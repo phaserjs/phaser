@@ -3,6 +3,7 @@
 precision mediump float;
 
 uniform vec2 uResolution;
+uniform float uCameraZoom;
 
 varying vec4 lightPosition;
 varying vec4 lightColor;
@@ -11,11 +12,11 @@ varying float lightAttenuation;
 
 void main ()
 {
-    vec2 center = (lightPosition.xy + 1.0) * uResolution.xy * 0.5;
+    vec2 center = (lightPosition.xy + 1.0) * (uResolution.xy * 0.5);
 
     float distToSurf = length(center - gl_FragCoord.xy);
 
-    float radius = 1.0 - distToSurf / lightRadius;
+    float radius = 1.0 - distToSurf / (lightRadius * uCameraZoom);
 
     float intensity = smoothstep(0.0, 1.0, radius * lightAttenuation);
 

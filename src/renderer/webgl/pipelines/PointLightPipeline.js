@@ -47,9 +47,10 @@ var PointLightPipeline = new Class({
         WebGLPipeline.call(this, config);
     },
 
-    onBind: function ()
+    onRender: function (scene, camera)
     {
         this.set2f('uResolution', this.width, this.height);
+        this.set1f('uCameraZoom', camera.zoom);
     },
 
     batchPointLight: function (light, camera, x0, y0, x1, y1, x2, y2, x3, y3, lightX, lightY)
