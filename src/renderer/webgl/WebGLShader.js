@@ -419,6 +419,31 @@ var WebGLShader = new Class({
     },
 
     /**
+     * Resets the cached values of the given uniform.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#resetUniform
+     * @since 3.50.0
+     *
+     * @param {string} name - The name of the uniform to reset.
+     *
+     * @return {this} This WebGLShader instance.
+     */
+    resetUniform: function (name)
+    {
+        var uniform = this.uniforms[name];
+
+        if (uniform)
+        {
+            uniform.value1 = null;
+            uniform.value2 = null;
+            uniform.value3 = null;
+            uniform.value4 = null;
+        }
+
+        return this;
+    },
+
+    /**
      * Sets the given uniform value/s based on the name and GL function.
      *
      * This method is called internally by other methods such as `set1f` and `set3iv`.
