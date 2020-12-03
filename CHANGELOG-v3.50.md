@@ -946,6 +946,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Utils.Array.Remove` would return an incorrect array of removed elements if one of the items to be removed was skipped in the array. Fix #5398 (thanks @year221)
 * `Geom.Intersects.TriangleToLine` wouldn't return `true` if the start or end of the Line fell inside the Triangle, only if the entire Line did. It now checks the start and end points correctly. (thanks @wiserim)
 * Using a Bitmap Mask and a Blend Mode in WebGL would reset the blend mode when the mask was rendered, causing the Game Object to have no blend mode. Fix #5409 (thanks @jcyuan)
+* `BitmapMask` would become corrupted when resizing the Phaser Game, either via the Scale Manager or directly, because the framebuffer and texture it used for rendering was still at the old dimensions. The BitmapMask now listens for the Renderer RESIZE event and re-creates itself accordingly. Fix #5399 (thanks @Patapits)
 
 ### Namespace Updates
 
