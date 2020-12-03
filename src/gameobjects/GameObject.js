@@ -687,14 +687,14 @@ var GameObject = new Class({
             this.preDestroy.call(this);
         }
 
+        this.emit(Events.DESTROY, this);
+
         this.removeAllListeners();
 
         if (this.postPipelines)
         {
             this.resetPostPipeline(true);
         }
-
-        this.emit(Events.DESTROY, this);
 
         if (this.displayList)
         {
