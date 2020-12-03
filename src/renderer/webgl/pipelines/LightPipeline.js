@@ -173,6 +173,7 @@ var LightPipeline = new Class({
         }
 
         //  Ok, we're good to go ...
+
         this.setShader(this['lightShader' + lightsCount], true);
 
         var i;
