@@ -1292,6 +1292,15 @@ var RenderTexture = new Class({
 
             ctx.globalAlpha = alpha;
 
+            if (this._eraseMode)
+            {
+                ctx.globalCompositeOperation = 'destination-out';
+            }
+            else
+            {
+                ctx.globalCompositeOperation = 'source-over';
+            }
+
             ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
 
             ctx.drawImage(source, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
