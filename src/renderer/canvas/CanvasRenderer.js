@@ -634,7 +634,6 @@ var CanvasRenderer = new Class({
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;
-        var calcMatrix = this._tempMatrix3;
 
         var cd = frame.canvasData;
 
@@ -731,22 +730,19 @@ var CanvasRenderer = new Class({
             //  Undo the camera scroll
             spriteMatrix.e = sprite.x;
             spriteMatrix.f = sprite.y;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
         else
         {
             spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
             spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
+
+        //  Multiply by the Sprite matrix
+        camMatrix.multiply(spriteMatrix);
 
         ctx.save();
 
-        calcMatrix.setToContext(ctx);
+        camMatrix.setToContext(ctx);
 
         ctx.globalCompositeOperation = this.blendModes[sprite.blendMode];
 
