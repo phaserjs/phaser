@@ -53,6 +53,11 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
 
         var tileset = gidMap[tile.index];
 
+        if (!tileset)
+        {
+            continue;
+        }
+
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 
         if (tileTexCoords === null)

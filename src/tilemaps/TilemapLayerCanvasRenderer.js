@@ -88,39 +88,42 @@ var TilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
         }
 
         var image = tileset.image.getSourceImage();
+
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 
-        if (tileTexCoords)
+        if (tileTexCoords === null)
         {
-            var halfWidth = tileset.tileWidth / 2;
-            var halfHeight = tileset.tileHeight / 2;
-
-            ctx.save();
-
-            ctx.translate(tile.pixelX + halfWidth, tile.pixelY + halfHeight);
-
-            if (tile.rotation !== 0)
-            {
-                ctx.rotate(tile.rotation);
-            }
-
-            if (tile.flipX || tile.flipY)
-            {
-                ctx.scale((tile.flipX) ? -1 : 1, (tile.flipY) ? -1 : 1);
-            }
-
-            ctx.globalAlpha = alpha * tile.alpha;
-
-            ctx.drawImage(
-                image,
-                tileTexCoords.x, tileTexCoords.y,
-                tileset.tileWidth , tileset.Height,
-                -halfWidth, -halfHeight,
-                tileset.tileWidth , tileset.tileHeight
-            );
-
-            ctx.restore();
+            continue;
         }
+
+        var halfWidth = tileset.tileWidth / 2;
+        var halfHeight = tileset.tileHeight / 2;
+
+        ctx.save();
+
+        ctx.translate(tile.pixelX + halfWidth, tile.pixelY + halfHeight);
+
+        if (tile.rotation !== 0)
+        {
+            ctx.rotate(tile.rotation);
+        }
+
+        if (tile.flipX || tile.flipY)
+        {
+            ctx.scale((tile.flipX) ? -1 : 1, (tile.flipY) ? -1 : 1);
+        }
+
+        ctx.globalAlpha = alpha * tile.alpha;
+
+        ctx.drawImage(
+            image,
+            tileTexCoords.x, tileTexCoords.y,
+            tileset.tileWidth , tileset.Height,
+            -halfWidth, -halfHeight,
+            tileset.tileWidth , tileset.tileHeight
+        );
+
+        ctx.restore();
     }
 
     ctx.restore();
