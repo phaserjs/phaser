@@ -720,8 +720,8 @@ var Layer = new Class({
 
         if (this.displayList)
         {
-            this.displayList.remove(this);
             this.displayList.queueDepthSort();
+            this.displayList.remove(this);
         }
 
         if (this.data)
