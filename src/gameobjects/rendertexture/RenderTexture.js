@@ -15,6 +15,7 @@ var GameObject = require('../GameObject');
 var NOOP = require('../../utils/NOOP');
 var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
 var Render = require('./RenderTextureRender');
+var RenderEvents = require('../../renderer/webgl/events');
 var RenderTarget = require('../../renderer/webgl/RenderTarget');
 var Utils = require('../../renderer/webgl/Utils');
 var UUID = require('../../utils/string/UUID');
@@ -286,6 +287,8 @@ var RenderTexture = new Class({
         this.setOrigin(0, 0);
 
         this.initPipeline(PIPELINE_CONST.SINGLE_PIPELINE);
+
+        renderer.on(RenderEvents.RESIZE, this.onResize, this);
     },
 
     /**
@@ -302,6 +305,34 @@ var RenderTexture = new Class({
     setSize: function (width, height)
     {
         return this.resize(width, height);
+    },
+
+    /**
+     * Internal renderer resize handler.
+     *
+     * @method Phaser.GameObjects.RenderTexture#onResize
+     * @private
+     * @since 3.50.0
+     *
+     * @param {number} width - The width of the renderer.
+     * @param {number} height - The height of the renderer.
+     */
+    onResize: function (width, height)
+    {
+        var camera = this.camera;
+        var renderTarget = this.renderTarget;
+
+        if (renderTarget)
+        {
+            var renderer = this.renderer;
+            var rendererWidth = renderer.width;
+            var rendererHeight = renderer.height;
+
+            var zoomX = rendererWidth / width;
+            var zoomY = rendererHeight / height;
+
+            camera.setZoom(zoomX, zoomY);
+        }
     },
 
     /**
@@ -371,7 +402,11 @@ var RenderTexture = new Class({
                 var zoomY = rendererHeight / height;
 
                 camera.setSize(width, height);
-                camera.setZoom(zoomX, zoomY);
+
+                if (renderTarget)
+                {
+                    camera.setZoom(zoomX, zoomY);
+                }
 
                 var ox = 0.5;
                 var oy = 0.5;
@@ -1290,20 +1325,17 @@ var RenderTexture = new Class({
 
             var matrix = this.camera.matrix;
 
+            ctx.save();
+
+            ctx.globalCompositeOperation = (this._eraseMode) ? 'destination-out' : 'source-over';
+
             ctx.globalAlpha = alpha;
 
-            if (this._eraseMode)
-            {
-                ctx.globalCompositeOperation = 'destination-out';
-            }
-            else
-            {
-                ctx.globalCompositeOperation = 'source-over';
-            }
-
-            ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+            matrix.setToContext(ctx);
 
             ctx.drawImage(source, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
+
+            ctx.restore();
         }
     },
 
@@ -1424,6 +1456,8 @@ var RenderTexture = new Class({
      */
     preDestroy: function ()
     {
+        this.renderer.off(RenderEvents.RESIZE, this.onResize, this);
+
         if (!this._saved)
         {
             CanvasPool.remove(this.canvas);
