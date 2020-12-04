@@ -278,13 +278,13 @@ var TransformMatrix = new Class({
             if (a || b)
             {
                 // var r = Math.sqrt(a * a + b * b);
-    
+
                 return (b > 0) ? Math.acos(a / this.scaleX) : -Math.acos(a / this.scaleX);
             }
             else if (c || d)
             {
                 // var s = Math.sqrt(c * c + d * d);
-    
+
                 return MATH_CONST.TAU - ((d > 0) ? Math.acos(-c / this.scaleY) : -Math.acos(c / this.scaleY));
             }
             else
@@ -427,7 +427,7 @@ var TransformMatrix = new Class({
 
     /**
      * Multiply this Matrix by the given Matrix.
-     * 
+     *
      * If an `out` Matrix is given then the results will be stored in it.
      * If it is not given, this matrix will be updated in place instead.
      * Use an `out` Matrix if you do not wish to mutate this matrix.
@@ -473,7 +473,7 @@ var TransformMatrix = new Class({
 
     /**
      * Multiply this Matrix by the matrix given, including the offset.
-     * 
+     *
      * The offsetX is added to the tx value: `offsetX * a + offsetY * c + tx`.
      * The offsetY is added to the ty value: `offsetY * b + offsetY * d + ty`.
      *
@@ -707,7 +707,7 @@ var TransformMatrix = new Class({
 
     /**
      * Copy the values in this Matrix to the array given.
-     * 
+     *
      * Where array indexes 0, 1, 2, 3, 4 and 5 are mapped to a, b, c, d, e and f.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#copyToArray
@@ -769,9 +769,9 @@ var TransformMatrix = new Class({
 
     /**
      * Decompose this Matrix into its translation, scale and rotation values using QR decomposition.
-     * 
+     *
      * The result must be applied in the following order to reproduce the current matrix:
-     * 
+     *
      * translate -> rotate -> scale
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#decomposeMatrix
@@ -863,7 +863,7 @@ var TransformMatrix = new Class({
     /**
      * Takes the `x` and `y` values and returns a new position in the `output` vector that is the inverse of
      * the current matrix with its transformation applied.
-     * 
+     *
      * Can be used to translate points from world to local space.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#applyInverse
@@ -902,7 +902,7 @@ var TransformMatrix = new Class({
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#getX
      * @since 3.12.0
-     * 
+     *
      * @param {number} x - The x value.
      * @param {number} y - The y value.
      *
@@ -919,7 +919,7 @@ var TransformMatrix = new Class({
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#getY
      * @since 3.12.0
-     * 
+     *
      * @param {number} x - The x value.
      * @param {number} y - The y value.
      *
@@ -932,12 +932,12 @@ var TransformMatrix = new Class({
 
     /**
      * Returns the X component of this matrix multiplied by the given values.
-     * 
+     *
      * This is the same as `x * a + y * c + e`, optionally passing via `Math.round`.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#getXRound
      * @since 3.50.0
-     * 
+     *
      * @param {number} x - The x value.
      * @param {number} y - The y value.
      * @param {boolean} [round=false] - Math.round the resulting value?
@@ -958,12 +958,12 @@ var TransformMatrix = new Class({
 
     /**
      * Returns the Y component of this matrix multiplied by the given values.
-     * 
+     *
      * This is the same as `x * b + y * d + f`, optionally passing via `Math.round`.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#getYRound
      * @since 3.50.0
-     * 
+     *
      * @param {number} x - The x value.
      * @param {number} y - The y value.
      * @param {boolean} [round=false] - Math.round the resulting value?
