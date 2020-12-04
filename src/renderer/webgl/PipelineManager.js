@@ -721,7 +721,7 @@ var PipelineManager = new Class({
 
     /**
      * Checks to see if the given pipeline is already the active pipeline, both within this
-     * Pipeline Manager, and also has the same vertex buffer and shader set within the Renderer.
+     * Pipeline Manager and also has the same shader set in the Renderer.
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#isCurrent
      * @since 3.50.0
@@ -741,11 +741,7 @@ var PipelineManager = new Class({
             currentShader = current.currentShader;
         }
 
-        return !(
-            current !== pipeline ||
-            current.vertexBuffer !== renderer.currentVertexBuffer ||
-            currentShader.program !== renderer.currentProgram
-        );
+        return !(current !== pipeline || currentShader.program !== renderer.currentProgram);
     },
 
     /**
@@ -996,14 +992,14 @@ var PipelineManager = new Class({
         gl.viewport(0, 0, renderer.width, renderer.height);
 
         renderer.currentProgram = null;
-        renderer.currentVertexBuffer = null;
-        renderer.currentIndexBuffer = null;
 
         renderer.setBlendMode(0, true);
 
         this.current = pipeline;
 
         pipeline.rebind();
+
+        renderer.resetTextures();
     },
 
     /**
@@ -1024,12 +1020,18 @@ var PipelineManager = new Class({
 
         this.flush();
 
-        this.previous = this.current;
-        this.current = null;
+        if (this.current)
+        {
+            this.current.unbind();
+            this.previous = this.current;
+            this.current = null;
+        }
+        else
+        {
+            this.previous = null;
+        }
 
         renderer.currentProgram = null;
-        renderer.currentVertexBuffer = null;
-        renderer.currentIndexBuffer = null;
 
         renderer.setBlendMode(0, true);
     },

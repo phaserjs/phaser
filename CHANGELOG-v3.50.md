@@ -215,6 +215,8 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.isBooted` is a new boolean property that lets you know if the rendere has fully finished booting.
 * The `WebGLRenderer` now extends the Event Emitter, allowing you to listen to renderer specific events.
 * `WebGLRenderer.defaultCamera` has been removed as it's not used anywhere internally any longer.
+* The `WebGLRenderer.setVertexBuffer` method has been removed along with the `WebGLRenderer.currentVertexBuffer` property. This is now set directly by the WebGL Pipeline, as needed.
+* The `WebGLRenderer.setIndexBuffer` method has been removed along with the `WebGLRenderer.currentIndexBuffer` property. This is now set directly by the WebGL Pipeline, as needed.
 
 ### WebGL and Canvas Renderer Events
 

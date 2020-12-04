@@ -295,26 +295,6 @@ var WebGLRenderer = new Class({
         this.currentProgram = null;
 
         /**
-         * Current WebGLBuffer (Vertex buffer) in use
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentVertexBuffer
-         * @type {WebGLBuffer}
-         * @default null
-         * @since 3.0.0
-         */
-        this.currentVertexBuffer = null;
-
-        /**
-         * Current WebGLBuffer (Index buffer) in use
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentIndexBuffer
-         * @type {WebGLBuffer}
-         * @default null
-         * @since 3.0.0
-         */
-        this.currentIndexBuffer = null;
-
-        /**
          * Current blend mode in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentBlendMode
@@ -1683,65 +1663,6 @@ var WebGLRenderer = new Class({
     resetProgram: function ()
     {
         this.gl.useProgram(this.currentProgram);
-
-        return this;
-    },
-
-    /**
-     * Binds a vertex buffer.
-     *
-     * If there was a different vertex buffer already bound it will force a pipeline flush first.
-     *
-     * If the same buffer given to this method is already set as the current buffer, no change
-     * will take place and this method will return `false`.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#setVertexBuffer
-     * @since 3.0.0
-     *
-     * @param {WebGLBuffer} vertexBuffer - The buffer that needs to be bound.
-     *
-     * @return {boolean} `true` if the given buffer was bound, otherwise `false`.
-     */
-    setVertexBuffer: function (vertexBuffer)
-    {
-        if (vertexBuffer && vertexBuffer !== this.currentVertexBuffer)
-        {
-            var gl = this.gl;
-
-            this.flush();
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-
-            this.currentVertexBuffer = vertexBuffer;
-
-            return true;
-        }
-
-        return false;
-    },
-
-    /**
-     * Binds an index buffer. If there is an index buffer already bound it'll force a pipeline flush.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#setIndexBuffer
-     * @since 3.0.0
-     *
-     * @param {WebGLBuffer} indexBuffer - The buffer the needs to be bound.
-     *
-     * @return {this} This WebGLRenderer instance.
-     */
-    setIndexBuffer: function (indexBuffer)
-    {
-        var gl = this.gl;
-
-        if (indexBuffer && indexBuffer !== this.currentIndexBuffer)
-        {
-            this.flush();
-
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-
-            this.currentIndexBuffer = indexBuffer;
-        }
 
         return this;
     },

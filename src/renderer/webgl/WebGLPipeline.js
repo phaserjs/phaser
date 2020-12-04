@@ -443,14 +443,12 @@ var WebGLPipeline = new Class({
 
         //  Set-up shaders
 
-        this.renderer.setVertexBuffer(this.vertexBuffer);
+        this.setVertexBuffer();
 
-        for (i = 0; i < shaders.length; i++)
+        for (i = shaders.length - 1; i >= 0; i--)
         {
             shaders[i].rebind();
         }
-
-        this.currentShader.bind();
 
         this.hasBooted = true;
 
@@ -511,7 +509,12 @@ var WebGLPipeline = new Class({
 
             renderer.resetTextures();
 
-            renderer.setVertexBuffer(this.vertexBuffer);
+            var wasBound = this.setVertexBuffer();
+
+            if (wasBound && !setAttributes)
+            {
+                setAttributes = true;
+            }
 
             shader.bind(setAttributes, false);
 
@@ -743,7 +746,7 @@ var WebGLPipeline = new Class({
     {
         if (currentShader === undefined) { currentShader = this.currentShader; }
 
-        var wasBound = this.renderer.setVertexBuffer(this.vertexBuffer);
+        var wasBound = this.setVertexBuffer();
 
         currentShader.bind(wasBound);
 
@@ -766,20 +769,47 @@ var WebGLPipeline = new Class({
      */
     rebind: function ()
     {
-        this.renderer.setVertexBuffer(this.vertexBuffer);
+        var wasBound = this.setVertexBuffer();
 
         var shaders = this.shaders;
 
-        for (var i = 0; i < shaders.length; i++)
+        //  Loop in reverse, so the first shader in the array is left as being bound
+        for (var i = shaders.length - 1; i >= 0; i--)
         {
-            shaders[i].rebind();
+            this.currentShader = shaders[i].bind(wasBound);
         }
 
-        this.currentShader = shaders[0];
+        this.onActive(this.currentShader);
 
         this.onRebind();
 
         return this;
+    },
+
+    /**
+     * Binds the vertex buffer to be the active ARRAY_BUFFER on the WebGL context.
+     *
+     * It first checks to see if it's already set as the active buffer and only
+     * binds itself if not.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setVertexBuffer
+     * @since 3.50.0
+     *
+     * @return {boolean} `true` if the vertex buffer was bound, or `false` if it was already bound.
+     */
+    setVertexBuffer: function ()
+    {
+        var gl = this.gl;
+        var buffer = this.vertexBuffer;
+
+        if (gl.getParameter(gl.ARRAY_BUFFER_BINDING) !== buffer)
+        {
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+            return true;
+        }
+
+        return false;
     },
 
     /**
@@ -890,6 +920,8 @@ var WebGLPipeline = new Class({
 
             if (this.active)
             {
+                this.setVertexBuffer();
+
                 if (vertexCount === this.vertexCapacity)
                 {
                     gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.DYNAMIC_DRAW);
