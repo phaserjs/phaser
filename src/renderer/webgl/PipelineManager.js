@@ -89,6 +89,15 @@ var PipelineManager = new Class({
         ]);
 
         /**
+         * This map stores all Post FX Pipeline classes available in this manager.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#postPipelineClasses
+         * @type {Phaser.Structs.Map.<string, Class>}
+         * @since 3.50.0
+         */
+        this.postPipelineClasses = new CustomMap();
+
+        /**
          * This map stores all pipeline instances in this manager.
          *
          * This is populated with the default pipelines in the `boot` method.
@@ -240,14 +249,16 @@ var PipelineManager = new Class({
         //  Install each of the default pipelines
 
         var instance;
+        var pipelineName;
+
         var _this = this;
         var game = this.game;
 
-        this.classes.each(function (name, pipeline)
+        this.classes.each(function (pipelineName, pipeline)
         {
-            instance = _this.add(name, new pipeline({ game: game }));
+            instance = _this.add(pipelineName, new pipeline({ game: game }));
 
-            if (name === CONST.UTILITY_PIPELINE)
+            if (pipelineName === CONST.UTILITY_PIPELINE)
             {
                 _this.UTILITY_PIPELINE = instance;
 
@@ -264,20 +275,21 @@ var PipelineManager = new Class({
         this.BITMAPMASK_PIPELINE = this.get(CONST.BITMAPMASK_PIPELINE);
 
         //  And now the ones in the config, if any
+
         if (pipelineConfig)
         {
-            for (var pipelineName in pipelineConfig)
+            for (pipelineName in pipelineConfig)
             {
                 var pipelineClass = pipelineConfig[pipelineName];
 
-                if (!this.has(pipelineName))
+                instance = new pipelineClass(game);
+
+                if (!instance.isPostFX)
                 {
-                    this.classes.set(pipelineName, pipelineClass);
-
-                    instance = new pipelineClass(game);
-
-                    if (!instance.isPostFX)
+                    if (!this.has(pipelineName))
                     {
+                        this.classes.set(pipelineName, pipelineClass);
+
                         this.add(pipelineName, instance);
                     }
                 }
@@ -380,9 +392,9 @@ var PipelineManager = new Class({
      */
     addPostPipeline: function (name, pipeline)
     {
-        if (!this.classes.has(name))
+        if (!this.postPipelineClasses.has(name))
         {
-            this.classes.set(name, pipeline);
+            this.postPipelineClasses.set(name, pipeline);
         }
     },
 
@@ -467,7 +479,7 @@ var PipelineManager = new Class({
      */
     getPostPipeline: function (pipeline, gameObject)
     {
-        var pipelineClasses = this.classes;
+        var pipelineClasses = this.postPipelineClasses;
 
         var instance;
 
@@ -514,17 +526,24 @@ var PipelineManager = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the pipeline to be removed.
-     * @param {boolean} [removeClass=true] - Remove the class as well as the instance?
+     * @param {boolean} [removeClass=true] - Remove the pipeline class as well as the instance?
+     * @param {boolean} [removePostPipelineClass=true] - Remove the post pipeline class as well as the instance?
      */
-    remove: function (name, removeClass)
+    remove: function (name, removeClass, removePostPipelineClass)
     {
         if (removeClass === undefined) { removeClass = true; }
+        if (removePostPipelineClass === undefined) { removePostPipelineClass = true; }
 
         this.pipelines.delete(name);
 
         if (removeClass)
         {
             this.classes.delete(name);
+        }
+
+        if (removePostPipelineClass)
+        {
+            this.postPipelineClasses.delete(name);
         }
     },
 
@@ -1025,11 +1044,13 @@ var PipelineManager = new Class({
         this.flush();
 
         this.classes.clear();
+        this.postPipelineClasses.clear();
         this.pipelines.clear();
 
         this.renderer = null;
         this.game = null;
         this.classes = null;
+        this.postPipelineClasses = null;
         this.pipelines = null;
         this.current = null;
         this.previous = null;
