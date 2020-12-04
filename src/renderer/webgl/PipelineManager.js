@@ -284,14 +284,15 @@ var PipelineManager = new Class({
 
                 instance = new pipelineClass(game);
 
-                if (!instance.isPostFX)
+                if (instance.isPostFX)
                 {
-                    if (!this.has(pipelineName))
-                    {
-                        this.classes.set(pipelineName, pipelineClass);
+                    this.postPipelineClasses.set(pipelineName, pipelineClass);
+                }
+                else if (!this.has(pipelineName))
+                {
+                    this.classes.set(pipelineName, pipelineClass);
 
-                        this.add(pipelineName, instance);
-                    }
+                    this.add(pipelineName, instance);
                 }
             }
         }
