@@ -7,10 +7,10 @@
 /**
  * The Renderer Resize Event.
  *
- * This event is dispatched by the WebGL Renderer when it is resized, usually as a result
+ * This event is dispatched by the Phaser Renderer when it is resized, usually as a result
  * of the Scale Manager resizing.
  *
- * @event Phaser.Renderer.WebGL.Events#RESIZE
+ * @event Phaser.Renderer.Events#RESIZE
  * @since 3.50.0
  *
  * @param {number} width - The new width of the renderer.

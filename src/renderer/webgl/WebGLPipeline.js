@@ -7,7 +7,7 @@
 
 var Class = require('../../utils/Class');
 var DeepCopy = require('../../utils/object/DeepCopy');
-var Events = require('./events');
+var Events = require('../events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Matrix4 = require('../../math/Matrix4');
 var RenderTarget = require('./RenderTarget');

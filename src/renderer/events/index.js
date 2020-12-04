@@ -5,7 +5,7 @@
  */
 
 /**
- * @namespace Phaser.Renderer.WebGL.Events
+ * @namespace Phaser.Renderer.Events
  */
 
 module.exports = {

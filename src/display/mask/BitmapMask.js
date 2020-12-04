@@ -6,7 +6,7 @@
 
 var Class = require('../../utils/Class');
 var GameEvents = require('../../core/events');
-var RenderEvents = require('../../renderer/webgl/events');
+var RenderEvents = require('../../renderer/events');
 
 /**
  * @classdesc

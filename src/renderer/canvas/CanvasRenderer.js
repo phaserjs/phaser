@@ -9,15 +9,22 @@ var CameraEvents = require('../../cameras/2d/events');
 var CanvasSnapshot = require('../snapshot/CanvasSnapshot');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
+var EventEmitter = require('eventemitter3');
+var Events = require('../events');
 var GetBlendModes = require('./utils/GetBlendModes');
 var ScaleEvents = require('../../scale/events');
+var TextureEvents = require('../../textures/events');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 /**
  * @classdesc
- * The Canvas Renderer is responsible for managing 2D canvas rendering contexts, including the one used by the Game's canvas. It tracks the internal state of a given context and can renderer textured Game Objects to it, taking into account alpha, blending, and scaling.
+ * The Canvas Renderer is responsible for managing 2D canvas rendering contexts,
+ * including the one used by the Games canvas. It tracks the internal state of a
+ * given context and can renderer textured Game Objects to it, taking into
+ * account alpha, blending, and scaling.
  *
  * @class CanvasRenderer
+ * @extends Phaser.Events.EventEmitter
  * @memberof Phaser.Renderer.Canvas
  * @constructor
  * @since 3.0.0
@@ -26,10 +33,30 @@ var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
  */
 var CanvasRenderer = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function CanvasRenderer (game)
     {
+        EventEmitter.call(this);
+
+        var gameConfig = game.config;
+
+        /**
+         * The local configuration settings of the CanvasRenderer.
+         *
+         * @name Phaser.Renderer.Canvas.CanvasRenderer#config
+         * @type {object}
+         * @since 3.0.0
+         */
+        this.config = {
+            clearBeforeRender: gameConfig.clearBeforeRender,
+            backgroundColor: gameConfig.backgroundColor,
+            antialias: gameConfig.antialias,
+            roundPixels: gameConfig.roundPixels
+        };
+
         /**
          * The Phaser Game instance that owns this renderer.
          *
@@ -77,20 +104,6 @@ var CanvasRenderer = new Class({
         this.height = 0;
 
         /**
-         * The local configuration settings of the CanvasRenderer.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#config
-         * @type {object}
-         * @since 3.0.0
-         */
-        this.config = {
-            clearBeforeRender: game.config.clearBeforeRender,
-            backgroundColor: game.config.backgroundColor,
-            antialias: game.config.antialias,
-            roundPixels: game.config.roundPixels
-        };
-
-        /**
          * The canvas element which the Game uses.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#gameCanvas
@@ -111,7 +124,7 @@ var CanvasRenderer = new Class({
          * @type {CanvasRenderingContext2D}
          * @since 3.0.0
          */
-        this.gameContext = (this.game.config.context) ? this.game.config.context : this.gameCanvas.getContext('2d', contextOptions);
+        this.gameContext = (gameConfig.context) ? gameConfig.context : this.gameCanvas.getContext('2d', contextOptions);
 
         /**
          * The canvas context currently used by the CanvasRenderer for all rendering operations.
@@ -192,6 +205,15 @@ var CanvasRenderer = new Class({
          */
         this._tempMatrix3 = new TransformMatrix();
 
+        /**
+         * Has this renderer fully booted yet?
+         *
+         * @name Phaser.Renderer.Canvas.CanvasRenderer#isBooted
+         * @type {boolean}
+         * @since 3.50.0
+         */
+        this.isBooted = false;
+
         this.init();
     },
 
@@ -203,9 +225,28 @@ var CanvasRenderer = new Class({
      */
     init: function ()
     {
-        this.game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
+        this.game.textures.once(TextureEvents.READY, this.boot, this);
+    },
 
-        var baseSize = this.game.scale.baseSize;
+    /**
+     * Internal boot handler.
+     *
+     * @method Phaser.Renderer.Canvas.CanvasRenderer#boot
+     * @private
+     * @since 3.50.0
+     */
+    boot: function ()
+    {
+        var game = this.game;
+
+        var baseSize = game.scale.baseSize;
+
+        this.width = baseSize.width;
+        this.height = baseSize.height;
+
+        this.isBooted = true;
+
+        game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
         this.resize(baseSize.width, baseSize.height);
     },
@@ -232,6 +273,7 @@ var CanvasRenderer = new Class({
      * Resize the main game canvas.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#resize
+     * @fires Phaser.Renderer.Events#RESIZE
      * @since 3.0.0
      *
      * @param {number} [width] - The new width of the renderer.
@@ -241,6 +283,8 @@ var CanvasRenderer = new Class({
     {
         this.width = width;
         this.height = height;
+
+        this.emit(Events.RESIZE, width, height);
     },
 
     /**
@@ -309,6 +353,7 @@ var CanvasRenderer = new Class({
      * Called at the start of the render loop.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#preRender
+     * @fires Phaser.Renderer.Events#PRE_RENDER
      * @since 3.0.0
      */
     preRender: function ()
@@ -337,6 +382,8 @@ var CanvasRenderer = new Class({
         ctx.save();
 
         this.drawCount = 0;
+
+        this.emit(Events.PRE_RENDER);
     },
 
     /**
@@ -350,6 +397,7 @@ var CanvasRenderer = new Class({
      * This method is not called if `Camera.visible` is `false`, or `Camera.alpha` is zero.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#render
+     * @fires Phaser.Renderer.Events#RENDER
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene to render.
@@ -359,6 +407,8 @@ var CanvasRenderer = new Class({
     render: function (scene, children, camera)
     {
         var childCount = children.length;
+
+        this.emit(Events.RENDER, scene, camera);
 
         var cx = camera.x;
         var cy = camera.y;
@@ -456,6 +506,7 @@ var CanvasRenderer = new Class({
      * The post-render step happens after all Cameras in all Scenes have been rendered.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#postRender
+     * @fires Phaser.Renderer.Events#POST_RENDER
      * @since 3.0.0
      */
     postRender: function ()
@@ -463,6 +514,8 @@ var CanvasRenderer = new Class({
         var ctx = this.gameContext;
 
         ctx.restore();
+
+        this.emit(Events.POST_RENDER);
 
         var state = this.snapshotState;
 
@@ -773,10 +826,11 @@ var CanvasRenderer = new Class({
      */
     destroy: function ()
     {
-        this.gameCanvas = null;
-        this.gameContext = null;
+        this.removeAllListeners();
 
         this.game = null;
+        this.gameCanvas = null;
+        this.gameContext = null;
     }
 
 });

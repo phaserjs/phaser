@@ -6,12 +6,11 @@
  */
 
 var ArrayRemove = require('../../utils/array/Remove');
-var BaseCamera = require('../../cameras/2d/BaseCamera');
 var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var EventEmitter = require('eventemitter3');
-var Events = require('./events');
+var Events = require('../events');
 var GameEvents = require('../../core/events');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var NOOP = require('../../utils/NOOP');
@@ -38,8 +37,8 @@ var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
  * WebGLRenderer and/or WebGLPipeline.
  *
  * @class WebGLRenderer
- * @memberof Phaser.Renderer.WebGL
  * @extends Phaser.Events.EventEmitter
+ * @memberof Phaser.Renderer.WebGL
  * @constructor
  * @since 3.0.0
  *
@@ -481,15 +480,6 @@ var WebGLRenderer = new Class({
         this.whiteTexture = null;
 
         /**
-         * A default Camera used in calls when no other camera has been provided.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#defaultCamera
-         * @type {Phaser.Cameras.Scene2D.BaseCamera}
-         * @since 3.12.0
-         */
-        this.defaultCamera = new BaseCamera(0, 0, 0, 0);
-
-        /**
          * The total number of masks currently stacked.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#maskCount
@@ -899,7 +889,7 @@ var WebGLRenderer = new Class({
      * Resizes the drawing buffer to match that required by the Scale Manager.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#resize
-     * @fires Phaser.Renderer.WebGL.Events#RESIZE
+     * @fires Phaser.Renderer.Events#RESIZE
      * @since 3.0.0
      *
      * @param {number} [width] - The new width of the renderer.
@@ -919,8 +909,6 @@ var WebGLRenderer = new Class({
         this.drawingBufferHeight = gl.drawingBufferHeight;
 
         gl.scissor(0, (gl.drawingBufferHeight - height), width, height);
-
-        this.defaultCamera.setSize(width, height);
 
         this.defaultScissor[2] = width;
         this.defaultScissor[3] = height;
@@ -2239,7 +2227,7 @@ var WebGLRenderer = new Class({
      * Clears the current vertex buffer and updates pipelines.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#preRender
-     * @fires Phaser.Renderer.WebGL.Events#PRE_RENDER
+     * @fires Phaser.Renderer.Events#PRE_RENDER
      * @since 3.0.0
      */
     preRender: function ()
@@ -2292,7 +2280,7 @@ var WebGLRenderer = new Class({
      * This method is not called if `Camera.visible` is `false`, or `Camera.alpha` is zero.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#render
-     * @fires Phaser.Renderer.WebGL.Events#RENDER
+     * @fires Phaser.Renderer.Events#RENDER
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene to render.
@@ -2392,7 +2380,7 @@ var WebGLRenderer = new Class({
      * The post-render step happens after all Cameras in all Scenes have been rendered.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#postRender
-     * @fires Phaser.Renderer.WebGL.Events#POST_RENDER
+     * @fires Phaser.Renderer.Events#POST_RENDER
      * @since 3.0.0
      */
     postRender: function ()
@@ -2847,7 +2835,6 @@ var WebGLRenderer = new Class({
         }
 
         this.pipelines.destroy();
-        this.defaultCamera.destroy();
 
         this.removeAllListeners();
 

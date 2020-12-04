@@ -7,11 +7,11 @@
 /**
  * The Render Event.
  *
- * This event is dispatched by the WebGL Renderer for every camera in every Scene.
+ * This event is dispatched by the Phaser Renderer for every camera in every Scene.
  *
  * It is dispatched before any of the children in the Scene have been rendered.
  *
- * @event Phaser.Renderer.WebGL.Events#RENDER
+ * @event Phaser.Renderer.Events#RENDER
  * @since 3.50.0
  *
  * @param {Phaser.Scene} scene - The Scene being rendered.

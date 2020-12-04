@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
-var Events = require('./events');
+var Events = require('../events');
 
 /**
  * @classdesc
