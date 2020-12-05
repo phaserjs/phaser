@@ -636,7 +636,7 @@ declare module spine {
         private queueAsset;
         loadText(clientId: string, path: string): void;
         loadJson(clientId: string, path: string): void;
-        loadTexture(clientId: string, textureLoader: (image: HTMLImageElement) => any, path: string): void;
+        loadTexture(clientId: string, textureLoader: (image: HTMLImageElement | ImageBitmap) => any, path: string): void;
         get(clientId: string, path: string): any;
         private updateClientAssets;
         isLoadingComplete(clientId: string): boolean;
@@ -881,9 +881,9 @@ declare module spine {
 }
 declare module spine {
     abstract class Texture {
-        protected _image: HTMLImageElement;
-        constructor(image: HTMLImageElement);
-        getImage(): HTMLImageElement;
+        protected _image: HTMLImageElement | ImageBitmap;
+        constructor(image: HTMLImageElement | ImageBitmap);
+        getImage(): HTMLImageElement | ImageBitmap;
         abstract setFilters(minFilter: TextureFilter, magFilter: TextureFilter): void;
         abstract setWraps(uWrap: TextureWrap, vWrap: TextureWrap): void;
         abstract dispose(): void;

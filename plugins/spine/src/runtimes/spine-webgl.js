@@ -3572,15 +3572,35 @@ var spine;
             path = this.pathPrefix + path;
             if (!this.queueAsset(clientId, textureLoader, path))
                 return;
-            var img = new Image();
-            img.crossOrigin = "anonymous";
-            img.onload = function (ev) {
-                _this.rawAssets[path] = img;
-            };
-            img.onerror = function (ev) {
-                _this.errors[path] = "Couldn't load image " + path;
-            };
-            img.src = path;
+            var isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document);
+            var isWebWorker = !isBrowser && typeof importScripts !== 'undefined';
+            if (isWebWorker) {
+                var options = { mode: "cors" };
+                fetch(path, options).then(function (response) {
+                    if (!response.ok) {
+                        _this.errors[path] = "Couldn't load image " + path;
+                    }
+                    return response.blob();
+                }).then(function (blob) {
+                    return createImageBitmap(blob, {
+                        premultiplyAlpha: 'none',
+                        colorSpaceConversion: 'none'
+                    });
+                }).then(function (bitmap) {
+                    _this.rawAssets[path] = bitmap;
+                });
+            }
+            else {
+                var img_1 = new Image();
+                img_1.crossOrigin = "anonymous";
+                img_1.onload = function (ev) {
+                    _this.rawAssets[path] = img_1;
+                };
+                img_1.onerror = function (ev) {
+                    _this.errors[path] = "Couldn't load image " + path;
+                };
+                img_1.src = path;
+            }
         };
         SharedAssetManager.prototype.get = function (clientId, path) {
             path = this.pathPrefix + path;
@@ -3590,6 +3610,8 @@ var spine;
             return clientAssets.assets[path];
         };
         SharedAssetManager.prototype.updateClientAssets = function (clientAssets) {
+            var isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document);
+            var isWebWorker = !isBrowser && typeof importScripts !== 'undefined';
             for (var i = 0; i < clientAssets.toLoad.length; i++) {
                 var path = clientAssets.toLoad[i];
                 var asset = clientAssets.assets[path];
@@ -3597,11 +3619,21 @@ var spine;
                     var rawAsset = this.rawAssets[path];
                     if (rawAsset === null || rawAsset === undefined)
                         continue;
-                    if (rawAsset instanceof HTMLImageElement) {
-                        clientAssets.assets[path] = clientAssets.textureLoader(rawAsset);
+                    if (isWebWorker) {
+                        if (rawAsset instanceof ImageBitmap) {
+                            clientAssets.assets[path] = clientAssets.textureLoader(rawAsset);
+                        }
+                        else {
+                            clientAssets.assets[path] = rawAsset;
+                        }
                     }
                     else {
-                        clientAssets.assets[path] = rawAsset;
+                        if (rawAsset instanceof HTMLImageElement) {
+                            clientAssets.assets[path] = clientAssets.textureLoader(rawAsset);
+                        }
+                        else {
+                            clientAssets.assets[path] = rawAsset;
+                        }
                     }
                 }
             }
@@ -7749,7 +7781,7 @@ var spine;
             return _this;
         }
         BoundingBoxAttachment.prototype.copy = function () {
-            var copy = new BoundingBoxAttachment(name);
+            var copy = new BoundingBoxAttachment(this.name);
             this.copyTo(copy);
             copy.color.setFromColor(this.color);
             return copy;
@@ -7768,7 +7800,7 @@ var spine;
             return _this;
         }
         ClippingAttachment.prototype.copy = function () {
-            var copy = new ClippingAttachment(name);
+            var copy = new ClippingAttachment(this.name);
             this.copyTo(copy);
             copy.endSlot = this.endSlot;
             copy.color.setFromColor(this.color);
@@ -7912,7 +7944,7 @@ var spine;
             return _this;
         }
         PathAttachment.prototype.copy = function () {
-            var copy = new PathAttachment(name);
+            var copy = new PathAttachment(this.name);
             this.copyTo(copy);
             copy.lengths = new Array(this.lengths.length);
             spine.Utils.arrayCopy(this.lengths, 0, copy.lengths, 0, this.lengths.length);
@@ -7946,7 +7978,7 @@ var spine;
             return Math.atan2(y, x) * spine.MathUtils.radDeg;
         };
         PointAttachment.prototype.copy = function () {
-            var copy = new PointAttachment(name);
+            var copy = new PointAttachment(this.name);
             copy.x = this.x;
             copy.y = this.y;
             copy.rotation = this.rotation;
@@ -10438,30 +10470,32 @@ var spine;
     (function (webgl) {
         var ManagedWebGLRenderingContext = (function () {
             function ManagedWebGLRenderingContext(canvasOrContext, contextConfig) {
-                var _this = this;
                 if (contextConfig === void 0) { contextConfig = { alpha: "true" }; }
                 this.restorables = new Array();
-                if (canvasOrContext instanceof HTMLCanvasElement) {
-                    var canvas = canvasOrContext;
-                    this.gl = (canvas.getContext("webgl2", contextConfig) || canvas.getContext("webgl", contextConfig));
-                    this.canvas = canvas;
-                    canvas.addEventListener("webglcontextlost", function (e) {
-                        var event = e;
-                        if (e) {
-                            e.preventDefault();
-                        }
-                    });
-                    canvas.addEventListener("webglcontextrestored", function (e) {
-                        for (var i = 0, n = _this.restorables.length; i < n; i++) {
-                            _this.restorables[i].restore();
-                        }
-                    });
+                if (canvasOrContext instanceof HTMLCanvasElement || canvasOrContext instanceof EventTarget) {
+                    this.setupCanvas(canvasOrContext, contextConfig);
                 }
                 else {
                     this.gl = canvasOrContext;
                     this.canvas = this.gl.canvas;
                 }
             }
+            ManagedWebGLRenderingContext.prototype.setupCanvas = function (canvas, contextConfig) {
+                var _this = this;
+                this.gl = (canvas.getContext("webgl2", contextConfig) || canvas.getContext("webgl", contextConfig));
+                this.canvas = canvas;
+                canvas.addEventListener("webglcontextlost", function (e) {
+                    var event = e;
+                    if (e) {
+                        e.preventDefault();
+                    }
+                });
+                canvas.addEventListener("webglcontextrestored", function (e) {
+                    for (var i = 0, n = _this.restorables.length; i < n; i++) {
+                        _this.restorables[i].restore();
+                    }
+                });
+            };
             ManagedWebGLRenderingContext.prototype.addRestorable = function (restorable) {
                 this.restorables.push(restorable);
             };
