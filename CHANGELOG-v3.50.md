@@ -868,6 +868,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `Display.Color.ColorSpectrum` is a new function that will return an array of 1024 Color Object elements aligned in a Color Spectrum layout, where the darkest colors have been omitted.
 * `AsepriteFile` is a new File Type for the Loader that allows you to load Aseprite images and animation data for use with the new Aseprite animation features. You can call this via `this.load.asesprite(png, json)`.
 * `GameObject.displayList` is a new property that contains a reference to the Display List to which the Game Object has been added. This will typically either by the Display List owned by a Scene, or a Layer Game Object. You should treat this property as read-only.
+* The `Shader` Game Object now supports being able to use a Render Texture as a `sampler2D` texture on the shader #5423 (thanks @ccaleb)
 
 ### Updates and API Changes
 
