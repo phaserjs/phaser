@@ -199,7 +199,7 @@ var BaseCamera = new Class({
          * The viewport is the area into which the camera renders.
          * To adjust the position the camera is looking at in the game world, see the `scrollX` value.
          *
-         * @name Phaser.Cameras.Scene2D.BaseCamera#x
+         * @name Phaser.Cameras.Scene2D.BaseCamera#_x
          * @type {number}
          * @private
          * @since 3.0.0
@@ -211,7 +211,7 @@ var BaseCamera = new Class({
          * The viewport is the area into which the camera renders.
          * To adjust the position the camera is looking at in the game world, see the `scrollY` value.
          *
-         * @name Phaser.Cameras.Scene2D.BaseCamera#y
+         * @name Phaser.Cameras.Scene2D.BaseCamera#_y
          * @type {number}
          * @private
          * @since 3.0.0
