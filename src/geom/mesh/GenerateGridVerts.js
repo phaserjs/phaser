@@ -36,7 +36,7 @@ var tempMatrix = new Matrix4();
  * example, no frame is given, the UVs will be in the range 0 to 1. If a frame is given,
  * such as from a texture atlas, the UVs will be generated within the range of that frame.
  *
- * @function Phaser.Geom.Mesh.GeneraterGridVerts
+ * @function Phaser.Geom.Mesh.GenerateGridVerts
  * @since 3.50.0
  *
  * @param {Phaser.Types.Geom.Mesh.GenerateGridConfig} config - A Grid configuration object.
