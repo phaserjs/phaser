@@ -221,7 +221,7 @@ var Rope = new Class({
          * Flipping always takes place from the middle of the texture and does not impact the scale value.
          * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
          *
-         * @name Phaser.GameObjects.Rope#flipY
+         * @name Phaser.GameObjects.Rope#_flipY
          * @type {boolean}
          * @default false
          * @private
