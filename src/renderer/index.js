@@ -15,6 +15,7 @@
 module.exports = {
 
     Canvas: require('./canvas'),
+    Events: require('./events'),
     Snapshot: require('./snapshot'),
     WebGL: require('./webgl')
 

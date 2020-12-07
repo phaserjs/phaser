@@ -6,7 +6,6 @@
 
 var CONST = {
 
-    FromOrientationString: require('./FromOrientationString'),
     ORIENTATION: require('./ORIENTATION_CONST')
 
 };

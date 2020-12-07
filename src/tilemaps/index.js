@@ -9,7 +9,7 @@ var CONST = require('./const');
 
 /**
  * @namespace Phaser.Tilemaps
- * 
+ *
  * @borrows Phaser.Tilemaps.Orientation.ORTHOGONAL as ORTHOGONAL
  * @borrows Phaser.Tilemaps.Orientation.ISOMETRIC as ISOMETRIC
  * @borrows Phaser.Tilemaps.Orientation.STAGGERED as STAGGERED

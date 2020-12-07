@@ -18,6 +18,7 @@ var GameObjects = {
     UpdateList: require('./UpdateList'),
 
     Components: require('./components'),
+    GetCalcMatrix: require('./GetCalcMatrix'),
 
     BuildGameObject: require('./BuildGameObject'),
     BuildGameObjectAnimation: require('./BuildGameObjectAnimation'),

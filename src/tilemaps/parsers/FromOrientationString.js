@@ -4,12 +4,12 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('./ORIENTATION_CONST');
+var CONST = require('../const/ORIENTATION_CONST');
 
 /**
  * Get the Tilemap orientation from the given string.
  *
- * @function Phaser.Tilemaps.Orientation.FromOrientationString
+ * @function Phaser.Tilemaps.Parsers.FromOrientationString
  * @since 3.50.0
  *
  * @param {string} [orientation] - The orientation type as a string.
