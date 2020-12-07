@@ -1164,7 +1164,7 @@ var ScaleManager = new Class({
      *
      * If the browser does not support this, a `FULLSCREEN_UNSUPPORTED` event will be emitted.
      *
-     * This method _must_ be called from a user-input gesture, such as `pointerup`. You cannot launch
+     * This method _must_ be called from a `pointerup` user-input gesture (**not** `pointerdown`). You cannot launch
      * games fullscreen without this, as most browsers block it. Games within an iframe will also be blocked
      * from fullscreen unless the iframe has the `allowfullscreen` attribute.
      *
