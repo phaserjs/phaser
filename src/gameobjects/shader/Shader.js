@@ -728,6 +728,12 @@ var Shader = new Class({
         if (textureManager.exists(textureKey))
         {
             var frame = textureManager.getFrame(textureKey);
+
+            if (frame.glTexture && frame.glTexture.isRenderTexture)
+            {
+                return this.setSampler2DBuffer(uniformKey, frame.glTexture, frame.width, frame.height, textureIndex, textureData);
+            }
+
             var uniform = this.uniforms[uniformKey];
             var source = frame.source;
 
@@ -908,7 +914,7 @@ var Shader = new Class({
 
         var data = uniform.textureData;
 
-        if (data)
+        if (data && !uniform.value.isRenderTexture)
         {
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
 
@@ -1017,7 +1023,7 @@ var Shader = new Class({
             }
             else if (uniform.type === 'sampler2D')
             {
-                gl.activeTexture(gl['TEXTURE' + textureCount]);
+                gl.activeTexture(gl.TEXTURE0 + textureCount);
 
                 gl.bindTexture(gl.TEXTURE_2D, value);
 

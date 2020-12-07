@@ -967,11 +967,6 @@ var PipelineManager = new Class({
             pipeline = this.previous;
         }
 
-        if (!pipeline)
-        {
-            return;
-        }
-
         var renderer = this.renderer;
         var gl = renderer.gl;
 
@@ -995,9 +990,12 @@ var PipelineManager = new Class({
 
         renderer.setBlendMode(0, true);
 
-        this.current = pipeline;
+        if (pipeline)
+        {
+            this.current = pipeline;
 
-        pipeline.rebind();
+            pipeline.rebind();
+        }
 
         renderer.resetTextures();
     },
