@@ -275,6 +275,7 @@ var Container = new Class({
      * @name Phaser.GameObjects.Container#originX
      * @type {number}
      * @readonly
+     * @override
      * @since 3.4.0
      */
     originX: {
@@ -293,6 +294,7 @@ var Container = new Class({
      * @name Phaser.GameObjects.Container#originY
      * @type {number}
      * @readonly
+     * @override
      * @since 3.4.0
      */
     originY: {
@@ -311,6 +313,7 @@ var Container = new Class({
      * @name Phaser.GameObjects.Container#displayOriginX
      * @type {number}
      * @readonly
+     * @override
      * @since 3.4.0
      */
     displayOriginX: {
@@ -329,6 +332,7 @@ var Container = new Class({
      * @name Phaser.GameObjects.Container#displayOriginY
      * @type {number}
      * @readonly
+     * @override
      * @since 3.4.0
      */
     displayOriginY: {
