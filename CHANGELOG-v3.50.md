@@ -274,6 +274,11 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.defaultCamera` has been removed as it's not used anywhere internally any longer.
 * The `WebGLRenderer.setVertexBuffer` method has been removed along with the `WebGLRenderer.currentVertexBuffer` property. This is now set directly by the WebGL Pipeline, as needed.
 * The `WebGLRenderer.setIndexBuffer` method has been removed along with the `WebGLRenderer.currentIndexBuffer` property. This is now set directly by the WebGL Pipeline, as needed.
+* `WebGLRenderer.resetScissor` is a new method that will reset the gl scissor state to be the current scissor, if there is one, without modifying the stack.
+* `WebGLRenderer.resetViewport` is a new method that will reset the gl viewport to the current renderer dimensions.
+* `WebGLRenderer.renderTarget` is a new property that contains a Render Target that is bound to the renderer and kept resized to match it.
+* `WebGLRenderer.beginCapture` is a new method that will bind the renderers Render Target, so everything drawn is redirected to it.
+* `WebGLRenderer.endCapture` is a new method that will unbind the renderers Render Target and return it, preventing anything else from being drawn to it.
 
 ### WebGL and Canvas Renderer Events
 
