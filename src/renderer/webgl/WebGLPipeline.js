@@ -1,15 +1,16 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @author       Felipe Alfonso <@bitnenfer>
  * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var DeepCopy = require('../../utils/object/DeepCopy');
-var Events = require('../events');
+var EventEmitter = require('eventemitter3');
+var Events = require('./pipelines/events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Matrix4 = require('../../math/Matrix4');
+var RendererEvents = require('../events');
 var RenderTarget = require('./RenderTarget');
 var Utils = require('./Utils');
 var WebGLShader = require('./WebGLShader');
@@ -40,6 +41,7 @@ var WebGLShader = require('./WebGLShader');
  * 4) onPostRender - called once at the end of the render step
  *
  * @class WebGLPipeline
+ * @extends Phaser.Events.EventEmitter
  * @memberof Phaser.Renderer.WebGL
  * @constructor
  * @since 3.0.0
@@ -48,10 +50,14 @@ var WebGLShader = require('./WebGLShader');
  */
 var WebGLPipeline = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function WebGLPipeline (config)
     {
+        EventEmitter.call(this);
+
         var game = config.game;
         var renderer = game.renderer;
         var gl = renderer.gl;
@@ -227,7 +233,7 @@ var WebGLPipeline = new Class({
 
         /**
          * Holds the most recently assigned texture unit.
-
+         *
          * Treat this value as read-only.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#currentUnit
@@ -345,6 +351,7 @@ var WebGLPipeline = new Class({
      * pipeline may need, that relies on game systems such as the Texture Manager being ready.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#boot
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#BOOT
      * @since 3.11.0
      */
     boot: function ()
@@ -452,10 +459,12 @@ var WebGLPipeline = new Class({
 
         this.hasBooted = true;
 
-        renderer.on(Events.RESIZE, this.resize, this);
-        renderer.on(Events.PRE_RENDER, this.onPreRender, this);
-        renderer.on(Events.RENDER, this.onRender, this);
-        renderer.on(Events.POST_RENDER, this.onPostRender, this);
+        renderer.on(RendererEvents.RESIZE, this.resize, this);
+        renderer.on(RendererEvents.PRE_RENDER, this.onPreRender, this);
+        renderer.on(RendererEvents.RENDER, this.onRender, this);
+        renderer.on(RendererEvents.POST_RENDER, this.onPostRender, this);
+
+        this.emit(Events.BOOT, this);
 
         this.onBoot();
     },
@@ -674,6 +683,7 @@ var WebGLPipeline = new Class({
      * This method is called automatically by the renderer during its resize handler.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#resize
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#RESIZE
      * @since 3.0.0
      *
      * @param {number} width - The new width of this WebGL Pipeline.
@@ -691,6 +701,38 @@ var WebGLPipeline = new Class({
         this.width = width;
         this.height = height;
 
+        var targets = this.renderTargets;
+
+        for (var i = 0; i < targets.length; i++)
+        {
+            targets[i].resize(width, height);
+        }
+
+        this.setProjectionMatrix(width, height, false);
+
+        this.emit(Events.RESIZE, width, height, this);
+
+        this.onResize(width, height);
+
+        return this;
+    },
+
+    /**
+     * Adjusts this pipelines ortho Projection Matrix to use the given diemsions
+     * and reets the `uProjectionMatrix` uniform on all bound shaders.
+     *
+     * This method is called automatically by the renderer during its resize handler.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setProjectionMatrix
+     * @since 3.50.0
+     *
+     * @param {number} width - The new width of this WebGL Pipeline.
+     * @param {number} height - The new height of this WebGL Pipeline.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    setProjectionMatrix: function (width, height)
+    {
         var projectionMatrix = this.projectionMatrix;
 
         //  Because Post FX Pipelines don't have them
@@ -699,20 +741,11 @@ var WebGLPipeline = new Class({
             projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
         }
 
-        var i;
-
-        var targets = this.renderTargets;
-
-        for (i = 0; i < targets.length; i++)
-        {
-            targets[i].resize(width, height);
-        }
-
         var shaders = this.shaders;
 
         var name = 'uProjectionMatrix';
 
-        for (i = 0; i < shaders.length; i++)
+        for (var i = 0; i < shaders.length; i++)
         {
             var shader = shaders[i];
 
@@ -724,8 +757,6 @@ var WebGLPipeline = new Class({
             }
         }
 
-        this.onResize(width, height);
-
         return this;
     },
 
@@ -736,6 +767,7 @@ var WebGLPipeline = new Class({
      * and attribute pointers.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#BIND
      * @since 3.0.0
      *
      * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
@@ -752,6 +784,8 @@ var WebGLPipeline = new Class({
 
         this.currentShader = currentShader;
 
+        this.emit(Events.BIND, this, currentShader);
+
         this.onActive(currentShader);
 
         return this;
@@ -763,6 +797,7 @@ var WebGLPipeline = new Class({
      * It resets all shaders this pipeline uses, setting their attributes again.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#rebind
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#REBIND
      * @since 3.0.0
      *
      * @return {this} This WebGLPipeline instance.
@@ -778,6 +813,8 @@ var WebGLPipeline = new Class({
         {
             this.currentShader = shaders[i].bind(wasBound);
         }
+
+        this.emit(Events.REBIND, this.currentShader);
 
         this.onActive(this.currentShader);
 
@@ -899,6 +936,8 @@ var WebGLPipeline = new Class({
      * Uploads the vertex data and emits a draw call for the current batch of vertices.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#BEFORE_FLUSH
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#AFTER_FLUSH
      * @since 3.0.0
      *
      * @param {boolean} [isPostFlush=false] - Was this flush invoked as part of a post-process, or not?
@@ -909,13 +948,14 @@ var WebGLPipeline = new Class({
     {
         if (isPostFlush === undefined) { isPostFlush = false; }
 
-        var vertexCount = this.vertexCount;
-
-        if (vertexCount > 0)
+        if (this.vertexCount > 0)
         {
+            this.emit(Events.BEFORE_FLUSH, this, isPostFlush);
+
             this.onBeforeFlush(isPostFlush);
 
             var gl = this.gl;
+            var vertexCount = this.vertexCount;
             var vertexSize = this.currentShader.vertexSize;
 
             if (this.active)
@@ -935,6 +975,8 @@ var WebGLPipeline = new Class({
             }
 
             this.vertexCount = 0;
+
+            this.emit(Events.AFTER_FLUSH, this, isPostFlush);
 
             this.onAfterFlush(isPostFlush);
         }
@@ -1095,7 +1137,7 @@ var WebGLPipeline = new Class({
      *
      * This method is called every time this pipeline is asked to flush its batch.
      *
-     * It is called immediately before the `gl.bufferData` and `gl.drawArray` calls are made, so you can
+     * It is called immediately before the `gl.bufferData` and `gl.drawArrays` calls are made, so you can
      * perform any final pre-render modifications. To apply changes post-render, see `onAfterFlush`.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onBeforeFlush
@@ -1960,12 +2002,15 @@ var WebGLPipeline = new Class({
      * Destroys all shader instances, removes all object references and nulls all external references.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#destroy
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#DESTROY
      * @since 3.0.0
      *
      * @return {this} This WebGLPipeline instance.
      */
     destroy: function ()
     {
+        this.emit(Events.DESTROY, this);
+
         var i;
 
         var shaders = this.shaders;
@@ -1986,10 +2031,12 @@ var WebGLPipeline = new Class({
 
         var renderer = this.renderer;
 
-        renderer.off(Events.RESIZE, this.resize, this);
-        renderer.off(Events.PRE_RENDER, this.onPreRender, this);
-        renderer.off(Events.RENDER, this.onRender, this);
-        renderer.off(Events.POST_RENDER, this.onPostRender, this);
+        renderer.off(RendererEvents.RESIZE, this.resize, this);
+        renderer.off(RendererEvents.PRE_RENDER, this.onPreRender, this);
+        renderer.off(RendererEvents.RENDER, this.onRender, this);
+        renderer.off(RendererEvents.POST_RENDER, this.onPostRender, this);
+
+        this.removeAllListeners();
 
         this.game = null;
         this.renderer = null;
