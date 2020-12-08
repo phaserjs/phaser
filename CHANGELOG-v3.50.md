@@ -10,7 +10,7 @@ Due to the huge amount of work that has taken place in this area, all of the pip
 * `TextureTintStripPipeline` is now called the `RopePipeline`.
 * `ForwardDiffuseLightPipeline` is now called the `LightPipeline`.
 
-There is also the new `GraphicsPipeline`. Previously, the `TextureTintPipeline` was responsible for rendering all Sprites, Graphics and Shape objects. Now, it only renders Sprites. All Graphics and Shapes are handled by the new `GraphicsPipeline` which uses its own shaders. See further below for details about this change.
+There is also the new `GraphicsPipeline`. Previously, the `TextureTintPipeline` was responsible for rendering all Sprites, Graphics and Shape objects. Now, it only renders Sprites. All Graphics and Shapes are handled by the new `GraphicsPipeline` which uses its own shaders. See below for details about this change.
 
 To match the new pipeline names, the shader source code has also been renamed.
 
@@ -32,13 +32,71 @@ Other pipeline changes are as follows:
 * All pipelines will now extract the `attributes` property from the config, allowing you to set it externally.
 * All pipelines will now extract the `topology` property from the config, allowing you to set it externally.
 * The `WebGLPipeline.shouldFlush` method now accepts an optional parameter `amount`. If given, it will return `true` if when the amount is added to the vertex count it will exceed the vertex capacity. The Multi Pipeline has been updated to now use this method instead of performing the comparison multiple times itself.
-* The `RopePipeline` now extends `MultiPipeline` and just changes the topolgy, vastly reducing the filesize.
+* The `RopePipeline` now extends `MultiPipeline` and just changes the topology, vastly reducing the filesize.
 * The `WebGLPipeline.flushLocked` property has been removed. A pipeline can never flush in the middle of a flush anyway, so it was just wasting CPU cycles being set.
 * You can now pass a pipeline instance to the `GameObject.setPipeline` method, as well as a string.
+* `WebGLPipeline.manager` is a new property that is a reference to the WebGL Pipeline Manager.
+* `WebGLPipeline.currentUnit` is a new property that holds the most recently assigned texture unit. Treat as read-only.
+* `WebGLPipeline.forceZero` is a new boolean property that sets if the pipeline should force the use of texture zero.
+* `WebGLPipeline.hasBooted` is a new boolean property that is set once the pipeline has finished setting itself up and has booted.
+* `WebGLPipeline.isPostFX` is a new boolean property that is only set by Post FX Pipelines to help identify them.
+* `WebGLPipeline.renderTargets` is a new property that holds an array of WebGL Render Targets belonging to the pipeline.
+* `WebGLPipeline.currentRenderTarget` is a new property that holds a reference to the currently bound Render Target.
+* `WebGLPipeline.shaders` is a new property that holds an array of all WebGLShader instances that belong to the pipeline.
+* `WebGLPipeline.currentShader` is a new property that holds a reference to the currently active shader within the pipeline.
+* `WebGLPipeline.config` is a new property that holds the pipeline configuration object used to create it.
+* `WebGLPipeline.projectionMatrix` is a new property that holds a Matrix4 used as the projection matrix for the pipeline.
+* `WebGLPipeline.setProjectionMatrix` is a new method that allows you to set the ortho projection matrix of the pipeline.
+* `WebGLPipeline.boot` will now check all of the attributes and store the pointer location within the attribute entry.
+* `WebGLPipeline.bind` no longer looks-up and enables every attribute, every frame. Instead, it uses the cached pointer location stored in the attribute entry, cutting down on redundant WebGL operations.
+* `WebGLPipeline.setAttribPointers` is a new method that will set the vertex attribute pointers for the pipeline.
+* `WebGLPipeline.setShader` is a new method that allows you to set the currently active shader within the pipeline.
+* `WebGLPipeline.getShaderByName` is a new method that allows you to get a shader from the pipeline based on its name.
+* `WebGLPipeline.setShadersFromConfig` is a new method that destroys all current shaders and creates brand new ones parsed from the given config object. This is part of the pipeline boot process, but also exposed should you need to call it directly.
+* `WebGLPipeline.setGameObject` is a new method that custom pipelines can use in order to perform pre-batch tasks for the given Game Object.
+* `WebGLPipeline.setVertexBuffer` is a new method that checks if the pipelines vertex buffer is active, or not, and if not, binds it as the active buffer. This used to be performed by the WebGL Renderer, but pipelines now manage this directly.
+* `WebGLPipeline.preBatch` is a new method that is called when a new quad is about to be added to the batch. This is used by Post FX Pipelines to set frame buffers.
+* `WebGLPipeline.postBatch` is a new method that is called after a quad has been added to the batch. This is used by Post FX Pipelines to apply post processing.
+* `WebGLPipeline.unbind` is a new method that unbinds the current Render Target, if one is set.
+* `WebGLPipeline.batchVert` is a new method that adds a single vertex to the vertex buffer and increments the count by 1.
+* `WebGLPipeline.batchQuad` is a new method that adds a single quad (6 vertices) to the vertex buffer and increments the count, flushing first if adding the quad would exceed the batch limit.
+* `WebGLPipeline.batchTri` is a new method that adds a single tri (3 vertices) to the vertex buffer and increments the count, flushing first if adding the tri would exceed the batch limit.
+* `WebGLPipeline.drawFillRect` is a new method that pushes a filled rectangle into the vertex batch.
+* `WebGLPipeline.setTexture2D` is a new method that sets the texture to be bound to the next available texture unit.
+* `WebGLPipeline.bindTexture` is a new method that immediately activates the given WebGL Texture and binds it to the requested slot.
+* `WebGLPipeline.bindRenderTarget` is a new method that binds the given Render Target to a given texture slot.
+* `WebGLPipeline.setTime` is a new method that gets the current game loop duration to the given shader uniform.
 
-### Post FX Pipelines
+### Pipeline Hooks
 
-TODO - Explain them here + pipeline component updates.
+WebGL Pipeline has lots of new hooks you can use. These are all empty by default so you can safely override them in your own classes and take advantage of them:
+
+* `WebGLPipeline.onBoot` is a new hook you can override in your own pipelines that is called when the pipeline has booted.
+* `WebGLPipeline.onResize` is a new hook you can override in your own pipelines that is called when the pipeline is resized.
+* `WebGLPipeline.onDraw` is a new hook you can override in your own pipelines that is called by Post FX Pipelines every time `postBatch` is invoked.
+* `WebGLPipeline.onActive` is a new hook you can override in your own pipelines that is called every time the Pipeline Manager makes the pipeline the active pipeline.
+* `WebGLPipeline.onBind` is a new hook you can override in your own pipelines that is called every time a Game Object asks the Pipeline Manager to use this pipeline, even if it's already active.
+* `WebGLPipeline.onRebind` is a new hook you can override in your own pipelines that is called every time the Pipeline Manager needs to reset and rebind the current pipeline.
+* `WebGLPipeline.onBatch` is a new hook you can override in your own pipelines that is called _after_ a new quad (or tri) has been added to the batch.
+* `WebGLPipeline.onPreBatch` is a new hook you can override in your own pipelines that is called _before_ a new Game Object is about to process itself through the batch.
+* `WebGLPipeline.onPostBatch` is a new hook you can override in your own pipelines that is called _after_ a new Game Object has added itself to the batch.
+* `WebGLPipeline.onPreRender` is a new hook you can override in your own pipelines that is called once, per frame, right before anything has been rendered.
+* `WebGLPipeline.onRender` is a new hook you can override in your own pipelines that is called once, per frame, by every Camera in the Scene that wants to render, at the start of the render process.
+* `WebGLPipeline.onPostRender` is a new hook you can override in your own pipelines that is called once, per frame, after all rendering has happened and snapshots have been taken.
+* `WebGLPipeline.onBeforeFlush` is a new hook you can override in your own pipelines that is called immediately before the `gl.bufferData` and `gl.drawArrays` calls are made, so you can perform any final pre-render modifications.
+* `WebGLPipeline.onAfterFlush` is a new hook you can override in your own pipelines that is called after `gl.drawArrays`, so you can perform additional post-render effects.
+
+### Pipeline Events
+
+The WebGL Pipeline class now extends Event Emitter and emits the following events:
+
+* The `WebGL.Pipelines.Events.AFTER_FLUSH` event is dispatched by a WebGL Pipeline right after it has issued a `drawArrays` command.
+* The `WebGL.Pipelines.Events.BEFORE_FLUSH` event is dispatched by a WebGL Pipeline right before it is about to flush.
+* The `WebGL.Pipelines.Events.BIND` event is dispatched by a WebGL Pipeline when it is bound by the Pipeline Manager.
+* The `WebGL.Pipelines.Events.BOOT` event is dispatched by a WebGL Pipeline when it has finished booting.
+* The `WebGL.Pipelines.Events.DESTROY` event is dispatched by a WebGL Pipeline when it begins its destruction process.
+* The `WebGL.Pipelines.Events.REBIND` event is dispatched by a WebGL Pipeline when the Pipeline Manager resets and rebinds it.
+* The `WebGL.Pipelines.Events.RESIZE` event is dispatched by a WebGL Pipeline when it is resized, usually as a result of the Renderer.
 
 ### Pipeline Uniform Changes
 
@@ -85,6 +143,11 @@ If your code uses any of the old method names, please update them using the list
 * `WebGLPipeline.setMatrix1` has been removed. Please use `setMatrix2fv` instead.
 * `WebGLPipeline.setMatrix2` has been removed. Please use `setMatrix3fv` instead.
 * `WebGLPipeline.setMatrix3` has been removed. Please use `setMatrix4fv` instead.
+
+
+### Post FX Pipelines
+
+TODO - Explain them here + pipeline component updates.
 
 ### Pipeline Manager
 
@@ -157,7 +220,6 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * The `TextureTintPipeline.batches` property has been removed, as it's no longer required.
 * `TextureTintPipeline.flush` has been rewritten to support multi-textures.
 * `TextureTintPipeline.flush` no longer creates a sub-array if the batch is full, but instead uses `bufferData` for speed.
-* `WebGLPipeline.currentUnit` is a new property that holds the most recently assigned texture unit. Treat as read-only.
 * `WebGLRenderer.setTextureSource` is a new method, used by pipelines and Game Objects, that will assign a texture unit to the given Texture Source.
 * The `WebGLRenderer.setTexture2D` method has been updated to use the new texture unit assignment. It no longer takes the `textureUnit` or `flush` parameters and these have been removed from its method signature.
 * `WebGLRenderer.setTextureZero` is a new method that activates texture zero and binds the given texture to it. Useful for fbo backed game objects.
@@ -167,11 +229,7 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.setNormalMap` is a new method that sets the current normal map texture.
 * `WebGLRenderer.clearNormalMap` is a new method that clears the current normal map texture.
 * `WebGLRenderer.resetTextures` is a new method that flushes the pipeline, resets all textures back to the temporary ones, and resets the active texture counter.
-* `WebGLPipeline.boot` will now check all of the attributes and store the pointer location within the attribute entry.
-* `WebGLPipeline.bind` no longer looks-up and enables every attribute, every frame. Instead, it uses the cached pointer location stored in the attribute entry, cutting down on redundant WebGL operations.
 * `WebGLRenderer.isNewNormalMap` is a new method that returns a boolean if the given parameters are not currently used.
-* `WebGLPipeline.forceZero` is a new property that informs Game Objects if the pipeline requires a zero bound texture unit.
-* `WebGLPipeline.setAttribPointers` is a new method that will set the vertex attribute pointers for the pipeline.
 * `WebGLRenderer.unbindTextures` is a new method that will activate and then null bind all WebGL textures.
 * `Renderer.WebGL.Utils.parseFragmentShaderMaxTextures` is a new function that will take fragment shader source and search it for `%count%` and `%forloop%` declarations, replacing them with the required GLSL for multi-texture support, returning the modified source.
 * The `WebGL.Utils.getComponentCount` function has been removed as this is no longer required internally.
@@ -191,7 +249,6 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * The `WebGLRenderer.deleteTexture` method has a new optional boolean parameter `reset` which allows you to control if the `WebGLRenderer.resetTextures` method is called, or not, after the texture is deleted.
 * The `WebGLRenderer.getMaxTextures` method has been removed. This is no longer needed as you can use the `WebGLRenderer.maxTextures` property instead.
 * The `WebGLRenderer.setProgram` method now returns a boolean. `true` if the program was set, otherwise `false`.
-* The `WebGLRenderer.setVertexBuffer` method now returns a boolean. `true` if the buffer was set, otherwise `false`.
 * `WebGLRenderer.setFloat1` has been removed. Use `WebGLPipeline.set1f` or `WebGLShader.set1f` instead.
 * `WebGLRenderer.setFloat2` has been removed. Use `WebGLPipeline.set2f` or `WebGLShader.set2f` instead.
 * `WebGLRenderer.setFloat3` has been removed. Use `WebGLPipeline.set3f` or `WebGLShader.set3f` instead.
