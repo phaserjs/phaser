@@ -821,10 +821,11 @@ var RenderTexture = new Class({
     {
         var camera = this.camera;
         var renderer = this.renderer;
+        var renderTarget = this.renderTarget;
 
         camera.preRender();
 
-        if (this.renderTarget)
+        if (renderTarget)
         {
             renderer.beginCapture();
         }
