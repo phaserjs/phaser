@@ -29,6 +29,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  * via the following methods in the Pipeline Manager:
  *
  * `copyFrame`
+ * `copyFrameRect`
  * `drawFrame`
  * `blendFrames`
  * `blendFramesAdditive`
@@ -314,6 +315,58 @@ var UtilityPipeline = new Class({
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    },
+
+    /**
+     * Binds the `source` Render Target and then copies a section of it to the `target` Render Target.
+     *
+     * This method is extremely fast because it uses `gl.copyTexSubImage2D` and doesn't
+     * require the use of any shaders. Remember the coordinates are given in standard WebGL format,
+     * where x and y specify the lower-left corner of the section, not the top-left.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#copyFrameRect
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
+     * @param {number} x - The x coordinate of the lower left corner where to start copying.
+     * @param {number} y - The y coordinate of the lower left corner where to start copying.
+     * @param {number} width - The width of the texture.
+     * @param {number} height - The height of the texture.
+     * @param {boolean} [clear=true] - Clear the target before copying?
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
+    copyFrameRect: function (source, target, x, y, width, height, clear, clearAlpha)
+    {
+        if (clear === undefined) { clear = true; }
+        if (clearAlpha === undefined) { clearAlpha = true; }
+
+        var gl = this.gl;
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, source.framebuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, source.texture, 0);
+
+        if (clear)
+        {
+            if (clearAlpha)
+            {
+                gl.clearColor(0, 0, 0, 0);
+            }
+            else
+            {
+                gl.clearColor(0, 0, 0, 1);
+            }
+
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, target.texture);
+
+        gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, x, y, width, height);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
