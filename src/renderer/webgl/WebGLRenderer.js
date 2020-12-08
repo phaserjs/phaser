@@ -15,6 +15,7 @@ var GameEvents = require('../../core/events');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var NOOP = require('../../utils/NOOP');
 var PipelineManager = require('./PipelineManager');
+var RenderTarget = require('./RenderTarget');
 var ScaleEvents = require('../../scale/events');
 var TextureEvents = require('../../textures/events');
 var Utils = require('./Utils');
@@ -598,6 +599,17 @@ var WebGLRenderer = new Class({
          */
         this.isBooted = false;
 
+        /**
+         * A Render Target you can use to capture the current state of the Renderer.
+         *
+         * A Render Target encapsulates a framebuffer and texture for the WebGL Renderer.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#renderTarget
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
+         * @since 3.50.0
+         */
+        this.renderTarget = null;
+
         this.init(this.config);
     },
 
@@ -827,6 +839,8 @@ var WebGLRenderer = new Class({
 
         this.isBooted = true;
 
+        this.renderTarget = new RenderTarget(this, this.width, this.height, 1, 0, false, true);
+
         //  Set-up pipelines
 
         pipelineManager.boot(game.config.pipeline);
@@ -863,6 +877,36 @@ var WebGLRenderer = new Class({
         {
             this.resize(baseSize.width, baseSize.height);
         }
+    },
+
+    /**
+     * Binds the WebGL Renderers Render Target, so all drawn content is now redirected to it.
+     *
+     * Make sure to call `endCapture`.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#beginCapture
+     * @since 3.50.0
+     */
+    beginCapture: function ()
+    {
+        this.renderTarget.bind(true);
+
+        this.resetTextures(true);
+    },
+
+    /**
+     * Unbinds the WebGL Renderers Render Target and returns it, stopping any further content being drawn to it.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#endCapture
+     * @since 3.50.0
+     *
+     * @return {Phaser.Renderer.WebGL.RenderTarget} A reference to the WebGL Renderer Render Target.
+     */
+    endCapture: function ()
+    {
+        this.renderTarget.unbind(true);
+
+        return this.renderTarget;
     },
 
     /**
@@ -1019,6 +1063,34 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * Resets the gl scissor state to be whatever the current scissor is, if there is one, without
+     * modifying the scissor stack.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#resetScissor
+     * @since 3.50.0
+     */
+    resetScissor: function ()
+    {
+        var gl = this.gl;
+
+        var current = this.currentScissor;
+
+        if (current)
+        {
+            var x = current[0];
+            var y = current[1];
+            var width = current[2];
+            var height = current[3];
+
+            if (width > 0 && height > 0)
+            {
+                gl.enable(gl.SCISSOR_TEST);
+                gl.scissor(x, (this.drawingBufferHeight - y - height), width, height);
+            }
+        }
+    },
+
+    /**
      * Pops the last scissor state and sets it.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#popScissor
@@ -1056,6 +1128,19 @@ var WebGLRenderer = new Class({
         var camMask = this.currentCameraMask.mask;
 
         return ((mask && mask.isStencil) || (camMask && camMask.isStencil));
+    },
+
+    /**
+     * Resets the gl viewport to the current renderer dimensions.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#resetViewport
+     * @since 3.50.0
+     */
+    resetViewport: function ()
+    {
+        var gl = this.gl;
+
+        gl.viewport(0, 0, this.width, this.height);
     },
 
     /**
