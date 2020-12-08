@@ -20,7 +20,7 @@
  */
 var SpriteWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    this.pipeline.batchSprite(src, camera, parentMatrix);
+    src.pipeline.batchSprite(src, camera, parentMatrix);
 };
 
 module.exports = SpriteWebGLRenderer;
