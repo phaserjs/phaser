@@ -358,39 +358,10 @@ var RenderTexture = new Class({
                     frame.source.glTexture = renderTarget.texture;
                 }
 
-                // var camera = this.camera;
+                this.camera.setSize(width, height);
 
                 frame.source.width = width;
                 frame.source.height = height;
-
-                // var renderer = this.renderer;
-                // var rendererWidth = renderer.width;
-                // var rendererHeight = renderer.height;
-
-                // var zoomX = rendererWidth / width;
-                // var zoomY = rendererHeight / height;
-
-                // camera.setSize(width, height);
-
-                if (renderTarget)
-                {
-                    // camera.setZoom(zoomX, zoomY);
-                }
-
-                // var ox = 0.5;
-                // var oy = 0.5;
-
-                // if (width !== rendererWidth)
-                // {
-                //     ox = 0;
-                // }
-
-                // if (height !== rendererHeight)
-                // {
-                //     oy = 0;
-                // }
-
-                // camera.setOrigin(ox, oy);
 
                 frame.setSize(width, height);
 
