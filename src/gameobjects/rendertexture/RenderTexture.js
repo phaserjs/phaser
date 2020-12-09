@@ -670,13 +670,7 @@ var RenderTexture = new Class({
     {
         this._eraseMode = true;
 
-        var blendMode = this.renderer.currentBlendMode;
-
-        this.renderer.setBlendMode(BlendModes.ERASE);
-
         this.draw(entries, x, y, 1, 16777215);
-
-        this.renderer.setBlendMode(blendMode);
 
         this._eraseMode = false;
 
@@ -1071,7 +1065,7 @@ var RenderTexture = new Class({
 
             var util = renderer.pipelines.setUtility();
 
-            util.blitFrame(canvasTarget, renderTarget, 1, false);
+            util.blitFrame(canvasTarget, renderTarget, 1, false, false, this._eraseMode);
 
             renderer.resetViewport();
         }
@@ -1188,11 +1182,6 @@ var RenderTexture = new Class({
 
         var prevX = gameObject.x;
         var prevY = gameObject.y;
-
-        if (!this._eraseMode)
-        {
-            this.renderer.setBlendMode(gameObject.blendMode);
-        }
 
         gameObject.setPosition(x + this.frame.cutX, y + this.frame.cutY);
 
