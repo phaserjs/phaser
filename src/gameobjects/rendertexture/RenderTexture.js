@@ -545,7 +545,7 @@ var RenderTexture = new Class({
 
         if (renderTarget)
         {
-            renderTarget.bind();
+            renderTarget.bind(true);
 
             var pipeline = this.pipeline;
 
@@ -1072,6 +1072,8 @@ var RenderTexture = new Class({
             var util = renderer.pipelines.setUtility();
 
             util.blitFrame(canvasTarget, renderTarget, 1, false);
+
+            renderer.resetViewport();
         }
         else
         {

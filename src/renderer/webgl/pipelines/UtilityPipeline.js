@@ -402,7 +402,19 @@ var UtilityPipeline = new Class({
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
-        gl.viewport(0, 0, source.width, source.height);
+        if (source.height >= target.height)
+        {
+            gl.viewport(0, 0, source.width, source.height);
+
+            this.setVerticesFromTarget(source, target);
+        }
+        else
+        {
+            var diff = target.height - source.height;
+
+            gl.viewport(0, diff, source.width, source.height);
+        }
+
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
 
@@ -420,7 +432,7 @@ var UtilityPipeline = new Class({
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
-        this.setVerticesFromTarget(source, target);
+        gl.disable(gl.SCISSOR_TEST);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -428,7 +440,7 @@ var UtilityPipeline = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
 
-        this.resetVertices();
+        this.resetUVs();
     },
 
     /**
@@ -693,19 +705,6 @@ var UtilityPipeline = new Class({
     },
 
     /**
-     * Resets the quad vertices to their default values.
-     *
-     * The quad is used by all shaders of the Utility Pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#resetVertices
-     * @since 3.50.0
-     */
-    resetVertices: function ()
-    {
-        this.vertexViewF32.set([ -1, -1, 0, 0, -1, 1, 0, 1, 1, 1, 1, 1, -1, -1, 0, 0, 1, 1, 1, 1, 1, -1, 1, 0 ]);
-    },
-
-    /**
      * Set the UV values for the 6 vertices that make up the quad used by the shaders
      * in the Utility Pipeline.
      *
@@ -766,16 +765,7 @@ var UtilityPipeline = new Class({
             diff = 0.5 + (0.5 - diff);
         }
 
-        console.log('setVerticesFromTarget UVs', 'game', source.height, 'rt', target.height, diff);
-
         this.setUVs(0, diff, 0, 1 + diff, 1, 1 + diff, 1, diff);
-
-        if (target.height >= source.height)
-        {
-            console.log('Adjusting Quad Y position');
-
-
-        }
     },
 
     /**
@@ -806,40 +796,30 @@ var UtilityPipeline = new Class({
         this.setUVs(0, 1, 0, 0, 1, 0, 1, 1);
     },
 
-    setAPos: function (x, y)
+    /**
+     * Resets the quad vertices to their default values.
+     *
+     * The quad is used by all shaders of the Utility Pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#resetVertices
+     * @since 3.50.0
+     */
+    resetVertices: function ()
     {
-        var vertexViewF32 = this.vertexViewF32;
-
-        vertexViewF32[0] = x;
-        vertexViewF32[1] = y;
-        vertexViewF32[12] = x;
-        vertexViewF32[13] = y;
+        this.vertexViewF32.set([ -1, -1, 0, 0, -1, 1, 0, 1, 1, 1, 1, 1, -1, -1, 0, 0, 1, 1, 1, 1, 1, -1, 1, 0 ]);
     },
 
-    setBPos: function (x, y)
+    /**
+     * Resets the quad vertice UV values to their default settings.
+     *
+     * The quad is used by all shaders of the Utility Pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#resetUVs
+     * @since 3.50.0
+     */
+    resetUVs: function ()
     {
-        var vertexViewF32 = this.vertexViewF32;
-
-        vertexViewF32[4] = x;
-        vertexViewF32[5] = y;
-    },
-
-    setCPos: function (x, y)
-    {
-        var vertexViewF32 = this.vertexViewF32;
-
-        vertexViewF32[8] = x;
-        vertexViewF32[9] = y;
-        vertexViewF32[16] = x;
-        vertexViewF32[17] = y;
-    },
-
-    setDPos: function (x, y)
-    {
-        var vertexViewF32 = this.vertexViewF32;
-
-        vertexViewF32[20] = x;
-        vertexViewF32[21] = y;
+        this.setUVs(0, 0, 0, 1, 1, 1, 1, 0);
     }
 
 });
