@@ -52,7 +52,7 @@ var BitmapMaskPipeline = new Class({
         config.fragShader = GetFastValue(config, 'fragShader', ShaderSourceFS),
         config.vertShader = GetFastValue(config, 'vertShader', ShaderSourceVS),
         config.batchSize = GetFastValue(config, 'batchSize', 1),
-        config.vertices = GetFastValue(config, 'vertices', new Float32Array([ -1, 1, -1, -7, 7, 1 ]).buffer),
+        config.vertices = GetFastValue(config, 'vertices', [ -1, 1, -1, -7, 7, 1 ]),
         config.attributes = GetFastValue(config, 'attributes', [
             {
                 name: 'inPosition',

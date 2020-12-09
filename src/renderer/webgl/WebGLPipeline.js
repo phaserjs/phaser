@@ -150,7 +150,7 @@ var WebGLPipeline = new Class({
         /**
          * The total number of vertices that this pipeline batch can hold before it will flush.
          *
-         * This defaults to `renderer batchSize * 7`, where `batchSize` is defined in the Renderer Config.
+         * This defaults to `renderer batchSize * 6`, where `batchSize` is defined in the Renderer Game Config.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexCapacity
          * @type {number}
@@ -161,7 +161,8 @@ var WebGLPipeline = new Class({
         /**
          * Raw byte buffer of vertices.
          *
-         * Either set via the config object, or generates a new Array Buffer of size `vertexCapacity * vertexSize`.
+         * Either set via the config object `vertices` property, or generates a new Array Buffer of
+         * size `vertexCapacity * vertexSize`.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexData
          * @type {ArrayBuffer}
@@ -173,7 +174,8 @@ var WebGLPipeline = new Class({
         /**
          * The WebGLBuffer that holds the vertex data.
          *
-         * Created from the `vertices` config ArrayBuffer that was passed in, or set by default, by the pipeline.
+         * Created from the `vertexData` ArrayBuffer. If `vertices` are set in the config, a `STATIC_DRAW` buffer
+         * is created. If not, a `DYNAMIC_DRAW` buffer is created.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
          * @type {WebGLBuffer}
@@ -429,24 +431,25 @@ var WebGLPipeline = new Class({
 
         this.vertexCapacity = batchSize * 6;
 
-        var data = GetFastValue(config, 'vertices', new ArrayBuffer(this.vertexCapacity * vertexSize));
+        var data = new ArrayBuffer(this.vertexCapacity * vertexSize);
 
         this.vertexData = data;
+        this.bytes = new Uint8Array(data);
+        this.vertexViewF32 = new Float32Array(data);
+        this.vertexViewU32 = new Uint32Array(data);
 
-        if (GetFastValue(config, 'vertices', null))
+        var configVerts = GetFastValue(config, 'vertices', null);
+
+        if (configVerts)
         {
+            this.vertexViewF32.set(configVerts);
+
             this.vertexBuffer = renderer.createVertexBuffer(data, gl.STATIC_DRAW);
         }
         else
         {
             this.vertexBuffer = renderer.createVertexBuffer(data.byteLength, gl.DYNAMIC_DRAW);
         }
-
-        this.bytes = new Uint8Array(data);
-
-        this.vertexViewF32 = new Float32Array(data);
-
-        this.vertexViewU32 = new Uint32Array(data);
 
         //  Set-up shaders
 
