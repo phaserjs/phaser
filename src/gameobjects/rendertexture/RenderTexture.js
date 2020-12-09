@@ -1071,9 +1071,7 @@ var RenderTexture = new Class({
 
             var util = renderer.pipelines.setUtility();
 
-            var y = canvasTarget.height - renderTarget.height;
-
-            util.copyFrameRect(canvasTarget, renderTarget, 0, y, renderTarget.width, renderTarget.height, false);
+            util.blitFrame(canvasTarget, renderTarget, 1, false);
         }
         else
         {

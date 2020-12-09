@@ -104,15 +104,65 @@ var UtilityPipeline = new Class({
             }
         ]);
 
-        //  x, y, u, v (x/y in NDC)
-        config.vertices = new Float32Array([
+        /**
+         * Vertices array layout:
+         *
+         * -1,  1   B----C   1,  1
+         *  0,  1   |   /|   1,  1
+         *          |  / |
+         *          | /  |
+         *          |/   |
+         * -1, -1   A----D   1, -1
+         *  0,  0            1,  0
+         *
+         * A = -1, -1 (pos) and 0, 0 (uv)
+         * B = -1,  1 (pos) and 0, 1 (uv)
+         * C =  1,  1 (pos) and 1, 1 (uv)
+         * D =  1, -1 (pos) and 1, 0 (uv)
+         *
+         * First tri: A, B, C
+         * Second tri: A, C, D
+         *
+         * Array index:
+         *
+         * 0  = Tri 1 - Vert A - x pos
+         * 1  = Tri 1 - Vert A - y pos
+         * 2  = Tri 1 - Vert A - uv u
+         * 3  = Tri 1 - Vert A - uv v
+         *
+         * 4  = Tri 1 - Vert B - x pos
+         * 5  = Tri 1 - Vert B - y pos
+         * 6  = Tri 1 - Vert B - uv u
+         * 7  = Tri 1 - Vert B - uv v
+         *
+         * 8  = Tri 1 - Vert C - x pos
+         * 9  = Tri 1 - Vert C - y pos
+         * 10 = Tri 1 - Vert C - uv u
+         * 11 = Tri 1 - Vert C - uv v
+         *
+         * 12 = Tri 2 - Vert A - x pos
+         * 13 = Tri 2 - Vert A - y pos
+         * 14 = Tri 2 - Vert A - uv u
+         * 15 = Tri 2 - Vert A - uv v
+         *
+         * 16 = Tri 2 - Vert C - x pos
+         * 17 = Tri 2 - Vert C - y pos
+         * 18 = Tri 2 - Vert C - uv u
+         * 19 = Tri 2 - Vert C - uv v
+         *
+         * 20 = Tri 2 - Vert D - x pos
+         * 21 = Tri 2 - Vert D - y pos
+         * 22 = Tri 2 - Vert D - uv u
+         * 23 = Tri 2 - Vert D - uv v
+         */
+        config.vertices = [
             -1, -1, 0, 0,
             -1, 1, 0, 1,
             1, 1, 1, 1,
             -1, -1, 0, 0,
             1, 1, 1, 1,
             1, -1, 1, 0
-        ]);
+        ];
 
         config.batchSize = 1;
 
@@ -321,11 +371,74 @@ var UtilityPipeline = new Class({
     },
 
     /**
+     * Copy the `source` Render Target to the `target` Render Target.
+     *
+     * The difference with this copy is that no resizing takes place. If the `source`
+     * Render Target is larger than the `target` then only a portion the same size as
+     * the `target` dimensions is copied across.
+     *
+     * You can optionally set the brightness factor of the copy.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#blitFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
+     * @param {number} [brightness=1] - The brightness value applied to the frame copy.
+     * @param {boolean} [clear=true] - Clear the target before copying?
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
+    blitFrame: function (source, target, brightness, clear, clearAlpha)
+    {
+        if (brightness === undefined) { brightness = 1; }
+        if (clear === undefined) { clear = true; }
+        if (clearAlpha === undefined) { clearAlpha = true; }
+
+        var gl = this.gl;
+
+        this.set1i('uMainSampler', 0, this.copyShader);
+        this.set1f('uBrightness', brightness, this.copyShader);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+
+        gl.viewport(0, 0, source.width, source.height);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+
+        if (clear)
+        {
+            if (clearAlpha)
+            {
+                gl.clearColor(0, 0, 0, 0);
+            }
+            else
+            {
+                gl.clearColor(0, 0, 0, 1);
+            }
+
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
+
+        this.setVerticesFromTarget(source, target);
+
+        gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+
+        this.resetVertices();
+    },
+
+    /**
      * Binds the `source` Render Target and then copies a section of it to the `target` Render Target.
      *
      * This method is extremely fast because it uses `gl.copyTexSubImage2D` and doesn't
      * require the use of any shaders. Remember the coordinates are given in standard WebGL format,
-     * where x and y specify the lower-left corner of the section, not the top-left.
+     * where x and y specify the lower-left corner of the section, not the top-left. Also, the
+     * copy entirely replaces the contents of the target texture, no 'merging' or 'blending' takes
+     * place.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#copyFrameRect
      * @since 3.50.0
@@ -577,6 +690,156 @@ var UtilityPipeline = new Class({
         var fbo = this.renderer.currentFramebuffer;
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    },
+
+    /**
+     * Resets the quad vertices to their default values.
+     *
+     * The quad is used by all shaders of the Utility Pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#resetVertices
+     * @since 3.50.0
+     */
+    resetVertices: function ()
+    {
+        this.vertexViewF32.set([ -1, -1, 0, 0, -1, 1, 0, 1, 1, 1, 1, 1, -1, -1, 0, 0, 1, 1, 1, 1, 1, -1, 1, 0 ]);
+    },
+
+    /**
+     * Set the UV values for the 6 vertices that make up the quad used by the shaders
+     * in the Utility Pipeline.
+     *
+     * Be sure to call `resetVertices` once you have finished manipulating the UV coordinates.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#resetVertices
+     * @since 3.50.0
+     *
+     * @param {number} uA - The u value of vertex A.
+     * @param {number} vA - The v value of vertex A.
+     * @param {number} uB - The u value of vertex B.
+     * @param {number} vB - The v value of vertex B.
+     * @param {number} uC - The u value of vertex C.
+     * @param {number} vC - The v value of vertex C.
+     * @param {number} uD - The u value of vertex D.
+     * @param {number} vD - The v value of vertex D.
+     */
+    setUVs: function (uA, vA, uB, vB, uC, vC, uD, vD)
+    {
+        var vertexViewF32 = this.vertexViewF32;
+
+        vertexViewF32[2] = uA;
+        vertexViewF32[3] = vA;
+        vertexViewF32[6] = uB;
+        vertexViewF32[7] = vB;
+        vertexViewF32[10] = uC;
+        vertexViewF32[11] = vC;
+        vertexViewF32[14] = uA;
+        vertexViewF32[15] = vA;
+        vertexViewF32[18] = uC;
+        vertexViewF32[19] = vC;
+        vertexViewF32[22] = uD;
+        vertexViewF32[23] = vD;
+    },
+
+    /**
+     * Sets the vertices of the quad used by the shaders in the Utility Pipeline
+     * so that they correctly adjust the texture coordinates for a blit frame effect.
+     *
+     * Be sure to call `resetVertices` once you have finished manipulating the UV coordinates.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#setVerticesFromTarget
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
+     */
+    setVerticesFromTarget: function (source, target)
+    {
+        var diff = (target.height / source.height);
+
+        if (diff > 0.5)
+        {
+            diff = 0.5 - (diff - 0.5);
+        }
+        else
+        {
+            diff = 0.5 + (0.5 - diff);
+        }
+
+        console.log('setVerticesFromTarget UVs', 'game', source.height, 'rt', target.height, diff);
+
+        this.setUVs(0, diff, 0, 1 + diff, 1, 1 + diff, 1, diff);
+
+        if (target.height >= source.height)
+        {
+            console.log('Adjusting Quad Y position');
+
+
+        }
+    },
+
+    /**
+     * Horizontally flips the UV coordinates of the quad used by the shaders in this
+     * Utility Pipeline.
+     *
+     * Be sure to call `resetVertices` once you have finished manipulating the UV coordinates.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#flipX
+     * @since 3.50.0
+     */
+    flipX: function ()
+    {
+        this.setUVs(1, 0, 1, 1, 0, 1, 0, 0);
+    },
+
+    /**
+     * Vertically flips the UV coordinates of the quad used by the shaders in this
+     * Utility Pipeline.
+     *
+     * Be sure to call `resetVertices` once you have finished manipulating the UV coordinates.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#flipY
+     * @since 3.50.0
+     */
+    flipY: function ()
+    {
+        this.setUVs(0, 1, 0, 0, 1, 0, 1, 1);
+    },
+
+    setAPos: function (x, y)
+    {
+        var vertexViewF32 = this.vertexViewF32;
+
+        vertexViewF32[0] = x;
+        vertexViewF32[1] = y;
+        vertexViewF32[12] = x;
+        vertexViewF32[13] = y;
+    },
+
+    setBPos: function (x, y)
+    {
+        var vertexViewF32 = this.vertexViewF32;
+
+        vertexViewF32[4] = x;
+        vertexViewF32[5] = y;
+    },
+
+    setCPos: function (x, y)
+    {
+        var vertexViewF32 = this.vertexViewF32;
+
+        vertexViewF32[8] = x;
+        vertexViewF32[9] = y;
+        vertexViewF32[16] = x;
+        vertexViewF32[17] = y;
+    },
+
+    setDPos: function (x, y)
+    {
+        var vertexViewF32 = this.vertexViewF32;
+
+        vertexViewF32[20] = x;
+        vertexViewF32[21] = y;
     }
 
 });
