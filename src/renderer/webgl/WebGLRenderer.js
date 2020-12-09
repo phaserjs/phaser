@@ -839,7 +839,7 @@ var WebGLRenderer = new Class({
 
         this.isBooted = true;
 
-        this.renderTarget = new RenderTarget(this, this.width, this.height, 1, 0, false, true);
+        this.renderTarget = new RenderTarget(this, this.width, this.height, 1, 0, true, true);
 
         //  Set-up pipelines
 
