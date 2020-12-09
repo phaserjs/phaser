@@ -5,6 +5,7 @@
  */
 
 var AddBlendFS = require('../shaders/AddBlend-frag.js');
+var BlendModes = require('../../BlendModes');
 var Class = require('../../../utils/Class');
 var ColorMatrix = require('../../../display/ColorMatrix');
 var ColorMatrixFS = require('../shaders/ColorMatrix-frag.js');
@@ -387,12 +388,14 @@ var UtilityPipeline = new Class({
      * @param {number} [brightness=1] - The brightness value applied to the frame copy.
      * @param {boolean} [clear=true] - Clear the target before copying?
      * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     * @param {boolean} [eraseMode=false] - Erase source from target using ERASE Blend Mode?
      */
-    blitFrame: function (source, target, brightness, clear, clearAlpha)
+    blitFrame: function (source, target, brightness, clear, clearAlpha, eraseMode)
     {
         if (brightness === undefined) { brightness = 1; }
         if (clear === undefined) { clear = true; }
         if (clearAlpha === undefined) { clearAlpha = true; }
+        if (eraseMode === undefined) { eraseMode = false; }
 
         var gl = this.gl;
 
@@ -432,10 +435,20 @@ var UtilityPipeline = new Class({
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
-        gl.disable(gl.SCISSOR_TEST);
+        if (eraseMode)
+        {
+            var blendMode = this.renderer.currentBlendMode;
+
+            this.renderer.setBlendMode(BlendModes.ERASE);
+        }
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        if (eraseMode)
+        {
+            this.renderer.setBlendMode(blendMode);
+        }
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
