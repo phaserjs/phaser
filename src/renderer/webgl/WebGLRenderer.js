@@ -882,20 +882,29 @@ var WebGLRenderer = new Class({
     /**
      * Binds the WebGL Renderers Render Target, so all drawn content is now redirected to it.
      *
-     * Make sure to call `endCapture`.
+     * Make sure to call `endCapture` when you are finished.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#beginCapture
      * @since 3.50.0
+     *
+     * @param {number} [width] - Optional new width of the Render Target.
+     * @param {number} [height] - Optional new height of the Render Target.
      */
-    beginCapture: function ()
+    beginCapture: function (width, height)
     {
-        this.renderTarget.bind(true);
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
 
-        this.resetTextures(true);
+        this.renderTarget.bind(true, width, height);
+
+        this.resetTextures();
     },
 
     /**
      * Unbinds the WebGL Renderers Render Target and returns it, stopping any further content being drawn to it.
+     *
+     * If the viewport or scissors were modified during the capture, you should reset them by calling
+     * `resetViewport` and `resetScissor` accordingly.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#endCapture
      * @since 3.50.0
@@ -1073,6 +1082,8 @@ var WebGLRenderer = new Class({
     {
         var gl = this.gl;
 
+        gl.enable(gl.SCISSOR_TEST);
+
         var current = this.currentScissor;
 
         if (current)
@@ -1084,7 +1095,6 @@ var WebGLRenderer = new Class({
 
             if (width > 0 && height > 0)
             {
-                gl.enable(gl.SCISSOR_TEST);
                 gl.scissor(x, (this.drawingBufferHeight - y - height), width, height);
             }
         }
@@ -1141,6 +1151,8 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
 
         gl.viewport(0, 0, this.width, this.height);
+
+        this.drawingBufferHeight = gl.drawingBufferHeight;
     },
 
     /**
