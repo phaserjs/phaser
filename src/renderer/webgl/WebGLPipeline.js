@@ -721,8 +721,8 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Adjusts this pipelines ortho Projection Matrix to use the given diemsions
-     * and reets the `uProjectionMatrix` uniform on all bound shaders.
+     * Adjusts this pipelines ortho Projection Matrix to use the given dimensions
+     * and resets the `uProjectionMatrix` uniform on all bound shaders.
      *
      * This method is called automatically by the renderer during its resize handler.
      *
