@@ -15,8 +15,8 @@ var SafeRange = require('./SafeRange');
  * @param {array} array - The array to search.
  * @param {function} callback - A callback to be invoked for each item in the array.
  * @param {object} context - The context in which the callback is invoked.
- * @param {integer} startIndex - The start index to search from.
- * @param {integer} endIndex - The end index to search to.
+ * @param {number} startIndex - The start index to search from.
+ * @param {number} endIndex - The end index to search to.
  * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
  *
  * @return {array} The input array.

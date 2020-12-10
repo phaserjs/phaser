@@ -10,7 +10,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.CREATED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     CREATED: 0,
@@ -19,7 +19,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.INIT
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     INIT: 1,
@@ -28,7 +28,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     DELAY: 2,
@@ -37,7 +37,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.OFFSET_DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     OFFSET_DELAY: 3,
@@ -46,7 +46,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.PENDING_RENDER
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PENDING_RENDER: 4,
@@ -55,7 +55,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.PLAYING_FORWARD
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PLAYING_FORWARD: 5,
@@ -64,7 +64,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.PLAYING_BACKWARD
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PLAYING_BACKWARD: 6,
@@ -73,7 +73,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.HOLD_DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     HOLD_DELAY: 7,
@@ -82,7 +82,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.REPEAT_DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     REPEAT_DELAY: 8,
@@ -91,7 +91,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.COMPLETE
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     COMPLETE: 9,
@@ -102,7 +102,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.PENDING_ADD
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PENDING_ADD: 20,
@@ -111,7 +111,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.PAUSED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PAUSED: 21,
@@ -120,7 +120,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.LOOP_DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     LOOP_DELAY: 22,
@@ -129,7 +129,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.ACTIVE
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     ACTIVE: 23,
@@ -138,7 +138,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.COMPLETE_DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     COMPLETE_DELAY: 24,
@@ -147,7 +147,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.PENDING_REMOVE
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PENDING_REMOVE: 25,
@@ -156,7 +156,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.REMOVED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     REMOVED: 26

@@ -110,6 +110,15 @@ var DisplayList = new Class({
     {
         gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
 
+        if (gameObject.displayList)
+        {
+            gameObject.displayList.remove(gameObject);
+        }
+
+        gameObject.displayList = this;
+
+        this.queueDepthSort();
+
         this.events.emit(SceneEvents.ADDED_TO_SCENE, gameObject, this.scene);
     },
 
@@ -127,6 +136,10 @@ var DisplayList = new Class({
     removeChildCallback: function (gameObject)
     {
         gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
+
+        gameObject.displayList = null;
+
+        this.queueDepthSort();
 
         this.events.emit(SceneEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
     },
@@ -181,7 +194,7 @@ var DisplayList = new Class({
      * @param {Phaser.GameObjects.GameObject} childA - The first Game Object.
      * @param {Phaser.GameObjects.GameObject} childB - The second Game Object.
      *
-     * @return {integer} The difference between the depths of each Game Object.
+     * @return {number} The difference between the depths of each Game Object.
      */
     sortByDepth: function (childA, childB)
     {

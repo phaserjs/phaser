@@ -12,8 +12,8 @@
  * @since 3.0.0
  *
  * @param {number} worldX - The x coordinate to be converted, in pixels, not tiles.
- * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the nearest integer.
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+ * @param {boolean} snapToFloor - Whether or not to round the tile coordinate down to the nearest integer.
+ * @param {?Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {number} The X location in tile units.
@@ -27,7 +27,7 @@ var WorldToTileX = function (worldX, snapToFloor, camera, layer)
 
     if (tilemapLayer)
     {
-        if (camera === undefined) { camera = tilemapLayer.scene.cameras.main; }
+        if (!camera) { camera = tilemapLayer.scene.cameras.main; }
 
         // Find the world position relative to the static or dynamic layer's top left origin,
         // factoring in the camera's horizontal scroll
@@ -36,9 +36,7 @@ var WorldToTileX = function (worldX, snapToFloor, camera, layer)
         tileWidth *= tilemapLayer.scaleX;
     }
 
-    return snapToFloor
-        ? Math.floor(worldX / tileWidth)
-        : worldX / tileWidth;
+    return (snapToFloor) ? Math.floor(worldX / tileWidth) : worldX / tileWidth;
 };
 
 module.exports = WorldToTileX;

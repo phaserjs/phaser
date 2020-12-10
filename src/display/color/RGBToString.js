@@ -12,10 +12,10 @@ var ComponentToHex = require('./ComponentToHex');
  * @function Phaser.Display.Color.RGBToString
  * @since 3.0.0
  *
- * @param {integer} r - The red color value. A number between 0 and 255.
- * @param {integer} g - The green color value. A number between 0 and 255.
- * @param {integer} b - The blue color value. A number between 0 and 255.
- * @param {integer} [a=255] - The alpha value. A number between 0 and 255.
+ * @param {number} r - The red color value. A number between 0 and 255.
+ * @param {number} g - The green color value. A number between 0 and 255.
+ * @param {number} b - The blue color value. A number between 0 and 255.
+ * @param {number} [a=255] - The alpha value. A number between 0 and 255.
  * @param {string} [prefix=#] - The prefix of the string. Either `#` or `0x`.
  *
  * @return {string} A string-based representation of the color values.

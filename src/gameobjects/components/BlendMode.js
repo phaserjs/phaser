@@ -20,7 +20,7 @@ var BlendMode = {
      * Private internal value. Holds the current blend mode.
      * 
      * @name Phaser.GameObjects.Components.BlendMode#_blendMode
-     * @type {integer}
+     * @type {number}
      * @private
      * @default 0
      * @since 3.0.0

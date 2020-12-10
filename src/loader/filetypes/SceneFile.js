@@ -52,7 +52,6 @@ var SceneFile = new Class({
 
         var fileConfig = {
             type: 'text',
-            cache: loader.cacheManager.text,
             extension: extension,
             responseType: 'text',
             key: key,

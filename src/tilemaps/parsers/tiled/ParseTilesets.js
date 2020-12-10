@@ -32,7 +32,7 @@ var ParseTilesets = function (json)
 
         if (set.source)
         {
-            console.warn('Phaser can\'t load external tilesets. Use the Embed Tileset button and then export the map again.');
+            console.warn('External tilesets unsupported. Use Embed Tileset and re-export');
         }
         else if (set.image)
         {
@@ -71,9 +71,10 @@ var ParseTilesets = function (json)
 
                             if (tile.objectgroup.objects)
                             {
-                                var parsedObjects2 = tile.objectgroup.objects.map(
-                                    function (obj) { return ParseObject(obj); }
-                                );
+                                var parsedObjects2 = tile.objectgroup.objects.map(function (obj)
+                                {
+                                    return ParseObject(obj);
+                                });
 
                                 tiles[tile.id].objectgroup.objects = parsedObjects2;
                             }
@@ -116,11 +117,14 @@ var ParseTilesets = function (json)
                     for (stringID in newSet.tileData)
                     {
                         var objectGroup = newSet.tileData[stringID].objectgroup;
+
                         if (objectGroup && objectGroup.objects)
                         {
-                            var parsedObjects1 = objectGroup.objects.map(
-                                function (obj) { return ParseObject(obj); }
-                            );
+                            var parsedObjects1 = objectGroup.objects.map(function (obj)
+                            {
+                                return ParseObject(obj);
+                            });
+
                             newSet.tileData[stringID].objectgroup.objects = parsedObjects1;
                         }
                     }
@@ -135,15 +139,23 @@ var ParseTilesets = function (json)
         }
         else
         {
-            var newCollection = new ImageCollection(set.name, set.firstgid, set.tilewidth,
-                set.tileheight, set.margin, set.spacing, set.properties);
+            var newCollection = new ImageCollection(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
 
-            for (stringID in set.tiles)
+            var maxId = 0;
+
+            for (t = 0; t < set.tiles.length; t++)
             {
-                var image = set.tiles[stringID].image;
-                var gid = set.firstgid + parseInt(stringID, 10);
+                tile = set.tiles[t];
+
+                var image = tile.image;
+                var tileId = parseInt(tile.id, 10);
+                var gid = set.firstgid + tileId;
                 newCollection.addImage(gid, image);
+
+                maxId = Math.max(tileId, maxId);
             }
+
+            newCollection.maxId = maxId;
 
             imageCollections.push(newCollection);
         }

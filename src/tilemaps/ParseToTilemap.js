@@ -17,14 +17,14 @@ var Tilemap = require('./Tilemap');
  *
  * @function Phaser.Tilemaps.ParseToTilemap
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scene} scene - The Scene to which this Tilemap belongs.
  * @param {string} [key] - The key in the Phaser cache that corresponds to the loaded tilemap data.
- * @param {integer} [tileWidth=32] - The width of a tile in pixels.
- * @param {integer} [tileHeight=32] - The height of a tile in pixels.
- * @param {integer} [width=10] - The width of the map in tiles.
- * @param {integer} [height=10] - The height of the map in tiles.
- * @param {integer[][]} [data] - Instead of loading from the cache, you can also load directly from
+ * @param {number} [tileWidth=32] - The width of a tile in pixels.
+ * @param {number} [tileHeight=32] - The height of a tile in pixels.
+ * @param {number} [width=10] - The width of the map in tiles.
+ * @param {number} [height=10] - The height of the map in tiles.
+ * @param {number[][]} [data] - Instead of loading from the cache, you can also load directly from
  * a 2D array of tile indexes.
  * @param {boolean} [insertNull=false] - Controls how empty tiles, tiles with an index of -1, in the
  * map data are handled. If `true`, empty locations will get a value of `null`. If `false`, empty
@@ -32,7 +32,7 @@ var Tilemap = require('./Tilemap');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
- * 
+ *
  * @return {Phaser.Tilemaps.Tilemap}
  */
 var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height, data, insertNull)

@@ -102,7 +102,7 @@ var PathFollower = {
      * Records the direction of the follower so it can change direction.
      *
      * @name Phaser.GameObjects.PathFollower#_prevDirection
-     * @type {integer}
+     * @type {number}
      * @private
      * @since 3.0.0
      */

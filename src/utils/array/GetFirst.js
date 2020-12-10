@@ -22,8 +22,8 @@ var SafeRange = require('./SafeRange');
  * @param {array} array - The array to search.
  * @param {string} [property] - The property to test on each array element.
  * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
- * @param {integer} [startIndex=0] - An optional start index to search from.
- * @param {integer} [endIndex=array.length] - An optional end index to search up to (but not included)
+ * @param {number} [startIndex=0] - An optional start index to search from.
+ * @param {number} [endIndex=array.length] - An optional end index to search up to (but not included)
  *
  * @return {object} The first matching element from the array, or `null` if no element could be found in the range given.
  */

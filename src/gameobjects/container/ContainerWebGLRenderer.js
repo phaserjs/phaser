@@ -22,8 +22,9 @@
 var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix)
 {
     var children = container.list;
+    var childCount = children.length;
 
-    if (children.length === 0)
+    if (childCount === 0)
     {
         return;
     }
@@ -43,6 +44,8 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
         transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
     }
 
+    renderer.pipelines.preBatch(container);
+
     var containerHasBlendMode = (container.blendMode !== -1);
 
     if (!containerHasBlendMode)
@@ -55,9 +58,6 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
 
     var scrollFactorX = container.scrollFactorX;
     var scrollFactorY = container.scrollFactorY;
-
-    var list = children;
-    var childCount = children.length;
 
     for (var i = 0; i < childCount; i++)
     {
@@ -114,7 +114,7 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
             renderer.currentType = type;
         }
 
-        renderer.nextTypeMatch = (i < childCount - 1) ? (list[i + 1].type === renderer.currentType) : false;
+        renderer.nextTypeMatch = (i < childCount - 1) ? (children[i + 1].type === renderer.currentType) : false;
 
         //  Set parent values
         child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
@@ -137,6 +137,8 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
 
         renderer.newType = false;
     }
+
+    renderer.pipelines.postBatch(container);
 };
 
 module.exports = ContainerWebGLRenderer;

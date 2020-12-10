@@ -20,11 +20,11 @@ var ParseWeltmeister = require('./impact/ParseWeltmeister');
  * @since 3.0.0
  *
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
- * @param {integer} mapFormat - See ../Formats.js.
- * @param {(integer[][]|string|object)} data - 2D array, CSV string or Tiled JSON object.
- * @param {integer} tileWidth - The width of a tile in pixels. Required for 2D array and CSV, but
+ * @param {number} mapFormat - See ../Formats.js.
+ * @param {(number[][]|string|object)} data - 2D array, CSV string or Tiled JSON object.
+ * @param {number} tileWidth - The width of a tile in pixels. Required for 2D array and CSV, but
  * ignored for Tiled JSON.
- * @param {integer} tileHeight - The height of a tile in pixels. Required for 2D array and CSV, but
+ * @param {number} tileHeight - The height of a tile in pixels. Required for 2D array and CSV, but
  * ignored for Tiled JSON.
  * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map
  * data are handled. If `true`, empty locations will get a value of `null`. If `false`, empty

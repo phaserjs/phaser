@@ -19,26 +19,16 @@ var Wrap = require('../../../../src/math/Wrap');
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {SpineGameObject} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpineGameObjectCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var SpineGameObjectCanvasRenderer = function (renderer, src, camera, parentMatrix)
 {
     var context = renderer.currentContext;
 
     var plugin = src.plugin;
     var skeleton = src.skeleton;
     var skeletonRenderer = plugin.skeletonRenderer;
-
-    var GameObjectRenderMask = 15;
-
-    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)));
-
-    if (!skeleton || !willRender)
-    {
-        return;
-    }
 
     var camMatrix = renderer._tempMatrix1;
     var spriteMatrix = renderer._tempMatrix2;
@@ -109,7 +99,6 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, interpolationPercen
         skeleton.scaleY *= -1;
     }
 
-    //  Add autoUpdate option
     skeleton.updateWorldTransform();
 
     skeletonRenderer.ctx = context;

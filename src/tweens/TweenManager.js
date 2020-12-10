@@ -105,7 +105,7 @@ var TweenManager = new Class({
          * The number of Tweens and Timelines which need to be processed by the Tween Manager at the start of the frame.
          *
          * @name Phaser.Tweens.TweenManager#_toProcess
-         * @type {integer}
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0

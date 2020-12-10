@@ -42,7 +42,7 @@ var Rectangle = new Class({
          * Used for fast type comparisons.
          *
          * @name Phaser.Geom.Rectangle#type
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.19.0
          */
@@ -135,7 +135,7 @@ var Rectangle = new Class({
      *
      * @generic {Phaser.Geom.Point[]} O - [output,$return]
      *
-     * @param {integer} quantity - The number of points to return. Set to `false` or 0 to return an arbitrary number of points (`perimeter / stepRate`) evenly spaced around the Rectangle based on the `stepRate`.
+     * @param {number} quantity - The number of points to return. Set to `false` or 0 to return an arbitrary number of points (`perimeter / stepRate`) evenly spaced around the Rectangle based on the `stepRate`.
      * @param {number} [stepRate] - If `quantity` is 0, determines the normalized distance between each returned point.
      * @param {(array|Phaser.Geom.Point[])} [output] - An array to which to append the points.
      *

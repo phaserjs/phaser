@@ -34,6 +34,7 @@ var PhaserMath = {
     Clamp: require('./Clamp'),
     DegToRad: require('./DegToRad'),
     Difference: require('./Difference'),
+    Euler: require('./Euler'),
     Factorial: require('./Factorial'),
     FloatBetween: require('./FloatBetween'),
     FloorTo: require('./FloorTo'),

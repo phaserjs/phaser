@@ -14,7 +14,7 @@
  * @param {Node} node - The XML Node.
  * @param {string} attribute - The attribute to read.
  *
- * @return {integer} The parsed value.
+ * @return {number} The parsed value.
  */
 function getValue (node, attribute)
 {
@@ -30,8 +30,8 @@ function getValue (node, attribute)
  *
  * @param {XMLDocument} xml - The XML Document to parse the font from.
  * @param {Phaser.Textures.Frame} frame - The texture frame to take into account when creating the uv data.
- * @param {integer} [xSpacing=0] - The x-axis spacing to add between each letter.
- * @param {integer} [ySpacing=0] - The y-axis spacing to add to the line height.
+ * @param {number} [xSpacing=0] - The x-axis spacing to add between each letter.
+ * @param {number} [ySpacing=0] - The y-axis spacing to add to the line height.
  * @param {Phaser.Textures.Texture} [texture] - If provided, each glyph in the Bitmap Font will be added to this texture as a frame.
  *
  * @return {Phaser.Types.GameObjects.BitmapText.BitmapFontData} The parsed Bitmap Font data.

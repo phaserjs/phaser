@@ -10,7 +10,7 @@
  * @property {array} [easeParams] - Optional easing parameters. Each individual Tween configuration can override this value.
  * @property {(string|function)} [ease='Power0'] - The easing equation to use for each tween. Each individual Tween configuration can override this value.
  * @property {number} [hold=0] - The number of milliseconds to hold each tween before yoyo'ing. Each individual Tween configuration can override this value.
- * @property {integer} [repeat=0] - The number of times to repeat each tween. Each individual Tween configuration can override this value.
+ * @property {number} [repeat=0] - The number of times to repeat each tween. Each individual Tween configuration can override this value.
  * @property {number} [repeatDelay=0] - The number of milliseconds to pause before each tween will repeat. Each individual Tween configuration can override this value.
  * @property {boolean} [yoyo=false] - Should each tween complete, then reverse the values incrementally to get back to the starting tween values? The reverse tweening will also take `duration` milliseconds to complete. Each individual Tween configuration can override this value.
  * @property {boolean} [flipX=false] - Horizontally flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipX` property. Each individual Tween configuration can override this value.

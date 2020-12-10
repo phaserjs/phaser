@@ -5,8 +5,10 @@
  */
 
 var GetTilesWithin = require('./GetTilesWithin');
-var WorldToTileX = require('./WorldToTileX');
-var WorldToTileY = require('./WorldToTileY');
+var Vector2 = require('../../math/Vector2');
+
+var pointStart = new Vector2();
+var pointEnd = new Vector2();
 
 /**
  * Gets the tiles in the given rectangular area (in world coordinates) of the layer.
@@ -18,24 +20,27 @@ var WorldToTileY = require('./WorldToTileY');
  * @param {number} worldY - The world y coordinate for the top-left of the area.
  * @param {number} width - The width of the area.
  * @param {number} height - The height of the area.
- * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
- * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
- * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
- * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
+ * @param {Phaser.Types.Tilemaps.FilteringOptions} filteringOptions - Optional filters to apply when getting the tiles.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when factoring in which tiles to return.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.
  */
 var GetTilesWithinWorldXY = function (worldX, worldY, width, height, filteringOptions, camera, layer)
 {
-    // Top left corner of the rect, rounded down to include partial tiles
-    var xStart = WorldToTileX(worldX, true, camera, layer);
-    var yStart = WorldToTileY(worldY, true, camera, layer);
+    var worldToTileXY = layer.tilemapLayer.tilemap._convert.WorldToTileXY;
 
-    // Bottom right corner of the rect, rounded up to include partial tiles
-    var xEnd = Math.ceil(WorldToTileX(worldX + width, false, camera, layer));
-    var yEnd = Math.ceil(WorldToTileY(worldY + height, false, camera, layer));
+    //  Top left corner of the rect, rounded down to include partial tiles
+    worldToTileXY(worldX, worldY, true, pointStart, camera, layer);
+
+    var xStart = pointStart.x;
+    var yStart = pointStart.y;
+
+    //  Bottom right corner of the rect, rounded up to include partial tiles
+    worldToTileXY(worldX + width, worldY + height, false, pointEnd, camera, layer);
+
+    var xEnd = Math.ceil(pointEnd.x);
+    var yEnd = Math.ceil(pointEnd.y);
 
     return GetTilesWithin(xStart, yStart, xEnd - xStart, yEnd - yStart, filteringOptions, layer);
 };

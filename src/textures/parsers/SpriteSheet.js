@@ -18,11 +18,11 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.
- * @param {integer} sourceIndex - The index of the TextureSource.
- * @param {integer} x - The top-left coordinate of the Sprite Sheet. Defaults to zero. Used when extracting sheets from atlases.
- * @param {integer} y - The top-left coordinate of the Sprite Sheet. Defaults to zero. Used when extracting sheets from atlases.
- * @param {integer} width - The width of the source image.
- * @param {integer} height - The height of the source image.
+ * @param {number} sourceIndex - The index of the TextureSource.
+ * @param {number} x - The top-left coordinate of the Sprite Sheet. Defaults to zero. Used when extracting sheets from atlases.
+ * @param {number} y - The top-left coordinate of the Sprite Sheet. Defaults to zero. Used when extracting sheets from atlases.
+ * @param {number} width - The width of the source image.
+ * @param {number} height - The height of the source image.
  * @param {object} config - An object describing how to parse the Sprite Sheet.
  * @param {number} config.frameWidth - Width in pixels of a single frame in the sprite sheet.
  * @param {number} [config.frameHeight] - Height in pixels of a single frame in the sprite sheet. Defaults to frameWidth if not provided.

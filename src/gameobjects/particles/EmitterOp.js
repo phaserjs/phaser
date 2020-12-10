@@ -234,6 +234,10 @@ var EmitterOp = new Class({
 
         var t = typeof value;
 
+        //  Reset them in case they're not changed below
+        this.onEmit = this.defaultEmit;
+        this.onUpdate = this.defaultUpdate;
+
         if (t === 'number')
         {
             //  Explicit static value:
@@ -270,28 +274,17 @@ var EmitterOp = new Class({
                 this.onUpdate = value;
             }
         }
-        else if (t === 'object' && (this.has(value, 'random') || this.hasBoth(value, 'start', 'end') || this.hasBoth(value, 'min', 'max')))
+        else if (t === 'object' && this.hasBoth(value, 'start', 'end'))
         {
-            this.start = this.has(value, 'start') ? value.start : value.min;
-            this.end = this.has(value, 'end') ? value.end : value.max;
+            this.start = value.start;
+            this.end = value.end;
 
-            var isRandom = (this.hasBoth(value, 'min', 'max') || !!value.random);
+            //  x: { start: 100, end: 400, random: true } (random optional) = eases between start and end
 
-            //  A random starting value (using 'min | max' instead of 'start | end' automatically implies a random value)
-
-            //  x: { start: 100, end: 400, random: true } OR { min: 100, max: 400 } OR { random: [ 100, 400 ] }
+            var isRandom = this.has(value, 'random');
 
             if (isRandom)
             {
-                var rnd = value.random;
-
-                //  x: { random: [ 100, 400 ] } = the same as doing: x: { start: 100, end: 400, random: true }
-                if (Array.isArray(rnd))
-                {
-                    this.start = rnd[0];
-                    this.end = rnd[1];
-                }
-
                 this.onEmit = this.randomRangedValueEmit;
             }
 
@@ -323,11 +316,30 @@ var EmitterOp = new Class({
                     this.onEmit = this.easedValueEmit;
                 }
 
-                //  BUG: alpha, rotate, scaleX, scaleY, or tint are eased here if {min, max} is given.
-                //  Probably this branch should exclude isRandom entirely.
-
                 this.onUpdate = this.easeValueUpdate;
             }
+        }
+        else if (t === 'object' && this.hasBoth(value, 'min', 'max'))
+        {
+            //  { min: 100, max: 400 } = pick a random number between min and max
+
+            this.start = value.min;
+            this.end = value.max;
+            this.onEmit = this.randomRangedValueEmit;
+        }
+        else if (t === 'object' && this.has(value, 'random'))
+        {
+            //  { random: [ 100, 400 ] } = pick a random number between the two elements of the array
+
+            var rnd = value.random;
+
+            if (Array.isArray(rnd))
+            {
+                this.start = rnd[0];
+                this.end = rnd[1];
+            }
+
+            this.onEmit = this.randomRangedValueEmit;
         }
         else if (t === 'object' && this.hasEither(value, 'onEmit', 'onUpdate'))
         {

@@ -23,11 +23,11 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var pipeline = renderer.pipelines.set(this.pipeline);
+    var pipeline = renderer.pipelines.set(src.pipeline);
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    var calcMatrix = pipeline._tempMatrix3.copyFrom(result.calc);
+    var calcMatrix = pipeline.calcMatrix.copyFrom(result.calc);
 
     calcMatrix.translate(-src._displayOriginX, -src._displayOriginY);
 
@@ -63,8 +63,6 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var cw = 0;
     var ch = 0;
 
-    pipeline.setTexture2D();
-
     if (showOutline)
     {
         //  To make room for the grid lines (in case alpha < 1)
@@ -81,6 +79,8 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
             cellHeightB--;
         }
     }
+
+    renderer.pipelines.preBatch(src);
 
     if (showCells && src.fillAlpha > 0)
     {
@@ -186,6 +186,8 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
             pipeline.batchLine(0, y1, width, y1, 1, 1, 1, 0, false);
         }
     }
+
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = GridWebGLRenderer;

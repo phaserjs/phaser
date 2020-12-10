@@ -21,8 +21,8 @@ var RenderTexture = require('./RenderTexture');
  *
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {integer} [width=32] - The width of the Render Texture.
- * @param {integer} [height=32] - The height of the Render Texture.
+ * @param {number} [width=32] - The width of the Render Texture.
+ * @param {number} [height=32] - The height of the Render Texture.
  * @property {string} [key] - The texture key to make the RenderTexture from.
  * @property {string} [frame] - the frame to make the RenderTexture from.
  * 

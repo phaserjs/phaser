@@ -17,20 +17,20 @@ var GetRandom = require('../../utils/array/GetRandom');
  * @function Phaser.Tilemaps.Components.Randomize
  * @since 3.0.0
  *
- * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
- * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
- * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
- * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
- * @param {integer[]} [indexes] - An array of indexes to randomly draw from during randomization.
+ * @param {number} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} width - How many tiles wide from the `tileX` index the area will be.
+ * @param {number} height - How many tiles tall from the `tileY` index the area will be.
+ * @param {number[]} indexes - An array of indexes to randomly draw from during randomization.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var Randomize = function (tileX, tileY, width, height, indexes, layer)
 {
     var i;
-    var tiles = GetTilesWithin(tileX, tileY, width, height, null, layer);
+    var tiles = GetTilesWithin(tileX, tileY, width, height, {}, layer);
 
     // If no indices are given, then find all the unique indexes within the specified region
-    if (indexes === undefined)
+    if (!indexes)
     {
         indexes = [];
 

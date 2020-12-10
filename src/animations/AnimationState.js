@@ -438,7 +438,7 @@ var AnimationState = new Class({
          * 3 = Waiting for specific frame
          *
          * @name Phaser.Animations.AnimationState#_pendingStop
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.4.0
          */
@@ -680,7 +680,7 @@ var AnimationState = new Class({
      * @since 3.50.0
      *
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
-     * @param {integer} delay - The delay, in milliseconds, to wait before starting the animation playing.
+     * @param {number} delay - The delay, in milliseconds, to wait before starting the animation playing.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -726,7 +726,7 @@ var AnimationState = new Class({
      * @since 3.50.0
      *
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
-     * @param {integer} [repeatCount=1] - How many times should the animation repeat before the next one starts?
+     * @param {number} [repeatCount=1] - How many times should the animation repeat before the next one starts?
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -1175,7 +1175,7 @@ var AnimationState = new Class({
      * @method Phaser.Animations.AnimationState#setRepeat
      * @since 3.4.0
      *
-     * @param {integer} value - The number of times that the animation should repeat.
+     * @param {number} value - The number of times that the animation should repeat.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -1351,7 +1351,7 @@ var AnimationState = new Class({
      * @fires Phaser.Animations.Events#ANIMATION_STOP
      * @since 3.4.0
      *
-     * @param {integer} delay - The number of milliseconds to wait before stopping this animation.
+     * @param {number} delay - The number of milliseconds to wait before stopping this animation.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -1379,7 +1379,7 @@ var AnimationState = new Class({
      * @fires Phaser.Animations.Events#ANIMATION_STOP
      * @since 3.50.0
      *
-     * @param {integer} [repeatCount=1] - How many times should the animation repeat before stopping?
+     * @param {number} [repeatCount=1] - How many times should the animation repeat before stopping?
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -1432,7 +1432,7 @@ var AnimationState = new Class({
      * @method Phaser.Animations.AnimationState#getTotalFrames
      * @since 3.4.0
      *
-     * @return {integer} The total number of frames in the current animation, or zero if no animation has been loaded.
+     * @return {number} The total number of frames in the current animation, or zero if no animation has been loaded.
      */
     getTotalFrames: function ()
     {
@@ -1629,11 +1629,11 @@ var AnimationState = new Class({
      *
      * @param {string} key - The key of the Animation to retrieve.
      *
-     * @return {Phaser.Animations.Animation} The Animation, or `undefined` if the key is invalid.
+     * @return {Phaser.Animations.Animation} The Animation, or `null` if the key is invalid.
      */
     get: function (key)
     {
-        return (this.anims && this.anims.get(key));
+        return (this.anims) ? this.anims.get(key) : null;
     },
 
     /**
@@ -1644,11 +1644,11 @@ var AnimationState = new Class({
      *
      * @param {string} key - The key of the Animation to check.
      *
-     * @return {boolean} `true` if the Animation exists locally, or `false` if the key is available.
+     * @return {boolean} `true` if the Animation exists locally, or `false` if the key is available, or there are no local animations.
      */
     exists: function (key)
     {
-        return (this.anims && this.anims.has(key));
+        return (this.anims) ? this.anims.has(key) : false;
     },
 
     /**
@@ -1699,6 +1699,99 @@ var AnimationState = new Class({
         }
 
         return anim;
+    },
+
+    /**
+     * Generate an array of {@link Phaser.Types.Animations.AnimationFrame} objects from a texture key and configuration object.
+     *
+     * Generates objects with string based frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNames}.
+     *
+     * It's a helper method, designed to make it easier for you to extract all of the frame names from texture atlases.
+     * If you're working with a sprite sheet, see the `generateFrameNumbers` method instead.
+     *
+     * Example:
+     *
+     * If you have a texture atlases loaded called `gems` and it contains 6 frames called `ruby_0001`, `ruby_0002`, and so on,
+     * then you can call this method using: `this.anims.generateFrameNames('gems', { prefix: 'ruby_', end: 6, zeroPad: 4 })`.
+     *
+     * The `end` value tells it to look for 6 frames, incrementally numbered, all starting with the prefix `ruby_`. The `zeroPad`
+     * value tells it how many zeroes pad out the numbers. To create an animation using this method, you can do:
+     *
+     * ```javascript
+     * this.anims.create({
+     *   key: 'ruby',
+     *   repeat: -1,
+     *   frames: this.anims.generateFrameNames('gems', {
+     *     prefix: 'ruby_',
+     *     end: 6,
+     *     zeroPad: 4
+     *   })
+     * });
+     * ```
+     *
+     * Please see the animation examples for further details.
+     *
+     * @method Phaser.Animations.AnimationState#generateFrameNames
+     * @since 3.50.0
+     *
+     * @param {string} key - The key for the texture containing the animation frames.
+     * @param {Phaser.Types.Animations.GenerateFrameNames} [config] - The configuration object for the animation frame names.
+     *
+     * @return {Phaser.Types.Animations.AnimationFrame[]} The array of {@link Phaser.Types.Animations.AnimationFrame} objects.
+     */
+    generateFrameNames: function (key, config)
+    {
+        return this.animationManager.generateFrameNames(key, config);
+    },
+
+    /**
+     * Generate an array of {@link Phaser.Types.Animations.AnimationFrame} objects from a texture key and configuration object.
+     *
+     * Generates objects with numbered frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNumbers}.
+     *
+     * If you're working with a texture atlas, see the `generateFrameNames` method instead.
+     *
+     * It's a helper method, designed to make it easier for you to extract frames from sprite sheets.
+     * If you're working with a texture atlas, see the `generateFrameNames` method instead.
+     *
+     * Example:
+     *
+     * If you have a sprite sheet loaded called `explosion` and it contains 12 frames, then you can call this method using:
+     * `this.anims.generateFrameNumbers('explosion', { start: 0, end: 12 })`.
+     *
+     * The `end` value tells it to stop after 12 frames. To create an animation using this method, you can do:
+     *
+     * ```javascript
+     * this.anims.create({
+     *   key: 'boom',
+     *   frames: this.anims.generateFrameNames('explosion', {
+     *     start: 0,
+     *     end: 12
+     *   })
+     * });
+     * ```
+     *
+     * Note that `start` is optional and you don't need to include it if the animation starts from frame 0.
+     *
+     * To specify an animation in reverse, swap the `start` and `end` values.
+     *
+     * If the frames are not sequential, you may pass an array of frame numbers instead, for example:
+     *
+     * `this.anims.generateFrameNumbers('explosion', { frames: [ 0, 1, 2, 1, 2, 3, 4, 0, 1, 2 ] })`
+     *
+     * Please see the animation examples and `GenerateFrameNumbers` config docs for further details.
+     *
+     * @method Phaser.Animations.AnimationState#generateFrameNumbers
+     * @since 3.50.0
+     *
+     * @param {string} key - The key for the texture containing the animation frames.
+     * @param {Phaser.Types.Animations.GenerateFrameNumbers} config - The configuration object for the animation frames.
+     *
+     * @return {Phaser.Types.Animations.AnimationFrame[]} The array of {@link Phaser.Types.Animations.AnimationFrame} objects.
+     */
+    generateFrameNumbers: function (key, config)
+    {
+        return this.animationManager.generateFrameNumbers(key, config);
     },
 
     /**

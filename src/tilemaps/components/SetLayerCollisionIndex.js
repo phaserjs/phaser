@@ -11,8 +11,8 @@
  * @function Phaser.Tilemaps.Components.SetLayerCollisionIndex
  * @since 3.0.0
  *
- * @param {integer} tileIndex - The tile index to set the collision boolean for.
- * @param {boolean} [collides=true] - Should the tile index collide or not?
+ * @param {number} tileIndex - The tile index to set the collision boolean for.
+ * @param {boolean} collides - Should the tile index collide or not?
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var SetLayerCollisionIndex = function (tileIndex, collides, layer)

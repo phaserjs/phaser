@@ -414,7 +414,7 @@ var Set = new Class({
      * Increasing the size larger than the current size has no effect.
      *
      * @name Phaser.Structs.Set#size
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     size: {

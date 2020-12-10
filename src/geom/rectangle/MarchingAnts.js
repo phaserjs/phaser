@@ -19,7 +19,7 @@ var Point = require('../point/Point');
  *
  * @param {Phaser.Geom.Rectangle} rect - The Rectangle to get the perimeter points from.
  * @param {number} [step] - The distance between each point of the perimeter. Set to `null` if you wish to use the `quantity` parameter instead.
- * @param {integer} [quantity] - The total number of points to return. The step is then calculated based on the length of the Rectangle, divided by this value.
+ * @param {number} [quantity] - The total number of points to return. The step is then calculated based on the length of the Rectangle, divided by this value.
  * @param {(array|Phaser.Geom.Point[])} [out] - An array in which the perimeter points will be stored. If not given, a new array instance is created.
  *
  * @return {(array|Phaser.Geom.Point[])} An array containing the perimeter points from the Rectangle.

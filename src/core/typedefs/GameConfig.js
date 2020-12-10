@@ -2,8 +2,8 @@
  * @typedef {object} Phaser.Types.Core.GameConfig
  * @since 3.0.0
  *
- * @property {(integer|string)} [width=1024] - The width of the game, in game pixels.
- * @property {(integer|string)} [height=768] - The height of the game, in game pixels.
+ * @property {(number|string)} [width=1024] - The width of the game, in game pixels.
+ * @property {(number|string)} [height=768] - The height of the game, in game pixels.
  * @property {number} [zoom=1] - Simple scale applied to the game canvas. 2 is double size, 0.5 is half size, etc.
  * @property {number} [type=CONST.AUTO] - Which renderer to use. Phaser.AUTO, Phaser.CANVAS, Phaser.HEADLESS, or Phaser.WEBGL. AUTO picks WEBGL if available, otherwise CANVAS.
  * @property {(HTMLElement|string)} [parent=undefined] - The DOM element that will contain the game canvas, or its `id`. If undefined, or if the named element doesn't exist, the game canvas is appended to the document body. If `null` no parent will be used and you are responsible for adding the canvas to the dom.
@@ -32,4 +32,5 @@
  * @property {Phaser.Types.Core.PluginObject|Phaser.Types.Core.PluginObjectItem[]} [plugins] - Plugins to install.
  * @property {Phaser.Types.Core.ScaleConfig} [scale] - The Scale Manager configuration.
  * @property {Phaser.Types.Core.AudioConfig} [audio] - The Audio Configuration object.
+ * @property {Phaser.Types.Core.PipelineConfig} [pipeline] - A WebGL Pipeline configuration object. Can also be part of the `RenderConfig`.
  */

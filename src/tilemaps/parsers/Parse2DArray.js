@@ -16,9 +16,9 @@ var Tile = require('../Tile');
  * @since 3.0.0
  *
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
- * @param {integer[][]} data - 2D array, CSV string or Tiled JSON object.
- * @param {integer} tileWidth - The width of a tile in pixels.
- * @param {integer} tileHeight - The height of a tile in pixels.
+ * @param {number[][]} data - 2D array, CSV string or Tiled JSON object.
+ * @param {number} tileWidth - The width of a tile in pixels.
+ * @param {number} tileHeight - The height of a tile in pixels.
  * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map
  * data are handled. If `true`, empty locations will get a value of `null`. If `false`, empty
  * location will get a Tile object with an index of -1. If you've a large sparsely populated map and
@@ -34,7 +34,7 @@ var Parse2DArray = function (name, data, tileWidth, tileHeight, insertNull)
         tileWidth: tileWidth,
         tileHeight: tileHeight
     });
-
+    
     var mapData = new MapData({
         name: name,
         tileWidth: tileWidth,

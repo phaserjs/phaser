@@ -49,8 +49,8 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {string} [texture] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager. If not given, `__DEFAULT` is used.
- * @param {(string|integer|null)} [frame] - An optional frame from the Texture this Game Object is rendering with.
- * @param {(integer|Phaser.Types.Math.Vector2Like[])} [points=2] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided a simple quad is created. See `setPoints` to set this post-creation.
+ * @param {(string|number|null)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {(number|Phaser.Types.Math.Vector2Like[])} [points=2] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided a simple quad is created. See `setPoints` to set this post-creation.
  * @param {boolean} [horizontal=true] - Should the vertices of this Rope be aligned horizontally (`true`), or vertically (`false`)?
  * @param {number[]} [colors] - An optional array containing the color data for this Rope. You should provide one color value per pair of vertices.
  * @param {number[]} [alphas] - An optional array containing the alpha data for this Rope. You should provide one alpha value per pair of vertices.
@@ -88,7 +88,7 @@ var Rope = new Class({
          * The Animation State of this Rope.
          *
          * @name Phaser.GameObjects.Rope#anims
-         * @type {Phaser.Animation.AnimationState}
+         * @type {Phaser.Animations.AnimationState}
          * @since 3.23.0
          */
         this.anims = new AnimationState(this);
@@ -221,7 +221,7 @@ var Rope = new Class({
          * Flipping always takes place from the middle of the texture and does not impact the scale value.
          * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
          *
-         * @name Phaser.GameObjects.Rope#flipY
+         * @name Phaser.GameObjects.Rope#_flipY
          * @type {boolean}
          * @default false
          * @private
@@ -333,7 +333,7 @@ var Rope = new Class({
      *
      * @param {string} key - The string-based key of the animation to play.
      * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
-     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     * @param {number} [startFrame=0] - Optionally start the animation playing from this frame index.
      *
      * @return {this} This Game Object.
      */
@@ -370,7 +370,7 @@ var Rope = new Class({
      * @method Phaser.GameObjects.Rope#setHorizontal
      * @since 3.23.0
      *
-     * @param {(integer|Phaser.Types.Math.Vector2Like[])} [points] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided the current points length is used.
+     * @param {(number|Phaser.Types.Math.Vector2Like[])} [points] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided the current points length is used.
      * @param {(number|number[])} [colors] - Either a single color value, or an array of values.
      * @param {(number|number[])} [alphas] - Either a single alpha value, or an array of values.
      *
@@ -399,7 +399,7 @@ var Rope = new Class({
      * @method Phaser.GameObjects.Rope#setVertical
      * @since 3.23.0
      *
-     * @param {(integer|Phaser.Types.Math.Vector2Like[])} [points] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided the current points length is used.
+     * @param {(number|Phaser.Types.Math.Vector2Like[])} [points] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided the current points length is used.
      * @param {(number|number[])} [colors] - Either a single color value, or an array of values.
      * @param {(number|number[])} [alphas] - Either a single alpha value, or an array of values.
      *
@@ -667,7 +667,7 @@ var Rope = new Class({
      * @method Phaser.GameObjects.Rope#setPoints
      * @since 3.23.0
      *
-     * @param {(integer|Phaser.Types.Math.Vector2Like[])} [points=2] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided a simple quad is created.
+     * @param {(number|Phaser.Types.Math.Vector2Like[])} [points=2] - An array containing the vertices data for this Rope, or a number that indicates how many segments to split the texture frame into. If none is provided a simple quad is created.
      * @param {(number|number[])} [colors] - Either a single color value, or an array of values.
      * @param {(number|number[])} [alphas] - Either a single alpha value, or an array of values.
      *
@@ -847,7 +847,7 @@ var Rope = new Class({
      * @method Phaser.GameObjects.Rope#resizeArrays
      * @since 3.23.0
      *
-     * @param {integer} newSize - The amount of segments to split the Rope in to.
+     * @param {number} newSize - The amount of segments to split the Rope in to.
      *
      * @return {this} This Game Object instance.
      */
@@ -1006,7 +1006,7 @@ var Rope = new Class({
      * @since 3.23.0
      *
      * @param {Phaser.GameObjects.Rope} src - The Rope object being rendered.
-     * @param {integer} meshLength - The number of vertices in the mesh.
+     * @param {number} meshLength - The number of vertices in the mesh.
      * @param {number[]} verts - An array of translated vertex coordinates.
      */
     renderDebugVerts: function (src, meshLength, verts)

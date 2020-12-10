@@ -4,12 +4,11 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Contains = require('../triangle/Contains');
 var LineToLine = require('./LineToLine');
 
 /**
  * Checks if a Triangle and a Line intersect.
- * 
+ *
  * The Line intersects the Triangle if it starts inside of it, ends inside of it, or crosses any of the Triangle's sides. Thus, the Triangle is considered "solid".
  *
  * @function Phaser.Geom.Intersects.TriangleToLine
@@ -23,7 +22,7 @@ var LineToLine = require('./LineToLine');
 var TriangleToLine = function (triangle, line)
 {
     //  If the Triangle contains either the start or end point of the line, it intersects
-    if (Contains(triangle, line.getPointA()) || Contains(triangle, line.getPointB()))
+    if (triangle.contains(line.x1, line.y1) || triangle.contains(line.x2, line.y2))
     {
         return true;
     }

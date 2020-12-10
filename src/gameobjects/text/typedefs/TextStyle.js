@@ -15,7 +15,7 @@
  * @property {Phaser.Types.GameObjects.Text.TextShadow} [shadow] - The Text shadow configuration object.
  * @property {Phaser.Types.GameObjects.Text.TextPadding} [padding] - A Text Padding object.
  * @property {string} [align='left'] - The alignment of the Text. This only impacts multi-line text. Either `left`, `right`, `center` or `justify`.
- * @property {integer} [maxLines=0] - The maximum number of lines to display within the Text object.
+ * @property {number} [maxLines=0] - The maximum number of lines to display within the Text object.
  * @property {number} [fixedWidth=0] - Force the Text object to have the exact width specified in this property. Leave as zero for it to change accordingly to content.
  * @property {number} [fixedHeight=0] - Force the Text object to have the exact height specified in this property. Leave as zero for it to change accordingly to content.
  * @property {number} [resolution=0] - Sets the resolution (DPI setting) of the Text object. Leave at zero for it to use the game resolution.

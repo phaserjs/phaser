@@ -17,6 +17,7 @@ module.exports = {
     FADE_OUT_START: require('./FADE_OUT_START_EVENT'),
     FLASH_COMPLETE: require('./FLASH_COMPLETE_EVENT'),
     FLASH_START: require('./FLASH_START_EVENT'),
+    FOLLOW_UPDATE: require('./FOLLOW_UPDATE_EVENT'),
     PAN_COMPLETE: require('./PAN_COMPLETE_EVENT'),
     PAN_START: require('./PAN_START_EVENT'),
     POST_RENDER: require('./POST_RENDER_EVENT'),

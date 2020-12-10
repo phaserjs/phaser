@@ -152,7 +152,11 @@ var Grid = new Class({
         this.setSize(width, height);
 
         this.setFillStyle(fillColor, fillAlpha);
-        this.setOutlineStyle(outlineFillColor, outlineFillAlpha);
+
+        if (outlineFillColor !== undefined)
+        {
+            this.setOutlineStyle(outlineFillColor, outlineFillAlpha);
+        }
 
         this.updateDisplayOrigin();
     },

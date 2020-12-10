@@ -11,7 +11,7 @@
  * @since 3.0.0
  *
  * @param {number} distance - The distance.
- * @param {integer} time - The time, in seconds.
+ * @param {number} time - The time, in seconds.
  *
  * @return {number} The speed, in distance per ms.
  *

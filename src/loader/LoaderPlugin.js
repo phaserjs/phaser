@@ -177,7 +177,7 @@ var LoaderPlugin = new Class({
          * The default is 32 but you can change this in your Game Config, or by changing this property before the Loader starts.
          *
          * @name Phaser.Loader.LoaderPlugin#maxParallelDownloads
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.maxParallelDownloads = GetFastValue(sceneConfig, 'maxParallelDownloads', gameConfig.loaderMaxParallelDownloads);
@@ -212,7 +212,7 @@ var LoaderPlugin = new Class({
          * of loading, especially if you load a Pack File. Therefore this value can change, but in most cases remains static.
          *
          * @name Phaser.Loader.LoaderPlugin#totalToLoad
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -287,7 +287,7 @@ var LoaderPlugin = new Class({
          * This value is reset when you call `Loader.start`.
          *
          * @name Phaser.Loader.LoaderPlugin#totalFailed
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.7.0
          */
@@ -298,7 +298,7 @@ var LoaderPlugin = new Class({
          * This value is reset when you call `Loader.start`.
          *
          * @name Phaser.Loader.LoaderPlugin#totalComplete
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.7.0
          */
@@ -308,7 +308,7 @@ var LoaderPlugin = new Class({
          * The current state of the Loader.
          *
          * @name Phaser.Loader.LoaderPlugin#state
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.0.0
          */
@@ -318,7 +318,7 @@ var LoaderPlugin = new Class({
          * The current index being used by multi-file loaders to avoid key clashes.
          *
          * @name Phaser.Loader.LoaderPlugin#multiKeyIndex
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.20.0
          */

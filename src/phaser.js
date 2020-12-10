@@ -50,7 +50,7 @@ var Phaser = {
 
 };
 
-//  Merge in the optional plugins
+//  Merge in the optional plugins and WebGL only features
 
 if (typeof FEATURE_SOUND)
 {

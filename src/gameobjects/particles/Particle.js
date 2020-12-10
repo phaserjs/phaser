@@ -191,7 +191,7 @@ var Particle = new Class({
          * The tint applied to this Particle.
          *
          * @name Phaser.GameObjects.Particles.Particle#tint
-         * @type {integer}
+         * @type {number}
          * @webglOnly
          * @since 3.0.0
          */

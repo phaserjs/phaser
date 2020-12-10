@@ -5,12 +5,13 @@
  */
 
 var Class = require('../../utils/Class');
+var CONST = require('../const/ORIENTATION_CONST');
 var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * @classdesc
  * A class for representing data about about a layer in a map. Maps are parsed from CSV, Tiled,
- * etc. into this format. Tilemap, StaticTilemapLayer and DynamicTilemapLayer have a reference
+ * etc. into this format. Tilemap and TilemapLayer objects have a reference
  * to this data and use it to look up and perform operations on tiles.
  *
  * @class LayerData
@@ -110,6 +111,15 @@ var LayerData = new Class({
         this.baseTileHeight = GetFastValue(config, 'baseTileHeight', this.tileHeight);
 
         /**
+         * The layers orientation, necessary to be able to determine a tiles pixelX and pixelY as well as the layers width and height.
+         *
+         * @name Phaser.Tilemaps.LayerData#orientation
+         * @type {Phaser.Tilemaps.OrientationType}
+         * @since 3.50.0
+         */
+        this.orientation = GetFastValue(config, 'orientation', CONST.ORTHOGONAL);
+
+        /**
          * The width in pixels of the entire layer.
          *
          * @name Phaser.Tilemaps.LayerData#widthInPixels
@@ -203,10 +213,20 @@ var LayerData = new Class({
          * A reference to the Tilemap layer that owns this data.
          *
          * @name Phaser.Tilemaps.LayerData#tilemapLayer
-         * @type {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)}
+         * @type {Phaser.Tilemaps.TilemapLayer}
          * @since 3.0.0
          */
         this.tilemapLayer = GetFastValue(config, 'tilemapLayer', null);
+
+        /**
+         * The length of the horizontal sides of the hexagon.
+         * Only used for hexagonal orientation Tilemaps.
+         *
+         * @name Phaser.Tilemaps.LayerData#hexSideLength
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.hexSideLength = GetFastValue(config, 'hexSideLength', 0);
     }
 
 });

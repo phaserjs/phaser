@@ -16,7 +16,7 @@ var Class = require('../../../utils/Class');
  * @since 3.0.0
  *
  * @param {Phaser.Types.GameObjects.Particles.EdgeZoneSource} source - An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
- * @param {integer} quantity - The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
+ * @param {number} quantity - The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
  * @param {number} stepRate - The distance between each particle. When set, `quantity` is implied and should be set to 0.
  * @param {boolean} [yoyo=false] - Whether particles are placed from start to end and then end to start.
  * @param {boolean} [seamless=true] - Whether one endpoint will be removed if it's identical to the other.
@@ -53,7 +53,7 @@ var EdgeZone = new Class({
          * The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
          *
          * @name Phaser.GameObjects.Particles.Zones.EdgeZone#quantity
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.quantity = quantity;

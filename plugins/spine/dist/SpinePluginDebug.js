@@ -88,9 +88,9 @@ window["SpinePlugin"] =
 /******/ ({
 
 /***/ "../../../node_modules/eventemitter3/index.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/node_modules/eventemitter3/index.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/node_modules/eventemitter3/index.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -436,9 +436,9 @@ if (true) {
 /***/ }),
 
 /***/ "../../../src/core/events/BLUR_EVENT.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/BLUR_EVENT.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/BLUR_EVENT.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -464,9 +464,9 @@ module.exports = 'blur';
 /***/ }),
 
 /***/ "../../../src/core/events/BOOT_EVENT.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/BOOT_EVENT.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/BOOT_EVENT.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -491,9 +491,9 @@ module.exports = 'boot';
 /***/ }),
 
 /***/ "../../../src/core/events/CONTEXT_LOST_EVENT.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/CONTEXT_LOST_EVENT.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/CONTEXT_LOST_EVENT.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -519,9 +519,9 @@ module.exports = 'contextlost';
 /***/ }),
 
 /***/ "../../../src/core/events/CONTEXT_RESTORED_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/CONTEXT_RESTORED_EVENT.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/CONTEXT_RESTORED_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -547,9 +547,9 @@ module.exports = 'contextrestored';
 /***/ }),
 
 /***/ "../../../src/core/events/DESTROY_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/DESTROY_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/DESTROY_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -575,9 +575,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/core/events/FOCUS_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/FOCUS_EVENT.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/FOCUS_EVENT.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -602,9 +602,9 @@ module.exports = 'focus';
 /***/ }),
 
 /***/ "../../../src/core/events/HIDDEN_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/HIDDEN_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/HIDDEN_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -633,9 +633,9 @@ module.exports = 'hidden';
 /***/ }),
 
 /***/ "../../../src/core/events/PAUSE_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/PAUSE_EVENT.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/PAUSE_EVENT.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -659,9 +659,9 @@ module.exports = 'pause';
 /***/ }),
 
 /***/ "../../../src/core/events/POST_RENDER_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/POST_RENDER_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/POST_RENDER_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -690,9 +690,9 @@ module.exports = 'postrender';
 /***/ }),
 
 /***/ "../../../src/core/events/POST_STEP_EVENT.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/POST_STEP_EVENT.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/POST_STEP_EVENT.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -720,9 +720,9 @@ module.exports = 'poststep';
 /***/ }),
 
 /***/ "../../../src/core/events/PRE_RENDER_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/PRE_RENDER_EVENT.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/PRE_RENDER_EVENT.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -750,9 +750,9 @@ module.exports = 'prerender';
 /***/ }),
 
 /***/ "../../../src/core/events/PRE_STEP_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/PRE_STEP_EVENT.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/PRE_STEP_EVENT.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -780,9 +780,9 @@ module.exports = 'prestep';
 /***/ }),
 
 /***/ "../../../src/core/events/READY_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/READY_EVENT.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/READY_EVENT.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -807,9 +807,9 @@ module.exports = 'ready';
 /***/ }),
 
 /***/ "../../../src/core/events/RESUME_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/RESUME_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/RESUME_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -833,9 +833,9 @@ module.exports = 'resume';
 /***/ }),
 
 /***/ "../../../src/core/events/STEP_EVENT.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/STEP_EVENT.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/STEP_EVENT.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -863,9 +863,9 @@ module.exports = 'step';
 /***/ }),
 
 /***/ "../../../src/core/events/VISIBLE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/VISIBLE_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/VISIBLE_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -892,9 +892,9 @@ module.exports = 'visible';
 /***/ }),
 
 /***/ "../../../src/core/events/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/index.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -933,9 +933,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/data/DataManager.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/DataManager.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/DataManager.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1615,7 +1615,7 @@ var DataManager = new Class({
      * Return the total number of entries in this Data Manager.
      *
      * @name Phaser.Data.DataManager#count
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     count: {
@@ -1645,9 +1645,9 @@ module.exports = DataManager;
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1682,9 +1682,9 @@ module.exports = 'changedata';
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_KEY_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1717,9 +1717,9 @@ module.exports = 'changedata-';
 /***/ }),
 
 /***/ "../../../src/data/events/DESTROY_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/DESTROY_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/DESTROY_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1743,9 +1743,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/data/events/REMOVE_DATA_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1776,9 +1776,9 @@ module.exports = 'removedata';
 /***/ }),
 
 /***/ "../../../src/data/events/SET_DATA_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/SET_DATA_EVENT.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/SET_DATA_EVENT.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1809,9 +1809,9 @@ module.exports = 'setdata';
 /***/ }),
 
 /***/ "../../../src/data/events/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/index.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1838,44 +1838,10 @@ module.exports = {
 
 /***/ }),
 
-/***/ "../../../src/display/color/GetColorFromValue.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/display/color/GetColorFromValue.js ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * Given a hex color value, such as 0xff00ff (for purple), it will return a
- * numeric representation of it (i.e. 16711935) for use in WebGL tinting.
- *
- * @function Phaser.Display.Color.GetColorFromValue
- * @since 3.50.0
- *
- * @param {number} red - The hex color value, such as 0xff0000.
- *
- * @return {number} The combined color value.
- */
-var GetColorFromValue = function (value)
-{
-    return (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
-};
-
-module.exports = GetColorFromValue;
-
-
-/***/ }),
-
 /***/ "../../../src/display/mask/BitmapMask.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/display/mask/BitmapMask.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/display/mask/BitmapMask.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1887,6 +1853,7 @@ module.exports = GetColorFromValue;
 
 var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
 var GameEvents = __webpack_require__(/*! ../../core/events */ "../../../src/core/events/index.js");
+var RenderEvents = __webpack_require__(/*! ../../renderer/events */ "../../../src/renderer/events/index.js");
 
 /**
  * @classdesc
@@ -1904,6 +1871,9 @@ var GameEvents = __webpack_require__(/*! ../../core/events */ "../../../src/core
  * that a pixel in the mask with an alpha of 0 will hide the corresponding pixel in all masked Game Objects
  *  A pixel with an alpha of 1 in the masked Game Object will receive the same alpha as the
  * corresponding pixel in the mask.
+ *
+ * Note: You cannot combine Bitmap Masks and Blend Modes on the same Game Object. You can, however,
+ * combine Geometry Masks and Blend Modes together.
  *
  * The Bitmap Mask's location matches the location of its Game Object, not the location of the
  * masked objects. Moving or transforming the underlying Game Object will change the mask
@@ -1929,7 +1899,7 @@ var BitmapMask = new Class({
 
     function BitmapMask (scene, renderable)
     {
-        var renderer = scene.sys.game.renderer;
+        var renderer = scene.sys.renderer;
 
         /**
          * A reference to either the Canvas or WebGL Renderer that this Mask is using.
@@ -1950,7 +1920,7 @@ var BitmapMask = new Class({
         this.bitmapMask = renderable;
 
         /**
-         * The texture used for the mask's framebuffer.
+         * The texture used for the masks framebuffer.
          *
          * @name Phaser.Display.Masks.BitmapMask#maskTexture
          * @type {WebGLTexture}
@@ -1998,18 +1968,10 @@ var BitmapMask = new Class({
         this.maskFramebuffer = null;
 
         /**
-         * The previous framebuffer set in the renderer before this one was enabled.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#prevFramebuffer
-         * @type {WebGLFramebuffer}
-         * @since 3.17.0
-         */
-        this.prevFramebuffer = null;
-
-        /**
          * Whether to invert the masks alpha.
          *
-         * If `true`, the alpha of the masking pixel will be inverted before it's multiplied with the masked pixel. Essentially, this means that a masked area will be visible only if the corresponding area in the mask is invisible.
+         * If `true`, the alpha of the masking pixel will be inverted before it's multiplied with the masked pixel.
+         * Essentially, this means that a masked area will be visible only if the corresponding area in the mask is invisible.
          *
          * @name Phaser.Display.Masks.BitmapMask#invertAlpha
          * @type {boolean}
@@ -2027,36 +1989,75 @@ var BitmapMask = new Class({
          */
         this.isStencil = false;
 
-        if (renderer && renderer.gl)
+        this.createMask();
+
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.createMask, this);
+
+        renderer.on(RenderEvents.RESIZE, this.createMask, this);
+    },
+
+    /**
+     * Creates the WebGL Texture2D objects and Framebuffers required for this
+     * mask. If this mask has already been created, then `clearMask` is called first.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#createMask
+     * @since 3.50.0
+     */
+    createMask: function ()
+    {
+        var renderer = this.renderer;
+
+        if (!renderer.gl)
         {
-            var width = renderer.width;
-            var height = renderer.height;
-            var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
-            var gl = renderer.gl;
-            var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
-            var filter = gl.LINEAR;
-
-            this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-            this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-            this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
-            this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
-
-            scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function (renderer)
-            {
-                var width = renderer.width;
-                var height = renderer.height;
-                var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
-                var gl = renderer.gl;
-                var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
-                var filter = gl.LINEAR;
-
-                this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-                this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-                this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
-                this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
-
-            }, this);
+            return;
         }
+
+        if (this.mainTexture)
+        {
+            this.clearMask();
+        }
+
+        var width = renderer.width;
+        var height = renderer.height;
+        var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
+        var gl = renderer.gl;
+        var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+        var filter = gl.LINEAR;
+
+        this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+        this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+        this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
+        this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
+    },
+
+    /**
+     * Deletes the `mainTexture` and `maskTexture` WebGL Textures and deletes
+     * the `mainFramebuffer` and `maskFramebuffer` too, nulling all references.
+     *
+     * This is called when this mask is destroyed, or if you try to creat a new
+     * mask from this object when one is already set.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#clearMask
+     * @since 3.50.0
+     */
+    clearMask: function ()
+    {
+        var renderer = this.renderer;
+
+        if (!renderer.gl || !this.mainTexture)
+        {
+            return;
+        }
+
+        renderer.deleteTexture(this.mainTexture);
+        renderer.deleteTexture(this.maskTexture);
+        renderer.deleteFramebuffer(this.mainFramebuffer);
+        renderer.deleteFramebuffer(this.maskFramebuffer);
+
+        this.mainTexture = null;
+        this.maskTexture = null;
+        this.mainFramebuffer = null;
+        this.maskFramebuffer = null;
     },
 
     /**
@@ -2143,22 +2144,11 @@ var BitmapMask = new Class({
      */
     destroy: function ()
     {
+        this.clearMask();
+
+        this.renderer.off(RenderEvents.RESIZE, this.createMask, this);
+
         this.bitmapMask = null;
-
-        var renderer = this.renderer;
-
-        if (renderer && renderer.gl)
-        {
-            renderer.deleteTexture(this.mainTexture);
-            renderer.deleteTexture(this.maskTexture);
-            renderer.deleteFramebuffer(this.mainFramebuffer);
-            renderer.deleteFramebuffer(this.maskFramebuffer);
-        }
-
-        this.mainTexture = null;
-        this.maskTexture = null;
-        this.mainFramebuffer = null;
-        this.maskFramebuffer = null;
         this.prevFramebuffer = null;
         this.renderer = null;
     }
@@ -2171,9 +2161,9 @@ module.exports = BitmapMask;
 /***/ }),
 
 /***/ "../../../src/display/mask/GeometryMask.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/display/mask/GeometryMask.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/display/mask/GeometryMask.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2230,6 +2220,8 @@ var GeometryMask = new Class({
          * Similar to the BitmapMasks invertAlpha setting this to true will then hide all pixels
          * drawn to the Geometry Mask.
          *
+         * This is a WebGL only feature.
+         *
          * @name Phaser.Display.Masks.GeometryMask#invertAlpha
          * @type {boolean}
          * @since 3.16.0
@@ -2264,7 +2256,7 @@ var GeometryMask = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphicsGeometry - The Graphics object which will be used for the Geometry Mask.
-     * 
+     *
      * @return {this} This Geometry Mask
      */
     setShape: function (graphicsGeometry)
@@ -2276,13 +2268,16 @@ var GeometryMask = new Class({
 
     /**
      * Sets the `invertAlpha` property of this Geometry Mask.
+     *
      * Inverting the alpha essentially flips the way the mask works.
+     *
+     * This is a WebGL only feature.
      *
      * @method Phaser.Display.Masks.GeometryMask#setInvertAlpha
      * @since 3.17.0
      *
      * @param {boolean} [value=true] - Invert the alpha of this mask?
-     * 
+     *
      * @return {this} This Geometry Mask
      */
     setInvertAlpha: function (value)
@@ -2361,7 +2356,7 @@ var GeometryMask = new Class({
         }
 
         //  Write stencil buffer
-        geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
+        geometryMask.renderWebGL(renderer, geometryMask, camera);
 
         renderer.flush();
 
@@ -2405,32 +2400,32 @@ var GeometryMask = new Class({
 
         renderer.maskCount--;
 
+        //  Force flush before disabling stencil test
+        renderer.flush();
+
+        var current = renderer.currentMask;
+
         if (renderer.maskStack.length === 0)
         {
             //  If this is the only mask in the stack, flush and disable
-            renderer.flush();
-
-            renderer.currentMask.mask = null;
+            current.mask = null;
 
             gl.disable(gl.STENCIL_TEST);
         }
         else
         {
-            //  Force flush before disabling stencil test
-            renderer.flush();
-
             var prev = renderer.maskStack[renderer.maskStack.length - 1];
 
             prev.mask.applyStencil(renderer, prev.camera, false);
 
             if (renderer.currentCameraMask.mask !== prev.mask)
             {
-                renderer.currentMask.mask = prev.mask;
-                renderer.currentMask.camera = prev.camera;
+                current.mask = prev.mask;
+                current.camera = prev.camera;
             }
             else
             {
-                renderer.currentMask.mask = null;
+                current.mask = null;
             }
         }
     },
@@ -2451,7 +2446,7 @@ var GeometryMask = new Class({
 
         renderer.currentContext.save();
 
-        geometryMask.renderCanvas(renderer, geometryMask, 0, camera, null, null, true);
+        geometryMask.renderCanvas(renderer, geometryMask, camera, null, null, true);
 
         renderer.currentContext.clip();
     },
@@ -2491,9 +2486,9 @@ module.exports = GeometryMask;
 /***/ }),
 
 /***/ "../../../src/gameobjects/BuildGameObject.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/BuildGameObject.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/BuildGameObject.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2624,9 +2619,9 @@ module.exports = BuildGameObject;
 /***/ }),
 
 /***/ "../../../src/gameobjects/GameObject.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/GameObject.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/GameObject.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2668,15 +2663,32 @@ var GameObject = new Class({
         EventEmitter.call(this);
 
         /**
-         * The Scene to which this Game Object belongs.
+         * A reference to the Scene to which this Game Object belongs.
+         *
          * Game Objects can only belong to one Scene.
+         *
+         * You should consider this property as being read-only. You cannot move a
+         * Game Object to another Scene by simply changing it.
          *
          * @name Phaser.GameObjects.GameObject#scene
          * @type {Phaser.Scene}
-         * @protected
          * @since 3.0.0
          */
         this.scene = scene;
+
+        /**
+         * Holds a reference to the Display List that contains this Game Object.
+         *
+         * This is set automatically when this Game Object is added to a Scene or Layer.
+         *
+         * You should treat this property as being read-only.
+         *
+         * @name Phaser.GameObjects.GameObject#displayList
+         * @type {(Phaser.GameObjects.DisplayList|Phaser.GameObjects.Layer)}
+         * @default null
+         * @since 3.50.0
+         */
+        this.displayList = null;
 
         /**
          * A textual representation of this Game Object, i.e. `sprite`.
@@ -2699,7 +2711,7 @@ var GameObject = new Class({
          * If you need to store complex data about your Game Object, look at using the Data Component instead.
          *
          * @name Phaser.GameObjects.GameObject#state
-         * @type {(integer|string)}
+         * @type {(number|string)}
          * @since 3.16.0
          */
         this.state = 0;
@@ -2741,7 +2753,7 @@ var GameObject = new Class({
          * Reserved for future use by plugins and the Input Manager.
          *
          * @name Phaser.GameObjects.GameObject#tabIndex
-         * @type {integer}
+         * @type {number}
          * @default -1
          * @since 3.0.0
          */
@@ -2765,7 +2777,7 @@ var GameObject = new Class({
          * If those components are not used by your custom class then you can use this bitmask as you wish.
          *
          * @name Phaser.GameObjects.GameObject#renderFlags
-         * @type {integer}
+         * @type {number}
          * @default 15
          * @since 3.0.0
          */
@@ -2873,7 +2885,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#setState
      * @since 3.16.0
      *
-     * @param {(integer|string)} value - The state of the Game Object.
+     * @param {(number|string)} value - The state of the Game Object.
      *
      * @return {this} This GameObject.
      */
@@ -3239,7 +3251,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#getIndexList
      * @since 3.4.0
      *
-     * @return {integer[]} An array of display list position indexes.
+     * @return {number[]} An array of display list position indexes.
      */
     getIndexList: function ()
     {
@@ -3288,13 +3300,9 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#destroy
      * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.0.0
-     *
-     * @param {boolean} [fromScene=false] - Is this Game Object being destroyed as the result of a Scene shutdown?
      */
-    destroy: function (fromScene)
+    destroy: function ()
     {
-        if (fromScene === undefined) { fromScene = false; }
-
         //  This Game Object has already been destroyed
         if (!this.scene || this.ignoreDestroy)
         {
@@ -3308,16 +3316,23 @@ var GameObject = new Class({
 
         this.emit(Events.DESTROY, this);
 
-        var sys = this.scene.sys;
+        this.removeAllListeners();
 
-        if (!fromScene)
+        if (this.postPipelines)
         {
-            sys.displayList.remove(this);
+            this.resetPostPipeline(true);
+        }
+
+        if (this.displayList)
+        {
+            this.displayList.queueDepthSort();
+            this.displayList.remove(this);
         }
 
         if (this.input)
         {
-            sys.input.clear(this);
+            this.scene.sys.input.clear(this);
+
             this.input = undefined;
         }
 
@@ -3331,23 +3346,16 @@ var GameObject = new Class({
         if (this.body)
         {
             this.body.destroy();
-            this.body = undefined;
-        }
 
-        //  Tell the Scene to re-sort the children
-        if (!fromScene)
-        {
-            sys.queueDepthSort();
+            this.body = undefined;
         }
 
         this.active = false;
         this.visible = false;
 
         this.scene = undefined;
-
+        this.displayList = undefined;
         this.parentContainer = undefined;
-
-        this.removeAllListeners();
     }
 
 });
@@ -3355,7 +3363,7 @@ var GameObject = new Class({
 /**
  * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.
  *
- * @constant {integer} RENDER_MASK
+ * @constant {number} RENDER_MASK
  * @memberof Phaser.GameObjects.GameObject
  * @default
  */
@@ -3366,10 +3374,86 @@ module.exports = GameObject;
 
 /***/ }),
 
+/***/ "../../../src/gameobjects/GetCalcMatrix.js":
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/GetCalcMatrix.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var TransformMatrix = __webpack_require__(/*! ./components/TransformMatrix */ "../../../src/gameobjects/components/TransformMatrix.js");
+
+var tempMatrix1 = new TransformMatrix();
+var tempMatrix2 = new TransformMatrix();
+var tempMatrix3 = new TransformMatrix();
+
+var result = { camera: tempMatrix1, sprite: tempMatrix2, calc: tempMatrix3 };
+
+/**
+ * Calculates the Transform Matrix of the given Game Object and Camera, factoring in
+ * the parent matrix if provided.
+ *
+ * Note that the object this results contains _references_ to the Transform Matrices,
+ * not new instances of them. Therefore, you should use their values immediately, or
+ * copy them to your own matrix, as they will be replaced as soon as another Game
+ * Object is rendered.
+ *
+ * @function Phaser.GameObjects.GetCalcMatrix
+ * @memberof Phaser.GameObjects
+ * @since 3.50.0
+ *
+ * @param {Phaser.GameObjects.GameObject} src - The Game Object to calculate the transform matrix for.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera being used to render the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - The transform matrix of the parent container, if any.
+ *
+ * @return {Phaser.Types.GameObjects.GetCalcMatrixResults} The results object containing the updated transform matrices.
+ */
+var GetCalcMatrix = function (src, camera, parentMatrix)
+{
+    var camMatrix = tempMatrix1;
+    var spriteMatrix = tempMatrix2;
+    var calcMatrix = tempMatrix3;
+
+    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+
+    camMatrix.copyFrom(camera.matrix);
+
+    if (parentMatrix)
+    {
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        spriteMatrix.e = src.x;
+        spriteMatrix.f = src.y;
+    }
+    else
+    {
+        spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
+        spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
+    }
+
+    //  Multiply by the Sprite matrix, store result in calcMatrix
+    camMatrix.multiply(spriteMatrix, calcMatrix);
+
+    return result;
+};
+
+module.exports = GetCalcMatrix;
+
+
+/***/ }),
+
 /***/ "../../../src/gameobjects/components/Alpha.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Alpha.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Alpha.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3667,9 +3751,9 @@ module.exports = Alpha;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/AlphaSingle.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/AlphaSingle.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/AlphaSingle.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3782,9 +3866,9 @@ module.exports = AlphaSingle;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/BlendMode.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/BlendMode.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/BlendMode.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3810,7 +3894,7 @@ var BlendMode = {
      * Private internal value. Holds the current blend mode.
      * 
      * @name Phaser.GameObjects.Components.BlendMode#_blendMode
-     * @type {integer}
+     * @type {number}
      * @private
      * @default 0
      * @since 3.0.0
@@ -3909,9 +3993,9 @@ module.exports = BlendMode;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ComputedSize.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ComputedSize.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ComputedSize.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4063,9 +4147,9 @@ module.exports = ComputedSize;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Crop.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Crop.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Crop.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4193,9 +4277,9 @@ module.exports = Crop;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Depth.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Depth.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Depth.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4208,7 +4292,7 @@ module.exports = Crop;
 /**
  * Provides methods used for setting the depth of a Game Object.
  * Should be applied as a mixin and not used directly.
- * 
+ *
  * @namespace Phaser.GameObjects.Components.Depth
  * @since 3.0.0
  */
@@ -4217,9 +4301,9 @@ var Depth = {
 
     /**
      * Private internal value. Holds the depth of the Game Object.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Depth#_depth
-     * @type {integer}
+     * @type {number}
      * @private
      * @default 0
      * @since 3.0.0
@@ -4228,7 +4312,7 @@ var Depth = {
 
     /**
      * The depth of this Game Object within the Scene.
-     * 
+     *
      * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
      * of Game Objects, without actually moving their position in the display list.
      *
@@ -4236,7 +4320,7 @@ var Depth = {
      * value will always render in front of one with a lower value.
      *
      * Setting the depth will queue a depth sort event within the Scene.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Depth#depth
      * @type {number}
      * @since 3.0.0
@@ -4250,7 +4334,11 @@ var Depth = {
 
         set: function (value)
         {
-            this.scene.sys.queueDepthSort();
+            if (this.displayList)
+            {
+                this.displayList.queueDepthSort();
+            }
+
             this._depth = value;
         }
 
@@ -4258,7 +4346,7 @@ var Depth = {
 
     /**
      * The depth of this Game Object within the Scene.
-     * 
+     *
      * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
      * of Game Objects, without actually moving their position in the display list.
      *
@@ -4266,12 +4354,12 @@ var Depth = {
      * value will always render in front of one with a lower value.
      *
      * Setting the depth will queue a depth sort event within the Scene.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Depth#setDepth
      * @since 3.0.0
      *
-     * @param {integer} value - The depth of this Game Object.
-     * 
+     * @param {number} value - The depth of this Game Object.
+     *
      * @return {this} This Game Object instance.
      */
     setDepth: function (value)
@@ -4291,9 +4379,9 @@ module.exports = Depth;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Flip.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Flip.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Flip.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4460,9 +4548,9 @@ module.exports = Flip;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/GetBounds.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/GetBounds.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/GetBounds.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4824,9 +4912,9 @@ module.exports = GetBounds;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Mask.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Mask.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Mask.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4864,10 +4952,10 @@ var Mask = {
      * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
      *
      * If a mask is already set on this Game Object it will be immediately replaced.
-     * 
+     *
      * Masks are positioned in global space and are not relative to the Game Object to which they
      * are applied. The reason for this is that multiple Game Objects can all share the same mask.
-     * 
+     *
      * Masks have no impact on physics or input detection. They are purely a rendering component
      * that allows you to limit what is visible during the render pass.
      *
@@ -4913,6 +5001,8 @@ var Mask = {
      * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
      * including this one.
      *
+     * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+     *
      * To create the mask you need to pass in a reference to a renderable Game Object.
      * A renderable Game Object is one that uses a texture to render with, such as an
      * Image, Sprite, Render Texture or BitmapText.
@@ -4923,7 +5013,7 @@ var Mask = {
      *
      * @method Phaser.GameObjects.Components.Mask#createBitmapMask
      * @since 3.6.2
-     * 
+     *
      * @param {Phaser.GameObjects.GameObject} [renderable] - A renderable Game Object that uses a texture, such as a Sprite.
      *
      * @return {Phaser.Display.Masks.BitmapMask} This Bitmap Mask that was created.
@@ -4947,12 +5037,12 @@ var Mask = {
      *
      * If you do not provide a graphics object, and this Game Object is an instance
      * of a Graphics object, then it will use itself to create the mask.
-     * 
+     *
      * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
      *
      * @method Phaser.GameObjects.Components.Mask#createGeometryMask
      * @since 3.6.2
-     * 
+     *
      * @param {Phaser.GameObjects.Graphics} [graphics] - A Graphics Game Object. The geometry within it will be used as the mask.
      *
      * @return {Phaser.Display.Masks.GeometryMask} This Geometry Mask that was created.
@@ -4976,9 +5066,9 @@ module.exports = Mask;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Origin.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Origin.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Origin.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5184,9 +5274,9 @@ module.exports = Origin;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/PathFollower.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/PathFollower.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/PathFollower.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5294,7 +5384,7 @@ var PathFollower = {
      * Records the direction of the follower so it can change direction.
      *
      * @name Phaser.GameObjects.PathFollower#_prevDirection
-     * @type {integer}
+     * @type {number}
      * @private
      * @since 3.0.0
      */
@@ -5616,9 +5706,9 @@ module.exports = PathFollower;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Pipeline.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Pipeline.js ***!
-  \*****************************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Pipeline.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5628,7 +5718,9 @@ module.exports = PathFollower;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DeepCopy = __webpack_require__(/*! ../../utils/object/DeepCopy */ "../../../src/utils/object/DeepCopy.js");
 var PIPELINE_CONST = __webpack_require__(/*! ../../renderer/webgl/pipelines/const */ "../../../src/renderer/webgl/pipelines/const.js");
+var SpliceOne = __webpack_require__(/*! ../../utils/array/SpliceOne */ "../../../src/utils/array/SpliceOne.js");
 
 /**
  * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
@@ -5642,6 +5734,8 @@ var Pipeline = {
 
     /**
      * The initial WebGL pipeline of this Game Object.
+     *
+     * If you call `resetPipeline` on this Game Object, the pipeline is reset to this default.
      *
      * @name Phaser.GameObjects.Components.Pipeline#defaultPipeline
      * @type {Phaser.Renderer.WebGL.WebGLPipeline}
@@ -5663,58 +5757,238 @@ var Pipeline = {
     pipeline: null,
 
     /**
+     * Does this Game Object have any Post Pipelines set?
+     *
+     * @name Phaser.GameObjects.Components.Pipeline#hasPostPipeline
+     * @type {boolean}
+     * @webglOnly
+     * @since 3.50.0
+     */
+    hasPostPipeline: false,
+
+    /**
+     * The WebGL Post FX Pipelines this Game Object uses for post-render effects.
+     *
+     * The pipelines are processed in the order in which they appear in this array.
+     *
+     * If you modify this array directly, be sure to set the
+     * `hasPostPipeline` property accordingly.
+     *
+     * @name Phaser.GameObjects.Components.Pipeline#postPipeline
+     * @type {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[]}
+     * @webglOnly
+     * @since 3.50.0
+     */
+    postPipelines: null,
+
+    /**
+     * An object to store pipeline specific data in, to be read by the pipelines this Game Object uses.
+     *
+     * @name Phaser.GameObjects.Components.Pipeline#pipelineData
+     * @type {object}
+     * @webglOnly
+     * @since 3.50.0
+     */
+    pipelineData: null,
+
+    /**
      * Sets the initial WebGL Pipeline of this Game Object.
      *
-     * This should only be called during the instantiation of the Game Object.
+     * This should only be called during the instantiation of the Game Object. After that, use `setPipeline`.
      *
      * @method Phaser.GameObjects.Components.Pipeline#initPipeline
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {string} [name=MultiPipeline] - The name of the pipeline to set on this Game Object. Defaults to the Multi Pipeline.
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline, or a pipeline instance to set.
      *
      * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
      */
-    initPipeline: function (name)
+    initPipeline: function (pipeline)
     {
-        if (name === undefined) { name = PIPELINE_CONST.MULTI_PIPELINE; }
+        if (pipeline === undefined) { pipeline = PIPELINE_CONST.MULTI_PIPELINE; }
 
-        var renderer = this.scene.sys.game.renderer;
+        var renderer = this.scene.sys.renderer;
         var pipelines = renderer.pipelines;
 
-        if (pipelines && pipelines.has(name))
-        {
-            this.defaultPipeline = pipelines.get(name);
-            this.pipeline = this.defaultPipeline;
+        this.postPipelines = [];
+        this.pipelineData = {};
 
-            return true;
+        if (pipelines)
+        {
+            var instance = pipelines.get(pipeline);
+
+            if (instance)
+            {
+                this.defaultPipeline = instance;
+                this.pipeline = instance;
+
+                return true;
+            }
         }
 
         return false;
     },
 
     /**
-     * Sets the active WebGL Pipeline of this Game Object.
+     * Sets the main WebGL Pipeline of this Game Object.
+     *
+     * Also sets the `pipelineData` property, if the parameter is given.
+     *
+     * Both the pipeline and post pipelines share the same pipeline data object.
      *
      * @method Phaser.GameObjects.Components.Pipeline#setPipeline
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {string} name - The name of the pipeline to set on this Game Object.
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline, or a pipeline instance to set.
+     * @param {object} [pipelineData] - Optional pipeline data object that is _deep copied_ into the `pipelineData` property of this Game Object.
+     * @param {boolean} [copyData=true] - Should the pipeline data object be _deep copied_ into the `pipelineData` property of this Game Object? If `false` it will be set by reference instead.
      *
      * @return {this} This Game Object instance.
      */
-    setPipeline: function (name)
+    setPipeline: function (pipeline, pipelineData, copyData)
     {
-        var renderer = this.scene.sys.game.renderer;
+        var renderer = this.scene.sys.renderer;
         var pipelines = renderer.pipelines;
 
-        if (pipelines && pipelines.has(name))
+        if (pipelines)
         {
-            this.pipeline = pipelines.get(name);
+            var instance = pipelines.get(pipeline);
+
+            if (instance)
+            {
+                this.pipeline = instance;
+            }
+
+            if (pipelineData)
+            {
+                this.pipelineData = (copyData) ? DeepCopy(pipelineData) : pipelineData;
+            }
         }
 
         return this;
+    },
+
+    /**
+     * Sets one, or more, Post Pipelines on this Game Object.
+     *
+     * Post Pipelines are invoked after this Game Object has rendered to its target and
+     * are commonly used for post-fx.
+     *
+     * The post pipelines are appended to the `postPipelines` array belonging to this
+     * Game Object. When the renderer processes this Game Object, it iterates through the post
+     * pipelines in the order in which they appear in the array. If you are stacking together
+     * multiple effects, be aware that the order is important.
+     *
+     * If you call this method multiple times, the new pipelines will be appended to any existing
+     * post pipelines already set. Use the `resetPostPipeline` method to clear them first, if required.
+     *
+     * You can optionally also sets the `pipelineData` property, if the parameter is given.
+     *
+     * Both the pipeline and post pipelines share the pipeline data object together.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#setPostPipeline
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {(string|string[]|function|function[]|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} pipelines - Either the string-based name of the pipeline, or a pipeline instance, or class, or an array of them.
+     * @param {object} [pipelineData] - Optional pipeline data object that is _deep copied_ into the `pipelineData` property of this Game Object.
+     * @param {boolean} [copyData=true] - Should the pipeline data object be _deep copied_ into the `pipelineData` property of this Game Object? If `false` it will be set by reference instead.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setPostPipeline: function (pipelines, pipelineData, copyData)
+    {
+        var renderer = this.scene.sys.renderer;
+        var pipelineManager = renderer.pipelines;
+
+        if (pipelineManager)
+        {
+            if (!Array.isArray(pipelines))
+            {
+                pipelines = [ pipelines ];
+            }
+
+            for (var i = 0; i < pipelines.length; i++)
+            {
+                var instance = pipelineManager.getPostPipeline(pipelines[i], this);
+
+                if (instance)
+                {
+                    this.postPipelines.push(instance);
+                }
+            }
+
+            if (pipelineData)
+            {
+                this.pipelineData = (copyData) ? DeepCopy(pipelineData) : pipelineData;
+            }
+        }
+
+        this.hasPostPipeline = (this.postPipelines.length > 0);
+
+        return this;
+    },
+
+    /**
+     * Adds an entry to the `pipelineData` object belonging to this Game Object.
+     *
+     * If the 'key' already exists, its value is updated. If it doesn't exist, it is created.
+     *
+     * If `value` is undefined, and `key` exists, `key` is removed from the data object.
+     *
+     * Both the pipeline and post pipelines share the pipeline data object together.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#setPipelineData
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {string} key - The key of the pipeline data to set, update, or delete.
+     * @param {any} [value] - The value to be set with the key. If `undefined` then `key` will be deleted from the object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setPipelineData: function (key, value)
+    {
+        var data = this.pipelineData;
+
+        if (value === undefined)
+        {
+            delete data[key];
+        }
+        else
+        {
+            data[key] = value;
+        }
+
+        return this;
+    },
+
+    /**
+     * Gets a Post Pipeline instance from this Game Object, based on the given name, and returns it.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#getPostPipeline
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {(string|function|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline)} pipeline - The string-based name of the pipeline, or a pipeline class.
+     *
+     * @return {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} The first Post Pipeline matching the name, or undefined if no match.
+     */
+    getPostPipeline: function (pipeline)
+    {
+        var pipelines = this.postPipelines;
+
+        for (var i = 0; i < pipelines.length; i++)
+        {
+            var instance = pipelines[i];
+
+            if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
+            {
+                return instance;
+            }
+        }
     },
 
     /**
@@ -5724,13 +5998,94 @@ var Pipeline = {
      * @webglOnly
      * @since 3.0.0
      *
-     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
+     * @param {boolean} [resetPostPipelines=false] - Reset all of the post pipelines?
+     * @param {boolean} [resetData=false] - Reset the `pipelineData` object to being an empty object?
+     *
+     * @return {boolean} `true` if the pipeline was reset successfully, otherwise `false`.
      */
-    resetPipeline: function ()
+    resetPipeline: function (resetPostPipelines, resetData)
     {
+        if (resetPostPipelines === undefined) { resetPostPipelines = false; }
+        if (resetData === undefined) { resetData = false; }
+
         this.pipeline = this.defaultPipeline;
 
+        if (resetPostPipelines)
+        {
+            this.postPipelines = [];
+            this.hasPostPipeline = false;
+        }
+
+        if (resetData)
+        {
+            this.pipelineData = {};
+        }
+
         return (this.pipeline !== null);
+    },
+
+    /**
+     * Resets the WebGL Post Pipelines of this Game Object. It does this by calling
+     * the `destroy` method on each post pipeline and then clearing the local array.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#resetPostPipeline
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {boolean} [resetData=false] - Reset the `pipelineData` object to being an empty object?
+     */
+    resetPostPipeline: function (resetData)
+    {
+        if (resetData === undefined) { resetData = false; }
+
+        var pipelines = this.postPipelines;
+
+        for (var i = 0; i < pipelines.length; i++)
+        {
+            pipelines[i].destroy();
+        }
+
+        this.postPipelines = [];
+        this.hasPostPipeline = false;
+
+        if (resetData)
+        {
+            this.pipelineData = {};
+        }
+    },
+
+    /**
+     * Removes a single Post Pipeline instance from this Game Object, based on the given name, and destroys it.
+     *
+     * If you wish to remove all Post Pipelines use the `resetPostPipeline` method instead.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#removePostPipeline
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {string|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} pipeline - The string-based name of the pipeline, or a pipeline class.
+     *
+     * @return {this} This Game Object.
+     */
+    removePostPipeline: function (pipeline)
+    {
+        var pipelines = this.postPipelines;
+
+        for (var i = 0; i < pipelines.length; i++)
+        {
+            var instance = pipelines[i];
+
+            if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
+            {
+                instance.destroy();
+
+                SpliceOne(pipelines, i);
+
+                return this;
+            }
+        }
+
+        return this;
     },
 
     /**
@@ -5755,9 +6110,9 @@ module.exports = Pipeline;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ScrollFactor.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ScrollFactor.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ScrollFactor.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5867,9 +6222,9 @@ module.exports = ScrollFactor;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Size.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Size.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Size.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6059,9 +6414,9 @@ module.exports = Size;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Texture.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Texture.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Texture.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6120,7 +6475,7 @@ var Texture = {
      * @since 3.0.0
      *
      * @param {(string|Phaser.Textures.Texture)} key - The key of the texture to be used, as stored in the Texture Manager, or a Texture instance.
-     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     * @param {(string|number)} [frame] - The name or index of the frame within the Texture.
      *
      * @return {this} This Game Object instance.
      */
@@ -6144,7 +6499,7 @@ var Texture = {
      * @method Phaser.GameObjects.Components.Texture#setFrame
      * @since 3.0.0
      *
-     * @param {(string|integer)} frame - The name or index of the frame within the Texture.
+     * @param {(string|number)} frame - The name or index of the frame within the Texture.
      * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
      * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
      *
@@ -6194,9 +6549,9 @@ module.exports = Texture;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TextureCrop.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/TextureCrop.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/TextureCrop.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6249,24 +6604,24 @@ var TextureCrop = {
 
     /**
      * Applies a crop to a texture based Game Object, such as a Sprite or Image.
-     * 
+     *
      * The crop is a rectangle that limits the area of the texture frame that is visible during rendering.
-     * 
+     *
      * Cropping a Game Object does not change its size, dimensions, physics body or hit area, it just
      * changes what is shown when rendered.
-     * 
+     *
      * The crop coordinates are relative to the texture frame, not the Game Object, meaning 0 x 0 is the top-left.
-     * 
+     *
      * Therefore, if you had a Game Object that had an 800x600 sized texture, and you wanted to show only the left
      * half of it, you could call `setCrop(0, 0, 400, 600)`.
-     * 
+     *
      * It is also scaled to match the Game Object scale automatically. Therefore a crop rect of 100x50 would crop
      * an area of 200x100 when applied to a Game Object that had a scale factor of 2.
-     * 
+     *
      * You can either pass in numeric values directly, or you can provide a single Rectangle object as the first argument.
-     * 
+     *
      * Call this method with no arguments at all to reset the crop, or toggle the property `isCropped` to `false`.
-     * 
+     *
      * You should do this if the crop rectangle becomes the same size as the frame itself, as it will allow
      * the renderer to skip several internal calculations.
      *
@@ -6314,7 +6669,7 @@ var TextureCrop = {
      * @since 3.0.0
      *
      * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     * @param {(string|number)} [frame] - The name or index of the frame within the Texture.
      *
      * @return {this} This Game Object instance.
      */
@@ -6338,7 +6693,7 @@ var TextureCrop = {
      * @method Phaser.GameObjects.Components.TextureCrop#setFrame
      * @since 3.0.0
      *
-     * @param {(string|integer)} frame - The name or index of the frame within the Texture.
+     * @param {(string|number)} frame - The name or index of the frame within the Texture.
      * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
      * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
      *
@@ -6391,7 +6746,7 @@ var TextureCrop = {
      * @method Phaser.GameObjects.Components.TextureCrop#resetCropObject
      * @private
      * @since 3.12.0
-     * 
+     *
      * @return {object} The crop object.
      */
     resetCropObject: function ()
@@ -6407,19 +6762,17 @@ module.exports = TextureCrop;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Tint.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Tint.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Tint.js ***!
+  \******************************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
-
-var GetColorFromValue = __webpack_require__(/*! ../../display/color/GetColorFromValue */ "../../../src/display/color/GetColorFromValue.js");
 
 /**
  * Provides methods used for setting the tint of a Game Object.
@@ -6433,62 +6786,58 @@ var GetColorFromValue = __webpack_require__(/*! ../../display/color/GetColorFrom
 var Tint = {
 
     /**
-     * Private internal value. Holds the top-left tint value.
+     * The tint value being applied to the top-left vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintTL
+     * @name Phaser.GameObjects.Components.Tint#tintTopLeft
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintTL: 16777215,
+    tintTopLeft: 0xffffff,
 
     /**
-     * Private internal value. Holds the top-right tint value.
+     * The tint value being applied to the top-right vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintTR
+     * @name Phaser.GameObjects.Components.Tint#tintTopRight
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintTR: 16777215,
+    tintTopRight: 0xffffff,
 
     /**
-     * Private internal value. Holds the bottom-left tint value.
+     * The tint value being applied to the bottom-left vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintBL
+     * @name Phaser.GameObjects.Components.Tint#tintBottomLeft
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintBL: 16777215,
+    tintBottomLeft: 0xffffff,
 
     /**
-     * Private internal value. Holds the bottom-right tint value.
+     * The tint value being applied to the bottom-right vertice of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
      *
-     * @name Phaser.GameObjects.Components.Tint#_tintBR
+     * @name Phaser.GameObjects.Components.Tint#tintBottomRight
      * @type {number}
-     * @private
-     * @default 16777215
+     * @default 0xffffff
      * @since 3.0.0
      */
-    _tintBR: 16777215,
+    tintBottomRight: 0xffffff,
 
     /**
-     * Private internal value. Holds if the Game Object is tinted or not.
+     * The tint fill mode.
      *
-     * @name Phaser.GameObjects.Components.Tint#_isTinted
-     * @type {boolean}
-     * @private
-     * @default false
-     * @since 3.11.0
-     */
-    _isTinted: false,
-
-    /**
-     * Fill or additive?
+     * `false` = An additive tint (the default), where vertices colors are blended with the texture.
+     * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
      *
      * @name Phaser.GameObjects.Components.Tint#tintFill
      * @type {boolean}
@@ -6513,8 +6862,6 @@ var Tint = {
     {
         this.setTint(0xffffff);
 
-        this._isTinted = false;
-
         return this;
     },
 
@@ -6538,10 +6885,10 @@ var Tint = {
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
-     * @param {integer} [topRight] - The tint being applied to the top-right of the Game Object.
-     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
-     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
+     * @param {number} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
+     * @param {number} [topRight] - The tint being applied to the top-right of the Game Object.
+     * @param {number} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
+     * @param {number} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
      *
      * @return {this} This Game Object instance.
      */
@@ -6556,12 +6903,10 @@ var Tint = {
             bottomRight = topLeft;
         }
 
-        this._tintTL = GetColorFromValue(topLeft);
-        this._tintTR = GetColorFromValue(topRight);
-        this._tintBL = GetColorFromValue(bottomLeft);
-        this._tintBR = GetColorFromValue(bottomRight);
-
-        this._isTinted = true;
+        this.tintTopLeft = topLeft;
+        this.tintTopRight = topRight;
+        this.tintBottomLeft = bottomLeft;
+        this.tintBottomRight = bottomRight;
 
         this.tintFill = false;
 
@@ -6589,10 +6934,10 @@ var Tint = {
      * @webglOnly
      * @since 3.11.0
      *
-     * @param {integer} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If not other values are given this value is applied evenly, tinting the whole Game Object.
-     * @param {integer} [topRight] - The tint being applied to the top-right of the Game Object.
-     * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
-     * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
+     * @param {number} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If not other values are given this value is applied evenly, tinting the whole Game Object.
+     * @param {number} [topRight] - The tint being applied to the top-right of the Game Object.
+     * @param {number} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
+     * @param {number} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
      *
      * @return {this} This Game Object instance.
      */
@@ -6606,107 +6951,11 @@ var Tint = {
     },
 
     /**
-     * The tint value being applied to the top-left of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintTopLeft
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintTopLeft: {
-
-        get: function ()
-        {
-            return this._tintTL;
-        },
-
-        set: function (value)
-        {
-            this._tintTL = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
-     * The tint value being applied to the top-right of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintTopRight
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintTopRight: {
-
-        get: function ()
-        {
-            return this._tintTR;
-        },
-
-        set: function (value)
-        {
-            this._tintTR = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
-     * The tint value being applied to the bottom-left of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintBottomLeft
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintBottomLeft: {
-
-        get: function ()
-        {
-            return this._tintBL;
-        },
-
-        set: function (value)
-        {
-            this._tintBL = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
-     * The tint value being applied to the bottom-right of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Tint#tintBottomRight
-     * @type {integer}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    tintBottomRight: {
-
-        get: function ()
-        {
-            return this._tintBR;
-        },
-
-        set: function (value)
-        {
-            this._tintBR = GetColorFromValue(value);
-            this._isTinted = true;
-        }
-
-    },
-
-    /**
      * The tint value being applied to the whole of the Game Object.
      * This property is a setter-only. Use the properties `tintTopLeft` etc to read the current tint value.
      *
      * @name Phaser.GameObjects.Components.Tint#tint
-     * @type {integer}
+     * @type {number}
      * @webglOnly
      * @since 3.0.0
      */
@@ -6719,7 +6968,10 @@ var Tint = {
     },
 
     /**
-     * Does this Game Object have a tint applied to it or not?
+     * Does this Game Object have a tint applied?
+     *
+     * It checks to see if the 4 tint properties are set to the value 0xffffff
+     * and that the `tintFill` property is `false`. This indicates that a Game Object isn't tinted.
      *
      * @name Phaser.GameObjects.Components.Tint#isTinted
      * @type {boolean}
@@ -6731,7 +6983,15 @@ var Tint = {
 
         get: function ()
         {
-            return this._isTinted;
+            var white = 0xffffff;
+
+            return (
+                this.tintFill ||
+                this.tintTopLeft !== white ||
+                this.tintTopRight !== white ||
+                this.tintBottomLeft !== white ||
+                this.tintBottomRight !== white
+            );
         }
 
     }
@@ -6744,9 +7004,9 @@ module.exports = Tint;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ToJSON.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ToJSON.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ToJSON.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6810,9 +7070,9 @@ module.exports = ToJSON;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Transform.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Transform.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Transform.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7024,7 +7284,7 @@ var Transform = {
      * If you prefer to work in radians, see the `rotation` property instead.
      *
      * @name Phaser.GameObjects.Components.Transform#angle
-     * @type {integer}
+     * @type {number}
      * @default 0
      * @since 3.0.0
      */
@@ -7093,6 +7353,26 @@ var Transform = {
         this.y = y;
         this.z = z;
         this.w = w;
+
+        return this;
+    },
+
+    /**
+     * Copies an object's coordinates to this Game Object's position.
+     *
+     * @method Phaser.GameObjects.Components.Transform#copyPosition
+     * @since 3.50.0
+     *
+     * @param {(Phaser.Types.Math.Vector2Like|Phaser.Types.Math.Vector3Like|Phaser.Types.Math.Vector4Like)} source - An object with numeric 'x', 'y', 'z', or 'w' properties. Undefined values are not copied.
+     *
+     * @return {this} This Game Object instance.
+     */
+    copyPosition: function (source)
+    {
+        if (source.x !== undefined) { this.x = source.x; }
+        if (source.y !== undefined) { this.y = source.y; }
+        if (source.z !== undefined) { this.z = source.z; }
+        if (source.w !== undefined) { this.w = source.w; }
 
         return this;
     },
@@ -7406,9 +7686,9 @@ module.exports = Transform;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TransformMatrix.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/TransformMatrix.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/TransformMatrix.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7692,13 +7972,13 @@ var TransformMatrix = new Class({
             if (a || b)
             {
                 // var r = Math.sqrt(a * a + b * b);
-    
+
                 return (b > 0) ? Math.acos(a / this.scaleX) : -Math.acos(a / this.scaleX);
             }
             else if (c || d)
             {
                 // var s = Math.sqrt(c * c + d * d);
-    
+
                 return MATH_CONST.TAU - ((d > 0) ? Math.acos(-c / this.scaleY) : -Math.acos(c / this.scaleY));
             }
             else
@@ -7841,7 +8121,7 @@ var TransformMatrix = new Class({
 
     /**
      * Multiply this Matrix by the given Matrix.
-     * 
+     *
      * If an `out` Matrix is given then the results will be stored in it.
      * If it is not given, this matrix will be updated in place instead.
      * Use an `out` Matrix if you do not wish to mutate this matrix.
@@ -7887,7 +8167,7 @@ var TransformMatrix = new Class({
 
     /**
      * Multiply this Matrix by the matrix given, including the offset.
-     * 
+     *
      * The offsetX is added to the tx value: `offsetX * a + offsetY * c + tx`.
      * The offsetY is added to the ty value: `offsetY * b + offsetY * d + ty`.
      *
@@ -8121,7 +8401,7 @@ var TransformMatrix = new Class({
 
     /**
      * Copy the values in this Matrix to the array given.
-     * 
+     *
      * Where array indexes 0, 1, 2, 3, 4 and 5 are mapped to a, b, c, d, e and f.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#copyToArray
@@ -8183,9 +8463,9 @@ var TransformMatrix = new Class({
 
     /**
      * Decompose this Matrix into its translation, scale and rotation values using QR decomposition.
-     * 
+     *
      * The result must be applied in the following order to reproduce the current matrix:
-     * 
+     *
      * translate -> rotate -> scale
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#decomposeMatrix
@@ -8277,7 +8557,7 @@ var TransformMatrix = new Class({
     /**
      * Takes the `x` and `y` values and returns a new position in the `output` vector that is the inverse of
      * the current matrix with its transformation applied.
-     * 
+     *
      * Can be used to translate points from world to local space.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#applyInverse
@@ -8316,7 +8596,7 @@ var TransformMatrix = new Class({
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#getX
      * @since 3.12.0
-     * 
+     *
      * @param {number} x - The x value.
      * @param {number} y - The y value.
      *
@@ -8333,7 +8613,7 @@ var TransformMatrix = new Class({
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#getY
      * @since 3.12.0
-     * 
+     *
      * @param {number} x - The x value.
      * @param {number} y - The y value.
      *
@@ -8346,12 +8626,12 @@ var TransformMatrix = new Class({
 
     /**
      * Returns the X component of this matrix multiplied by the given values.
-     * 
+     *
      * This is the same as `x * a + y * c + e`, optionally passing via `Math.round`.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#getXRound
      * @since 3.50.0
-     * 
+     *
      * @param {number} x - The x value.
      * @param {number} y - The y value.
      * @param {boolean} [round=false] - Math.round the resulting value?
@@ -8372,12 +8652,12 @@ var TransformMatrix = new Class({
 
     /**
      * Returns the Y component of this matrix multiplied by the given values.
-     * 
+     *
      * This is the same as `x * b + y * d + f`, optionally passing via `Math.round`.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#getYRound
      * @since 3.50.0
-     * 
+     *
      * @param {number} x - The x value.
      * @param {number} y - The y value.
      * @param {boolean} [round=false] - Math.round the resulting value?
@@ -8431,9 +8711,9 @@ module.exports = TransformMatrix;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Visible.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Visible.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Visible.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8525,9 +8805,9 @@ module.exports = Visible;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/index.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/index.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/index.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8571,9 +8851,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/Container.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/container/Container.js ***!
-  \*****************************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/Container.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8590,7 +8870,6 @@ var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Cla
 var Components = __webpack_require__(/*! ../components */ "../../../src/gameobjects/components/index.js");
 var Events = __webpack_require__(/*! ../events */ "../../../src/gameobjects/events/index.js");
 var GameObject = __webpack_require__(/*! ../GameObject */ "../../../src/gameobjects/GameObject.js");
-var GameObjectEvents = __webpack_require__(/*! ../events */ "../../../src/gameobjects/events/index.js");
 var Rectangle = __webpack_require__(/*! ../../geom/rectangle/Rectangle */ "../../../src/geom/rectangle/Rectangle.js");
 var Render = __webpack_require__(/*! ./ContainerRender */ "../../../src/gameobjects/container/ContainerRender.js");
 var Union = __webpack_require__(/*! ../../geom/rectangle/Union */ "../../../src/geom/rectangle/Union.js");
@@ -8623,7 +8902,7 @@ var Vector2 = __webpack_require__(/*! ../../math/Vector2 */ "../../../src/math/V
  *
  * Containers can be enabled for input. Because they do not have a texture you need to provide a shape for them
  * to use as their hit area. Container children can also be enabled for input, independent of the Container.
- * 
+ *
  * If input enabling a _child_ you should not set both the `origin` and a **negative** scale factor on the child,
  * or the input area will become misaligned.
  *
@@ -8650,6 +8929,7 @@ var Vector2 = __webpack_require__(/*! ../../math/Vector2 */ "../../../src/math/V
  * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Mask
+ * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
@@ -8668,6 +8948,7 @@ var Container = new Class({
         Components.ComputedSize,
         Components.Depth,
         Components.Mask,
+        Components.Pipeline,
         Components.Transform,
         Components.Visible,
         Render
@@ -8714,7 +8995,7 @@ var Container = new Class({
          * the maximum limit the Container can grow in size to.
          *
          * @name Phaser.GameObjects.Container#maxSize
-         * @type {integer}
+         * @type {number}
          * @default -1
          * @since 3.4.0
          */
@@ -8724,7 +9005,7 @@ var Container = new Class({
          * The cursor position.
          *
          * @name Phaser.GameObjects.Container#position
-         * @type {integer}
+         * @type {number}
          * @since 3.4.0
          */
         this.position = 0;
@@ -8801,7 +9082,7 @@ var Container = new Class({
          * @name Phaser.GameObjects.Container#scrollFactorX
          * @type {number}
          * @default 1
-         * @since 3.0.0
+         * @since 3.4.0
          */
         this.scrollFactorX = 1;
 
@@ -8828,9 +9109,11 @@ var Container = new Class({
          * @name Phaser.GameObjects.Container#scrollFactorY
          * @type {number}
          * @default 1
-         * @since 3.0.0
+         * @since 3.4.0
          */
         this.scrollFactorY = 1;
+
+        this.initPipeline();
 
         this.setPosition(x, y);
 
@@ -9039,7 +9322,7 @@ var Container = new Class({
         //  Is only on the Display List via this Container
         if (!this.scene.sys.displayList.exists(gameObject))
         {
-            gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
+            gameObject.emit(Events.ADDED_TO_SCENE, gameObject, this.scene);
         }
     },
 
@@ -9064,7 +9347,7 @@ var Container = new Class({
         //  Is only on the Display List via this Container
         if (!this.scene.sys.displayList.exists(gameObject))
         {
-            gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
+            gameObject.emit(Events.REMOVED_FROM_SCENE, gameObject, this.scene);
         }
     },
 
@@ -9150,7 +9433,7 @@ var Container = new Class({
      * @since 3.4.0
      *
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to add to the Container.
-     * @param {integer} [index=0] - The position to insert the Game Object/s at.
+     * @param {number} [index=0] - The position to insert the Game Object/s at.
      *
      * @return {this} This Container instance.
      */
@@ -9167,7 +9450,7 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#getAt
      * @since 3.4.0
      *
-     * @param {integer} index - The position to get the Game Object from.
+     * @param {number} index - The position to get the Game Object from.
      *
      * @return {?Phaser.GameObjects.GameObject} The Game Object at the specified index, or `null` if none found.
      */
@@ -9184,7 +9467,7 @@ var Container = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to search for in this Container.
      *
-     * @return {integer} The index of the Game Object in this Container, or -1 if not found.
+     * @return {number} The index of the Game Object in this Container, or -1 if not found.
      */
     getIndex: function (child)
     {
@@ -9245,8 +9528,8 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#getRandom
      * @since 3.4.0
      *
-     * @param {integer} [startIndex=0] - An optional start index.
-     * @param {integer} [length] - An optional length, the total number of elements (from the startIndex) to choose from.
+     * @param {number} [startIndex=0] - An optional start index.
+     * @param {number} [length] - An optional length, the total number of elements (from the startIndex) to choose from.
      *
      * @return {?Phaser.GameObjects.GameObject} A random child from the Container, or `null` if the Container is empty.
      */
@@ -9270,8 +9553,8 @@ var Container = new Class({
      *
      * @param {string} property - The property to test on each Game Object in the Container.
      * @param {*} value - The value to test the property against. Must pass a strict (`===`) comparison check.
-     * @param {integer} [startIndex=0] - An optional start index to search from.
-     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {number} [startIndex=0] - An optional start index to search from.
+     * @param {number} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
      * @return {?Phaser.GameObjects.GameObject} The first matching Game Object, or `null` if none was found.
      */
@@ -9300,8 +9583,8 @@ var Container = new Class({
      *
      * @param {string} [property] - The property to test on each Game Object in the Container.
      * @param {any} [value] - If property is set then the `property` must strictly equal this value to be included in the results.
-     * @param {integer} [startIndex=0] - An optional start index to search from.
-     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {number} [startIndex=0] - An optional start index to search from.
+     * @param {number} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
      * @return {Phaser.GameObjects.GameObject[]} An array of matching Game Objects from this Container.
      */
@@ -9323,10 +9606,10 @@ var Container = new Class({
      *
      * @param {string} property - The property to check.
      * @param {any} value - The value to check.
-     * @param {integer} [startIndex=0] - An optional start index to search from.
-     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {number} [startIndex=0] - An optional start index to search from.
+     * @param {number} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
-     * @return {integer} The total number of Game Objects in this Container with a property matching the given value.
+     * @return {number} The total number of Game Objects in this Container with a property matching the given value.
      */
     count: function (property, value, startIndex, endIndex)
     {
@@ -9364,7 +9647,7 @@ var Container = new Class({
      * @since 3.4.0
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to move.
-     * @param {integer} index - The new position of the Game Object in this Container.
+     * @param {number} index - The new position of the Game Object in this Container.
      *
      * @return {this} This Container instance.
      */
@@ -9418,7 +9701,7 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#removeAt
      * @since 3.4.0
      *
-     * @param {integer} index - The index of the Game Object to be removed.
+     * @param {number} index - The index of the Game Object to be removed.
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on the Game Object if successfully removed from this Container.
      *
      * @return {this} This Container instance.
@@ -9443,8 +9726,8 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#removeBetween
      * @since 3.4.0
      *
-     * @param {integer} [startIndex=0] - An optional start index to search from.
-     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {number} [startIndex=0] - An optional start index to search from.
+     * @param {number} [endIndex=Container.length] - An optional end index to search up to (but not included)
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each Game Object successfully removed from this Container.
      *
      * @return {this} This Container instance.
@@ -9651,8 +9934,8 @@ var Container = new Class({
      *
      * @param {string} property - The property that must exist on the Game Object.
      * @param {any} value - The value to get the property to.
-     * @param {integer} [startIndex=0] - An optional start index to search from.
-     * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
+     * @param {number} [startIndex=0] - An optional start index to search from.
+     * @param {number} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
      * @return {this} This Container instance.
      */
@@ -9764,7 +10047,7 @@ var Container = new Class({
      * them from physics bodies if not accounted for in your code.
      *
      * @method Phaser.GameObjects.Container#setScrollFactor
-     * @since 3.0.0
+     * @since 3.4.0
      *
      * @param {number} x - The horizontal scroll factor of this Game Object.
      * @param {number} [y=x] - The vertical scroll factor of this Game Object. If not set it will use the `x` value.
@@ -9793,7 +10076,7 @@ var Container = new Class({
      * The number of Game Objects inside this Container.
      *
      * @name Phaser.GameObjects.Container#length
-     * @type {integer}
+     * @type {number}
      * @readonly
      * @since 3.4.0
      */
@@ -9944,9 +10227,9 @@ module.exports = Container;
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/ContainerCanvasRenderer.js":
-/*!*******************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/container/ContainerCanvasRenderer.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/ContainerCanvasRenderer.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -9968,11 +10251,10 @@ module.exports = Container;
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var ContainerCanvasRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+var ContainerCanvasRenderer = function (renderer, container, camera, parentMatrix)
 {
     var children = container.list;
 
@@ -10037,7 +10319,7 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
         child.setAlpha(childAlpha * alpha);
 
         //  Render
-        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+        child.renderCanvas(renderer, child, camera, transformMatrix);
 
         //  Restore original values
         child.setAlpha(childAlpha);
@@ -10056,9 +10338,9 @@ module.exports = ContainerCanvasRenderer;
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/ContainerRender.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/container/ContainerRender.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/ContainerRender.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10093,9 +10375,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/ContainerWebGLRenderer.js":
-/*!******************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/container/ContainerWebGLRenderer.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/ContainerWebGLRenderer.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10117,21 +10399,21 @@ module.exports = {
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var ContainerWebGLRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix)
 {
     var children = container.list;
+    var childCount = children.length;
 
-    if (children.length === 0)
+    if (childCount === 0)
     {
         return;
     }
 
     var transformMatrix = container.localTransform;
-    
+
     if (parentMatrix)
     {
         transformMatrix.loadIdentity();
@@ -10145,6 +10427,8 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
     }
 
+    renderer.pipelines.preBatch(container);
+
     var containerHasBlendMode = (container.blendMode !== -1);
 
     if (!containerHasBlendMode)
@@ -10157,9 +10441,6 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
 
     var scrollFactorX = container.scrollFactorX;
     var scrollFactorY = container.scrollFactorY;
-
-    var list = children;
-    var childCount = children.length;
 
     for (var i = 0; i < childCount; i++)
     {
@@ -10216,7 +10497,7 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
             renderer.currentType = type;
         }
 
-        renderer.nextTypeMatch = (i < childCount - 1) ? (list[i + 1].type === renderer.currentType) : false;
+        renderer.nextTypeMatch = (i < childCount - 1) ? (children[i + 1].type === renderer.currentType) : false;
 
         //  Set parent values
         child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
@@ -10224,7 +10505,7 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
 
         //  Render
-        child.renderWebGL(renderer, child, interpolationPercentage, camera, transformMatrix);
+        child.renderWebGL(renderer, child, camera, transformMatrix);
 
         //  Restore original values
 
@@ -10239,6 +10520,8 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
 
         renderer.newType = false;
     }
+
+    renderer.pipelines.postBatch(container);
 };
 
 module.exports = ContainerWebGLRenderer;
@@ -10247,9 +10530,9 @@ module.exports = ContainerWebGLRenderer;
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/ADDED_TO_SCENE_EVENT.js":
-/*!*************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/ADDED_TO_SCENE_EVENT.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/ADDED_TO_SCENE_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10278,9 +10561,9 @@ module.exports = 'addedtoscene';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/DESTROY_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10308,9 +10591,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js":
-/*!*****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10339,9 +10622,9 @@ module.exports = 'removedfromscene';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_COMPLETE_EVENT.js":
-/*!*************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_COMPLETE_EVENT.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_COMPLETE_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10376,9 +10659,9 @@ module.exports = 'complete';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_CREATED_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_CREATED_EVENT.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_CREATED_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10401,8 +10684,8 @@ module.exports = 'complete';
  * @since 3.20.0
  * 
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which raised the event.
- * @param {integer} width - The width of the video.
- * @param {integer} height - The height of the video.
+ * @param {number} width - The width of the video.
+ * @param {number} height - The height of the video.
  */
 module.exports = 'created';
 
@@ -10410,9 +10693,9 @@ module.exports = 'created';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_ERROR_EVENT.js":
-/*!**********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_ERROR_EVENT.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_ERROR_EVENT.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10441,9 +10724,9 @@ module.exports = 'error';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_LOOP_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_LOOP_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_LOOP_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10478,9 +10761,9 @@ module.exports = 'loop';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_PLAY_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_PLAY_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_PLAY_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10511,9 +10794,9 @@ module.exports = 'play';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_SEEKED_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_SEEKED_EVENT.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_SEEKED_EVENT.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10541,9 +10824,9 @@ module.exports = 'seeked';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_SEEKING_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_SEEKING_EVENT.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_SEEKING_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10572,9 +10855,9 @@ module.exports = 'seeking';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_STOP_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_STOP_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_STOP_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10603,9 +10886,9 @@ module.exports = 'stop';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10634,9 +10917,9 @@ module.exports = 'timeout';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js":
-/*!*************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10665,9 +10948,9 @@ module.exports = 'unlocked';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10703,9 +10986,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/geom/const.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/const.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/const.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10721,7 +11004,7 @@ var GEOM_CONST = {
      * A Circle Geometry object type.
      * 
      * @name Phaser.Geom.CIRCLE
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     CIRCLE: 0,
@@ -10730,7 +11013,7 @@ var GEOM_CONST = {
      * An Ellipse Geometry object type.
      * 
      * @name Phaser.Geom.ELLIPSE
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     ELLIPSE: 1,
@@ -10739,7 +11022,7 @@ var GEOM_CONST = {
      * A Line Geometry object type.
      * 
      * @name Phaser.Geom.LINE
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     LINE: 2,
@@ -10748,7 +11031,7 @@ var GEOM_CONST = {
      * A Point Geometry object type.
      * 
      * @name Phaser.Geom.POINT
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     POINT: 3,
@@ -10757,7 +11040,7 @@ var GEOM_CONST = {
      * A Polygon Geometry object type.
      * 
      * @name Phaser.Geom.POLYGON
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     POLYGON: 4,
@@ -10766,7 +11049,7 @@ var GEOM_CONST = {
      * A Rectangle Geometry object type.
      * 
      * @name Phaser.Geom.RECTANGLE
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     RECTANGLE: 5,
@@ -10775,7 +11058,7 @@ var GEOM_CONST = {
      * A Triangle Geometry object type.
      * 
      * @name Phaser.Geom.TRIANGLE
-     * @type {integer}
+     * @type {number}
      * @since 3.19.0
      */
     TRIANGLE: 6
@@ -10788,9 +11071,9 @@ module.exports = GEOM_CONST;
 /***/ }),
 
 /***/ "../../../src/geom/line/GetPoint.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/GetPoint.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/GetPoint.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10832,9 +11115,9 @@ module.exports = GetPoint;
 /***/ }),
 
 /***/ "../../../src/geom/line/GetPoints.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/GetPoints.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/GetPoints.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10861,7 +11144,7 @@ var Point = __webpack_require__(/*! ../point/Point */ "../../../src/geom/point/P
  * @generic {Phaser.Geom.Point[]} O - [out,$return]
  *
  * @param {Phaser.Geom.Line} line - The line.
- * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
+ * @param {number} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
  * @param {number} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
  * @param {(array|Phaser.Geom.Point[])} [out] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
  *
@@ -10902,9 +11185,9 @@ module.exports = GetPoints;
 /***/ }),
 
 /***/ "../../../src/geom/line/Length.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/Length.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/Length.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10935,9 +11218,9 @@ module.exports = Length;
 /***/ }),
 
 /***/ "../../../src/geom/line/Line.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/Line.js ***!
-  \************************************************/
+/*!*****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/Line.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10984,7 +11267,7 @@ var Line = new Class({
          * Used for fast type comparisons.
          *
          * @name Phaser.Geom.Line#type
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.19.0
          */
@@ -11058,8 +11341,8 @@ var Line = new Class({
      *
      * @generic {Phaser.Geom.Point[]} O - [output,$return]
      *
-     * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
-     * @param {integer} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
+     * @param {number} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
+     * @param {number} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
      * @param {(array|Phaser.Geom.Point[])} [output] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
      *
      * @return {(array|Phaser.Geom.Point[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
@@ -11277,9 +11560,9 @@ module.exports = Line;
 /***/ }),
 
 /***/ "../../../src/geom/line/Random.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/Random.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/Random.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11322,9 +11605,9 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/geom/point/Point.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/point/Point.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/point/Point.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11363,7 +11646,7 @@ var Point = new Class({
          * Used for fast type comparisons.
          *
          * @name Phaser.Geom.Point#type
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.19.0
          */
@@ -11420,9 +11703,9 @@ module.exports = Point;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Contains.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Contains.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Contains.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11460,9 +11743,9 @@ module.exports = Contains;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/GetPoint.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/GetPoint.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/GetPoint.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11546,9 +11829,9 @@ module.exports = GetPoint;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/GetPoints.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/GetPoints.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/GetPoints.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11574,7 +11857,7 @@ var Perimeter = __webpack_require__(/*! ./Perimeter */ "../../../src/geom/rectan
  *
  * @param {Phaser.Geom.Rectangle} rectangle - The Rectangle object to get the points from.
  * @param {number} step - Step between points. Used to calculate the number of points to return when quantity is falsey. Ignored if quantity is positive.
- * @param {integer} quantity - The number of evenly spaced points from the rectangles perimeter to return. If falsey, step param will be used to calculate the number of points.
+ * @param {number} quantity - The number of evenly spaced points from the rectangles perimeter to return. If falsey, step param will be used to calculate the number of points.
  * @param {(array|Phaser.Geom.Point[])} [out] - An optional array to store the points in.
  *
  * @return {(array|Phaser.Geom.Point[])} An array of Points from the perimeter of the rectangle.
@@ -11605,9 +11888,9 @@ module.exports = GetPoints;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Perimeter.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Perimeter.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Perimeter.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11638,9 +11921,9 @@ module.exports = Perimeter;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Random.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Random.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Random.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11681,9 +11964,9 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Rectangle.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Rectangle.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Rectangle.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11731,7 +12014,7 @@ var Rectangle = new Class({
          * Used for fast type comparisons.
          *
          * @name Phaser.Geom.Rectangle#type
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.19.0
          */
@@ -11824,7 +12107,7 @@ var Rectangle = new Class({
      *
      * @generic {Phaser.Geom.Point[]} O - [output,$return]
      *
-     * @param {integer} quantity - The number of points to return. Set to `false` or 0 to return an arbitrary number of points (`perimeter / stepRate`) evenly spaced around the Rectangle based on the `stepRate`.
+     * @param {number} quantity - The number of points to return. Set to `false` or 0 to return an arbitrary number of points (`perimeter / stepRate`) evenly spaced around the Rectangle based on the `stepRate`.
      * @param {number} [stepRate] - If `quantity` is 0, determines the normalized distance between each returned point.
      * @param {(array|Phaser.Geom.Point[])} [output] - An array to which to append the points.
      *
@@ -12197,9 +12480,9 @@ module.exports = Rectangle;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Union.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Union.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Union.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12244,9 +12527,9 @@ module.exports = Union;
 /***/ }),
 
 /***/ "../../../src/loader/File.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/File.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/File.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12329,7 +12612,18 @@ var File = new Class({
 
         if (!this.type || !this.key)
         {
-            throw new Error('Error calling \'Loader.' + this.type + '\' invalid key provided.');
+            throw new Error('Invalid Loader.' + this.type + ' key');
+        }
+
+        var url = GetFastValue(fileConfig, 'url');
+
+        if (url === undefined)
+        {
+            url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
+        }
+        else if (typeof url === 'string' && !url.match(/^(?:blob:|data:|http:\/\/|https:\/\/|\/\/)/))
+        {
+            url = loader.path + url;
         }
 
         /**
@@ -12343,16 +12637,7 @@ var File = new Class({
          * @type {object|string}
          * @since 3.0.0
          */
-        this.url = GetFastValue(fileConfig, 'url');
-
-        if (this.url === undefined)
-        {
-            this.url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
-        }
-        else if (typeof this.url === 'string' && this.url.indexOf('blob:') !== 0 && this.url.indexOf('data:') !== 0)
-        {
-            this.url = loader.path + this.url;
-        }
+        this.url = url;
 
         /**
          * The final URL this file will load from, including baseURL and path.
@@ -12391,7 +12676,7 @@ var File = new Class({
          * The current state of the file. One of the FILE_CONST values.
          *
          * @name Phaser.Loader.File#state
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.state = (typeof(this.url) === 'function') ? CONST.FILE_POPULATED : CONST.FILE_PENDING;
@@ -12797,9 +13082,9 @@ module.exports = File;
 /***/ }),
 
 /***/ "../../../src/loader/FileTypesManager.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/FileTypesManager.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/FileTypesManager.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -12871,9 +13156,9 @@ module.exports = FileTypesManager;
 /***/ }),
 
 /***/ "../../../src/loader/GetURL.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/GetURL.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/GetURL.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -12917,9 +13202,9 @@ module.exports = GetURL;
 /***/ }),
 
 /***/ "../../../src/loader/MergeXHRSettings.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/MergeXHRSettings.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MergeXHRSettings.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12970,9 +13255,9 @@ module.exports = MergeXHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/MultiFile.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/MultiFile.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MultiFile.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12988,7 +13273,7 @@ var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.
  * @classdesc
  * A MultiFile is a special kind of parent that contains two, or more, Files as children and looks after
  * the loading and processing of them all. It is commonly extended and used as a base class for file types such as AtlasJSON or BitmapFont.
- * 
+ *
  * You shouldn't create an instance of a MultiFile directly, but should extend it with your own class, setting a custom type and processing methods.
  *
  * @class MultiFile
@@ -13007,6 +13292,17 @@ var MultiFile = new Class({
 
     function MultiFile (loader, type, key, files)
     {
+        var finalFiles = [];
+
+        //  Clean out any potential 'null' or 'undefined' file entries
+        files.forEach(function (file)
+        {
+            if (file)
+            {
+                finalFiles.push(file);
+            }
+        });
+
         /**
          * A reference to the Loader that is going to load this file.
          *
@@ -13038,7 +13334,7 @@ var MultiFile = new Class({
          * The current index being used by multi-file loaders to avoid key clashes.
          *
          * @name Phaser.Loader.MultiFile#multiKeyIndex
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.20.0
          */
@@ -13051,7 +13347,7 @@ var MultiFile = new Class({
          * @type {Phaser.Loader.File[]}
          * @since 3.7.0
          */
-        this.files = files;
+        this.files = finalFiles;
 
         /**
          * The completion status of this MultiFile.
@@ -13067,17 +13363,17 @@ var MultiFile = new Class({
          * The number of files to load.
          *
          * @name Phaser.Loader.MultiFile#pending
-         * @type {integer}
+         * @type {number}
          * @since 3.7.0
          */
 
-        this.pending = files.length;
+        this.pending = finalFiles.length;
 
         /**
          * The number of files that failed to load.
          *
          * @name Phaser.Loader.MultiFile#failed
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.7.0
          */
@@ -13123,9 +13419,9 @@ var MultiFile = new Class({
         this.prefix = loader.prefix;
 
         //  Link the files
-        for (var i = 0; i < files.length; i++)
+        for (var i = 0; i < finalFiles.length; i++)
         {
-            files[i].multiFile = this;
+            finalFiles[i].multiFile = this;
         }
     },
 
@@ -13209,9 +13505,9 @@ module.exports = MultiFile;
 /***/ }),
 
 /***/ "../../../src/loader/XHRLoader.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/XHRLoader.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRLoader.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13295,9 +13591,9 @@ module.exports = XHRLoader;
 /***/ }),
 
 /***/ "../../../src/loader/XHRSettings.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/XHRSettings.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRSettings.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13317,7 +13613,7 @@ module.exports = XHRLoader;
  * @param {boolean} [async=true] - Should the XHR request use async or not?
  * @param {string} [user=''] - Optional username for the XHR request.
  * @param {string} [password=''] - Optional password for the XHR request.
- * @param {integer} [timeout=0] - Optional XHR timeout value.
+ * @param {number} [timeout=0] - Optional XHR timeout value.
  * @param {boolean} [withCredentials=false] - Optional XHR withCredentials value.
  *
  * @return {Phaser.Types.Loader.XHRSettingsObject} The XHRSettings object as used by the Loader.
@@ -13370,9 +13666,9 @@ module.exports = XHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/const.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/const.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/const.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13388,7 +13684,7 @@ var FILE_CONST = {
      * The Loader is idle.
      * 
      * @name Phaser.Loader.LOADER_IDLE
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     LOADER_IDLE: 0,
@@ -13397,7 +13693,7 @@ var FILE_CONST = {
      * The Loader is actively loading.
      * 
      * @name Phaser.Loader.LOADER_LOADING
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     LOADER_LOADING: 1,
@@ -13406,7 +13702,7 @@ var FILE_CONST = {
      * The Loader is processing files is has loaded.
      * 
      * @name Phaser.Loader.LOADER_PROCESSING
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     LOADER_PROCESSING: 2,
@@ -13415,7 +13711,7 @@ var FILE_CONST = {
      * The Loader has completed loading and processing.
      * 
      * @name Phaser.Loader.LOADER_COMPLETE
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     LOADER_COMPLETE: 3,
@@ -13424,7 +13720,7 @@ var FILE_CONST = {
      * The Loader is shutting down.
      * 
      * @name Phaser.Loader.LOADER_SHUTDOWN
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     LOADER_SHUTDOWN: 4,
@@ -13433,7 +13729,7 @@ var FILE_CONST = {
      * The Loader has been destroyed.
      * 
      * @name Phaser.Loader.LOADER_DESTROYED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     LOADER_DESTROYED: 5,
@@ -13442,7 +13738,7 @@ var FILE_CONST = {
      * File is in the load queue but not yet started
      * 
      * @name Phaser.Loader.FILE_PENDING
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     FILE_PENDING: 10,
@@ -13451,7 +13747,7 @@ var FILE_CONST = {
      * File has been started to load by the loader (onLoad called)
      * 
      * @name Phaser.Loader.FILE_LOADING
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     FILE_LOADING: 11,
@@ -13460,7 +13756,7 @@ var FILE_CONST = {
      * File has loaded successfully, awaiting processing    
      * 
      * @name Phaser.Loader.FILE_LOADED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     FILE_LOADED: 12,
@@ -13469,7 +13765,7 @@ var FILE_CONST = {
      * File failed to load
      * 
      * @name Phaser.Loader.FILE_FAILED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     FILE_FAILED: 13,
@@ -13478,7 +13774,7 @@ var FILE_CONST = {
      * File is being processed (onProcess callback)
      * 
      * @name Phaser.Loader.FILE_PROCESSING
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     FILE_PROCESSING: 14,
@@ -13487,7 +13783,7 @@ var FILE_CONST = {
      * The File has errored somehow during processing.
      * 
      * @name Phaser.Loader.FILE_ERRORED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     FILE_ERRORED: 16,
@@ -13496,7 +13792,7 @@ var FILE_CONST = {
      * File has finished processing.
      * 
      * @name Phaser.Loader.FILE_COMPLETE
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     FILE_COMPLETE: 17,
@@ -13505,7 +13801,7 @@ var FILE_CONST = {
      * File has been destroyed
      * 
      * @name Phaser.Loader.FILE_DESTROYED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     FILE_DESTROYED: 18,
@@ -13514,7 +13810,7 @@ var FILE_CONST = {
      * File was populated from local data and doesn't need an HTTP request
      * 
      * @name Phaser.Loader.FILE_POPULATED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     FILE_POPULATED: 19
@@ -13527,9 +13823,9 @@ module.exports = FILE_CONST;
 /***/ }),
 
 /***/ "../../../src/loader/events/ADD_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/ADD_EVENT.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/ADD_EVENT.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13562,9 +13858,9 @@ module.exports = 'addfile';
 /***/ }),
 
 /***/ "../../../src/loader/events/COMPLETE_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/COMPLETE_EVENT.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/COMPLETE_EVENT.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13586,8 +13882,8 @@ module.exports = 'addfile';
  * @since 3.0.0
  * 
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
- * @param {integer} totalComplete - The total number of files that successfully loaded.
- * @param {integer} totalFailed - The total number of files that failed to load.
+ * @param {number} totalComplete - The total number of files that successfully loaded.
+ * @param {number} totalFailed - The total number of files that failed to load.
  */
 module.exports = 'complete';
 
@@ -13595,9 +13891,9 @@ module.exports = 'complete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_COMPLETE_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13629,9 +13925,9 @@ module.exports = 'filecomplete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_KEY_COMPLETE_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13688,9 +13984,9 @@ module.exports = 'filecomplete-';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_ERROR_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13718,9 +14014,9 @@ module.exports = 'loaderror';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13749,9 +14045,9 @@ module.exports = 'load';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_PROGRESS_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13781,9 +14077,9 @@ module.exports = 'fileprogress';
 /***/ }),
 
 /***/ "../../../src/loader/events/POST_PROCESS_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13815,9 +14111,9 @@ module.exports = 'postprocess';
 /***/ }),
 
 /***/ "../../../src/loader/events/PROGRESS_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/PROGRESS_EVENT.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/PROGRESS_EVENT.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13845,9 +14141,9 @@ module.exports = 'progress';
 /***/ }),
 
 /***/ "../../../src/loader/events/START_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/START_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/START_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13877,9 +14173,9 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/loader/events/index.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/index.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/index.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13912,9 +14208,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/ImageFile.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/ImageFile.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/ImageFile.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14191,9 +14487,9 @@ module.exports = ImageFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/JSONFile.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/JSONFile.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/JSONFile.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14426,9 +14722,9 @@ module.exports = JSONFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/TextFile.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/TextFile.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/TextFile.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14472,7 +14768,9 @@ var TextFile = new Class({
 
     function TextFile (loader, key, url, xhrSettings)
     {
+        var type = 'text';
         var extension = 'txt';
+        var cache = loader.cacheManager.text;
 
         if (IsPlainObject(key))
         {
@@ -14482,11 +14780,13 @@ var TextFile = new Class({
             url = GetFastValue(config, 'url');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
+            type = GetFastValue(config, 'type', type);
+            cache = GetFastValue(config, 'cache', cache);
         }
 
         var fileConfig = {
-            type: 'text',
-            cache: loader.cacheManager.text,
+            type: type,
+            cache: cache,
             extension: extension,
             responseType: 'text',
             key: key,
@@ -14606,9 +14906,9 @@ module.exports = TextFile;
 /***/ }),
 
 /***/ "../../../src/math/Average.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Average.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Average.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14646,9 +14946,9 @@ module.exports = Average;
 /***/ }),
 
 /***/ "../../../src/math/Bernstein.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Bernstein.js ***!
-  \************************************************/
+/*!*****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Bernstein.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14682,9 +14982,9 @@ module.exports = Bernstein;
 /***/ }),
 
 /***/ "../../../src/math/Between.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Between.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Between.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14700,10 +15000,10 @@ module.exports = Bernstein;
  * @function Phaser.Math.Between
  * @since 3.0.0
  *
- * @param {integer} min - The minimum value.
- * @param {integer} max - The maximum value.
+ * @param {number} min - The minimum value.
+ * @param {number} max - The maximum value.
  *
- * @return {integer} The random integer.
+ * @return {number} The random integer.
  */
 var Between = function (min, max)
 {
@@ -14716,9 +15016,9 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/CatmullRom.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/CatmullRom.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/CatmullRom.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14758,9 +15058,9 @@ module.exports = CatmullRom;
 /***/ }),
 
 /***/ "../../../src/math/CeilTo.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/CeilTo.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/CeilTo.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14780,7 +15080,7 @@ module.exports = CatmullRom;
  *
  * @param {number} value - The value to round.
  * @param {number} [place=0] - The place to round to.
- * @param {integer} [base=10] - The base to round in. Default is 10 for decimal.
+ * @param {number} [base=10] - The base to round in. Default is 10 for decimal.
  *
  * @return {number} The rounded value.
  */
@@ -14800,9 +15100,9 @@ module.exports = CeilTo;
 /***/ }),
 
 /***/ "../../../src/math/Clamp.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Clamp.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Clamp.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14835,9 +15135,9 @@ module.exports = Clamp;
 /***/ }),
 
 /***/ "../../../src/math/DegToRad.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/DegToRad.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/DegToRad.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14855,7 +15155,7 @@ var CONST = __webpack_require__(/*! ./const */ "../../../src/math/const.js");
  * @function Phaser.Math.DegToRad
  * @since 3.0.0
  *
- * @param {integer} degrees - The angle (in degrees) to convert to radians.
+ * @param {number} degrees - The angle (in degrees) to convert to radians.
  *
  * @return {number} The given angle converted to radians.
  */
@@ -14870,9 +15170,9 @@ module.exports = DegToRad;
 /***/ }),
 
 /***/ "../../../src/math/Difference.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Difference.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Difference.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14903,10 +15203,298 @@ module.exports = Difference;
 
 /***/ }),
 
+/***/ "../../../src/math/Euler.js":
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Euler.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Clamp = __webpack_require__(/*! ./Clamp */ "../../../src/math/Clamp.js");
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var Matrix4 = __webpack_require__(/*! ./Matrix4 */ "../../../src/math/Matrix4.js");
+var NOOP = __webpack_require__(/*! ../utils/NOOP */ "../../../src/utils/NOOP.js");
+
+var tempMatrix = new Matrix4();
+
+/**
+ * @classdesc
+ *
+ * @class Euler
+ * @memberof Phaser.Math
+ * @constructor
+ * @since 3.50.0
+ *
+ * @param {number} [x] - The x component.
+ * @param {number} [y] - The y component.
+ * @param {number} [z] - The z component.
+ */
+var Euler = new Class({
+
+    initialize:
+
+    function Euler (x, y, z, order)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (z === undefined) { z = 0; }
+        if (order === undefined) { order = Euler.DefaultOrder; }
+
+        this._x = x;
+        this._y = y;
+        this._z = z;
+        this._order = order;
+
+        this.onChangeCallback = NOOP;
+    },
+
+    x: {
+        get: function ()
+        {
+            return this._x;
+        },
+
+        set: function (value)
+        {
+            this._x = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    y: {
+        get: function ()
+        {
+            return this._y;
+        },
+
+        set: function (value)
+        {
+            this._y = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    z: {
+        get: function ()
+        {
+            return this._z;
+        },
+
+        set: function (value)
+        {
+            this._z = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    order: {
+        get: function ()
+        {
+            return this._order;
+        },
+
+        set: function (value)
+        {
+            this._order = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    set: function (x, y, z, order)
+    {
+        if (order === undefined) { order = this._order; }
+
+        this._x = x;
+        this._y = y;
+        this._z = z;
+        this._order = order;
+
+        this.onChangeCallback(this);
+
+        return this;
+    },
+
+    copy: function (euler)
+    {
+        return this.set(euler.x, euler.y, euler.z, euler.order);
+    },
+
+    setFromQuaternion: function (quaternion, order, update)
+    {
+        if (order === undefined) { order = this._order; }
+        if (update === undefined) { update = false; }
+
+        tempMatrix.fromQuat(quaternion);
+
+        return this.setFromRotationMatrix(tempMatrix, order, update);
+    },
+
+    setFromRotationMatrix: function (matrix, order, update)
+    {
+        if (order === undefined) { order = this._order; }
+        if (update === undefined) { update = false; }
+
+        var elements = matrix.val;
+
+        //  Upper 3x3 of matrix is un-scaled rotation matrix
+        var m11 = elements[0];
+        var m12 = elements[4];
+        var m13 = elements[8];
+        var m21 = elements[1];
+        var m22 = elements[5];
+        var m23 = elements[9];
+        var m31 = elements[2];
+        var m32 = elements[6];
+        var m33 = elements[10];
+
+        var x = 0;
+        var y = 0;
+        var z = 0;
+        var epsilon = 0.99999;
+
+        switch (order)
+        {
+            case 'XYZ':
+            {
+                y = Math.asin(Clamp(m13, -1, 1));
+
+                if (Math.abs(m13) < epsilon)
+                {
+                    x = Math.atan2(-m23, m33);
+                    z = Math.atan2(-m12, m11);
+                }
+                else
+                {
+                    x = Math.atan2(m32, m22);
+                }
+
+                break;
+            }
+
+            case 'YXZ':
+            {
+                x = Math.asin(-Clamp(m23, -1, 1));
+
+                if (Math.abs(m23) < epsilon)
+                {
+                    y = Math.atan2(m13, m33);
+                    z = Math.atan2(m21, m22);
+                }
+                else
+                {
+                    y = Math.atan2(-m31, m11);
+                }
+
+                break;
+            }
+
+            case 'ZXY':
+            {
+                x = Math.asin(Clamp(m32, -1, 1));
+
+                if (Math.abs(m32) < epsilon)
+                {
+                    y = Math.atan2(-m31, m33);
+                    z = Math.atan2(-m12, m22);
+                }
+                else
+                {
+                    z = Math.atan2(m21, m11);
+                }
+
+                break;
+            }
+
+            case 'ZYX':
+            {
+                y = Math.asin(-Clamp(m31, -1, 1));
+
+                if (Math.abs(m31) < epsilon)
+                {
+                    x = Math.atan2(m32, m33);
+                    z = Math.atan2(m21, m11);
+                }
+                else
+                {
+                    z = Math.atan2(-m12, m22);
+                }
+
+                break;
+            }
+
+            case 'YZX':
+            {
+                z = Math.asin(Clamp(m21, -1, 1));
+
+                if (Math.abs(m21) < epsilon)
+                {
+                    x = Math.atan2(-m23, m22);
+                    y = Math.atan2(-m31, m11);
+                }
+                else
+                {
+                    y = Math.atan2(m13, m33);
+                }
+
+                break;
+            }
+
+            case 'XZY':
+            {
+                z = Math.asin(-Clamp(m12, -1, 1));
+
+                if (Math.abs(m12) < epsilon)
+                {
+                    x = Math.atan2(m32, m22);
+                    y = Math.atan2(m13, m11);
+                }
+                else
+                {
+                    x = Math.atan2(-m23, m33);
+                }
+
+                break;
+            }
+        }
+
+        this._x = x;
+        this._y = y;
+        this._z = z;
+        this._order = order;
+
+        if (update)
+        {
+            this.onChangeCallback(this);
+        }
+
+        return this;
+    }
+
+});
+
+Euler.RotationOrders = [ 'XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY' ];
+
+Euler.DefaultOrder = 'XYZ';
+
+module.exports = Euler;
+
+
+/***/ }),
+
 /***/ "../../../src/math/Factorial.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Factorial.js ***!
-  \************************************************/
+/*!*****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Factorial.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14949,9 +15537,9 @@ module.exports = Factorial;
 /***/ }),
 
 /***/ "../../../src/math/FloatBetween.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FloatBetween.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/FloatBetween.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14983,9 +15571,9 @@ module.exports = FloatBetween;
 /***/ }),
 
 /***/ "../../../src/math/FloorTo.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FloorTo.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/FloorTo.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15004,8 +15592,8 @@ module.exports = FloatBetween;
  * @since 3.0.0
  *
  * @param {number} value - The value to round.
- * @param {integer} [place=0] - The place to round to.
- * @param {integer} [base=10] - The base to round in. Default is 10 for decimal.
+ * @param {number} [place=0] - The place to round to.
+ * @param {number} [base=10] - The base to round in. Default is 10 for decimal.
  *
  * @return {number} The rounded value.
  */
@@ -15025,9 +15613,9 @@ module.exports = FloorTo;
 /***/ }),
 
 /***/ "../../../src/math/FromPercent.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FromPercent.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/FromPercent.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15064,9 +15652,9 @@ module.exports = FromPercent;
 /***/ }),
 
 /***/ "../../../src/math/GetSpeed.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/GetSpeed.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/GetSpeed.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15083,7 +15671,7 @@ module.exports = FromPercent;
  * @since 3.0.0
  *
  * @param {number} distance - The distance.
- * @param {integer} time - The time, in seconds.
+ * @param {number} time - The time, in seconds.
  *
  * @return {number} The speed, in distance per ms.
  *
@@ -15102,9 +15690,9 @@ module.exports = GetSpeed;
 /***/ }),
 
 /***/ "../../../src/math/IsEven.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/IsEven.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/IsEven.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15138,9 +15726,9 @@ module.exports = IsEven;
 /***/ }),
 
 /***/ "../../../src/math/IsEvenStrict.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/IsEvenStrict.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/IsEvenStrict.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15172,9 +15760,9 @@ module.exports = IsEvenStrict;
 /***/ }),
 
 /***/ "../../../src/math/Linear.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Linear.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Linear.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15207,9 +15795,9 @@ module.exports = Linear;
 /***/ }),
 
 /***/ "../../../src/math/Matrix3.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Matrix3.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Matrix3.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15805,9 +16393,9 @@ module.exports = Matrix3;
 /***/ }),
 
 /***/ "../../../src/math/Matrix4.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Matrix4.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Matrix4.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15817,16 +16405,20 @@ module.exports = Matrix3;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
-//  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
-
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var Vector3 = __webpack_require__(/*! ./Vector3 */ "../../../src/math/Vector3.js");
 
+/**
+ * @ignore
+ */
 var EPSILON = 0.000001;
 
 /**
  * @classdesc
  * A four-dimensional matrix.
+ *
+ * Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
+ * and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
  *
  * @class Matrix4
  * @memberof Phaser.Math
@@ -15875,8 +16467,6 @@ var Matrix4 = new Class({
         return new Matrix4(this);
     },
 
-    //  TODO - Should work with basic values
-
     /**
      * This method is an alias for `Matrix4.copy`.
      *
@@ -15885,11 +16475,60 @@ var Matrix4 = new Class({
      *
      * @param {Phaser.Math.Matrix4} src - The Matrix to set the values of this Matrix's from.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     set: function (src)
     {
         return this.copy(src);
+    },
+
+    /**
+     * Sets all values of this Matrix4.
+     *
+     * @method Phaser.Math.Matrix4#setValues
+     * @since 3.50.0
+     *
+     * @param {number} m00 - The m00 value.
+     * @param {number} m01 - The m01 value.
+     * @param {number} m02 - The m02 value.
+     * @param {number} m03 - The m03 value.
+     * @param {number} m10 - The m10 value.
+     * @param {number} m11 - The m11 value.
+     * @param {number} m12 - The m12 value.
+     * @param {number} m13 - The m13 value.
+     * @param {number} m20 - The m20 value.
+     * @param {number} m21 - The m21 value.
+     * @param {number} m22 - The m22 value.
+     * @param {number} m23 - The m23 value.
+     * @param {number} m30 - The m30 value.
+     * @param {number} m31 - The m31 value.
+     * @param {number} m32 - The m32 value.
+     * @param {number} m33 - The m33 value.
+     *
+     * @return {this} This Matrix4 instance.
+     */
+    setValues: function (m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33)
+    {
+        var out = this.val;
+
+        out[0] = m00;
+        out[1] = m01;
+        out[2] = m02;
+        out[3] = m03;
+        out[4] = m10;
+        out[5] = m11;
+        out[6] = m12;
+        out[7] = m13;
+        out[8] = m20;
+        out[9] = m21;
+        out[10] = m22;
+        out[11] = m23;
+        out[12] = m30;
+        out[13] = m31;
+        out[14] = m32;
+        out[15] = m33;
+
+        return this;
     },
 
     /**
@@ -15900,31 +16539,13 @@ var Matrix4 = new Class({
      *
      * @param {Phaser.Math.Matrix4} src - The Matrix to copy the values from.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     copy: function (src)
     {
-        var out = this.val;
         var a = src.val;
 
-        out[0] = a[0];
-        out[1] = a[1];
-        out[2] = a[2];
-        out[3] = a[3];
-        out[4] = a[4];
-        out[5] = a[5];
-        out[6] = a[6];
-        out[7] = a[7];
-        out[8] = a[8];
-        out[9] = a[9];
-        out[10] = a[10];
-        out[11] = a[11];
-        out[12] = a[12];
-        out[13] = a[13];
-        out[14] = a[14];
-        out[15] = a[15];
-
-        return this;
+        return this.setValues(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15]);
     },
 
     /**
@@ -15933,32 +16554,13 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#fromArray
      * @since 3.0.0
      *
-     * @param {array} a - The array to copy the values from.
+     * @param {number[]} a - The array to copy the values from. Must have at least 16 elements.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     fromArray: function (a)
     {
-        var out = this.val;
-
-        out[0] = a[0];
-        out[1] = a[1];
-        out[2] = a[2];
-        out[3] = a[3];
-        out[4] = a[4];
-        out[5] = a[5];
-        out[6] = a[6];
-        out[7] = a[7];
-        out[8] = a[8];
-        out[9] = a[9];
-        out[10] = a[10];
-        out[11] = a[11];
-        out[12] = a[12];
-        out[13] = a[13];
-        out[14] = a[14];
-        out[15] = a[15];
-
-        return this;
+        return this.setValues(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15]);
     },
 
     /**
@@ -15973,26 +16575,52 @@ var Matrix4 = new Class({
      */
     zero: function ()
     {
-        var out = this.val;
+        return this.setValues(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    },
 
-        out[0] = 0;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
-        out[4] = 0;
-        out[5] = 0;
-        out[6] = 0;
-        out[7] = 0;
-        out[8] = 0;
-        out[9] = 0;
-        out[10] = 0;
-        out[11] = 0;
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = 0;
-        out[15] = 0;
+    /**
+     * Generates a transform matrix based on the given position, scale and rotation.
+     *
+     * @method Phaser.Math.Matrix4#transform
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} position - The position vector.
+     * @param {Phaser.Math.Vector3} scale - The scale vector.
+     * @param {Phaser.Math.Quaternion} rotation - The rotation quaternion.
+     *
+     * @return {this} This Matrix4.
+     */
+    transform: function (position, scale, rotation)
+    {
+        var rotMatrix = _tempMat1.fromQuat(rotation);
 
-        return this;
+        var rm = rotMatrix.val;
+
+        var sx = scale.x;
+        var sy = scale.y;
+        var sz = scale.z;
+
+        return this.setValues(
+            rm[0] * sx,
+            rm[1] * sx,
+            rm[2] * sx,
+            0,
+
+            rm[4] * sy,
+            rm[5] * sy,
+            rm[6] * sy,
+            0,
+
+            rm[8] * sz,
+            rm[9] * sz,
+            rm[10] * sz,
+            0,
+
+            position.x,
+            position.y,
+            position.z,
+            1
+        );
     },
 
     /**
@@ -16005,7 +16633,7 @@ var Matrix4 = new Class({
      * @param {number} y - The y value.
      * @param {number} z - The z value.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     xyz: function (x, y, z)
     {
@@ -16030,7 +16658,7 @@ var Matrix4 = new Class({
      * @param {number} y - The y scaling value.
      * @param {number} z - The z scaling value.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     scaling: function (x, y, z)
     {
@@ -16052,30 +16680,11 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#identity
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     identity: function ()
     {
-        var out = this.val;
-
-        out[0] = 1;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
-        out[4] = 0;
-        out[5] = 1;
-        out[6] = 0;
-        out[7] = 0;
-        out[8] = 0;
-        out[9] = 0;
-        out[10] = 1;
-        out[11] = 0;
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = 0;
-        out[15] = 1;
-
-        return this;
+        return this.setValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
     },
 
     /**
@@ -16084,7 +16693,7 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#transpose
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     transpose: function ()
     {
@@ -16114,12 +16723,29 @@ var Matrix4 = new Class({
     },
 
     /**
+     * Copies the given Matrix4 into this Matrix and then inverses it.
+     *
+     * @method Phaser.Math.Matrix4#getInverse
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} m - The Matrix4 to invert into this Matrix4.
+     *
+     * @return {this} This Matrix4.
+     */
+    getInverse: function (m)
+    {
+        this.copy(m);
+
+        return this.invert();
+    },
+
+    /**
      * Invert this Matrix.
      *
      * @method Phaser.Math.Matrix4#invert
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     invert: function ()
     {
@@ -16160,34 +16786,34 @@ var Matrix4 = new Class({
         var b10 = a21 * a33 - a23 * a31;
         var b11 = a22 * a33 - a23 * a32;
 
-        // Calculate the determinant
+        //  Calculate the determinant
         var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
         if (!det)
         {
-            return null;
+            return this;
         }
 
         det = 1 / det;
 
-        a[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
-        a[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
-        a[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
-        a[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
-        a[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
-        a[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
-        a[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
-        a[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
-        a[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
-        a[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
-        a[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
-        a[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
-        a[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det;
-        a[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
-        a[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
-        a[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
-
-        return this;
+        return this.setValues(
+            (a11 * b11 - a12 * b10 + a13 * b09) * det,
+            (a02 * b10 - a01 * b11 - a03 * b09) * det,
+            (a31 * b05 - a32 * b04 + a33 * b03) * det,
+            (a22 * b04 - a21 * b05 - a23 * b03) * det,
+            (a12 * b08 - a10 * b11 - a13 * b07) * det,
+            (a00 * b11 - a02 * b08 + a03 * b07) * det,
+            (a32 * b02 - a30 * b05 - a33 * b01) * det,
+            (a20 * b05 - a22 * b02 + a23 * b01) * det,
+            (a10 * b10 - a11 * b08 + a13 * b06) * det,
+            (a01 * b08 - a00 * b10 - a03 * b06) * det,
+            (a30 * b04 - a31 * b02 + a33 * b00) * det,
+            (a21 * b02 - a20 * b04 - a23 * b00) * det,
+            (a11 * b07 - a10 * b09 - a12 * b06) * det,
+            (a00 * b09 - a01 * b07 + a02 * b06) * det,
+            (a31 * b01 - a30 * b03 - a32 * b00) * det,
+            (a20 * b03 - a21 * b01 + a22 * b00) * det
+        );
     },
 
     /**
@@ -16196,7 +16822,7 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#adjoint
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     adjoint: function ()
     {
@@ -16222,24 +16848,24 @@ var Matrix4 = new Class({
         var a32 = a[14];
         var a33 = a[15];
 
-        a[0] = (a11 * (a22 * a33 - a23 * a32) - a21 * (a12 * a33 - a13 * a32) + a31 * (a12 * a23 - a13 * a22));
-        a[1] = -(a01 * (a22 * a33 - a23 * a32) - a21 * (a02 * a33 - a03 * a32) + a31 * (a02 * a23 - a03 * a22));
-        a[2] = (a01 * (a12 * a33 - a13 * a32) - a11 * (a02 * a33 - a03 * a32) + a31 * (a02 * a13 - a03 * a12));
-        a[3] = -(a01 * (a12 * a23 - a13 * a22) - a11 * (a02 * a23 - a03 * a22) + a21 * (a02 * a13 - a03 * a12));
-        a[4] = -(a10 * (a22 * a33 - a23 * a32) - a20 * (a12 * a33 - a13 * a32) + a30 * (a12 * a23 - a13 * a22));
-        a[5] = (a00 * (a22 * a33 - a23 * a32) - a20 * (a02 * a33 - a03 * a32) + a30 * (a02 * a23 - a03 * a22));
-        a[6] = -(a00 * (a12 * a33 - a13 * a32) - a10 * (a02 * a33 - a03 * a32) + a30 * (a02 * a13 - a03 * a12));
-        a[7] = (a00 * (a12 * a23 - a13 * a22) - a10 * (a02 * a23 - a03 * a22) + a20 * (a02 * a13 - a03 * a12));
-        a[8] = (a10 * (a21 * a33 - a23 * a31) - a20 * (a11 * a33 - a13 * a31) + a30 * (a11 * a23 - a13 * a21));
-        a[9] = -(a00 * (a21 * a33 - a23 * a31) - a20 * (a01 * a33 - a03 * a31) + a30 * (a01 * a23 - a03 * a21));
-        a[10] = (a00 * (a11 * a33 - a13 * a31) - a10 * (a01 * a33 - a03 * a31) + a30 * (a01 * a13 - a03 * a11));
-        a[11] = -(a00 * (a11 * a23 - a13 * a21) - a10 * (a01 * a23 - a03 * a21) + a20 * (a01 * a13 - a03 * a11));
-        a[12] = -(a10 * (a21 * a32 - a22 * a31) - a20 * (a11 * a32 - a12 * a31) + a30 * (a11 * a22 - a12 * a21));
-        a[13] = (a00 * (a21 * a32 - a22 * a31) - a20 * (a01 * a32 - a02 * a31) + a30 * (a01 * a22 - a02 * a21));
-        a[14] = -(a00 * (a11 * a32 - a12 * a31) - a10 * (a01 * a32 - a02 * a31) + a30 * (a01 * a12 - a02 * a11));
-        a[15] = (a00 * (a11 * a22 - a12 * a21) - a10 * (a01 * a22 - a02 * a21) + a20 * (a01 * a12 - a02 * a11));
-
-        return this;
+        return this.setValues(
+            (a11 * (a22 * a33 - a23 * a32) - a21 * (a12 * a33 - a13 * a32) + a31 * (a12 * a23 - a13 * a22)),
+            -(a01 * (a22 * a33 - a23 * a32) - a21 * (a02 * a33 - a03 * a32) + a31 * (a02 * a23 - a03 * a22)),
+            (a01 * (a12 * a33 - a13 * a32) - a11 * (a02 * a33 - a03 * a32) + a31 * (a02 * a13 - a03 * a12)),
+            -(a01 * (a12 * a23 - a13 * a22) - a11 * (a02 * a23 - a03 * a22) + a21 * (a02 * a13 - a03 * a12)),
+            -(a10 * (a22 * a33 - a23 * a32) - a20 * (a12 * a33 - a13 * a32) + a30 * (a12 * a23 - a13 * a22)),
+            (a00 * (a22 * a33 - a23 * a32) - a20 * (a02 * a33 - a03 * a32) + a30 * (a02 * a23 - a03 * a22)),
+            -(a00 * (a12 * a33 - a13 * a32) - a10 * (a02 * a33 - a03 * a32) + a30 * (a02 * a13 - a03 * a12)),
+            (a00 * (a12 * a23 - a13 * a22) - a10 * (a02 * a23 - a03 * a22) + a20 * (a02 * a13 - a03 * a12)),
+            (a10 * (a21 * a33 - a23 * a31) - a20 * (a11 * a33 - a13 * a31) + a30 * (a11 * a23 - a13 * a21)),
+            -(a00 * (a21 * a33 - a23 * a31) - a20 * (a01 * a33 - a03 * a31) + a30 * (a01 * a23 - a03 * a21)),
+            (a00 * (a11 * a33 - a13 * a31) - a10 * (a01 * a33 - a03 * a31) + a30 * (a01 * a13 - a03 * a11)),
+            -(a00 * (a11 * a23 - a13 * a21) - a10 * (a01 * a23 - a03 * a21) + a20 * (a01 * a13 - a03 * a11)),
+            -(a10 * (a21 * a32 - a22 * a31) - a20 * (a11 * a32 - a12 * a31) + a30 * (a11 * a22 - a12 * a21)),
+            (a00 * (a21 * a32 - a22 * a31) - a20 * (a01 * a32 - a02 * a31) + a30 * (a01 * a22 - a02 * a21)),
+            -(a00 * (a11 * a32 - a12 * a31) - a10 * (a01 * a32 - a02 * a31) + a30 * (a01 * a12 - a02 * a11)),
+            (a00 * (a11 * a22 - a12 * a21) - a10 * (a01 * a22 - a02 * a21) + a20 * (a01 * a12 - a02 * a11))
+        );
     },
 
     /**
@@ -16299,7 +16925,7 @@ var Matrix4 = new Class({
      *
      * @param {Phaser.Math.Matrix4} src - The Matrix to multiply this Matrix by.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     multiply: function (src)
     {
@@ -16379,35 +17005,121 @@ var Matrix4 = new Class({
      *
      * @param {Phaser.Math.Matrix4} src - The source Matrix4 that this Matrix4 is multiplied by.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     multiplyLocal: function (src)
     {
-        var a = [];
-        var m1 = this.val;
-        var m2 = src.val;
+        var a = this.val;
+        var b = src.val;
 
-        a[0] = m1[0] * m2[0] + m1[1] * m2[4] + m1[2] * m2[8] + m1[3] * m2[12];
-        a[1] = m1[0] * m2[1] + m1[1] * m2[5] + m1[2] * m2[9] + m1[3] * m2[13];
-        a[2] = m1[0] * m2[2] + m1[1] * m2[6] + m1[2] * m2[10] + m1[3] * m2[14];
-        a[3] = m1[0] * m2[3] + m1[1] * m2[7] + m1[2] * m2[11] + m1[3] * m2[15];
+        return this.setValues(
+            a[0] * b[0] + a[1] * b[4] + a[2] * b[8] + a[3] * b[12],
+            a[0] * b[1] + a[1] * b[5] + a[2] * b[9] + a[3] * b[13],
+            a[0] * b[2] + a[1] * b[6] + a[2] * b[10] + a[3] * b[14],
+            a[0] * b[3] + a[1] * b[7] + a[2] * b[11] + a[3] * b[15],
 
-        a[4] = m1[4] * m2[0] + m1[5] * m2[4] + m1[6] * m2[8] + m1[7] * m2[12];
-        a[5] = m1[4] * m2[1] + m1[5] * m2[5] + m1[6] * m2[9] + m1[7] * m2[13];
-        a[6] = m1[4] * m2[2] + m1[5] * m2[6] + m1[6] * m2[10] + m1[7] * m2[14];
-        a[7] = m1[4] * m2[3] + m1[5] * m2[7] + m1[6] * m2[11] + m1[7] * m2[15];
+            a[4] * b[0] + a[5] * b[4] + a[6] * b[8] + a[7] * b[12],
+            a[4] * b[1] + a[5] * b[5] + a[6] * b[9] + a[7] * b[13],
+            a[4] * b[2] + a[5] * b[6] + a[6] * b[10] + a[7] * b[14],
+            a[4] * b[3] + a[5] * b[7] + a[6] * b[11] + a[7] * b[15],
 
-        a[8] = m1[8] * m2[0] + m1[9] * m2[4] + m1[10] * m2[8] + m1[11] * m2[12];
-        a[9] = m1[8] * m2[1] + m1[9] * m2[5] + m1[10] * m2[9] + m1[11] * m2[13];
-        a[10] = m1[8] * m2[2] + m1[9] * m2[6] + m1[10] * m2[10] + m1[11] * m2[14];
-        a[11] = m1[8] * m2[3] + m1[9] * m2[7] + m1[10] * m2[11] + m1[11] * m2[15];
+            a[8] * b[0] + a[9] * b[4] + a[10] * b[8] + a[11] * b[12],
+            a[8] * b[1] + a[9] * b[5] + a[10] * b[9] + a[11] * b[13],
+            a[8] * b[2] + a[9] * b[6] + a[10] * b[10] + a[11] * b[14],
+            a[8] * b[3] + a[9] * b[7] + a[10] * b[11] + a[11] * b[15],
 
-        a[12] = m1[12] * m2[0] + m1[13] * m2[4] + m1[14] * m2[8] + m1[15] * m2[12];
-        a[13] = m1[12] * m2[1] + m1[13] * m2[5] + m1[14] * m2[9] + m1[15] * m2[13];
-        a[14] = m1[12] * m2[2] + m1[13] * m2[6] + m1[14] * m2[10] + m1[15] * m2[14];
-        a[15] = m1[12] * m2[3] + m1[13] * m2[7] + m1[14] * m2[11] + m1[15] * m2[15];
+            a[12] * b[0] + a[13] * b[4] + a[14] * b[8] + a[15] * b[12],
+            a[12] * b[1] + a[13] * b[5] + a[14] * b[9] + a[15] * b[13],
+            a[12] * b[2] + a[13] * b[6] + a[14] * b[10] + a[15] * b[14],
+            a[12] * b[3] + a[13] * b[7] + a[14] * b[11] + a[15] * b[15]
+        );
+    },
 
-        return this.fromArray(a);
+    /**
+     * Multiplies the given Matrix4 object with this Matrix.
+     *
+     * This is the same as calling `multiplyMatrices(m, this)`.
+     *
+     * @method Phaser.Math.Matrix4#premultiply
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} m - The Matrix4 to multiply with this one.
+     *
+     * @return {this} This Matrix4.
+     */
+    premultiply: function (m)
+    {
+        return this.multiplyMatrices(m, this);
+    },
+
+    /**
+     * Multiplies the two given Matrix4 objects and stores the results in this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#multiplyMatrices
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} a - The first Matrix4 to multiply.
+     * @param {Phaser.Math.Matrix4} b - The second Matrix4 to multiply.
+     *
+     * @return {this} This Matrix4.
+     */
+    multiplyMatrices: function (a, b)
+    {
+        var am = a.val;
+        var bm = b.val;
+
+        var a11 = am[0];
+        var a12 = am[4];
+        var a13 = am[8];
+        var a14 = am[12];
+        var a21 = am[1];
+        var a22 = am[5];
+        var a23 = am[9];
+        var a24 = am[13];
+        var a31 = am[2];
+        var a32 = am[6];
+        var a33 = am[10];
+        var a34 = am[14];
+        var a41 = am[3];
+        var a42 = am[7];
+        var a43 = am[11];
+        var a44 = am[15];
+
+        var b11 = bm[0];
+        var b12 = bm[4];
+        var b13 = bm[8];
+        var b14 = bm[12];
+        var b21 = bm[1];
+        var b22 = bm[5];
+        var b23 = bm[9];
+        var b24 = bm[13];
+        var b31 = bm[2];
+        var b32 = bm[6];
+        var b33 = bm[10];
+        var b34 = bm[14];
+        var b41 = bm[3];
+        var b42 = bm[7];
+        var b43 = bm[11];
+        var b44 = bm[15];
+
+        return this.setValues(
+            a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41,
+            a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41,
+            a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41,
+            a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41,
+            a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42,
+            a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42,
+            a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42,
+            a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42,
+            a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43,
+            a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43,
+            a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43,
+            a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43,
+            a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44,
+            a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44,
+            a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44,
+            a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44
+        );
     },
 
     /**
@@ -16418,21 +17130,11 @@ var Matrix4 = new Class({
      *
      * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to translate this Matrix with.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     translate: function (v)
     {
-        var x = v.x;
-        var y = v.y;
-        var z = v.z;
-        var a = this.val;
-
-        a[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
-        a[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
-        a[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
-        a[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
-
-        return this;
+        return this.translateXYZ(v.x, v.y, v.z);
     },
 
     /**
@@ -16445,7 +17147,7 @@ var Matrix4 = new Class({
      * @param {number} y - The y component.
      * @param {number} z - The z component.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     translateXYZ: function (x, y, z)
     {
@@ -16469,31 +17171,11 @@ var Matrix4 = new Class({
      *
      * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to scale this Matrix with.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     scale: function (v)
     {
-        var x = v.x;
-        var y = v.y;
-        var z = v.z;
-        var a = this.val;
-
-        a[0] = a[0] * x;
-        a[1] = a[1] * x;
-        a[2] = a[2] * x;
-        a[3] = a[3] * x;
-
-        a[4] = a[4] * y;
-        a[5] = a[5] * y;
-        a[6] = a[6] * y;
-        a[7] = a[7] * y;
-
-        a[8] = a[8] * z;
-        a[9] = a[9] * z;
-        a[10] = a[10] * z;
-        a[11] = a[11] * z;
-
-        return this;
+        return this.scaleXYZ(v.x, v.y, v.z);
     },
 
     /**
@@ -16506,7 +17188,7 @@ var Matrix4 = new Class({
      * @param {number} y - The y component.
      * @param {number} z - The z component.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     scaleXYZ: function (x, y, z)
     {
@@ -16539,7 +17221,7 @@ var Matrix4 = new Class({
      * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} axis - The rotation axis.
      * @param {number} angle - The rotation angle in radians.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     makeRotationAxis: function (axis, angle)
     {
@@ -16554,14 +17236,12 @@ var Matrix4 = new Class({
         var tx = t * x;
         var ty = t * y;
 
-        this.fromArray([
+        return this.setValues(
             tx * x + c, tx * y - s * z, tx * z + s * y, 0,
             tx * y + s * z, ty * y + c, ty * z - s * x, 0,
             tx * z - s * y, ty * z + s * x, t * z * z + c, 0,
             0, 0, 0, 1
-        ]);
-
-        return this;
+        );
     },
 
     /**
@@ -16573,7 +17253,7 @@ var Matrix4 = new Class({
      * @param {number} rad - The angle in radians to rotate by.
      * @param {Phaser.Math.Vector3} axis - The axis to rotate upon.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     rotate: function (rad, axis)
     {
@@ -16585,7 +17265,7 @@ var Matrix4 = new Class({
 
         if (Math.abs(len) < EPSILON)
         {
-            return null;
+            return this;
         }
 
         len = 1 / len;
@@ -16612,7 +17292,12 @@ var Matrix4 = new Class({
         var a22 = a[10];
         var a23 = a[11];
 
-        // Construct the elements of the rotation matrix
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        //  Construct the elements of the rotation matrix
         var b00 = x * x * t + c;
         var b01 = y * x * t + z * s;
         var b02 = z * x * t - y * s;
@@ -16625,21 +17310,22 @@ var Matrix4 = new Class({
         var b21 = y * z * t - x * s;
         var b22 = z * z * t + c;
 
-        // Perform rotation-specific matrix multiplication
-        a[0] = a00 * b00 + a10 * b01 + a20 * b02;
-        a[1] = a01 * b00 + a11 * b01 + a21 * b02;
-        a[2] = a02 * b00 + a12 * b01 + a22 * b02;
-        a[3] = a03 * b00 + a13 * b01 + a23 * b02;
-        a[4] = a00 * b10 + a10 * b11 + a20 * b12;
-        a[5] = a01 * b10 + a11 * b11 + a21 * b12;
-        a[6] = a02 * b10 + a12 * b11 + a22 * b12;
-        a[7] = a03 * b10 + a13 * b11 + a23 * b12;
-        a[8] = a00 * b20 + a10 * b21 + a20 * b22;
-        a[9] = a01 * b20 + a11 * b21 + a21 * b22;
-        a[10] = a02 * b20 + a12 * b21 + a22 * b22;
-        a[11] = a03 * b20 + a13 * b21 + a23 * b22;
-
-        return this;
+        //  Perform rotation-specific matrix multiplication
+        return this.setValues(
+            a00 * b00 + a10 * b01 + a20 * b02,
+            a01 * b00 + a11 * b01 + a21 * b02,
+            a02 * b00 + a12 * b01 + a22 * b02,
+            a03 * b00 + a13 * b01 + a23 * b02,
+            a00 * b10 + a10 * b11 + a20 * b12,
+            a01 * b10 + a11 * b11 + a21 * b12,
+            a02 * b10 + a12 * b11 + a22 * b12,
+            a03 * b10 + a13 * b11 + a23 * b12,
+            a00 * b20 + a10 * b21 + a20 * b22,
+            a01 * b20 + a11 * b21 + a21 * b22,
+            a02 * b20 + a12 * b21 + a22 * b22,
+            a03 * b20 + a13 * b21 + a23 * b22,
+            a30, a31, a32, a33
+        );
     },
 
     /**
@@ -16650,7 +17336,7 @@ var Matrix4 = new Class({
      *
      * @param {number} rad - The angle in radians to rotate by.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     rotateX: function (rad)
     {
@@ -16668,7 +17354,7 @@ var Matrix4 = new Class({
         var a22 = a[10];
         var a23 = a[11];
 
-        // Perform axis-specific matrix multiplication
+        //  Perform axis-specific matrix multiplication
         a[4] = a10 * c + a20 * s;
         a[5] = a11 * c + a21 * s;
         a[6] = a12 * c + a22 * s;
@@ -16689,7 +17375,7 @@ var Matrix4 = new Class({
      *
      * @param {number} rad - The angle to rotate by, in radians.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     rotateY: function (rad)
     {
@@ -16707,7 +17393,7 @@ var Matrix4 = new Class({
         var a22 = a[10];
         var a23 = a[11];
 
-        // Perform axis-specific matrix multiplication
+        //  Perform axis-specific matrix multiplication
         a[0] = a00 * c - a20 * s;
         a[1] = a01 * c - a21 * s;
         a[2] = a02 * c - a22 * s;
@@ -16728,7 +17414,7 @@ var Matrix4 = new Class({
      *
      * @param {number} rad - The angle to rotate by, in radians.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     rotateZ: function (rad)
     {
@@ -16746,7 +17432,7 @@ var Matrix4 = new Class({
         var a12 = a[6];
         var a13 = a[7];
 
-        // Perform axis-specific matrix multiplication
+        //  Perform axis-specific matrix multiplication
         a[0] = a00 * c + a10 * s;
         a[1] = a01 * c + a11 * s;
         a[2] = a02 * c + a12 * s;
@@ -16768,13 +17454,11 @@ var Matrix4 = new Class({
      * @param {Phaser.Math.Quaternion} q - The Quaternion to set rotation from.
      * @param {Phaser.Math.Vector3} v - The Vector to set translation from.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     fromRotationTranslation: function (q, v)
     {
-        // Quaternion math
-        var out = this.val;
-
+        //  Quaternion math
         var x = q.x;
         var y = q.y;
         var z = q.z;
@@ -16796,27 +17480,27 @@ var Matrix4 = new Class({
         var wy = w * y2;
         var wz = w * z2;
 
-        out[0] = 1 - (yy + zz);
-        out[1] = xy + wz;
-        out[2] = xz - wy;
-        out[3] = 0;
+        return this.setValues(
+            1 - (yy + zz),
+            xy + wz,
+            xz - wy,
+            0,
 
-        out[4] = xy - wz;
-        out[5] = 1 - (xx + zz);
-        out[6] = yz + wx;
-        out[7] = 0;
+            xy - wz,
+            1 - (xx + zz),
+            yz + wx,
+            0,
 
-        out[8] = xz + wy;
-        out[9] = yz - wx;
-        out[10] = 1 - (xx + yy);
-        out[11] = 0;
+            xz + wy,
+            yz - wx,
+            1 - (xx + yy),
+            0,
 
-        out[12] = v.x;
-        out[13] = v.y;
-        out[14] = v.z;
-        out[15] = 1;
-
-        return this;
+            v.x,
+            v.y,
+            v.z,
+            1
+        );
     },
 
     /**
@@ -16827,12 +17511,10 @@ var Matrix4 = new Class({
      *
      * @param {Phaser.Math.Quaternion} q - The Quaternion to set the values of this Matrix from.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     fromQuat: function (q)
     {
-        var out = this.val;
-
         var x = q.x;
         var y = q.y;
         var z = q.z;
@@ -16854,27 +17536,27 @@ var Matrix4 = new Class({
         var wy = w * y2;
         var wz = w * z2;
 
-        out[0] = 1 - (yy + zz);
-        out[1] = xy + wz;
-        out[2] = xz - wy;
-        out[3] = 0;
+        return this.setValues(
+            1 - (yy + zz),
+            xy + wz,
+            xz - wy,
+            0,
 
-        out[4] = xy - wz;
-        out[5] = 1 - (xx + zz);
-        out[6] = yz + wx;
-        out[7] = 0;
+            xy - wz,
+            1 - (xx + zz),
+            yz + wx,
+            0,
 
-        out[8] = xz + wy;
-        out[9] = yz - wx;
-        out[10] = 1 - (xx + yy);
-        out[11] = 0;
+            xz + wy,
+            yz - wx,
+            1 - (xx + yy),
+            0,
 
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = 0;
-        out[15] = 1;
-
-        return this;
+            0,
+            0,
+            0,
+            1
+        );
     },
 
     /**
@@ -16890,37 +17572,35 @@ var Matrix4 = new Class({
      * @param {number} near - The near bound of the frustum.
      * @param {number} far - The far bound of the frustum.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     frustum: function (left, right, bottom, top, near, far)
     {
-        var out = this.val;
-
         var rl = 1 / (right - left);
         var tb = 1 / (top - bottom);
         var nf = 1 / (near - far);
 
-        out[0] = (near * 2) * rl;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
+        return this.setValues(
+            (near * 2) * rl,
+            0,
+            0,
+            0,
 
-        out[4] = 0;
-        out[5] = (near * 2) * tb;
-        out[6] = 0;
-        out[7] = 0;
+            0,
+            (near * 2) * tb,
+            0,
+            0,
 
-        out[8] = (right + left) * rl;
-        out[9] = (top + bottom) * tb;
-        out[10] = (far + near) * nf;
-        out[11] = -1;
+            (right + left) * rl,
+            (top + bottom) * tb,
+            (far + near) * nf,
+            -1,
 
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = (far * near * 2) * nf;
-        out[15] = 0;
-
-        return this;
+            0,
+            0,
+            (far * near * 2) * nf,
+            0
+        );
     },
 
     /**
@@ -16934,35 +17614,34 @@ var Matrix4 = new Class({
      * @param {number} near - Near bound of the frustum.
      * @param {number} far - Far bound of the frustum.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     perspective: function (fovy, aspect, near, far)
     {
-        var out = this.val;
         var f = 1.0 / Math.tan(fovy / 2);
         var nf = 1 / (near - far);
 
-        out[0] = f / aspect;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
+        return this.setValues(
+            f / aspect,
+            0,
+            0,
+            0,
 
-        out[4] = 0;
-        out[5] = f;
-        out[6] = 0;
-        out[7] = 0;
+            0,
+            f,
+            0,
+            0,
 
-        out[8] = 0;
-        out[9] = 0;
-        out[10] = (far + near) * nf;
-        out[11] = -1;
+            0,
+            0,
+            (far + near) * nf,
+            -1,
 
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = (2 * far * near) * nf;
-        out[15] = 0;
-
-        return this;
+            0,
+            0,
+            (2 * far * near) * nf,
+            0
+        );
     },
 
     /**
@@ -16976,33 +17655,31 @@ var Matrix4 = new Class({
      * @param {number} near - Near bound of the frustum.
      * @param {number} far - Far bound of the frustum.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     perspectiveLH: function (width, height, near, far)
     {
-        var out = this.val;
+        return this.setValues(
+            (2 * near) / width,
+            0,
+            0,
+            0,
 
-        out[0] = (2 * near) / width;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
+            0,
+            (2 * near) / height,
+            0,
+            0,
 
-        out[4] = 0;
-        out[5] = (2 * near) / height;
-        out[6] = 0;
-        out[7] = 0;
+            0,
+            0,
+            -far / (near - far),
+            1,
 
-        out[8] = 0;
-        out[9] = 0;
-        out[10] = -far / (near - far);
-        out[11] = 1;
-
-        out[12] = 0;
-        out[13] = 0;
-        out[14] = (near * far) / (near - far);
-        out[15] = 0;
-
-        return this;
+            0,
+            0,
+            (near * far) / (near - far),
+            0
+        );
     },
 
     /**
@@ -17018,11 +17695,10 @@ var Matrix4 = new Class({
      * @param {number} near - The near bound of the frustum.
      * @param {number} far - The far bound of the frustum.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     ortho: function (left, right, bottom, top, near, far)
     {
-        var out = this.val;
         var lr = left - right;
         var bt = bottom - top;
         var nf = near - far;
@@ -17032,25 +17708,85 @@ var Matrix4 = new Class({
         bt = (bt === 0) ? bt : 1 / bt;
         nf = (nf === 0) ? nf : 1 / nf;
 
-        out[0] = -2 * lr;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 0;
+        return this.setValues(
+            -2 * lr,
+            0,
+            0,
+            0,
 
-        out[4] = 0;
-        out[5] = -2 * bt;
-        out[6] = 0;
-        out[7] = 0;
+            0,
+            -2 * bt,
+            0,
+            0,
 
-        out[8] = 0;
-        out[9] = 0;
-        out[10] = 2 * nf;
-        out[11] = 0;
+            0,
+            0,
+            2 * nf,
+            0,
 
-        out[12] = (left + right) * lr;
-        out[13] = (top + bottom) * bt;
-        out[14] = (far + near) * nf;
-        out[15] = 1;
+            (left + right) * lr,
+            (top + bottom) * bt,
+            (far + near) * nf,
+            1
+        );
+    },
+
+    /**
+     * Generate a right-handed look-at matrix with the given eye position, target and up axis.
+     *
+     * @method Phaser.Math.Matrix4#lookAtRH
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} eye - Position of the viewer.
+     * @param {Phaser.Math.Vector3} target - Point the viewer is looking at.
+     * @param {Phaser.Math.Vector3} up - vec3 pointing up.
+     *
+     * @return {this} This Matrix4.
+     */
+    lookAtRH: function (eye, target, up)
+    {
+        var m = this.val;
+
+        _z.subVectors(eye, target);
+
+        if (_z.getLengthSquared() === 0)
+        {
+            // eye and target are in the same position
+            _z.z = 1;
+        }
+
+        _z.normalize();
+        _x.crossVectors(up, _z);
+
+        if (_x.getLengthSquared() === 0)
+        {
+            // up and z are parallel
+
+            if (Math.abs(up.z) === 1)
+            {
+                _z.x += 0.0001;
+            }
+            else
+            {
+                _z.z += 0.0001;
+            }
+
+            _z.normalize();
+            _x.crossVectors(up, _z);
+        }
+
+        _x.normalize();
+        _y.crossVectors(_z, _x);
+
+        m[0] = _x.x;
+        m[1] = _x.y;
+        m[2] = _x.z;
+        m[4] = _y.x;
+        m[5] = _y.y;
+        m[6] = _y.z;
+        m[8] = _z.x;
+        m[9] = _z.y;
+        m[10] = _z.z;
 
         return this;
     },
@@ -17065,12 +17801,10 @@ var Matrix4 = new Class({
      * @param {Phaser.Math.Vector3} center - Point the viewer is looking at
      * @param {Phaser.Math.Vector3} up - vec3 pointing up.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     lookAt: function (eye, center, up)
     {
-        var out = this.val;
-
         var eyex = eye.x;
         var eyey = eye.y;
         var eyez = eye.z;
@@ -17140,27 +17874,27 @@ var Matrix4 = new Class({
             y2 *= len;
         }
 
-        out[0] = x0;
-        out[1] = y0;
-        out[2] = z0;
-        out[3] = 0;
+        return this.setValues(
+            x0,
+            y0,
+            z0,
+            0,
 
-        out[4] = x1;
-        out[5] = y1;
-        out[6] = z1;
-        out[7] = 0;
+            x1,
+            y1,
+            z1,
+            0,
 
-        out[8] = x2;
-        out[9] = y2;
-        out[10] = z2;
-        out[11] = 0;
+            x2,
+            y2,
+            z2,
+            0,
 
-        out[12] = -(x0 * eyex + x1 * eyey + x2 * eyez);
-        out[13] = -(y0 * eyex + y1 * eyey + y2 * eyez);
-        out[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
-        out[15] = 1;
-
-        return this;
+            -(x0 * eyex + x1 * eyey + x2 * eyez),
+            -(y0 * eyex + y1 * eyey + y2 * eyez),
+            -(z0 * eyex + z1 * eyey + z2 * eyez),
+            1
+        );
     },
 
     /**
@@ -17173,7 +17907,7 @@ var Matrix4 = new Class({
      * @param {number} pitch - The pitch value.
      * @param {number} roll - The roll value.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     yawPitchRoll: function (yaw, pitch, roll)
     {
@@ -17236,7 +17970,7 @@ var Matrix4 = new Class({
      * @param {Phaser.Math.Matrix4} [viewMatrix] - The view matrix.
      * @param {Phaser.Math.Matrix4} [projectionMatrix] - The projection matrix.
      *
-     * @return {Phaser.Math.Matrix4} This Matrix4.
+     * @return {this} This Matrix4.
      */
     setWorldMatrix: function (rotation, position, scale, viewMatrix, projectionMatrix)
     {
@@ -17248,23 +17982,208 @@ var Matrix4 = new Class({
         this.multiplyLocal(_tempMat1);
         this.multiplyLocal(_tempMat2);
 
-        if (viewMatrix !== undefined)
+        if (viewMatrix)
         {
             this.multiplyLocal(viewMatrix);
         }
 
-        if (projectionMatrix !== undefined)
+        if (projectionMatrix)
         {
             this.multiplyLocal(projectionMatrix);
         }
 
         return this;
+    },
+
+    /**
+     * Multiplies this Matrix4 by the given `src` Matrix4 and stores the results in the `out` Matrix4.
+     *
+     * @method Phaser.Math.Matrix4#multiplyToMat4
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} src - The Matrix4 to multiply with this one.
+     * @param {Phaser.Math.Matrix4} out - The receiving Matrix.
+     *
+     * @return {Phaser.Math.Matrix4} This `out` Matrix4.
+     */
+    multiplyToMat4: function (src, out)
+    {
+        var a = this.val;
+        var b = src.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        var b00 = b[0];
+        var b01 = b[1];
+        var b02 = b[2];
+        var b03 = b[3];
+        var b10 = b[4];
+        var b11 = b[5];
+        var b12 = b[6];
+        var b13 = b[7];
+        var b20 = b[8];
+        var b21 = b[9];
+        var b22 = b[10];
+        var b23 = b[11];
+        var b30 = b[12];
+        var b31 = b[13];
+        var b32 = b[14];
+        var b33 = b[15];
+
+        return out.setValues(
+            b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
+            b01 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
+            b02 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
+            b03 * a03 + b01 * a13 + b02 * a23 + b03 * a33,
+
+            b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30,
+            b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31,
+            b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32,
+            b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33,
+
+            b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30,
+            b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31,
+            b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32,
+            b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33,
+
+            b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30,
+            b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
+            b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
+            b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33
+        );
+    },
+
+    /**
+     * Takes the rotation and position vectors and builds this Matrix4 from them.
+     *
+     * @method Phaser.Math.Matrix4#fromRotationXYTranslation
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} rotation - The rotation vector.
+     * @param {Phaser.Math.Vector3} position - The position vector.
+     * @param {boolean} translateFirst - Should the operation translate then rotate (`true`), or rotate then translate? (`false`)
+     *
+     * @return {this} This Matrix4.
+     */
+    fromRotationXYTranslation: function (rotation, position, translateFirst)
+    {
+        var x = position.x;
+        var y = position.y;
+        var z = position.z;
+
+        var sx = Math.sin(rotation.x);
+        var cx = Math.cos(rotation.x);
+
+        var sy = Math.sin(rotation.y);
+        var cy = Math.cos(rotation.y);
+
+        var a30 = x;
+        var a31 = y;
+        var a32 = z;
+
+        //  Rotate X
+
+        var b21 = -sx;
+
+        //  Rotate Y
+
+        var c01 = 0 - b21 * sy;
+
+        var c02 = 0 - cx * sy;
+
+        var c21 = b21 * cy;
+
+        var c22 = cx * cy;
+
+        //  Translate
+        if (!translateFirst)
+        {
+            // a30 = cy * x + 0 * y + sy * z;
+            a30 = cy * x + sy * z;
+            a31 = c01 * x + cx * y + c21 * z;
+            a32 = c02 * x + sx * y + c22 * z;
+        }
+
+        return this.setValues(
+            cy,
+            c01,
+            c02,
+            0,
+            0,
+            cx,
+            sx,
+            0,
+            sy,
+            c21,
+            c22,
+            0,
+            a30,
+            a31,
+            a32,
+            1
+        );
+    },
+
+    /**
+     * Returns the maximum axis scale from this Matrix4.
+     *
+     * @method Phaser.Math.Matrix4#getMaxScaleOnAxis
+     * @since 3.50.0
+     *
+     * @return {number} The maximum axis scale.
+     */
+    getMaxScaleOnAxis: function ()
+    {
+        var m = this.val;
+
+        var scaleXSq = m[0] * m[0] + m[1] * m[1] + m[2] * m[2];
+        var scaleYSq = m[4] * m[4] + m[5] * m[5] + m[6] * m[6];
+        var scaleZSq = m[8] * m[8] + m[9] * m[9] + m[10] * m[10];
+
+        return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
     }
 
 });
 
+/**
+ * @ignore
+ */
 var _tempMat1 = new Matrix4();
+
+/**
+ * @ignore
+ */
 var _tempMat2 = new Matrix4();
+
+/**
+ * @ignore
+ */
+var _x = new Vector3();
+
+/**
+ * @ignore
+ */
+var _y = new Vector3();
+
+/**
+ * @ignore
+ */
+var _z = new Vector3();
 
 module.exports = Matrix4;
 
@@ -17272,9 +18191,9 @@ module.exports = Matrix4;
 /***/ }),
 
 /***/ "../../../src/math/MaxAdd.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/MaxAdd.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/MaxAdd.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17307,9 +18226,9 @@ module.exports = MaxAdd;
 /***/ }),
 
 /***/ "../../../src/math/MinSub.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/MinSub.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/MinSub.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17342,9 +18261,9 @@ module.exports = MinSub;
 /***/ }),
 
 /***/ "../../../src/math/Percent.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Percent.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Percent.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -17406,9 +18325,9 @@ module.exports = Percent;
 /***/ }),
 
 /***/ "../../../src/math/Quaternion.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Quaternion.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Quaternion.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17422,8 +18341,9 @@ module.exports = Percent;
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
-var Vector3 = __webpack_require__(/*! ./Vector3 */ "../../../src/math/Vector3.js");
 var Matrix3 = __webpack_require__(/*! ./Matrix3 */ "../../../src/math/Matrix3.js");
+var NOOP = __webpack_require__(/*! ../utils/NOOP */ "../../../src/utils/NOOP.js");
+var Vector3 = __webpack_require__(/*! ./Vector3 */ "../../../src/math/Vector3.js");
 
 var EPSILON = 0.000001;
 
@@ -17446,10 +18366,10 @@ var tmpMat3 = new Matrix3();
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x] - The x component.
- * @param {number} [y] - The y component.
- * @param {number} [z] - The z component.
- * @param {number} [w] - The w component.
+ * @param {number} [x=0] - The x component.
+ * @param {number} [y=0] - The y component.
+ * @param {number} [z=0] - The z component.
+ * @param {number} [w=1] - The w component.
  */
 var Quaternion = new Class({
 
@@ -17460,52 +18380,141 @@ var Quaternion = new Class({
         /**
          * The x component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#x
+         * @name Phaser.Math.Quaternion#_x
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
         /**
          * The y component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#y
+         * @name Phaser.Math.Quaternion#_y
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
         /**
          * The z component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#z
+         * @name Phaser.Math.Quaternion#_z
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
         /**
          * The w component of this Quaternion.
          *
-         * @name Phaser.Math.Quaternion#w
+         * @name Phaser.Math.Quaternion#_w
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @private
+         * @since 3.50.0
          */
 
-        if (typeof x === 'object')
+        /**
+         * This callback is invoked, if set, each time a value in this quaternion is changed.
+         * The callback is passed one argument, a reference to this quaternion.
+         *
+         * @name Phaser.Math.Quaternion#onChangeCallback
+         * @type {function}
+         * @since 3.50.0
+         */
+        this.onChangeCallback = NOOP;
+
+        this.set(x, y, z, w);
+    },
+
+    /**
+     * The x component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#x
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    x: {
+        get: function ()
         {
-            this.x = x.x || 0;
-            this.y = x.y || 0;
-            this.z = x.z || 0;
-            this.w = x.w || 0;
+            return this._x;
+        },
+
+        set: function (value)
+        {
+            this._x = value;
+
+            this.onChangeCallback(this);
         }
-        else
+    },
+
+    /**
+     * The y component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#y
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    y: {
+        get: function ()
         {
-            this.x = x || 0;
-            this.y = y || 0;
-            this.z = z || 0;
-            this.w = w || 0;
+            return this._y;
+        },
+
+        set: function (value)
+        {
+            this._y = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    /**
+     * The z component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#z
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    z: {
+        get: function ()
+        {
+            return this._z;
+        },
+
+        set: function (value)
+        {
+            this._z = value;
+
+            this.onChangeCallback(this);
+        }
+    },
+
+    /**
+     * The w component of this Quaternion.
+     *
+     * @name Phaser.Math.Quaternion#w
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    w: {
+        get: function ()
+        {
+            return this._w;
+        },
+
+        set: function (value)
+        {
+            this._w = value;
+
+            this.onChangeCallback(this);
         }
     },
 
@@ -17521,16 +18530,11 @@ var Quaternion = new Class({
      */
     copy: function (src)
     {
-        this.x = src.x;
-        this.y = src.y;
-        this.z = src.z;
-        this.w = src.w;
-
-        return this;
+        return this.set(src);
     },
 
     /**
-     * Set the components of this Quaternion.
+     * Set the components of this Quaternion and optionally call the `onChangeCallback`.
      *
      * @method Phaser.Math.Quaternion#set
      * @since 3.0.0
@@ -17539,24 +18543,32 @@ var Quaternion = new Class({
      * @param {number} [y=0] - The y component.
      * @param {number} [z=0] - The z component.
      * @param {number} [w=0] - The w component.
+     * @param {boolean} [update=true] - Call the `onChangeCallback`?
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
      */
-    set: function (x, y, z, w)
+    set: function (x, y, z, w, update)
     {
+        if (update === undefined) { update = true; }
+
         if (typeof x === 'object')
         {
-            this.x = x.x || 0;
-            this.y = x.y || 0;
-            this.z = x.z || 0;
-            this.w = x.w || 0;
+            this._x = x.x || 0;
+            this._y = x.y || 0;
+            this._z = x.z || 0;
+            this._w = x.w || 0;
         }
         else
         {
-            this.x = x || 0;
-            this.y = y || 0;
-            this.z = z || 0;
-            this.w = w || 0;
+            this._x = x || 0;
+            this._y = y || 0;
+            this._z = z || 0;
+            this._w = w || 0;
+        }
+
+        if (update)
+        {
+            this.onChangeCallback(this);
         }
 
         return this;
@@ -17574,10 +18586,12 @@ var Quaternion = new Class({
      */
     add: function (v)
     {
-        this.x += v.x;
-        this.y += v.y;
-        this.z += v.z;
-        this.w += v.w;
+        this._x += v.x;
+        this._y += v.y;
+        this._z += v.z;
+        this._w += v.w;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -17594,10 +18608,12 @@ var Quaternion = new Class({
      */
     subtract: function (v)
     {
-        this.x -= v.x;
-        this.y -= v.y;
-        this.z -= v.z;
-        this.w -= v.w;
+        this._x -= v.x;
+        this._y -= v.y;
+        this._z -= v.z;
+        this._w -= v.w;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -17614,10 +18630,12 @@ var Quaternion = new Class({
      */
     scale: function (scale)
     {
-        this.x *= scale;
-        this.y *= scale;
-        this.z *= scale;
-        this.w *= scale;
+        this._x *= scale;
+        this._y *= scale;
+        this._z *= scale;
+        this._w *= scale;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -17678,11 +18696,13 @@ var Quaternion = new Class({
         {
             len = 1 / Math.sqrt(len);
 
-            this.x = x * len;
-            this.y = y * len;
-            this.z = z * len;
-            this.w = w * len;
+            this._x = x * len;
+            this._y = y * len;
+            this._z = z * len;
+            this._w = w * len;
         }
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -17722,12 +18742,12 @@ var Quaternion = new Class({
         var az = this.z;
         var aw = this.w;
 
-        this.x = ax + t * (v.x - ax);
-        this.y = ay + t * (v.y - ay);
-        this.z = az + t * (v.z - az);
-        this.w = aw + t * (v.w - aw);
-
-        return this;
+        return this.set(
+            ax + t * (v.x - ax),
+            ay + t * (v.y - ay),
+            az + t * (v.z - az),
+            aw + t * (v.w - aw)
+        );
     },
 
     /**
@@ -17759,21 +18779,16 @@ var Quaternion = new Class({
         }
         else if (dot > 0.999999)
         {
-            this.x = 0;
-            this.y = 0;
-            this.z = 0;
-            this.w = 1;
-
-            return this;
+            return this.set(0, 0, 0, 1);
         }
         else
         {
             tmpvec.copy(a).cross(b);
 
-            this.x = tmpvec.x;
-            this.y = tmpvec.y;
-            this.z = tmpvec.z;
-            this.w = 1 + dot;
+            this._x = tmpvec.x;
+            this._y = tmpvec.y;
+            this._z = tmpvec.z;
+            this._w = 1 + dot;
 
             return this.normalize();
         }
@@ -17820,12 +18835,7 @@ var Quaternion = new Class({
      */
     identity: function ()
     {
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
-        this.w = 1;
-
-        return this;
+        return this.set(0, 0, 0, 1);
     },
 
     /**
@@ -17845,12 +18855,12 @@ var Quaternion = new Class({
 
         var s = Math.sin(rad);
 
-        this.x = s * axis.x;
-        this.y = s * axis.y;
-        this.z = s * axis.z;
-        this.w = Math.cos(rad);
-
-        return this;
+        return this.set(
+            s * axis.x,
+            s * axis.y,
+            s * axis.z,
+            Math.cos(rad)
+        );
     },
 
     /**
@@ -17875,12 +18885,12 @@ var Quaternion = new Class({
         var bz = b.z;
         var bw = b.w;
 
-        this.x = ax * bw + aw * bx + ay * bz - az * by;
-        this.y = ay * bw + aw * by + az * bx - ax * bz;
-        this.z = az * bw + aw * bz + ax * by - ay * bx;
-        this.w = aw * bw - ax * bx - ay * by - az * bz;
-
-        return this;
+        return this.set(
+            ax * bw + aw * bx + ay * bz - az * by,
+            ay * bw + aw * by + az * bx - ax * bz,
+            az * bw + aw * bz + ax * by - ay * bx,
+            aw * bw - ax * bx - ay * by - az * bz
+        );
     },
 
     /**
@@ -17938,12 +18948,12 @@ var Quaternion = new Class({
         }
 
         // calculate final values
-        this.x = scale0 * ax + scale1 * bx;
-        this.y = scale0 * ay + scale1 * by;
-        this.z = scale0 * az + scale1 * bz;
-        this.w = scale0 * aw + scale1 * bw;
-
-        return this;
+        return this.set(
+            scale0 * ax + scale1 * bx,
+            scale0 * ay + scale1 * by,
+            scale0 * az + scale1 * bz,
+            scale0 * aw + scale1 * bw
+        );
     },
 
     /**
@@ -17964,14 +18974,12 @@ var Quaternion = new Class({
         var dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
         var invDot = (dot) ? 1 / dot : 0;
 
-        // TODO: Would be faster to return [0,0,0,0] immediately if dot == 0
-
-        this.x = -a0 * invDot;
-        this.y = -a1 * invDot;
-        this.z = -a2 * invDot;
-        this.w = a3 * invDot;
-
-        return this;
+        return this.set(
+            -a0 * invDot,
+            -a1 * invDot,
+            -a2 * invDot,
+            a3 * invDot
+        );
     },
 
     /**
@@ -17986,9 +18994,11 @@ var Quaternion = new Class({
      */
     conjugate: function ()
     {
-        this.x = -this.x;
-        this.y = -this.y;
-        this.z = -this.z;
+        this._x = -this.x;
+        this._y = -this.y;
+        this._z = -this.z;
+
+        this.onChangeCallback(this);
 
         return this;
     },
@@ -18015,12 +19025,12 @@ var Quaternion = new Class({
         var bx = Math.sin(rad);
         var bw = Math.cos(rad);
 
-        this.x = ax * bw + aw * bx;
-        this.y = ay * bw + az * bx;
-        this.z = az * bw - ay * bx;
-        this.w = aw * bw - ax * bx;
-
-        return this;
+        return this.set(
+            ax * bw + aw * bx,
+            ay * bw + az * bx,
+            az * bw - ay * bx,
+            aw * bw - ax * bx
+        );
     },
 
     /**
@@ -18045,12 +19055,12 @@ var Quaternion = new Class({
         var by = Math.sin(rad);
         var bw = Math.cos(rad);
 
-        this.x = ax * bw - az * by;
-        this.y = ay * bw + aw * by;
-        this.z = az * bw + ax * by;
-        this.w = aw * bw - ay * by;
-
-        return this;
+        return this.set(
+            ax * bw - az * by,
+            ay * bw + aw * by,
+            az * bw + ax * by,
+            aw * bw - ay * by
+        );
     },
 
     /**
@@ -18075,12 +19085,12 @@ var Quaternion = new Class({
         var bz = Math.sin(rad);
         var bw = Math.cos(rad);
 
-        this.x = ax * bw + ay * bz;
-        this.y = ay * bw - ax * bz;
-        this.z = az * bw + aw * bz;
-        this.w = aw * bw - az * bz;
-
-        return this;
+        return this.set(
+            ax * bw + ay * bz,
+            ay * bw - ax * bz,
+            az * bw + aw * bz,
+            aw * bw - az * bz
+        );
     },
 
     /**
@@ -18100,6 +19110,190 @@ var Quaternion = new Class({
         var z = this.z;
 
         this.w = -Math.sqrt(1.0 - x * x - y * y - z * z);
+
+        return this;
+    },
+
+    /**
+     * Set this Quaternion from the given Euler, based on Euler order.
+     *
+     * @method Phaser.Math.Quaternion#setFromEuler
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Euler} euler - The Euler to convert from.
+     * @param {boolean} [update=true] - Run the `onChangeCallback`?
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    setFromEuler: function (euler, update)
+    {
+        var x = euler.x / 2;
+        var y = euler.y / 2;
+        var z = euler.z / 2;
+
+        var c1 = Math.cos(x);
+        var c2 = Math.cos(y);
+        var c3 = Math.cos(z);
+
+        var s1 = Math.sin(x);
+        var s2 = Math.sin(y);
+        var s3 = Math.sin(z);
+
+        switch (euler.order)
+        {
+            case 'XYZ':
+            {
+                this.set(
+                    s1 * c2 * c3 + c1 * s2 * s3,
+                    c1 * s2 * c3 - s1 * c2 * s3,
+                    c1 * c2 * s3 + s1 * s2 * c3,
+                    c1 * c2 * c3 - s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'YXZ':
+            {
+                this.set(
+                    s1 * c2 * c3 + c1 * s2 * s3,
+                    c1 * s2 * c3 - s1 * c2 * s3,
+                    c1 * c2 * s3 - s1 * s2 * c3,
+                    c1 * c2 * c3 + s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'ZXY':
+            {
+                this.set(
+                    s1 * c2 * c3 - c1 * s2 * s3,
+                    c1 * s2 * c3 + s1 * c2 * s3,
+                    c1 * c2 * s3 + s1 * s2 * c3,
+                    c1 * c2 * c3 - s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'ZYX':
+            {
+                this.set(
+                    s1 * c2 * c3 - c1 * s2 * s3,
+                    c1 * s2 * c3 + s1 * c2 * s3,
+                    c1 * c2 * s3 - s1 * s2 * c3,
+                    c1 * c2 * c3 + s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'YZX':
+            {
+                this.set(
+                    s1 * c2 * c3 + c1 * s2 * s3,
+                    c1 * s2 * c3 + s1 * c2 * s3,
+                    c1 * c2 * s3 - s1 * s2 * c3,
+                    c1 * c2 * c3 - s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+
+            case 'XZY':
+            {
+                this.set(
+                    s1 * c2 * c3 - c1 * s2 * s3,
+                    c1 * s2 * c3 - s1 * c2 * s3,
+                    c1 * c2 * s3 + s1 * s2 * c3,
+                    c1 * c2 * c3 + s1 * s2 * s3,
+                    update
+                );
+
+                break;
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets the rotation of this Quaternion from the given Matrix4.
+     *
+     * @method Phaser.Math.Quaternion#setFromRotationMatrix
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} mat4 - The Matrix4 to set the rotation from.
+     *
+     * @return {Phaser.Math.Quaternion} This Quaternion.
+     */
+    setFromRotationMatrix: function (mat4)
+    {
+        var m = mat4.val;
+
+        var m11 = m[0];
+        var m12 = m[4];
+        var m13 = m[8];
+        var m21 = m[1];
+        var m22 = m[5];
+        var m23 = m[9];
+        var m31 = m[2];
+        var m32 = m[6];
+        var m33 = m[10];
+
+        var trace = m11 + m22 + m33;
+        var s;
+
+        if (trace > 0)
+        {
+            s = 0.5 / Math.sqrt(trace + 1.0);
+
+            this.set(
+                (m32 - m23) * s,
+                (m13 - m31) * s,
+                (m21 - m12) * s,
+                0.25 / s
+            );
+        }
+        else if (m11 > m22 && m11 > m33)
+        {
+            s = 2.0 * Math.sqrt(1.0 + m11 - m22 - m33);
+
+            this.set(
+                0.25 * s,
+                (m12 + m21) / s,
+                (m13 + m31) / s,
+                (m32 - m23) / s
+            );
+        }
+        else if (m22 > m33)
+        {
+            s = 2.0 * Math.sqrt(1.0 + m22 - m11 - m33);
+
+            this.set(
+                (m12 + m21) / s,
+                0.25 * s,
+                (m23 + m32) / s,
+                (m13 - m31) / s
+            );
+        }
+        else
+        {
+            s = 2.0 * Math.sqrt(1.0 + m33 - m11 - m22);
+
+            this.set(
+                (m13 + m31) / s,
+                (m23 + m32) / s,
+                0.25 * s,
+                (m21 - m12) / s
+            );
+        }
 
         return this;
     },
@@ -18135,9 +19329,9 @@ var Quaternion = new Class({
 
             fRoot = 0.5 / fRoot; // 1/(4w)
 
-            this.x = (m[7] - m[5]) * fRoot;
-            this.y = (m[2] - m[6]) * fRoot;
-            this.z = (m[3] - m[1]) * fRoot;
+            this._x = (m[7] - m[5]) * fRoot;
+            this._y = (m[2] - m[6]) * fRoot;
+            this._z = (m[3] - m[1]) * fRoot;
         }
         else
         {
@@ -18166,11 +19360,13 @@ var Quaternion = new Class({
             tmp[j] = (m[j * 3 + i] + m[i * 3 + j]) * fRoot;
             tmp[k] = (m[k * 3 + i] + m[i * 3 + k]) * fRoot;
 
-            this.x = tmp[0];
-            this.y = tmp[1];
-            this.z = tmp[2];
-            this.w = (m[k * 3 + j] - m[j * 3 + k]) * fRoot;
+            this._x = tmp[0];
+            this._y = tmp[1];
+            this._z = tmp[2];
+            this._w = (m[k * 3 + j] - m[j * 3 + k]) * fRoot;
         }
+
+        this.onChangeCallback(this);
 
         return this;
     }
@@ -18183,9 +19379,9 @@ module.exports = Quaternion;
 /***/ }),
 
 /***/ "../../../src/math/RadToDeg.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RadToDeg.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RadToDeg.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18205,7 +19401,7 @@ var CONST = __webpack_require__(/*! ./const */ "../../../src/math/const.js");
  *
  * @param {number} radians - The angle in radians to convert ot degrees.
  *
- * @return {integer} The given angle converted to degrees.
+ * @return {number} The given angle converted to degrees.
  */
 var RadToDeg = function (radians)
 {
@@ -18218,9 +19414,9 @@ module.exports = RadToDeg;
 /***/ }),
 
 /***/ "../../../src/math/RandomXY.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXY.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXY.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18263,9 +19459,9 @@ module.exports = RandomXY;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZ.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXYZ.js ***!
-  \************************************************/
+/*!*****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXYZ.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18307,9 +19503,9 @@ module.exports = RandomXYZ;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZW.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXYZW.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXYZW.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18349,9 +19545,9 @@ module.exports = RandomXYZW;
 /***/ }),
 
 /***/ "../../../src/math/Rotate.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Rotate.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Rotate.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18389,9 +19585,9 @@ module.exports = Rotate;
 /***/ }),
 
 /***/ "../../../src/math/RotateAround.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateAround.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateAround.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18438,9 +19634,9 @@ module.exports = RotateAround;
 /***/ }),
 
 /***/ "../../../src/math/RotateAroundDistance.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateAroundDistance.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateAroundDistance.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18484,9 +19680,9 @@ module.exports = RotateAroundDistance;
 /***/ }),
 
 /***/ "../../../src/math/RotateTo.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateTo.js ***!
-  \***********************************************/
+/*!****************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateTo.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18526,9 +19722,9 @@ module.exports = RotateTo;
 /***/ }),
 
 /***/ "../../../src/math/RotateVec3.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateVec3.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateVec3.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18579,9 +19775,9 @@ module.exports = RotateVec3;
 /***/ }),
 
 /***/ "../../../src/math/RoundAwayFromZero.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RoundAwayFromZero.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RoundAwayFromZero.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18613,9 +19809,9 @@ module.exports = RoundAwayFromZero;
 /***/ }),
 
 /***/ "../../../src/math/RoundTo.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RoundTo.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/RoundTo.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18649,8 +19845,8 @@ module.exports = RoundAwayFromZero;
  * @since 3.0.0
  *
  * @param {number} value - The value to round.
- * @param {integer} [place=0] - The place to round to. Positive to round the units, negative to round the decimal.
- * @param {integer} [base=10] - The base to round in. Default is 10 for decimal.
+ * @param {number} [place=0] - The place to round to. Positive to round the units, negative to round the decimal.
+ * @param {number} [base=10] - The base to round in. Default is 10 for decimal.
  *
  * @return {number} The rounded value.
  */
@@ -18670,9 +19866,9 @@ module.exports = RoundTo;
 /***/ }),
 
 /***/ "../../../src/math/SinCosTableGenerator.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SinCosTableGenerator.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/SinCosTableGenerator.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18728,9 +19924,9 @@ module.exports = SinCosTableGenerator;
 /***/ }),
 
 /***/ "../../../src/math/SmoothStep.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SmoothStep.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/SmoothStep.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18780,9 +19976,9 @@ module.exports = SmoothStep;
 /***/ }),
 
 /***/ "../../../src/math/SmootherStep.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SmootherStep.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/SmootherStep.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18824,9 +20020,9 @@ module.exports = SmootherStep;
 /***/ }),
 
 /***/ "../../../src/math/ToXY.js":
-/*!*******************************************!*\
-  !*** D:/wamp/www/phaser/src/math/ToXY.js ***!
-  \*******************************************/
+/*!************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/ToXY.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18848,9 +20044,9 @@ var Vector2 = __webpack_require__(/*! ./Vector2 */ "../../../src/math/Vector2.js
  * @function Phaser.Math.ToXY
  * @since 3.19.0
  *
- * @param {integer} index - The position within the grid to get the x/y value for.
- * @param {integer} width - The width of the grid.
- * @param {integer} height - The height of the grid.
+ * @param {number} index - The position within the grid to get the x/y value for.
+ * @param {number} width - The width of the grid.
+ * @param {number} height - The height of the grid.
  * @param {Phaser.Math.Vector2} [out] - An optional Vector2 to store the result in. If not given, a new Vector2 instance will be created.
  *
  * @return {Phaser.Math.Vector2} A Vector2 where the x and y properties contain the given grid index.
@@ -18887,9 +20083,9 @@ module.exports = ToXY;
 /***/ }),
 
 /***/ "../../../src/math/TransformXY.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/TransformXY.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/TransformXY.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18947,9 +20143,9 @@ module.exports = TransformXY;
 /***/ }),
 
 /***/ "../../../src/math/Vector2.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector2.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector2.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19728,9 +20924,9 @@ module.exports = Vector2;
 /***/ }),
 
 /***/ "../../../src/math/Vector3.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector3.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector3.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19830,6 +21026,44 @@ var Vector3 = new Class({
     },
 
     /**
+     * Sets the components of this Vector to be the `Math.min` result from the given vector.
+     *
+     * @method Phaser.Math.Vector3#min
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} v - The Vector3 to check the minimum values against.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    min: function (v)
+    {
+        this.x = Math.min(this.x, v.x);
+        this.y = Math.min(this.y, v.y);
+        this.z = Math.min(this.z, v.z);
+
+        return this;
+    },
+
+    /**
+     * Sets the components of this Vector to be the `Math.max` result from the given vector.
+     *
+     * @method Phaser.Math.Vector3#max
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} v - The Vector3 to check the maximum values against.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    max: function (v)
+    {
+        this.x = Math.max(this.x, v.x);
+        this.y = Math.max(this.y, v.y);
+        this.z = Math.max(this.z, v.z);
+
+        return this;
+    },
+
+    /**
      * Make a clone of this Vector3.
      *
      * @method Phaser.Math.Vector3#clone
@@ -19840,6 +21074,26 @@ var Vector3 = new Class({
     clone: function ()
     {
         return new Vector3(this.x, this.y, this.z);
+    },
+
+    /**
+     * Adds the two given Vector3s and sets the results into this Vector3.
+     *
+     * @method Phaser.Math.Vector3#addVectors
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Vector3} a - The first Vector to add.
+     * @param {Phaser.Math.Vector3} b - The second Vector to add.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    addVectors: function (a, b)
+    {
+        this.x = a.x + b.x;
+        this.y = a.y + b.y;
+        this.z = a.z + b.z;
+
+        return this;
     },
 
     /**
@@ -19936,6 +21190,63 @@ var Vector3 = new Class({
     },
 
     /**
+     * Sets the components of this Vector3 from the position of the given Matrix4.
+     *
+     * @method Phaser.Math.Vector3#setFromMatrixPosition
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} mat4 - The Matrix4 to get the position from.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    setFromMatrixPosition: function (m)
+    {
+        return this.fromArray(m.val, 12);
+    },
+
+    /**
+     * Sets the components of this Vector3 from the Matrix4 column specified.
+     *
+     * @method Phaser.Math.Vector3#setFromMatrixColumn
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} mat4 - The Matrix4 to get the column from.
+     * @param {number} index - The column index.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    setFromMatrixColumn: function (mat4, index)
+    {
+        return this.fromArray(mat4.val, index * 4);
+    },
+
+    /**
+     * Sets the components of this Vector3 from the given array, based on the offset.
+     *
+     * Vector3.x = array[offset]
+     * Vector3.y = array[offset + 1]
+     * Vector3.z = array[offset + 2]
+     *
+     * @method Phaser.Math.Vector3#fromArray
+     * @since 3.50.0
+     *
+     * @param {number[]} array - The array of values to get this Vector from.
+     * @param {number} [offset=0] - The offset index into the array.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    fromArray: function (array, offset)
+    {
+        if (offset === undefined) { offset = 0; }
+
+        this.x = array[offset];
+        this.y = array[offset + 1];
+        this.z = array[offset + 2];
+
+        return this;
+    },
+
+    /**
      * Add a given Vector to this Vector. Addition is component-wise.
      *
      * @method Phaser.Math.Vector3#add
@@ -19950,6 +21261,45 @@ var Vector3 = new Class({
         this.x += v.x;
         this.y += v.y;
         this.z += v.z || 0;
+
+        return this;
+    },
+
+    /**
+     * Add the given value to each component of this Vector.
+     *
+     * @method Phaser.Math.Vector3#addScalar
+     * @since 3.50.0
+     *
+     * @param {number} s - The amount to add to this Vector.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    addScalar: function (s)
+    {
+        this.x += s;
+        this.y += s;
+        this.z += s;
+
+        return this;
+    },
+
+    /**
+     * Add and scale a given Vector to this Vector. Addition is component-wise.
+     *
+     * @method Phaser.Math.Vector3#addScale
+     * @since 3.50.0
+     *
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to add to this Vector.
+     * @param {number} scale - The amount to scale `v` by.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    addScale: function (v, scale)
+    {
+        this.x += v.x * scale;
+        this.y += v.y * scale;
+        this.z += v.z * scale || 0;
 
         return this;
     },
@@ -20231,6 +21581,56 @@ var Vector3 = new Class({
     },
 
     /**
+     * Takes a Matrix3 and applies it to this Vector3.
+     *
+     * @method Phaser.Math.Vector3#applyMatrix3
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix3} mat3 - The Matrix3 to apply to this Vector3.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    applyMatrix3: function (mat3)
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var m = mat3.val;
+
+        this.x = m[0] * x + m[3] * y + m[6] * z;
+        this.y = m[1] * x + m[4] * y + m[7] * z;
+        this.z = m[2] * x + m[5] * y + m[8] * z;
+
+        return this;
+    },
+
+    /**
+     * Takes a Matrix4 and applies it to this Vector3.
+     *
+     * @method Phaser.Math.Vector3#applyMatrix4
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} mat4 - The Matrix4 to apply to this Vector3.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    applyMatrix4: function (mat4)
+    {
+        var x = this.x;
+        var y = this.y;
+        var z = this.z;
+        var m = mat4.val;
+
+        var w = 1 / (m[3] * x + m[7] * y + m[11] * z + m[15]);
+
+        this.x = (m[0] * x + m[4] * y + m[8] * z + m[12]) * w;
+        this.y = (m[1] * x + m[5] * y + m[9] * z + m[13]) * w;
+        this.z = (m[2] * x + m[6] * y + m[10] * z + m[14]) * w;
+
+        return this;
+    },
+
+    /**
      * Transform this Vector with the given Matrix.
      *
      * @method Phaser.Math.Vector3#transformMat3
@@ -20255,7 +21655,7 @@ var Vector3 = new Class({
     },
 
     /**
-     * Transform this Vector with the given Matrix.
+     * Transform this Vector with the given Matrix4.
      *
      * @method Phaser.Math.Vector3#transformMat4
      * @since 3.0.0
@@ -20387,6 +21787,38 @@ var Vector3 = new Class({
     },
 
     /**
+     * Multiplies this Vector3 by the given view and projection matrices.
+     *
+     * @method Phaser.Math.Vector3#projectViewMatrix
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} viewMatrix - A View Matrix.
+     * @param {Phaser.Math.Matrix4} projectionMatrix - A Projection Matrix.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    projectViewMatrix: function (viewMatrix, projectionMatrix)
+    {
+        return this.applyMatrix4(viewMatrix).applyMatrix4(projectionMatrix);
+    },
+
+    /**
+     * Multiplies this Vector3 by the given inversed projection matrix and world matrix.
+     *
+     * @method Phaser.Math.Vector3#unprojectViewMatrix
+     * @since 3.50.0
+     *
+     * @param {Phaser.Math.Matrix4} projectionMatrix - An inversed Projection Matrix.
+     * @param {Phaser.Math.Matrix4} worldMatrix - A World View Matrix.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    unprojectViewMatrix: function (projectionMatrix, worldMatrix)
+    {
+        return this.applyMatrix4(projectionMatrix).applyMatrix4(worldMatrix);
+    },
+
+    /**
      * Unproject this point from 2D space to 3D space.
      * The point should have its x and y properties set to
      * 2D screen space, and the z either at 0 (near plane)
@@ -20443,7 +21875,7 @@ var Vector3 = new Class({
 
 /**
  * A static zero Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20455,7 +21887,7 @@ Vector3.ZERO = new Vector3();
 
 /**
  * A static right Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20467,7 +21899,7 @@ Vector3.RIGHT = new Vector3(1, 0, 0);
 
 /**
  * A static left Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20479,7 +21911,7 @@ Vector3.LEFT = new Vector3(-1, 0, 0);
 
 /**
  * A static up Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20491,7 +21923,7 @@ Vector3.UP = new Vector3(0, -1, 0);
 
 /**
  * A static down Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20503,7 +21935,7 @@ Vector3.DOWN = new Vector3(0, 1, 0);
 
 /**
  * A static forward Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20515,7 +21947,7 @@ Vector3.FORWARD = new Vector3(0, 0, 1);
 
 /**
  * A static back Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20527,7 +21959,7 @@ Vector3.BACK = new Vector3(0, 0, -1);
 
 /**
  * A static one Vector3 for use by reference.
- * 
+ *
  * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
@@ -20543,9 +21975,9 @@ module.exports = Vector3;
 /***/ }),
 
 /***/ "../../../src/math/Vector4.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector4.js ***!
-  \**********************************************/
+/*!***************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector4.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21093,9 +22525,9 @@ module.exports = Vector4;
 /***/ }),
 
 /***/ "../../../src/math/Within.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Within.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Within.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21128,9 +22560,9 @@ module.exports = Within;
 /***/ }),
 
 /***/ "../../../src/math/Wrap.js":
-/*!*******************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Wrap.js ***!
-  \*******************************************/
+/*!************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/Wrap.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21165,9 +22597,9 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/Between.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Between.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Between.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21201,9 +22633,9 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPoints.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenPoints.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenPoints.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21237,9 +22669,9 @@ module.exports = BetweenPoints;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPointsY.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenPointsY.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenPointsY.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21274,9 +22706,9 @@ module.exports = BetweenPointsY;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenY.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenY.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenY.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21313,9 +22745,9 @@ module.exports = BetweenY;
 /***/ }),
 
 /***/ "../../../src/math/angle/CounterClockwise.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/CounterClockwise.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/CounterClockwise.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21363,9 +22795,9 @@ module.exports = CounterClockwise;
 /***/ }),
 
 /***/ "../../../src/math/angle/Normalize.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Normalize.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Normalize.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21405,9 +22837,9 @@ module.exports = Normalize;
 /***/ }),
 
 /***/ "../../../src/math/angle/Random.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Random.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Random.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21439,9 +22871,9 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/math/angle/RandomDegrees.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/RandomDegrees.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/RandomDegrees.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21473,9 +22905,9 @@ module.exports = RandomDegrees;
 /***/ }),
 
 /***/ "../../../src/math/angle/Reverse.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Reverse.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Reverse.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21508,9 +22940,9 @@ module.exports = Reverse;
 /***/ }),
 
 /***/ "../../../src/math/angle/RotateTo.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/RotateTo.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/RotateTo.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21580,9 +23012,9 @@ module.exports = RotateTo;
 /***/ }),
 
 /***/ "../../../src/math/angle/ShortestBetween.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/ShortestBetween.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/ShortestBetween.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21634,9 +23066,9 @@ module.exports = ShortestBetween;
 /***/ }),
 
 /***/ "../../../src/math/angle/Wrap.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Wrap.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Wrap.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21671,9 +23103,9 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/WrapDegrees.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/WrapDegrees.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/WrapDegrees.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21708,9 +23140,9 @@ module.exports = WrapDegrees;
 /***/ }),
 
 /***/ "../../../src/math/angle/index.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/index.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/index.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21746,9 +23178,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/const.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/const.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/const.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21843,9 +23275,9 @@ module.exports = MATH_CONST;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetween.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetween.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceBetween.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21882,9 +23314,9 @@ module.exports = DistanceBetween;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetweenPoints.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetweenPoints.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceBetweenPoints.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21919,9 +23351,9 @@ module.exports = DistanceBetweenPoints;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetweenPointsSquared.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetweenPointsSquared.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceBetweenPointsSquared.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21956,9 +23388,9 @@ module.exports = DistanceBetweenPointsSquared;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceChebyshev.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceChebyshev.js ***!
-  \*****************************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceChebyshev.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -21995,9 +23427,9 @@ module.exports = ChebyshevDistance;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistancePower.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistancePower.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistancePower.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22034,9 +23466,9 @@ module.exports = DistancePower;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceSnake.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceSnake.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceSnake.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22073,9 +23505,9 @@ module.exports = SnakeDistance;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceSquared.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceSquared.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceSquared.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22112,9 +23544,9 @@ module.exports = DistanceSquared;
 /***/ }),
 
 /***/ "../../../src/math/distance/index.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/index.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/index.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22144,9 +23576,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/back/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/In.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/In.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22180,9 +23612,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/InOut.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/InOut.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22225,9 +23657,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/Out.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/Out.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22261,9 +23693,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/index.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/index.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22289,9 +23721,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/In.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/In.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/In.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22339,9 +23771,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/InOut.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/InOut.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/InOut.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22408,9 +23840,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/Out.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/Out.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/Out.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22456,9 +23888,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22484,9 +23916,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/In.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/In.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/In.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22517,9 +23949,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/InOut.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/InOut.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/InOut.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22557,9 +23989,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/Out.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/Out.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/Out.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22590,9 +24022,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/index.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/index.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/index.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22618,9 +24050,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/In.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/In.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/In.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22651,9 +24083,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/InOut.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/InOut.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/InOut.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22691,9 +24123,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/Out.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/Out.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/Out.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22724,9 +24156,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/index.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/index.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/index.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22752,9 +24184,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/In.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/In.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22812,9 +24244,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/InOut.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/InOut.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22879,9 +24311,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/Out.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/Out.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22939,9 +24371,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22967,9 +24399,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/In.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/In.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23000,9 +24432,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/InOut.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/InOut.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23040,9 +24472,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/Out.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/Out.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23073,9 +24505,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/index.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/index.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23101,9 +24533,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/index.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23138,9 +24570,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/Linear.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/linear/Linear.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/linear/Linear.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23171,9 +24603,9 @@ module.exports = Linear;
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/linear/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/linear/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23189,9 +24621,9 @@ module.exports = __webpack_require__(/*! ./Linear */ "../../../src/math/easing/l
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/In.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/In.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/In.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23222,9 +24654,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/InOut.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/InOut.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/InOut.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23262,9 +24694,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/Out.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/Out.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/Out.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23295,9 +24727,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/index.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/index.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/index.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23323,9 +24755,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/In.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/In.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23356,9 +24788,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/InOut.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/InOut.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23396,9 +24828,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/Out.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/Out.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23429,9 +24861,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23457,9 +24889,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/In.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/In.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23490,9 +24922,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/InOut.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/InOut.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23530,9 +24962,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/Out.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/Out.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23563,9 +24995,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23591,9 +25023,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/In.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/In.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23635,9 +25067,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/InOut.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/InOut.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23679,9 +25111,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/Out.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/Out.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23723,9 +25155,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/index.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/index.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23751,9 +25183,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/Stepped.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/stepped/Stepped.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/stepped/Stepped.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23798,9 +25230,9 @@ module.exports = Stepped;
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/stepped/index.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/stepped/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23820,9 +25252,9 @@ module.exports = __webpack_require__(/*! ./Stepped */ "../../../src/math/easing/
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Ceil.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Ceil.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Ceil.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23856,9 +25288,9 @@ module.exports = Ceil;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Equal.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Equal.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Equal.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23895,9 +25327,9 @@ module.exports = Equal;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Floor.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Floor.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Floor.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23931,9 +25363,9 @@ module.exports = Floor;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/GreaterThan.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/GreaterThan.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/GreaterThan.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23970,9 +25402,9 @@ module.exports = GreaterThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/LessThan.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/LessThan.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/LessThan.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24009,9 +25441,9 @@ module.exports = LessThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/index.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/index.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/index.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24039,9 +25471,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/index.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/index.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/index.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24081,6 +25513,7 @@ var PhaserMath = {
     Clamp: __webpack_require__(/*! ./Clamp */ "../../../src/math/Clamp.js"),
     DegToRad: __webpack_require__(/*! ./DegToRad */ "../../../src/math/DegToRad.js"),
     Difference: __webpack_require__(/*! ./Difference */ "../../../src/math/Difference.js"),
+    Euler: __webpack_require__(/*! ./Euler */ "../../../src/math/Euler.js"),
     Factorial: __webpack_require__(/*! ./Factorial */ "../../../src/math/Factorial.js"),
     FloatBetween: __webpack_require__(/*! ./FloatBetween */ "../../../src/math/FloatBetween.js"),
     FloorTo: __webpack_require__(/*! ./FloorTo */ "../../../src/math/FloorTo.js"),
@@ -24133,9 +25566,9 @@ module.exports = PhaserMath;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/BezierInterpolation.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/BezierInterpolation.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/BezierInterpolation.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24177,9 +25610,9 @@ module.exports = BezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CatmullRomInterpolation.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24239,9 +25672,9 @@ module.exports = CatmullRomInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CubicBezierInterpolation.js":
-/*!*****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24314,9 +25747,9 @@ module.exports = CubicBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/LinearInterpolation.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/LinearInterpolation.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/LinearInterpolation.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24366,9 +25799,9 @@ module.exports = LinearInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/QuadraticBezierInterpolation.js":
-/*!*********************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
-  \*********************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24430,9 +25863,9 @@ module.exports = QuadraticBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmoothStepInterpolation.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24468,9 +25901,9 @@ module.exports = SmoothStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmootherStepInterpolation.js":
-/*!******************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24506,9 +25939,9 @@ module.exports = SmootherStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24538,9 +25971,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/pow2/GetPowerOfTwo.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/GetPowerOfTwo.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/GetPowerOfTwo.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24558,7 +25991,7 @@ module.exports = {
  *
  * @param {number} value - The value.
  *
- * @return {integer} The nearest power of 2 to `value`.
+ * @return {number} The nearest power of 2 to `value`.
  */
 var GetPowerOfTwo = function (value)
 {
@@ -24573,9 +26006,9 @@ module.exports = GetPowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsSizePowerOfTwo.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24608,9 +26041,9 @@ module.exports = IsSizePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsValuePowerOfTwo.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24641,9 +26074,9 @@ module.exports = IsValuePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/index.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/index.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/index.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24669,9 +26102,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/random-data-generator/RandomDataGenerator.js":
-/*!********************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25184,9 +26617,9 @@ module.exports = RandomDataGenerator;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapCeil.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapCeil.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapCeil.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25233,9 +26666,9 @@ module.exports = SnapCeil;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapFloor.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapFloor.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapFloor.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25282,9 +26715,9 @@ module.exports = SnapFloor;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapTo.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapTo.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapTo.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25330,9 +26763,9 @@ module.exports = SnapTo;
 /***/ }),
 
 /***/ "../../../src/math/snap/index.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/index.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/index.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25358,9 +26791,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/plugins/BasePlugin.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/plugins/BasePlugin.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/BasePlugin.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25493,9 +26926,9 @@ module.exports = BasePlugin;
 /***/ }),
 
 /***/ "../../../src/plugins/ScenePlugin.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/plugins/ScenePlugin.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/ScenePlugin.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25626,9 +27059,9 @@ module.exports = ScenePlugin;
 /***/ }),
 
 /***/ "../../../src/renderer/BlendModes.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/BlendModes.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/BlendModes.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25651,7 +27084,7 @@ module.exports = {
      * Skips the Blend Mode check in the renderer.
      * 
      * @name Phaser.BlendModes.SKIP_CHECK
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25662,7 +27095,7 @@ module.exports = {
      * This is the default setting and draws new shapes on top of the existing canvas content.
      * 
      * @name Phaser.BlendModes.NORMAL
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25673,7 +27106,7 @@ module.exports = {
      * Where both shapes overlap the color is determined by adding color values.
      * 
      * @name Phaser.BlendModes.ADD
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25684,7 +27117,7 @@ module.exports = {
      * The pixels are of the top layer are multiplied with the corresponding pixel of the bottom layer. A darker picture is the result.
      * 
      * @name Phaser.BlendModes.MULTIPLY
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25695,7 +27128,7 @@ module.exports = {
      * The pixels are inverted, multiplied, and inverted again. A lighter picture is the result (opposite of multiply)
      * 
      * @name Phaser.BlendModes.SCREEN
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25706,7 +27139,7 @@ module.exports = {
      * A combination of multiply and screen. Dark parts on the base layer become darker, and light parts become lighter.
      * 
      * @name Phaser.BlendModes.OVERLAY
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25717,7 +27150,7 @@ module.exports = {
      * Retains the darkest pixels of both layers.
      * 
      * @name Phaser.BlendModes.DARKEN
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25728,7 +27161,7 @@ module.exports = {
      * Retains the lightest pixels of both layers.
      * 
      * @name Phaser.BlendModes.LIGHTEN
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25739,7 +27172,7 @@ module.exports = {
      * Divides the bottom layer by the inverted top layer.
      * 
      * @name Phaser.BlendModes.COLOR_DODGE
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25750,7 +27183,7 @@ module.exports = {
      * Divides the inverted bottom layer by the top layer, and then inverts the result.
      * 
      * @name Phaser.BlendModes.COLOR_BURN
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25761,7 +27194,7 @@ module.exports = {
      * A combination of multiply and screen like overlay, but with top and bottom layer swapped.
      * 
      * @name Phaser.BlendModes.HARD_LIGHT
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25772,7 +27205,7 @@ module.exports = {
      * A softer version of hard-light. Pure black or white does not result in pure black or white.
      * 
      * @name Phaser.BlendModes.SOFT_LIGHT
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25783,7 +27216,7 @@ module.exports = {
      * Subtracts the bottom layer from the top layer or the other way round to always get a positive value.
      * 
      * @name Phaser.BlendModes.DIFFERENCE
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25794,7 +27227,7 @@ module.exports = {
      * Like difference, but with lower contrast.
      * 
      * @name Phaser.BlendModes.EXCLUSION
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25805,7 +27238,7 @@ module.exports = {
      * Preserves the luma and chroma of the bottom layer, while adopting the hue of the top layer.
      * 
      * @name Phaser.BlendModes.HUE
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25816,7 +27249,7 @@ module.exports = {
      * Preserves the luma and hue of the bottom layer, while adopting the chroma of the top layer.
      * 
      * @name Phaser.BlendModes.SATURATION
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25827,7 +27260,7 @@ module.exports = {
      * Preserves the luma of the bottom layer, while adopting the hue and chroma of the top layer.
      * 
      * @name Phaser.BlendModes.COLOR
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25838,7 +27271,7 @@ module.exports = {
      * Preserves the hue and chroma of the bottom layer, while adopting the luma of the top layer.
      * 
      * @name Phaser.BlendModes.LUMINOSITY
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25848,7 +27281,7 @@ module.exports = {
      * Alpha erase blend mode. For Canvas and WebGL.
      * 
      * @name Phaser.BlendModes.ERASE
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25859,7 +27292,7 @@ module.exports = {
      * The new shape is drawn only where both the new shape and the destination canvas overlap. Everything else is made transparent.
      * 
      * @name Phaser.BlendModes.SOURCE_IN
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25870,7 +27303,7 @@ module.exports = {
      * The new shape is drawn where it doesn't overlap the existing canvas content.
      * 
      * @name Phaser.BlendModes.SOURCE_OUT
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25881,7 +27314,7 @@ module.exports = {
      * The new shape is only drawn where it overlaps the existing canvas content.
      * 
      * @name Phaser.BlendModes.SOURCE_ATOP
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25892,7 +27325,7 @@ module.exports = {
      * New shapes are drawn behind the existing canvas content.
      * 
      * @name Phaser.BlendModes.DESTINATION_OVER
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25903,7 +27336,7 @@ module.exports = {
      * The existing canvas content is kept where both the new shape and existing canvas content overlap. Everything else is made transparent.
      * 
      * @name Phaser.BlendModes.DESTINATION_IN
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25914,7 +27347,7 @@ module.exports = {
      * The existing content is kept where it doesn't overlap the new shape.
      * 
      * @name Phaser.BlendModes.DESTINATION_OUT
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25925,7 +27358,7 @@ module.exports = {
      * The existing canvas is only kept where it overlaps the new shape. The new shape is drawn behind the canvas content.
      * 
      * @name Phaser.BlendModes.DESTINATION_ATOP
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25936,7 +27369,7 @@ module.exports = {
      * Where both shapes overlap the color is determined by adding color values.
      * 
      * @name Phaser.BlendModes.LIGHTER
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25947,7 +27380,7 @@ module.exports = {
      * Only the new shape is shown.
      * 
      * @name Phaser.BlendModes.COPY
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25958,7 +27391,7 @@ module.exports = {
      * Shapes are made transparent where both overlap and drawn normal everywhere else.
      * 
      * @name Phaser.BlendModes.XOR
-     * @type {integer}
+     * @type {number}
      * @const
      * @since 3.0.0
      */
@@ -25969,10 +27402,155 @@ module.exports = {
 
 /***/ }),
 
+/***/ "../../../src/renderer/events/POST_RENDER_EVENT.js":
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/events/POST_RENDER_EVENT.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Post-Render Event.
+ *
+ * This event is dispatched by the Renderer when all rendering, for all cameras in all Scenes,
+ * has completed, but before any pending snap shots have been taken.
+ *
+ * @event Phaser.Renderer.Events#POST_RENDER
+ * @since 3.50.0
+ */
+module.exports = 'postrender';
+
+
+/***/ }),
+
+/***/ "../../../src/renderer/events/PRE_RENDER_EVENT.js":
+/*!***********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/events/PRE_RENDER_EVENT.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Pre-Render Event.
+ *
+ * This event is dispatched by the Phaser Renderer. This happens right at the start of the render
+ * process, after the context has been cleared, the scissors enabled (WebGL only) and everything has been
+ * reset ready for the render.
+ *
+ * @event Phaser.Renderer.Events#PRE_RENDER
+ * @since 3.50.0
+ */
+module.exports = 'prerender';
+
+
+/***/ }),
+
+/***/ "../../../src/renderer/events/RENDER_EVENT.js":
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/events/RENDER_EVENT.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Render Event.
+ *
+ * This event is dispatched by the Phaser Renderer for every camera in every Scene.
+ *
+ * It is dispatched before any of the children in the Scene have been rendered.
+ *
+ * @event Phaser.Renderer.Events#RENDER
+ * @since 3.50.0
+ *
+ * @param {Phaser.Scene} scene - The Scene being rendered.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera being rendered.
+ */
+module.exports = 'render';
+
+
+/***/ }),
+
+/***/ "../../../src/renderer/events/RESIZE_EVENT.js":
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/events/RESIZE_EVENT.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Renderer Resize Event.
+ *
+ * This event is dispatched by the Phaser Renderer when it is resized, usually as a result
+ * of the Scale Manager resizing.
+ *
+ * @event Phaser.Renderer.Events#RESIZE
+ * @since 3.50.0
+ *
+ * @param {number} width - The new width of the renderer.
+ * @param {number} height - The new height of the renderer.
+ */
+module.exports = 'resize';
+
+
+/***/ }),
+
+/***/ "../../../src/renderer/events/index.js":
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/events/index.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Renderer.Events
+ */
+
+module.exports = {
+
+    POST_RENDER: __webpack_require__(/*! ./POST_RENDER_EVENT */ "../../../src/renderer/events/POST_RENDER_EVENT.js"),
+    PRE_RENDER: __webpack_require__(/*! ./PRE_RENDER_EVENT */ "../../../src/renderer/events/PRE_RENDER_EVENT.js"),
+    RENDER: __webpack_require__(/*! ./RENDER_EVENT */ "../../../src/renderer/events/RENDER_EVENT.js"),
+    RESIZE: __webpack_require__(/*! ./RESIZE_EVENT */ "../../../src/renderer/events/RESIZE_EVENT.js")
+
+};
+
+
+/***/ }),
+
 /***/ "../../../src/renderer/webgl/pipelines/const.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/webgl/pipelines/const.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/webgl/pipelines/const.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26005,6 +27583,16 @@ var PIPELINE_CONST = {
     LIGHT_PIPELINE: 'Light2D',
 
     /**
+     * The Point Light Pipeline.
+     *
+     * @name Phaser.Renderer.WebGL.Pipelines.POINTLIGHT_PIPELINE
+     * @type {string}
+     * @const
+     * @since 3.50.0
+     */
+    POINTLIGHT_PIPELINE: 'PointLightPipeline',
+
+    /**
      * The Single Texture Pipeline.
      *
      * @name Phaser.Renderer.WebGL.Pipelines.SINGLE_PIPELINE
@@ -26032,8 +27620,37 @@ var PIPELINE_CONST = {
      * @const
      * @since 3.50.0
      */
-    ROPE_PIPELINE: 'RopePipeline'
+    ROPE_PIPELINE: 'RopePipeline',
 
+    /**
+     * The Graphics and Shapes Pipeline.
+     *
+     * @name Phaser.Renderer.WebGL.Pipelines.GRAPHICS_PIPELINE
+     * @type {string}
+     * @const
+     * @since 3.50.0
+     */
+    GRAPHICS_PIPELINE: 'GraphicsPipeline',
+
+    /**
+     * The Post FX Pipeline.
+     *
+     * @name Phaser.Renderer.WebGL.Pipelines.POSTFX_PIPELINE
+     * @type {string}
+     * @const
+     * @since 3.50.0
+     */
+    POSTFX_PIPELINE: 'PostFXPipeline',
+
+    /**
+     * The Utility Pipeline.
+     *
+     * @name Phaser.Renderer.WebGL.Pipelines.UTILITY_PIPELINE
+     * @type {string}
+     * @const
+     * @since 3.50.0
+     */
+    UTILITY_PIPELINE: 'UtilityPipeline'
 };
 
 module.exports = PIPELINE_CONST;
@@ -26042,9 +27659,9 @@ module.exports = PIPELINE_CONST;
 /***/ }),
 
 /***/ "../../../src/scale/events/RESIZE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scale/events/RESIZE_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scale/events/RESIZE_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26056,7 +27673,7 @@ module.exports = PIPELINE_CONST;
 
 /**
  * The Scale Manager Resize Event.
- * 
+ *
  * This event is dispatched whenever the Scale Manager detects a resize event from the browser.
  * It sends three parameters to the callback, each of them being Size components. You can read
  * the `width`, `height`, `aspectRatio` and other properties of these components to help with
@@ -26064,11 +27681,10 @@ module.exports = PIPELINE_CONST;
  *
  * @event Phaser.Scale.Events#RESIZE
  * @since 3.16.1
- * 
+ *
  * @param {Phaser.Structs.Size} gameSize - A reference to the Game Size component. This is the un-scaled size of your game canvas.
- * @param {Phaser.Structs.Size} baseSize - A reference to the Base Size component. This is the game size multiplied by resolution.
+ * @param {Phaser.Structs.Size} baseSize - A reference to the Base Size component. This is the game size.
  * @param {Phaser.Structs.Size} displaySize - A reference to the Display Size component. This is the scaled canvas size, after applying zoom and scale mode.
- * @param {number} resolution - The current resolution. Defaults to 1 at the moment.
  * @param {number} previousWidth - If the `gameSize` has changed, this value contains its previous width, otherwise it contains the current width.
  * @param {number} previousHeight - If the `gameSize` has changed, this value contains its previous height, otherwise it contains the current height.
  */
@@ -26078,9 +27694,9 @@ module.exports = 'resize';
 /***/ }),
 
 /***/ "../../../src/scene/events/ADDED_TO_SCENE_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/ADDED_TO_SCENE_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/ADDED_TO_SCENE_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26109,9 +27725,9 @@ module.exports = 'addedtoscene';
 /***/ }),
 
 /***/ "../../../src/scene/events/BOOT_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/BOOT_EVENT.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/BOOT_EVENT.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26139,9 +27755,9 @@ module.exports = 'boot';
 /***/ }),
 
 /***/ "../../../src/scene/events/CREATE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/CREATE_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/CREATE_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26173,9 +27789,9 @@ module.exports = 'create';
 /***/ }),
 
 /***/ "../../../src/scene/events/DESTROY_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/DESTROY_EVENT.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/DESTROY_EVENT.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26205,9 +27821,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/scene/events/PAUSE_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/PAUSE_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/PAUSE_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26237,9 +27853,9 @@ module.exports = 'pause';
 /***/ }),
 
 /***/ "../../../src/scene/events/POST_UPDATE_EVENT.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26279,9 +27895,9 @@ module.exports = 'postupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/PRE_UPDATE_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26321,9 +27937,9 @@ module.exports = 'preupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/READY_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/READY_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/READY_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26354,9 +27970,9 @@ module.exports = 'ready';
 /***/ }),
 
 /***/ "../../../src/scene/events/REMOVED_FROM_SCENE_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/REMOVED_FROM_SCENE_EVENT.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/REMOVED_FROM_SCENE_EVENT.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26385,9 +28001,9 @@ module.exports = 'removedfromscene';
 /***/ }),
 
 /***/ "../../../src/scene/events/RENDER_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/RENDER_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/RENDER_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26426,9 +28042,9 @@ module.exports = 'render';
 /***/ }),
 
 /***/ "../../../src/scene/events/RESUME_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/RESUME_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/RESUME_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26458,9 +28074,9 @@ module.exports = 'resume';
 /***/ }),
 
 /***/ "../../../src/scene/events/SHUTDOWN_EVENT.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26493,9 +28109,9 @@ module.exports = 'shutdown';
 /***/ }),
 
 /***/ "../../../src/scene/events/SLEEP_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/SLEEP_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/SLEEP_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26525,9 +28141,9 @@ module.exports = 'sleep';
 /***/ }),
 
 /***/ "../../../src/scene/events/START_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/START_EVENT.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/START_EVENT.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26555,9 +28171,9 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_COMPLETE_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26596,9 +28212,9 @@ module.exports = 'transitioncomplete';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_INIT_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26638,9 +28254,9 @@ module.exports = 'transitioninit';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_OUT_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26677,9 +28293,9 @@ module.exports = 'transitionout';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_START_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26722,9 +28338,9 @@ module.exports = 'transitionstart';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_WAKE_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26762,9 +28378,9 @@ module.exports = 'transitionwake';
 /***/ }),
 
 /***/ "../../../src/scene/events/UPDATE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/UPDATE_EVENT.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/UPDATE_EVENT.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26804,9 +28420,9 @@ module.exports = 'update';
 /***/ }),
 
 /***/ "../../../src/scene/events/WAKE_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/WAKE_EVENT.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/WAKE_EVENT.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26836,9 +28452,9 @@ module.exports = 'wake';
 /***/ }),
 
 /***/ "../../../src/scene/events/index.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/index.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/index.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26882,9 +28498,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/tweens/builders/GetBoolean.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/tweens/builders/GetBoolean.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/tweens/builders/GetBoolean.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26928,9 +28544,9 @@ module.exports = GetBoolean;
 /***/ }),
 
 /***/ "../../../src/tweens/tween/const.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/tweens/tween/const.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/tweens/tween/const.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26946,7 +28562,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.CREATED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     CREATED: 0,
@@ -26955,7 +28571,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.INIT
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     INIT: 1,
@@ -26964,7 +28580,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     DELAY: 2,
@@ -26973,7 +28589,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.OFFSET_DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     OFFSET_DELAY: 3,
@@ -26982,7 +28598,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.PENDING_RENDER
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PENDING_RENDER: 4,
@@ -26991,7 +28607,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.PLAYING_FORWARD
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PLAYING_FORWARD: 5,
@@ -27000,7 +28616,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.PLAYING_BACKWARD
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PLAYING_BACKWARD: 6,
@@ -27009,7 +28625,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.HOLD_DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     HOLD_DELAY: 7,
@@ -27018,7 +28634,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.REPEAT_DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     REPEAT_DELAY: 8,
@@ -27027,7 +28643,7 @@ var TWEEN_CONST = {
      * TweenData state.
      * 
      * @name Phaser.Tweens.COMPLETE
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     COMPLETE: 9,
@@ -27038,7 +28654,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.PENDING_ADD
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PENDING_ADD: 20,
@@ -27047,7 +28663,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.PAUSED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PAUSED: 21,
@@ -27056,7 +28672,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.LOOP_DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     LOOP_DELAY: 22,
@@ -27065,7 +28681,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.ACTIVE
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     ACTIVE: 23,
@@ -27074,7 +28690,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.COMPLETE_DELAY
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     COMPLETE_DELAY: 24,
@@ -27083,7 +28699,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.PENDING_REMOVE
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     PENDING_REMOVE: 25,
@@ -27092,7 +28708,7 @@ var TWEEN_CONST = {
      * Tween state.
      * 
      * @name Phaser.Tweens.REMOVED
-     * @type {integer}
+     * @type {number}
      * @since 3.0.0
      */
     REMOVED: 26
@@ -27105,9 +28721,9 @@ module.exports = TWEEN_CONST;
 /***/ }),
 
 /***/ "../../../src/utils/Class.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/Class.js ***!
-  \*********************************************/
+/*!**************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/Class.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27183,6 +28799,7 @@ function hasNonConfigurable (obj, k)
  * Extends the given `myClass` object's prototype with the properties of `definition`.
  *
  * @function extend
+ * @ignore
  * @param {Object} ctor The constructor object to mix into.
  * @param {Object} definition A dictionary of functions for the class.
  * @param {boolean} isClassDescriptor Is the definition a class descriptor?
@@ -27234,6 +28851,7 @@ function extend (ctor, definition, isClassDescriptor, extend)
  * Applies the given `mixins` to the prototype of `myClass`.
  *
  * @function mixin
+ * @ignore
  * @param {Object} myClass The constructor object to mix into.
  * @param {Object|Array<Object>} mixins The mixins to apply to the constructor.
  */
@@ -27364,9 +28982,9 @@ module.exports = Class;
 /***/ }),
 
 /***/ "../../../src/utils/NOOP.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/NOOP.js ***!
-  \********************************************/
+/*!*************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/NOOP.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27396,9 +29014,9 @@ module.exports = NOOP;
 /***/ }),
 
 /***/ "../../../src/utils/array/Add.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Add.js ***!
-  \*************************************************/
+/*!******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Add.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27425,7 +29043,7 @@ module.exports = NOOP;
  *
  * @param {array} array - The array to be added to.
  * @param {any|any[]} item - The item, or array of items, to add to the array. Each item must be unique within the array.
- * @param {integer} [limit] - Optional limit which caps the size of the array.
+ * @param {number} [limit] - Optional limit which caps the size of the array.
  * @param {function} [callback] - A callback to be invoked for each item successfully added to the array.
  * @param {object} [context] - The context in which the callback is invoked.
  *
@@ -27518,9 +29136,9 @@ module.exports = Add;
 /***/ }),
 
 /***/ "../../../src/utils/array/AddAt.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/AddAt.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/AddAt.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27549,8 +29167,8 @@ module.exports = Add;
  *
  * @param {array} array - The array to be added to.
  * @param {any|any[]} item - The item, or array of items, to add to the array.
- * @param {integer} [index=0] - The index in the array where the item will be inserted.
- * @param {integer} [limit] - Optional limit which caps the size of the array.
+ * @param {number} [index=0] - The index in the array where the item will be inserted.
+ * @param {number} [limit] - Optional limit which caps the size of the array.
  * @param {function} [callback] - A callback to be invoked for each item successfully added to the array.
  * @param {object} [context] - The context in which the callback is invoked.
  *
@@ -27645,9 +29263,9 @@ module.exports = AddAt;
 /***/ }),
 
 /***/ "../../../src/utils/array/BringToTop.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/BringToTop.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/BringToTop.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27688,9 +29306,9 @@ module.exports = BringToTop;
 /***/ }),
 
 /***/ "../../../src/utils/array/CountAllMatching.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/CountAllMatching.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/CountAllMatching.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -27711,10 +29329,10 @@ var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array
  * @param {array} array - The array to search.
  * @param {string} property - The property to test on each array element.
  * @param {*} value - The value to test the property against. Must pass a strict (`===`) comparison check.
- * @param {integer} [startIndex] - An optional start index to search from.
- * @param {integer} [endIndex] - An optional end index to search to.
+ * @param {number} [startIndex] - An optional start index to search from.
+ * @param {number} [endIndex] - An optional end index to search to.
  *
- * @return {integer} The total number of elements with properties matching the given value.
+ * @return {number} The total number of elements with properties matching the given value.
  */
 var CountAllMatching = function (array, property, value, startIndex, endIndex)
 {
@@ -27745,9 +29363,9 @@ module.exports = CountAllMatching;
 /***/ }),
 
 /***/ "../../../src/utils/array/Each.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Each.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Each.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27796,9 +29414,9 @@ module.exports = Each;
 /***/ }),
 
 /***/ "../../../src/utils/array/EachInRange.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/EachInRange.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/EachInRange.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -27819,8 +29437,8 @@ var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array
  * @param {array} array - The array to search.
  * @param {function} callback - A callback to be invoked for each item in the array.
  * @param {object} context - The context in which the callback is invoked.
- * @param {integer} startIndex - The start index to search from.
- * @param {integer} endIndex - The end index to search to.
+ * @param {number} startIndex - The start index to search from.
+ * @param {number} endIndex - The end index to search to.
  * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
  *
  * @return {array} The input array.
@@ -27857,9 +29475,9 @@ module.exports = EachInRange;
 /***/ }),
 
 /***/ "../../../src/utils/array/FindClosestInSorted.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/FindClosestInSorted.js ***!
-  \*****************************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/FindClosestInSorted.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27946,9 +29564,9 @@ module.exports = FindClosestInSorted;
 /***/ }),
 
 /***/ "../../../src/utils/array/GetAll.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/GetAll.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/GetAll.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -27977,8 +29595,8 @@ var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array
  * @param {array} array - The array to search.
  * @param {string} [property] - The property to test on each array element.
  * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
- * @param {integer} [startIndex] - An optional start index to search from.
- * @param {integer} [endIndex] - An optional end index to search to.
+ * @param {number} [startIndex] - An optional start index to search from.
+ * @param {number} [endIndex] - An optional end index to search to.
  *
  * @return {array} All matching elements from the array.
  */
@@ -28013,9 +29631,9 @@ module.exports = GetAll;
 /***/ }),
 
 /***/ "../../../src/utils/array/GetFirst.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/GetFirst.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/GetFirst.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28043,8 +29661,8 @@ var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array
  * @param {array} array - The array to search.
  * @param {string} [property] - The property to test on each array element.
  * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
- * @param {integer} [startIndex=0] - An optional start index to search from.
- * @param {integer} [endIndex=array.length] - An optional end index to search up to (but not included)
+ * @param {number} [startIndex=0] - An optional start index to search from.
+ * @param {number} [endIndex=array.length] - An optional end index to search up to (but not included)
  *
  * @return {object} The first matching element from the array, or `null` if no element could be found in the range given.
  */
@@ -28077,9 +29695,9 @@ module.exports = GetFirst;
 /***/ }),
 
 /***/ "../../../src/utils/array/GetRandom.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/GetRandom.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/GetRandom.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28096,8 +29714,8 @@ module.exports = GetFirst;
  * @since 3.0.0
  *
  * @param {array} array - The array to select the random entry from.
- * @param {integer} [startIndex=0] - An optional start index.
- * @param {integer} [length=array.length] - An optional length, the total number of elements (from the startIndex) to choose from.
+ * @param {number} [startIndex=0] - An optional start index.
+ * @param {number} [length=array.length] - An optional length, the total number of elements (from the startIndex) to choose from.
  *
  * @return {*} A random element from the array, or `null` if no element could be found in the range given.
  */
@@ -28117,9 +29735,9 @@ module.exports = GetRandom;
 /***/ }),
 
 /***/ "../../../src/utils/array/MoveDown.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/MoveDown.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/MoveDown.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28164,9 +29782,9 @@ module.exports = MoveDown;
 /***/ }),
 
 /***/ "../../../src/utils/array/MoveTo.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/MoveTo.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/MoveTo.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28185,7 +29803,7 @@ module.exports = MoveDown;
  *
  * @param {array} array - The array.
  * @param {*} item - The element to move.
- * @param {integer} index - The new index that the element will be moved to.
+ * @param {number} index - The new index that the element will be moved to.
  *
  * @return {*} The element that was moved.
  */
@@ -28216,9 +29834,9 @@ module.exports = MoveTo;
 /***/ }),
 
 /***/ "../../../src/utils/array/MoveUp.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/MoveUp.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/MoveUp.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28263,9 +29881,9 @@ module.exports = MoveUp;
 /***/ }),
 
 /***/ "../../../src/utils/array/NumberArray.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/NumberArray.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/NumberArray.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28361,9 +29979,9 @@ module.exports = NumberArray;
 /***/ }),
 
 /***/ "../../../src/utils/array/NumberArrayStep.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/NumberArrayStep.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/NumberArrayStep.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28443,9 +30061,9 @@ module.exports = NumberArrayStep;
 /***/ }),
 
 /***/ "../../../src/utils/array/QuickSelect.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/QuickSelect.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/QuickSelect.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28487,9 +30105,9 @@ function defaultCompare (a, b)
  * @since 3.0.0
  *
  * @param {array} arr - The array to sort.
- * @param {integer} k - The k-th element index.
- * @param {integer} [left=0] - The index of the left part of the range.
- * @param {integer} [right] - The index of the right part of the range.
+ * @param {number} k - The k-th element index.
+ * @param {number} [left=0] - The index of the left part of the range.
+ * @param {number} [right] - The index of the right part of the range.
  * @param {function} [compare] - An optional comparison function. Is passed two elements and should return 0, 1 or -1.
  */
 var QuickSelect = function (arr, k, left, right, compare)
@@ -28570,9 +30188,9 @@ module.exports = QuickSelect;
 /***/ }),
 
 /***/ "../../../src/utils/array/Range.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Range.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Range.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28713,9 +30331,9 @@ module.exports = Range;
 /***/ }),
 
 /***/ "../../../src/utils/array/Remove.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Remove.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Remove.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28729,9 +30347,9 @@ var SpliceOne = __webpack_require__(/*! ./SpliceOne */ "../../../src/utils/array
 
 /**
  * Removes the given item, or array of items, from the array.
- * 
+ *
  * The array is modified in-place.
- * 
+ *
  * You can optionally specify a callback to be invoked for each item successfully removed from the array.
  *
  * @function Phaser.Utils.Array.Remove
@@ -28775,6 +30393,7 @@ var Remove = function (array, item, callback, context)
     //  If we got this far, we have an array of items to remove
 
     var itemLength = item.length - 1;
+    var removed = [];
 
     while (itemLength >= 0)
     {
@@ -28786,21 +30405,18 @@ var Remove = function (array, item, callback, context)
         {
             SpliceOne(array, index);
 
+            removed.push(entry);
+
             if (callback)
             {
                 callback.call(context, entry);
             }
         }
-        else
-        {
-            //  Item wasn't found in the array, so remove it from our return results
-            item.pop();
-        }
 
         itemLength--;
     }
 
-    return item;
+    return removed;
 };
 
 module.exports = Remove;
@@ -28809,9 +30425,9 @@ module.exports = Remove;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveAt.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RemoveAt.js ***!
-  \******************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RemoveAt.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28834,7 +30450,7 @@ var SpliceOne = __webpack_require__(/*! ./SpliceOne */ "../../../src/utils/array
  * @since 3.4.0
  *
  * @param {array} array - The array to be modified.
- * @param {integer} index - The array index to remove the item from. The index must be in bounds or it will throw an error.
+ * @param {number} index - The array index to remove the item from. The index must be in bounds or it will throw an error.
  * @param {function} [callback] - A callback to be invoked for the item removed from the array.
  * @param {object} [context] - The context in which the callback is invoked.
  *
@@ -28865,9 +30481,9 @@ module.exports = RemoveAt;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveBetween.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RemoveBetween.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RemoveBetween.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28890,8 +30506,8 @@ var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array
  * @since 3.4.0
  *
  * @param {array} array - The array to be modified.
- * @param {integer} startIndex - The start index to remove from.
- * @param {integer} endIndex - The end index to remove to.
+ * @param {number} startIndex - The start index to remove from.
+ * @param {number} endIndex - The end index to remove to.
  * @param {function} [callback] - A callback to be invoked for the item removed from the array.
  * @param {object} [context] - The context in which the callback is invoked.
  *
@@ -28933,9 +30549,9 @@ module.exports = RemoveBetween;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveRandomElement.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RemoveRandomElement.js ***!
-  \*****************************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RemoveRandomElement.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28955,8 +30571,8 @@ var SpliceOne = __webpack_require__(/*! ./SpliceOne */ "../../../src/utils/array
  * @since 3.0.0
  *
  * @param {array} array - The array to removed a random element from.
- * @param {integer} [start=0] - The array index to start the search from.
- * @param {integer} [length=array.length] - Optional restriction on the number of elements to randomly select from.
+ * @param {number} [start=0] - The array index to start the search from.
+ * @param {number} [length=array.length] - Optional restriction on the number of elements to randomly select from.
  *
  * @return {object} The random element that was removed, or `null` if there were no array elements that fell within the given range.
  */
@@ -28976,9 +30592,9 @@ module.exports = RemoveRandomElement;
 /***/ }),
 
 /***/ "../../../src/utils/array/Replace.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Replace.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Replace.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29025,9 +30641,9 @@ module.exports = Replace;
 /***/ }),
 
 /***/ "../../../src/utils/array/RotateLeft.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RotateLeft.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RotateLeft.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29045,7 +30661,7 @@ module.exports = Replace;
  * @since 3.0.0
  *
  * @param {array} array - The array to shift to the left. This array is modified in place.
- * @param {integer} [total=1] - The number of times to shift the array.
+ * @param {number} [total=1] - The number of times to shift the array.
  *
  * @return {*} The most recently shifted element.
  */
@@ -29070,9 +30686,9 @@ module.exports = RotateLeft;
 /***/ }),
 
 /***/ "../../../src/utils/array/RotateRight.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RotateRight.js ***!
-  \*********************************************************/
+/*!**************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RotateRight.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29090,7 +30706,7 @@ module.exports = RotateLeft;
  * @since 3.0.0
  *
  * @param {array} array - The array to shift to the right. This array is modified in place.
- * @param {integer} [total=1] - The number of times to shift the array.
+ * @param {number} [total=1] - The number of times to shift the array.
  *
  * @return {*} The most recently shifted element.
  */
@@ -29115,9 +30731,9 @@ module.exports = RotateRight;
 /***/ }),
 
 /***/ "../../../src/utils/array/SafeRange.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SafeRange.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SafeRange.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29134,8 +30750,8 @@ module.exports = RotateRight;
  * @since 3.4.0
  *
  * @param {array} array - The array to check.
- * @param {integer} startIndex - The start index.
- * @param {integer} endIndex - The end index.
+ * @param {number} startIndex - The start index.
+ * @param {number} endIndex - The end index.
  * @param {boolean} [throwError=true] - Throw an error if the range is out of bounds.
  *
  * @return {boolean} True if the range is safe, otherwise false.
@@ -29169,9 +30785,9 @@ module.exports = SafeRange;
 /***/ }),
 
 /***/ "../../../src/utils/array/SendToBack.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SendToBack.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SendToBack.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29212,9 +30828,9 @@ module.exports = SendToBack;
 /***/ }),
 
 /***/ "../../../src/utils/array/SetAll.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SetAll.js ***!
-  \****************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SetAll.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29240,8 +30856,8 @@ var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array
  * @param {array} array - The array to search.
  * @param {string} property - The property to test for on each array element.
  * @param {*} value - The value to set the property to.
- * @param {integer} [startIndex] - An optional start index to search from.
- * @param {integer} [endIndex] - An optional end index to search to.
+ * @param {number} [startIndex] - An optional start index to search from.
+ * @param {number} [endIndex] - An optional end index to search to.
  *
  * @return {array} The input array.
  */
@@ -29272,9 +30888,9 @@ module.exports = SetAll;
 /***/ }),
 
 /***/ "../../../src/utils/array/Shuffle.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Shuffle.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Shuffle.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29318,9 +30934,9 @@ module.exports = Shuffle;
 /***/ }),
 
 /***/ "../../../src/utils/array/SortByDigits.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SortByDigits.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SortByDigits.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29361,9 +30977,9 @@ module.exports = SortByDigits;
 /***/ }),
 
 /***/ "../../../src/utils/array/SpliceOne.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SpliceOne.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SpliceOne.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29381,7 +30997,7 @@ module.exports = SortByDigits;
  * @since 3.0.0
  *
  * @param {array} array - The array to splice from.
- * @param {integer} index - The index of the item which should be spliced.
+ * @param {number} index - The index of the item which should be spliced.
  *
  * @return {*} The item which was spliced (removed).
  */
@@ -29412,9 +31028,9 @@ module.exports = SpliceOne;
 /***/ }),
 
 /***/ "../../../src/utils/array/StableSort.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/StableSort.js ***!
-  \********************************************************/
+/*!*************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/StableSort.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29593,9 +31209,9 @@ module.exports = StableSort;
 /***/ }),
 
 /***/ "../../../src/utils/array/Swap.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Swap.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Swap.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29646,9 +31262,9 @@ module.exports = Swap;
 /***/ }),
 
 /***/ "../../../src/utils/array/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/index.js ***!
-  \***************************************************/
+/*!********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29705,9 +31321,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/CheckMatrix.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/CheckMatrix.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/CheckMatrix.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29720,22 +31336,23 @@ module.exports = {
 /**
  * Checks if an array can be used as a matrix.
  *
- * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows) have the same length. There must be at least two rows:
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
  *
  * ```
- *    [
- *        [ 1, 1, 1, 1, 1, 1 ],
- *        [ 2, 0, 0, 0, 0, 4 ],
- *        [ 2, 0, 1, 2, 0, 4 ],
- *        [ 2, 0, 3, 4, 0, 4 ],
- *        [ 2, 0, 0, 0, 0, 4 ],
- *        [ 3, 3, 3, 3, 3, 3 ]
- *    ]
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
  * ```
  *
  * @function Phaser.Utils.Array.Matrix.CheckMatrix
  * @since 3.0.0
- * 
+ *
  * @generic T
  * @genericUse {T[][]} - [matrix]
  *
@@ -29771,9 +31388,9 @@ module.exports = CheckMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/MatrixToString.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/MatrixToString.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/MatrixToString.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29788,6 +31405,20 @@ var CheckMatrix = __webpack_require__(/*! ./CheckMatrix */ "../../../src/utils/a
 
 /**
  * Generates a string (which you can pass to console.log) from the given Array Matrix.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
  *
  * @function Phaser.Utils.Array.Matrix.MatrixToString
  * @since 3.0.0
@@ -29857,9 +31488,9 @@ module.exports = MatrixToString;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/ReverseColumns.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/ReverseColumns.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/ReverseColumns.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29871,6 +31502,20 @@ module.exports = MatrixToString;
 
 /**
  * Reverses the columns in the given Array Matrix.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
  *
  * @function Phaser.Utils.Array.Matrix.ReverseColumns
  * @since 3.0.0
@@ -29893,9 +31538,9 @@ module.exports = ReverseColumns;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/ReverseRows.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/ReverseRows.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/ReverseRows.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29907,6 +31552,20 @@ module.exports = ReverseColumns;
 
 /**
  * Reverses the rows in the given Array Matrix.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
  *
  * @function Phaser.Utils.Array.Matrix.ReverseRows
  * @since 3.0.0
@@ -29934,9 +31593,9 @@ module.exports = ReverseRows;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/Rotate180.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/Rotate180.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/Rotate180.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29950,6 +31609,20 @@ var RotateMatrix = __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils
 
 /**
  * Rotates the array matrix 180 degrees.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
  *
  * @function Phaser.Utils.Array.Matrix.Rotate180
  * @since 3.0.0
@@ -29972,9 +31645,9 @@ module.exports = Rotate180;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateLeft.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/RotateLeft.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/RotateLeft.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29988,6 +31661,20 @@ var RotateMatrix = __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils
 
 /**
  * Rotates the array matrix to the left (or 90 degrees)
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
  *
  * @function Phaser.Utils.Array.Matrix.RotateLeft
  * @since 3.0.0
@@ -30010,9 +31697,9 @@ module.exports = RotateLeft;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateMatrix.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/RotateMatrix.js ***!
-  \*****************************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/RotateMatrix.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30032,6 +31719,20 @@ var TransposeMatrix = __webpack_require__(/*! ./TransposeMatrix */ "../../../src
  * or a string command: `rotateLeft`, `rotateRight` or `rotate180`.
  *
  * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
  *
  * @function Phaser.Utils.Array.Matrix.RotateMatrix
  * @since 3.0.0
@@ -30087,9 +31788,9 @@ module.exports = RotateMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateRight.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/RotateRight.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/RotateRight.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30103,6 +31804,20 @@ var RotateMatrix = __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils
 
 /**
  * Rotates the array matrix to the left (or -90 degrees)
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
  *
  * @function Phaser.Utils.Array.Matrix.RotateRight
  * @since 3.0.0
@@ -30124,10 +31839,104 @@ module.exports = RotateRight;
 
 /***/ }),
 
+/***/ "../../../src/utils/array/matrix/TranslateMatrix.js":
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/TranslateMatrix.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var RotateLeft = __webpack_require__(/*! ../RotateLeft */ "../../../src/utils/array/RotateLeft.js");
+var RotateRight = __webpack_require__(/*! ../RotateRight */ "../../../src/utils/array/RotateRight.js");
+
+/**
+ * Translates the given Array Matrix by shifting each column and row the
+ * amount specified.
+ *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
+ *
+ * @function Phaser.Utils.Array.Matrix.Translate
+ * @since 3.50.0
+ *
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
+ *
+ * @param {T[][]} [matrix] - The array matrix to translate.
+ * @param {number} [x=0] - The amount to horizontally translate the matrix by.
+ * @param {number} [y=0] - The amount to vertically translate the matrix by.
+ *
+ * @return {T[][]} The translated matrix.
+ */
+var TranslateMatrix = function (matrix, x, y)
+{
+    if (x === undefined) { x = 0; }
+    if (y === undefined) { y = 0; }
+
+    //  Vertical translation
+
+    if (y !== 0)
+    {
+        if (y < 0)
+        {
+            //  Shift Up
+            RotateLeft(matrix, Math.abs(y));
+        }
+        else
+        {
+            //  Shift Down
+            RotateRight(matrix, y);
+        }
+    }
+
+    //  Horizontal translation
+
+    if (x !== 0)
+    {
+        for (var i = 0; i < matrix.length; i++)
+        {
+            var row = matrix[i];
+
+            if (x < 0)
+            {
+                RotateLeft(row, Math.abs(x));
+            }
+            else
+            {
+                RotateRight(row, x);
+            }
+        }
+    }
+
+    return matrix;
+};
+
+module.exports = TranslateMatrix;
+
+
+/***/ }),
+
 /***/ "../../../src/utils/array/matrix/TransposeMatrix.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/TransposeMatrix.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/TransposeMatrix.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30142,12 +31951,26 @@ module.exports = RotateRight;
  *
  * The transpose of a matrix is a new matrix whose rows are the columns of the original.
  *
+ * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
+ * have the same length. There must be at least two rows. This is an example matrix:
+ *
+ * ```
+ * [
+ *    [ 1, 1, 1, 1, 1, 1 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 2, 0, 1, 2, 0, 4 ],
+ *    [ 2, 0, 3, 4, 0, 4 ],
+ *    [ 2, 0, 0, 0, 0, 4 ],
+ *    [ 3, 3, 3, 3, 3, 3 ]
+ * ]
+ * ```
+ *
  * @function Phaser.Utils.Array.Matrix.TransposeMatrix
  * @since 3.0.0
- * 
+ *
  * @generic T
  * @genericUse {T[][]} - [array,$return]
- * 
+ *
  * @param {T[][]} [array] - The array matrix to transpose.
  *
  * @return {T[][]} A new array matrix which is a transposed version of the given array.
@@ -30178,9 +32001,9 @@ module.exports = TransposeMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/index.js ***!
-  \**********************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/index.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30204,6 +32027,7 @@ module.exports = {
     RotateLeft: __webpack_require__(/*! ./RotateLeft */ "../../../src/utils/array/matrix/RotateLeft.js"),
     RotateMatrix: __webpack_require__(/*! ./RotateMatrix */ "../../../src/utils/array/matrix/RotateMatrix.js"),
     RotateRight: __webpack_require__(/*! ./RotateRight */ "../../../src/utils/array/matrix/RotateRight.js"),
+    Translate: __webpack_require__(/*! ./TranslateMatrix */ "../../../src/utils/array/matrix/TranslateMatrix.js"),
     TransposeMatrix: __webpack_require__(/*! ./TransposeMatrix */ "../../../src/utils/array/matrix/TransposeMatrix.js")
 
 };
@@ -30211,10 +32035,64 @@ module.exports = {
 
 /***/ }),
 
+/***/ "../../../src/utils/object/DeepCopy.js":
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/DeepCopy.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Deep Copy the given object or array.
+ *
+ * @function Phaser.Utils.Objects.DeepCopy
+ * @since 3.50.0
+ *
+ * @param {object} obj - The object to deep copy.
+ *
+ * @return {object} A deep copy of the original object.
+ */
+var DeepCopy = function (inObject)
+{
+    var outObject;
+    var value;
+    var key;
+
+    if (typeof inObject !== 'object' || inObject === null)
+    {
+        //  inObject is not an object
+        return inObject;
+    }
+
+    //  Create an array or object to hold the values
+    outObject = Array.isArray(inObject) ? [] : {};
+
+    for (key in inObject)
+    {
+        value = inObject[key];
+
+        //  Recursively (deep) copy for nested objects, including arrays
+        outObject[key] = DeepCopy(value);
+    }
+
+    return outObject;
+};
+
+module.exports = DeepCopy;
+
+
+/***/ }),
+
 /***/ "../../../src/utils/object/Extend.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/Extend.js ***!
-  \*****************************************************/
+/*!**********************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/Extend.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30318,9 +32196,9 @@ module.exports = Extend;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetAdvancedValue.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetAdvancedValue.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetAdvancedValue.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30410,9 +32288,9 @@ module.exports = GetAdvancedValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetFastValue.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetFastValue.js ***!
-  \***********************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetFastValue.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30458,9 +32336,9 @@ module.exports = GetFastValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetValue.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetValue.js ***!
-  \*******************************************************/
+/*!************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetValue.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30534,9 +32412,9 @@ module.exports = GetValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/IsPlainObject.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/IsPlainObject.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/IsPlainObject.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30595,9 +32473,9 @@ module.exports = IsPlainObject;
 /***/ }),
 
 /***/ "../../../src/utils/string/Pad.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/string/Pad.js ***!
-  \**************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/rich/Documents/GitHub/phaser/src/utils/string/Pad.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30631,9 +32509,9 @@ module.exports = IsPlainObject;
  * @since 3.0.0
  *
  * @param {string|number|object} str - The target string. `toString()` will be called on the string, which means you can also pass in common data types like numbers.
- * @param {integer} [len=0] - The number of characters to be added.
+ * @param {number} [len=0] - The number of characters to be added.
  * @param {string} [pad=" "] - The string to pad it out with (defaults to a space).
- * @param {integer} [dir=3] - The direction dir = 1 (left), 2 (right), 3 (both).
+ * @param {number} [dir=3] - The direction dir = 1 (left), 2 (right), 3 (both).
  * 
  * @return {string} The padded string.
  */
@@ -30768,7 +32646,7 @@ var SpineFile = new Class({
             for (i = 0; i < atlasURL.length; i++)
             {
                 atlas = new TextFile(loader, {
-                    key: key + '_' + i,
+                    key: key + '!' + i,
                     url: atlasURL[i],
                     extension: GetFastValue(config, 'atlasExtension', 'atlas'),
                     xhrSettings: GetFastValue(config, 'atlasXhrSettings')
@@ -30790,7 +32668,7 @@ var SpineFile = new Class({
 
             for (i = 0; i < atlasURL.length; i++)
             {
-                atlas = new TextFile(loader, key + '_' + i, atlasURL[i], atlasXhrSettings);
+                atlas = new TextFile(loader, key + '!' + i, atlasURL[i], atlasXhrSettings);
                 atlas.cache = cache;
 
                 files.push(atlas);
@@ -30864,9 +32742,12 @@ var SpineFile = new Class({
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
-                    this.addToMultiFile(image);
+                    if (!loader.keyExists(image))
+                    {
+                        this.addToMultiFile(image);
 
-                    loader.addFile(image);
+                        loader.addFile(image);
+                    }
                 }
 
                 //  Reset the loader settings
@@ -30903,7 +32784,7 @@ var SpineFile = new Class({
 
                 if (file.type === 'text')
                 {
-                    atlasKey = file.key.replace(/_[\d]$/, '');
+                    atlasKey = file.key.replace(/![\d]$/, '');
 
                     atlasCache = file.cache;
 
@@ -30912,7 +32793,7 @@ var SpineFile = new Class({
                 else
                 {
                     var src = file.key.trim();
-                    var pos = src.indexOf('_');
+                    var pos = src.indexOf('!');
                     var key = src.substr(pos + 1);
 
                     if (!textureManager.exists(key))
@@ -30960,6 +32841,9 @@ var SpineFile = __webpack_require__(/*! ./SpineFile */ "./SpineFile.js");
 var SpineGameObject = __webpack_require__(/*! ./gameobject/SpineGameObject */ "./gameobject/SpineGameObject.js");
 var SpineContainer = __webpack_require__(/*! ./container/SpineContainer */ "./container/SpineContainer.js");
 var NOOP = __webpack_require__(/*! ../../../src/utils/NOOP */ "../../../src/utils/NOOP.js");
+
+//  Plugin specific instance of the Spine Scene Renderer
+var sceneRenderer;
 
 /**
  * @classdesc
@@ -31162,6 +33046,8 @@ var SpinePlugin = new Class({
         /**
          * An instance of the Spine WebGL Scene Renderer.
          *
+         * There is only one instance of the Scene Renderer shared across the whole plugin.
+         *
          * Only set if running in WebGL mode.
          *
          * @name SpinePlugin#sceneRenderer
@@ -31192,7 +33078,7 @@ var SpinePlugin = new Class({
 
         /**
          * A reference to the Spine runtime.
-         * This is the runtime created by Esoteric Software
+         * This is the runtime created by Esoteric Software.
          *
          * @name SpinePlugin#plugin
          * @type {spine}
@@ -31382,8 +33268,6 @@ var SpinePlugin = new Class({
      */
     bootWebGL: function ()
     {
-        this.sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
-
         //  Monkeypatch the Spine setBlendMode functions, or batching is destroyed!
 
         var setBlendMode = function (srcBlend, dstBlend)
@@ -31403,11 +33287,17 @@ var SpinePlugin = new Class({
             }
         };
 
-        this.sceneRenderer.batcher.setBlendMode = setBlendMode;
-        this.sceneRenderer.shapes.setBlendMode = setBlendMode;
+        if (!sceneRenderer)
+        {
+            sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
+            sceneRenderer.batcher.setBlendMode = setBlendMode;
+            sceneRenderer.shapes.setBlendMode = setBlendMode;
+        }
 
-        this.skeletonRenderer = this.sceneRenderer.skeletonRenderer;
-        this.skeletonDebugRenderer = this.sceneRenderer.skeletonDebugRenderer;
+        //  All share the same instance
+        this.sceneRenderer = sceneRenderer;
+        this.skeletonRenderer = sceneRenderer.skeletonRenderer;
+        this.skeletonDebugRenderer = sceneRenderer.skeletonDebugRenderer;
 
         this.temp1 = new Spine.webgl.Vector3(0, 0, 0);
         this.temp2 = new Spine.webgl.Vector3(0, 0, 0);
@@ -32005,8 +33895,7 @@ var SpinePlugin = new Class({
         sceneRenderer.camera.position.x = viewportWidth / 2;
         sceneRenderer.camera.position.y = viewportHeight / 2;
 
-        sceneRenderer.camera.viewportWidth = viewportWidth;
-        sceneRenderer.camera.viewportHeight = viewportHeight;
+        sceneRenderer.camera.setViewport(viewportWidth, viewportHeight);
     },
 
     /**
@@ -32068,9 +33957,9 @@ var SpinePlugin = new Class({
     {
         this.destroy();
 
-        if (this.sceneRenderer)
+        if (sceneRenderer)
         {
-            this.sceneRenderer.dispose();
+            sceneRenderer.dispose();
         }
 
         this.sceneRenderer = null;
@@ -32178,8 +34067,8 @@ var SpineContainerRender = __webpack_require__(/*! ./SpineContainerRender */ "./
  * A Spine Container is a special kind of Container created specifically for Spine Game Objects.
  *
  * You have all of the same features of a standard Container, but the rendering functions are optimized specifically
- * for Spine Game Objects. You must only add ever Spine Game Objects to this type of Container. Although Phaser will
- * not prevent you from adding other types, they will not render and are likely to throw runtime errors.
+ * for Spine Game Objects. You must only add ever Spine Game Objects, or other Spine Containers, to this type of Container.
+ * Although Phaser will not prevent you from adding other types, they will not render and are likely to throw runtime errors.
  *
  * To create one in a Scene, use the factory methods:
  *
@@ -32192,6 +34081,10 @@ var SpineContainerRender = __webpack_require__(/*! ./SpineContainerRender */ "./
  * ```javascript
  * this.make.spinecontainer();
  * ```
+ *
+ * Note that you should not nest Spine Containers inside regular Containers if you wish to use masks on the
+ * container children. You can, however, mask children of Spine Containers if they are embedded within other
+ * Spine Containers. In short, if you need masking, don't mix and match the types.
  *
  * See the Container documentation for further details about what Containers can do.
  *
@@ -32283,11 +34176,10 @@ module.exports = SpineContainer;
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpineContainerCanvasRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+var SpineContainerCanvasRenderer = function (renderer, container, camera, parentMatrix)
 {
     var children = container.list;
 
@@ -32352,7 +34244,7 @@ var SpineContainerCanvasRenderer = function (renderer, container, interpolationP
         child.setAlpha(childAlpha * alpha);
 
         //  Render
-        child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+        child.renderCanvas(renderer, child, camera, transformMatrix);
 
         //  Restore original values
         child.setAlpha(childAlpha);
@@ -32411,18 +34303,13 @@ module.exports = {
   !*** ./container/SpineContainerWebGLRenderer.js ***!
   \**************************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
-
-var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
-var Clamp = __webpack_require__(/*! ../../../../src/math/Clamp */ "../../../src/math/Clamp.js");
-var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
-var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/math/Wrap.js");
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -32435,11 +34322,10 @@ var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/ma
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpineContainerWebGLRenderer = function (renderer, container, interpolationPercentage, camera, parentMatrix)
+var SpineContainerWebGLRenderer = function (renderer, container, camera, parentMatrix)
 {
     var plugin = container.plugin;
     var sceneRenderer = plugin.sceneRenderer;
@@ -32472,12 +34358,6 @@ var SpineContainerWebGLRenderer = function (renderer, container, interpolationPe
         transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
     }
 
-    var alpha = container.alpha;
-    var scrollFactorX = container.scrollFactorX;
-    var scrollFactorY = container.scrollFactorY;
-
-    var GameObjectRenderMask = 15;
-
     if (renderer.newType)
     {
         //  flush + clear if this is a new type
@@ -32486,91 +34366,53 @@ var SpineContainerWebGLRenderer = function (renderer, container, interpolationPe
         sceneRenderer.begin();
     }
 
+    var rendererNextType = renderer.nextTypeMatch;
+
+    //  Force these to avoid batch flushing during SpineGameObject.renderWebGL
+    renderer.nextTypeMatch = true;
+    renderer.newType = false;
+
     for (var i = 0; i < children.length; i++)
     {
-        var src = children[i];
+        var child = children[i];
 
-        var skeleton = src.skeleton;
-        var childAlpha = skeleton.color.a;
-
-        var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || childAlpha === 0);
-
-        if (!skeleton || !willRender)
+        if (child.willRender(camera))
         {
-            continue;
-        }
+            var mask = child.mask;
 
-        var camMatrix = renderer._tempMatrix1;
-        var spriteMatrix = renderer._tempMatrix2;
-        var calcMatrix = renderer._tempMatrix3;
-
-        spriteMatrix.applyITRS(src.x, src.y, src.rotation, Math.abs(src.scaleX), Math.abs(src.scaleY));
-
-        camMatrix.copyFrom(camera.matrix);
-
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(transformMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
-
-        //  Undo the camera scroll
-        spriteMatrix.e = src.x;
-        spriteMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-
-        var viewportHeight = renderer.height;
-
-        skeleton.x = calcMatrix.tx;
-        skeleton.y = viewportHeight - calcMatrix.ty;
-
-        skeleton.scaleX = calcMatrix.scaleX;
-        skeleton.scaleY = calcMatrix.scaleY;
-
-        if (src.scaleX < 0)
-        {
-            skeleton.scaleX *= -1;
-
-            src.root.rotation = RadToDeg(calcMatrix.rotationNormalized);
-        }
-        else
-        {
-            //  +90 degrees to account for the difference in Spine vs. Phaser rotation
-            src.root.rotation = Wrap(RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90, 0, 360);
-        }
-
-        if (src.scaleY < 0)
-        {
-            skeleton.scaleY *= -1;
-
-            if (src.scaleX < 0)
+            if (mask)
             {
-                src.root.rotation -= (RadToDeg(calcMatrix.rotationNormalized) * 2);
+                sceneRenderer.end();
+
+                renderer.pipelines.rebind();
+
+                mask.preRenderWebGL(renderer, child, camera);
+
+                renderer.pipelines.clear();
+
+                sceneRenderer.begin();
             }
-            else
+
+            child.renderWebGL(renderer, child, camera, transformMatrix, container);
+
+            if (mask)
             {
-                src.root.rotation += (RadToDeg(calcMatrix.rotationNormalized) * 2);
+                sceneRenderer.end();
+
+                renderer.pipelines.rebind();
+
+                mask.postRenderWebGL(renderer, camera);
+
+                renderer.pipelines.clear();
+
+                sceneRenderer.begin();
             }
         }
-
-        if (camera.renderToTexture || renderer.currentFramebuffer !== null)
-        {
-            skeleton.y = calcMatrix.ty;
-            skeleton.scaleY *= -1;
-        }
-
-        //  Add autoUpdate option
-        skeleton.updateWorldTransform();
-
-        skeleton.color.a = Clamp(childAlpha * alpha, 0, 1);
-
-        //  Draw the current skeleton
-        sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
-
-        //  Restore alpha
-        skeleton.color.a = childAlpha;
     }
 
-    if (!renderer.nextTypeMatch)
+    renderer.nextTypeMatch = rendererNextType;
+
+    if (!rendererNextType)
     {
         //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
@@ -33011,17 +34853,24 @@ var SpineGameObject = new Class({
     },
 
     /**
-     * Overrides the default Game Object method and always returns true.
-     * Rendering is decided in the renderer functions.
+     * Returns `true` if this Spine Game Object both has a skeleton and
+     * also passes the render tests for the given Camera.
      *
      * @method SpineGameObject#willRender
      * @since 3.19.0
      *
-     * @return {boolean} Always returns `true`.
+     * @return {boolean} `true` if this Game Object should be rendered, otherwise `false`.
      */
-    willRender: function ()
+    willRender: function (camera)
     {
-        return true;
+        if (!this.skeleton)
+        {
+            return false;
+        }
+
+        var GameObjectRenderMask = 15;
+
+        return !(GameObjectRenderMask !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
     },
 
     /**
@@ -33806,6 +35655,9 @@ var SpineGameObject = new Class({
      */
     addAnimation: function (trackIndex, animationName, loop, delay)
     {
+        if (loop === undefined) { loop = false; }
+        if (delay === undefined) { delay = 0; }
+
         return this.state.addAnimation(trackIndex, animationName, loop, delay);
     },
 
@@ -34385,26 +36237,16 @@ var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/ma
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
  * @param {SpineGameObject} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpineGameObjectCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var SpineGameObjectCanvasRenderer = function (renderer, src, camera, parentMatrix)
 {
     var context = renderer.currentContext;
 
     var plugin = src.plugin;
     var skeleton = src.skeleton;
     var skeletonRenderer = plugin.skeletonRenderer;
-
-    var GameObjectRenderMask = 15;
-
-    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)));
-
-    if (!skeleton || !willRender)
-    {
-        return;
-    }
 
     var camMatrix = renderer._tempMatrix1;
     var spriteMatrix = renderer._tempMatrix2;
@@ -34475,7 +36317,6 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, interpolationPercen
         skeleton.scaleY *= -1;
     }
 
-    //  Add autoUpdate option
     skeleton.updateWorldTransform();
 
     skeletonRenderer.ctx = context;
@@ -34542,7 +36383,9 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Clamp = __webpack_require__(/*! ../../../../src/math/Clamp */ "../../../src/math/Clamp.js");
 var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
+var GetCalcMatrix = __webpack_require__(/*! ../../../../src/gameobjects/GetCalcMatrix */ "../../../src/gameobjects/GetCalcMatrix.js");
 var RadToDeg = __webpack_require__(/*! ../../../../src/math/RadToDeg */ "../../../src/math/RadToDeg.js");
 var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/math/Wrap.js");
 
@@ -34557,76 +36400,36 @@ var Wrap = __webpack_require__(/*! ../../../../src/math/Wrap */ "../../../src/ma
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {SpineGameObject} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix, container)
 {
     var plugin = src.plugin;
     var skeleton = src.skeleton;
-    var childAlpha = skeleton.color.a;
     var sceneRenderer = plugin.sceneRenderer;
-
-    var GameObjectRenderMask = 15;
-
-    var willRender = !(GameObjectRenderMask !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || childAlpha === 0);
-
-    if (!skeleton || !willRender)
-    {
-        //  If there is already a batch running, and the next type isn't a Spine object, or this is the end, we need to close it
-
-        if (sceneRenderer.batcher.isDrawing && (!renderer.nextTypeMatch || renderer.finalType))
-        {
-            //  The next object in the display list is not a Spine object, so we end the batch
-            sceneRenderer.end();
-
-            renderer.pipelines.rebind();
-        }
-
-        if (!renderer.finalType)
-        {
-            //  Reset the current type
-            renderer.currentType = '';
-        }
-
-        return;
-    }
 
     if (renderer.newType)
     {
         //  flush + clear previous pipeline if this is a new type
         renderer.pipelines.clear();
+
+        sceneRenderer.begin();
     }
 
-    var camMatrix = renderer._tempMatrix1;
-    var spriteMatrix = renderer._tempMatrix2;
-    var calcMatrix = renderer._tempMatrix3;
+    var scrollFactorX = src.scrollFactorX;
+    var scrollFactorY = src.scrollFactorY;
+    var alpha = skeleton.color.a;
 
-    spriteMatrix.applyITRS(src.x, src.y, src.rotation, Math.abs(src.scaleX), Math.abs(src.scaleY));
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
+    if (container)
     {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+        src.scrollFactorX = container.scrollFactorX;
+        src.scrollFactorY = container.scrollFactorY;
 
-        //  Undo the camera scroll
-        spriteMatrix.e = src.x;
-        spriteMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
+        skeleton.color.a = Clamp(alpha * container.alpha, 0, 1);
     }
-    else
-    {
-        spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
-        spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
 
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-    }
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
     var viewportHeight = renderer.height;
 
@@ -34640,7 +36443,8 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     {
         skeleton.scaleX *= -1;
 
-        src.root.rotation = RadToDeg(calcMatrix.rotationNormalized);
+        //  -180 degrees to account for the difference in Spine vs. Phaser rotation when inversely scaled
+        src.root.rotation = Wrap(RadToDeg(calcMatrix.rotationNormalized) - 180, 0, 360);
     }
     else
     {
@@ -34668,16 +36472,17 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         skeleton.scaleY *= -1;
     }
 
-    //  Add autoUpdate option
     skeleton.updateWorldTransform();
-
-    if (renderer.newType)
-    {
-        sceneRenderer.begin();
-    }
 
     //  Draw the current skeleton
     sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
+
+    if (container)
+    {
+        src.scrollFactorX = scrollFactorX;
+        src.scrollFactorY = scrollFactorY;
+        skeleton.color.a = alpha;
+    }
 
     if (plugin.drawDebug || src.drawDebug)
     {
@@ -38293,15 +40098,35 @@ var spine;
             path = this.pathPrefix + path;
             if (!this.queueAsset(clientId, textureLoader, path))
                 return;
-            var img = new Image();
-            img.crossOrigin = "anonymous";
-            img.onload = function (ev) {
-                _this.rawAssets[path] = img;
-            };
-            img.onerror = function (ev) {
-                _this.errors[path] = "Couldn't load image " + path;
-            };
-            img.src = path;
+            var isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document);
+            var isWebWorker = !isBrowser && typeof importScripts !== 'undefined';
+            if (isWebWorker) {
+                var options = { mode: "cors" };
+                fetch(path, options).then(function (response) {
+                    if (!response.ok) {
+                        _this.errors[path] = "Couldn't load image " + path;
+                    }
+                    return response.blob();
+                }).then(function (blob) {
+                    return createImageBitmap(blob, {
+                        premultiplyAlpha: 'none',
+                        colorSpaceConversion: 'none'
+                    });
+                }).then(function (bitmap) {
+                    _this.rawAssets[path] = bitmap;
+                });
+            }
+            else {
+                var img_1 = new Image();
+                img_1.crossOrigin = "anonymous";
+                img_1.onload = function (ev) {
+                    _this.rawAssets[path] = img_1;
+                };
+                img_1.onerror = function (ev) {
+                    _this.errors[path] = "Couldn't load image " + path;
+                };
+                img_1.src = path;
+            }
         };
         SharedAssetManager.prototype.get = function (clientId, path) {
             path = this.pathPrefix + path;
@@ -38311,6 +40136,8 @@ var spine;
             return clientAssets.assets[path];
         };
         SharedAssetManager.prototype.updateClientAssets = function (clientAssets) {
+            var isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document);
+            var isWebWorker = !isBrowser && typeof importScripts !== 'undefined';
             for (var i = 0; i < clientAssets.toLoad.length; i++) {
                 var path = clientAssets.toLoad[i];
                 var asset = clientAssets.assets[path];
@@ -38318,11 +40145,21 @@ var spine;
                     var rawAsset = this.rawAssets[path];
                     if (rawAsset === null || rawAsset === undefined)
                         continue;
-                    if (rawAsset instanceof HTMLImageElement) {
-                        clientAssets.assets[path] = clientAssets.textureLoader(rawAsset);
+                    if (isWebWorker) {
+                        if (rawAsset instanceof ImageBitmap) {
+                            clientAssets.assets[path] = clientAssets.textureLoader(rawAsset);
+                        }
+                        else {
+                            clientAssets.assets[path] = rawAsset;
+                        }
                     }
                     else {
-                        clientAssets.assets[path] = rawAsset;
+                        if (rawAsset instanceof HTMLImageElement) {
+                            clientAssets.assets[path] = clientAssets.textureLoader(rawAsset);
+                        }
+                        else {
+                            clientAssets.assets[path] = rawAsset;
+                        }
                     }
                 }
             }
@@ -42470,7 +44307,7 @@ var spine;
             return _this;
         }
         BoundingBoxAttachment.prototype.copy = function () {
-            var copy = new BoundingBoxAttachment(name);
+            var copy = new BoundingBoxAttachment(this.name);
             this.copyTo(copy);
             copy.color.setFromColor(this.color);
             return copy;
@@ -42489,7 +44326,7 @@ var spine;
             return _this;
         }
         ClippingAttachment.prototype.copy = function () {
-            var copy = new ClippingAttachment(name);
+            var copy = new ClippingAttachment(this.name);
             this.copyTo(copy);
             copy.endSlot = this.endSlot;
             copy.color.setFromColor(this.color);
@@ -42633,7 +44470,7 @@ var spine;
             return _this;
         }
         PathAttachment.prototype.copy = function () {
-            var copy = new PathAttachment(name);
+            var copy = new PathAttachment(this.name);
             this.copyTo(copy);
             copy.lengths = new Array(this.lengths.length);
             spine.Utils.arrayCopy(this.lengths, 0, copy.lengths, 0, this.lengths.length);
@@ -42667,7 +44504,7 @@ var spine;
             return Math.atan2(y, x) * spine.MathUtils.radDeg;
         };
         PointAttachment.prototype.copy = function () {
-            var copy = new PointAttachment(name);
+            var copy = new PointAttachment(this.name);
             copy.x = this.x;
             copy.y = this.y;
             copy.rotation = this.rotation;
@@ -45427,30 +47264,32 @@ var spine;
     (function (webgl) {
         var ManagedWebGLRenderingContext = (function () {
             function ManagedWebGLRenderingContext(canvasOrContext, contextConfig) {
-                var _this = this;
                 if (contextConfig === void 0) { contextConfig = { alpha: "true" }; }
                 this.restorables = new Array();
-                if (canvasOrContext instanceof HTMLCanvasElement) {
-                    var canvas_1 = canvasOrContext;
-                    this.gl = (canvas_1.getContext("webgl2", contextConfig) || canvas_1.getContext("webgl", contextConfig));
-                    this.canvas = canvas_1;
-                    canvas_1.addEventListener("webglcontextlost", function (e) {
-                        var event = e;
-                        if (e) {
-                            e.preventDefault();
-                        }
-                    });
-                    canvas_1.addEventListener("webglcontextrestored", function (e) {
-                        for (var i = 0, n = _this.restorables.length; i < n; i++) {
-                            _this.restorables[i].restore();
-                        }
-                    });
+                if (canvasOrContext instanceof HTMLCanvasElement || canvasOrContext instanceof EventTarget) {
+                    this.setupCanvas(canvasOrContext, contextConfig);
                 }
                 else {
                     this.gl = canvasOrContext;
                     this.canvas = this.gl.canvas;
                 }
             }
+            ManagedWebGLRenderingContext.prototype.setupCanvas = function (canvas, contextConfig) {
+                var _this = this;
+                this.gl = (canvas.getContext("webgl2", contextConfig) || canvas.getContext("webgl", contextConfig));
+                this.canvas = canvas;
+                canvas.addEventListener("webglcontextlost", function (e) {
+                    var event = e;
+                    if (e) {
+                        e.preventDefault();
+                    }
+                });
+                canvas.addEventListener("webglcontextrestored", function (e) {
+                    for (var i = 0, n = _this.restorables.length; i < n; i++) {
+                        _this.restorables[i].restore();
+                    }
+                });
+            };
             ManagedWebGLRenderingContext.prototype.addRestorable = function (restorable) {
                 this.restorables.push(restorable);
             };

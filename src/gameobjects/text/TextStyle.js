@@ -213,7 +213,7 @@ var TextStyle = new Class({
          * The maximum number of lines to draw.
          *
          * @name Phaser.GameObjects.TextStyle#maxLines
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -1030,7 +1030,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.TextStyle#setMaxLines
      * @since 3.0.0
      *
-     * @param {integer} [max=0] - The maximum number of lines to draw.
+     * @param {number} [max=0] - The maximum number of lines to draw.
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */

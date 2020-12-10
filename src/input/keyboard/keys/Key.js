@@ -20,7 +20,7 @@ var Events = require('../events');
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.KeyboardPlugin} plugin - The Keyboard Plugin instance that owns this Key object.
- * @param {integer} keyCode - The keycode of this key.
+ * @param {number} keyCode - The keycode of this key.
  */
 var Key = new Class({
 
@@ -45,7 +45,7 @@ var Key = new Class({
          * The keycode of this key.
          *
          * @name Phaser.Input.Keyboard.Key#keyCode
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.keyCode = keyCode;

@@ -24,7 +24,7 @@ var Vector2 = require('../math/Vector2');
  *
  * @param {number} [width=0] - The width of the Size component.
  * @param {number} [height=width] - The height of the Size component. If not given, it will use the `width`.
- * @param {integer} [aspectMode=0] - The aspect mode of the Size component. Defaults to 0, no mode.
+ * @param {number} [aspectMode=0] - The aspect mode of the Size component. Defaults to 0, no mode.
  * @param {any} [parent=null] - The parent of this Size component. Can be any object with public `width` and `height` properties. Dimensions are clamped to keep them within the parent bounds where possible.
  */
 var Size = new Class({
@@ -73,7 +73,7 @@ var Size = new Class({
          * This property is read-only. To change it use the `setAspectMode` method.
          *
          * @name Phaser.Structs.Size#aspectMode
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.16.0
          */
@@ -171,7 +171,7 @@ var Size = new Class({
      * @method Phaser.Structs.Size#setAspectMode
      * @since 3.16.0
      *
-     * @param {integer} [value=0] - The aspect mode value.
+     * @param {number} [value=0] - The aspect mode value.
      *
      * @return {this} This Size component instance.
      */
@@ -724,7 +724,7 @@ var Size = new Class({
  * 
  * @name Phaser.Structs.Size.NONE
  * @constant
- * @type {integer}
+ * @type {number}
  * @since 3.16.0
  */
 Size.NONE = 0;
@@ -734,7 +734,7 @@ Size.NONE = 0;
  * 
  * @name Phaser.Structs.Size.WIDTH_CONTROLS_HEIGHT
  * @constant
- * @type {integer}
+ * @type {number}
  * @since 3.16.0
  */
 Size.WIDTH_CONTROLS_HEIGHT = 1;
@@ -744,7 +744,7 @@ Size.WIDTH_CONTROLS_HEIGHT = 1;
  * 
  * @name Phaser.Structs.Size.HEIGHT_CONTROLS_WIDTH
  * @constant
- * @type {integer}
+ * @type {number}
  * @since 3.16.0
  */
 Size.HEIGHT_CONTROLS_WIDTH = 2;
@@ -754,7 +754,7 @@ Size.HEIGHT_CONTROLS_WIDTH = 2;
  * 
  * @name Phaser.Structs.Size.FIT
  * @constant
- * @type {integer}
+ * @type {number}
  * @since 3.16.0
  */
 Size.FIT = 3;
@@ -764,7 +764,7 @@ Size.FIT = 3;
  * 
  * @name Phaser.Structs.Size.ENVELOP
  * @constant
- * @type {integer}
+ * @type {number}
  * @since 3.16.0
  */
 Size.ENVELOP = 4;

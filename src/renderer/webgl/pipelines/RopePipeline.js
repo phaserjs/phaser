@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../utils/Class');
-var ModelViewProjection = require('./components/ModelViewProjection');
+var GetFastValue = require('../../../utils/object/GetFastValue');
 var MultiPipeline = require('./MultiPipeline');
 
 /**
@@ -49,15 +49,13 @@ var RopePipeline = new Class({
 
     Extends: MultiPipeline,
 
-    Mixins: [
-        ModelViewProjection
-    ],
-
     initialize:
 
     function RopePipeline (config)
     {
-        config.topology = config.game.renderer.gl.TRIANGLE_STRIP;
+        //  GLenum 5 = TRIANGLE_STRIP
+        config.topology = 5;
+        config.batchSize = GetFastValue(config, 'batchSize', 256);
 
         MultiPipeline.call(this, config);
     }

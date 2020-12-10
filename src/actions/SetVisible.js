@@ -19,8 +19,8 @@ var PropertyValueSet = require('./PropertyValueSet');
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
  * @param {boolean} value - The value to set the property to.
- * @param {integer} [index=0] - An optional offset to start searching from within the items array.
- * @param {integer} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
+ * @param {number} [index=0] - An optional offset to start searching from within the items array.
+ * @param {number} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of objects that were passed to this Action.
  */

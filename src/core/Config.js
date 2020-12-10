@@ -47,17 +47,17 @@ var Config = new Class({
         var defaultBannerTextColor = '#ffffff';
 
         /**
-         * @const {(integer|string)} Phaser.Core.Config#width - The width of the underlying canvas, in pixels.
+         * @const {(number|string)} Phaser.Core.Config#width - The width of the underlying canvas, in pixels.
          */
         this.width = GetValue(config, 'width', 1024);
 
         /**
-         * @const {(integer|string)} Phaser.Core.Config#height - The height of the underlying canvas, in pixels.
+         * @const {(number|string)} Phaser.Core.Config#height - The height of the underlying canvas, in pixels.
          */
         this.height = GetValue(config, 'height', 768);
 
         /**
-         * @const {(Phaser.Scale.ZoomType|integer)} Phaser.Core.Config#zoom - The zoom factor, as used by the Scale Manager.
+         * @const {(Phaser.Scale.ZoomType|number)} Phaser.Core.Config#zoom - The zoom factor, as used by the Scale Manager.
          */
         this.zoom = GetValue(config, 'zoom', 1);
 
@@ -77,7 +77,7 @@ var Config = new Class({
         this.expandParent = GetValue(config, 'expandParent', true);
 
         /**
-         * @const {integer} Phaser.Core.Config#autoRound - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
+         * @const {number} Phaser.Core.Config#autoRound - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
          */
         this.autoRound = GetValue(config, 'autoRound', false);
 
@@ -87,7 +87,7 @@ var Config = new Class({
         this.autoCenter = GetValue(config, 'autoCenter', 0);
 
         /**
-         * @const {integer} Phaser.Core.Config#resizeInterval - How many ms should elapse before checking if the browser size has changed?
+         * @const {number} Phaser.Core.Config#resizeInterval - How many ms should elapse before checking if the browser size has changed?
          */
         this.resizeInterval = GetValue(config, 'resizeInterval', 500);
 
@@ -97,22 +97,22 @@ var Config = new Class({
         this.fullscreenTarget = GetValue(config, 'fullscreenTarget', null);
 
         /**
-         * @const {integer} Phaser.Core.Config#minWidth - The minimum width, in pixels, the canvas will scale down to. A value of zero means no minimum.
+         * @const {number} Phaser.Core.Config#minWidth - The minimum width, in pixels, the canvas will scale down to. A value of zero means no minimum.
          */
         this.minWidth = GetValue(config, 'minWidth', 0);
 
         /**
-         * @const {integer} Phaser.Core.Config#maxWidth - The maximum width, in pixels, the canvas will scale up to. A value of zero means no maximum.
+         * @const {number} Phaser.Core.Config#maxWidth - The maximum width, in pixels, the canvas will scale up to. A value of zero means no maximum.
          */
         this.maxWidth = GetValue(config, 'maxWidth', 0);
 
         /**
-         * @const {integer} Phaser.Core.Config#minHeight - The minimum height, in pixels, the canvas will scale down to. A value of zero means no minimum.
+         * @const {number} Phaser.Core.Config#minHeight - The minimum height, in pixels, the canvas will scale down to. A value of zero means no minimum.
          */
         this.minHeight = GetValue(config, 'minHeight', 0);
 
         /**
-         * @const {integer} Phaser.Core.Config#maxHeight - The maximum height, in pixels, the canvas will scale up to. A value of zero means no maximum.
+         * @const {number} Phaser.Core.Config#maxHeight - The maximum height, in pixels, the canvas will scale up to. A value of zero means no maximum.
          */
         this.maxHeight = GetValue(config, 'maxHeight', 0);
 
@@ -220,7 +220,7 @@ var Config = new Class({
         this.inputKeyboardEventTarget = GetValue(config, 'input.keyboard.target', window);
 
         /**
-         * @const {?integer[]} Phaser.Core.Config#inputKeyboardCapture - `preventDefault` will be called on every non-modified key which has a key code in this array. By default, it is empty.
+         * @const {?number[]} Phaser.Core.Config#inputKeyboardCapture - `preventDefault` will be called on every non-modified key which has a key code in this array. By default, it is empty.
          */
         this.inputKeyboardCapture = GetValue(config, 'input.keyboard.capture', []);
 
@@ -235,19 +235,24 @@ var Config = new Class({
         this.inputMouseEventTarget = GetValue(config, 'input.mouse.target', null);
 
         /**
-         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultDown - Should `mousedown` events be captured? I.e. have prevent default called on them.
+         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultDown - Should `mousedown` DOM events have `preventDefault` called on them?
          */
         this.inputMousePreventDefaultDown = GetValue(config, 'input.mouse.preventDefaultDown', true);
 
         /**
-         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultUp - Should `mouseup` events be captured? I.e. have prevent default called on them.
+         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultUp - Should `mouseup` DOM events have `preventDefault` called on them?
          */
         this.inputMousePreventDefaultUp = GetValue(config, 'input.mouse.preventDefaultUp', true);
 
         /**
-         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultMove - Should `mousemove` events be captured? I.e. have prevent default called on them.
+         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultMove - Should `mousemove` DOM events have `preventDefault` called on them?
          */
         this.inputMousePreventDefaultMove = GetValue(config, 'input.mouse.preventDefaultMove', true);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#inputMousePreventDefaultWheel - Should `wheel` DOM events have `preventDefault` called on them?
+         */
+        this.inputMousePreventDefaultWheel = GetValue(config, 'input.mouse.preventDefaultWheel', true);
 
         /**
          * @const {boolean} Phaser.Core.Config#inputTouch - Enable the Touch Plugin. This can be disabled in games that don't need touch input.
@@ -265,12 +270,12 @@ var Config = new Class({
         this.inputTouchCapture = GetValue(config, 'input.touch.capture', true);
 
         /**
-         * @const {integer} Phaser.Core.Config#inputActivePointers - The number of Pointer objects created by default. In a mouse-only, or non-multi touch game, you can leave this as 1.
+         * @const {number} Phaser.Core.Config#inputActivePointers - The number of Pointer objects created by default. In a mouse-only, or non-multi touch game, you can leave this as 1.
          */
         this.inputActivePointers = GetValue(config, 'input.activePointers', 1);
 
         /**
-         * @const {integer} Phaser.Core.Config#inputSmoothFactor - The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
+         * @const {number} Phaser.Core.Config#inputSmoothFactor - The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
          */
         this.inputSmoothFactor = GetValue(config, 'input.smoothFactor', 0);
 
@@ -327,7 +332,7 @@ var Config = new Class({
         }
 
         /**
-         * @const {?Phaser.Types.Core.FPSConfig} Phaser.Core.Config#fps - The Frame Rate Configuration object, as parsed by the Timestep class.
+         * @const {Phaser.Types.Core.FPSConfig} Phaser.Core.Config#fps - The Frame Rate Configuration object, as parsed by the Timestep class.
          */
         this.fps = GetValue(config, 'fps', null);
 
@@ -335,6 +340,11 @@ var Config = new Class({
         //  These can either be in a `render` object within the Config, or specified on their own
 
         var renderConfig = GetValue(config, 'render', config);
+
+        /**
+         * @const {Phaser.Types.Core.PipelineConfig} Phaser.Core.Config#pipeline - An object mapping WebGL names to WebGLPipeline classes. These should be class constructors, not instances.
+         */
+        this.pipeline = GetValue(renderConfig, 'pipeline', null);
 
         /**
          * @const {boolean} Phaser.Core.Config#antialias - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
@@ -399,17 +409,17 @@ var Config = new Class({
         this.powerPreference = GetValue(renderConfig, 'powerPreference', 'default');
 
         /**
-         * @const {integer} Phaser.Core.Config#batchSize - The default WebGL Batch size.
+         * @const {number} Phaser.Core.Config#batchSize - The default WebGL Batch size. Represents the number of _quads_ that can be added to a single batch.
          */
         this.batchSize = GetValue(renderConfig, 'batchSize', 4096);
 
         /**
-         * @const {integer} Phaser.Core.Config#maxTextures - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
+         * @const {number} Phaser.Core.Config#maxTextures - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
          */
         this.maxTextures = GetValue(renderConfig, 'maxTextures', -1);
 
         /**
-         * @const {integer} Phaser.Core.Config#maxLights - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
+         * @const {number} Phaser.Core.Config#maxLights - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
          */
         this.maxLights = GetValue(renderConfig, 'maxLights', 10);
 
@@ -420,8 +430,9 @@ var Config = new Class({
          */
         this.backgroundColor = ValueToColor(bgc);
 
-        if (bgc === 0 && this.transparent)
+        if (this.transparent)
         {
+            this.backgroundColor = ValueToColor(0x000000);
             this.backgroundColor.alpha = 0;
         }
 
@@ -456,7 +467,7 @@ var Config = new Class({
         this.loaderPath = GetValue(config, 'loader.path', '');
 
         /**
-         * @const {integer} Phaser.Core.Config#loaderMaxParallelDownloads - Maximum parallel downloads allowed for resources (Default to 32).
+         * @const {number} Phaser.Core.Config#loaderMaxParallelDownloads - Maximum parallel downloads allowed for resources (Default to 32).
          */
         var defaultParallel = (Device.os.android) ? 6 : 32;
 
@@ -488,7 +499,7 @@ var Config = new Class({
         this.loaderPassword = GetValue(config, 'loader.password', '');
 
         /**
-         * @const {integer} Phaser.Core.Config#loaderTimeout - Optional XHR timeout value, in ms.
+         * @const {number} Phaser.Core.Config#loaderTimeout - Optional XHR timeout value, in ms.
          */
         this.loaderTimeout = GetValue(config, 'loader.timeout', 0);
 

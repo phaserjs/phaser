@@ -33,9 +33,9 @@ var CanvasPool = function ()
      * @since 3.0.0
      *
      * @param {*} parent - The parent of the Canvas object.
-     * @param {integer} [width=1] - The width of the Canvas.
-     * @param {integer} [height=1] - The height of the Canvas.
-     * @param {integer} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
+     * @param {number} [width=1] - The width of the Canvas.
+     * @param {number} [height=1] - The height of the Canvas.
+     * @param {number} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
      * @param {boolean} [selfParent=false] - Use the generated Canvas element as the parent?
      *
      * @return {HTMLCanvasElement} The canvas element that was created or pulled from the pool
@@ -95,8 +95,8 @@ var CanvasPool = function ()
      * @since 3.0.0
      *
      * @param {*} parent - The parent of the Canvas object.
-     * @param {integer} [width=1] - The width of the Canvas.
-     * @param {integer} [height=1] - The height of the Canvas.
+     * @param {number} [width=1] - The width of the Canvas.
+     * @param {number} [height=1] - The height of the Canvas.
      *
      * @return {HTMLCanvasElement} The created canvas.
      */
@@ -112,8 +112,8 @@ var CanvasPool = function ()
      * @since 3.0.0
      *
      * @param {*} parent - The parent of the Canvas object.
-     * @param {integer} [width=1] - The width of the Canvas.
-     * @param {integer} [height=1] - The height of the Canvas.
+     * @param {number} [width=1] - The width of the Canvas.
+     * @param {number} [height=1] - The height of the Canvas.
      *
      * @return {HTMLCanvasElement} The created WebGL canvas.
      */
@@ -128,7 +128,7 @@ var CanvasPool = function ()
      * @function Phaser.Display.Canvas.CanvasPool.first
      * @since 3.0.0
      *
-     * @param {integer} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
+     * @param {number} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
      *
      * @return {HTMLCanvasElement} The first free canvas, or `null` if a WebGL canvas was requested or if the pool doesn't have free canvases.
      */
@@ -185,7 +185,7 @@ var CanvasPool = function ()
      * @function Phaser.Display.Canvas.CanvasPool.total
      * @since 3.0.0
      *
-     * @return {integer} The number of used canvases.
+     * @return {number} The number of used canvases.
      */
     var total = function ()
     {
@@ -208,7 +208,7 @@ var CanvasPool = function ()
      * @function Phaser.Display.Canvas.CanvasPool.free
      * @since 3.0.0
      *
-     * @return {integer} The number of free canvases.
+     * @return {number} The number of free canvases.
      */
     var free = function ()
     {

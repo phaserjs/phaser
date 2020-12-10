@@ -331,7 +331,7 @@ var Gamepad = new Class({
      * @method Phaser.Input.Gamepad.Gamepad#getAxisTotal
      * @since 3.10.0
      *
-     * @return {integer} The total number of axes this Gamepad claims to support.
+     * @return {number} The total number of axes this Gamepad claims to support.
      */
     getAxisTotal: function ()
     {
@@ -346,7 +346,7 @@ var Gamepad = new Class({
      * @method Phaser.Input.Gamepad.Gamepad#getAxisValue
      * @since 3.10.0
      *
-     * @param {integer} index - The index of the axes to get the value for.
+     * @param {number} index - The index of the axes to get the value for.
      *
      * @return {number} The value of the axis, between 0 and 1.
      */
@@ -378,7 +378,7 @@ var Gamepad = new Class({
      * @method Phaser.Input.Gamepad.Gamepad#getButtonTotal
      * @since 3.10.0
      *
-     * @return {integer} The total number of buttons this Gamepad claims to have.
+     * @return {number} The total number of buttons this Gamepad claims to have.
      */
     getButtonTotal: function ()
     {
@@ -395,7 +395,7 @@ var Gamepad = new Class({
      * @method Phaser.Input.Gamepad.Gamepad#getButtonValue
      * @since 3.10.0
      *
-     * @param {integer} index - The index of the button to get the value for.
+     * @param {number} index - The index of the button to get the value for.
      *
      * @return {number} The value of the button, between 0 and 1.
      */
@@ -411,7 +411,7 @@ var Gamepad = new Class({
      * @method Phaser.Input.Gamepad.Gamepad#isButtonDown
      * @since 3.10.0
      *
-     * @param {integer} index - The index of the button to get the value for.
+     * @param {number} index - The index of the button to get the value for.
      *
      * @return {boolean} `true` if the button is considered as being pressed down, otherwise `false`.
      */

@@ -14,7 +14,7 @@
  * 
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
  * @param {Phaser.Cameras.Scene2D.Effects.Shake} effect - A reference to the effect instance.
- * @param {integer} duration - The duration of the effect.
+ * @param {number} duration - The duration of the effect.
  * @param {number} intensity - The intensity of the effect.
  */
 module.exports = 'camerashakestart';

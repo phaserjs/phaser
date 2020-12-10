@@ -636,7 +636,7 @@ declare module spine {
         private queueAsset;
         loadText(clientId: string, path: string): void;
         loadJson(clientId: string, path: string): void;
-        loadTexture(clientId: string, textureLoader: (image: HTMLImageElement) => any, path: string): void;
+        loadTexture(clientId: string, textureLoader: (image: HTMLImageElement | ImageBitmap) => any, path: string): void;
         get(clientId: string, path: string): any;
         private updateClientAssets;
         isLoadingComplete(clientId: string): boolean;
@@ -881,9 +881,9 @@ declare module spine {
 }
 declare module spine {
     abstract class Texture {
-        protected _image: HTMLImageElement;
-        constructor(image: HTMLImageElement);
-        getImage(): HTMLImageElement;
+        protected _image: HTMLImageElement | ImageBitmap;
+        constructor(image: HTMLImageElement | ImageBitmap);
+        getImage(): HTMLImageElement | ImageBitmap;
         abstract setFilters(minFilter: TextureFilter, magFilter: TextureFilter): void;
         abstract setWraps(uWrap: TextureWrap, vWrap: TextureWrap): void;
         abstract dispose(): void;
@@ -1400,7 +1400,7 @@ declare module spine.webgl {
         private boundUnit;
         private useMipMaps;
         static DISABLE_UNPACK_PREMULTIPLIED_ALPHA_WEBGL: boolean;
-        constructor(context: ManagedWebGLRenderingContext | WebGLRenderingContext, image: HTMLImageElement, useMipMaps?: boolean);
+        constructor(context: ManagedWebGLRenderingContext | WebGLRenderingContext, image: HTMLImageElement | ImageBitmap, useMipMaps?: boolean);
         setFilters(minFilter: TextureFilter, magFilter: TextureFilter): void;
         static validateMagFilter(magFilter: TextureFilter): TextureFilter.Nearest | TextureFilter.Linear | TextureFilter.Linear;
         setWraps(uWrap: TextureWrap, vWrap: TextureWrap): void;
@@ -1738,7 +1738,8 @@ declare module spine.webgl {
         canvas: HTMLCanvasElement | OffscreenCanvas;
         gl: WebGLRenderingContext;
         private restorables;
-        constructor(canvasOrContext: HTMLCanvasElement | WebGLRenderingContext, contextConfig?: any);
+        constructor(canvasOrContext: HTMLCanvasElement | WebGLRenderingContext | EventTarget | WebGL2RenderingContext, contextConfig?: any);
+        private setupCanvas;
         addRestorable(restorable: Restorable): void;
         removeRestorable(restorable: Restorable): void;
     }

@@ -16,11 +16,11 @@ var SetTileCollision = require('./SetTileCollision');
  * @function Phaser.Tilemaps.Components.Fill
  * @since 3.0.0
  *
- * @param {integer} index - The tile index to fill the area with.
- * @param {integer} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
- * @param {integer} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
- * @param {integer} width - How many tiles wide from the `tileX` index the area will be.
- * @param {integer} height - How many tiles tall from the `tileY` index the area will be.
+ * @param {number} index - The tile index to fill the area with.
+ * @param {number} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} width - How many tiles wide from the `tileX` index the area will be.
+ * @param {number} height - How many tiles tall from the `tileY` index the area will be.
  * @param {boolean} recalculateFaces - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The tile layer to use. If not given the current layer is used.
  */

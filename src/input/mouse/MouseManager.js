@@ -73,6 +73,16 @@ var MouseManager = new Class({
         this.preventDefaultMove = true;
 
         /**
+         * If `true` the DOM `wheel` event will have `preventDefault` set.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#preventDefaultWheel
+         * @type {boolean}
+         * @default true
+         * @since 3.50.0
+         */
+        this.preventDefaultWheel = false;
+
+        /**
          * A boolean that controls if the Mouse Manager is enabled or not.
          * Can be toggled on the fly.
          *
@@ -202,6 +212,20 @@ var MouseManager = new Class({
          */
         this.pointerLockChange = NOOP;
 
+        /**
+         * Are the event listeners hooked into `window.top` or `window`?
+         *
+         * This is set during the `boot` sequence. If the browser does not have access to `window.top`,
+         * such as in cross-origin iframe environments, this property gets set to `false` and the events
+         * are hooked into `window` instead.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#isTop
+         * @type {boolean}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.isTop = true;
+
         inputManager.events.once(InputEvents.MANAGER_BOOT, this.boot, this);
     },
 
@@ -223,6 +247,7 @@ var MouseManager = new Class({
         this.preventDefaultDown = config.inputMousePreventDefaultDown;
         this.preventDefaultUp = config.inputMousePreventDefaultUp;
         this.preventDefaultMove = config.inputMousePreventDefaultMove;
+        this.preventDefaultWheel = config.inputMousePreventDefaultWheel;
 
         if (!this.target)
         {
@@ -423,6 +448,11 @@ var MouseManager = new Class({
             {
                 manager.onMouseWheel(event);
             }
+
+            if (_this.preventDefaultWheel && event.target === canvas)
+            {
+                event.preventDefault();
+            }
         };
 
         var passive = { passive: true };
@@ -432,12 +462,30 @@ var MouseManager = new Class({
         target.addEventListener('mouseup', this.onMouseUp);
         target.addEventListener('mouseover', this.onMouseOver, passive);
         target.addEventListener('mouseout', this.onMouseOut, passive);
-        target.addEventListener('wheel', this.onMouseWheel, passive);
+
+        if (this.preventDefaultWheel)
+        {
+            target.addEventListener('wheel', this.onMouseWheel, { passive: false });
+        }
+        else
+        {
+            target.addEventListener('wheel', this.onMouseWheel, passive);
+        }
 
         if (window && manager.game.config.inputWindowEvents)
         {
-            window.top.addEventListener('mousedown', this.onMouseDownWindow, passive);
-            window.top.addEventListener('mouseup', this.onMouseUpWindow, passive);
+            try
+            {
+                window.top.addEventListener('mousedown', this.onMouseDownWindow, passive);
+                window.top.addEventListener('mouseup', this.onMouseUpWindow, passive);
+            }
+            catch (exception)
+            {
+                window.addEventListener('mousedown', this.onMouseDownWindow, passive);
+                window.addEventListener('mouseup', this.onMouseUpWindow, passive);
+
+                this.isTop = false;
+            }
         }
 
         if (Features.pointerLock)
@@ -478,8 +526,10 @@ var MouseManager = new Class({
 
         if (window)
         {
-            window.top.removeEventListener('mousedown', this.onMouseDownWindow);
-            window.top.removeEventListener('mouseup', this.onMouseUpWindow);
+            target = (this.isTop) ? window.top : window;
+
+            target.removeEventListener('mousedown', this.onMouseDownWindow);
+            target.removeEventListener('mouseup', this.onMouseUpWindow);
         }
 
         if (Features.pointerLock)

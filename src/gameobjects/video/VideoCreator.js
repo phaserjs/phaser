@@ -37,6 +37,11 @@ GameObjectCreator.register('video', function (config, addToScene)
 
     BuildGameObject(this.scene, video, config);
 
+    if (!config.add)
+    {
+        this.updateList.add(video);
+    }
+
     return video;
 });
 

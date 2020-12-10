@@ -12,17 +12,15 @@ var ComponentsBlendMode = require('../components/BlendMode');
 var ComponentsDepth = require('../components/Depth');
 var ComponentsMask = require('../components/Mask');
 var ComponentsPipeline = require('../components/Pipeline');
+var ComponentsScrollFactor = require('../components/ScrollFactor');
 var ComponentsTransform = require('../components/Transform');
 var ComponentsVisible = require('../components/Visible');
-var ComponentsScrollFactor = require('../components/ScrollFactor');
-
-var TransformMatrix = require('../components/TransformMatrix');
-
 var Ellipse = require('../../geom/ellipse/Ellipse');
 var GameObject = require('../GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
+var PIPELINES_CONST = require('../../renderer/webgl/pipelines/const');
 var Render = require('./GraphicsRender');
 
 /**
@@ -110,7 +108,7 @@ var Graphics = new Class({
         GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
-        this.initPipeline();
+        this.initPipeline(PIPELINES_CONST.GRAPHICS_PIPELINE);
 
         /**
          * The horizontal display origin of the Graphics.
@@ -201,36 +199,6 @@ var Graphics = new Class({
          * @since 3.0.0
          */
         this._lineWidth = 1.0;
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.GameObjects.Graphics#_tempMatrix1
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.17.0
-         */
-        this._tempMatrix1 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.GameObjects.Graphics#_tempMatrix2
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.17.0
-         */
-        this._tempMatrix2 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.GameObjects.Graphics#_tempMatrix3
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.17.0
-         */
-        this._tempMatrix3 = new TransformMatrix();
 
         this.setDefaultStyles(options);
     },
@@ -335,21 +303,28 @@ var Graphics = new Class({
      * @webglOnly
      * @since 3.12.0
      *
-     * @param {integer} topLeft - The tint being applied to the top-left of the Game Object.
-     * @param {integer} topRight - The tint being applied to the top-right of the Game Object.
-     * @param {integer} bottomLeft - The tint being applied to the bottom-left of the Game Object.
-     * @param {integer} bottomRight - The tint being applied to the bottom-right of the Game Object.
-     * @param {number} [alpha=1] - The fill alpha.
+     * @param {number} topLeft - The top left fill color.
+     * @param {number} topRight - The top right fill color.
+     * @param {number} bottomLeft - The bottom left fill color.
+     * @param {number} bottomRight - The bottom right fill color. Not used when filling triangles.
+     * @param {number} [alphaTopLeft=1] - The top left alpha value. If you give only this value, it's used for all corners.
+     * @param {number} [alphaTopRight=1] - The top right alpha value.
+     * @param {number} [alphaBottomLeft=1] - The bottom left alpha value.
+     * @param {number} [alphaBottomRight=1] - The bottom right alpha value.
      *
      * @return {this} This Game Object.
      */
-    fillGradientStyle: function (topLeft, topRight, bottomLeft, bottomRight, alpha)
+    fillGradientStyle: function (topLeft, topRight, bottomLeft, bottomRight, alphaTopLeft, alphaTopRight, alphaBottomLeft, alphaBottomRight)
     {
-        if (alpha === undefined) { alpha = 1; }
+        if (alphaTopLeft === undefined) { alphaTopLeft = 1; }
+        if (alphaTopRight === undefined) { alphaTopRight = alphaTopLeft; }
+        if (alphaBottomLeft === undefined) { alphaBottomLeft = alphaTopLeft; }
+        if (alphaBottomRight === undefined) { alphaBottomRight = alphaTopLeft; }
 
         this.commandBuffer.push(
             Commands.GRADIENT_FILL_STYLE,
-            alpha, topLeft, topRight, bottomLeft, bottomRight
+            alphaTopLeft, alphaTopRight, alphaBottomLeft, alphaBottomRight,
+            topLeft, topRight, bottomLeft, bottomRight
         );
 
         return this;
@@ -373,10 +348,10 @@ var Graphics = new Class({
      * @since 3.12.0
      *
      * @param {number} lineWidth - The stroke width.
-     * @param {integer} topLeft - The tint being applied to the top-left of the Game Object.
-     * @param {integer} topRight - The tint being applied to the top-right of the Game Object.
-     * @param {integer} bottomLeft - The tint being applied to the bottom-left of the Game Object.
-     * @param {integer} bottomRight - The tint being applied to the bottom-right of the Game Object.
+     * @param {number} topLeft - The tint being applied to the top-left of the Game Object.
+     * @param {number} topRight - The tint being applied to the top-right of the Game Object.
+     * @param {number} bottomLeft - The tint being applied to the bottom-left of the Game Object.
+     * @param {number} bottomRight - The tint being applied to the bottom-right of the Game Object.
      * @param {number} [alpha=1] - The fill alpha.
      *
      * @return {this} This Game Object.
@@ -389,62 +364,6 @@ var Graphics = new Class({
             Commands.GRADIENT_LINE_STYLE,
             lineWidth, alpha, topLeft, topRight, bottomLeft, bottomRight
         );
-
-        return this;
-    },
-
-    /**
-     * Sets the texture frame this Graphics Object will use when drawing all shapes defined after calling this.
-     *
-     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
-     *
-     * Once set, all shapes will use this texture. Call this method with no arguments to clear it.
-     *
-     * The textures are not tiled. They are stretched to the dimensions of the shapes being rendered. For this reason,
-     * it works best with seamless / tileable textures.
-     *
-     * The mode argument controls how the textures are combined with the fill colors. The default value (0) will
-     * multiply the texture by the fill color. A value of 1 will use just the fill color, but the alpha data from the texture,
-     * and a value of 2 will use just the texture and no fill color at all.
-     *
-     * @method Phaser.GameObjects.Graphics#setTexture
-     * @since 3.12.0
-     * @webglOnly
-     *
-     * @param {string} [key] - The key of the texture to be used, as stored in the Texture Manager. Leave blank to clear a previously set texture.
-     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
-     * @param {number} [mode=0] - The texture tint mode. 0 is multiply, 1 is alpha only and 2 is texture only.
-     *
-     * @return {this} This Game Object.
-     */
-    setTexture: function (key, frame, mode)
-    {
-        if (mode === undefined) { mode = 0; }
-
-        if (key === undefined)
-        {
-            this.commandBuffer.push(
-                Commands.CLEAR_TEXTURE
-            );
-        }
-        else
-        {
-            var textureFrame = this.scene.sys.textures.getFrame(key, frame);
-
-            if (textureFrame)
-            {
-                if (mode === 2)
-                {
-                    mode = 3;
-                }
-
-                this.commandBuffer.push(
-                    Commands.SET_TEXTURE,
-                    textureFrame,
-                    mode
-                );
-            }
-        }
 
         return this;
     },
@@ -1047,7 +966,7 @@ var Graphics = new Class({
      * @param {(array|Phaser.Geom.Point[])} points - The points to stroke.
      * @param {boolean} [closeShape=false] - When `true`, the shape is closed by joining the last point to the first point.
      * @param {boolean} [closePath=false] - When `true`, the path is closed before being stroked.
-     * @param {integer} [endIndex] - The index of `points` to stop drawing at. Defaults to `points.length`.
+     * @param {number} [endIndex] - The index of `points` to stop drawing at. Defaults to `points.length`.
      *
      * @return {this} This Game Object.
      */
@@ -1094,7 +1013,7 @@ var Graphics = new Class({
      * @param {(array|Phaser.Geom.Point[])} points - The points to fill.
      * @param {boolean} [closeShape=false] - When `true`, the shape is closed by joining the last point to the first point.
      * @param {boolean} [closePath=false] - When `true`, the path is closed before being stroked.
-     * @param {integer} [endIndex] - The index of `points` to stop at. Defaults to `points.length`.
+     * @param {number} [endIndex] - The index of `points` to stop at. Defaults to `points.length`.
      *
      * @return {this} This Game Object.
      */
@@ -1135,7 +1054,7 @@ var Graphics = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Geom.Ellipse} ellipse - The ellipse to stroke.
-     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
+     * @param {number} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {this} This Game Object.
      */
@@ -1158,7 +1077,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the center of the ellipse.
      * @param {number} width - The width of the ellipse.
      * @param {number} height - The height of the ellipse.
-     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
+     * @param {number} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {this} This Game Object.
      */
@@ -1180,7 +1099,7 @@ var Graphics = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Geom.Ellipse} ellipse - The ellipse to fill.
-     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
+     * @param {number} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {this} This Game Object.
      */
@@ -1203,7 +1122,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the center of the ellipse.
      * @param {number} width - The width of the ellipse.
      * @param {number} height - The height of the ellipse.
-     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
+     * @param {number} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {this} This Game Object.
      */
@@ -1460,8 +1379,8 @@ var Graphics = new Class({
      * @since 3.0.0
      *
      * @param {(string|HTMLCanvasElement)} key - The key to store the texture with in the Texture Manager, or a Canvas to draw to.
-     * @param {integer} [width] - The width of the graphics to generate.
-     * @param {integer} [height] - The height of the graphics to generate.
+     * @param {number} [width] - The width of the graphics to generate.
+     * @param {number} [height] - The height of the graphics to generate.
      *
      * @return {this} This Game Object.
      */

@@ -41,12 +41,14 @@ var RopeWebGLRenderer = function (renderer, src, camera, parentMatrix)
     //  Because it's a triangle strip and we don't want lots of degenerate triangles joining things up
     pipeline.flush();
 
+    renderer.pipelines.preBatch(src);
+
     var textureUnit = pipeline.setGameObject(src);
 
     var vertexViewF32 = pipeline.vertexViewF32;
     var vertexViewU32 = pipeline.vertexViewU32;
 
-    var vertexOffset = (pipeline.vertexCount * pipeline.vertexComponentCount) - 1;
+    var vertexOffset = (pipeline.vertexCount * pipeline.currentShader.vertexComponentCount) - 1;
 
     var colorIndex = 0;
 
@@ -97,6 +99,8 @@ var RopeWebGLRenderer = function (renderer, src, camera, parentMatrix)
     }
 
     pipeline.vertexCount += vertexCount;
+
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = RopeWebGLRenderer;

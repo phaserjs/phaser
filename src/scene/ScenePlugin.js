@@ -86,7 +86,7 @@ var ScenePlugin = new Class({
          * Transition elapsed timer.
          *
          * @name Phaser.Scenes.ScenePlugin#_elapsed
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.5.0
          */
@@ -106,7 +106,7 @@ var ScenePlugin = new Class({
          * Transition duration.
          *
          * @name Phaser.Scenes.ScenePlugin#_duration
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.5.0
          */
@@ -951,7 +951,7 @@ var ScenePlugin = new Class({
      *
      * @param {(string|Phaser.Scene)} [key] - The Scene to get the index of.
      *
-     * @return {integer} The index of the Scene.
+     * @return {number} The index of the Scene.
      */
     getIndex: function (key)
     {

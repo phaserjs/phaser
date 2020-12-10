@@ -21,8 +21,8 @@
  * @param {string} key - The property to be updated.
  * @param {number} value - The amount to set the property to.
  * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.
- * @param {integer} [index=0] - An optional offset to start searching from within the items array.
- * @param {integer} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
+ * @param {number} [index=0] - An optional offset to start searching from within the items array.
+ * @param {number} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of objects that were passed to this Action.
  */

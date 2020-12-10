@@ -13,7 +13,7 @@
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.
- * @param {integer} sourceIndex - The index of the TextureSource.
+ * @param {number} sourceIndex - The index of the TextureSource.
  *
  * @return {Phaser.Textures.Texture} The Texture modified by this parser.
  */

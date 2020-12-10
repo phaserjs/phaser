@@ -264,7 +264,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#addCapture
      * @since 3.16.0
      *
-     * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to enable event capture for.
+     * @param {(string|number|number[]|any[])} keycode - The Key Codes to enable event capture for.
      *
      * @return {this} This KeyboardPlugin object.
      */
@@ -306,7 +306,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#removeCapture
      * @since 3.16.0
      *
-     * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to disable event capture for.
+     * @param {(string|number|number[]|any[])} keycode - The Key Codes to disable event capture for.
      *
      * @return {this} This KeyboardPlugin object.
      */
@@ -323,7 +323,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#getCaptures
      * @since 3.16.0
      *
-     * @return {integer[]} An array of all the currently capturing key codes.
+     * @return {number[]} An array of all the currently capturing key codes.
      */
     getCaptures: function ()
     {
@@ -471,7 +471,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#addKey
      * @since 3.10.0
      *
-     * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+     * @param {(Phaser.Input.Keyboard.Key|string|number)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      * @param {boolean} [enableCapture=true] - Automatically call `preventDefault` on the native DOM browser event for the key codes being added.
      * @param {boolean} [emitOnRepeat=false] - Controls if the Key will continuously emit a 'down' event while being held down (true), or emit the event just once (false, the default).
      *
@@ -535,7 +535,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#removeKey
      * @since 3.10.0
      *
-     * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+     * @param {(Phaser.Input.Keyboard.Key|string|number)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      * @param {boolean} [destroy=false] - Call `Key.destroy` on the removed Key object?
      *
      * @return {this} This KeyboardPlugin object.
@@ -647,7 +647,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#createCombo
      * @since 3.10.0
      *
-     * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
+     * @param {(string|number[]|object[])} keys - The keys that comprise this combo.
      * @param {Phaser.Types.Input.Keyboard.KeyComboConfig} [config] - A Key Combo configuration object.
      *
      * @return {Phaser.Input.Keyboard.KeyCombo} The new KeyCombo object.

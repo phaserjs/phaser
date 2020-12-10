@@ -36,9 +36,11 @@ class Parser {
         return result;
     }
     parseObjects(docs) {
+        console.log('------------------------------------------------------------------');
+        console.log('Parse Objects');
+        console.log('------------------------------------------------------------------');
         for (let i = 0; i < docs.length; i++) {
             let doclet = docs[i];
-            // TODO: Custom temporary rules
             switch (doclet.longname) {
                 case 'Phaser.GameObjects.Components.Alpha':
                 case 'Phaser.GameObjects.Components.AlphaSingle':
@@ -61,7 +63,6 @@ class Parser {
                 case 'Phaser.GameObjects.Components.ToJSON':
                 case 'Phaser.GameObjects.Components.Transform':
                 case 'Phaser.GameObjects.Components.Visible':
-                case 'Phaser.Renderer.WebGL.Pipelines.ModelViewProjection':
                     doclet.kind = 'mixin';
                     break;
                 //  Because, sod you TypeScript
@@ -74,6 +75,7 @@ class Parser {
                 case 'Phaser.Scale.ScaleModes':
                 case 'Phaser.Scale.Zoom':
                 case 'Phaser.Textures.FilterMode':
+                case 'Phaser.Tilemaps.Orientation':
                     // console.log('Forcing enum for ' + doclet.longname);
                     doclet.kind = 'member';
                     doclet.isEnum = true;
@@ -82,6 +84,7 @@ class Parser {
             if ((doclet.longname.indexOf('Phaser.Physics.Arcade.Components.') == 0 || doclet.longname.indexOf('Phaser.Physics.Impact.Components.') == 0 || doclet.longname.indexOf('Phaser.Physics.Matter.Components.') == 0) && doclet.longname.indexOf('#') == -1) {
                 doclet.kind = 'mixin';
             }
+            // console.log(`Name: ${doclet.longname} - Kind: ${doclet.kind}`);
             let obj;
             let container = this.objects;
             switch (doclet.kind) {
@@ -131,12 +134,15 @@ class Parser {
         }
     }
     resolveObjects(docs) {
+        console.log('------------------------------------------------------------------');
+        console.log('Resolve Objects');
+        console.log('------------------------------------------------------------------');
         let allTypes = new Set();
         for (let doclet of docs) {
-            let obj = doclet.kind === 'namespace' ? this.namespaces[doclet.longname] : this.objects[doclet.longname];
+            let obj = (doclet.kind === 'namespace') ? this.namespaces[doclet.longname] : this.objects[doclet.longname];
             if (!obj) {
-                //  TODO
-                console.log(`Warning: Didn't find object for ${doclet.longname}`);
+                console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
+                console.log(`Warning: Didn't find object`);
                 continue;
             }
             if (!doclet.memberof) {
@@ -145,49 +151,31 @@ class Parser {
             else {
                 let isNamespaceMember = doclet.kind === 'class' || doclet.kind === 'typedef' || doclet.kind == 'namespace' || doclet.isEnum;
                 let parent = isNamespaceMember ? this.namespaces[doclet.memberof] : (this.objects[doclet.memberof] || this.namespaces[doclet.memberof]);
-                //TODO: this whole section should be removed once stable
                 if (!parent) {
-                    console.log(`${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
-                    let parts = doclet.memberof.split('.');
-                    let newParts = [parts.pop()];
-                    while (parts.length > 0 && this.objects[parts.join('.')] == null)
-                        newParts.unshift(parts.pop());
-                    parent = this.objects[parts.join('.')];
-                    if (parent == null) {
-                        parent = dom.create.namespace(doclet.memberof);
-                        this.namespaces[doclet.memberof] = parent;
-                        this.topLevel.push(parent);
-                    }
-                    else {
-                        while (newParts.length > 0) {
-                            let oldParent = parent;
-                            parent = dom.create.namespace(newParts.shift());
-                            parts.push(parent.name);
-                            this.namespaces[parts.join('.')] = parent;
-                            oldParent.members.push(parent);
-                            parent._parent = oldParent;
-                        }
-                    }
+                    console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
+                    console.log(`PARENT WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
                 }
-                ///////////////////////////////////////////////////////
                 if (parent.members) {
                     parent.members.push(obj);
                 }
                 else {
-                    console.log('Cannot find members array for:');
+                    console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
+                    console.log('Could not find members array');
                     console.log(parent);
                 }
                 obj._parent = parent;
-                // class/interface members have methods, not functions
-                if ((parent.kind === 'class' || parent.kind === 'interface')
-                    && obj.kind === 'function')
+                // class / interface members have methods, not functions
+                if ((parent.kind === 'class' || parent.kind === 'interface') && obj.kind === 'function') {
                     obj.kind = 'method';
+                }
                 // namespace members are vars or consts, not properties
                 if (parent.kind === 'namespace' && obj.kind === 'property') {
-                    if (doclet.kind == 'constant')
+                    if (doclet.kind == 'constant') {
                         obj.kind = 'const';
-                    else
+                    }
+                    else {
                         obj.kind = 'var';
+                    }
                 }
             }
         }
@@ -196,16 +184,17 @@ class Parser {
         for (let doclet of docs) {
             let obj = doclet.kind === 'namespace' ? this.namespaces[doclet.longname] : this.objects[doclet.longname];
             if (!obj) {
-                //  TODO
                 console.log(`Didn't find type ${doclet.longname} ???`);
                 continue;
             }
             if (!obj._parent)
                 continue;
-            if (doclet.inherited) { // remove inherited members if they aren't from an interface
+            if (doclet.inherited) {
+                // remove inherited members if they aren't from an interface
                 let from = this.objects[doclet.inherits];
-                if (!from || !from._parent)
+                if (!from || !from._parent) {
                     throw `'${doclet.longname}' should inherit from '${doclet.inherits}', which is not defined.`;
+                }
                 if (from._parent.kind != 'interface') {
                     obj._parent.members.splice(obj._parent.members.indexOf(obj), 1);
                     obj._parent = null;
@@ -348,7 +337,10 @@ class Parser {
             let optional = false;
             obj.jsDocComment = '';
             for (let paramDoc of doclet.params) {
-                // TODO REMOVE TEMP FIX
+                if (!paramDoc.name) {
+                    console.log(`Docs Error in '${doclet.longname}' in ${doclet.meta.filename}@${doclet.meta.lineno}`);
+                    console.info(paramDoc);
+                }
                 if (paramDoc.name.indexOf('.') != -1) {
                     console.log(`Warning: ignoring param with '.' for '${doclet.longname}' in ${doclet.meta.filename}@${doclet.meta.lineno}`);
                     let defaultVal = paramDoc.defaultvalue !== undefined ? ` Default ${String(paramDoc.defaultvalue)}.` : '';
@@ -358,7 +350,6 @@ class Parser {
                         obj.jsDocComment += `\n@param ${paramDoc.name} ` + defaultVal;
                     continue;
                 }
-                ///////////////////////
                 let param = dom.create.parameter(paramDoc.name, this.parseType(paramDoc));
                 parameters.push(param);
                 if (optional && paramDoc.optional != true) {

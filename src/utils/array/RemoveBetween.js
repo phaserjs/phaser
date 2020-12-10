@@ -17,8 +17,8 @@ var SafeRange = require('./SafeRange');
  * @since 3.4.0
  *
  * @param {array} array - The array to be modified.
- * @param {integer} startIndex - The start index to remove from.
- * @param {integer} endIndex - The end index to remove to.
+ * @param {number} startIndex - The start index to remove from.
+ * @param {number} endIndex - The end index to remove to.
  * @param {function} [callback] - A callback to be invoked for the item removed from the array.
  * @param {object} [context] - The context in which the callback is invoked.
  *

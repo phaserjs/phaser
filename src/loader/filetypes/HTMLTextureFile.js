@@ -28,8 +28,8 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
- * @param {integer} [width] - The width of the texture the HTML will be rendered to.
- * @param {integer} [height] - The height of the texture the HTML will be rendered to.
+ * @param {number} [width] - The width of the texture the HTML will be rendered to.
+ * @param {number} [height] - The height of the texture the HTML will be rendered to.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var HTMLTextureFile = new Class({
@@ -225,8 +225,8 @@ var HTMLTextureFile = new Class({
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.html`, i.e. if `key` was "alien" then the URL will be "alien.html".
- * @param {integer} [width=512] - The width of the texture the HTML will be rendered to.
- * @param {integer} [height=512] - The height of the texture the HTML will be rendered to.
+ * @param {number} [width=512] - The width of the texture the HTML will be rendered to.
+ * @param {number} [height=512] - The height of the texture the HTML will be rendered to.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {this} The Loader instance.

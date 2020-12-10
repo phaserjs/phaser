@@ -14,12 +14,15 @@ var Extend = require('../../../utils/object/Extend');
 var Pipelines = {
 
     BitmapMaskPipeline: require('./BitmapMaskPipeline'),
+    Events: require('./events'),
+    GraphicsPipeline: require('./GraphicsPipeline'),
     LightPipeline: require('./LightPipeline'),
-    MeshPipeline: require('./MeshPipeline'),
-    ModelViewProjection: require('./components/ModelViewProjection'),
     MultiPipeline: require('./MultiPipeline'),
+    PointLightPipeline: require('./PointLightPipeline'),
+    PostFXPipeline: require('./PostFXPipeline'),
     RopePipeline: require('./RopePipeline'),
-    SinglePipeline: require('./SinglePipeline')
+    SinglePipeline: require('./SinglePipeline'),
+    UtilityPipeline: require('./UtilityPipeline')
 
 };
 

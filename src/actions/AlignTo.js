@@ -17,7 +17,7 @@ var QuickSet = require('../display/align/to/QuickSet');
  * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
- * @param {integer} position - The position to align the items with. This is an align constant, such as `Phaser.Display.Align.LEFT_CENTER`.
+ * @param {number} position - The position to align the items with. This is an align constant, such as `Phaser.Display.Align.LEFT_CENTER`.
  * @param {number} [offsetX=0] - Optional horizontal offset from the position.
  * @param {number} [offsetY=0] - Optional vertical offset from the position.
  *

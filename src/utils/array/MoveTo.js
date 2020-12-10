@@ -13,7 +13,7 @@
  *
  * @param {array} array - The array.
  * @param {*} item - The element to move.
- * @param {integer} index - The new index that the element will be moved to.
+ * @param {number} index - The new index that the element will be moved to.
  *
  * @return {*} The element that was moved.
  */

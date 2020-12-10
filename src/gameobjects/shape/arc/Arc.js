@@ -40,8 +40,8 @@ var Shape = require('../Shape');
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [radius=128] - The radius of the arc.
- * @param {integer} [startAngle=0] - The start angle of the arc, in degrees.
- * @param {integer} [endAngle=360] - The end angle of the arc, in degrees.
+ * @param {number} [startAngle=0] - The start angle of the arc, in degrees.
+ * @param {number} [endAngle=360] - The end angle of the arc, in degrees.
  * @param {boolean} [anticlockwise=false] - The winding order of the start and end angles.
  * @param {number} [fillColor] - The color the arc will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the arc will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
@@ -71,7 +71,7 @@ var Arc = new Class({
          * Private internal value. Holds the start angle in degrees.
          *
          * @name Phaser.GameObjects.Arc#_startAngle
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.13.0
          */
@@ -81,7 +81,7 @@ var Arc = new Class({
          * Private internal value. Holds the end angle in degrees.
          *
          * @name Phaser.GameObjects.Arc#_endAngle
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.13.0
          */
@@ -178,7 +178,7 @@ var Arc = new Class({
      * The start angle of the arc, in degrees.
      *
      * @name Phaser.GameObjects.Arc#startAngle
-     * @type {integer}
+     * @type {number}
      * @since 3.13.0
      */
     startAngle: {
@@ -201,7 +201,7 @@ var Arc = new Class({
      * The end angle of the arc, in degrees.
      *
      * @name Phaser.GameObjects.Arc#endAngle
-     * @type {integer}
+     * @type {number}
      * @since 3.13.0
      */
     endAngle: {
@@ -290,7 +290,7 @@ var Arc = new Class({
      * @method Phaser.GameObjects.Arc#setStartAngle
      * @since 3.13.0
      * 
-     * @param {integer} value - The value to set the starting angle to.
+     * @param {number} value - The value to set the starting angle to.
      *
      * @return {this} This Game Object instance.
      */
@@ -313,7 +313,7 @@ var Arc = new Class({
      * @method Phaser.GameObjects.Arc#setEndAngle
      * @since 3.13.0
      * 
-     * @param {integer} value - The value to set the ending angle to.
+     * @param {number} value - The value to set the ending angle to.
      *
      * @return {this} This Game Object instance.
      */

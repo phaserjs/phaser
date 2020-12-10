@@ -14,7 +14,7 @@
  * 
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
  * @param {Phaser.Cameras.Scene2D.Effects.RotateTo} effect - A reference to the effect instance.
- * @param {integer} duration - The duration of the effect.
+ * @param {number} duration - The duration of the effect.
  * @param {number} destination - The destination value.
  */
 module.exports = 'camerarotatestart';

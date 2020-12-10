@@ -18,6 +18,7 @@ var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
 var FuzzyLessThan = require('../../math/fuzzy/LessThan');
 var GetOverlapX = require('./GetOverlapX');
 var GetOverlapY = require('./GetOverlapY');
+var GetTilesWithinWorldXY = require('../../tilemaps/components/GetTilesWithinWorldXY');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
 var ProcessQueue = require('../../structs/ProcessQueue');
@@ -321,7 +322,7 @@ var World = new Class({
          * to allow more items per node and less node division.
          *
          * @name Phaser.Physics.Arcade.World#maxEntries
-         * @type {integer}
+         * @type {number}
          * @default 16
          * @since 3.0.0
          */
@@ -431,7 +432,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object - The object, or objects, on which to create the bodies.
-     * @param {integer} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
+     * @param {number} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
      */
     enable: function (object, bodyType)
     {
@@ -498,7 +499,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} object - The Game Object on which to create the body.
-     * @param {integer} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
+     * @param {number} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object on which the body was created.
      */
@@ -894,7 +895,7 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#setFPS
      * @since 3.10.0
      *
-     * @param {integer} framerate - The frame rate to advance the simulation at.
+     * @param {number} framerate - The frame rate to advance the simulation at.
      *
      * @return {this} This World object.
      */
@@ -982,7 +983,7 @@ var World = new Class({
                 }
             }
 
-            this.emit(Events.WORLD_STEP);
+            this.emit(Events.WORLD_STEP, fixedDelta);
         }
 
         //  Process any additional steps this frame
@@ -1041,7 +1042,7 @@ var World = new Class({
             }
         }
 
-        this.emit(Events.WORLD_STEP);
+        this.emit(Events.WORLD_STEP, delta);
 
         this.stepsLastFrame++;
     },
@@ -1247,6 +1248,7 @@ var World = new Class({
             if (useDamping)
             {
                 //  Damping based deceleration
+                dragX = Math.pow(dragX, delta);
 
                 velocityX *= dragX;
 
@@ -1286,6 +1288,8 @@ var World = new Class({
             if (useDamping)
             {
                 //  Damping based deceleration
+                dragY = Math.pow(dragY, delta);
+
                 velocityY *= dragY;
 
                 speed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
@@ -1466,9 +1470,6 @@ var World = new Class({
      */
     separateCircle: function (body1, body2, overlapOnly, bias)
     {
-        body1.updateCenter();
-        body2.updateCenter();
-
         //  Set the bounding box overlap values into the bodies themselves (hence we don't use the return values here)
         GetOverlapX(body1, body2, false, bias);
         GetOverlapY(body1, body2, false, bias);
@@ -1519,6 +1520,9 @@ var World = new Class({
         {
             overlap = (body1.halfWidth + body2.halfWidth) - DistanceBetween(body1.center.x, body1.center.y, body2.center.x, body2.center.y);
         }
+
+        body1.overlapR = overlap;
+        body2.overlapR = overlap;
 
         //  Can't separate two immovable bodies, or a body with its own custom separation logic
         if (overlapOnly || overlap === 0 || (body1.immovable && body2.immovable) || body1.customSeparateX || body2.customSeparateX)
@@ -2047,10 +2051,10 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Group} group - The first object to check for collision.
-     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The second object to check for collision.
-     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
-     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
-     * @param {any} [callbackContext] - The context in which to run the callbacks.
+     * @param {Phaser.Tilemaps.TilemapLayer} tilemapLayer - The second object to check for collision.
+     * @param {ArcadePhysicsCallback} collideCallback - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} processCallback - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} callbackContext - The context in which to run the callbacks.
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
@@ -2165,7 +2169,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
-     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The second object to check for collision.
+     * @param {Phaser.Tilemaps.TilemapLayer} tilemapLayer - The second object to check for collision.
      * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
      * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
      * @param {any} [callbackContext] - The context in which to run the callbacks.
@@ -2187,9 +2191,6 @@ var World = new Class({
         var w = body.width;
         var h = body.height;
 
-        // TODO: this logic should be encapsulated within the Tilemap API at some point.
-        // If the maps base tile size differs from the layer's tile size, we need to adjust the
-        // selection area by the difference between the two.
         var layerData = tilemapLayer.layer;
 
         if (layerData.tileWidth > layerData.baseTileWidth)
@@ -2207,7 +2208,7 @@ var World = new Class({
             h += yDiff;
         }
 
-        var mapData = tilemapLayer.getTilesWithinWorldXY(x, y, w, h);
+        var mapData = GetTilesWithinWorldXY(x, y, w, h, null, tilemapLayer.scene.cameras.main, tilemapLayer.layer);
 
         if (mapData.length === 0)
         {
@@ -2230,7 +2231,7 @@ var World = new Class({
      * @since 3.17.0
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
-     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The second object to check for collision.
+     * @param {Phaser.Tilemaps.TilemapLayer} tilemapLayer - The second object to check for collision.
      * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
      * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
      * @param {any} [callbackContext] - The context in which to run the callbacks.
@@ -2254,11 +2255,13 @@ var World = new Class({
 
             tilemapLayer = tile.tilemapLayer;
 
-            tileWorldRect.left = tilemapLayer.tileToWorldX(tile.x);
-            tileWorldRect.top = tilemapLayer.tileToWorldY(tile.y);
+            var point = tilemapLayer.tileToWorldXY(tile.x, tile.y);
 
-            // If the map's base tile size differs from the layer's tile size, only the top of the rect
-            // needs to be adjusted since its origin is (0, 1).
+            tileWorldRect.left = point.x;
+            tileWorldRect.top = point.y;
+
+            //  If the maps base tile size differs from the layer tile size, only the top of the rect
+            //  needs to be adjusted since its origin is (0, 1).
             if (tile.baseHeight !== tile.height)
             {
                 tileWorldRect.top -= (tile.height - tile.baseHeight) * tilemapLayer.scaleY;
@@ -2335,7 +2338,7 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#wrap
      * @since 3.3.0
      *
-     * @param {*} object - A Game Object, a Group, an object with `x` and `y` coordinates, or an array of such objects.
+     * @param {any} object - A Game Object, a Group, an object with `x` and `y` coordinates, or an array of such objects.
      * @param {number} [padding=0] - An amount added to each boundary edge during the operation.
      */
     wrap: function (object, padding)

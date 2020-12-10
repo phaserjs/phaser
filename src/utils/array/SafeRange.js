@@ -11,8 +11,8 @@
  * @since 3.4.0
  *
  * @param {array} array - The array to check.
- * @param {integer} startIndex - The start index.
- * @param {integer} endIndex - The end index.
+ * @param {number} startIndex - The start index.
+ * @param {number} endIndex - The end index.
  * @param {boolean} [throwError=true] - Throw an error if the range is out of bounds.
  *
  * @return {boolean} True if the range is safe, otherwise false.

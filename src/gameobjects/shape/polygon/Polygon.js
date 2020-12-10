@@ -85,7 +85,7 @@ var Polygon = new Class({
      * @method Phaser.GameObjects.Polygon#smooth
      * @since 3.13.0
      * 
-     * @param {integer} [iterations=1] - The number of times to apply the polygon smoothing.
+     * @param {number} [iterations=1] - The number of times to apply the polygon smoothing.
      *
      * @return {this} This Game Object instance.
      */

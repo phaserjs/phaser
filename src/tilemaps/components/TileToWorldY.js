@@ -11,11 +11,11 @@
  * @function Phaser.Tilemaps.Components.TileToWorldY
  * @since 3.0.0
  *
- * @param {integer} tileY - The x coordinate, in tiles, not pixels.
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
+ * @param {number} tileY - The y coordinate, in tiles, not pixels.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
- * @return {number}
+ * @return {number} The Y location in world coordinates.
  */
 var TileToWorldY = function (tileY, camera, layer)
 {
@@ -25,7 +25,7 @@ var TileToWorldY = function (tileY, camera, layer)
 
     if (tilemapLayer)
     {
-        if (camera === undefined) { camera = tilemapLayer.scene.cameras.main; }
+        if (!camera) { camera = tilemapLayer.scene.cameras.main; }
 
         layerWorldY = (tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY));
 

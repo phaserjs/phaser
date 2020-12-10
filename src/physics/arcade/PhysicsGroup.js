@@ -113,7 +113,7 @@ var PhysicsGroup = new Class({
          * The physics type of the Group's members.
          *
          * @name Phaser.Physics.Arcade.Group#physicsType
-         * @type {integer}
+         * @type {number}
          * @default Phaser.Physics.Arcade.DYNAMIC_BODY
          * @since 3.0.0
          */

@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var Line = require('../../geom/line/Line');
+var PIPELINES_CONST = require('../../renderer/webgl/pipelines/const');
 
 /**
  * @classdesc
@@ -85,7 +86,7 @@ var Shape = new Class({
          * Holds the earcut polygon path index data for filled rendering.
          *
          * @name Phaser.GameObjects.Shape#pathIndexes
-         * @type {integer[]}
+         * @type {number[]}
          * @readonly
          * @since 3.13.0
          */
@@ -203,7 +204,7 @@ var Shape = new Class({
          */
         this.height = 0;
 
-        this.initPipeline();
+        this.initPipeline(PIPELINES_CONST.GRAPHICS_PIPELINE);
     },
 
     /**

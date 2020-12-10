@@ -9,6 +9,7 @@ var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var ShaderSourceFS = require('../shaders/BitmapMask-frag.js');
 var ShaderSourceVS = require('../shaders/BitmapMask-vert.js');
+var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**
@@ -50,53 +51,32 @@ var BitmapMaskPipeline = new Class({
     {
         config.fragShader = GetFastValue(config, 'fragShader', ShaderSourceFS),
         config.vertShader = GetFastValue(config, 'vertShader', ShaderSourceVS),
-        config.vertexSize = GetFastValue(config, 'vertexSize', 8),
-        config.vertexCapacity = GetFastValue(config, 'vertexCapacity', 3),
-        config.vertices = GetFastValue(config, 'vertices', new Float32Array([ -1, 1, -1, -7, 7, 1 ]).buffer),
+        config.batchSize = GetFastValue(config, 'batchSize', 1),
+        config.vertices = GetFastValue(config, 'vertices', [ -1, 1, -1, -7, 7, 1 ]),
         config.attributes = GetFastValue(config, 'attributes', [
             {
                 name: 'inPosition',
                 size: 2,
-                type: config.game.renderer.gl.FLOAT,
-                normalized: false,
-                offset: 0,
-                enabled: false,
-                location: -1
+                type: WEBGL_CONST.FLOAT
             }
-        ]);
-        config.uniforms = GetFastValue(config, 'uniforms', [
-            'uResolution',
-            'uMainSampler',
-            'uMaskSampler',
-            'uInvertMaskAlpha'
         ]);
 
         WebGLPipeline.call(this, config);
     },
 
-    /**
-     * Called every time the pipeline is bound by the renderer.
-     * Sets the shader program, vertex buffer and other resources.
-     * Should only be called when changing pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#bind
-     * @since 3.50.0
-     *
-     * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    bind: function (reset)
+    boot: function ()
     {
-        if (reset === undefined) { reset = false; }
+        WebGLPipeline.prototype.boot.call(this);
 
-        WebGLPipeline.prototype.bind.call(this, reset);
-
-        this.set2f('uResolution', this.width, this.height);
         this.set1i('uMainSampler', 0);
         this.set1i('uMaskSampler', 1);
+    },
 
-        return this;
+    resize: function (width, height)
+    {
+        WebGLPipeline.prototype.resize.call(this, width, height);
+
+        this.set2f('uResolution', width, height);
     },
 
     /**
@@ -112,19 +92,16 @@ var BitmapMaskPipeline = new Class({
      */
     beginMask: function (mask, maskedObject, camera)
     {
-        var renderer = this.renderer;
         var gl = this.gl;
 
         //  The renderable Game Object that is being used for the bitmap mask
-        var bitmapMask = mask.bitmapMask;
-
-        if (bitmapMask && gl)
+        if (mask.bitmapMask && gl)
         {
+            var renderer = this.renderer;
+
             renderer.flush();
 
-            mask.prevFramebuffer = renderer.currentFramebuffer;
-
-            renderer.setFramebuffer(mask.mainFramebuffer);
+            renderer.pushFramebuffer(mask.mainFramebuffer);
 
             gl.disable(gl.STENCIL_TEST);
             gl.clearColor(0, 0, 0, 0);
@@ -159,11 +136,13 @@ var BitmapMaskPipeline = new Class({
 
         if (bitmapMask && gl)
         {
+            //  mask.mainFramebuffer should now contain all the Game Objects we want masked
             renderer.flush();
 
-            //  First we draw the mask to the mask fb
-            renderer.setFramebuffer(mask.maskFramebuffer);
+            //  Swap to the mask framebuffer (push, in case the bitmapMask GO has a post-pipeline)
+            renderer.pushFramebuffer(mask.maskFramebuffer);
 
+            //  Clear it and draw the Game Object that is acting as a mask to it
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -173,7 +152,9 @@ var BitmapMaskPipeline = new Class({
 
             renderer.flush();
 
-            renderer.setFramebuffer(mask.prevFramebuffer);
+            //  Clear the mask framebuffer + main framebuffer
+            renderer.popFramebuffer();
+            renderer.popFramebuffer();
 
             //  Is there a stencil further up the stack?
             var prev = renderer.getCurrentStencilMask();
@@ -189,7 +170,7 @@ var BitmapMaskPipeline = new Class({
                 renderer.currentMask.mask = null;
             }
 
-            //  Bind bitmap mask pipeline and draw
+            //  Bind this pipeline and draw
             renderer.pipelines.set(this);
 
             gl.activeTexture(gl.TEXTURE1);
@@ -202,6 +183,8 @@ var BitmapMaskPipeline = new Class({
 
             //  Finally, draw a triangle filling the whole screen
             gl.drawArrays(this.topology, 0, 3);
+
+            renderer.resetTextures();
         }
     }
 

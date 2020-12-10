@@ -93,7 +93,7 @@ var AnimationManager = new Class({
          * See the {@link #setMix} method for more details.
          *
          * @name Phaser.Animations.AnimationManager#mixes
-         * @type {Phaser.Structs.Map.<string>}
+         * @type {Phaser.Structs.Map.<string, Phaser.Animations.Animation>}
          * @since 3.50.0
          */
         this.mixes = new CustomMap();
@@ -354,17 +354,17 @@ var AnimationManager = new Class({
      *
      * This was tested with Aseprite 1.2.25.
      *
-     * This will export a png and json file which you can load using the Atlas Loader, i.e.:
+     * This will export a png and json file which you can load using the Aseprite Loader, i.e.:
      *
      * ```javascript
      * function preload ()
      * {
      *     this.load.path = 'assets/animations/aseprite/';
-     *     this.load.atlas('paladin', 'paladin.png', 'paladin.json');
+     *     this.load.aseprite('paladin', 'paladin.png', 'paladin.json');
      * }
      * ```
      *
-     * Once exported, you can call this method from within a Scene with the 'atlas' key:
+     * Once loaded, you can call this method from within a Scene with the 'atlas' key:
      *
      * ```javascript
      * this.anims.createFromAseprite('paladin');
@@ -682,6 +682,36 @@ var AnimationManager = new Class({
      * Generates objects with numbered frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNumbers}.
      *
      * If you're working with a texture atlas, see the `generateFrameNames` method instead.
+     *
+     * It's a helper method, designed to make it easier for you to extract frames from sprite sheets.
+     * If you're working with a texture atlas, see the `generateFrameNames` method instead.
+     *
+     * Example:
+     *
+     * If you have a sprite sheet loaded called `explosion` and it contains 12 frames, then you can call this method using:
+     * `this.anims.generateFrameNumbers('explosion', { start: 0, end: 12 })`.
+     *
+     * The `end` value tells it to stop after 12 frames. To create an animation using this method, you can do:
+     *
+     * ```javascript
+     * this.anims.create({
+     *   key: 'boom',
+     *   frames: this.anims.generateFrameNames('explosion', {
+     *     start: 0,
+     *     end: 12
+     *   })
+     * });
+     * ```
+     *
+     * Note that `start` is optional and you don't need to include it if the animation starts from frame 0.
+     *
+     * To specify an animation in reverse, swap the `start` and `end` values.
+     *
+     * If the frames are not sequential, you may pass an array of frame numbers instead, for example:
+     *
+     * `this.anims.generateFrameNumbers('explosion', { frames: [ 0, 1, 2, 1, 2, 3, 4, 0, 1, 2 ] })`
+     *
+     * Please see the animation examples and `GenerateFrameNumbers` config docs for further details.
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNumbers
      * @since 3.0.0

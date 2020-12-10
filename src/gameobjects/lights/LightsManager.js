@@ -4,8 +4,14 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CircleToRectangle = require('../../geom/intersects/CircleToRectangle');
 var Class = require('../../utils/Class');
+var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Light = require('./Light');
+var PointLight = require('../pointlight/PointLight');
+var RGB = require('../../display/RGB');
+var SpliceOne = require('../../utils/array/SpliceOne');
+var StableSort = require('../../utils/array/StableSort');
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
@@ -32,18 +38,6 @@ var LightsManager = new Class({
     function LightsManager ()
     {
         /**
-         * The pool of Lights.
-         *
-         * Used to recycle removed Lights for a more efficient use of memory.
-         *
-         * @name Phaser.GameObjects.LightsManager#lightPool
-         * @type {Phaser.GameObjects.Light[]}
-         * @default []
-         * @since 3.0.0
-         */
-        this.lightPool = [];
-
-        /**
          * The Lights in the Scene.
          *
          * @name Phaser.GameObjects.LightsManager#lights
@@ -54,25 +48,13 @@ var LightsManager = new Class({
         this.lights = [];
 
         /**
-         * Lights that have been culled from a Camera's viewport.
-         *
-         * Lights in this list will not be rendered.
-         *
-         * @name Phaser.GameObjects.LightsManager#culledLights
-         * @type {Phaser.GameObjects.Light[]}
-         * @default []
-         * @since 3.0.0
-         */
-        this.culledLights = [];
-
-        /**
          * The ambient color.
          *
          * @name Phaser.GameObjects.LightsManager#ambientColor
-         * @type {{ r: number, g: number, b: number }}
-         * @since 3.0.0
+         * @type {Phaser.Display.RGB}
+         * @since 3.50.0
          */
-        this.ambientColor = { r: 0.1, g: 0.1, b: 0.1 };
+        this.ambientColor = new RGB(0.1, 0.1, 0.1);
 
         /**
          * Whether the Lights Manager is enabled.
@@ -89,11 +71,26 @@ var LightsManager = new Class({
          * Change this via the `maxLights` property in your game config, as it cannot be changed at runtime.
          *
          * @name Phaser.GameObjects.LightsManager#maxLights
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.15.0
          */
         this.maxLights = -1;
+
+        /**
+         * The number of lights that the LightPipeline processed in the _previous_ frame.
+         *
+         * @name Phaser.GameObjects.LightsManager#visibleLights
+         * @type {number}
+         * @readonly
+         * @since 3.50.0
+         */
+        this.visibleLights = 0;
+    },
+
+    addPointLight: function (x, y, color, radius, intensity)
+    {
+        return this.systems.displayList.add(new PointLight(this.scene, x, y, color, radius, intensity));
     },
 
     /**
@@ -108,7 +105,7 @@ var LightsManager = new Class({
     {
         if (this.maxLights === -1)
         {
-            this.maxLights = this.scene.sys.game.renderer.config.maxLights;
+            this.maxLights = this.scene.sys.renderer.config.maxLights;
         }
 
         this.active = true;
@@ -132,77 +129,59 @@ var LightsManager = new Class({
     },
 
     /**
-     * Cull any Lights that aren't visible to the given Camera.
+     * Get all lights that can be seen by the given Camera.
      *
-     * Culling Lights improves performance by ensuring that only Lights within a Camera's viewport are rendered.
+     * It will automatically cull lights that are outside the world view of the Camera.
      *
-     * @method Phaser.GameObjects.LightsManager#cull
-     * @since 3.0.0
+     * If more lights are returned than supported by the pipeline, the lights are then culled
+     * based on the distance from the center of the camera. Only those closest are rendered.
+     *
+     * @method Phaser.GameObjects.LightsManager#getLights
+     * @since 3.50.0
      *
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to cull Lights for.
      *
      * @return {Phaser.GameObjects.Light[]} The culled Lights.
      */
-    cull: function (camera)
+    getLights: function (camera)
     {
         var lights = this.lights;
-        var culledLights = this.culledLights;
-        var length = lights.length;
-        var cameraCenterX = camera.x + camera.width / 2.0;
-        var cameraCenterY = camera.y + camera.height / 2.0;
-        var cameraRadius = (camera.width + camera.height) / 2.0;
-        var point = { x: 0, y: 0 };
-        var cameraMatrix = camera.matrix;
-        var viewportHeight = this.systems.game.renderer.height;
+        var worldView = camera.worldView;
 
-        culledLights.length = 0;
+        var visibleLights = [];
 
-        for (var i = 0; i < length && culledLights.length < this.maxLights; i++)
+        for (var i = 0; i < lights.length; i++)
         {
             var light = lights[i];
 
-            cameraMatrix.transformPoint(light.x, light.y, point);
-
-            //  We'll just use bounding spheres to test if lights should be rendered
-            var dx = cameraCenterX - (point.x - (camera.scrollX * light.scrollFactorX * camera.zoom));
-            var dy = cameraCenterY - (viewportHeight - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
-            var distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < light.radius + cameraRadius)
+            if (light.willRender(camera) && CircleToRectangle(light, worldView))
             {
-                culledLights.push(lights[i]);
+                visibleLights.push({
+                    light: light,
+                    distance: DistanceBetween(light.x, light.y, worldView.centerX, worldView.centerY)
+                });
             }
         }
 
-        return culledLights;
+        if (visibleLights.length > this.maxLights)
+        {
+            //  We've got too many lights, so sort by distance from camera and cull those far away
+            //  This isn't ideal because it doesn't factor in the radius of the lights, but it'll do for now
+            //  and is significantly better than we had before!
+
+            StableSort(visibleLights, this.sortByDistance);
+
+            visibleLights = visibleLights.slice(0, this.maxLights);
+        }
+
+        this.visibleLights = visibleLights.length;
+
+        return visibleLights;
     },
 
-    /**
-     * Iterate over each Light with a callback.
-     *
-     * @method Phaser.GameObjects.LightsManager#forEachLight
-     * @since 3.0.0
-     *
-     * @param {LightForEach} callback - The callback that is called with each Light.
-     *
-     * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
-     */
-    forEachLight: function (callback)
+    sortByDistance: function (a, b)
     {
-        if (!callback)
-        {
-            return;
-        }
-
-        var lights = this.lights;
-        var length = lights.length;
-
-        for (var i = 0; i < length; i++)
-        {
-            callback(lights[i]);
-        }
-
-        return this;
+        return (a.distance >= b.distance);
     },
 
     /**
@@ -219,9 +198,7 @@ var LightsManager = new Class({
     {
         var color = Utils.getFloatsFromUintRGB(rgb);
 
-        this.ambientColor.r = color[0];
-        this.ambientColor.g = color[1];
-        this.ambientColor.b = color[2];
+        this.ambientColor.set(color[0], color[1], color[2]);
 
         return this;
     },
@@ -232,11 +209,11 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#getMaxVisibleLights
      * @since 3.0.0
      *
-     * @return {integer} The maximum number of Lights allowed to appear at once.
+     * @return {number} The maximum number of Lights allowed to appear at once.
      */
     getMaxVisibleLights: function ()
     {
-        return 10;
+        return this.maxLights;
     },
 
     /**
@@ -245,7 +222,7 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#getLightCount
      * @since 3.0.0
      *
-     * @return {integer} The number of Lights managed by this Lights Manager.
+     * @return {number} The number of Lights managed by this Lights Manager.
      */
     getLightCount: function ()
     {
@@ -270,29 +247,13 @@ var LightsManager = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (radius === undefined) { radius = 100; }
+        if (radius === undefined) { radius = 128; }
         if (rgb === undefined) { rgb = 0xffffff; }
         if (intensity === undefined) { intensity = 1; }
 
-        var color = null;
-        var light = null;
+        var color = Utils.getFloatsFromUintRGB(rgb);
 
-        color = Utils.getFloatsFromUintRGB(rgb);
-
-        light = null;
-
-        var pool = this.lightPool;
-
-        if (pool.length > 0)
-        {
-            light = pool.pop();
-
-            light.set(x, y, radius, color[0], color[1], color[2], intensity);
-        }
-        else
-        {
-            light = new Light(x, y, radius, color[0], color[1], color[2], intensity);
-        }
+        var light = new Light(x, y, radius, color[0], color[1], color[2], intensity);
 
         this.lights.push(light);
 
@@ -315,8 +276,7 @@ var LightsManager = new Class({
 
         if (index >= 0)
         {
-            this.lightPool.push(light);
-            this.lights.splice(index, 1);
+            SpliceOne(this.lights, index);
         }
 
         return this;
@@ -333,13 +293,6 @@ var LightsManager = new Class({
      */
     shutdown: function ()
     {
-        while (this.lights.length > 0)
-        {
-            this.lightPool.push(this.lights.pop());
-        }
-
-        this.ambientColor = { r: 0.1, g: 0.1, b: 0.1 };
-        this.culledLights.length = 0;
         this.lights.length = 0;
     },
 
@@ -354,8 +307,6 @@ var LightsManager = new Class({
     destroy: function ()
     {
         this.shutdown();
-
-        this.lightPool.length = 0;
     }
 
 });

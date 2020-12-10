@@ -12,7 +12,7 @@
  * @since 3.0.0
  *
  * @param {array} array - The array to shift to the right. This array is modified in place.
- * @param {integer} [total=1] - The number of times to shift the array.
+ * @param {number} [total=1] - The number of times to shift the array.
  *
  * @return {*} The most recently shifted element.
  */

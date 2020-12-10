@@ -12,7 +12,7 @@
  *
  * @param {number} value - The value.
  *
- * @return {integer} The nearest power of 2 to `value`.
+ * @return {number} The nearest power of 2 to `value`.
  */
 var GetPowerOfTwo = function (value)
 {

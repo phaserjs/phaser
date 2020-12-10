@@ -1,0 +1,17 @@
+#define SHADER_NAME PHASER_GRAPHICS_VS
+
+precision mediump float;
+
+uniform mat4 uProjectionMatrix;
+
+attribute vec2 inPosition;
+attribute vec4 inColor;
+
+varying vec4 outColor;
+
+void main ()
+{
+    gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);
+
+    outColor = inColor;
+}

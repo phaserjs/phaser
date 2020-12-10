@@ -17,13 +17,12 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  * @function Phaser.Tilemaps.Components.SetCollisionBetween
  * @since 3.0.0
  *
- * @param {integer} start - The first index of the tile to be set for collision.
- * @param {integer} stop - The last index of the tile to be set for collision.
- * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
- * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
+ * @param {number} start - The first index of the tile to be set for collision.
+ * @param {number} stop - The last index of the tile to be set for collision.
+ * @param {boolean} collides - If true it will enable collision. If false it will clear collision.
+ * @param {boolean} recalculateFaces - Whether or not to recalculate the tile faces after the update.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
- * @param {boolean} [updateLayer=true] - If true, updates the current tiles on the layer. Set to
- * false if no tiles have been placed for significant performance boost.
+ * @param {boolean} [updateLayer=true] - If true, updates the current tiles on the layer. Set to false if no tiles have been placed for significant performance boost.
  */
 var SetCollisionBetween = function (start, stop, collides, recalculateFaces, layer, updateLayer)
 {
@@ -31,15 +30,18 @@ var SetCollisionBetween = function (start, stop, collides, recalculateFaces, lay
     if (recalculateFaces === undefined) { recalculateFaces = true; }
     if (updateLayer === undefined) { updateLayer = true; }
 
-    if (start > stop) { return; }
+    if (start > stop)
+    {
+        return;
+    }
 
-    // Update the array of colliding indexes
+    //  Update the array of colliding indexes
     for (var index = start; index <= stop; index++)
     {
         SetLayerCollisionIndex(index, collides, layer);
     }
 
-    // Update the tiles
+    //  Update the tiles
     if (updateLayer)
     {
         for (var ty = 0; ty < layer.height; ty++)

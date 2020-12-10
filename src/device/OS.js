@@ -69,7 +69,20 @@ function init ()
     }
     else if ((/Mac OS/).test(ua) && !((/like Mac OS/).test(ua)))
     {
-        OS.macOS = true;
+        //  Because iOS 13 identifies as Mac OS:
+        if (navigator.maxTouchPoints && navigator.maxTouchPoints > 2)
+        {
+            OS.iOS = true;
+            OS.iPad = true;
+
+            (navigator.appVersion).match(/Version\/(\d+)/);
+
+            OS.iOSVersion = parseInt(RegExp.$1, 10);
+        }
+        else
+        {
+            OS.macOS = true;
+        }
     }
     else if ((/Android/).test(ua))
     {

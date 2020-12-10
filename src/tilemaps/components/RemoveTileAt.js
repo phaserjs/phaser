@@ -15,17 +15,17 @@ var CalculateFacesAt = require('./CalculateFacesAt');
  * @function Phaser.Tilemaps.Components.RemoveTileAt
  * @since 3.0.0
  *
- * @param {integer} tileX - The x coordinate.
- * @param {integer} tileY - The y coordinate.
- * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified location with null instead of a Tile with an index of -1.
- * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
+ * @param {number} tileX - The x coordinate.
+ * @param {number} tileY - The y coordinate.
+ * @param {boolean} replaceWithNull - If true, this will replace the tile at the specified location with null instead of a Tile with an index of -1.
+ * @param {boolean} recalculateFaces - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {Phaser.Tilemaps.Tile} The Tile object that was removed.
  */
 var RemoveTileAt = function (tileX, tileY, replaceWithNull, recalculateFaces, layer)
 {
-    if (replaceWithNull === undefined) { replaceWithNull = false; }
+    if (replaceWithNull === undefined) { replaceWithNull = true; }
     if (recalculateFaces === undefined) { recalculateFaces = true; }
 
     if (!IsInLayerBounds(tileX, tileY, layer))
@@ -41,7 +41,7 @@ var RemoveTileAt = function (tileX, tileY, replaceWithNull, recalculateFaces, la
     }
     else
     {
-        layer.data[tileY][tileX] = (replaceWithNull) ? null : new Tile(layer, -1, tileX, tileY, tile.width, tile.height);
+        layer.data[tileY][tileX] = (replaceWithNull) ? null : new Tile(layer, -1, tileX, tileY, layer.tileWidth, layer.tileHeight);
     }
 
     //  Recalculate faces only if the removed tile was a colliding tile

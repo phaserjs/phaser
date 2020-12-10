@@ -84,7 +84,7 @@ var SpineFile = new Class({
             for (i = 0; i < atlasURL.length; i++)
             {
                 atlas = new TextFile(loader, {
-                    key: key + '_' + i,
+                    key: key + '!' + i,
                     url: atlasURL[i],
                     extension: GetFastValue(config, 'atlasExtension', 'atlas'),
                     xhrSettings: GetFastValue(config, 'atlasXhrSettings')
@@ -106,7 +106,7 @@ var SpineFile = new Class({
 
             for (i = 0; i < atlasURL.length; i++)
             {
-                atlas = new TextFile(loader, key + '_' + i, atlasURL[i], atlasXhrSettings);
+                atlas = new TextFile(loader, key + '!' + i, atlasURL[i], atlasXhrSettings);
                 atlas.cache = cache;
 
                 files.push(atlas);
@@ -180,9 +180,12 @@ var SpineFile = new Class({
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
-                    this.addToMultiFile(image);
+                    if (!loader.keyExists(image))
+                    {
+                        this.addToMultiFile(image);
 
-                    loader.addFile(image);
+                        loader.addFile(image);
+                    }
                 }
 
                 //  Reset the loader settings
@@ -219,7 +222,7 @@ var SpineFile = new Class({
 
                 if (file.type === 'text')
                 {
-                    atlasKey = file.key.replace(/_[\d]$/, '');
+                    atlasKey = file.key.replace(/![\d]$/, '');
 
                     atlasCache = file.cache;
 
@@ -228,7 +231,7 @@ var SpineFile = new Class({
                 else
                 {
                     var src = file.key.trim();
-                    var pos = src.indexOf('_');
+                    var pos = src.indexOf('!');
                     var key = src.substr(pos + 1);
 
                     if (!textureManager.exists(key))

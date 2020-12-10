@@ -47,7 +47,7 @@ var BatchChar = function (pipeline, src, char, glyph, offsetX, offsetY, calcMatr
     var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
     var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
 
-    pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, glyph.u0, glyph.v0, glyph.u1, glyph.v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
+    pipeline.batchQuad(src, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, glyph.u0, glyph.v0, glyph.u1, glyph.v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
 };
 
 module.exports = BatchChar;

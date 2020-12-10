@@ -134,7 +134,10 @@ var GameObjectFactory = new Class({
         {
             this.displayList.add(child);
         }
-        else if (child.preUpdate)
+
+        //  For when custom objects have overridden `preUpdate` but don't hook into the ADDED_TO_SCENE event:
+        //  Adding to the list multiple times is safe, as it won't add duplicates into the list anyway.
+        if (child.preUpdate)
         {
             this.updateList.add(child);
         }

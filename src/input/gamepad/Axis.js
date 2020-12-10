@@ -17,7 +17,7 @@ var Class = require('../../utils/Class');
  * @since 3.0.0
  *
  * @param {Phaser.Input.Gamepad.Gamepad} pad - A reference to the Gamepad that this Axis belongs to.
- * @param {integer} index - The index of this Axis.
+ * @param {number} index - The index of this Axis.
  */
 var Axis = new Class({
 
@@ -47,7 +47,7 @@ var Axis = new Class({
          * The index of this Axis.
          *
          * @name Phaser.Input.Gamepad.Axis#index
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.index = index;

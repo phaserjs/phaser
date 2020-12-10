@@ -16,7 +16,7 @@ var List = require('../../structs/List');
  * @callback CreateCallback
  *
  * @param {Phaser.GameObjects.Bob} bob - The Bob that was created by the Blitter.
- * @param {integer} index - The position of the Bob within the Blitter display list.
+ * @param {number} index - The position of the Bob within the Blitter display list.
  */
 
 /**
@@ -56,7 +56,7 @@ var List = require('../../structs/List');
  * @param {number} [x=0] - The x coordinate of this Game Object in world space.
  * @param {number} [y=0] - The y coordinate of this Game Object in world space.
  * @param {string} [texture='__DEFAULT'] - The key of the texture this Game Object will use for rendering. The Texture must already exist in the Texture Manager.
- * @param {(string|integer)} [frame=0] - The Frame of the Texture that this Game Object will use. Only set if the Texture has multiple frames, such as a Texture Atlas or Sprite Sheet.
+ * @param {(string|number)} [frame=0] - The Frame of the Texture that this Game Object will use. Only set if the Texture has multiple frames, such as a Texture Atlas or Sprite Sheet.
  */
 var Blitter = new Class({
 
@@ -130,9 +130,9 @@ var Blitter = new Class({
      *
      * @param {number} x - The x position of the Bob. Bob coordinate are relative to the position of the Blitter object.
      * @param {number} y - The y position of the Bob. Bob coordinate are relative to the position of the Blitter object.
-     * @param {(string|integer|Phaser.Textures.Frame)} [frame] - The Frame the Bob will use. It _must_ be part of the Texture the parent Blitter object is using.
+     * @param {(string|number|Phaser.Textures.Frame)} [frame] - The Frame the Bob will use. It _must_ be part of the Texture the parent Blitter object is using.
      * @param {boolean} [visible=true] - Should the created Bob render or not?
-     * @param {integer} [index] - The position in the Blitters Display List to add the new Bob at. Defaults to the top of the list.
+     * @param {number} [index] - The position in the Blitters Display List to add the new Bob at. Defaults to the top of the list.
      *
      * @return {Phaser.GameObjects.Bob} The newly created Bob object.
      */
@@ -166,8 +166,8 @@ var Blitter = new Class({
      * @since 3.0.0
      *
      * @param {CreateCallback} callback - The callback to invoke after creating a bob. It will be sent two arguments: The Bob and the index of the Bob.
-     * @param {integer} quantity - The quantity of Bob objects to create.
-     * @param {(string|integer|Phaser.Textures.Frame|string[]|integer[]|Phaser.Textures.Frame[])} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
+     * @param {number} quantity - The quantity of Bob objects to create.
+     * @param {(string|number|Phaser.Textures.Frame|string[]|number[]|Phaser.Textures.Frame[])} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
      * @param {boolean} [visible=true] - Should the created Bob render or not?
      *
      * @return {Phaser.GameObjects.Bob[]} An array of Bob objects that were created.
@@ -197,8 +197,8 @@ var Blitter = new Class({
      * @method Phaser.GameObjects.Blitter#createMultiple
      * @since 3.0.0
      *
-     * @param {integer} quantity - The quantity of Bob objects to create.
-     * @param {(string|integer|Phaser.Textures.Frame|string[]|integer[]|Phaser.Textures.Frame[])} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
+     * @param {number} quantity - The quantity of Bob objects to create.
+     * @param {(string|number|Phaser.Textures.Frame|string[]|number[]|Phaser.Textures.Frame[])} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
      * @param {boolean} [visible=true] - Should the created Bob render or not?
      *
      * @return {Phaser.GameObjects.Bob[]} An array of Bob objects that were created.

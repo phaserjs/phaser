@@ -10,10 +10,10 @@
  * @function Phaser.Math.Between
  * @since 3.0.0
  *
- * @param {integer} min - The minimum value.
- * @param {integer} max - The maximum value.
+ * @param {number} min - The minimum value.
+ * @param {number} max - The maximum value.
  *
- * @return {integer} The random integer.
+ * @return {number} The random integer.
  */
 var Between = function (min, max)
 {

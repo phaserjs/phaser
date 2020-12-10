@@ -82,7 +82,7 @@ var ProcessQueue = new Class({
          * The total number of items awaiting processing.
          *
          * @name Phaser.Structs.ProcessQueue#_toProcess
-         * @type {integer}
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -264,7 +264,7 @@ var ProcessQueue = new Class({
      * The number of entries in the active list.
      *
      * @name Phaser.Structs.ProcessQueue#length
-     * @type {integer}
+     * @type {number}
      * @readonly
      * @since 3.20.0
      */

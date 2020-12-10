@@ -66,7 +66,7 @@ var Ellipse = new Class({
          * The number of points used to draw the curve. Higher values create smoother renders at the cost of more triangles being drawn.
          *
          * @name Phaser.GameObjects.Ellipse#_smoothness
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.13.0
          */
@@ -91,7 +91,7 @@ var Ellipse = new Class({
      * Increase this value for a smoother ellipse, at the cost of more polygons being rendered.
      *
      * @name Phaser.GameObjects.Ellipse#smoothness
-     * @type {integer}
+     * @type {number}
      * @default 64
      * @since 3.13.0
      */
@@ -125,6 +125,9 @@ var Ellipse = new Class({
      */
     setSize: function (width, height)
     {
+        this.width = width;
+        this.height = height;
+        this.geom.setPosition(width / 2, height / 2);
         this.geom.setSize(width, height);
 
         return this.updateData();
@@ -138,7 +141,7 @@ var Ellipse = new Class({
      * @method Phaser.GameObjects.Ellipse#setSmoothness
      * @since 3.13.0
      * 
-     * @param {integer} value - The value to set the smoothness to.
+     * @param {number} value - The value to set the smoothness to.
      *
      * @return {this} This Game Object instance.
      */

@@ -7,15 +7,16 @@
 
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var ShaderSourceFS = require('../shaders/Light-frag.js');
+var LightShaderSourceFS = require('../shaders/Light-frag.js');
 var MultiPipeline = require('./MultiPipeline');
+var Vec2 = require('../../../math/Vector2');
 var WebGLPipeline = require('../WebGLPipeline');
 
 var LIGHT_COUNT = 10;
+var tempVec2 = new Vec2();
 
 /**
  * @classdesc
- *
  * The Light Pipeline is an extension of the Multi Pipeline and uses a custom shader
  * designed to handle forward diffused rendering of 2D lights in a Scene.
  *
@@ -71,9 +72,19 @@ var LightPipeline = new Class({
     {
         LIGHT_COUNT = config.game.renderer.config.maxLights;
 
-        var fragmentShaderSource = GetFastValue(config, 'fragShader', ShaderSourceFS);
+        var fragShader = GetFastValue(config, 'fragShader', LightShaderSourceFS);
 
-        config.fragShader = fragmentShaderSource.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString());
+        var shaders = [];
+
+        for (var i = 1; i <= LIGHT_COUNT; i++)
+        {
+            shaders.push({
+                name: 'lights' + i,
+                fragShader: fragShader.replace('%LIGHT_COUNT%', i.toString())
+            });
+        }
+
+        config.shaders = shaders;
 
         MultiPipeline.call(this, config);
 
@@ -100,17 +111,6 @@ var LightPipeline = new Class({
          * @since 3.50.0
          */
         this.defaultNormalMap;
-
-        /**
-         * Stores the previous number of lights rendered.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#lightCount
-         * @type {number}
-         * @since 3.50.0
-         */
-        this.lightCount = 0;
-
-        this.forceZero = true;
     },
 
     /**
@@ -119,7 +119,7 @@ var LightPipeline = new Class({
      * By this stage all Game level systems are now in place and you can perform any final
      * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
      *
-     * @method Phaser.Renderer.WebGL.LightPipeline#boot
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#boot
      * @since 3.11.0
      */
     boot: function ()
@@ -138,118 +138,71 @@ var LightPipeline = new Class({
 
         this.defaultNormalMap = { glTexture: tempTexture };
 
-        return this;
-    },
-
-    /**
-     * Called every time the pipeline is bound by the renderer.
-     * Sets the shader program, vertex buffer and other resources.
-     * Should only be called when changing pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#bind
-     * @since 3.50.0
-     *
-     * @param {boolean} [reset=false] - Should the pipeline be fully re-bound after a renderer pipeline clear?
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    bind: function (reset)
-    {
-        if (reset === undefined) { reset = false; }
-
-        WebGLPipeline.prototype.bind.call(this, reset);
-
-        var renderer = this.renderer;
-        var program = this.program;
-
-        renderer.setInt1(program, 'uMainSampler', 0);
-        renderer.setInt1(program, 'uNormSampler', 1);
-        renderer.setFloat2(program, 'uResolution', this.width, this.height);
-
-        return this;
+        //  Set the lights shaders
+        for (var i = 0; i < this.shaders.length; i++)
+        {
+            this['lightShader' + (i + 1)] = this.shaders[i];
+        }
     },
 
     /**
      * This function sets all the needed resources for each camera pass.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#onRender
+     * @ignore
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene being rendered.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera being rendered with.
-     *
-     * @return {this} This WebGLPipeline instance.
      */
     onRender: function (scene, camera)
     {
-        this.active = false;
-
         var lightManager = scene.sys.lights;
 
-        if (!lightManager || lightManager.lights.length <= 0 || !lightManager.active)
+        if (!lightManager || !lightManager.active)
         {
-            //  Passthru
-            return this;
+            return;
         }
 
-        var lights = lightManager.cull(camera);
-        var lightCount = Math.min(lights.length, LIGHT_COUNT);
+        var lights = lightManager.getLights(camera);
+        var lightsCount = lights.length;
 
-        if (lightCount === 0)
+        if (lightsCount === 0)
         {
-            return this;
+            return;
         }
 
-        this.active = true;
+        //  Ok, we're good to go ...
 
-        var renderer = this.renderer;
-        var program = this.program;
-        var cameraMatrix = camera.matrix;
-        var point = {x: 0, y: 0};
-        var height = renderer.height;
+        this.setShader(this['lightShader' + lightsCount], true);
+
         var i;
+        var renderer = this.renderer;
+        var height = renderer.height;
+        var cameraMatrix = camera.matrix;
 
-        if (lightCount !== this.lightCount)
+        this.set1i('uMainSampler', 0);
+        this.set1i('uNormSampler', 1);
+        this.set2f('uResolution', this.width / 2, this.height / 2);
+        this.set4f('uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
+        this.set3f('uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
+
+        for (i = 0; i < lightsCount; i++)
         {
-            for (i = 0; i < LIGHT_COUNT; i++)
-            {
-                //  Reset lights
-                renderer.setFloat1(program, 'uLights[' + i + '].radius', 0);
-            }
+            var light = lights[i].light;
+            var color = light.color;
 
-            this.lightCount = lightCount;
-        }
-
-        if (camera.dirty)
-        {
-            renderer.setFloat4(program, 'uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
-        }
-
-        //  TODO - Only if dirty! and cache the location
-        renderer.setFloat3(program, 'uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
-
-        for (i = 0; i < lightCount; i++)
-        {
-            var light = lights[i];
             var lightName = 'uLights[' + i + '].';
 
-            cameraMatrix.transformPoint(light.x, light.y, point);
+            cameraMatrix.transformPoint(light.x, light.y, tempVec2);
 
-            //  TODO - Cache the uniform locations!!!
-            renderer.setFloat2(program, lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
-
-            if (light.dirty)
-            {
-                renderer.setFloat3(program, lightName + 'color', light.r, light.g, light.b);
-                renderer.setFloat1(program, lightName + 'intensity', light.intensity);
-                renderer.setFloat1(program, lightName + 'radius', light.radius);
-                light.dirty = false;
-            }
+            this.set2f(lightName + 'position', tempVec2.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (tempVec2.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
+            this.set3f(lightName + 'color', color.r, color.g, color.b);
+            this.set1f(lightName + 'intensity', light.intensity);
+            this.set1f(lightName + 'radius', light.radius);
         }
 
         this.currentNormalMapRotation = null;
-
-        return this;
     },
 
     /**
@@ -288,7 +241,7 @@ var LightPipeline = new Class({
                 inverseRotationMatrix[1] = inverseRotationMatrix[3] = 0;
             }
 
-            this.renderer.setMatrix3(this.program, 'uInverseRotationMatrix', false, inverseRotationMatrix);
+            this.setMatrix3fv('uInverseRotationMatrix', false, inverseRotationMatrix);
 
             this.currentNormalMapRotation = rotation;
         }
@@ -298,6 +251,7 @@ var LightPipeline = new Class({
      * Assigns a texture to the current batch. If a different texture is already set it creates a new batch object.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#setTexture2D
+     * @ignore
      * @since 3.50.0
      *
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
@@ -311,7 +265,7 @@ var LightPipeline = new Class({
 
         var normalTexture = this.getNormalMap(gameObject);
 
-        if (renderer.isNewNormalMap())
+        if (renderer.isNewNormalMap(texture, normalTexture))
         {
             this.flush();
 
@@ -333,6 +287,7 @@ var LightPipeline = new Class({
      * for the given Game Object. It must return the texture unit the Game Object was assigned.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#setGameObject
+     * @ignore
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered or added to the batch.

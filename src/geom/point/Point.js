@@ -33,7 +33,7 @@ var Point = new Class({
          * Used for fast type comparisons.
          *
          * @name Phaser.Geom.Point#type
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @since 3.19.0
          */

@@ -51,6 +51,8 @@ var GeometryMask = new Class({
          * Similar to the BitmapMasks invertAlpha setting this to true will then hide all pixels
          * drawn to the Geometry Mask.
          *
+         * This is a WebGL only feature.
+         *
          * @name Phaser.Display.Masks.GeometryMask#invertAlpha
          * @type {boolean}
          * @since 3.16.0
@@ -97,7 +99,10 @@ var GeometryMask = new Class({
 
     /**
      * Sets the `invertAlpha` property of this Geometry Mask.
+     *
      * Inverting the alpha essentially flips the way the mask works.
+     *
+     * This is a WebGL only feature.
      *
      * @method Phaser.Display.Masks.GeometryMask#setInvertAlpha
      * @since 3.17.0
@@ -226,32 +231,32 @@ var GeometryMask = new Class({
 
         renderer.maskCount--;
 
+        //  Force flush before disabling stencil test
+        renderer.flush();
+
+        var current = renderer.currentMask;
+
         if (renderer.maskStack.length === 0)
         {
             //  If this is the only mask in the stack, flush and disable
-            renderer.flush();
-
-            renderer.currentMask.mask = null;
+            current.mask = null;
 
             gl.disable(gl.STENCIL_TEST);
         }
         else
         {
-            //  Force flush before disabling stencil test
-            renderer.flush();
-
             var prev = renderer.maskStack[renderer.maskStack.length - 1];
 
             prev.mask.applyStencil(renderer, prev.camera, false);
 
             if (renderer.currentCameraMask.mask !== prev.mask)
             {
-                renderer.currentMask.mask = prev.mask;
-                renderer.currentMask.camera = prev.camera;
+                current.mask = prev.mask;
+                current.camera = prev.camera;
             }
             else
             {
-                renderer.currentMask.mask = null;
+                current.mask = null;
             }
         }
     },

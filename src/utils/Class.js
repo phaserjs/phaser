@@ -70,6 +70,7 @@ function hasNonConfigurable (obj, k)
  * Extends the given `myClass` object's prototype with the properties of `definition`.
  *
  * @function extend
+ * @ignore
  * @param {Object} ctor The constructor object to mix into.
  * @param {Object} definition A dictionary of functions for the class.
  * @param {boolean} isClassDescriptor Is the definition a class descriptor?
@@ -121,6 +122,7 @@ function extend (ctor, definition, isClassDescriptor, extend)
  * Applies the given `mixins` to the prototype of `myClass`.
  *
  * @function mixin
+ * @ignore
  * @param {Object} myClass The constructor object to mix into.
  * @param {Object|Array<Object>} mixins The mixins to apply to the constructor.
  */

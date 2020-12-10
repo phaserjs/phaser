@@ -70,7 +70,7 @@ var Tween = new Class({
          * The cached length of the data array.
          *
          * @name Phaser.Tweens.Tween#totalData
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.totalData = data.length;
@@ -88,7 +88,7 @@ var Tween = new Class({
          * Cached target total (not necessarily the same as the data total)
          *
          * @name Phaser.Tweens.Tween#totalTargets
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.totalTargets = targets.length;
@@ -223,7 +223,7 @@ var Tween = new Class({
          * The current state of the tween
          *
          * @name Phaser.Tweens.Tween#state
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.state = TWEEN_CONST.PENDING_ADD;
@@ -232,7 +232,7 @@ var Tween = new Class({
          * The state of the tween when it was paused (used by Resume)
          *
          * @name Phaser.Tweens.Tween#_pausedState
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.0.0
          */
@@ -352,7 +352,7 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#getValue
      * @since 3.0.0
      *
-     * @param {integer} [index=0] - The Tween Data to return the value from.
+     * @param {number} [index=0] - The Tween Data to return the value from.
      *
      * @return {number} The value of the requested Tween Data.
      */
@@ -1284,7 +1284,7 @@ var Tween = new Class({
      * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
      * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
      *
-     * @return {integer} The state of this Tween.
+     * @return {number} The state of this Tween.
      */
     setStateFromEnd: function (tween, tweenData, diff)
     {
@@ -1370,7 +1370,7 @@ var Tween = new Class({
      * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
      * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
      *
-     * @return {integer} The state of this Tween.
+     * @return {number} The state of this Tween.
      */
     setStateFromStart: function (tween, tweenData, diff)
     {

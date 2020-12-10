@@ -6,6 +6,11 @@
 
 var CSSBlendModes = require('./CSSBlendModes');
 var GameObject = require('../GameObject');
+var TransformMatrix = require('../components/TransformMatrix');
+
+var tempMatrix1 = new TransformMatrix();
+var tempMatrix2 = new TransformMatrix();
+var tempMatrix3 = new TransformMatrix();
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -45,9 +50,9 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
         alpha *= parent.alpha;
     }
 
-    var camMatrix = renderer._tempMatrix1;
-    var srcMatrix = renderer._tempMatrix2;
-    var calcMatrix = renderer._tempMatrix3;
+    var camMatrix = tempMatrix1;
+    var srcMatrix = tempMatrix2;
+    var calcMatrix = tempMatrix3;
 
     var dx = 0;
     var dy = 0;

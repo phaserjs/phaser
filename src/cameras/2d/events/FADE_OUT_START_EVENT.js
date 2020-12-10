@@ -16,9 +16,9 @@
  * 
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
  * @param {Phaser.Cameras.Scene2D.Effects.Fade} effect - A reference to the effect instance.
- * @param {integer} duration - The duration of the effect.
- * @param {integer} red - The red color channel value.
- * @param {integer} green - The green color channel value.
- * @param {integer} blue - The blue color channel value.
+ * @param {number} duration - The duration of the effect.
+ * @param {number} red - The red color channel value.
+ * @param {number} green - The green color channel value.
+ * @param {number} blue - The blue color channel value.
  */
 module.exports = 'camerafadeoutstart';

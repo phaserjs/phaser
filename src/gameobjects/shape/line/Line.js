@@ -15,13 +15,13 @@ var LineRender = require('./LineRender');
  * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
  * it for input or physics. It provides a quick and easy way for you to render this shape in your
  * game without using a texture, while still taking advantage of being fully batched in WebGL.
- * 
+ *
  * This shape supports only stroke colors and cannot be filled.
- * 
+ *
  * A Line Shape allows you to draw a line between two points in your game. You can control the
  * stroke color and thickness of the line. In WebGL only you can also specify a different
  * thickness for the start and end of the line, allowing you to render lines that taper-off.
- * 
+ *
  * If you need to draw multiple lines in a sequence you may wish to use the Polygon Shape instead.
  *
  * Be aware that as with all Game Objects the default origin is 0.5. If you need to draw a Line
@@ -64,8 +64,8 @@ var Line = new Class({
 
         Shape.call(this, scene, 'Line', new GeomLine(x1, y1, x2, y2));
 
-        var width = this.geom.right - this.geom.left;
-        var height = this.geom.bottom - this.geom.top;
+        var width = Math.max(1, this.geom.right - this.geom.left);
+        var height = Math.max(1, this.geom.bottom - this.geom.top);
 
         /**
          * The width (or thickness) of the line.
@@ -110,15 +110,15 @@ var Line = new Class({
 
     /**
      * Sets the width of the line.
-     * 
+     *
      * When using the WebGL renderer you can have different start and end widths.
      * When using the Canvas renderer only the `startWidth` value is used. The `endWidth` is ignored.
-     * 
+     *
      * This call can be chained.
      *
      * @method Phaser.GameObjects.Line#setLineWidth
      * @since 3.13.0
-     * 
+     *
      * @param {number} startWidth - The start width of the line.
      * @param {number} [endWidth] - The end width of the line. Only used in WebGL.
      *

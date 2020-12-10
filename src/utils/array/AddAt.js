@@ -23,8 +23,8 @@
  *
  * @param {array} array - The array to be added to.
  * @param {any|any[]} item - The item, or array of items, to add to the array.
- * @param {integer} [index=0] - The index in the array where the item will be inserted.
- * @param {integer} [limit] - Optional limit which caps the size of the array.
+ * @param {number} [index=0] - The index in the array where the item will be inserted.
+ * @param {number} [limit] - Optional limit which caps the size of the array.
  * @param {function} [callback] - A callback to be invoked for each item successfully added to the array.
  * @param {object} [context] - The context in which the callback is invoked.
  *

@@ -32,7 +32,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
-    var pipeline = renderer.pipelines.set(this.pipeline, src);
+    var pipeline = renderer.pipelines.set(src.pipeline, src);
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
@@ -65,6 +65,8 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var dropShadowY = src.dropShadowY;
 
     var dropShadow = (dropShadowX !== 0 || dropShadowY !== 0);
+
+    renderer.pipelines.preBatch(src);
 
     if (dropShadow)
     {
@@ -120,6 +122,8 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
         //  Debug test if the characters are in the correct place when rendered:
         // pipeline.drawFillRect(tx0, ty0, tx2 - tx0, ty2 - ty0, 0x00ff00, 0.5);
     }
+
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = BitmapTextWebGLRenderer;

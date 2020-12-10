@@ -24,15 +24,17 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var RectangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var pipeline = renderer.pipelines.set(this.pipeline);
+    var pipeline = renderer.pipelines.set(src.pipeline);
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    pipeline._tempMatrix3.copyFrom(result.calc);
+    pipeline.calcMatrix.copyFrom(result.calc);
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
     var alpha = camera.alpha * src.alpha;
+
+    renderer.pipelines.preBatch(src);
 
     if (src.isFilled)
     {
@@ -43,8 +45,6 @@ var RectangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
         fillTint.TR = fillTintColor;
         fillTint.BL = fillTintColor;
         fillTint.BR = fillTintColor;
-
-        pipeline.setTexture2D();
 
         pipeline.batchFillRect(
             -dx,
@@ -58,6 +58,8 @@ var RectangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
     {
         StrokePathWebGL(pipeline, src, alpha, dx, dy);
     }
+
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = RectangleWebGLRenderer;

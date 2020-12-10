@@ -22,17 +22,23 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var frame = src.frame;
-    var width = frame.width;
-    var height = frame.height;
-    var getTint = Utils.getTintAppendFloatAlpha;
-    var pipeline = renderer.pipelines.set(src.pipeline, src);
+    var cameraAlpha = camera.alpha;
 
-    var textureUnit = pipeline.setTexture2D(frame.glTexture, src);
+    var renderTarget = src.renderTarget;
+    var width = renderTarget.width;
+    var height = renderTarget.height;
+
+    var getTint = Utils.getTintAppendFloatAlpha;
+
+    var pipeline = renderer.pipelines.set(src.pipeline);
+
+    var textureUnit = pipeline.setTexture2D(renderTarget.texture);
+
+    renderer.pipelines.preBatch(src);
 
     pipeline.batchTexture(
         src,
-        frame.glTexture,
+        renderTarget.texture,
         width, height,
         src.x, src.y,
         width, height,
@@ -42,17 +48,21 @@ var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
         src.scrollFactorX, src.scrollFactorY,
         src.displayOriginX, src.displayOriginY,
         0, 0, width, height,
-        getTint(src.tintTopLeft, camera.alpha * src._alphaTL),
-        getTint(src.tintTopRight, camera.alpha * src._alphaTR),
-        getTint(src.tintBottomLeft, camera.alpha * src._alphaBL),
-        getTint(src.tintBottomRight, camera.alpha * src._alphaBR),
+        getTint(src.tintTopLeft, cameraAlpha * src._alphaTL),
+        getTint(src.tintTopRight, cameraAlpha * src._alphaTR),
+        getTint(src.tintBottomLeft, cameraAlpha * src._alphaBL),
+        getTint(src.tintBottomRight, cameraAlpha * src._alphaBR),
         src.tintFill,
         0, 0,
         camera,
         parentMatrix,
-        false,
+        true,
         textureUnit
     );
+
+    renderer.resetTextures();
+
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = RenderTextureWebGLRenderer;

@@ -3,7 +3,7 @@
  * @since 3.5.0
  *
  * @property {string} target - The Scene key to transition to.
- * @property {integer} [duration=1000] - The duration, in ms, for the transition to last.
+ * @property {number} [duration=1000] - The duration, in ms, for the transition to last.
  * @property {boolean} [sleep=false] - Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
  * @property {boolean} [remove=false] - Will the Scene responsible for the transition be removed from the Scene Manager after the transition completes?
  * @property {boolean} [allowInput=false] - Will the Scenes Input system be able to process events while it is transitioning in or out?

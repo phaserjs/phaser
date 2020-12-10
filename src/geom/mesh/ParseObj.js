@@ -224,16 +224,17 @@ function parseUseMtl (lineItems)
 }
 
 /**
- * Parses a Wavefront OBJ File, extracting the models from it and returning them
- * in an array.
+ * Parses a Wavefront OBJ File, extracting the models from it and returning them in an array.
  *
- * @function Phaser.Geom.ParseObj
+ * The model data *must* be triangulated for a Mesh Game Object to be able to render it.
+ *
+ * @function Phaser.Geom.Mesh.ParseObj
  * @since 3.50.0
  *
  * @param {string} data - The OBJ File data as a raw string.
- * @param {boolean} [flipUV=true] -
+ * @param {boolean} [flipUV=true] - Flip the UV coordinates?
  *
- * @return {array} An array of model data.
+ * @return {Phaser.Types.Geom.Mesh.OBJData} The parsed model and material data.
  */
 var ParseObj = function (data, flipUV)
 {
@@ -243,6 +244,7 @@ var ParseObj = function (data, flipUV)
 
     //  Store results in here
     var result = {
+        materials: {},
         materialLibraries: [],
         models: []
     };
@@ -264,30 +266,37 @@ var ParseObj = function (data, flipUV)
                 // Start A New Model
                 parseObject(lineItems, result);
                 break;
+
             case 'g':
                 // Start a new polygon group
                 parseGroup(lineItems);
                 break;
+
             case 'v':
                 // Define a vertex for the current model
                 parseVertexCoords(lineItems, result);
                 break;
+
             case 'vt':
                 // Texture Coords
                 parseTextureCoords(lineItems, result);
                 break;
+
             case 'vn':
                 // Define a vertex normal for the current model
                 parseVertexNormal(lineItems, result);
                 break;
+
             case 'f':
                 // Define a Face/Polygon
                 parsePolygon(lineItems, result);
                 break;
+
             case 'mtllib':
                 // Reference to a material library file (.mtl)
                 parseMtlLib(lineItems, result);
                 break;
+
             case 'usemtl':
                 // Sets the current material to be applied to polygons defined from this point forward
                 parseUseMtl(lineItems);

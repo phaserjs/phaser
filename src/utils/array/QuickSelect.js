@@ -36,9 +36,9 @@ function defaultCompare (a, b)
  * @since 3.0.0
  *
  * @param {array} arr - The array to sort.
- * @param {integer} k - The k-th element index.
- * @param {integer} [left=0] - The index of the left part of the range.
- * @param {integer} [right] - The index of the right part of the range.
+ * @param {number} k - The k-th element index.
+ * @param {number} [left=0] - The index of the left part of the range.
+ * @param {number} [right] - The index of the right part of the range.
  * @param {function} [compare] - An optional comparison function. Is passed two elements and should return 0, 1 or -1.
  */
 var QuickSelect = function (arr, k, left, right, compare)

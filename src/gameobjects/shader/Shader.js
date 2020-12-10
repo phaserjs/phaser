@@ -110,7 +110,7 @@ var Shader = new Class({
          * This Game Object cannot have a blend mode, so skip all checks.
          *
          * @name Phaser.GameObjects.Shader#blendMode
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.17.0
          */
@@ -504,9 +504,9 @@ var Shader = new Class({
         var program = renderer.createProgram(this.shader.vertexSrc, this.shader.fragmentSrc);
 
         //  The default uniforms available within the vertex shader
-        renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
-        renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
-        renderer.setFloat2(program, 'uResolution', this.width, this.height);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewMatrix'), false, this.viewMatrix);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uProjectionMatrix'), false, this.projectionMatrix);
+        gl.uniform2f(gl.getUniformLocation(program, 'uResolution'), this.width, this.height);
 
         this.program = program;
 
@@ -602,7 +602,12 @@ var Shader = new Class({
 
         var program = this.program;
 
-        this.renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
+        var gl = this.gl;
+        var renderer = this.renderer;
+
+        renderer.setProgram(program);
+
+        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uProjectionMatrix'), false, this.projectionMatrix);
 
         this._rendererWidth = right;
         this._rendererHeight = bottom;
@@ -668,9 +673,9 @@ var Shader = new Class({
      *
      * @param {string} uniformKey - The key of the sampler2D uniform to be updated, i.e. `iChannel0`.
      * @param {WebGLTexture} texture - A WebGLTexture reference.
-     * @param {integer} width - The width of the texture.
-     * @param {integer} height - The height of the texture.
-     * @param {integer} [textureIndex=0] - The texture index.
+     * @param {number} width - The width of the texture.
+     * @param {number} height - The height of the texture.
+     * @param {number} [textureIndex=0] - The texture index.
      * @param {any} [textureData] - Additional texture data.
      *
      * @return {this} This Shader instance.
@@ -709,7 +714,7 @@ var Shader = new Class({
      *
      * @param {string} uniformKey - The key of the sampler2D uniform to be updated, i.e. `iChannel0`.
      * @param {string} textureKey - The key of the texture, as stored in the Texture Manager. Must already be loaded.
-     * @param {integer} [textureIndex=0] - The texture index.
+     * @param {number} [textureIndex=0] - The texture index.
      * @param {any} [textureData] - Additional texture data.
      *
      * @return {this} This Shader instance.
@@ -723,6 +728,12 @@ var Shader = new Class({
         if (textureManager.exists(textureKey))
         {
             var frame = textureManager.getFrame(textureKey);
+
+            if (frame.glTexture && frame.glTexture.isRenderTexture)
+            {
+                return this.setSampler2DBuffer(uniformKey, frame.glTexture, frame.width, frame.height, textureIndex, textureData);
+            }
+
             var uniform = this.uniforms[uniformKey];
             var source = frame.source;
 
@@ -903,7 +914,7 @@ var Shader = new Class({
 
         var data = uniform.textureData;
 
-        if (data)
+        if (data && !uniform.value.isRenderTexture)
         {
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
 
@@ -1012,7 +1023,7 @@ var Shader = new Class({
             }
             else if (uniform.type === 'sampler2D')
             {
-                gl.activeTexture(gl['TEXTURE' + textureCount]);
+                gl.activeTexture(gl.TEXTURE0 + textureCount);
 
                 gl.bindTexture(gl.TEXTURE_2D, value);
 

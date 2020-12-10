@@ -5,12 +5,12 @@
  */
 
 var BaseCamera = require('./BaseCamera');
-var CanvasPool = require('../../display/canvas/CanvasPool');
 var CenterOn = require('../../geom/rectangle/CenterOn');
 var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var Components = require('../../gameobjects/components');
 var Effects = require('./effects');
+var Events = require('./events');
 var Linear = require('../../math/Linear');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Vector2 = require('../../math/Vector2');
@@ -46,6 +46,7 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.Cameras.Scene2D.BaseCamera
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.Tint
+ * @extends Phaser.GameObjects.Components.Pipeline
  *
  * @param {number} x - The x position of the Camera, relative to the top-left of the game canvas.
  * @param {number} y - The y position of the Camera, relative to the top-left of the game canvas.
@@ -58,7 +59,8 @@ var Camera = new Class({
 
     Mixins: [
         Components.Flip,
-        Components.Tint
+        Components.Tint,
+        Components.Pipeline
     ],
 
     initialize:
@@ -66,6 +68,9 @@ var Camera = new Class({
     function Camera (x, y, width, height)
     {
         BaseCamera.call(this, x, y, width, height);
+
+        this.postPipelines = [];
+        this.pipelineData = {};
 
         /**
          * Does this Camera allow the Game Objects it renders to receive input events?
@@ -201,268 +206,6 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._follow = null;
-
-        /**
-         * Is this Camera rendering directly to the canvas or to a texture?
-         *
-         * Enable rendering to texture with the method `setRenderToTexture` (just enabling this boolean won't be enough)
-         *
-         * Once enabled you can toggle it by switching this property.
-         *
-         * To properly remove a render texture you should call the `clearRenderToTexture()` method.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#renderToTexture
-         * @type {boolean}
-         * @default false
-         * @since 3.13.0
-         */
-        this.renderToTexture = false;
-
-        /**
-         * If this Camera is rendering to a texture (via `setRenderToTexture`) then you
-         * have the option to control if it should also render to the Game canvas as well.
-         *
-         * By default, a Camera will render both to its texture and to the Game canvas.
-         *
-         * However, if you set ths property to `false` it will only render to the texture
-         * and skip rendering to the Game canvas.
-         *
-         * Setting this property if the Camera isn't rendering to a texture has no effect.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#renderToGame
-         * @type {boolean}
-         * @default true
-         * @since 3.23.0
-         */
-        this.renderToGame = true;
-
-        /**
-         * If this Camera has been set to render to a texture then this holds a reference
-         * to the HTML Canvas Element that the Camera is drawing to.
-         *
-         * Enable texture rendering using the method `setRenderToTexture`.
-         *
-         * This is only populated if Phaser is running with the Canvas Renderer.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#canvas
-         * @type {HTMLCanvasElement}
-         * @since 3.13.0
-         */
-        this.canvas = null;
-
-        /**
-         * If this Camera has been set to render to a texture then this holds a reference
-         * to the Rendering Context belonging to the Canvas element the Camera is drawing to.
-         *
-         * Enable texture rendering using the method `setRenderToTexture`.
-         *
-         * This is only populated if Phaser is running with the Canvas Renderer.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#context
-         * @type {CanvasRenderingContext2D}
-         * @since 3.13.0
-         */
-        this.context = null;
-
-        /**
-         * If this Camera has been set to render to a texture then this holds a reference
-         * to the GL Texture belonging the Camera is drawing to.
-         *
-         * Enable texture rendering using the method `setRenderToTexture`.
-         *
-         * This is only set if Phaser is running with the WebGL Renderer.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#glTexture
-         * @type {?WebGLTexture}
-         * @since 3.13.0
-         */
-        this.glTexture = null;
-
-        /**
-         * If this Camera has been set to render to a texture then this holds a reference
-         * to the GL Frame Buffer belonging the Camera is drawing to.
-         *
-         * Enable texture rendering using the method `setRenderToTexture`.
-         *
-         * This is only set if Phaser is running with the WebGL Renderer.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#framebuffer
-         * @type {?WebGLFramebuffer}
-         * @since 3.13.0
-         */
-        this.framebuffer = null;
-
-        /**
-         * If this Camera has been set to render to a texture and to use a custom pipeline,
-         * then this holds a reference to the pipeline the Camera is drawing with.
-         *
-         * Enable texture rendering using the method `setRenderToTexture`.
-         *
-         * This is only set if Phaser is running with the WebGL Renderer.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#pipeline
-         * @type {?Phaser.Renderer.WebGL.WebGLPipeline}
-         * @since 3.13.0
-         */
-        this.pipeline = null;
-    },
-
-    /**
-     * Sets the Camera to render to a texture instead of to the main canvas.
-     *
-     * The Camera will redirect all Game Objects it's asked to render to this texture.
-     *
-     * During the render sequence, the texture itself will then be rendered to the main canvas.
-     *
-     * Doing this gives you the ability to modify the texture before this happens,
-     * allowing for special effects such as Camera specific shaders, or post-processing
-     * on the texture.
-     *
-     * If running under Canvas the Camera will render to its `canvas` property.
-     *
-     * If running under WebGL the Camera will create a frame buffer, which is stored in its `framebuffer` and `glTexture` properties.
-     *
-     * If you set a camera to render to a texture then it will emit 2 events during the render loop:
-     *
-     * First, it will emit the event `prerender`. This happens right before any Game Object's are drawn to the Camera texture.
-     *
-     * Then, it will emit the event `postrender`. This happens after all Game Object's have been drawn, but right before the
-     * Camera texture is rendered to the main game canvas. It's the final point at which you can manipulate the texture before
-     * it appears in-game.
-     *
-     * You should not enable this unless you plan on actually using the texture it creates
-     * somehow, otherwise you're just doubling the work required to render your game.
-     *
-     * If you only require the Camera to render to a texture, and not also to the Game,
-     * them set the `renderToGame` parameter to `false`.
-     *
-     * To temporarily disable rendering to a texture, toggle the `renderToTexture` boolean.
-     *
-     * If you no longer require the Camera to render to a texture, call the `clearRenderToTexture` method,
-     * which will delete the respective textures and free-up resources.
-     *
-     * @method Phaser.Cameras.Scene2D.Camera#setRenderToTexture
-     * @since 3.13.0
-     *
-     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} [pipeline] - An optional WebGL Pipeline to render with, can be either a string which is the name of the pipeline, or a pipeline reference.
-     * @param {boolean} [renderToGame=true] - If you do not need the Camera to still render to the Game, set this parameter to `false`.
-     *
-     * @return {this} This Camera instance.
-     */
-    setRenderToTexture: function (pipeline, renderToGame)
-    {
-        if (renderToGame === undefined) { renderToGame = true; }
-
-        var renderer = this.scene.sys.game.renderer;
-
-        if (renderer.gl)
-        {
-            this.glTexture = renderer.createTextureFromSource(null, this.width, this.height, 0);
-            this.framebuffer = renderer.createFramebuffer(this.width, this.height, this.glTexture, false);
-        }
-        else
-        {
-            this.canvas = CanvasPool.create2D(this, this.width, this.height);
-            this.context = this.canvas.getContext('2d');
-        }
-
-        this.renderToTexture = true;
-        this.renderToGame = renderToGame;
-
-        if (pipeline)
-        {
-            this.setPipeline(pipeline);
-        }
-
-        return this;
-    },
-
-    /**
-     * Sets the WebGL pipeline this Camera is using when rendering to a texture.
-     *
-     * You can pass either the string-based name of the pipeline, or a reference to the pipeline itself.
-     *
-     * Call this method with no arguments to clear any previously set pipeline.
-     *
-     * @method Phaser.Cameras.Scene2D.Camera#setPipeline
-     * @since 3.13.0
-     *
-     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} [pipeline] - The WebGL Pipeline to render with, can be either a string which is the name of the pipeline, or a pipeline reference. Or if left empty it will clear the pipeline.
-     *
-     * @return {this} This Camera instance.
-     */
-    setPipeline: function (pipeline)
-    {
-        if (typeof pipeline === 'string')
-        {
-            var renderer = this.scene.sys.game.renderer;
-
-            if (renderer.gl && renderer.pipelines.has(pipeline))
-            {
-                this.pipeline = renderer.pipelines.get(pipeline);
-            }
-        }
-        else
-        {
-            this.pipeline = pipeline;
-        }
-
-        return this;
-    },
-
-    /**
-     * If this Camera was set to render to a texture, this will clear the resources it was using and
-     * redirect it to render back to the primary Canvas again.
-     *
-     * If you only wish to temporarily disable rendering to a texture then you can toggle the
-     * property `renderToTexture` instead.
-     *
-     * @method Phaser.Cameras.Scene2D.Camera#clearRenderToTexture
-     * @since 3.13.0
-     *
-     * @return {this} This Camera instance.
-     */
-    clearRenderToTexture: function ()
-    {
-        if (!this.scene)
-        {
-            return;
-        }
-
-        var renderer = this.scene.sys.game.renderer;
-
-        if (!renderer)
-        {
-            return;
-        }
-
-        if (renderer.gl)
-        {
-            if (this.framebuffer)
-            {
-                renderer.deleteFramebuffer(this.framebuffer);
-            }
-
-            if (this.glTexture)
-            {
-                renderer.deleteTexture(this.glTexture);
-            }
-
-            this.framebuffer = null;
-            this.glTexture = null;
-            this.pipeline = null;
-        }
-        else
-        {
-            CanvasPool.remove(this);
-
-            this.canvas = null;
-            this.context = null;
-        }
-
-        this.renderToTexture = false;
-
-        return this;
     },
 
     /**
@@ -535,10 +278,10 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_COMPLETE
      * @since 3.3.0
      *
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {integer} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
-     * @param {integer} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
-     * @param {integer} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
+     * @param {number} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
+     * @param {number} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
@@ -559,10 +302,10 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_COMPLETE
      * @since 3.3.0
      *
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {integer} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
-     * @param {integer} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
-     * @param {integer} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
+     * @param {number} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
+     * @param {number} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
@@ -582,10 +325,10 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_COMPLETE
      * @since 3.5.0
      *
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {integer} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
-     * @param {integer} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
-     * @param {integer} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
+     * @param {number} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
+     * @param {number} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {boolean} [force=false] - Force the effect to start immediately, even if already running.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
@@ -606,10 +349,10 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_COMPLETE
      * @since 3.0.0
      *
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {integer} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
-     * @param {integer} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
-     * @param {integer} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [red=0] - The amount to fade the red channel towards. A value between 0 and 255.
+     * @param {number} [green=0] - The amount to fade the green channel towards. A value between 0 and 255.
+     * @param {number} [blue=0] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {boolean} [force=false] - Force the effect to start immediately, even if already running.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
@@ -630,10 +373,10 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#FLASH_COMPLETE
      * @since 3.0.0
      *
-     * @param {integer} [duration=250] - The duration of the effect in milliseconds.
-     * @param {integer} [red=255] - The amount to fade the red channel towards. A value between 0 and 255.
-     * @param {integer} [green=255] - The amount to fade the green channel towards. A value between 0 and 255.
-     * @param {integer} [blue=255] - The amount to fade the blue channel towards. A value between 0 and 255.
+     * @param {number} [duration=250] - The duration of the effect in milliseconds.
+     * @param {number} [red=255] - The amount to fade the red channel towards. A value between 0 and 255.
+     * @param {number} [green=255] - The amount to fade the green channel towards. A value between 0 and 255.
+     * @param {number} [blue=255] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {boolean} [force=false] - Force the effect to start immediately, even if already running.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
@@ -654,7 +397,7 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#SHAKE_COMPLETE
      * @since 3.0.0
      *
-     * @param {integer} [duration=100] - The duration of the effect in milliseconds.
+     * @param {number} [duration=100] - The duration of the effect in milliseconds.
      * @param {(number|Phaser.Math.Vector2)} [intensity=0.05] - The intensity of the shake.
      * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
      * @param {function} [callback] - This callback will be invoked every frame for the duration of the effect.
@@ -679,7 +422,7 @@ var Camera = new Class({
      *
      * @param {number} x - The destination x coordinate to scroll the center of the Camera viewport to.
      * @param {number} y - The destination y coordinate to scroll the center of the Camera viewport to.
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
      * @param {(string|function)} [ease='Linear'] - The ease to use for the pan. Can be any of the Phaser Easing constants or a custom function.
      * @param {boolean} [force=false] - Force the pan effect to start immediately, even if already running.
      * @param {Phaser.Types.Cameras.Scene2D.CameraPanCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
@@ -703,7 +446,7 @@ var Camera = new Class({
      *
      * @param {number} radians - The destination angle in radians to rotate the Camera viewport to. If the angle is positive then the rotation is clockwise else anticlockwise
      * @param {boolean} [shortestPath=false] - If shortest path is set to true the camera will rotate in the quickest direction clockwise or anti-clockwise.
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
      * @param {(string|function)} [ease='Linear'] - The ease to use for the rotation. Can be any of the Phaser Easing constants or a custom function.
      * @param {boolean} [force=false] - Force the rotation effect to start immediately, even if already running.
      * @param {CameraRotateCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
@@ -727,7 +470,7 @@ var Camera = new Class({
      * @since 3.11.0
      *
      * @param {number} zoom - The target Camera zoom value.
-     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {number} [duration=1000] - The duration of the effect in milliseconds.
      * @param {(string|function)} [ease='Linear'] - The ease to use for the pan. Can be any of the Phaser Easing constants or a custom function.
      * @param {boolean} [force=false] - Force the pan effect to start immediately, even if already running.
      * @param {Phaser.Types.Cameras.Scene2D.CameraPanCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
@@ -774,6 +517,8 @@ var Camera = new Class({
             CenterOn(deadzone, this.midPoint.x, this.midPoint.y);
         }
 
+        var emitFollowEvent = false;
+
         if (follow && !this.panEffect.isRunning)
         {
             var fx = (follow.x - this.followOffset.x);
@@ -804,6 +549,8 @@ var Camera = new Class({
                 sx = Linear(sx, fx - originX, this.lerp.x);
                 sy = Linear(sy, fy - originY, this.lerp.y);
             }
+
+            emitFollowEvent = true;
         }
 
         if (this.useBounds)
@@ -816,6 +563,9 @@ var Camera = new Class({
         {
             originX = Math.round(originX);
             originY = Math.round(originY);
+
+            sx = Math.round(sx);
+            sy = Math.round(sy);
         }
 
         //  Values are in pixels and not impacted by zooming the Camera
@@ -832,17 +582,26 @@ var Camera = new Class({
         var displayWidth = width / zoom;
         var displayHeight = height / zoom;
 
-        this.worldView.setTo(
-            midX - (displayWidth / 2),
-            midY - (displayHeight / 2),
-            displayWidth,
-            displayHeight
-        );
+        var vwx = midX - (displayWidth / 2);
+        var vwy = midY - (displayHeight / 2);
+
+        if (this.roundPixels)
+        {
+            vwx = Math.round(vwx);
+            vwy = Math.round(vwy);
+        }
+
+        this.worldView.setTo(vwx, vwy, displayWidth, displayHeight);
 
         matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoom, zoom);
         matrix.translate(-originX, -originY);
 
         this.shakeEffect.preRender();
+
+        if (emitFollowEvent)
+        {
+            this.emit(Events.FOLLOW_UPDATE, this, follow);
+        }
     },
 
     /**
@@ -1002,7 +761,7 @@ var Camera = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
+     * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
     update: function (time, delta)
@@ -1030,8 +789,6 @@ var Camera = new Class({
      */
     destroy: function ()
     {
-        this.clearRenderToTexture();
-
         this.resetFX();
 
         BaseCamera.prototype.destroy.call(this);

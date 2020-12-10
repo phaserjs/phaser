@@ -45,7 +45,7 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.KeyboardPlugin} keyboardPlugin - A reference to the Keyboard Plugin.
- * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
+ * @param {(string|number[]|object[])} keys - The keys that comprise this combo.
  * @param {Phaser.Types.Input.Keyboard.KeyComboConfig} [config] - A Key Combo configuration object.
  */
 var KeyCombo = new Class({
@@ -115,7 +115,7 @@ var KeyCombo = new Class({
          * The current keyCode the combo is waiting for.
          *
          * @name Phaser.Input.Keyboard.KeyCombo#current
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.current = this.keyCodes[0];
@@ -124,7 +124,7 @@ var KeyCombo = new Class({
          * The current index of the key being waited for in the 'keys' string.
          *
          * @name Phaser.Input.Keyboard.KeyCombo#index
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -183,7 +183,7 @@ var KeyCombo = new Class({
          * The max delay in ms between each key press. Above this the combo is reset. 0 means disabled.
          *
          * @name Phaser.Input.Keyboard.KeyCombo#maxKeyDelay
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */

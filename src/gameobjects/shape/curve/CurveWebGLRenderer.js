@@ -24,16 +24,18 @@ var StrokePathWebGL = require('../StrokePathWebGL');
  */
 var CurveWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var pipeline = renderer.pipelines.set(this.pipeline);
+    var pipeline = renderer.pipelines.set(src.pipeline);
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    var calcMatrix = pipeline._tempMatrix3.copyFrom(result.calc);
+    var calcMatrix = pipeline.calcMatrix.copyFrom(result.calc);
 
     var dx = src._displayOriginX + src._curveBounds.x;
     var dy = src._displayOriginY + src._curveBounds.y;
 
     var alpha = camera.alpha * src.alpha;
+
+    renderer.pipelines.preBatch(src);
 
     if (src.isFilled)
     {
@@ -44,6 +46,8 @@ var CurveWebGLRenderer = function (renderer, src, camera, parentMatrix)
     {
         StrokePathWebGL(pipeline, src, alpha, dx, dy);
     }
+
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = CurveWebGLRenderer;

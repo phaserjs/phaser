@@ -6,6 +6,7 @@
 
 var Color = require('./Color');
 
+Color.ColorSpectrum = require('./ColorSpectrum');
 Color.ColorToRGBA = require('./ColorToRGBA');
 Color.ComponentToHex = require('./ComponentToHex');
 Color.GetColor = require('./GetColor');

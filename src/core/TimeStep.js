@@ -89,7 +89,7 @@ var TimeStep = new Class({
          * The minimum fps rate you want the Time Step to run at.
          *
          * @name Phaser.Core.TimeStep#minFps
-         * @type {integer}
+         * @type {number}
          * @default 5
          * @since 3.0.0
          */
@@ -103,7 +103,7 @@ var TimeStep = new Class({
          * is spiraling out of control.
          *
          * @name Phaser.Core.TimeStep#targetFps
-         * @type {integer}
+         * @type {number}
          * @default 60
          * @since 3.0.0
          */
@@ -135,7 +135,7 @@ var TimeStep = new Class({
          * An exponential moving average of the frames per second.
          *
          * @name Phaser.Core.TimeStep#actualFps
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @default 60
          * @since 3.0.0
@@ -147,7 +147,7 @@ var TimeStep = new Class({
          * When an fps update happens, the `framesThisSecond` value is reset.
          *
          * @name Phaser.Core.TimeStep#nextFpsUpdate
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @default 0
          * @since 3.0.0
@@ -158,7 +158,7 @@ var TimeStep = new Class({
          * The number of frames processed this second.
          *
          * @name Phaser.Core.TimeStep#framesThisSecond
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @default 0
          * @since 3.0.0
@@ -223,7 +223,7 @@ var TimeStep = new Class({
          * time has passed and is unaffected by delta smoothing.
          *
          * @name Phaser.Core.TimeStep#frame
-         * @type {integer}
+         * @type {number}
          * @readonly
          * @default 0
          * @since 3.0.0
@@ -257,7 +257,7 @@ var TimeStep = new Class({
          * An internal counter to allow for the browser 'cooling down' after coming back into focus.
          *
          * @name Phaser.Core.TimeStep#_coolDown
-         * @type {integer}
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -268,7 +268,7 @@ var TimeStep = new Class({
          * The delta time, in ms, since the last game step. This is a clamped and smoothed average value.
          *
          * @name Phaser.Core.TimeStep#delta
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -278,7 +278,7 @@ var TimeStep = new Class({
          * Internal index of the delta history position.
          *
          * @name Phaser.Core.TimeStep#deltaIndex
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -288,7 +288,7 @@ var TimeStep = new Class({
          * Internal array holding the previous delta values, used for delta smoothing.
          *
          * @name Phaser.Core.TimeStep#deltaHistory
-         * @type {integer[]}
+         * @type {number[]}
          * @since 3.0.0
          */
         this.deltaHistory = [];
@@ -299,7 +299,7 @@ var TimeStep = new Class({
          * This can be changed in the Game Config via the `fps.deltaHistory` property. The default is 10.
          *
          * @name Phaser.Core.TimeStep#deltaSmoothingMax
-         * @type {integer}
+         * @type {number}
          * @default 10
          * @since 3.0.0
          */
@@ -312,7 +312,7 @@ var TimeStep = new Class({
          * This can be changed in the Game Config via the `fps.panicMax` property. The default is 120.
          *
          * @name Phaser.Core.TimeStep#panicMax
-         * @type {integer}
+         * @type {number}
          * @default 120
          * @since 3.0.0
          */

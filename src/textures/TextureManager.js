@@ -104,7 +104,7 @@ var TextureManager = new Class({
          * An counting value used for emitting 'ready' event after all of managers in game is loaded.
          *
          * @name Phaser.Textures.TextureManager#_pending
-         * @type {integer}
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -247,6 +247,10 @@ var TextureManager = new Class({
     /**
      * Adds a new Texture to the Texture Manager created from the given Base64 encoded data.
      *
+     * It works by creating an `Image` DOM object, then setting the `src` attribute to
+     * the given base64 encoded data. As a result, the process is asynchronous by its nature,
+     * so be sure to listen for the events this method dispatches before using the texture.
+     *
      * @method Phaser.Textures.TextureManager#addBase64
      * @fires Phaser.Textures.Events#ADD
      * @fires Phaser.Textures.Events#ERROR
@@ -301,7 +305,7 @@ var TextureManager = new Class({
      * @since 3.12.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
+     * @param {(string|number)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
      * @param {string} [type='image/png'] - A DOMString indicating the image format. The default format type is image/png.
      * @param {number} [encoderOptions=0.92] - A Number between 0 and 1 indicating the image quality to use for image formats that use lossy compression such as image/jpeg and image/webp. If this argument is anything else, the default value for image quality is used. The default value is 0.92. Other arguments are ignored.
      *
@@ -386,6 +390,9 @@ var TextureManager = new Class({
      *
      * This allows you to then use the Texture as a normal texture for texture based Game Objects like Sprites.
      *
+     * If the `width` and `height` arguments are omitted, but the WebGL Texture was created by Phaser's WebGL Renderer
+     * and has `glTexture.width` and `glTexture.height` properties, these values will be used instead.
+     *
      * This is a WebGL only feature.
      *
      * @method Phaser.Textures.TextureManager#addGLTexture
@@ -394,8 +401,8 @@ var TextureManager = new Class({
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {WebGLTexture} glTexture - The source Render Texture.
-     * @param {number} width - The new width of the Texture.
-     * @param {number} height - The new height of the Texture.
+     * @param {number} [width] - The new width of the Texture. Read from `glTexture.width` if omitted.
+     * @param {number} [height] - The new height of the Texture. Read from `glTexture.height` if omitted.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -405,6 +412,9 @@ var TextureManager = new Class({
 
         if (this.checkKey(key))
         {
+            if (width === undefined) { width = glTexture.width; }
+            if (height === undefined) { height = glTexture.height; }
+
             texture = this.create(key, glTexture, width, height);
 
             texture.add('__BASE', 0, 0, 0, width, height);
@@ -515,8 +525,8 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {integer} [width=256] - The width of the Canvas element.
-     * @param {integer} [height=256] - The height of the Canvas element.
+     * @param {number} [width=256] - The width of the Canvas element.
+     * @param {number} [height=256] - The height of the Canvas element.
      *
      * @return {?Phaser.Textures.CanvasTexture} The Canvas Texture that was created, or `null` if the key is already in use.
      */
@@ -866,8 +876,8 @@ var TextureManager = new Class({
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
-     * @param {integer} width - The width of the Texture.
-     * @param {integer} height - The height of the Texture.
+     * @param {number} width - The width of the Texture.
+     * @param {number} height - The height of the Texture.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -941,7 +951,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} frame - The string or index of the Frame to be cloned.
+     * @param {(string|number)} frame - The string or index of the Frame to be cloned.
      *
      * @return {Phaser.Textures.Frame} A Clone of the given Frame.
      */
@@ -960,7 +970,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
+     * @param {(string|number)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
      *
      * @return {Phaser.Textures.Frame} A Texture Frame object.
      */
@@ -1004,10 +1014,10 @@ var TextureManager = new Class({
      * @method Phaser.Textures.TextureManager#getPixel
      * @since 3.0.0
      *
-     * @param {integer} x - The x coordinate of the pixel within the Texture.
-     * @param {integer} y - The y coordinate of the pixel within the Texture.
+     * @param {number} x - The x coordinate of the pixel within the Texture.
+     * @param {number} y - The y coordinate of the pixel within the Texture.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} [frame] - The string or index of the Frame.
+     * @param {(string|number)} [frame] - The string or index of the Frame.
      *
      * @return {?Phaser.Display.Color} A Color object populated with the color values of the requested pixel,
      * or `null` if the coordinates were out of bounds.
@@ -1051,12 +1061,12 @@ var TextureManager = new Class({
      * @method Phaser.Textures.TextureManager#getPixelAlpha
      * @since 3.10.0
      *
-     * @param {integer} x - The x coordinate of the pixel within the Texture.
-     * @param {integer} y - The y coordinate of the pixel within the Texture.
+     * @param {number} x - The x coordinate of the pixel within the Texture.
+     * @param {number} y - The y coordinate of the pixel within the Texture.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} [frame] - The string or index of the Frame.
+     * @param {(string|number)} [frame] - The string or index of the Frame.
      *
-     * @return {integer} A value between 0 and 255, or `null` if the coordinates were out of bounds.
+     * @return {number} A value between 0 and 255, or `null` if the coordinates were out of bounds.
      */
     getPixelAlpha: function (x, y, key, frame)
     {
@@ -1098,7 +1108,7 @@ var TextureManager = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object the texture would be set on.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} [frame] - The string or index of the Frame.
+     * @param {(string|number)} [frame] - The string or index of the Frame.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object the texture was set on.
      */

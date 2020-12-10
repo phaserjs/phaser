@@ -88,7 +88,7 @@ var Animation = new Class({
          * The frame rate of playback in frames per second (default 24 if duration is null)
          *
          * @name Phaser.Animations.Animation#frameRate
-         * @type {integer}
+         * @type {number}
          * @default 24
          * @since 3.0.0
          */
@@ -100,7 +100,7 @@ var Animation = new Class({
          * otherwise the `frameRate` is derived from `duration`.
          *
          * @name Phaser.Animations.Animation#duration
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.duration = GetValue(config, 'duration', null);
@@ -109,7 +109,7 @@ var Animation = new Class({
          * How many ms per frame, not including frame specific modifiers.
          *
          * @name Phaser.Animations.Animation#msPerFrame
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.msPerFrame;
@@ -128,7 +128,7 @@ var Animation = new Class({
          * The delay in ms before the playback will begin.
          *
          * @name Phaser.Animations.Animation#delay
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -138,7 +138,7 @@ var Animation = new Class({
          * Number of times to repeat the animation. Set to -1 to repeat forever.
          *
          * @name Phaser.Animations.Animation#repeat
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -148,7 +148,7 @@ var Animation = new Class({
          * The delay in ms before the a repeat play starts.
          *
          * @name Phaser.Animations.Animation#repeatDelay
-         * @type {integer}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -222,7 +222,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#calculateDuration
      * @since 3.50.0
      *
-     * @param {(Phaser.Animations.Animation|Phaser.GameObjects.Components.Animation)} target - The target to set the values on.
+     * @param {Phaser.Animations.Animation} target - The target to set the values on.
      * @param {number} totalFrames - The total number of frames in the animation.
      * @param {number} duration - The duration to calculate the frame rate from.
      * @param {number} frameRate - The frame ate to calculate the duration from.
@@ -276,7 +276,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#addFrameAt
      * @since 3.0.0
      *
-     * @param {integer} index - The index to insert the frame at within the animation.
+     * @param {number} index - The index to insert the frame at within the animation.
      * @param {(string|Phaser.Types.Animations.AnimationFrame[])} config - Either a string, in which case it will use all frames from a texture with the matching key, or an array of Animation Frame configuration objects.
      *
      * @return {this} This Animation object.
@@ -315,7 +315,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#checkFrame
      * @since 3.0.0
      *
-     * @param {integer} index - The index to be checked.
+     * @param {number} index - The index to be checked.
      *
      * @return {boolean} `true` if the index is valid, otherwise `false`.
      */
@@ -332,14 +332,14 @@ var Animation = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     * @param {Phaser.Animations.AnimationState} state - The Animation State belonging to the Game Object invoking this call.
      */
-    getFirstTick: function (component)
+    getFirstTick: function (state)
     {
         //  When is the first update due?
-        component.accumulator = 0;
+        state.accumulator = 0;
 
-        component.nextTick = component.msPerFrame + component.currentFrame.duration;
+        state.nextTick = state.msPerFrame + state.currentFrame.duration;
     },
 
     /**
@@ -349,7 +349,7 @@ var Animation = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {integer} index - The index in the AnimationFrame array
+     * @param {number} index - The index in the AnimationFrame array
      *
      * @return {Phaser.Animations.AnimationFrame} The frame at the index provided from the animation sequence
      */
@@ -473,13 +473,13 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#getNextTick
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     * @param {Phaser.Animations.AnimationState} state - The Animation State belonging to the Game Object invoking this call.
      */
-    getNextTick: function (component)
+    getNextTick: function (state)
     {
-        component.accumulator -= component.nextTick;
+        state.accumulator -= state.nextTick;
 
-        component.nextTick = component.msPerFrame + component.currentFrame.duration;
+        state.nextTick = state.msPerFrame + state.currentFrame.duration;
     },
 
     /**
@@ -505,42 +505,42 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#nextFrame
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
+     * @param {Phaser.Animations.AnimationState} state - The Animation State to advance.
      */
-    nextFrame: function (component)
+    nextFrame: function (state)
     {
-        var frame = component.currentFrame;
+        var frame = state.currentFrame;
 
         if (frame.isLast)
         {
             //  We're at the end of the animation
 
             //  Yoyo? (happens before repeat)
-            if (component.yoyo)
+            if (state.yoyo)
             {
-                this.handleYoyoFrame(component, false);
+                this.handleYoyoFrame(state, false);
             }
-            else if (component.repeatCounter > 0)
+            else if (state.repeatCounter > 0)
             {
                 //  Repeat (happens before complete)
 
-                if (component.inReverse && component.forward)
+                if (state.inReverse && state.forward)
                 {
-                    component.forward = false;
+                    state.forward = false;
                 }
                 else
                 {
-                    this.repeatAnimation(component);
+                    this.repeatAnimation(state);
                 }
             }
             else
             {
-                component.complete();
+                state.complete();
             }
         }
         else
         {
-            this.updateAndGetNextTick(component, frame.nextFrame);
+            this.updateAndGetNextTick(state, frame.nextFrame);
         }
     },
 
@@ -551,37 +551,37 @@ var Animation = new Class({
      * @private
      * @since 3.12.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
+     * @param {Phaser.Animations.AnimationState} state - The Animation State to advance.
      * @param {boolean} isReverse - Is animation in reverse mode? (Default: false)
      */
-    handleYoyoFrame: function (component, isReverse)
+    handleYoyoFrame: function (state, isReverse)
     {
         if (!isReverse) { isReverse = false; }
 
-        if (component.inReverse === !isReverse && component.repeatCounter > 0)
+        if (state.inReverse === !isReverse && state.repeatCounter > 0)
         {
-            if (component.repeatDelay === 0 || component.pendingRepeat)
+            if (state.repeatDelay === 0 || state.pendingRepeat)
             {
-                component.forward = isReverse;
+                state.forward = isReverse;
             }
 
-            this.repeatAnimation(component);
+            this.repeatAnimation(state);
 
             return;
         }
 
-        if (component.inReverse !== isReverse && component.repeatCounter === 0)
+        if (state.inReverse !== isReverse && state.repeatCounter === 0)
         {
-            component.complete();
+            state.complete();
 
             return;
         }
 
-        component.forward = isReverse;
+        state.forward = isReverse;
 
-        var frame = (isReverse) ? component.currentFrame.nextFrame : component.currentFrame.prevFrame;
+        var frame = (isReverse) ? state.currentFrame.nextFrame : state.currentFrame.prevFrame;
 
-        this.updateAndGetNextTick(component, frame);
+        this.updateAndGetNextTick(state, frame);
     },
 
     /**
@@ -590,7 +590,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#getLastFrame
      * @since 3.12.0
      *
-     * @return {Phaser.Animations.AnimationFrame} component - The Animation Last Frame.
+     * @return {Phaser.Animations.AnimationFrame} The last Animation Frame.
      */
     getLastFrame: function ()
     {
@@ -604,41 +604,41 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#previousFrame
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     * @param {Phaser.Animations.AnimationState} state - The Animation State belonging to the Game Object invoking this call.
      */
-    previousFrame: function (component)
+    previousFrame: function (state)
     {
-        var frame = component.currentFrame;
+        var frame = state.currentFrame;
 
         if (frame.isFirst)
         {
             //  We're at the start of the animation
-            if (component.yoyo)
+            if (state.yoyo)
             {
-                this.handleYoyoFrame(component, true);
+                this.handleYoyoFrame(state, true);
             }
-            else if (component.repeatCounter > 0)
+            else if (state.repeatCounter > 0)
             {
-                if (component.inReverse && !component.forward)
+                if (state.inReverse && !state.forward)
                 {
-                    this.repeatAnimation(component);
+                    this.repeatAnimation(state);
                 }
                 else
                 {
                     //  Repeat (happens before complete)
-                    component.forward = true;
+                    state.forward = true;
 
-                    this.repeatAnimation(component);
+                    this.repeatAnimation(state);
                 }
             }
             else
             {
-                component.complete();
+                state.complete();
             }
         }
         else
         {
-            this.updateAndGetNextTick(component, frame.prevFrame);
+            this.updateAndGetNextTick(state, frame.prevFrame);
         }
     },
 
@@ -649,13 +649,14 @@ var Animation = new Class({
      * @private
      * @since 3.12.0
      *
+     * @param {Phaser.Animations.AnimationState} state - The Animation State.
      * @param {Phaser.Animations.AnimationFrame} frame - An Animation frame.
      */
-    updateAndGetNextTick: function (component, frame)
+    updateAndGetNextTick: function (state, frame)
     {
-        component.setCurrentFrame(frame);
+        state.setCurrentFrame(frame);
 
-        this.getNextTick(component);
+        this.getNextTick(state);
     },
 
     /**
@@ -688,7 +689,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#removeFrameAt
      * @since 3.0.0
      *
-     * @param {integer} index - The index in the AnimationFrame array
+     * @param {number} index - The index in the AnimationFrame array
      *
      * @return {this} This Animation object.
      */
@@ -711,46 +712,46 @@ var Animation = new Class({
      * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_REPEAT
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component belonging to the Game Object invoking this call.
+     * @param {Phaser.Animations.AnimationState} state - The Animation State belonging to the Game Object invoking this call.
      */
-    repeatAnimation: function (component)
+    repeatAnimation: function (state)
     {
-        if (component._pendingStop === 2)
+        if (state._pendingStop === 2)
         {
-            if (component._pendingStopValue === 0)
+            if (state._pendingStopValue === 0)
             {
-                return component.stop();
+                return state.stop();
             }
             else
             {
-                component._pendingStopValue--;
+                state._pendingStopValue--;
             }
         }
 
-        if (component.repeatDelay > 0 && !component.pendingRepeat)
+        if (state.repeatDelay > 0 && !state.pendingRepeat)
         {
-            component.pendingRepeat = true;
-            component.accumulator -= component.nextTick;
-            component.nextTick += component.repeatDelay;
+            state.pendingRepeat = true;
+            state.accumulator -= state.nextTick;
+            state.nextTick += state.repeatDelay;
         }
         else
         {
-            component.repeatCounter--;
+            state.repeatCounter--;
 
-            if (component.forward)
+            if (state.forward)
             {
-                component.setCurrentFrame(component.currentFrame.nextFrame);
+                state.setCurrentFrame(state.currentFrame.nextFrame);
             }
             else
             {
-                component.setCurrentFrame(component.currentFrame.prevFrame);
+                state.setCurrentFrame(state.currentFrame.prevFrame);
             }
 
-            if (component.isPlaying)
+            if (state.isPlaying)
             {
-                this.getNextTick(component);
+                this.getNextTick(state);
 
-                component.handleRepeat();
+                state.handleRepeat();
             }
         }
     },

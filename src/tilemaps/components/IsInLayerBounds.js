@@ -10,8 +10,8 @@
  * @function Phaser.Tilemaps.Components.IsInLayerBounds
  * @since 3.0.0
  *
- * @param {integer} tileX - The x coordinate, in tiles, not pixels.
- * @param {integer} tileY - The y coordinate, in tiles, not pixels.
+ * @param {number} tileX - The x coordinate, in tiles, not pixels.
+ * @param {number} tileY - The y coordinate, in tiles, not pixels.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {boolean} `true` if the tile coordinates are within the bounds of the layer, otherwise `false`.

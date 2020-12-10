@@ -24,15 +24,17 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var TriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var pipeline = renderer.pipelines.set(this.pipeline);
+    var pipeline = renderer.pipelines.set(src.pipeline);
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    pipeline._tempMatrix3.copyFrom(result.calc);
+    pipeline.calcMatrix.copyFrom(result.calc);
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
     var alpha = camera.alpha * src.alpha;
+
+    renderer.pipelines.preBatch(src);
 
     if (src.isFilled)
     {
@@ -51,8 +53,6 @@ var TriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
         var x3 = src.geom.x3 - dx;
         var y3 = src.geom.y3 - dy;
 
-        pipeline.setTexture2D();
-
         pipeline.batchFillTriangle(
             x1,
             y1,
@@ -69,6 +69,8 @@ var TriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
     {
         StrokePathWebGL(pipeline, src, alpha, dx, dy);
     }
+
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = TriangleWebGLRenderer;

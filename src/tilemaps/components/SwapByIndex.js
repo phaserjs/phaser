@@ -14,12 +14,12 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @function Phaser.Tilemaps.Components.SwapByIndex
  * @since 3.0.0
  *
- * @param {integer} tileA - First tile index.
- * @param {integer} tileB - Second tile index.
- * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
- * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
- * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
- * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+ * @param {number} tileA - First tile index.
+ * @param {number} tileB - Second tile index.
+ * @param {number} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} width - How many tiles wide from the `tileX` index the area will be.
+ * @param {number} height - How many tiles tall from the `tileY` index the area will be.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var SwapByIndex = function (indexA, indexB, tileX, tileY, width, height, layer)

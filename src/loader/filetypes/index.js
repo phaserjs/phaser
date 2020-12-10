@@ -11,6 +11,7 @@
 module.exports = {
 
     AnimationJSONFile: require('./AnimationJSONFile'),
+    AsepriteFile: require('./AsepriteFile'),
     AtlasJSONFile: require('./AtlasJSONFile'),
     AtlasXMLFile: require('./AtlasXMLFile'),
     AudioFile: require('./AudioFile'),

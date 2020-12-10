@@ -24,23 +24,35 @@ var Vector3 = require('../../math/Vector3');
  */
 var GetLineToLine = function (line1, line2, out)
 {
-    var dx1 = line1.x2 - line1.x1;
-    var dy1 = line1.y2 - line1.y1;
+    var x1 = line1.x1;
+    var y1 = line1.y1;
+    var x2 = line1.x2;
+    var y2 = line1.y2;
 
-    var dx2 = line2.x2 - line2.x1;
-    var dy2 = line2.y2 - line2.y1;
+    var x3 = line2.x1;
+    var y3 = line2.y1;
+    var x4 = line2.x2;
+    var y4 = line2.y2;
 
-    var mag1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
-    var mag2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+    var dx1 = x2 - x1;
+    var dy1 = y2 - y1;
 
-    //  Parallel?
-    if (dx1 / mag1 === dx2 / mag2 && dy1 / mag1 === dy2 / mag2)
+    var dx2 = x4 - x3;
+    var dy2 = y4 - y3;
+
+    var denom = dy2 * dx1 - dx2 * dy1;
+
+    //  Make sure there is not a division by zero - this also indicates that the lines are parallel.
+    //  If numA and numB were both equal to zero the lines would be on top of each other (coincidental).
+    //  This check is not done because it is not necessary for this implementation (the parallel check accounts for this).
+
+    if (dx1 === 0 || denom === 0)
     {
-        return null;
+        return false;
     }
 
-    var T2 = (dx1 * (line2.y1 - line1.y1) + dy1 * (line1.x1 - line2.x1)) / (dx2 * dy1 - dy2 * dx1);
-    var T1 = (line2.x1 + dx2 * T2 - line1.x1) / dx1;
+    var T2 = (dx1 * (y3 - y1) + dy1 * (x1 - x3)) / (dx2 * dy1 - dy2 * dx1);
+    var T1 = (x3 + dx2 * T2 - x1) / dx1;
 
     //  Intersects?
     if (T1 < 0 || T2 < 0 || T2 > 1)
@@ -54,8 +66,8 @@ var GetLineToLine = function (line1, line2, out)
     }
 
     return out.set(
-        line1.x1 + dx1 * T1,
-        line1.y1 + dy1 * T1,
+        x1 + dx1 * T1,
+        y1 + dy1 * T1,
         T1
     );
 };

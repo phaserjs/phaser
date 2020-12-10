@@ -8,9 +8,9 @@ var SpliceOne = require('./SpliceOne');
 
 /**
  * Removes the given item, or array of items, from the array.
- * 
+ *
  * The array is modified in-place.
- * 
+ *
  * You can optionally specify a callback to be invoked for each item successfully removed from the array.
  *
  * @function Phaser.Utils.Array.Remove
@@ -54,6 +54,7 @@ var Remove = function (array, item, callback, context)
     //  If we got this far, we have an array of items to remove
 
     var itemLength = item.length - 1;
+    var removed = [];
 
     while (itemLength >= 0)
     {
@@ -65,21 +66,18 @@ var Remove = function (array, item, callback, context)
         {
             SpliceOne(array, index);
 
+            removed.push(entry);
+
             if (callback)
             {
                 callback.call(context, entry);
             }
         }
-        else
-        {
-            //  Item wasn't found in the array, so remove it from our return results
-            item.pop();
-        }
 
         itemLength--;
     }
 
-    return item;
+    return removed;
 };
 
 module.exports = Remove;

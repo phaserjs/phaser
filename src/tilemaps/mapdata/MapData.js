@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var CONST = require('../const/ORIENTATION_CONST');
 var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
@@ -30,7 +31,7 @@ var MapData = new Class({
 
         /**
          * The key in the Phaser cache that corresponds to the loaded tilemap data.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#name
          * @type {string}
          * @since 3.0.0
@@ -39,7 +40,7 @@ var MapData = new Class({
 
         /**
          * The width of the entire tilemap.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#width
          * @type {number}
          * @since 3.0.0
@@ -48,7 +49,7 @@ var MapData = new Class({
 
         /**
          * The height of the entire tilemap.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#height
          * @type {number}
          * @since 3.0.0
@@ -66,7 +67,7 @@ var MapData = new Class({
 
         /**
          * The width of the tiles.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#tileWidth
          * @type {number}
          * @since 3.0.0
@@ -75,7 +76,7 @@ var MapData = new Class({
 
         /**
          * The height of the tiles.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#tileHeight
          * @type {number}
          * @since 3.0.0
@@ -84,7 +85,7 @@ var MapData = new Class({
 
         /**
          * The width in pixels of the entire tilemap.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#widthInPixels
          * @type {number}
          * @since 3.0.0
@@ -93,7 +94,7 @@ var MapData = new Class({
 
         /**
          * The height in pixels of the entire tilemap.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#heightInPixels
          * @type {number}
          * @since 3.0.0
@@ -102,30 +103,30 @@ var MapData = new Class({
 
         /**
          * The format of the map data.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#format
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.format = GetFastValue(config, 'format', null);
 
         /**
          * The orientation of the map data (i.e. orthogonal, isometric, hexagonal), default 'orthogonal'.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#orientation
-         * @type {string}
-         * @since 3.0.0
+         * @type {Phaser.Tilemaps.OrientationType}
+         * @since 3.50.0
          */
-        this.orientation = GetFastValue(config, 'orientation', 'orthogonal');
+        this.orientation = GetFastValue(config, 'orientation', CONST.ORTHOGONAL);
 
         /**
          * Determines the draw order of tilemap. Default is right-down
-         * 
+         *
          * 0, or 'right-down'
          * 1, or 'left-down'
          * 2, or 'right-up'
          * 3, or 'left-up'
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#renderOrder
          * @type {string}
          * @since 3.12.0
@@ -134,7 +135,7 @@ var MapData = new Class({
 
         /**
          * The version of the map data (as specified in Tiled).
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#version
          * @type {string}
          * @since 3.0.0
@@ -143,7 +144,7 @@ var MapData = new Class({
 
         /**
          * Map specific properties (can be specified in Tiled)
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#properties
          * @type {object}
          * @since 3.0.0
@@ -152,7 +153,7 @@ var MapData = new Class({
 
         /**
          * An array with all the layers configured to the MapData.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#layers
          * @type {(Phaser.Tilemaps.LayerData[]|Phaser.Tilemaps.ObjectLayer)}
          * @since 3.0.0
@@ -161,7 +162,7 @@ var MapData = new Class({
 
         /**
          * An array of Tiled Image Layers.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#images
          * @type {array}
          * @since 3.0.0
@@ -170,7 +171,7 @@ var MapData = new Class({
 
         /**
          * An object of Tiled Object Layers.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#objects
          * @type {object}
          * @since 3.0.0
@@ -179,7 +180,7 @@ var MapData = new Class({
 
         /**
           * An object of collision data. Must be created as physics object or will return undefined.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#collision
          * @type {object}
          * @since 3.0.0
@@ -188,7 +189,7 @@ var MapData = new Class({
 
         /**
          * An array of Tilesets.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#tilesets
          * @type {Phaser.Tilemaps.Tileset[]}
          * @since 3.0.0
@@ -197,7 +198,7 @@ var MapData = new Class({
 
         /**
          * The collection of images the map uses(specified in Tiled)
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#imageCollections
          * @type {array}
          * @since 3.0.0
@@ -206,12 +207,22 @@ var MapData = new Class({
 
         /**
          * An array of tile instances.
-         * 
+         *
          * @name Phaser.Tilemaps.MapData#tiles
          * @type {array}
          * @since 3.0.0
          */
         this.tiles = GetFastValue(config, 'tiles', []);
+
+        /**
+         * The length of the horizontal sides of the hexagon.
+         * Only used for hexagonal orientation Tilemaps.
+         *
+         * @name Phaser.Tilemaps.MapData#hexSideLength
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.hexSideLength = GetFastValue(config, 'hexSideLength', 0);
     }
 
 });

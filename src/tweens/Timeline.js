@@ -150,7 +150,7 @@ var Timeline = new Class({
          * The current state of the Timeline.
          *
          * @name Phaser.Tweens.Timeline#state
-         * @type {integer}
+         * @type {number}
          * @since 3.0.0
          */
         this.state = TWEEN_CONST.PENDING_ADD;
@@ -159,7 +159,7 @@ var Timeline = new Class({
          * The state of the Timeline when it was paused (used by Resume)
          *
          * @name Phaser.Tweens.Timeline#_pausedState
-         * @type {integer}
+         * @type {number}
          * @private
          * @since 3.0.0
          */

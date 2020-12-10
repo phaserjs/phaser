@@ -23,11 +23,11 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var pipeline = renderer.pipelines.set(this.pipeline);
+    var pipeline = renderer.pipelines.set(src.pipeline);
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    var calcMatrix = pipeline._tempMatrix3.copyFrom(result.calc);
+    var calcMatrix = pipeline.calcMatrix.copyFrom(result.calc);
 
     var size = src.width;
     var height = src.height;
@@ -44,6 +44,8 @@ var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    renderer.pipelines.preBatch(src);
+
     var tint;
 
     var x0;
@@ -54,8 +56,6 @@ var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var x2;
     var y2;
-
-    pipeline.setTexture2D();
 
     //  Top Face
 
@@ -75,7 +75,7 @@ var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
         var x3 = calcMatrix.getX(0, sizeB - height);
         var y3 = calcMatrix.getY(0, sizeB - height);
 
-        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
+        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, tint, tint, tint, tint);
     }
 
     //  Left Face
@@ -107,7 +107,7 @@ var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
             y2 = calcMatrix.getY(0, sizeB - height);
         }
 
-        pipeline.batchTri(x0, y0, x1, y1, x2, y2, 0, 0, 1, 1, tint, tint, tint, 1);
+        pipeline.batchTri(x0, y0, x1, y1, x2, y2, tint, tint, tint);
     }
 
     //  Right Face
@@ -139,8 +139,10 @@ var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
             y2 = calcMatrix.getY(0, sizeB - height);
         }
 
-        pipeline.batchTri(x0, y0, x1, y1, x2, y2, 0, 0, 1, 1, tint, tint, tint, 1);
+        pipeline.batchTri(x0, y0, x1, y1, x2, y2, tint, tint, tint);
     }
+
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = IsoTriangleWebGLRenderer;

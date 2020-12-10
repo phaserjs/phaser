@@ -23,15 +23,17 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var LineWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var pipeline = renderer.pipelines.set(this.pipeline);
+    var pipeline = renderer.pipelines.set(src.pipeline);
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
-    pipeline._tempMatrix3.copyFrom(result.calc);
+    pipeline.calcMatrix.copyFrom(result.calc);
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
     var alpha = camera.alpha * src.alpha;
+
+    renderer.pipelines.preBatch(src);
 
     if (src.isStroked)
     {
@@ -45,8 +47,6 @@ var LineWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
         var startWidth = src._startWidth;
         var endWidth = src._endWidth;
-
-        pipeline.setTexture2D();
 
         pipeline.batchLine(
             src.geom.x1 - dx,
@@ -62,6 +62,8 @@ var LineWebGLRenderer = function (renderer, src, camera, parentMatrix)
             result.camera
         );
     }
+
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = LineWebGLRenderer;

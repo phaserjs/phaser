@@ -4,7 +4,10 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var TransformMatrix = require('../components/TransformMatrix');
 var Utils = require('../../renderer/webgl/Utils');
+
+var tempMatrix = new TransformMatrix();
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -34,9 +37,7 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var cameraScrollX = camera.scrollX * src.scrollFactorX;
     var cameraScrollY = camera.scrollY * src.scrollFactorY;
 
-    var calcMatrix = pipeline._tempMatrix1;
-
-    calcMatrix.copyFrom(camera.matrix);
+    var calcMatrix = tempMatrix.copyFrom(camera.matrix);
 
     if (parentMatrix)
     {
@@ -52,6 +53,8 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var tintEffect = false;
     var alpha = camera.alpha * src.alpha;
     var roundPixels = camera.roundPixels;
+
+    renderer.pipelines.preBatch(src);
 
     for (var index = 0; index < list.length; index++)
     {
@@ -111,11 +114,13 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
         }
 
         //  TL x/y, BL x/y, BR x/y, TR x/y
-        if (pipeline.batchQuad(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, frame.glTexture, textureUnit))
+        if (pipeline.batchQuad(src, tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, frame.glTexture, textureUnit))
         {
             prevTextureSourceIndex = -1;
         }
     }
+
+    renderer.pipelines.postBatch(src);
 };
 
 module.exports = BlitterWebGLRenderer;

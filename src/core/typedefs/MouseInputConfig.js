@@ -6,4 +6,5 @@
  * @property {boolean} [preventDefaultDown=true] - If `true` the DOM `mousedown` event will have `preventDefault` set.
  * @property {boolean} [preventDefaultUp=true] - If `true` the DOM `mouseup` event will have `preventDefault` set.
  * @property {boolean} [preventDefaultMove=true] - If `true` the DOM `mousemove` event will have `preventDefault` set.
+ * @property {boolean} [preventDefaultWheel=true] - If `true` the DOM `wheel` event will have `preventDefault` set.
  */
