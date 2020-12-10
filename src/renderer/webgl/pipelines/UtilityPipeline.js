@@ -405,11 +405,11 @@ var UtilityPipeline = new Class({
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
-        if (source.height >= target.height)
+        if (source.height > target.height)
         {
             gl.viewport(0, 0, source.width, source.height);
 
-            this.setVerticesFromTarget(source, target);
+            this.setTargetUVs(source, target);
         }
         else
         {
@@ -754,18 +754,18 @@ var UtilityPipeline = new Class({
     },
 
     /**
-     * Sets the vertices of the quad used by the shaders in the Utility Pipeline
+     * Sets the vertex UV coordinates of the quad used by the shaders in the Utility Pipeline
      * so that they correctly adjust the texture coordinates for a blit frame effect.
      *
-     * Be sure to call `resetVertices` once you have finished manipulating the UV coordinates.
+     * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#setVerticesFromTarget
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#setTargetUVs
      * @since 3.50.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
      * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
      */
-    setVerticesFromTarget: function (source, target)
+    setTargetUVs: function (source, target)
     {
         var diff = (target.height / source.height);
 
