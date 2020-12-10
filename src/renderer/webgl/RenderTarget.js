@@ -189,20 +189,26 @@ var RenderTarget = new Class({
      */
     resize: function (width, height)
     {
-        var renderer = this.renderer;
+        var scaledWidth = width * this.scale;
+        var scaledHeight = height * this.scale;
 
-        renderer.deleteFramebuffer(this.framebuffer);
+        if (scaledWidth !== this.width || scaledHeight !== this.height)
+        {
+            var renderer = this.renderer;
 
-        renderer.deleteTexture(this.texture);
+            renderer.deleteFramebuffer(this.framebuffer);
 
-        width *= this.scale;
-        height *= this.scale;
+            renderer.deleteTexture(this.texture);
 
-        this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter);
-        this.framebuffer = renderer.createFramebuffer(width, height, this.texture, false);
+            width *= this.scale;
+            height *= this.scale;
 
-        this.width = width;
-        this.height = height;
+            this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter);
+            this.framebuffer = renderer.createFramebuffer(width, height, this.texture, false);
+
+            this.width = width;
+            this.height = height;
+        }
 
         return this;
     },
@@ -218,14 +224,21 @@ var RenderTarget = new Class({
      * @since 3.50.0
      *
      * @param {boolean} [adjustViewport=false] - Adjust the GL viewport by calling `RenderTarget.adjustViewport` ?
+     * @param {number} [width] - Optional new width of this Render Target.
+     * @param {number} [height] - Optional new height of this Render Target.
      */
-    bind: function (adjustViewport)
+    bind: function (adjustViewport, width, height)
     {
         if (adjustViewport === undefined) { adjustViewport = false; }
 
         if (adjustViewport)
         {
             this.renderer.flush();
+        }
+
+        if (width && height)
+        {
+            this.resize(width, height);
         }
 
         this.renderer.pushFramebuffer(this.framebuffer, false, false, false);
@@ -236,7 +249,7 @@ var RenderTarget = new Class({
 
             gl.clearColor(0, 0, 0, 0);
 
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
         }
 
         if (adjustViewport)
@@ -246,21 +259,20 @@ var RenderTarget = new Class({
     },
 
     /**
-     * Adjusts the GL viewport to match the WebGL Renderer width and height,
-     * with a y offset of `RenderTarget.height` - `WebGLRenderer.height`.
+     * Adjusts the GL viewport to match the width and height of this Render Target.
+     *
+     * Also disables `SCISSOR_TEST`.
      *
      * @method Phaser.Renderer.WebGL.RenderTarget#adjustViewport
      * @since 3.50.0
      */
     adjustViewport: function ()
     {
-        var renderer = this.renderer;
+        var gl = this.renderer.gl;
 
-        var textureWidth = this.width;
-        var textureHeight = this.height;
+        gl.viewport(0, 0, this.width, this.height);
 
-        renderer.gl.viewport(0, 0, textureWidth, textureHeight);
-        renderer.gl.disable(renderer.gl.SCISSOR_TEST);
+        gl.disable(gl.SCISSOR_TEST);
     },
 
     /**
@@ -301,20 +313,6 @@ var RenderTarget = new Class({
         if (flush)
         {
             renderer.flush();
-
-            renderer.gl.enable(renderer.gl.SCISSOR_TEST);
-
-            var scissor = renderer.currentScissor;
-
-            if (scissor)
-            {
-                var x = scissor[0];
-                var y = scissor[1];
-                var width = scissor[2];
-                var height = scissor[3];
-
-                renderer.gl.scissor(x, (renderer.drawingBufferHeight - y - height), width, height);
-            }
         }
 
         return renderer.popFramebuffer();
