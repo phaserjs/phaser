@@ -897,6 +897,8 @@ var WebGLRenderer = new Class({
 
         this.renderTarget.bind(true, width, height);
 
+        this.emit(Events.PROJECTION, width, height);
+
         this.resetTextures();
     },
 
@@ -914,6 +916,8 @@ var WebGLRenderer = new Class({
     endCapture: function ()
     {
         this.renderTarget.unbind(true);
+
+        this.emit(Events.PROJECTION, this.width, this.height);
 
         return this.renderTarget;
     },

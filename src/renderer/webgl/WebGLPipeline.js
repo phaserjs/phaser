@@ -466,6 +466,7 @@ var WebGLPipeline = new Class({
         renderer.on(RendererEvents.PRE_RENDER, this.onPreRender, this);
         renderer.on(RendererEvents.RENDER, this.onRender, this);
         renderer.on(RendererEvents.POST_RENDER, this.onPostRender, this);
+        renderer.on(RendererEvents.PROJECTION, this.setProjectionMatrix, this);
 
         this.emit(Events.BOOT, this);
 
@@ -2038,6 +2039,7 @@ var WebGLPipeline = new Class({
         renderer.off(RendererEvents.PRE_RENDER, this.onPreRender, this);
         renderer.off(RendererEvents.RENDER, this.onRender, this);
         renderer.off(RendererEvents.POST_RENDER, this.onPostRender, this);
+        renderer.off(RendererEvents.PROJECTION, this.setProjectionMatrix, this);
 
         this.removeAllListeners();
 

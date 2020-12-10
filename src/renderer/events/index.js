@@ -12,6 +12,7 @@ module.exports = {
 
     POST_RENDER: require('./POST_RENDER_EVENT'),
     PRE_RENDER: require('./PRE_RENDER_EVENT'),
+    PROJECTION: require('./PROJECTION_EVENT'),
     RENDER: require('./RENDER_EVENT'),
     RESIZE: require('./RESIZE_EVENT')
 
