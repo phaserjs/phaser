@@ -792,7 +792,7 @@ var RenderTexture = new Class({
 
         if (renderTarget)
         {
-            renderer.beginCapture();
+            renderer.beginCapture(renderTarget.width, renderTarget.height);
         }
         else
         {
@@ -1038,6 +1038,7 @@ var RenderTexture = new Class({
 
             util.blitFrame(canvasTarget, renderTarget, 1, false, false, this._eraseMode);
 
+            renderer.resetScissor();
             renderer.resetViewport();
         }
         else
