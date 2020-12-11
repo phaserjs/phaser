@@ -558,7 +558,6 @@ var GameObject = new Class({
      */
     addedToScene: function ()
     {
-        console.log('addedToScene', this);
     },
 
     /**
