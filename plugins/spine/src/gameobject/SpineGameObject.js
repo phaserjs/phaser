@@ -248,18 +248,31 @@ var SpineGameObject = new Class({
      * @method SpineGameObject#willRender
      * @since 3.19.0
      *
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+     * @param {SpineContainer} [container] - If this Spine object is in a Spine Container, this is a reference to it.
+     *
      * @return {boolean} `true` if this Game Object should be rendered, otherwise `false`.
      */
-    willRender: function (camera)
+    willRender: function (camera, container)
     {
-        if (!this.skeleton)
-        {
-            return false;
-        }
-
         var GameObjectRenderMask = 15;
 
-        return !(GameObjectRenderMask !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
+        var result = (!this.skeleton || !(GameObjectRenderMask !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id))));
+
+        if (!container && !result)
+        {
+            var plugin = this.plugin;
+            var sceneRenderer = plugin.sceneRenderer;
+
+            if (plugin.gl && sceneRenderer.batcher.isDrawing)
+            {
+                sceneRenderer.end();
+
+                plugin.renderer.pipelines.rebind();
+            }
+        }
+
+        return result;
     },
 
     /**
