@@ -854,14 +854,14 @@ var WebGLPipeline = new Class({
      */
     rebind: function ()
     {
-        var wasBound = this.setVertexBuffer();
+        this.setVertexBuffer();
 
         var shaders = this.shaders;
 
         //  Loop in reverse, so the first shader in the array is left as being bound
         for (var i = shaders.length - 1; i >= 0; i--)
         {
-            this.currentShader = shaders[i].bind(wasBound);
+            this.currentShader = shaders[i].rebind();
         }
 
         this.emit(Events.REBIND, this.currentShader);
