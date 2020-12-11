@@ -333,6 +333,24 @@ var WebGLPipeline = new Class({
         this.projectionMatrix;
 
         /**
+         * The cached width of the Projection matrix.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#projectionWidth
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.projectionWidth = 0;
+
+        /**
+         * The cached height of the Projection matrix.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#projectionHeight
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.projectionHeight = 0;
+
+        /**
          * The configuration object that was used to create this pipeline.
          *
          * Treat this object as 'read only', because changing it post-creation will not
@@ -466,7 +484,6 @@ var WebGLPipeline = new Class({
         renderer.on(RendererEvents.PRE_RENDER, this.onPreRender, this);
         renderer.on(RendererEvents.RENDER, this.onRender, this);
         renderer.on(RendererEvents.POST_RENDER, this.onPostRender, this);
-        renderer.on(RendererEvents.PROJECTION, this.setProjectionMatrix, this);
 
         this.emit(Events.BOOT, this);
 
@@ -712,7 +729,7 @@ var WebGLPipeline = new Class({
             targets[i].resize(width, height);
         }
 
-        this.setProjectionMatrix(width, height, false);
+        this.setProjectionMatrix(width, height);
 
         this.emit(Events.RESIZE, width, height, this);
 
@@ -739,11 +756,16 @@ var WebGLPipeline = new Class({
     {
         var projectionMatrix = this.projectionMatrix;
 
-        //  Because Post FX Pipelines don't have them
-        if (projectionMatrix)
+        //  Because not all pipelines have them
+        if (!projectionMatrix)
         {
-            projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
+            return this;
         }
+
+        this.projectionWidth = width;
+        this.projectionHeight = height;
+
+        projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
 
         var shaders = this.shaders;
 
@@ -762,6 +784,30 @@ var WebGLPipeline = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Adjusts this pipelines ortho Projection Matrix to match that of the global
+     * WebGL Renderer Projection Matrix.
+     *
+     * This method is called automatically by the Pipeline Manager when this
+     * pipeline is set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#updateProjectionMatrix
+     * @since 3.50.0
+     */
+    updateProjectionMatrix: function ()
+    {
+        if (this.projectionMatrix)
+        {
+            var globalWidth = this.renderer.projectionWidth;
+            var globalHeight = this.renderer.projectionHeight;
+
+            if (this.projectionWidth !== globalWidth || this.projectionHeight !== globalHeight)
+            {
+                this.setProjectionMatrix(globalWidth, globalHeight);
+            }
+        }
     },
 
     /**
@@ -2039,7 +2085,6 @@ var WebGLPipeline = new Class({
         renderer.off(RendererEvents.PRE_RENDER, this.onPreRender, this);
         renderer.off(RendererEvents.RENDER, this.onRender, this);
         renderer.off(RendererEvents.POST_RENDER, this.onPostRender, this);
-        renderer.off(RendererEvents.PROJECTION, this.setProjectionMatrix, this);
 
         this.removeAllListeners();
 
