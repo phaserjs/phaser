@@ -259,7 +259,7 @@ var SpineGameObject = new Class({
 
         var result = (!this.skeleton || !(GameObjectRenderMask !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id))));
 
-        if (!container && !result)
+        if (!container && !result && this.parentContainer)
         {
             var plugin = this.plugin;
             var sceneRenderer = plugin.sceneRenderer;
