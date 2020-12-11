@@ -458,6 +458,9 @@ var Mesh = new Class({
      *
      * If using this mode you will often need to set `Mesh.hideCCW` to `false` as well.
      *
+     * By default, calling this method with no parameters will set the scaleX value to
+     * match the renderers aspect ratio.
+     *
      * See also `setPerspective`.
      *
      * @method Phaser.GameObjects.Mesh#setOrtho
@@ -470,7 +473,7 @@ var Mesh = new Class({
      */
     setOrtho: function (scaleX, scaleY, near, far)
     {
-        if (scaleX === undefined) { scaleX = 1; }
+        if (scaleX === undefined) { scaleX = this.scene.sys.renderer.getAspectRatio(); }
         if (scaleY === undefined) { scaleY = 1; }
         if (near === undefined) { near = -1000; }
         if (far === undefined) { far = 1000; }
