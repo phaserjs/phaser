@@ -988,6 +988,19 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * Gets the aspect ratio of the WebGLRenderer dimensions.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#getAspectRatio
+     * @since 3.50.0
+     *
+     * @return {number} The aspect ratio of the WebGLRenderer dimensions.
+     */
+    getAspectRatio: function ()
+    {
+        return this.width / this.height;
+    },
+
+    /**
      * Sets the Projection Matrix of this renderer to the given dimensions.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setProjectionMatrix
