@@ -87,15 +87,18 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
         }
     }
 
-    if (camera.renderToTexture || renderer.currentFramebuffer !== null)
+    /*
+    if (renderer.currentFramebuffer !== null)
     {
         skeleton.y = calcMatrix.ty;
         skeleton.scaleY *= -1;
     }
+    */
 
     skeleton.updateWorldTransform();
 
     //  Draw the current skeleton
+
     sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
 
     if (container)
