@@ -2307,12 +2307,15 @@ var WebGLRenderer = new Class({
      */
     postRenderCamera: function (camera)
     {
-        if (camera.flashEffect.isRunning || camera.fadeEffect.isRunning)
+        var flashEffect = camera.flashEffect;
+        var fadeEffect = camera.fadeEffect;
+
+        if (flashEffect.isRunning || (fadeEffect.isRunning || fadeEffect.isComplete))
         {
             var pipeline = this.pipelines.setMulti();
 
-            camera.flashEffect.postRenderWebGL(pipeline, Utils.getTintFromFloats);
-            camera.fadeEffect.postRenderWebGL(pipeline, Utils.getTintFromFloats);
+            flashEffect.postRenderWebGL(pipeline, Utils.getTintFromFloats);
+            fadeEffect.postRenderWebGL(pipeline, Utils.getTintFromFloats);
         }
 
         camera.dirty = false;
