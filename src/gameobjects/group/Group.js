@@ -251,9 +251,6 @@ var Group = new Class({
         {
             this.createMultiple(config);
         }
-
-        this.on(Events.ADDED_TO_SCENE, this.addedToScene, this);
-        this.on(Events.REMOVED_FROM_SCENE, this.removedFromScene, this);
     },
 
     //  Overrides Game Object method

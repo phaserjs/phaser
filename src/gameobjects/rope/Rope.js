@@ -8,7 +8,6 @@ var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
-var GameObjectEvents = require('../events');
 var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
 var RopeRender = require('./RopeRender');
 var Vector2 = require('../../math/Vector2');
@@ -285,9 +284,6 @@ var Rope = new Class({
         this.setPoints(points, colors, alphas);
 
         this.updateVertices();
-
-        this.on(GameObjectEvents.ADDED_TO_SCENE, this.addedToScene, this);
-        this.on(GameObjectEvents.REMOVED_FROM_SCENE, this.removedFromScene, this);
     },
 
     //  Overrides Game Object method

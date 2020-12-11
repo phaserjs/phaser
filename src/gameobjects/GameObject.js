@@ -205,6 +205,9 @@ var GameObject = new Class({
          */
         this.ignoreDestroy = false;
 
+        this.on(Events.ADDED_TO_SCENE, this.addedToScene, this);
+        this.on(Events.REMOVED_FROM_SCENE, this.removedFromScene, this);
+
         //  Tell the Scene to re-sort the children
         scene.sys.queueDepthSort();
     },
@@ -555,6 +558,7 @@ var GameObject = new Class({
      */
     addedToScene: function ()
     {
+        console.log('addedToScene', this);
     },
 
     /**

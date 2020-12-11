@@ -8,7 +8,6 @@ var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
-var GameObjectEvents = require('../events');
 var SpriteRender = require('./SpriteRender');
 
 /**
@@ -106,9 +105,6 @@ var Sprite = new Class({
         this.setSizeToFrame();
         this.setOriginFromFrame();
         this.initPipeline();
-
-        this.on(GameObjectEvents.ADDED_TO_SCENE, this.addedToScene, this);
-        this.on(GameObjectEvents.REMOVED_FROM_SCENE, this.removedFromScene, this);
     },
 
     //  Overrides Game Object method

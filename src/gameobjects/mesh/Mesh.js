@@ -9,7 +9,6 @@ var Components = require('../components');
 var DegToRad = require('../../math/DegToRad');
 var Face = require('../../geom/mesh/Face');
 var GameObject = require('../GameObject');
-var GameObjectEvents = require('../events');
 var GenerateVerts = require('../../geom/mesh/GenerateVerts');
 var GenerateObjVerts = require('../../geom/mesh/GenerateObjVerts');
 var GetCalcMatrix = require('../GetCalcMatrix');
@@ -357,9 +356,6 @@ var Mesh = new Class({
         {
             this.addVertices(vertices, uvs, indicies, containsZ, normals, colors, alphas);
         }
-
-        this.on(GameObjectEvents.ADDED_TO_SCENE, this.addedToScene, this);
-        this.on(GameObjectEvents.REMOVED_FROM_SCENE, this.removedFromScene, this);
     },
 
     //  Overrides Game Object method
