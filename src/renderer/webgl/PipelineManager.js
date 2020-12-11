@@ -588,6 +588,8 @@ var PipelineManager = new Class({
             pipeline.bind(currentShader);
         }
 
+        pipeline.updateProjectionMatrix();
+
         pipeline.onBind(gameObject);
 
         return pipeline;
