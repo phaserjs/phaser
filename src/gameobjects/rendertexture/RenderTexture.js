@@ -597,7 +597,7 @@ var RenderTexture = new Class({
      * It can accept any of the following:
      *
      * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
-     * * Dynamic and Static Tilemap Layers.
+     * * Tilemap Layers.
      * * A Group. The contents of which will be iterated and drawn in turn.
      * * A Container. The contents of which will be iterated fully, and drawn in turn.
      * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
@@ -654,7 +654,7 @@ var RenderTexture = new Class({
      * It can accept any of the following:
      *
      * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
-     * * Dynamic and Static Tilemap Layers.
+     * * Tilemap Layers.
      * * A Group. The contents of which will be iterated and drawn in turn.
      * * A Container. The contents of which will be iterated fully, and drawn in turn.
      * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
@@ -837,7 +837,7 @@ var RenderTexture = new Class({
      * It can accept any of the following:
      *
      * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
-     * * Dynamic and Static Tilemap Layers.
+     * * Tilemap Layers.
      * * A Group. The contents of which will be iterated and drawn in turn.
      * * A Container. The contents of which will be iterated fully, and drawn in turn.
      * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
@@ -1157,7 +1157,14 @@ var RenderTexture = new Class({
 
         gameObject.setPosition(x + this.frame.cutX, y + this.frame.cutY);
 
-        gameObject.renderWebGL(this.renderer, gameObject, this.camera);
+        if (gameObject.renderDirect)
+        {
+            gameObject.renderDirect(this.renderer, gameObject, this.camera);
+        }
+        else
+        {
+            gameObject.renderWebGL(this.renderer, gameObject, this.camera);
+        }
 
         gameObject.setPosition(prevX, prevY);
     },

@@ -6,10 +6,12 @@
 
 var renderWebGL = require('../../../../src/utils/NOOP');
 var renderCanvas = require('../../../../src/utils/NOOP');
+var renderDirect = require('../../../../src/utils/NOOP');
 
 if (typeof WEBGL_RENDERER)
 {
     renderWebGL = require('./SpineGameObjectWebGLRenderer');
+    renderDirect = require('./SpineGameObjectWebGLDirect');
 }
 
 if (typeof CANVAS_RENDERER)
@@ -20,6 +22,7 @@ if (typeof CANVAS_RENDERER)
 module.exports = {
 
     renderWebGL: renderWebGL,
-    renderCanvas: renderCanvas
+    renderCanvas: renderCanvas,
+    renderDirect: renderDirect
 
 };
