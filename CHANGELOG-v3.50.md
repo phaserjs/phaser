@@ -281,6 +281,7 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.endCapture` is a new method that will unbind the renderers Render Target and return it, preventing anything else from being drawn to it.
 * `WebGLRenderer.setProjectionMatrix` is a new method that sets the global renderer projection matrix to the given dimensions.
 * `WebGLRenderer.resetProjectionMatrix` is a new method that resets the renderer projection matrix back to match the renderer size.
+* `WebGLRenderer.getAspectRatio` is a new method that returns the aspect ratio of the renderer.
 
 ### WebGL and Canvas Renderer Events
 
