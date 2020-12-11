@@ -279,6 +279,8 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.renderTarget` is a new property that contains a Render Target that is bound to the renderer and kept resized to match it.
 * `WebGLRenderer.beginCapture` is a new method that will bind the renderers Render Target, so everything drawn is redirected to it.
 * `WebGLRenderer.endCapture` is a new method that will unbind the renderers Render Target and return it, preventing anything else from being drawn to it.
+* `WebGLRenderer.setProjectionMatrix` is a new method that sets the global renderer projection matrix to the given dimensions.
+* `WebGLRenderer.resetProjectionMatrix` is a new method that resets the renderer projection matrix back to match the renderer size.
 
 ### WebGL and Canvas Renderer Events
 
