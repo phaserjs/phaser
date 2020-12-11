@@ -14,7 +14,7 @@
  * @private
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
- * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
+ * @param {SpineContainer} container - The Game Object being rendered in this call.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
@@ -69,7 +69,7 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
     {
         var child = children[i];
 
-        if (child.willRender(camera))
+        if (child.willRender(camera, container))
         {
             var mask = child.mask;
 
