@@ -13,6 +13,7 @@ var EventEmitter = require('eventemitter3');
 var Events = require('../events');
 var GameEvents = require('../../core/events');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
+var Matrix4 = require('../../math/Matrix4');
 var NOOP = require('../../utils/NOOP');
 var PipelineManager = require('./PipelineManager');
 var RenderTarget = require('./RenderTarget');
@@ -610,6 +611,33 @@ var WebGLRenderer = new Class({
          */
         this.renderTarget = null;
 
+        /**
+         * The global game Projection matrix, used by shaders as 'uProjectionMatrix' uniform.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#projectionMatrix
+         * @type {Phaser.Math.Matrix4}
+         * @since 3.50.0
+         */
+        this.projectionMatrix;
+
+        /**
+         * The cached width of the Projection matrix.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#projectionWidth
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.projectionWidth = 0;
+
+        /**
+         * The cached height of the Projection matrix.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#projectionHeight
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.projectionHeight = 0;
+
         this.init(this.config);
     },
 
@@ -815,6 +843,8 @@ var WebGLRenderer = new Class({
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
 
+        this.projectionMatrix = new Matrix4().identity();
+
         game.textures.once(TextureEvents.READY, this.boot, this);
 
         return this;
@@ -897,7 +927,7 @@ var WebGLRenderer = new Class({
 
         this.renderTarget.bind(true, width, height);
 
-        this.emit(Events.PROJECTION, width, height);
+        this.setProjectionMatrix(width, height);
 
         this.resetTextures();
     },
@@ -917,7 +947,7 @@ var WebGLRenderer = new Class({
     {
         this.renderTarget.unbind(true);
 
-        this.emit(Events.PROJECTION, this.width, this.height);
+        this.resetProjectionMatrix();
 
         return this.renderTarget;
     },
@@ -941,6 +971,8 @@ var WebGLRenderer = new Class({
         this.width = width;
         this.height = height;
 
+        this.setProjectionMatrix(width, height);
+
         gl.viewport(0, 0, width, height);
 
         this.drawingBufferHeight = gl.drawingBufferHeight;
@@ -953,6 +985,47 @@ var WebGLRenderer = new Class({
         this.emit(Events.RESIZE, width, height);
 
         return this;
+    },
+
+    /**
+     * Sets the Projection Matrix of this renderer to the given dimensions.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setProjectionMatrix
+     * @since 3.50.0
+     *
+     * @param {number} width - The new width of the Projection Matrix.
+     * @param {number} height - The new height of the Projection Matrix.
+     *
+     * @return {this} This WebGLRenderer instance.
+     */
+    setProjectionMatrix: function (width, height)
+    {
+        if (width !== this.projectionWidth || height !== this.projectionHeight)
+        {
+            this.projectionWidth = width;
+            this.projectionHeight = height;
+
+            this.projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
+        }
+
+        return this;
+    },
+
+    /**
+     * Resets the Projection Matrix back to this renderers width and height.
+     *
+     * This is called during `endCapture`, should the matrix have been changed
+     * as a result of the capture process.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#resetProjectionMatrix
+     * @since 3.50.0
+     */
+    resetProjectionMatrix: function ()
+    {
+        this.projectionWidth = this.width;
+        this.projectionHeight = this.height;
+
+        this.projectionMatrix.ortho(0, this.width, this.height, 0, -1000, 1000);
     },
 
     /**
