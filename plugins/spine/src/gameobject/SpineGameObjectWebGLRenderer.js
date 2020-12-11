@@ -23,6 +23,7 @@ var Wrap = require('../../../../src/math/Wrap');
  * @param {SpineGameObject} src - The Game Object being rendered in this call.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ * @param {SpineContainer} [container] - If this Spine object is in a Spine Container, this is a reference to it.
  */
 var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix, container)
 {
