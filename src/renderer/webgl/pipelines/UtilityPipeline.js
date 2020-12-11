@@ -721,9 +721,9 @@ var UtilityPipeline = new Class({
      * Set the UV values for the 6 vertices that make up the quad used by the shaders
      * in the Utility Pipeline.
      *
-     * Be sure to call `resetVertices` once you have finished manipulating the UV coordinates.
+     * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#resetVertices
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#setUVs
      * @since 3.50.0
      *
      * @param {number} uA - The u value of vertex A.
@@ -785,7 +785,7 @@ var UtilityPipeline = new Class({
      * Horizontally flips the UV coordinates of the quad used by the shaders in this
      * Utility Pipeline.
      *
-     * Be sure to call `resetVertices` once you have finished manipulating the UV coordinates.
+     * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#flipX
      * @since 3.50.0
@@ -799,7 +799,7 @@ var UtilityPipeline = new Class({
      * Vertically flips the UV coordinates of the quad used by the shaders in this
      * Utility Pipeline.
      *
-     * Be sure to call `resetVertices` once you have finished manipulating the UV coordinates.
+     * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#flipY
      * @since 3.50.0
@@ -807,19 +807,6 @@ var UtilityPipeline = new Class({
     flipY: function ()
     {
         this.setUVs(0, 1, 0, 0, 1, 0, 1, 1);
-    },
-
-    /**
-     * Resets the quad vertices to their default values.
-     *
-     * The quad is used by all shaders of the Utility Pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#resetVertices
-     * @since 3.50.0
-     */
-    resetVertices: function ()
-    {
-        this.vertexViewF32.set([ -1, -1, 0, 0, -1, 1, 0, 1, 1, 1, 1, 1, -1, -1, 0, 0, 1, 1, 1, 1, 1, -1, 1, 0 ]);
     },
 
     /**
