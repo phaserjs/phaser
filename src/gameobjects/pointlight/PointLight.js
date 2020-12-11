@@ -7,10 +7,9 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
-var IntegerToRGB = require('../../display/color/IntegerToRGB');
+var IntegerToColor = require('../../display/color/IntegerToColor');
 var PIPELINES_CONST = require('../../renderer/webgl/pipelines/const');
 var Render = require('./PointLightRender');
-var RGB = require('../../display/RGB');
 
 /**
  * @classdesc
@@ -69,9 +68,7 @@ var PointLight = new Class({
 
         this.setPosition(x, y);
 
-        var rgb = IntegerToRGB(color);
-
-        this.color = new RGB(rgb.r, rgb.g, rgb.b);
+        this.color = IntegerToColor(color);
 
         this.intensity = intensity;
         this.attenuation = attenuation;
