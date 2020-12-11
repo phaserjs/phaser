@@ -1390,8 +1390,6 @@ var BaseCamera = new Class({
      * Masks have no impact on physics or input detection. They are purely a rendering component
      * that allows you to limit what is visible during the render pass.
      *
-     * Note: You cannot mask a Camera that has `renderToTexture` set.
-     *
      * @method Phaser.Cameras.Scene2D.BaseCamera#setMask
      * @since 3.17.0
      *
