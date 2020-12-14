@@ -422,7 +422,7 @@ var BitmapText = new Class({
      *
      * @param {number} [x=0] - The horizontal offset of the drop shadow.
      * @param {number} [y=0] - The vertical offset of the drop shadow.
-     * @param {number} [color=0xffffff] - The color of the drop shadow, given as a hex value, i.e. `0x000000` for black.
+     * @param {number} [color=0x000000] - The color of the drop shadow, given as a hex value, i.e. `0x000000` for black.
      * @param {number} [alpha=0.5] - The alpha of the drop shadow, given as a float between 0 and 1. This is combined with the Bitmap Text alpha as well.
      *
      * @return {this} This BitmapText Object.
@@ -436,8 +436,8 @@ var BitmapText = new Class({
 
         this.dropShadowX = x;
         this.dropShadowY = y;
-        this.dropShadowAlpha = alpha;
         this.dropShadowColor = color;
+        this.dropShadowAlpha = alpha;
 
         return this;
     },

@@ -44,10 +44,12 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var tintEffect = src.tintFill;
 
-    var tintTL = Utils.getTintAppendFloatAlpha(src.tintTopLeft, cameraAlpha * src._alphaTL);
-    var tintTR = Utils.getTintAppendFloatAlpha(src.tintTopRight, cameraAlpha * src._alphaTR);
-    var tintBL = Utils.getTintAppendFloatAlpha(src.tintBottomLeft, cameraAlpha * src._alphaBL);
-    var tintBR = Utils.getTintAppendFloatAlpha(src.tintBottomRight, cameraAlpha * src._alphaBR);
+    var getTint = Utils.getTintAppendFloatAlpha;
+
+    var tintTL = getTint(src.tintTopLeft, cameraAlpha * src._alphaTL);
+    var tintTR = getTint(src.tintTopRight, cameraAlpha * src._alphaTR);
+    var tintBL = getTint(src.tintBottomLeft, cameraAlpha * src._alphaBL);
+    var tintBR = getTint(src.tintBottomRight, cameraAlpha * src._alphaBR);
 
     var texture = src.frame.glTexture;
     var textureUnit = pipeline.setGameObject(src);
@@ -70,13 +72,13 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (dropShadow)
     {
-        var srcShadowColor = src._dropShadowColorGL;
+        var srcShadowColor = src.dropShadowColor;
         var srcShadowAlpha = src.dropShadowAlpha;
 
-        var blackTL = Utils.getTintAppendFloatAlpha(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaTL);
-        var blackTR = Utils.getTintAppendFloatAlpha(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaTR);
-        var blackBL = Utils.getTintAppendFloatAlpha(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaBL);
-        var blackBR = Utils.getTintAppendFloatAlpha(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaBR);
+        var shadowTL = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaTL);
+        var shadowTR = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaTR);
+        var shadowBL = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaBL);
+        var shadowBR = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaBR);
 
         for (i = 0; i < characters.length; i++)
         {
@@ -88,7 +90,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 continue;
             }
 
-            BatchChar(pipeline, src, char, glyph, dropShadowX, dropShadowY, calcMatrix, roundPixels, blackTL, blackTR, blackBL, blackBR, 0, texture, textureUnit);
+            BatchChar(pipeline, src, char, glyph, dropShadowX, dropShadowY, calcMatrix, roundPixels, shadowTL, shadowTR, shadowBL, shadowBR, 1, texture, textureUnit);
         }
     }
 
@@ -106,13 +108,13 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
         {
             var color = charColors[char.i];
 
-            var ctintEffect = color.tintEffect;
-            var ctintTL = Utils.getTintAppendFloatAlpha(color.tintTL, cameraAlpha * src._alphaTL);
-            var ctintTR = Utils.getTintAppendFloatAlpha(color.tintTR, cameraAlpha * src._alphaTR);
-            var ctintBL = Utils.getTintAppendFloatAlpha(color.tintBL, cameraAlpha * src._alphaBL);
-            var ctintBR = Utils.getTintAppendFloatAlpha(color.tintBR, cameraAlpha * src._alphaBR);
+            var charTintEffect = color.tintEffect;
+            var charTintTL = getTint(color.tintTL, cameraAlpha * src._alphaTL);
+            var charTintTR = getTint(color.tintTR, cameraAlpha * src._alphaTR);
+            var charTintBL = getTint(color.tintBL, cameraAlpha * src._alphaBL);
+            var charTintBR = getTint(color.tintBR, cameraAlpha * src._alphaBR);
 
-            BatchChar(pipeline, src, char, glyph, 0, 0, calcMatrix, roundPixels, ctintTL, ctintTR, ctintBL, ctintBR, ctintEffect, texture, textureUnit);
+            BatchChar(pipeline, src, char, glyph, 0, 0, calcMatrix, roundPixels, charTintTL, charTintTR, charTintBL, charTintBR, charTintEffect, texture, textureUnit);
         }
         else
         {
