@@ -75,9 +75,6 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
             continue;
         }
 
-        var followX = (emitter.follow) ? emitter.follow.x + emitter.followOffset.x : 0;
-        var followY = (emitter.follow) ? emitter.follow.y + emitter.followOffset.y : 0;
-
         var scrollFactorX = emitter.scrollFactorX;
         var scrollFactorY = emitter.scrollFactorY;
 
@@ -107,7 +104,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
             camMatrix.copyFrom(camera.matrix);
 
-            camMatrix.multiplyWithOffset(managerMatrix, followX + -camera.scrollX * scrollFactorX, followY + -camera.scrollY * scrollFactorY);
+            camMatrix.multiplyWithOffset(managerMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
 
             //  Undo the camera scroll
             particleMatrix.e = particle.x;
