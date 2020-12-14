@@ -993,6 +993,7 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * The `BitmapMask.prevFramebuffer` property has been removed as it's no longer required, due to the fbo stack in the renderer.
 * The `TextureManager.addGLTexture` method has been updated so that the `width` and `height` parameters are now optional. If not provided, and if available, they will be read from the given WebGLTexture instead (thanks @hexus)
 * `GameObjects.Components.Depth.depthList` is a new property that all Game Objects that have the Depth Component now have. It contains a reference to the List responsible for managing the depth sorting of the Game Object. This is typically the Scene Display List, but can also be a Layer. It allows the Depth component to queue a depth sort directly on the list it belongs to now, rather than just the Scene.
+* The `WebAudioSoundManager` will no longer try to unlock itself if the Game hasn't already booted and been added to the DOM. It will now wait for the `BOOT` event and unlock based on that. Fix #5439 (thanks @samme)
 
 ### Bug Fixes
 
