@@ -10,7 +10,17 @@ var WEBGL_CONST = require('./const');
 
 /**
  * @classdesc
- * TODO
+ * Instances of the WebGLShader class belong to the WebGL Pipeline classes. When the pipeline is
+ * created it will create an instance of this class for each one of its shaders, as defined in
+ * the pipeline configuration.
+ *
+ * This class encapsulates everything needed to manage a shader in a pipeline, including the
+ * shader attributes and uniforms, as well as lots of handy methods such as `set2f`, for setting
+ * uniform values on this shader.
+ *
+ * Typically, you do not create an instance of this class directly, as it works in unison with
+ * the pipeline to which it belongs. You can gain access to this class via a pipeline's `shaders`
+ * array, post-creation.
  *
  * @class WebGLShader
  * @memberof Phaser.Renderer.WebGL
