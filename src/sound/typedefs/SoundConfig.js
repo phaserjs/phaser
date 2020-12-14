@@ -11,4 +11,5 @@
  * @property {number} [seek=0] - Position of playback for this sound, in seconds.
  * @property {boolean} [loop=false] - Whether or not the sound or current sound marker should loop.
  * @property {number} [delay=0] - Time, in seconds, that should elapse before the sound actually starts its playback.
+ * @property {number} [pan=0] - A value between -1 (full left pan) and 1 (full right pan). 0 means no pan.
  */

@@ -917,6 +917,49 @@ var HTML5AudioSound = new Class({
         this.loop = value;
 
         return this;
+    },
+
+    /**
+     * Gets or sets the pan of this sound, a value between -1 (full left pan) and 1 (full right pan).
+     * Has no effect on HTML5 Audio Sound.
+     *
+     * @name Phaser.Sound.HTML5AudioSound#pan
+     * @type {number}
+     * @default 0
+     * @fires Phaser.Sound.Events#PAN
+     * @since 3.0.0
+     */
+    pan: {
+
+        get: function ()
+        {
+            return this.currentConfig.pan;
+        },
+
+        set: function (value)
+        {
+            this.currentConfig.pan = value;
+
+            this.emit(Events.PAN, this, value);
+        }
+    },
+
+    /**
+     * Sets the pan of this Sound. Has no effect on HTML5 Audio Sound.
+     *
+     * @method Phaser.Sound.HTML5AudioSound#setPan
+     * @fires Phaser.Sound.Events#PAN
+     * @since 3.4.0
+     *
+     * @param {number} value - The pan of the sound.
+     *
+     * @return {Phaser.Sound.HTML5AudioSound} This Sound instance.
+     */
+    setPan: function (value)
+    {
+        this.pan = value;
+
+        return this;
     }
 
 });
