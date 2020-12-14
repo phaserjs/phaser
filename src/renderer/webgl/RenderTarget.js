@@ -243,6 +243,11 @@ var RenderTarget = new Class({
 
         this.renderer.pushFramebuffer(this.framebuffer, false, false, false);
 
+        if (adjustViewport)
+        {
+            this.adjustViewport();
+        }
+
         if (this.autoClear)
         {
             var gl = this.renderer.gl;
@@ -250,11 +255,6 @@ var RenderTarget = new Class({
             gl.clearColor(0, 0, 0, 0);
 
             gl.clear(gl.COLOR_BUFFER_BIT);
-        }
-
-        if (adjustViewport)
-        {
-            this.adjustViewport();
         }
     },
 
@@ -283,15 +283,20 @@ var RenderTarget = new Class({
      */
     clear: function ()
     {
-        this.renderer.pushFramebuffer(this.framebuffer);
+        var renderer = this.renderer;
+        var gl = renderer.gl;
 
-        var gl = this.renderer.gl;
+        renderer.pushFramebuffer(this.framebuffer);
+
+        gl.disable(gl.SCISSOR_TEST);
 
         gl.clearColor(0, 0, 0, 0);
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        this.renderer.popFramebuffer();
+        renderer.popFramebuffer();
+
+        renderer.resetScissor();
     },
 
     /**
