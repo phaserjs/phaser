@@ -2,7 +2,7 @@
 
 ### WebGL Pipeline Updates
 
-If you use a custom WebGL Pipeline in your game, you must update your code in order to use Phaser 3.50.
+If you use a custom WebGL Pipeline in your game then you must update your code in order to use Phaser 3.50.
 
 Due to the huge amount of work that has taken place in this area, all of the pipelines have been renamed. If you extend any of these pipelines or use them in your game code (referenced by name), then please update accordingly. The name changes are:
 
@@ -181,12 +181,39 @@ New constants have been created to help you reference a pipeline without needing
 * `Phaser.Renderer.WebGL.Pipelines.SINGLE_PIPELINE` for the Single Pipeline.
 * `Phaser.Renderer.WebGL.Pipelines.MULTI_PIPELINE` for the Multi Pipeline.
 * `Phaser.Renderer.WebGL.Pipelines.ROPE_PIPELINE` for the Rope Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.POINTLIGHT_PIPELINE` for the Point Light Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.POSTFX_PIPELINE` for the Post FX Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.UTILITY_PIPELINE` for the Utility Pipeline.
 
 All Game Objects have been updated to use the new constants and Pipeline Manager.
 
-#### Single Pipeline
+#### Single Pipeline Update
 
-There is also a new pipeline called `SinglePipeline`, created to emulate the old `TextureTintPipeline`. This special pipeline uses just a single texture and makes things a lot easier if you wish to create a custom pipeline, but not have to recode your shaders to work with multiple textures. Instead, just extend `SinglePipeline`, where-as before you extended the `TextureTintPipeline` and you won't have to change any of your shader code. However, if you can, you should update it to make it perform faster, but that choice is left up to you.
+There is a new pipeline called `SinglePipeline`, created to emulate the old `TextureTintPipeline`. This special pipeline uses just a single texture and makes things a lot easier if you wish to create a custom pipeline, but not have to recode your shaders to work with multiple textures. Instead, just extend `SinglePipeline`, where-as before you extended the `TextureTintPipeline` and you won't have to change any of your shader code. However, if you can, you should update it to make it perform faster, but that choice is left up to you.
+
+### Light Pipeline Update
+
+The Light Pipeline (previously called the Forward Diffuse Light Pipeline), which is responsible for rendering lights under WebGL, has been rewritten to work with the new Multi Pipeline features. Lots of redundant code has been removed and the following changes and improvements took place:
+
+* The pipeline now works with Game Objects that do not have a normal map. They will be rendered using the new default normal map, which allows for a flat light effect to pass over them and merge with their diffuse map colors.
+* Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
+* The Bitmap Text (Static and Dynamic) Game Objects now support rendering with normal maps.
+* The TileSprite Game Objects now support rendering with normal maps.
+* Mesh Game Objects now support rendering with normal maps.
+* Particle Emitter Game Object now supports rendering in Light2d.
+* The Text Game Object now supports rendering in Light2d, no matter which font, stroke or style it is using.
+* Tilemap Layer Game Objects now support the Light2d pipeline, with or without normal maps.
+* The pipeline will no longer look-up and set all of the light uniforms unless the `Light` is dirty.
+* The pipeline will no longer reset all of the lights unless the quantity of lights has changed.
+* The `ForwardDiffuseLightPipeline.defaultNormalMap` property has changed, it's now an object with a `glTexture` property that maps to the pipelines default normal map.
+* The `ForwardDiffuseLightPipeline.boot` method has been changed to now generate a default normal map.
+* The `ForwardDiffuseLightPipeline.onBind` method has been removed as it's no longer required.
+* The `ForwardDiffuseLightPipeline.setNormalMap` method has been removed as it's no longer required.
+* `ForwardDiffuseLightPipeline.bind` is a new method that handles setting-up the shader uniforms.
+* The `ForwardDiffuseLightPipeline.batchTexture` method has been rewritten to use the Texture Tint Pipeline function instead.
+* The `ForwardDiffuseLightPipeline.batchSprite` method has been rewritten to use the Texture Tint Pipeline function instead.
+* `ForwardDiffuseLightPipeline.lightCount` is a new property that stores the previous number of lights rendered.
+* `ForwardDiffuseLightPipeline.getNormalMap` is a new method that will look-up and return a normal map for the given object.
 
 ### WebGL Multi-Texture Rendering
 
@@ -328,7 +355,7 @@ Other changes and fixes:
 
 The Graphics Pipeline is a new pipeline added in 3.50 that is responsible for rendering Graphics Game Objects and all of the Shape Game Objects, such as Arc, Rectangle, Star, etc. Due to the new pipeline some changes have been made:
 
-* The Graphics Pipeline now uses much simpler vertex and fragment shaders, with just two attributes (`inPosition` and `inColor`), making the vertex size and memory-use 57% smaller.
+* The Graphics Pipeline now uses much simpler vertex and fragment shaders with just two attributes (`inPosition` and `inColor`), making the vertex size and memory-use 57% smaller.
 * The private `_tempMatrix1`, 2, 3 and 4 properties have all been removed from the pipeline.
 * A new public `calcMatrix` property has been added, which Shape Game Objects use to maintain transform state during rendering.
 * The Graphics Pipeline no longer makes use of `tintEffect` or any textures.
@@ -365,31 +392,10 @@ Render Textures have the following bug fixes:
 * `RenderTexture.fill` would fail to fill the correct area under WebGL if the RenderTexture wasn't the same size as the Canvas. It now fills the given region properly.
 * `RenderTexture.erase` has never worked when using the Canvas Renderer and a texture frame, only with Game Objects. It now works with both. Fix #5422 (thanks @vforsh)
 
-### Light Pipeline Changes
 
-The Light Pipeline (previously called the Forward Diffuse Light Pipeline), which is responsible for rendering lights under WebGL, has been rewritten to work with the new Multi Pipeline features. Lots of redundant code has been removed and the following changes and improvements took place:
+### Lights 2D Updates
 
-* The pipeline now works with Game Objects that do not have a normal map. They will be rendered using the new default normal map, which allows for a flat light effect to pass over them and merge with their diffuse map colors.
-* Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
-* The Bitmap Text (Static and Dynamic) Game Objects now support rendering with normal maps.
-* The TileSprite Game Objects now support rendering with normal maps.
-* Mesh Game Objects now support rendering with normal maps.
-* Particle Emitter Game Object now supports rendering in Light2d.
-* The Text Game Object now supports rendering in Light2d, no matter which font, stroke or style it is using.
-* Tilemap Layer Game Objects now support the Light2d pipeline, with or without normal maps.
-* The pipeline will no longer look-up and set all of the light uniforms unless the `Light` is dirty.
-* The pipeline will no longer reset all of the lights unless the quantity of lights has changed.
-* The `ForwardDiffuseLightPipeline.defaultNormalMap` property has changed, it's now an object with a `glTexture` property that maps to the pipelines default normal map.
-* The `ForwardDiffuseLightPipeline.boot` method has been changed to now generate a default normal map.
-* The `ForwardDiffuseLightPipeline.onBind` method has been removed as it's no longer required.
-* The `ForwardDiffuseLightPipeline.setNormalMap` method has been removed as it's no longer required.
-* `ForwardDiffuseLightPipeline.bind` is a new method that handles setting-up the shader uniforms.
-* The `ForwardDiffuseLightPipeline.batchTexture` method has been rewritten to use the Texture Tint Pipeline function instead.
-* The `ForwardDiffuseLightPipeline.batchSprite` method has been rewritten to use the Texture Tint Pipeline function instead.
-* `ForwardDiffuseLightPipeline.lightCount` is a new property that stores the previous number of lights rendered.
-* `ForwardDiffuseLightPipeline.getNormalMap` is a new method that will look-up and return a normal map for the given object.
-
-### Lights
+The Light Game Object has been rewritten so it now extends the `Geom.Circle` object, as they shared lots of the same properties and methods anyway.
 
 * `Light.dirty` is a new property that controls if the light is dirty, or not, and needs its uniforms updating.
 * `Light` has been recoded so that all of its properties are now setters that activate its `dirty` flag.
@@ -1060,3 +1066,9 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
 @samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky @maikthomas @atursams @LearningCode2023 @DylanC @BenjaminDRichards @rexrainbow @Riderrr @spwilson2 @EmilSV @PhaserEditor2D @Gangryong @vinerz @trynx @usufruct99 @pirateksh @justin-calleja @monteiz
+
+### Beta Testing Help
+
+A special mention to the following who submitted feedback on the the 3.50 Beta releases:
+
+Acorn BlunT76 @PhaserEditor2D @samme @rexrainbow 
