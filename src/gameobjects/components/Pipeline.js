@@ -361,7 +361,9 @@ var Pipeline = {
         {
             var instance = pipelines[i];
 
-            if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
+            if (
+                (typeof pipeline === 'string' && instance.name === pipeline) ||
+                (typeof pipeline !== 'string' && instance instanceof pipeline))
             {
                 instance.destroy();
 
