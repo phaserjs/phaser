@@ -1922,6 +1922,9 @@ var ParticleEmitter = new Class({
 
         var dead = this.dead;
 
+        var followX = (this.follow) ? this.follow.x + this.followOffset.x : x;
+        var followY = (this.follow) ? this.follow.y + this.followOffset.y : y;
+
         for (var i = 0; i < count; i++)
         {
             var particle = dead.pop();
@@ -1931,7 +1934,7 @@ var ParticleEmitter = new Class({
                 particle = new this.particleClass(this);
             }
 
-            particle.fire(x, y);
+            particle.fire(followX, followY);
 
             if (this.particleBringToTop)
             {
