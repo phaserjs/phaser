@@ -95,7 +95,6 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    // eslint-disable-next-line no-unused-vars
     addMarker: returnFalse,
 
     /**
@@ -106,7 +105,6 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    // eslint-disable-next-line no-unused-vars
     updateMarker: returnFalse,
 
     /**

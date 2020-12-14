@@ -19,7 +19,7 @@
  * ```
  *
  * @event Phaser.Sound.Events#PAN
- * @since 3.0.0
+ * @since 3.50.0
  *
  * @param {(Phaser.Sound.WebAudioSound|Phaser.Sound.HTML5AudioSound)} sound - A reference to the Sound that emitted the event.
  * @param {number} pan - The new pan of the Sound.
