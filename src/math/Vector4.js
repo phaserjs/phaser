@@ -482,9 +482,6 @@ var Vector4 = new Class({
      */
     transformQuat: function (q)
     {
-        // TODO: is this really the same as Vector3?
-        // Also, what about this: http://molecularmusings.wordpress.com/2013/05/24/a-faster-quaternion-vector-multiplication/
-        // benchmarks: http://jsperf.com/quaternion-transform-vec3-implementations
         var x = this.x;
         var y = this.y;
         var z = this.z;
@@ -527,7 +524,6 @@ var Vector4 = new Class({
 
 });
 
-//  TODO: Check if these are required internally, if not, remove.
 Vector4.prototype.sub = Vector4.prototype.subtract;
 Vector4.prototype.mul = Vector4.prototype.multiply;
 Vector4.prototype.div = Vector4.prototype.divide;

@@ -14,7 +14,6 @@ var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
- *
  * The Bitmap Mask Pipeline handles all of the bitmap mask rendering in WebGL for applying
  * alpha masks to Game Objects. It works by sampling two texture on the fragment shader and
  * using the fragments alpha to clip the region.

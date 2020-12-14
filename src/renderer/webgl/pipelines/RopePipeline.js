@@ -10,7 +10,6 @@ var MultiPipeline = require('./MultiPipeline');
 
 /**
  * @classdesc
- *
  * The Rope Pipeline is a variation of the Multi Pipeline that uses a `TRIANGLE_STRIP` for
  * its topology, instead of TRIANGLES. This is primarily used by the Rope Game Object,
  * or anything that extends it.
@@ -31,8 +30,6 @@ var MultiPipeline = require('./MultiPipeline');
  * The default shader uniforms for this pipeline are:
  *
  * `uProjectionMatrix` (mat4)
- * `uViewMatrix` (mat4)
- * `uModelMatrix` (mat4)
  * `uMainSampler` (sampler2D array)
  *
  * The pipeline is structurally identical to the Multi Pipeline and should be treated as such.

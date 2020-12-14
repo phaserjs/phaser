@@ -13,7 +13,6 @@ var Render = require('./PointLightRender');
 
 /**
  * @classdesc
- *
  * TODO
  *
  * @class PointLight

@@ -1565,7 +1565,7 @@ var World = new Class({
             overlap /= 2;
         }
 
-        // TODO this is inadequate for circle-rectangle separation
+        // Note: This is inadequate for circle-rectangle separation
 
         var angle = AngleBetweenPoints(body1.center, body2.center);
         var overlapX = (overlap + MATH_CONST.EPSILON) * Math.cos(angle);

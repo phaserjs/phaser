@@ -15,8 +15,6 @@
  * greater than 0 then it's a counter-clockwise rotation, if < 0 then it's
  * a clockwise rotation.
  *
- * TODO: Wrap the angles in this function?
- *
  * @function Phaser.Math.Angle.ShortestBetween
  * @since 3.0.0
  *

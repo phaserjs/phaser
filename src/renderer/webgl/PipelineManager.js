@@ -21,18 +21,21 @@ var UtilityPipeline = require('./pipelines/UtilityPipeline');
 /**
  * @classdesc
  * The Pipeline Manager is responsible for the creation, activation, running and destruction
- * of WebGL Pipelines in Phaser 3.
+ * of WebGL Pipelines and Post FX Pipelines in Phaser 3.
  *
  * The `WebGLRenderer` owns a single instance of the Pipeline Manager, which you can access
  * via the `WebGLRenderer.pipelines` property.
  *
- * By default, there are 5 pipelines installed into the Pipeline Manager when Phaser boots:
+ * By default, there are 8 pipelines installed into the Pipeline Manager when Phaser boots:
  *
- * 1. The Multi Pipeline. Responsible for all multi-texture rendering, i.e. Sprites, Shapes.
- * 2. The Single Pipeline. Responsible for rendering Game Objects that explicitly require one bound texture.
+ * 1. The Multi Pipeline. Responsible for all multi-texture rendering, i.e. Sprites and Tilemaps.
+ * 2. The Graphics Pipeline. Responsible for rendering Graphics and Shape objects.
  * 3. The Rope Pipeline. Responsible for rendering the Rope Game Object.
  * 4. The Light Pipeline. Responsible for rendering the Light Game Object.
- * 5. The Bitmap Mask Pipeline. Responsible for Bitmap Mask rendering.
+ * 5. The Point Light Pipeline. Responsible for rendering the Point Light Game Object.
+ * 6. The Single Pipeline. Responsible for rendering Game Objects that explicitly require one bound texture.
+ * 7. The Bitmap Mask Pipeline. Responsible for Bitmap Mask rendering.
+ * 8. The Utility Pipeline. Responsible for providing lots of handy texture manipulation functions.
  *
  * You can add your own custom pipeline via the `PipelineManager.add` method. Pipelines are
  * identified by unique string-based keys.
@@ -770,9 +773,7 @@ var PipelineManager = new Class({
      */
     copyFrame: function (source, target, brightness, clear, clearAlpha)
     {
-        var pipeline = this.setUtility(this.UTILITY_PIPELINE.copyShader);
-
-        pipeline.copyFrame(source, target, brightness, clear, clearAlpha);
+        this.setUtility(this.UTILITY_PIPELINE.copyShader).copyFrame(source, target, brightness, clear, clearAlpha);
 
         return this;
     },
@@ -794,9 +795,7 @@ var PipelineManager = new Class({
      */
     copyToGame: function (source)
     {
-        var pipeline = this.setUtility(this.UTILITY_PIPELINE.copyShader);
-
-        pipeline.copyToGame(source);
+        this.setUtility(this.UTILITY_PIPELINE.copyShader).copyToGame(source);
 
         return this;
     },
@@ -824,9 +823,7 @@ var PipelineManager = new Class({
      */
     drawFrame: function (source, target, clearAlpha, colorMatrix)
     {
-        var pipeline = this.setUtility(this.UTILITY_PIPELINE.colorMatrixShader);
-
-        pipeline.drawFrame(source, target, clearAlpha, colorMatrix);
+        this.setUtility(this.UTILITY_PIPELINE.colorMatrixShader).drawFrame(source, target, clearAlpha, colorMatrix);
 
         return this;
     },
@@ -850,9 +847,7 @@ var PipelineManager = new Class({
      */
     blendFrames: function (source1, source2, target, strength, clearAlpha)
     {
-        var pipeline = this.setUtility(this.UTILITY_PIPELINE.linearShader);
-
-        pipeline.blendFrames(source1, source2, target, strength, clearAlpha);
+        this.setUtility(this.UTILITY_PIPELINE.linearShader).blendFrames(source1, source2, target, strength, clearAlpha);
 
         return this;
     },
@@ -876,9 +871,7 @@ var PipelineManager = new Class({
      */
     blendFramesAdditive: function (source1, source2, target, strength, clearAlpha)
     {
-        var pipeline = this.setUtility(this.UTILITY_PIPELINE.addShader);
-
-        pipeline.blendFrames(source1, source2, target, strength, clearAlpha);
+        this.setUtility(this.UTILITY_PIPELINE.addShader).blendFramesAdditive(source1, source2, target, strength, clearAlpha);
 
         return this;
     },
@@ -891,10 +884,70 @@ var PipelineManager = new Class({
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to clear.
      * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     *
+     * @return {this} This Pipeline Manager instance.
      */
     clearFrame: function (target, clearAlpha)
     {
         this.UTILITY_PIPELINE.clearFrame(target, clearAlpha);
+
+        return this;
+    },
+
+    /**
+     * Copy the `source` Render Target to the `target` Render Target.
+     *
+     * The difference with this copy is that no resizing takes place. If the `source`
+     * Render Target is larger than the `target` then only a portion the same size as
+     * the `target` dimensions is copied across.
+     *
+     * You can optionally set the brightness factor of the copy.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#blitFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
+     * @param {number} [brightness=1] - The brightness value applied to the frame copy.
+     * @param {boolean} [clear=true] - Clear the target before copying?
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     * @param {boolean} [eraseMode=false] - Erase source from target using ERASE Blend Mode?
+     *
+     * @return {this} This Pipeline Manager instance.
+     */
+    blitFrame: function (source, target, brightness, clear, clearAlpha, eraseMode)
+    {
+        this.setUtility(this.UTILITY_PIPELINE.copyShader).blitFrame(source, target, brightness, clear, clearAlpha, eraseMode);
+
+        return this;
+    },
+
+    /**
+     * Binds the `source` Render Target and then copies a section of it to the `target` Render Target.
+     *
+     * This method is extremely fast because it uses `gl.copyTexSubImage2D` and doesn't
+     * require the use of any shaders. Remember the coordinates are given in standard WebGL format,
+     * where x and y specify the lower-left corner of the section, not the top-left. Also, the
+     * copy entirely replaces the contents of the target texture, no 'merging' or 'blending' takes
+     * place.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#copyFrameRect
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
+     * @param {number} x - The x coordinate of the lower left corner where to start copying.
+     * @param {number} y - The y coordinate of the lower left corner where to start copying.
+     * @param {number} width - The width of the texture.
+     * @param {number} height - The height of the texture.
+     * @param {boolean} [clear=true] - Clear the target before copying?
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     *
+     * @return {this} This Pipeline Manager instance.
+     */
+    copyFrameRect: function (source, target, x, y, width, height, clear, clearAlpha)
+    {
+        this.UTILITY_PIPELINE.copyFrameRect(source, target, x, y, width, height, clear, clearAlpha);
 
         return this;
     },

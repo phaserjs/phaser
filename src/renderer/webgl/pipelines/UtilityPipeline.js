@@ -26,14 +26,13 @@ var WebGLPipeline = require('../WebGLPipeline');
  * 3) Linear Blend Mode Shader. Blends two textures using a linear blend mode.
  * 4) Color Matrix Copy Shader. Draws a texture to a target using a Color Matrix.
  *
- * You typically do not extend or access this pipeline directly, but instead go
- * via the following methods in the Pipeline Manager:
+ * You do not extend this pipeline, but instead get a reference to it from the Pipeline
+ * Manager via the `setUtility` method. You can also access methods such as `copyFrame`
+ * directly from the Pipeline Manager.
  *
- * `copyFrame`
- * `copyFrameRect`
- * `drawFrame`
- * `blendFrames`
- * `blendFramesAdditive`
+ * This pipeline provides methods for manipulating framebuffer backed textures, such as
+ * copying or blending one texture to another, copying a portion of a texture, additively
+ * blending two textures, flipping textures and more.
  *
  * The default shader attributes for this pipeline are:
  *
@@ -333,8 +332,10 @@ var UtilityPipeline = new Class({
 
         var gl = this.gl;
 
-        this.set1i('uMainSampler', 0, this.copyShader);
-        this.set1f('uBrightness', brightness, this.copyShader);
+        this.setShader(this.copyShader);
+
+        this.set1i('uMainSampler', 0);
+        this.set1f('uBrightness', brightness);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
@@ -399,8 +400,10 @@ var UtilityPipeline = new Class({
 
         var gl = this.gl;
 
-        this.set1i('uMainSampler', 0, this.copyShader);
-        this.set1f('uBrightness', brightness, this.copyShader);
+        this.setShader(this.copyShader);
+
+        this.set1i('uMainSampler', 0);
+        this.set1f('uBrightness', brightness);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
@@ -529,8 +532,10 @@ var UtilityPipeline = new Class({
     {
         var gl = this.gl;
 
-        this.set1i('uMainSampler', 0, this.copyShader);
-        this.set1f('uBrightness', 1, this.copyShader);
+        this.setShader(this.copyShader);
+
+        this.set1i('uMainSampler', 0);
+        this.set1f('uBrightness', 1);
 
         this.renderer.popFramebuffer();
 
@@ -567,9 +572,11 @@ var UtilityPipeline = new Class({
 
         var gl = this.gl;
 
-        this.set1i('uMainSampler', 0, this.colorMatrixShader);
-        this.set1fv('uColorMatrix', colorMatrix.getData(), this.colorMatrixShader);
-        this.set1f('uAlpha', colorMatrix.alpha, this.colorMatrixShader);
+        this.setShader(this.colorMatrixShader);
+
+        this.set1i('uMainSampler', 0);
+        this.set1fv('uColorMatrix', colorMatrix.getData());
+        this.set1f('uAlpha', colorMatrix.alpha);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
@@ -625,9 +632,11 @@ var UtilityPipeline = new Class({
 
         var gl = this.gl;
 
-        this.set1i('uMainSampler1', 0, blendShader);
-        this.set1i('uMainSampler2', 1, blendShader);
-        this.set1f('uStrength', strength, blendShader);
+        this.setShader(blendShader);
+
+        this.set1i('uMainSampler1', 0);
+        this.set1i('uMainSampler2', 1);
+        this.set1f('uStrength', strength);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source1.texture);

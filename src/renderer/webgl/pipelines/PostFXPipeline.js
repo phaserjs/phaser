@@ -13,19 +13,28 @@ var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
- * TODO
+ * The Post FX Pipeline is a special kind of pipeline specifically for handling post
+ * processing effects. Where-as a standard Pipeline allows you to control the process
+ * of rendering Game Objects by configuring the shaders and attributes used to draw them,
+ * a Post FX Pipeline is designed to allow you to apply processing _after_ the Game Object/s
+ * have been rendered. Typical examples of post processing effects are bloom filters,
+ * blurs, light effects and color manipulation.
  *
- * The fragment shader it uses can be found in `shaders/src/PostFX.frag`.
- * The vertex shader it uses can be found in `shaders/src/PostFX.vert`.
+ * The pipeline works by creating a tiny vertex buffer with just one single hard-coded quad
+ * in it. Game Objects can have a Post Pipeline set on them. Those objects are then rendered
+ * using their standard pipeline, but are redirected to the Render Targets owned by the
+ * post pipeline, which can then apply their own shaders and effects, before passing them
+ * back to the main renderer.
+ *
+ * Please see the Phaser 3 examples for further details on this extensive subject.
+ *
+ * The default fragment shader it uses can be found in `shaders/src/PostFX.frag`.
+ * The default vertex shader it uses can be found in `shaders/src/Quad.vert`.
  *
  * The default shader attributes for this pipeline are:
  *
  * `inPosition` (vec2, offset 0)
  * `inTexCoord` (vec2, offset 8)
- *
- * The default shader uniforms for this pipeline are:
- *
-  * `uMainSampler` (sampler2D)
  *
  * @class PostFXPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -331,6 +340,70 @@ var PostFXPipeline = new Class({
     blendFramesAdditive: function (source1, source2, target, strength, clearAlpha)
     {
         this.manager.blendFramesAdditive(source1, source2, target, strength, clearAlpha);
+    },
+
+    /**
+     * Clears the given Render Target.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#clearFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to clear.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
+    clearFrame: function (target, clearAlpha)
+    {
+        this.manager.clearFrame(target, clearAlpha);
+    },
+
+    /**
+     * Copy the `source` Render Target to the `target` Render Target.
+     *
+     * The difference with this copy is that no resizing takes place. If the `source`
+     * Render Target is larger than the `target` then only a portion the same size as
+     * the `target` dimensions is copied across.
+     *
+     * You can optionally set the brightness factor of the copy.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#blitFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
+     * @param {number} [brightness=1] - The brightness value applied to the frame copy.
+     * @param {boolean} [clear=true] - Clear the target before copying?
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     * @param {boolean} [eraseMode=false] - Erase source from target using ERASE Blend Mode?
+     */
+    blitFrame: function (source, target, brightness, clear, clearAlpha, eraseMode)
+    {
+        this.manager.blitFrame(source, target, brightness, clear, clearAlpha, eraseMode);
+    },
+
+    /**
+     * Binds the `source` Render Target and then copies a section of it to the `target` Render Target.
+     *
+     * This method is extremely fast because it uses `gl.copyTexSubImage2D` and doesn't
+     * require the use of any shaders. Remember the coordinates are given in standard WebGL format,
+     * where x and y specify the lower-left corner of the section, not the top-left. Also, the
+     * copy entirely replaces the contents of the target texture, no 'merging' or 'blending' takes
+     * place.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#copyFrameRect
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
+     * @param {number} x - The x coordinate of the lower left corner where to start copying.
+     * @param {number} y - The y coordinate of the lower left corner where to start copying.
+     * @param {number} width - The width of the texture.
+     * @param {number} height - The height of the texture.
+     * @param {boolean} [clear=true] - Clear the target before copying?
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
+    copyFrameRect: function (source, target, x, y, width, height, clear, clearAlpha)
+    {
+        this.manager.copyFrameRect(source, target, x, y, width, height, clear, clearAlpha);
     },
 
     /**

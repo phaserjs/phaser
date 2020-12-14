@@ -41,11 +41,8 @@ var tempVec2 = new Vec2();
  * `inTintEffect` (float, offset 20)
  * `inTint` (vec4, offset 24, normalized)
  *
- * The default shader uniforms for this pipeline are:
+ * The default shader uniforms for this pipeline are those from the Multi Pipeline, plus:
  *
- * `uProjectionMatrix` (mat4)
- * `uViewMatrix` (mat4)
- * `uModelMatrix` (mat4)
  * `uMainSampler` (sampler2D)
  * `uNormSampler` (sampler2D)
  * `uCamera` (vec4)
