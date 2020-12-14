@@ -9,6 +9,7 @@ var Base64ToArrayBuffer = require('../../utils/base64/Base64ToArrayBuffer');
 var BaseSoundManager = require('../BaseSoundManager');
 var Class = require('../../utils/Class');
 var Events = require('../events');
+var GameEvents = require('../../core/events');
 var WebAudioSound = require('./WebAudioSound');
 
 /**
@@ -83,9 +84,13 @@ var WebAudioSoundManager = new Class({
 
         BaseSoundManager.call(this, game);
 
-        if (this.locked)
+        if (this.locked && game.isBooted)
         {
             this.unlock();
+        }
+        else
+        {
+            game.events.once(GameEvents.BOOT, this.unlock, this);
         }
     },
 
