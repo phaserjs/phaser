@@ -934,6 +934,9 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `AsepriteFile` is a new File Type for the Loader that allows you to load Aseprite images and animation data for use with the new Aseprite animation features. You can call this via `this.load.asesprite(png, json)`.
 * `GameObject.displayList` is a new property that contains a reference to the Display List to which the Game Object has been added. This will typically either by the Display List owned by a Scene, or a Layer Game Object. You should treat this property as read-only.
 * The `Shader` Game Object now supports being able to use a Render Texture as a `sampler2D` texture on the shader #5423 (thanks @ccaleb)
+* `BaseSound.pan`, `HTMLAudioSound.pan` and `WebAudioSound.pan` are new properties that allow you to get or set the pan value of a sound, a value between -1 (full left pan) and 1 (full right pan). Note that pan only works under Web Audio, but the property and event still exists under HTML5 Audio for compatibility (thanks @pi-kei)
+* `WebAudioSound.setPan` is a new method that allows you to set the pan of the sound. A value between -1 (full left pan) and 1 (full right pan) (thanks @pi-kei)
+* `Sound.Events.PAN` is a new event dispatched by both Web Audio and HTML5 Audio Sound objects when their pan changes (thanks @pi-kei)
 
 ### Updates and API Changes
 
