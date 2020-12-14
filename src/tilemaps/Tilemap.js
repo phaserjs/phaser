@@ -9,6 +9,7 @@ var DegToRad = require('../math/DegToRad');
 var Formats = require('./Formats');
 var GetFastValue = require('../utils/object/GetFastValue');
 var LayerData = require('./mapdata/LayerData');
+var ORIENTATION = require('./const/ORIENTATION_CONST');
 var Rotate = require('../math/Rotate');
 var SpliceOne = require('../utils/array/SpliceOne');
 var Sprite = require('../gameobjects/sprite/Sprite');
@@ -1912,6 +1913,8 @@ var Tilemap = new Class({
      *
      * If no layer is specified, the maps current layer is used.
      *
+     * **Note:** This method currently only works with orthogonal tilemap layers.
+     *
      * @method Phaser.Tilemaps.Tilemap#renderDebug
      * @since 3.0.0
      *
@@ -1927,7 +1930,10 @@ var Tilemap = new Class({
 
         if (layer === null) { return null; }
 
-        TilemapComponents.RenderDebug(graphics, styleConfig, layer);
+        if (this.orientation === ORIENTATION.ORTHOGONAL)
+        {
+            TilemapComponents.RenderDebug(graphics, styleConfig, layer);
+        }
 
         return this;
     },
