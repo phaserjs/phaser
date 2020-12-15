@@ -148,6 +148,22 @@ If your code uses any of the old method names, please update them using the list
 
 ### Post FX Pipeline
 
+The Post FX Pipeline is a brand new and special kind of pipeline specifically for handling post processing effects in Phaser 3.50.
+
+Where-as a standard Pipeline allows you to control the process of rendering Game Objects by configuring the shaders and attributes used to draw them, a Post FX Pipeline is designed to allow you to apply processing _after_ the Game Object/s have been rendered. 
+
+Typical examples of post processing effects are bloom filters, blurs, light effects and color manipulation.
+
+The pipeline works by creating a tiny vertex buffer with just one single hard-coded quad in it. Game Objects can have a Post Pipeline set on them, which becomes their own unique pipeline instance. Those objects are then rendered using their standard pipeline, but are redirected to the Render Targets owned by the post pipeline, which can then apply their own shaders and effects, before passing them back to the main renderer.
+
+The following properties and methods are available in the new `PostFXPipeline` class:
+
+* The `PostFXPipeline.gameObject` property is a reference to the Game Object that owns the Post Pipeline, if any.
+* The `PostFXPipeline.colorMatrix` property is a Color Matrix instance used by the draw shader.
+* The `PostFXPipeline.fullFrame1` property is a reference to the `fullFrame1` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
+* The `PostFXPipeline.fullFrame2` property is a reference to the `fullFrame2` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
+* The `PostFXPipeline.halfFrame1` property is a reference to the `halfFrame1` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
+* The `PostFXPipeline.halfFrame2` property is a reference to the `halfFrame2` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
 * The `PostFXPipeline.copyFrame` method will copy a `source` Render Target to the `target` Render Target, optionally setting the brightness of the copy.
 * The `PostFXPipeline.blitFrame` method will copy a `source` Render Target to the `target` Render Target. Unlike `copyFrame` no resizing takes place and you can optionally set the brightness and erase mode of the copy.
 * The `PostFXPipeline.copyFrameRect` method binds the `source` Render Target and then copies a section of it to the `target` using `gl.copyTexSubImage2D` rather than a shader, making it much faster if you don't need blending or preserving alpha details.
@@ -156,6 +172,7 @@ If your code uses any of the old method names, please update them using the list
 * The `PostFXPipeline.blendFrames` method draws the `source1` and `source2` Render Targets to the `target` Render Target using a linear blend effect, which is controlled by the `strength` parameter.
 * The `PostFXPipeline.blendFramesAdditive` method draws the `source1` and `source2` Render Targets to the `target` Render Target using an additive blend effect, which is controlled by the `strength` parameter.
 * The `PostFXPipeline.clearFrame` method clears the given Render Target.
+* The `PostFXPipeline.bindAndDraw` method binds this pipeline and draws the `source` Render Target to the `target` Render Target. This is typically the final step taken in when post processing.
 
 ### WebGLShader
 
