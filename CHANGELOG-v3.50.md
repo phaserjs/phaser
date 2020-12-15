@@ -100,11 +100,13 @@ The WebGL Pipeline class now extends Event Emitter and emits the following event
 
 ### Pipeline Uniform Changes
 
-Pipelines now have a new `uniforms` array that can be passed in with the config. All default pipelines now set these. The array contains the names, as strings, of all uniforms your pipeline shader uses. Once the pipeline shader has been successfully linked, it will use the array of names to look-up the `WebGLUniformLocation` of all uniforms specified. These are stored in the new `WebGLPipeline.uniforms` object. This takes place in the new `WebGLPipeline.setUniformLocations` method.
+WebGLShaders a`uniforms` object that is automatically populated when the shader is created. It scans all of the active uniforms from the compiled shader and then builds an object containing their `WebGLUniformLocation` and a value cache.
 
-When a pipeline is bound, you can now use the new methods (listed below) to set uniform values directly on the pipeline. Previously, calling a method such as `setFloat3` on a pipeline would pass that call over to `WebGLRenderer`. The renderer would first check to see if the pipeline program was current, and if not, make it so, before then looking up the uniform location and finally setting it. This is a lot of steps to take for pipelines that potentially need to change uniforms for every Game Object they render.
+This saves redundant gl operations for both looking-up uniform locations and setting their values if they're already the currently set values by using the local cache instead.
 
-Under the new methods, and using the new pre-cached uniform locations, these extra steps are skipped. The uniform value is set directly, no shader binding takes place and no location look-up happens. This dramatically reduces the number of WebGL ops being issued per frame. To clearly differentiate these pipeline methods, we have renamed them. The new method names are as follows:
+WebGL Pipelines offer a means to set uniform values on the shader (or shaders) belonging to the pipeline. Previously, calling a method such as `setFloat3` on a pipeline would pass that call over to `WebGLRenderer`. The renderer would first check to see if the pipeline program was current, and if not, make it so, before then looking up the uniform location and finally setting it. This is a lot of steps to take for pipelines that potentially need to change uniforms for every Game Object they render.
+
+Under the new methods, and using the new pre-cached uniform locations and values, these extra steps are skipped. The uniform value is set directly, no shader binding takes place and no location look-up happens. This dramatically reduces the number of WebGL ops being issued per frame. To clearly differentiate these pipeline methods, we have renamed them. The new method names are as follows:
 
 * `WebGLPipeline.set1f` will set a 1f uniform based on the given name.
 * `WebGLPipeline.set2f` will set a 2f uniform based on the given name.
@@ -144,8 +146,16 @@ If your code uses any of the old method names, please update them using the list
 * `WebGLPipeline.setMatrix2` has been removed. Please use `setMatrix3fv` instead.
 * `WebGLPipeline.setMatrix3` has been removed. Please use `setMatrix4fv` instead.
 
+### Post FX Pipeline
 
-### Post FX Pipelines
+* The `PostFXPipeline.copyFrame` method will copy a `source` Render Target to the `target` Render Target, optionally setting the brightness of the copy.
+* The `PostFXPipeline.blitFrame` method will copy a `source` Render Target to the `target` Render Target. Unlike `copyFrame` no resizing takes place and you can optionally set the brightness and erase mode of the copy.
+* The `PostFXPipeline.copyFrameRect` method binds the `source` Render Target and then copies a section of it to the `target` using `gl.copyTexSubImage2D` rather than a shader, making it much faster if you don't need blending or preserving alpha details.
+* The `PostFXPipeline.copyToGame` method pops the framebuffer from the renderers FBO stack and sets that as the active target, then draws the `source` Render Target to it. Use when you need to render the _final_ result to the game canvas.
+* The `PostFXPipeline.drawFrame` method will copy a `source` Render Target, optionally to a `target` Render Target, using the given ColorMatrix, allowing for full control over the luminance values used during the copy.
+* The `PostFXPipeline.blendFrames` method draws the `source1` and `source2` Render Targets to the `target` Render Target using a linear blend effect, which is controlled by the `strength` parameter.
+* The `PostFXPipeline.blendFramesAdditive` method draws the `source1` and `source2` Render Targets to the `target` Render Target using an additive blend effect, which is controlled by the `strength` parameter.
+* The `PostFXPipeline.clearFrame` method clears the given Render Target.
 
 ### WebGLShader
 
@@ -223,9 +233,47 @@ The following properties and methods are available in the new `RenderTexture` cl
 
 ### Point Lights
 
+TODO
+
 ### Utility Pipeline
 
+The Utility Pipeline is a brand new default special-use WebGL Pipeline that is created by and belongs to the Pipeline Manager.
 
+It provides 4 shaders and handy associated methods:
+
+1) Copy Shader. A fast texture to texture copy shader with optional brightness setting.
+2) Additive Blend Mode Shader. Blends two textures using an additive blend mode.
+3) Linear Blend Mode Shader. Blends two textures using a linear blend mode.
+4) Color Matrix Copy Shader. Draws a texture to a target using a Color Matrix.
+
+You do not extend this pipeline, but instead get a reference to it from the Pipeline Manager via the `setUtility` method. You can also access its methods, such as `copyFrame`, directly from both the Pipeline Manager and from Post FX Pipelines, where its features are most useful.
+
+This pipeline provides methods for manipulating framebuffer backed textures, such as copying or blending one texture to another, copying a portion of a texture, additively blending two textures, flipping textures and more. All essential and common operations for post processing.
+
+The following properties and methods are available in the new `UtilityPipeline` class:
+
+* The `UtilityPipeline.colorMatrix` property is an instance of a ColorMatrix class, used by the draw shader.
+* The `UtilityPipeline.copyShader` property is a reference to the Copy Shader.
+* The `UtilityPipeline.addShader` property is a reference to the additive blend shader.
+* The `UtilityPipeline.linearShader` property is a reference to the linear blend shader.
+* The `UtilityPipeline.colorMatrixShader` property is a reference to the color matrix (draw) shader.
+* The `UtilityPipeline.fullFrame1` property is a full sized Render Target that can be used as a temporary buffer during post processing calls.
+* The `UtilityPipeline.fullFrame2` property is a full sized Render Target that can be used as a temporary buffer during post processing calls.
+* The `UtilityPipeline.halfFrame1` property is a half sized Render Target that can be used as a temporary buffer during post processing calls, where a small texture is required for more intensive operations.
+* The `UtilityPipeline.halfFrame2` property is a half sized Render Target that can be used as a temporary buffer during post processing calls, where a small texture is required for more intensive operations.
+* The `UtilityPipeline.copyFrame` method will copy a `source` Render Target to the `target` Render Target, optionally setting the brightness of the copy.
+* The `UtilityPipeline.blitFrame` method will copy a `source` Render Target to the `target` Render Target. Unlike `copyFrame` no resizing takes place and you can optionally set the brightness and erase mode of the copy.
+* The `UtilityPipeline.copyFrameRect` method binds the `source` Render Target and then copies a section of it to the `target` using `gl.copyTexSubImage2D` rather than a shader, making it much faster if you don't need blending or preserving alpha details.
+* The `UtilityPipeline.copyToGame` method pops the framebuffer from the renderers FBO stack and sets that as the active target, then draws the `source` Render Target to it. Use when you need to render the _final_ result to the game canvas.
+* The `UtilityPipeline.drawFrame` method will copy a `source` Render Target, optionally to a `target` Render Target, using the given ColorMatrix, allowing for full control over the luminance values used during the copy.
+* The `UtilityPipeline.blendFrames` method draws the `source1` and `source2` Render Targets to the `target` Render Target using a linear blend effect, which is controlled by the `strength` parameter.
+* The `UtilityPipeline.blendFramesAdditive` method draws the `source1` and `source2` Render Targets to the `target` Render Target using an additive blend effect, which is controlled by the `strength` parameter.
+* The `UtilityPipeline.clearFrame` method clears the given Render Target.
+* The `UtilityPipeline.setUVs` method allows you to set the UV values for the 6 vertices that make-up the quad belonging to the Utility Pipeline.
+* The `UtilityPipeline.setTargetUVs` method sets the vertex UV coordinates of the quad used by the shaders so that they correctly adjust the texture coordinates for a blit frame effect.
+* The `UtilityPipeline.flipX` method horizontally flips the UV coordinates of the quad used by the shaders.
+* The `UtilityPipeline.flipY` method vertically flips the UV coordinates of the quad used by the shaders.
+* The `UtilityPipeline.resetUVs` method resets the quad vertice UV values to their default settings.
 
 ### Pipeline Manager
 
@@ -251,6 +299,14 @@ The Pipeline Manager also offers the following new features:
 * The `PipelineManager.setMulti` method automatically binds the Multi Texture Pipeline, Phaser's default.
 * The `PipelineManager.clear` method will clear the pipeline, store it in `previous` and free the renderer.
 * The `PipelineManager.rebind` method will reset the rendering context and restore the `previous` pipeline, if set.
+* The `PipelineManager.copyFrame` method will copy a `source` Render Target to the `target` Render Target, optionally setting the brightness of the copy.
+* The `PipelineManager.blitFrame` method will copy a `source` Render Target to the `target` Render Target. Unlike `copyFrame` no resizing takes place and you can optionally set the brightness and erase mode of the copy.
+* The `PipelineManager.copyFrameRect` method binds the `source` Render Target and then copies a section of it to the `target` using `gl.copyTexSubImage2D` rather than a shader, making it much faster if you don't need blending or preserving alpha details.
+* The `PipelineManager.copyToGame` method pops the framebuffer from the renderers FBO stack and sets that as the active target, then draws the `source` Render Target to it. Use when you need to render the _final_ result to the game canvas.
+* The `PipelineManager.drawFrame` method will copy a `source` Render Target, optionally to a `target` Render Target, using the given ColorMatrix, allowing for full control over the luminance values used during the copy.
+* The `PipelineManager.blendFrames` method draws the `source1` and `source2` Render Targets to the `target` Render Target using a linear blend effect, which is controlled by the `strength` parameter.
+* The `PipelineManager.blendFramesAdditive` method draws the `source1` and `source2` Render Targets to the `target` Render Target using an additive blend effect, which is controlled by the `strength` parameter.
+* The `PipelineManager.clearFrame` method clears the given Render Target.
 
 New constants have been created to help you reference a pipeline without needing to use strings:
 
