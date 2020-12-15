@@ -14,8 +14,8 @@ var WebGLPipeline = require('../WebGLPipeline');
  * @classdesc
  * The Point Light Pipeline handles rendering the Point Light Game Objects in WebGL.
  *
- * The fragment shader it uses can be found in `shaders/src/BitmapMask.frag`.
- * The vertex shader it uses can be found in `shaders/src/BitmapMask.vert`.
+ * The fragment shader it uses can be found in `shaders/src/PointLight.frag`.
+ * The vertex shader it uses can be found in `shaders/src/PointLight.vert`.
  *
  * The default shader attributes for this pipeline are:
  *
