@@ -100,11 +100,11 @@ The WebGL Pipeline class now extends Event Emitter and emits the following event
 
 ### Pipeline Uniform Changes
 
-Piplines now have a new `uniforms` array that can be passed in with the config. All default pipelines now set these. The array contains the names, as strings, of all uniforms your pipeline shader uses. Once the pipeline shader has been successfully linked, it will use the array of names to look-up the `WebGLUniformLocation` of all uniforms specified. These are stored in the new `WebGLPipeline.uniforms` object. This takes place in the new `WebGLPipeline.setUniformLocations` method.
+Pipelines now have a new `uniforms` array that can be passed in with the config. All default pipelines now set these. The array contains the names, as strings, of all uniforms your pipeline shader uses. Once the pipeline shader has been successfully linked, it will use the array of names to look-up the `WebGLUniformLocation` of all uniforms specified. These are stored in the new `WebGLPipeline.uniforms` object. This takes place in the new `WebGLPipeline.setUniformLocations` method.
 
 When a pipeline is bound, you can now use the new methods (listed below) to set uniform values directly on the pipeline. Previously, calling a method such as `setFloat3` on a pipeline would pass that call over to `WebGLRenderer`. The renderer would first check to see if the pipeline program was current, and if not, make it so, before then looking up the uniform location and finally setting it. This is a lot of steps to take for pipelines that potentially need to change uniforms for every Game Object they render.
 
-Under the new methods, and using the new pre-cached uniform locations, these extra steps are skipped. The uniform value is set directly, no shader binding takes place and no location look-up happens. This dramatically reduces the number of WebGL ops being issued per frame. To clearly differentiate these pipline methods, we have renamed them. The new method names are as follows:
+Under the new methods, and using the new pre-cached uniform locations, these extra steps are skipped. The uniform value is set directly, no shader binding takes place and no location look-up happens. This dramatically reduces the number of WebGL ops being issued per frame. To clearly differentiate these pipeline methods, we have renamed them. The new method names are as follows:
 
 * `WebGLPipeline.set1f` will set a 1f uniform based on the given name.
 * `WebGLPipeline.set2f` will set a 2f uniform based on the given name.
@@ -147,7 +147,85 @@ If your code uses any of the old method names, please update them using the list
 
 ### Post FX Pipelines
 
-TODO - Explain them here + pipeline component updates.
+### WebGLShader
+
+`WebGLShader` is a new class that is created and belongs to WebGL Pipeline classes. When the pipeline is created it will create a `WebGLShader` instance for each one of its shaders, as defined in the pipeline configuration.
+
+This class encapsulates everything needed to manage a shader in a pipeline, including the shader attributes and uniforms, as well as lots of handy methods such as `set2f`, for setting uniform values on this shader. Uniform values are automatically cached to avoid unnecessary gl operations.
+
+Typically, you do not create an instance of this class directly, as it works in unison with the pipeline to which it belongs. You can gain access to this class via a pipeline's `shaders` array, post-creation.
+
+The following properties and methods are available in the new `WebGLShader` class:
+
+* The `WebGLShader.pipeline` property is a reference to the WebGL Pipeline that owns the WebGLShader instance.
+* The `WebGLShader.name` property is the name of the shader.
+* The `WebGLShader.renderer` property is a reference to the WebGL Renderer.
+* The `WebGLShader.gl` property is a reference to the WebGL Rendering Context.
+* The `WebGLShader.program` property is the WebGL Program created from the vertex and fragment shaders.
+* The `WebGLShader.attributes` property is an array of objects that describe the vertex attributes of the shader.
+* The `WebGLShader.vertexComponentCount` property is the total amount of vertex attribute components of 32-bit length.
+* The `WebGLShader.vertexSize` property is the size, in bytes, of a single vertex.
+* The `WebGLShader.uniforms` property is an object that is automatically populated with all active uniforms in the shader.
+* The `WebGLShader.createAttributes` method takes the vertex attributes config and parses it, creating the shader attributes. This is called automatically.
+* The `WebGLShader.bind` method sets the program the shader uses as being active. Called automatically when the parent pipeline needs this shader.
+* The `WebGLShader.rebind` method sets the program the shader uses as being active and resets all of the vertex attribute pointers.
+* The `WebGLShader.setAttribPointers` method sets the vertex attribute pointers. Called automatically during `bind`.
+* The `WebGLShader.createUniforms` method populates the `uniforms` object with details about all active uniforms.
+* The `WebGLShader.hasUniform` method returns a boolean if the given uniform exists.
+* The `WebGLShader.resetUniform` method resets the cached value for the given uniform.
+* The `WebGLShader.setUniform1` method is an internal method used for setting a single value uniform on the shader.
+* The `WebGLShader.setUniform2` method is an internal method used for setting a double value uniform on the shader.
+* The `WebGLShader.setUniform3` method is an internal method used for setting a triple value uniform on the shader.
+* The `WebGLShader.setUniform4` method is an internal method used for setting a quadruple value uniform on the shader.
+* The `WebGLShader.set1f` method sets a 1f uniform based on the given name.
+* The `WebGLShader.set2f` method sets a 2f uniform based on the given name.
+* The `WebGLShader.set3f` method sets a 3f uniform based on the given name.
+* The `WebGLShader.set4f` method sets a 4f uniform based on the given name.
+* The `WebGLShader.set1fv` method sets a 1fv uniform based on the given name.
+* The `WebGLShader.set2fv` method sets a 2fv uniform based on the given name.
+* The `WebGLShader.set3fv` method sets a 3fv uniform based on the given name.
+* The `WebGLShader.set4fv` method sets a 4fv uniform based on the given name.
+* The `WebGLShader.set1iv` method sets a 1iv uniform based on the given name.
+* The `WebGLShader.set2iv` method sets a 2iv uniform based on the given name.
+* The `WebGLShader.set3iv` method sets a 3iv uniform based on the given name.
+* The `WebGLShader.set4iv` method sets a 4iv uniform based on the given name.
+* The `WebGLShader.set1i` method sets a 1i uniform based on the given name.
+* The `WebGLShader.set2i` method sets a 2i uniform based on the given name.
+* The `WebGLShader.set3i` method sets a 3i uniform based on the given name.
+* The `WebGLShader.set4i` method sets a 4i uniform based on the given name.
+* The `WebGLShader.setMatrix2fv` method sets a matrix 2fv uniform based on the given name.
+* The `WebGLShader.setMatrix3fv` method sets a matrix 3fv uniform based on the given name.
+* The `WebGLShader.setMatrix4fv` method sets a matrix 4fv uniform based on the given name.
+* The `WebGLShader.destroy` method removes all external references and deletes the program and attributes.
+
+### Render Target
+
+`RenderTarget` is a brand new class that encapsulates a WebGL framebuffer and the WebGL Texture that displays it. Instances of this class are typically created by, and belong to WebGL Pipelines, however other Game Objects and classes can take advantage of Render Targets as well.
+
+The following properties and methods are available in the new `RenderTexture` class:
+
+* The `RenderTarget.renderer` property is a reference to the WebGL Renderer.
+* The `RenderTarget.framebuffer` property is the WebGLFramebuffer belonging to the Render Target.
+* The `RenderTarget.texture` property is a WebGLTexture belonging to the Render Target and bound to the framebuffer.
+* The `RenderTarget.width` property is the width of the Render Target.
+* The `RenderTarget.height` property is the height of the Render Target.
+* The `RenderTarget.scale` property is the scale of the Render Target, applied to the dimensions during resize.
+* The `RenderTarget.minFilter` property is the min filter of the texture.
+* The `RenderTarget.autoClear` property is a boolean that controls if the Render Target is automatically cleared when bound.
+* The `RenderTarget.autoResize` property is a boolean that controls if the Render Target is automatically resized if the WebGLRenderer resizes.
+* The `RenderTarget.setAutoResize` method lets you set the auto resize of the Render Target.
+* The `RenderTarget.resize` method lets you resize the Render Target.
+* The `RenderTarget.bind` method sets the Render Target as being the active fbo in the renderer and optionally clears and adjusts the viewport.
+* The `RenderTarget.adjustViewport` method sets the viewport to match the Render Target dimensions.
+* The `RenderTarget.clear` method disables the scissors, clears the Render Target and resets the scissors again.
+* The `RenderTarget.unbind` method flushes the renderer and pops the Render Target framebuffer from the stack.
+* The `RenderTarget.destroy` method removes all external references and deletes the framebuffer and texture.
+
+### Point Lights
+
+### Utility Pipeline
+
+
 
 ### Pipeline Manager
 
