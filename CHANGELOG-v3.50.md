@@ -34,7 +34,6 @@ Other pipeline changes are as follows:
 * The `WebGLPipeline.shouldFlush` method now accepts an optional parameter `amount`. If given, it will return `true` if when the amount is added to the vertex count it will exceed the vertex capacity. The Multi Pipeline has been updated to now use this method instead of performing the comparison multiple times itself.
 * The `RopePipeline` now extends `MultiPipeline` and just changes the topology, vastly reducing the filesize.
 * The `WebGLPipeline.flushLocked` property has been removed. A pipeline can never flush in the middle of a flush anyway, so it was just wasting CPU cycles being set.
-* You can now pass a pipeline instance to the `GameObject.setPipeline` method, as well as a string.
 * `WebGLPipeline.manager` is a new property that is a reference to the WebGL Pipeline Manager.
 * `WebGLPipeline.currentUnit` is a new property that holds the most recently assigned texture unit. Treat as read-only.
 * `WebGLPipeline.forceZero` is a new boolean property that sets if the pipeline should force the use of texture zero.
@@ -337,6 +336,22 @@ New constants have been created to help you reference a pipeline without needing
 * `Phaser.Renderer.WebGL.Pipelines.UTILITY_PIPELINE` for the Utility Pipeline.
 
 All Game Objects have been updated to use the new constants and Pipeline Manager.
+
+#### Game Object Pipeline Component Updates
+
+To support the new Post Pipelines in 3.50, the Pipeline Component which most Game Objects inherit has been updated. That means the following new properties and methods are available on all Game Objects that have this component, such as Sprite, Layer, Rope, etc.
+
+* `hasPostPipeline` is a new boolean property that indicates if the Game Object has one, or more post pipelines set.
+* `postPipelines` is a new property that contains an array of Post Pipelines owned by the Game Object.
+* `pipelineData` is a new object object to store pipeline specific data in.
+* The `setPipeline` method has been updated with 2 new parameters: `pipelineData` and `copyData`. These allow you to populate the pipeline data object during setting.
+* You can now pass a pipeline instance to the `setPipeline` method, as well as a string.
+* `setPostPipeline` is a new method that allows you to set one, or more, Post FX Pipelines on the Game Object. And optionally set the pipeline data with them.
+* `setPipelineData` is a new method that allows you to set a key/value pair into the pipeline data object in a chainable way.
+* `getPostPipeline` is a new method that will return a Post Pipeline instance from the Game Object based on the given string, function or instance.
+* The `resetPipeline` method has two new parameters `resetPostPipeline` and `resetData`, both false by default, that will reset the Post Pipelines and pipeline data accordingly.
+* `resetPostPipeline` is a new method that will specifically reset just the Post Pipelines, and optionally the pipeline data.
+* `removePostPipeline` is a new method that will destroy and remove the given Post Pipeline from the Game Object.
 
 #### Single Pipeline Update
 
