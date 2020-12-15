@@ -97,9 +97,9 @@ The WebGL Pipeline class now extends Event Emitter and emits the following event
 * The `WebGL.Pipelines.Events.REBIND` event is dispatched by a WebGL Pipeline when the Pipeline Manager resets and rebinds it.
 * The `WebGL.Pipelines.Events.RESIZE` event is dispatched by a WebGL Pipeline when it is resized, usually as a result of the Renderer.
 
-### Pipeline Uniform Changes
+### Pipeline Uniform Changes 
 
-WebGLShaders a`uniforms` object that is automatically populated when the shader is created. It scans all of the active uniforms from the compiled shader and then builds an object containing their `WebGLUniformLocation` and a value cache.
+WebGLShaders have a `uniforms` object that is automatically populated when the shader is created. It scans all of the active uniforms from the compiled shader and then builds an object containing their `WebGLUniformLocation` and a value cache.
 
 This saves redundant gl operations for both looking-up uniform locations and setting their values if they're already the currently set values by using the local cache instead.
 
@@ -249,7 +249,44 @@ The following properties and methods are available in the new `RenderTexture` cl
 
 ### Point Lights
 
-TODO
+The Point Light Game Object is brand new in 3.50 and provides a way to add a point light effect into your game, without the expensive shader processing requirements of the traditional Light Game Object.
+
+The difference is that the Point Light renders using a custom shader, designed to give the impression of a radial light source, of variable radius, intensity and color, in your game. However, unlike the Light Game Object, it does not impact any other Game Objects, or use their normal maps for calcuations. This makes them extremely fast to render compared to Lights
+and perfect for special effects, such as flickering torches or muzzle flashes.
+
+For maximum performance you should batch Point Light Game Objects together. This means ensuring they follow each other consecutively on the display list. Ideally, use a Layer Game Object and then add just Point Lights to it, so that it can batch together the rendering of the lights. You don't _have_ to do this, and if you've only a handful of Point Lights in your game then it's perfectly safe to mix them into the dislay list as normal. However, if you're using a large number of them, please consider how they are mixed into the display list.
+
+The renderer will automatically cull Point Lights. Those with a radius that does not intersect with the Camera will be skipped in the rendering list. This happens automatically and the culled state is refreshed every frame, for every camera.
+
+The `PointLight` Game Object has the following unique properties and methods:
+
+* The `PointLight.color` property is an instance of the Color object that controls the color value of the light.
+* The `PointLight.intensity` property sets the intensity of the light. The colors of the light are multiplied by this value during rendering.
+* The `PointLight.attenuation` property sets the attenuation of the light, which is the force with which the light falls off from its center.
+* The `PointLight.radius` property sets the radius of the light, in pixels. This value is also used for culling.
+
+Point Lights also have corresponding Factory and Creator functions, available from within a Scene:
+
+```js
+this.add.pointlight(x, y, color, radius, intensity, attenuation);
+```
+
+and
+
+```js
+this.make.pointlight({ x, y, color, radius, intensity, attenuation });
+```
+
+### Point Lights Pipeline
+
+The Point Light Pipeline is a brand new pipeline in 3.50 that was creates specifically for rendering the new Point Light Game Objects in WebGL.
+
+It extends the WebGLPipeline and sets the required shader attributes and uniforms for Point Light rendering.
+
+You typically don't access or set the pipeline directly, but rather create instances of the Point Light Game Object instead. However, it does have the following unique methods:
+
+* The `PointLightPipeline.batchPointLight` method is a special-case method that is called directly by the Point Light Game Object during rendering and allows it to add itself into the rendering batch.
+* The `PointLightPipeline.batchLightVert` method is a special internal method, used by `batchPointLight` that adds a single Point Light vert into the batch.
 
 ### Utility Pipeline
 
@@ -1237,4 +1274,6 @@ My thanks to the following for helping with the Phaser 3 Examples, Docs, and Typ
 
 A special mention to the following who submitted feedback on the the 3.50 Beta releases:
 
-Acorn BlunT76 @PhaserEditor2D @samme @rexrainbow 
+@gammafp Acorn @BlunT76 @PhaserEditor2D @samme @rexrainbow @vforsh @kainage @ccaleb @spayton @FloodGames @buzzjeux @jcyuan @MadDogMayCry0 @Patapits @MMontalto @SBCGames @juanitogan @Racoonacoon @EmilSV @telinc1 @d7561985 @RollinSafary
+
+Sorry if I forgot you!
