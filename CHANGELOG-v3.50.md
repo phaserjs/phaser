@@ -2,7 +2,7 @@
 
 ### WebGL Pipeline Updates
 
-If you use a custom WebGL Pipeline in your game then you must update your code in order to use Phaser 3.50.
+If you use a custom WebGL Pipeline in your game, you must update your code to use Phaser 3.50.
 
 Due to the huge amount of work that has taken place in this area, all of the pipelines have been renamed. If you extend any of these pipelines or use them in your game code (referenced by name), then please update accordingly. The name changes are:
 
@@ -10,7 +10,7 @@ Due to the huge amount of work that has taken place in this area, all of the pip
 * `TextureTintStripPipeline` is now called the `RopePipeline`.
 * `ForwardDiffuseLightPipeline` is now called the `LightPipeline`.
 
-There is also the new `GraphicsPipeline`. Previously, the `TextureTintPipeline` was responsible for rendering all Sprites, Graphics and Shape objects. Now, it only renders Sprites. All Graphics and Shapes are handled by the new `GraphicsPipeline` which uses its own shaders. See below for details about this change.
+There is also the new `GraphicsPipeline`. Previously, the `TextureTintPipeline` was responsible for rendering all Sprites, Graphics, and Shape objects. Now, it only renders Sprites. All Graphics and Shapes are handled by the new `GraphicsPipeline`, which uses its own shaders. See below for details about this change.
 
 To match the new pipeline names, the shader source code has also been renamed.
 
@@ -20,7 +20,7 @@ To match the new pipeline names, the shader source code has also been renamed.
 
 Other pipeline changes are as follows:
 
-* None of the shaders or pipelines use the `uViewMatrix` and `uModelMatrix` uniforms any longer. These were always just plain identity matrices, so there is no point spending CPU and GPU time to set them as uniforms, or use them in the shaders. Should you need these uniforms, you can add them to your own custom pipelines.
+* None of the shaders or pipelines use the `uViewMatrix` and `uModelMatrix` uniforms any longer. These were always just plain identity matrices, so there is no point spending CPU and GPU time to set them as uniforms or use them in the shaders. Should you need these uniforms, you can add them to your own custom pipelines.
 * `Types.Renderer.WebGL.WebGLPipelineConfig` is a new TypeDef that helps you easily configure your own Custom Pipeline when using TypeScript and also provides better JSDocs.
 * `Types.Renderer.WebGL.WebGLPipelineAttributesConfig` is a new TypeDef that helps you easily configure the attributes for your own Custom Pipelines when using TypeScript and also provides better JSDocs.
 * All pipelines will now work out the `renderer` property automatically, so it's no longer required in the config.
@@ -31,7 +31,7 @@ Other pipeline changes are as follows:
 * All pipelines will now extract the `vertexData` property from the config, allowing you to set it externally.
 * All pipelines will now extract the `attributes` property from the config, allowing you to set it externally.
 * All pipelines will now extract the `topology` property from the config, allowing you to set it externally.
-* The `WebGLPipeline.shouldFlush` method now accepts an optional parameter `amount`. If given, it will return `true` if when the amount is added to the vertex count it will exceed the vertex capacity. The Multi Pipeline has been updated to now use this method instead of performing the comparison multiple times itself.
+* The `WebGLPipeline.shouldFlush` method now accepts an optional parameter `amount`. If given, it will return `true` if the amount to be added to the vertex count exceeds the vertex capacity. The Multi Pipeline has been updated to now use this method instead of performing the comparison multiple times itself.
 * The `RopePipeline` now extends `MultiPipeline` and just changes the topology, vastly reducing the filesize.
 * The `WebGLPipeline.flushLocked` property has been removed. A pipeline can never flush in the middle of a flush anyway, so it was just wasting CPU cycles being set.
 * `WebGLPipeline.manager` is a new property that is a reference to the WebGL Pipeline Manager.
