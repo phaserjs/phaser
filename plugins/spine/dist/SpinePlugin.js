@@ -14138,8 +14138,6 @@ module.exports = RotateTo;
  * greater than 0 then it's a counter-clockwise rotation, if < 0 then it's
  * a clockwise rotation.
  *
- * TODO: Wrap the angles in this function?
- *
  * @function Phaser.Math.Angle.ShortestBetween
  * @since 3.0.0
  *
@@ -17973,7 +17971,6 @@ var RandomXYZW = function (vec4, scale)
 {
     if (scale === undefined) { scale = 1; }
 
-    // TODO: Not spherical; should fix this for more uniform distribution
     vec4.x = (Math.random() * 2 - 1) * scale;
     vec4.y = (Math.random() * 2 - 1) * scale;
     vec4.z = (Math.random() * 2 - 1) * scale;
@@ -18779,9 +18776,6 @@ var Vector4 = new Class({
      */
     transformQuat: function (q)
     {
-        // TODO: is this really the same as Vector3?
-        // Also, what about this: http://molecularmusings.wordpress.com/2013/05/24/a-faster-quaternion-vector-multiplication/
-        // benchmarks: http://jsperf.com/quaternion-transform-vec3-implementations
         var x = this.x;
         var y = this.y;
         var z = this.z;
@@ -18824,7 +18818,6 @@ var Vector4 = new Class({
 
 });
 
-//  TODO: Check if these are required internally, if not, remove.
 Vector4.prototype.sub = Vector4.prototype.subtract;
 Vector4.prototype.mul = Vector4.prototype.multiply;
 Vector4.prototype.div = Vector4.prototype.divide;
@@ -44234,7 +44227,9 @@ var Pipeline = {
         {
             var instance = pipelines[i];
 
-            if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
+            if (
+                (typeof pipeline === 'string' && instance.name === pipeline) ||
+                (typeof pipeline !== 'string' && instance instanceof pipeline))
             {
                 instance.destroy();
 
