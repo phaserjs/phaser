@@ -10,7 +10,7 @@ WebGL Pipelines are responsible for the rendering of all Game Objects in Phaser 
 
 #### Pipeline Manager
 
-The `WebGL.PipelineManager` is a new class that is responsbile for managing all of the WebGL Pipelines in Phaser. An instance of the Pipeline Manager is created by the WebGL Renderer and is available under the `pipelines` property. This means that the WebGL Renderer no longer handles pipelines directly, causing the following API changes:
+The `WebGL.PipelineManager` is a new class that is responsible for managing all of the WebGL Pipelines in Phaser. An instance of the Pipeline Manager is created by the WebGL Renderer and is available under the `pipelines` property. This means that the WebGL Renderer no longer handles pipelines directly, causing the following API changes:
 
 * `WebGLRenderer.pipelines` is no longer a plain object containing pipeline instances. It's now an instance of the `PipelineManager` class. This instance is created during the init and boot phase of the renderer.
 * The `WebGLRenderer.currentPipeline` property no longer exists, instead use `PipelineManager.current`.
@@ -29,7 +29,7 @@ The Pipeline Manager also offers the following new features:
 * The `PipelineManager.preRender` method calls the pre-render method of all pipelines.
 * The `PipelineManager.render` method calls the render method of all pipelines.
 * The `PipelineManager.postRender` method calls the post-render method of all pipelines.
-* The `PipelineManager.setMulti` method automatically binds the Multi Texture Pipeline, Phaser's default.
+* The `PipelineManager.setMulti` method automatically binds the Multi Texture Pipeline, Phasers default.
 * The `PipelineManager.clear` method will clear the pipeline, store it in `previous` and free the renderer.
 * The `PipelineManager.rebind` method will reset the rendering context and restore the `previous` pipeline, if set.
 * The `PipelineManager.copyFrame` method will copy a `source` Render Target to the `target` Render Target, optionally setting the brightness of the copy.
@@ -114,7 +114,7 @@ Further pipeline changes are as follows:
 * All pipelines will now extract the `attributes` property from the config, allowing you to set it externally.
 * All pipelines will now extract the `topology` property from the config, allowing you to set it externally.
 * The `WebGLPipeline.shouldFlush` method now accepts an optional parameter `amount`. If given, it will return `true` if the amount to be added to the vertex count exceeds the vertex capacity. The Multi Pipeline has been updated to now use this method instead of performing the comparison multiple times itself.
-* The `RopePipeline` now extends `MultiPipeline` and just changes the topology, vastly reducing the filesize.
+* The `RopePipeline` now extends `MultiPipeline` and just changes the topology, vastly reducing the file size.
 * The `WebGLPipeline.flushLocked` property has been removed. A pipeline can never flush in the middle of a flush anyway, so it was just wasting CPU cycles being set.
 * `WebGLPipeline.manager` is a new property that is a reference to the WebGL Pipeline Manager.
 * `WebGLPipeline.currentUnit` is a new property that holds the most recently assigned texture unit. Treat as read-only.
@@ -243,7 +243,6 @@ To support the new Post Pipelines in 3.50, the Pipeline Component which most Gam
 * `resetPostPipeline` is a new method that will specifically reset just the Post Pipelines, and optionally the pipeline data.
 * `removePostPipeline` is a new method that will destroy and remove the given Post Pipeline from the Game Object.
 
-
 #### Utility Pipeline
 
 The Utility Pipeline is a brand new default special-use WebGL Pipeline that is created by and belongs to the Pipeline Manager.
@@ -338,8 +337,6 @@ As a result of these changes the following features are no longer available:
 #### Single Pipeline Update
 
 There is a new pipeline called `SinglePipeline`, created to emulate the old `TextureTintPipeline`. This special pipeline uses just a single texture and makes things a lot easier if you wish to create a custom pipeline, but not have to recode your shaders to work with multiple textures. Instead, just extend `SinglePipeline`, where-as before you extended the `TextureTintPipeline` and you won't have to change any of your shader code. However, if you can, you should update it to make it perform faster, but that choice is left up to you.
-
-
 
 ### WebGLShader
 
@@ -498,7 +495,7 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.pushFramebuffer` is a new method that is used to push a framebuffer onto the fbo stack before setting it as the current framebuffer. This should now be called in place of `setFramebuffer`. Remember to call `popFramebuffer` after using it.
 * `WebGLRenderer.popFramebuffer` is a new method that will pop the current framebuffer off the fbo stack and set the previous one as being active.
 * `WebGLRenderer.setFramebuffer` has a new optional boolean parameter `resetTextures` which will reset the WebGL Textures, if set to `true` (which is the default).
-* `WebGLRenderer.isBooted` is a new boolean property that lets you know if the rendere has fully finished booting.
+* `WebGLRenderer.isBooted` is a new boolean property that lets you know if the renderer has fully finished booting.
 * The `WebGLRenderer` now extends the Event Emitter, allowing you to listen to renderer specific events.
 * `WebGLRenderer.defaultCamera` has been removed as it's not used anywhere internally any longer.
 * The `WebGLRenderer.setVertexBuffer` method has been removed along with the `WebGLRenderer.currentVertexBuffer` property. This is now set directly by the WebGL Pipeline, as needed.
@@ -536,7 +533,7 @@ The `ModelViewProjection` object contained a lot of functions that Phaser never 
 
 ### WebGL and Canvas Renderer Events
 
-* `Phaser.Renderer.Events` is a new namespace for events emited by the Canvas and WebGL Renderers.
+* `Phaser.Renderer.Events` is a new namespace for events emitted by the Canvas and WebGL Renderers.
 * `Renderer.Events.PRE_RENDER` is a new event dispatched by the Phaser Renderer. This happens right at the start of the render process.
 * `Renderer.Events.RENDER` is a new event dispatched by the Phaser Renderer. This happens once for every camera, in every Scene at the start of its render process.
 * `Renderer.Events.POST_RENDER` is a new event dispatched by the Phaser Renderer. This happens right at the end of the render process.
@@ -544,7 +541,7 @@ The `ModelViewProjection` object contained a lot of functions that Phaser never 
 
 ### Canvas Renderer Updates
 
-* `CanvasRenderer.isBooted` is a new boolean property that lets you know if the rendere has fully finished booting.
+* `CanvasRenderer.isBooted` is a new boolean property that lets you know if the renderer has fully finished booting.
 * The `CanvasRenderer` now extends the Event Emitter, allowing you to listen to renderer specific events.
 
 ### Camera - New Features, Updates and API Changes
@@ -631,10 +628,10 @@ Render Textures have the following bug fixes:
 
 The Point Light Game Object is brand new in 3.50 and provides a way to add a point light effect into your game, without the expensive shader processing requirements of the traditional Light Game Object.
 
-The difference is that the Point Light renders using a custom shader, designed to give the impression of a radial light source, of variable radius, intensity and color, in your game. However, unlike the Light Game Object, it does not impact any other Game Objects, or use their normal maps for calcuations. This makes them extremely fast to render compared to Lights
+The difference is that the Point Light renders using a custom shader, designed to give the impression of a radial light source, of variable radius, intensity and color, in your game. However, unlike the Light Game Object, it does not impact any other Game Objects, or use their normal maps for calculations. This makes them extremely fast to render compared to Lights
 and perfect for special effects, such as flickering torches or muzzle flashes.
 
-For maximum performance you should batch Point Light Game Objects together. This means ensuring they follow each other consecutively on the display list. Ideally, use a Layer Game Object and then add just Point Lights to it, so that it can batch together the rendering of the lights. You don't _have_ to do this, and if you've only a handful of Point Lights in your game then it's perfectly safe to mix them into the dislay list as normal. However, if you're using a large number of them, please consider how they are mixed into the display list.
+For maximum performance you should batch Point Light Game Objects together. This means ensuring they follow each other consecutively on the display list. Ideally, use a Layer Game Object and then add just Point Lights to it, so that it can batch together the rendering of the lights. You don't _have_ to do this, and if you've only a handful of Point Lights in your game then it's perfectly safe to mix them into the display list as normal. However, if you're using a large number of them, please consider how they are mixed into the display list.
 
 The renderer will automatically cull Point Lights. Those with a radius that does not intersect with the Camera will be skipped in the rendering list. This happens automatically and the culled state is refreshed every frame, for every camera.
 
@@ -695,7 +692,7 @@ The Mesh Game Object has been rewritten from scratch in v3.50 with a lot of chan
 * `Mesh.vertices` is now an array of `GameObject.Vertex` instances, not a Float32Array.
 * `Mesh.faces` is a new array of `GameObject.Face` instances, which is populated during a call to methods like `addVertices` or `addModel`.
 * `Mesh.totalRendered` is a new property that holds the total number of Faces that were rendered in the previous frame.
-* `Mesh.setDebug` is a new method that allows you to render a debug visualisation of the Mesh vertices to a Graphics Game Object. You can provide your own Graphics instance and optionally callback that is invoked during rendering. This allows you to easily visualise the vertices of your Mesh to help debug UV mapping.
+* `Mesh.setDebug` is a new method that allows you to render a debug visualization of the Mesh vertices to a Graphics Game Object. You can provide your own Graphics instance and optionally callback that is invoked during rendering. This allows you to easily visualize the vertices of your Mesh to help debug UV mapping.
 * The Mesh now renders by iterating through the Faces array, not the vertices. This allows you to use Array methods such as `BringToTop` to reposition a Face, thus changing the drawing order without having to repopulate all of the vertices. Or, for a 3D model, you can now depth sort the Faces.
 * The `Mesh` Game Object now extends the `SingleAlpha` component and the alpha value is factored into the final alpha value per vertex during rendering. This means you can now set the whole alpha across the Mesh using the standard `setAlpha` methods. But, if you wish to, you can still control the alpha on a per-vertex basis as well.
 * The Mesh renderer will now check to see if the pipeline capacity has been exceeded for every Face added, allowing you to use Meshes with vertex counts that exceed the pipeline capacity without causing runtime errors.
@@ -784,7 +781,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `ANIMATION_STOP_EVENT` is a new event that is emitted from a Sprite when its current animation is stopped. This can happen if any of the `stop` methods are called, or a new animation is played prior to this one reaching completion. Fix #4894 (thanks @scott20145)
 * The Game Object `Component.Animation` component has been renamed to `AnimationState` and has moved namespace. It's now in `Phaser.Animations` instead of `GameObjects.Components` to help differentiate it from the `Animation` class when browsing the documentation.
 * The `play`, `playReverse`, `playAfterDelay`, `playAfterRepeat` and `chain` Sprite and Animation Component methods can now all take a `Phaser.Types.Animations.PlayAnimationConfig` configuration object, as well as a string, as the `key` parameter. This allows you to override any default animation setting with those defined in the config, giving you far greater control over animations on a Game Object level, without needing to globally duplicate them.
-* `AnimationState.create` is a new method that allows you to create animations directly on a Sprite. These are not global and never enter the Animation Manager, instead risiding within the Sprite itself. This allows you to use the same keys across both local and global animations and set-up Sprite specific local animations.
+* `AnimationState.create` is a new method that allows you to create animations directly on a Sprite. These are not global and never enter the Animation Manager, instead residing within the Sprite itself. This allows you to use the same keys across both local and global animations and set-up Sprite specific local animations.
 * `AnimationState.generateFrameNumbers` is a new method that is a proxy for the same method available under the Animation Manager. It's exposed in the Animation State so you're able to access it from within a Sprite (thanks @juanitogan)
 * `AnimationState.generateFrameNames` is a new method that is a proxy for the same method available under the Animation Manager. It's exposed in the Animation State so you're able to access it from within a Sprite (thanks @juanitogan)
 * All playback methods: `play`, `playReverse`, `playAfterDelay` and `playAfterRepeat` will now check to see if the given animation key exists locally on the Sprite first. If it does, it's used, otherwise it then checks the global Animation Manager for the key instead.
@@ -873,7 +870,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * The `AnimationState.updateFrame` method has now been removed. Everything is handled by `setCurrentFrame` instead, which removes one extra step out of the update process.
 * `GenerateFrameNames` will now `console.warn` if the generated frame isn't present in the texture, which should help with debugging animation creation massively.
 * `GenerateFrameNumbers` will now `console.warn` if the generated frame isn't present in the texture, which should help with debugging animation creation massively.
-* `GenerateFrameNumbers` would include the __BASE frame by mistake in its calculations. This didn't end up in the final animation, but did cause a cache miss when building the animation.
+* `GenerateFrameNumbers` would include the `__BASE` frame by mistake in its calculations. This didn't end up in the final animation, but did cause a cache miss when building the animation.
 * `GenerateFrameNumbers` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
 * `GenerateFrameNames` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
 
@@ -995,12 +992,12 @@ This has all changed in 3.50, as outlined below. Tint values are now used direct
 * As a result of the change to the shader, all uses of the WebGL Util function `getTintAppendFloatAlphaAndSwap` have been replaced with `getTintAppendFloatAlpha` instead.
 * As a result of the change to the shader, the Multi Pipeline now uses the `WebGLRenderer.whiteTexture` and `tintEffect` mode of 1 by default, instead of mode 2 (which has been removed) and a transparent texture. This ensures Graphics and Shapes objects still render correctly under the new smaller shader code.
 * `WebGLRenderer.whiteTexture` is a new property that is a reference to a pure white 4x4 texture that is created during Boot by the Texture Manager. The Graphics Pipeline uses this internally for all geometry fill rendering.
-* The `TextureManager` now generates a new texture with the key `__WHITE` durings its boot process. This is a pure white 4x4 texture used by the Graphics pipelines.
+* The `TextureManager` now generates a new texture with the key `__WHITE` during its boot process. This is a pure white 4x4 texture used by the Graphics pipelines.
 * `Config.images.white` is a new Game Config property that specifies the 4x4 white PNG texture used by Graphics rendering. You can override this via the config, but only do so if needed.
 
 ### Arcade Physics - New Features, API Changes and Bug Fixes
 
-Prior to v3.50 an Arcade Physics Body could be one of two states: immovable, or moveable. An immovable body could not receive _any_ impact from another Body. If something collided with it, it wouldn't even separate to break free from the collision (the other body had to take the full separation value). It was intended for objects such as platforms, ground or walls, there they absolutely shouldn't move under any circumstances. As a result, two immovable bodies could never be collided together. While this worked for scenery-like items, it didn't work if you required maybe 2 players who could collide with each other, but should never be able to push one another. As of 3.50 all physics bodies now have a new property `pushable` that allows this. A pushable body can share separation with its collider, as well as take on mass-based velocity from the impact. A non-pushable body will behave differently depending on what it collides with. For example, a pushable body hitting a non-pushable (or immoveable) body will rebound off it.
+Prior to v3.50 an Arcade Physics Body could be one of two states: immovable, or movable. An immovable body could not receive _any_ impact from another Body. If something collided with it, it wouldn't even separate to break free from the collision (the other body had to take the full separation value). It was intended for objects such as platforms, ground or walls, there they absolutely shouldn't move under any circumstances. As a result, two immovable bodies could never be collided together. While this worked for scenery-like items, it didn't work if you required maybe 2 players who could collide with each other, but should never be able to push one another. As of 3.50 all physics bodies now have a new property `pushable` that allows this. A pushable body can share separation with its collider, as well as take on mass-based velocity from the impact. A non-pushable body will behave differently depending on what it collides with. For example, a pushable body hitting a non-pushable (or immovable) body will rebound off it.
 
 * The Arcade Physics `Body` class has a new boolean property `pushable` (true, by default). This allows you to set if a Body can be physically pushed by another Body, or not. Fix #4175 #4415 (thanks @inmylo @CipSoft-Components)
 * `Body.setPushable` is a new chainable method that allows you to set the `pushable` state of a Body.
