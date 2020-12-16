@@ -1287,7 +1287,7 @@ My thanks to the following for helping with the Phaser 3 Examples, Docs, and Typ
 
 ### 3.50 Beta Testing Help
 
-A special mention to the following who submitted feedback on the the 3.50 Beta releases:
+A special mention to the following who submitted feedback on the 3.50 Beta releases:
 
 @gammafp Acorn @BlunT76 @PhaserEditor2D @samme @rexrainbow @vforsh @kainage @ccaleb @spayton @FloodGames @buzzjeux @jcyuan @MadDogMayCry0 @Patapits @MMontalto @SBCGames @juanitogan @Racoonacoon @EmilSV @telinc1 @d7561985 @RollinSafary
 
