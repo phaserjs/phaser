@@ -1,8 +1,88 @@
-## Version 3.50.0 - Subaru - in development
+## Version 3.50.0 - Subaru - 16th December 2020
 
-### WebGL Pipeline Updates
+Due to the massive amount of changes in 3.50 this Change Log is, by its nature, very long. It's important to scan through it, especially if you're porting a game from an earlier version of Phaser to 3.50. However, if you're after more top-level descriptions of what's new, with example code, then please see the posts we will be making to the Phaser site and Phaser Patreon in the coming months after release. We have also updated the Phaser 3 Examples site, so that every single example up there has been rewritten for 3.50, so you don't have to struggle working through old or deprecated syntax. Virtually all new features are covered in new examples, as well.
 
-If you use a custom WebGL Pipeline in your game, you must update your code to use Phaser 3.50.
+With that said, we've tried to organize the Change Log into commonly themed sections to make it more digestible, but we appreciate there is a lot here. Please don't feel overwhelmed! If you need clarification about something, join us on the Phaser Discord and feel free to ask.
+
+### WebGL Pipelines and Post Processing
+
+WebGL Pipelines are responsible for the rendering of all Game Objects in Phaser and they have had a complete rewrite in 3.50. This was to allow for the introduction of post processing pipelines, now readily available to be created from the new Post FX Pipeline class. The changes in this area have been extensive, so if you use custom WebGL Pipelines in your game already, you must update your code to use Phaser 3.50.
+
+#### Pipeline Manager
+
+The `WebGL.PipelineManager` is a new class that is responsbile for managing all of the WebGL Pipelines in Phaser. An instance of the Pipeline Manager is created by the WebGL Renderer and is available under the `pipelines` property. This means that the WebGL Renderer no longer handles pipelines directly, causing the following API changes:
+
+* `WebGLRenderer.pipelines` is no longer a plain object containing pipeline instances. It's now an instance of the `PipelineManager` class. This instance is created during the init and boot phase of the renderer.
+* The `WebGLRenderer.currentPipeline` property no longer exists, instead use `PipelineManager.current`.
+* The `WebGLRenderer.previousPipeline` property no longer exists, instead use `PipelineManager.previous`.
+* The `WebGLRenderer.hasPipeline` method no longer exists, instead use `PipelineManager.has`.
+* The `WebGLRenderer.getPipeline` method no longer exists, instead use `PipelineManager.get`.
+* The `WebGLRenderer.removePipeline` method no longer exists, instead use `PipelineManager.remove`.
+* The `WebGLRenderer.addPipeline` method no longer exists, instead use `PipelineManager.add`.
+* The `WebGLRenderer.setPipeline` method no longer exists, instead use `PipelineManager.set`.
+* The `WebGLRenderer.rebindPipeline` method no longer exists, instead use `PipelineManager.rebind`.
+* The `WebGLRenderer.clearPipeline` method no longer exists, instead use `PipelineManager.clear`.
+
+The Pipeline Manager also offers the following new features:
+
+* The `PipelineManager.resize` method automatically handles resize events across all pipelines.
+* The `PipelineManager.preRender` method calls the pre-render method of all pipelines.
+* The `PipelineManager.render` method calls the render method of all pipelines.
+* The `PipelineManager.postRender` method calls the post-render method of all pipelines.
+* The `PipelineManager.setMulti` method automatically binds the Multi Texture Pipeline, Phaser's default.
+* The `PipelineManager.clear` method will clear the pipeline, store it in `previous` and free the renderer.
+* The `PipelineManager.rebind` method will reset the rendering context and restore the `previous` pipeline, if set.
+* The `PipelineManager.copyFrame` method will copy a `source` Render Target to the `target` Render Target, optionally setting the brightness of the copy.
+* The `PipelineManager.blitFrame` method will copy a `source` Render Target to the `target` Render Target. Unlike `copyFrame` no resizing takes place and you can optionally set the brightness and erase mode of the copy.
+* The `PipelineManager.copyFrameRect` method binds the `source` Render Target and then copies a section of it to the `target` using `gl.copyTexSubImage2D` rather than a shader, making it much faster if you don't need blending or preserving alpha details.
+* The `PipelineManager.copyToGame` method pops the framebuffer from the renderers FBO stack and sets that as the active target, then draws the `source` Render Target to it. Use when you need to render the _final_ result to the game canvas.
+* The `PipelineManager.drawFrame` method will copy a `source` Render Target, optionally to a `target` Render Target, using the given ColorMatrix, allowing for full control over the luminance values used during the copy.
+* The `PipelineManager.blendFrames` method draws the `source1` and `source2` Render Targets to the `target` Render Target using a linear blend effect, which is controlled by the `strength` parameter.
+* The `PipelineManager.blendFramesAdditive` method draws the `source1` and `source2` Render Targets to the `target` Render Target using an additive blend effect, which is controlled by the `strength` parameter.
+* The `PipelineManager.clearFrame` method clears the given Render Target.
+
+New constants have been created to help you reference a pipeline without needing to use strings:
+
+* `Phaser.Renderer.WebGL.Pipelines.BITMAPMASK_PIPELINE` for the Bitmap Mask Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.LIGHT_PIPELINE` for the Light 2D Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.SINGLE_PIPELINE` for the Single Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.MULTI_PIPELINE` for the Multi Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.ROPE_PIPELINE` for the Rope Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.POINTLIGHT_PIPELINE` for the Point Light Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.POSTFX_PIPELINE` for the Post FX Pipeline.
+* `Phaser.Renderer.WebGL.Pipelines.UTILITY_PIPELINE` for the Utility Pipeline.
+
+All Game Objects have been updated to use the new constants and Pipeline Manager.
+
+#### Post FX Pipeline
+
+The Post FX Pipeline is a brand new and special kind of pipeline specifically for handling post processing effects in Phaser 3.50.
+
+Where-as a standard Pipeline allows you to control the process of rendering Game Objects by configuring the shaders and attributes used to draw them, a Post FX Pipeline is designed to allow you to apply processing _after_ the Game Object/s have been rendered. 
+
+Typical examples of post processing effects are bloom filters, blurs, light effects and color manipulation.
+
+The pipeline works by creating a tiny vertex buffer with just one single hard-coded quad in it. Game Objects can have a Post Pipeline set on them, which becomes their own unique pipeline instance. Those objects are then rendered using their standard pipeline, but are redirected to the Render Targets owned by the post pipeline, which can then apply their own shaders and effects, before passing them back to the main renderer.
+
+The following properties and methods are available in the new `PostFXPipeline` class:
+
+* The `PostFXPipeline.gameObject` property is a reference to the Game Object that owns the Post Pipeline, if any.
+* The `PostFXPipeline.colorMatrix` property is a Color Matrix instance used by the draw shader.
+* The `PostFXPipeline.fullFrame1` property is a reference to the `fullFrame1` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
+* The `PostFXPipeline.fullFrame2` property is a reference to the `fullFrame2` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
+* The `PostFXPipeline.halfFrame1` property is a reference to the `halfFrame1` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
+* The `PostFXPipeline.halfFrame2` property is a reference to the `halfFrame2` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
+* The `PostFXPipeline.copyFrame` method will copy a `source` Render Target to the `target` Render Target, optionally setting the brightness of the copy.
+* The `PostFXPipeline.blitFrame` method will copy a `source` Render Target to the `target` Render Target. Unlike `copyFrame` no resizing takes place and you can optionally set the brightness and erase mode of the copy.
+* The `PostFXPipeline.copyFrameRect` method binds the `source` Render Target and then copies a section of it to the `target` using `gl.copyTexSubImage2D` rather than a shader, making it much faster if you don't need blending or preserving alpha details.
+* The `PostFXPipeline.copyToGame` method pops the framebuffer from the renderers FBO stack and sets that as the active target, then draws the `source` Render Target to it. Use when you need to render the _final_ result to the game canvas.
+* The `PostFXPipeline.drawFrame` method will copy a `source` Render Target, optionally to a `target` Render Target, using the given ColorMatrix, allowing for full control over the luminance values used during the copy.
+* The `PostFXPipeline.blendFrames` method draws the `source1` and `source2` Render Targets to the `target` Render Target using a linear blend effect, which is controlled by the `strength` parameter.
+* The `PostFXPipeline.blendFramesAdditive` method draws the `source1` and `source2` Render Targets to the `target` Render Target using an additive blend effect, which is controlled by the `strength` parameter.
+* The `PostFXPipeline.clearFrame` method clears the given Render Target.
+* The `PostFXPipeline.bindAndDraw` method binds this pipeline and draws the `source` Render Target to the `target` Render Target. This is typically the final step taken in when post processing.
+
+#### Renamed WebGL Pipelines
 
 Due to the huge amount of work that has taken place in this area, all of the pipelines have been renamed. If you extend any of these pipelines or use them in your game code (referenced by name), then please update accordingly. The name changes are:
 
@@ -18,7 +98,9 @@ To match the new pipeline names, the shader source code has also been renamed.
 * `TextureTint.frag` is now called `Multi.frag`.
 * `TextureTint.vert` is now called `Multi.vert`.
 
-Other pipeline changes are as follows:
+#### WebGL Pipelines Updates
+
+Further pipeline changes are as follows:
 
 * None of the shaders or pipelines use the `uViewMatrix` and `uModelMatrix` uniforms any longer. These were always just plain identity matrices, so there is no point spending CPU and GPU time to set them as uniforms or use them in the shaders. Should you need these uniforms, you can add them to your own custom pipelines.
 * `Types.Renderer.WebGL.WebGLPipelineConfig` is a new TypeDef that helps you easily configure your own Custom Pipeline when using TypeScript and also provides better JSDocs.
@@ -66,9 +148,9 @@ Other pipeline changes are as follows:
 * `WebGLPipeline.bindRenderTarget` is a new method that binds the given Render Target to a given texture slot.
 * `WebGLPipeline.setTime` is a new method that gets the current game loop duration to the given shader uniform.
 
-### Pipeline Hooks
+#### Pipeline Hooks
 
-WebGL Pipeline has lots of new hooks you can use. These are all empty by default so you can safely override them in your own classes and take advantage of them:
+The `WebGLPipeline` class has lots of new hooks you can use. These are all empty by default so you can safely override them in your own classes to take advantage of them:
 
 * `WebGLPipeline.onBoot` is a new hook you can override in your own pipelines that is called when the pipeline has booted.
 * `WebGLPipeline.onResize` is a new hook you can override in your own pipelines that is called when the pipeline is resized.
@@ -85,9 +167,9 @@ WebGL Pipeline has lots of new hooks you can use. These are all empty by default
 * `WebGLPipeline.onBeforeFlush` is a new hook you can override in your own pipelines that is called immediately before the `gl.bufferData` and `gl.drawArrays` calls are made, so you can perform any final pre-render modifications.
 * `WebGLPipeline.onAfterFlush` is a new hook you can override in your own pipelines that is called after `gl.drawArrays`, so you can perform additional post-render effects.
 
-### Pipeline Events
+#### Pipeline Events
 
-The WebGL Pipeline class now extends Event Emitter and emits the following events:
+The `WebGLPipeline` class now extends the Event Emitter and emits the following new events:
 
 * The `WebGL.Pipelines.Events.AFTER_FLUSH` event is dispatched by a WebGL Pipeline right after it has issued a `drawArrays` command.
 * The `WebGL.Pipelines.Events.BEFORE_FLUSH` event is dispatched by a WebGL Pipeline right before it is about to flush.
@@ -97,13 +179,13 @@ The WebGL Pipeline class now extends Event Emitter and emits the following event
 * The `WebGL.Pipelines.Events.REBIND` event is dispatched by a WebGL Pipeline when the Pipeline Manager resets and rebinds it.
 * The `WebGL.Pipelines.Events.RESIZE` event is dispatched by a WebGL Pipeline when it is resized, usually as a result of the Renderer.
 
-### Pipeline Uniform Changes 
+#### Pipeline Uniform Changes 
 
 WebGLShaders have a `uniforms` object that is automatically populated when the shader is created. It scans all of the active uniforms from the compiled shader and then builds an object containing their `WebGLUniformLocation` and a value cache.
 
 This saves redundant gl operations for both looking-up uniform locations and setting their values if they're already the currently set values by using the local cache instead.
 
-WebGL Pipelines offer a means to set uniform values on the shader (or shaders) belonging to the pipeline. Previously, calling a method such as `setFloat3` on a pipeline would pass that call over to `WebGLRenderer`. The renderer would first check to see if the pipeline program was current, and if not, make it so, before then looking up the uniform location and finally setting it. This is a lot of steps to take for pipelines that potentially need to change uniforms for every Game Object they render.
+The `WebGLPipeline` classes offer a means to set uniform values on the shader (or shaders) belonging to the pipeline. Previously, calling a method such as `setFloat3` on a pipeline would pass that call over to `WebGLRenderer`. The renderer would first check to see if the pipeline program was current, and if not, make it so, before then looking up the uniform location and finally setting it. This is a lot of steps to take for pipelines that potentially need to change uniforms for every Game Object they render.
 
 Under the new methods, and using the new pre-cached uniform locations and values, these extra steps are skipped. The uniform value is set directly, no shader binding takes place and no location look-up happens. This dramatically reduces the number of WebGL ops being issued per frame. To clearly differentiate these pipeline methods, we have renamed them. The new method names are as follows:
 
@@ -145,33 +227,119 @@ If your code uses any of the old method names, please update them using the list
 * `WebGLPipeline.setMatrix2` has been removed. Please use `setMatrix3fv` instead.
 * `WebGLPipeline.setMatrix3` has been removed. Please use `setMatrix4fv` instead.
 
-### Post FX Pipeline
+#### Game Object Pipeline Component Updates
 
-The Post FX Pipeline is a brand new and special kind of pipeline specifically for handling post processing effects in Phaser 3.50.
+To support the new Post Pipelines in 3.50, the Pipeline Component which most Game Objects inherit has been updated. That means the following new properties and methods are available on all Game Objects that have this component, such as Sprite, Layer, Rope, etc.
 
-Where-as a standard Pipeline allows you to control the process of rendering Game Objects by configuring the shaders and attributes used to draw them, a Post FX Pipeline is designed to allow you to apply processing _after_ the Game Object/s have been rendered. 
+* `hasPostPipeline` is a new boolean property that indicates if the Game Object has one, or more post pipelines set.
+* `postPipelines` is a new property that contains an array of Post Pipelines owned by the Game Object.
+* `pipelineData` is a new object object to store pipeline specific data in.
+* The `setPipeline` method has been updated with 2 new parameters: `pipelineData` and `copyData`. These allow you to populate the pipeline data object during setting.
+* You can now pass a pipeline instance to the `setPipeline` method, as well as a string.
+* `setPostPipeline` is a new method that allows you to set one, or more, Post FX Pipelines on the Game Object. And optionally set the pipeline data with them.
+* `setPipelineData` is a new method that allows you to set a key/value pair into the pipeline data object in a chainable way.
+* `getPostPipeline` is a new method that will return a Post Pipeline instance from the Game Object based on the given string, function or instance.
+* The `resetPipeline` method has two new parameters `resetPostPipeline` and `resetData`, both false by default, that will reset the Post Pipelines and pipeline data accordingly.
+* `resetPostPipeline` is a new method that will specifically reset just the Post Pipelines, and optionally the pipeline data.
+* `removePostPipeline` is a new method that will destroy and remove the given Post Pipeline from the Game Object.
 
-Typical examples of post processing effects are bloom filters, blurs, light effects and color manipulation.
 
-The pipeline works by creating a tiny vertex buffer with just one single hard-coded quad in it. Game Objects can have a Post Pipeline set on them, which becomes their own unique pipeline instance. Those objects are then rendered using their standard pipeline, but are redirected to the Render Targets owned by the post pipeline, which can then apply their own shaders and effects, before passing them back to the main renderer.
+#### Utility Pipeline
 
-The following properties and methods are available in the new `PostFXPipeline` class:
+The Utility Pipeline is a brand new default special-use WebGL Pipeline that is created by and belongs to the Pipeline Manager.
 
-* The `PostFXPipeline.gameObject` property is a reference to the Game Object that owns the Post Pipeline, if any.
-* The `PostFXPipeline.colorMatrix` property is a Color Matrix instance used by the draw shader.
-* The `PostFXPipeline.fullFrame1` property is a reference to the `fullFrame1` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
-* The `PostFXPipeline.fullFrame2` property is a reference to the `fullFrame2` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
-* The `PostFXPipeline.halfFrame1` property is a reference to the `halfFrame1` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
-* The `PostFXPipeline.halfFrame2` property is a reference to the `halfFrame2` Render Target that belongs to the Utility Pipeline, as it's commonly used in post processing.
-* The `PostFXPipeline.copyFrame` method will copy a `source` Render Target to the `target` Render Target, optionally setting the brightness of the copy.
-* The `PostFXPipeline.blitFrame` method will copy a `source` Render Target to the `target` Render Target. Unlike `copyFrame` no resizing takes place and you can optionally set the brightness and erase mode of the copy.
-* The `PostFXPipeline.copyFrameRect` method binds the `source` Render Target and then copies a section of it to the `target` using `gl.copyTexSubImage2D` rather than a shader, making it much faster if you don't need blending or preserving alpha details.
-* The `PostFXPipeline.copyToGame` method pops the framebuffer from the renderers FBO stack and sets that as the active target, then draws the `source` Render Target to it. Use when you need to render the _final_ result to the game canvas.
-* The `PostFXPipeline.drawFrame` method will copy a `source` Render Target, optionally to a `target` Render Target, using the given ColorMatrix, allowing for full control over the luminance values used during the copy.
-* The `PostFXPipeline.blendFrames` method draws the `source1` and `source2` Render Targets to the `target` Render Target using a linear blend effect, which is controlled by the `strength` parameter.
-* The `PostFXPipeline.blendFramesAdditive` method draws the `source1` and `source2` Render Targets to the `target` Render Target using an additive blend effect, which is controlled by the `strength` parameter.
-* The `PostFXPipeline.clearFrame` method clears the given Render Target.
-* The `PostFXPipeline.bindAndDraw` method binds this pipeline and draws the `source` Render Target to the `target` Render Target. This is typically the final step taken in when post processing.
+It provides 4 shaders and handy associated methods:
+
+1) Copy Shader. A fast texture to texture copy shader with optional brightness setting.
+2) Additive Blend Mode Shader. Blends two textures using an additive blend mode.
+3) Linear Blend Mode Shader. Blends two textures using a linear blend mode.
+4) Color Matrix Copy Shader. Draws a texture to a target using a Color Matrix.
+
+You do not extend this pipeline, but instead get a reference to it from the Pipeline Manager via the `setUtility` method. You can also access its methods, such as `copyFrame`, directly from both the Pipeline Manager and from Post FX Pipelines, where its features are most useful.
+
+This pipeline provides methods for manipulating framebuffer backed textures, such as copying or blending one texture to another, copying a portion of a texture, additively blending two textures, flipping textures and more. All essential and common operations for post processing.
+
+The following properties and methods are available in the new `UtilityPipeline` class:
+
+* The `UtilityPipeline.colorMatrix` property is an instance of a ColorMatrix class, used by the draw shader.
+* The `UtilityPipeline.copyShader` property is a reference to the Copy Shader.
+* The `UtilityPipeline.addShader` property is a reference to the additive blend shader.
+* The `UtilityPipeline.linearShader` property is a reference to the linear blend shader.
+* The `UtilityPipeline.colorMatrixShader` property is a reference to the color matrix (draw) shader.
+* The `UtilityPipeline.fullFrame1` property is a full sized Render Target that can be used as a temporary buffer during post processing calls.
+* The `UtilityPipeline.fullFrame2` property is a full sized Render Target that can be used as a temporary buffer during post processing calls.
+* The `UtilityPipeline.halfFrame1` property is a half sized Render Target that can be used as a temporary buffer during post processing calls, where a small texture is required for more intensive operations.
+* The `UtilityPipeline.halfFrame2` property is a half sized Render Target that can be used as a temporary buffer during post processing calls, where a small texture is required for more intensive operations.
+* The `UtilityPipeline.copyFrame` method will copy a `source` Render Target to the `target` Render Target, optionally setting the brightness of the copy.
+* The `UtilityPipeline.blitFrame` method will copy a `source` Render Target to the `target` Render Target. Unlike `copyFrame` no resizing takes place and you can optionally set the brightness and erase mode of the copy.
+* The `UtilityPipeline.copyFrameRect` method binds the `source` Render Target and then copies a section of it to the `target` using `gl.copyTexSubImage2D` rather than a shader, making it much faster if you don't need blending or preserving alpha details.
+* The `UtilityPipeline.copyToGame` method pops the framebuffer from the renderers FBO stack and sets that as the active target, then draws the `source` Render Target to it. Use when you need to render the _final_ result to the game canvas.
+* The `UtilityPipeline.drawFrame` method will copy a `source` Render Target, optionally to a `target` Render Target, using the given ColorMatrix, allowing for full control over the luminance values used during the copy.
+* The `UtilityPipeline.blendFrames` method draws the `source1` and `source2` Render Targets to the `target` Render Target using a linear blend effect, which is controlled by the `strength` parameter.
+* The `UtilityPipeline.blendFramesAdditive` method draws the `source1` and `source2` Render Targets to the `target` Render Target using an additive blend effect, which is controlled by the `strength` parameter.
+* The `UtilityPipeline.clearFrame` method clears the given Render Target.
+* The `UtilityPipeline.setUVs` method allows you to set the UV values for the 6 vertices that make-up the quad belonging to the Utility Pipeline.
+* The `UtilityPipeline.setTargetUVs` method sets the vertex UV coordinates of the quad used by the shaders so that they correctly adjust the texture coordinates for a blit frame effect.
+* The `UtilityPipeline.flipX` method horizontally flips the UV coordinates of the quad used by the shaders.
+* The `UtilityPipeline.flipY` method vertically flips the UV coordinates of the quad used by the shaders.
+* The `UtilityPipeline.resetUVs` method resets the quad vertice UV values to their default settings.
+
+#### Light Pipeline Update
+
+The Light Pipeline (previously called the Forward Diffuse Light Pipeline), which is responsible for rendering lights under WebGL, has been rewritten to work with the new Multi Pipeline features. Lots of redundant code has been removed and the following changes and improvements took place:
+
+* The pipeline now works with Game Objects that do not have a normal map. They will be rendered using the new default normal map, which allows for a flat light effect to pass over them and merge with their diffuse map colors.
+* Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
+* The Bitmap Text (Static and Dynamic) Game Objects now support rendering with normal maps.
+* The TileSprite Game Objects now support rendering with normal maps.
+* Mesh Game Objects now support rendering with normal maps.
+* Particle Emitter Game Object now supports rendering in Light2d.
+* The Text Game Object now supports rendering in Light2d, no matter which font, stroke or style it is using.
+* Tilemap Layer Game Objects now support the Light2d pipeline, with or without normal maps.
+* The pipeline will no longer look-up and set all of the light uniforms unless the `Light` is dirty.
+* The pipeline will no longer reset all of the lights unless the quantity of lights has changed.
+* The `ForwardDiffuseLightPipeline.defaultNormalMap` property has changed, it's now an object with a `glTexture` property that maps to the pipelines default normal map.
+* The `ForwardDiffuseLightPipeline.boot` method has been changed to now generate a default normal map.
+* The `ForwardDiffuseLightPipeline.onBind` method has been removed as it's no longer required.
+* The `ForwardDiffuseLightPipeline.setNormalMap` method has been removed as it's no longer required.
+* `ForwardDiffuseLightPipeline.bind` is a new method that handles setting-up the shader uniforms.
+* The `ForwardDiffuseLightPipeline.batchTexture` method has been rewritten to use the Texture Tint Pipeline function instead.
+* The `ForwardDiffuseLightPipeline.batchSprite` method has been rewritten to use the Texture Tint Pipeline function instead.
+* `ForwardDiffuseLightPipeline.lightCount` is a new property that stores the previous number of lights rendered.
+* `ForwardDiffuseLightPipeline.getNormalMap` is a new method that will look-up and return a normal map for the given object.
+
+#### Point Lights Pipeline
+
+The Point Light Pipeline is a brand new pipeline in 3.50 that was creates specifically for rendering the new Point Light Game Objects in WebGL.
+
+It extends the WebGLPipeline and sets the required shader attributes and uniforms for Point Light rendering.
+
+You typically don't access or set the pipeline directly, but rather create instances of the Point Light Game Object instead. However, it does have the following unique methods:
+
+* The `PointLightPipeline.batchPointLight` method is a special-case method that is called directly by the Point Light Game Object during rendering and allows it to add itself into the rendering batch.
+* The `PointLightPipeline.batchLightVert` method is a special internal method, used by `batchPointLight` that adds a single Point Light vert into the batch.
+
+#### Graphics Pipeline and Graphics Game Object Changes
+
+The Graphics Pipeline is a new pipeline added in 3.50 that is responsible for rendering Graphics Game Objects and all of the Shape Game Objects, such as Arc, Rectangle, Star, etc. Due to the new pipeline some changes have been made:
+
+* The Graphics Pipeline now uses much simpler vertex and fragment shaders with just two attributes (`inPosition` and `inColor`), making the vertex size and memory-use 57% smaller.
+* The private `_tempMatrix1`, 2, 3 and 4 properties have all been removed from the pipeline.
+* A new public `calcMatrix` property has been added, which Shape Game Objects use to maintain transform state during rendering.
+* The Graphics Pipeline no longer makes use of `tintEffect` or any textures.
+* Because Graphics and Shapes now render with their own pipeline, you are able to exclude the pipeline and those Game Objects entirely from custom builds, further reducing the final bundle size.
+
+As a result of these changes the following features are no longer available:
+
+* `Graphics.setTexture` has been removed. You can no longer use a texture as a 'fill' for a Graphic. It never worked with any shape other than a Rectangle, anyway, due to UV mapping issues, so is much better handled via the new Mesh Game Object.
+* `Graphics._tempMatrix1`, 2 and 3 have been removed. They're not required internally any longer.
+* `Graphics.renderWebGL` now uses the standard `GetCalcMatrix` function, cutting down on duplicate code significantly.
+
+#### Single Pipeline Update
+
+There is a new pipeline called `SinglePipeline`, created to emulate the old `TextureTintPipeline`. This special pipeline uses just a single texture and makes things a lot easier if you wish to create a custom pipeline, but not have to recode your shaders to work with multiple textures. Instead, just extend `SinglePipeline`, where-as before you extended the `TextureTintPipeline` and you won't have to change any of your shader code. However, if you can, you should update it to make it perform faster, but that choice is left up to you.
+
+
 
 ### WebGLShader
 
@@ -247,178 +415,9 @@ The following properties and methods are available in the new `RenderTexture` cl
 * The `RenderTarget.unbind` method flushes the renderer and pops the Render Target framebuffer from the stack.
 * The `RenderTarget.destroy` method removes all external references and deletes the framebuffer and texture.
 
-### Point Lights
+### WebGL Renderer
 
-The Point Light Game Object is brand new in 3.50 and provides a way to add a point light effect into your game, without the expensive shader processing requirements of the traditional Light Game Object.
-
-The difference is that the Point Light renders using a custom shader, designed to give the impression of a radial light source, of variable radius, intensity and color, in your game. However, unlike the Light Game Object, it does not impact any other Game Objects, or use their normal maps for calcuations. This makes them extremely fast to render compared to Lights
-and perfect for special effects, such as flickering torches or muzzle flashes.
-
-For maximum performance you should batch Point Light Game Objects together. This means ensuring they follow each other consecutively on the display list. Ideally, use a Layer Game Object and then add just Point Lights to it, so that it can batch together the rendering of the lights. You don't _have_ to do this, and if you've only a handful of Point Lights in your game then it's perfectly safe to mix them into the dislay list as normal. However, if you're using a large number of them, please consider how they are mixed into the display list.
-
-The renderer will automatically cull Point Lights. Those with a radius that does not intersect with the Camera will be skipped in the rendering list. This happens automatically and the culled state is refreshed every frame, for every camera.
-
-The `PointLight` Game Object has the following unique properties and methods:
-
-* The `PointLight.color` property is an instance of the Color object that controls the color value of the light.
-* The `PointLight.intensity` property sets the intensity of the light. The colors of the light are multiplied by this value during rendering.
-* The `PointLight.attenuation` property sets the attenuation of the light, which is the force with which the light falls off from its center.
-* The `PointLight.radius` property sets the radius of the light, in pixels. This value is also used for culling.
-
-Point Lights also have corresponding Factory and Creator functions, available from within a Scene:
-
-```js
-this.add.pointlight(x, y, color, radius, intensity, attenuation);
-```
-
-and
-
-```js
-this.make.pointlight({ x, y, color, radius, intensity, attenuation });
-```
-
-### Point Lights Pipeline
-
-The Point Light Pipeline is a brand new pipeline in 3.50 that was creates specifically for rendering the new Point Light Game Objects in WebGL.
-
-It extends the WebGLPipeline and sets the required shader attributes and uniforms for Point Light rendering.
-
-You typically don't access or set the pipeline directly, but rather create instances of the Point Light Game Object instead. However, it does have the following unique methods:
-
-* The `PointLightPipeline.batchPointLight` method is a special-case method that is called directly by the Point Light Game Object during rendering and allows it to add itself into the rendering batch.
-* The `PointLightPipeline.batchLightVert` method is a special internal method, used by `batchPointLight` that adds a single Point Light vert into the batch.
-
-### Utility Pipeline
-
-The Utility Pipeline is a brand new default special-use WebGL Pipeline that is created by and belongs to the Pipeline Manager.
-
-It provides 4 shaders and handy associated methods:
-
-1) Copy Shader. A fast texture to texture copy shader with optional brightness setting.
-2) Additive Blend Mode Shader. Blends two textures using an additive blend mode.
-3) Linear Blend Mode Shader. Blends two textures using a linear blend mode.
-4) Color Matrix Copy Shader. Draws a texture to a target using a Color Matrix.
-
-You do not extend this pipeline, but instead get a reference to it from the Pipeline Manager via the `setUtility` method. You can also access its methods, such as `copyFrame`, directly from both the Pipeline Manager and from Post FX Pipelines, where its features are most useful.
-
-This pipeline provides methods for manipulating framebuffer backed textures, such as copying or blending one texture to another, copying a portion of a texture, additively blending two textures, flipping textures and more. All essential and common operations for post processing.
-
-The following properties and methods are available in the new `UtilityPipeline` class:
-
-* The `UtilityPipeline.colorMatrix` property is an instance of a ColorMatrix class, used by the draw shader.
-* The `UtilityPipeline.copyShader` property is a reference to the Copy Shader.
-* The `UtilityPipeline.addShader` property is a reference to the additive blend shader.
-* The `UtilityPipeline.linearShader` property is a reference to the linear blend shader.
-* The `UtilityPipeline.colorMatrixShader` property is a reference to the color matrix (draw) shader.
-* The `UtilityPipeline.fullFrame1` property is a full sized Render Target that can be used as a temporary buffer during post processing calls.
-* The `UtilityPipeline.fullFrame2` property is a full sized Render Target that can be used as a temporary buffer during post processing calls.
-* The `UtilityPipeline.halfFrame1` property is a half sized Render Target that can be used as a temporary buffer during post processing calls, where a small texture is required for more intensive operations.
-* The `UtilityPipeline.halfFrame2` property is a half sized Render Target that can be used as a temporary buffer during post processing calls, where a small texture is required for more intensive operations.
-* The `UtilityPipeline.copyFrame` method will copy a `source` Render Target to the `target` Render Target, optionally setting the brightness of the copy.
-* The `UtilityPipeline.blitFrame` method will copy a `source` Render Target to the `target` Render Target. Unlike `copyFrame` no resizing takes place and you can optionally set the brightness and erase mode of the copy.
-* The `UtilityPipeline.copyFrameRect` method binds the `source` Render Target and then copies a section of it to the `target` using `gl.copyTexSubImage2D` rather than a shader, making it much faster if you don't need blending or preserving alpha details.
-* The `UtilityPipeline.copyToGame` method pops the framebuffer from the renderers FBO stack and sets that as the active target, then draws the `source` Render Target to it. Use when you need to render the _final_ result to the game canvas.
-* The `UtilityPipeline.drawFrame` method will copy a `source` Render Target, optionally to a `target` Render Target, using the given ColorMatrix, allowing for full control over the luminance values used during the copy.
-* The `UtilityPipeline.blendFrames` method draws the `source1` and `source2` Render Targets to the `target` Render Target using a linear blend effect, which is controlled by the `strength` parameter.
-* The `UtilityPipeline.blendFramesAdditive` method draws the `source1` and `source2` Render Targets to the `target` Render Target using an additive blend effect, which is controlled by the `strength` parameter.
-* The `UtilityPipeline.clearFrame` method clears the given Render Target.
-* The `UtilityPipeline.setUVs` method allows you to set the UV values for the 6 vertices that make-up the quad belonging to the Utility Pipeline.
-* The `UtilityPipeline.setTargetUVs` method sets the vertex UV coordinates of the quad used by the shaders so that they correctly adjust the texture coordinates for a blit frame effect.
-* The `UtilityPipeline.flipX` method horizontally flips the UV coordinates of the quad used by the shaders.
-* The `UtilityPipeline.flipY` method vertically flips the UV coordinates of the quad used by the shaders.
-* The `UtilityPipeline.resetUVs` method resets the quad vertice UV values to their default settings.
-
-### Pipeline Manager
-
-The `WebGL.PipelineManager` is a new class that is responsbile for managing all of the WebGL Pipelines in Phaser. An instance of the Pipeline Manager is created by the WebGL Renderer and is available under the `pipelines` property. This means that the WebGL Renderer no longer handles pipelines directly, causing the following API changes:
-
-* `WebGLRenderer.pipelines` is no longer a plain object containing pipeline instances. It's now an instance of the `PipelineManager` class. This instance is created during the init and boot phase of the renderer.
-* The `WebGLRenderer.currentPipeline` property no longer exists, instead use `PipelineManager.current`.
-* The `WebGLRenderer.previousPipeline` property no longer exists, instead use `PipelineManager.previous`.
-* The `WebGLRenderer.hasPipeline` method no longer exists, instead use `PipelineManager.has`.
-* The `WebGLRenderer.getPipeline` method no longer exists, instead use `PipelineManager.get`.
-* The `WebGLRenderer.removePipeline` method no longer exists, instead use `PipelineManager.remove`.
-* The `WebGLRenderer.addPipeline` method no longer exists, instead use `PipelineManager.add`.
-* The `WebGLRenderer.setPipeline` method no longer exists, instead use `PipelineManager.set`.
-* The `WebGLRenderer.rebindPipeline` method no longer exists, instead use `PipelineManager.rebind`.
-* The `WebGLRenderer.clearPipeline` method no longer exists, instead use `PipelineManager.clear`.
-
-The Pipeline Manager also offers the following new features:
-
-* The `PipelineManager.resize` method automatically handles resize events across all pipelines.
-* The `PipelineManager.preRender` method calls the pre-render method of all pipelines.
-* The `PipelineManager.render` method calls the render method of all pipelines.
-* The `PipelineManager.postRender` method calls the post-render method of all pipelines.
-* The `PipelineManager.setMulti` method automatically binds the Multi Texture Pipeline, Phaser's default.
-* The `PipelineManager.clear` method will clear the pipeline, store it in `previous` and free the renderer.
-* The `PipelineManager.rebind` method will reset the rendering context and restore the `previous` pipeline, if set.
-* The `PipelineManager.copyFrame` method will copy a `source` Render Target to the `target` Render Target, optionally setting the brightness of the copy.
-* The `PipelineManager.blitFrame` method will copy a `source` Render Target to the `target` Render Target. Unlike `copyFrame` no resizing takes place and you can optionally set the brightness and erase mode of the copy.
-* The `PipelineManager.copyFrameRect` method binds the `source` Render Target and then copies a section of it to the `target` using `gl.copyTexSubImage2D` rather than a shader, making it much faster if you don't need blending or preserving alpha details.
-* The `PipelineManager.copyToGame` method pops the framebuffer from the renderers FBO stack and sets that as the active target, then draws the `source` Render Target to it. Use when you need to render the _final_ result to the game canvas.
-* The `PipelineManager.drawFrame` method will copy a `source` Render Target, optionally to a `target` Render Target, using the given ColorMatrix, allowing for full control over the luminance values used during the copy.
-* The `PipelineManager.blendFrames` method draws the `source1` and `source2` Render Targets to the `target` Render Target using a linear blend effect, which is controlled by the `strength` parameter.
-* The `PipelineManager.blendFramesAdditive` method draws the `source1` and `source2` Render Targets to the `target` Render Target using an additive blend effect, which is controlled by the `strength` parameter.
-* The `PipelineManager.clearFrame` method clears the given Render Target.
-
-New constants have been created to help you reference a pipeline without needing to use strings:
-
-* `Phaser.Renderer.WebGL.Pipelines.BITMAPMASK_PIPELINE` for the Bitmap Mask Pipeline.
-* `Phaser.Renderer.WebGL.Pipelines.LIGHT_PIPELINE` for the Light 2D Pipeline.
-* `Phaser.Renderer.WebGL.Pipelines.SINGLE_PIPELINE` for the Single Pipeline.
-* `Phaser.Renderer.WebGL.Pipelines.MULTI_PIPELINE` for the Multi Pipeline.
-* `Phaser.Renderer.WebGL.Pipelines.ROPE_PIPELINE` for the Rope Pipeline.
-* `Phaser.Renderer.WebGL.Pipelines.POINTLIGHT_PIPELINE` for the Point Light Pipeline.
-* `Phaser.Renderer.WebGL.Pipelines.POSTFX_PIPELINE` for the Post FX Pipeline.
-* `Phaser.Renderer.WebGL.Pipelines.UTILITY_PIPELINE` for the Utility Pipeline.
-
-All Game Objects have been updated to use the new constants and Pipeline Manager.
-
-#### Game Object Pipeline Component Updates
-
-To support the new Post Pipelines in 3.50, the Pipeline Component which most Game Objects inherit has been updated. That means the following new properties and methods are available on all Game Objects that have this component, such as Sprite, Layer, Rope, etc.
-
-* `hasPostPipeline` is a new boolean property that indicates if the Game Object has one, or more post pipelines set.
-* `postPipelines` is a new property that contains an array of Post Pipelines owned by the Game Object.
-* `pipelineData` is a new object object to store pipeline specific data in.
-* The `setPipeline` method has been updated with 2 new parameters: `pipelineData` and `copyData`. These allow you to populate the pipeline data object during setting.
-* You can now pass a pipeline instance to the `setPipeline` method, as well as a string.
-* `setPostPipeline` is a new method that allows you to set one, or more, Post FX Pipelines on the Game Object. And optionally set the pipeline data with them.
-* `setPipelineData` is a new method that allows you to set a key/value pair into the pipeline data object in a chainable way.
-* `getPostPipeline` is a new method that will return a Post Pipeline instance from the Game Object based on the given string, function or instance.
-* The `resetPipeline` method has two new parameters `resetPostPipeline` and `resetData`, both false by default, that will reset the Post Pipelines and pipeline data accordingly.
-* `resetPostPipeline` is a new method that will specifically reset just the Post Pipelines, and optionally the pipeline data.
-* `removePostPipeline` is a new method that will destroy and remove the given Post Pipeline from the Game Object.
-
-#### Single Pipeline Update
-
-There is a new pipeline called `SinglePipeline`, created to emulate the old `TextureTintPipeline`. This special pipeline uses just a single texture and makes things a lot easier if you wish to create a custom pipeline, but not have to recode your shaders to work with multiple textures. Instead, just extend `SinglePipeline`, where-as before you extended the `TextureTintPipeline` and you won't have to change any of your shader code. However, if you can, you should update it to make it perform faster, but that choice is left up to you.
-
-### Light Pipeline Update
-
-The Light Pipeline (previously called the Forward Diffuse Light Pipeline), which is responsible for rendering lights under WebGL, has been rewritten to work with the new Multi Pipeline features. Lots of redundant code has been removed and the following changes and improvements took place:
-
-* The pipeline now works with Game Objects that do not have a normal map. They will be rendered using the new default normal map, which allows for a flat light effect to pass over them and merge with their diffuse map colors.
-* Fixed a bug in the way lights were handled that caused Tilemaps to render one tile at a time, causing massive slow down. They're now batched properly, making a combination of lights and tilemaps possible again.
-* The Bitmap Text (Static and Dynamic) Game Objects now support rendering with normal maps.
-* The TileSprite Game Objects now support rendering with normal maps.
-* Mesh Game Objects now support rendering with normal maps.
-* Particle Emitter Game Object now supports rendering in Light2d.
-* The Text Game Object now supports rendering in Light2d, no matter which font, stroke or style it is using.
-* Tilemap Layer Game Objects now support the Light2d pipeline, with or without normal maps.
-* The pipeline will no longer look-up and set all of the light uniforms unless the `Light` is dirty.
-* The pipeline will no longer reset all of the lights unless the quantity of lights has changed.
-* The `ForwardDiffuseLightPipeline.defaultNormalMap` property has changed, it's now an object with a `glTexture` property that maps to the pipelines default normal map.
-* The `ForwardDiffuseLightPipeline.boot` method has been changed to now generate a default normal map.
-* The `ForwardDiffuseLightPipeline.onBind` method has been removed as it's no longer required.
-* The `ForwardDiffuseLightPipeline.setNormalMap` method has been removed as it's no longer required.
-* `ForwardDiffuseLightPipeline.bind` is a new method that handles setting-up the shader uniforms.
-* The `ForwardDiffuseLightPipeline.batchTexture` method has been rewritten to use the Texture Tint Pipeline function instead.
-* The `ForwardDiffuseLightPipeline.batchSprite` method has been rewritten to use the Texture Tint Pipeline function instead.
-* `ForwardDiffuseLightPipeline.lightCount` is a new property that stores the previous number of lights rendered.
-* `ForwardDiffuseLightPipeline.getNormalMap` is a new method that will look-up and return a normal map for the given object.
-
-### WebGL Multi-Texture Rendering
+#### New WebGL Multi-Texture Support
 
 The Multi Pipeline (previously called the Texture Tint Pipeline) has had its core flow rewritten to eliminate the need for constantly creating `batch` objects. Instead, it now supports the new multi-texture shader, vastly increasing rendering performance, especially on draw-call bound systems.
 
@@ -464,7 +463,7 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `Renderer.WebGL.Utils.parseFragmentShaderMaxTextures` is a new function that will take fragment shader source and search it for `%count%` and `%forloop%` declarations, replacing them with the required GLSL for multi-texture support, returning the modified source.
 * The `WebGL.Utils.getComponentCount` function has been removed as this is no longer required internally.
 
-### WebGLRenderer New Features, Updates and API Changes
+#### WebGLRenderer New Features, Updates and API Changes
 
 * `WebGLRenderer.instancedArraysExtension` is a new property that holds the WebGL Extension for instanced array drawing, if supported by the browser.
 * `WebGLRenderer.vaoExtension` is a new property that holds a reference to the Vertex Array Object WebGL Extension, if supported by the browser.
@@ -513,6 +512,28 @@ All of the internal functions, such as `batchQuad` and `batchSprite` have been u
 * `WebGLRenderer.resetProjectionMatrix` is a new method that resets the renderer projection matrix back to match the renderer size.
 * `WebGLRenderer.getAspectRatio` is a new method that returns the aspect ratio of the renderer.
 
+#### WebGL ModelViewProjection Removed
+
+The `ModelViewProjection` object contained a lot of functions that Phaser never used internally. Instead, the functions available in them were already available in the `Math.Matrix4` class. So the pipelines have been updated to use a Matrix4 instead and all of the MVP functions have been removed. The full list of removed functions is below:
+
+* `projIdentity` has been removed.
+* `projPersp` has been removed.
+* `modelRotateX` has been removed.
+* `modelRotateY` has been removed.
+* `modelRotateZ` has been removed.
+* `viewLoad` has been removed.
+* `viewRotateX` has been removed.
+* `viewRotateY` has been removed.
+* `viewRotateZ` has been removed.
+* `viewScale` has been removed.
+* `viewTranslate` has been removed.
+* `modelIdentity` has been removed.
+* `modelScale` has been removed.
+* `modelTranslate` has been removed.
+* `viewIdentity` has been removed.
+* `viewLoad2D` has been removed.
+* `projOrtho` has been removed.
+
 ### WebGL and Canvas Renderer Events
 
 * `Phaser.Renderer.Events` is a new namespace for events emited by the Canvas and WebGL Renderers.
@@ -554,23 +575,34 @@ Other changes and fixes:
 * `Cameras.Scene2D.Events.FOLLOW_UPDATE` is a new Event that is dispatched by a Camera when it is following a Game Object. It is dispatched every frame, right after the final Camera position and internal matrices have been updated. Use it if you need to react to a camera, using its most current position and the camera is following something. Fix #5253 (thanks @rexrainbow)
 * If the Camera has `roundPixels` set it will now round the internal scroll factors and `worldView` during the `preRender` step. Fix #4464 (thanks @Antriel)
 
-### Graphics Pipeline and Graphics Game Object Changes
+### Spine Plugin - New Features, API Changes and Bug Fixes
 
-The Graphics Pipeline is a new pipeline added in 3.50 that is responsible for rendering Graphics Game Objects and all of the Shape Game Objects, such as Arc, Rectangle, Star, etc. Due to the new pipeline some changes have been made:
+* The Spine Runtimes have been updated to 3.8.99, which are the most recent non-beta versions. Please note, you _will need_ to re-export your animations if you're working in a version of Spine lower than 3.8.20. We do not impose this requirement, the Spine editor does.
+* `SpineContainer` is a new Game Object available via `this.add.spineContainer` to which you can add Spine Game Objects only. It uses a special rendering function to retain batching, even across multiple container or Spine Game Object instances, resulting in dramatically improved performance compared to using regular Containers. You _can_ still use regular Containers if you need, but they do not benefit from the new batching.
+* A Spine Game Object with `setVisible(false)` will no longer still cause internal gl commands and is now properly skipped, retaining any current batch in the process. Fix #5174 (thanks @Kitsee)
+* The Spine Game Object WebGL Renderer will no longer clear the type if invisible and will only end the batch if the next type doesn't match.
+* The Spine Game Object WebGL Renderer will no longer rebind the pipeline if it was the final object on the display list, saving lots of gl commands.
+* The Webpack build scripts have all been updated for Webpack 4.44.x. Fix #5243 (thanks @RollinSafary)
+* There is a new npm script `npm run plugin.spine.runtimes` which will build all of the Spine runtimes, for ingestion by the plugin. Note: You will need to check-out the Esoteric Spine Runtimes repo into `plugins/spine/` in order for this to work and then run `npm i`.
+* Spine Game Objects can now be rendered to Render Textures. Fix #5184 (thanks @Kitsee)
+* Using > 128 Spine objects in a Container would cause a `WebGL: INVALID_OPERATION: vertexAttribPointer: no ARRAY_BUFFER is bound and offset is non-zero` error if you added any subsequent Spine objects to the Scene. There is now no limit. Fix #5246 (thanks @d7561985)
+* The Spine Plugin will now work in HEADLESS mode without crashing. Fix #4988 (thanks @raimon-segura)
+* Spine Game Objects now use -1 as their default blend mode, which means 'skip setting it', as blend modes should be handled by the Spine skeletons directly.
+* The Spine TypeScript defs have been updated for the latest version of the plugin and to add SpineContainers.
+* The `SpineGameObject.setAnimation` method will now use the `trackIndex` parameter if `ignoreIfPlaying` is set and run the check against this track index. Fix #4842 (thanks @vinerz)
+* The `SpineFile` will no longer throw a warning if adding a texture into the Texture Manager that already exists. This allows you to have multiple Spine JSON use the same texture file, however, it also means you now get no warning if you accidentally load a texture that exists, so be careful with your keys! Fix #4947 (thanks @Nomy1)
+* The Spine Plugin `destroy` method will now no longer remove the Game Objects from the Game Object Factory, or dispose of the Scene Renderer. This means when a Scene is destroyed, it will keep the Game Objects in the factory for other Scenes to use. Fix #5279 (thanks @Racoonacoon)
+* `SpinePlugin.gameDestroy` is a new method that is called if the Game instance emits a `destroy` event. It removes the Spine Game Objects from the factory and disposes of the Spine scene renderer.
+* `SpineFile` will now check to see if another identical atlas in the load queue is already loading the texture it needs and will no longer get locked waiting for a file that will never complete. This allows multiple skeleton JSONs to use the same atlas data. Fix #5331 (thanks @Racoonacoon)
+* `SpineFile` now uses a `!` character to split the keys, instead of an underscore, preventing the plugin from incorrectly working out the keys for filenames with underscores in them. Fix #5336 (thanks @Racoonacoon)
+* `SpineGameObject.willRender` is no longer hard-coded to return `true`. It instead now takes a Camera parameter and performs all of the checks needed before returning. Previously, this happened during the render functions.
+* The Spine Plugin now uses a single instance of the Scene Renderer when running under WebGL. All instances of the plugin (installed per Scene) share the same base Scene Renderer, avoiding duplicate allocations and resizing events under multi-Scene games. Fix #5286 (thanks @spayton BunBunBun)
 
-* The Graphics Pipeline now uses much simpler vertex and fragment shaders with just two attributes (`inPosition` and `inColor`), making the vertex size and memory-use 57% smaller.
-* The private `_tempMatrix1`, 2, 3 and 4 properties have all been removed from the pipeline.
-* A new public `calcMatrix` property has been added, which Shape Game Objects use to maintain transform state during rendering.
-* The Graphics Pipeline no longer makes use of `tintEffect` or any textures.
-* Because Graphics and Shapes now render with their own pipeline, you are able to exclude the pipeline and those Game Objects entirely from custom builds, further reducing the final bundle size.
+### Game Objects - New Features, API Changes and Bug Fixes
 
-As a result of these changes the following features are no longer available:
+Lots of the core Phaser Game Objects have been improved in 3.50 and there are several new Game Objects as well.
 
-* `Graphics.setTexture` has been removed. You can no longer use a texture as a 'fill' for a Graphic. It never worked with any shape other than a Rectangle, anyway, due to UV mapping issues, so is much better handled via the new Mesh Game Object.
-* `Graphics._tempMatrix1`, 2 and 3 have been removed. They're not required internally any longer.
-* `Graphics.renderWebGL` now uses the standard `GetCalcMatrix` function, cutting down on duplicate code significantly.
-
-### Render Texture Game Object - New Features, API Changes and Bug Fixes
+#### Render Texture Game Object
 
 The Render Texture Game Object has been rewritten to use the new `RenderTarget` class internally, rather than managing its own framebuffer and gl textures directly. The core draw methods are now a lot simpler and no longer require manipulating render pipelines.
 
@@ -595,39 +627,119 @@ Render Textures have the following bug fixes:
 * `RenderTexture.fill` would fail to fill the correct area under WebGL if the RenderTexture wasn't the same size as the Canvas. It now fills the given region properly.
 * `RenderTexture.erase` has never worked when using the Canvas Renderer and a texture frame, only with Game Objects. It now works with both. Fix #5422 (thanks @vforsh)
 
+#### Point Lights Game Object
 
-### Lights 2D Updates
+The Point Light Game Object is brand new in 3.50 and provides a way to add a point light effect into your game, without the expensive shader processing requirements of the traditional Light Game Object.
 
-The Light Game Object has been rewritten so it now extends the `Geom.Circle` object, as they shared lots of the same properties and methods anyway.
+The difference is that the Point Light renders using a custom shader, designed to give the impression of a radial light source, of variable radius, intensity and color, in your game. However, unlike the Light Game Object, it does not impact any other Game Objects, or use their normal maps for calcuations. This makes them extremely fast to render compared to Lights
+and perfect for special effects, such as flickering torches or muzzle flashes.
 
-* `Light.dirty` is a new property that controls if the light is dirty, or not, and needs its uniforms updating.
-* `Light` has been recoded so that all of its properties are now setters that activate its `dirty` flag.
-* `LightsManager.destroy` will now clear the `lightPool` array when destroyed, where-as previously it didn't.
-* `LightsManager.cull` now takes the viewport height from the renderer instead of the game config (thanks zenwaichi)
+For maximum performance you should batch Point Light Game Objects together. This means ensuring they follow each other consecutively on the display list. Ideally, use a Layer Game Object and then add just Point Lights to it, so that it can batch together the rendering of the lights. You don't _have_ to do this, and if you've only a handful of Point Lights in your game then it's perfectly safe to mix them into the dislay list as normal. However, if you're using a large number of them, please consider how they are mixed into the display list.
 
-### WebGL ModelViewProjection Removed
+The renderer will automatically cull Point Lights. Those with a radius that does not intersect with the Camera will be skipped in the rendering list. This happens automatically and the culled state is refreshed every frame, for every camera.
 
-The `ModelViewProjection` object contained a lot of functions that Phaser never used internally. Instead, the functions available in them were already available in the `Math.Matrix4` class. So the pipelines have been updated to use a Matrix4 instead and all of the MVP functions have been removed. The full list of removed functions is below:
+The `PointLight` Game Object has the following unique properties and methods:
 
-* `projIdentity` has been removed.
-* `projPersp` has been removed.
-* `modelRotateX` has been removed.
-* `modelRotateY` has been removed.
-* `modelRotateZ` has been removed.
-* `viewLoad` has been removed.
-* `viewRotateX` has been removed.
-* `viewRotateY` has been removed.
-* `viewRotateZ` has been removed.
-* `viewScale` has been removed.
-* `viewTranslate` has been removed.
-* `modelIdentity` has been removed.
-* `modelScale` has been removed.
-* `modelTranslate` has been removed.
-* `viewIdentity` has been removed.
-* `viewLoad2D` has been removed.
-* `projOrtho` has been removed.
+* The `PointLight.color` property is an instance of the Color object that controls the color value of the light.
+* The `PointLight.intensity` property sets the intensity of the light. The colors of the light are multiplied by this value during rendering.
+* The `PointLight.attenuation` property sets the attenuation of the light, which is the force with which the light falls off from its center.
+* The `PointLight.radius` property sets the radius of the light, in pixels. This value is also used for culling.
 
-### BitmapText - New Features, Updates and API Changes
+Point Lights also have corresponding Factory and Creator functions, available from within a Scene:
+
+```js
+this.add.pointlight(x, y, color, radius, intensity, attenuation);
+```
+
+and
+
+```js
+this.make.pointlight({ x, y, color, radius, intensity, attenuation });
+```
+
+#### Mesh Game Object
+
+The Mesh Game Object has been rewritten from scratch in v3.50 with a lot of changes to make it much more useful. It is accompanied by the new `Geom.Mesh` set of functions.
+
+* `Geom.Mesh` is a new namespace that contains the Mesh related geometry functions. These are stand-alone functions that you may, or may not require, depending on your game.
+* `Geom.Mesh.Vertex` is a new class that encapsulates all of the data required for a single vertex, including position, uv, normals, color and alpha.
+* `Geom.Mesh.Face` is a new class that consists of references to the three `Vertex` instances that construct a single Face in a Mesh and provides methods for manipulating them.
+* `Geom.Mesh.GenerateVerts` is a new function that will return an array of `Vertex` and `Face` objects generated from the given data. You can provide index, or non-index vertex lists, along with UV data, normals, colors and alpha which it will parse and return the results from.
+* `Geom.Mesh.GenerateGridVerts` is a new function that will generate a series of `Vertex` objects in a grid format, based on the given `GenerateGridConfig` config file. You can set the size of the grid, the number of segments to split it into, translate it, color it and tile the texture across it. The resulting data can be easily used by a Mesh Game Object.
+* `Geom.Mesh.GenerateObjVerts` is a new function that will generate a series of `Vertex` objects based on the given parsed Wavefront Obj Model data. You can optionally scale and translate the generated vertices and add them to a Mesh.
+* `Geom.Mesh.ParseObj` is a new function that will parse a triangulated Wavefront OBJ file into model data into a format that the `GenerateObjVerts` function can consume.
+* `Geom.Mesh.ParseObjMaterial` is a new function that will parse a Wavefront material file and extract the diffuse color data from it, combining it with the parsed object data.
+* `Geom.Mesh.RotateFace` is a new function that will rotate a Face by a given amount, based on an optional center of rotation.
+* `Loader.OBJFile` is a new File Loader type that can load triangulated Wavefront OBJ files, and optionally material files, which are then parsed and stored in the OBJ Cache.
+* The Mesh constructor and `MeshFactory` signatures have changed to `scene, x, y, texture, frame, vertices, uvs, indicies, containsZ, normals, colors, alphas`. Note the way the Texture and Frame parameters now comes first. `indicies` is a new parameter that allows you to provide indexed vertex data to create the Mesh from, where the `indicies` array holds the vertex index information. The final list of vertices is built from this index along with the provided vertices and uvs arrays. The `indicies` array is optional. If your data is not indexed, then simply pass `null` or an empty array for this parameter.
+* The `Mesh` Game Object now has the Animation State Component. This allows you to create and play animations across the texture of a Mesh, something that previously wasn't possible. As a result, the Mesh now adds itself to the Update List when added to a Scene.
+* `Mesh.addVertices` is a new method that allows you to add vertices to a Mesh Game Object based on the given parameters. This allows you to modify a mesh post-creation, or populate it with data at a later stage.
+* `Mesh.addVerticesFromObj` is a new method that will add the model data from a loaded Wavefront OBJ file to a Mesh. You load it via the new `OBJFile` with a `this.load.obj` call, then you can use the key with this method. This method also takes an optional scale and position parameters to control placement of the created model within the Mesh.
+* `Mesh.hideCCW` is a new boolean property that, when enabled, tells a Face to not render if it isn't counter-clockwise. You can use this to hide backward facing Faces.
+* `Mesh.modelPosition` is a new Vector3 property that allows you to translate the position of all vertices in the Mesh.
+* `Mesh.modelRotation` is a new Vector3 property that allows you to rotate all vertices in the Mesh.
+* `Mesh.modelScale` is a new Vector3 property that allows you to scale all vertices in the Mesh.
+* `Mesh.panX` is a new function that will translate the view position of the Mesh on the x axis.
+* `Mesh.panY` is a new function that will translate the view position of the Mesh on the y axis.
+* `Mesh.panZ` is a new function that will translate the view position of the Mesh on the z axis.
+* `Mesh.setPerspective` is a new method that allows you to set a perspective projection matrix based on the given dimensions, fov, near and far values.
+* `Mesh.setOrtho` is a new method that allows you to set an orthographic projection matrix based on the given scale, near and far values.
+* `Mesh.clear` is a new method that will destroy all Faces and Vertices and clear the Mesh.
+* `Mesh.depthSort` is a new method that will run a depth sort across all Faces in the Mesh by sorting them based on their average depth.
+* `Mesh.addVertex` is a new method that allows you to add a new single Vertex into the Mesh.
+* `Mesh.addFace` is a new method that allows you to add a new Face into the Mesh. A Face must consist of 3 Vertex instances.
+* `Mesh.getFaceCount` new is a new method that will return the total number of Faces in the Mesh.
+* `Mesh.getVertexCount` new is a new method that will return the total number of Vertices in the Mesh.
+* `Mesh.getFace` new is a new method that will return a Face instance from the Mesh based on the given index.
+* `Mesh.getFaceAt` new is a new method that will return an array of Face instances from the Mesh based on the given position. The position is checked against each Face, translated through the optional Camera and Mesh matrix. If more than one Face intersects, they will all be returned but the array will be depth sorted first, so the first element will be that closest to the camera.
+* `Mesh.vertices` is now an array of `GameObject.Vertex` instances, not a Float32Array.
+* `Mesh.faces` is a new array of `GameObject.Face` instances, which is populated during a call to methods like `addVertices` or `addModel`.
+* `Mesh.totalRendered` is a new property that holds the total number of Faces that were rendered in the previous frame.
+* `Mesh.setDebug` is a new method that allows you to render a debug visualisation of the Mesh vertices to a Graphics Game Object. You can provide your own Graphics instance and optionally callback that is invoked during rendering. This allows you to easily visualise the vertices of your Mesh to help debug UV mapping.
+* The Mesh now renders by iterating through the Faces array, not the vertices. This allows you to use Array methods such as `BringToTop` to reposition a Face, thus changing the drawing order without having to repopulate all of the vertices. Or, for a 3D model, you can now depth sort the Faces.
+* The `Mesh` Game Object now extends the `SingleAlpha` component and the alpha value is factored into the final alpha value per vertex during rendering. This means you can now set the whole alpha across the Mesh using the standard `setAlpha` methods. But, if you wish to, you can still control the alpha on a per-vertex basis as well.
+* The Mesh renderer will now check to see if the pipeline capacity has been exceeded for every Face added, allowing you to use Meshes with vertex counts that exceed the pipeline capacity without causing runtime errors.
+* You can now supply just a single numerical value as the `colors` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the color for all vertices created.
+* You can now supply just a single numerical value as the `alphas` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the alpha for all vertices created.
+* `Mesh.debugGraphic` is a new property that holds the debug Graphics instance reference.
+* `Mesh.debugCallback` is a new property that holds the debug render callback.
+* `Mesh.renderDebugVerts` is a new method that acts as the default render callback for `setDebug` if none is provided.
+* `Mesh.preDestroy` is a new method that will clean-up the Mesh arrays and debug references on destruction.
+* `Mesh.isDirty` is a new method that will check if any of the data is dirty, requiring the vertices to be transformed. This is called automatically in `preUpdate` to avoid generating lots of math when nothing has changed.
+* The `Mesh.uv` array has been removed. All UV data is now bound in the Vertex instances.
+* The `Mesh.colors` array has been removed. All color data is now bound in the Vertex instances.
+* The `Mesh.alphas` array has been removed. All color data is now bound in the Vertex instances.
+* The `Mesh.tintFill` property is now a `boolean` and defaults to `false`.
+
+#### Layer Game Object
+
+A Layer is a special type of Game Object that acts as a Display List. You can add any type of Game Object to a Layer, just as you would to a Scene. Layers can be used to visually group together 'layers' of Game Objects:
+
+```javascript
+const spaceman = this.add.sprite(150, 300, 'spaceman');
+const bunny = this.add.sprite(400, 300, 'bunny');
+const elephant = this.add.sprite(650, 300, 'elephant');
+
+const layer = this.add.layer();
+
+layer.add([ spaceman, bunny, elephant ]);
+```
+
+The 3 sprites in the example above will now be managed by the Layer they were added to. Therefore, if you then set `layer.setVisible(false)` they would all vanish from the display.
+
+You can also control the depth of the Game Objects within the Layer. For example, calling the `setDepth` method of a child of a Layer will allow you to adjust the depth of that child _within the Layer itself_, rather than the whole Scene. The Layer, too, can have its depth set as well.
+
+The Layer class also offers many different methods for manipulating the list, such as the methods `moveUp`, `moveDown`, `sendToBack`, `bringToTop` and so on. These allow you to change the display list position of the Layers children, causing it to adjust the order in which they are rendered. Using `setDepth` on a child allows you to override this.
+
+Layers can have Post FX Pipelines set, which allows you to easily enable a post pipeline across a whole range of children, which, depending on the effect, can often be far more efficient that doing so on a per-child basis.
+
+Layers have no position or size within the Scene. This means you cannot enable a Layer for physics or input, or change the position, rotation or scale of a Layer. They also have no scroll factor, texture, tint, origin, crop or bounds.
+
+If you need those kind of features then you should use a Container instead. Containers can be added to Layers, but Layers cannot be added to Containers.
+
+However, you can set the Alpha, Blend Mode, Depth, Mask and Visible state of a Layer. These settings will impact all children being rendered by the Layer.
+
+#### BitmapText Game Object
 
 * `BitmapText.setCharacterTint` is a new method that allows you to set a tint color (either additive or fill) on a specific range of characters within a static Bitmap Text. You can specify the start and length offsets and per-corner tint colors.
 * `BitmapText.setWordTint` is a new method that allows you to set a tint color (either additive or fill) on all matching words within a static Bitmap Text. You can specify the word by string, or numeric offset, and the number of replacements to tint.
@@ -654,52 +766,13 @@ The `ModelViewProjection` object contained a lot of functions that Phaser never 
 * `ParseXMLBitmapFont` has a new optional parameter `texture`. If defined, this Texture is populated with Frame data, one frame per glyph. This happens automatically when loading Bitmap Text data in Phaser.
 * You can now use `setMaxWidth` on `DynamicBitmapText`, which wasn't previously possible. Fix #4997 (thanks @AndreaBoeAbrahamsen)
 
-### Update List Changes
+#### Quad Game Object Removed
 
-The way in which Game Objects add themselves to the Scene Update List has changed. Instead of being added by the Factory methods, they will now add and remove themselves based on the new `ADDED_TO_SCENE` and `REMOVED_FROM_SCENE` events. This means, you can now add Sprites directly to a Container, or Group, and they'll animate properly without first having to be part of the Update List. The full set of changes and new features relating to this follow:
+The `Quad` Game Object has been removed from v3.50.0.
 
-* `GameObjects.Events.ADDED_TO_SCENE` is a new event, emitted by a Game Object, when it is added to a Scene, or a Container that is part of the Scene.
-* `GameObjects.Events.REMOVED_FROM_SCENE` is a new event, emitted by a Game Object, when it is removed from a Scene, or a Container that is part of the Scene.
-* `Scenes.Events.ADDED_TO_SCENE` is a new event, emitted by a Scene, when a new Game Object is added to the display list in the Scene, or a Container that is on the display list.
-* `Scenes.Events.REMOVED_FROM_SCENE` is a new event, emitted by a Scene, when it a Game Object is removed from the display list in the Scene, or a Container that is on the display list.
-* `GameObject.addedToScene` is a new method that custom Game Objects can use to perform additional set-up when a Game Object is added to a Scene. For example, Sprite uses this to add itself to the Update List.
-* `GameObject.removedFromScene` is a new method that custom Game Objects can use to perform additional tear-down when a Game Object is removed from a Scene. For example, Sprite uses this to remove themselves from the Update List.
-* Game Objects no longer automatically remove themselves from the Update List during `preDestroy`. This should be handled directly in the `removedFromScene` method now.
-* The `Container` will now test to see if any Game Object added to it is already on the display list, or not, and emit its ADDED and REMOVED events accordingly. Fix #5267 #3876 (thanks @halgorithm @mbpictures)
-* `DisplayList.events` is a new property that references the Scene's Event Emitter. This is now used internally.
-* `DisplayList.addChildCallback` is a new method that overrides the List callback and fires the new ADDED events.
-* `DisplayList.removeChildCallback` is a new method that overrides the List callback and fires the new REMOVED events.
-* `GameObjectCreator.events` is a new property that references the Scene's Event Emitter. This is now used internally.
-* `GameObjectFactory.events` is a new property that references the Scene's Event Emitter. This is now used internally.
-* `ProcessQueue.checkQueue` is a new boolean property that will make sure only unique objects are added to the Process Queue.
-* The `Update List` now uses the new `checkQueue` property to ensure no duplicate objects are on the active list.
-* `DOMElementFactory`, `ExternFactory`, `ParticleManagerFactor`, `RopeFactory` and `SpriteFactory` all no longer add the objects to the Update List, this is now handled by the ADDED events instead.
-* `Sprite`, `Rope`, `ParticleEmitterManager`, `Extern` and `DOMElement` now all override the `addedToScene` and `removedFromScene` callbacks to handle further set-up tasks.
+You can now create your own Quads easily using the new `Geom.Mesh.GenerateGridVerts` function, which is far more flexible than the old quads were.
 
-### Spine Plugin Updates
-
-* The Spine Runtimes have been updated to 3.8.99, which are the most recent non-beta versions. Please note, you will _need_ to re-export your animations if you're working in a version of Spine lower than 3.8.20.
-* `SpineContainer` is a new Game Object available via `this.add.spineContainer` to which you can add Spine Game Objects only. It uses a special rendering function to retain batching, even across multiple container or Spine Game Object instances, resulting in dramatically improved performance compared to using regular Containers. You _can_ still use regular Containers if you need, but they do not benefit from the new batching.
-* A Spine Game Object with `setVisible(false)` will no longer still cause internal gl commands and is now properly skipped, retaining any current batch in the process. Fix #5174 (thanks @Kitsee)
-* The Spine Game Object WebGL Renderer will no longer clear the type if invisible and will only end the batch if the next type doesn't match.
-* The Spine Game Object WebGL Renderer will no longer rebind the pipeline if it was the final object on the display list, saving lots of gl commands.
-* The Webpack build scripts have all been updated for Webpack 4.44.x. Fix #5243 (thanks @RollinSafary)
-* There is a new npm script `npm run plugin.spine.runtimes` which will build all of the Spine runtimes, for ingestion by the plugin. Note: You will need to check-out the Esoteric Spine Runtimes repo into `plugins/spine/` in order for this to work and then run `npm i`.
-* Spine Game Objects can now be rendered to Render Textures. Fix #5184 (thanks @Kitsee)
-* Using > 128 Spine objects in a Container would cause a `WebGL: INVALID_OPERATION: vertexAttribPointer: no ARRAY_BUFFER is bound and offset is non-zero` error if you added any subsequent Spine objects to the Scene. There is now no limit. Fix #5246 (thanks @d7561985)
-* The Spine Plugin will now work in HEADLESS mode without crashing. Fix #4988 (thanks @raimon-segura)
-* Spine Game Objects now use -1 as their default blend mode, which means 'skip setting it', as blend modes should be handled by the Spine skeletons directly.
-* The Spine TypeScript defs have been updated for the latest version of the plugin and to add SpineContainers.
-* The `SpineGameObject.setAnimation` method will now use the `trackIndex` parameter if `ignoreIfPlaying` is set and run the check against this track index. Fix #4842 (thanks @vinerz)
-* The `SpineFile` will no longer throw a warning if adding a texture into the Texture Manager that already exists. This allows you to have multiple Spine JSON use the same texture file, however, it also means you now get no warning if you accidentally load a texture that exists, so be careful with your keys! Fix #4947 (thanks @Nomy1)
-* The Spine Plugin `destroy` method will now no longer remove the Game Objects from the Game Object Factory, or dispose of the Scene Renderer. This means when a Scene is destroyed, it will keep the Game Objects in the factory for other Scenes to use. Fix #5279 (thanks @Racoonacoon)
-* `SpinePlugin.gameDestroy` is a new method that is called if the Game instance emits a `destroy` event. It removes the Spine Game Objects from the factory and disposes of the Spine scene renderer.
-* `SpineFile` will now check to see if another identical atlas in the load queue is already loading the texture it needs and will no longer get locked waiting for a file that will never complete. This allows multiple skeleton JSONs to use the same atlas data. Fix #5331 (thanks @Racoonacoon)
-* `SpineFile` now uses a `!` character to split the keys, instead of an underscore, preventing the plugin from incorrectly working out the keys for filenames with underscores in them. Fix #5336 (thanks @Racoonacoon)
-* `SpineGameObject.willRender` is no longer hard-coded to return `true`. It instead now takes a Camera parameter and performs all of the checks needed before returning. Previously, this happened during the render functions.
-* The Spine Plugin now uses a single instance of the Scene Renderer when running under WebGL. All instances of the plugin (installed per Scene) share the same base Scene Renderer, avoiding duplicate allocations and resizing events under multi-Scene games. Fix #5286 (thanks @spayton BunBunBun)
-
-### Animation API - New Features and Updates
+### Animation API - New Features, API Changes and Bug Fixes
 
 If you use Animations in your game, please read the following important API changes in 3.50:
 
@@ -804,7 +877,7 @@ The Animation API has had a significant overhaul to improve playback handling. I
 * `GenerateFrameNumbers` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
 * `GenerateFrameNames` can now accept the `start` and `end` parameters in reverse order, meaning you can now do `{ start: 10, end: 1 }` to create the animation in reverse.
 
-### Tilemap - New Features, Updates and API Changes
+### Tilemap - New Features, API Changes and Bug Fixes
 
 There are three large changes to Tilemaps in 3.50. If you use tilemaps, you must read this section:
 
@@ -859,95 +932,29 @@ In your game where you use `map.createDynamicLayer` or `map.createStaticLayer` r
 * The method `Tilemap.weightedRandomize` has changed so that the parameter `weightedIndexes` is now first in the method and is non-optional. Previously, it was the 5th parameter and incorrectly flagged as optional.
 * The method `TilemapLayer.weightedRandomize` has changed so that the parameter `weightedIndexes` is now first in the method and is non-optional. Previously, it was the 5th parameter and incorrectly flagged as optional.
 
-### Mesh Game Object - New Features, Updates and API Changes
+### Update List - New Features, API Changes and Bug Fixes
 
-The Mesh Game Object has been rewritten from scratch in v3.50 with a lot of changes to make it much more useful. It is accompanied by the new `Geom.Mesh` set of functions.
+The way in which Game Objects add themselves to the Scene Update List has changed. Instead of being added by the Factory methods, they will now add and remove themselves based on the new `ADDED_TO_SCENE` and `REMOVED_FROM_SCENE` events. This means, you can now add Sprites directly to a Container, or Group, and they'll animate properly without first having to be part of the Update List. The full set of changes and new features relating to this follow:
 
-* `Geom.Mesh` is a new namespace that contains the Mesh related geometry functions. These are stand-alone functions that you may, or may not require, depending on your game.
-* `Geom.Mesh.Vertex` is a new class that encapsulates all of the data required for a single vertex, including position, uv, normals, color and alpha.
-* `Geom.Mesh.Face` is a new class that consists of references to the three `Vertex` instances that construct a single Face in a Mesh and provides methods for manipulating them.
-* `Geom.Mesh.GenerateVerts` is a new function that will return an array of `Vertex` and `Face` objects generated from the given data. You can provide index, or non-index vertex lists, along with UV data, normals, colors and alpha which it will parse and return the results from.
-* `Geom.Mesh.GenerateGridVerts` is a new function that will generate a series of `Vertex` objects in a grid format, based on the given `GenerateGridConfig` config file. You can set the size of the grid, the number of segments to split it into, translate it, color it and tile the texture across it. The resulting data can be easily used by a Mesh Game Object.
-* `Geom.Mesh.GenerateObjVerts` is a new function that will generate a series of `Vertex` objects based on the given parsed Wavefront Obj Model data. You can optionally scale and translate the generated vertices and add them to a Mesh.
-* `Geom.Mesh.ParseObj` is a new function that will parse a triangulated Wavefront OBJ file into model data into a format that the `GenerateObjVerts` function can consume.
-* `Geom.Mesh.ParseObjMaterial` is a new function that will parse a Wavefront material file and extract the diffuse color data from it, combining it with the parsed object data.
-* `Geom.Mesh.RotateFace` is a new function that will rotate a Face by a given amount, based on an optional center of rotation.
-* `Loader.OBJFile` is a new File Loader type that can load triangulated Wavefront OBJ files, and optionally material files, which are then parsed and stored in the OBJ Cache.
-* The Mesh constructor and `MeshFactory` signatures have changed to `scene, x, y, texture, frame, vertices, uvs, indicies, containsZ, normals, colors, alphas`. Note the way the Texture and Frame parameters now comes first. `indicies` is a new parameter that allows you to provide indexed vertex data to create the Mesh from, where the `indicies` array holds the vertex index information. The final list of vertices is built from this index along with the provided vertices and uvs arrays. The `indicies` array is optional. If your data is not indexed, then simply pass `null` or an empty array for this parameter.
-* The `Mesh` Game Object now has the Animation State Component. This allows you to create and play animations across the texture of a Mesh, something that previously wasn't possible. As a result, the Mesh now adds itself to the Update List when added to a Scene.
-* `Mesh.addVertices` is a new method that allows you to add vertices to a Mesh Game Object based on the given parameters. This allows you to modify a mesh post-creation, or populate it with data at a later stage.
-* `Mesh.addVerticesFromObj` is a new method that will add the model data from a loaded Wavefront OBJ file to a Mesh. You load it via the new `OBJFile` with a `this.load.obj` call, then you can use the key with this method. This method also takes an optional scale and position parameters to control placement of the created model within the Mesh.
-* `Mesh.hideCCW` is a new boolean property that, when enabled, tells a Face to not render if it isn't counter-clockwise. You can use this to hide backward facing Faces.
-* `Mesh.modelPosition` is a new Vector3 property that allows you to translate the position of all vertices in the Mesh.
-* `Mesh.modelRotation` is a new Vector3 property that allows you to rotate all vertices in the Mesh.
-* `Mesh.modelScale` is a new Vector3 property that allows you to scale all vertices in the Mesh.
-* `Mesh.panX` is a new function that will translate the view position of the Mesh on the x axis.
-* `Mesh.panY` is a new function that will translate the view position of the Mesh on the y axis.
-* `Mesh.panZ` is a new function that will translate the view position of the Mesh on the z axis.
-* `Mesh.setPerspective` is a new method that allows you to set a perspective projection matrix based on the given dimensions, fov, near and far values.
-* `Mesh.setOrtho` is a new method that allows you to set an orthographic projection matrix based on the given scale, near and far values.
-* `Mesh.clear` is a new method that will destroy all Faces and Vertices and clear the Mesh.
-* `Mesh.depthSort` is a new method that will run a depth sort across all Faces in the Mesh by sorting them based on their average depth.
-* `Mesh.addVertex` is a new method that allows you to add a new single Vertex into the Mesh.
-* `Mesh.addFace` is a new method that allows you to add a new Face into the Mesh. A Face must consist of 3 Vertex instances.
-* `Mesh.getFaceCount` new is a new method that will return the total number of Faces in the Mesh.
-* `Mesh.getVertexCount` new is a new method that will return the total number of Vertices in the Mesh.
-* `Mesh.getFace` new is a new method that will return a Face instance from the Mesh based on the given index.
-* `Mesh.getFaceAt` new is a new method that will return an array of Face instances from the Mesh based on the given position. The position is checked against each Face, translated through the optional Camera and Mesh matrix. If more than one Face intersects, they will all be returned but the array will be depth sorted first, so the first element will be that closest to the camera.
-* `Mesh.vertices` is now an array of `GameObject.Vertex` instances, not a Float32Array.
-* `Mesh.faces` is a new array of `GameObject.Face` instances, which is populated during a call to methods like `addVertices` or `addModel`.
-* `Mesh.totalRendered` is a new property that holds the total number of Faces that were rendered in the previous frame.
-* `Mesh.setDebug` is a new method that allows you to render a debug visualisation of the Mesh vertices to a Graphics Game Object. You can provide your own Graphics instance and optionally callback that is invoked during rendering. This allows you to easily visualise the vertices of your Mesh to help debug UV mapping.
-* The Mesh now renders by iterating through the Faces array, not the vertices. This allows you to use Array methods such as `BringToTop` to reposition a Face, thus changing the drawing order without having to repopulate all of the vertices. Or, for a 3D model, you can now depth sort the Faces.
-* The `Mesh` Game Object now extends the `SingleAlpha` component and the alpha value is factored into the final alpha value per vertex during rendering. This means you can now set the whole alpha across the Mesh using the standard `setAlpha` methods. But, if you wish to, you can still control the alpha on a per-vertex basis as well.
-* The Mesh renderer will now check to see if the pipeline capacity has been exceeded for every Face added, allowing you to use Meshes with vertex counts that exceed the pipeline capacity without causing runtime errors.
-* You can now supply just a single numerical value as the `colors` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the color for all vertices created.
-* You can now supply just a single numerical value as the `alphas` parameter in the constructor, factory method and `addVertices` method. If a number, instead of an array, it will be used as the alpha for all vertices created.
-* `Mesh.debugGraphic` is a new property that holds the debug Graphics instance reference.
-* `Mesh.debugCallback` is a new property that holds the debug render callback.
-* `Mesh.renderDebugVerts` is a new method that acts as the default render callback for `setDebug` if none is provided.
-* `Mesh.preDestroy` is a new method that will clean-up the Mesh arrays and debug references on destruction.
-* `Mesh.isDirty` is a new method that will check if any of the data is dirty, requiring the vertices to be transformed. This is called automatically in `preUpdate` to avoid generating lots of math when nothing has changed.
-* The `Mesh.uv` array has been removed. All UV data is now bound in the Vertex instances.
-* The `Mesh.colors` array has been removed. All color data is now bound in the Vertex instances.
-* The `Mesh.alphas` array has been removed. All color data is now bound in the Vertex instances.
-* The `Mesh.tintFill` property is now a `boolean` and defaults to `false`.
+* `GameObjects.Events.ADDED_TO_SCENE` is a new event, emitted by a Game Object, when it is added to a Scene, or a Container that is part of the Scene.
+* `GameObjects.Events.REMOVED_FROM_SCENE` is a new event, emitted by a Game Object, when it is removed from a Scene, or a Container that is part of the Scene.
+* `Scenes.Events.ADDED_TO_SCENE` is a new event, emitted by a Scene, when a new Game Object is added to the display list in the Scene, or a Container that is on the display list.
+* `Scenes.Events.REMOVED_FROM_SCENE` is a new event, emitted by a Scene, when it a Game Object is removed from the display list in the Scene, or a Container that is on the display list.
+* `GameObject.addedToScene` is a new method that custom Game Objects can use to perform additional set-up when a Game Object is added to a Scene. For example, Sprite uses this to add itself to the Update List.
+* `GameObject.removedFromScene` is a new method that custom Game Objects can use to perform additional tear-down when a Game Object is removed from a Scene. For example, Sprite uses this to remove themselves from the Update List.
+* Game Objects no longer automatically remove themselves from the Update List during `preDestroy`. This should be handled directly in the `removedFromScene` method now.
+* The `Container` will now test to see if any Game Object added to it is already on the display list, or not, and emit its ADDED and REMOVED events accordingly. Fix #5267 #3876 (thanks @halgorithm @mbpictures)
+* `DisplayList.events` is a new property that references the Scene's Event Emitter. This is now used internally.
+* `DisplayList.addChildCallback` is a new method that overrides the List callback and fires the new ADDED events.
+* `DisplayList.removeChildCallback` is a new method that overrides the List callback and fires the new REMOVED events.
+* `GameObjectCreator.events` is a new property that references the Scene's Event Emitter. This is now used internally.
+* `GameObjectFactory.events` is a new property that references the Scene's Event Emitter. This is now used internally.
+* `ProcessQueue.checkQueue` is a new boolean property that will make sure only unique objects are added to the Process Queue.
+* The `Update List` now uses the new `checkQueue` property to ensure no duplicate objects are on the active list.
+* `DOMElementFactory`, `ExternFactory`, `ParticleManagerFactor`, `RopeFactory` and `SpriteFactory` all no longer add the objects to the Update List, this is now handled by the ADDED events instead.
+* `Sprite`, `Rope`, `ParticleEmitterManager`, `Extern` and `DOMElement` now all override the `addedToScene` and `removedFromScene` callbacks to handle further set-up tasks.
 
-### Quad Game Object Removed
-
-The `Quad` Game Object has been removed from v3.50.0.
-
-You can now create your own Quads easily using the new `Geom.Mesh.GenerateGridVerts` function, which is far more flexible than the old quads were.
-
-### Layer Game Object
-
-A Layer is a special type of Game Object that acts as a Display List. You can add any type of Game Object to a Layer, just as you would to a Scene. Layers can be used to visually group together 'layers' of Game Objects:
-
-```javascript
-const spaceman = this.add.sprite(150, 300, 'spaceman');
-const bunny = this.add.sprite(400, 300, 'bunny');
-const elephant = this.add.sprite(650, 300, 'elephant');
-
-const layer = this.add.layer();
-
-layer.add([ spaceman, bunny, elephant ]);
-```
-
-The 3 sprites in the example above will now be managed by the Layer they were added to. Therefore, if you then set `layer.setVisible(false)` they would all vanish from the display.
-
-You can also control the depth of the Game Objects within the Layer. For example, calling the `setDepth` method of a child of a Layer will allow you to adjust the depth of that child _within the Layer itself_, rather than the whole Scene. The Layer, too, can have its depth set as well.
-
-The Layer class also offers many different methods for manipulating the list, such as the methods `moveUp`, `moveDown`, `sendToBack`, `bringToTop` and so on. These allow you to change the display list position of the Layers children, causing it to adjust the order in which they are rendered. Using `setDepth` on a child allows you to override this.
-
-Layers can have Post FX Pipelines set, which allows you to easily enable a post pipeline across a whole range of children, which, depending on the effect, can often be far more efficient that doing so on a per-child basis.
-
-Layers have no position or size within the Scene. This means you cannot enable a Layer for physics or input, or change the position, rotation or scale of a Layer. They also have no scroll factor, texture, tint, origin, crop or bounds.
-
-If you need those kind of features then you should use a Container instead. Containers can be added to Layers, but Layers cannot be added to Containers.
-
-However, you can set the Alpha, Blend Mode, Depth, Mask and Visible state of a Layer. These settings will impact all children being rendered by the Layer.
-
-### Input / Mouse Updates and API Changes
+### Input Manager and Mouse Manager - New Features, API Changes and Bug Fixes
 
 * `ScaleManager.refresh` is now called when the `Game.READY` event fires. This fixes a bug where the Scale Manager would have the incorrect canvas bounds, because they were calculated before a previous canvas was removed from the DOM. Fix #4862 (thanks @dranitski)
 * The Game Config property `inputMouseCapture` has been removed, as this is now split into 3 new config options:
@@ -969,7 +976,7 @@ However, you can set the Alpha, Blend Mode, Depth, Mask and Visible state of a L
 * The `InputPlugin.shutdown` method will now reset the CSS cursor, in case it was set by any Game Objects in the Scene that have since been destroyed.
 * The `InputPlugin.processOverEvents` has had a duplicate internal loop removed from it (thanks KingCosmic)
 
-### Tint Updates and Shader Changes
+### Tint Component Updates and resulting Shader Changes
 
 Phaser has had the ability to apply an additive tint to a Game Object since the beginning, and gained 'filled tints', with and without texture alpha, in v3.11. While this was handy, it introduced a 3-way if-else condition to the shaders to handle the different modes. Plus, setting tint colors was also generating rgb order Float32 color values for each Game Object, making reading those colors back again difficult (as they'd return in BGR order).
 
@@ -991,7 +998,7 @@ This has all changed in 3.50, as outlined below. Tint values are now used direct
 * The `TextureManager` now generates a new texture with the key `__WHITE` durings its boot process. This is a pure white 4x4 texture used by the Graphics pipelines.
 * `Config.images.white` is a new Game Config property that specifies the 4x4 white PNG texture used by Graphics rendering. You can override this via the config, but only do so if needed.
 
-### Arcade Physics Updates
+### Arcade Physics - New Features, API Changes and Bug Fixes
 
 Prior to v3.50 an Arcade Physics Body could be one of two states: immovable, or moveable. An immovable body could not receive _any_ impact from another Body. If something collided with it, it wouldn't even separate to break free from the collision (the other body had to take the full separation value). It was intended for objects such as platforms, ground or walls, there they absolutely shouldn't move under any circumstances. As a result, two immovable bodies could never be collided together. While this worked for scenery-like items, it didn't work if you required maybe 2 players who could collide with each other, but should never be able to push one another. As of 3.50 all physics bodies now have a new property `pushable` that allows this. A pushable body can share separation with its collider, as well as take on mass-based velocity from the impact. A non-pushable body will behave differently depending on what it collides with. For example, a pushable body hitting a non-pushable (or immoveable) body will rebound off it.
 
@@ -1013,65 +1020,6 @@ Prior to v3.50 an Arcade Physics Body could be one of two states: immovable, or 
 * `Arcade.Body.center` values were incorrect after collisions with the world bounds or (for rectangular bodies) after collisions with another body. The body center is now updated after those separations (thanks @samme)
 * The Arcade Physics `WORLD_STEP` event now has a new parameter: the delta argument (thanks @samme)
 * The Arcade Body `drag` property has been redefined when damping is used and scales the damping multiplier by the physics step delta. Drag is now the velocity retained after 1 second instead of after 1 step, when damping is used. This makes damping consistent for different physics step rates and more accurate when fixedStep is off. If you use `drag` you will need to change any existing drag values to get the same effects as before. Convert `drag` to `drag ^ 60` or `drag ^ fps` if you use a different step rate (thanks @samme)
-
-### Loader Cache Changes
-
-When loading any of the file types listed below it will no longer store the data file in the cache. For example, when loading a Texture Atlas using a JSON File, it used to store the parsed image data in the Texture Manager and also store the JSON in the JSON Cache under the same key. This has changed in 3.50. The data files are no longer cached, as they are not required by the textures once parsing is completed, which happens during load. This helps free-up memory. How much depends on the size of your data files. And also allows you to easily remove textures based on just their key, without also having to clear out the corresponding data cache.
-
-* `AtlasJSONFile` no longer stores the JSON in the JSON Cache once the texture has been created.
-* `AtlasXMLFile` no longer stores the XML in the XML Cache once the texture has been created.
-* `UnityAtlasFile` no longer stores the Text in the Text Cache once the texture has been created.
-* `BitmapFontFile` no longer stores the XML in the XML Cache once the texture has been created.
-* You can now use `TextureManager.remove` to remove a texture and not have to worry about clearing the corresponding JSON or XML cache entry as well in order to reload a new texture using the same key. Fix #5323 (thanks @TedGriggs)
-
-### ColorMatrix
-
-* `Phaser.Display.ColorMatrix` is a new class that allows you to create and manipulate a 5x4 color matrix, which can be used by shaders or graphics operations.
-* The `ColorMatrix.set` method allows you to set the values of a ColorMatrix.
-* The `ColorMatrix.reset` method will reset the ColorMatrix to its default values.
-* The `ColorMatrix.getData` method will return the data in the ColorMatrix as a Float32Array, useful for setting in a shader uniform.
-* The `ColorMatrix.brightness` method lets you set the brightness of the ColorMatrix.
-* The `ColorMatrix.saturate` method lets you set the saturation of the ColorMatrix.
-* The `ColorMatrix.desaturate` method lets you desaturate the colors in the ColorMatrix.
-* The `ColorMatrix.hue` method lets you rotate the hues of the ColorMatrix by the given amount.
-* The `ColorMatrix.grayscale` method converts the ColorMatrix to grayscale.
-* The `ColorMatrix.blackWhite` method converts the ColorMatrix to black and whites.
-* The `ColorMatrix.contrast` method lets you set the contrast of the ColorMatrix.
-* The `ColorMatrix.negative` method converts the ColorMatrix to negative values.
-* The `ColorMatrix.desaturateLuminance` method applies a desaturated luminance to the ColorMatrix.
-* The `ColorMatrix.sepia` method applies a sepia tone to the ColorMatrix.
-* The `ColorMatrix.night` method applies a night time effect to the ColorMatrix.
-* The `ColorMatrix.lsd` method applies a trippy color effect to the ColorMatrix.
-* The `ColorMatrix.brown` method applies a brown tone to the ColorMatrix.
-* The `ColorMatrix.vintagePinhole` method applies a vintage pinhole color effect to the ColorMatrix.
-* The `ColorMatrix.kodachrome` method applies a kodachrome color effect to the ColorMatrix.
-* The `ColorMatrix.technicolor` method applies a technicolor color effect to the ColorMatrix.
-* The `ColorMatrix.polaroid` method applies a polaroid color effect to the ColorMatrix.
-* The `ColorMatrix.shiftToBGR` method shifts the values of the ColorMatrix into BGR order.
-* The `ColorMatrix.multiply` method multiplies two ColorMatrix data sets together.
-
-### Removal of 'resolution' property from across the API
-
-For legacy reasons, Phaser 3 has never properly supported HighDPI devices. It will render happily to them of course, but wouldn't let you set a 'resolution' for the Canvas beyond 1. Earlier versions of 3.x had a resolution property in the Game Config, but it was never fully implemented (for example, it would break zooming cameras). When the Scale Manager was introduced in v3.16 we forced the resolution to be 1 to avoid it breaking anything else internally.
-
-For a long time, the 'resolution' property has been present - taunting developers and confusing new comers. In this release we have finally gone through and removed all references to it. The Game Config option is now gone, it's removed from the Scale Manager, Base Camera and everywhere else where it matters. As much as we would have liked to implement the feature, we've spent too long without it, and things have been built around the assumption it isn't present. The API just wouldn't cope with having it shoe-horned in at this stage. As frustrating as this is, it's even more annoying to just leave the property there confusing people and wasting CPU cycles. Phaser 4 has been built with HighDPI screens in mind from the very start, but it's too late for v3. The following changes are a result of this removal:
-
-* The `Phaser.Scale.Events#RESIZE` event no longer sends the `resolution` as a parameter.
-* The `BaseCamera.resolution` property has been removed.
-* The internal private `BaseCamera._cx`, `_cy`, `_cw` and `_ch` properties has been removed, use `x`, `y`, `width` and `height` instead.
-* The `BaseCamera.preRender` method no longer receives or uses the `resolution` parameter.
-* The `Camera.preRender` method no longer receives or uses the `resolution` parameter.
-* The `CameraManager.onResize` method no longer receives or uses the `resolution` parameter.
-* The `Core.Config.resolution` property has been removed.
-* The `TextStyle.resolution` property is no longer read from the Game Config. You can still set it via the Text Style config to a value other than 1, but it will default to this now.
-* The `CanvasRenderer` no longer reads or uses the Game Config resolution property.
-* The `PipelineManager.resize` method along with `WebGLPipeline.resize` and anything else that extends them no longer receives or uses the `resolution` parameter.
-* The `WebGLRenderer.resize` and `onResize` methods no longer receives or uses the `resolution` parameter.
-* The `ScaleManager.resolution` property has been removed and all internal use of it.
-
-### Removed 'interpolationPercentage' parameter from all render functions
-
-Since v3.0.0 the Game Object `render` functions have received a parameter called `interpolationPercentage` that was never used. The renderers do not calculate this value and no Game Objects apply it, so for the sake of clairty, reducing code and removing complexity from the API it has been removed from every single function that either sent or expected the parameter. This touches every single Game Object and changes the parameter order as a result, so please be aware of this if you have your own _custom_ Game Objects, or plugins, that implement their own `render` methods. In terms of surface API changes, you shouldn't notice anything at all from this removal.
 
 ### New Features
 
@@ -1146,6 +1094,32 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * `BaseSound.pan`, `HTMLAudioSound.pan` and `WebAudioSound.pan` are new properties that allow you to get or set the pan value of a sound, a value between -1 (full left pan) and 1 (full right pan). Note that pan only works under Web Audio, but the property and event still exists under HTML5 Audio for compatibility (thanks @pi-kei)
 * `WebAudioSound.setPan` is a new method that allows you to set the pan of the sound. A value between -1 (full left pan) and 1 (full right pan) (thanks @pi-kei)
 * `Sound.Events.PAN` is a new event dispatched by both Web Audio and HTML5 Audio Sound objects when their pan changes (thanks @pi-kei)
+
+#### ColorMatrix
+
+* `Phaser.Display.ColorMatrix` is a new class that allows you to create and manipulate a 5x4 color matrix, which can be used by shaders or graphics operations.
+* The `ColorMatrix.set` method allows you to set the values of a ColorMatrix.
+* The `ColorMatrix.reset` method will reset the ColorMatrix to its default values.
+* The `ColorMatrix.getData` method will return the data in the ColorMatrix as a Float32Array, useful for setting in a shader uniform.
+* The `ColorMatrix.brightness` method lets you set the brightness of the ColorMatrix.
+* The `ColorMatrix.saturate` method lets you set the saturation of the ColorMatrix.
+* The `ColorMatrix.desaturate` method lets you desaturate the colors in the ColorMatrix.
+* The `ColorMatrix.hue` method lets you rotate the hues of the ColorMatrix by the given amount.
+* The `ColorMatrix.grayscale` method converts the ColorMatrix to grayscale.
+* The `ColorMatrix.blackWhite` method converts the ColorMatrix to black and whites.
+* The `ColorMatrix.contrast` method lets you set the contrast of the ColorMatrix.
+* The `ColorMatrix.negative` method converts the ColorMatrix to negative values.
+* The `ColorMatrix.desaturateLuminance` method applies a desaturated luminance to the ColorMatrix.
+* The `ColorMatrix.sepia` method applies a sepia tone to the ColorMatrix.
+* The `ColorMatrix.night` method applies a night time effect to the ColorMatrix.
+* The `ColorMatrix.lsd` method applies a trippy color effect to the ColorMatrix.
+* The `ColorMatrix.brown` method applies a brown tone to the ColorMatrix.
+* The `ColorMatrix.vintagePinhole` method applies a vintage pinhole color effect to the ColorMatrix.
+* The `ColorMatrix.kodachrome` method applies a kodachrome color effect to the ColorMatrix.
+* The `ColorMatrix.technicolor` method applies a technicolor color effect to the ColorMatrix.
+* The `ColorMatrix.polaroid` method applies a polaroid color effect to the ColorMatrix.
+* The `ColorMatrix.shiftToBGR` method shifts the values of the ColorMatrix into BGR order.
+* The `ColorMatrix.multiply` method multiplies two ColorMatrix data sets together.
 
 ### Updates and API Changes
 
@@ -1239,7 +1213,51 @@ Since v3.0.0 the Game Object `render` functions have received a parameter called
 * Using a Bitmap Mask and a Blend Mode in WebGL would reset the blend mode when the mask was rendered, causing the Game Object to have no blend mode. Fix #5409 (thanks @jcyuan)
 * `BitmapMask` would become corrupted when resizing the Phaser Game, either via the Scale Manager or directly, because the framebuffer and texture it used for rendering was still at the old dimensions. The BitmapMask now listens for the Renderer RESIZE event and re-creates itself accordingly. Fix #5399 (thanks @Patapits)
 
-### Namespace Updates
+### Misc Changes
+
+#### Loader Cache Changes
+
+When loading any of the file types listed below it will no longer store the data file in the cache. For example, when loading a Texture Atlas using a JSON File, it used to store the parsed image data in the Texture Manager and also store the JSON in the JSON Cache under the same key. This has changed in 3.50. The data files are no longer cached, as they are not required by the textures once parsing is completed, which happens during load. This helps free-up memory. How much depends on the size of your data files. And also allows you to easily remove textures based on just their key, without also having to clear out the corresponding data cache.
+
+* `AtlasJSONFile` no longer stores the JSON in the JSON Cache once the texture has been created.
+* `AtlasXMLFile` no longer stores the XML in the XML Cache once the texture has been created.
+* `UnityAtlasFile` no longer stores the Text in the Text Cache once the texture has been created.
+* `BitmapFontFile` no longer stores the XML in the XML Cache once the texture has been created.
+* You can now use `TextureManager.remove` to remove a texture and not have to worry about clearing the corresponding JSON or XML cache entry as well in order to reload a new texture using the same key. Fix #5323 (thanks @TedGriggs)
+
+#### Lights 2D Updates
+
+The Light Game Object has been rewritten so it now extends the `Geom.Circle` object, as they shared lots of the same properties and methods anyway. This has cut down on duplicate code massively.
+
+* `Light.dirty` is a new property that controls if the light is dirty, or not, and needs its uniforms updating.
+* `Light` has been recoded so that all of its properties are now setters that activate its `dirty` flag.
+* `LightsManager.destroy` will now clear the `lightPool` array when destroyed, where-as previously it didn't.
+* `LightsManager.cull` now takes the viewport height from the renderer instead of the game config (thanks zenwaichi)
+
+#### Removal of 'resolution' property from across the API
+
+For legacy reasons, Phaser 3 has never properly supported HighDPI devices. It will render happily to them of course, but wouldn't let you set a 'resolution' for the Canvas beyond 1. Earlier versions of 3.x had a resolution property in the Game Config, but it was never fully implemented (for example, it would break zooming cameras). When the Scale Manager was introduced in v3.16 we forced the resolution to be 1 to avoid it breaking anything else internally.
+
+For a long time, the 'resolution' property has been present - taunting developers and confusing new comers. In this release we have finally gone through and removed all references to it. The Game Config option is now gone, it's removed from the Scale Manager, Base Camera and everywhere else where it matters. As much as we would have liked to implement the feature, we've spent too long without it, and things have been built around the assumption it isn't present. The API just wouldn't cope with having it shoe-horned in at this stage. As frustrating as this is, it's even more annoying to just leave the property there confusing people and wasting CPU cycles. Phaser 4 has been built with HighDPI screens in mind from the very start, but it's too late for v3. The following changes are a result of this removal:
+
+* The `Phaser.Scale.Events#RESIZE` event no longer sends the `resolution` as a parameter.
+* The `BaseCamera.resolution` property has been removed.
+* The internal private `BaseCamera._cx`, `_cy`, `_cw` and `_ch` properties has been removed, use `x`, `y`, `width` and `height` instead.
+* The `BaseCamera.preRender` method no longer receives or uses the `resolution` parameter.
+* The `Camera.preRender` method no longer receives or uses the `resolution` parameter.
+* The `CameraManager.onResize` method no longer receives or uses the `resolution` parameter.
+* The `Core.Config.resolution` property has been removed.
+* The `TextStyle.resolution` property is no longer read from the Game Config. You can still set it via the Text Style config to a value other than 1, but it will default to this now.
+* The `CanvasRenderer` no longer reads or uses the Game Config resolution property.
+* The `PipelineManager.resize` method along with `WebGLPipeline.resize` and anything else that extends them no longer receives or uses the `resolution` parameter.
+* The `WebGLRenderer.resize` and `onResize` methods no longer receives or uses the `resolution` parameter.
+* The `ScaleManager.resolution` property has been removed and all internal use of it.
+
+#### Removal of 'interpolationPercentage' parameter from across the API
+
+Since v3.0.0 the Game Object `render` functions have received a parameter called `interpolationPercentage` that was never used. The renderers do not calculate this value and no Game Objects apply it, so for the sake of clairty, reducing code and removing complexity from the API it has been removed from every single function that either sent or expected the parameter. This touches every single Game Object and changes the parameter order as a result, so please be aware of this if you have your own _custom_ Game Objects, or plugins, that implement their own `render` methods. In terms of surface API changes, you shouldn't notice anything at all from this removal.
+
+#### Namespace Updates
 
 * The `Phaser.Curves.MoveTo` function has now been exposed on the Phaser namespace (thanks @samme)
 * The `Phaser.DOM.GetInnerHeight` function has now been exposed on the Phaser namespace (thanks @samme)
@@ -1270,7 +1288,7 @@ My thanks to the following for helping with the Phaser 3 Examples, Docs, and Typ
 
 @samme @16patsle @scott20145 @khasanovbi @mk360 @volkans80 @jaabberwocky @maikthomas @atursams @LearningCode2023 @DylanC @BenjaminDRichards @rexrainbow @Riderrr @spwilson2 @EmilSV @PhaserEditor2D @Gangryong @vinerz @trynx @usufruct99 @pirateksh @justin-calleja @monteiz
 
-### Beta Testing Help
+### 3.50 Beta Testing Help
 
 A special mention to the following who submitted feedback on the the 3.50 Beta releases:
 
