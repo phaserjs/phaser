@@ -1030,8 +1030,6 @@ var Body = new Class({
 
         if (this.moves)
         {
-            this.prev.x = this.position.x;
-            this.prev.y = this.position.y;
             this.prevFrame.x = this.position.x;
             this.prevFrame.y = this.position.y;
         }
@@ -1057,9 +1055,6 @@ var Body = new Class({
      */
     update: function (delta)
     {
-        this.prev.x = this.position.x;
-        this.prev.y = this.position.y;
-
         if (this.moves)
         {
             this.world.updateMotion(this, delta);
@@ -1087,6 +1082,8 @@ var Body = new Class({
 
         this._dx = this.position.x - this.prev.x;
         this._dy = this.position.y - this.prev.y;
+        this.prev.x = this.position.x;
+        this.prev.y = this.position.y;
     },
 
     /**
