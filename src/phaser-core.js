@@ -13,22 +13,17 @@ var Extend = require('./utils/object/Extend');
  * @namespace Phaser
  */
 
-/**
- * The root types namespace.
- *
- * @namespace Phaser.Types
- * @since 3.17.0
- */
-
 var Phaser = {
 
     Animations: require('./animations'),
+    BlendModes: require('./renderer/BlendModes'),
     Cache: require('./cache'),
     Cameras: { Scene2D: require('./cameras/2d') },
     Core: require('./core'),
     Class: require('./utils/Class'),
     Data: require('./data'),
     Display: { Masks: require('./display/mask') },
+    DOM: require('./dom'),
     Events: require('./events'),
     Game: require('./core/Game'),
     GameObjects: {
@@ -96,6 +91,7 @@ var Phaser = {
     Plugins: require('./plugins'),
     Renderer: require('./renderer'),
     Scale: require('./scale'),
+    ScaleModes: require('./renderer/ScaleModes'),
     Scene: require('./scene/Scene'),
     Scenes: require('./scene'),
     Structs: require('./structs'),
@@ -104,16 +100,25 @@ var Phaser = {
     Tweens: require('./tweens')
 };
 
-//   Merge in the consts
-
-Phaser = Extend(false, Phaser, CONST);
-
-//  Export it
+//   Merge in the consts//  Merge in the optional plugins and WebGL only features
 
 if (typeof FEATURE_SOUND)
 {
     Phaser.Sound = require('./sound');
 }
+
+//   Merge in the consts
+
+Phaser = Extend(false, Phaser, CONST);
+
+/**
+ * The root types namespace.
+ *
+ * @namespace Phaser.Types
+ * @since 3.17.0
+ */
+
+//  Export it
 
 module.exports = Phaser;
 
