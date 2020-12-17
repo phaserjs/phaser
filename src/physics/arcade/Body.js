@@ -1022,24 +1022,29 @@ var Body = new Class({
         if (willStep)
         {
             this.resetFlags();
+
+            if (this.moves)
+            {
+                // Snapshot the last physics step position *before* syncing from the gameObject per `prev`'s contract. This lets physics see any changes from tweens etc to the game object's position. If a step isn't going to be executed, it's not correct to snapshot, since then movement direction might be lost.
+                // You can avoid this by explicitly calling `reset` to "teleport" a gameobject around.
+                this.prev.x = this.position.x;
+                this.prev.y = this.position.y;
+            }
         }
 
         this.updateFromGameObject();
 
         this.rotation = this.transform.rotation;
         this.preRotation = this.rotation;
-
         if (this.moves)
         {
-            this.prev.x = this.position.x;
-            this.prev.y = this.position.y;
+            // Snapshot now to maintain the invariant that the difference between `position.x` and `prevFrame.x` is equal to the adjustment needed to `gameObject.x` (and same for `.y`).
             this.prevFrame.x = this.position.x;
             this.prevFrame.y = this.position.y;
         }
-
         if (willStep)
         {
-            this.update(delta);
+            this.update(delta, true);
         }
     },
 
@@ -1055,11 +1060,16 @@ var Body = new Class({
      * @since 3.0.0
      *
      * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
+     * @param {boolean} [isFirstUpdateAfterFrame=false] - True if this is the first physics step of the frame, which skips some of the setup done in `preUpdate`.
      */
-    update: function (delta)
+    update: function (delta, isFirstUpdateAfterFrame)
     {
-        this.prev.x = this.position.x;
-        this.prev.y = this.position.y;
+        if (!isFirstUpdateAfterFrame)
+        {
+            // `preUpdate` did an initial snapshot of `prev` before calling `update` the first time, but any additional physics steps in one frame require additional snapshots of `prev` here:
+            this.prev.x = this.position.x;
+            this.prev.y = this.position.y;
+        }
 
         if (this.moves)
         {
@@ -1131,7 +1141,6 @@ var Body = new Class({
                     dy = my;
                 }
             }
-
             this.gameObject.x += dx;
             this.gameObject.y += dy;
         }
