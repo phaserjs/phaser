@@ -82,7 +82,7 @@ Extra special thanks to the following companies whose support makes Phaser possi
 * [Poki](https://developers.poki.com/)
 * [CrazyGames](https://www.crazygames.com)
 * [Lagged](https://www.lagged.com)
-* [Nakama](https://heroiclabs.com/nakama-opensource/)
+* [Nakama](https://heroiclabs.com/phaserjs/)
 
 ![Sponsors](https://phaser.io/images/github/sponsors-2020-12.png "Our Awesome Sponsors")
 
