@@ -94,12 +94,14 @@ var WebAudioSound = new Class({
         /**
          * Panner node responsible for controlling this sound's pan.
          *
+         * Doesn't work on iOS / Safari.
+         *
          * @name Phaser.Sound.WebAudioSound#pannerNode
          * @type {StereoPannerNode}
          * @private
          * @since 3.50.0
          */
-        this.pannerNode = manager.context.createStereoPanner();
+        this.pannerNode = null;
 
         /**
          * The time at which the sound should have started playback from the beginning.
@@ -175,9 +177,18 @@ var WebAudioSound = new Class({
 
         this.muteNode.connect(this.volumeNode);
 
-        this.volumeNode.connect(this.pannerNode);
+        if (manager.context.createStereoPanner)
+        {
+            this.pannerNode = manager.context.createStereoPanner();
 
-        this.pannerNode.connect(manager.destination);
+            this.volumeNode.connect(this.pannerNode);
+
+            this.pannerNode.connect(manager.destination);
+        }
+        else
+        {
+            this.volumeNode.connect(manager.destination);
+        }
 
         this.duration = this.audioBuffer.duration;
 
@@ -908,6 +919,8 @@ var WebAudioSound = new Class({
     /**
      * Gets or sets the pan of this sound, a value between -1 (full left pan) and 1 (full right pan).
      *
+     * Always returns zero on iOS / Safari as it doesn't support the stereo panner node.
+     *
      * @name Phaser.Sound.WebAudioSound#pan
      * @type {number}
      * @default 0
@@ -918,13 +931,24 @@ var WebAudioSound = new Class({
 
         get: function ()
         {
-            return this.pannerNode.pan.value;
+            if (this.pannerNode)
+            {
+                return this.pannerNode.pan.value;
+            }
+            else
+            {
+                return 0;
+            }
         },
 
         set: function (value)
         {
             this.currentConfig.pan = value;
-            this.pannerNode.pan.setValueAtTime(value, this.manager.context.currentTime);
+
+            if (this.pannerNode)
+            {
+                this.pannerNode.pan.setValueAtTime(value, this.manager.context.currentTime);
+            }
 
             this.emit(Events.PAN, this, value);
         }
@@ -932,6 +956,8 @@ var WebAudioSound = new Class({
 
     /**
      * Sets the pan of this sound, a value between -1 (full left pan) and 1 (full right pan).
+     *
+     * Note: iOS / Safari doesn't support the stereo panner node.
      *
      * @method Phaser.Sound.WebAudioSound#setPan
      * @fires Phaser.Sound.Events#PAN
