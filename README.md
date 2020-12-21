@@ -288,7 +288,7 @@ There are both plain and minified compiled versions of Phaser in the `dist` fold
 
 Phaser 3 is built using Webpack and we take advantage of the Webpack definePlugin feature to allow for conditional building of the Canvas and WebGL renderers and extra plugins. You can custom the build process to only include the features you require. Doing so can cut the main build file size down to just 70KB.
 
-Read our [comprehensive guide](https://phaser.io/phaser3/devlog/127) on creating Custom Builds of Phaser 3 for full details.
+Read our [comprehensive guide](https://github.com/photonstorm/phaser3-custom-build#creating-custom-phaser-3-builds) on creating Custom Builds of Phaser 3 for full details.
 
 ### Building from Source
 
