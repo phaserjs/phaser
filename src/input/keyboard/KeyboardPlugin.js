@@ -747,7 +747,7 @@ var KeyboardPlugin = new Class({
             }
 
             //  Duplicate event bailout
-            if (code === this.prevCode && event.timeStamp === this.prevTime)
+            if (code === this.prevCode && event.timeStamp === this.prevTime && event.type === this.prevType)
             {
                 //  On some systems, the exact same event will fire multiple times. This prevents it.
                 continue;
@@ -755,6 +755,7 @@ var KeyboardPlugin = new Class({
 
             this.prevCode = code;
             this.prevTime = event.timeStamp;
+            this.prevType = event.type;
 
             if (event.type === 'keydown')
             {
