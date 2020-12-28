@@ -167,6 +167,16 @@ var KeyboardPlugin = new Class({
          */
         this.prevTime = 0;
 
+        /**
+         * Internal repeat key flag.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#prevType
+         * @type {string}
+         * @private
+         * @since 3.50.1
+         */
+        this.prevType = null;
+
         sceneInputPlugin.pluginEvents.once(InputEvents.BOOT, this.boot, this);
         sceneInputPlugin.pluginEvents.on(InputEvents.START, this.start, this);
     },
