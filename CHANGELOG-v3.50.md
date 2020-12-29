@@ -1,3 +1,16 @@
+## Version 3.51.0 - Emilia - in development
+
+### New Features
+
+### Updates
+
+### Bug Fixes
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
+
+
 ## Version 3.50.1 - Subaru - 21st December 2020
 
 * The new Web Audio Panning feature breaks WebAudio on Safari (OSX and iOS). The stero panner node is now only created if supported. Fix #5460 (thanks @d4rkforce)
