@@ -582,6 +582,17 @@ var WebGLRenderer = new Class({
         this.textureFlush = 0;
 
         /**
+         * Are the WebGL Textures in their default state?
+         *
+         * Used to avoid constant gl binds.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#isTextureClean
+         * @type {boolean}
+         * @since 3.51.0
+         */
+        this.isTextureClean = false;
+
+        /**
          * The default scissor, set during `preRender` and modified during `resize`.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#defaultScissor
@@ -1427,6 +1438,8 @@ var WebGLRenderer = new Class({
             }
         }
 
+        this.isTextureClean = false;
+
         return textureSource.glIndex;
     },
 
@@ -1572,6 +1585,12 @@ var WebGLRenderer = new Class({
     {
         if (all === undefined) { all = false; }
 
+        if (this.isTextureClean)
+        {
+            //  No need to do this if the textures are already clean
+            return;
+        }
+
         this.flush();
 
         var gl = this.gl;
@@ -1587,6 +1606,8 @@ var WebGLRenderer = new Class({
 
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, temp[1]);
+
+            this.isTextureClean = true;
         }
         else
         {
@@ -1662,6 +1683,8 @@ var WebGLRenderer = new Class({
                 this.currentActiveTexture = 2;
             }
         }
+
+        this.isTextureClean = false;
 
         return texture.glIndex;
     },
