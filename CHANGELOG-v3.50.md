@@ -8,6 +8,7 @@
 
 * On some keyboards it was possible for the `keyup` event to not fire because it was filtered out by the Keyboard Plugin repeat key check. Fix #5472 (thanks @cjw6k)
 * Fixed issue causing `Cannot read property 'pipelines' of null` to be thrown if using 3.50 with the HEADLESS renderer. Fix #5468 (thanks @Grenagar)
+* Canvas Tilemap Rendering is now working again. Fix #5480 (thanks @marshmn)
 
 ### Examples, Documentation and TypeScript
 
