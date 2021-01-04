@@ -7,6 +7,8 @@
 ### Updates
 
 * `Layer.destroy` will now call `destroy` on all of its children as well.
+* The `Layer` Game Object has been given all of the missing properties and methods from Game Object to make the class shapes identical. This includes the properties `parentContainer`, `tabIndex`, `input` and `body`. You cannot set any of these properties, they are ignored by the Layer itself. It also includes the methods: `setInteractive`, `disableInteractive` and `removeInteractive`. A Layer cannot be enabled for input or have a physics body. Fix #5459 (thanks @PhaserEditor2D)
+* `Layer.getIndexList` is a new method, taken from the Game Object, that will return the index of the Layer in the display list, factoring in any parents.
 
 ### Bug Fixes
 
