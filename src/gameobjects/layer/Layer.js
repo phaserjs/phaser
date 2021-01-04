@@ -690,10 +690,13 @@ var Layer = new Class({
     },
 
     /**
-     * Destroys this Game Object removing it from the Display List and Update List and
+     * Destroys this Layer removing it from the Display List and Update List and
      * severing all ties to parent resources.
      *
-     * Use this to remove a Game Object from your game if you don't ever plan to use it again.
+     * Also destroys all children of this Layer. If you do not wish for the
+     * children to be destroyed, you should move them from this Layer first.
+     *
+     * Use this to remove this Layer from your game if you don't ever plan to use it again.
      * As long as no reference to it exists within your own code it should become free for
      * garbage collection by the browser.
      *
@@ -712,11 +715,18 @@ var Layer = new Class({
             return;
         }
 
-        this.removeAll();
-        this.removeAllListeners();
-        this.resetPostPipeline(true);
-
         this.emit(GameObjectEvents.DESTROY, this);
+
+        var i = this.list.length;
+
+        while (i--)
+        {
+            this.list[i].destroy();
+        }
+
+        this.removeAllListeners();
+
+        this.resetPostPipeline(true);
 
         if (this.displayList)
         {
@@ -734,6 +744,7 @@ var Layer = new Class({
         this.active = false;
         this.visible = false;
 
+        this.list = undefined;
         this.scene = undefined;
         this.displayList = undefined;
         this.systems = undefined;
