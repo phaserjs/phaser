@@ -96,8 +96,11 @@ var TilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
             continue;
         }
 
-        var halfWidth = tileset.tileWidth / 2;
-        var halfHeight = tileset.tileHeight / 2;
+        var tileWidth = tileset.tileWidth;
+        var tileHeight = tileset.tileHeight;
+
+        var halfWidth = tileWidth * 0.5;
+        var halfHeight = tileHeight * 0.5;
 
         ctx.save();
 
@@ -118,9 +121,9 @@ var TilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
         ctx.drawImage(
             image,
             tileTexCoords.x, tileTexCoords.y,
-            tileset.tileWidth , tileset.Height,
+            tileWidth , tileHeight,
             -halfWidth, -halfHeight,
-            tileset.tileWidth , tileset.tileHeight
+            tileWidth, tileHeight
         );
 
         ctx.restore();
