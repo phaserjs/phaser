@@ -10,6 +10,7 @@ var DefaultPlugins = require('../plugins/DefaultPlugins');
 var Events = require('./events');
 var GetPhysicsPlugins = require('./GetPhysicsPlugins');
 var GetScenePlugins = require('./GetScenePlugins');
+var GLOBAL_CONST = require('../const');
 var NOOP = require('../utils/NOOP');
 var Settings = require('./Settings');
 
@@ -757,6 +758,11 @@ var Systems = new Class({
 
         settings.active = false;
         settings.visible = false;
+
+        if (this.renderer === GLOBAL_CONST.WEBGL)
+        {
+            this.renderer.resetTextures(true);
+        }
 
         events.emit(Events.SHUTDOWN, this, data);
     },
