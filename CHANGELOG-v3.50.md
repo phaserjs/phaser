@@ -3,6 +3,7 @@
 ### New Features
 
 * `WebGLRenderer.isTextureClean` is a new boolean property that tracks of all of the multi-textures are in a clean 'default' state, to avoid lots of gl texture binds and activations during a Scene restart or destruction process.
+* `GameObject.removePostPipeline(pipelineClass)` would previously only remove a single pipeline instance. Calling the method with a class will now clear all instances of the pipeline class from the Game Object (thanks @rexrainbow)
 
 ### Updates
 
