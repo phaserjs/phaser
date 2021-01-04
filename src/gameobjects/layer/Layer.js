@@ -153,6 +153,18 @@ var Layer = new Class({
         this.state = 0;
 
         /**
+         * A Layer cannot be placed inside a Container.
+         *
+         * This property is kept purely so a Layer has the same
+         * shape as a Game Object.
+         *
+         * @name Phaser.GameObjects.Layer#parentContainer
+         * @type {Phaser.GameObjects.Container}
+         * @since 3.51.0
+         */
+        this.parentContainer = null;
+
+        /**
          * The name of this Game Object.
          * Empty by default and never populated by Phaser, this is left for developers to use.
          *
@@ -174,6 +186,17 @@ var Layer = new Class({
          * @since 3.50.0
          */
         this.active = true;
+
+        /**
+         * The Tab Index of the Game Object.
+         * Reserved for future use by plugins and the Input Manager.
+         *
+         * @name Phaser.GameObjects.Layer#tabIndex
+         * @type {number}
+         * @default -1
+         * @since 3.51.0
+         */
+        this.tabIndex = -1;
 
         /**
          * A Data Manager.
@@ -213,6 +236,28 @@ var Layer = new Class({
          * @since 3.50.0
          */
         this.cameraFilter = 0;
+
+        /**
+         * This property is kept purely so a Layer has the same
+         * shape as a Game Object. You cannot input enable a Layer.
+         *
+         * @name Phaser.GameObjects.Layer#input
+         * @type {?Phaser.Types.Input.InteractiveObject}
+         * @default null
+         * @since 3.51.0
+         */
+        this.input = null;
+
+        /**
+         * This property is kept purely so a Layer has the same
+         * shape as a Game Object. You cannot give a Layer a physics body.
+         *
+         * @name Phaser.GameObjects.Layer#body
+         * @type {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|MatterJS.BodyType)}
+         * @default null
+         * @since 3.51.0
+         */
+        this.body = null;
 
         /**
          * This Game Object will ignore all calls made to its destroy method if this flag is set to `true`.
@@ -512,6 +557,54 @@ var Layer = new Class({
     },
 
     /**
+     * A Layer cannot be enabled for input.
+     *
+     * This method does nothing and is kept to ensure
+     * the Layer has the same shape as a Game Object.
+     *
+     * @method Phaser.GameObjects.Layer#setInteractive
+     * @since 3.51.0
+     *
+     * @return {this} This GameObject.
+     */
+    setInteractive: function ()
+    {
+        return this;
+    },
+
+    /**
+     * A Layer cannot be enabled for input.
+     *
+     * This method does nothing and is kept to ensure
+     * the Layer has the same shape as a Game Object.
+     *
+     * @method Phaser.GameObjects.Layer#disableInteractive
+     * @since 3.51.0
+     *
+     * @return {this} This GameObject.
+     */
+    disableInteractive: function ()
+    {
+        return this;
+    },
+
+    /**
+     * A Layer cannot be enabled for input.
+     *
+     * This method does nothing and is kept to ensure
+     * the Layer has the same shape as a Game Object.
+     *
+     * @method Phaser.GameObjects.Layer#removeInteractive
+     * @since 3.51.0
+     *
+     * @return {this} This GameObject.
+     */
+    removeInteractive: function ()
+    {
+        return this;
+    },
+
+    /**
      * This callback is invoked when this Game Object is added to a Scene.
      *
      * Can be overriden by custom Game Objects, but be aware of some Game Objects that
@@ -580,6 +673,48 @@ var Layer = new Class({
     willRender: function (camera)
     {
         return !(this.renderFlags !== 15 || this.list.length === 0 || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
+    },
+
+    /**
+     * Returns an array containing the display list index of either this Game Object, or if it has one,
+     * its parent Container. It then iterates up through all of the parent containers until it hits the
+     * root of the display list (which is index 0 in the returned array).
+     *
+     * Used internally by the InputPlugin but also useful if you wish to find out the display depth of
+     * this Game Object and all of its ancestors.
+     *
+     * @method Phaser.GameObjects.Layer#getIndexList
+     * @since 3.51.0
+     *
+     * @return {number[]} An array of display list position indexes.
+     */
+    getIndexList: function ()
+    {
+        // eslint-disable-next-line consistent-this
+        var child = this;
+        var parent = this.parentContainer;
+
+        var indexes = [];
+
+        while (parent)
+        {
+            indexes.unshift(parent.getIndex(child));
+
+            child = parent;
+
+            if (!parent.parentContainer)
+            {
+                break;
+            }
+            else
+            {
+                parent = parent.parentContainer;
+            }
+        }
+
+        indexes.unshift(this.displayList.getIndex(child));
+
+        return indexes;
     },
 
     /**
