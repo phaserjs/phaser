@@ -639,7 +639,6 @@ var GameObject = new Class({
 
         while (parent)
         {
-            // indexes.unshift([parent.getIndex(child), parent.name]);
             indexes.unshift(parent.getIndex(child));
 
             child = parent;
@@ -654,8 +653,7 @@ var GameObject = new Class({
             }
         }
 
-        // indexes.unshift([this.scene.sys.displayList.getIndex(child), 'root']);
-        indexes.unshift(this.scene.sys.displayList.getIndex(child));
+        indexes.unshift(this.displayList.getIndex(child));
 
         return indexes;
     },
