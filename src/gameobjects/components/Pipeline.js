@@ -95,6 +95,12 @@ var Pipeline = {
         if (pipeline === undefined) { pipeline = PIPELINE_CONST.MULTI_PIPELINE; }
 
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return false;
+        }
+
         var pipelines = renderer.pipelines;
 
         this.postPipelines = [];
@@ -136,6 +142,12 @@ var Pipeline = {
     setPipeline: function (pipeline, pipelineData, copyData)
     {
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return this;
+        }
+
         var pipelines = renderer.pipelines;
 
         if (pipelines)
@@ -187,6 +199,12 @@ var Pipeline = {
     setPostPipeline: function (pipelines, pipelineData, copyData)
     {
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return this;
+        }
+
         var pipelineManager = renderer.pipelines;
 
         if (pipelineManager)
