@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('../const');
 var Class = require('../utils/Class');
 var Frame = require('./Frame');
 var TextureSource = require('./TextureSource');
@@ -505,6 +506,13 @@ var Texture = new Class({
         this.frames = {};
 
         this.manager.removeKey(this.key);
+
+        var renderer = this.manager.game.renderer;
+
+        if (renderer.type === CONST.WEBGL)
+        {
+            renderer.resetTextures(true);
+        }
 
         this.manager = null;
     }
