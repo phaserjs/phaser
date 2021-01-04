@@ -2,6 +2,8 @@
 
 ### New Features
 
+* `WebGLRenderer.isTextureClean` is a new boolean property that tracks of all of the multi-textures are in a clean 'default' state, to avoid lots of gl texture binds and activations during a Scene restart or destruction process.
+
 ### Updates
 
 * `Layer.destroy` will now call `destroy` on all of its children as well.
@@ -12,6 +14,8 @@
 * Fixed issue causing `Cannot read property 'pipelines' of null` to be thrown if using 3.50 with the HEADLESS renderer. Fix #5468 (thanks @Grenagar)
 * Canvas Tilemap Rendering is now working again. Fix #5480 (thanks @marshmn)
 * `Layer.destroy` will now emit the `DESTROY` event at the start of the method. Fix #5466 (thanks @samme)
+* The error `RENDER WARNING: there is no texture bound to the unit ...` would be thrown when trying to restart a Scene. When a Scene is shutdown is will now reset the WebGL Texture cache. Fix #5464 (thanks @ffx0s)
+* The error `RENDER WARNING: there is no texture bound to the unit ...` would be thrown when destroying a Text Game Object, or any Game Object that uses its own custom texture. Destroying such an object will now reset the WebGL Texture cache. Fix #5464 (thanks @mark-rushakoff)
 
 ### Examples, Documentation and TypeScript
 
