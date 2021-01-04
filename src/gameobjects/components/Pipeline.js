@@ -359,7 +359,7 @@ var Pipeline = {
     },
 
     /**
-     * Removes a single Post Pipeline instance from this Game Object, based on the given name, and destroys it.
+     * Removes a type of Post Pipeline instances from this Game Object, based on the given name, and destroys them.
      *
      * If you wish to remove all Post Pipelines use the `resetPostPipeline` method instead.
      *
@@ -375,7 +375,7 @@ var Pipeline = {
     {
         var pipelines = this.postPipelines;
 
-        for (var i = 0; i < pipelines.length; i++)
+        for (var i = pipelines.length - 1; i >= 0; i--)
         {
             var instance = pipelines[i];
 
@@ -386,10 +386,10 @@ var Pipeline = {
                 instance.destroy();
 
                 SpliceOne(pipelines, i);
-
-                return this;
             }
         }
+
+        this.hasPostPipeline = (this.postPipelines.length > 0);
 
         return this;
     },
