@@ -176,7 +176,7 @@ var SpineFile = new Class({
                 {
                     var textureURL = textures[i];
 
-                    var key = this.prefix + textureURL;
+                    var key = textureURL;
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
