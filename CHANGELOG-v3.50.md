@@ -19,6 +19,7 @@
 * `Layer.destroy` will now emit the `DESTROY` event at the start of the method. Fix #5466 (thanks @samme)
 * The error `RENDER WARNING: there is no texture bound to the unit ...` would be thrown when trying to restart a Scene. When a Scene is shutdown is will now reset the WebGL Texture cache. Fix #5464 (thanks @ffx0s)
 * The error `RENDER WARNING: there is no texture bound to the unit ...` would be thrown when destroying a Text Game Object, or any Game Object that uses its own custom texture. Destroying such an object will now reset the WebGL Texture cache. Fix #5464 (thanks @mark-rushakoff)
+* When using an asset pack with a prefix, and loading a Spine file, the prefix was being appended twice causing the texture to fail loading. It's now appended correctly (thanks @jdcook)
 
 ### Examples, Documentation and TypeScript
 
