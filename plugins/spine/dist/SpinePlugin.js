@@ -11739,7 +11739,6 @@ var GameObject = new Class({
 
         while (parent)
         {
-            // indexes.unshift([parent.getIndex(child), parent.name]);
             indexes.unshift(parent.getIndex(child));
 
             child = parent;
@@ -11754,8 +11753,7 @@ var GameObject = new Class({
             }
         }
 
-        // indexes.unshift([this.scene.sys.displayList.getIndex(child), 'root']);
-        indexes.unshift(this.scene.sys.displayList.getIndex(child));
+        indexes.unshift(this.displayList.getIndex(child));
 
         return indexes;
     },
@@ -30868,7 +30866,7 @@ var SpineFile = new Class({
                 {
                     var textureURL = textures[i];
 
-                    var key = this.prefix + textureURL;
+                    var key = textureURL;
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
@@ -43961,6 +43959,12 @@ var Pipeline = {
         if (pipeline === undefined) { pipeline = PIPELINE_CONST.MULTI_PIPELINE; }
 
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return false;
+        }
+
         var pipelines = renderer.pipelines;
 
         this.postPipelines = [];
@@ -44002,6 +44006,12 @@ var Pipeline = {
     setPipeline: function (pipeline, pipelineData, copyData)
     {
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return this;
+        }
+
         var pipelines = renderer.pipelines;
 
         if (pipelines)
@@ -44053,6 +44063,12 @@ var Pipeline = {
     setPostPipeline: function (pipelines, pipelineData, copyData)
     {
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return this;
+        }
+
         var pipelineManager = renderer.pipelines;
 
         if (pipelineManager)
@@ -44207,7 +44223,7 @@ var Pipeline = {
     },
 
     /**
-     * Removes a single Post Pipeline instance from this Game Object, based on the given name, and destroys it.
+     * Removes a type of Post Pipeline instances from this Game Object, based on the given name, and destroys them.
      *
      * If you wish to remove all Post Pipelines use the `resetPostPipeline` method instead.
      *
@@ -44223,7 +44239,7 @@ var Pipeline = {
     {
         var pipelines = this.postPipelines;
 
-        for (var i = 0; i < pipelines.length; i++)
+        for (var i = pipelines.length - 1; i >= 0; i--)
         {
             var instance = pipelines[i];
 
@@ -44234,10 +44250,10 @@ var Pipeline = {
                 instance.destroy();
 
                 SpliceOne(pipelines, i);
-
-                return this;
             }
         }
+
+        this.hasPostPipeline = (this.postPipelines.length > 0);
 
         return this;
     },
