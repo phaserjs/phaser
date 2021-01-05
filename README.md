@@ -13,10 +13,10 @@ Along with the fantastic open source community, Phaser is actively developed and
 
 Thousands of developers from indie and multi-national digital agencies, and universities worldwide use Phaser. You can take a look at their incredible [games](https://phaser.io/games/).
 
-**Visit:** The [Phaser website](https://phaser.io) and follow on [Twitter](https://twitter.com/phaser_) (#phaserjs)<br />
+**Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)
+**Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query)<br />
 **Learn:** [API Docs](https://photonstorm.github.io/phaser3-docs/index.html), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
 **Code:** 1770+ [Examples](https://phaser.io/examples) (source available in this [repo][examples])<br />
-**Read:** The [Phaser World](#newsletter) Newsletter<br />
 **Discord:** Join us on [Discord](https://phaser.io/community/discord)<br />
 **Extend:** With [Phaser Plugins](https://phaser.io/shop/plugins)<br />
 **Be awesome:** [Support](#support) the future of Phaser<br />
@@ -276,9 +276,13 @@ Run it in your browser and you'll see the following:
 
 This is a tiny example, and there are hundreds more for you to explore, but hopefully it shows how expressive and quick Phaser is to use. With just a few easily readable lines of code, we've got something pretty impressive up on screen!
 
-![Ourcade](https://phaser.io/images/github/ourcade.jpg "Ourcade")
+[![Ourcade](https://phaser.io/images/github/ourcade.jpg)](https://blog.ourcade.co)
 
-Ourcade have published [two great Phaser 3 books](https://blog.ourcade.co/). They'll take you from getting set-up, through to finishing your first game using modern JavaScript or TypeScript and they're both completely free! They also publish a huge range of quality tutorials and videos, so be sure to check out their site every week.
+Ourcade have published [two great Phaser 3 books](https://blog.ourcade.co). They'll take you from getting set-up, through to finishing your first game using modern JavaScript or TypeScript and they're both completely free! They also publish a huge range of quality tutorials and videos, so be sure to check out their site every week.
+
+[![HTML5 Cross Platform Game Development with Phaser 3](https://phaser.io/images/github/feronato.png)](https://gumroad.com/a/244184179)
+
+Learn the secrets of HTML5 game development with Phaser 3.50 while building a cross platform endless runner game. Designed both for beginners and skilled programmers, the course guides you from an empty folder introducing the bare bones of JavaScript to advanced Phaser 3 features. Find out more details about [HTML5 Cross Platform Game Development with Phaser](https://gumroad.com/a/244184179).
 
 ![Building Phaser](https://phaser.io/images/github/div-building-phaser.png "Building Phaser")
 
