@@ -191,6 +191,9 @@ var Tile = new Class({
         /**
          * Whether the tile should collide with any object on the left side.
          *
+         * This property is used by Arcade Physics only, however, you can also use it
+         * in your own checks.
+         *
          * @name Phaser.Tilemaps.Tile#collideLeft
          * @type {boolean}
          * @since 3.0.0
@@ -199,6 +202,9 @@ var Tile = new Class({
 
         /**
          * Whether the tile should collide with any object on the right side.
+         *
+         * This property is used by Arcade Physics only, however, you can also use it
+         * in your own checks.
          *
          * @name Phaser.Tilemaps.Tile#collideRight
          * @type {boolean}
@@ -209,6 +215,9 @@ var Tile = new Class({
         /**
          * Whether the tile should collide with any object on the top side.
          *
+         * This property is used by Arcade Physics only, however, you can also use it
+         * in your own checks.
+         *
          * @name Phaser.Tilemaps.Tile#collideUp
          * @type {boolean}
          * @since 3.0.0
@@ -217,6 +226,9 @@ var Tile = new Class({
 
         /**
          * Whether the tile should collide with any object on the bottom side.
+         *
+         * This property is used by Arcade Physics only, however, you can also use it
+         * in your own checks.
          *
          * @name Phaser.Tilemaps.Tile#collideDown
          * @type {boolean}
