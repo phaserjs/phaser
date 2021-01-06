@@ -512,10 +512,13 @@ var WebAudioSound = new Class({
         this.muteNode = null;
         this.volumeNode.disconnect();
         this.volumeNode = null;
-        if (this.pannerNode) {
+
+        if (this.pannerNode)
+        {
             this.pannerNode.disconnect();
             this.pannerNode = null;
         }
+
         this.rateUpdates.length = 0;
         this.rateUpdates = null;
     },
