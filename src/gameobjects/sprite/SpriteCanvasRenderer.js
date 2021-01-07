@@ -20,6 +20,8 @@
  */
 var SpriteCanvasRenderer = function (renderer, src, camera, parentMatrix)
 {
+    camera.addToRenderList(src);
+
     renderer.batchSprite(src, src.frame, camera, parentMatrix);
 };
 

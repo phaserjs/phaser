@@ -32,6 +32,8 @@ var BitmapTextCanvasRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    camera.addToRenderList(src);
+
     var textureFrame = src.frame;
 
     var chars = src.fontData.chars;

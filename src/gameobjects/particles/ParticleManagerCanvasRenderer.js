@@ -67,6 +67,8 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
             continue;
         }
 
+        camera.addToRenderList(emitter);
+
         var followX = (emitter.follow) ? emitter.follow.x + emitter.followOffset.x : 0;
         var followY = (emitter.follow) ? emitter.follow.y + emitter.followOffset.y : 0;
 

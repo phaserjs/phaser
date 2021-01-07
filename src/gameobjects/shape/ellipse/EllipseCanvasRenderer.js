@@ -24,6 +24,8 @@ var SetTransform = require('../../../renderer/canvas/utils/SetTransform');
  */
 var EllipseCanvasRenderer = function (renderer, src, camera, parentMatrix)
 {
+    camera.addToRenderList(src);
+
     var ctx = renderer.currentContext;
 
     if (SetTransform(renderer, ctx, src, camera, parentMatrix))

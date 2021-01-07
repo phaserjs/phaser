@@ -35,6 +35,8 @@ var GraphicsCanvasRenderer = function (renderer, src, camera, parentMatrix, rend
         return;
     }
 
+    camera.addToRenderList(src);
+
     var lineAlpha = 1;
     var fillAlpha = 1;
     var lineColor = 0;

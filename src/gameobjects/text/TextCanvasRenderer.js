@@ -25,6 +25,8 @@ var TextCanvasRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    camera.addToRenderList(src);
+
     renderer.batchSprite(src, src.frame, camera, parentMatrix);
 };
 

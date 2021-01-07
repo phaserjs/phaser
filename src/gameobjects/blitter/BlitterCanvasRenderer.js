@@ -37,6 +37,8 @@ var BlitterCanvasRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    camera.addToRenderList(src);
+
     //  Blend Mode + Scale Mode
     ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
 

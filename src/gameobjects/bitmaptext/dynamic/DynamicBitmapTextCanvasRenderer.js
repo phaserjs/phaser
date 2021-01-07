@@ -32,6 +32,8 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, camera, parentMat
         return;
     }
 
+    camera.addToRenderList(src);
+
     var textureFrame = src.frame;
 
     var displayCallback = src.displayCallback;
