@@ -4,9 +4,16 @@
 
 ### Updates
 
+* `Camera.renderList` is a new array that is populated with all Game Objects that the camera has rendered in the current frame. It is automatically cleared during `Camera.preUpdate` and is an accurate representation of the Game Objects the Camera rendered. It's used internally by the Input Plugin, but exposed should you wish to read the contents or use it for profiling.
+* `Camera.addToRenderList` is a new method that will add the given Game Object to the Cameras current render list.
+* The `InputPlugin.sortGameObjects` method now uses the new Camera render list to work out the display index depths.
+* The `InputPlugin.sortDropZones` method is a new method, based on the old `sortGameObjects` method that is used for sorting input enabled drop zones.
+
 ### Bug Fixes
 
 * `WebAudioSound.destroy` now checks to see if `pannerNode` exists before disabling it, preventing an error in Safari (thanks @jdcook)
+* Fixed the cause of `Uncaught TypeError: Cannot read property 'getIndex' of null` by checking the display list property securely. Fix #5489 (thanks @actionmoon)
+* Fixed an issue where adding input-enabled Game Objects to a Layer would have the input system ignore their depth settings. Fix #5483 (thanks @pr4xx)
 
 ### Examples, Documentation and TypeScript
 
