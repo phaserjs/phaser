@@ -557,6 +557,10 @@ var CameraManager = new Class({
                 {
                     cameras[index].destroy();
                 }
+                else
+                {
+                    cameras[index].renderList = [];
+                }
 
                 cameras.splice(index, 1);
 
