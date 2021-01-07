@@ -22,6 +22,8 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
+    camera.addToRenderList(src);
+
     var cameraAlpha = camera.alpha;
 
     var renderTarget = src.renderTarget;

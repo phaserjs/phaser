@@ -29,8 +29,10 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (list.length === 0)
     {
-        return;
+        return src.clearRenderDepth(camera);
     }
+
+    src.setRenderDepth(camera);
 
     var pipeline = renderer.pipelines.set(this.pipeline, src);
 

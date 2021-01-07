@@ -20,6 +20,8 @@
  */
 var SpriteWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
+    camera.addToRenderList(src);
+
     src.pipeline.batchSprite(src, camera, parentMatrix);
 };
 

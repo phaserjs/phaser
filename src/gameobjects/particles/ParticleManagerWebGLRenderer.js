@@ -75,6 +75,8 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
             continue;
         }
 
+        camera.addToRenderList(emitter);
+
         var scrollFactorX = emitter.scrollFactorX;
         var scrollFactorY = emitter.scrollFactorY;
 

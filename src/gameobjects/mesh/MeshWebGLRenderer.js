@@ -30,6 +30,8 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    camera.addToRenderList(src);
+
     var pipeline = renderer.pipelines.set(src.pipeline, src);
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;

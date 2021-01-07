@@ -171,16 +171,6 @@ var Container = new Class({
         this.tempTransformMatrix = new Components.TransformMatrix();
 
         /**
-         * A reference to the Scene Display List.
-         *
-         * @name Phaser.GameObjects.Container#_displayList
-         * @type {Phaser.GameObjects.DisplayList}
-         * @private
-         * @since 3.4.0
-         */
-        this._displayList = scene.sys.displayList;
-
-        /**
          * The property key to sort by.
          *
          * @name Phaser.GameObjects.Container#_sortKey
@@ -454,11 +444,23 @@ var Container = new Class({
 
         if (this.exclusive)
         {
-            this._displayList.remove(gameObject);
+            if (gameObject.displayList)
+            {
+                gameObject.displayList.remove(gameObject);
+            }
 
             if (gameObject.parentContainer)
             {
                 gameObject.parentContainer.remove(gameObject);
+            }
+
+            if (this.displayList)
+            {
+                gameObject.displayList = this.displayList;
+            }
+            else
+            {
+                gameObject.displayList = this.scene.sys.displayList;
             }
 
             gameObject.parentContainer = this;
@@ -1361,7 +1363,6 @@ var Container = new Class({
         this.tempTransformMatrix.destroy();
 
         this.list = [];
-        this._displayList = null;
     }
 
 });

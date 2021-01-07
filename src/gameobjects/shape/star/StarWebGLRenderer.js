@@ -24,6 +24,8 @@ var StrokePathWebGL = require('../StrokePathWebGL');
  */
 var StarWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
+    camera.addToRenderList(src);
+
     var pipeline = renderer.pipelines.set(src.pipeline);
 
     var result = GetCalcMatrix(src, camera, parentMatrix);

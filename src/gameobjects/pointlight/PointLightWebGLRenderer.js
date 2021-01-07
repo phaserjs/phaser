@@ -22,6 +22,8 @@ var GetCalcMatrix = require('../GetCalcMatrix');
  */
 var PointLightWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
+    camera.addToRenderList(src);
+
     var pipeline = renderer.pipelines.set(src.pipeline);
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;

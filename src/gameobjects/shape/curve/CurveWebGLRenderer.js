@@ -24,6 +24,8 @@ var StrokePathWebGL = require('../StrokePathWebGL');
  */
 var CurveWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
+    camera.addToRenderList(src);
+
     var pipeline = renderer.pipelines.set(src.pipeline);
 
     var result = GetCalcMatrix(src, camera, parentMatrix);

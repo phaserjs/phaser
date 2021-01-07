@@ -27,6 +27,8 @@ var ShaderWebGLRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    camera.addToRenderList(src);
+
     renderer.pipelines.clear();
 
     if (src.renderToTexture)

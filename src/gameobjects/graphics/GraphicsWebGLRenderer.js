@@ -47,6 +47,8 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    camera.addToRenderList(src);
+
     var pipeline = renderer.pipelines.set(src.pipeline, src);
 
     renderer.pipelines.preBatch(src);

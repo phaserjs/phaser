@@ -26,10 +26,13 @@ var TileSpriteWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var width = src.width;
     var height = src.height;
+
     if (width === 0 || height === 0)
     {
         return;
     }
+
+    camera.addToRenderList(src);
 
     renderer.pipelines.preBatch(src);
 

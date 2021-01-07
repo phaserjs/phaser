@@ -34,6 +34,8 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
         return;
     }
 
+    camera.addToRenderList(src);
+
     var pipeline = renderer.pipelines.set(src.pipeline, src);
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
