@@ -583,9 +583,9 @@ var CameraManager = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The Renderer that will render the children to this camera.
-     * @param {Phaser.GameObjects.DisplayList} children - The Display List for the Scene.
+     * @param {Phaser.GameObjects.DisplayList} displayList - The Display List for the Scene.
      */
-    render: function (renderer, children)
+    render: function (renderer, displayList)
     {
         var scene = this.scene;
         var cameras = this.cameras;
@@ -598,7 +598,7 @@ var CameraManager = new Class({
             {
                 camera.preRender();
 
-                var visibleChildren = this.getVisibleChildren(children.getChildren(), camera);
+                var visibleChildren = this.getVisibleChildren(displayList.getChildren(), camera);
 
                 renderer.render(scene, visibleChildren, camera);
             }
