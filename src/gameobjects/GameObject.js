@@ -653,7 +653,14 @@ var GameObject = new Class({
             }
         }
 
-        indexes.unshift(this.displayList.getIndex(child));
+        if (this.displayList)
+        {
+            indexes.unshift(this.displayList.getIndex(child));
+        }
+        else
+        {
+            indexes.unshift(this.scene.sys.displayList.getIndex(child));
+        }
 
         return indexes;
     },
