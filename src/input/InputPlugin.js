@@ -624,8 +624,8 @@ var InputPlugin = new Class({
             //  _temp contains a hit tested and camera culled list of IO objects
             this._temp = this.hitTestPointer(pointer);
 
-            this.sortGameObjects(this._temp);
-            this.sortGameObjects(this._tempZones);
+            this.sortGameObjects(this._temp, pointer);
+            this.sortDropZones(this._tempZones);
 
             if (this.topOnly)
             {
@@ -693,8 +693,8 @@ var InputPlugin = new Class({
             //  _temp contains a hit tested and camera culled list of IO objects
             this._temp = this.hitTestPointer(pointer);
 
-            this.sortGameObjects(this._temp);
-            this.sortGameObjects(this._tempZones);
+            this.sortGameObjects(this._temp, pointer);
+            this.sortDropZones(this._tempZones);
 
             if (this.topOnly)
             {
@@ -1195,7 +1195,7 @@ var InputPlugin = new Class({
         }
         else if (draglist.length > 1)
         {
-            this.sortGameObjects(draglist);
+            this.sortGameObjects(draglist, pointer);
 
             if (this.topOnly)
             {
@@ -1681,7 +1681,7 @@ var InputPlugin = new Class({
 
             var aborted = false;
 
-            this.sortGameObjects(previouslyOver);
+            this.sortGameObjects(previouslyOver, pointer);
 
             for (var i = 0; i < total; i++)
             {
@@ -1807,7 +1807,7 @@ var InputPlugin = new Class({
 
         if (total > 0)
         {
-            this.sortGameObjects(justOut);
+            this.sortGameObjects(justOut, pointer);
 
             //  Call onOut for everything in the justOut array
             for (i = 0; i < total; i++)
@@ -1856,7 +1856,7 @@ var InputPlugin = new Class({
 
         if (total > 0)
         {
-            this.sortGameObjects(justOver);
+            this.sortGameObjects(justOver, pointer);
 
             //  Call onOver for everything in the justOver array
             for (i = 0; i < total; i++)
@@ -1900,7 +1900,7 @@ var InputPlugin = new Class({
         previouslyOver = stillOver.concat(justOver);
 
         //  Then sort it into display list order
-        this._over[pointer.id] = this.sortGameObjects(previouslyOver);
+        this._over[pointer.id] = this.sortGameObjects(previouslyOver, pointer);
 
         return totalInteracted;
     },
@@ -2624,17 +2624,44 @@ var InputPlugin = new Class({
     },
 
     /**
-     * Given an array of Game Objects, sort the array and return it, so that the objects are in depth index order
-     * with the lowest at the bottom.
+     * Given an array of Game Objects and a Pointer, sort the array and return it,
+     * so that the objects are in render order with the lowest at the bottom.
      *
      * @method Phaser.Input.InputPlugin#sortGameObjects
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to be sorted.
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to check against the Game Objects.
      *
      * @return {Phaser.GameObjects.GameObject[]} The sorted array of Game Objects.
      */
-    sortGameObjects: function (gameObjects)
+    sortGameObjects: function (gameObjects, pointer)
+    {
+        if (gameObjects.length < 2)
+        {
+            return gameObjects;
+        }
+
+        var list = pointer.camera.renderList;
+
+        return gameObjects.sort(function (childA, childB)
+        {
+            return list.indexOf(childB) - list.indexOf(childA);
+        });
+    },
+
+    /**
+     * Given an array of Drop Zone Game Objects, sort the array and return it,
+     * so that the objects are in depth index order with the lowest at the bottom.
+     *
+     * @method Phaser.Input.InputPlugin#sortDropZones
+     * @since 3.52.0
+     *
+     * @param {Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to be sorted.
+     *
+     * @return {Phaser.GameObjects.GameObject[]} The sorted array of Game Objects.
+     */
+    sortDropZones: function (gameObjects)
     {
         if (gameObjects.length < 2)
         {
@@ -2643,23 +2670,25 @@ var InputPlugin = new Class({
 
         this.scene.sys.depthSort();
 
-        return gameObjects.sort(this.sortHandlerGO.bind(this));
+        return gameObjects.sort(this.sortDropZoneHandler.bind(this));
     },
 
     /**
      * Return the child lowest down the display list (with the smallest index)
      * Will iterate through all parent containers, if present.
      *
-     * @method Phaser.Input.InputPlugin#sortHandlerGO
+     * Prior to version 3.52.0 this method was called `sortHandlerGO`.
+     *
+     * @method Phaser.Input.InputPlugin#sortDropZoneHandler
      * @private
-     * @since 3.0.0
+     * @since 3.52.0
      *
      * @param {Phaser.GameObjects.GameObject} childA - The first Game Object to compare.
      * @param {Phaser.GameObjects.GameObject} childB - The second Game Object to compare.
      *
      * @return {number} Returns either a negative or positive integer, or zero if they match.
      */
-    sortHandlerGO: function (childA, childB)
+    sortDropZoneHandler: function (childA, childB)
     {
         if (!childA.parentContainer && !childB.parentContainer)
         {
