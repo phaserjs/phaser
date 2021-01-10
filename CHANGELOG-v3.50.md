@@ -19,7 +19,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@ygongdev
+@ygongdev Tucker
 
 ## Version 3.51.0 - Emilia - 5th January 2021
 
