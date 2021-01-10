@@ -19,13 +19,13 @@ var SpineContainerRender = require('./SpineContainerRender');
  * To create one in a Scene, use the factory methods:
  *
  * ```javascript
- * this.add.spinecontainer();
+ * this.add.spineContainer();
  * ```
  *
  * or
  *
  * ```javascript
- * this.make.spinecontainer();
+ * this.make.spineContainer();
  * ```
  *
  * Note that you should not nest Spine Containers inside regular Containers if you wish to use masks on the
