@@ -28,9 +28,11 @@ var Vertex = require('../../geom/mesh/Vertex');
  * Support for generating mesh data from grids, model data or Wavefront OBJ Files is included.
  *
  * Although you can use this to render 3D objects, its primary use is for displaying more complex
- * Sprites, or Sprites where you need fine-grained control over the vertice positions in order to
- * achieve special effects in your games. Note that rendering still takes place using Phasers
- * orthographic camera. As a result, all depth and face tests are done in orthographic space.
+ * Sprites, or Sprites where you need fine-grained control over the vertex positions in order to
+ * achieve special effects in your games. Note that rendering still takes place using Phaser's
+ * orthographic camera (after being transformed via `projectionMesh`, see `setPerspective`,
+ * `setOrtho`, and `panZ` methods). As a result, all depth and face tests are done in an eventually
+ * orthographic space.
  *
  * The rendering process will iterate through the faces of this Mesh and render out each face
  * that is considered as being in view of the camera. No depth buffer is used, and because of this,
@@ -73,10 +75,10 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @param {number} [y] - The vertical position of this Game Object in the world.
  * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {string|number} [frame] - An optional frame from the Texture this Game Object is rendering with.
- * @param {number[]} [vertices] - The vertices array. Either `xy` pairs, or `xyz` if the `containsZ` parameter is `true`.
+ * @param {number[]} [vertices] - The vertices array. Either `xy` pairs, or `xyz` if the `containsZ` parameter is `true` (but see note).
  * @param {number[]} [uvs] - The UVs pairs array.
  * @param {number[]} [indicies] - Optional vertex indicies array. If you don't have one, pass `null` or an empty array.
- * @param {boolean} [containsZ=false] - Does the vertices data include a `z` component?
+ * @param {boolean} [containsZ=false] - Does the vertices data include a `z` component? Note: If not, it will be assumed `z=0`, see method `panZ` or `setOrtho`.
  * @param {number[]} [normals] - Optional vertex normals array. If you don't have one, pass `null` or an empty array.
  * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
  * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
@@ -350,7 +352,7 @@ var Mesh = new Class({
         this.setSize(renderer.width, renderer.height);
         this.initPipeline();
 
-        this.setPerspective(renderer.width, renderer.height, 45, 0.01, 1000);
+        this.setPerspective(renderer.width, renderer.height);
 
         if (vertices)
         {
@@ -407,6 +409,9 @@ var Mesh = new Class({
     /**
      * Translates the view position of this Mesh on the z axis by the given amount.
      *
+     * As the default `panZ` value is 0, vertices with `z=0` (the default) need special care or else they will not display as they are behind the camera.
+     * Consider using `mesh.panZ(mesh.height / (2 * Math.tan(Math.PI / 16)))`, which will interpret vertex geometry 1:1 with pixel geometry (or see `setOrtho`).
+     *
      * @method Phaser.GameObjects.Mesh#panZ
      * @since 3.50.0
      *
@@ -423,6 +428,8 @@ var Mesh = new Class({
 
     /**
      * Builds a new perspective projection matrix from the given values.
+     *
+     * These are also the initial projection matrix & parameters for `Mesh` (and see `panZ` for more discussion).
      *
      * See also `setOrtho`.
      *
@@ -455,7 +462,8 @@ var Mesh = new Class({
      * If using this mode you will often need to set `Mesh.hideCCW` to `false` as well.
      *
      * By default, calling this method with no parameters will set the scaleX value to
-     * match the renderers aspect ratio.
+     * match the renderer's aspect ratio. If you would like to render vertex positions 1:1
+     * to pixel positions, consider calling as `mesh.setOrtho(mesh.width, mesh.height)`.
      *
      * See also `setPerspective`.
      *
@@ -642,7 +650,7 @@ var Mesh = new Class({
      *
      * This method will take vertex data in one of two formats, based on the `containsZ` parameter.
      *
-     * If your vertex data are `x`, `y` pairs, then `containsZ` should be `false` (this is the default)
+     * If your vertex data are `x`, `y` pairs, then `containsZ` should be `false` (this is the default, and will result in `z=0` for each vertex).
      *
      * If your vertex data is groups of `x`, `y` and `z` values, then the `containsZ` parameter must be true.
      *
@@ -661,6 +669,7 @@ var Mesh = new Class({
      * The following example will create a 256 x 256 sized quad using an index array:
      *
      * ```javascript
+     * let mesh = new Mesh(this);  // Assuming `this` is a scene!
      * const vertices = [
      *   -128, 128,
      *   128, 128,
@@ -678,6 +687,9 @@ var Mesh = new Class({
      * const indices = [ 0, 2, 1, 2, 3, 1 ];
      *
      * mesh.addVertices(vertices, uvs, indicies);
+     * // Note: Otherwise the added points will be "behind" the camera! This value will project vertex `x` & `y` values 1:1 to pixel values.
+     * mesh.hideCCW = false;
+     * mesh.setOrtho(mesh.width, mesh.height);
      * ```
      *
      * If the data is not indexed, it's assumed that the arrays all contain sequential data.
@@ -688,7 +700,7 @@ var Mesh = new Class({
      * @param {number[]} vertices - The vertices array. Either `xy` pairs, or `xyz` if the `containsZ` parameter is `true`.
      * @param {number[]} uvs - The UVs pairs array.
      * @param {number[]} [indicies] - Optional vertex indicies array. If you don't have one, pass `null` or an empty array.
-     * @param {boolean} [containsZ=false] - Does the vertices data include a `z` component?
+     * @param {boolean} [containsZ=false] - Does the vertices data include a `z` component? If not, it will be assumed `z=0`, see methods `panZ` or `setOrtho`.
      * @param {number[]} [normals] - Optional vertex normals array. If you don't have one, pass `null` or an empty array.
      * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
      * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
