@@ -2,6 +2,8 @@
 
 ### New Features
 
+* The `getPostPipeline` method available on most Game Objects will now return an array of piplines if an instance is given and the Game Object has more than one of those pipelines set on it. If only one pipeline is set, it will be returned directly.
+
 ### Updates
 
 * `BaseCamera.renderList` is a new array that is populated with all Game Objects that the camera has rendered in the current frame. It is automatically cleared during `Camera.preUpdate` and is an accurate representation of the Game Objects the Camera rendered. It's used internally by the Input Plugin, but exposed should you wish to read the contents or use it for profiling.
