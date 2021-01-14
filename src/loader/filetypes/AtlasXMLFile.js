@@ -98,6 +98,8 @@ var AtlasXMLFile = new Class({
 
             this.loader.textureManager.addAtlasXML(image.key, image.data, xml.data, normalMap);
 
+            xml.pendingDestroy();
+
             this.complete = true;
         }
     }

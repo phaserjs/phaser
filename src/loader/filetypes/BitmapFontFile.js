@@ -97,6 +97,7 @@ var BitmapFontFile = new Class({
             var xml = this.files[1];
 
             image.addToCache();
+            xml.pendingDestroy();
 
             var texture = image.cache.get(image.key);
 
