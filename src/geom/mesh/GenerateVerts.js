@@ -79,7 +79,7 @@ var GenerateVerts = function (vertices, uvs, indicies, containsZ, normals, color
 
     var result = {
         faces: [],
-        verts: []
+        vertices: []
     };
 
     var i;
@@ -132,7 +132,7 @@ var GenerateVerts = function (vertices, uvs, indicies, containsZ, normals, color
                 normalZ = (containsZ) ? normals[index3 + 2] : 0;
             }
 
-            result.verts.push(new Vertex(x, y, z, u, v, color, alpha, normalX, normalY, normalZ));
+            result.vertices.push(new Vertex(x, y, z, u, v, color, alpha, normalX, normalY, normalZ));
         }
     }
     else
@@ -163,18 +163,18 @@ var GenerateVerts = function (vertices, uvs, indicies, containsZ, normals, color
                 normalZ = (containsZ) ? normals[i + 2] : 0;
             }
 
-            result.verts.push(new Vertex(x, y, z, u, v, color, alpha, normalX, normalY, normalZ));
+            result.vertices.push(new Vertex(x, y, z, u, v, color, alpha, normalX, normalY, normalZ));
 
             uvIndex += 2;
             colorIndex++;
         }
     }
 
-    for (i = 0; i < result.verts.length; i += 3)
+    for (i = 0; i < result.vertices.length; i += 3)
     {
-        var vert1 = result.verts[i];
-        var vert2 = result.verts[i + 1];
-        var vert3 = result.verts[i + 2];
+        var vert1 = result.vertices[i];
+        var vert2 = result.vertices[i + 1];
+        var vert3 = result.vertices[i + 2];
 
         result.faces.push(new Face(vert1, vert2, vert3));
     }
