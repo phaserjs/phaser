@@ -83,8 +83,8 @@ var DebugHeader = function (game)
             args.push('color: ' + config.bannerTextColor + '; background: ' + config.bannerBackgroundColor);
         }
 
-        //  URL link background color (always white)
-        args.push('background: #fff');
+        //  URL link background color (always transparent to support different browser themes)
+        args.push('background: transparent');
 
         if (config.gameTitle)
         {
