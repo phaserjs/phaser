@@ -237,7 +237,7 @@ var MultiPipeline = new Class({
             flipY = -1;
         }
 
-        spriteMatrix.applyITRS(gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
+        spriteMatrix.applyITRS(gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY, gameObject.skewX, gameObject.skewY);
 
         camMatrix.copyFrom(camera.matrix);
 

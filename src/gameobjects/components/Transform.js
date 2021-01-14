@@ -57,6 +57,27 @@ var Transform = {
     _rotation: 0,
 
     /**
+     * The horizontal skew of this GameObject.
+     *
+     * @name Phaser.GameObjects.Components.Transform#_skewX
+     * @type {number}
+     * @default 0
+     * @since 3.52.0
+     */
+    skewX: 0,
+
+    /**
+     * The vertical skew of this GameObject.
+     *
+     * @name Phaser.GameObjects.Components.Transform#_skewY
+     * @type {number}
+     * @private
+     * @default 0
+     * @since 3.52.0
+     */
+    skewY: 0,
+
+    /**
      * The x position of this Game Object.
      *
      * @name Phaser.GameObjects.Components.Transform#x
@@ -332,6 +353,28 @@ var Transform = {
     },
 
     /**
+     * Sets the horizontal & vertical skew of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setSkew
+     * @since 3.52.0
+     *
+     * @param {number} [sx=0] - The horizontal skew.
+     * @param {number} [sy=0] - The vertical skew.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setSkew: function (sx, sy)
+    {
+        if (sx === undefined) { sx = 0; }
+        if (sy === undefined) { sy = 0; }
+
+        this.skewX = sx;
+        this.skewY = sy;
+
+        return this;
+    },
+
+    /**
      * Sets the rotation of this Game Object.
      *
      * @method Phaser.GameObjects.Components.Transform#setRotation
@@ -484,7 +527,7 @@ var Transform = {
     {
         if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
 
-        return tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
+        return tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY, this.skewX, this.skewY);
     },
 
     /**
@@ -510,11 +553,11 @@ var Transform = {
             return this.getLocalTransformMatrix(tempMatrix);
         }
 
-        tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
+        tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY, this.skewX, this.skewY);
 
         while (parent)
         {
-            parentMatrix.applyITRS(parent.x, parent.y, parent._rotation, parent._scaleX, parent._scaleY);
+            parentMatrix.applyITRS(parent.x, parent.y, parent._rotation, parent._scaleX, parent._scaleY, parent.skewX, parent.skewY);
 
             parentMatrix.multiply(tempMatrix, tempMatrix);
 
