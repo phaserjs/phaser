@@ -19,12 +19,14 @@
 * Fixed an issue where adding input-enabled Game Objects to a Layer would have the input system ignore their depth settings. Fix #5483 (thanks @pr4xx)
 * The method `TilemapLayer.weightedRandomize` has changed so that the parameter `weightedIndexes` is now first in the method and is non-optional. Previously, it was the 5th parameter and incorrectly flagged as optional. This change was made to the docs but not the parameters, but now works according to the docs (thanks Fantasix)
 * The Mesh `GenerateVerts` function was returning an object with the property `verts` instead of `vertices` as expected by the `Mesh.addVertices` method. It now returns the correct name (thanks @lackhand)
+* `AtlasJSONFile` will now call `File.pendingDestroy`, clearing up the resources it used during load and emiting a missing `FILE_COMPLETE` event. Fix #5495 (thanks @mikuso)
+* `AtlasJSONFile`, `AtlasXMLFile`, `BitmapFontFile` and `UnityAtlasFile` will now call `File.pendingDestroy`, clearing up the resources it used during load and emiting a missing `FILE_COMPLETE` event. Fix #5495 (thanks @mikuso)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@ygongdev Tucker
+@ygongdev Tucker @lackhand
 
 ## Version 3.51.0 - Emilia - 5th January 2021
 
