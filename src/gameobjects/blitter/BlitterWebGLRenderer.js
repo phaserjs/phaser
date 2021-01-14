@@ -29,10 +29,18 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     if (list.length === 0)
     {
-        return src.clearRenderDepth(camera);
+        return;
     }
 
-    src.setRenderDepth(camera);
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+
+    camera.addToRenderList(src);
 
     var pipeline = renderer.pipelines.set(this.pipeline, src);
 
@@ -53,7 +61,6 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var blitterY = src.y - cameraScrollY;
     var prevTextureSourceIndex = -1;
     var tintEffect = false;
-    var alpha = camera.alpha * src.alpha;
     var roundPixels = camera.roundPixels;
 
     renderer.pipelines.preBatch(src);
