@@ -34,7 +34,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, camera, parentMatrix)
 
     camera.addToRenderList(src);
 
-    var textureFrame = src.frame;
+    var textureFrame = src.texture.frames['__BASE'];
 
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
@@ -57,7 +57,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, camera, parentMatrix)
     var lastGlyph = null;
     var lastCharCode = 0;
 
-    var image = src.frame.source.image;
+    var image = textureFrame.source.image;
 
     var textureX = textureFrame.cutX;
     var textureY = textureFrame.cutY;
