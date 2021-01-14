@@ -1200,7 +1200,7 @@ var TilemapLayer = new Class({
      *
      * @return {this} This Tilemap Layer object.
      */
-    weightedRandomize: function (tileX, tileY, width, height, weightedIndexes)
+    weightedRandomize: function (weightedIndexes, tileX, tileY, width, height)
     {
         TilemapComponents.WeightedRandomize(tileX, tileY, width, height, weightedIndexes, this.layer);
 
