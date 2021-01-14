@@ -19,7 +19,7 @@
 * Fixed an issue where adding input-enabled Game Objects to a Layer would have the input system ignore their depth settings. Fix #5483 (thanks @pr4xx)
 * The method `TilemapLayer.weightedRandomize` has changed so that the parameter `weightedIndexes` is now first in the method and is non-optional. Previously, it was the 5th parameter and incorrectly flagged as optional. This change was made to the docs but not the parameters, but now works according to the docs (thanks Fantasix)
 * The Mesh `GenerateVerts` function was returning an object with the property `verts` instead of `vertices` as expected by the `Mesh.addVertices` method. It now returns the correct name (thanks @lackhand)
-* `AtlasJSONFile` will now call `File.pendingDestroy`, clearing up the resources it used during load and emiting a missing `FILE_COMPLETE` event. Fix #5495 (thanks @mikuso)
+* `AtlasJSONFile` will now call `File.pendingDestroy`, clearing up the resources it used during load and emitting a missing `FILE_COMPLETE` event. Fix #5495 (thanks @mikuso)
 * `AtlasJSONFile`, `AtlasXMLFile`, `BitmapFontFile` and `UnityAtlasFile` will now call `File.pendingDestroy`, clearing up the resources it used during load and emiting a missing `FILE_COMPLETE` event. Fix #5495 (thanks @mikuso)
 * Some Bitmap Text fonts were not rendering under Canvas due to the way in which the texture offset was calculated. It now uses the `__BASE` frame to get the texture offset, rather than the first frame in the set. Fix #5462 #5501 (thanks @monteiz @DPMakerQB)
 
