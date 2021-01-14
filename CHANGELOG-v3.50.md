@@ -14,6 +14,7 @@
 * `WebAudioSound.destroy` now checks to see if `pannerNode` exists before disabling it, preventing an error in Safari (thanks @jdcook)
 * Fixed the cause of `Uncaught TypeError: Cannot read property 'getIndex' of null` by checking the display list property securely. Fix #5489 (thanks @actionmoon)
 * Fixed an issue where adding input-enabled Game Objects to a Layer would have the input system ignore their depth settings. Fix #5483 (thanks @pr4xx)
+* The method `TilemapLayer.weightedRandomize` has changed so that the parameter `weightedIndexes` is now first in the method and is non-optional. Previously, it was the 5th parameter and incorrectly flagged as optional. This change was made to the docs but not the parameters, but now works according to the docs (thanks Fantasix)
 
 ### Examples, Documentation and TypeScript
 
