@@ -1,4 +1,4 @@
-## Version 3.52.0 - Crusch - in development
+## Version 3.52.0 - Crusch - 14th January 2021
 
 ### New Features
 
