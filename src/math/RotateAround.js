@@ -18,19 +18,22 @@
  * @param {number} x - The horizontal coordinate to rotate around.
  * @param {number} y - The vertical coordinate to rotate around.
  * @param {number} angle - The angle of rotation in radians.
+ * @param {number} [skewX=0] - The angle of skew in the horizontal direction.
+ * @param {number} [skewY=0] - The angle of skew in the vertical direction.
  *
  * @return {Phaser.Types.Math.Vector2Like} The given point.
  */
-var RotateAround = function (point, x, y, angle)
+var RotateAround = function (point, x, y, angle, skewX, skewY)
 {
-    var c = Math.cos(angle);
-    var s = Math.sin(angle);
+    if (skewX === undefined) { skewX = 0; }
+    if (skewY === undefined) { skewY = 0; }
+
 
     var tx = point.x - x;
     var ty = point.y - y;
 
-    point.x = tx * c - ty * s + x;
-    point.y = tx * s + ty * c + y;
+    point.x = tx * Math.cos(angle - skewY) - ty * Math.sin(angle + skewX) + x;
+    point.y = tx * Math.sin(angle - skewY) + ty * Math.cos(angle + skewX) + y;
 
     return point;
 };

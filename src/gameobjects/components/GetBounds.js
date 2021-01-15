@@ -7,6 +7,7 @@
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RotateAround = require('../../math/RotateAround');
 var Vector2 = require('../../math/Vector2');
+var TransformMatrix = require('./TransformMatrix');
 
 /**
  * Provides methods used for obtaining the bounds of a Game Object.
@@ -36,9 +37,11 @@ var GetBounds = {
     {
         if (includeParent === undefined) { includeParent = false; }
 
-        if (this.rotation !== 0)
+        // The position and scale are handled by the displayWidth (etc) of the object. However, the rotation and skew are *not*, so we need to perform an itsy-bitsy transform on them -- the local transform, less the fields which don't matter.
+        // This assumes the object has component Transform -- but then, so does accessing `rotation` in the first place!
+        if (this.rotation !== 0 || this.skewX !== 0 || this.skewY !== 0)
         {
-            RotateAround(output, this.x, this.y, this.rotation);
+            RotateAround(output, this.x, this.y, this.rotation, this.skewX, this.skewY);
         }
 
         if (includeParent && this.parentContainer)
@@ -287,7 +290,7 @@ var GetBounds = {
 
         var TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy;
 
-        // Instead of doing a check if parent container is 
+        // Instead of doing a check if parent container is
         // defined per corner we only do it once.
         if (this.parentContainer)
         {
