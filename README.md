@@ -105,9 +105,9 @@ npm install phaser
 
 ### CDN
 
-[![](https://data.jsdelivr.com/v1/package/gh/photonstorm/phaser/badge)](https://www.jsdelivr.com/package/gh/photonstorm/phaser)
+[![](https://data.jsdelivr.com/v1/package/npm/phaser/badge)](https://www.jsdelivr.com/package/npm/phaser)
 
-[Phaser is on jsDelivr](https://www.jsdelivr.com/projects/phaser) which is a "super-fast CDN for developers". Include the following in your html:
+[Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
 <script src="//cdn.jsdelivr.net/npm/phaser@3.52.0/dist/phaser.js"></script>
