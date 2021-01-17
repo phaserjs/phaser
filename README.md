@@ -4,8 +4,8 @@
 
 [![Discord chat](https://img.shields.io/discord/244245946873937922?style=for-the-badge)](https://discord.gg/phaser)
 [![Twitter Follow](https://img.shields.io/twitter/follow/phaser_?style=for-the-badge)](https://twitter.com/phaser_)
-![GitHub All Releases](https://img.shields.io/github/downloads/photonstorm/phaser/total?style=for-the-badge)
-![npm](https://img.shields.io/npm/dy/phaser?label=npm&style=for-the-badge)
+![npm](https://img.shields.io/jsdelivr/npm/hm/phaser?style=for-the-badge)
+![GitHub](https://img.shields.io/github/downloads/photonstorm/phaser/total?style=for-the-badge)
 
 Phaser is a fast, free, and fun open source HTML5 game framework that offers WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled to iOS, Android and native apps by using 3rd party tools. You can use JavaScript or TypeScript for development.
 
