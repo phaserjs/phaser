@@ -61,6 +61,11 @@ var OS = {
 
 function init ()
 {
+    if (typeof importScripts === 'function')
+    {
+        return OS;
+    }
+
     var ua = navigator.userAgent;
 
     if ((/Windows/).test(ua))
@@ -143,9 +148,17 @@ function init ()
         OS.webApp = true;
     }
 
-    if (window.cordova !== undefined)
+    if (typeof importScripts !== 'function')
     {
-        OS.cordova = true;
+        if (window.cordova !== undefined)
+        {
+            OS.cordova = true;
+        }
+
+        if (window.ejecta !== undefined)
+        {
+            OS.ejecta = true;
+        }
     }
 
     if (typeof process !== 'undefined' && process.versions && process.versions.node)
@@ -158,11 +171,6 @@ function init ()
         OS.nodeWebkit = !!process.versions['node-webkit'];
 
         OS.electron = !!process.versions.electron;
-    }
-
-    if (window.ejecta !== undefined)
-    {
-        OS.ejecta = true;
     }
 
     if ((/Crosswalk/).test(ua))

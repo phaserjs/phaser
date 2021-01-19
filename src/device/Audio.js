@@ -41,6 +41,11 @@ var Audio = {
 
 function init ()
 {
+    if (typeof importScripts === 'function')
+    {
+        return Audio;
+    }
+
     Audio.audioData = !!(window['Audio']);
 
     Audio.webAudio = !!(window['AudioContext'] || window['webkitAudioContext']);

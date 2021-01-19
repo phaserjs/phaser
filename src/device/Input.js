@@ -11,10 +11,10 @@ var Browser = require('./Browser');
  * These values are read-only and populated during the boot sequence of the game.
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.input` from within any Scene.
- * 
+ *
  * @typedef {object} Phaser.Device.Input
  * @since 3.0.0
- * 
+ *
  * @property {?string} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
  * @property {boolean} gamepads - Is navigator.getGamepads available?
  * @property {boolean} mspointer - Is mspointer available?
@@ -26,11 +26,16 @@ var Input = {
     mspointer: false,
     touch: false,
     wheelEvent: null
-    
+
 };
 
 function init ()
 {
+    if (typeof importScripts === 'function')
+    {
+        return Input;
+    }
+
     if ('ontouchstart' in document.documentElement || (navigator.maxTouchPoints && navigator.maxTouchPoints >= 1))
     {
         Input.touch = true;

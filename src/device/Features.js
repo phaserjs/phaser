@@ -13,10 +13,10 @@ var CanvasPool = require('../display/canvas/CanvasPool');
  * These values are read-only and populated during the boot sequence of the game.
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.features` from within any Scene.
- * 
+ *
  * @typedef {object} Phaser.Device.Features
  * @since 3.0.0
- * 
+ *
  * @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
  * @property {boolean} canvas - Is canvas available?
  * @property {boolean} file - Is file available?
@@ -78,6 +78,11 @@ function checkIsLittleEndian ()
 
 function init ()
 {
+    if (typeof importScripts === 'function')
+    {
+        return Features;
+    }
+
     Features.canvas = !!window['CanvasRenderingContext2D'];
 
     try
