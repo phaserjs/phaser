@@ -13,7 +13,9 @@ module.exports = {
         phaser: './phaser.js',
         'phaser.min': './phaser.js',
         'phaser-arcade-physics': './phaser-arcade-physics.js',
-        'phaser-arcade-physics.min': './phaser-arcade-physics.js'
+        'phaser-arcade-physics.min': './phaser-arcade-physics.js',
+        'phaser-ie9': './phaser-ie9.js',
+        'phaser-ie9.min': './phaser-ie9.js'
     },
 
     output: {
@@ -21,7 +23,8 @@ module.exports = {
         filename: '[name].js',
         library: 'Phaser',
         libraryTarget: 'umd',
-        umdNamedDefine: true
+        umdNamedDefine: true,
+        globalObject: 'this'
     },
 
     performance: { hints: false },
