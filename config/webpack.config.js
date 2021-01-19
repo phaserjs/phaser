@@ -20,7 +20,8 @@ module.exports = {
         sourceMapFilename: '[file].map',
         devtoolModuleFilenameTemplate: 'webpack:///[resource-path]', // string
         devtoolFallbackModuleFilenameTemplate: 'webpack:///[resource-path]?[hash]', // string
-        umdNamedDefine: true
+        umdNamedDefine: true,
+        globalObject: 'this'
     },
 
     performance: { hints: false },
