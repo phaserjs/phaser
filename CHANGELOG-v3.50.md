@@ -2,7 +2,12 @@
 
 ### New Features
 
+* You can now run Phaser from within a Web Worker. You must use the `type: 'classic'` method and then use `importScripts('phaser.js')` within your workers, but it will no longer throw window errors and allows you access to lots of the core Phaser functions from Workers.
+
 ### Updates
+
+* Phaser no longer includes the IE9 polyfills. All polyfills have been removed from the core builds and moved to their own specific version called `phaser-ie9`, which can be found in the `dist` folder.
+* All of the Device functions will now check to see if Phaser is running inside of a Web Worker, or not. If it is, they will return early, avoiding trying to make calls to `window` or other elements not present within Workers.
 
 ### Bug Fixes
 
@@ -11,6 +16,9 @@
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
+
+
+
 
 ## Version 3.52.0 - Crusch - 14th January 2021
 
