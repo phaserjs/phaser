@@ -4,8 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-require('./polyfills');
-
 var CONST = require('./const');
 var Extend = require('./utils/object/Extend');
 
