@@ -8,6 +8,7 @@
 
 * Phaser no longer includes the IE9 polyfills. All polyfills have been removed from the core builds and moved to their own specific version called `phaser-ie9`, which can be found in the `dist` folder.
 * All of the Device functions will now check to see if Phaser is running inside of a Web Worker, or not. If it is, they will return early, avoiding trying to make calls to `window` or other elements not present within Workers.
+* The Webpack loaders have been moved to dev dependencies to avoid peer issues during use of Phaser as a package (thanks @andrewstart)
 
 ### Bug Fixes
 
