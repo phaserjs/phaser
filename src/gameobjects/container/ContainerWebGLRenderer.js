@@ -29,6 +29,8 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
         return;
     }
 
+    camera.addToRenderList(src);
+
     var transformMatrix = container.localTransform;
 
     if (parentMatrix)
