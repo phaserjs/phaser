@@ -68,8 +68,8 @@ var SetBody = {
      * @method Phaser.Physics.Matter.Components.SetBody#setPolygon
      * @since 3.0.0
      *
-     * @param {number} sides - The number of sides the polygon will have.
      * @param {number} radius - The "radius" of the polygon, i.e. the distance from its center to any vertex. This is also the radius of its circumcircle.
+     * @param {number} sides - The number of sides the polygon will have.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
