@@ -29,7 +29,7 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
         return;
     }
 
-    camera.addToRenderList(src);
+    camera.addToRenderList(container);
 
     var transformMatrix = container.localTransform;
 
