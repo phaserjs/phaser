@@ -15,11 +15,12 @@
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
  * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
- * 5. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
- * 
+ * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
+ * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
+ *
  * Listen to it from a Scene using `this.scene.events.on('render', listener)`.
- * 
- * A Scene will only render if it is visible and active.
+ *
+ * A Scene will only render if it is visible.
  * By the time this event is dispatched, the Scene will have already been rendered.
  * 
  * @event Phaser.Scenes.Events#RENDER
