@@ -9,6 +9,20 @@
 * Phaser no longer includes the IE9 polyfills. All polyfills have been removed from the core builds and moved to their own specific version called `phaser-ie9`, which can be found in the `dist` folder.
 * All of the Device functions will now check to see if Phaser is running inside of a Web Worker, or not. If it is, they will return early, avoiding trying to make calls to `window` or other elements not present within Workers.
 * The Webpack loaders have been moved to dev dependencies to avoid peer issues during use of Phaser as a package (thanks @andrewstart)
+* The `WebAudioSoundManager.createAudioContext` method is no longer private.
+* The `WebAudioSoundManager.context` property is no longer private.
+* The `WebAudioSoundManager.masterMuteNode` property is no longer private.
+* The `WebAudioSoundManager.masterVolumeNode` property is no longer private.
+* The `WebAudioSoundManager.destination` property is no longer private.
+* The `WebAudioSound.audioBuffer` property is no longer private.
+* The `WebAudioSound.source` property is no longer private.
+* The `WebAudioSound.loopSource` property is no longer private.
+* The `WebAudioSound.muteNode` property is no longer private.
+* The `WebAudioSound.volumeNode` property is no longer private.
+* The `WebAudioSound.pannerNode` property is no longer private.
+* The `WebAudioSound.hasEnded` property is no longer private, but _is_ read only.
+* The `WebAudioSound.hasLooped` property is no longer private, but _is_ read only.
+* The `WebAudioSoundManager.createAudioContext` method will now use `webkitAudioContext` if defined in `window` (rather than using the polyfill) to handle audio on Safari.
 
 ### Bug Fixes
 
