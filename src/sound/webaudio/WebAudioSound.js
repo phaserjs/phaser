@@ -38,7 +38,6 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#audioBuffer
          * @type {AudioBuffer}
-         * @private
          * @since 3.0.0
          */
         this.audioBuffer = manager.game.cache.audio.get(key);
@@ -54,7 +53,6 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#source
          * @type {AudioBufferSourceNode}
-         * @private
          * @default null
          * @since 3.0.0
          */
@@ -65,7 +63,6 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#loopSource
          * @type {AudioBufferSourceNode}
-         * @private
          * @default null
          * @since 3.0.0
          */
@@ -76,7 +73,6 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#muteNode
          * @type {GainNode}
-         * @private
          * @since 3.0.0
          */
         this.muteNode = manager.context.createGain();
@@ -86,7 +82,6 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#volumeNode
          * @type {GainNode}
-         * @private
          * @since 3.0.0
          */
         this.volumeNode = manager.context.createGain();
@@ -98,7 +93,6 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#pannerNode
          * @type {StereoPannerNode}
-         * @private
          * @since 3.50.0
          */
         this.pannerNode = null;
@@ -157,7 +151,7 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#hasEnded
          * @type {boolean}
-         * @private
+         * @readonly
          * @default false
          * @since 3.0.0
          */
@@ -169,7 +163,7 @@ var WebAudioSound = new Class({
          *
          * @name Phaser.Sound.WebAudioSound#hasLooped
          * @type {boolean}
-         * @private
+         * @readonly
          * @default false
          * @since 3.0.0
          */
