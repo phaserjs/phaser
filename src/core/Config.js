@@ -77,7 +77,7 @@ var Config = new Class({
         this.expandParent = GetValue(config, 'expandParent', true);
 
         /**
-         * @const {number} Phaser.Core.Config#autoRound - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
+         * @const {boolean} Phaser.Core.Config#autoRound - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
          */
         this.autoRound = GetValue(config, 'autoRound', false);
 
