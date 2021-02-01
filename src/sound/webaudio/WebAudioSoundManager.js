@@ -41,7 +41,6 @@ var WebAudioSoundManager = new Class({
          *
          * @name Phaser.Sound.WebAudioSoundManager#context
          * @type {AudioContext}
-         * @private
          * @since 3.0.0
          */
         this.context = this.createAudioContext(game);
@@ -51,7 +50,6 @@ var WebAudioSoundManager = new Class({
          *
          * @name Phaser.Sound.WebAudioSoundManager#masterMuteNode
          * @type {GainNode}
-         * @private
          * @since 3.0.0
          */
         this.masterMuteNode = this.context.createGain();
@@ -61,7 +59,6 @@ var WebAudioSoundManager = new Class({
          *
          * @name Phaser.Sound.WebAudioSoundManager#masterVolumeNode
          * @type {GainNode}
-         * @private
          * @since 3.0.0
          */
         this.masterVolumeNode = this.context.createGain();
@@ -75,7 +72,6 @@ var WebAudioSoundManager = new Class({
          *
          * @name Phaser.Sound.WebAudioSoundManager#destination
          * @type {AudioNode}
-         * @private
          * @since 3.0.0
          */
         this.destination = this.masterMuteNode;
@@ -102,7 +98,6 @@ var WebAudioSoundManager = new Class({
      * and you want to reuse already instantiated AudioContext.
      *
      * @method Phaser.Sound.WebAudioSoundManager#createAudioContext
-     * @private
      * @since 3.0.0
      *
      * @param {Phaser.Game} game - Reference to the current game instance.
@@ -120,7 +115,14 @@ var WebAudioSoundManager = new Class({
             return audioConfig.context;
         }
 
-        return new AudioContext();
+        if (window.hasOwnProperty('AudioContext'))
+        {
+            return new AudioContext();
+        }
+        else if (window.hasOwnProperty('webkitAudioContext'))
+        {
+            return new window.webkitAudioContext();
+        }
     },
 
     /**
