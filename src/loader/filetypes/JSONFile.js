@@ -98,7 +98,18 @@ var JSONFile = new Class({
         {
             this.state = CONST.FILE_PROCESSING;
 
-            var json = JSON.parse(this.xhrLoader.responseText);
+            try
+            {
+                var json = JSON.parse(this.xhrLoader.responseText);
+            }
+            catch (e)
+            {
+                console.warn('Invalid JSON: ' + this.key);
+
+                this.onProcessError();
+
+                throw e;
+            }
 
             var key = this.config;
 
