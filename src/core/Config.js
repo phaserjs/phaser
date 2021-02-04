@@ -394,6 +394,11 @@ var Config = new Class({
         this.clearBeforeRender = GetValue(renderConfig, 'clearBeforeRender', true);
 
         /**
+         * @const {boolean} Phaser.Core.Config#preserveDrawingBuffer - If the value is true the WebGL buffers will not be cleared and will preserve their values until cleared or overwritten by the author.
+         */
+        this.preserveDrawingBuffer = GetValue(renderConfig, 'preserveDrawingBuffer', false);
+
+        /**
          * @const {boolean} Phaser.Core.Config#premultipliedAlpha - In WebGL mode, sets the drawing buffer to contain colors with pre-multiplied alpha.
          */
         this.premultipliedAlpha = GetValue(renderConfig, 'premultipliedAlpha', true);

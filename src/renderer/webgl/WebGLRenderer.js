@@ -66,7 +66,8 @@ var WebGLRenderer = new Class({
             premultipliedAlpha: gameConfig.premultipliedAlpha,
             stencil: true,
             failIfMajorPerformanceCaveat: gameConfig.failIfMajorPerformanceCaveat,
-            powerPreference: gameConfig.powerPreference
+            powerPreference: gameConfig.powerPreference,
+            preserveDrawingBuffer: gameConfig.preserveDrawingBuffer
         };
 
         /**
