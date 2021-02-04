@@ -4,6 +4,7 @@
 
 * You can now run Phaser from within a Web Worker. You must use the `type: 'classic'` method and then use `importScripts('phaser.js')` within your workers, but it will no longer throw window errors and allows you access to lots of the core Phaser functions from Workers.
 * `Scenes.Events.PRE_RENDER` is a new event fired after the display list is sorted and before the Scene is rendered (thanks @samme)
+* You can now set the boolean `preserveDrawingBuffer` in the Game Config (either directly, or in the Render Config). This is passed to the WebGL context during creation and controls if the buffers are automatically cleared each frame or not. The default is to clear them. Set to `true` to retain them.
 
 ### Updates
 
@@ -25,13 +26,14 @@
 * The `WebAudioSound.hasLooped` property is no longer private, but _is_ read only.
 * The `WebAudioSoundManager.createAudioContext` method will now use `webkitAudioContext` if defined in `window` (rather than using the polyfill) to handle audio on Safari.
 * If a loaded JSON File fails to parse it will now issue a console warning along with the file key (thanks @samme)
+* The Canvas Renderer will no longer run a `fillRect` if `clearBeforeRender` is `false` in the Game Config.
 
 ### Bug Fixes
 
 * `BlitterWebGLRenderer` was calling an out-dated function `setRenderDepth` instead of `addToRenderList` (thanks Harm)
 * When a loaded JSON file fails to parse, it's marked `FILE_ERRORED` and the Loader continues. Before this change the Loader would stall (thanks @samme)
 * `Math.FromPercent` silently assumed the `min` parameter to be 0. It can now be any value, allowing you to generate percentages between `min` and `max` correctly (thanks @somechris)
-* The Container and Zone Game Objects were not handling being added to the render list, causing them to fail input detection tests. Fix #5506 (thanks @rexrainbow @vforsh)
+* The Container and Zone Game Objects were not handling being added to the render list, causing them to fail input detection tests. Fix #5506 #5508 (thanks @rexrainbow @vforsh @Nightspeller)
 * `IsometricWorldToTileXY` was returning a tile incorrectly offset from the given coordinates. It now returns from the expected location (thanks @veleek)
 
 ### Examples, Documentation and TypeScript
