@@ -50,8 +50,6 @@ var IsometricWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
         tileWidth *= tilemapLayer.scaleX;
     }
 
-    worldX -= tileWidth / 2;
-
     var x = (snapToFloor) ? Math.floor((worldX / (tileWidth / 2) + worldY / (tileHeight / 2)) / 2) : ((worldX / (tileWidth / 2) + worldY / (tileHeight / 2)) / 2);
     var y = (snapToFloor) ? Math.floor((worldY / (tileHeight / 2) - worldX / (tileWidth / 2)) / 2) : ((worldY / (tileHeight / 2) - worldX / (tileWidth / 2)) / 2);
 
