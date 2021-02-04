@@ -371,12 +371,12 @@ var CanvasRenderer = new Class({
         if (config.clearBeforeRender)
         {
             ctx.clearRect(0, 0, width, height);
-        }
 
-        if (!config.transparent)
-        {
-            ctx.fillStyle = config.backgroundColor.rgba;
-            ctx.fillRect(0, 0, width, height);
+            if (!config.transparent)
+            {
+                ctx.fillStyle = config.backgroundColor.rgba;
+                ctx.fillRect(0, 0, width, height);
+            }
         }
 
         ctx.save();
