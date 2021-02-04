@@ -16,6 +16,7 @@ module.exports = {
     DESTROY: require('./DESTROY_EVENT'),
     PAUSE: require('./PAUSE_EVENT'),
     POST_UPDATE: require('./POST_UPDATE_EVENT'),
+    PRE_RENDER: require('./PRE_RENDER_EVENT'),
     PRE_UPDATE: require('./PRE_UPDATE_EVENT'),
     READY: require('./READY_EVENT'),
     REMOVED_FROM_SCENE: require('./REMOVED_FROM_SCENE_EVENT'),
