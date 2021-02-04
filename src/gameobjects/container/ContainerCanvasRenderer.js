@@ -28,6 +28,8 @@ var ContainerCanvasRenderer = function (renderer, container, camera, parentMatri
         return;
     }
 
+    camera.addToRenderList(container);
+
     var transformMatrix = container.localTransform;
 
     if (parentMatrix)
