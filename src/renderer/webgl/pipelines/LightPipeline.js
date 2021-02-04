@@ -108,6 +108,17 @@ var LightPipeline = new Class({
          * @since 3.50.0
          */
         this.defaultNormalMap;
+
+        /**
+         * A boolean that is set automatically during `onRender` that determines
+         * if the Scene LightManager is active, or not.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#lightsActive
+         * @type {boolean}
+         * @readonly
+         * @since 3.53.0
+         */
+        this.lightsActive = true;
     },
 
     /**
@@ -156,6 +167,8 @@ var LightPipeline = new Class({
     {
         var lightManager = scene.sys.lights;
 
+        this.lightsActive = false;
+
         if (!lightManager || !lightManager.active)
         {
             return;
@@ -170,6 +183,8 @@ var LightPipeline = new Class({
         }
 
         //  Ok, we're good to go ...
+
+        this.lightsActive = true;
 
         this.setShader(this['lightShader' + lightsCount], true);
 
@@ -360,6 +375,142 @@ var LightPipeline = new Class({
         }
 
         return normalTexture.glTexture;
+    },
+
+    /**
+     * Takes a Sprite Game Object, or any object that extends it, and adds it to the batch.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#batchSprite
+     * @since 3.50.0
+     *
+     * @param {(Phaser.GameObjects.Image|Phaser.GameObjects.Sprite)} gameObject - The texture based Game Object to add to the batch.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use for the rendering transform.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - The transform matrix of the parent container, if set.
+     */
+    batchSprite: function (gameObject, camera, parentTransformMatrix)
+    {
+        if (this.lightsActive)
+        {
+            MultiPipeline.prototype.batchSprite.call(this, gameObject, camera, parentTransformMatrix);
+        }
+    },
+
+    /**
+     * Generic function for batching a textured quad using argument values instead of a Game Object.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#batchTexture
+     * @since 3.50.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject.
+     * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad.
+     * @param {number} textureWidth - Real texture width.
+     * @param {number} textureHeight - Real texture height.
+     * @param {number} srcX - X coordinate of the quad.
+     * @param {number} srcY - Y coordinate of the quad.
+     * @param {number} srcWidth - Width of the quad.
+     * @param {number} srcHeight - Height of the quad.
+     * @param {number} scaleX - X component of scale.
+     * @param {number} scaleY - Y component of scale.
+     * @param {number} rotation - Rotation of the quad.
+     * @param {boolean} flipX - Indicates if the quad is horizontally flipped.
+     * @param {boolean} flipY - Indicates if the quad is vertically flipped.
+     * @param {number} scrollFactorX - By which factor is the quad affected by the camera horizontal scroll.
+     * @param {number} scrollFactorY - By which factor is the quad effected by the camera vertical scroll.
+     * @param {number} displayOriginX - Horizontal origin in pixels.
+     * @param {number} displayOriginY - Vertical origin in pixels.
+     * @param {number} frameX - X coordinate of the texture frame.
+     * @param {number} frameY - Y coordinate of the texture frame.
+     * @param {number} frameWidth - Width of the texture frame.
+     * @param {number} frameHeight - Height of the texture frame.
+     * @param {number} tintTL - Tint for top left.
+     * @param {number} tintTR - Tint for top right.
+     * @param {number} tintBL - Tint for bottom left.
+     * @param {number} tintBR - Tint for bottom right.
+     * @param {number} tintEffect - The tint effect.
+     * @param {number} uOffset - Horizontal offset on texture coordinate.
+     * @param {number} vOffset - Vertical offset on texture coordinate.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container.
+     * @param {boolean} [skipFlip=false] - Skip the renderTexture check.
+     * @param {number} [textureUnit] - Use the currently bound texture unit?
+     */
+    batchTexture: function (
+        gameObject,
+        texture,
+        textureWidth, textureHeight,
+        srcX, srcY,
+        srcWidth, srcHeight,
+        scaleX, scaleY,
+        rotation,
+        flipX, flipY,
+        scrollFactorX, scrollFactorY,
+        displayOriginX, displayOriginY,
+        frameX, frameY, frameWidth, frameHeight,
+        tintTL, tintTR, tintBL, tintBR, tintEffect,
+        uOffset, vOffset,
+        camera,
+        parentTransformMatrix,
+        skipFlip,
+        textureUnit)
+    {
+        if (this.lightsActive)
+        {
+            MultiPipeline.prototype.batchTexture.call(
+                this,
+                gameObject,
+                texture,
+                textureWidth, textureHeight,
+                srcX, srcY,
+                srcWidth, srcHeight,
+                scaleX, scaleY,
+                rotation,
+                flipX, flipY,
+                scrollFactorX, scrollFactorY,
+                displayOriginX, displayOriginY,
+                frameX, frameY, frameWidth, frameHeight,
+                tintTL, tintTR, tintBL, tintBR, tintEffect,
+                uOffset, vOffset,
+                camera,
+                parentTransformMatrix,
+                skipFlip,
+                textureUnit
+            );
+        }
+    },
+
+    /**
+     * Adds a Texture Frame into the batch for rendering.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#batchTextureFrame
+     * @since 3.50.0
+     *
+     * @param {Phaser.Textures.Frame} frame - The Texture Frame to be rendered.
+     * @param {number} x - The horizontal position to render the texture at.
+     * @param {number} y - The vertical position to render the texture at.
+     * @param {number} tint - The tint color.
+     * @param {number} alpha - The alpha value.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} transformMatrix - The Transform Matrix to use for the texture.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - A parent Transform Matrix.
+     */
+    batchTextureFrame: function (
+        frame,
+        x, y,
+        tint, alpha,
+        transformMatrix,
+        parentTransformMatrix
+    )
+    {
+        if (this.lightsActive)
+        {
+            MultiPipeline.prototype.batchTextureFrame.call(
+                this,
+                frame,
+                x, y,
+                tint, alpha,
+                transformMatrix,
+                parentTransformMatrix
+            );
+        }
     }
 
 });
