@@ -140,13 +140,13 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#enable
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
+     * @return {this} This Lights Manager instance.
      */
     enable: function ()
     {
         if (this.maxLights === -1)
         {
-            this.maxLights = this.scene.sys.renderer.config.maxLights;
+            this.maxLights = this.systems.renderer.config.maxLights;
         }
 
         this.active = true;
@@ -160,7 +160,7 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#disable
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
+     * @return {this} This Lights Manager instance.
      */
     disable: function ()
     {
@@ -233,7 +233,7 @@ var LightsManager = new Class({
      *
      * @param {number} rgb - The integer RGB color of the ambient light.
      *
-     * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
+     * @return {this} This Lights Manager instance.
      */
     setAmbientColor: function (rgb)
     {
@@ -278,7 +278,7 @@ var LightsManager = new Class({
      *
      * @param {number} [x=0] - The horizontal position of the Light.
      * @param {number} [y=0] - The vertical position of the Light.
-     * @param {number} [radius=100] - The radius of the Light.
+     * @param {number} [radius=128] - The radius of the Light.
      * @param {number} [rgb=0xffffff] - The integer RGB color of the light.
      * @param {number} [intensity=1] - The intensity of the Light.
      *
@@ -309,7 +309,7 @@ var LightsManager = new Class({
      *
      * @param {Phaser.GameObjects.Light} light - The Light to remove.
      *
-     * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
+     * @return {this} This Lights Manager instance.
      */
     removeLight: function (light)
     {
