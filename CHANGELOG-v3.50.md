@@ -27,6 +27,9 @@
 * The `WebAudioSoundManager.createAudioContext` method will now use `webkitAudioContext` if defined in `window` (rather than using the polyfill) to handle audio on Safari.
 * If a loaded JSON File fails to parse it will now issue a console warning along with the file key (thanks @samme)
 * The Canvas Renderer will no longer run a `fillRect` if `clearBeforeRender` is `false` in the Game Config.
+* The `LightsManager.addPointlight` method now has full JSDocs and the `attenuation` parameter.
+* `LightPipeline.lightsActive` is a new boolean property that keeps track if the Lights Manager in a Scene is active, or not.
+* The `LightPipeline` now only calls `batchSprite`, `batchTexture` and `batchTextureFrame` if the Scene Lights Manager is active. Fix #5522 (thanks @inmylo)
 
 ### Bug Fixes
 
