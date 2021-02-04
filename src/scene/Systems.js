@@ -391,6 +391,7 @@ var Systems = new Class({
      * Instructs the Scene to render itself via its Camera Manager to the renderer given.
      *
      * @method Phaser.Scenes.Systems#render
+     * @fires Phaser.Scenes.Events#PRE_RENDER
      * @fires Phaser.Scenes.Events#RENDER
      * @since 3.0.0
      *
@@ -401,6 +402,8 @@ var Systems = new Class({
         var displayList = this.displayList;
 
         displayList.depthSort();
+
+        this.events.emit(Events.PRE_RENDER, renderer);
 
         this.cameras.render(renderer, displayList);
 
