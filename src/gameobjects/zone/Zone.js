@@ -267,7 +267,7 @@ var Zone = new Class({
     setAlpha: function ()
     {
     },
-    
+
     /**
      * A NOOP method so you can pass a Zone to a Container in Canvas.
      * Calling this method will do nothing. It is intentionally empty.
@@ -285,14 +285,14 @@ var Zone = new Class({
      *
      * @method Phaser.GameObjects.Zone#renderCanvas
      * @private
-     * @since 3.0.0
-     * 
+     * @since 3.53.0
+     *
      * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
      * @param {Phaser.GameObjects.Image} src - The Game Object being rendered in this call.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
      */
-    renderCanvas: function (renderer, src, camera, parentMatrix)
+    renderCanvas: function (renderer, src, camera)
     {
         camera.addToRenderList(src);
     },
@@ -302,14 +302,14 @@ var Zone = new Class({
      *
      * @method Phaser.GameObjects.Zone#renderWebGL
      * @private
-     * @since 3.0.0
-     * 
+     * @since 3.53.0
+     *
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
      * @param {Phaser.GameObjects.Image} src - The Game Object being rendered in this call.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
      */
-    renderWebGL: function (renderer, src, camera, parentMatrix)
+    renderWebGL: function (renderer, src, camera)
     {
         camera.addToRenderList(src);
     }
