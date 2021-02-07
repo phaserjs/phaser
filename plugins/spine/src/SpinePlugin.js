@@ -18,6 +18,14 @@ var NOOP = require('../../../src/utils/NOOP');
 //  Plugin specific instance of the Spine Scene Renderer
 var sceneRenderer;
 
+var spineAttributes = [
+    Spine.webgl.Shader.COLOR,
+    Spine.webgl.Shader.COLOR2,
+    Spine.webgl.Shader.POSITION,
+    Spine.webgl.Shader.SAMPLER
+];
+
+
 /**
  * @classdesc
  * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game Objects.
@@ -278,6 +286,51 @@ var SpinePlugin = new Class({
          * @since 3.19.0
          */
         this.temp2;
+
+        /**
+         * An internal WebGLProgram used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {?WebGLProgram}
+         */
+        this.lastBatcherShaderProgram;
+        
+        /**
+         * An internal WebGLProgram used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {?WebGLProgram}
+         */
+        this.lastShapesShaderProgram;
+
+        /**
+         * An internal array used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {?number[]}
+         */
+        this.attributeLocations;
+        
+        /**
+         * An internal array used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {number[]}
+         */
+        this.enableAttribLocations = [];
+
+        /**
+         * An internal boolean used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {boolean}
+         */
+        this.hasAttributeCache = false;
 
         if (this.isWebGL)
         {
@@ -1048,6 +1101,115 @@ var SpinePlugin = new Class({
 
         return { offset: offset, size: size };
     },
+
+    /**
+     * gets the attributes location for the shader that spine uses
+     *
+     * Only works in WebGL.
+     *
+     * @return {number[]} This attributes location
+     */
+    getShaderAttributeLocations: function ()
+    {
+        var batcherShaderProgram = this.sceneRenderer.batcherShader.getProgram();
+        var shapesShaderProgram = this.sceneRenderer.shapesShader.getProgram();
+
+        // get new attribute locations if any shader program changes
+        if (this.lastBatcherShaderProgram !== batcherShaderProgram ||
+            this.lastShapesShaderProgram !== shapesShaderProgram)
+        {
+            var gl = this.gl;
+            var attributeLocations = [];
+            for (var i = 0; i < spineAttributes.length; i++)
+            {
+                var loc = gl.getAttribLocation(batcherShaderProgram, spineAttributes[i]);
+                if (loc !== -1 && attributeLocations.indexOf(loc) === -1)
+                {
+                    attributeLocations.push(loc);
+                }
+
+                loc = gl.getAttribLocation(batcherShaderProgram, spineAttributes[i]);
+                if (loc !== -1 && attributeLocations.indexOf(loc) === -1)
+                {
+                    attributeLocations.push(loc);
+                }
+            }
+
+            this.attributeLocations = attributeLocations;
+            this.lastBatcherShaderProgram = batcherShaderProgram;
+            this.lastShapesShaderProgram = shapesShaderProgram;
+        }
+
+        return this.attributeLocations;
+    },
+
+    /**
+     * cache the current enabled attributes
+     *
+     * Only works in WebGL.
+     *
+     * @since 1.0.0
+     *
+     * @return {boolean} true if new cache was created
+     */
+    cacheShaderAttributes: function ()
+    {
+        if (this.hasAttributeCache)
+        {
+            return false;
+        }
+        
+        var attributesLocations = this.getShaderAttributeLocations();
+        var enableAttribLocs = this.enableAttribLocs;
+
+        var gl = this.gl;
+
+
+        // store enabled vertex attribute state
+        for (var i = 0; i < attributesLocations.length; i++)
+        {
+            var attributeLoc = attributesLocations[i];
+            if (gl.getVertexAttrib(attributeLoc, gl.VERTEX_ATTRIB_ARRAY_ENABLED))
+            {
+                enableAttribLocs.push(attributeLoc);
+            }
+        }
+
+        this.hasAttributeCache = true;
+        return true;
+    },
+
+    /**
+     * restore the previous enabled shader attributes
+     *
+     * Only works in WebGL.
+     *
+     * @since 1.0.0
+     *
+     * @return {boolean} true if the cached attributes was restored
+    */
+    restoreShaderAttributes: function ()
+    {
+        if (this.hasAttributeCache)
+        {
+            var gl = this.gl;
+            var enableAttribLocs = this.enableAttribLocs;
+
+            // restore enabled vertex attribute state
+            while (enableAttribLocs.length)
+            {
+                gl.enableVertexAttribArray(enableAttribLocs.pop());
+            }
+
+            this.hasAttributeCache = false;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    },
+
 
     /**
      * Internal handler for when the renderer resizes.

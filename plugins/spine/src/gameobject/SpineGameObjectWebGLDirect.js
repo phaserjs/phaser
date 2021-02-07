@@ -34,6 +34,8 @@ var SpineGameObjectWebGLDirect = function (renderer, src, camera, parentMatrix, 
     //  flush + clear previous pipeline if this is a new type
     renderer.pipelines.clear();
 
+    plugin.cacheShaderAttributes();
+
     sceneRenderer.begin();
 
     var scrollFactorX = src.scrollFactorX;
@@ -123,6 +125,8 @@ var SpineGameObjectWebGLDirect = function (renderer, src, camera, parentMatrix, 
 
     //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
     sceneRenderer.end();
+
+    plugin.restoreShaderAttributes();
 
     //  And rebind the previous pipeline
     renderer.pipelines.rebind();
