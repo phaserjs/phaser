@@ -88,9 +88,9 @@ window["SpinePlugin"] =
 /******/ ({
 
 /***/ "../../../node_modules/eventemitter3/index.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/node_modules/eventemitter3/index.js ***!
-  \**************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/node_modules/eventemitter3/index.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -436,9 +436,9 @@ if (true) {
 /***/ }),
 
 /***/ "../../../src/core/events/BLUR_EVENT.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/BLUR_EVENT.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/BLUR_EVENT.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -464,9 +464,9 @@ module.exports = 'blur';
 /***/ }),
 
 /***/ "../../../src/core/events/BOOT_EVENT.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/BOOT_EVENT.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/BOOT_EVENT.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -491,9 +491,9 @@ module.exports = 'boot';
 /***/ }),
 
 /***/ "../../../src/core/events/CONTEXT_LOST_EVENT.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/CONTEXT_LOST_EVENT.js ***!
-  \****************************************************************/
+/*!*******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/CONTEXT_LOST_EVENT.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -519,9 +519,9 @@ module.exports = 'contextlost';
 /***/ }),
 
 /***/ "../../../src/core/events/CONTEXT_RESTORED_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/CONTEXT_RESTORED_EVENT.js ***!
-  \********************************************************************/
+/*!***********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/CONTEXT_RESTORED_EVENT.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -547,9 +547,9 @@ module.exports = 'contextrestored';
 /***/ }),
 
 /***/ "../../../src/core/events/DESTROY_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/DESTROY_EVENT.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/DESTROY_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -575,9 +575,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/core/events/FOCUS_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/FOCUS_EVENT.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/FOCUS_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -602,9 +602,9 @@ module.exports = 'focus';
 /***/ }),
 
 /***/ "../../../src/core/events/HIDDEN_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/HIDDEN_EVENT.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/HIDDEN_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -633,9 +633,9 @@ module.exports = 'hidden';
 /***/ }),
 
 /***/ "../../../src/core/events/PAUSE_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/PAUSE_EVENT.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/PAUSE_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -659,9 +659,9 @@ module.exports = 'pause';
 /***/ }),
 
 /***/ "../../../src/core/events/POST_RENDER_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/POST_RENDER_EVENT.js ***!
-  \***************************************************************/
+/*!******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/POST_RENDER_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -690,9 +690,9 @@ module.exports = 'postrender';
 /***/ }),
 
 /***/ "../../../src/core/events/POST_STEP_EVENT.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/POST_STEP_EVENT.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/POST_STEP_EVENT.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -720,9 +720,9 @@ module.exports = 'poststep';
 /***/ }),
 
 /***/ "../../../src/core/events/PRE_RENDER_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/PRE_RENDER_EVENT.js ***!
-  \**************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/PRE_RENDER_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -750,9 +750,9 @@ module.exports = 'prerender';
 /***/ }),
 
 /***/ "../../../src/core/events/PRE_STEP_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/PRE_STEP_EVENT.js ***!
-  \************************************************************/
+/*!***************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/PRE_STEP_EVENT.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -780,9 +780,9 @@ module.exports = 'prestep';
 /***/ }),
 
 /***/ "../../../src/core/events/READY_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/READY_EVENT.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/READY_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -807,9 +807,9 @@ module.exports = 'ready';
 /***/ }),
 
 /***/ "../../../src/core/events/RESUME_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/RESUME_EVENT.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/RESUME_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -833,9 +833,9 @@ module.exports = 'resume';
 /***/ }),
 
 /***/ "../../../src/core/events/STEP_EVENT.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/STEP_EVENT.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/STEP_EVENT.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -863,9 +863,9 @@ module.exports = 'step';
 /***/ }),
 
 /***/ "../../../src/core/events/VISIBLE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/VISIBLE_EVENT.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/VISIBLE_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -892,9 +892,9 @@ module.exports = 'visible';
 /***/ }),
 
 /***/ "../../../src/core/events/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/index.js ***!
-  \***************************************************/
+/*!******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/core/events/index.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -933,9 +933,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/data/DataManager.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/DataManager.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/data/DataManager.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1645,9 +1645,9 @@ module.exports = DataManager;
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
-  \***************************************************************/
+/*!******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1682,9 +1682,9 @@ module.exports = 'changedata';
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_KEY_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
-  \*******************************************************************/
+/*!**********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1717,9 +1717,9 @@ module.exports = 'changedata-';
 /***/ }),
 
 /***/ "../../../src/data/events/DESTROY_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/DESTROY_EVENT.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/data/events/DESTROY_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1743,9 +1743,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/data/events/REMOVE_DATA_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
-  \***************************************************************/
+/*!******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1776,9 +1776,9 @@ module.exports = 'removedata';
 /***/ }),
 
 /***/ "../../../src/data/events/SET_DATA_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/SET_DATA_EVENT.js ***!
-  \************************************************************/
+/*!***************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/data/events/SET_DATA_EVENT.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1809,9 +1809,9 @@ module.exports = 'setdata';
 /***/ }),
 
 /***/ "../../../src/data/events/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/index.js ***!
-  \***************************************************/
+/*!******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/data/events/index.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1839,9 +1839,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/display/mask/BitmapMask.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/display/mask/BitmapMask.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/display/mask/BitmapMask.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2161,9 +2161,9 @@ module.exports = BitmapMask;
 /***/ }),
 
 /***/ "../../../src/display/mask/GeometryMask.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/display/mask/GeometryMask.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/display/mask/GeometryMask.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2486,9 +2486,9 @@ module.exports = GeometryMask;
 /***/ }),
 
 /***/ "../../../src/gameobjects/BuildGameObject.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/BuildGameObject.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/BuildGameObject.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2619,9 +2619,9 @@ module.exports = BuildGameObject;
 /***/ }),
 
 /***/ "../../../src/gameobjects/GameObject.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/GameObject.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/GameObject.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3266,7 +3266,6 @@ var GameObject = new Class({
 
         while (parent)
         {
-            // indexes.unshift([parent.getIndex(child), parent.name]);
             indexes.unshift(parent.getIndex(child));
 
             child = parent;
@@ -3281,8 +3280,14 @@ var GameObject = new Class({
             }
         }
 
-        // indexes.unshift([this.scene.sys.displayList.getIndex(child), 'root']);
-        indexes.unshift(this.scene.sys.displayList.getIndex(child));
+        if (this.displayList)
+        {
+            indexes.unshift(this.displayList.getIndex(child));
+        }
+        else
+        {
+            indexes.unshift(this.scene.sys.displayList.getIndex(child));
+        }
 
         return indexes;
     },
@@ -3378,9 +3383,9 @@ module.exports = GameObject;
 /***/ }),
 
 /***/ "../../../src/gameobjects/GetCalcMatrix.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/GetCalcMatrix.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/GetCalcMatrix.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3454,9 +3459,9 @@ module.exports = GetCalcMatrix;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Alpha.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Alpha.js ***!
-  \**************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Alpha.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3754,9 +3759,9 @@ module.exports = Alpha;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/AlphaSingle.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/AlphaSingle.js ***!
-  \********************************************************************/
+/*!***********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/AlphaSingle.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3869,9 +3874,9 @@ module.exports = AlphaSingle;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/BlendMode.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/BlendMode.js ***!
-  \******************************************************************/
+/*!*********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/BlendMode.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3996,9 +4001,9 @@ module.exports = BlendMode;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ComputedSize.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ComputedSize.js ***!
-  \*********************************************************************/
+/*!************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/ComputedSize.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4150,9 +4155,9 @@ module.exports = ComputedSize;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Crop.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Crop.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Crop.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4280,9 +4285,9 @@ module.exports = Crop;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Depth.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Depth.js ***!
-  \**************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Depth.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4382,9 +4387,9 @@ module.exports = Depth;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Flip.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Flip.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Flip.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4551,9 +4556,9 @@ module.exports = Flip;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/GetBounds.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/GetBounds.js ***!
-  \******************************************************************/
+/*!*********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/GetBounds.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4915,9 +4920,9 @@ module.exports = GetBounds;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Mask.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Mask.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Mask.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5069,9 +5074,9 @@ module.exports = Mask;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Origin.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Origin.js ***!
-  \***************************************************************/
+/*!******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Origin.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5277,9 +5282,9 @@ module.exports = Origin;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/PathFollower.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/PathFollower.js ***!
-  \*********************************************************************/
+/*!************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/PathFollower.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5709,9 +5714,9 @@ module.exports = PathFollower;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Pipeline.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Pipeline.js ***!
-  \*****************************************************************/
+/*!********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Pipeline.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5812,6 +5817,12 @@ var Pipeline = {
         if (pipeline === undefined) { pipeline = PIPELINE_CONST.MULTI_PIPELINE; }
 
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return false;
+        }
+
         var pipelines = renderer.pipelines;
 
         this.postPipelines = [];
@@ -5853,6 +5864,12 @@ var Pipeline = {
     setPipeline: function (pipeline, pipelineData, copyData)
     {
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return this;
+        }
+
         var pipelines = renderer.pipelines;
 
         if (pipelines)
@@ -5904,6 +5921,12 @@ var Pipeline = {
     setPostPipeline: function (pipelines, pipelineData, copyData)
     {
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return this;
+        }
+
         var pipelineManager = renderer.pipelines;
 
         if (pipelineManager)
@@ -5977,11 +6000,13 @@ var Pipeline = {
      *
      * @param {(string|function|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline)} pipeline - The string-based name of the pipeline, or a pipeline class.
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} The first Post Pipeline matching the name, or undefined if no match.
+     * @return {(Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} The Post Pipeline/s matching the name, or undefined if no match. If more than one match they are returned in an array.
      */
     getPostPipeline: function (pipeline)
     {
         var pipelines = this.postPipelines;
+
+        var results = [];
 
         for (var i = 0; i < pipelines.length; i++)
         {
@@ -5989,9 +6014,11 @@ var Pipeline = {
 
             if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
             {
-                return instance;
+                results.push(instance);
             }
         }
+
+        return (results.length === 1) ? results[0] : results;
     },
 
     /**
@@ -6058,7 +6085,7 @@ var Pipeline = {
     },
 
     /**
-     * Removes a single Post Pipeline instance from this Game Object, based on the given name, and destroys it.
+     * Removes a type of Post Pipeline instances from this Game Object, based on the given name, and destroys them.
      *
      * If you wish to remove all Post Pipelines use the `resetPostPipeline` method instead.
      *
@@ -6074,19 +6101,21 @@ var Pipeline = {
     {
         var pipelines = this.postPipelines;
 
-        for (var i = 0; i < pipelines.length; i++)
+        for (var i = pipelines.length - 1; i >= 0; i--)
         {
             var instance = pipelines[i];
 
-            if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
+            if (
+                (typeof pipeline === 'string' && instance.name === pipeline) ||
+                (typeof pipeline !== 'string' && instance instanceof pipeline))
             {
                 instance.destroy();
 
                 SpliceOne(pipelines, i);
-
-                return this;
             }
         }
+
+        this.hasPostPipeline = (this.postPipelines.length > 0);
 
         return this;
     },
@@ -6113,9 +6142,9 @@ module.exports = Pipeline;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ScrollFactor.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ScrollFactor.js ***!
-  \*********************************************************************/
+/*!************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/ScrollFactor.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6225,9 +6254,9 @@ module.exports = ScrollFactor;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Size.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Size.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Size.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6417,9 +6446,9 @@ module.exports = Size;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Texture.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Texture.js ***!
-  \****************************************************************/
+/*!*******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Texture.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6552,9 +6581,9 @@ module.exports = Texture;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TextureCrop.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/TextureCrop.js ***!
-  \********************************************************************/
+/*!***********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/TextureCrop.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6765,9 +6794,9 @@ module.exports = TextureCrop;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Tint.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Tint.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Tint.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7007,9 +7036,9 @@ module.exports = Tint;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ToJSON.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ToJSON.js ***!
-  \***************************************************************/
+/*!******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/ToJSON.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7073,9 +7102,9 @@ module.exports = ToJSON;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Transform.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Transform.js ***!
-  \******************************************************************/
+/*!*********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Transform.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7689,9 +7718,9 @@ module.exports = Transform;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TransformMatrix.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/TransformMatrix.js ***!
-  \************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/TransformMatrix.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8714,9 +8743,9 @@ module.exports = TransformMatrix;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Visible.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Visible.js ***!
-  \****************************************************************/
+/*!*******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/Visible.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8808,9 +8837,9 @@ module.exports = Visible;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/index.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/index.js ***!
-  \**************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/components/index.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8854,9 +8883,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/Container.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/container/Container.js ***!
-  \*****************************************************************/
+/*!********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/container/Container.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9031,16 +9060,6 @@ var Container = new Class({
          * @since 3.4.0
          */
         this.tempTransformMatrix = new Components.TransformMatrix();
-
-        /**
-         * A reference to the Scene Display List.
-         *
-         * @name Phaser.GameObjects.Container#_displayList
-         * @type {Phaser.GameObjects.DisplayList}
-         * @private
-         * @since 3.4.0
-         */
-        this._displayList = scene.sys.displayList;
 
         /**
          * The property key to sort by.
@@ -9316,11 +9335,23 @@ var Container = new Class({
 
         if (this.exclusive)
         {
-            this._displayList.remove(gameObject);
+            if (gameObject.displayList)
+            {
+                gameObject.displayList.remove(gameObject);
+            }
 
             if (gameObject.parentContainer)
             {
                 gameObject.parentContainer.remove(gameObject);
+            }
+
+            if (this.displayList)
+            {
+                gameObject.displayList = this.displayList;
+            }
+            else
+            {
+                gameObject.displayList = this.scene.sys.displayList;
             }
 
             gameObject.parentContainer = this;
@@ -10223,7 +10254,6 @@ var Container = new Class({
         this.tempTransformMatrix.destroy();
 
         this.list = [];
-        this._displayList = null;
     }
 
 });
@@ -10234,9 +10264,9 @@ module.exports = Container;
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/ContainerCanvasRenderer.js":
-/*!*******************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/container/ContainerCanvasRenderer.js ***!
-  \*******************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/container/ContainerCanvasRenderer.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10345,9 +10375,9 @@ module.exports = ContainerCanvasRenderer;
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/ContainerRender.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/container/ContainerRender.js ***!
-  \***********************************************************************/
+/*!**************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/container/ContainerRender.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10382,9 +10412,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/ContainerWebGLRenderer.js":
-/*!******************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/container/ContainerWebGLRenderer.js ***!
-  \******************************************************************************/
+/*!*********************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/container/ContainerWebGLRenderer.js ***!
+  \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10537,9 +10567,9 @@ module.exports = ContainerWebGLRenderer;
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/ADDED_TO_SCENE_EVENT.js":
-/*!*************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/ADDED_TO_SCENE_EVENT.js ***!
-  \*************************************************************************/
+/*!****************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/ADDED_TO_SCENE_EVENT.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10568,9 +10598,9 @@ module.exports = 'addedtoscene';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/DESTROY_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
-  \******************************************************************/
+/*!*********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10598,9 +10628,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js":
-/*!*****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js ***!
-  \*****************************************************************************/
+/*!********************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js ***!
+  \********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10629,9 +10659,9 @@ module.exports = 'removedfromscene';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_COMPLETE_EVENT.js":
-/*!*************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_COMPLETE_EVENT.js ***!
-  \*************************************************************************/
+/*!****************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/VIDEO_COMPLETE_EVENT.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10666,9 +10696,9 @@ module.exports = 'complete';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_CREATED_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_CREATED_EVENT.js ***!
-  \************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/VIDEO_CREATED_EVENT.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10700,9 +10730,9 @@ module.exports = 'created';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_ERROR_EVENT.js":
-/*!**********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_ERROR_EVENT.js ***!
-  \**********************************************************************/
+/*!*************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/VIDEO_ERROR_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10731,9 +10761,9 @@ module.exports = 'error';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_LOOP_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_LOOP_EVENT.js ***!
-  \*********************************************************************/
+/*!************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/VIDEO_LOOP_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10768,9 +10798,9 @@ module.exports = 'loop';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_PLAY_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_PLAY_EVENT.js ***!
-  \*********************************************************************/
+/*!************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/VIDEO_PLAY_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10801,9 +10831,9 @@ module.exports = 'play';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_SEEKED_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_SEEKED_EVENT.js ***!
-  \***********************************************************************/
+/*!**************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/VIDEO_SEEKED_EVENT.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10831,9 +10861,9 @@ module.exports = 'seeked';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_SEEKING_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_SEEKING_EVENT.js ***!
-  \************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/VIDEO_SEEKING_EVENT.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10862,9 +10892,9 @@ module.exports = 'seeking';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_STOP_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_STOP_EVENT.js ***!
-  \*********************************************************************/
+/*!************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/VIDEO_STOP_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10893,9 +10923,9 @@ module.exports = 'stop';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js ***!
-  \************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10924,9 +10954,9 @@ module.exports = 'timeout';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js":
-/*!*************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js ***!
-  \*************************************************************************/
+/*!****************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10955,9 +10985,9 @@ module.exports = 'unlocked';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/index.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/gameobjects/events/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10993,9 +11023,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/geom/const.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/const.js ***!
-  \********************************************/
+/*!***********************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/const.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11078,9 +11108,9 @@ module.exports = GEOM_CONST;
 /***/ }),
 
 /***/ "../../../src/geom/line/GetPoint.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/GetPoint.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/line/GetPoint.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11122,9 +11152,9 @@ module.exports = GetPoint;
 /***/ }),
 
 /***/ "../../../src/geom/line/GetPoints.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/GetPoints.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/line/GetPoints.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11192,9 +11222,9 @@ module.exports = GetPoints;
 /***/ }),
 
 /***/ "../../../src/geom/line/Length.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/Length.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/line/Length.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11225,9 +11255,9 @@ module.exports = Length;
 /***/ }),
 
 /***/ "../../../src/geom/line/Line.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/Line.js ***!
-  \************************************************/
+/*!***************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/line/Line.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11567,9 +11597,9 @@ module.exports = Line;
 /***/ }),
 
 /***/ "../../../src/geom/line/Random.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/Random.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/line/Random.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11612,9 +11642,9 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/geom/point/Point.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/point/Point.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/point/Point.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11710,9 +11740,9 @@ module.exports = Point;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Contains.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Contains.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/rectangle/Contains.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11750,9 +11780,9 @@ module.exports = Contains;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/GetPoint.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/GetPoint.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/rectangle/GetPoint.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11836,9 +11866,9 @@ module.exports = GetPoint;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/GetPoints.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/GetPoints.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/rectangle/GetPoints.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11895,9 +11925,9 @@ module.exports = GetPoints;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Perimeter.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Perimeter.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/rectangle/Perimeter.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11928,9 +11958,9 @@ module.exports = Perimeter;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Random.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Random.js ***!
-  \*******************************************************/
+/*!**********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/rectangle/Random.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11971,9 +12001,9 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Rectangle.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Rectangle.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/rectangle/Rectangle.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12487,9 +12517,9 @@ module.exports = Rectangle;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Union.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Union.js ***!
-  \******************************************************/
+/*!*********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/geom/rectangle/Union.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12534,9 +12564,9 @@ module.exports = Union;
 /***/ }),
 
 /***/ "../../../src/loader/File.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/File.js ***!
-  \*********************************************/
+/*!************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/File.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13089,9 +13119,9 @@ module.exports = File;
 /***/ }),
 
 /***/ "../../../src/loader/FileTypesManager.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/FileTypesManager.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/FileTypesManager.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13163,9 +13193,9 @@ module.exports = FileTypesManager;
 /***/ }),
 
 /***/ "../../../src/loader/GetURL.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/GetURL.js ***!
-  \***********************************************/
+/*!**************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/GetURL.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13209,9 +13239,9 @@ module.exports = GetURL;
 /***/ }),
 
 /***/ "../../../src/loader/MergeXHRSettings.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/MergeXHRSettings.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/MergeXHRSettings.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13262,9 +13292,9 @@ module.exports = MergeXHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/MultiFile.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/MultiFile.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/MultiFile.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13512,9 +13542,9 @@ module.exports = MultiFile;
 /***/ }),
 
 /***/ "../../../src/loader/XHRLoader.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/XHRLoader.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/XHRLoader.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13598,9 +13628,9 @@ module.exports = XHRLoader;
 /***/ }),
 
 /***/ "../../../src/loader/XHRSettings.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/XHRSettings.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/XHRSettings.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13673,9 +13703,9 @@ module.exports = XHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/const.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/const.js ***!
-  \**********************************************/
+/*!*************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/const.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13830,9 +13860,9 @@ module.exports = FILE_CONST;
 /***/ }),
 
 /***/ "../../../src/loader/events/ADD_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/ADD_EVENT.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/events/ADD_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13865,9 +13895,9 @@ module.exports = 'addfile';
 /***/ }),
 
 /***/ "../../../src/loader/events/COMPLETE_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/COMPLETE_EVENT.js ***!
-  \**************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/events/COMPLETE_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13898,9 +13928,9 @@ module.exports = 'complete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_COMPLETE_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
-  \*******************************************************************/
+/*!**********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13932,9 +13962,9 @@ module.exports = 'filecomplete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_KEY_COMPLETE_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
-  \***********************************************************************/
+/*!**************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13991,9 +14021,9 @@ module.exports = 'filecomplete-';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_ERROR_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
-  \*********************************************************************/
+/*!************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14021,9 +14051,9 @@ module.exports = 'loaderror';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
-  \***************************************************************/
+/*!******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14052,9 +14082,9 @@ module.exports = 'load';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_PROGRESS_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
-  \*******************************************************************/
+/*!**********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14084,9 +14114,9 @@ module.exports = 'fileprogress';
 /***/ }),
 
 /***/ "../../../src/loader/events/POST_PROCESS_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
-  \******************************************************************/
+/*!*********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14118,9 +14148,9 @@ module.exports = 'postprocess';
 /***/ }),
 
 /***/ "../../../src/loader/events/PROGRESS_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/PROGRESS_EVENT.js ***!
-  \**************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/events/PROGRESS_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14148,9 +14178,9 @@ module.exports = 'progress';
 /***/ }),
 
 /***/ "../../../src/loader/events/START_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/START_EVENT.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/events/START_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14180,9 +14210,9 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/loader/events/index.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/index.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/events/index.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14215,9 +14245,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/ImageFile.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/ImageFile.js ***!
-  \************************************************************/
+/*!***************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/filetypes/ImageFile.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14494,9 +14524,9 @@ module.exports = ImageFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/JSONFile.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/JSONFile.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/filetypes/JSONFile.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14729,9 +14759,9 @@ module.exports = JSONFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/TextFile.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/TextFile.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/loader/filetypes/TextFile.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14913,9 +14943,9 @@ module.exports = TextFile;
 /***/ }),
 
 /***/ "../../../src/math/Average.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Average.js ***!
-  \**********************************************/
+/*!*************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Average.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14953,9 +14983,9 @@ module.exports = Average;
 /***/ }),
 
 /***/ "../../../src/math/Bernstein.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Bernstein.js ***!
-  \************************************************/
+/*!***************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Bernstein.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14989,9 +15019,9 @@ module.exports = Bernstein;
 /***/ }),
 
 /***/ "../../../src/math/Between.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Between.js ***!
-  \**********************************************/
+/*!*************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Between.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15023,9 +15053,9 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/CatmullRom.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/CatmullRom.js ***!
-  \*************************************************/
+/*!****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/CatmullRom.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15065,9 +15095,9 @@ module.exports = CatmullRom;
 /***/ }),
 
 /***/ "../../../src/math/CeilTo.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/CeilTo.js ***!
-  \*********************************************/
+/*!************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/CeilTo.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15107,9 +15137,9 @@ module.exports = CeilTo;
 /***/ }),
 
 /***/ "../../../src/math/Clamp.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Clamp.js ***!
-  \********************************************/
+/*!***********************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Clamp.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15142,9 +15172,9 @@ module.exports = Clamp;
 /***/ }),
 
 /***/ "../../../src/math/DegToRad.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/DegToRad.js ***!
-  \***********************************************/
+/*!**************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/DegToRad.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15177,9 +15207,9 @@ module.exports = DegToRad;
 /***/ }),
 
 /***/ "../../../src/math/Difference.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Difference.js ***!
-  \*************************************************/
+/*!****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Difference.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15211,9 +15241,9 @@ module.exports = Difference;
 /***/ }),
 
 /***/ "../../../src/math/Euler.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Euler.js ***!
-  \********************************************/
+/*!***********************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Euler.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15499,9 +15529,9 @@ module.exports = Euler;
 /***/ }),
 
 /***/ "../../../src/math/Factorial.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Factorial.js ***!
-  \************************************************/
+/*!***************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Factorial.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15544,9 +15574,9 @@ module.exports = Factorial;
 /***/ }),
 
 /***/ "../../../src/math/FloatBetween.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FloatBetween.js ***!
-  \***************************************************/
+/*!******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/FloatBetween.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15578,9 +15608,9 @@ module.exports = FloatBetween;
 /***/ }),
 
 /***/ "../../../src/math/FloorTo.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FloorTo.js ***!
-  \**********************************************/
+/*!*************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/FloorTo.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15620,9 +15650,9 @@ module.exports = FloorTo;
 /***/ }),
 
 /***/ "../../../src/math/FromPercent.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FromPercent.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/FromPercent.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15659,9 +15689,9 @@ module.exports = FromPercent;
 /***/ }),
 
 /***/ "../../../src/math/GetSpeed.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/GetSpeed.js ***!
-  \***********************************************/
+/*!**************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/GetSpeed.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15697,9 +15727,9 @@ module.exports = GetSpeed;
 /***/ }),
 
 /***/ "../../../src/math/IsEven.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/IsEven.js ***!
-  \*********************************************/
+/*!************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/IsEven.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15733,9 +15763,9 @@ module.exports = IsEven;
 /***/ }),
 
 /***/ "../../../src/math/IsEvenStrict.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/IsEvenStrict.js ***!
-  \***************************************************/
+/*!******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/IsEvenStrict.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15767,9 +15797,9 @@ module.exports = IsEvenStrict;
 /***/ }),
 
 /***/ "../../../src/math/Linear.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Linear.js ***!
-  \*********************************************/
+/*!************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Linear.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15802,9 +15832,9 @@ module.exports = Linear;
 /***/ }),
 
 /***/ "../../../src/math/Matrix3.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Matrix3.js ***!
-  \**********************************************/
+/*!*************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Matrix3.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16400,9 +16430,9 @@ module.exports = Matrix3;
 /***/ }),
 
 /***/ "../../../src/math/Matrix4.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Matrix4.js ***!
-  \**********************************************/
+/*!*************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Matrix4.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18198,9 +18228,9 @@ module.exports = Matrix4;
 /***/ }),
 
 /***/ "../../../src/math/MaxAdd.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/MaxAdd.js ***!
-  \*********************************************/
+/*!************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/MaxAdd.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18233,9 +18263,9 @@ module.exports = MaxAdd;
 /***/ }),
 
 /***/ "../../../src/math/MinSub.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/MinSub.js ***!
-  \*********************************************/
+/*!************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/MinSub.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18268,9 +18298,9 @@ module.exports = MinSub;
 /***/ }),
 
 /***/ "../../../src/math/Percent.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Percent.js ***!
-  \**********************************************/
+/*!*************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Percent.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18332,9 +18362,9 @@ module.exports = Percent;
 /***/ }),
 
 /***/ "../../../src/math/Quaternion.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Quaternion.js ***!
-  \*************************************************/
+/*!****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Quaternion.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19386,9 +19416,9 @@ module.exports = Quaternion;
 /***/ }),
 
 /***/ "../../../src/math/RadToDeg.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RadToDeg.js ***!
-  \***********************************************/
+/*!**************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/RadToDeg.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19421,9 +19451,9 @@ module.exports = RadToDeg;
 /***/ }),
 
 /***/ "../../../src/math/RandomXY.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXY.js ***!
-  \***********************************************/
+/*!**************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/RandomXY.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19466,9 +19496,9 @@ module.exports = RandomXY;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZ.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXYZ.js ***!
-  \************************************************/
+/*!***************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/RandomXYZ.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19510,9 +19540,9 @@ module.exports = RandomXYZ;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZW.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXYZW.js ***!
-  \*************************************************/
+/*!****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/RandomXYZW.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19537,7 +19567,6 @@ var RandomXYZW = function (vec4, scale)
 {
     if (scale === undefined) { scale = 1; }
 
-    // TODO: Not spherical; should fix this for more uniform distribution
     vec4.x = (Math.random() * 2 - 1) * scale;
     vec4.y = (Math.random() * 2 - 1) * scale;
     vec4.z = (Math.random() * 2 - 1) * scale;
@@ -19552,9 +19581,9 @@ module.exports = RandomXYZW;
 /***/ }),
 
 /***/ "../../../src/math/Rotate.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Rotate.js ***!
-  \*********************************************/
+/*!************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Rotate.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19592,9 +19621,9 @@ module.exports = Rotate;
 /***/ }),
 
 /***/ "../../../src/math/RotateAround.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateAround.js ***!
-  \***************************************************/
+/*!******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/RotateAround.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19641,9 +19670,9 @@ module.exports = RotateAround;
 /***/ }),
 
 /***/ "../../../src/math/RotateAroundDistance.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateAroundDistance.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/RotateAroundDistance.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19687,9 +19716,9 @@ module.exports = RotateAroundDistance;
 /***/ }),
 
 /***/ "../../../src/math/RotateTo.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateTo.js ***!
-  \***********************************************/
+/*!**************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/RotateTo.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19729,9 +19758,9 @@ module.exports = RotateTo;
 /***/ }),
 
 /***/ "../../../src/math/RotateVec3.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateVec3.js ***!
-  \*************************************************/
+/*!****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/RotateVec3.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19782,9 +19811,9 @@ module.exports = RotateVec3;
 /***/ }),
 
 /***/ "../../../src/math/RoundAwayFromZero.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RoundAwayFromZero.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/RoundAwayFromZero.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19816,9 +19845,9 @@ module.exports = RoundAwayFromZero;
 /***/ }),
 
 /***/ "../../../src/math/RoundTo.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RoundTo.js ***!
-  \**********************************************/
+/*!*************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/RoundTo.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19873,9 +19902,9 @@ module.exports = RoundTo;
 /***/ }),
 
 /***/ "../../../src/math/SinCosTableGenerator.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SinCosTableGenerator.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/SinCosTableGenerator.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19931,9 +19960,9 @@ module.exports = SinCosTableGenerator;
 /***/ }),
 
 /***/ "../../../src/math/SmoothStep.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SmoothStep.js ***!
-  \*************************************************/
+/*!****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/SmoothStep.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19983,9 +20012,9 @@ module.exports = SmoothStep;
 /***/ }),
 
 /***/ "../../../src/math/SmootherStep.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SmootherStep.js ***!
-  \***************************************************/
+/*!******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/SmootherStep.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -20027,9 +20056,9 @@ module.exports = SmootherStep;
 /***/ }),
 
 /***/ "../../../src/math/ToXY.js":
-/*!*******************************************!*\
-  !*** D:/wamp/www/phaser/src/math/ToXY.js ***!
-  \*******************************************/
+/*!**********************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/ToXY.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20090,9 +20119,9 @@ module.exports = ToXY;
 /***/ }),
 
 /***/ "../../../src/math/TransformXY.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/TransformXY.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/TransformXY.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20150,9 +20179,9 @@ module.exports = TransformXY;
 /***/ }),
 
 /***/ "../../../src/math/Vector2.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector2.js ***!
-  \**********************************************/
+/*!*************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Vector2.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20931,9 +20960,9 @@ module.exports = Vector2;
 /***/ }),
 
 /***/ "../../../src/math/Vector3.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector3.js ***!
-  \**********************************************/
+/*!*************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Vector3.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21982,9 +22011,9 @@ module.exports = Vector3;
 /***/ }),
 
 /***/ "../../../src/math/Vector4.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector4.js ***!
-  \**********************************************/
+/*!*************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Vector4.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22472,9 +22501,6 @@ var Vector4 = new Class({
      */
     transformQuat: function (q)
     {
-        // TODO: is this really the same as Vector3?
-        // Also, what about this: http://molecularmusings.wordpress.com/2013/05/24/a-faster-quaternion-vector-multiplication/
-        // benchmarks: http://jsperf.com/quaternion-transform-vec3-implementations
         var x = this.x;
         var y = this.y;
         var z = this.z;
@@ -22517,7 +22543,6 @@ var Vector4 = new Class({
 
 });
 
-//  TODO: Check if these are required internally, if not, remove.
 Vector4.prototype.sub = Vector4.prototype.subtract;
 Vector4.prototype.mul = Vector4.prototype.multiply;
 Vector4.prototype.div = Vector4.prototype.divide;
@@ -22532,9 +22557,9 @@ module.exports = Vector4;
 /***/ }),
 
 /***/ "../../../src/math/Within.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Within.js ***!
-  \*********************************************/
+/*!************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Within.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22567,9 +22592,9 @@ module.exports = Within;
 /***/ }),
 
 /***/ "../../../src/math/Wrap.js":
-/*!*******************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Wrap.js ***!
-  \*******************************************/
+/*!**********************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/Wrap.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22604,9 +22629,9 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/Between.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Between.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/Between.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22640,9 +22665,9 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPoints.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenPoints.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/BetweenPoints.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22676,9 +22701,9 @@ module.exports = BetweenPoints;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPointsY.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenPointsY.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/BetweenPointsY.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22713,9 +22738,9 @@ module.exports = BetweenPointsY;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenY.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenY.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/BetweenY.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22752,9 +22777,9 @@ module.exports = BetweenY;
 /***/ }),
 
 /***/ "../../../src/math/angle/CounterClockwise.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/CounterClockwise.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/CounterClockwise.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22802,9 +22827,9 @@ module.exports = CounterClockwise;
 /***/ }),
 
 /***/ "../../../src/math/angle/Normalize.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Normalize.js ***!
-  \******************************************************/
+/*!*********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/Normalize.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22844,9 +22869,9 @@ module.exports = Normalize;
 /***/ }),
 
 /***/ "../../../src/math/angle/Random.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Random.js ***!
-  \***************************************************/
+/*!******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/Random.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22878,9 +22903,9 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/math/angle/RandomDegrees.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/RandomDegrees.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/RandomDegrees.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22912,9 +22937,9 @@ module.exports = RandomDegrees;
 /***/ }),
 
 /***/ "../../../src/math/angle/Reverse.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Reverse.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/Reverse.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22947,9 +22972,9 @@ module.exports = Reverse;
 /***/ }),
 
 /***/ "../../../src/math/angle/RotateTo.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/RotateTo.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/RotateTo.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23019,9 +23044,9 @@ module.exports = RotateTo;
 /***/ }),
 
 /***/ "../../../src/math/angle/ShortestBetween.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/ShortestBetween.js ***!
-  \************************************************************/
+/*!***************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/ShortestBetween.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23041,8 +23066,6 @@ module.exports = RotateTo;
  * The angle returned will be in the same range. If the returned angle is
  * greater than 0 then it's a counter-clockwise rotation, if < 0 then it's
  * a clockwise rotation.
- *
- * TODO: Wrap the angles in this function?
  *
  * @function Phaser.Math.Angle.ShortestBetween
  * @since 3.0.0
@@ -23073,9 +23096,9 @@ module.exports = ShortestBetween;
 /***/ }),
 
 /***/ "../../../src/math/angle/Wrap.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Wrap.js ***!
-  \*************************************************/
+/*!****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/Wrap.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23110,9 +23133,9 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/WrapDegrees.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/WrapDegrees.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/WrapDegrees.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23147,9 +23170,9 @@ module.exports = WrapDegrees;
 /***/ }),
 
 /***/ "../../../src/math/angle/index.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/index.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/angle/index.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23185,9 +23208,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/const.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/const.js ***!
-  \********************************************/
+/*!***********************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/const.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23282,9 +23305,9 @@ module.exports = MATH_CONST;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetween.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetween.js ***!
-  \***************************************************************/
+/*!******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/distance/DistanceBetween.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23321,9 +23344,9 @@ module.exports = DistanceBetween;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetweenPoints.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetweenPoints.js ***!
-  \*********************************************************************/
+/*!************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/distance/DistanceBetweenPoints.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23358,9 +23381,9 @@ module.exports = DistanceBetweenPoints;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetweenPointsSquared.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetweenPointsSquared.js ***!
-  \****************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/distance/DistanceBetweenPointsSquared.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23395,9 +23418,9 @@ module.exports = DistanceBetweenPointsSquared;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceChebyshev.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceChebyshev.js ***!
-  \*****************************************************************/
+/*!********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/distance/DistanceChebyshev.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23434,9 +23457,9 @@ module.exports = ChebyshevDistance;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistancePower.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistancePower.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/distance/DistancePower.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23473,9 +23496,9 @@ module.exports = DistancePower;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceSnake.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceSnake.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/distance/DistanceSnake.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23512,9 +23535,9 @@ module.exports = SnakeDistance;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceSquared.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceSquared.js ***!
-  \***************************************************************/
+/*!******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/distance/DistanceSquared.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23551,9 +23574,9 @@ module.exports = DistanceSquared;
 /***/ }),
 
 /***/ "../../../src/math/distance/index.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/index.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/distance/index.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23583,9 +23606,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/back/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/In.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/back/In.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23619,9 +23642,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/InOut.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/back/InOut.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23664,9 +23687,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/Out.js ***!
-  \******************************************************/
+/*!*********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/back/Out.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23700,9 +23723,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/index.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/back/index.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23728,9 +23751,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/In.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/In.js ***!
-  \*******************************************************/
+/*!**********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/bounce/In.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23778,9 +23801,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/InOut.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/InOut.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/bounce/InOut.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23847,9 +23870,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/Out.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/Out.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/bounce/Out.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23895,9 +23918,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/index.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/bounce/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23923,9 +23946,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/In.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/In.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/circular/In.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23956,9 +23979,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/InOut.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/InOut.js ***!
-  \************************************************************/
+/*!***************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/circular/InOut.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23996,9 +24019,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/Out.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/Out.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/circular/Out.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24029,9 +24052,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/index.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/index.js ***!
-  \************************************************************/
+/*!***************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/circular/index.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24057,9 +24080,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/In.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/In.js ***!
-  \******************************************************/
+/*!*********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/cubic/In.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24090,9 +24113,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/InOut.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/InOut.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/cubic/InOut.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24130,9 +24153,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/Out.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/Out.js ***!
-  \*******************************************************/
+/*!**********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/cubic/Out.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24163,9 +24186,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/index.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/index.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/cubic/index.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24191,9 +24214,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/In.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/elastic/In.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24251,9 +24274,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/InOut.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/elastic/InOut.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24318,9 +24341,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/Out.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/elastic/Out.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24378,9 +24401,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/index.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/elastic/index.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24406,9 +24429,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/In.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/expo/In.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24439,9 +24462,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/InOut.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/expo/InOut.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24479,9 +24502,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/Out.js ***!
-  \******************************************************/
+/*!*********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/expo/Out.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24512,9 +24535,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/index.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/expo/index.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24540,9 +24563,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/index.js ***!
-  \***************************************************/
+/*!******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/index.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24577,9 +24600,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/Linear.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/linear/Linear.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/linear/Linear.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24610,9 +24633,9 @@ module.exports = Linear;
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/linear/index.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/linear/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24628,9 +24651,9 @@ module.exports = __webpack_require__(/*! ./Linear */ "../../../src/math/easing/l
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/In.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/In.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quadratic/In.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24661,9 +24684,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/InOut.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/InOut.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quadratic/InOut.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24701,9 +24724,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/Out.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/Out.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quadratic/Out.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24734,9 +24757,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/index.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/index.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quadratic/index.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24762,9 +24785,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/In.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quartic/In.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24795,9 +24818,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/InOut.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quartic/InOut.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24835,9 +24858,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/Out.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quartic/Out.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24868,9 +24891,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/index.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quartic/index.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24896,9 +24919,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/In.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quintic/In.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24929,9 +24952,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/InOut.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quintic/InOut.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24969,9 +24992,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/Out.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quintic/Out.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25002,9 +25025,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/index.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/quintic/index.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25030,9 +25053,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/In.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/sine/In.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25074,9 +25097,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/InOut.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/sine/InOut.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25118,9 +25141,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/Out.js ***!
-  \******************************************************/
+/*!*********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/sine/Out.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25162,9 +25185,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/index.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/sine/index.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25190,9 +25213,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/Stepped.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/stepped/Stepped.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/stepped/Stepped.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25237,9 +25260,9 @@ module.exports = Stepped;
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/stepped/index.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/easing/stepped/index.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25259,9 +25282,9 @@ module.exports = __webpack_require__(/*! ./Stepped */ "../../../src/math/easing/
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Ceil.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Ceil.js ***!
-  \*************************************************/
+/*!****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/fuzzy/Ceil.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25295,9 +25318,9 @@ module.exports = Ceil;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Equal.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Equal.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/fuzzy/Equal.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25334,9 +25357,9 @@ module.exports = Equal;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Floor.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Floor.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/fuzzy/Floor.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25370,9 +25393,9 @@ module.exports = Floor;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/GreaterThan.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/GreaterThan.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/fuzzy/GreaterThan.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25409,9 +25432,9 @@ module.exports = GreaterThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/LessThan.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/LessThan.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/fuzzy/LessThan.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25448,9 +25471,9 @@ module.exports = LessThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/index.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/index.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/fuzzy/index.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25478,9 +25501,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/index.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/index.js ***!
-  \********************************************/
+/*!***********************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/index.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25573,9 +25596,9 @@ module.exports = PhaserMath;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/BezierInterpolation.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/BezierInterpolation.js ***!
-  \************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/interpolation/BezierInterpolation.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25617,9 +25640,9 @@ module.exports = BezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CatmullRomInterpolation.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
-  \****************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25679,9 +25702,9 @@ module.exports = CatmullRomInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CubicBezierInterpolation.js":
-/*!*****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
-  \*****************************************************************************/
+/*!********************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
+  \********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25754,9 +25777,9 @@ module.exports = CubicBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/LinearInterpolation.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/LinearInterpolation.js ***!
-  \************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/interpolation/LinearInterpolation.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25806,9 +25829,9 @@ module.exports = LinearInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/QuadraticBezierInterpolation.js":
-/*!*********************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
-  \*********************************************************************************/
+/*!************************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
+  \************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25870,9 +25893,9 @@ module.exports = QuadraticBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmoothStepInterpolation.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
-  \****************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25908,9 +25931,9 @@ module.exports = SmoothStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmootherStepInterpolation.js":
-/*!******************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
-  \******************************************************************************/
+/*!*********************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
+  \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25946,9 +25969,9 @@ module.exports = SmootherStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/index.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/interpolation/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25978,9 +26001,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/pow2/GetPowerOfTwo.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/GetPowerOfTwo.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/pow2/GetPowerOfTwo.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26013,9 +26036,9 @@ module.exports = GetPowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsSizePowerOfTwo.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
-  \************************************************************/
+/*!***************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26048,9 +26071,9 @@ module.exports = IsSizePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsValuePowerOfTwo.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26081,9 +26104,9 @@ module.exports = IsValuePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/index.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/index.js ***!
-  \*************************************************/
+/*!****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/pow2/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26109,9 +26132,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/random-data-generator/RandomDataGenerator.js":
-/*!********************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
-  \********************************************************************************/
+/*!***********************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
+  \***********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26624,9 +26647,9 @@ module.exports = RandomDataGenerator;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapCeil.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapCeil.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/snap/SnapCeil.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26673,9 +26696,9 @@ module.exports = SnapCeil;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapFloor.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapFloor.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/snap/SnapFloor.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26722,9 +26745,9 @@ module.exports = SnapFloor;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapTo.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapTo.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/snap/SnapTo.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26770,9 +26793,9 @@ module.exports = SnapTo;
 /***/ }),
 
 /***/ "../../../src/math/snap/index.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/index.js ***!
-  \*************************************************/
+/*!****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/math/snap/index.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26798,9 +26821,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/plugins/BasePlugin.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/plugins/BasePlugin.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/plugins/BasePlugin.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26933,9 +26956,9 @@ module.exports = BasePlugin;
 /***/ }),
 
 /***/ "../../../src/plugins/ScenePlugin.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/plugins/ScenePlugin.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/plugins/ScenePlugin.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -27066,9 +27089,9 @@ module.exports = ScenePlugin;
 /***/ }),
 
 /***/ "../../../src/renderer/BlendModes.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/BlendModes.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/renderer/BlendModes.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27410,9 +27433,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/renderer/events/POST_RENDER_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/events/POST_RENDER_EVENT.js ***!
-  \*******************************************************************/
+/*!**********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/renderer/events/POST_RENDER_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27437,9 +27460,9 @@ module.exports = 'postrender';
 /***/ }),
 
 /***/ "../../../src/renderer/events/PRE_RENDER_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/events/PRE_RENDER_EVENT.js ***!
-  \******************************************************************/
+/*!*********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/renderer/events/PRE_RENDER_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27465,9 +27488,9 @@ module.exports = 'prerender';
 /***/ }),
 
 /***/ "../../../src/renderer/events/RENDER_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/events/RENDER_EVENT.js ***!
-  \**************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/renderer/events/RENDER_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27496,9 +27519,9 @@ module.exports = 'render';
 /***/ }),
 
 /***/ "../../../src/renderer/events/RESIZE_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/events/RESIZE_EVENT.js ***!
-  \**************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/renderer/events/RESIZE_EVENT.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27526,9 +27549,9 @@ module.exports = 'resize';
 /***/ }),
 
 /***/ "../../../src/renderer/events/index.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/events/index.js ***!
-  \*******************************************************/
+/*!**********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/renderer/events/index.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -27555,9 +27578,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/renderer/webgl/pipelines/const.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/webgl/pipelines/const.js ***!
-  \****************************************************************/
+/*!*******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/renderer/webgl/pipelines/const.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27666,9 +27689,9 @@ module.exports = PIPELINE_CONST;
 /***/ }),
 
 /***/ "../../../src/scale/events/RESIZE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scale/events/RESIZE_EVENT.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scale/events/RESIZE_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27701,9 +27724,9 @@ module.exports = 'resize';
 /***/ }),
 
 /***/ "../../../src/scene/events/ADDED_TO_SCENE_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/ADDED_TO_SCENE_EVENT.js ***!
-  \*******************************************************************/
+/*!**********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/ADDED_TO_SCENE_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27732,9 +27755,9 @@ module.exports = 'addedtoscene';
 /***/ }),
 
 /***/ "../../../src/scene/events/BOOT_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/BOOT_EVENT.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/BOOT_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27762,9 +27785,9 @@ module.exports = 'boot';
 /***/ }),
 
 /***/ "../../../src/scene/events/CREATE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/CREATE_EVENT.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/CREATE_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27796,9 +27819,9 @@ module.exports = 'create';
 /***/ }),
 
 /***/ "../../../src/scene/events/DESTROY_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/DESTROY_EVENT.js ***!
-  \************************************************************/
+/*!***************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/DESTROY_EVENT.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27828,9 +27851,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/scene/events/PAUSE_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/PAUSE_EVENT.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/PAUSE_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27860,9 +27883,9 @@ module.exports = 'pause';
 /***/ }),
 
 /***/ "../../../src/scene/events/POST_UPDATE_EVENT.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
-  \****************************************************************/
+/*!*******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27902,9 +27925,9 @@ module.exports = 'postupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/PRE_UPDATE_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
-  \***************************************************************/
+/*!******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27944,9 +27967,9 @@ module.exports = 'preupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/READY_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/READY_EVENT.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/READY_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27977,9 +28000,9 @@ module.exports = 'ready';
 /***/ }),
 
 /***/ "../../../src/scene/events/REMOVED_FROM_SCENE_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/REMOVED_FROM_SCENE_EVENT.js ***!
-  \***********************************************************************/
+/*!**************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/REMOVED_FROM_SCENE_EVENT.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28008,9 +28031,9 @@ module.exports = 'removedfromscene';
 /***/ }),
 
 /***/ "../../../src/scene/events/RENDER_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/RENDER_EVENT.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/RENDER_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28049,9 +28072,9 @@ module.exports = 'render';
 /***/ }),
 
 /***/ "../../../src/scene/events/RESUME_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/RESUME_EVENT.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/RESUME_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28081,9 +28104,9 @@ module.exports = 'resume';
 /***/ }),
 
 /***/ "../../../src/scene/events/SHUTDOWN_EVENT.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28116,9 +28139,9 @@ module.exports = 'shutdown';
 /***/ }),
 
 /***/ "../../../src/scene/events/SLEEP_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/SLEEP_EVENT.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/SLEEP_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28148,9 +28171,9 @@ module.exports = 'sleep';
 /***/ }),
 
 /***/ "../../../src/scene/events/START_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/START_EVENT.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/START_EVENT.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28178,9 +28201,9 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_COMPLETE_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
-  \************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28219,9 +28242,9 @@ module.exports = 'transitioncomplete';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_INIT_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
-  \********************************************************************/
+/*!***********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28261,9 +28284,9 @@ module.exports = 'transitioninit';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_OUT_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
-  \*******************************************************************/
+/*!**********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28300,9 +28323,9 @@ module.exports = 'transitionout';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_START_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
-  \*********************************************************************/
+/*!************************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28345,9 +28368,9 @@ module.exports = 'transitionstart';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_WAKE_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
-  \********************************************************************/
+/*!***********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28385,9 +28408,9 @@ module.exports = 'transitionwake';
 /***/ }),
 
 /***/ "../../../src/scene/events/UPDATE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/UPDATE_EVENT.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/UPDATE_EVENT.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28427,9 +28450,9 @@ module.exports = 'update';
 /***/ }),
 
 /***/ "../../../src/scene/events/WAKE_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/WAKE_EVENT.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/WAKE_EVENT.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28459,9 +28482,9 @@ module.exports = 'wake';
 /***/ }),
 
 /***/ "../../../src/scene/events/index.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/index.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/scene/events/index.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28505,9 +28528,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/tweens/builders/GetBoolean.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/tweens/builders/GetBoolean.js ***!
-  \************************************************************/
+/*!***************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/tweens/builders/GetBoolean.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28551,9 +28574,9 @@ module.exports = GetBoolean;
 /***/ }),
 
 /***/ "../../../src/tweens/tween/const.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/tweens/tween/const.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/tweens/tween/const.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28728,9 +28751,9 @@ module.exports = TWEEN_CONST;
 /***/ }),
 
 /***/ "../../../src/utils/Class.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/Class.js ***!
-  \*********************************************/
+/*!************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/Class.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28989,9 +29012,9 @@ module.exports = Class;
 /***/ }),
 
 /***/ "../../../src/utils/NOOP.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/NOOP.js ***!
-  \********************************************/
+/*!***********************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/NOOP.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29021,9 +29044,9 @@ module.exports = NOOP;
 /***/ }),
 
 /***/ "../../../src/utils/array/Add.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Add.js ***!
-  \*************************************************/
+/*!****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/Add.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29143,9 +29166,9 @@ module.exports = Add;
 /***/ }),
 
 /***/ "../../../src/utils/array/AddAt.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/AddAt.js ***!
-  \***************************************************/
+/*!******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/AddAt.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29270,9 +29293,9 @@ module.exports = AddAt;
 /***/ }),
 
 /***/ "../../../src/utils/array/BringToTop.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/BringToTop.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/BringToTop.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29313,9 +29336,9 @@ module.exports = BringToTop;
 /***/ }),
 
 /***/ "../../../src/utils/array/CountAllMatching.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/CountAllMatching.js ***!
-  \**************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/CountAllMatching.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29370,9 +29393,9 @@ module.exports = CountAllMatching;
 /***/ }),
 
 /***/ "../../../src/utils/array/Each.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Each.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/Each.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29421,9 +29444,9 @@ module.exports = Each;
 /***/ }),
 
 /***/ "../../../src/utils/array/EachInRange.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/EachInRange.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/EachInRange.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29482,9 +29505,9 @@ module.exports = EachInRange;
 /***/ }),
 
 /***/ "../../../src/utils/array/FindClosestInSorted.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/FindClosestInSorted.js ***!
-  \*****************************************************************/
+/*!********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/FindClosestInSorted.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29571,9 +29594,9 @@ module.exports = FindClosestInSorted;
 /***/ }),
 
 /***/ "../../../src/utils/array/GetAll.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/GetAll.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/GetAll.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29638,9 +29661,9 @@ module.exports = GetAll;
 /***/ }),
 
 /***/ "../../../src/utils/array/GetFirst.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/GetFirst.js ***!
-  \******************************************************/
+/*!*********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/GetFirst.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29702,9 +29725,9 @@ module.exports = GetFirst;
 /***/ }),
 
 /***/ "../../../src/utils/array/GetRandom.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/GetRandom.js ***!
-  \*******************************************************/
+/*!**********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/GetRandom.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29742,9 +29765,9 @@ module.exports = GetRandom;
 /***/ }),
 
 /***/ "../../../src/utils/array/MoveDown.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/MoveDown.js ***!
-  \******************************************************/
+/*!*********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/MoveDown.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29789,9 +29812,9 @@ module.exports = MoveDown;
 /***/ }),
 
 /***/ "../../../src/utils/array/MoveTo.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/MoveTo.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/MoveTo.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29841,9 +29864,9 @@ module.exports = MoveTo;
 /***/ }),
 
 /***/ "../../../src/utils/array/MoveUp.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/MoveUp.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/MoveUp.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29888,9 +29911,9 @@ module.exports = MoveUp;
 /***/ }),
 
 /***/ "../../../src/utils/array/NumberArray.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/NumberArray.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/NumberArray.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29986,9 +30009,9 @@ module.exports = NumberArray;
 /***/ }),
 
 /***/ "../../../src/utils/array/NumberArrayStep.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/NumberArrayStep.js ***!
-  \*************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/NumberArrayStep.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30068,9 +30091,9 @@ module.exports = NumberArrayStep;
 /***/ }),
 
 /***/ "../../../src/utils/array/QuickSelect.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/QuickSelect.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/QuickSelect.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30195,9 +30218,9 @@ module.exports = QuickSelect;
 /***/ }),
 
 /***/ "../../../src/utils/array/Range.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Range.js ***!
-  \***************************************************/
+/*!******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/Range.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30338,9 +30361,9 @@ module.exports = Range;
 /***/ }),
 
 /***/ "../../../src/utils/array/Remove.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Remove.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/Remove.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30432,9 +30455,9 @@ module.exports = Remove;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveAt.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RemoveAt.js ***!
-  \******************************************************/
+/*!*********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/RemoveAt.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30488,9 +30511,9 @@ module.exports = RemoveAt;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveBetween.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RemoveBetween.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/RemoveBetween.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30556,9 +30579,9 @@ module.exports = RemoveBetween;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveRandomElement.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RemoveRandomElement.js ***!
-  \*****************************************************************/
+/*!********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/RemoveRandomElement.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30599,9 +30622,9 @@ module.exports = RemoveRandomElement;
 /***/ }),
 
 /***/ "../../../src/utils/array/Replace.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Replace.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/Replace.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30648,9 +30671,9 @@ module.exports = Replace;
 /***/ }),
 
 /***/ "../../../src/utils/array/RotateLeft.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RotateLeft.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/RotateLeft.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30693,9 +30716,9 @@ module.exports = RotateLeft;
 /***/ }),
 
 /***/ "../../../src/utils/array/RotateRight.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RotateRight.js ***!
-  \*********************************************************/
+/*!************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/RotateRight.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30738,9 +30761,9 @@ module.exports = RotateRight;
 /***/ }),
 
 /***/ "../../../src/utils/array/SafeRange.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SafeRange.js ***!
-  \*******************************************************/
+/*!**********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/SafeRange.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30792,9 +30815,9 @@ module.exports = SafeRange;
 /***/ }),
 
 /***/ "../../../src/utils/array/SendToBack.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SendToBack.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/SendToBack.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30835,9 +30858,9 @@ module.exports = SendToBack;
 /***/ }),
 
 /***/ "../../../src/utils/array/SetAll.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SetAll.js ***!
-  \****************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/SetAll.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30895,9 +30918,9 @@ module.exports = SetAll;
 /***/ }),
 
 /***/ "../../../src/utils/array/Shuffle.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Shuffle.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/Shuffle.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30941,9 +30964,9 @@ module.exports = Shuffle;
 /***/ }),
 
 /***/ "../../../src/utils/array/SortByDigits.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SortByDigits.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/SortByDigits.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30984,9 +31007,9 @@ module.exports = SortByDigits;
 /***/ }),
 
 /***/ "../../../src/utils/array/SpliceOne.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SpliceOne.js ***!
-  \*******************************************************/
+/*!**********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/SpliceOne.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31035,9 +31058,9 @@ module.exports = SpliceOne;
 /***/ }),
 
 /***/ "../../../src/utils/array/StableSort.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/StableSort.js ***!
-  \********************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/StableSort.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31216,9 +31239,9 @@ module.exports = StableSort;
 /***/ }),
 
 /***/ "../../../src/utils/array/Swap.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Swap.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/Swap.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31269,9 +31292,9 @@ module.exports = Swap;
 /***/ }),
 
 /***/ "../../../src/utils/array/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/index.js ***!
-  \***************************************************/
+/*!******************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/index.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31328,9 +31351,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/CheckMatrix.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/CheckMatrix.js ***!
-  \****************************************************************/
+/*!*******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/matrix/CheckMatrix.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31395,9 +31418,9 @@ module.exports = CheckMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/MatrixToString.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/MatrixToString.js ***!
-  \*******************************************************************/
+/*!**********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/matrix/MatrixToString.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31495,9 +31518,9 @@ module.exports = MatrixToString;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/ReverseColumns.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/ReverseColumns.js ***!
-  \*******************************************************************/
+/*!**********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/matrix/ReverseColumns.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31545,9 +31568,9 @@ module.exports = ReverseColumns;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/ReverseRows.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/ReverseRows.js ***!
-  \****************************************************************/
+/*!*******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/matrix/ReverseRows.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31600,9 +31623,9 @@ module.exports = ReverseRows;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/Rotate180.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/Rotate180.js ***!
-  \**************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/matrix/Rotate180.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31652,9 +31675,9 @@ module.exports = Rotate180;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateLeft.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/RotateLeft.js ***!
-  \***************************************************************/
+/*!******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/matrix/RotateLeft.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31704,9 +31727,9 @@ module.exports = RotateLeft;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateMatrix.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/RotateMatrix.js ***!
-  \*****************************************************************/
+/*!********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/matrix/RotateMatrix.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31795,9 +31818,9 @@ module.exports = RotateMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateRight.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/RotateRight.js ***!
-  \****************************************************************/
+/*!*******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/matrix/RotateRight.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31847,9 +31870,9 @@ module.exports = RotateRight;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/TranslateMatrix.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/TranslateMatrix.js ***!
-  \********************************************************************/
+/*!***********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/matrix/TranslateMatrix.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31941,9 +31964,9 @@ module.exports = TranslateMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/TransposeMatrix.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/TransposeMatrix.js ***!
-  \********************************************************************/
+/*!***********************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/matrix/TransposeMatrix.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -32008,9 +32031,9 @@ module.exports = TransposeMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/index.js ***!
-  \**********************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/array/matrix/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32043,9 +32066,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/utils/object/DeepCopy.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/DeepCopy.js ***!
-  \*******************************************************/
+/*!**********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/object/DeepCopy.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -32097,9 +32120,9 @@ module.exports = DeepCopy;
 /***/ }),
 
 /***/ "../../../src/utils/object/Extend.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/Extend.js ***!
-  \*****************************************************/
+/*!********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/object/Extend.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32203,9 +32226,9 @@ module.exports = Extend;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetAdvancedValue.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetAdvancedValue.js ***!
-  \***************************************************************/
+/*!******************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/object/GetAdvancedValue.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32295,9 +32318,9 @@ module.exports = GetAdvancedValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetFastValue.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetFastValue.js ***!
-  \***********************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/object/GetFastValue.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -32343,9 +32366,9 @@ module.exports = GetFastValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetValue.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetValue.js ***!
-  \*******************************************************/
+/*!**********************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/object/GetValue.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -32419,9 +32442,9 @@ module.exports = GetValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/IsPlainObject.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/IsPlainObject.js ***!
-  \************************************************************/
+/*!***************************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/object/IsPlainObject.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -32480,9 +32503,9 @@ module.exports = IsPlainObject;
 /***/ }),
 
 /***/ "../../../src/utils/string/Pad.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/string/Pad.js ***!
-  \**************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/git_repos/jacktheriddlerphaser3/lib/phaser/src/utils/string/Pad.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -32745,7 +32768,7 @@ var SpineFile = new Class({
                 {
                     var textureURL = textures[i];
 
-                    var key = this.prefix + textureURL;
+                    var key = textureURL;
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
@@ -32851,6 +32874,14 @@ var NOOP = __webpack_require__(/*! ../../../src/utils/NOOP */ "../../../src/util
 
 //  Plugin specific instance of the Spine Scene Renderer
 var sceneRenderer;
+
+var spineAttributes = [
+    Spine.webgl.Shader.COLOR,
+    Spine.webgl.Shader.COLOR2,
+    Spine.webgl.Shader.POSITION,
+    Spine.webgl.Shader.SAMPLER
+];
+
 
 /**
  * @classdesc
@@ -33112,6 +33143,51 @@ var SpinePlugin = new Class({
          * @since 3.19.0
          */
         this.temp2;
+
+        /**
+         * An internal WebGLProgram used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {?WebGLProgram}
+         */
+        this.lastBatcherShaderProgram;
+        
+        /**
+         * An internal WebGLProgram used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {?WebGLProgram}
+         */
+        this.lastShapesShaderProgram;
+
+        /**
+         * An internal array used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {?number[]}
+         */
+        this.attributeLocations;
+        
+        /**
+         * An internal array used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {number[]}
+         */
+        this.enableAttribLocations = [];
+
+        /**
+         * An internal boolean used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {boolean}
+         */
+        this.hasAttributeCache = false;
 
         if (this.isWebGL)
         {
@@ -33884,6 +33960,115 @@ var SpinePlugin = new Class({
     },
 
     /**
+     * gets the attributes location for the shader that spine uses
+     *
+     * Only works in WebGL.
+     *
+     * @return {number[]} This attributes location
+     */
+    getShaderAttributeLocations: function ()
+    {
+        var batcherShaderProgram = this.sceneRenderer.batcherShader.getProgram();
+        var shapesShaderProgram = this.sceneRenderer.shapesShader.getProgram();
+
+        // get new attribute locations if any shader program changes
+        if (this.lastBatcherShaderProgram !== batcherShaderProgram ||
+            this.lastShapesShaderProgram !== shapesShaderProgram)
+        {
+            var gl = this.gl;
+            var attributeLocations = [];
+            for (var i = 0; i < spineAttributes.length; i++)
+            {
+                var loc = gl.getAttribLocation(batcherShaderProgram, spineAttributes[i]);
+                if (loc !== -1 && attributeLocations.indexOf(loc) === -1)
+                {
+                    attributeLocations.push(loc);
+                }
+
+                loc = gl.getAttribLocation(batcherShaderProgram, spineAttributes[i]);
+                if (loc !== -1 && attributeLocations.indexOf(loc) === -1)
+                {
+                    attributeLocations.push(loc);
+                }
+            }
+
+            this.attributeLocations = attributeLocations;
+            this.lastBatcherShaderProgram = batcherShaderProgram;
+            this.lastShapesShaderProgram = shapesShaderProgram;
+        }
+
+        return this.attributeLocations;
+    },
+
+    /**
+     * cache the current enabled attributes
+     *
+     * Only works in WebGL.
+     *
+     * @since 1.0.0
+     *
+     * @return {boolean} true if new cache was created
+     */
+    cacheShaderAttributes: function ()
+    {
+        if (this.hasAttributeCache)
+        {
+            return false;
+        }
+        
+        var attributesLocations = this.getShaderAttributeLocations();
+        var enableAttribLocations = this.enableAttribLocations;
+
+        var gl = this.gl;
+
+
+        // store enabled vertex attribute state
+        for (var i = 0; i < attributesLocations.length; i++)
+        {
+            var attributeLoc = attributesLocations[i];
+            if (gl.getVertexAttrib(attributeLoc, gl.VERTEX_ATTRIB_ARRAY_ENABLED))
+            {
+                enableAttribLocations.push(attributeLoc);
+            }
+        }
+
+        this.hasAttributeCache = true;
+        return true;
+    },
+
+    /**
+     * restore the previous enabled shader attributes
+     *
+     * Only works in WebGL.
+     *
+     * @since 1.0.0
+     *
+     * @return {boolean} true if the cached attributes was restored
+    */
+    restoreShaderAttributes: function ()
+    {
+        if (this.hasAttributeCache)
+        {
+            var gl = this.gl;
+            var enableAttribLocations = this.enableAttribLocations;
+
+            // restore enabled vertex attribute state
+            while (enableAttribLocations.length)
+            {
+                gl.enableVertexAttribArray(enableAttribLocations.pop());
+            }
+
+            this.hasAttributeCache = false;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    },
+
+
+    /**
      * Internal handler for when the renderer resizes.
      *
      * Only called if running in WebGL.
@@ -34080,13 +34265,13 @@ var SpineContainerRender = __webpack_require__(/*! ./SpineContainerRender */ "./
  * To create one in a Scene, use the factory methods:
  *
  * ```javascript
- * this.add.spinecontainer();
+ * this.add.spineContainer();
  * ```
  *
  * or
  *
  * ```javascript
- * this.make.spinecontainer();
+ * this.make.spineContainer();
  * ```
  *
  * Note that you should not nest Spine Containers inside regular Containers if you wish to use masks on the
@@ -34370,6 +34555,8 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
         //  flush + clear if this is a new type
         renderer.pipelines.clear();
 
+        plugin.cacheShaderAttributes();
+        
         sceneRenderer.begin();
     }
 
@@ -34423,6 +34610,8 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
     {
         //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
+
+        plugin.restoreShaderAttributes();
 
         //  And rebind the previous pipeline
         renderer.pipelines.rebind();
@@ -36436,6 +36625,8 @@ var SpineGameObjectWebGLDirect = function (renderer, src, camera, parentMatrix, 
     //  flush + clear previous pipeline if this is a new type
     renderer.pipelines.clear();
 
+    plugin.cacheShaderAttributes();
+
     sceneRenderer.begin();
 
     var scrollFactorX = src.scrollFactorX;
@@ -36526,6 +36717,8 @@ var SpineGameObjectWebGLDirect = function (renderer, src, camera, parentMatrix, 
     //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
     sceneRenderer.end();
 
+    plugin.restoreShaderAttributes();
+
     //  And rebind the previous pipeline
     renderer.pipelines.rebind();
 };
@@ -36579,6 +36772,8 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
     {
         //  flush + clear previous pipeline if this is a new type
         renderer.pipelines.clear();
+
+        plugin.cacheShaderAttributes();
 
         sceneRenderer.begin();
     }
@@ -36672,6 +36867,8 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
     {
         //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
+
+        plugin.restoreShaderAttributes();
 
         //  And rebind the previous pipeline
         renderer.pipelines.rebind();

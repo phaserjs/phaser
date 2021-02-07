@@ -11753,7 +11753,14 @@ var GameObject = new Class({
             }
         }
 
-        indexes.unshift(this.displayList.getIndex(child));
+        if (this.displayList)
+        {
+            indexes.unshift(this.displayList.getIndex(child));
+        }
+        else
+        {
+            indexes.unshift(this.scene.sys.displayList.getIndex(child));
+        }
 
         return indexes;
     },
@@ -12327,6 +12334,14 @@ var NOOP = __webpack_require__(1);
 //  Plugin specific instance of the Spine Scene Renderer
 var sceneRenderer;
 
+var spineAttributes = [
+    Spine.webgl.Shader.COLOR,
+    Spine.webgl.Shader.COLOR2,
+    Spine.webgl.Shader.POSITION,
+    Spine.webgl.Shader.SAMPLER
+];
+
+
 /**
  * @classdesc
  * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game Objects.
@@ -12587,6 +12602,51 @@ var SpinePlugin = new Class({
          * @since 3.19.0
          */
         this.temp2;
+
+        /**
+         * An internal WebGLProgram used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {?WebGLProgram}
+         */
+        this.lastBatcherShaderProgram;
+        
+        /**
+         * An internal WebGLProgram used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {?WebGLProgram}
+         */
+        this.lastShapesShaderProgram;
+
+        /**
+         * An internal array used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {?number[]}
+         */
+        this.attributeLocations;
+        
+        /**
+         * An internal array used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {number[]}
+         */
+        this.enableAttribLocations = [];
+
+        /**
+         * An internal boolean used for the attribute cache.
+         *
+         * @name SpinePlugin#lastBatcherShaderProgram
+         * @private
+         * @type {boolean}
+         */
+        this.hasAttributeCache = false;
 
         if (this.isWebGL)
         {
@@ -13357,6 +13417,115 @@ var SpinePlugin = new Class({
 
         return { offset: offset, size: size };
     },
+
+    /**
+     * gets the attributes location for the shader that spine uses
+     *
+     * Only works in WebGL.
+     *
+     * @return {number[]} This attributes location
+     */
+    getShaderAttributeLocations: function ()
+    {
+        var batcherShaderProgram = this.sceneRenderer.batcherShader.getProgram();
+        var shapesShaderProgram = this.sceneRenderer.shapesShader.getProgram();
+
+        // get new attribute locations if any shader program changes
+        if (this.lastBatcherShaderProgram !== batcherShaderProgram ||
+            this.lastShapesShaderProgram !== shapesShaderProgram)
+        {
+            var gl = this.gl;
+            var attributeLocations = [];
+            for (var i = 0; i < spineAttributes.length; i++)
+            {
+                var loc = gl.getAttribLocation(batcherShaderProgram, spineAttributes[i]);
+                if (loc !== -1 && attributeLocations.indexOf(loc) === -1)
+                {
+                    attributeLocations.push(loc);
+                }
+
+                loc = gl.getAttribLocation(batcherShaderProgram, spineAttributes[i]);
+                if (loc !== -1 && attributeLocations.indexOf(loc) === -1)
+                {
+                    attributeLocations.push(loc);
+                }
+            }
+
+            this.attributeLocations = attributeLocations;
+            this.lastBatcherShaderProgram = batcherShaderProgram;
+            this.lastShapesShaderProgram = shapesShaderProgram;
+        }
+
+        return this.attributeLocations;
+    },
+
+    /**
+     * cache the current enabled attributes
+     *
+     * Only works in WebGL.
+     *
+     * @since 1.0.0
+     *
+     * @return {boolean} true if new cache was created
+     */
+    cacheShaderAttributes: function ()
+    {
+        if (this.hasAttributeCache)
+        {
+            return false;
+        }
+        
+        var attributesLocations = this.getShaderAttributeLocations();
+        var enableAttribLocations = this.enableAttribLocations;
+
+        var gl = this.gl;
+
+
+        // store enabled vertex attribute state
+        for (var i = 0; i < attributesLocations.length; i++)
+        {
+            var attributeLoc = attributesLocations[i];
+            if (gl.getVertexAttrib(attributeLoc, gl.VERTEX_ATTRIB_ARRAY_ENABLED))
+            {
+                enableAttribLocations.push(attributeLoc);
+            }
+        }
+
+        this.hasAttributeCache = true;
+        return true;
+    },
+
+    /**
+     * restore the previous enabled shader attributes
+     *
+     * Only works in WebGL.
+     *
+     * @since 1.0.0
+     *
+     * @return {boolean} true if the cached attributes was restored
+    */
+    restoreShaderAttributes: function ()
+    {
+        if (this.hasAttributeCache)
+        {
+            var gl = this.gl;
+            var enableAttribLocations = this.enableAttribLocations;
+
+            // restore enabled vertex attribute state
+            while (enableAttribLocations.length)
+            {
+                gl.enableVertexAttribArray(enableAttribLocations.pop());
+            }
+
+            this.hasAttributeCache = false;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    },
+
 
     /**
      * Internal handler for when the renderer resizes.
@@ -35452,6 +35621,8 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
         //  flush + clear previous pipeline if this is a new type
         renderer.pipelines.clear();
 
+        plugin.cacheShaderAttributes();
+
         sceneRenderer.begin();
     }
 
@@ -35545,6 +35716,8 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
         //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
 
+        plugin.restoreShaderAttributes();
+
         //  And rebind the previous pipeline
         renderer.pipelines.rebind();
     }
@@ -35592,6 +35765,8 @@ var SpineGameObjectWebGLDirect = function (renderer, src, camera, parentMatrix, 
 
     //  flush + clear previous pipeline if this is a new type
     renderer.pipelines.clear();
+
+    plugin.cacheShaderAttributes();
 
     sceneRenderer.begin();
 
@@ -35683,6 +35858,8 @@ var SpineGameObjectWebGLDirect = function (renderer, src, camera, parentMatrix, 
     //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
     sceneRenderer.end();
 
+    plugin.restoreShaderAttributes();
+
     //  And rebind the previous pipeline
     renderer.pipelines.rebind();
 };
@@ -35715,13 +35892,13 @@ var SpineContainerRender = __webpack_require__(343);
  * To create one in a Scene, use the factory methods:
  *
  * ```javascript
- * this.add.spinecontainer();
+ * this.add.spineContainer();
  * ```
  *
  * or
  *
  * ```javascript
- * this.make.spinecontainer();
+ * this.make.spineContainer();
  * ```
  *
  * Note that you should not nest Spine Containers inside regular Containers if you wish to use masks on the
@@ -35967,16 +36144,6 @@ var Container = new Class({
          * @since 3.4.0
          */
         this.tempTransformMatrix = new Components.TransformMatrix();
-
-        /**
-         * A reference to the Scene Display List.
-         *
-         * @name Phaser.GameObjects.Container#_displayList
-         * @type {Phaser.GameObjects.DisplayList}
-         * @private
-         * @since 3.4.0
-         */
-        this._displayList = scene.sys.displayList;
 
         /**
          * The property key to sort by.
@@ -36252,11 +36419,23 @@ var Container = new Class({
 
         if (this.exclusive)
         {
-            this._displayList.remove(gameObject);
+            if (gameObject.displayList)
+            {
+                gameObject.displayList.remove(gameObject);
+            }
 
             if (gameObject.parentContainer)
             {
                 gameObject.parentContainer.remove(gameObject);
+            }
+
+            if (this.displayList)
+            {
+                gameObject.displayList = this.displayList;
+            }
+            else
+            {
+                gameObject.displayList = this.scene.sys.displayList;
             }
 
             gameObject.parentContainer = this;
@@ -37159,7 +37338,6 @@ var Container = new Class({
         this.tempTransformMatrix.destroy();
 
         this.list = [];
-        this._displayList = null;
     }
 
 });
@@ -43752,11 +43930,13 @@ var Pipeline = {
      *
      * @param {(string|function|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline)} pipeline - The string-based name of the pipeline, or a pipeline class.
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} The first Post Pipeline matching the name, or undefined if no match.
+     * @return {(Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} The Post Pipeline/s matching the name, or undefined if no match. If more than one match they are returned in an array.
      */
     getPostPipeline: function (pipeline)
     {
         var pipelines = this.postPipelines;
+
+        var results = [];
 
         for (var i = 0; i < pipelines.length; i++)
         {
@@ -43764,9 +43944,11 @@ var Pipeline = {
 
             if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
             {
-                return instance;
+                results.push(instance);
             }
         }
+
+        return (results.length === 1) ? results[0] : results;
     },
 
     /**
@@ -45117,6 +45299,8 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
         //  flush + clear if this is a new type
         renderer.pipelines.clear();
 
+        plugin.cacheShaderAttributes();
+        
         sceneRenderer.begin();
     }
 
@@ -45170,6 +45354,8 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
     {
         //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
+
+        plugin.restoreShaderAttributes();
 
         //  And rebind the previous pipeline
         renderer.pipelines.rebind();

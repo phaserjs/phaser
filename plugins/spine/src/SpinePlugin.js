@@ -1160,7 +1160,7 @@ var SpinePlugin = new Class({
         }
         
         var attributesLocations = this.getShaderAttributeLocations();
-        var enableAttribLocs = this.enableAttribLocs;
+        var enableAttribLocations = this.enableAttribLocations;
 
         var gl = this.gl;
 
@@ -1171,7 +1171,7 @@ var SpinePlugin = new Class({
             var attributeLoc = attributesLocations[i];
             if (gl.getVertexAttrib(attributeLoc, gl.VERTEX_ATTRIB_ARRAY_ENABLED))
             {
-                enableAttribLocs.push(attributeLoc);
+                enableAttribLocations.push(attributeLoc);
             }
         }
 
@@ -1193,12 +1193,12 @@ var SpinePlugin = new Class({
         if (this.hasAttributeCache)
         {
             var gl = this.gl;
-            var enableAttribLocs = this.enableAttribLocs;
+            var enableAttribLocations = this.enableAttribLocations;
 
             // restore enabled vertex attribute state
-            while (enableAttribLocs.length)
+            while (enableAttribLocations.length)
             {
-                gl.enableVertexAttribArray(enableAttribLocs.pop());
+                gl.enableVertexAttribArray(enableAttribLocations.pop());
             }
 
             this.hasAttributeCache = false;
