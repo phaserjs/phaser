@@ -12,8 +12,6 @@ var FromPoints = require('../geom/rectangle/FromPoints');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var Vector2 = require('../math/Vector2');
 
-var tmpVec2 = new Vector2();
-
 /**
  * @classdesc
  * A LineCurve is a "curve" comprising exactly two points (a line segment).
@@ -182,16 +180,21 @@ var LineCurve = new Class({
      *
      * @method Phaser.Curves.Line#getTangent
      * @since 3.0.0
-     * 
+     *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
+     * @param {number} [t] - The relative position on the line, [0..1].
+     * @param {Phaser.Math.Vector2} [out] - A vector to store the result in.
      *
      * @return {Phaser.Math.Vector2} The tangent vector.
      */
-    getTangent: function ()
+    getTangent: function (t, out)
     {
-        var tangent = tmpVec2.copy(this.p1).subtract(this.p0);
+        if (out === undefined) { out = new Vector2(); }
 
-        return tangent.normalize();
+        out.copy(this.p1).subtract(this.p0).normalize();
+
+        return out;
     },
 
     /**
