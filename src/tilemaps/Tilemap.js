@@ -831,15 +831,34 @@ var Tilemap = new Class({
                 }
 
                 //  Set properties the class may have, or setData those it doesn't
-                for (var key in obj.properties)
+                if (Array.isArray(obj.properties))
                 {
-                    if (sprite[key] !== undefined)
+                    // Tiled objects custom properties format
+                    obj.properties.forEach(function (propData)
                     {
-                        sprite[key] = obj.properties[key];
-                    }
-                    else
+                        var key = propData['name'];
+                        if (sprite[key] !== undefined)
+                        {
+                            sprite[key] = propData['value'];
+                        }
+                        else
+                        {
+                            sprite.setData(key, propData['value']);
+                        }
+                    });
+                }
+                else
+                {
+                    for (var key in obj.properties)
                     {
-                        sprite.setData(key, obj.properties[key]);
+                        if (sprite[key] !== undefined)
+                        {
+                            sprite[key] = obj.properties[key];
+                        }
+                        else
+                        {
+                            sprite.setData(key, obj.properties[key]);
+                        }
                     }
                 }
 
