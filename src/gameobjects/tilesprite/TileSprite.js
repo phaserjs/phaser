@@ -277,6 +277,11 @@ var TileSprite = new Class({
 
         scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function (renderer)
         {
+            if (!renderer)
+            {
+                return;
+            }
+            
             var gl = renderer.gl;
 
             this.dirty = true;
@@ -429,7 +434,7 @@ var TileSprite = new Class({
         var fw = this.potWidth;
         var fh = this.potHeight;
 
-        if (!this.renderer.gl)
+        if (!this.renderer || !this.renderer.gl)
         {
             fw = frame.cutWidth;
             fh = frame.cutHeight;
@@ -448,7 +453,7 @@ var TileSprite = new Class({
             fw, fh
         );
 
-        if (this.renderer.gl)
+        if (this.renderer && this.renderer.gl)
         {
             this.fillPattern = this.renderer.canvasToTexture(canvas, this.fillPattern);
         }
