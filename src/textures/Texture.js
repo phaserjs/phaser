@@ -509,7 +509,7 @@ var Texture = new Class({
 
         var renderer = this.manager.game.renderer;
 
-        if (renderer.type === CONST.WEBGL)
+        if (renderer && renderer.type === CONST.WEBGL)
         {
             renderer.resetTextures(true);
         }
