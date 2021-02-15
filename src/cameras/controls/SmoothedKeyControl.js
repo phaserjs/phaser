@@ -29,7 +29,7 @@ var GetValue = require('../../utils/object/GetValue');
  *     maxSpeed: 1.0
  * };
  * ```
- * 
+ *
  * You must call the `update` method of this controller every frame.
  *
  * @class SmoothedKeyControl
@@ -124,6 +124,26 @@ var SmoothedKeyControl = new Class({
          * @since 3.0.0
          */
         this.zoomSpeed = GetValue(config, 'zoomSpeed', 0.01);
+
+        /**
+         * The smallest zoom value the camera will reach when zoomed out.
+         *
+         * @name Phaser.Cameras.Controls.SmoothedKeyControl#minZoom
+         * @type {number}
+         * @default 0.001
+         * @since 3.53.0
+         */
+        this.minZoom = GetValue(config, 'minZoom', 0.001);
+
+        /**
+         * The largest zoom value the camera will reach when zoomed in.
+         *
+         * @name Phaser.Cameras.Controls.SmoothedKeyControl#maxZoom
+         * @type {number}
+         * @default 1000
+         * @since 3.53.0
+         */
+        this.maxZoom = GetValue(config, 'maxZoom', 1000);
 
         /**
          * The horizontal acceleration the camera will move.
@@ -446,9 +466,13 @@ var SmoothedKeyControl = new Class({
         {
             cam.zoom += this._zoom;
 
-            if (cam.zoom < 0.001)
+            if (cam.zoom < this.minZoom)
             {
-                cam.zoom = 0.001;
+                cam.zoom = this.minZoom;
+            }
+            else if (cam.zoom > this.maxZoom)
+            {
+                cam.zoom = this.maxZoom;
             }
         }
     },

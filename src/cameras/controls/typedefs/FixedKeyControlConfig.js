@@ -11,4 +11,6 @@
  * @property {Phaser.Input.Keyboard.Key} [zoomOut] - The Key to be pressed that will zoom the Camera out.
  * @property {number} [zoomSpeed=0.01] - The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
  * @property {(number|{x:number,y:number})} [speed=0] - The horizontal and vertical speed the camera will move.
+ * @property {number} [minZoom=0.001] - The smallest zoom value the camera will reach when zoomed out.
+ * @property {number} [maxZoom=1000] - The largest zoom value the camera will reach when zoomed in.
  */
