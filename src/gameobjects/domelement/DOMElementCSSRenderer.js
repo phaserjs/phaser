@@ -104,7 +104,6 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
         style.display = 'block';
         style.opacity = alpha;
         style.zIndex = src._depth;
-        style.pointerEvents = 'auto';
         style.mixBlendMode = CSSBlendModes[src._blendMode];
     }
 
