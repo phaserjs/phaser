@@ -5,6 +5,7 @@
 * You can now run Phaser from within a Web Worker. You must use the `type: 'classic'` method and then use `importScripts('phaser.js')` within your workers, but it will no longer throw window errors and allows you access to lots of the core Phaser functions from Workers.
 * `Scenes.Events.PRE_RENDER` is a new event fired after the display list is sorted and before the Scene is rendered (thanks @samme)
 * You can now set the boolean `preserveDrawingBuffer` in the Game Config (either directly, or in the Render Config). This is passed to the WebGL context during creation and controls if the buffers are automatically cleared each frame or not. The default is to clear them. Set to `true` to retain them.
+* `GameObjects.Shape.setDisplaySize` is a new method that helps setting the display width and height of a Shape object in a chainable way. Fix #5526 (thanks @samme)
 
 ### Updates
 
@@ -32,6 +33,7 @@
 * The `LightPipeline` now only calls `batchSprite`, `batchTexture` and `batchTextureFrame` if the Scene Lights Manager is active. Fix #5522 (thanks @inmylo)
 * The Tiled Parser has been updated so it now supports object properties defined in an array with name / type values (thanks @veleek)
 * `LineCurve.getTangent` can now take an output vector to receive the tangent value (thanks @samme)
+* `DOMElementCSSRenderer` no longer sets the `pointerEvents` style attribute to `auto`. This is the default value anyway and it now means you can override it from your code by setting the `pointer-events` attribute directly. Fix #5470 (thanks @hayatae @endel)
 
 ### Bug Fixes
 
@@ -50,7 +52,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@edemaine
+@edemaine @xuxucode
 
 
 ## Version 3.52.0 - Crusch - 14th January 2021
