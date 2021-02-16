@@ -146,7 +146,10 @@ var BitmapMask = new Class({
 
         scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.createMask, this);
 
-        renderer.on(RenderEvents.RESIZE, this.createMask, this);
+        if (renderer)
+        {
+            renderer.on(RenderEvents.RESIZE, this.createMask, this);
+        }
     },
 
     /**
@@ -160,7 +163,7 @@ var BitmapMask = new Class({
     {
         var renderer = this.renderer;
 
-        if (!renderer.gl)
+        if (!renderer || !renderer.gl)
         {
             return;
         }
@@ -197,7 +200,7 @@ var BitmapMask = new Class({
     {
         var renderer = this.renderer;
 
-        if (!renderer.gl || !this.mainTexture)
+        if (!renderer || !renderer.gl || !this.mainTexture)
         {
             return;
         }
@@ -299,8 +302,11 @@ var BitmapMask = new Class({
     {
         this.clearMask();
 
-        this.renderer.off(RenderEvents.RESIZE, this.createMask, this);
-
+        if (this.renderer)
+        {
+            this.renderer.off(RenderEvents.RESIZE, this.createMask, this);
+        }
+        
         this.bitmapMask = null;
         this.prevFramebuffer = null;
         this.renderer = null;
