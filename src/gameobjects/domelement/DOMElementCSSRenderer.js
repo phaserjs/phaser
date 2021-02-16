@@ -28,16 +28,17 @@ var tempMatrix3 = new TransformMatrix();
  */
 var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var node = src.node;
-    var style = node.style;
+    if (!src.node)
+    {
+        return;
+    }
+
+    var style = src.node.style;
     var settings = src.scene.sys.settings;
 
-    if (!node || !style || !settings.visible || GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || (src.parentContainer && !src.parentContainer.willRender()))
+    if (!style || !settings.visible || GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)) || (src.parentContainer && !src.parentContainer.willRender()))
     {
-        if (node)
-        {
-            style.display = 'none';
-        }
+        style.display = 'none';
 
         return;
     }
