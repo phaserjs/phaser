@@ -39,6 +39,7 @@
 * `Math.FromPercent` silently assumed the `min` parameter to be 0. It can now be any value, allowing you to generate percentages between `min` and `max` correctly (thanks @somechris)
 * The Container and Zone Game Objects were not handling being added to the render list, causing them to fail input detection tests. Fix #5506 #5508 (thanks @rexrainbow @vforsh @Nightspeller)
 * `IsometricWorldToTileXY` was returning a tile incorrectly offset from the given coordinates. It now returns from the expected location (thanks @veleek)
+* `DOMElementCSSRenderer` will now return early if `src.node` doesn't exist or is null, rather than trying to extract the `style` property from it. Fix #5566 (thanks @rattias)
 
 ### Examples, Documentation and TypeScript
 
