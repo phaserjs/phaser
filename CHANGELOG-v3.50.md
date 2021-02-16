@@ -6,6 +6,8 @@
 * `Scenes.Events.PRE_RENDER` is a new event fired after the display list is sorted and before the Scene is rendered (thanks @samme)
 * You can now set the boolean `preserveDrawingBuffer` in the Game Config (either directly, or in the Render Config). This is passed to the WebGL context during creation and controls if the buffers are automatically cleared each frame or not. The default is to clear them. Set to `true` to retain them.
 * `GameObjects.Shape.setDisplaySize` is a new method that helps setting the display width and height of a Shape object in a chainable way. Fix #5526 (thanks @samme)
+* `Tilemaps.Parsers.Tiled.ParseTilesets` has been updated so it now retains the `type` field information that can be optionally specified within Tiled. This is useful when creating objects from tiles and tile variants (thanks @lackhand)
+* `Tilemaps.Parsers.Tiled.ParseWangsets` is a new function that will parse the Wangset information from Tiled map data, if present, and retain it so you can access the data (thanks @lackhand)
 
 ### Updates
 
