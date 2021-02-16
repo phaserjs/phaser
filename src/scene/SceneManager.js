@@ -20,7 +20,7 @@ var Systems = require('./Systems');
  *
  * The Scene Manager is a Game level system, responsible for creating, processing and updating all of the
  * Scenes in a Game instance.
-ó *
+ *
  *
  * @class SceneManager
  * @memberof Phaser.Scenes
@@ -49,7 +49,7 @@ var SceneManager = new Class({
          * An object that maps the keys to the scene so we can quickly get a scene from a key without iteration.
          *
          * @name Phaser.Scenes.SceneManager#keys
-         * @type {object}
+         * @type {Record<string, Phaser.Scene>}
          * @since 3.0.0
          */
         this.keys = {};
@@ -58,7 +58,7 @@ var SceneManager = new Class({
          * The array in which all of the scenes are kept.
          *
          * @name Phaser.Scenes.SceneManager#scenes
-         * @type {array}
+         * @type {Phaser.Scene[]}
          * @since 3.0.0
          */
         this.scenes = [];
@@ -514,16 +514,7 @@ var SceneManager = new Class({
      */
     loadComplete: function (loader)
     {
-        var scene = loader.scene;
-
-        //  TODO - Remove. This should *not* be handled here
-        //  Try to unlock HTML5 sounds every time any loader completes
-        if (this.game.sound && this.game.sound.onBlurPausedSounds)
-        {
-            this.game.sound.unlock();
-        }
-
-        this.create(scene);
+        this.create(loader.scene);
     },
 
     /**
