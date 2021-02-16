@@ -12,7 +12,15 @@ var PluginCache = require('../plugins/PluginCache');
 
 /**
  * @classdesc
- * A proxy class to the Global Scene Manager.
+ * The Scene Plugin is the main interface to the Scene Manager and allows you to control
+ * any Scene running in your game. You should always use this plugin. By default, it is
+ * mapped to the Scene property `this.scene`. Meaning, from within a Scene, you can call
+ * methods such as `this.scene.start()`.
+ *
+ * Note that nearly all methods in this class are run on a queue-basis and not
+ * immediately. For example, calling `this.scene.launch('SceneB')` will try to
+ * launch SceneB when the Scene Manager next updates, which is at the start of the game
+ * step. All operations are queued and run in the order in which they are invoked here.
  *
  * @class ScenePlugin
  * @memberof Phaser.Scenes
@@ -193,10 +201,10 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#start
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to start.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to start.
      * @param {object} [data] - The Scene data.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     start: function (key, data)
     {
@@ -218,7 +226,7 @@ var ScenePlugin = new Class({
      *
      * @param {object} [data] - The Scene data.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     restart: function (data)
     {
@@ -433,12 +441,12 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#add
      * @since 3.0.0
      *
-     * @param {string} key - The Scene key.
-     * @param {(Phaser.Scene|Phaser.Types.Scenes.SettingsConfig|Phaser.Types.Scenes.CreateSceneFromObjectConfig|function)} sceneConfig - The config for the Scene.
-     * @param {boolean} autoStart - Whether to start the Scene after it's added.
-     * @param {object} [data] - Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
+     * @param {string} key - A unique key used to reference the Scene, i.e. `MainMenu` or `Level1`.
+     * @param {(Phaser.Scene|Phaser.Types.Scenes.SettingsConfig|Phaser.Types.Scenes.CreateSceneFromObjectConfig|function)} sceneConfig - The config for the Scene
+     * @param {boolean} [autoStart=false] - If `true` the Scene will be started immediately after being added.
+     * @param {object} [data] - Optional data object. This will be set as `Scene.settings.data` and passed to `Scene.init`, and `Scene.create`.
      *
-     * @return {Phaser.Scene} An instance of the Scene that was added to the Scene Manager.
+     * @return {?Phaser.Scene} The added Scene, if it was added immediately, otherwise `null`.
      */
     add: function (key, sceneConfig, autoStart, data)
     {
@@ -453,10 +461,10 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#launch
      * @since 3.0.0
      *
-     * @param {string} key - The Scene to launch.
+     * @param {(string|Phaser.Scene)} key - The Scene to launch.
      * @param {object} [data] - The Scene data.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     launch: function (key, data)
     {
@@ -482,10 +490,10 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#run
      * @since 3.10.0
      *
-     * @param {string} key - The Scene to run.
+     * @param {(string|Phaser.Scene)} key - The Scene to run.
      * @param {object} [data] - A data object that will be passed to the Scene and emitted in its ready, wake, or resume events.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     run: function (key, data)
     {
@@ -505,10 +513,10 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#pause
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to pause.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to pause.
      * @param {object} [data] - An optional data object that will be passed to the Scene and emitted in its pause event.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     pause: function (key, data)
     {
@@ -527,10 +535,10 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#resume
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to resume.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to resume.
      * @param {object} [data] - An optional data object that will be passed to the Scene and emitted in its resume event.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     resume: function (key, data)
     {
@@ -549,10 +557,10 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#sleep
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to put to sleep.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to put to sleep.
      * @param {object} [data] - An optional data object that will be passed to the Scene and emitted in its sleep event.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     sleep: function (key, data)
     {
@@ -571,10 +579,10 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#wake
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to wake up.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to wake up.
      * @param {object} [data] - An optional data object that will be passed to the Scene and emitted in its wake event.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     wake: function (key, data)
     {
@@ -593,9 +601,9 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#switch
      * @since 3.0.0
      *
-     * @param {string} key - The Scene to start.
+     * @param {(string|Phaser.Scene)} key - The Scene to start.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     switch: function (key)
     {
@@ -615,10 +623,10 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#stop
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to stop.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to stop.
      * @param {any} [data] - Optional data object to pass to Scene.Systems.shutdown.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     stop: function (key, data)
     {
@@ -636,10 +644,10 @@ var ScenePlugin = new Class({
      * @since 3.0.0
      *
      * @param {boolean} value - If `true` the Scene will be resumed. If `false` it will be paused.
-     * @param {string} [key] - The Scene to set the active state of.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to set the active state of.
      * @param {object} [data] - An optional data object that will be passed to the Scene and emitted with its events.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     setActive: function (value, key, data)
     {
@@ -662,9 +670,9 @@ var ScenePlugin = new Class({
      * @since 3.0.0
      *
      * @param {boolean} value - The visible value.
-     * @param {string} [key] - The Scene to set the visible state for.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to set the visible state for.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     setVisible: function (value, key)
     {
@@ -686,9 +694,9 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#isSleeping
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to check.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to check.
      *
-     * @return {boolean} Whether the Scene is sleeping.
+     * @return {boolean} Whether the Scene is sleeping, or `null` if no matching Scene was found.
      */
     isSleeping: function (key)
     {
@@ -703,9 +711,9 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#isActive
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to check.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to check.
      *
-     * @return {boolean} Whether the Scene is running.
+     * @return {boolean} Whether the Scene is running, or `null` if no matching Scene was found.
      */
     isActive: function (key)
     {
@@ -720,9 +728,9 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#isPaused
      * @since 3.17.0
      *
-     * @param {string} [key] - The Scene to check.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to check.
      *
-     * @return {boolean} Whether the Scene is paused.
+     * @return {boolean} Whether the Scene is paused, or `null` if no matching Scene was found.
      */
     isPaused: function (key)
     {
@@ -737,9 +745,9 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#isVisible
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to check.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to check.
      *
-     * @return {boolean} Whether the Scene is visible.
+     * @return {boolean} Whether the Scene is visible, or `null` if no matching Scene was found.
      */
     isVisible: function (key)
     {
@@ -756,10 +764,10 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#swapPosition
      * @since 3.2.0
      *
-     * @param {string} keyA - The first Scene to swap.
-     * @param {string} [keyB] - The second Scene to swap. If none is given it defaults to this Scene.
+     * @param {(string|Phaser.Scene)} keyA - The first Scene to swap.
+     * @param {(string|Phaser.Scene)} [keyB] - The second Scene to swap. If none is given it defaults to this Scene.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     swapPosition: function (keyA, keyB)
     {
@@ -781,10 +789,10 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#moveAbove
      * @since 3.2.0
      *
-     * @param {string} keyA - The Scene that Scene B will be moved to be above.
-     * @param {string} [keyB] - The Scene to be moved. If none is given it defaults to this Scene.
+     * @param {(string|Phaser.Scene)} keyA - The Scene that Scene B will be moved to be above.
+     * @param {(string|Phaser.Scene)} [keyB] - The Scene to be moved. If none is given it defaults to this Scene.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     moveAbove: function (keyA, keyB)
     {
@@ -806,10 +814,10 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#moveBelow
      * @since 3.2.0
      *
-     * @param {string} keyA - The Scene that Scene B will be moved to be below.
-     * @param {string} [keyB] - The Scene to be moved. If none is given it defaults to this Scene.
+     * @param {(string|Phaser.Scene)} keyA - The Scene that Scene B will be moved to be below.
+     * @param {(string|Phaser.Scene)} [keyB] - The Scene to be moved. If none is given it defaults to this Scene.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     moveBelow: function (keyA, keyB)
     {
@@ -837,7 +845,7 @@ var ScenePlugin = new Class({
      *
      * @param {(string|Phaser.Scene)} [key] - The Scene to be removed.
      *
-     * @return {Phaser.Scenes.SceneManager} This SceneManager.
+     * @return {this} This Scene Plugin instance.
      */
     remove: function (key)
     {
@@ -854,9 +862,9 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#moveUp
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to move.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to move.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     moveUp: function (key)
     {
@@ -873,9 +881,9 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#moveDown
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to move.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to move.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     moveDown: function (key)
     {
@@ -894,9 +902,9 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#bringToTop
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to move.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to move.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     bringToTop: function (key)
     {
@@ -915,9 +923,9 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#sendToBack
      * @since 3.0.0
      *
-     * @param {string} [key] - The Scene to move.
+     * @param {(string|Phaser.Scene)} [key] - The Scene to move.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {this} This Scene Plugin instance.
      */
     sendToBack: function (key)
     {
@@ -934,7 +942,7 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#get
      * @since 3.0.0
      *
-     * @param {string} key - The Scene to retrieve.
+     * @param {(string|Phaser.Scene)} key - The Scene to retrieve.
      *
      * @return {Phaser.Scene} The Scene.
      */
@@ -962,6 +970,7 @@ var ScenePlugin = new Class({
 
     /**
      * The Scene that owns this plugin is shutting down.
+     *
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.Scenes.ScenePlugin#shutdown
@@ -979,6 +988,7 @@ var ScenePlugin = new Class({
 
     /**
      * The Scene that owns this plugin is being destroyed.
+     *
      * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Scenes.ScenePlugin#destroy
