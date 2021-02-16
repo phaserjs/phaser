@@ -10,7 +10,7 @@ var ParseObject = require('./ParseObject');
 var ParseWangsets = require('./ParseWangsets');
 
 /**
- * Tilesets and Image Collections
+ * Tilesets and Image Collections.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseTilesets
  * @since 3.0.0
@@ -43,6 +43,7 @@ var ParseTilesets = function (json)
             {
                 var datas = undefined;
                 var props = undefined;
+
                 if (Array.isArray(set.tiles))
                 {
                     datas = datas || {};
@@ -96,12 +97,15 @@ var ParseTilesets = function (json)
                         }
                     }
                 }
+
                 if (Array.isArray(set.wangsets))
                 {
                     datas = datas || {};
                     props = props || {};
+
                     ParseWangsets(set.wangsets, datas);
                 }
+
                 if (datas) // Implies also props is set.
                 {
                     newSet.tileData = datas;
