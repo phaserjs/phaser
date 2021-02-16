@@ -40,6 +40,10 @@
 * The Container and Zone Game Objects were not handling being added to the render list, causing them to fail input detection tests. Fix #5506 #5508 (thanks @rexrainbow @vforsh @Nightspeller)
 * `IsometricWorldToTileXY` was returning a tile incorrectly offset from the given coordinates. It now returns from the expected location (thanks @veleek)
 * `DOMElementCSSRenderer` will now return early if `src.node` doesn't exist or is null, rather than trying to extract the `style` property from it. Fix #5566 (thanks @rattias)
+* The BitmapMask will now check to see if `renderer` exists before trying to hook to its event emitter (thanks @mattjennings)
+* TileSprite will now check to see if `renderer` exists before trying to restore itself during a context loss (thanks @mattjennings)
+* A Texture will now check to see if `renderer` exists before resetting the WebGL textures (thanks @mattjennings)
+* Destroying a Text Game Object when using the HEADLESS renderer would cause an `Uncaught TypeError`. Fix #5558 (thanks @mattjennings)
 
 ### Examples, Documentation and TypeScript
 
