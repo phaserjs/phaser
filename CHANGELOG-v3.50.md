@@ -31,6 +31,7 @@
 * `LightPipeline.lightsActive` is a new boolean property that keeps track if the Lights Manager in a Scene is active, or not.
 * The `LightPipeline` now only calls `batchSprite`, `batchTexture` and `batchTextureFrame` if the Scene Lights Manager is active. Fix #5522 (thanks @inmylo)
 * The Tiled Parser has been updated so it now supports object properties defined in an array with name / type values (thanks @veleek)
+* `LineCurve.getTangent` can now take an output vector to receive the tangent value (thanks @samme)
 
 ### Bug Fixes
 
