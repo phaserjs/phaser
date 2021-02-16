@@ -203,6 +203,19 @@ var RenderTarget = new Class({
             width *= this.scale;
             height *= this.scale;
 
+            width = Math.round(width);
+            height = Math.round(height);
+
+            if (width <= 0)
+            {
+                width = 1;
+            }
+
+            if (height <= 0)
+            {
+                height = 1;
+            }
+
             this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter);
             this.framebuffer = renderer.createFramebuffer(width, height, this.texture, false);
 
