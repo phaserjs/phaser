@@ -36,6 +36,7 @@
 * The Tiled Parser has been updated so it now supports object properties defined in an array with name / type values (thanks @veleek)
 * `LineCurve.getTangent` can now take an output vector to receive the tangent value (thanks @samme)
 * `DOMElementCSSRenderer` no longer sets the `pointerEvents` style attribute to `auto`. This is the default value anyway and it now means you can override it from your code by setting the `pointer-events` attribute directly. Fix #5470 (thanks @hayatae @endel)
+* `SceneManager.loadComplete` will no longer try to unlock the Sound Manager, preventing `AudioContext was not allowed to start` console warnings after each Scene finishes loading.
 
 ### Bug Fixes
 
