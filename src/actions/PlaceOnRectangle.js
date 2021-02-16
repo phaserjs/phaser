@@ -21,7 +21,7 @@ var RotateRight = require('../utils/array/RotateRight');
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {Phaser.Geom.Rectangle} rect - The Rectangle to position the Game Objects on.
- * @param {number} [shift=1] - An optional positional offset.
+ * @param {number} [shift=0] - An optional positional offset.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
  */
