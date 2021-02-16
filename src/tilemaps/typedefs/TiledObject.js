@@ -4,7 +4,7 @@
  *
  * @property {number} id - The unique object ID.
  * @property {string} name - The name this object was assigned in Tiled.
- * @property {string} type - The type, as assigned in Tiled.
+ * @property {string} type - The string type of this instance, as assigned in Tiled. Tiled supports inheriting instance types from tilesets; in that case, the type will be set in the tile's data, but will be `''` here; use the `gid` to fetch the tile data or properties.
  * @property {boolean} [visible] - The visible state of this object.
  * @property {number} [x] - The horizontal position of this object, in pixels, relative to the tilemap.
  * @property {number} [y] - The vertical position of this object, in pixels, relative to the tilemap.
