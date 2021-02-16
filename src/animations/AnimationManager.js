@@ -689,16 +689,19 @@ var AnimationManager = new Class({
      * Example:
      *
      * If you have a sprite sheet loaded called `explosion` and it contains 12 frames, then you can call this method using:
-     * `this.anims.generateFrameNumbers('explosion', { start: 0, end: 12 })`.
      *
-     * The `end` value tells it to stop after 12 frames. To create an animation using this method, you can do:
+     * `this.anims.generateFrameNumbers('explosion', { start: 0, end: 11 })`.
+     *
+     * The `end` value of 11 tells it to stop after the 12th frame has been added, because it started at zero.
+     *
+     * To create an animation using this method, you can do:
      *
      * ```javascript
      * this.anims.create({
      *   key: 'boom',
      *   frames: this.anims.generateFrameNames('explosion', {
      *     start: 0,
-     *     end: 12
+     *     end: 11
      *   })
      * });
      * ```
