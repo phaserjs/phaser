@@ -50,6 +50,7 @@
 * A Texture will now check to see if `renderer` exists before resetting the WebGL textures (thanks @mattjennings)
 * Destroying a Text Game Object when using the HEADLESS renderer would cause an `Uncaught TypeError`. Fix #5558 (thanks @mattjennings)
 * The `Actions.PlayAnimation` arguments have been updated to match the new animation system introduced in Phaser 3.50. It will now take either a string-key, or a play animation configuration object, and the `startFrame` parameter has been replaced with `ignoreIfPlaying`. The function will also only call `play` if the Game Object has an animation component, meaning you can now supply this action with a mixed-content array without errors. Fix #5555 (thanks @xuxucode)
+* `RenderTarget.resize` will now `Math.floor` the scaled width and height as well as ensure they're not <= 0 which causes  `Framebuffer status: Incomplete Attachment` errors. Fix #5563 (thanks @orjandh)
 
 ### Examples, Documentation and TypeScript
 
