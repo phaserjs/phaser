@@ -37,6 +37,8 @@
 * `LineCurve.getTangent` can now take an output vector to receive the tangent value (thanks @samme)
 * `DOMElementCSSRenderer` no longer sets the `pointerEvents` style attribute to `auto`. This is the default value anyway and it now means you can override it from your code by setting the `pointer-events` attribute directly. Fix #5470 (thanks @hayatae @endel)
 * `SceneManager.loadComplete` will no longer try to unlock the Sound Manager, preventing `AudioContext was not allowed to start` console warnings after each Scene finishes loading.
+* `WebGLRenderer.deleteTexture` will now run `resetTextures(true)` first, incase the requested texture to be deleted is currently bound. Previously, it would delete the texture and then reset them.
+* If `TextureSource.destroy` has a WebGL Texture it will tell the WebGL Renderer to reset the textures first, before deleting its texture.
 
 ### Bug Fixes
 
