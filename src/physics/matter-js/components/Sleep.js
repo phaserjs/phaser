@@ -27,6 +27,8 @@ var Sleep = {
     setToSleep: function ()
     {
         Sleeping.set(this.body, true);
+
+        return this;
     },
 
     /**
@@ -40,6 +42,8 @@ var Sleep = {
     setAwake: function ()
     {
         Sleeping.set(this.body, false);
+
+        return this;
     },
 
     /**
@@ -63,9 +67,9 @@ var Sleep = {
 
     /**
      * Enable sleep and wake events for this body.
-     * 
+     *
      * By default when a body goes to sleep, or wakes up, it will not emit any events.
-     * 
+     *
      * The events are emitted by the Matter World instance and can be listened to via
      * the `SLEEP_START` and `SLEEP_END` events.
      *
