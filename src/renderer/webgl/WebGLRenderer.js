@@ -2173,14 +2173,14 @@ var WebGLRenderer = new Class({
      */
     deleteTexture: function (texture, reset)
     {
+        if (reset)
+        {
+            this.resetTextures(true);
+        }
+
         if (texture)
         {
             this.gl.deleteTexture(texture);
-        }
-
-        if (reset)
-        {
-            this.resetTextures();
         }
 
         return this;
