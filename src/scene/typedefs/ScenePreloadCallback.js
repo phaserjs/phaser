@@ -5,4 +5,6 @@
  *
  * @callback Phaser.Types.Scenes.ScenePreloadCallback
  * @since 3.0.0
+ *
+ * @this Phaser.Scene
  */
