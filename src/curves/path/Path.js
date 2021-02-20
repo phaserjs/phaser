@@ -869,7 +869,7 @@ var Path = new Class({
  */
 GameObjectFactory.register('path', function (x, y)
 {
-    return new Path(x, y);
+    return this.displayList.add(new Path(x, y));
 });
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
