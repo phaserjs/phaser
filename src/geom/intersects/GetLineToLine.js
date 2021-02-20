@@ -55,7 +55,7 @@ var GetLineToLine = function (line1, line2, out)
     var T1 = (x3 + dx2 * T2 - x1) / dx1;
 
     //  Intersects?
-    if (T1 < 0 || T2 < 0 || T2 > 1)
+    if (T1 < 0 || T2 < 0 || T1 > 1 || T2 > 1)
     {
         return null;
     }
