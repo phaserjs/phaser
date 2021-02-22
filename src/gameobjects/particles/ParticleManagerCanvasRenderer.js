@@ -69,9 +69,6 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
 
         camera.addToRenderList(emitter);
 
-        var followX = (emitter.follow) ? emitter.follow.x + emitter.followOffset.x : 0;
-        var followY = (emitter.follow) ? emitter.follow.y + emitter.followOffset.y : 0;
-
         var scrollFactorX = emitter.scrollFactorX;
         var scrollFactorY = emitter.scrollFactorY;
 
@@ -94,7 +91,7 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
 
             camMatrix.copyFrom(camera.matrix);
 
-            camMatrix.multiplyWithOffset(managerMatrix, followX + -camera.scrollX * scrollFactorX, followY + -camera.scrollY * scrollFactorY);
+            camMatrix.multiplyWithOffset(managerMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
 
             //  Undo the camera scroll
             particleMatrix.e = particle.x;
