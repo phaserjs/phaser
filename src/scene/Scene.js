@@ -37,6 +37,7 @@ var Scene = new Class({
 
         /**
          * A reference to the Phaser.Game instance.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#game
@@ -47,6 +48,7 @@ var Scene = new Class({
 
         /**
          * A reference to the global Animation Manager.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#anims
@@ -57,6 +59,7 @@ var Scene = new Class({
 
         /**
          * A reference to the global Cache.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#cache
@@ -66,7 +69,8 @@ var Scene = new Class({
         this.cache;
 
         /**
-         * A reference to the game level Data Manager.
+         * A reference to the global Data Manager.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#registry
@@ -77,16 +81,18 @@ var Scene = new Class({
 
         /**
          * A reference to the Sound Manager.
+         *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
          * @name Phaser.Scene#sound
-         * @type {Phaser.Sound.BaseSoundManager}
+         * @type {(Phaser.Sound.NoAudioSoundManager|Phaser.Sound.HTML5AudioSoundManager|Phaser.Sound.WebAudioSoundManager)}
          * @since 3.0.0
          */
         this.sound;
 
         /**
          * A reference to the Texture Manager.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#textures
@@ -96,7 +102,8 @@ var Scene = new Class({
         this.textures;
 
         /**
-         * A scene level Event Emitter.
+         * A Scene specific Event Emitter.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#events
@@ -106,7 +113,8 @@ var Scene = new Class({
         this.events;
 
         /**
-         * A scene level Camera System.
+         * The Scene Camera Manager.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#cameras
@@ -116,7 +124,8 @@ var Scene = new Class({
         this.cameras;
 
         /**
-         * A scene level Game Object Factory.
+         * The Scene Game Object Factory.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#add
@@ -126,7 +135,8 @@ var Scene = new Class({
         this.add;
 
         /**
-         * A scene level Game Object Creator.
+         * The Scene Game Object Creator.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#make
@@ -137,6 +147,7 @@ var Scene = new Class({
 
         /**
          * A reference to the Scene Manager Plugin.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#scene
@@ -146,7 +157,8 @@ var Scene = new Class({
         this.scene;
 
         /**
-         * A scene level Game Object Display List.
+         * The Game Object Display List belonging to this Scene.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#children
@@ -156,7 +168,8 @@ var Scene = new Class({
         this.children;
 
         /**
-         * A scene level Lights Manager Plugin.
+         * The Scene Lights Manager Plugin.
+         *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
          * @name Phaser.Scene#lights
@@ -166,7 +179,10 @@ var Scene = new Class({
         this.lights;
 
         /**
-         * A scene level Data Manager Plugin.
+         * A Scene specific Data Manager Plugin.
+         *
+         * See the `registry` property for the global Data Manager.
+         *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
          * @name Phaser.Scene#data
@@ -176,7 +192,8 @@ var Scene = new Class({
         this.data;
 
         /**
-         * A scene level Input Manager Plugin.
+         * The Scene Input Manager Plugin.
+         *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
          * @name Phaser.Scene#input
@@ -186,7 +203,8 @@ var Scene = new Class({
         this.input;
 
         /**
-         * A scene level Loader Plugin.
+         * The Scene Loader Plugin.
+         *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
          * @name Phaser.Scene#load
@@ -196,7 +214,8 @@ var Scene = new Class({
         this.load;
 
         /**
-         * A scene level Time and Clock Plugin.
+         * The Scene Time and Clock Plugin.
+         *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
          * @name Phaser.Scene#time
@@ -206,7 +225,8 @@ var Scene = new Class({
         this.time;
 
         /**
-         * A scene level Tween Manager Plugin.
+         * The Scene Tween Manager Plugin.
+         *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
          * @name Phaser.Scene#tweens
@@ -216,7 +236,8 @@ var Scene = new Class({
         this.tweens;
 
         /**
-         * A scene level Arcade Physics Plugin.
+         * The Scene Arcade Physics Plugin.
+         *
          * This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.
          *
          * @name Phaser.Scene#physics
@@ -226,7 +247,8 @@ var Scene = new Class({
         this.physics;
 
         /**
-         * A scene level Matter Physics Plugin.
+         * The Scene Matter Physics Plugin.
+         *
          * This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.
          *
          * @name Phaser.Scene#matter
@@ -238,7 +260,8 @@ var Scene = new Class({
         if (typeof PLUGIN_FBINSTANT)
         {
             /**
-             * A scene level Facebook Instant Games Plugin.
+             * The Facebook Instant Games Plugin.
+             *
              * This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.
              *
              * @name Phaser.Scene#facebook
@@ -250,6 +273,7 @@ var Scene = new Class({
 
         /**
          * A reference to the global Scale Manager.
+         *
          * This property will only be available if defined in the Scene Injection Map.
          *
          * @name Phaser.Scene#scale
@@ -259,7 +283,7 @@ var Scene = new Class({
         this.scale;
 
         /**
-         * A reference to the Plugin Manager.
+         * A reference to the global Plugin Manager.
          *
          * The Plugin Manager is a global system that allows plugins to register themselves with it, and can then install
          * those plugins into Scenes as required.
@@ -271,7 +295,7 @@ var Scene = new Class({
         this.plugins;
 
         /**
-         * A reference to the renderer instance Phaser is using, either Canvas or WebGL.
+         * A reference to the renderer instance Phaser is using, either Canvas Renderer or WebGL Renderer.
          *
          * @name Phaser.Scene#renderer
          * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
@@ -281,7 +305,8 @@ var Scene = new Class({
     },
 
     /**
-     * Should be overridden by your own Scenes.
+     * This method should be overridden by your own Scenes.
+     *
      * This method is called once per game step while the scene is running.
      *
      * @method Phaser.Scene#update
