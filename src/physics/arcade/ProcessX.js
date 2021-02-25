@@ -379,7 +379,7 @@ var RunImmovableBody2 = function (blockedState)
         //  Separation happened in the block check
         body1.velocity.x = 0;
     }
-    if (body2OnLeft)
+    else if (body2OnLeft)
     {
         body1.processX(overlap, body1FullImpact, true);
     }
