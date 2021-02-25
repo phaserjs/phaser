@@ -56,6 +56,7 @@
 * `RenderTarget.resize` will now `Math.floor` the scaled width and height as well as ensure they're not <= 0 which causes  `Framebuffer status: Incomplete Attachment` errors. Fix #5563 #5478 (thanks @orjandh @venarius)
 * `Matter.Components.Sleep.setToSleep` and `setAwake` were documented as returning `this`, however they didn't return anything. Both now `return this` correctly. Fix #5567 (thanks @micsun-al)
 * The Particle position would be wrong when set to follow a Sprite using the Canvas Renderer.Fix #5457 (thanks @samme)
+* Fixed a conditional bug in Arcade Physics `ProcessX` when Body2 is Immovable and Body1 is not.
 
 ### Examples, Documentation and TypeScript
 
