@@ -337,9 +337,10 @@ var Body = new Class({
          *
          * When `useDamping` is true, this is a damping multiplier between 0 and 1.
          * A value of 0 means the Body stops instantly.
-         * A value of 0.01 mean the Body loses 99% of its velocity per second.
-         * A value of 0.1 means the Body loses 90% of its velocity per second.
+         * A value of 0.01 mean the Body keeps 1% of its velocity per second, losing 99%.
+         * A value of 0.1 means the Body keeps 10% of its velocity per second, losing 90%.
          * A value of 1 means the Body loses no velocity.
+         * You can use very small values (e.g., 0.001) to stop the Body quickly.
          *
          * The x and y components are applied separately.
          *
