@@ -8,6 +8,7 @@
 * `GameObjects.Shape.setDisplaySize` is a new method that helps setting the display width and height of a Shape object in a chainable way. Fix #5526 (thanks @samme)
 * `Tilemaps.Parsers.Tiled.ParseTilesets` has been updated so it now retains the `type` field information that can be optionally specified within Tiled. This is useful when creating objects from tiles and tile variants (thanks @lackhand)
 * `Tilemaps.Parsers.Tiled.ParseWangsets` is a new function that will parse the Wangset information from Tiled map data, if present, and retain it so you can access the data (thanks @lackhand)
+* `WebGLPipeline.glReset` is a new boolean property that keeps track of when the GL Context was last reset by the Pipeline Manager. It then redirects calls to `bind` to `rebind` instead to restore the pipeline state.
 
 ### Updates
 
@@ -39,6 +40,12 @@
 * `SceneManager.loadComplete` will no longer try to unlock the Sound Manager, preventing `AudioContext was not allowed to start` console warnings after each Scene finishes loading.
 * `WebGLRenderer.deleteTexture` will now run `resetTextures(true)` first, incase the requested texture to be deleted is currently bound. Previously, it would delete the texture and then reset them.
 * If `TextureSource.destroy` has a WebGL Texture it will tell the WebGL Renderer to reset the textures first, before deleting its texture.
+* `Cameras.Controls.FixedKeyControl.minZoom` is a new configurable property that sets the minimum camera zoom. Default to 0.001 (thanks @samme)
+* `Cameras.Controls.FixedKeyControl.maxZoom` is a new configurable property that sets the maximum camera zoom. Default to 1000 (thanks @samme)
+* `Cameras.Controls.SmoothedKeyControl.minZoom` is a new configurable property that sets the minimum camera zoom. Default to 0.001 (thanks @samme)
+* `Cameras.Controls.SmoothedKeyControl.maxZoom` is a new configurable property that sets the maximum camera zoom. Default to 1000 (thanks @samme)
+* The `WebGLPipeline.rebind` method now accepts an optional parameter `currentShader`. If provided it will set the current shader to be this after the pipeline reset is complete.
+* The `PipelineManager.rebind` method will now flag all pipelines as `glReset = true`, so they know to fully rebind the next time they are invoked.
 
 ### Bug Fixes
 
@@ -57,12 +64,14 @@
 * `Matter.Components.Sleep.setToSleep` and `setAwake` were documented as returning `this`, however they didn't return anything. Both now `return this` correctly. Fix #5567 (thanks @micsun-al)
 * The Particle position would be wrong when set to follow a Sprite using the Canvas Renderer. Fix #5457 (thanks @samme)
 * Fixed a conditional bug in Arcade Physics `ProcessX` when Body2 is Immovable and Body1 is not.
+* The Spine Plugin would throw an error while unloading and restarting the game. Fix #5477 (thanks @ayamomiji @Pong420)
+* The Spine Plugin would cause all textures to render as blue if a Spine object followed any Game Object using the Graphics Pipeline on the display list, due to the gl context restoration not being properly handled. Fix #5493 #5449 (thanks @EmilSV @FloodGames)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@edemaine @xuxucode @schontz @kaktus42 @Nero0 
+@edemaine @xuxucode @schontz @kaktus42 @Nero0 @samme
 
 ## Version 3.52.0 - Crusch - 14th January 2021
 
