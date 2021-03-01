@@ -1045,6 +1045,13 @@ var PipelineManager = new Class({
 
         renderer.setBlendMode(0, true);
 
+        var entries = this.pipelines.entries;
+
+        for (var key in entries)
+        {
+            entries[key].glReset = true;
+        }
+
         if (pipeline)
         {
             this.current = pipeline;
