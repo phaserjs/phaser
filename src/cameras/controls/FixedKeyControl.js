@@ -120,6 +120,26 @@ var FixedKeyControl = new Class({
         this.zoomSpeed = GetValue(config, 'zoomSpeed', 0.01);
 
         /**
+         * The smallest zoom value the camera will reach when zoomed out.
+         *
+         * @name Phaser.Cameras.Controls.FixedKeyControl#minZoom
+         * @type {number}
+         * @default 0.001
+         * @since 3.53.0
+         */
+        this.minZoom = GetValue(config, 'minZoom', 0.001);
+
+        /**
+         * The largest zoom value the camera will reach when zoomed in.
+         *
+         * @name Phaser.Cameras.Controls.FixedKeyControl#maxZoom
+         * @type {number}
+         * @default 1000
+         * @since 3.53.0
+         */
+        this.maxZoom = GetValue(config, 'maxZoom', 1000);
+
+        /**
          * The horizontal speed the camera will move.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#speedX
@@ -265,14 +285,19 @@ var FixedKeyControl = new Class({
         {
             cam.zoom -= this.zoomSpeed;
 
-            if (cam.zoom < 0.1)
+            if (cam.zoom < this.minZoom)
             {
-                cam.zoom = 0.1;
+                cam.zoom = this.minZoom;
             }
         }
         else if (this.zoomOut && this.zoomOut.isDown)
         {
             cam.zoom += this.zoomSpeed;
+
+            if (cam.zoom > this.maxZoom)
+            {
+                cam.zoom = this.maxZoom;
+            }
         }
     },
 
