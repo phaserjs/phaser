@@ -362,6 +362,19 @@ var WebGLPipeline = new Class({
          * @since 3.50.0
          */
         this.config = config;
+
+        /**
+         * Has the GL Context been reset to the Phaser defaults since the last time
+         * this pipeline was bound? This is set automatically when the Pipeline Manager
+         * resets itself, usually after handing off to a 3rd party renderer like Spine.
+         *
+         * You should treat this property as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#glReset
+         * @type {boolean}
+         * @since 3.53.0
+         */
+        this.glReset = false;
     },
 
     /**
@@ -828,6 +841,11 @@ var WebGLPipeline = new Class({
     {
         if (currentShader === undefined) { currentShader = this.currentShader; }
 
+        if (this.glReset)
+        {
+            return this.rebind(currentShader);
+        }
+
         var wasBound = this.setVertexBuffer();
 
         currentShader.bind(wasBound);
@@ -850,9 +868,11 @@ var WebGLPipeline = new Class({
      * @fires Phaser.Renderer.WebGL.Pipelines.Events#REBIND
      * @since 3.0.0
      *
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
+     *
      * @return {this} This WebGLPipeline instance.
      */
-    rebind: function ()
+    rebind: function (currentShader)
     {
         this.setVertexBuffer();
 
@@ -861,7 +881,12 @@ var WebGLPipeline = new Class({
         //  Loop in reverse, so the first shader in the array is left as being bound
         for (var i = shaders.length - 1; i >= 0; i--)
         {
-            this.currentShader = shaders[i].rebind();
+            var shader = shaders[i].rebind();
+
+            if (!currentShader || shader === currentShader)
+            {
+                this.currentShader = shader;
+            }
         }
 
         this.emit(Events.REBIND, this.currentShader);
@@ -869,6 +894,8 @@ var WebGLPipeline = new Class({
         this.onActive(this.currentShader);
 
         this.onRebind();
+
+        this.glReset = false;
 
         return this;
     },
