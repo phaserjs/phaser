@@ -1128,18 +1128,16 @@ var SpinePlugin = new Class({
      */
     gameDestroy: function ()
     {
-        this.destroy();
+        this.pluginManager.removeGameObject('spine', true, true);
+        this.pluginManager.removeGameObject('spineContainer', true, true);
+        this.pluginManager = null;
 
         if (sceneRenderer)
         {
             sceneRenderer.dispose();
+            sceneRenderer = null;
         }
-
         this.sceneRenderer = null;
-        this.pluginManager = null;
-
-        this.pluginManager.removeGameObject('spine', true, true);
-        this.pluginManager.removeGameObject('spineContainer', true, true);
     }
 
 });
