@@ -1130,6 +1130,7 @@ var SpinePlugin = new Class({
     {
         this.pluginManager.removeGameObject('spine', true, true);
         this.pluginManager.removeGameObject('spineContainer', true, true);
+
         this.pluginManager = null;
 
         if (sceneRenderer)
@@ -1137,6 +1138,7 @@ var SpinePlugin = new Class({
             sceneRenderer.dispose();
             sceneRenderer = null;
         }
+
         this.sceneRenderer = null;
     }
 
