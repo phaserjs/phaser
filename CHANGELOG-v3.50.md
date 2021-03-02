@@ -66,6 +66,7 @@
 * Fixed a conditional bug in Arcade Physics `ProcessX` when Body2 is Immovable and Body1 is not.
 * The Spine Plugin would throw an error while unloading and restarting the game. Fix #5477 (thanks @ayamomiji @Pong420)
 * The Spine Plugin would cause all textures to render as blue if a Spine object followed any Game Object using the Graphics Pipeline on the display list, due to the gl context restoration not being properly handled. Fix #5493 #5449 (thanks @EmilSV @FloodGames)
+* Spine Game Objects and Containers will now add themselves to the Camera render list, fixing issues where input didn't work if depth was used or they were overlapped with another interactive Game Object.
 
 ### Examples, Documentation and TypeScript
 
