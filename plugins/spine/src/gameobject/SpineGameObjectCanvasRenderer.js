@@ -34,6 +34,8 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, camera, parentMatri
     var spriteMatrix = renderer._tempMatrix2;
     var calcMatrix = renderer._tempMatrix3;
 
+    camera.addToRenderList(src);
+
     spriteMatrix.applyITRS(src.x, src.y, src.rotation, Math.abs(src.scaleX), Math.abs(src.scaleY));
 
     camMatrix.copyFrom(camera.matrix);

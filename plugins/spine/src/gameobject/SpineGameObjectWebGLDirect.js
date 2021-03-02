@@ -48,6 +48,8 @@ var SpineGameObjectWebGLDirect = function (renderer, src, camera, parentMatrix, 
         skeleton.color.a = Clamp(alpha * container.alpha, 0, 1);
     }
 
+    camera.addToRenderList(src);
+
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
     var viewportHeight = renderer.height;

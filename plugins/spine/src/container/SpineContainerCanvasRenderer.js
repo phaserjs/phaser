@@ -27,6 +27,8 @@ var SpineContainerCanvasRenderer = function (renderer, container, camera, parent
         return;
     }
 
+    camera.addToRenderList(container);
+
     var transformMatrix = container.localTransform;
 
     if (parentMatrix)

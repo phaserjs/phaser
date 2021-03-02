@@ -36,6 +36,8 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
         return;
     }
 
+    camera.addToRenderList(container);
+
     var transformMatrix = container.localTransform;
 
     if (parentMatrix)
