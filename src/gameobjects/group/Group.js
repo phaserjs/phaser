@@ -251,6 +251,9 @@ var Group = new Class({
         {
             this.createMultiple(config);
         }
+
+        this.on(Events.ADDED_TO_SCENE, this.addedToScene, this);
+        this.on(Events.REMOVED_FROM_SCENE, this.removedFromScene, this);
     },
 
     //  Overrides Game Object method
@@ -299,12 +302,8 @@ var Group = new Class({
 
         var child = new this.classType(this.scene, x, y, key, frame);
 
-        this.scene.sys.displayList.add(child);
-
-        if (child.preUpdate)
-        {
-            this.scene.sys.updateList.add(child);
-        }
+        child.addToDisplayList(this.scene.sys.displayList);
+        child.addToUpdateList();
 
         child.visible = visible;
         child.setActive(active);
@@ -576,12 +575,8 @@ var Group = new Class({
 
         if (addToScene)
         {
-            this.scene.sys.displayList.add(child);
-
-            if (child.preUpdate)
-            {
-                this.scene.sys.updateList.add(child);
-            }
+            child.addToDisplayList(this.scene.sys.displayList);
+            child.addToUpdateList();
         }
 
         child.on(Events.DESTROY, this.remove, this);
@@ -661,12 +656,8 @@ var Group = new Class({
         }
         else if (removeFromScene)
         {
-            child.scene.sys.displayList.remove(child);
-
-            if (child.preUpdate)
-            {
-                child.scene.sys.updateList.remove(child);
-            }
+            child.removeFromDisplayList();
+            child.removeFromUpdateList();
         }
 
         return this;
@@ -704,12 +695,8 @@ var Group = new Class({
             }
             else if (removeFromScene)
             {
-                gameObject.scene.sys.displayList.remove(gameObject);
-
-                if (gameObject.preUpdate)
-                {
-                    gameObject.scene.sys.updateList.remove(gameObject);
-                }
+                gameObject.removeFromDisplayList();
+                gameObject.removeFromUpdateList();
             }
         }
 
@@ -1692,18 +1679,26 @@ var Group = new Class({
     },
 
     /**
-     * Empties this group and removes it from the Scene.
+     * Empties this Group of all children and removes it from the Scene.
      *
      * Does not call {@link Phaser.GameObjects.Group#removeCallback}.
+     *
+     * Children of this Group will _not_ be removed from the Scene by calling this method
+     * unless you specify the `removeFromScene` parameter.
+     *
+     * Children of this Group will also _not_ be destroyed by calling this method
+     * unless you specify the `destroyChildren` parameter.
      *
      * @method Phaser.GameObjects.Group#destroy
      * @since 3.0.0
      *
-     * @param {boolean} [destroyChildren=false] - Also {@link Phaser.GameObjects.GameObject#destroy} each group member.
+     * @param {boolean} [destroyChildren=false] - Also {@link Phaser.GameObjects.GameObject#destroy} each Group member.
+     * @param {boolean} [removeFromScene=false] - Optionally remove each Group member from the Scene.
      */
-    destroy: function (destroyChildren)
+    destroy: function (destroyChildren, removeFromScene)
     {
         if (destroyChildren === undefined) { destroyChildren = false; }
+        if (removeFromScene === undefined) { removeFromScene = false; }
 
         //  This Game Object had already been destroyed
         if (!this.scene || this.ignoreDestroy)
@@ -1711,7 +1706,13 @@ var Group = new Class({
             return;
         }
 
-        this.clear(false, destroyChildren);
+        this.emit(Events.DESTROY, this);
+
+        this.removeAllListeners();
+
+        this.scene.sys.updateList.remove(this);
+
+        this.clear(removeFromScene, destroyChildren);
 
         this.scene = undefined;
         this.children = undefined;
