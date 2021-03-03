@@ -10,6 +10,21 @@
 * `Tilemaps.Parsers.Tiled.ParseWangsets` is a new function that will parse the Wangset information from Tiled map data, if present, and retain it so you can access the data (thanks @lackhand)
 * `WebGLPipeline.glReset` is a new boolean property that keeps track of when the GL Context was last reset by the Pipeline Manager. It then redirects calls to `bind` to `rebind` instead to restore the pipeline state.
 
+### Display List Updates
+
+* `GameObject.addToDisplayList` is a new method that allows you to add a Game Object to the given Display List. If no Display List is given, it will default to the Scene Display List. A Game Object can only exist on one Display List at any given time, but may move freely between them.
+* `GameObject.addToUpdateList` is a new method that adds the Game Object to the Update List belonging to the Scene. When a Game Object is added to the Update List it will have its `preUpdate` method called every game frame.
+* `GameObject.removeFromDisplayList` is a new method that removes the Game Object from the Display List it is currently on.
+* `GameObject.removeFromUpdateList` is a new method that removes the Game Object from the Scenes Update List.
+* `GameObject.destroy` will now call the new `removeFromDisplayList` and `removeFromUpdateList` methods.
+* `DisplayList.addChildCallback` will now use the new `addToDisplayList` and `removeFromDisplayList` Game Object methods.
+* `Container.addHandler` will now use the new `addToDisplayList` and `removeFromDisplayList` Game Object methods.
+* `Layer.addChildCallback` and `removeChildCallback` will now use the new `addToDisplayList` and `removeFromDisplayList` Game Object methods.
+* `Group` now listens for the `ADDED_TO_SCENE` and `REMOVED_FROM_SCENE` methods and adds and removes itself from the Update List accordingly.
+* `Group.add` and `create` now uses the new `addToDisplayList` and `addToUpdateList` Game Object methods.
+* `Group.remove` now uses the new `removeFromDisplayList` and `removeFromUpdateList` Game Object methods.
+* `Group.destroy` has a new optional boolean parameter `removeFromScene`, which will remove all Group children from the Scene if specified.
+
 ### Updates
 
 * Phaser no longer includes the IE9 polyfills. All polyfills have been removed from the core builds and moved to their own specific version called `phaser-ie9`, which can be found in the `dist` folder.
@@ -67,6 +82,7 @@
 * The Spine Plugin would throw an error while unloading and restarting the game. Fix #5477 (thanks @ayamomiji @Pong420)
 * The Spine Plugin would cause all textures to render as blue if a Spine object followed any Game Object using the Graphics Pipeline on the display list, due to the gl context restoration not being properly handled. Fix #5493 #5449 (thanks @EmilSV @FloodGames)
 * Spine Game Objects and Containers will now add themselves to the Camera render list, fixing issues where input didn't work if depth was used or they were overlapped with another interactive Game Object.
+* Calling `Group.destroy` would cause a runtime error if `Group.runChildUpdate` had been set. Fix #5576 (thanks @samme)
 
 ### Examples, Documentation and TypeScript
 
