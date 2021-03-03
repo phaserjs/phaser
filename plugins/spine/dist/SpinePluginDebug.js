@@ -1993,7 +1993,10 @@ var BitmapMask = new Class({
 
         scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.createMask, this);
 
-        renderer.on(RenderEvents.RESIZE, this.createMask, this);
+        if (renderer)
+        {
+            renderer.on(RenderEvents.RESIZE, this.createMask, this);
+        }
     },
 
     /**
@@ -2007,7 +2010,7 @@ var BitmapMask = new Class({
     {
         var renderer = this.renderer;
 
-        if (!renderer.gl)
+        if (!renderer || !renderer.gl)
         {
             return;
         }
@@ -2044,7 +2047,7 @@ var BitmapMask = new Class({
     {
         var renderer = this.renderer;
 
-        if (!renderer.gl || !this.mainTexture)
+        if (!renderer || !renderer.gl || !this.mainTexture)
         {
             return;
         }
@@ -2146,8 +2149,11 @@ var BitmapMask = new Class({
     {
         this.clearMask();
 
-        this.renderer.off(RenderEvents.RESIZE, this.createMask, this);
-
+        if (this.renderer)
+        {
+            this.renderer.off(RenderEvents.RESIZE, this.createMask, this);
+        }
+        
         this.bitmapMask = null;
         this.prevFramebuffer = null;
         this.renderer = null;
@@ -3266,7 +3272,6 @@ var GameObject = new Class({
 
         while (parent)
         {
-            // indexes.unshift([parent.getIndex(child), parent.name]);
             indexes.unshift(parent.getIndex(child));
 
             child = parent;
@@ -3281,8 +3286,14 @@ var GameObject = new Class({
             }
         }
 
-        // indexes.unshift([this.scene.sys.displayList.getIndex(child), 'root']);
-        indexes.unshift(this.scene.sys.displayList.getIndex(child));
+        if (this.displayList)
+        {
+            indexes.unshift(this.displayList.getIndex(child));
+        }
+        else
+        {
+            indexes.unshift(this.scene.sys.displayList.getIndex(child));
+        }
 
         return indexes;
     },
@@ -5812,6 +5823,12 @@ var Pipeline = {
         if (pipeline === undefined) { pipeline = PIPELINE_CONST.MULTI_PIPELINE; }
 
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return false;
+        }
+
         var pipelines = renderer.pipelines;
 
         this.postPipelines = [];
@@ -5853,6 +5870,12 @@ var Pipeline = {
     setPipeline: function (pipeline, pipelineData, copyData)
     {
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return this;
+        }
+
         var pipelines = renderer.pipelines;
 
         if (pipelines)
@@ -5904,6 +5927,12 @@ var Pipeline = {
     setPostPipeline: function (pipelines, pipelineData, copyData)
     {
         var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return this;
+        }
+
         var pipelineManager = renderer.pipelines;
 
         if (pipelineManager)
@@ -5977,11 +6006,13 @@ var Pipeline = {
      *
      * @param {(string|function|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline)} pipeline - The string-based name of the pipeline, or a pipeline class.
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} The first Post Pipeline matching the name, or undefined if no match.
+     * @return {(Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} The Post Pipeline/s matching the name, or undefined if no match. If more than one match they are returned in an array.
      */
     getPostPipeline: function (pipeline)
     {
         var pipelines = this.postPipelines;
+
+        var results = [];
 
         for (var i = 0; i < pipelines.length; i++)
         {
@@ -5989,9 +6020,11 @@ var Pipeline = {
 
             if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
             {
-                return instance;
+                results.push(instance);
             }
         }
+
+        return (results.length === 1) ? results[0] : results;
     },
 
     /**
@@ -6058,7 +6091,7 @@ var Pipeline = {
     },
 
     /**
-     * Removes a single Post Pipeline instance from this Game Object, based on the given name, and destroys it.
+     * Removes a type of Post Pipeline instances from this Game Object, based on the given name, and destroys them.
      *
      * If you wish to remove all Post Pipelines use the `resetPostPipeline` method instead.
      *
@@ -6074,19 +6107,21 @@ var Pipeline = {
     {
         var pipelines = this.postPipelines;
 
-        for (var i = 0; i < pipelines.length; i++)
+        for (var i = pipelines.length - 1; i >= 0; i--)
         {
             var instance = pipelines[i];
 
-            if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
+            if (
+                (typeof pipeline === 'string' && instance.name === pipeline) ||
+                (typeof pipeline !== 'string' && instance instanceof pipeline))
             {
                 instance.destroy();
 
                 SpliceOne(pipelines, i);
-
-                return this;
             }
         }
+
+        this.hasPostPipeline = (this.postPipelines.length > 0);
 
         return this;
     },
@@ -9033,16 +9068,6 @@ var Container = new Class({
         this.tempTransformMatrix = new Components.TransformMatrix();
 
         /**
-         * A reference to the Scene Display List.
-         *
-         * @name Phaser.GameObjects.Container#_displayList
-         * @type {Phaser.GameObjects.DisplayList}
-         * @private
-         * @since 3.4.0
-         */
-        this._displayList = scene.sys.displayList;
-
-        /**
          * The property key to sort by.
          *
          * @name Phaser.GameObjects.Container#_sortKey
@@ -9316,11 +9341,23 @@ var Container = new Class({
 
         if (this.exclusive)
         {
-            this._displayList.remove(gameObject);
+            if (gameObject.displayList)
+            {
+                gameObject.displayList.remove(gameObject);
+            }
 
             if (gameObject.parentContainer)
             {
                 gameObject.parentContainer.remove(gameObject);
+            }
+
+            if (this.displayList)
+            {
+                gameObject.displayList = this.displayList;
+            }
+            else
+            {
+                gameObject.displayList = this.scene.sys.displayList;
             }
 
             gameObject.parentContainer = this;
@@ -10223,7 +10260,6 @@ var Container = new Class({
         this.tempTransformMatrix.destroy();
 
         this.list = [];
-        this._displayList = null;
     }
 
 });
@@ -10269,6 +10305,8 @@ var ContainerCanvasRenderer = function (renderer, container, camera, parentMatri
     {
         return;
     }
+
+    camera.addToRenderList(container);
 
     var transformMatrix = container.localTransform;
 
@@ -10418,6 +10456,8 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
     {
         return;
     }
+
+    camera.addToRenderList(container);
 
     var transformMatrix = container.localTransform;
 
@@ -14600,7 +14640,18 @@ var JSONFile = new Class({
         {
             this.state = CONST.FILE_PROCESSING;
 
-            var json = JSON.parse(this.xhrLoader.responseText);
+            try
+            {
+                var json = JSON.parse(this.xhrLoader.responseText);
+            }
+            catch (e)
+            {
+                console.warn('Invalid JSON: ' + this.key);
+
+                this.onProcessError();
+
+                throw e;
+            }
 
             var key = this.config;
 
@@ -15650,7 +15701,7 @@ var FromPercent = function (percent, min, max)
 {
     percent = Clamp(percent, 0, 1);
 
-    return (max - min) * percent;
+    return (max - min) * percent + min;
 };
 
 module.exports = FromPercent;
@@ -19537,7 +19588,6 @@ var RandomXYZW = function (vec4, scale)
 {
     if (scale === undefined) { scale = 1; }
 
-    // TODO: Not spherical; should fix this for more uniform distribution
     vec4.x = (Math.random() * 2 - 1) * scale;
     vec4.y = (Math.random() * 2 - 1) * scale;
     vec4.z = (Math.random() * 2 - 1) * scale;
@@ -22472,9 +22522,6 @@ var Vector4 = new Class({
      */
     transformQuat: function (q)
     {
-        // TODO: is this really the same as Vector3?
-        // Also, what about this: http://molecularmusings.wordpress.com/2013/05/24/a-faster-quaternion-vector-multiplication/
-        // benchmarks: http://jsperf.com/quaternion-transform-vec3-implementations
         var x = this.x;
         var y = this.y;
         var z = this.z;
@@ -22517,7 +22564,6 @@ var Vector4 = new Class({
 
 });
 
-//  TODO: Check if these are required internally, if not, remove.
 Vector4.prototype.sub = Vector4.prototype.subtract;
 Vector4.prototype.mul = Vector4.prototype.multiply;
 Vector4.prototype.div = Vector4.prototype.divide;
@@ -23041,8 +23087,6 @@ module.exports = RotateTo;
  * The angle returned will be in the same range. If the returned angle is
  * greater than 0 then it's a counter-clockwise rotation, if < 0 then it's
  * a clockwise rotation.
- *
- * TODO: Wrap the angles in this function?
  *
  * @function Phaser.Math.Angle.ShortestBetween
  * @since 3.0.0
@@ -27883,8 +27927,9 @@ module.exports = 'pause';
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
  * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
- * 5. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
- * 
+ * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
+ * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
+ *
  * Listen to it from a Scene using `this.scene.events.on('postupdate', listener)`.
  * 
  * A Scene will only run its step if it is active.
@@ -27897,6 +27942,48 @@ module.exports = 'pause';
  * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
  */
 module.exports = 'postupdate';
+
+
+/***/ }),
+
+/***/ "../../../src/scene/events/PRE_RENDER_EVENT.js":
+/*!***************************************************************!*\
+  !*** D:/wamp/www/phaser/src/scene/events/PRE_RENDER_EVENT.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       samme
+ * @copyright    2021 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * The Scene Systems Pre-Render Event.
+ *
+ * This event is dispatched by a Scene during the main game loop step.
+ *
+ * The event flow for a single step of a Scene is as follows:
+ *
+ * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
+ * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
+ * 3. The `Scene.update` method is called, if it exists
+ * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
+ * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
+ * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
+ *
+ * Listen to this event from a Scene using `this.scene.events.on('prerender', listener)`.
+ *
+ * A Scene will only render if it is visible.
+ * This event is dispatched after the Scene Display List is sorted and before the Scene is rendered.
+ *
+ * @event Phaser.Scenes.Events#PRE_RENDER
+ * @since 3.53.0
+ *
+ * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer that rendered the Scene.
+ */
+module.exports = 'prerender';
 
 
 /***/ }),
@@ -27925,8 +28012,9 @@ module.exports = 'postupdate';
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
  * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
- * 5. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
- * 
+ * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
+ * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
+ *
  * Listen to it from a Scene using `this.scene.events.on('preupdate', listener)`.
  * 
  * A Scene will only run its step if it is active.
@@ -28031,11 +28119,12 @@ module.exports = 'removedfromscene';
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
  * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
- * 5. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
- * 
+ * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
+ * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
+ *
  * Listen to it from a Scene using `this.scene.events.on('render', listener)`.
- * 
- * A Scene will only render if it is visible and active.
+ *
+ * A Scene will only render if it is visible.
  * By the time this event is dispatched, the Scene will have already been rendered.
  * 
  * @event Phaser.Scenes.Events#RENDER
@@ -28408,8 +28497,9 @@ module.exports = 'transitionwake';
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
  * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
- * 5. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
- * 
+ * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
+ * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
+ *
  * Listen to it from a Scene using `this.scene.events.on('update', listener)`.
  * 
  * A Scene will only run its step if it is active.
@@ -28483,6 +28573,7 @@ module.exports = {
     DESTROY: __webpack_require__(/*! ./DESTROY_EVENT */ "../../../src/scene/events/DESTROY_EVENT.js"),
     PAUSE: __webpack_require__(/*! ./PAUSE_EVENT */ "../../../src/scene/events/PAUSE_EVENT.js"),
     POST_UPDATE: __webpack_require__(/*! ./POST_UPDATE_EVENT */ "../../../src/scene/events/POST_UPDATE_EVENT.js"),
+    PRE_RENDER: __webpack_require__(/*! ./PRE_RENDER_EVENT */ "../../../src/scene/events/PRE_RENDER_EVENT.js"),
     PRE_UPDATE: __webpack_require__(/*! ./PRE_UPDATE_EVENT */ "../../../src/scene/events/PRE_UPDATE_EVENT.js"),
     READY: __webpack_require__(/*! ./READY_EVENT */ "../../../src/scene/events/READY_EVENT.js"),
     REMOVED_FROM_SCENE: __webpack_require__(/*! ./REMOVED_FROM_SCENE_EVENT */ "../../../src/scene/events/REMOVED_FROM_SCENE_EVENT.js"),
@@ -32745,7 +32836,7 @@ var SpineFile = new Class({
                 {
                     var textureURL = textures[i];
 
-                    var key = this.prefix + textureURL;
+                    var key = textureURL;
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
@@ -33962,18 +34053,18 @@ var SpinePlugin = new Class({
      */
     gameDestroy: function ()
     {
-        this.destroy();
+        this.pluginManager.removeGameObject('spine', true, true);
+        this.pluginManager.removeGameObject('spineContainer', true, true);
+
+        this.pluginManager = null;
 
         if (sceneRenderer)
         {
             sceneRenderer.dispose();
+            sceneRenderer = null;
         }
 
         this.sceneRenderer = null;
-        this.pluginManager = null;
-
-        this.pluginManager.removeGameObject('spine', true, true);
-        this.pluginManager.removeGameObject('spineContainer', true, true);
     }
 
 });
@@ -34080,13 +34171,13 @@ var SpineContainerRender = __webpack_require__(/*! ./SpineContainerRender */ "./
  * To create one in a Scene, use the factory methods:
  *
  * ```javascript
- * this.add.spinecontainer();
+ * this.add.spineContainer();
  * ```
  *
  * or
  *
  * ```javascript
- * this.make.spinecontainer();
+ * this.make.spineContainer();
  * ```
  *
  * Note that you should not nest Spine Containers inside regular Containers if you wish to use masks on the
@@ -34194,6 +34285,8 @@ var SpineContainerCanvasRenderer = function (renderer, container, camera, parent
     {
         return;
     }
+
+    camera.addToRenderList(container);
 
     var transformMatrix = container.localTransform;
 
@@ -34349,6 +34442,8 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
 
         return;
     }
+
+    camera.addToRenderList(container);
 
     var transformMatrix = container.localTransform;
 
@@ -36272,6 +36367,8 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, camera, parentMatri
     var spriteMatrix = renderer._tempMatrix2;
     var calcMatrix = renderer._tempMatrix3;
 
+    camera.addToRenderList(src);
+
     spriteMatrix.applyITRS(src.x, src.y, src.rotation, Math.abs(src.scaleX), Math.abs(src.scaleY));
 
     camMatrix.copyFrom(camera.matrix);
@@ -36450,6 +36547,8 @@ var SpineGameObjectWebGLDirect = function (renderer, src, camera, parentMatrix, 
         skeleton.color.a = Clamp(alpha * container.alpha, 0, 1);
     }
 
+    camera.addToRenderList(src);
+
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
     var viewportHeight = renderer.height;
@@ -36594,6 +36693,8 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
 
         skeleton.color.a = Clamp(alpha * container.alpha, 0, 1);
     }
+
+    camera.addToRenderList(src);
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
