@@ -730,18 +730,21 @@ var Layer = new Class({
      */
     addChildCallback: function (gameObject)
     {
-        gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
-
-        if (gameObject.displayList)
+        if (gameObject.displayList && gameObject.displayList !== this)
         {
-            gameObject.displayList.remove(gameObject);
+            gameObject.removeFromDisplayList();
         }
 
-        gameObject.displayList = this;
+        if (!gameObject.displayList)
+        {
+            this.queueDepthSort();
 
-        this.queueDepthSort();
+            gameObject.displayList = this;
 
-        this.events.emit(SceneEvents.ADDED_TO_SCENE, gameObject, this.scene);
+            gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
+
+            this.events.emit(SceneEvents.ADDED_TO_SCENE, gameObject, this.scene);
+        }
     },
 
     /**
@@ -757,11 +760,11 @@ var Layer = new Class({
      */
     removeChildCallback: function (gameObject)
     {
-        gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
+        this.queueDepthSort();
 
         gameObject.displayList = null;
 
-        this.queueDepthSort();
+        gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
 
         this.events.emit(SceneEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
     },
@@ -865,8 +868,9 @@ var Layer = new Class({
 
         if (this.displayList)
         {
+            this.displayList.remove(this, true);
+
             this.displayList.queueDepthSort();
-            this.displayList.remove(this);
         }
 
         if (this.data)
