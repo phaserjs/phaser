@@ -108,18 +108,21 @@ var DisplayList = new Class({
      */
     addChildCallback: function (gameObject)
     {
-        gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
-
-        if (gameObject.displayList)
+        if (gameObject.displayList && gameObject.displayList !== this)
         {
-            gameObject.displayList.remove(gameObject);
+            gameObject.removeFromDisplayList();
         }
 
-        gameObject.displayList = this;
+        if (!gameObject.displayList)
+        {
+            this.queueDepthSort();
 
-        this.queueDepthSort();
+            gameObject.displayList = this;
 
-        this.events.emit(SceneEvents.ADDED_TO_SCENE, gameObject, this.scene);
+            gameObject.emit(GameObjectEvents.ADDED_TO_SCENE, gameObject, this.scene);
+
+            this.events.emit(SceneEvents.ADDED_TO_SCENE, gameObject, this.scene);
+        }
     },
 
     /**
@@ -135,11 +138,11 @@ var DisplayList = new Class({
      */
     removeChildCallback: function (gameObject)
     {
-        gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
+        this.queueDepthSort();
 
         gameObject.displayList = null;
 
-        this.queueDepthSort();
+        gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
 
         this.events.emit(SceneEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
     },
@@ -217,6 +220,7 @@ var DisplayList = new Class({
 
     /**
      * The Scene that owns this plugin is shutting down.
+     *
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.GameObjects.DisplayList#shutdown
