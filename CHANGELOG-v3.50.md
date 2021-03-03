@@ -83,6 +83,7 @@
 * The Spine Plugin would cause all textures to render as blue if a Spine object followed any Game Object using the Graphics Pipeline on the display list, due to the gl context restoration not being properly handled. Fix #5493 #5449 (thanks @EmilSV @FloodGames)
 * Spine Game Objects and Containers will now add themselves to the Camera render list, fixing issues where input didn't work if depth was used or they were overlapped with another interactive Game Object.
 * Calling `Group.destroy` would cause a runtime error if `Group.runChildUpdate` had been set. Fix #5576 (thanks @samme)
+* Moving a Sprite from a Container or Layer to the Scene would fail without first resetting the display list. Fix #5535 (thanks @malahaas @samme @tringcooler)
 
 ### Examples, Documentation and TypeScript
 
