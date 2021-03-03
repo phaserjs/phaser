@@ -444,32 +444,18 @@ var Container = new Class({
 
         if (this.exclusive)
         {
-            if (gameObject.displayList)
-            {
-                gameObject.displayList.remove(gameObject);
-            }
+            gameObject.removeFromDisplayList();
 
             if (gameObject.parentContainer)
             {
                 gameObject.parentContainer.remove(gameObject);
             }
 
-            if (this.displayList)
-            {
-                gameObject.displayList = this.displayList;
-            }
-            else
-            {
-                gameObject.displayList = this.scene.sys.displayList;
-            }
+            var displayList = this.displayList || this.scene.sys.displayList;
+
+            gameObject.addToDisplayList(displayList);
 
             gameObject.parentContainer = this;
-        }
-
-        //  Is only on the Display List via this Container
-        if (!this.scene.sys.displayList.exists(gameObject))
-        {
-            gameObject.emit(Events.ADDED_TO_SCENE, gameObject, this.scene);
         }
     },
 
@@ -488,13 +474,11 @@ var Container = new Class({
 
         if (this.exclusive)
         {
-            gameObject.parentContainer = null;
-        }
+            gameObject.removeFromDisplayList();
 
-        //  Is only on the Display List via this Container
-        if (!this.scene.sys.displayList.exists(gameObject))
-        {
-            gameObject.emit(Events.REMOVED_FROM_SCENE, gameObject, this.scene);
+            gameObject.parentContainer = null;
+
+            gameObject.addToDisplayList();
         }
     },
 
