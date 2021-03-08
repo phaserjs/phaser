@@ -27,9 +27,9 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 14th January 2021
+> 8th March 2021
 
-After 13 beta releases, over 200 resolved issues, thousands of lines of new code and the culmination of over 6 months incredibly hard work, Phaser 3.50 was finally released in December 2020 and we're continuing with updates in the New Year with the 3.52 point release.
+After 13 beta releases, over 200 resolved issues, thousands of lines of new code and the culmination of over 6 months incredibly hard work, Phaser 3.50 was finally released in December 2020 and we're continuing with updates into 2021 with this new 3.53 release.
 
 It's not hyperbole or exaggeration when I say that Phaser 3.50 is the single biggest point release ever in the history of Phaser. There are quite literally hundreds of new features to explore, updates to key areas and of course bug fixes. I did actually try counting all the changes, but gave up after I'd reached 900 of them! Thankfully, they are, as always, meticulously detailed in the [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.50.md). The changes for 3.50 actually grew so large that I had to split them out from the main Change Log and put them into their own file.
 
@@ -110,13 +110,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.52.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.53.0/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.52.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.53.0/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -188,7 +188,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.52.0/dist/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.53.0/dist/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
@@ -309,7 +309,7 @@ Traditionally we have always included the most recent Change Log in this README.
 
 This is somewhat unprecedented for Phaser, but then 3.50 _is_ a truly massive release!
 
-You can read the whole [3.51 Change Log here](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.50.md).
+You can read the whole [3.50+ Change Log here](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.50.md).
 
 We've organized the Change Log into commonly themed sections to make it more digestible, but we appreciate there is a lot in there. Please don't feel overwhelmed! If you need clarification about something, join us on the Phaser Discord and feel free to ask.
 
@@ -342,8 +342,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.52.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.52.0/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.53.0/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.53.0/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser
