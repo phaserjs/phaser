@@ -110,13 +110,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.53.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.53.1/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.53.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.53.1/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -188,7 +188,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.53.0/dist/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.53.1/dist/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
@@ -342,8 +342,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.53.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.53.0/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.53.1/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.53.1/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser

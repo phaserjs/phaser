@@ -451,10 +451,6 @@ var Container = new Class({
                 gameObject.parentContainer.remove(gameObject);
             }
 
-            var displayList = this.displayList || this.scene.sys.displayList;
-
-            gameObject.addToDisplayList(displayList);
-
             gameObject.parentContainer = this;
         }
     },
@@ -474,8 +470,6 @@ var Container = new Class({
 
         if (this.exclusive)
         {
-            gameObject.removeFromDisplayList();
-
             gameObject.parentContainer = null;
 
             gameObject.addToDisplayList();
