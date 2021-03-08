@@ -1,4 +1,4 @@
-## Version 3.53.0 - Anastasia - in development
+## Version 3.53.0 - Anastasia - 8th March 2021
 
 ### New Features
 
