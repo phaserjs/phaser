@@ -9,6 +9,7 @@
         ],
         "exclude": [
             "../../src/phaser-arcade-physics.js",
+            "../../src/phaser-ie9.js",
             "../../src/phaser-core.js",
             "../../src/physics/matter-js/poly-decomp/",
             "../../src/physics/matter-js/lib",
