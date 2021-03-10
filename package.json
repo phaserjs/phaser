@@ -1,6 +1,6 @@
 {
   "name": "phaser",
-  "version": "3.53.1",
+  "version": "3.54.0-dev",
   "release": "Anastasia",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rich@photonstorm.com> (http://www.photonstorm.com)",
