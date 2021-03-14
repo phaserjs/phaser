@@ -749,7 +749,7 @@ var Group = new Class({
     /**
      * Returns all children in this Group that match the given criteria based on the `property` and `value` arguments.
      *
-     * For example: `getAll('visible', true)` would return only children that have their `visible` property set.
+     * For example: `getMatching('visible', true)` would return only children that have their `visible` property set.
      *
      * Optionally, you can specify a start and end index. For example if the Group has 100 elements,
      * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
