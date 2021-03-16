@@ -34,7 +34,9 @@ var BitmapTextCanvasRenderer = function (renderer, src, camera, parentMatrix)
 
     camera.addToRenderList(src);
 
-    var textureFrame = src.texture.frames['__BASE'];
+    var textureFrame = src.fromAtlas
+        ? src.frame
+        : src.texture.frames['__BASE'];
 
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;

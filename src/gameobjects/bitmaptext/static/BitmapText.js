@@ -264,6 +264,15 @@ var BitmapText = new Class({
          */
         this.dropShadowAlpha = 0.5;
 
+        /**
+         * Indicates whether the font texture is from an atlas or not.
+         *
+         * @name Phaser.GameObjects.BitmapText#fromAtlas
+         * @type {boolean}
+         * @since 3.53.2
+         */
+        this.fromAtlas = entry.fromAtlas;
+
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
