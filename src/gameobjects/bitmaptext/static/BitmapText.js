@@ -767,6 +767,7 @@ var BitmapText = new Class({
                 this.fontData = entry.data;
                 this._fontSize = size;
                 this._align = align;
+                this.fromAtlas = entry.fromAtlas;
 
                 this.setTexture(entry.texture, entry.frame);
 
