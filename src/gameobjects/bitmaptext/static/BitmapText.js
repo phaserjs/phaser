@@ -271,7 +271,7 @@ var BitmapText = new Class({
          * @type {boolean}
          * @since 3.53.2
          */
-        this.fromAtlas = entry.fromAtlas;
+        this.fromAtlas = entry.fromAtlas === true;
 
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
@@ -767,7 +767,7 @@ var BitmapText = new Class({
                 this.fontData = entry.data;
                 this._fontSize = size;
                 this._align = align;
-                this.fromAtlas = entry.fromAtlas;
+                this.fromAtlas = entry.fromAtlas === true;
 
                 this.setTexture(entry.texture, entry.frame);
 
