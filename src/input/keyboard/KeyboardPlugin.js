@@ -852,7 +852,7 @@ var KeyboardPlugin = new Class({
     /**
      * Shuts this Keyboard Plugin down. This performs the following tasks:
      *
-     * 1 - Resets all keys created by this Keyboard plugin.
+     * 1 - Removes all keys created by this Keyboard plugin.
      * 2 - Stops and removes the keyboard event listeners.
      * 3 - Clears out any pending requests in the queue, without processing them.
      *
@@ -862,7 +862,8 @@ var KeyboardPlugin = new Class({
      */
     shutdown: function ()
     {
-        this.resetKeys();
+        this.removeAllKeys(true);
+        this.removeAllListeners();
 
         this.sceneInputPlugin.manager.events.off(InputEvents.MANAGER_PROCESS, this.update, this);
 
@@ -870,8 +871,6 @@ var KeyboardPlugin = new Class({
 
         this.scene.sys.events.off(SceneEvents.PAUSE, this.resetKeys, this);
         this.scene.sys.events.off(SceneEvents.SLEEP, this.resetKeys, this);
-
-        this.removeAllListeners();
 
         this.queue = [];
     },
