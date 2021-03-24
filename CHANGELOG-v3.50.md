@@ -8,7 +8,7 @@
 ### Bug Fixes
 
 * Adding a Game Object to a Container that already existed in another Container would leave a copy of it on the Display List. Fix #5618 (thanks Kromah @mariogarranz)
-* Fixed missing `backgroundColor` property in GameConfig.
+* Fixed missing `backgroundColor` property in GameConfig. Fix #5597 (thanks @eli-s-r)
 * BitmapText wouldn't render correctly with the Canvas Renderer when the texture came from a Texture Atlas. Fix #5545 (thanks @vforsh)
 * #5504 had broken DOM Elements being able to be clicked due to an oversight of the DOM Container. DOM Elements now correctly pick-up the default pointer events handler. Fix #5594 (thanks @pizkaz)
 * The `RGBToString` function will no longer return CSS strings with decimal places if the input contained them (thanks @neil-h)
