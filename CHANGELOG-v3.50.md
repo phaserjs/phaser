@@ -1,6 +1,9 @@
 ## Version 3.54.0 - Futaro - in dev
 
+### Bug Fixes
+
 * Adding a Game Object to a Container that already existed in another Container would leave a copy of it on the Display List (thanks Kromah)
+* Fixed missing `backgroundColor` property in GameConfig.
 
 ## Version 3.53.1 - Anastasia - 8th March 2021
 
