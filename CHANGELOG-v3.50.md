@@ -21,7 +21,6 @@ My thanks to the following for helping with the Phaser 3 Examples, Docs, and Typ
 
 @samme @masterT @krotovic @Kvisaz
 
-
 ## Version 3.53.1 - Anastasia - 8th March 2021
 
 * Fixed an issue where Container children were not removed from the display list properly.
