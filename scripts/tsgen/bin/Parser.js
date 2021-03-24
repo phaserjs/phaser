@@ -333,6 +333,12 @@ class Parser {
     }
     setParams(doclet, obj) {
         let parameters = [];
+        if (doclet.this) {
+            let typeName = this.prepareTypeName(doclet.this);
+            let type = dom.create.namedTypeReference(this.processTypeName(typeName));
+            let param = dom.create.parameter(dom.type.this, type);
+            parameters.push(param);
+        }
         if (doclet.params) {
             let optional = false;
             obj.jsDocComment = '';

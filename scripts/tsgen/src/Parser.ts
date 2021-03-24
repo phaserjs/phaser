@@ -449,6 +449,14 @@ export class Parser {
     private setParams(doclet: any, obj: dom.FunctionDeclaration | dom.ConstructorDeclaration): void {
         let parameters: dom.Parameter[] = [];
 
+        if (doclet.this) {
+            let typeName = this.prepareTypeName(doclet.this);
+            let type = dom.create.namedTypeReference(this.processTypeName(typeName));
+            let param = dom.create.parameter(dom.type.this, type);
+
+            parameters.push(param);
+        }
+
         if (doclet.params) {
 
             let optional = false;

@@ -5,5 +5,6 @@
  * @callback Phaser.Types.Scenes.SceneInitCallback
  * @since 3.0.0
  *
+ * @this Phaser.Scene
  * @param {object} data - Any data passed via `ScenePlugin.add()` or `ScenePlugin.start()`. Same as Scene.settings.data.
  */
