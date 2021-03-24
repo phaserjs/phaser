@@ -342,25 +342,6 @@ var Systems = new Class({
     },
 
     /**
-     * Called by a plugin, it tells the System to install the plugin locally.
-     *
-     * @method Phaser.Scenes.Systems#install
-     * @private
-     * @since 3.0.0
-     *
-     * @param {array} plugin - An array of plugins to install into this Scene.
-     */
-    install: function (plugin)
-    {
-        if (!Array.isArray(plugin))
-        {
-            plugin = [ plugin ];
-        }
-
-        this.plugins.installLocal(this, plugin);
-    },
-
-    /**
      * A single game step. Called automatically by the Scene Manager as a result of a Request Animation
      * Frame or Set Timeout call to the main Game instance.
      *
