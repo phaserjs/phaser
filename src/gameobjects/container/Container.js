@@ -444,12 +444,12 @@ var Container = new Class({
 
         if (this.exclusive)
         {
-            gameObject.removeFromDisplayList();
-
             if (gameObject.parentContainer)
             {
                 gameObject.parentContainer.remove(gameObject);
             }
+
+            gameObject.removeFromDisplayList();
 
             gameObject.parentContainer = this;
         }
