@@ -36416,7 +36416,7 @@ var Vector2 = __webpack_require__(2);
  *
  * The position of the Game Object automatically becomes relative to the position of the Container.
  *
- * The origin of a Container is 0x0 (in local space) and that cannot be changed. The children you add to the
+ * The transform point of a Container is 0x0 (in local space) and that cannot be changed. The children you add to the
  * Container should be positioned with this value in mind. I.e. you should treat 0x0 as being the center of
  * the Container, and position children positively and negative around it as required.
  *
@@ -36834,16 +36834,12 @@ var Container = new Class({
 
         if (this.exclusive)
         {
-            gameObject.removeFromDisplayList();
-
             if (gameObject.parentContainer)
             {
                 gameObject.parentContainer.remove(gameObject);
             }
 
-            var displayList = this.displayList || this.scene.sys.displayList;
-
-            gameObject.addToDisplayList(displayList);
+            gameObject.removeFromDisplayList();
 
             gameObject.parentContainer = this;
         }
@@ -36864,8 +36860,6 @@ var Container = new Class({
 
         if (this.exclusive)
         {
-            gameObject.removeFromDisplayList();
-
             gameObject.parentContainer = null;
 
             gameObject.addToDisplayList();
