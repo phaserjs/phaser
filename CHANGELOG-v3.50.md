@@ -4,6 +4,14 @@
 
 * Adding a Game Object to a Container that already existed in another Container would leave a copy of it on the Display List (thanks Kromah)
 * Fixed missing `backgroundColor` property in GameConfig.
+* BitmapText wouldn't render correctly with the Canvas Renderer when the texture came from a Texture Atlas. Fix #5545 (thanks @vforsh)
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
+
+@samme @masterT
+
 
 ## Version 3.53.1 - Anastasia - 8th March 2021
 
