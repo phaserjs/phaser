@@ -26,7 +26,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * The position of the Game Object automatically becomes relative to the position of the Container.
  *
- * The origin of a Container is 0x0 (in local space) and that cannot be changed. The children you add to the
+ * The transform point of a Container is 0x0 (in local space) and that cannot be changed. The children you add to the
  * Container should be positioned with this value in mind. I.e. you should treat 0x0 as being the center of
  * the Container, and position children positively and negative around it as required.
  *
