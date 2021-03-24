@@ -8,6 +8,6 @@
  * @property {boolean} [dropZone=false] - If `true` the Interactive Object will be set to be a drop zone for draggable objects.
  * @property {boolean} [useHandCursor=false] - If `true` the Interactive Object will set the `pointer` hand cursor when a pointer is over it. This is a short-cut for setting `cursor: 'pointer'`.
  * @property {string} [cursor] - The CSS string to be used when the cursor is over this Interactive Object.
- * @property {boolean} [pixelPerfect=false] - If `true` the a pixel perfect function will be set for the hit area callback. Only works with texture based Game Objects.
+ * @property {boolean} [pixelPerfect=false] - If `true` the a pixel perfect function will be set for the hit area callback. Only works with image texture based Game Objects, not Render Textures.
  * @property {number} [alphaTolerance=1] - If `pixelPerfect` is set, this is the alpha tolerance threshold value used in the callback.
  */
