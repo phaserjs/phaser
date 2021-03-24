@@ -341,9 +341,11 @@ var WebAudioSoundManager = new Class({
      */
     onFocus: function ()
     {
-        if (!this.locked)
+        var context = this.context;
+
+        if (context.state === 'suspended' || context.state === 'interrupted' || !this.locked)
         {
-            this.context.resume();
+            context.resume();
         }
     },
 
