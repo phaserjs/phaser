@@ -14,7 +14,7 @@
  * @property {(Phaser.Scene|Phaser.Scene[]|Phaser.Types.Scenes.SettingsConfig|Phaser.Types.Scenes.SettingsConfig[]|Phaser.Types.Scenes.CreateSceneFromObjectConfig|Phaser.Types.Scenes.CreateSceneFromObjectConfig[]|function|function[])} [scene=null] - A scene or scenes to add to the game. If several are given, the first is started; the remainder are started only if they have `{ active: true }`. See the `sceneConfig` argument in `Phaser.Scenes.SceneManager#add`.
  * @property {string[]} [seed] - Seed for the random number generator.
  * @property {string} [title=''] - The title of the game. Shown in the browser console.
- * @property {string} [url='http://phaser.io'] - The URL of the game. Shown in the browser console.
+ * @property {string} [url='https://phaser.io'] - The URL of the game. Shown in the browser console.
  * @property {string} [version=''] - The version of the game. Shown in the browser console.
  * @property {boolean} [autoFocus=true] - Automatically call window.focus() when the game boots. Usually necessary to capture input events if the game is in a separate frame.
  * @property {(boolean|Phaser.Types.Core.InputConfig)} [input] - Input configuration, or `false` to disable all game input.
