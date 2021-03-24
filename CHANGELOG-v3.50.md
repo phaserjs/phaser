@@ -1,3 +1,7 @@
+## Version 3.54.0 - Futaro - in dev
+
+* Adding a Game Object to a Container that already existed in another Container would leave a copy of it on the Display List (thanks Kromah)
+
 ## Version 3.53.1 - Anastasia - 8th March 2021
 
 * Fixed an issue where Container children were not removed from the display list properly.
