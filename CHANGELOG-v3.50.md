@@ -1,16 +1,24 @@
 ## Version 3.54.0 - Futaro - in dev
 
+### Updates
+
+* When the Scene-owned Input Plugin is shutdown (i.e. via a call to `Scene.stop`) it will now _remove_ any `Key` objects that the plugin created, not just reset them. This is a quality-of-life breaking change from how it worked previously (thanks @veleek)
+* Thanks to a TS Parser update by @krotovic the JSDocs can now define `@this` tags. Fix #4669.
+
 ### Bug Fixes
 
-* Adding a Game Object to a Container that already existed in another Container would leave a copy of it on the Display List (thanks Kromah)
+* Adding a Game Object to a Container that already existed in another Container would leave a copy of it on the Display List. Fix #5618 (thanks Kromah @mariogarranz)
 * Fixed missing `backgroundColor` property in GameConfig.
 * BitmapText wouldn't render correctly with the Canvas Renderer when the texture came from a Texture Atlas. Fix #5545 (thanks @vforsh)
+* #5504 had broken DOM Elements being able to be clicked due to an oversight of the DOM Container. DOM Elements now correctly pick-up the default pointer events handler. Fix #5594 (thanks @pizkaz)
+* The `RGBToString` function will no longer return CSS strings with decimal places if the input contained them (thanks @neil-h)
+* Objects added to a `SpineContainer` were also added to the base Display List, causing them to appear twice. Fix #5599 (thanks @spayton)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@samme @masterT
+@samme @masterT @krotovic
 
 
 ## Version 3.53.1 - Anastasia - 8th March 2021
