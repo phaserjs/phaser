@@ -117,7 +117,7 @@ var LightsManager = new Class({
      *
      * Point Lights are a WebGL only feature and do not have a Canvas counterpart.
      *
-     * @method Phaser.GameObjects.LightsManager#addPointlight
+     * @method Phaser.GameObjects.LightsManager#addPointLight
      * @since 3.50.0
      *
      * @param {number} x - The horizontal position of this Point Light in the world.
