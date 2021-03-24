@@ -269,9 +269,10 @@ var BitmapText = new Class({
          *
          * @name Phaser.GameObjects.BitmapText#fromAtlas
          * @type {boolean}
-         * @since 3.53.2
+         * @since 3.54.0
+         * @readonly
          */
-        this.fromAtlas = entry.fromAtlas === true;
+        this.fromAtlas = entry.fromAtlas;
 
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
