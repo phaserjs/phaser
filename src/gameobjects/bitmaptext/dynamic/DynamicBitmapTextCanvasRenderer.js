@@ -34,7 +34,9 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, camera, parentMat
 
     camera.addToRenderList(src);
 
-    var textureFrame = src.frame;
+    var textureFrame = src.fromAtlas
+        ? src.frame
+        : src.texture.frames['__BASE'];
 
     var displayCallback = src.displayCallback;
     var callbackData = src.callbackData;
