@@ -58,8 +58,8 @@ var UUID = require('../../utils/string/UUID');
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=32] - The width of the Render Texture.
  * @param {number} [height=32] - The height of the Render Texture.
- * @property {string} [key] - The texture key to make the RenderTexture from.
- * @property {string} [frame] - the frame to make the RenderTexture from.
+ * @param {string} [key] - The texture key to make the RenderTexture from.
+ * @param {string} [frame] - The frame to make the RenderTexture from.
  */
 var RenderTexture = new Class({
 
