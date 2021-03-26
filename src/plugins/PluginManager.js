@@ -269,18 +269,20 @@ var PluginManager = new Class({
 
                 var source = PluginCache.getCore(pluginKey);
 
-                var plugin = new source.plugin(scene, this);
+                var mapKey = source.mapping;
 
-                sys[source.mapping] = plugin;
+                var plugin = new source.plugin(scene, this, mapKey);
+
+                sys[mapKey] = plugin;
 
                 //  Scene level injection
                 if (source.custom)
                 {
-                    scene[source.mapping] = plugin;
+                    scene[mapKey] = plugin;
                 }
-                else if (map.hasOwnProperty(source.mapping))
+                else if (map.hasOwnProperty(mapKey))
                 {
-                    scene[map[source.mapping]] = plugin;
+                    scene[map[mapKey]] = plugin;
                 }
 
                 //  Scene is already booted, usually because this method is being called at run-time, so boot the plugin
