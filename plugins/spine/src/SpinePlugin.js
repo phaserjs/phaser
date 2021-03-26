@@ -121,6 +121,7 @@ var sceneRenderer;
  *
  * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
  * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Phaser Plugin Manager.
+ * @param {string} pluginKey - The key under which this plugin has been installed into the Scene Systems.
  */
 var SpinePlugin = new Class({
 
@@ -128,9 +129,9 @@ var SpinePlugin = new Class({
 
     initialize:
 
-    function SpinePlugin (scene, pluginManager)
+    function SpinePlugin (scene, pluginManager, pluginKey)
     {
-        ScenePlugin.call(this, scene, pluginManager);
+        ScenePlugin.call(this, scene, pluginManager, pluginKey);
 
         var game = pluginManager.game;
 
@@ -310,11 +311,10 @@ var SpinePlugin = new Class({
             };
         }
 
-        var _this = this;
-
         var add = function (x, y, key, animationName, loop)
         {
-            var spineGO = new SpineGameObject(this.scene, _this, x, y, key, animationName, loop);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var spineGO = new SpineGameObject(this.scene, spinePlugin, x, y, key, animationName, loop);
 
             this.displayList.add(spineGO);
             this.updateList.add(spineGO);
@@ -330,7 +330,8 @@ var SpinePlugin = new Class({
             var animationName = GetValue(config, 'animationName', null);
             var loop = GetValue(config, 'loop', false);
 
-            var spineGO = new SpineGameObject(this.scene, _this, 0, 0, key, animationName, loop);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var spineGO = new SpineGameObject(this.scene, spinePlugin, 0, 0, key, animationName, loop);
 
             if (addToScene !== undefined)
             {
@@ -360,7 +361,8 @@ var SpinePlugin = new Class({
 
         var addContainer = function (x, y, children)
         {
-            var spineGO = new SpineContainer(this.scene, _this, x, y, children);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var spineGO = new SpineContainer(this.scene, spinePlugin, x, y, children);
 
             this.displayList.add(spineGO);
 
@@ -375,7 +377,8 @@ var SpinePlugin = new Class({
             var y = GetValue(config, 'y', 0);
             var children = GetValue(config, 'children', null);
 
-            var container = new SpineContainer(this.scene, _this, x, y, children);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var container = new SpineContainer(this.scene, spinePlugin, x, y, children);
 
             if (addToScene !== undefined)
             {
