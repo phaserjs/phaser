@@ -15,6 +15,7 @@
 * #5504 had broken DOM Elements being able to be clicked due to an oversight of the DOM Container. DOM Elements now correctly pick-up the default pointer events handler. Fix #5594 (thanks @pizkaz)
 * The `RGBToString` function will no longer return CSS strings with decimal places if the input contained them (thanks @neil-h)
 * Objects added to a `SpineContainer` were also added to the base Display List, causing them to appear twice. Fix #5599 (thanks @spayton)
+* When an Animation has `skipMissedFrames` set it will now bail out of the skip catch-up loop if any of the frames cause the animation to complete. Fix #5620 (thanks @fenrir1990 @Aveyder)
 
 ### Examples, Documentation and TypeScript
 
