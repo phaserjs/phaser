@@ -17,6 +17,7 @@ Thousands of developers from indie and multi-national digital agencies, and univ
 **Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
 **Learn:** [API Docs](https://photonstorm.github.io/phaser3-docs/index.html), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
 **Code:** 1770+ [Examples](https://phaser.io/examples) (source available in this [repo][examples])<br />
+**Read:** The [Phaser World](#newsletter) Newsletter<br />
 **Discord:** Join us on [Discord](https://phaser.io/community/discord)<br />
 **Extend:** With [Phaser Plugins](https://phaser.io/shop/plugins)<br />
 **Be awesome:** [Support](#support) the future of Phaser<br />
@@ -27,9 +28,9 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 8th March 2021
+> 26th March 2021
 
-After 13 beta releases, over 200 resolved issues, thousands of lines of new code and the culmination of over 6 months incredibly hard work, Phaser 3.50 was finally released in December 2020 and we're continuing with updates into 2021 with this new 3.53 release.
+After 13 beta releases, over 200 resolved issues, thousands of lines of new code and the culmination of over 6 months incredibly hard work, Phaser 3.50 was finally released in December 2020 and we're continuing with updates into 2021 with this new 3.54 release.
 
 It's not hyperbole or exaggeration when I say that Phaser 3.50 is the single biggest point release ever in the history of Phaser. There are quite literally hundreds of new features to explore, updates to key areas and of course bug fixes. I did actually try counting all the changes, but gave up after I'd reached 900 of them! Thankfully, they are, as always, meticulously detailed in the [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.50.md). The changes for 3.50 actually grew so large that I had to split them out from the main Change Log and put them into their own file.
 
@@ -86,6 +87,14 @@ Extra special thanks to the following companies whose support makes Phaser possi
 
 ![Sponsors](https://phaser.io/images/github/sponsors-2020-12.png "Our Awesome Sponsors")
 
+![Phaser Newsletter](https://phaser.io/images/github/div-newsletter.png "Phaser Newsletter")
+
+<div align="center"><img src="https://phaser.io/images/github/phaser-world.png"></div>
+
+Subscribe to the [Phaser World](https://phaser.io/community/newsletter) newsletter for all the latest Phaser games, tutorials, videos and more. It's published every 2 weeks.
+
+Over 150 previous editions can be found on our [Back Issues](https://phaser.io/community/backissues) page.
+
 ![Download Phaser](https://phaser.io/images/github/div-download.png "Download Phaser")
 <a name="download"></a>
 
@@ -110,13 +119,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.53.1/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.54.0/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.53.1/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.54.0/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -188,7 +197,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.53.1/dist/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.54.0/dist/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
@@ -342,8 +351,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.53.1/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.53.1/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.54.0/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.54.0/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser

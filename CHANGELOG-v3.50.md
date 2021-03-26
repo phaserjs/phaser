@@ -1,4 +1,4 @@
-## Version 3.54.0 - Futaro - in dev
+## Version 3.54.0 - Futaro - 26th March 2021
 
 ### New Features
 
