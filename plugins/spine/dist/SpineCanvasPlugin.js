@@ -457,7 +457,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#copy
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to copy the components from.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to copy the components from.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -553,7 +553,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#equals
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} v - The vector to compare with this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} v - The vector to compare with this Vector.
      *
      * @return {boolean} Whether the given Vector is equal to this Vector.
      */
@@ -568,7 +568,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#fuzzyEquals
      * @since 3.23.0
      *
-     * @param {Phaser.Math.Vector2} v - The vector to compare with this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} v - The vector to compare with this Vector.
      * @param {number} [epsilon=0.0001] - The tolerance value.
      *
      * @return {boolean} Whether both absolute differences of the x and y components are smaller than `epsilon`.
@@ -621,7 +621,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#add
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to add to this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to add to this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -639,7 +639,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#subtract
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to subtract from this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to subtract from this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -659,7 +659,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#multiply
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to multiply this Vector by.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to multiply this Vector by.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -705,7 +705,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#divide
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to divide this Vector by.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to divide this Vector by.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -739,7 +739,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#distance
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to calculate the distance to.
      *
      * @return {number} The distance from this Vector to the given Vector.
      */
@@ -757,7 +757,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#distanceSq
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to calculate the distance to.
      *
      * @return {number} The distance from this Vector to the given Vector, squared.
      */
@@ -885,7 +885,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#dot
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector2 to dot product with this Vector2.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to dot product with this Vector2.
      *
      * @return {number} The dot product of this Vector and the given Vector.
      */
@@ -900,7 +900,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#cross
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector2 to cross with this Vector2.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to cross with this Vector2.
      *
      * @return {number} The cross product of this Vector and the given Vector.
      */
@@ -917,7 +917,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#lerp
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector2 to interpolate towards.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to interpolate towards.
      * @param {number} [t=0] - The interpolation percentage, between 0 and 1.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
@@ -5218,11 +5218,11 @@ module.exports = RadToDeg;
 
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(13);
-var Events = __webpack_require__(203);
+var Events = __webpack_require__(204);
 var GetFastValue = __webpack_require__(8);
-var GetURL = __webpack_require__(214);
+var GetURL = __webpack_require__(215);
 var MergeXHRSettings = __webpack_require__(44);
-var XHRLoader = __webpack_require__(215);
+var XHRLoader = __webpack_require__(216);
 var XHRSettings = __webpack_require__(45);
 
 /**
@@ -5898,12 +5898,12 @@ module.exports = CheckMatrix;
  */
 
 var Class = __webpack_require__(0);
-var Contains = __webpack_require__(295);
+var Contains = __webpack_require__(296);
 var GetPoint = __webpack_require__(60);
-var GetPoints = __webpack_require__(296);
+var GetPoints = __webpack_require__(297);
 var GEOM_CONST = __webpack_require__(25);
-var Line = __webpack_require__(297);
-var Random = __webpack_require__(302);
+var Line = __webpack_require__(298);
+var Random = __webpack_require__(303);
 
 /**
  * @classdesc
@@ -8755,28 +8755,28 @@ module.exports = Quaternion;
 
 module.exports = {
 
-    ADDED_TO_SCENE: __webpack_require__(178),
-    BOOT: __webpack_require__(179),
-    CREATE: __webpack_require__(180),
-    DESTROY: __webpack_require__(181),
-    PAUSE: __webpack_require__(182),
-    POST_UPDATE: __webpack_require__(183),
-    PRE_RENDER: __webpack_require__(184),
-    PRE_UPDATE: __webpack_require__(185),
-    READY: __webpack_require__(186),
-    REMOVED_FROM_SCENE: __webpack_require__(187),
-    RENDER: __webpack_require__(188),
-    RESUME: __webpack_require__(189),
-    SHUTDOWN: __webpack_require__(190),
-    SLEEP: __webpack_require__(191),
-    START: __webpack_require__(192),
-    TRANSITION_COMPLETE: __webpack_require__(193),
-    TRANSITION_INIT: __webpack_require__(194),
-    TRANSITION_OUT: __webpack_require__(195),
-    TRANSITION_START: __webpack_require__(196),
-    TRANSITION_WAKE: __webpack_require__(197),
-    UPDATE: __webpack_require__(198),
-    WAKE: __webpack_require__(199)
+    ADDED_TO_SCENE: __webpack_require__(179),
+    BOOT: __webpack_require__(180),
+    CREATE: __webpack_require__(181),
+    DESTROY: __webpack_require__(182),
+    PAUSE: __webpack_require__(183),
+    POST_UPDATE: __webpack_require__(184),
+    PRE_RENDER: __webpack_require__(185),
+    PRE_UPDATE: __webpack_require__(186),
+    READY: __webpack_require__(187),
+    REMOVED_FROM_SCENE: __webpack_require__(188),
+    RENDER: __webpack_require__(189),
+    RESUME: __webpack_require__(190),
+    SHUTDOWN: __webpack_require__(191),
+    SLEEP: __webpack_require__(192),
+    START: __webpack_require__(193),
+    TRANSITION_COMPLETE: __webpack_require__(194),
+    TRANSITION_INIT: __webpack_require__(195),
+    TRANSITION_OUT: __webpack_require__(196),
+    TRANSITION_START: __webpack_require__(197),
+    TRANSITION_WAKE: __webpack_require__(198),
+    UPDATE: __webpack_require__(199),
+    WAKE: __webpack_require__(200)
 
 };
 
@@ -11148,8 +11148,8 @@ module.exports = Visible;
 
 var Class = __webpack_require__(0);
 var ComponentsToJSON = __webpack_require__(54);
-var DataManager = __webpack_require__(220);
-var EventEmitter = __webpack_require__(227);
+var DataManager = __webpack_require__(221);
+var EventEmitter = __webpack_require__(228);
 var Events = __webpack_require__(55);
 var SceneEvents = __webpack_require__(43);
 
@@ -12108,19 +12108,19 @@ module.exports = ToJSON;
 
 module.exports = {
 
-    ADDED_TO_SCENE: __webpack_require__(228),
-    DESTROY: __webpack_require__(229),
-    REMOVED_FROM_SCENE: __webpack_require__(230),
-    VIDEO_COMPLETE: __webpack_require__(231),
-    VIDEO_CREATED: __webpack_require__(232),
-    VIDEO_ERROR: __webpack_require__(233),
-    VIDEO_LOOP: __webpack_require__(234),
-    VIDEO_PLAY: __webpack_require__(235),
-    VIDEO_SEEKED: __webpack_require__(236),
-    VIDEO_SEEKING: __webpack_require__(237),
-    VIDEO_STOP: __webpack_require__(238),
-    VIDEO_TIMEOUT: __webpack_require__(239),
-    VIDEO_UNLOCKED: __webpack_require__(240)
+    ADDED_TO_SCENE: __webpack_require__(229),
+    DESTROY: __webpack_require__(230),
+    REMOVED_FROM_SCENE: __webpack_require__(231),
+    VIDEO_COMPLETE: __webpack_require__(232),
+    VIDEO_CREATED: __webpack_require__(233),
+    VIDEO_ERROR: __webpack_require__(234),
+    VIDEO_LOOP: __webpack_require__(235),
+    VIDEO_PLAY: __webpack_require__(236),
+    VIDEO_SEEKED: __webpack_require__(237),
+    VIDEO_SEEKING: __webpack_require__(238),
+    VIDEO_STOP: __webpack_require__(239),
+    VIDEO_TIMEOUT: __webpack_require__(240),
+    VIDEO_UNLOCKED: __webpack_require__(241)
 
 };
 
@@ -12430,12 +12430,12 @@ module.exports = Perimeter;
 var BuildGameObject = __webpack_require__(63);
 var Class = __webpack_require__(0);
 var GetValue = __webpack_require__(7);
-var ResizeEvent = __webpack_require__(175);
-var ScenePlugin = __webpack_require__(176);
-var Spine = __webpack_require__(200);
-var SpineFile = __webpack_require__(201);
-var SpineGameObject = __webpack_require__(219);
-var SpineContainer = __webpack_require__(250);
+var ResizeEvent = __webpack_require__(176);
+var ScenePlugin = __webpack_require__(177);
+var Spine = __webpack_require__(201);
+var SpineFile = __webpack_require__(202);
+var SpineGameObject = __webpack_require__(220);
+var SpineContainer = __webpack_require__(251);
 var NOOP = __webpack_require__(1);
 
 //  Plugin specific instance of the Spine Scene Renderer
@@ -12544,6 +12544,7 @@ var sceneRenderer;
  *
  * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
  * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Phaser Plugin Manager.
+ * @param {string} pluginKey - The key under which this plugin has been installed into the Scene Systems.
  */
 var SpinePlugin = new Class({
 
@@ -12551,9 +12552,9 @@ var SpinePlugin = new Class({
 
     initialize:
 
-    function SpinePlugin (scene, pluginManager)
+    function SpinePlugin (scene, pluginManager, pluginKey)
     {
-        ScenePlugin.call(this, scene, pluginManager);
+        ScenePlugin.call(this, scene, pluginManager, pluginKey);
 
         var game = pluginManager.game;
 
@@ -12733,11 +12734,10 @@ var SpinePlugin = new Class({
             };
         }
 
-        var _this = this;
-
         var add = function (x, y, key, animationName, loop)
         {
-            var spineGO = new SpineGameObject(this.scene, _this, x, y, key, animationName, loop);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var spineGO = new SpineGameObject(this.scene, spinePlugin, x, y, key, animationName, loop);
 
             this.displayList.add(spineGO);
             this.updateList.add(spineGO);
@@ -12753,7 +12753,8 @@ var SpinePlugin = new Class({
             var animationName = GetValue(config, 'animationName', null);
             var loop = GetValue(config, 'loop', false);
 
-            var spineGO = new SpineGameObject(this.scene, _this, 0, 0, key, animationName, loop);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var spineGO = new SpineGameObject(this.scene, spinePlugin, 0, 0, key, animationName, loop);
 
             if (addToScene !== undefined)
             {
@@ -12783,7 +12784,8 @@ var SpinePlugin = new Class({
 
         var addContainer = function (x, y, children)
         {
-            var spineGO = new SpineContainer(this.scene, _this, x, y, children);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var spineGO = new SpineContainer(this.scene, spinePlugin, x, y, children);
 
             this.displayList.add(spineGO);
 
@@ -12798,7 +12800,8 @@ var SpinePlugin = new Class({
             var y = GetValue(config, 'y', 0);
             var children = GetValue(config, 'children', null);
 
-            var container = new SpineContainer(this.scene, _this, x, y, children);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var container = new SpineContainer(this.scene, spinePlugin, x, y, children);
 
             if (addToScene !== undefined)
             {
@@ -13904,34 +13907,35 @@ var PhaserMath = {
     IsEvenStrict: __webpack_require__(159),
     Linear: __webpack_require__(35),
     MaxAdd: __webpack_require__(160),
-    MinSub: __webpack_require__(161),
-    Percent: __webpack_require__(162),
+    Median: __webpack_require__(161),
+    MinSub: __webpack_require__(162),
+    Percent: __webpack_require__(163),
     RadToDeg: __webpack_require__(20),
-    RandomXY: __webpack_require__(163),
-    RandomXYZ: __webpack_require__(164),
-    RandomXYZW: __webpack_require__(165),
-    Rotate: __webpack_require__(166),
+    RandomXY: __webpack_require__(164),
+    RandomXYZ: __webpack_require__(165),
+    RandomXYZW: __webpack_require__(166),
+    Rotate: __webpack_require__(167),
     RotateAround: __webpack_require__(38),
-    RotateAroundDistance: __webpack_require__(167),
-    RotateTo: __webpack_require__(168),
+    RotateAroundDistance: __webpack_require__(168),
+    RotateTo: __webpack_require__(169),
     RoundAwayFromZero: __webpack_require__(39),
-    RoundTo: __webpack_require__(169),
-    SinCosTableGenerator: __webpack_require__(170),
+    RoundTo: __webpack_require__(170),
+    SinCosTableGenerator: __webpack_require__(171),
     SmootherStep: __webpack_require__(37),
     SmoothStep: __webpack_require__(36),
-    ToXY: __webpack_require__(171),
+    ToXY: __webpack_require__(172),
     TransformXY: __webpack_require__(40),
-    Within: __webpack_require__(172),
+    Within: __webpack_require__(173),
     Wrap: __webpack_require__(11),
 
     //  Vector classes
     Vector2: __webpack_require__(2),
     Vector3: __webpack_require__(12),
-    Vector4: __webpack_require__(173),
+    Vector4: __webpack_require__(174),
     Matrix3: __webpack_require__(41),
     Matrix4: __webpack_require__(19),
     Quaternion: __webpack_require__(42),
-    RotateVec3: __webpack_require__(174)
+    RotateVec3: __webpack_require__(175)
 
 };
 
@@ -17895,6 +17899,47 @@ module.exports = MaxAdd;
 /***/ (function(module, exports) {
 
 /**
+ * @author       Vladislav Forsh <vlad@robowhale.com>
+ * @copyright    2021 RoboWhale
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the median of the given values. The values are sorted and the middle value is returned.
+ * In case of an even number of values, the average of the two middle values is returned.
+ *
+ * @function Phaser.Math.Median
+ * @since 3.54.0
+ *
+ * @param {number[]} values - The values to average.
+ *
+ * @return {number} The median value.
+ */
+var Median = function (values)
+{
+    var valuesNum = values.length;
+    if (valuesNum === 0)
+    {
+        return 0;
+    }
+
+    values.sort(function (a, b) { return a - b; });
+
+    var halfIndex = Math.floor(valuesNum / 2);
+
+    return valuesNum % 2 === 0
+        ? (values[halfIndex] + values[halfIndex - 1]) / 2
+        : values[halfIndex];
+};
+
+module.exports = Median;
+
+
+/***/ }),
+/* 162 */
+/***/ (function(module, exports) {
+
+/**
  * @author       Richard Davey <rich@photonstorm.com>
  * @copyright    2020 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
@@ -17921,7 +17966,7 @@ module.exports = MinSub;
 
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports) {
 
 /**
@@ -17980,7 +18025,7 @@ module.exports = Percent;
 
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports) {
 
 /**
@@ -18020,7 +18065,7 @@ module.exports = RandomXY;
 
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports) {
 
 /**
@@ -18059,7 +18104,7 @@ module.exports = RandomXYZ;
 
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports) {
 
 /**
@@ -18095,7 +18140,7 @@ module.exports = RandomXYZW;
 
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports) {
 
 /**
@@ -18130,7 +18175,7 @@ module.exports = Rotate;
 
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports) {
 
 /**
@@ -18171,7 +18216,7 @@ module.exports = RotateAroundDistance;
 
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports) {
 
 /**
@@ -18208,7 +18253,7 @@ module.exports = RotateTo;
 
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports) {
 
 /**
@@ -18260,7 +18305,7 @@ module.exports = RoundTo;
 
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports) {
 
 /**
@@ -18313,7 +18358,7 @@ module.exports = SinCosTableGenerator;
 
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -18371,7 +18416,7 @@ module.exports = ToXY;
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports) {
 
 /**
@@ -18401,7 +18446,7 @@ module.exports = Within;
 
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -18942,7 +18987,7 @@ module.exports = Vector4;
 
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -18990,7 +19035,7 @@ module.exports = RotateVec3;
 
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, exports) {
 
 /**
@@ -19020,7 +19065,7 @@ module.exports = 'resize';
 
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -19029,7 +19074,7 @@ module.exports = 'resize';
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
-var BasePlugin = __webpack_require__(177);
+var BasePlugin = __webpack_require__(178);
 var Class = __webpack_require__(0);
 var SceneEvents = __webpack_require__(43);
 
@@ -19047,6 +19092,7 @@ var SceneEvents = __webpack_require__(43);
  *
  * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
  * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Plugin Manager.
+ * @param {string} pluginKey - The key under which this plugin has been installed into the Scene Systems.
  */
 var ScenePlugin = new Class({
 
@@ -19054,7 +19100,7 @@ var ScenePlugin = new Class({
 
     initialize:
 
-    function ScenePlugin (scene, pluginManager)
+    function ScenePlugin (scene, pluginManager, pluginKey)
     {
         BasePlugin.call(this, pluginManager);
 
@@ -19083,6 +19129,19 @@ var ScenePlugin = new Class({
          * @since 3.8.0
          */
         this.systems = scene.sys;
+
+        /**
+         * The key under which this plugin was installed into the Scene Systems.
+         *
+         * This property is only set when the plugin is instantiated and added to the Scene, not before.
+         * You can use it during the `boot` method.
+         *
+         * @name Phaser.Plugins.ScenePlugin#pluginKey
+         * @type {string}
+         * @readonly
+         * @since 3.54.0
+         */
+        this.pluginKey = pluginKey;
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
     },
@@ -19128,7 +19187,7 @@ var ScenePlugin = new Class({
 
     /**
      * Game instance has been destroyed.
-     * 
+     *
      * You must release everything in here, all references, all objects, free it all up.
      *
      * @method Phaser.Plugins.ScenePlugin#destroy
@@ -19148,7 +19207,7 @@ module.exports = ScenePlugin;
 
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -19278,7 +19337,7 @@ module.exports = BasePlugin;
 
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, exports) {
 
 /**
@@ -19304,7 +19363,7 @@ module.exports = 'addedtoscene';
 
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, exports) {
 
 /**
@@ -19329,7 +19388,7 @@ module.exports = 'boot';
 
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, exports) {
 
 /**
@@ -19358,7 +19417,7 @@ module.exports = 'create';
 
 
 /***/ }),
-/* 181 */
+/* 182 */
 /***/ (function(module, exports) {
 
 /**
@@ -19385,7 +19444,7 @@ module.exports = 'destroy';
 
 
 /***/ }),
-/* 182 */
+/* 183 */
 /***/ (function(module, exports) {
 
 /**
@@ -19412,7 +19471,7 @@ module.exports = 'pause';
 
 
 /***/ }),
-/* 183 */
+/* 184 */
 /***/ (function(module, exports) {
 
 /**
@@ -19450,7 +19509,7 @@ module.exports = 'postupdate';
 
 
 /***/ }),
-/* 184 */
+/* 185 */
 /***/ (function(module, exports) {
 
 /**
@@ -19487,7 +19546,7 @@ module.exports = 'prerender';
 
 
 /***/ }),
-/* 185 */
+/* 186 */
 /***/ (function(module, exports) {
 
 /**
@@ -19525,7 +19584,7 @@ module.exports = 'preupdate';
 
 
 /***/ }),
-/* 186 */
+/* 187 */
 /***/ (function(module, exports) {
 
 /**
@@ -19553,7 +19612,7 @@ module.exports = 'ready';
 
 
 /***/ }),
-/* 187 */
+/* 188 */
 /***/ (function(module, exports) {
 
 /**
@@ -19579,7 +19638,7 @@ module.exports = 'removedfromscene';
 
 
 /***/ }),
-/* 188 */
+/* 189 */
 /***/ (function(module, exports) {
 
 /**
@@ -19616,7 +19675,7 @@ module.exports = 'render';
 
 
 /***/ }),
-/* 189 */
+/* 190 */
 /***/ (function(module, exports) {
 
 /**
@@ -19643,7 +19702,7 @@ module.exports = 'resume';
 
 
 /***/ }),
-/* 190 */
+/* 191 */
 /***/ (function(module, exports) {
 
 /**
@@ -19673,7 +19732,7 @@ module.exports = 'shutdown';
 
 
 /***/ }),
-/* 191 */
+/* 192 */
 /***/ (function(module, exports) {
 
 /**
@@ -19700,7 +19759,7 @@ module.exports = 'sleep';
 
 
 /***/ }),
-/* 192 */
+/* 193 */
 /***/ (function(module, exports) {
 
 /**
@@ -19725,7 +19784,7 @@ module.exports = 'start';
 
 
 /***/ }),
-/* 193 */
+/* 194 */
 /***/ (function(module, exports) {
 
 /**
@@ -19761,7 +19820,7 @@ module.exports = 'transitioncomplete';
 
 
 /***/ }),
-/* 194 */
+/* 195 */
 /***/ (function(module, exports) {
 
 /**
@@ -19798,7 +19857,7 @@ module.exports = 'transitioninit';
 
 
 /***/ }),
-/* 195 */
+/* 196 */
 /***/ (function(module, exports) {
 
 /**
@@ -19832,7 +19891,7 @@ module.exports = 'transitionout';
 
 
 /***/ }),
-/* 196 */
+/* 197 */
 /***/ (function(module, exports) {
 
 /**
@@ -19872,7 +19931,7 @@ module.exports = 'transitionstart';
 
 
 /***/ }),
-/* 197 */
+/* 198 */
 /***/ (function(module, exports) {
 
 /**
@@ -19907,7 +19966,7 @@ module.exports = 'transitionwake';
 
 
 /***/ }),
-/* 198 */
+/* 199 */
 /***/ (function(module, exports) {
 
 /**
@@ -19945,7 +20004,7 @@ module.exports = 'update';
 
 
 /***/ }),
-/* 199 */
+/* 200 */
 /***/ (function(module, exports) {
 
 /**
@@ -19972,7 +20031,7 @@ module.exports = 'wake';
 
 
 /***/ }),
-/* 200 */
+/* 201 */
 /***/ (function(module, exports) {
 
 /*** IMPORTS FROM imports-loader ***/
@@ -28459,7 +28518,7 @@ module.exports = spine;
 
 
 /***/ }),
-/* 201 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28470,11 +28529,11 @@ module.exports = spine;
 
 var Class = __webpack_require__(0);
 var GetFastValue = __webpack_require__(8);
-var ImageFile = __webpack_require__(202);
+var ImageFile = __webpack_require__(203);
 var IsPlainObject = __webpack_require__(6);
-var JSONFile = __webpack_require__(216);
-var MultiFile = __webpack_require__(217);
-var TextFile = __webpack_require__(218);
+var JSONFile = __webpack_require__(217);
+var MultiFile = __webpack_require__(218);
+var TextFile = __webpack_require__(219);
 
 /**
  * @typedef {object} Phaser.Loader.FileTypes.SpineFileConfig
@@ -28719,7 +28778,7 @@ module.exports = SpineFile;
 
 
 /***/ }),
-/* 202 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28993,7 +29052,7 @@ module.exports = ImageFile;
 
 
 /***/ }),
-/* 203 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29008,22 +29067,22 @@ module.exports = ImageFile;
 
 module.exports = {
 
-    ADD: __webpack_require__(204),
-    COMPLETE: __webpack_require__(205),
-    FILE_COMPLETE: __webpack_require__(206),
-    FILE_KEY_COMPLETE: __webpack_require__(207),
-    FILE_LOAD_ERROR: __webpack_require__(208),
-    FILE_LOAD: __webpack_require__(209),
-    FILE_PROGRESS: __webpack_require__(210),
-    POST_PROCESS: __webpack_require__(211),
-    PROGRESS: __webpack_require__(212),
-    START: __webpack_require__(213)
+    ADD: __webpack_require__(205),
+    COMPLETE: __webpack_require__(206),
+    FILE_COMPLETE: __webpack_require__(207),
+    FILE_KEY_COMPLETE: __webpack_require__(208),
+    FILE_LOAD_ERROR: __webpack_require__(209),
+    FILE_LOAD: __webpack_require__(210),
+    FILE_PROGRESS: __webpack_require__(211),
+    POST_PROCESS: __webpack_require__(212),
+    PROGRESS: __webpack_require__(213),
+    START: __webpack_require__(214)
 
 };
 
 
 /***/ }),
-/* 204 */
+/* 205 */
 /***/ (function(module, exports) {
 
 /**
@@ -29053,7 +29112,7 @@ module.exports = 'addfile';
 
 
 /***/ }),
-/* 205 */
+/* 206 */
 /***/ (function(module, exports) {
 
 /**
@@ -29081,7 +29140,7 @@ module.exports = 'complete';
 
 
 /***/ }),
-/* 206 */
+/* 207 */
 /***/ (function(module, exports) {
 
 /**
@@ -29110,7 +29169,7 @@ module.exports = 'filecomplete';
 
 
 /***/ }),
-/* 207 */
+/* 208 */
 /***/ (function(module, exports) {
 
 /**
@@ -29164,7 +29223,7 @@ module.exports = 'filecomplete-';
 
 
 /***/ }),
-/* 208 */
+/* 209 */
 /***/ (function(module, exports) {
 
 /**
@@ -29189,7 +29248,7 @@ module.exports = 'loaderror';
 
 
 /***/ }),
-/* 209 */
+/* 210 */
 /***/ (function(module, exports) {
 
 /**
@@ -29215,7 +29274,7 @@ module.exports = 'load';
 
 
 /***/ }),
-/* 210 */
+/* 211 */
 /***/ (function(module, exports) {
 
 /**
@@ -29242,7 +29301,7 @@ module.exports = 'fileprogress';
 
 
 /***/ }),
-/* 211 */
+/* 212 */
 /***/ (function(module, exports) {
 
 /**
@@ -29271,7 +29330,7 @@ module.exports = 'postprocess';
 
 
 /***/ }),
-/* 212 */
+/* 213 */
 /***/ (function(module, exports) {
 
 /**
@@ -29296,7 +29355,7 @@ module.exports = 'progress';
 
 
 /***/ }),
-/* 213 */
+/* 214 */
 /***/ (function(module, exports) {
 
 /**
@@ -29323,7 +29382,7 @@ module.exports = 'start';
 
 
 /***/ }),
-/* 214 */
+/* 215 */
 /***/ (function(module, exports) {
 
 /**
@@ -29364,7 +29423,7 @@ module.exports = GetURL;
 
 
 /***/ }),
-/* 215 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29445,7 +29504,7 @@ module.exports = XHRLoader;
 
 
 /***/ }),
-/* 216 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29686,7 +29745,7 @@ module.exports = JSONFile;
 
 
 /***/ }),
-/* 217 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29931,7 +29990,7 @@ module.exports = MultiFile;
 
 
 /***/ }),
-/* 218 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -30110,7 +30169,7 @@ module.exports = TextFile;
 
 
 /***/ }),
-/* 219 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -30132,8 +30191,8 @@ var CounterClockwise = __webpack_require__(16);
 var DegToRad = __webpack_require__(18);
 var GameObject = __webpack_require__(53);
 var RadToDeg = __webpack_require__(20);
-var SpineEvents = __webpack_require__(241);
-var SpineGameObjectRender = __webpack_require__(248);
+var SpineEvents = __webpack_require__(242);
+var SpineGameObjectRender = __webpack_require__(249);
 
 /**
  * @classdesc
@@ -31725,7 +31784,7 @@ module.exports = SpineGameObject;
 
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31735,7 +31794,7 @@ module.exports = SpineGameObject;
  */
 
 var Class = __webpack_require__(0);
-var Events = __webpack_require__(221);
+var Events = __webpack_require__(222);
 
 /**
  * @callback DataEachCallback
@@ -32432,7 +32491,7 @@ module.exports = DataManager;
 
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -32447,17 +32506,17 @@ module.exports = DataManager;
 
 module.exports = {
 
-    CHANGE_DATA: __webpack_require__(222),
-    CHANGE_DATA_KEY: __webpack_require__(223),
-    DESTROY: __webpack_require__(224),
-    REMOVE_DATA: __webpack_require__(225),
-    SET_DATA: __webpack_require__(226)
+    CHANGE_DATA: __webpack_require__(223),
+    CHANGE_DATA_KEY: __webpack_require__(224),
+    DESTROY: __webpack_require__(225),
+    REMOVE_DATA: __webpack_require__(226),
+    SET_DATA: __webpack_require__(227)
 
 };
 
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports) {
 
 /**
@@ -32489,7 +32548,7 @@ module.exports = 'changedata';
 
 
 /***/ }),
-/* 223 */
+/* 224 */
 /***/ (function(module, exports) {
 
 /**
@@ -32519,7 +32578,7 @@ module.exports = 'changedata-';
 
 
 /***/ }),
-/* 224 */
+/* 225 */
 /***/ (function(module, exports) {
 
 /**
@@ -32540,7 +32599,7 @@ module.exports = 'destroy';
 
 
 /***/ }),
-/* 225 */
+/* 226 */
 /***/ (function(module, exports) {
 
 /**
@@ -32568,7 +32627,7 @@ module.exports = 'removedata';
 
 
 /***/ }),
-/* 226 */
+/* 227 */
 /***/ (function(module, exports) {
 
 /**
@@ -32596,7 +32655,7 @@ module.exports = 'setdata';
 
 
 /***/ }),
-/* 227 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -32939,7 +32998,7 @@ if (true) {
 
 
 /***/ }),
-/* 228 */
+/* 229 */
 /***/ (function(module, exports) {
 
 /**
@@ -32965,7 +33024,7 @@ module.exports = 'addedtoscene';
 
 
 /***/ }),
-/* 229 */
+/* 230 */
 /***/ (function(module, exports) {
 
 /**
@@ -32990,7 +33049,7 @@ module.exports = 'destroy';
 
 
 /***/ }),
-/* 230 */
+/* 231 */
 /***/ (function(module, exports) {
 
 /**
@@ -33016,7 +33075,7 @@ module.exports = 'removedfromscene';
 
 
 /***/ }),
-/* 231 */
+/* 232 */
 /***/ (function(module, exports) {
 
 /**
@@ -33048,7 +33107,7 @@ module.exports = 'complete';
 
 
 /***/ }),
-/* 232 */
+/* 233 */
 /***/ (function(module, exports) {
 
 /**
@@ -33077,7 +33136,7 @@ module.exports = 'created';
 
 
 /***/ }),
-/* 233 */
+/* 234 */
 /***/ (function(module, exports) {
 
 /**
@@ -33103,7 +33162,7 @@ module.exports = 'error';
 
 
 /***/ }),
-/* 234 */
+/* 235 */
 /***/ (function(module, exports) {
 
 /**
@@ -33135,7 +33194,7 @@ module.exports = 'loop';
 
 
 /***/ }),
-/* 235 */
+/* 236 */
 /***/ (function(module, exports) {
 
 /**
@@ -33163,7 +33222,7 @@ module.exports = 'play';
 
 
 /***/ }),
-/* 236 */
+/* 237 */
 /***/ (function(module, exports) {
 
 /**
@@ -33188,7 +33247,7 @@ module.exports = 'seeked';
 
 
 /***/ }),
-/* 237 */
+/* 238 */
 /***/ (function(module, exports) {
 
 /**
@@ -33214,7 +33273,7 @@ module.exports = 'seeking';
 
 
 /***/ }),
-/* 238 */
+/* 239 */
 /***/ (function(module, exports) {
 
 /**
@@ -33240,7 +33299,7 @@ module.exports = 'stop';
 
 
 /***/ }),
-/* 239 */
+/* 240 */
 /***/ (function(module, exports) {
 
 /**
@@ -33266,7 +33325,7 @@ module.exports = 'timeout';
 
 
 /***/ }),
-/* 240 */
+/* 241 */
 /***/ (function(module, exports) {
 
 /**
@@ -33292,7 +33351,7 @@ module.exports = 'unlocked';
 
 
 /***/ }),
-/* 241 */
+/* 242 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33307,18 +33366,18 @@ module.exports = 'unlocked';
 
 module.exports = {
 
-    COMPLETE: __webpack_require__(242),
-    DISPOSE: __webpack_require__(243),
-    END: __webpack_require__(244),
-    EVENT: __webpack_require__(245),
-    INTERRUPTED: __webpack_require__(246),
-    START: __webpack_require__(247)
+    COMPLETE: __webpack_require__(243),
+    DISPOSE: __webpack_require__(244),
+    END: __webpack_require__(245),
+    EVENT: __webpack_require__(246),
+    INTERRUPTED: __webpack_require__(247),
+    START: __webpack_require__(248)
 
 };
 
 
 /***/ }),
-/* 242 */
+/* 243 */
 /***/ (function(module, exports) {
 
 /**
@@ -33337,7 +33396,7 @@ module.exports = 'complete';
 
 
 /***/ }),
-/* 243 */
+/* 244 */
 /***/ (function(module, exports) {
 
 /**
@@ -33356,7 +33415,7 @@ module.exports = 'dispose';
 
 
 /***/ }),
-/* 244 */
+/* 245 */
 /***/ (function(module, exports) {
 
 /**
@@ -33375,7 +33434,7 @@ module.exports = 'end';
 
 
 /***/ }),
-/* 245 */
+/* 246 */
 /***/ (function(module, exports) {
 
 /**
@@ -33394,7 +33453,7 @@ module.exports = 'event';
 
 
 /***/ }),
-/* 246 */
+/* 247 */
 /***/ (function(module, exports) {
 
 /**
@@ -33413,7 +33472,7 @@ module.exports = 'interrupted';
 
 
 /***/ }),
-/* 247 */
+/* 248 */
 /***/ (function(module, exports) {
 
 /**
@@ -33432,7 +33491,7 @@ module.exports = 'start';
 
 
 /***/ }),
-/* 248 */
+/* 249 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33450,7 +33509,7 @@ if (false)
 
 if (true)
 {
-    renderCanvas = __webpack_require__(249);
+    renderCanvas = __webpack_require__(250);
 }
 
 module.exports = {
@@ -33463,7 +33522,7 @@ module.exports = {
 
 
 /***/ }),
-/* 249 */
+/* 250 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33585,7 +33644,7 @@ module.exports = SpineGameObjectCanvasRenderer;
 
 
 /***/ }),
-/* 250 */
+/* 251 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33595,8 +33654,8 @@ module.exports = SpineGameObjectCanvasRenderer;
  */
 
 var Class = __webpack_require__(0);
-var Container = __webpack_require__(251);
-var SpineContainerRender = __webpack_require__(342);
+var Container = __webpack_require__(252);
+var SpineContainerRender = __webpack_require__(343);
 
 /**
  * @classdesc
@@ -33687,7 +33746,7 @@ module.exports = SpineContainer;
 
 
 /***/ }),
-/* 251 */
+/* 252 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33697,15 +33756,15 @@ module.exports = SpineContainer;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var ArrayUtils = __webpack_require__(252);
+var ArrayUtils = __webpack_require__(253);
 var BlendModes = __webpack_require__(15);
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(289);
+var Components = __webpack_require__(290);
 var Events = __webpack_require__(55);
 var GameObject = __webpack_require__(53);
 var Rectangle = __webpack_require__(24);
-var Render = __webpack_require__(339);
-var Union = __webpack_require__(341);
+var Render = __webpack_require__(340);
+var Union = __webpack_require__(342);
 var Vector2 = __webpack_require__(2);
 
 /**
@@ -35041,7 +35100,7 @@ module.exports = Container;
 
 
 /***/ }),
-/* 252 */
+/* 253 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35056,46 +35115,46 @@ module.exports = Container;
 
 module.exports = {
 
-    Matrix: __webpack_require__(253),
+    Matrix: __webpack_require__(254),
 
-    Add: __webpack_require__(262),
-    AddAt: __webpack_require__(263),
-    BringToTop: __webpack_require__(264),
-    CountAllMatching: __webpack_require__(265),
-    Each: __webpack_require__(266),
-    EachInRange: __webpack_require__(267),
-    FindClosestInSorted: __webpack_require__(268),
-    GetAll: __webpack_require__(269),
-    GetFirst: __webpack_require__(270),
-    GetRandom: __webpack_require__(271),
-    MoveDown: __webpack_require__(272),
-    MoveTo: __webpack_require__(273),
-    MoveUp: __webpack_require__(274),
-    NumberArray: __webpack_require__(275),
-    NumberArrayStep: __webpack_require__(276),
-    QuickSelect: __webpack_require__(277),
-    Range: __webpack_require__(278),
-    Remove: __webpack_require__(279),
-    RemoveAt: __webpack_require__(280),
-    RemoveBetween: __webpack_require__(281),
-    RemoveRandomElement: __webpack_require__(282),
-    Replace: __webpack_require__(283),
+    Add: __webpack_require__(263),
+    AddAt: __webpack_require__(264),
+    BringToTop: __webpack_require__(265),
+    CountAllMatching: __webpack_require__(266),
+    Each: __webpack_require__(267),
+    EachInRange: __webpack_require__(268),
+    FindClosestInSorted: __webpack_require__(269),
+    GetAll: __webpack_require__(270),
+    GetFirst: __webpack_require__(271),
+    GetRandom: __webpack_require__(272),
+    MoveDown: __webpack_require__(273),
+    MoveTo: __webpack_require__(274),
+    MoveUp: __webpack_require__(275),
+    NumberArray: __webpack_require__(276),
+    NumberArrayStep: __webpack_require__(277),
+    QuickSelect: __webpack_require__(278),
+    Range: __webpack_require__(279),
+    Remove: __webpack_require__(280),
+    RemoveAt: __webpack_require__(281),
+    RemoveBetween: __webpack_require__(282),
+    RemoveRandomElement: __webpack_require__(283),
+    Replace: __webpack_require__(284),
     RotateLeft: __webpack_require__(57),
     RotateRight: __webpack_require__(58),
     SafeRange: __webpack_require__(4),
-    SendToBack: __webpack_require__(284),
-    SetAll: __webpack_require__(285),
+    SendToBack: __webpack_require__(285),
+    SetAll: __webpack_require__(286),
     Shuffle: __webpack_require__(59),
-    SortByDigits: __webpack_require__(286),
+    SortByDigits: __webpack_require__(287),
     SpliceOne: __webpack_require__(9),
-    StableSort: __webpack_require__(287),
-    Swap: __webpack_require__(288)
+    StableSort: __webpack_require__(288),
+    Swap: __webpack_require__(289)
 
 };
 
 
 /***/ }),
-/* 253 */
+/* 254 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35111,21 +35170,21 @@ module.exports = {
 module.exports = {
 
     CheckMatrix: __webpack_require__(23),
-    MatrixToString: __webpack_require__(254),
-    ReverseColumns: __webpack_require__(256),
-    ReverseRows: __webpack_require__(257),
-    Rotate180: __webpack_require__(258),
-    RotateLeft: __webpack_require__(259),
+    MatrixToString: __webpack_require__(255),
+    ReverseColumns: __webpack_require__(257),
+    ReverseRows: __webpack_require__(258),
+    Rotate180: __webpack_require__(259),
+    RotateLeft: __webpack_require__(260),
     RotateMatrix: __webpack_require__(14),
-    RotateRight: __webpack_require__(260),
-    Translate: __webpack_require__(261),
+    RotateRight: __webpack_require__(261),
+    Translate: __webpack_require__(262),
     TransposeMatrix: __webpack_require__(56)
 
 };
 
 
 /***/ }),
-/* 254 */
+/* 255 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35134,7 +35193,7 @@ module.exports = {
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Pad = __webpack_require__(255);
+var Pad = __webpack_require__(256);
 var CheckMatrix = __webpack_require__(23);
 
 /**
@@ -35220,7 +35279,7 @@ module.exports = MatrixToString;
 
 
 /***/ }),
-/* 255 */
+/* 256 */
 /***/ (function(module, exports) {
 
 /**
@@ -35296,7 +35355,7 @@ module.exports = Pad;
 
 
 /***/ }),
-/* 256 */
+/* 257 */
 /***/ (function(module, exports) {
 
 /**
@@ -35341,7 +35400,7 @@ module.exports = ReverseColumns;
 
 
 /***/ }),
-/* 257 */
+/* 258 */
 /***/ (function(module, exports) {
 
 /**
@@ -35391,7 +35450,7 @@ module.exports = ReverseRows;
 
 
 /***/ }),
-/* 258 */
+/* 259 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35438,7 +35497,7 @@ module.exports = Rotate180;
 
 
 /***/ }),
-/* 259 */
+/* 260 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35485,7 +35544,7 @@ module.exports = RotateLeft;
 
 
 /***/ }),
-/* 260 */
+/* 261 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35532,7 +35591,7 @@ module.exports = RotateRight;
 
 
 /***/ }),
-/* 261 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35621,7 +35680,7 @@ module.exports = TranslateMatrix;
 
 
 /***/ }),
-/* 262 */
+/* 263 */
 /***/ (function(module, exports) {
 
 /**
@@ -35738,7 +35797,7 @@ module.exports = Add;
 
 
 /***/ }),
-/* 263 */
+/* 264 */
 /***/ (function(module, exports) {
 
 /**
@@ -35860,7 +35919,7 @@ module.exports = AddAt;
 
 
 /***/ }),
-/* 264 */
+/* 265 */
 /***/ (function(module, exports) {
 
 /**
@@ -35898,7 +35957,7 @@ module.exports = BringToTop;
 
 
 /***/ }),
-/* 265 */
+/* 266 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35950,7 +36009,7 @@ module.exports = CountAllMatching;
 
 
 /***/ }),
-/* 266 */
+/* 267 */
 /***/ (function(module, exports) {
 
 /**
@@ -35996,7 +36055,7 @@ module.exports = Each;
 
 
 /***/ }),
-/* 267 */
+/* 268 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36052,7 +36111,7 @@ module.exports = EachInRange;
 
 
 /***/ }),
-/* 268 */
+/* 269 */
 /***/ (function(module, exports) {
 
 /**
@@ -36136,7 +36195,7 @@ module.exports = FindClosestInSorted;
 
 
 /***/ }),
-/* 269 */
+/* 270 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36198,7 +36257,7 @@ module.exports = GetAll;
 
 
 /***/ }),
-/* 270 */
+/* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36257,7 +36316,7 @@ module.exports = GetFirst;
 
 
 /***/ }),
-/* 271 */
+/* 272 */
 /***/ (function(module, exports) {
 
 /**
@@ -36292,7 +36351,7 @@ module.exports = GetRandom;
 
 
 /***/ }),
-/* 272 */
+/* 273 */
 /***/ (function(module, exports) {
 
 /**
@@ -36334,7 +36393,7 @@ module.exports = MoveDown;
 
 
 /***/ }),
-/* 273 */
+/* 274 */
 /***/ (function(module, exports) {
 
 /**
@@ -36381,7 +36440,7 @@ module.exports = MoveTo;
 
 
 /***/ }),
-/* 274 */
+/* 275 */
 /***/ (function(module, exports) {
 
 /**
@@ -36423,7 +36482,7 @@ module.exports = MoveUp;
 
 
 /***/ }),
-/* 275 */
+/* 276 */
 /***/ (function(module, exports) {
 
 /**
@@ -36516,7 +36575,7 @@ module.exports = NumberArray;
 
 
 /***/ }),
-/* 276 */
+/* 277 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36593,7 +36652,7 @@ module.exports = NumberArrayStep;
 
 
 /***/ }),
-/* 277 */
+/* 278 */
 /***/ (function(module, exports) {
 
 /**
@@ -36715,7 +36774,7 @@ module.exports = QuickSelect;
 
 
 /***/ }),
-/* 278 */
+/* 279 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36853,7 +36912,7 @@ module.exports = Range;
 
 
 /***/ }),
-/* 279 */
+/* 280 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36942,7 +37001,7 @@ module.exports = Remove;
 
 
 /***/ }),
-/* 280 */
+/* 281 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36993,7 +37052,7 @@ module.exports = RemoveAt;
 
 
 /***/ }),
-/* 281 */
+/* 282 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37056,7 +37115,7 @@ module.exports = RemoveBetween;
 
 
 /***/ }),
-/* 282 */
+/* 283 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37094,7 +37153,7 @@ module.exports = RemoveRandomElement;
 
 
 /***/ }),
-/* 283 */
+/* 284 */
 /***/ (function(module, exports) {
 
 /**
@@ -37138,7 +37197,7 @@ module.exports = Replace;
 
 
 /***/ }),
-/* 284 */
+/* 285 */
 /***/ (function(module, exports) {
 
 /**
@@ -37176,7 +37235,7 @@ module.exports = SendToBack;
 
 
 /***/ }),
-/* 285 */
+/* 286 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37231,7 +37290,7 @@ module.exports = SetAll;
 
 
 /***/ }),
-/* 286 */
+/* 287 */
 /***/ (function(module, exports) {
 
 /**
@@ -37269,7 +37328,7 @@ module.exports = SortByDigits;
 
 
 /***/ }),
-/* 287 */
+/* 288 */
 /***/ (function(module, exports) {
 
 /**
@@ -37445,7 +37504,7 @@ module.exports = StableSort;
 
 
 /***/ }),
-/* 288 */
+/* 289 */
 /***/ (function(module, exports) {
 
 /**
@@ -37493,7 +37552,7 @@ module.exports = Swap;
 
 
 /***/ }),
-/* 289 */
+/* 290 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37508,23 +37567,23 @@ module.exports = Swap;
 
 module.exports = {
 
-    Alpha: __webpack_require__(290),
-    AlphaSingle: __webpack_require__(291),
-    BlendMode: __webpack_require__(292),
+    Alpha: __webpack_require__(291),
+    AlphaSingle: __webpack_require__(292),
+    BlendMode: __webpack_require__(293),
     ComputedSize: __webpack_require__(46),
-    Crop: __webpack_require__(293),
+    Crop: __webpack_require__(294),
     Depth: __webpack_require__(47),
     Flip: __webpack_require__(48),
-    GetBounds: __webpack_require__(294),
-    Mask: __webpack_require__(303),
-    Origin: __webpack_require__(328),
-    PathFollower: __webpack_require__(329),
-    Pipeline: __webpack_require__(332),
+    GetBounds: __webpack_require__(295),
+    Mask: __webpack_require__(304),
+    Origin: __webpack_require__(329),
+    PathFollower: __webpack_require__(330),
+    Pipeline: __webpack_require__(333),
     ScrollFactor: __webpack_require__(49),
-    Size: __webpack_require__(335),
-    Texture: __webpack_require__(336),
-    TextureCrop: __webpack_require__(337),
-    Tint: __webpack_require__(338),
+    Size: __webpack_require__(336),
+    Texture: __webpack_require__(337),
+    TextureCrop: __webpack_require__(338),
+    Tint: __webpack_require__(339),
     ToJSON: __webpack_require__(54),
     Transform: __webpack_require__(50),
     TransformMatrix: __webpack_require__(51),
@@ -37534,7 +37593,7 @@ module.exports = {
 
 
 /***/ }),
-/* 290 */
+/* 291 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37829,7 +37888,7 @@ module.exports = Alpha;
 
 
 /***/ }),
-/* 291 */
+/* 292 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37939,7 +37998,7 @@ module.exports = AlphaSingle;
 
 
 /***/ }),
-/* 292 */
+/* 293 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38061,7 +38120,7 @@ module.exports = BlendMode;
 
 
 /***/ }),
-/* 293 */
+/* 294 */
 /***/ (function(module, exports) {
 
 /**
@@ -38186,7 +38245,7 @@ module.exports = Crop;
 
 
 /***/ }),
-/* 294 */
+/* 295 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38545,7 +38604,7 @@ module.exports = GetBounds;
 
 
 /***/ }),
-/* 295 */
+/* 296 */
 /***/ (function(module, exports) {
 
 /**
@@ -38580,7 +38639,7 @@ module.exports = Contains;
 
 
 /***/ }),
-/* 296 */
+/* 297 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38634,7 +38693,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 297 */
+/* 298 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38644,10 +38703,10 @@ module.exports = GetPoints;
  */
 
 var Class = __webpack_require__(0);
-var GetPoint = __webpack_require__(298);
-var GetPoints = __webpack_require__(299);
+var GetPoint = __webpack_require__(299);
+var GetPoints = __webpack_require__(300);
 var GEOM_CONST = __webpack_require__(25);
-var Random = __webpack_require__(301);
+var Random = __webpack_require__(302);
 var Vector2 = __webpack_require__(2);
 
 /**
@@ -38971,7 +39030,7 @@ module.exports = Line;
 
 
 /***/ }),
-/* 298 */
+/* 299 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39010,7 +39069,7 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 299 */
+/* 300 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39019,7 +39078,7 @@ module.exports = GetPoint;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Length = __webpack_require__(300);
+var Length = __webpack_require__(301);
 var Point = __webpack_require__(10);
 
 /**
@@ -39075,7 +39134,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 300 */
+/* 301 */
 /***/ (function(module, exports) {
 
 /**
@@ -39103,7 +39162,7 @@ module.exports = Length;
 
 
 /***/ }),
-/* 301 */
+/* 302 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39143,7 +39202,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 302 */
+/* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39181,7 +39240,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 303 */
+/* 304 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39190,8 +39249,8 @@ module.exports = Random;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BitmapMask = __webpack_require__(304);
-var GeometryMask = __webpack_require__(327);
+var BitmapMask = __webpack_require__(305);
+var GeometryMask = __webpack_require__(328);
 
 /**
  * Provides methods used for getting and setting the mask of a Game Object.
@@ -39330,7 +39389,7 @@ module.exports = Mask;
 
 
 /***/ }),
-/* 304 */
+/* 305 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39340,8 +39399,8 @@ module.exports = Mask;
  */
 
 var Class = __webpack_require__(0);
-var GameEvents = __webpack_require__(305);
-var RenderEvents = __webpack_require__(322);
+var GameEvents = __webpack_require__(306);
+var RenderEvents = __webpack_require__(323);
 
 /**
  * @classdesc
@@ -39653,7 +39712,7 @@ module.exports = BitmapMask;
 
 
 /***/ }),
-/* 305 */
+/* 306 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39668,28 +39727,28 @@ module.exports = BitmapMask;
 
 module.exports = {
 
-    BLUR: __webpack_require__(306),
-    BOOT: __webpack_require__(307),
-    CONTEXT_LOST: __webpack_require__(308),
-    CONTEXT_RESTORED: __webpack_require__(309),
-    DESTROY: __webpack_require__(310),
-    FOCUS: __webpack_require__(311),
-    HIDDEN: __webpack_require__(312),
-    PAUSE: __webpack_require__(313),
-    POST_RENDER: __webpack_require__(314),
-    POST_STEP: __webpack_require__(315),
-    PRE_RENDER: __webpack_require__(316),
-    PRE_STEP: __webpack_require__(317),
-    READY: __webpack_require__(318),
-    RESUME: __webpack_require__(319),
-    STEP: __webpack_require__(320),
-    VISIBLE: __webpack_require__(321)
+    BLUR: __webpack_require__(307),
+    BOOT: __webpack_require__(308),
+    CONTEXT_LOST: __webpack_require__(309),
+    CONTEXT_RESTORED: __webpack_require__(310),
+    DESTROY: __webpack_require__(311),
+    FOCUS: __webpack_require__(312),
+    HIDDEN: __webpack_require__(313),
+    PAUSE: __webpack_require__(314),
+    POST_RENDER: __webpack_require__(315),
+    POST_STEP: __webpack_require__(316),
+    PRE_RENDER: __webpack_require__(317),
+    PRE_STEP: __webpack_require__(318),
+    READY: __webpack_require__(319),
+    RESUME: __webpack_require__(320),
+    STEP: __webpack_require__(321),
+    VISIBLE: __webpack_require__(322)
 
 };
 
 
 /***/ }),
-/* 306 */
+/* 307 */
 /***/ (function(module, exports) {
 
 /**
@@ -39712,7 +39771,7 @@ module.exports = 'blur';
 
 
 /***/ }),
-/* 307 */
+/* 308 */
 /***/ (function(module, exports) {
 
 /**
@@ -39734,7 +39793,7 @@ module.exports = 'boot';
 
 
 /***/ }),
-/* 308 */
+/* 309 */
 /***/ (function(module, exports) {
 
 /**
@@ -39757,7 +39816,7 @@ module.exports = 'contextlost';
 
 
 /***/ }),
-/* 309 */
+/* 310 */
 /***/ (function(module, exports) {
 
 /**
@@ -39780,7 +39839,7 @@ module.exports = 'contextrestored';
 
 
 /***/ }),
-/* 310 */
+/* 311 */
 /***/ (function(module, exports) {
 
 /**
@@ -39803,7 +39862,7 @@ module.exports = 'destroy';
 
 
 /***/ }),
-/* 311 */
+/* 312 */
 /***/ (function(module, exports) {
 
 /**
@@ -39825,7 +39884,7 @@ module.exports = 'focus';
 
 
 /***/ }),
-/* 312 */
+/* 313 */
 /***/ (function(module, exports) {
 
 /**
@@ -39851,7 +39910,7 @@ module.exports = 'hidden';
 
 
 /***/ }),
-/* 313 */
+/* 314 */
 /***/ (function(module, exports) {
 
 /**
@@ -39872,7 +39931,7 @@ module.exports = 'pause';
 
 
 /***/ }),
-/* 314 */
+/* 315 */
 /***/ (function(module, exports) {
 
 /**
@@ -39898,7 +39957,7 @@ module.exports = 'postrender';
 
 
 /***/ }),
-/* 315 */
+/* 316 */
 /***/ (function(module, exports) {
 
 /**
@@ -39923,7 +39982,7 @@ module.exports = 'poststep';
 
 
 /***/ }),
-/* 316 */
+/* 317 */
 /***/ (function(module, exports) {
 
 /**
@@ -39948,7 +40007,7 @@ module.exports = 'prerender';
 
 
 /***/ }),
-/* 317 */
+/* 318 */
 /***/ (function(module, exports) {
 
 /**
@@ -39973,7 +40032,7 @@ module.exports = 'prestep';
 
 
 /***/ }),
-/* 318 */
+/* 319 */
 /***/ (function(module, exports) {
 
 /**
@@ -39995,7 +40054,7 @@ module.exports = 'ready';
 
 
 /***/ }),
-/* 319 */
+/* 320 */
 /***/ (function(module, exports) {
 
 /**
@@ -40016,7 +40075,7 @@ module.exports = 'resume';
 
 
 /***/ }),
-/* 320 */
+/* 321 */
 /***/ (function(module, exports) {
 
 /**
@@ -40041,7 +40100,7 @@ module.exports = 'step';
 
 
 /***/ }),
-/* 321 */
+/* 322 */
 /***/ (function(module, exports) {
 
 /**
@@ -40065,7 +40124,7 @@ module.exports = 'visible';
 
 
 /***/ }),
-/* 322 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40080,16 +40139,16 @@ module.exports = 'visible';
 
 module.exports = {
 
-    POST_RENDER: __webpack_require__(323),
-    PRE_RENDER: __webpack_require__(324),
-    RENDER: __webpack_require__(325),
-    RESIZE: __webpack_require__(326)
+    POST_RENDER: __webpack_require__(324),
+    PRE_RENDER: __webpack_require__(325),
+    RENDER: __webpack_require__(326),
+    RESIZE: __webpack_require__(327)
 
 };
 
 
 /***/ }),
-/* 323 */
+/* 324 */
 /***/ (function(module, exports) {
 
 /**
@@ -40111,7 +40170,7 @@ module.exports = 'postrender';
 
 
 /***/ }),
-/* 324 */
+/* 325 */
 /***/ (function(module, exports) {
 
 /**
@@ -40134,7 +40193,7 @@ module.exports = 'prerender';
 
 
 /***/ }),
-/* 325 */
+/* 326 */
 /***/ (function(module, exports) {
 
 /**
@@ -40160,7 +40219,7 @@ module.exports = 'render';
 
 
 /***/ }),
-/* 326 */
+/* 327 */
 /***/ (function(module, exports) {
 
 /**
@@ -40185,7 +40244,7 @@ module.exports = 'resize';
 
 
 /***/ }),
-/* 327 */
+/* 328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40505,7 +40564,7 @@ module.exports = GeometryMask;
 
 
 /***/ }),
-/* 328 */
+/* 329 */
 /***/ (function(module, exports) {
 
 /**
@@ -40708,7 +40767,7 @@ module.exports = Origin;
 
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40718,9 +40777,9 @@ module.exports = Origin;
  */
 
 var DegToRad = __webpack_require__(18);
-var GetBoolean = __webpack_require__(330);
+var GetBoolean = __webpack_require__(331);
 var GetValue = __webpack_require__(7);
-var TWEEN_CONST = __webpack_require__(331);
+var TWEEN_CONST = __webpack_require__(332);
 var Vector2 = __webpack_require__(2);
 
 /**
@@ -41135,7 +41194,7 @@ module.exports = PathFollower;
 
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ (function(module, exports) {
 
 /**
@@ -41176,7 +41235,7 @@ module.exports = GetBoolean;
 
 
 /***/ }),
-/* 331 */
+/* 332 */
 /***/ (function(module, exports) {
 
 /**
@@ -41348,7 +41407,7 @@ module.exports = TWEEN_CONST;
 
 
 /***/ }),
-/* 332 */
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41357,8 +41416,8 @@ module.exports = TWEEN_CONST;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var DeepCopy = __webpack_require__(333);
-var PIPELINE_CONST = __webpack_require__(334);
+var DeepCopy = __webpack_require__(334);
+var PIPELINE_CONST = __webpack_require__(335);
 var SpliceOne = __webpack_require__(9);
 
 /**
@@ -41771,7 +41830,7 @@ module.exports = Pipeline;
 
 
 /***/ }),
-/* 333 */
+/* 334 */
 /***/ (function(module, exports) {
 
 /**
@@ -41820,7 +41879,7 @@ module.exports = DeepCopy;
 
 
 /***/ }),
-/* 334 */
+/* 335 */
 /***/ (function(module, exports) {
 
 /**
@@ -41926,7 +41985,7 @@ module.exports = PIPELINE_CONST;
 
 
 /***/ }),
-/* 335 */
+/* 336 */
 /***/ (function(module, exports) {
 
 /**
@@ -42113,7 +42172,7 @@ module.exports = Size;
 
 
 /***/ }),
-/* 336 */
+/* 337 */
 /***/ (function(module, exports) {
 
 /**
@@ -42243,7 +42302,7 @@ module.exports = Texture;
 
 
 /***/ }),
-/* 337 */
+/* 338 */
 /***/ (function(module, exports) {
 
 /**
@@ -42451,7 +42510,7 @@ module.exports = TextureCrop;
 
 
 /***/ }),
-/* 338 */
+/* 339 */
 /***/ (function(module, exports) {
 
 /**
@@ -42688,7 +42747,7 @@ module.exports = Tint;
 
 
 /***/ }),
-/* 339 */
+/* 340 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42706,7 +42765,7 @@ if (false)
 
 if (true)
 {
-    renderCanvas = __webpack_require__(340);
+    renderCanvas = __webpack_require__(341);
 }
 
 module.exports = {
@@ -42718,7 +42777,7 @@ module.exports = {
 
 
 /***/ }),
-/* 340 */
+/* 341 */
 /***/ (function(module, exports) {
 
 /**
@@ -42826,7 +42885,7 @@ module.exports = ContainerCanvasRenderer;
 
 
 /***/ }),
-/* 341 */
+/* 342 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42868,7 +42927,7 @@ module.exports = Union;
 
 
 /***/ }),
-/* 342 */
+/* 343 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42885,7 +42944,7 @@ if (false)
 
 if (true)
 {
-    renderCanvas = __webpack_require__(343);
+    renderCanvas = __webpack_require__(344);
 }
 
 module.exports = {
@@ -42897,7 +42956,7 @@ module.exports = {
 
 
 /***/ }),
-/* 343 */
+/* 344 */
 /***/ (function(module, exports) {
 
 /**
