@@ -20,7 +20,7 @@ var Remove = require('../utils/array/Remove');
  *
  * It is a global system and therefore belongs to the Game instance, not a specific Scene.
  *
- * It works in conjunction with the PluginCache. Core internal plugins automatically register themselves 
+ * It works in conjunction with the PluginCache. Core internal plugins automatically register themselves
  * with the Cache, but it's the Plugin Manager that is responsible for injecting them into the Scenes.
  *
  * There are two types of plugin:
@@ -169,7 +169,7 @@ var PluginManager = new Class({
                 {
                     console.warn('Missing `plugin` for key: ' + key);
                 }
-                
+
             }
         }
 
@@ -270,7 +270,7 @@ var PluginManager = new Class({
                 var source = PluginCache.getCore(pluginKey);
 
                 var plugin = new source.plugin(scene, this);
-                
+
                 sys[source.mapping] = plugin;
 
                 //  Scene level injection
@@ -335,7 +335,7 @@ var PluginManager = new Class({
      *
      * ```javascript
      * this.plugins.installScenePlugin('powerupsPlugin', pluginCode, 'powerups');
-     * 
+     *
      * // and from within the scene:
      * this.sys.powerupsPlugin; // key value
      * this.powerups; // mapping value
@@ -379,7 +379,7 @@ var PluginManager = new Class({
 
         if (addToScene)
         {
-            var instance = new plugin(addToScene, this);
+            var instance = new plugin(addToScene, this, key);
 
             addToScene.sys[key] = instance;
 
@@ -401,7 +401,7 @@ var PluginManager = new Class({
      *
      * ```javascript
      * this.plugins.install('powerupsPlugin', pluginCode);
-     * 
+     *
      * // and from within the scene:
      * this.plugins.get('powerupsPlugin');
      * ```
@@ -414,7 +414,7 @@ var PluginManager = new Class({
      *
      * @method Phaser.Plugins.PluginManager#install
      * @since 3.8.0
-     * 
+     *
      * @param {string} key - The unique handle given to this plugin within the Plugin Manager.
      * @param {function} plugin - The plugin code. This should be the non-instantiated version.
      * @param {boolean} [start=false] - Automatically start the plugin running? This is always `true` if you provide a mapping value.
@@ -749,16 +749,16 @@ var PluginManager = new Class({
      * this.add.clown();
      * this.make.clown();
      * ```
-     * 
+     *
      * The callbacks are what are called when the factories try to create a Game Object
      * matching the given key. It's important to understand that the callbacks are invoked within
      * the context of the GameObjectFactory. In this context there are several properties available
      * to use:
-     * 
+     *
      * this.scene - A reference to the Scene that owns the GameObjectFactory.
      * this.displayList - A reference to the Display List the Scene owns.
      * this.updateList - A reference to the Update List the Scene owns.
-     * 
+     *
      * See the GameObjectFactory and GameObjectCreator classes for more details.
      * Any public property or method listed is available from your callbacks under `this`.
      *
@@ -816,7 +816,7 @@ var PluginManager = new Class({
     /**
      * Registers a new file type with the global File Types Manager, making it available to all Loader
      * Plugins created after this.
-     * 
+     *
      * This is usually called from within your Plugin code and is a helpful short-cut for creating
      * new loader file types.
      *
@@ -828,12 +828,12 @@ var PluginManager = new Class({
      * // later in your preload code:
      * this.load.wad();
      * ```
-     * 
+     *
      * The callback is what is called when the loader tries to load a file  matching the given key.
      * It's important to understand that the callback is invoked within
      * the context of the LoaderPlugin. In this context there are several properties / methods available
      * to use:
-     * 
+     *
      * this.addFile - A method to add the new file to the load queue.
      * this.scene - The Scene that owns the Loader Plugin instance.
      *
@@ -860,7 +860,7 @@ var PluginManager = new Class({
     /**
      * Destroys this Plugin Manager and all associated plugins.
      * It will iterate all plugins found and call their `destroy` methods.
-     * 
+     *
      * The PluginCache will remove all custom plugins.
      *
      * @method Phaser.Plugins.PluginManager#destroy

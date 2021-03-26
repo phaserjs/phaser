@@ -22,6 +22,7 @@ var SceneEvents = require('../scene/events');
  *
  * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
  * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Plugin Manager.
+ * @param {string} pluginKey - The key under which this plugin has been installed into the Scene Systems.
  */
 var ScenePlugin = new Class({
 
@@ -29,7 +30,7 @@ var ScenePlugin = new Class({
 
     initialize:
 
-    function ScenePlugin (scene, pluginManager)
+    function ScenePlugin (scene, pluginManager, pluginKey)
     {
         BasePlugin.call(this, pluginManager);
 
@@ -58,6 +59,19 @@ var ScenePlugin = new Class({
          * @since 3.8.0
          */
         this.systems = scene.sys;
+
+        /**
+         * The key under which this plugin was installed into the Scene Systems.
+         *
+         * This property is only set when the plugin is instantiated and added to the Scene, not before.
+         * You can use it during the `boot` method.
+         *
+         * @name Phaser.Plugins.ScenePlugin#pluginKey
+         * @type {string}
+         * @readonly
+         * @since 3.54.0
+         */
+        this.pluginKey = pluginKey;
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
     },
@@ -103,7 +117,7 @@ var ScenePlugin = new Class({
 
     /**
      * Game instance has been destroyed.
-     * 
+     *
      * You must release everything in here, all references, all objects, free it all up.
      *
      * @method Phaser.Plugins.ScenePlugin#destroy
