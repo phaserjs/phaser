@@ -3,6 +3,7 @@
 ### New Features
 
 * `Phaser.Math.Median` is a new function that will calculate the median of the given values. The values are sorted and the middle value is returned. In case of an even number of values, the average of the two middle values is returned (thanks @vforsh)
+* `ScenePlugin.pluginKey` is a new string-based property, set by the `PluginManager` that contains the key of the plugin with the Scene Systems.
 
 ### Updates
 
@@ -20,6 +21,7 @@
 * The `RGBToString` function will no longer return CSS strings with decimal places if the input contained them (thanks @neil-h)
 * Objects added to a `SpineContainer` were also added to the base Display List, causing them to appear twice. Fix #5599 (thanks @spayton)
 * When an Animation has `skipMissedFrames` set it will now bail out of the skip catch-up loop if any of the frames cause the animation to complete. Fix #5620 (thanks @fenrir1990 @Aveyder)
+* The `Spine Plugin` factory functions now use the local Scene Spine Plugin reference in order to create the objects, rather than the Scene belonging to the first instance of the plugin. This prevents errors when you have globally installed the Spine plugin, but then remove or destroy the first Scene using it (thanks stever1388 @samme)
 
 ### Examples, Documentation and TypeScript
 
