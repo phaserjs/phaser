@@ -286,22 +286,24 @@ var WebAudioSoundManager = new Class({
 
         var unlockHandler = function unlockHandler ()
         {
-            if (_this.context)
+            if (_this.context && body)
             {
+                var bodyRemove = body.removeEventListener;
+
                 _this.context.resume().then(function ()
                 {
-                    body.removeEventListener('touchstart', unlockHandler);
-                    body.removeEventListener('touchend', unlockHandler);
-                    body.removeEventListener('click', unlockHandler);
-                    body.removeEventListener('keydown', unlockHandler);
+                    bodyRemove('touchstart', unlockHandler);
+                    bodyRemove('touchend', unlockHandler);
+                    bodyRemove('click', unlockHandler);
+                    bodyRemove('keydown', unlockHandler);
 
                     _this.unlocked = true;
                 }, function ()
                 {
-                    body.removeEventListener('touchstart', unlockHandler);
-                    body.removeEventListener('touchend', unlockHandler);
-                    body.removeEventListener('click', unlockHandler);
-                    body.removeEventListener('keydown', unlockHandler);
+                    bodyRemove('touchstart', unlockHandler);
+                    bodyRemove('touchend', unlockHandler);
+                    bodyRemove('click', unlockHandler);
+                    bodyRemove('keydown', unlockHandler);
                 });
             }
         };
