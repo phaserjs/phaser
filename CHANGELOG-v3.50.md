@@ -1,5 +1,9 @@
 ## Version 3.54.0 - Futaro - in dev
 
+### New Features
+
+* `Phaser.Math.Median` is a new function that will calculate the median of the given values. The values are sorted and the middle value is returned. In case of an even number of values, the average of the two middle values is returned (thanks @vforsh)
+
 ### Updates
 
 * When the Scene-owned Input Plugin is shutdown (i.e. via a call to `Scene.stop`) it will now _remove_ any `Key` objects that the plugin created, not just reset them. This is a quality-of-life breaking change from how it worked previously (thanks @veleek)
