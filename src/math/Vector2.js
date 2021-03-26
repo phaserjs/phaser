@@ -83,7 +83,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#copy
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to copy the components from.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to copy the components from.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -179,7 +179,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#equals
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} v - The vector to compare with this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} v - The vector to compare with this Vector.
      *
      * @return {boolean} Whether the given Vector is equal to this Vector.
      */
@@ -194,7 +194,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#fuzzyEquals
      * @since 3.23.0
      *
-     * @param {Phaser.Math.Vector2} v - The vector to compare with this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} v - The vector to compare with this Vector.
      * @param {number} [epsilon=0.0001] - The tolerance value.
      *
      * @return {boolean} Whether both absolute differences of the x and y components are smaller than `epsilon`.
@@ -247,7 +247,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#add
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to add to this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to add to this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -265,7 +265,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#subtract
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to subtract from this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to subtract from this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -285,7 +285,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#multiply
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to multiply this Vector by.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to multiply this Vector by.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -331,7 +331,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#divide
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to divide this Vector by.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to divide this Vector by.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -365,7 +365,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#distance
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to calculate the distance to.
      *
      * @return {number} The distance from this Vector to the given Vector.
      */
@@ -383,7 +383,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#distanceSq
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to calculate the distance to.
      *
      * @return {number} The distance from this Vector to the given Vector, squared.
      */
@@ -511,7 +511,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#dot
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector2 to dot product with this Vector2.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to dot product with this Vector2.
      *
      * @return {number} The dot product of this Vector and the given Vector.
      */
@@ -526,7 +526,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#cross
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector2 to cross with this Vector2.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to cross with this Vector2.
      *
      * @return {number} The cross product of this Vector and the given Vector.
      */
@@ -543,7 +543,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#lerp
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector2 to interpolate towards.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to interpolate towards.
      * @param {number} [t=0] - The interpolation percentage, between 0 and 1.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
