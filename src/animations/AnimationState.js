@@ -1511,7 +1511,7 @@ var AnimationState = new Class({
 
                     safetyNet++;
 
-                } while (this.accumulator > this.nextTick && safetyNet < 60);
+                } while (this.isPlaying && this.accumulator > this.nextTick && safetyNet < 60);
             }
         }
     },
