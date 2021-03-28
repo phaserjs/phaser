@@ -9,8 +9,8 @@
  * 
  * This event is dispatched by a Scene during the Scene Systems start process. Primarily used by Scene Plugins.
  * 
- * Listen to it from a Scene using `this.scene.events.on('start', listener)`.
  * 
+ * Listen to it from a Scene using `this.events.on('start', listener)`.
  * @event Phaser.Scenes.Events#START
  * @since 3.0.0
  * 

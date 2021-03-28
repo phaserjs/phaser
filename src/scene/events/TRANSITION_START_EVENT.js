@@ -15,8 +15,8 @@
  * If the Target Scene was sleeping then the [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} event is
  * dispatched instead of this event.
  * 
- * Listen to it from a Scene using `this.scene.events.on('transitionstart', listener)`.
  * 
+ * Listen to it from a Scene using `this.events.on('transitionstart', listener)`.
  * The Scene Transition event flow is as follows:
  * 
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.

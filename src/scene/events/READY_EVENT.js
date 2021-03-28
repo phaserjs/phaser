@@ -11,8 +11,8 @@
  * By this point in the process the Scene is now fully active and rendering.
  * This event is meant for your game code to use, as all plugins have responded to the earlier 'start' event.
  * 
- * Listen to it from a Scene using `this.scene.events.on('ready', listener)`.
  * 
+ * Listen to it from a Scene using `this.events.on('ready', listener)`.
  * @event Phaser.Scenes.Events#READY
  * @since 3.0.0
  * 

@@ -9,7 +9,7 @@
  *
  * This event is dispatched when a Game Object is added to a Scene.
  *
- * Listen for it from a Scene using `this.scene.events.on('addedtoscene', listener)`.
+ * Listen for it from a Scene using `this.events.on('addedtoscene', listener)`.
  *
  * @event Phaser.Scenes.Events#ADDED_TO_SCENE
  * @since 3.50.0

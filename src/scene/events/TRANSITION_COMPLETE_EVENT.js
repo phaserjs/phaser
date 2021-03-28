@@ -12,8 +12,8 @@
  * It happens when the transition process has completed. This occurs when the duration timer equals or exceeds the duration
  * of the transition.
  * 
- * Listen to it from a Scene using `this.scene.events.on('transitioncomplete', listener)`.
  * 
+ * Listen to it from a Scene using `this.events.on('transitioncomplete', listener)`.
  * The Scene Transition event flow is as follows:
  * 
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.

@@ -10,8 +10,8 @@
  * This event is dispatched by a Scene when it is resumed from a paused state, either directly via the `resume` method,
  * or as an action from another Scene.
  * 
- * Listen to it from a Scene using `this.scene.events.on('resume', listener)`.
  * 
+ * Listen to it from a Scene using `this.events.on('resume', listener)`.
  * @event Phaser.Scenes.Events#RESUME
  * @since 3.0.0
  * 

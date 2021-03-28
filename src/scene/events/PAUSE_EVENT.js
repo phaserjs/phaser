@@ -10,8 +10,8 @@
  * This event is dispatched by a Scene when it is paused, either directly via the `pause` method, or as an
  * action from another Scene.
  * 
- * Listen to it from a Scene using `this.scene.events.on('pause', listener)`.
  * 
+ * Listen to it from a Scene using `this.events.on('pause', listener)`.
  * @event Phaser.Scenes.Events#PAUSE
  * @since 3.0.0
  * 
