@@ -42,6 +42,7 @@ var PhaserMath = {
     GetSpeed: require('./GetSpeed'),
     IsEven: require('./IsEven'),
     IsEvenStrict: require('./IsEvenStrict'),
+    MapLinear: require('./MapLinear'),
     Linear: require('./Linear'),
     MaxAdd: require('./MaxAdd'),
     Median: require('./Median'),
