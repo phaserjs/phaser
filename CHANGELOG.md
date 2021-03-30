@@ -1,5 +1,16 @@
 ## Version 3.55.0 - Ichika - in dev
 
+### New Features
+
+* `GameObjects.DOMElement.pointerEvents` is a new property that allows you to set the `pointerEvents` attribute on the DOM Element CSS. This is `auto` by default and should not be changed unless you know what you're doing.
+* `Core.Config.domPointerEvents` is a new config property set via `dom: { pointerEvents }` within the Game Config that allows you to set the `pointerEvents` css attribute on the DOM Element container.
+
+### Bug Fixes
+
+* Have reverted all of the DOM Element CSS changes back to how they were in 3.52, causing both DOM Input and Phaser Input to work together properly again.
+
+
+
 
 
 ## Version 3.54.0 - Futaro - 26th March 2021
