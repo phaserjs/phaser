@@ -314,15 +314,13 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 # Change Log
 
-Traditionally we have always included the most recent Change Log in this README. It was a nice quick way for visitors to scan what's new in the latest version. However, with the 3.50.0 release we cannot do that because the Change Log itself is 1300 lines long and over 160KB in size.
+Due to the increasing size of our Change Logs we have now split them up into three parts:
 
-This is somewhat unprecedented for Phaser, but then 3.50 _is_ a truly massive release!
+* [v3.50.1+ Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md) (this is the most recent Change Log)
+* [v3.50.0 Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.50.md)
+* [v3.0.0 to v3.24.1. Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.00-v3.24.1.md)
 
-You can read the whole [3.50+ Change Log here](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.50.md).
-
-We've organized the Change Log into commonly themed sections to make it more digestible, but we appreciate there is a lot in there. Please don't feel overwhelmed! If you need clarification about something, join us on the Phaser Discord and feel free to ask.
-
-For versions prior to 3.50 you can read the previous [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md) as well.
+We've organized the Change Logs into commonly themed sections to make it more digestible, but we appreciate there is a lot in there. Please don't feel overwhelmed! If you need clarification about something, join us on the Phaser Discord and feel free to ask.
 
 ![Contributing](https://phaser.io/images/github/div-contributing.png "Contributing")
 <a name="contributing"></a>
