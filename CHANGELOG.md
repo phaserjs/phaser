@@ -7,7 +7,7 @@
 
 ### Bug Fixes
 
-* Have reverted all of the DOM Element CSS changes back to how they were in 3.52, causing both DOM Input and Phaser Input to work together properly again.
+* Have reverted all of the DOM Element CSS changes back to how they were in 3.52, causing both DOM Input and Phaser Input to work together properly again. Fix #5628 (thanks @sacharobarts)
 
 
 
