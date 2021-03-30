@@ -208,6 +208,19 @@ var DOMElement = new Class({
         this.rotate3dAngle = 'deg';
 
         /**
+         * Sets the CSS `pointerEvents` attribute on the DOM Element during rendering.
+         *
+         * This is 'auto' by default. Changing it may have unintended side-effects with
+         * internal Phaser input handling, such as dragging, so only change this if you
+         * understand the implications.
+         *
+         * @name Phaser.GameObjects.DOMElement#pointerEvents
+         * @type {string}
+         * @since 3.55.0
+         */
+        this.pointerEvents = 'auto';
+
+        /**
          * The native (un-scaled) width of this Game Object.
          *
          * For a DOM Element this property is read-only.
