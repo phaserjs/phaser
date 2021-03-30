@@ -207,6 +207,11 @@ var Config = new Class({
          */
         this.domBehindCanvas = GetValue(config, 'dom.behindCanvas', false);
 
+        /**
+         * @const {?string} Phaser.Core.Config#domPointerEvents - The default `pointerEvents` attribute set on the DOM Container.
+         */
+        this.domPointerEvents = GetValue(config, 'dom.pointerEvents', 'none');
+
         //  Input
 
         /**
