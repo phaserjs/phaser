@@ -9,8 +9,11 @@
 
 * Have reverted all of the DOM Element CSS changes back to how they were in 3.52, causing both DOM Input and Phaser Input to work together properly again. Fix #5628 (thanks @sacharobarts)
 
+### Examples, Documentation and TypeScript
 
+My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
+@x-wk
 
 
 ## Version 3.54.0 - Futaro - 26th March 2021
