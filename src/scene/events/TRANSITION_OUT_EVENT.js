@@ -9,8 +9,8 @@
  * 
  * This event is dispatched by a Scene when it initiates a transition to another Scene.
  * 
- * Listen to it from a Scene using `this.scene.events.on('transitionout', listener)`.
  * 
+ * Listen to it from a Scene using `this.events.on('transitionout', listener)`.
  * The Scene Transition event flow is as follows:
  * 
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.

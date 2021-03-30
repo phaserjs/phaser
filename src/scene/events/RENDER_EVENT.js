@@ -18,7 +18,7 @@
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('render', listener)`.
+ * Listen to it from a Scene using `this.events.on('render', listener)`.
  *
  * A Scene will only render if it is visible.
  * By the time this event is dispatched, the Scene will have already been rendered.

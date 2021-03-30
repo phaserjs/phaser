@@ -13,8 +13,8 @@
  * 
  * If there is a transition, this event will be fired after the `TRANSITION_START` event.
  * 
- * Listen to it from a Scene using `this.scene.events.on('create', listener)`.
  * 
+ * Listen to it from a Scene using `this.events.on('create', listener)`.
  * @event Phaser.Scenes.Events#CREATE
  * @since 3.17.0
  * 

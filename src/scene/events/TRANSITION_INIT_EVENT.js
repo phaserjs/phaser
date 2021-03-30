@@ -12,8 +12,8 @@
  * It happens immediately after the `Scene.init` method is called. If the Scene does not have an `init` method,
  * this event is not dispatched.
  * 
- * Listen to it from a Scene using `this.scene.events.on('transitioninit', listener)`.
  * 
+ * Listen to it from a Scene using `this.events.on('transitioninit', listener)`.
  * The Scene Transition event flow is as follows:
  * 
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.

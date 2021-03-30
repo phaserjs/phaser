@@ -9,7 +9,7 @@
  *
  * This event is dispatched when a Game Object is removed from a Scene.
  *
- * Listen for it from a Scene using `this.scene.events.on('removedfromscene', listener)`.
+ * Listen for it from a Scene using `this.events.on('removedfromscene', listener)`.
  *
  * @event Phaser.Scenes.Events#REMOVED_FROM_SCENE
  * @since 3.50.0

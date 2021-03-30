@@ -18,8 +18,8 @@
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('preupdate', listener)`.
  * 
+ * Listen to it from a Scene using `this.events.on('preupdate', listener)`.
  * A Scene will only run its step if it is active.
  * 
  * @event Phaser.Scenes.Events#PRE_UPDATE

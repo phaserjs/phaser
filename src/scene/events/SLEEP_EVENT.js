@@ -10,8 +10,8 @@
  * This event is dispatched by a Scene when it is sent to sleep, either directly via the `sleep` method,
  * or as an action from another Scene.
  * 
- * Listen to it from a Scene using `this.scene.events.on('sleep', listener)`.
  * 
+ * Listen to it from a Scene using `this.events.on('sleep', listener)`.
  * @event Phaser.Scenes.Events#SLEEP
  * @since 3.0.0
  * 
