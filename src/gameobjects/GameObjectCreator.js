@@ -151,8 +151,19 @@ var GameObjectCreator = new Class({
 
 });
 
-//  Static method called directly by the Game Object creator functions
-
+/**
+ * Static method called directly by the Game Object creator functions.
+ * With this method you can register a custom GameObject factory in the GameObjectCreator,
+ * providing a name (`factoryType`) and the constructor (`factoryFunction`) in order
+ * to be called when you invoke Phaser.Scene.make[ factoryType ] method.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator.register
+ * @static
+ * @since 3.0.0
+ *
+ * @param {string} factoryType - The key of the factory that you will use to call to Phaser.Scene.make[ factoryType ] method.
+ * @param {function} factoryFunction - The constructor function to be called when you invoke to the Phaser.Scene.make method.
+ */
 GameObjectCreator.register = function (factoryType, factoryFunction)
 {
     if (!GameObjectCreator.prototype.hasOwnProperty(factoryType))
@@ -161,6 +172,18 @@ GameObjectCreator.register = function (factoryType, factoryFunction)
     }
 };
 
+/**
+ * Static method called directly by the Game Object Creator functions.
+ *
+ * With this method you can remove a custom Game Object Creator that has been previously
+ * registered in the Game Object Creator. Pass in its `factoryType` in order to remove it.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator.remove
+ * @static
+ * @since 3.0.0
+ *
+ * @param {string} factoryType - The key of the factory that you want to remove from the GameObjectCreator.
+ */
 GameObjectCreator.remove = function (factoryType)
 {
     if (GameObjectCreator.prototype.hasOwnProperty(factoryType))
