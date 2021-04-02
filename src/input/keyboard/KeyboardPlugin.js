@@ -113,7 +113,7 @@ var KeyboardPlugin = new Class({
          * A reference to the global Keyboard Manager.
          *
          * @name Phaser.Input.Keyboard.KeyboardPlugin#manager
-         * @type {Phaser.Input.InputPlugin}
+         * @type {Phaser.Input.Keyboard.KeyboardManager}
          * @since 3.16.0
          */
         this.manager = sceneInputPlugin.manager.keyboard;
