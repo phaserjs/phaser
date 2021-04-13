@@ -238,10 +238,11 @@ VideoFile.create = function (loader, key, urls, loadEvent, asBlob, noAudio, xhrS
         asBlob = GetFastValue(key, 'asBlob', false);
         noAudio = GetFastValue(key, 'noAudio', false);
         xhrSettings = GetFastValue(key, 'xhrSettings');
+        key = GetFastValue(key, 'key');
     }
 
     var urlConfig = VideoFile.getVideoURL(game, urls);
-
+    
     if (urlConfig)
     {
         return new VideoFile(loader, key, urlConfig, loadEvent, asBlob, noAudio, xhrSettings);
