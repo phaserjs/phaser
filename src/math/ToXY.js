@@ -42,11 +42,9 @@ var ToXY = function (index, width, height, out)
         {
             x = index;
         }
-
-        out.set(x, y);
     }
 
-    return out;
+    return out.set(x, y);
 };
 
 module.exports = ToXY;
