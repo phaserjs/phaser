@@ -15,6 +15,7 @@
 * `Math.ToXY` will now return an empty Vector 2 if the index is out of range, where before it would return the input Vector2 (thanks @Trissolo)
 * The `UpdateList.shutdown` method will now remove the `PRE_UPDATE` handler from the ProcessQueue correctly (thanks @samme)
 * When loading a Video with a config object, it would not get the correct `key` value from it (thanks @mattjennings)
+* The `GameObjectFactory.existing` method will now accept `Layer` as a TypeScript type. Fix #5642 (thanks @michal-bures)
 
 ### Examples, Documentation and TypeScript
 
