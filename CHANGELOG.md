@@ -12,6 +12,7 @@
 ### Bug Fixes
 
 * Have reverted all of the DOM Element CSS changes back to how they were in 3.52, causing both DOM Input and Phaser Input to work together properly again. Fix #5628 (thanks @sacharobarts)
+* The `Mesh` Game Object would incorrectly cull faces if the Camera scrolled. It now calculates the cull correctly, regardless of camera world position, zoom or rotation. Fix #5570 (thanks @hendrikras)
 * `Math.ToXY` will now return an empty Vector 2 if the index is out of range, where before it would return the input Vector2 (thanks @Trissolo)
 * The `UpdateList.shutdown` method will now remove the `PRE_UPDATE` handler from the ProcessQueue correctly (thanks @samme)
 * When loading a Video with a config object, it would not get the correct `key` value from it (thanks @mattjennings)
