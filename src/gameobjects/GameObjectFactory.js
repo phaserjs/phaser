@@ -122,9 +122,9 @@ var GameObjectFactory = new Class({
      * @method Phaser.GameObjects.GameObjectFactory#existing
      * @since 3.0.0
      *
-     * @generic {(Phaser.GameObjects.GameObject|Phaser.GameObjects.Group)} G - [child,$return]
+     * @generic {(Phaser.GameObjects.GameObject|Phaser.GameObjects.Group|Phaser.GameObjects.Layer)} G - [child,$return]
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.Group)} child - The child to be added to this Scene.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.Group|Phaser.GameObjects.Layer)} child - The child to be added to this Scene.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that was added.
      */
