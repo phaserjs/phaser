@@ -25,7 +25,7 @@ var MeasureText = function (textStyle)
 
     var metrics = context.measureText(textStyle.testString);
 
-    if (metrics.hasOwnProperty('actualBoundingBoxAscent'))
+    if ('actualBoundingBoxAscent' in metrics)
     {
         var ascent = metrics.actualBoundingBoxAscent;
         var descent = metrics.actualBoundingBoxDescent;
