@@ -65,6 +65,16 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
     var newTile = layer.data[tileY][tileX];
     var collides = layer.collideIndexes.indexOf(newTile.index) !== -1;
 
+    // Copy properties from tileset to tiles.
+    var tiles = BuildTilesetIndex(layer.tilemapLayer.tilemap);
+    var index = tile instanceof Tile ? tile.index : tile;
+
+    var sid = tiles[index][2];
+    var set = layer.tilemapLayer.tileset[sid];
+
+    newTile.width = set.tileWidth;
+    newTile.height = set.tileHeight;
+
     SetTileCollision(newTile, collides);
 
     // Recalculate faces only if the colliding flag at (tileX, tileY) has changed
