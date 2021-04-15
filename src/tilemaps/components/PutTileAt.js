@@ -8,6 +8,7 @@ var Tile = require('../Tile');
 var IsInLayerBounds = require('./IsInLayerBounds');
 var CalculateFacesAt = require('./CalculateFacesAt');
 var SetTileCollision = require('./SetTileCollision');
+var BuildTilesetIndex = require('../parsers/tiled/BuildTilesetIndex');
 
 /**
  * Puts a tile at the given tile coordinates in the specified layer. You can pass in either an index
