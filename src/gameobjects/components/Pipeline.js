@@ -60,7 +60,7 @@ var Pipeline = {
      * If you modify this array directly, be sure to set the
      * `hasPostPipeline` property accordingly.
      *
-     * @name Phaser.GameObjects.Components.Pipeline#postPipeline
+     * @name Phaser.GameObjects.Components.Pipeline#postPipelines
      * @type {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[]}
      * @webglOnly
      * @since 3.50.0
