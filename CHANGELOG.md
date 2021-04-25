@@ -4,6 +4,8 @@
 
 * `GameObjects.DOMElement.pointerEvents` is a new property that allows you to set the `pointerEvents` attribute on the DOM Element CSS. This is `auto` by default and should not be changed unless you know what you're doing.
 * `Core.Config.domPointerEvents` is a new config property set via `dom: { pointerEvents }` within the Game Config that allows you to set the `pointerEvents` css attribute on the DOM Element container.
+* The `RenderTexture.endDraw` method has a new optional boolean `erase` which allows you to draw all objects in the batch using a blend mode of ERASE. This has the effect of erasing any filled pixels in the objects being drawn.
+
 
 ### Updates
 
