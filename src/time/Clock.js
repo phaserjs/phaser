@@ -152,12 +152,17 @@ var Clock = new Class({
     },
 
     /**
-     * Creates a Timer Event and adds it to the Clock at the start of the frame.
+     * Creates a Timer Event and adds it to this Clock at the start of the next frame.
      *
-     * You can also pass in an existing Timer Event, which will be reset and added to this Clock.
+     * You can pass in either a `TimerEventConfig` object, from with a new `TimerEvent` will
+     * be created, or you can pass in a `TimerEvent` instance.
      *
-     * Note that if the Timer Event is being used by _another_ Clock (in another Scene) it will still
-     * be updated by that Clock as well, so be careful when using this feature.
+     * If passing an instance please make sure that this instance hasn't been used before.
+     * If it has ever entered a 'completed' state then it will no longer be suitable to
+     * run again.
+     *
+     * Also, if the `TimerEvent` instance is being used by _another_ Clock (in another Scene)
+     * it will still be updated by that Clock as well, so be careful when using this feature.
      *
      * @method Phaser.Time.Clock#addEvent
      * @since 3.0.0
