@@ -25,6 +25,8 @@ module.exports = {
     MoveDown: require('./MoveDown'),
     MoveTo: require('./MoveTo'),
     MoveUp: require('./MoveUp'),
+    MoveAbove: require('./MoveAbove'),
+    MoveBelow: require('./MoveBelow'),
     NumberArray: require('./NumberArray'),
     NumberArrayStep: require('./NumberArrayStep'),
     QuickSelect: require('./QuickSelect'),
