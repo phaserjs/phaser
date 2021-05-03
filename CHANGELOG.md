@@ -19,6 +19,7 @@
 * The `UpdateList.shutdown` method will now remove the `PRE_UPDATE` handler from the ProcessQueue correctly (thanks @samme)
 * When loading a Video with a config object, it would not get the correct `key` value from it (thanks @mattjennings)
 * The `GameObjectFactory.existing` method will now accept `Layer` as a TypeScript type. Fix #5642 (thanks @michal-bures)
+* The `Input.Pointer.event` property can now be a `WheelEvent` as well.
 
 ### Examples, Documentation and TypeScript
 
