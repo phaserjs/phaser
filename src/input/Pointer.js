@@ -64,7 +64,7 @@ var Pointer = new Class({
          * The most recent native DOM Event this Pointer has processed.
          *
          * @name Phaser.Input.Pointer#event
-         * @type {(TouchEvent|MouseEvent)}
+         * @type {(TouchEvent|MouseEvent|WheelEvent)}
          * @since 3.0.0
          */
         this.event;
