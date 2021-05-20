@@ -37,6 +37,13 @@ var ObjectHelper = new Class({
         this._gids = this.gids;
     },
 
+    /**
+     * Enabled if the object helper reaches into tilesets for data. Disabled if it only uses data directly on a gid object.
+     * 
+     * @name Phaser.Tilemaps.ObjectHelper#enabled
+     * @type boolean
+     * @since 3.54.0
+     */
     enabled: {
         get: function ()
         {
@@ -48,9 +55,17 @@ var ObjectHelper = new Class({
         }
     },
 
+    /**
+     * Gets the Tiled `type` field value from the object or the `gid` behind it.
+     * 
+     * @name Phaser.Tilemaps.ObjectHelper#getTypeIncludingTile
+     * @param {Phaser.Types.Tilemaps.TiledObject} obj - The tiled Object to investigate
+     * @returns string? - The `type` of the object, the tile behind the `gid` of the object, or `undefined`.
+     * @since 3.54.0
+     */
     getTypeIncludingTile: function (obj)
     {
-        if (obj.type !== undefined)
+        if (obj.type !== undefined && obj.type != "")
         {
             return obj.type;
         }
@@ -71,9 +86,22 @@ var ObjectHelper = new Class({
         return tileData.type;
     },
 
+    /**
+     * Sets the sprite texture data as specified (usually in a config) or, failing that, as specified in the `gid` of the object being loaded (if any).
+     * 
+     * This fallback will only work if the tileset was loaded as a spritesheet matching the geometry of sprites fed into tiled,
+     * so that (for example:) tile id #`3` within the tileset is the same as texture frame `3` from the image of the tileset.
+     * 
+     * @name Phaser.Tilemaps.ObjectHelper#setTextureAndFrame
+     * @param {Phaser.GameObjects.GameObject} sprite - The GameObject to modify.
+     * @param {string|Phaser.Textures.Texture} key? - The texture key to set (or else the `obj.gid`'s tile is used if available).
+     * @param {string|number|Phaser.Textures.Frame} frame? - The frame's key to set (or else the `obj.gid`'s tile is used if available).
+     * @param {Phaser.Types.Tilemaps.TiledObject} obj - The Tiled object for fallbacks.
+     * @since 3.54.0
+     */
     setTextureAndFrame: function (sprite, key, frame, obj)
     {
-        if (((key === null) || (frame === null)) && this.gids && obj.gid !== undefined)
+        if ((key === null) && this.gids && obj.gid !== undefined)
         {
             var tileset = this.gids[obj.gid];
             if (tileset)
@@ -84,6 +112,7 @@ var ObjectHelper = new Class({
                 }
                 if (frame === null)
                 {
+                    // This relies on the tileset texture *also* having been loaded as a spritesheet. This isn't guaranteed!
                     frame = obj.gid - tileset.firstgid;
                 }
 
@@ -98,59 +127,53 @@ var ObjectHelper = new Class({
         sprite.setTexture(key, frame);
     },
 
-    setProperties: function (sprite, obj)
+    /**
+     * Sets the `sprite.data` field from the tiled properties on the object and its tile (if any).
+     * 
+     * @name Phaser.Tilemaps.ObjectHelper#setPropertiesFromTiledObject
+     * @param {Phaser.GameObjects.GameObject} sprite 
+     * @param {Phaser.Types.Tilemaps.TiledObject} obj 
+     * @since 3.54.0
+     */
+    setPropertiesFromTiledObject: function (sprite, obj)
     {
-        var propertieses = [];
         if (this.gids !== undefined && obj.gid !== undefined)
         {
             var tileset = this.gids[obj.gid];
             if (tileset !== undefined)
             {
-                propertieses.push(tileset.getTileProperties(obj.gid));
+                this._setPropertiesFromPropertiesJSON(sprite, tileset.getTileProperties(obj.gid));
             }
         }
-        propertieses.push(obj.properties);
+        this._setPropertiesFromPropertiesJSON(sprite, obj.properties);
+    },
 
-        for (var p = 0; p < propertieses.length; ++p)
+    /**
+     * 
+     * @name Phaser.Tilemaps.ObjectHelper#_setPropertiesFromPropertiesJSON
+     * @ignore
+     * @param {Phaser.GameObjects.GameObject} sprite - The object for which to populate `data`.
+     * @param {({[key:string]:*}|{name:string, value:*}[])} properties? - The properties to set in either JSON object format or else a list of objects with `name` and `value` fields.
+     * @since 3.54.0
+     */
+    _setPropertiesFromPropertiesJSON: function (sprite, properties)
+    {
+        if (!properties)
         {
-            var properties = propertieses[p];
-            if (properties === undefined)
+            return;
+        }
+        if (Array.isArray(properties))
+        {
+            // Tiled objects custom properties format
+            properties.forEach(function (propData)
             {
-                continue;
-            }
-
-            //  Set properties the class may have, or setData those it doesn't
-            if (Array.isArray(properties))
-            {
-                // Tiled objects custom properties format
-                properties.forEach(function (propData)
-                {
-                    var key = propData['name'];
-                    if (sprite[key] !== undefined)
-                    {
-                        sprite[key] = propData['value'];
-                    }
-                    else
-                    {
-                        sprite.setData(key, propData['value']);
-                    }
-                });
-            }
-            else
-            {
-                for (var key in properties)
-                {
-                    if (sprite[key] !== undefined)
-                    {
-                        sprite[key] = properties[key];
-                    }
-                    else
-                    {
-                        sprite.setData(key, properties[key]);
-                    }
-                }
-            }
-
+                sprite.setData(propData.name, propData.value);
+            });
+            return;
+        }
+        for (var key in properties)
+        {
+            sprite.setData(key, properties[key]);
         }
     }
 });

@@ -855,7 +855,7 @@ var Tilemap = new Class({
                     sprite.visible = false;
                 }
 
-                objectHelper.setProperties(sprite, obj);
+                objectHelper.setPropertiesFromTiledObject(sprite, obj);
 
                 if (container)
                 {
