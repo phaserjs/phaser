@@ -787,7 +787,6 @@ var Container = new Class({
      * Moves a Game Object above another one within this Container.
      *
      * These 2 Game Objects must already be children of this Container.
-     *   
      *
      * @method Phaser.GameObjects.Container#moveAbove
      * @since 3.55.0
@@ -800,7 +799,7 @@ var Container = new Class({
     moveAbove: function (child1, child2)
     {
         ArrayUtils.MoveAbove(this.list, child1, child2);
- 
+
         return this;
     },
 
@@ -808,9 +807,8 @@ var Container = new Class({
      * Moves a Game Object below another one within this Container.
      *
      * These 2 Game Objects must already be children of this Container.
-     *   
      *
-     * @method Phaser.GameObjects.Container#moveAbove
+     * @method Phaser.GameObjects.Container#moveBelow
      * @since 3.55.0
      *
      * @param {Phaser.GameObjects.GameObject} child1 - The Game Object to move below base Game Object.
@@ -819,9 +817,9 @@ var Container = new Class({
      * @return {this} This Container instance.
      */
     moveBelow: function (child1, child2)
-     {
+    {
         ArrayUtils.MoveBelow(this.list, child1, child2);
-  
+
         return this;
     },
 
