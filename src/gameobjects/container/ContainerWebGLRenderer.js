@@ -21,6 +21,8 @@
  */
 var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix)
 {
+    camera.addToRenderList(container);
+
     var children = container.list;
     var childCount = children.length;
 
@@ -28,8 +30,6 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
     {
         return;
     }
-
-    camera.addToRenderList(container);
 
     var transformMatrix = container.localTransform;
 
