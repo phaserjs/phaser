@@ -32,6 +32,7 @@
 * Video would not resume playing after regaining focus swapping from another browser tab. Fix #5377 (thanks @spayton)
 * Container will now invoke `addToRenderList` before leaving the render method, fixing an issue with Container Input. Fix #5506 (thanks @vforsh @rexrainbow)
 * The `Game.postBoot` callback was never being invoked due to an incorrect internal property setter. Fix #5689 (thanks @sebastianfast)
+* The `Light` Game Object didn't set the shader uniforms correctly, causing it to appear to ignore image rotation with normal maps. Fix #5660 (thanks @sroboubi @telinc1)
 
 ### Examples, Documentation and TypeScript
 
