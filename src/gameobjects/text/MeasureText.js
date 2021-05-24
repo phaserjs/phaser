@@ -25,7 +25,7 @@ var MeasureText = function (textStyle)
 
     var metrics = context.measureText(textStyle.testString);
 
-    if (metrics.hasOwnProperty('actualBoundingBoxAscent'))
+    if ('actualBoundingBoxAscent' in metrics)
     {
         var ascent = metrics.actualBoundingBoxAscent;
         var descent = metrics.actualBoundingBoxDescent;
@@ -63,7 +63,8 @@ var MeasureText = function (textStyle)
         fontSize: 0
     };
 
-    if (!context.getImageData(0, 0, width, height))
+    var imagedata = context.getImageData(0, 0, width, height);
+    if (!imagedata)
     {
         output.ascent = baseline;
         output.descent = baseline + 6;
@@ -74,8 +75,8 @@ var MeasureText = function (textStyle)
         return output;
     }
 
-    var imagedata = context.getImageData(0, 0, width, height).data;
-    var pixels = imagedata.length;
+    var pixels = imagedata.data;
+    var numPixels = pixels.length;
     var line = width * 4;
     var i;
     var j;
@@ -87,7 +88,7 @@ var MeasureText = function (textStyle)
     {
         for (j = 0; j < line; j += 4)
         {
-            if (imagedata[idx + j] !== 255)
+            if (pixels[idx + j] !== 255)
             {
                 stop = true;
                 break;
@@ -106,7 +107,7 @@ var MeasureText = function (textStyle)
 
     output.ascent = baseline - i;
 
-    idx = pixels - line;
+    idx = numPixels - line;
     stop = false;
 
     // descent. scan from bottom to top until we find a non red pixel
@@ -114,7 +115,7 @@ var MeasureText = function (textStyle)
     {
         for (j = 0; j < line; j += 4)
         {
-            if (imagedata[idx + j] !== 255)
+            if (pixels[idx + j] !== 255)
             {
                 stop = true;
                 break;
