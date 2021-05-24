@@ -123,6 +123,8 @@ var TextureManager = new Class({
      */
     boot: function ()
     {
+        this._pending = 3;
+
         this.on(Events.LOAD, this.updatePending, this);
         this.on(Events.ERROR, this.updatePending, this);
 
@@ -131,8 +133,6 @@ var TextureManager = new Class({
         this.addBase64('__DEFAULT', config.defaultImage);
         this.addBase64('__MISSING', config.missingImage);
         this.addBase64('__WHITE', config.whiteImage);
-
-        this._pending = 3;
 
         this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
