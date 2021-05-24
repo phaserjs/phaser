@@ -12,6 +12,8 @@
 * All of the methods from the `GraphicsPipeline` have now been merged with the `MultiPipeline`, these include `batchFillRect`, `batchFillTriangle`, `batchStrokeTriangle`, `batchFillPath`, `batchStrokePath` and `batchLine`. The Graphics Game Object and all of the Shape Game Objects have been updated to use the new Multi Pipeline. This means that drawing Sprites and Graphics / Shapes will all batch together again. Fix #5553 #5500 (thanks @venarius @roberthook823)
 * `Container.moveAbove` is a new method that will move a Game Object above another in the same Container (thanks @rexrainbow)
 * `Container.moveBelow` is a new method that will move a Game Object below another in the same Container (thanks @rexrainbow)
+* `List.moveAbove` is a new method that will move a Game Object above another in the same List (thanks @rexrainbow)
+* `List.moveBelow` is a new method that will move a Game Object below another in the same List (thanks @rexrainbow)
 * The `MeasureText` function, as used by Text Game Objects, has had its performance enhanced by removing a duplicate image data check and also now checks for metrics properties correctly (thanks @valadaptive)
 * `WebGLShader.setUniform1` has a new optional boolean parameter `skipCheck` which will force the function to set the values without checking against the previously held ones.
 * `WebGLShader.setUniform2` has a new optional boolean parameter `skipCheck` which will force the function to set the values without checking against the previously held ones.
