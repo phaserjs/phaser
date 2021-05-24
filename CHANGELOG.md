@@ -5,11 +5,11 @@
 * `GameObjects.DOMElement.pointerEvents` is a new property that allows you to set the `pointerEvents` attribute on the DOM Element CSS. This is `auto` by default and should not be changed unless you know what you're doing.
 * `Core.Config.domPointerEvents` is a new config property set via `dom: { pointerEvents }` within the Game Config that allows you to set the `pointerEvents` css attribute on the DOM Element container.
 * The `RenderTexture.endDraw` method has a new optional boolean `erase` which allows you to draw all objects in the batch using a blend mode of ERASE. This has the effect of erasing any filled pixels in the objects being drawn.
+* All of the methods from the `GraphicsPipeline` have now been merged with the `MultiPipeline`, these include `batchFillRect`, `batchFillTriangle`, `batchStrokeTriangle`, `batchFillPath`, `batchStrokePath` and `batchLine`. The Graphics Game Object and all of the Shape Game Objects have been updated to use the new Multi Pipeline. This means that drawing Sprites and Graphics / Shapes will all batch together again. Fix #5553 #5500 (thanks @venarius @roberthook823)
 
 ### Updates
 
 * The types have been improved for WebGL Compressed Textures (thanks @vforsh)
-* All of the methods from the `GraphicsPipeline` have now been merged with the `MultiPipeline`, these include `batchFillRect`, `batchFillTriangle`, `batchStrokeTriangle`, `batchFillPath`, `batchStrokePath` and `batchLine`. The Graphics Game Object and all of the Shape Game Objects have been updated to use the new Multi Pipeline. This means that drawing Sprites and Graphics / Shapes will all batch together again. Fix #5553 #5500 (thanks @venarius @roberthook823)
 * `Container.moveAbove` is a new method that will move a Game Object above another in the same Container (thanks @rexrainbow)
 * `Container.moveBelow` is a new method that will move a Game Object below another in the same Container (thanks @rexrainbow)
 * `List.moveAbove` is a new method that will move a Game Object above another in the same List (thanks @rexrainbow)
