@@ -373,11 +373,11 @@ var List = new Class({
     {
         return ArrayUtils.MoveAbove(this.list, child1, child2);
     },
- 
+
     /**
      * Moves the given array element below another one in the array.
      *
-     * @method Phaser.Structs.List#moveAbove
+     * @method Phaser.Structs.List#moveBelow
      * @since 3.55.0
      *
      * @genericUse {T} - [child1,child2]
