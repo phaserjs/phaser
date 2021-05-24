@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig
+ * @typedef {object} Phaser.Types.Renderer.WebGL.WebGLPipelineAttributeConfig
  * @since 3.50.0
  *
  * @property {string} name - The name of the attribute as defined in the vertex shader.

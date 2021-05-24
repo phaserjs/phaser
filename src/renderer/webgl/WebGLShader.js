@@ -31,7 +31,7 @@ var WEBGL_CONST = require('./const');
  * @param {string} name - The name of this Shader.
  * @param {string} vertexShader - The vertex shader source code as a single string.
  * @param {string} fragmentShader - The fragment shader source code as a single string.
- * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig[]} attributes - An array of attributes.
+ * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributeConfig[]} attributes - An array of attributes.
  */
 var WebGLShader = new Class({
 
@@ -158,7 +158,7 @@ var WebGLShader = new Class({
      * @method Phaser.Renderer.WebGL.WebGLShader#createAttributes
      * @since 3.50.0
      *
-     * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig[]} attributes - An array of attributes configs.
+     * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributeConfig[]} attributes - An array of attributes configs.
      */
     createAttributes: function (attributes)
     {
