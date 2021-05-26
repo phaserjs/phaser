@@ -821,8 +821,8 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#destroy
      * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.0.0
-     * 
-     * @param {boolean} fromScene - True if this Game Object is destroyed from scene, false if not.
+     *
+     * @param {boolean} [fromScene=false] - `True` if this Game Object is being destroyed by the Scene, `false` if not.
      */
     destroy: function (fromScene)
     {
