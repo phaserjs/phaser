@@ -15,5 +15,6 @@
  * @since 3.0.0
  * 
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object which is being destroyed.
+ * @param {boolean} fromScene - True if this Game Object is destroyed from scene, false if not.
  */
 module.exports = 'destroy';
