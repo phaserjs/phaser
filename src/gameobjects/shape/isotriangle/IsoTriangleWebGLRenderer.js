@@ -77,7 +77,7 @@ var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
         var x3 = calcMatrix.getX(0, sizeB - height);
         var y3 = calcMatrix.getY(0, sizeB - height);
 
-        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, tint, tint, tint, tint);
+        pipeline.batchQuad(src, x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
     }
 
     //  Left Face
@@ -109,7 +109,7 @@ var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
             y2 = calcMatrix.getY(0, sizeB - height);
         }
 
-        pipeline.batchTri(x0, y0, x1, y1, x2, y2, tint, tint, tint);
+        pipeline.batchTri(src, x0, y0, x1, y1, x2, y2, 0, 0, 1, 1, tint, tint, tint, 1);
     }
 
     //  Right Face
@@ -141,7 +141,7 @@ var IsoTriangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
             y2 = calcMatrix.getY(0, sizeB - height);
         }
 
-        pipeline.batchTri(x0, y0, x1, y1, x2, y2, tint, tint, tint);
+        pipeline.batchTri(src, x0, y0, x1, y1, x2, y2, 0, 0, 1, 1, tint, tint, tint, 1);
     }
 
     renderer.pipelines.postBatch(src);
