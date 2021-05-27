@@ -79,7 +79,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
         x3 = calcMatrix.getX(0, sizeB - height);
         y3 = calcMatrix.getY(0, sizeB - height);
 
-        pipeline.batchQuad(src, x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
+        pipeline.batchQuad(src, x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
     }
 
     //  Left Face
@@ -100,7 +100,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
         x3 = calcMatrix.getX(-sizeA, -height);
         y3 = calcMatrix.getY(-sizeA, -height);
 
-        pipeline.batchQuad(src, x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
+        pipeline.batchQuad(src, x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
     }
 
     //  Right Face
@@ -121,7 +121,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, camera, parentMatrix)
         x3 = calcMatrix.getX(sizeA, -height);
         y3 = calcMatrix.getY(sizeA, -height);
 
-        pipeline.batchQuad(src, x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 1);
+        pipeline.batchQuad(src, x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
     }
 
     renderer.pipelines.postBatch(src);
