@@ -275,20 +275,7 @@ var TileSprite = new Class({
         this.setOriginFromFrame();
         this.initPipeline();
 
-        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function (renderer)
-        {
-            if (!renderer)
-            {
-                return;
-            }
-            
-            var gl = renderer.gl;
-
-            this.dirty = true;
-            this.fillPattern = null;
-            this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
-
-        }, this);
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     },
 
     /**
@@ -526,6 +513,28 @@ var TileSprite = new Class({
     },
 
     /**
+     * Internal context-restored handler.
+     *
+     * @method Phaser.GameObjects.TileSprite#onContextRestored
+     * @protected
+     * @since 3.56.0
+     */
+    onContextRestored: function (renderer)
+    {
+        if (!renderer)
+        {
+            return;
+        }
+         
+        var gl = renderer.gl;
+ 
+        this.dirty = true;
+        this.fillPattern = null;
+        this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
+ 
+    },    
+ 
+    /**
      * Internal destroy handler, called as part of the destroy process.
      *
      * @method Phaser.GameObjects.TileSprite#preDestroy
@@ -552,6 +561,8 @@ var TileSprite = new Class({
         this.texture.destroy();
 
         this.renderer = null;
+
+        this.scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     },
 
     /**

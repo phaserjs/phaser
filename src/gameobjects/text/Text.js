@@ -287,10 +287,7 @@ var Text = new Class({
             this.setLineSpacing(style.lineSpacing);
         }
 
-        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function ()
-        {
-            this.dirty = true;
-        }, this);
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     },
 
     /**
@@ -1364,6 +1361,18 @@ var Text = new Class({
     },
 
     /**
+     * Internal context-restored handler.
+     *
+     * @method Phaser.GameObjects.Text#onContextRestored
+     * @protected
+     * @since 3.56.0
+     */
+    onContextRestored: function ()
+    {
+        this.dirty = true;
+    },
+
+    /**
      * Internal destroy handler, called as part of the destroy process.
      *
      * @method Phaser.GameObjects.Text#preDestroy
@@ -1380,6 +1389,8 @@ var Text = new Class({
         CanvasPool.remove(this.canvas);
 
         this.texture.destroy();
+
+        this.scene.sys.game.events.off(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     }
 
     /**
