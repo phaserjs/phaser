@@ -1,3 +1,9 @@
+## Version 3.56.0 - Miku - in development
+
+### Bug Fixes
+
+* `Animation.createFromAseprite` would calculate an incorrect frame duration if the frames didn't all have the same speed.
+
 ## Version 3.55.2 - Ichika - 27th May 2021
 
 ### Bug Fixes
