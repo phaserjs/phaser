@@ -10,6 +10,7 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
+var GetURL = require('../GetURL');
 
 /**
  * @classdesc
@@ -84,6 +85,14 @@ var ImageFile = new Class({
 
             loader.addFile(normalMap);
         }
+
+        this.useImageElementLoad = loader.imageLoadType === 'HTMLImageElement';
+
+        if (this.useImageElementLoad)
+        {
+            this.load = this.loadImage;
+            this.onProcess = this.onProcessImage;
+        }
     },
 
     /**
@@ -118,6 +127,56 @@ var ImageFile = new Class({
         };
 
         File.createObjectURL(this.data, this.xhrLoader.response, 'image/png');
+    },
+
+    onProcessImage: function () 
+    {
+        var result = this.state;
+
+        this.state = CONST.FILE_PROCESSING;
+
+        if (result === CONST.FILE_LOADED) 
+        {
+            this.onProcessComplete();
+        } 
+        else
+        {
+            this.onProcessError();
+        }
+    },
+
+    loadImage: function () 
+    {
+        this.state = CONST.FILE_LOADING;
+
+        this.src = GetURL(this, this.loader.baseURL);
+
+        if (this.src.indexOf('data:') === 0)
+        {
+            console.warn('Local data URIs are not supported: ' + this.key);
+        }
+        else 
+        {
+            this.data = new Image();
+
+            this.data.crossOrigin = this.crossOrigin;
+
+            var _this = this;
+
+            this.data.onload = function () 
+            {
+                _this.state = CONST.FILE_LOADED;
+
+                _this.loader.nextFile(_this, true);
+            }
+
+            this.data.onerror = function () 
+            {
+                _this.loader.nextFile(_this, false);
+            }
+
+            this.data.src = this.src;
+        }
     },
 
     /**

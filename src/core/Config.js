@@ -518,6 +518,11 @@ var Config = new Class({
          */
         this.loaderWithCredentials = GetValue(config, 'loader.withCredentials', false);
 
+        /**
+         * @const {string} Phaser.Core.Config#loaderImageLoadType - Optional load type for image, `XHR` is default, or `HTMLImageElement` for a lightweight way.
+         */
+        this.loaderImageLoadType = GetValue(config, 'loader.imageLoadType', 'XHR');
+
         /*
          * Allows `plugins` property to either be an array, in which case it just replaces
          * the default plugins like previously, or a config object.
