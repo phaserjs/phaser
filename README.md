@@ -56,7 +56,7 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 
 ![boogie](https://www.phaser.io/images/spacedancer.gif)
 
-[![](https://www.phaser.io/github/twilioquest.png)](https://www.twilio.com/blog/unlock-your-power-to-teach-with-twilioquest?utm_source=github&utm_medium=banner&utm_campaign=phaser)
+[![](https://www.phaser.io/images/github/twilioquest.png)](https://www.twilio.com/blog/unlock-your-power-to-teach-with-twilioquest?utm_source=github&utm_medium=banner&utm_campaign=phaser)
 
 ![Support Phaser](https://phaser.io/images/github/div-support-phaser.png "Support Phaser")
 
