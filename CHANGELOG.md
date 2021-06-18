@@ -4,6 +4,7 @@
 
 * `Animation.createFromAseprite` would calculate an incorrect frame duration if the frames didn't all have the same speed.
 * The URL scheme `capacitor://` has been added to the protocol check to prevent malformed double-urls in some environments (thanks @consolenaut)
+* Removed `Config.domBehindCanvas` property as it's never used internally. Fix #5749 (thanks @iamallenchang)
 
 ## Version 3.55.2 - Ichika - 27th May 2021
 
