@@ -203,11 +203,6 @@ var Config = new Class({
         this.domCreateContainer = GetValue(config, 'dom.createContainer', false);
 
         /**
-         * @const {?boolean} Phaser.Core.Config#domBehindCanvas - Should the DOM Container that is created (if `dom.createContainer` is true) be positioned behind (true) or over the top (false, the default) of the game canvas?
-         */
-        this.domBehindCanvas = GetValue(config, 'dom.behindCanvas', false);
-
-        /**
          * @const {?string} Phaser.Core.Config#domPointerEvents - The default `pointerEvents` attribute set on the DOM Container.
          */
         this.domPointerEvents = GetValue(config, 'dom.pointerEvents', 'none');
