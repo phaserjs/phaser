@@ -31,7 +31,7 @@ var WEBGL_CONST = require('./const');
  * @param {string} name - The name of this Shader.
  * @param {string} vertexShader - The vertex shader source code as a single string.
  * @param {string} fragmentShader - The fragment shader source code as a single string.
- * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig[]} attributes - An array of attributes.
+ * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributeConfig[]} attributes - An array of attributes.
  */
 var WebGLShader = new Class({
 
@@ -158,7 +158,7 @@ var WebGLShader = new Class({
      * @method Phaser.Renderer.WebGL.WebGLShader#createAttributes
      * @since 3.50.0
      *
-     * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributesConfig[]} attributes - An array of attributes configs.
+     * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineAttributeConfig[]} attributes - An array of attributes configs.
      */
     createAttributes: function (attributes)
     {
@@ -470,10 +470,11 @@ var WebGLShader = new Class({
      * @param {function} setter - The GL function to call.
      * @param {string} name - The name of the uniform to set.
      * @param {(boolean|number|number[]|Float32Array)} value1 - The new value of the uniform.
+     * @param {boolean} [skipCheck=false] - Skip the value comparison?
      *
      * @return {this} This WebGLShader instance.
      */
-    setUniform1: function (setter, name, value1)
+    setUniform1: function (setter, name, value1, skipCheck)
     {
         var uniform = this.uniforms[name];
 
@@ -482,7 +483,7 @@ var WebGLShader = new Class({
             return this;
         }
 
-        if (uniform.value1 !== value1)
+        if (skipCheck || uniform.value1 !== value1)
         {
             uniform.value1 = value1;
 
@@ -514,10 +515,11 @@ var WebGLShader = new Class({
      * @param {string} name - The name of the uniform to set.
      * @param {(boolean|number|number[]|Float32Array)} value1 - The new value of the uniform.
      * @param {(boolean|number|number[]|Float32Array)} value2 - The new value of the uniform.
+     * @param {boolean} [skipCheck=false] - Skip the value comparison?
      *
      * @return {this} This WebGLShader instance.
      */
-    setUniform2: function (setter, name, value1, value2)
+    setUniform2: function (setter, name, value1, value2, skipCheck)
     {
         var uniform = this.uniforms[name];
 
@@ -526,7 +528,7 @@ var WebGLShader = new Class({
             return this;
         }
 
-        if (uniform.value1 !== value1 || uniform.value2 !== value2)
+        if (skipCheck || uniform.value1 !== value1 || uniform.value2 !== value2)
         {
             uniform.value1 = value1;
             uniform.value2 = value2;
@@ -560,10 +562,11 @@ var WebGLShader = new Class({
      * @param {(boolean|number|number[]|Float32Array)} value1 - The new value of the uniform.
      * @param {(boolean|number|number[]|Float32Array)} value2 - The new value of the uniform.
      * @param {(boolean|number|number[]|Float32Array)} value3 - The new value of the uniform.
+     * @param {boolean} [skipCheck=false] - Skip the value comparison?
      *
      * @return {this} This WebGLShader instance.
      */
-    setUniform3: function (setter, name, value1, value2, value3)
+    setUniform3: function (setter, name, value1, value2, value3, skipCheck)
     {
         var uniform = this.uniforms[name];
 
@@ -572,7 +575,7 @@ var WebGLShader = new Class({
             return this;
         }
 
-        if (uniform.value1 !== value1 || uniform.value2 !== value2 || uniform.value3 !== value3)
+        if (skipCheck || uniform.value1 !== value1 || uniform.value2 !== value2 || uniform.value3 !== value3)
         {
             uniform.value1 = value1;
             uniform.value2 = value2;
@@ -608,10 +611,11 @@ var WebGLShader = new Class({
      * @param {(boolean|number|number[]|Float32Array)} value2 - The new value of the uniform.
      * @param {(boolean|number|number[]|Float32Array)} value3 - The new value of the uniform.
      * @param {(boolean|number|number[]|Float32Array)} value4 - The new value of the uniform.
+     * @param {boolean} [skipCheck=false] - Skip the value comparison?
      *
      * @return {this} This WebGLShader instance.
      */
-    setUniform4: function (setter, name, value1, value2, value3, value4)
+    setUniform4: function (setter, name, value1, value2, value3, value4, skipCheck)
     {
         var uniform = this.uniforms[name];
 
@@ -620,7 +624,7 @@ var WebGLShader = new Class({
             return this;
         }
 
-        if (uniform.value1 !== value1 || uniform.value2 !== value2 || uniform.value3 !== value3 || uniform.value4 !== value4)
+        if (skipCheck || uniform.value1 !== value1 || uniform.value2 !== value2 || uniform.value3 !== value3 || uniform.value4 !== value4)
         {
             uniform.value1 = value1;
             uniform.value2 = value2;
@@ -750,7 +754,7 @@ var WebGLShader = new Class({
      */
     set1fv: function (name, arr)
     {
-        return this.setUniform1(this.gl.uniform1fv, name, arr);
+        return this.setUniform1(this.gl.uniform1fv, name, arr, true);
     },
 
     /**
@@ -772,7 +776,7 @@ var WebGLShader = new Class({
      */
     set2fv: function (name, arr)
     {
-        return this.setUniform1(this.gl.uniform2fv, name, arr);
+        return this.setUniform1(this.gl.uniform2fv, name, arr, true);
     },
 
     /**
@@ -794,7 +798,7 @@ var WebGLShader = new Class({
      */
     set3fv: function (name, arr)
     {
-        return this.setUniform1(this.gl.uniform3fv, name, arr);
+        return this.setUniform1(this.gl.uniform3fv, name, arr, true);
     },
 
     /**
@@ -816,7 +820,7 @@ var WebGLShader = new Class({
      */
     set4fv: function (name, arr)
     {
-        return this.setUniform1(this.gl.uniform4fv, name, arr);
+        return this.setUniform1(this.gl.uniform4fv, name, arr, true);
     },
 
     /**
@@ -838,7 +842,7 @@ var WebGLShader = new Class({
      */
     set1iv: function (name, arr)
     {
-        return this.setUniform1(this.gl.uniform1iv, name, arr);
+        return this.setUniform1(this.gl.uniform1iv, name, arr, true);
     },
 
     /**
@@ -860,7 +864,7 @@ var WebGLShader = new Class({
      */
     set2iv: function (name, arr)
     {
-        return this.setUniform1(this.gl.uniform2iv, name, arr);
+        return this.setUniform1(this.gl.uniform2iv, name, arr, true);
     },
 
     /**
@@ -882,7 +886,7 @@ var WebGLShader = new Class({
      */
     set3iv: function (name, arr)
     {
-        return this.setUniform1(this.gl.uniform3iv, name, arr);
+        return this.setUniform1(this.gl.uniform3iv, name, arr, true);
     },
 
     /**
@@ -904,7 +908,7 @@ var WebGLShader = new Class({
      */
     set4iv: function (name, arr)
     {
-        return this.setUniform1(this.gl.uniform4iv, name, arr);
+        return this.setUniform1(this.gl.uniform4iv, name, arr, true);
     },
 
     /**
@@ -1021,7 +1025,7 @@ var WebGLShader = new Class({
      */
     setMatrix2fv: function (name, transpose, matrix)
     {
-        return this.setUniform2(this.gl.uniformMatrix2fv, name, transpose, matrix);
+        return this.setUniform2(this.gl.uniformMatrix2fv, name, transpose, matrix, true);
     },
 
     /**
@@ -1044,7 +1048,7 @@ var WebGLShader = new Class({
      */
     setMatrix3fv: function (name, transpose, matrix)
     {
-        return this.setUniform2(this.gl.uniformMatrix3fv, name, transpose, matrix);
+        return this.setUniform2(this.gl.uniformMatrix3fv, name, transpose, matrix, true);
     },
 
     /**
@@ -1067,7 +1071,7 @@ var WebGLShader = new Class({
      */
     setMatrix4fv: function (name, transpose, matrix)
     {
-        return this.setUniform2(this.gl.uniformMatrix4fv, name, transpose, matrix);
+        return this.setUniform2(this.gl.uniformMatrix4fv, name, transpose, matrix, true);
     },
 
     /**

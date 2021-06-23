@@ -359,6 +359,38 @@ var List = new Class({
     },
 
     /**
+     * Moves the given array element above another one in the array.
+     *
+     * @method Phaser.Structs.List#moveAbove
+     * @since 3.55.0
+     *
+     * @genericUse {T} - [child1,child2]
+     *
+     * @param {*} child1 - The element to move above base element.
+     * @param {*} child2 - The base element.
+     */
+    moveAbove: function (child1, child2)
+    {
+        return ArrayUtils.MoveAbove(this.list, child1, child2);
+    },
+
+    /**
+     * Moves the given array element below another one in the array.
+     *
+     * @method Phaser.Structs.List#moveBelow
+     * @since 3.55.0
+     *
+     * @genericUse {T} - [child1,child2]
+     *
+     * @param {*} child1 - The element to move below base element.
+     * @param {*} child2 - The base element.
+     */
+    moveBelow: function (child1, child2)
+    {
+        return ArrayUtils.MoveBelow(this.list, child1, child2);
+    },
+
+    /**
      * Removes one or many items from the List.
      *
      * @method Phaser.Structs.List#remove

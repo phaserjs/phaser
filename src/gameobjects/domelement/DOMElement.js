@@ -729,7 +729,7 @@ var DOMElement = new Class({
      * @method Phaser.GameObjects.DOMElement#createFromHTML
      * @since 3.17.0
      *
-     * @param {string} A string of html to be set as the `innerHTML` property of the created element.
+     * @param {string} html - A string of html to be set as the `innerHTML` property of the created element.
      * @param {string} [tagName='div'] - The tag name of the element into which all of the html will be inserted. Defaults to a plain div tag.
      *
      * @return {this} This DOM Element instance.

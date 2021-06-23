@@ -6,7 +6,6 @@
 
 var Class = require('../../utils/Class');
 var Rectangle = require('../rectangle/Rectangle');
-var RectangleToRectangle = require('../intersects/RectangleToRectangle');
 var Vector2 = require('../../math/Vector2');
 
 /**
@@ -273,14 +272,7 @@ var Face = new Class({
      * @param {Uint32Array} U32 - A Uint32 Array to insert the color and alpha data in to.
      * @param {number} offset - The index of the array to insert this Vertex to.
      * @param {number} textureUnit - The texture unit currently in use.
-     * @param {number} alpha - The alpha of the parent object.
-     * @param {number} a - The parent transform matrix data a component.
-     * @param {number} b - The parent transform matrix data b component.
-     * @param {number} c - The parent transform matrix data c component.
-     * @param {number} d - The parent transform matrix data d component.
-     * @param {number} e - The parent transform matrix data e component.
-     * @param {number} f - The parent transform matrix data f component.
-     * @param {boolean} roundPixels - Round the vertex position or not?
+     * @param {number} tintEffect - The tint effect to use.
      *
      * @return {number} The new vertex index array offset.
      */
@@ -400,7 +392,15 @@ var Face = new Class({
         bounds.width = Math.max(v1.tx, v2.tx, v3.tx) - bounds.x;
         bounds.height = Math.max(v1.ty, v2.ty, v3.ty) - bounds.y;
 
-        return RectangleToRectangle(bounds, camera.worldView);
+        var cr = camera.x + camera.width;
+        var cb = camera.y + camera.height;
+
+        if (bounds.width <= 0 || bounds.height <= 0 || camera.width <= 0 || camera.height <= 0)
+        {
+            return false;
+        }
+
+        return !(bounds.right < camera.x || bounds.bottom < camera.y || bounds.x > cr || bounds.y > cb);
     },
 
     /**

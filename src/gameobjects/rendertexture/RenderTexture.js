@@ -1022,10 +1022,14 @@ var RenderTexture = new Class({
      * @method Phaser.GameObjects.RenderTexture#endDraw
      * @since 3.50.0
      *
+     * @param {boolean} [erase=false] - Draws all objects in this batch using a blend mode of ERASE. This has the effect of erasing any filled pixels in the objects being drawn.
+     *
      * @return {this} This Render Texture instance.
      */
-    endDraw: function ()
+    endDraw: function (erase)
     {
+        if (erase === undefined) { erase = this._eraseMode; }
+
         var renderer = this.renderer;
 
         var renderTarget = this.renderTarget;
@@ -1036,7 +1040,7 @@ var RenderTexture = new Class({
 
             var util = renderer.pipelines.setUtility();
 
-            util.blitFrame(canvasTarget, renderTarget, 1, false, false, this._eraseMode);
+            util.blitFrame(canvasTarget, renderTarget, 1, false, false, erase);
 
             renderer.resetScissor();
             renderer.resetViewport();

@@ -268,6 +268,7 @@ var Vertex = new Class({
      * @param {Uint32Array} U32 - A Uint32 Array to insert the color and alpha data in to.
      * @param {number} offset - The index of the array to insert this Vertex to.
      * @param {number} textureUnit - The texture unit currently in use.
+     * @param {number} tintEffect - The tint effect to use.
      *
      * @return {number} The new array offset.
      */

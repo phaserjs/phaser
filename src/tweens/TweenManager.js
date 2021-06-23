@@ -206,6 +206,8 @@ var TweenManager = new Class({
     /**
      * Create a Tween and add it to the active Tween list.
      *
+     * Please note that a Tween will not manipulate any property that begins with an underscore.
+     *
      * @method Phaser.Tweens.TweenManager#add
      * @since 3.0.0
      *

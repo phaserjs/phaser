@@ -1,11 +1,11 @@
 /**
  * @typedef {object} Phaser.Types.Renderer.WebGL.WebGLPipelineUniformsConfig
- * @since 3.50.0
+ * @since 3.55.1
  *
- * @property {string} name - The name of the uniform as defined in the shaders.
- * @property {WebGLUniformLocation} location - The pipeline will set it when the program is linked.
- * @property {any} value1 - The cached value1.
- * @property {any} value2 - The cached value2.
- * @property {any} value3 - The cached value3.
- * @property {any} value4 - The cached value4.
+ * @property {string} name - The name of the uniform as defined in the shader.
+ * @property {number} location - The location of the uniform.
+ * @property {number} [value1] - The first cached value of the uniform.
+ * @property {number} [value2] - The first cached value of the uniform.
+ * @property {number} [value3] - The first cached value of the uniform.
+ * @property {number} [value4] - The first cached value of the uniform.
  */

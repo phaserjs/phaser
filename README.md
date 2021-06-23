@@ -11,7 +11,7 @@ Phaser is a fast, free, and fun open source HTML5 game framework that offers Web
 
 Along with the fantastic open source community, Phaser is actively developed and maintained by [Photon Storm](http://www.photonstorm.com). As a result of rapid support, and a developer friendly API, Phaser is currently one of the [most starred](https://github.com/collections/javascript-game-engines) game frameworks on GitHub.
 
-Thousands of developers from indie and multi-national digital agencies, and universities worldwide use Phaser. You can take a look at their incredible [games](https://phaser.io/games/).
+Thousands of developers from indie and multi-national digital agencies, and universities worldwide use Phaser. Take a look at their incredible [games](https://phaser.io/games/).
 
 **Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)<br />
 **Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
@@ -28,9 +28,9 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 26th March 2021
+> 27th May 2021
 
-After 13 beta releases, over 200 resolved issues, thousands of lines of new code and the culmination of over 6 months incredibly hard work, Phaser 3.50 was finally released in December 2020 and we're continuing with updates into 2021 with this new 3.54 release.
+After 13 beta releases, over 200 resolved issues, thousands of lines of new code and the culmination of over 6 months incredibly hard work, Phaser 3.50 was finally released in December 2020 and we're continuing with updates into 2021 with this new 3.55 release. 3.55 focuses mostly on fixing issues, but also addresses a performance issue with mixing Sprites and Graphics objects together.
 
 It's not hyperbole or exaggeration when I say that Phaser 3.50 is the single biggest point release ever in the history of Phaser. There are quite literally hundreds of new features to explore, updates to key areas and of course bug fixes. I did actually try counting all the changes, but gave up after I'd reached 900 of them! Thankfully, they are, as always, meticulously detailed in the [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.50.md). The changes for 3.50 actually grew so large that I had to split them out from the main Change Log and put them into their own file.
 
@@ -56,6 +56,8 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 
 ![boogie](https://www.phaser.io/images/spacedancer.gif)
 
+[![](https://www.phaser.io/images/github/twilioquest838.png)](https://www.twilio.com/blog/unlock-your-power-to-teach-with-twilioquest?utm_source=github&utm_medium=banner&utm_campaign=phaser)
+
 ![Support Phaser](https://phaser.io/images/github/div-support-phaser.png "Support Phaser")
 
 Because Phaser is an open source project, we cannot charge for it in the same way as traditional retail software. What's more, we don't ever want to. After all, it's built on, and was born from, open web standards. It's part of our manifesto that the core framework will always be free, even if you use it commercially, as many of you do.
@@ -79,13 +81,13 @@ Extra special thanks to the following companies whose support makes Phaser possi
 * [GameCommerce](https://www.gamecommerce.com)
 * [Mozilla](https://www.mozilla.org)
 * [Texture Packer](https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16)
-* [Twilio](https://www.twilio.com)
+* [TwilioQuest](https://www.twilio.com/blog/unlock-your-power-to-teach-with-twilioquest?utm_source=github&utm_medium=banner&utm_campaign=phaser)
 * [Poki](https://developers.poki.com/)
 * [CrazyGames](https://www.crazygames.com)
 * [Lagged](https://www.lagged.com)
 * [Nakama](https://heroiclabs.com/phaserjs/)
 
-![Sponsors](https://phaser.io/images/github/sponsors-2020-12.png "Our Awesome Sponsors")
+![Sponsors](https://phaser.io/images/github/sponsors-2021-06.png "Our Awesome Sponsors")
 
 ![Phaser Newsletter](https://phaser.io/images/github/div-newsletter.png "Phaser Newsletter")
 
@@ -119,20 +121,18 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.54.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.54.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
 
-Go to https://photonstorm.github.io/phaser3-docs/index.html to read the docs online. Use the drop-down menus at the top to navigate the namespaces, classes and Game Objects lists.
-
-Or, if you wish to run the docs locally you can checkout the [phaser3-docs](https://github.com/photonstorm/phaser3-docs) repository and then read the documentation by pointing your browser to the `docs/` folder.
+Go to https://newdocs.phaser.io/ to read the docs online using our brand new interface. Use the links to navigate the namespaces, classes and Game Objects lists and also use the new search box.
 
 The documentation for Phaser 3 is an on-going project. Please help us by contributing improved docs and examples.
 
@@ -197,7 +197,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.54.0/dist/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
@@ -317,8 +317,8 @@ You can then run `webpack` to create a development build in the `build` folder w
 Due to the increasing size of our Change Logs we have now split them up into three parts:
 
 * [v3.50.1+ Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md) (this is the most recent Change Log)
-* [v3.50.0 Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.50.md)
-* [v3.0.0 to v3.24.1. Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.00-v3.24.1.md)
+* [v3.50.0 Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.50.md) (all the changes 3.50 contained)
+* [v3.0.0 to v3.24.1. Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.00-v3.24.1.md) (everything that came before)
 
 We've organized the Change Logs into commonly themed sections to make it more digestible, but we appreciate there is a lot in there. Please don't feel overwhelmed! If you need clarification about something, join us on the Phaser Discord and feel free to ask.
 
@@ -349,8 +349,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.54.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.54.0/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.55.2/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.55.2/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser

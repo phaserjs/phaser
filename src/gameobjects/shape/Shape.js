@@ -8,7 +8,6 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var Line = require('../../geom/line/Line');
-var PIPELINES_CONST = require('../../renderer/webgl/pipelines/const');
 
 /**
  * @classdesc
@@ -23,7 +22,7 @@ var PIPELINES_CONST = require('../../renderer/webgl/pipelines/const');
  *
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
-  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
@@ -204,7 +203,7 @@ var Shape = new Class({
          */
         this.height = 0;
 
-        this.initPipeline(PIPELINES_CONST.GRAPHICS_PIPELINE);
+        this.initPipeline();
     },
 
     /**

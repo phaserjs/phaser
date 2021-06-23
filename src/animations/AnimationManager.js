@@ -146,7 +146,7 @@ var AnimationManager = new Class({
      * as blending between an idle and a walk state, or a running and a firing state.
      *
      * Note that mixing is only applied if you use the `Sprite.play` method. If you opt to use
-     * `playAfterRepeat` or `playAfterDelay` instead, those will take pririty and the mix
+     * `playAfterRepeat` or `playAfterDelay` instead, those will take priority and the mix
      * delay will not be used.
      *
      * To update an existing mix, just call this method with the new delay.
@@ -459,7 +459,7 @@ var AnimationManager = new Class({
                         animFrames.push({
                             key: key,
                             frame: entry.frame,
-                            duration: (minDuration - entry.duration)
+                            duration: (entry.duration - minDuration)
                         });
                     });
 

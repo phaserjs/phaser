@@ -20,7 +20,6 @@ var GameObject = require('../GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
-var PIPELINES_CONST = require('../../renderer/webgl/pipelines/const');
 var Render = require('./GraphicsRender');
 
 /**
@@ -108,7 +107,7 @@ var Graphics = new Class({
         GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
-        this.initPipeline(PIPELINES_CONST.GRAPHICS_PIPELINE);
+        this.initPipeline();
 
         /**
          * The horizontal display origin of the Graphics.

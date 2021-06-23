@@ -199,7 +199,7 @@ var UpdateList = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off(SceneEvents.PRE_UPDATE, this.preUpdate, this);
+        eventEmitter.off(SceneEvents.PRE_UPDATE, this.update, this);
         eventEmitter.off(SceneEvents.UPDATE, this.sceneUpdate, this);
         eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },

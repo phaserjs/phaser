@@ -421,7 +421,7 @@ var WebGLRenderer = new Class({
          * Stores the supported WebGL texture compression formats.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#compression
-         * @type {object}
+         * @type {Phaser.Types.Renderer.WebGL.WebGLTextureCompression}
          * @since 3.8.0
          */
         this.compression = {

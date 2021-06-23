@@ -929,6 +929,7 @@ var Video = new Class({
      */
     playPromiseSuccessHandler: function ()
     {
+        this._codePaused = false;
         this.touchLocked = false;
 
         this.emit(Events.VIDEO_PLAY, this);
@@ -970,6 +971,7 @@ var Video = new Class({
      */
     playHandler: function ()
     {
+        this._codePaused = false;
         this.touchLocked = false;
 
         this.emit(Events.VIDEO_PLAY, this);

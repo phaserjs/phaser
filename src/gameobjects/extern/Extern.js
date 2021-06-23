@@ -19,10 +19,14 @@ var ExternRender = require('./ExternRender');
  * clear down the pipeline and prepare a transform matrix which your render function can
  * take advantage of, if required.
  *
- * The WebGL context is then left is a 'clean' state, ready for you to bind your own shaders,
- * or draw to it, whatever you wish to do. Once you've finished, you should free-up any
- * of your resources. The Extern will then rebind the Phaser pipeline and carry on
- * rendering the display list.
+ * The WebGL context is then left in a 'clean' state, ready for you to bind your own shaders,
+ * or draw to it, whatever you wish to do. This should all take place in the `render` method.
+ * The correct way to deploy an Extern object is to create a class that extends it, then
+ * override the `render` (and optionally `preUpdate`) methods and pass off control to your
+ * 3rd party libraries or custom WebGL code there.
+ *
+ * Once you've finished, you should free-up any of your resources.
+ * The Extern will then rebind the Phaser pipeline and carry on rendering the display list.
  *
  * Although this object has lots of properties such as Alpha, Blend Mode and Tint, none of
  * them are used during rendering unless you take advantage of them in your own render code.
