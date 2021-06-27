@@ -1759,7 +1759,7 @@ var World = new Class({
         var i;
         var j;
 
-        if (object1.isParent && object1.physicsType === undefined)
+        if (object1.isParent && (object1.physicsType === undefined || object2 === undefined || object1 === object2))
         {
             object1 = object1.children.entries;
         }
