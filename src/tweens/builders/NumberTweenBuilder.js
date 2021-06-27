@@ -110,7 +110,6 @@ var NumberTweenBuilder = function (parent, config, defaults)
             var callbackScope = GetValue(config, type + 'Scope', scope);
             var callbackParams = GetValue(config, type + 'Params', []);
 
-            //  The null is reset to be the Tween target
             tween.setCallback(type, callback, callbackParams, callbackScope);
         }
     }
