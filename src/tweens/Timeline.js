@@ -595,7 +595,7 @@ var Timeline = new Class({
     {
         if (Timeline.TYPES.indexOf(type) !== -1)
         {
-            this.callbacks[type] = { func: callback, scope: scope, params: params };
+            this.callbacks[type] = { func: callback, scope: scope, params: [ this ].concat(params) };
         }
 
         return this;

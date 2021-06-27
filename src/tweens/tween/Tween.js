@@ -1006,7 +1006,7 @@ var Tween = new Class({
      */
     setCallback: function (type, callback, params, scope)
     {
-        this.callbacks[type] = { func: callback, scope: scope, params: params };
+        this.callbacks[type] = { func: callback, scope: scope, params: [ this, null ].concat(params) };
 
         return this;
     },
