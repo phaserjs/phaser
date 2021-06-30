@@ -1131,13 +1131,11 @@ var SpinePlugin = new Class({
 
         this.pluginManager = null;
 
-        if (sceneRenderer)
+        if (this.sceneRenderer)
         {
-            sceneRenderer.dispose();
-            sceneRenderer = null;
+            this.sceneRenderer.dispose();
+            this.sceneRenderer = null;
         }
-
-        this.sceneRenderer = null;
     }
 
 });
