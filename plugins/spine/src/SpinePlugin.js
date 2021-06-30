@@ -15,8 +15,6 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
 var SpineContainer = require('./container/SpineContainer');
 var NOOP = require('../../../src/utils/NOOP');
 
-//  Plugin specific instance of the Spine Scene Renderer
-var sceneRenderer;
 
 /**
  * @classdesc
@@ -463,12 +461,9 @@ var SpinePlugin = new Class({
             }
         };
 
-        if (!sceneRenderer)
-        {
-            sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
-            sceneRenderer.batcher.setBlendMode = setBlendMode;
-            sceneRenderer.shapes.setBlendMode = setBlendMode;
-        }
+        var sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
+        sceneRenderer.batcher.setBlendMode = setBlendMode;
+        sceneRenderer.shapes.setBlendMode = setBlendMode;
 
         //  All share the same instance
         this.sceneRenderer = sceneRenderer;
