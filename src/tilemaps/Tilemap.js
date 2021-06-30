@@ -2449,13 +2449,13 @@ var Tilemap = new Class({
      *
      * @return {?number} Returns a number, or null if the layer given was invalid.
      */
-    tileToWorldY: function (tileX, camera, layer)
+    tileToWorldY: function (tileY, camera, layer)
     {
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
 
-        return this._convert.TileToWorldY(tileX, camera, layer);
+        return this._convert.TileToWorldY(tileY, camera, layer);
     },
 
     /**

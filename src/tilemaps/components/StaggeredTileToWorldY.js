@@ -32,7 +32,7 @@ var StaggeredTileToWorldY = function (tileY, camera, layer)
         tileHeight *= tilemapLayer.scaleY;
     }
 
-    return layerWorldY + tileY * (tileHeight / 2);
+    return layerWorldY + tileY * (tileHeight / 2) + tileHeight;
 };
 
 module.exports = StaggeredTileToWorldY;
