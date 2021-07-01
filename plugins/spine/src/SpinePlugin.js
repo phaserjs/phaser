@@ -461,11 +461,15 @@ var SpinePlugin = new Class({
             }
         };
 
-        var sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
-        sceneRenderer.batcher.setBlendMode = setBlendMode;
-        sceneRenderer.shapes.setBlendMode = setBlendMode;
+        var sceneRenderer = this.renderer.spineSceneRenderer;
+        if (!sceneRenderer) {
+            sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
+            sceneRenderer.batcher.setBlendMode = setBlendMode;
+            sceneRenderer.shapes.setBlendMode = setBlendMode;
+            this.renderer.spineSceneRenderer = sceneRenderer;
+        }
 
-        //  All share the same instance
+        //  All scene share the same instance
         this.sceneRenderer = sceneRenderer;
         this.skeletonRenderer = sceneRenderer.skeletonRenderer;
         this.skeletonDebugRenderer = sceneRenderer.skeletonDebugRenderer;
@@ -1131,11 +1135,14 @@ var SpinePlugin = new Class({
 
         this.pluginManager = null;
 
-        if (this.sceneRenderer)
+        var sceneRenderer = this.renderer.spineSceneRenderer;
+
+        if (sceneRenderer)
         {
-            this.sceneRenderer.dispose();
-            this.sceneRenderer = null;
+            sceneRenderer.dispose();
         }
+        this.renderer.spineSceneRenderer = null;
+        this.sceneRenderer = null;
     }
 
 });
