@@ -69,9 +69,9 @@ export class Mouse extends EventEmitter
     {
         this.positionToPoint(event);
 
-        this.primaryDown = (event.button === 0);
-        this.auxDown = (event.button === 1);
-        this.secondaryDown = (event.button === 2);
+        if (event.button === 0) this.primaryDown = true;
+        if (event.button === 1) this.auxDown = true;
+        if (event.button === 2) this.secondaryDown = true;
 
         Emit(this, 'pointerdown', this.localPoint.x, this.localPoint.y, event.button, event);
     }
@@ -80,9 +80,9 @@ export class Mouse extends EventEmitter
     {
         this.positionToPoint(event);
 
-        this.primaryDown = !(event.button === 0);
-        this.auxDown = !(event.button === 1);
-        this.secondaryDown = !(event.button === 2);
+        if (event.button === 0) this.primaryDown = false;
+        if (event.button === 1) this.auxDown = false;
+        if (event.button === 2) this.secondaryDown = false;
 
         Emit(this, 'pointerup', this.localPoint.x, this.localPoint.y, event.button, event);
     }
