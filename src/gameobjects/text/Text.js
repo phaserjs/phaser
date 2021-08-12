@@ -287,10 +287,7 @@ var Text = new Class({
             this.setLineSpacing(style.lineSpacing);
         }
 
-        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function ()
-        {
-            this.dirty = true;
-        }, this);
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     },
 
     /**
@@ -1380,6 +1377,22 @@ var Text = new Class({
         CanvasPool.remove(this.canvas);
 
         this.texture.destroy();
+
+        this.scene.sys.game.events.off(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
+    },
+
+    /**
+     * Internal handler for {@link Phaser.Core.Events#CONTEXT_RESTORED}.
+     *
+     * Marks the Text object dirty.
+     *
+     * @method Phaser.GameObjects.Text#onContextRestored
+     * @protected
+     * @since 3.56.0
+     */
+    onContextRestored: function ()
+    {
+        this.dirty = true;
     }
 
     /**

@@ -275,20 +275,7 @@ var TileSprite = new Class({
         this.setOriginFromFrame();
         this.initPipeline();
 
-        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function (renderer)
-        {
-            if (!renderer)
-            {
-                return;
-            }
-            
-            var gl = renderer.gl;
-
-            this.dirty = true;
-            this.fillPattern = null;
-            this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
-
-        }, this);
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     },
 
     /**
@@ -552,6 +539,33 @@ var TileSprite = new Class({
         this.texture.destroy();
 
         this.renderer = null;
+
+        this.scene.sys.game.events.off(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
+    },
+
+    /**
+     * Internal handler for {@link Phaser.Core.Events#CONTEXT_RESTORED}.
+     *
+     * Recreates the fill pattern texture.
+     *
+     * @method Phaser.GameObjects.TileSprite#onContextRestored
+     * @protected
+     * @since 3.56.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL renderer.
+     */
+    onContextRestored: function (renderer)
+    {
+        if (!renderer)
+        {
+            return;
+        }
+
+        var gl = renderer.gl;
+
+        this.dirty = true;
+        this.fillPattern = null;
+        this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
     },
 
     /**
