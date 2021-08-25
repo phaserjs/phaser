@@ -86,5 +86,6 @@
   "dependencies": {
     "eventemitter3": "^4.0.7",
     "path": "^0.12.7"
-  }
+  },
+  "heroku-run-build-script": true
 }
