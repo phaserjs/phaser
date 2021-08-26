@@ -75,7 +75,7 @@ We use [Patreon](https://www.patreon.com/photonstorm) to manage the backing and 
 Extra special thanks to the following companies whose support makes Phaser possible:
 
 * [Cerebral Fix](https://cerebralfix.com)
-* [CrossInstall](https://crossinstall.com)
+* [MoPub](https://www.mopub.com/en)
 * [Facebook](https://www.facebook.com)
 * [Game Distribution](https://gamedistribution.com)
 * [GameCommerce](https://www.gamecommerce.com)
@@ -87,7 +87,7 @@ Extra special thanks to the following companies whose support makes Phaser possi
 * [Lagged](https://www.lagged.com)
 * [Nakama](https://heroiclabs.com/phaserjs/)
 
-![Sponsors](https://phaser.io/images/github/sponsors-2021-06.png "Our Awesome Sponsors")
+![Sponsors](https://phaser.io/images/github/sponsors-2021-08.png "Our Awesome Sponsors")
 
 ![Phaser Newsletter](https://phaser.io/images/github/div-newsletter.png "Phaser Newsletter")
 
