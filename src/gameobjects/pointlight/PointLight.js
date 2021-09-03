@@ -58,7 +58,7 @@ var Render = require('./PointLightRender');
  * @param {number} y - The vertical position of this Point Light in the world.
  * @param {number} [color=0xffffff] - The color of the Point Light, given as a hex value.
  * @param {number} [radius=128] - The radius of the Point Light.
- * @param {number} [intensity=1] - The intensity, or colr blend, of the Point Light.
+ * @param {number} [intensity=1] - The intensity, or color blend, of the Point Light.
  * @param {number} [attenuation=0.1] - The attenuation  of the Point Light. This is the reduction of light from the center point.
  */
 var PointLight = new Class({
