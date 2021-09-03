@@ -1,4 +1,4 @@
-## Version 3.56.0 - Miku - in development
+## Version 3.60.0 - Miku - in development
 
 ### Bug Fixes
 
@@ -10,7 +10,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@necrokot
+@necrokot Golen
 
 
 
