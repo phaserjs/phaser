@@ -1217,7 +1217,7 @@ var SceneManager = new Class({
     {
         var scene = this.getScene(key);
 
-        if (scene && !scene.sys.isTransitioning())
+        if (scene && !scene.sys.isTransitioning() && scene.sys.settings.status !== CONST.SHUTDOWN)
         {
             scene.sys.shutdown(data);
         }
