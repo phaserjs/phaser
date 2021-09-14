@@ -224,8 +224,8 @@ var Animation = new Class({
      *
      * @param {Phaser.Animations.Animation} target - The target to set the values on.
      * @param {number} totalFrames - The total number of frames in the animation.
-     * @param {number} duration - The duration to calculate the frame rate from.
-     * @param {number} frameRate - The frame ate to calculate the duration from.
+     * @param {?number} duration - The duration to calculate the frame rate from.
+     * @param {?number} frameRate - The frame rate to calculate the duration from.
      */
     calculateDuration: function (target, totalFrames, duration, frameRate)
     {
