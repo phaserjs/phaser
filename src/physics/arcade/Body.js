@@ -1899,7 +1899,7 @@ var Body = new Class({
      * @since 3.0.0
      *
      * @param {number} x - The horizontal bounce, relative to 1.
-     * @param {number} y - The vertical bounce, relative to 1.
+     * @param {?number} y - The vertical bounce, relative to 1.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
