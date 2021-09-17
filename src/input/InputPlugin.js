@@ -846,6 +846,7 @@ var InputPlugin = new Class({
         }
 
         input.enabled = false;
+        input.dragState = 0;
 
         // Clear from _temp, _drag and _over
         var index = this._temp.indexOf(gameObject);
