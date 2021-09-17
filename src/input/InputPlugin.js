@@ -838,7 +838,43 @@ var InputPlugin = new Class({
      */
     disable: function (gameObject)
     {
-        gameObject.input.enabled = false;
+        var input = gameObject.input;
+
+        if (!input)
+        {
+            return this;
+        }
+
+        input.enabled = false;
+
+        // Clear from _temp, _drag and _over
+        var index = this._temp.indexOf(gameObject);
+
+        if (index > -1)
+        {
+            this._temp.splice(index, 1);
+        }
+
+        for (var i = 0; i < 10; i++)
+        {
+            index = this._drag[i].indexOf(gameObject);
+
+            if (index > -1)
+            {
+                this._drag[i].splice(index, 1);
+            }
+
+            index = this._over[i].indexOf(gameObject);
+
+            if (index > -1)
+            {
+                this._over[i].splice(index, 1);
+
+                this.manager.resetCursor(input);
+            }
+        }
+
+        return this;
     },
 
     /**
