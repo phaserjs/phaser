@@ -1,10 +1,19 @@
 ## Version 3.60.0 - Miku - in development
 
+### New Features
+
+### Updates
+
+* When you try to use a frame that is missing on the Texture, it will now give the key of the Texture in the console warning. Thanks @samme.
+* The `Display.Masks.BitmapMask` `destroy` method will now remove the context-lost event handler.
+
 ### Bug Fixes
 
 * `Animation.createFromAseprite` would calculate an incorrect frame duration if the frames didn't all have the same speed.
 * The URL scheme `capacitor://` has been added to the protocol check to prevent malformed double-urls in some environments (thanks @consolenaut)
 * Removed `Config.domBehindCanvas` property as it's never used internally. Fix #5749 (thanks @iamallenchang)
+* `dispatchTweenEvent` would overwrite one of the callback's parameters. This fix ensures that `Tween.setCallback` now works consistently. Fix #5753 (thanks @andrei-pmbcn @samme)
+* The context restore event handler is now turned off when a Game Object is destroyed. This helps avoid memory leakage from Text and TileSprite Game Objects, especially if you consistently destroy and recreate your Game instance in a single-page app (thanks @rexrainbow)
 
 ### Examples, Documentation and TypeScript
 
