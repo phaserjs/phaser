@@ -9,7 +9,7 @@ var Class = require('../utils/Class');
 var Frame = require('./Frame');
 var TextureSource = require('./TextureSource');
 
-var TEXTURE_MISSING_ERROR = 'Texture.frame missing: ';
+var TEXTURE_MISSING_ERROR = 'Texture "%s" has no frame "%s"';
 
 /**
  * @classdesc
@@ -248,7 +248,7 @@ var Texture = new Class({
 
         if (!frame)
         {
-            console.warn(TEXTURE_MISSING_ERROR + name);
+            console.warn(TEXTURE_MISSING_ERROR, this.key, name);
 
             frame = this.frames[this.firstFrame];
         }
@@ -376,7 +376,7 @@ var Texture = new Class({
         }
         else
         {
-            console.warn(TEXTURE_MISSING_ERROR + name);
+            console.warn(TEXTURE_MISSING_ERROR, this.key, name);
 
             return this.frames['__BASE'].source.image;
         }
@@ -407,7 +407,7 @@ var Texture = new Class({
 
         if (!frame)
         {
-            console.warn(TEXTURE_MISSING_ERROR + name);
+            console.warn(TEXTURE_MISSING_ERROR, this.key, name);
 
             idx = this.frames['__BASE'].sourceIndex;
         }
