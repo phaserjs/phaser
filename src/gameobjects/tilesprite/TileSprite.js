@@ -517,7 +517,7 @@ var TileSprite = new Class({
      *
      * @method Phaser.GameObjects.TileSprite#onContextRestored
      * @protected
-     * @since 3.56.0
+     * @since 3.60.0
      */
     onContextRestored: function (renderer)
     {
@@ -525,13 +525,13 @@ var TileSprite = new Class({
         {
             return;
         }
-         
+
         var gl = renderer.gl;
-   
+
         this.dirty = true;
         this.fillPattern = null;
         this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
-    
+
     },
 
     /**

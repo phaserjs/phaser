@@ -1365,7 +1365,7 @@ var Text = new Class({
      *
      * @method Phaser.GameObjects.Text#onContextRestored
      * @protected
-     * @since 3.56.0
+     * @since 3.60.0
      */
     onContextRestored: function ()
     {
