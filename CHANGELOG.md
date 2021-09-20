@@ -2,10 +2,13 @@
 
 ### New Features
 
+* `ScaleManager.getViewPort` is a new method that will return a Rectangle geometry object that matches the visible area of the screen (thanks @rexrainbow)
+
 ### Updates
 
-* When you try to use a frame that is missing on the Texture, it will now give the key of the Texture in the console warning. Thanks @samme.
+* When you try to use a frame that is missing on the Texture, it will now give the key of the Texture in the console warning (thanks @samme)
 * The `Display.Masks.BitmapMask` `destroy` method will now remove the context-lost event handler.
+* The `hitArea` parameter of the `GameObjects.Zone.setDropZone` method is now optional and if not given it will try to create a hit area based on the size of the Zone Game Object (thanks @rexrainbow)
 
 ### Bug Fixes
 
@@ -19,7 +22,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@necrokot Golen
+@necrokot Golen @Pythux @samme
 
 
 
