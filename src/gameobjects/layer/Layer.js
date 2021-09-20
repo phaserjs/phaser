@@ -828,6 +828,95 @@ var Layer = new Class({
     },
 
     /**
+     * Adds this Layer to the given Display List.
+     *
+     * If no Display List is specified, it will default to the Display List owned by the Scene to which
+     * this Layer belongs.
+     *
+     * A Layer can only exist on one Display List at any given time, but may move freely between them.
+     *
+     * If this Layer is already on another Display List when this method is called, it will first
+     * be removed from it, before being added to the new list.
+     *
+     * You can query which list it is on by looking at the `Phaser.GameObjects.Layer#displayList` property.
+     *
+     * If a Layer isn't on any display list, it will not be rendered. If you just wish to temporarily
+     * disable it from rendering, consider using the `setVisible` method, instead.
+     *
+     * @method Phaser.GameObjects.Layer#addToDisplayList
+     * @fires Phaser.Scenes.Events#ADDED_TO_SCENE
+     * @fires Phaser.GameObjects.Events#ADDED_TO_SCENE
+     * @since 3.56.0
+     *
+     * @param {(Phaser.GameObjects.DisplayList|Phaser.GameObjects.Layer)} [displayList] - The Display List to add to. Defaults to the Scene Display List.
+     *
+     * @return {this} This Layer.
+     */
+    addToDisplayList: function (displayList)
+    {
+        if (displayList === undefined) { displayList = this.scene.sys.displayList; }
+
+        if (this.displayList && this.displayList !== displayList)
+        {
+            this.removeFromDisplayList();
+        }
+
+        //  Don't repeat if it's already on this list
+        if (!displayList.exists(this))
+        {
+            this.displayList = displayList;
+
+            displayList.add(this, true);
+
+            displayList.queueDepthSort();
+
+            this.emit(GameObjectEvents.ADDED_TO_SCENE, this, this.scene);
+
+            displayList.events.emit(SceneEvents.ADDED_TO_SCENE, this, this.scene);
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes this Layer from the Display List it is currently on.
+     *
+     * A Layer can only exist on one Display List at any given time, but may move freely removed
+     * and added back at a later stage.
+     *
+     * You can query which list it is on by looking at the `Phaser.GameObjects.GameObject#displayList` property.
+     *
+     * If a Layer isn't on any Display List, it will not be rendered. If you just wish to temporarily
+     * disable it from rendering, consider using the `setVisible` method, instead.
+     *
+     * @method Phaser.GameObjects.Layer#removeFromDisplayList
+     * @fires Phaser.Scenes.Events#REMOVED_FROM_SCENE
+     * @fires Phaser.GameObjects.Events#REMOVED_FROM_SCENE
+     * @since 3.56.0
+     *
+     * @return {this} This Layer.
+     */
+    removeFromDisplayList: function ()
+    {
+        var displayList = this.displayList || this.scene.sys.displayList;
+
+        if (displayList.exists(this))
+        {
+            displayList.remove(this, true);
+
+            displayList.queueDepthSort();
+
+            this.displayList = null;
+
+            this.emit(GameObjectEvents.REMOVED_FROM_SCENE, this, this.scene);
+
+            displayList.events.emit(SceneEvents.REMOVED_FROM_SCENE, this, this.scene);
+        }
+
+        return this;
+    },
+
+    /**
      * Destroys this Layer removing it from the Display List and Update List and
      * severing all ties to parent resources.
      *
