@@ -940,7 +940,7 @@ var DOMElement = new Class({
      *
      * @method Phaser.GameObjects.DOMElement#preRender
      * @private
-     * @since 3.56.0
+     * @since 3.60.0
      */
     preRender: function ()
     {
