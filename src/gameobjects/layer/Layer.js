@@ -846,7 +846,7 @@ var Layer = new Class({
      * @method Phaser.GameObjects.Layer#addToDisplayList
      * @fires Phaser.Scenes.Events#ADDED_TO_SCENE
      * @fires Phaser.GameObjects.Events#ADDED_TO_SCENE
-     * @since 3.56.0
+     * @since 3.60.0
      *
      * @param {(Phaser.GameObjects.DisplayList|Phaser.GameObjects.Layer)} [displayList] - The Display List to add to. Defaults to the Scene Display List.
      *
@@ -892,7 +892,7 @@ var Layer = new Class({
      * @method Phaser.GameObjects.Layer#removeFromDisplayList
      * @fires Phaser.Scenes.Events#REMOVED_FROM_SCENE
      * @fires Phaser.GameObjects.Events#REMOVED_FROM_SCENE
-     * @since 3.56.0
+     * @since 3.60.0
      *
      * @return {this} This Layer.
      */
