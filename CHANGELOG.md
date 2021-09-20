@@ -3,12 +3,14 @@
 ### New Features
 
 * `ScaleManager.getViewPort` is a new method that will return a Rectangle geometry object that matches the visible area of the screen (thanks @rexrainbow)
+* When starting a Scene and using an invalid key, Phaser will now raise a console warning informing you of this, instead of silently failing. Fix #5811 (thanks @ubershmekel)
 
 ### Updates
 
 * When you try to use a frame that is missing on the Texture, it will now give the key of the Texture in the console warning (thanks @samme)
 * The `Display.Masks.BitmapMask` `destroy` method will now remove the context-lost event handler.
 * The `hitArea` parameter of the `GameObjects.Zone.setDropZone` method is now optional and if not given it will try to create a hit area based on the size of the Zone Game Object (thanks @rexrainbow)
+* `BitmapMask.scene` is a new property that allows the Bitmap Mask to reference the Scene it was created in.
 
 ### Bug Fixes
 
@@ -16,13 +18,13 @@
 * The URL scheme `capacitor://` has been added to the protocol check to prevent malformed double-urls in some environments (thanks @consolenaut)
 * Removed `Config.domBehindCanvas` property as it's never used internally. Fix #5749 (thanks @iamallenchang)
 * `dispatchTweenEvent` would overwrite one of the callback's parameters. This fix ensures that `Tween.setCallback` now works consistently. Fix #5753 (thanks @andrei-pmbcn @samme)
-* The context restore event handler is now turned off when a Game Object is destroyed. This helps avoid memory leakage from Text and TileSprite Game Objects, especially if you consistently destroy and recreate your Game instance in a single-page app (thanks @rexrainbow)
+* The context restore event handler is now turned off when a Game Object is destroyed. This helps avoid memory leakage from Text and TileSprite Game Objects, especially if you consistently destroy and recreate your Game instance in a single-page app (thanks @@rollinsafary-inomma @rexrainbow @samme)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@necrokot Golen @Pythux @samme
+@necrokot Golen @Pythux @samme @danfoster
 
 
 
