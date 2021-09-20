@@ -11,6 +11,8 @@
 * The `Display.Masks.BitmapMask` `destroy` method will now remove the context-lost event handler.
 * The `hitArea` parameter of the `GameObjects.Zone.setDropZone` method is now optional and if not given it will try to create a hit area based on the size of the Zone Game Object (thanks @rexrainbow)
 * `BitmapMask.scene` is a new property that allows the Bitmap Mask to reference the Scene it was created in.
+* The `DOMElement.preUpdate` method has been removed. If you overrode this method, please now see `preRender` instead.
+* `DOMElement.preRender` is a new method that will check parent visibility and improve its behavior, responding to the parent even if the Scene is paused or the element is inactive. Dom Elements are also no longer added to the Scene Update List. Fix #5816 (thanks @prakol16 @samme)
 
 ### Bug Fixes
 
