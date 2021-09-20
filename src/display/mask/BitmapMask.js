@@ -302,11 +302,13 @@ var BitmapMask = new Class({
     {
         this.clearMask();
 
+        this.scene.sys.game.events.off(GameEvents.CONTEXT_RESTORED, this.createMask, this);
+
         if (this.renderer)
         {
             this.renderer.off(RenderEvents.RESIZE, this.createMask, this);
         }
-        
+
         this.bitmapMask = null;
         this.prevFramebuffer = null;
         this.renderer = null;
