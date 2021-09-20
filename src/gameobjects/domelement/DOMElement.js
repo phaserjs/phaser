@@ -303,18 +303,7 @@ var DOMElement = new Class({
 
         scene.sys.events.on(SCENE_EVENTS.SLEEP, this.handleSceneEvent, this);
         scene.sys.events.on(SCENE_EVENTS.WAKE, this.handleSceneEvent, this);
-    },
-
-    //  Overrides Game Object method
-    addedToScene: function ()
-    {
-        this.scene.sys.updateList.add(this);
-    },
-
-    //  Overrides Game Object method
-    removedFromScene: function ()
-    {
-        this.scene.sys.updateList.remove(this);
+        scene.sys.events.on(SCENE_EVENTS.PRE_RENDER, this.preRender, this);
     },
 
     /**
@@ -949,11 +938,11 @@ var DOMElement = new Class({
     /**
      * Runs internal update tasks.
      *
-     * @method Phaser.GameObjects.DOMElement#preUpdate
+     * @method Phaser.GameObjects.DOMElement#preRender
      * @private
-     * @since 3.17.0
+     * @since 3.56.0
      */
-    preUpdate: function ()
+    preRender: function ()
     {
         var parent = this.parentContainer;
         var node = this.node;
@@ -992,6 +981,7 @@ var DOMElement = new Class({
 
         this.scene.sys.events.off(SCENE_EVENTS.SLEEP, this.handleSceneEvent, this);
         this.scene.sys.events.off(SCENE_EVENTS.WAKE, this.handleSceneEvent, this);
+        this.scene.sys.events.off(SCENE_EVENTS.PRE_RENDER, this.preRender, this);
     }
 
 });
