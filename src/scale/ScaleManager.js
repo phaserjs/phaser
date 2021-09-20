@@ -1469,6 +1469,57 @@ var ScaleManager = new Class({
     },
 
     /**
+     * Get Rectange of visible area, this Rectange does NOT factor in camera scroll.
+     *
+     * @method Phaser.Scale.ScaleManager#getViewPort
+     * @since 3.56.0
+     *
+     * @param {Phaser.Geom.Rectangle} [out] - The Rectangle of visible area.
+     *
+     * @return {Phaser.Geom.Rectangle} The Rectangle of visible area.
+     */
+    getViewPort: function (out)
+    {
+        if (out === undefined)
+        {
+            out = new Rectangle();
+        }
+
+        var baseSize = this.baseSize;
+        var parentSize = this.parentSize;
+        var canvasBounds = this.canvasBounds;
+        var displayScale = this.displayScale;
+        
+        var x = (canvasBounds.x >= 0) ? 0 : -(canvasBounds.x * displayScale.x);
+    
+        var y = (canvasBounds.y >= 0) ? 0 : -(canvasBounds.y * displayScale.y);
+    
+        var width;
+        if (parentSize.width >= canvasBounds.width)
+        {
+            width = baseSize.width;
+        }
+        else
+        {
+            width = baseSize.width - (canvasBounds.width - parentSize.width) * displayScale.x;
+        }
+    
+        var height;
+        if (parentSize.height >= canvasBounds.height)
+        {
+            height = baseSize.height;
+        }
+        else
+        {
+            height = baseSize.height - (canvasBounds.height - parentSize.height) * displayScale.y;
+        }
+    
+        out.setTo(x, y, width, height);
+    
+        return out;
+    },
+
+    /**
      * Internal method, called automatically by the game step.
      * Monitors the elapsed time and resize interval to see if a parent bounds check needs to take place.
      *
