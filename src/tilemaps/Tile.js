@@ -407,8 +407,10 @@ var Tile = new Class({
         if (tilemapLayer)
         {
             var point = tilemapLayer.tileToWorldXY(this.x, this.y, undefined, camera);
+
             return point.x;
         }
+
         return this.x * this.baseWidth;
     },
 
