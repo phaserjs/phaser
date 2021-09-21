@@ -311,7 +311,7 @@ var PipelineManager = new Class({
      * For example, you should pass it like this:
      *
      * ```javascript
-     * this.add('yourName', new CustomPipeline());`
+     * this.add('yourName', new CustomPipeline(game));`
      * ```
      *
      * and **not** like this:
