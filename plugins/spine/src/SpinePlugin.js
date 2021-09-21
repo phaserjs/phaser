@@ -15,7 +15,6 @@ var SpineGameObject = require('./gameobject/SpineGameObject');
 var SpineContainer = require('./container/SpineContainer');
 var NOOP = require('../../../src/utils/NOOP');
 
-
 /**
  * @classdesc
  * The Spine Plugin is a Scene based plugin that handles the creation and rendering of Spine Game Objects.
@@ -462,10 +461,13 @@ var SpinePlugin = new Class({
         };
 
         var sceneRenderer = this.renderer.spineSceneRenderer;
-        if (!sceneRenderer) {
+
+        if (!sceneRenderer)
+        {
             sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
             sceneRenderer.batcher.setBlendMode = setBlendMode;
             sceneRenderer.shapes.setBlendMode = setBlendMode;
+
             this.renderer.spineSceneRenderer = sceneRenderer;
         }
 
@@ -1141,6 +1143,7 @@ var SpinePlugin = new Class({
         {
             sceneRenderer.dispose();
         }
+
         this.renderer.spineSceneRenderer = null;
         this.sceneRenderer = null;
     }

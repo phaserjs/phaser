@@ -370,7 +370,9 @@ var PluginManager = new Class({
             //  Plugin is freshly loaded
             PluginCache.register(key, plugin, mapping, true);
         }
-        if (this.scenePlugins.indexOf(key) === -1) {
+
+        if (this.scenePlugins.indexOf(key) === -1)
+        {
             this.scenePlugins.push(key);
         }
         else if (!fromLoader && PluginCache.hasCore(key))
