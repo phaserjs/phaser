@@ -206,15 +206,16 @@ var LoaderPlugin = new Class({
          * @since 3.0.0
          */
         this.crossOrigin = GetFastValue(sceneConfig, 'crossOrigin', gameConfig.loaderCrossOrigin);
-        
+
         /**
-         * Optional load type for image, `XHR` is default, or `HTMLImageElement` for a lightweight way.
+         * Optional load type for image files. `XHR` is the default. Set to `HTMLImageElement` to load images using the Image tag instead.
          *
          * @name Phaser.Loader.LoaderPlugin#imageLoadType
          * @type {string}
+         * @since 3.60.0
          */
         this.imageLoadType = GetFastValue(sceneConfig, 'imageLoadType', gameConfig.loaderImageLoadType);
-        
+
         /**
          * The total number of files to load. It may not always be accurate because you may add to the Loader during the process
          * of loading, especially if you load a Pack File. Therefore this value can change, but in most cases remains static.

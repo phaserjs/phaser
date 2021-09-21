@@ -129,23 +129,37 @@ var ImageFile = new Class({
         File.createObjectURL(this.data, this.xhrLoader.response, 'image/png');
     },
 
-    onProcessImage: function () 
+    /**
+     * Handles image load processing.
+     *
+     * @method Phaser.Loader.FileTypes.ImageFile#onProcessImage
+     * @private
+     * @since 3.60.0
+     */
+    onProcessImage: function ()
     {
         var result = this.state;
 
         this.state = CONST.FILE_PROCESSING;
 
-        if (result === CONST.FILE_LOADED) 
+        if (result === CONST.FILE_LOADED)
         {
             this.onProcessComplete();
-        } 
+        }
         else
         {
             this.onProcessError();
         }
     },
 
-    loadImage: function () 
+    /**
+     * Loads the image using either XHR or an Image tag.
+     *
+     * @method Phaser.Loader.FileTypes.ImageFile#loadImage
+     * @private
+     * @since 3.60.0
+     */
+    loadImage: function ()
     {
         this.state = CONST.FILE_LOADING;
 
@@ -155,7 +169,7 @@ var ImageFile = new Class({
         {
             console.warn('Local data URIs are not supported: ' + this.key);
         }
-        else 
+        else
         {
             this.data = new Image();
 
@@ -163,17 +177,17 @@ var ImageFile = new Class({
 
             var _this = this;
 
-            this.data.onload = function () 
+            this.data.onload = function ()
             {
                 _this.state = CONST.FILE_LOADED;
 
                 _this.loader.nextFile(_this, true);
-            }
+            };
 
-            this.data.onerror = function () 
+            this.data.onerror = function ()
             {
                 _this.loader.nextFile(_this, false);
-            }
+            };
 
             this.data.src = this.src;
         }
@@ -292,6 +306,10 @@ var ImageFile = new Class({
  *
  * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
  * Normal maps are a WebGL only feature.
+ *
+ * In Phaser 3.60 a new property was added that allows you to control how images are loaded. By default, images are loaded via XHR as Blobs.
+ * However, you can set `loader.imageLoadType: "HTMLImageElement"` in the Game Configuration and instead, the Loader will load all images
+ * via the Image tag instead.
  *
  * Note: The ability to load this type of file will only be available if the Image File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
