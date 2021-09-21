@@ -16,7 +16,7 @@
 * `BitmapMask.scene` is a new property that allows the Bitmap Mask to reference the Scene it was created in.
 * The `DOMElement.preUpdate` method has been removed. If you overrode this method, please now see `preRender` instead.
 * `DOMElement.preRender` is a new method that will check parent visibility and improve its behavior, responding to the parent even if the Scene is paused or the element is inactive. Dom Elements are also no longer added to the Scene Update List. Fix #5816 (thanks @prakol16 @samme)
-* 
+* Phaser 3 is now built with webpack 5 and all related packages have been updated.
 
 ### Bug Fixes
 
