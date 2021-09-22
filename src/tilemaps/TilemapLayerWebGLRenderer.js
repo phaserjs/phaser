@@ -78,13 +78,8 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
         var tw = tileset.tileWidth * 0.5;
         var th = tileset.tileHeight * 0.5;
 
-        var tOffsetX = 0;
-        var tOffsetY = 0;
-
-        if (tileset.tileoffset) {
-            tOffsetX = tileset.tileoffset.x;
-            tOffsetY = tileset.tileoffset.y;
-        }
+        var tOffsetX = tileset.tileOffset.x;
+        var tOffsetY = tileset.tileoffset.y;
 
         var tint = getTint(tile.tint, alpha * tile.alpha);
 
