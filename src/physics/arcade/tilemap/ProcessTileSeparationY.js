@@ -27,6 +27,7 @@ var ProcessTileSeparationY = function (body, y)
     }
 
     body.position.y -= y;
+    body.updateCenter();
 
     if (body.bounce.y === 0)
     {
