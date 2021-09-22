@@ -102,6 +102,9 @@ var TilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
         var halfWidth = tileWidth * 0.5;
         var halfHeight = tileHeight * 0.5;
 
+        tileTexCoords.x += tileset.tileOffset.x;
+        tileTexCoords.y += tileset.tileOffset.y;
+
         ctx.save();
 
         ctx.translate(tile.pixelX + halfWidth, tile.pixelY + halfHeight);
