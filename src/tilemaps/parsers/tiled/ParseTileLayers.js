@@ -141,7 +141,7 @@ var ParseTileLayers = function (json, insertNull)
 
             for (var c = 0; c < curl.height; c++)
             {
-                output.push([ null ]);
+                output[c] = [ null ];
 
                 for (var j = 0; j < curl.width; j++)
                 {
