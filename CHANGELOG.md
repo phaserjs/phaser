@@ -19,6 +19,7 @@
 * `DOMElement.preRender` is a new method that will check parent visibility and improve its behavior, responding to the parent even if the Scene is paused or the element is inactive. Dom Elements are also no longer added to the Scene Update List. Fix #5816 (thanks @prakol16 @samme)
 * Phaser 3 is now built with webpack 5 and all related packages have been updated.
 * Previously, an Array Matrix would enforce it had more than 2 rows. This restriction has been removed, allowing you to define and rotate single-row array matrices (thanks @andriibarvynko)
+* The Gamepad objects now have full TypeScript definitions thanks to @sylvainpolletvillard
 
 ### Bug Fixes
 
@@ -45,7 +46,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@necrokot Golen @Pythux @samme @danfoster @eltociear
+@necrokot Golen @Pythux @samme @danfoster @eltociear @sylvainpolletvillard
 
 
 
