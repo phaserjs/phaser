@@ -75,7 +75,7 @@ var Light = new Class({
          * The bits are 0001 | 0010 | 0100 | 1000 set by the components Visible, Alpha, Transform and Texture respectively.
          * If those components are not used by your custom class then you can use this bitmask as you wish.
          *
-         * @name Phaser.GameObjects.GameObject#renderFlags
+         * @name Phaser.GameObjects.Light#renderFlags
          * @type {number}
          * @default 15
          * @since 3.0.0
@@ -90,7 +90,7 @@ var Light = new Class({
          * @example
          * this.cameraFilter |= camera.id
          *
-         * @name Phaser.GameObjects.GameObject#cameraFilter
+         * @name Phaser.GameObjects.Light#cameraFilter
          * @type {number}
          * @default 0
          * @since 3.0.0
