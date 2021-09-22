@@ -78,13 +78,21 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
         var tw = tileset.tileWidth * 0.5;
         var th = tileset.tileHeight * 0.5;
 
+        var tOffsetX = 0;
+        var tOffsetY = 0;
+
+        if (tileset.tileoffset) {
+            tOffsetX = tileset.tileoffset.x;
+            tOffsetY = tileset.tileoffset.y;
+        }
+
         var tint = getTint(tile.tint, alpha * tile.alpha);
 
         pipeline.batchTexture(
             src,
             texture,
             texture.width, texture.height,
-            x + ((tw + tile.pixelX) * sx), y + ((th + tile.pixelY) * sy),
+            x + tile.pixelX * sx + tOffsetX, y + tile.pixelY * sy + (th * sy - tOffsetY),
             tile.width, tile.height,
             sx, sy,
             tile.rotation,

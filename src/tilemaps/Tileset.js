@@ -25,13 +25,14 @@ var Class = require('../utils/Class');
  * @param {object} [tileProperties={}] - Custom properties defined per tile in the Tileset.
  * These typically are custom properties created in Tiled when editing a tileset.
  * @param {object} [tileData={}] - Data stored per tile. These typically are created in Tiled
+ * @param {object} [tileoffset={x: 0, y: 0}] - Tile texture offset.
  * when editing a tileset, e.g. from Tiled's tile collision editor or terrain editor.
  */
 var Tileset = new Class({
 
     initialize:
 
-    function Tileset (name, firstgid, tileWidth, tileHeight, tileMargin, tileSpacing, tileProperties, tileData)
+    function Tileset (name, firstgid, tileWidth, tileHeight, tileMargin, tileSpacing, tileProperties, tileData, tileoffset)
     {
         if (tileWidth === undefined || tileWidth <= 0) { tileWidth = 32; }
         if (tileHeight === undefined || tileHeight <= 0) { tileHeight = 32; }
@@ -39,6 +40,7 @@ var Tileset = new Class({
         if (tileSpacing === undefined) { tileSpacing = 0; }
         if (tileProperties === undefined) { tileProperties = {}; }
         if (tileData === undefined) { tileData = {}; }
+        if (tileoffset === undefined) { tileoffset = { x: 0, y: 0}; }
 
         /**
          * The name of the Tileset.
@@ -117,6 +119,15 @@ var Tileset = new Class({
          * @since 3.0.0
          */
         this.tileData = tileData;
+
+        /**
+         * Tileset-specific data per tile that draw offset from origin.
+         *
+         * @name Phaser.Tilemaps.Tileset#tileoffset
+         * @type {object}
+         * @since 3.0.0
+         */
+        this.tileoffset = tileoffset
 
         /**
          * The cached image that contains the individual tiles. Use setImage to set.
