@@ -40,7 +40,7 @@ var GetLineToLine = function (line1, line2, out)
     var dx2 = x4 - x3;
     var dy2 = y4 - y3;
 
-    var denom = (dx1*dy2 - dy1*dx2);
+    var denom = (dx1 * dy2 - dy1 * dx2);
 
     //  Make sure there is not a division by zero - this also indicates that the lines are parallel.
     //  If numA and numB were both equal to zero the lines would be on top of each other (coincidental).
@@ -51,8 +51,8 @@ var GetLineToLine = function (line1, line2, out)
         return false;
     }
 
-    var t = ((x3 - x1)*dy2 - (y3 - y1)*dx2) / denom;
-    var u = ((y1 - y3)*dx1 - (x1 - x3)*dy1) / denom;
+    var t = ((x3 - x1) * dy2 - (y3 - y1) * dx2) / denom;
+    var u = ((y1 - y3) * dx1 - (x1 - x3) * dy1) / denom;
 
     //  Intersects?
     if (t < 0 || t > 1 || u < 0 || u > 1)
