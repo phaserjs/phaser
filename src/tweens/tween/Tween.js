@@ -18,6 +18,8 @@ var MATH_CONST = require('../../math/const');
  * on a duration and type of ease. They are rarely instantiated directly and instead should be
  * created via the TweenManager.
  *
+ * Please note that a Tween will not manipulate any property that begins with an underscore.
+ *
  * @class Tween
  * @memberof Phaser.Tweens
  * @extends Phaser.Events.EventEmitter
@@ -1006,7 +1008,7 @@ var Tween = new Class({
      */
     setCallback: function (type, callback, params, scope)
     {
-        this.callbacks[type] = { func: callback, scope: scope, params: params };
+        this.callbacks[type] = { func: callback, scope: scope, params: [ this, null ].concat(params) };
 
         return this;
     },

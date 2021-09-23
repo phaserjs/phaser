@@ -404,7 +404,14 @@ var Tile = new Class({
     {
         var tilemapLayer = this.tilemapLayer;
 
-        return (tilemapLayer) ? tilemapLayer.tileToWorldX(this.x, camera) : this.x * this.baseWidth;
+        if (tilemapLayer)
+        {
+            var point = tilemapLayer.tileToWorldXY(this.x, this.y, undefined, camera);
+
+            return point.x;
+        }
+
+        return this.x * this.baseWidth;
     },
 
     /**

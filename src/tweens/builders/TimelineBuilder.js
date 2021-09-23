@@ -40,9 +40,6 @@ var TimelineBuilder = function (manager, config)
     //  Callbacks
 
     var scope = GetValue(config, 'callbackScope', timeline);
-
-    var timelineArray = [ timeline ];
-
     var onStart = GetValue(config, 'onStart', false);
 
     //  The Start of the Timeline
@@ -51,7 +48,7 @@ var TimelineBuilder = function (manager, config)
         var onStartScope = GetValue(config, 'onStartScope', scope);
         var onStartParams = GetValue(config, 'onStartParams', []);
 
-        timeline.setCallback('onStart', onStart, timelineArray.concat(onStartParams), onStartScope);
+        timeline.setCallback('onStart', onStart, onStartParams, onStartScope);
     }
 
     var onUpdate = GetValue(config, 'onUpdate', false);
@@ -62,7 +59,7 @@ var TimelineBuilder = function (manager, config)
         var onUpdateScope = GetValue(config, 'onUpdateScope', scope);
         var onUpdateParams = GetValue(config, 'onUpdateParams', []);
 
-        timeline.setCallback('onUpdate', onUpdate, timelineArray.concat(onUpdateParams), onUpdateScope);
+        timeline.setCallback('onUpdate', onUpdate, onUpdateParams, onUpdateScope);
     }
 
     var onLoop = GetValue(config, 'onLoop', false);
@@ -73,7 +70,7 @@ var TimelineBuilder = function (manager, config)
         var onLoopScope = GetValue(config, 'onLoopScope', scope);
         var onLoopParams = GetValue(config, 'onLoopParams', []);
 
-        timeline.setCallback('onLoop', onLoop, timelineArray.concat(onLoopParams), onLoopScope);
+        timeline.setCallback('onLoop', onLoop, onLoopParams, onLoopScope);
     }
 
     var onYoyo = GetValue(config, 'onYoyo', false);
@@ -84,7 +81,7 @@ var TimelineBuilder = function (manager, config)
         var onYoyoScope = GetValue(config, 'onYoyoScope', scope);
         var onYoyoParams = GetValue(config, 'onYoyoParams', []);
 
-        timeline.setCallback('onYoyo', onYoyo, timelineArray.concat(null, onYoyoParams), onYoyoScope);
+        timeline.setCallback('onYoyo', onYoyo, onYoyoParams, onYoyoScope);
     }
 
     var onComplete = GetValue(config, 'onComplete', false);
@@ -95,7 +92,7 @@ var TimelineBuilder = function (manager, config)
         var onCompleteScope = GetValue(config, 'onCompleteScope', scope);
         var onCompleteParams = GetValue(config, 'onCompleteParams', []);
 
-        timeline.setCallback('onComplete', onComplete, timelineArray.concat(onCompleteParams), onCompleteScope);
+        timeline.setCallback('onComplete', onComplete, onCompleteParams, onCompleteScope);
     }
 
     // Tweens

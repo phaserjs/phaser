@@ -821,8 +821,10 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#destroy
      * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.0.0
+     *
+     * @param {boolean} [fromScene=false] - `True` if this Game Object is being destroyed by the Scene, `false` if not.
      */
-    destroy: function ()
+    destroy: function (fromScene)
     {
         //  This Game Object has already been destroyed
         if (!this.scene || this.ignoreDestroy)
@@ -830,12 +832,14 @@ var GameObject = new Class({
             return;
         }
 
+        if (fromScene === undefined) { fromScene = false; }
+
         if (this.preDestroy)
         {
             this.preDestroy.call(this);
         }
 
-        this.emit(Events.DESTROY, this);
+        this.emit(Events.DESTROY, this, fromScene);
 
         this.removeAllListeners();
 

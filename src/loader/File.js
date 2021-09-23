@@ -86,7 +86,7 @@ var File = new Class({
         {
             url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
         }
-        else if (typeof url === 'string' && !url.match(/^(?:blob:|data:|http:\/\/|https:\/\/|\/\/)/))
+        else if (typeof url === 'string' && !url.match(/^(?:blob:|data:|capacitor:\/\/|http:\/\/|https:\/\/|\/\/)/))
         {
             url = loader.path + url;
         }
@@ -310,7 +310,12 @@ var File = new Class({
      */
     onLoad: function (xhr, event)
     {
-        var localFileOk = ((xhr.responseURL && xhr.responseURL.indexOf('file://') === 0 && event.target.status === 0));
+        // On iOS, Capacitor often runs on a capacitor:// protocol, meaning local files are served from capacitor:// rather than file://
+        // See: https://github.com/photonstorm/phaser/issues/5685
+
+        var isLocalFile = xhr.responseURL && (xhr.responseURL.indexOf('file://') === 0 || xhr.responseURL.indexOf('capacitor://') === 0);
+
+        var localFileOk = (isLocalFile && event.target.status === 0);
 
         var success = !(event.target && event.target.status !== 200) || localFileOk;
 

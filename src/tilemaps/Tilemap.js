@@ -685,7 +685,9 @@ var Tilemap = new Class({
      * This will convert all Objects with a gid of 26 into your custom `Coin` class. You can pass
      * any class type here, but it _must_ extend `Phaser.GameObjects.GameObject` as its base class.
      * Your class will always be passed 1 parameter: `scene`, which is a reference to either the Scene
-     * specified in the config object or, if not given, the Scene to which this Tilemap belongs.
+     * specified in the config object or, if not given, the Scene to which this Tilemap belongs. The
+     * class must have {@link Phaser.GameObjects.Components.Transform#setPosition} and
+     * {@link Phaser.GameObjects.Components.Texture#setTexture} methods.
      *
      * All properties from object are copied into the Game Object, so you can use this as an easy
      * way to configure properties from within the map editor. For example giving an object a
@@ -825,11 +827,11 @@ var Tilemap = new Class({
                     sprite.displayHeight = obj.height;
                 }
 
-                //  Origin is (0, 1) in Tiled, so find the offset that matches the Sprites origin.
+                //  Origin is (0, 1) for tile objects or (0, 0) for other objects in Tiled, so find the offset that matches the Sprites origin.
                 //  Do not offset objects with zero dimensions (e.g. points).
                 var offset = {
                     x: sprite.originX * obj.width,
-                    y: (sprite.originY - 1) * obj.height
+                    y: (sprite.originY - (obj.gid ? 1 : 0)) * obj.height
                 };
 
                 //  If the object is rotated, then the origin offset also needs to be rotated.
@@ -2444,13 +2446,13 @@ var Tilemap = new Class({
      *
      * @return {?number} Returns a number, or null if the layer given was invalid.
      */
-    tileToWorldY: function (tileX, camera, layer)
+    tileToWorldY: function (tileY, camera, layer)
     {
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
 
-        return this._convert.TileToWorldY(tileX, camera, layer);
+        return this._convert.TileToWorldY(tileY, camera, layer);
     },
 
     /**

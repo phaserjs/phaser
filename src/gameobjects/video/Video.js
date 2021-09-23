@@ -811,10 +811,11 @@ var Video = new Class({
      * @param {string} url - The URL of the video to load or be streamed.
      * @param {string} [loadEvent='loadeddata'] - The load event to listen for. Either `loadeddata`, `canplay` or `canplaythrough`.
      * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
+     * @param {string} [crossOrigin] - The value to use for the `crossOrigin` property in the video load request.  Either undefined, `anonymous` or `use-credentials`. If no value is given, `crossorigin` will not be set in the request.
      *
      * @return {this} This Video Game Object for method chaining.
      */
-    loadURL: function (url, loadEvent, noAudio)
+    loadURL: function (url, loadEvent, noAudio, crossOrigin)
     {
         if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
         if (noAudio === undefined) { noAudio = false; }
@@ -843,6 +844,11 @@ var Video = new Class({
 
         video.setAttribute('playsinline', 'playsinline');
         video.setAttribute('preload', 'auto');
+
+        if (crossOrigin !== undefined)
+        {
+            video.setAttribute('crossorigin', crossOrigin);
+        }
 
         video.addEventListener('error', this._callbacks.error, true);
 
@@ -929,6 +935,7 @@ var Video = new Class({
      */
     playPromiseSuccessHandler: function ()
     {
+        this._codePaused = false;
         this.touchLocked = false;
 
         this.emit(Events.VIDEO_PLAY, this);
@@ -970,6 +977,7 @@ var Video = new Class({
      */
     playHandler: function ()
     {
+        this._codePaused = false;
         this.touchLocked = false;
 
         this.emit(Events.VIDEO_PLAY, this);

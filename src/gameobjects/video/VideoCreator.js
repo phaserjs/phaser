@@ -17,7 +17,7 @@ var Video = require('./Video');
  * @method Phaser.GameObjects.GameObjectCreator#video
  * @since 3.20.0
  *
- * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.Types.GameObjects.Video.VideoConfig} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Video} The Game Object that was created.

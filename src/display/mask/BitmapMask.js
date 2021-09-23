@@ -142,6 +142,15 @@ var BitmapMask = new Class({
          */
         this.isStencil = false;
 
+        /**
+         * The Scene which this Bitmap Mask will be used in.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#scene
+         * @type {Phaser.Scene}
+         * @since 3.60.0
+         */
+        this.scene = scene;
+
         this.createMask();
 
         scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.createMask, this);
@@ -302,11 +311,13 @@ var BitmapMask = new Class({
     {
         this.clearMask();
 
+        this.scene.sys.game.events.off(GameEvents.CONTEXT_RESTORED, this.createMask, this);
+
         if (this.renderer)
         {
             this.renderer.off(RenderEvents.RESIZE, this.createMask, this);
         }
-        
+
         this.bitmapMask = null;
         this.prevFramebuffer = null;
         this.renderer = null;

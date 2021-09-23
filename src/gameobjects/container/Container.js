@@ -784,6 +784,46 @@ var Container = new Class({
     },
 
     /**
+     * Moves a Game Object above another one within this Container.
+     *
+     * These 2 Game Objects must already be children of this Container.
+     *
+     * @method Phaser.GameObjects.Container#moveAbove
+     * @since 3.55.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The Game Object to move above base Game Object.
+     * @param {Phaser.GameObjects.GameObject} child2 - The base Game Object.
+     *
+     * @return {this} This Container instance.
+     */
+    moveAbove: function (child1, child2)
+    {
+        ArrayUtils.MoveAbove(this.list, child1, child2);
+
+        return this;
+    },
+
+    /**
+     * Moves a Game Object below another one within this Container.
+     *
+     * These 2 Game Objects must already be children of this Container.
+     *
+     * @method Phaser.GameObjects.Container#moveBelow
+     * @since 3.55.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The Game Object to move below base Game Object.
+     * @param {Phaser.GameObjects.GameObject} child2 - The base Game Object.
+     *
+     * @return {this} This Container instance.
+     */
+    moveBelow: function (child1, child2)
+    {
+        ArrayUtils.MoveBelow(this.list, child1, child2);
+
+        return this;
+    },
+
+    /**
      * Removes the given Game Object, or array of Game Objects, from this Container.
      *
      * The Game Objects must already be children of this Container.

@@ -1151,53 +1151,56 @@ var SceneManager = new Class({
 
         var scene = this.getScene(key);
 
-        if (scene)
+        if (!scene)
         {
-            var sys = scene.sys;
-
-            //  If the Scene is already running (perhaps they called start from a launched sub-Scene?)
-            //  then we close it down before starting it again.
-            if (sys.isActive() || sys.isPaused())
-            {
-                sys.shutdown();
-
-                sys.sceneUpdate = NOOP;
-
-                sys.start(data);
-            }
-            else
-            {
-                sys.sceneUpdate = NOOP;
-
-                sys.start(data);
-
-                var loader;
-
-                if (sys.load)
-                {
-                    loader = sys.load;
-                }
-
-                //  Files payload?
-                if (loader && sys.settings.hasOwnProperty('pack'))
-                {
-                    loader.reset();
-
-                    if (loader.addPack({ payload: sys.settings.pack }))
-                    {
-                        sys.settings.status = CONST.LOADING;
-
-                        loader.once(LoaderEvents.COMPLETE, this.payloadComplete, this);
-
-                        loader.start();
-
-                        return this;
-                    }
-                }
-            }
-
-            this.bootScene(scene);
+            console.warn('Scene not found for key: ' + key);
+            return this;
         }
+
+        var sys = scene.sys;
+
+        //  If the Scene is already running (perhaps they called start from a launched sub-Scene?)
+        //  then we close it down before starting it again.
+        if (sys.isActive() || sys.isPaused())
+        {
+            sys.shutdown();
+
+            sys.sceneUpdate = NOOP;
+
+            sys.start(data);
+        }
+        else
+        {
+            sys.sceneUpdate = NOOP;
+
+            sys.start(data);
+
+            var loader;
+
+            if (sys.load)
+            {
+                loader = sys.load;
+            }
+
+            //  Files payload?
+            if (loader && sys.settings.hasOwnProperty('pack'))
+            {
+                loader.reset();
+
+                if (loader.addPack({ payload: sys.settings.pack }))
+                {
+                    sys.settings.status = CONST.LOADING;
+
+                    loader.once(LoaderEvents.COMPLETE, this.payloadComplete, this);
+
+                    loader.start();
+
+                    return this;
+                }
+            }
+        }
+
+        this.bootScene(scene);
 
         return this;
     },

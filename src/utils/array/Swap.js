@@ -22,7 +22,7 @@ var Swap = function (array, item1, item2)
 {
     if (item1 === item2)
     {
-        return;
+        return array;
     }
 
     var index1 = array.indexOf(item1);

@@ -203,11 +203,6 @@ var Config = new Class({
         this.domCreateContainer = GetValue(config, 'dom.createContainer', false);
 
         /**
-         * @const {?boolean} Phaser.Core.Config#domBehindCanvas - Should the DOM Container that is created (if `dom.createContainer` is true) be positioned behind (true) or over the top (false, the default) of the game canvas?
-         */
-        this.domBehindCanvas = GetValue(config, 'dom.behindCanvas', false);
-
-        /**
          * @const {?string} Phaser.Core.Config#domPointerEvents - The default `pointerEvents` attribute set on the DOM Container.
          */
         this.domPointerEvents = GetValue(config, 'dom.pointerEvents', 'none');
@@ -517,6 +512,11 @@ var Config = new Class({
          * @const {boolean} Phaser.Core.Config#loaderWithCredentials - Optional XHR withCredentials value.
          */
         this.loaderWithCredentials = GetValue(config, 'loader.withCredentials', false);
+
+        /**
+         * @const {string} Phaser.Core.Config#loaderImageLoadType - Optional load type for image, `XHR` is default, or `HTMLImageElement` for a lightweight way.
+         */
+        this.loaderImageLoadType = GetValue(config, 'loader.imageLoadType', 'XHR');
 
         /*
          * Allows `plugins` property to either be an array, in which case it just replaces

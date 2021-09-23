@@ -37,7 +37,7 @@ var ParseTilesets = function (json)
         }
         else if (set.image)
         {
-            var newSet = new Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing);
+            var newSet = new Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, undefined, undefined, set.tileoffset);
 
             if (json.version > 1)
             {

@@ -237,18 +237,14 @@ var Zone = new Class({
      * @method Phaser.GameObjects.Zone#setDropZone
      * @since 3.0.0
      *
-     * @param {object} hitArea - A Geometry shape instance, such as Phaser.Geom.Ellipse, or your own custom shape.
-     * @param {Phaser.Types.Input.HitAreaCallback} hitAreaCallback - A function that will return `true` if the given x/y coords it is sent are within the shape.
+     * @param {object} [hitArea] - A Geometry shape instance, such as Phaser.Geom.Ellipse, or your own custom shape. If not given it will try to create a Rectangle based on the size of this zone.
+     * @param {Phaser.Types.Input.HitAreaCallback} [hitAreaCallback] - A function that will return `true` if the given x/y coords it is sent are within the shape. If you provide a shape you must also provide a callback.
      *
      * @return {this} This Game Object.
      */
     setDropZone: function (hitArea, hitAreaCallback)
     {
-        if (hitArea === undefined)
-        {
-            this.setRectangleDropZone(this.width, this.height);
-        }
-        else if (!this.input)
+        if (!this.input)
         {
             this.setInteractive(hitArea, hitAreaCallback, true);
         }

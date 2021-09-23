@@ -1899,7 +1899,7 @@ var Body = new Class({
      * @since 3.0.0
      *
      * @param {number} x - The horizontal bounce, relative to 1.
-     * @param {number} y - The vertical bounce, relative to 1.
+     * @param {number} [y=x] - The vertical bounce, relative to 1.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
@@ -1951,7 +1951,7 @@ var Body = new Class({
      * @since 3.0.0
      *
      * @param {number} x - The horizontal component, in pixels per second squared.
-     * @param {number} y - The vertical component, in pixels per second squared.
+     * @param {number} [y=x] - The vertical component, in pixels per second squared.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
@@ -2063,7 +2063,7 @@ var Body = new Class({
      * @since 3.0.0
      *
      * @param {number} x - The horizontal component, in pixels per second squared.
-     * @param {number} y - The vertical component, in pixels per second squared.
+     * @param {number} [y=x] - The vertical component, in pixels per second squared.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
@@ -2140,7 +2140,7 @@ var Body = new Class({
      * @since 3.0.0
      *
      * @param {number} x - The horizontal component, in pixels per second squared.
-     * @param {number} y - The vertical component, in pixels per second squared.
+     * @param {number} [y=x] - The vertical component, in pixels per second squared.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
@@ -2192,7 +2192,7 @@ var Body = new Class({
      * @since 3.0.0
      *
      * @param {number} x - The horizontal component, relative to 1.
-     * @param {number} y - The vertical component, relative to 1.
+     * @param {number} [y=x] - The vertical component, relative to 1.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */

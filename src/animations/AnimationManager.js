@@ -459,7 +459,7 @@ var AnimationManager = new Class({
                         animFrames.push({
                             key: key,
                             frame: entry.frame,
-                            duration: (minDuration - entry.duration)
+                            duration: (entry.duration - minDuration)
                         });
                     });
 
