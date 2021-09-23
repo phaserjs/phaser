@@ -293,6 +293,11 @@ var Particle = new Class({
 
         this.frame = emitter.getFrame();
 
+        if (!this.frame)
+        {
+            throw new Error('Particle has no texture frame');
+        }
+
         if (emitter.emitZone)
         {
             //  Updates particle.x and particle.y during this call
