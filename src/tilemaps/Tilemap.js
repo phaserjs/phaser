@@ -736,19 +736,21 @@ var Tilemap = new Class({
      * ]);
      * ```
      *
-     * The signature of this method changed significantly in v3.50.0. Prior to this, it did not take config objects.
+     * The signature of this method changed significantly in v3.60.0. Prior to this, it did not take config objects.
      *
      * @method Phaser.Tilemaps.Tilemap#createFromObjects
      * @since 3.0.0
      *
      * @param {string} objectLayerName - The name of the Tiled object layer to create the Game Objects from.
      * @param {Phaser.Types.Tilemaps.CreateFromObjectLayerConfig|Phaser.Types.Tilemaps.CreateFromObjectLayerConfig[]} config - A CreateFromObjects configuration object, or an array of them.
-     * @param {boolean} useTileset - True if objects that set gids should also search the underlying tile for properties and data.
+     * @param {boolean} [useTileset=true] - True if objects that set gids should also search the underlying tile for properties and data.
      *
      * @return {Phaser.GameObjects.GameObject[]} An array containing the Game Objects that were created. Empty if invalid object layer, or no matching id/gid/name was found.
      */
     createFromObjects: function (objectLayerName, config, useTileset)
     {
+        if (useTileset === undefined) { useTileset = true; }
+
         var results = [];
 
         var objectLayer = this.getObjectLayer(objectLayerName);
