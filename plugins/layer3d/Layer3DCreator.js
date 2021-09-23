@@ -16,7 +16,7 @@ var Layer3D = require('./Layer3D');
  * @method Phaser.GameObjects.GameObjectCreator#layer3d
  * @since 3.50.0
  *
- * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.Types.GameObjects.GameObjectConfig} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Layer3D} The Game Object that was created.
