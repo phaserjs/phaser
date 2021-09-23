@@ -104,10 +104,9 @@ var Flash = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#alpha
          * @type {number}
-         * @private
          * @since 3.5.0
          */
-        this.alpha = 0;
+        this.alpha = 1;
 
         /**
          * If this effect is running this holds the current percentage of the progress, a value between 0 and 1.
@@ -127,6 +126,17 @@ var Flash = new Class({
          * @since 3.5.0
          */
         this._elapsed = 0;
+
+        /**
+         * This is an internal copy of the initial value of `this.alpha`, used to calculate the current alpha value of the fade effect.
+         *
+         * @name Phaser.Cameras.Scene2D.Effects.Flash#_alpha
+         * @type {number}
+         * @private
+         * @readonly
+         * @since 3.50.0
+         */
+        this._alpha;
 
         /**
          * This callback is invoked every frame for the duration of the effect.
@@ -191,8 +201,8 @@ var Flash = new Class({
         this.red = red;
         this.green = green;
         this.blue = blue;
-        this.alpha = 1;
 
+        this._alpha = this.alpha;
         this._elapsed = 0;
 
         this._onUpdate = callback;
@@ -230,7 +240,7 @@ var Flash = new Class({
 
         if (this._elapsed < this.duration)
         {
-            this.alpha = 1 - this.progress;
+            this.alpha = this._alpha * (1 - this.progress);
         }
         else
         {
@@ -304,6 +314,7 @@ var Flash = new Class({
      */
     effectComplete: function ()
     {
+        this.alpha = this._alpha
         this._onUpdate = null;
         this._onUpdateScope = null;
 
