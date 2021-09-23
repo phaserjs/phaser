@@ -20,6 +20,7 @@
 * Phaser 3 is now built with webpack 5 and all related packages have been updated.
 * Previously, an Array Matrix would enforce it had more than 2 rows. This restriction has been removed, allowing you to define and rotate single-row array matrices (thanks @andriibarvynko)
 * The Gamepad objects now have full TypeScript definitions thanks to @sylvainpolletvillard
+* Lots of configuration objects now have full TypeScript definitions thanks to @16patsle
 
 ### Bug Fixes
 
