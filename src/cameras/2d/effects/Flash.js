@@ -134,7 +134,7 @@ var Flash = new Class({
          * @type {number}
          * @private
          * @readonly
-         * @since 3.50.0
+         * @since 3.60.0
          */
         this._alpha;
 
@@ -314,7 +314,7 @@ var Flash = new Class({
      */
     effectComplete: function ()
     {
-        this.alpha = this._alpha
+        this.alpha = this._alpha;
         this._onUpdate = null;
         this._onUpdateScope = null;
 
