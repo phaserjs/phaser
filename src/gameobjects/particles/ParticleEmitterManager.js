@@ -245,6 +245,10 @@ var ParticleEmitterManager = new Class({
             {
                 out.push(this.texture.get(frame));
             }
+            else
+            {
+                console.warn('Texture "%s" has no frame "%s"', this.texture.key, frame);
+            }
         }
 
         if (out.length > 0)
@@ -253,6 +257,8 @@ var ParticleEmitterManager = new Class({
         }
         else
         {
+            console.warn('No texture frames were set');
+
             emitter.defaultFrame = this.defaultFrame;
         }
 
