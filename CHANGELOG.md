@@ -50,7 +50,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@necrokot Golen @Pythux @samme @danfoster @eltociear @sylvainpolletvillard @hanzooo
+@necrokot Golen @Pythux @samme @danfoster @eltociear @sylvainpolletvillard @hanzooo @etherealmachine
 
 
 
