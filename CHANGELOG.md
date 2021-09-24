@@ -23,6 +23,8 @@
 * Previously, an Array Matrix would enforce it had more than 2 rows. This restriction has been removed, allowing you to define and rotate single-row array matrices (thanks @andriibarvynko)
 * The Gamepad objects now have full TypeScript definitions thanks to @sylvainpolletvillard
 * Lots of configuration objects now have full TypeScript definitions thanks to @16patsle
+* `Particle.fire` will now throw an error if the particle has no texture frame. This prevents an uncaught error later when the particle fails to render. Fix #5838 (thanks @samme @monteiz)
+* `ParticleEmitterManager.setEmitterFrames` will now print out console warnings if an invalid texture frame is given, or if no texture frames were set. Fix #5838 (thanks @samme @monteiz)
 
 ### Bug Fixes
 
