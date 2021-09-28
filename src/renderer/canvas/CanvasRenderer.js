@@ -427,6 +427,8 @@ var CanvasRenderer = new Class({
             ctx.clip();
         }
 
+        camera.emit(CameraEvents.PRE_RENDER, camera);
+
         this.currentContext = ctx;
 
         var mask = camera.mask;
@@ -498,6 +500,8 @@ var CanvasRenderer = new Class({
                 scene.sys.context.drawImage(camera.canvas, cx, cy);
             }
         }
+
+        camera.emit(CameraEvents.POST_RENDER, camera);
     },
 
     /**
