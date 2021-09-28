@@ -763,7 +763,9 @@ var CameraManager = new Class({
 
         this.default.destroy();
 
-        this.scene.sys.events.off(SceneEvents.START, this.start, this);
+        this.systems.events.off(SceneEvents.START, this.start, this);
+        this.systems.events.off(SceneEvents.DESTROY, this.destroy, this);
+        this.systems.game.scale.off(ScaleEvents.RESIZE, this.onResize, this);
 
         this.scene = null;
         this.systems = null;
