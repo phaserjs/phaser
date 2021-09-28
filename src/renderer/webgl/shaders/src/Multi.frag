@@ -1,6 +1,6 @@
 #define SHADER_NAME PHASER_MULTI_FS
 
-precision mediump float;
+precision highp float;
 
 uniform sampler2D uMainSampler[%count%];
 
