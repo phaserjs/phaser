@@ -793,6 +793,12 @@ var CanvasRenderer = new Class({
         //  Multiply by the Sprite matrix
         camMatrix.multiply(spriteMatrix);
 
+        if (camera.roundPixels)
+        {
+            camMatrix.e = Math.round(camMatrix.e);
+            camMatrix.f = Math.round(camMatrix.f);
+        }
+
         ctx.save();
 
         camMatrix.setToContext(ctx);
