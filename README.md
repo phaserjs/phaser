@@ -159,6 +159,18 @@ The TS defs are automatically generated from the JSDoc comments found in the Pha
 
 We use Webpack to build Phaser and we take advantage of its conditional build flag feature to handle renderer swapping. If you wish to use Webpack with Phaser then please use our [Phaser 3 Project Template](https://github.com/photonstorm/phaser3-project-template) as it's already set-up to handle the build conditions Phaser needs. Recent changes to our build steps mean you should now be able to use any other packager, like Parcel, without any config changes.
 
+### Browserify
+
+Browserify is a great alternative for building your Phaser 3 project. It is much easier to learn and utilize than webpack. If you wish to use Browserify to bundle your project simply install it using npm:
+
+`npm install browserify`
+
+Then run the following command inside your game file's current directory to build your game with all its Phaser dependencies.
+
+`browserify game.js -o bundle.js`
+
+Make sure to add `bundle.js` to your `<script>` tag on your main HTML file.
+
 ### License
 
 Phaser is released under the [MIT License](https://opensource.org/licenses/MIT).
