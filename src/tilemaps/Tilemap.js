@@ -829,6 +829,17 @@ var Tilemap = new Class({
                     sprite.displayHeight = obj.height;
                 }
 
+                if (this.orientation === ORIENTATION.ISOMETRIC)
+                {
+                    var isometricPosition = {
+                      x: sprite.x - sprite.y,
+                      y: (sprite.x + sprite.y) / 2
+                    }
+
+                    sprite.x = isometricPosition.x
+                    sprite.y = isometricPosition.y
+                }
+
                 //  Origin is (0, 1) for tile objects or (0, 0) for other objects in Tiled, so find the offset that matches the Sprites origin.
                 //  Do not offset objects with zero dimensions (e.g. points).
                 var offset = {
