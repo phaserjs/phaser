@@ -58,11 +58,11 @@ if (fs.existsSync(dest))
 
         const options = {
             path: './src',
-            extensions: [ 'js' ]
+            extensions: [ '.js' ]
         };
-
+ 
         sloc(options).then((res) => {
-            console.log('Source files: ' + res.files + '\nLines of code: ' + res.sloc);
+            console.log('Source files: ' + res.sloc.files + '\nLines of code: ' + res.sloc.sloc);
         });
 
     });
