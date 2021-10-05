@@ -1042,6 +1042,36 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * Checks if the given compressed texture format is supported, or not.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#supportsCompressedTexture
+     * @since 3.60.0
+     *
+     * @param {string} baseFormat - The Base Format to check.
+     * @param {GLenum} [format] - An optional GLenum format to check within the base format.
+     *
+     * @return {boolean} True if the format is supported, otherwise false.
+     */
+    supportsCompressedTexture: function (baseFormat, format)
+    {
+        var supportedFormats = this.compression[baseFormat.toUpperCase()];
+
+        if (supportedFormats)
+        {
+            if (format)
+            {
+                return format in supportedFormats;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    /**
      * Gets the aspect ratio of the WebGLRenderer dimensions.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#getAspectRatio
