@@ -1042,7 +1042,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * TODO
+     * Returns a compressed texture format GLenum name based on the given format.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#getCompressedTextureName
      * @since 3.60.0
@@ -1050,7 +1050,7 @@ var WebGLRenderer = new Class({
      * @param {string} baseFormat - The Base Format to check.
      * @param {GLenum} [format] - An optional GLenum format to check within the base format.
      *
-     * @return {string}
+     * @return {string} The compressed texture format name, as a string.
      */
     getCompressedTextureName: function (baseFormat, format)
     {
