@@ -6,12 +6,13 @@
 
 var AtlasJSONFile = require('./AtlasJSONFile');
 var BinaryFile = require('./BinaryFile');
-var JSONFile = require('./JSONFile');
 var Class = require('../../utils/Class');
-var CONST = require('../const');
-var MultiFile = require('../MultiFile');
 var FileTypesManager = require('../FileTypesManager');
 var ImageFile = require('./ImageFile');
+var JSONFile = require('./JSONFile');
+var KTXParser = require('../../textures/parsers/KTXParser');
+var MultiFile = require('../MultiFile');
+var PVRParser = require('../../textures/parsers/PVRParser');
 
 /**
  * @classdesc
@@ -55,6 +56,8 @@ var CompressedTextureFile = new Class({
             config: entry
         });
 
+        // console.log('binary file', image);
+
         if (entry.atlasURL)
         {
             var data = new JSONFile(loader, {
@@ -70,6 +73,8 @@ var CompressedTextureFile = new Class({
         {
             MultiFile.call(this, loader, 'texture', key, [ image ]);
         }
+
+        this.config = entry;
     },
 
     /**
@@ -82,14 +87,44 @@ var CompressedTextureFile = new Class({
     {
         if (this.isReadyToProcess())
         {
-            console.log('ready to add to cache', this.files);
+            var entry = this.config;
+            var renderer = this.loader.systems.renderer;
 
-            // var image = this.files[0];
-            // var json = this.files[1];
+            var image = this.files[0];
+            var json = this.files[1];
 
-            // this.loader.textureManager.addAtlas(image.key, image.data, json.data, normalMap);
+            var textureData;
 
-            // json.pendingDestroy();
+            if (entry.type === 'PVR')
+            {
+                textureData = PVRParser(image.data);
+            }
+            else if (entry.type === 'KTX')
+            {
+                textureData = KTXParser(image.data);
+            }
+
+            if (textureData && renderer.supportsCompressedTexture(entry.format, textureData.internalFormat))
+            {
+                textureData.format = renderer.getCompressedTextureName(entry.format, textureData.internalFormat);
+
+                //  width, height, mipmaps array, compressed, format, internalFormat
+                console.log(textureData);
+
+                // const texture = new Texture(null, textureData.width, textureData.height, Object.assign(fileData.glConfig, textureData));
+
+                // this.loader.textureManager.addAtlas(image.key, image.data, json.data, normalMap);
+
+                if (json && json.data)
+                {
+                    // AtlasParser(texture, json.data);
+                }
+            }
+
+            if (json)
+            {
+                json.pendingDestroy();
+            }
 
             this.complete = true;
         }
@@ -200,25 +235,24 @@ FileTypesManager.register('texture', function (key, urls, xhrSettings)
     if (!entry)
     {
         console.warn('No supported texture format or IMG fallback', key);
-
-        return;
     }
-
-    if (entry.format === 'IMG')
+    else if (entry.format === 'IMG')
     {
         if (entry.atlasURL)
         {
-            this.addFile(new AtlasJSONFile(key, entry.textureURL, entry.atlasURL, xhrSettings));
+            this.addFile(new AtlasJSONFile(this, key, entry.textureURL, entry.atlasURL, xhrSettings));
         }
         else
         {
-            this.addFile(new ImageFile(key, entry.textureURL, xhrSettings));
+            this.addFile(new ImageFile(this, key, entry.textureURL, xhrSettings));
         }
-
-        return this;
     }
+    else
+    {
+        var multifile = new CompressedTextureFile(this, key, entry, xhrSettings);
 
-    this.addFile(new CompressedTextureFile(this, key, entry, xhrSettings));
+        this.addFile(multifile.files);
+    }
 
     return this;
 });
