@@ -18,6 +18,7 @@ module.exports = {
     AudioSpriteFile: require('./AudioSpriteFile'),
     BinaryFile: require('./BinaryFile'),
     BitmapFontFile: require('./BitmapFontFile'),
+    CompressedTextureFile: require('./CompressedTextureFile'),
     CSSFile: require('./CSSFile'),
     GLSLFile: require('./GLSLFile'),
     HTML5AudioFile: require('./HTML5AudioFile'),
