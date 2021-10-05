@@ -420,15 +420,13 @@ var WebGLRenderer = new Class({
         /**
          * Stores the supported WebGL texture compression formats.
          *
+         * Overhauled in version 3.60.
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#compression
          * @type {Phaser.Types.Renderer.WebGL.WebGLTextureCompression}
          * @since 3.8.0
          */
-        this.compression = {
-            ETC1: false,
-            PVRTC: false,
-            S3TC: false
-        };
+        this.compression;
 
         /**
          * Cached drawing buffer height to reduce gl calls.
@@ -780,12 +778,7 @@ var WebGLRenderer = new Class({
             config.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
         }
 
-        var extString = 'WEBGL_compressed_texture_';
-        var wkExtString = 'WEBKIT_' + extString;
-
-        this.compression.ETC1 = gl.getExtension(extString + 'etc1') || gl.getExtension(wkExtString + 'etc1');
-        this.compression.PVRTC = gl.getExtension(extString + 'pvrtc') || gl.getExtension(wkExtString + 'pvrtc');
-        this.compression.S3TC = gl.getExtension(extString + 's3tc') || gl.getExtension(wkExtString + 's3tc');
+        this.compression = this.getCompressedTextures();
 
         this.supportedExtensions = exts;
 
@@ -997,6 +990,55 @@ var WebGLRenderer = new Class({
         this.emit(Events.RESIZE, width, height);
 
         return this;
+    },
+
+    /**
+     * Determines which compressed texture formats this browser and device supports.
+     *
+     * Called automatically as part of the WebGL Renderer init process. If you need to investigate
+     * which formats it supports, see the `Phaser.Renderer.WebGL.WebGLRenderer#compression` property instead.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#getCompressedTextures
+     * @since 3.60.0
+     *
+     * @return {Phaser.Types.Renderer.WebGL.WebGLTextureCompression} The compression object.
+     */
+    getCompressedTextures: function ()
+    {
+        var extString = 'WEBGL_compressed_texture_';
+        var wkExtString = 'WEBKIT_' + extString;
+
+        var hasExt = function (gl, format)
+        {
+            var results = gl.getExtension(extString + format) || gl.getExtension(wkExtString + format);
+
+            if (results)
+            {
+                var glEnums = {};
+
+                for (var key in results)
+                {
+                    glEnums[results[key]] = key;
+                }
+
+                return glEnums;
+            }
+        };
+
+        var gl = this.gl;
+
+        return {
+            ETC: hasExt(gl, 'etc'),
+            ETC1: hasExt(gl, 'etc1'),
+            ATC: hasExt(gl, 'atc'),
+            ASTC: hasExt(gl, 'astc'),
+            BPTC: hasExt(gl, 'bptc'),
+            RGTC: hasExt(gl, 'rgtc'),
+            PVRTC: hasExt(gl, 'pvrtc'),
+            S3TC: hasExt(gl, 's3tc'),
+            S3TCSRGB: hasExt(gl, 's3tc_srgb'),
+            IMG: true
+        };
     },
 
     /**
