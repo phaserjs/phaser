@@ -1042,6 +1042,27 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * TODO
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#getCompressedTextureName
+     * @since 3.60.0
+     *
+     * @param {string} baseFormat - The Base Format to check.
+     * @param {GLenum} [format] - An optional GLenum format to check within the base format.
+     *
+     * @return {string}
+     */
+    getCompressedTextureName: function (baseFormat, format)
+    {
+        var supportedFormats = this.compression[baseFormat.toUpperCase()];
+
+        if (format in supportedFormats)
+        {
+            return supportedFormats[format];
+        }
+    },
+
+    /**
      * Checks if the given compressed texture format is supported, or not.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#supportsCompressedTexture
