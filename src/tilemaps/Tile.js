@@ -492,10 +492,10 @@ var Tile = new Class({
     {
         if (output === undefined) { output = new Rectangle(); }
 
-        output.x = this.getLeft();
-        output.y = this.getTop();
-        output.width = this.getRight() - output.x;
-        output.height = this.getBottom() - output.y;
+        output.x = this.getLeft(camera);
+        output.y = this.getTop(camera);
+        output.width = this.getRight(camera) - output.x;
+        output.height = this.getBottom(camera) - output.y;
 
         return output;
     },
