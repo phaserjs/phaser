@@ -892,8 +892,8 @@ var LoaderPlugin = new Class({
                 }
                 else
                 {
-                    var srcs = file.multiFile.files.map(function(it) { return it.src }).join(', '));
-                    console.warn("failed to load multiFile into cache: " + srcs;
+                    var srcs = file.multiFile.files.map(function(it) { return it.src; }).join(', ');
+                    console.warn("failed to load multiFile into cache: " + srcs);
                 }
             }
             else
