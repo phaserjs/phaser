@@ -426,6 +426,56 @@ var TextureManager = new Class({
     },
 
     /**
+     * Adds a Compressed Texture to this Texture Manager.
+     *
+     * The texture should typically have been loaded via the `CompressedTextureFile` loader,
+     * in order to prepare the correct data object this method requires.
+     *
+     * You can optionally also pass atlas data to this method, in which case a texture atlas
+     * will be generated from the given compressed texture, combined with the atlas data.
+     *
+     * @method Phaser.Textures.TextureManager#addCompressedTexture
+     * @fires Phaser.Textures.Events#ADD
+     * @since 3.60.0
+     *
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {Phaser.Types.Textures.CompressedTextureData} textureData - The Compressed Texture data object.
+     * @param {object} [atlasData] - Optional Texture Atlas data.
+     *
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
+     */
+    addCompressedTexture: function (key, textureData, atlasData)
+    {
+        var texture = null;
+
+        if (this.checkKey(key))
+        {
+            texture = this.create(key, textureData);
+
+            texture.add('__BASE', 0, 0, 0, textureData.width, textureData.height);
+
+            if (atlasData)
+            {
+                if (Array.isArray(atlasData))
+                {
+                    for (var i = 0; i < atlasData.length; i++)
+                    {
+                        Parser.JSONHash(texture, i, atlasData[i]);
+                    }
+                }
+                else
+                {
+                    Parser.JSONHash(texture, 0, atlasData);
+                }
+            }
+
+            this.emit(Events.ADD, key, texture);
+        }
+
+        return texture;
+    },
+
+    /**
      * Adds a Render Texture to the Texture Manager using the given key.
      * This allows you to then use the Render Texture as a normal texture for texture based Game Objects like Sprites.
      *
