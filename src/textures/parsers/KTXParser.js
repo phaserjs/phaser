@@ -4,6 +4,17 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+/**
+ * Parses a KTX format Compressed Texture file and generates texture data suitable for WebGL from it.
+ *
+ * @function Phaser.Textures.Parsers.KTXParser
+ * @memberof Phaser.Textures.Parsers
+ * @since 3.60.0
+ *
+ * @param {ArrayBuffer} data - The data object created by the Compressed Texture File Loader.
+ *
+ * @return {Phaser.Types.Textures.CompressedTextureData} The Compressed Texture data.
+ */
 var KTXParser = function (data)
 {
     var idCheck = [ 0xab, 0x4b, 0x54, 0x58, 0x20, 0x31, 0x31, 0xbb, 0x0d, 0x0a, 0x1a, 0x0a ];
@@ -62,8 +73,6 @@ var KTXParser = function (data)
             width: levelWidth,
             height: levelHeight
         };
-
-        console.log('KTX', i, 'size', levelWidth, levelHeight);
 
         // add padding for odd sized image
         // offset += 3 - ((levelSize + 3) % 4);
