@@ -1,5 +1,15 @@
 ## Version 3.60.0 - Miku - in development
 
+### New Features - Compressed Texture Support
+
+* `TextureSoure.compressionAlgorithm` is now populated with the compression format used by the texture.
+* `Types.Textures.CompressedTextureData` is the new compressed texture configuration object type.
+* `TextureManager.addCompressedTexture` is a new method that will add a compressed texture, and optionally atlas data into the Texture Manager and return a `Texture` object than any Sprite can use.
+* `Textures.Parsers.KTXParser` is a new parser for the KTX compression container format.
+* `Textures.Parsers.PVRParser` is a new parser for the PVR compression container format.
+* The `WebGLRenderer.compression` property now holds a more in-depth object containing supported compression formats.
+* The `WebGLRenderer.createTextureFromSource` method now accepts the `CompressedTextureData` data objects and creates WebGL textures from them.
+
 ### New Features
 
 * `ScaleManager.getViewPort` is a new method that will return a Rectangle geometry object that matches the visible area of the screen (thanks @rexrainbow)
