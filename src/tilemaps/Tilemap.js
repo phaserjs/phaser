@@ -831,9 +831,10 @@ var Tilemap = new Class({
 
                 if (this.orientation === ORIENTATION.ISOMETRIC)
                 {
+                    var isometricRatio = this.tileWidth / this.tileHeight;
                     var isometricPosition = {
                         x: sprite.x - sprite.y,
-                        y: (sprite.x + sprite.y) / 2
+                        y: (sprite.x + sprite.y) / isometricRatio
                     };
 
                     sprite.x = isometricPosition.x;
