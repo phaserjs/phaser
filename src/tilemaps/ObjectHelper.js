@@ -8,11 +8,11 @@ var Class = require('../utils/Class');
 
 /**
  * @classdesc
- * An ObjectHelper helps tie objects with `gids` into the tileset that sits behind them.
+ * The ObjectHelper helps tie objects with `gids` into the tileset
+ * that sits behind them.
  *
  * @class ObjectHelper
  * @memberof Phaser.Tilemaps
- * @ignore
  * @constructor
  * @since 3.60.0
  *
@@ -20,8 +20,17 @@ var Class = require('../utils/Class');
  */
 var ObjectHelper = new Class({
 
-    initialize: function ObjectHelper (tilesets)
+    initialize:
+
+    function ObjectHelper (tilesets)
     {
+        /**
+         * The Tile GIDs array.
+         *
+         * @name Phaser.Tilemaps.ObjectHelper#gids
+         * @type {array}
+         * @since 3.60.0
+         */
         this.gids = [];
 
         if (tilesets !== undefined)
@@ -37,14 +46,23 @@ var ObjectHelper = new Class({
             }
         }
 
+        /**
+         * The Tile GIDs array.
+         *
+         * @name Phaser.Tilemaps.ObjectHelper#_gids
+         * @type {array}
+         * @private
+         * @since 3.60.0
+         */
         this._gids = this.gids;
     },
 
     /**
-     * Enabled if the object helper reaches into tilesets for data. Disabled if it only uses data directly on a gid object.
+     * Enabled if the object helper reaches in to tilesets for data.
+     * Disabled if it only uses data directly on a gid object.
      *
      * @name Phaser.Tilemaps.ObjectHelper#enabled
-     * @type boolean
+     * @type {boolean}
      * @since 3.60.0
      */
     enabled: {
@@ -58,6 +76,7 @@ var ObjectHelper = new Class({
         {
             this.gids = v ? this._gids : undefined;
         }
+
     },
 
     /**
@@ -109,7 +128,7 @@ var ObjectHelper = new Class({
      *
      * @method Phaser.Tilemaps.ObjectHelper#setTextureAndFrame
      * @since 3.60.0
-
+     *
      * @param {Phaser.GameObjects.GameObject} sprite - The Game Object to modify.
      * @param {string|Phaser.Textures.Texture} [key] - The texture key to set (or else the `obj.gid`'s tile is used if available).
      * @param {string|number|Phaser.Textures.Frame} [frame] - The frames key to set (or else the `obj.gid`'s tile is used if available).
@@ -171,6 +190,7 @@ var ObjectHelper = new Class({
     },
 
     /**
+     * Sets the sprite data from the JSON object.
      *
      * @method Phaser.Tilemaps.ObjectHelper#setFromJSON
      * @since 3.60.0
