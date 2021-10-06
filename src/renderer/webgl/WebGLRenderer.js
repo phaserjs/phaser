@@ -418,9 +418,9 @@ var WebGLRenderer = new Class({
         this.glFormats = [];
 
         /**
-         * Stores the supported WebGL texture compression formats.
+         * Stores the WebGL texture compression formats that this device and browser supports.
          *
-         * Overhauled in version 3.60.
+         * Support for using compressed texture formats was added in Phaser version 3.60.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#compression
          * @type {Phaser.Types.Renderer.WebGL.WebGLTextureCompression}
@@ -2008,6 +2008,13 @@ var WebGLRenderer = new Class({
             magFilter = gl.LINEAR;
         }
 
+        if (source && source.compressed)
+        {
+            //  If you don't set minFilter to LINEAR then the compressed textures don't work!
+            minFilter = gl.LINEAR;
+            magFilter = gl.LINEAR;
+        }
+
         if (!source && typeof width === 'number' && typeof height === 'number')
         {
             texture = this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, null, width, height);
@@ -2064,9 +2071,24 @@ var WebGLRenderer = new Class({
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, pma);
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
+        var generateMipmap = false;
+
         if (pixels === null || pixels === undefined)
         {
             gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, width, height, 0, format, gl.UNSIGNED_BYTE, null);
+
+            generateMipmap = IsSizePowerOfTwo(width, height);
+        }
+        else if (pixels.compressed)
+        {
+            width = pixels.width;
+            height = pixels.height;
+            generateMipmap = pixels.generateMipmap;
+
+            for (var i = 0; i < pixels.mipmaps.length; i++)
+            {
+                gl.compressedTexImage2D(gl.TEXTURE_2D, i, pixels.internalFormat, pixels.mipmaps[i].width, pixels.mipmaps[i].height, 0, pixels.mipmaps[i].data);
+            }
         }
         else
         {
@@ -2077,9 +2099,11 @@ var WebGLRenderer = new Class({
             }
 
             gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, format, gl.UNSIGNED_BYTE, pixels);
+
+            generateMipmap = IsSizePowerOfTwo(width, height);
         }
 
-        if (IsSizePowerOfTwo(width, height))
+        if (generateMipmap)
         {
             gl.generateMipmap(gl.TEXTURE_2D);
         }
