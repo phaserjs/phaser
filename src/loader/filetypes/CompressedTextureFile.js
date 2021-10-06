@@ -127,9 +127,10 @@ var CompressedTextureFile = new Class({
 /**
  * Adds a Compressed Texture file to the current load queue. This feature is WebGL only.
  *
- * This method takes a key and a configuration object, which lists the different formats and files that map to them.
+ * This method takes a key and a configuration object, which lists the different formats
+ * and files associated with them.
  *
- * The texture format object should be ordered in GPU priority order, with IMG last.
+ * The texture format object should be ordered in GPU priority order, with IMG as the last entry.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
  *
@@ -140,16 +141,18 @@ var CompressedTextureFile = new Class({
  *         ASTC: { type: 'PVR', textureURL: 'pic-astc-4x4.pvr' },
  *         PVRTC: { type: 'PVR', textureURL: 'pic-pvrtc-4bpp-rgba.pvr' },
  *         S3TC: { type: 'PVR', textureURL: 'pic-dxt5.pvr' },
- *         IMG: { textureURL: 'pic.png }
+ *         IMG: { textureURL: 'pic.png' }
  *     });
  * ```
  *
+ * The number of formats you provide to this function is up to you, but you should ensure you
+ * cover the primary platforms where appropriate.
+ *
  * The 'IMG' entry is a fallback to a JPG or PNG, should the browser be unable to load any of the other
- * formats presented to this function.
+ * formats presented to this function. You should really always include this, although it is optional.
  *
- * Phaser supports loading both the PVR and KTX container formats.
- *
- * Within those, it can parse the following texture compression formats:
+ * Phaser supports loading both the PVR and KTX container formats. Within those, it can parse
+ * the following texture compression formats:
  *
  * ETC
  * ETC1
@@ -161,14 +164,20 @@ var CompressedTextureFile = new Class({
  * S3TC
  * S3TCSRGB
  *
+ * For more information about the benefits of compressed textures please see the
+ * following articles:
+ *
+ * Texture Compression in 2020 (https://aras-p.info/blog/2020/12/08/Texture-Compression-in-2020/)
+ * Compressed GPU Texture Formats (https://themaister.net/blog/2020/08/12/compressed-gpu-texture-formats-a-review-and-compute-shader-decoders-part-1/)
+ *
  * To create compressed texture files use a 3rd party application such as:
  *
  * Texture Packer (https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16)
  * PVRTexTool (https://developer.imaginationtech.com/pvrtextool/) - available for Windows, macOS and Linux.
- * Mail Texture Compression Tool (https://developer.arm.com/tools-and-software/graphics-and-gaming/mali-texture-compression-tool)
+ * Mali Texture Compression Tool (https://developer.arm.com/tools-and-software/graphics-and-gaming/mali-texture-compression-tool)
  * ASTC Encoder (https://github.com/ARM-software/astc-encoder)
  *
- * ASTCs must be: Channel Type: Unsigned Normalized Bytes (UNorm) and Color Space: Linear RGB
+ * ASTCs must have a Channel Type of Unsigned Normalized Bytes (UNorm) and a Linear RGB Color Space.
  *
  * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
  * or if it's already running, when the next free load slot becomes available. This happens automatically if you
@@ -183,25 +192,13 @@ var CompressedTextureFile = new Class({
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
  * then remove it from the Texture Manager first, before loading a new one.
  *
- * Instead of passing arguments you can pass a configuration object, such as:
- *
- * ```javascript
- * this.load.texture({
- *     key: 'doom',
- *     url: 'files/Doom.wad',
- *     dataType: Uint8Array
- * });
- * ```
- *
- * See the documentation for `Phaser.Types.Loader.FileTypes.CompressedTextureFileConfig` for more details.
- *
  * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
  * key. For example, if the prefix was `LEVEL1.` and the key was `Data` the final key will be `LEVEL1.Data` and
  * this is what you would use to retrieve the text from the Texture Manager.
  *
  * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
  *
- * Unlike other file loads in Phaser, you must provide a URL and extension.
+ * Unlike other file loaders in Phaser, the URLs must include the file extension.
  *
  * Note: The ability to load this type of file will only be available if the Compressed Texture File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
@@ -210,7 +207,7 @@ var CompressedTextureFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.60.0
  *
- * @param {string} key - The key to use for this file.
+ * @param {string} key - The key to use for this file within the Texture Manager.
  * @param {Phaser.Types.Loader.FileTypes.CompressedTextureFileConfig} urls - The compressed texture configuration object.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
