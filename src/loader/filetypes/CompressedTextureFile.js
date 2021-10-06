@@ -1,12 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2021 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var AtlasJSONFile = require('./AtlasJSONFile');
 var BinaryFile = require('./BinaryFile');
 var Class = require('../../utils/Class');
+var Merge = require('../../utils/object/Merge');
 var FileTypesManager = require('../FileTypesManager');
 var ImageFile = require('./ImageFile');
 var JSONFile = require('./JSONFile');
@@ -30,7 +31,7 @@ var PVRParser = require('../../textures/parsers/PVRParser');
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {string} key - The key to use for this file.
- * @param {object} entry -
+ * @param {Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry} entry - The compressed texture file entry to load.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var CompressedTextureFile = new Class({
@@ -55,8 +56,6 @@ var CompressedTextureFile = new Class({
             xhrSettings: xhrSettings,
             config: entry
         });
-
-        // console.log('binary file', image);
 
         if (entry.atlasURL)
         {
@@ -89,6 +88,7 @@ var CompressedTextureFile = new Class({
         {
             var entry = this.config;
             var renderer = this.loader.systems.renderer;
+            var textureManager = this.loader.textureManager;
 
             var image = this.files[0];
             var json = this.files[1];
@@ -108,17 +108,9 @@ var CompressedTextureFile = new Class({
             {
                 textureData.format = renderer.getCompressedTextureName(entry.format, textureData.internalFormat);
 
-                //  width, height, mipmaps array, compressed, format, internalFormat
-                console.log(textureData);
+                var atlasData = (json && json.data) ? json.data : null;
 
-                // const texture = new Texture(null, textureData.width, textureData.height, Object.assign(fileData.glConfig, textureData));
-
-                // this.loader.textureManager.addAtlas(image.key, image.data, json.data, normalMap);
-
-                if (json && json.data)
-                {
-                    // AtlasParser(texture, json.data);
-                }
+                textureManager.addCompressedTexture(image.key, textureData, atlasData);
             }
 
             if (json)
@@ -133,16 +125,50 @@ var CompressedTextureFile = new Class({
 });
 
 /**
- * Adds a Compressed Texture file to the current load queue.
+ * Adds a Compressed Texture file to the current load queue. This feature is WebGL only.
+ *
+ * This method takes a key and a configuration object, which lists the different formats and files that map to them.
+ *
+ * The texture format object should be ordered in GPU priority order, with IMG last.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
  *
  * ```javascript
  * function preload ()
  * {
- *     this.load.texture('doom', 'files/doom.ktx');
- * }
+ *     this.load.texture('pic', {
+ *         ASTC: { type: 'PVR', textureURL: 'pic-astc-4x4.pvr' },
+ *         PVRTC: { type: 'PVR', textureURL: 'pic-pvrtc-4bpp-rgba.pvr' },
+ *         S3TC: { type: 'PVR', textureURL: 'pic-dxt5.pvr' },
+ *         IMG: { textureURL: 'pic.png }
+ *     });
  * ```
+ *
+ * The 'IMG' entry is a fallback to a JPG or PNG, should the browser be unable to load any of the other
+ * formats presented to this function.
+ *
+ * Phaser supports loading both the PVR and KTX container formats.
+ *
+ * Within those, it can parse the following texture compression formats:
+ *
+ * ETC
+ * ETC1
+ * ATC
+ * ASTC
+ * BPTC
+ * RGTC
+ * PVRTC
+ * S3TC
+ * S3TCSRGB
+ *
+ * To create compressed texture files use a 3rd party application such as:
+ *
+ * Texture Packer (https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16)
+ * PVRTexTool (https://developer.imaginationtech.com/pvrtextool/) - available for Windows, macOS and Linux.
+ * Mail Texture Compression Tool (https://developer.arm.com/tools-and-software/graphics-and-gaming/mali-texture-compression-tool)
+ * ASTC Encoder (https://github.com/ARM-software/astc-encoder)
+ *
+ * ASTCs must be: Channel Type: Unsigned Normalized Bytes (UNorm) and Color Space: Linear RGB
  *
  * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
  * or if it's already running, when the next free load slot becomes available. This happens automatically if you
@@ -152,10 +178,10 @@ var CompressedTextureFile = new Class({
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
  *
- * The key must be a unique String. It is used to add the file to the global Binary Cache upon a successful load.
- * The key should be unique both in terms of files being loaded and files already present in the Binary Cache.
+ * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+ * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
- * then remove it from the Binary Cache first, before loading a new one.
+ * then remove it from the Texture Manager first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
  *
@@ -167,35 +193,25 @@ var CompressedTextureFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Types.Loader.FileTypes.BinaryFileConfig` for more details.
- *
- * Once the file has finished loading you can access it from its Cache using its key:
- *
- * ```javascript
- * this.load.texture('doom', 'files/Doom.wad');
- * // and later in your game ...
- * var data = this.cache.binary.get('doom');
- * ```
+ * See the documentation for `Phaser.Types.Loader.FileTypes.CompressedTextureFileConfig` for more details.
  *
  * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
  * key. For example, if the prefix was `LEVEL1.` and the key was `Data` the final key will be `LEVEL1.Data` and
- * this is what you would use to retrieve the text from the Binary Cache.
+ * this is what you would use to retrieve the text from the Texture Manager.
  *
  * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
  *
- * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "doom"
- * and no URL is given then the Loader will set the URL to be "doom.bin". It will always add `.bin` as the extension, although
- * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ * Unlike other file loads in Phaser, you must provide a URL and extension.
  *
- * Note: The ability to load this type of file will only be available if the Binary File type has been built into Phaser.
+ * Note: The ability to load this type of file will only be available if the Compressed Texture File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#texture
  * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.60.0
  *
- * @param {(string|Phaser.Types.Loader.FileTypes.BinaryFileConfig)} key - The key to use for this file, or a file configuration object.
- * @param {string} [urls] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.bin`, i.e. if `key` was "alien" then the URL will be "alien.bin".
+ * @param {string} key - The key to use for this file.
+ * @param {Phaser.Types.Loader.FileTypes.CompressedTextureFileConfig} urls - The compressed texture configuration object.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {this} The Loader instance.
@@ -223,7 +239,7 @@ FileTypesManager.register('texture', function (key, urls, xhrSettings)
             }
             else
             {
-                // Object.assign(entry, urlEntry);
+                entry = Merge(urlEntry, entry);
             }
 
             entry.format = textureBaseFormat.toUpperCase();
@@ -258,23 +274,3 @@ FileTypesManager.register('texture', function (key, urls, xhrSettings)
 });
 
 module.exports = CompressedTextureFile;
-
-/*
-    //  key = Compression Format (ETC, ASTC, etc) that the browser must support
-    //  type = The Container Format (PVR or KTX) - if not given will try to extract from textureURL extension
-    //  textureURL = URL of the texture file (todo: could also be base64 data?)
-    //  atlasURL = optional - if given, will treat as an AtlasFile and load as JSON, otherwise an ImageFile
-
-    ASTCs must be:
-    Channel Type: Unsigned Normalized Bytes (UNorm)
-    Color Space: Linear RGB
-
-    Texture Formats should be ordered in alphabetical / GPU priority order, with IMG last
-
-    TextureFile('pic', {
-        ASTC: { type: string, textureURL?: string, atlasURL?: string },
-        ETC: { type: string, textureURL?: string, atlasURL?: string },
-        S3TC: { type: string, textureURL?: string, atlasURL?: string },
-        IMG: { type: string, textureURL?: string, atlasURL?: string }
-    });
-*/
