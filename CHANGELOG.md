@@ -6,6 +6,8 @@ Phaser 3.60 contains support for Compressed Textures. It can parse both KTX and 
 
 Compressed Textures are loaded using the new `this.load.texture` method, which takes a texture configuration object that maps the formats to the files. The browser will then download the first file in the object that it knows it can support. You can also provide Texture Atlas JSON data, too, so you can use compressed texture atlases. Currently, Texture Packer is the best tool for creating these.
 
+Development of this feature was kindly sponsored by Club Penguin Rewritten (https://cprewritten.net).
+
 * `TextureSoure.compressionAlgorithm` is now populated with the compression format used by the texture.
 * `Types.Textures.CompressedTextureData` is the new compressed texture configuration object type.
 * `TextureManager.addCompressedTexture` is a new method that will add a compressed texture, and optionally atlas data into the Texture Manager and return a `Texture` object than any Sprite can use.
