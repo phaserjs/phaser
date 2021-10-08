@@ -504,8 +504,6 @@ var Curve = new Class({
      */
     getNormal: function (t, out)
     {
-        if (out === undefined) { out = new Vector2(); }
-
         return this.getTangent(t, out).rotate(Math.PI / 2);
     },
 
