@@ -734,6 +734,26 @@ var Path = new Class({
     },
 
     /**
+     * Gets a unit vector normal at a relative position on the path.
+     *
+     * @method Phaser.Curves.Path#getNormal
+     * @since 3.60.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
+     * @param {number} t - The relative position on the path, [0..1].
+     * @param {Phaser.Math.Vector2} [out] - A vector to store the result in.
+     *
+     * @return {Phaser.Math.Vector2} Vector approximating the normal line at the point t (delta +/- 0.0001)
+     */
+    getNormal: function (t, out)
+    {
+        if (out === undefined) { out = new Vector2(); }
+
+        return this.getTangent(t, out).rotate(MATH_CONST.TAU);
+    },
+
+    /**
      * Creates a line curve from the previous end point to x/y.
      *
      * @method Phaser.Curves.Path#lineTo

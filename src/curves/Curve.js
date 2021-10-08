@@ -490,6 +490,46 @@ var Curve = new Class({
     },
 
     /**
+     * Get a unit vector normal at a relative position on the curve.
+     *
+     * @method Phaser.Curves.Curve#getNormal
+     * @since 3.60.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
+     * @param {number} t - The relative position on the curve, [0..1].
+     * @param {Phaser.Math.Vector2} [out] - A vector to store the result in.
+     *
+     * @return {Phaser.Math.Vector2} The normal vector.
+     */
+    getNormal: function (t, out)
+    {
+        if (out === undefined) { out = new Vector2(); }
+
+        return this.getTangent(t, out).rotate(Math.PI / 2);
+    },
+
+    /**
+     * Get a unit vector normal at a relative position on the curve, by arc length.
+     *
+     * @method Phaser.Curves.Curve#getNormalAt
+     * @since 3.60.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
+     *
+     * @param {number} u - The relative position on the curve, [0..1].
+     * @param {Phaser.Math.Vector2} [out] - A vector to store the result in.
+     *
+     * @return {Phaser.Math.Vector2} The normal vector.
+     */
+    getNormalAt: function (u, out)
+    {
+        var t = this.getUtoTmapping(u);
+
+        return this.getNormal(t, out);
+    },
+
+    /**
      * Given a distance in pixels, get a t to find p.
      *
      * @method Phaser.Curves.Curve#getTFromDistance
