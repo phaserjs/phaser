@@ -412,6 +412,8 @@ var File = new Class({
      */
     onProcessError: function ()
     {
+        console.error('Failed to process file: %s "%s"', this.type, this.key);
+
         this.state = CONST.FILE_ERRORED;
 
         if (this.multiFile)

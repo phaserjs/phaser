@@ -231,6 +231,8 @@ var MultiFile = new Class({
         if (index !== -1)
         {
             this.failed++;
+
+            console.error('File failed: %s "%s" (via %s "%s")', this.type, this.key, file.type, file.key);
         }
     }
 
