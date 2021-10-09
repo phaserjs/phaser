@@ -83,8 +83,6 @@ var XMLFile = new Class({
         }
         else
         {
-            console.warn('Invalid XMLFile: ' + this.key);
-            
             this.onProcessError();
         }
     }
