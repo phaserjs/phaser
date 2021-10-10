@@ -412,6 +412,7 @@ var File = new Class({
      */
     onProcessError: function ()
     {
+        // eslint-disable-next-line no-console
         console.error('Failed to process file: %s "%s"', this.type, this.key);
 
         this.state = CONST.FILE_ERRORED;

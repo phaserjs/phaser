@@ -232,6 +232,7 @@ var MultiFile = new Class({
         {
             this.failed++;
 
+            // eslint-disable-next-line no-console
             console.error('File failed: %s "%s" (via %s "%s")', this.type, this.key, file.type, file.key);
         }
     }
