@@ -767,23 +767,4 @@ Vector2.DOWN = new Vector2(0, 1);
  */
 Vector2.ONE = new Vector2(1, 1);
 
-/**
- * Interpolates two given Vectors and returns a new Vector.
- *
- * Does not modify either of the passed Vectors.
- * 
- * @method Phaser.Math.Vector2
- * @since 3.6.0
- *
- * @param {Phaser.Math.Vector2} vector1 - Starting vector
- * @param {Phaser.Math.Vector2} vector2 - Ending vector
- * @param {number} [t=0] - The interpolation percentage, between 0 and 1.
- * @return {Phaser.Math.Vector2} Value of the interpolation
- */
-Vector2.Lerp = function (vector1, vector2, t)
-{
-    if (t === undefined) { t = 0; }
-    return vector1.clone().lerp(vector2, t);
-};
-
 module.exports = Vector2;
