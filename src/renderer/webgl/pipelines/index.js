@@ -22,6 +22,7 @@ var Pipelines = {
     PostFXPipeline: require('./PostFXPipeline'),
     RopePipeline: require('./RopePipeline'),
     SinglePipeline: require('./SinglePipeline'),
+    SpriteFXPipeline: require('./SpriteFXPipeline'),
     UtilityPipeline: require('./UtilityPipeline')
 
 };
