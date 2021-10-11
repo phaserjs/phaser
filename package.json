@@ -67,7 +67,7 @@
     "@types/source-map": "^0.5.7",
     "clean-webpack-plugin": "^4.0.0",
     "dts-dom": "^3.6.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.0.0",
     "eslint-plugin-es5": "^1.5.0",
     "exports-loader": "^3.0.0",
     "fs-extra": "^10.0.0",
@@ -79,7 +79,7 @@
     "terser-webpack-plugin": "^5.2.4",
     "typescript": "^4.4.3",
     "vivid-cli": "^1.1.2",
-    "webpack": "^5.57.1",
+    "webpack": "^5.58.1",
     "webpack-cli": "^4.9.0",
     "webpack-shell-plugin": "^0.5.0"
   },
