@@ -1364,39 +1364,6 @@ var WebGLPipeline = new Class({
         return hasFlushed;
     },
 
-    batchQuadFX: function (gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit)
-    {
-        if (unit === undefined) { unit = this.currentUnit; }
-
-        this.flush();
-
-        //  quad bounds
-        var bx = Math.min(x0, x1, x2, x3);
-        var by = Math.min(y0, y1, y2, y3);
-        var br = Math.max(x0, x1, x2, x3);
-        var bb = Math.max(y0, y1, y2, y3);
-
-        //  add the fx padding to get the fbo dimensions
-        var width = br - bx + (gameObject.fxPadding * 2);
-        var height = bb - by + (gameObject.fxPadding * 2);
-
-
-
-
-        unit = this.setTexture2D(texture);
-
-        this.batchVert(x0, y0, u0, v0, unit, tintEffect, tintTL);
-        this.batchVert(x1, y1, u0, v1, unit, tintEffect, tintBL);
-        this.batchVert(x2, y2, u1, v1, unit, tintEffect, tintBR);
-        this.batchVert(x0, y0, u0, v0, unit, tintEffect, tintTL);
-        this.batchVert(x2, y2, u1, v1, unit, tintEffect, tintBR);
-        this.batchVert(x3, y3, u1, v0, unit, tintEffect, tintTR);
-
-        this.onBatch(gameObject);
-
-        return true;
-    },
-
     /**
      * Adds the vertices data into the batch and flushes if full.
      *
