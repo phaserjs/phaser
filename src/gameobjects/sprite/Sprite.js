@@ -100,6 +100,8 @@ var Sprite = new Class({
          */
         this.anims = new AnimationState(this);
 
+        this.fxPadding = 0;
+
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
