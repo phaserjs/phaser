@@ -430,9 +430,9 @@ var WebGLPipeline = new Class({
                 var minFilter = GetFastValue(targets[i], 'minFilter', 0);
                 var autoClear = GetFastValue(targets[i], 'autoClear', 1);
                 var targetWidth = GetFastValue(targets[i], 'width', null);
-                var targetHeight = GetFastValue(targets[i], 'height', null);
+                var targetHeight = GetFastValue(targets[i], 'height', targetWidth);
 
-                if (targetWidth && targetHeight)
+                if (targetWidth)
                 {
                     renderTargets.push(new RenderTarget(renderer, targetWidth, targetHeight, 1, minFilter, autoClear));
                 }
