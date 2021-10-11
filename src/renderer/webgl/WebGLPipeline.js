@@ -429,8 +429,17 @@ var WebGLPipeline = new Class({
                 var scale = GetFastValue(targets[i], 'scale', 1);
                 var minFilter = GetFastValue(targets[i], 'minFilter', 0);
                 var autoClear = GetFastValue(targets[i], 'autoClear', 1);
+                var targetWidth = GetFastValue(targets[i], 'width', null);
+                var targetHeight = GetFastValue(targets[i], 'height', null);
 
-                renderTargets.push(new RenderTarget(renderer, width, height, scale, minFilter, autoClear));
+                if (targetWidth && targetHeight)
+                {
+                    renderTargets.push(new RenderTarget(renderer, targetWidth, targetHeight, 1, minFilter, autoClear));
+                }
+                else
+                {
+                    renderTargets.push(new RenderTarget(renderer, width, height, scale, minFilter, autoClear));
+                }
             }
         }
 
@@ -1366,6 +1375,13 @@ var WebGLPipeline = new Class({
         var by = Math.min(y0, y1, y2, y3);
         var br = Math.max(x0, x1, x2, x3);
         var bb = Math.max(y0, y1, y2, y3);
+
+        //  add the fx padding to get the fbo dimensions
+        var width = br - bx + (gameObject.fxPadding * 2);
+        var height = bb - by + (gameObject.fxPadding * 2);
+
+
+
 
         unit = this.setTexture2D(texture);
 
