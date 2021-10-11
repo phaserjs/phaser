@@ -7,8 +7,8 @@
 var Class = require('../../../utils/Class');
 var ColorMatrix = require('../../../display/ColorMatrix');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var ShaderSourceFS = require('../shaders/PostFX-frag.js');
-var ShaderSourceVS = require('../shaders/Quad-vert.js');
+var ShaderSourceFS = require('../shaders/Single-frag.js');
+var ShaderSourceVS = require('../shaders/Single-vert.js');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
@@ -343,21 +343,20 @@ var SpriteFXPipeline = new Class({
             this.flush();
         }
 
-        var unit = this.setGameObject(gameObject, frame);
-
         this.manager.preBatch(gameObject);
 
-        this.batchQuad(gameObject, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, gameObject.tintFill, texture, unit);
+        this.renderer.setTextureZero(texture);
+
+        this.batchQuad(gameObject, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, gameObject.tintFill, texture, 0);
+
+        this.renderer.clearTextureZero();
 
         this.manager.postBatch(gameObject);
     },
 
     batchQuad: function (gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit)
     {
-        if (unit === undefined) { unit = this.currentUnit; }
-
-        this.flush();
-
+        /*
         //  quad bounds
         var bx = Math.min(x0, x1, x2, x3);
         var by = Math.min(y0, y1, y2, y3);
@@ -367,9 +366,7 @@ var SpriteFXPipeline = new Class({
         //  add the fx padding to get the fbo dimensions
         var width = br - bx + (gameObject.fxPadding * 2);
         var height = bb - by + (gameObject.fxPadding * 2);
-
-
-
+        */
 
         unit = this.setTexture2D(texture);
 
@@ -381,6 +378,8 @@ var SpriteFXPipeline = new Class({
         this.batchVert(x3, y3, u1, v0, unit, tintEffect, tintTR);
 
         this.onBatch(gameObject);
+
+        this.flush();
 
         return true;
     },
