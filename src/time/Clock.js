@@ -382,7 +382,7 @@ var Clock = new Class({
                     event.repeatCount--;
 
                     // Very short delay
-                    if (remainder >= event.delay)
+                    if ((remainder >= event.delay) && (!event.hasDispatched && event.callback))
                     {
                         while ((remainder >= event.delay) && (event.repeatCount > 0))
                         {
