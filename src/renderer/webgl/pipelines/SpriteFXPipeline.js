@@ -12,10 +12,10 @@ var SingleQuadFS = require('../shaders/Single-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
 var PostFXFS = require('../shaders/PostFX-frag.js');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
-var Utils = require('../Utils');
 var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
-var SnapFloor = require('../../../math/snap/SnapFloor');
+var MultiPipeline = require('./MultiPipeline');
+var SnapCeil = require('../../../math/snap/SnapCeil');
 
 /**
  * @classdesc
@@ -175,7 +175,8 @@ var SpriteFXPipeline = new Class({
 
         this.drawToFrame = false;
 
-        this.bounds = new Rectangle();
+        this.spriteBounds = new Rectangle();
+        this.targetBounds = new Rectangle();
 
         if (this.renderer.isBooted)
         {
@@ -197,8 +198,7 @@ var SpriteFXPipeline = new Class({
 
         this.fullFrame1 = targets[0];
 
-        console.log(this.vertexData);
-        console.log(this.renderTargets);
+        //  TODO - Prepare vertex data
     },
 
     /**
@@ -213,160 +213,75 @@ var SpriteFXPipeline = new Class({
      */
     batchSprite: function (gameObject, camera, parentTransformMatrix)
     {
-        this.manager.set(this, gameObject);
+        //  Proxy this call to the MultiPipeline
+        //  batchQuad will intercept the rendering
+        MultiPipeline.prototype.batchSprite.call(this, gameObject, camera, parentTransformMatrix);
+    },
 
-        var camMatrix = this._tempMatrix1;
-        var spriteMatrix = this._tempMatrix2;
-        var calcMatrix = this._tempMatrix3;
-
-        var frame = gameObject.frame;
-        var texture = frame.glTexture;
-
-        var u0 = frame.u0;
-        var v0 = frame.v0;
-        var u1 = frame.u1;
-        var v1 = frame.v1;
-        var frameX = frame.x;
-        var frameY = frame.y;
-        var frameWidth = frame.cutWidth;
-        var frameHeight = frame.cutHeight;
-        var customPivot = frame.customPivot;
-
-        var displayOriginX = gameObject.displayOriginX;
-        var displayOriginY = gameObject.displayOriginY;
-
-        var x = -displayOriginX + frameX;
-        var y = -displayOriginY + frameY;
-
-        if (gameObject.isCropped)
+    /**
+     * Adds the vertices data into the batch and flushes if full.
+     *
+     * Assumes 6 vertices in the following arrangement:
+     *
+     * ```
+     * 0----3
+     * |\  B|
+     * | \  |
+     * |  \ |
+     * | A \|
+     * |    \
+     * 1----2
+     * ```
+     *
+     * Where tx0/ty0 = 0, tx1/ty1 = 1, tx2/ty2 = 2 and tx3/ty3 = 3
+     *
+     * @method Phaser.Renderer.WebGL.SpriteFXPipeline#batchQuad
+     * @since 3.60.0
+     *
+     * @param {(Phaser.GameObjects.GameObject|null)} gameObject - The Game Object, if any, drawing this quad.
+     * @param {number} x0 - The top-left x position.
+     * @param {number} y0 - The top-left y position.
+     * @param {number} x1 - The bottom-left x position.
+     * @param {number} y1 - The bottom-left y position.
+     * @param {number} x2 - The bottom-right x position.
+     * @param {number} y2 - The bottom-right y position.
+     * @param {number} x3 - The top-right x position.
+     * @param {number} y3 - The top-right y position.
+     * @param {number} u0 - UV u0 value.
+     * @param {number} v0 - UV v0 value.
+     * @param {number} u1 - UV u1 value.
+     * @param {number} v1 - UV v1 value.
+     * @param {number} tintTL - The top-left tint color value.
+     * @param {number} tintTR - The top-right tint color value.
+     * @param {number} tintBL - The bottom-left tint color value.
+     * @param {number} tintBR - The bottom-right tint color value.
+     * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
+     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
+     * @param {number} [unit=0] - Texture unit to which the texture needs to be bound.
+     *
+     * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
+     */
+    batchQuad: function (gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit)
+    {
+        if (!this.drawToFrame)
         {
-            var crop = gameObject._crop;
-
-            if (crop.flipX !== gameObject.flipX || crop.flipY !== gameObject.flipY)
-            {
-                frame.updateCropUVs(crop, gameObject.flipX, gameObject.flipY);
-            }
-
-            u0 = crop.u0;
-            v0 = crop.v0;
-            u1 = crop.u1;
-            v1 = crop.v1;
-
-            frameWidth = crop.width;
-            frameHeight = crop.height;
-
-            frameX = crop.x;
-            frameY = crop.y;
-
-            x = -displayOriginX + frameX;
-            y = -displayOriginY + frameY;
-        }
-
-        var flipX = 1;
-        var flipY = 1;
-
-        if (gameObject.flipX)
-        {
-            if (!customPivot)
-            {
-                x += (-frame.realWidth + (displayOriginX * 2));
-            }
-
-            flipX = -1;
-        }
-
-        //  Auto-invert the flipY if this is coming from a GLTexture
-
-        if (gameObject.flipY || (frame.source.isGLTexture && !texture.flipY))
-        {
-            if (!customPivot)
-            {
-                y += (-frame.realHeight + (displayOriginY * 2));
-            }
-
-            flipY = -1;
-        }
-
-        spriteMatrix.applyITRS(gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
-
-        camMatrix.copyFrom(camera.matrix);
-
-        if (parentTransformMatrix)
-        {
-            //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * gameObject.scrollFactorX, -camera.scrollY * gameObject.scrollFactorY);
-
-            //  Undo the camera scroll
-            spriteMatrix.e = gameObject.x;
-            spriteMatrix.f = gameObject.y;
-        }
-        else
-        {
-            spriteMatrix.e -= camera.scrollX * gameObject.scrollFactorX;
-            spriteMatrix.f -= camera.scrollY * gameObject.scrollFactorY;
-        }
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
-
-        var xw = x + frameWidth;
-        var yh = y + frameHeight;
-
-        var roundPixels = camera.roundPixels;
-
-        var tx0 = calcMatrix.getXRound(x, y, roundPixels);
-        var ty0 = calcMatrix.getYRound(x, y, roundPixels);
-
-        var tx1 = calcMatrix.getXRound(x, yh, roundPixels);
-        var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
-
-        var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
-        var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
-
-        var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
-        var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
-
-        var getTint = Utils.getTintAppendFloatAlpha;
-        var cameraAlpha = camera.alpha;
-
-        var tintTL = getTint(gameObject.tintTopLeft, cameraAlpha * gameObject._alphaTL);
-        var tintTR = getTint(gameObject.tintTopRight, cameraAlpha * gameObject._alphaTR);
-        var tintBL = getTint(gameObject.tintBottomLeft, cameraAlpha * gameObject._alphaBL);
-        var tintBR = getTint(gameObject.tintBottomRight, cameraAlpha * gameObject._alphaBR);
-
-        if (this.shouldFlush(6))
-        {
-            this.flush();
-        }
-
-        this.manager.preBatch(gameObject);
-
-        if (this.drawToFrame)
-        {
-            this.drawSpriteToFBO(gameObject, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, gameObject.tintFill, texture);
-        }
-        else
-        {
+            //  If we're not drawing to the fbo,
+            //  we can just pass this on to the WebGLPipeline.batchQuad function
             this.renderer.setTextureZero(texture);
 
-            WebGLPipeline.prototype.batchQuad.call(this, gameObject, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, gameObject.tintFill, texture, 0);
+            WebGLPipeline.prototype.batchQuad.call(this, gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, gameObject.tintFill, texture, 0);
 
             this.flush();
 
             this.renderer.clearTextureZero();
+
+            return true;
         }
-
-        this.manager.postBatch(gameObject);
-    },
-
-    drawSpriteToFBO: function (gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture)
-    {
-        // console.log('drawSpriteToFBO');
 
         var padding = gameObject.fxPadding;
 
         //  quad bounds
-        var bounds = this.bounds;
+        var bounds = this.spriteBounds;
 
         var bx = Math.min(x0, x1, x2, x3);
         var by = Math.min(y0, y1, y2, y3);
@@ -375,15 +290,21 @@ var SpriteFXPipeline = new Class({
         var bw = br - bx;
         var bh = bb - by;
 
-        var width = bw + (padding * 2);
-        var height = bh + (padding * 2);
-
-        var size = Math.max(width, height);
-
         bounds.setTo(bx, by, bw, bh);
 
-        var target = this.getFrameFromSize(size);
+        var width = bw + (padding * 2);
+        var height = bh + (padding * 2);
+        var maxDimension = Math.abs(Math.max(width, height));
 
+        var target = this.getFrameFromSize(maxDimension);
+
+        var targetBounds = this.targetBounds.setTo(0, 0, target.width, target.height);
+
+        //  targetBounds is the same size as the fbo and centered on the spriteBounds
+        //  so we can use it when we re-render this back to the game
+        CenterOn(targetBounds, bounds.centerX, bounds.centerY);
+
+        //  Now adjust the position of the sprite bounds to the fbo size
         CenterOn(bounds, target.width / 2, target.height / 2);
 
         //  set the target fbo
@@ -404,6 +325,13 @@ var SpriteFXPipeline = new Class({
         //  we can now get the bounds offset and apply to the verts
         var ox = bx - bounds.x;
         var oy = bounds.y - by;
+
+        if (oy > 0)
+        {
+            oy = by - bounds.y;
+        }
+
+        console.log(gameObject.scaleY, '=', ox, oy);
 
         this.batchVert(x0 - ox, y0 - oy, u0, v0, 0, tintEffect, tintTL);
         this.batchVert(x1 - ox, y1 - oy, u0, v1, 0, tintEffect, tintBL);
@@ -432,15 +360,17 @@ var SpriteFXPipeline = new Class({
 
     getFrameFromSize: function (size)
     {
+        var targets = this.renderTargets;
+
         if (size > 1024)
         {
-            return this.fullFrame;
+            return targets[0];
         }
         else
         {
-            var target = SnapFloor(size, 64, 0, true);
+            var target = SnapCeil(size, 64, 0, true);
 
-            return this.renderTargets[target];
+            return targets[target];
         }
     },
 
@@ -677,6 +607,58 @@ var SpriteFXPipeline = new Class({
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
+        var matrix = this._tempMatrix1.loadIdentity();
+
+        var x = this.targetBounds.x;
+        var y = this.targetBounds.y;
+
+        var xw = x + source.width;
+        var yh = y + source.height;
+
+        var x0 = matrix.getX(x, y);
+        var y0 = matrix.getY(x, y);
+
+        var x1 = matrix.getX(x, yh);
+        var y1 = matrix.getY(x, yh);
+
+        var x2 = matrix.getX(xw, yh);
+        var y2 = matrix.getY(xw, yh);
+
+        var x3 = matrix.getX(xw, y);
+        var y3 = matrix.getY(xw, y);
+
+        var tintEffect = 0;
+        var tint = 0xffffff;
+
+        // default
+
+        // var uA = 0;
+        // var vA = 0;
+        // var uB = 0;
+        // var vB = 1;
+        // var uC = 1;
+        // var vC = 1;
+        // var uD = 1;
+        // var vD = 0;
+
+        //  flipped y:
+
+        var uA = 0;
+        var vA = 1;
+        var uB = 0;
+        var vB = 0;
+        var uC = 1;
+        var vC = 0;
+        var uD = 1;
+        var vD = 1;
+
+        this.batchVert(x0, y0, uA, vA, 0, tintEffect, tint);
+        this.batchVert(x1, y1, uB, vB, 0, tintEffect, tint);
+        this.batchVert(x2, y2, uC, vC, 0, tintEffect, tint);
+        this.batchVert(x0, y0, uA, vA, 0, tintEffect, tint);
+        this.batchVert(x2, y2, uC, vC, 0, tintEffect, tint);
+        this.batchVert(x3, y3, uD, vD, 0, tintEffect, tint);
+
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -689,7 +671,27 @@ var SpriteFXPipeline = new Class({
             gl.bindTexture(gl.TEXTURE_2D, null);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
+    },
+
+    /*
+    batchVert: function (x, y)
+    {
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+
+        var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
+
+        vertexViewF32[vertexOffset + 1] = x;
+        vertexViewF32[vertexOffset + 2] = y;
+        // vertexViewF32[++vertexOffset] = u;
+        // vertexViewF32[++vertexOffset] = v;
+        vertexViewF32[vertexOffset] = unit;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tint;
+
+        this.vertexCount++;
     }
+    */
 
 });
 
