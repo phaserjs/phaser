@@ -682,48 +682,17 @@ var SpriteFXPipeline = new Class({
         var x2 = matrix.getX(xw, yh);
         var x3 = matrix.getX(xw, y);
 
-        //  normal verts
         var y0 = matrix.getY(x, y);
         var y1 = matrix.getY(x, yh);
         var y2 = matrix.getY(xw, yh);
         var y3 = matrix.getY(xw, y);
 
-        //  flipped verts
-        // var y0 = matrix.getY(x, yh);
-        // var y1 = matrix.getY(x, y);
-        // var y2 = matrix.getY(xw, y);
-        // var y3 = matrix.getY(xw, yh);
-
-        // default uvs
-
-        var uA = 0;
-        var vA = 0;
-        var uB = 0;
-        var vB = 1;
-        var uC = 1;
-        var vC = 1;
-        var uD = 1;
-        var vD = 0;
-
-        //  normal verts + default uvs = shader correct way up, but texture inverted
-
-        //  flipped uvs
-
-        // var uA = 0;
-        // var vA = 1;
-        // var uB = 0;
-        // var vB = 0;
-        // var uC = 1;
-        // var vC = 0;
-        // var uD = 1;
-        // var vD = 1;
-
-        this.batchVert(x0, y0, uA, vA, 0, 0xffffff, 0);
-        this.batchVert(x1, y1, uB, vB, 0, 0xffffff, 0);
-        this.batchVert(x2, y2, uC, vC, 0, 0xffffff, 0);
-        this.batchVert(x0, y0, uA, vA, 0, 0xffffff, 0);
-        this.batchVert(x2, y2, uC, vC, 0, 0xffffff, 0);
-        this.batchVert(x3, y3, uD, vD, 0, 0xffffff, 0);
+        this.batchVert(x0, y0, 0, 0, 0, 0xffffff, 0);
+        this.batchVert(x1, y1, 0, 1, 0, 0xffffff, 0);
+        this.batchVert(x2, y2, 1, 1, 0, 0xffffff, 0);
+        this.batchVert(x0, y0, 0, 0, 0, 0xffffff, 0);
+        this.batchVert(x2, y2, 1, 1, 0, 0xffffff, 0);
+        this.batchVert(x3, y3, 1, 0, 0, 0xffffff, 0);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
