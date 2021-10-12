@@ -16,7 +16,6 @@ var MultiPipeline = require('./pipelines/MultiPipeline');
 var PointLightPipeline = require('./pipelines/PointLightPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
 var SinglePipeline = require('./pipelines/SinglePipeline');
-var SpriteFXPipeline = require('./pipelines/SpriteFXPipeline');
 var UtilityPipeline = require('./pipelines/UtilityPipeline');
 
 /**
@@ -27,7 +26,7 @@ var UtilityPipeline = require('./pipelines/UtilityPipeline');
  * The `WebGLRenderer` owns a single instance of the Pipeline Manager, which you can access
  * via the `WebGLRenderer.pipelines` property.
  *
- * By default, there are 9 pipelines installed into the Pipeline Manager when Phaser boots:
+ * By default, there are 8 pipelines installed into the Pipeline Manager when Phaser boots:
  *
  * 1. The Multi Pipeline. Responsible for all multi-texture rendering, i.e. Sprites and Tilemaps.
  * 2. The Graphics Pipeline. Responsible for rendering Graphics and Shape objects.
@@ -37,7 +36,6 @@ var UtilityPipeline = require('./pipelines/UtilityPipeline');
  * 6. The Single Pipeline. Responsible for rendering Game Objects that explicitly require one bound texture.
  * 7. The Bitmap Mask Pipeline. Responsible for Bitmap Mask rendering.
  * 8. The Utility Pipeline. Responsible for providing lots of handy texture manipulation functions.
- * 9. The Sprite FX Pipeline.
  *
  * You can add your own custom pipeline via the `PipelineManager.add` method. Pipelines are
  * identified by unique string-based keys.
@@ -90,8 +88,7 @@ var PipelineManager = new Class({
             [ CONST.ROPE_PIPELINE, RopePipeline ],
             [ CONST.LIGHT_PIPELINE, LightPipeline ],
             [ CONST.POINTLIGHT_PIPELINE, PointLightPipeline ],
-            [ CONST.GRAPHICS_PIPELINE, GraphicsPipeline ],
-            [ CONST.SPRITEFX_PIPELINE, SpriteFXPipeline ]
+            [ CONST.GRAPHICS_PIPELINE, GraphicsPipeline ]
         ]);
 
         /**
@@ -362,7 +359,7 @@ var PipelineManager = new Class({
             pipeline.boot();
         }
 
-        if (renderer.width !== 0 && renderer.height !== 0)
+        if (renderer.width !== 0 && renderer.height !== 0 && !pipeline.isSpriteFX)
         {
             pipeline.resize(renderer.width, renderer.height);
         }

@@ -94,17 +94,7 @@ var PIPELINE_CONST = {
      * @const
      * @since 3.50.0
      */
-    UTILITY_PIPELINE: 'UtilityPipeline',
-
-    /**
-     * The Sprite FX Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.SPRITEFX_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.60.0
-     */
-    SPRITEFX_PIPELINE: 'SpriteFXPipeline'
+    UTILITY_PIPELINE: 'UtilityPipeline'
 
 };
 
