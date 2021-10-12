@@ -350,16 +350,29 @@ var MultiPipeline = new Class({
         var roundPixels = camera.roundPixels;
 
         var tx0 = calcMatrix.getXRound(x, y, roundPixels);
-        var ty0 = calcMatrix.getYRound(x, y, roundPixels);
-
         var tx1 = calcMatrix.getXRound(x, yh, roundPixels);
-        var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
-
         var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
-        var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
-
         var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
-        var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
+
+        var ty0;
+        var ty1;
+        var ty2;
+        var ty3;
+
+        if (this.isSpriteFX)
+        {
+            ty0 = calcMatrix.getYRound(x, yh, roundPixels);
+            ty1 = calcMatrix.getYRound(x, y, roundPixels);
+            ty2 = calcMatrix.getYRound(xw, y, roundPixels);
+            ty3 = calcMatrix.getYRound(xw, yh, roundPixels);
+        }
+        else
+        {
+            ty0 = calcMatrix.getYRound(x, y, roundPixels);
+            ty1 = calcMatrix.getYRound(x, yh, roundPixels);
+            ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
+            ty3 = calcMatrix.getYRound(xw, y, roundPixels);
+        }
 
         var getTint = Utils.getTintAppendFloatAlpha;
         var cameraAlpha = camera.alpha;
