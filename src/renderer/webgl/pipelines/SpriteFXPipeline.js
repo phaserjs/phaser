@@ -7,16 +7,16 @@
 var CenterOn = require('../../../geom/rectangle/CenterOn');
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
+var MultiPipeline = require('./MultiPipeline');
+var PostFXFS = require('../shaders/PostFX-frag.js');
 var Rectangle = require('../../../geom/rectangle/Rectangle');
+var RenderTarget = require('../RenderTarget');
 var SingleQuadFS = require('../shaders/Single-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
-var PostFXFS = require('../shaders/PostFX-frag.js');
+var SnapCeil = require('../../../math/snap/SnapCeil');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
-var MultiPipeline = require('./MultiPipeline');
-var SnapCeil = require('../../../math/snap/SnapCeil');
-var RenderTarget = require('../RenderTarget');
 
 /**
  * @classdesc
@@ -37,7 +37,7 @@ var SpriteFXPipeline = new Class({
 
     function SpriteFXPipeline (config)
     {
-        config.renderTarget = [ { scale: 1 } ];
+        config.renderTarget = [ { scale: 1 }, { scale: 1 } ];
 
         config.attributes = GetFastValue(config, 'attributes', [
             {
@@ -84,15 +84,6 @@ var SpriteFXPipeline = new Class({
 
         config.batchSize = 1;
 
-        // config.vertices = [
-        //     -1, -1, 0, 0,
-        //     -1, 1, 0, 1,
-        //     1, 1, 1, 1,
-        //     -1, -1, 0, 0,
-        //     1, 1, 1, 1,
-        //     1, -1, 1, 0
-        // ];
-
         WebGLPipeline.call(this, config);
 
         this.isSpriteFX = true;
@@ -128,23 +119,9 @@ var SpriteFXPipeline = new Class({
         this._tempMatrix3 = new TransformMatrix();
 
         /**
-         * A reference to the Full Frame 1 Render Target.
-         *
-         * This property is set during the `boot` method.
-         *
-         * This Render Target is the full size of the renderer.
-         *
-         * You can use this directly in Post FX Pipelines for multi-target effects.
-         * However, be aware that these targets are shared between all post fx pipelines.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#fullFrame
-         * @type {Phaser.Renderer.WebGL.RenderTarget}
-         * @since 3.60.0
-         */
-        this.fullFrame;
-
-        /**
          * A reference to the Draw Sprite Shader belonging to this Pipeline.
+         *
+         * This shader is used when the sprite is drawn to this fbo (or to the game if drawToFrame is false)
          *
          * This property is set during the `boot` method.
          *
@@ -157,6 +134,8 @@ var SpriteFXPipeline = new Class({
 
         /**
          * A reference to the Copy Shader belonging to this Pipeline.
+         *
+         * This shader draws the fbo to the game.
          *
          * This property is set during the `boot` method.
          *
@@ -173,6 +152,28 @@ var SpriteFXPipeline = new Class({
 
         this.spriteBounds = new Rectangle();
         this.targetBounds = new Rectangle();
+
+        this.spriteData = {
+            x0: 0,
+            y0: 0,
+            x1: 0,
+            y1: 0,
+            x2: 0,
+            y2: 0,
+            x3: 0,
+            y3: 0,
+            u0: 0,
+            v0: 0,
+            u1: 0,
+            v1: 0,
+            tintTL: 0,
+            tintTR: 0,
+            tintBL: 0,
+            tintBR: 0,
+            tintEffect: 0,
+            texture: null,
+            textureIndex: 0
+        };
 
         if (this.renderer.isBooted)
         {
@@ -193,8 +194,6 @@ var SpriteFXPipeline = new Class({
         this.drawSpriteShader = shaders[0];
         this.copyShader = shaders[1];
 
-        this.fullFrame1 = targets[0];
-
         var minDimension = Math.min(renderer.width, renderer.height);
 
         var qty = Math.ceil(minDimension / 64);
@@ -206,9 +205,15 @@ var SpriteFXPipeline = new Class({
             targets.push(new RenderTarget(renderer, targetWidth, targetWidth, 1, 0, true));
         }
 
-        this.maxDimension = (qty - 1) * 64;
+        //  Duplicate set of RTs for swap frames
+        for (i = 1; i < qty; i++)
+        {
+            targetWidth = i * 64;
 
-        //  TODO - Prepare vertex data
+            targets.push(new RenderTarget(renderer, targetWidth, targetWidth, 1, 0, true));
+        }
+
+        this.maxDimension = (qty - 1) * 64;
     },
 
     /**
@@ -267,11 +272,10 @@ var SpriteFXPipeline = new Class({
      * @param {number} tintBR - The bottom-right tint color value.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
      * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
-     * @param {number} [unit=0] - Texture unit to which the texture needs to be bound.
      *
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
-    batchQuad: function (gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit)
+    batchQuad: function (gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture)
     {
         if (!this.drawToFrame)
         {
@@ -317,37 +321,33 @@ var SpriteFXPipeline = new Class({
         //  Now adjust the position of the sprite bounds to the fbo size
         CenterOn(bounds, target.width / 2, target.height / 2);
 
-        //  set the target fbo
-        var gl = this.gl;
-
-        this.setShader(this.drawSpriteShader);
-
-        this.set1i('uMainSampler', 0);
-
-        this.renderer.setTextureZero(texture);
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
-
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-
         //  we can now get the bounds offset and apply to the verts
         var ox = bounds.x - bx;
         var oy = by - bounds.y;
 
-        this.batchVert(x0 + ox, y0 + oy, u0, v0, 0, tintEffect, tintTL);
-        this.batchVert(x1 + ox, y1 + oy, u0, v1, 0, tintEffect, tintBL);
-        this.batchVert(x2 + ox, y2 + oy, u1, v1, 0, tintEffect, tintBR);
-        this.batchVert(x0 + ox, y0 + oy, u0, v0, 0, tintEffect, tintTL);
-        this.batchVert(x2 + ox, y2 + oy, u1, v1, 0, tintEffect, tintBR);
-        this.batchVert(x3 + ox, y3 + oy, u1, v0, 0, tintEffect, tintTR);
+        var data = this.spriteData;
 
-        this.flush();
+        data.x0 = x0 + ox;
+        data.y0 = y0 + oy;
+        data.x1 = x1 + ox;
+        data.y1 = y1 + oy;
+        data.x2 = x2 + ox;
+        data.y2 = y2 + oy;
+        data.x3 = x3 + ox;
+        data.y3 = y3 + oy;
+        data.u0 = u0;
+        data.v0 = v0;
+        data.u1 = u1;
+        data.v1 = v1;
+        data.tintEffect = tintEffect;
+        data.tintTL = tintTL;
+        data.tintBL = tintBL;
+        data.tintBR = tintBR;
+        data.tintTR = tintTR;
+        data.texture = texture;
+        data.target = target;
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        this.renderer.clearTextureZero();
+        this.drawSprite(true);
 
         //  Now we've drawn the sprite to the target (using our pipeline shader)
         //  we can pass it to the pipeline in case they want to do further
@@ -361,19 +361,78 @@ var SpriteFXPipeline = new Class({
         return true;
     },
 
+    drawSprite: function (clear)
+    {
+        if (clear === undefined) { clear = false; }
+
+        var gl = this.gl;
+        var data = this.spriteData;
+        var target = data.target;
+
+        this.setShader(this.drawSpriteShader);
+
+        this.set1i('uMainSampler', 0);
+
+        this.renderer.setTextureZero(data.texture);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+
+        if (clear)
+        {
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
+
+        var tintEffect = data.tintEffect;
+
+        this.batchVert(data.x0, data.y0, data.u0, data.v0, 0, tintEffect, data.tintTL);
+        this.batchVert(data.x1, data.y1, data.u0, data.v1, 0, tintEffect, data.tintBL);
+        this.batchVert(data.x2, data.y2, data.u1, data.v1, 0, tintEffect, data.tintBR);
+        this.batchVert(data.x0, data.y0, data.u0, data.v0, 0, tintEffect, data.tintTL);
+        this.batchVert(data.x2, data.y2, data.u1, data.v1, 0, tintEffect, data.tintBR);
+        this.batchVert(data.x3, data.y3, data.u1, data.v0, 0, tintEffect, data.tintTR);
+
+        this.flush();
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        this.renderer.clearTextureZero();
+    },
+
     getFrameFromSize: function (size)
     {
         var targets = this.renderTargets;
 
         if (size > this.maxDimension)
         {
+            this.spriteData.textureIndex = 0;
+
             return targets[0];
         }
         else
         {
-            var target = SnapCeil(size, 64, 0, true);
+            //  +1 because we've got 2 fullFrames at the start of the targets array
+            var index = SnapCeil(size, 64, 0, true) + 1;
 
-            return targets[target];
+            this.spriteData.textureIndex = index;
+
+            return targets[index];
+        }
+    },
+
+    getSwapFrame: function ()
+    {
+        var targets = this.renderTargets;
+        var index = this.spriteData.textureIndex;
+
+        if (index === 0)
+        {
+            return targets[1];
+        }
+        else
+        {
+            return targets[index + this.maxDimension];
         }
     },
 
@@ -630,9 +689,6 @@ var SpriteFXPipeline = new Class({
         var x3 = matrix.getX(xw, y);
         var y3 = matrix.getY(xw, y);
 
-        var tintEffect = 0;
-        var tint = 0xffffff;
-
         // default
 
         // var uA = 0;
@@ -655,12 +711,12 @@ var SpriteFXPipeline = new Class({
         var uD = 1;
         var vD = 1;
 
-        this.batchVert(x0, y0, uA, vA, 0, tintEffect, tint);
-        this.batchVert(x1, y1, uB, vB, 0, tintEffect, tint);
-        this.batchVert(x2, y2, uC, vC, 0, tintEffect, tint);
-        this.batchVert(x0, y0, uA, vA, 0, tintEffect, tint);
-        this.batchVert(x2, y2, uC, vC, 0, tintEffect, tint);
-        this.batchVert(x3, y3, uD, vD, 0, tintEffect, tint);
+        this.batchVert(x0, y0, uA, vA, 0, 0xffffff, 0);
+        this.batchVert(x1, y1, uB, vB, 0, 0xffffff, 0);
+        this.batchVert(x2, y2, uC, vC, 0, 0xffffff, 0);
+        this.batchVert(x0, y0, uA, vA, 0, 0xffffff, 0);
+        this.batchVert(x2, y2, uC, vC, 0, 0xffffff, 0);
+        this.batchVert(x3, y3, uD, vD, 0, 0xffffff, 0);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -674,27 +730,7 @@ var SpriteFXPipeline = new Class({
             gl.bindTexture(gl.TEXTURE_2D, null);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
-    },
-
-    /*
-    batchVert: function (x, y)
-    {
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-
-        var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
-
-        vertexViewF32[vertexOffset + 1] = x;
-        vertexViewF32[vertexOffset + 2] = y;
-        // vertexViewF32[++vertexOffset] = u;
-        // vertexViewF32[++vertexOffset] = v;
-        vertexViewF32[vertexOffset] = unit;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tint;
-
-        this.vertexCount++;
     }
-    */
 
 });
 
