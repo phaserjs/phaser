@@ -678,38 +678,45 @@ var SpriteFXPipeline = new Class({
         var yh = y + source.height;
 
         var x0 = matrix.getX(x, y);
-        var y0 = matrix.getY(x, y);
-
         var x1 = matrix.getX(x, yh);
-        var y1 = matrix.getY(x, yh);
-
         var x2 = matrix.getX(xw, yh);
-        var y2 = matrix.getY(xw, yh);
-
         var x3 = matrix.getX(xw, y);
+
+        //  normal verts
+        var y0 = matrix.getY(x, y);
+        var y1 = matrix.getY(x, yh);
+        var y2 = matrix.getY(xw, yh);
         var y3 = matrix.getY(xw, y);
 
-        // default
+        //  flipped verts
+        // var y0 = matrix.getY(x, yh);
+        // var y1 = matrix.getY(x, y);
+        // var y2 = matrix.getY(xw, y);
+        // var y3 = matrix.getY(xw, yh);
 
-        // var uA = 0;
-        // var vA = 0;
-        // var uB = 0;
-        // var vB = 1;
-        // var uC = 1;
-        // var vC = 1;
-        // var uD = 1;
-        // var vD = 0;
-
-        //  flipped y:
+        // default uvs
 
         var uA = 0;
-        var vA = 1;
+        var vA = 0;
         var uB = 0;
-        var vB = 0;
+        var vB = 1;
         var uC = 1;
-        var vC = 0;
+        var vC = 1;
         var uD = 1;
-        var vD = 1;
+        var vD = 0;
+
+        //  normal verts + default uvs = shader correct way up, but texture inverted
+
+        //  flipped uvs
+
+        // var uA = 0;
+        // var vA = 1;
+        // var uB = 0;
+        // var vB = 0;
+        // var uC = 1;
+        // var vC = 0;
+        // var uD = 1;
+        // var vD = 1;
 
         this.batchVert(x0, y0, uA, vA, 0, 0xffffff, 0);
         this.batchVert(x1, y1, uB, vB, 0, 0xffffff, 0);
