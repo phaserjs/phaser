@@ -995,7 +995,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * This method is only used by Post FX Pipelines and those that extend from them.
+     * This method is only used by Sprite FX and Post FX Pipelines and those that extend from them.
      *
      * This method is called every time the `postBatch` method is called and is passed a
      * reference to the current render target.
