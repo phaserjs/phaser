@@ -32,6 +32,7 @@ var SpriteRender = require('./SpriteRender');
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
+ * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
@@ -58,6 +59,7 @@ var Sprite = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.Flip,
+        Components.FX,
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
@@ -99,8 +101,6 @@ var Sprite = new Class({
          * @since 3.0.0
          */
         this.anims = new AnimationState(this);
-
-        this.fxPadding = 0;
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);

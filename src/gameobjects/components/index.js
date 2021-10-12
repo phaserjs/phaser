@@ -17,6 +17,7 @@ module.exports = {
     Crop: require('./Crop'),
     Depth: require('./Depth'),
     Flip: require('./Flip'),
+    FX: require('./FX'),
     GetBounds: require('./GetBounds'),
     Mask: require('./Mask'),
     Origin: require('./Origin'),
