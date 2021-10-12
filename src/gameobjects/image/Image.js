@@ -83,6 +83,8 @@ var Image = new Class({
          */
         this._crop = this.resetCropObject();
 
+        this.fxPadding = 0;
+
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
