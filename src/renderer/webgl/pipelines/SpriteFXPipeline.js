@@ -16,6 +16,7 @@ var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
 var MultiPipeline = require('./MultiPipeline');
 var SnapCeil = require('../../../math/snap/SnapCeil');
+var RenderTarget = require('../RenderTarget');
 
 /**
  * @classdesc
@@ -36,14 +37,7 @@ var SpriteFXPipeline = new Class({
 
     function SpriteFXPipeline (config)
     {
-        var sizes = [ { scale: 1 } ];
-
-        for (var i = 1; i <= 16; i++)
-        {
-            sizes.push({ width: i * 64 });
-        }
-
-        config.renderTarget = GetFastValue(config, 'renderTarget', sizes);
+        config.renderTarget = [ { scale: 1 } ];
 
         config.attributes = GetFastValue(config, 'attributes', [
             {
@@ -175,6 +169,8 @@ var SpriteFXPipeline = new Class({
 
         this.drawToFrame = false;
 
+        this.maxDimension = 0;
+
         this.spriteBounds = new Rectangle();
         this.targetBounds = new Rectangle();
 
@@ -191,12 +187,26 @@ var SpriteFXPipeline = new Class({
         WebGLPipeline.prototype.boot.call(this);
 
         var shaders = this.shaders;
+        var renderer = this.renderer;
         var targets = this.renderTargets;
 
         this.drawSpriteShader = shaders[0];
         this.copyShader = shaders[1];
 
         this.fullFrame1 = targets[0];
+
+        var minDimension = Math.min(renderer.width, renderer.height);
+
+        var qty = Math.ceil(minDimension / 64);
+
+        for (var i = 1; i < qty; i++)
+        {
+            var targetWidth = i * 64;
+
+            targets.push(new RenderTarget(renderer, targetWidth, targetWidth, 1, 0, true));
+        }
+
+        this.maxDimension = (qty - 1) * 64;
 
         //  TODO - Prepare vertex data
     },
@@ -323,22 +333,15 @@ var SpriteFXPipeline = new Class({
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         //  we can now get the bounds offset and apply to the verts
-        var ox = bx - bounds.x;
-        var oy = bounds.y - by;
+        var ox = bounds.x - bx;
+        var oy = by - bounds.y;
 
-        if (oy > 0)
-        {
-            oy = by - bounds.y;
-        }
-
-        console.log(gameObject.scaleY, '=', ox, oy);
-
-        this.batchVert(x0 - ox, y0 - oy, u0, v0, 0, tintEffect, tintTL);
-        this.batchVert(x1 - ox, y1 - oy, u0, v1, 0, tintEffect, tintBL);
-        this.batchVert(x2 - ox, y2 - oy, u1, v1, 0, tintEffect, tintBR);
-        this.batchVert(x0 - ox, y0 - oy, u0, v0, 0, tintEffect, tintTL);
-        this.batchVert(x2 - ox, y2 - oy, u1, v1, 0, tintEffect, tintBR);
-        this.batchVert(x3 - ox, y3 - oy, u1, v0, 0, tintEffect, tintTR);
+        this.batchVert(x0 + ox, y0 + oy, u0, v0, 0, tintEffect, tintTL);
+        this.batchVert(x1 + ox, y1 + oy, u0, v1, 0, tintEffect, tintBL);
+        this.batchVert(x2 + ox, y2 + oy, u1, v1, 0, tintEffect, tintBR);
+        this.batchVert(x0 + ox, y0 + oy, u0, v0, 0, tintEffect, tintTL);
+        this.batchVert(x2 + ox, y2 + oy, u1, v1, 0, tintEffect, tintBR);
+        this.batchVert(x3 + ox, y3 + oy, u1, v0, 0, tintEffect, tintTR);
 
         this.flush();
 
@@ -362,7 +365,7 @@ var SpriteFXPipeline = new Class({
     {
         var targets = this.renderTargets;
 
-        if (size > 1024)
+        if (size > this.maxDimension)
         {
             return targets[0];
         }
