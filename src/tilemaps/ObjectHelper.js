@@ -197,7 +197,7 @@ var ObjectHelper = new Class({
      * @private
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The object for which to populate `data`.
-     * @param {({[key:string]:*}|{name:string, value:*}[])} properties - The properties to set in either JSON object format or else a list of objects with `name` and `value` fields.
+     * @param {(Object.<string, *>|Object[])} properties - The properties to set in either JSON object format or else a list of objects with `name` and `value` fields.
      */
     setFromJSON: function (sprite, properties)
     {
