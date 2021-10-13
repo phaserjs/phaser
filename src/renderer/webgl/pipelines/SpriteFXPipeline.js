@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BlendModes = require('../../BlendModes');
 var CenterOn = require('../../../geom/rectangle/CenterOn');
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
@@ -64,7 +65,7 @@ var SpriteFXPipeline = new Class({
         ]);
 
         var fragShader = GetFastValue(config, 'fragShader', PostFXFS);
-        var vertShader = GetFastValue(config, 'vertShader', QuadVS);
+        var vertShader = GetFastValue(config, 'vertShader', SingleQuadVS);
 
         var defaultShaders = [
             {
@@ -73,9 +74,14 @@ var SpriteFXPipeline = new Class({
                 vertShader: SingleQuadVS
             },
             {
-                name: 'Copy',
+                name: 'CopyFrame',
                 fragShader: fragShader,
                 vertShader: vertShader
+            },
+            {
+                name: 'BindAndDraw',
+                fragShader: fragShader,
+                vertShader: SingleQuadVS
             }
         ];
 
@@ -182,6 +188,15 @@ var SpriteFXPipeline = new Class({
          */
         this.quadVertexViewF32;
 
+        /**
+         * Uint32 view of the array buffer containing the pipeline's vertices.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexViewU32
+         * @type {Uint32Array}
+         * @since 3.0.0
+         */
+        this.quadVertexViewU32;
+
         this.drawToFrame = false;
 
         this.maxDimension = 0;
@@ -253,23 +268,51 @@ var SpriteFXPipeline = new Class({
         this.maxDimension = (qty - 1) * 64;
         this.swapTargetIndex = (qty - 1);
 
-        //  Create our fbo copy vertexData
-        var vertices = [
-            -1, -1, 0, 0,
-            -1, 1, 0, 1,
-            1, 1, 1, 1,
-            -1, -1, 0, 0,
-            1, 1, 1, 1,
-            1, -1, 1, 0
-        ];
-
         var data = new ArrayBuffer(6 * 28);
 
         this.quadVertexData = data;
-        this.quadVertexViewF32 = new Float32Array(data);
 
-        this.quadVertexViewF32.set(vertices);
+        this.quadVertexViewF32 = new Float32Array(data);
+        this.quadVertexViewU32 = new Float32Array(data);
+
+        this.batchQuadVert(0, -1, -1, 0, 0);
+        this.batchQuadVert(1, -1, 1, 0, 1);
+        this.batchQuadVert(2, 1, 1, 1, 1);
+        this.batchQuadVert(3, -1, -1, 0, 0);
+        this.batchQuadVert(4, 1, 1, 1, 1);
+        this.batchQuadVert(5, 1, -1, 1, 0);
+
         this.quadVertexBuffer = renderer.createVertexBuffer(data, this.gl.STATIC_DRAW);
+
+        // this.batchQuadVert(0, x0, y0, u0, v0);
+        // this.batchQuadVert(1, x1, y1, u0, v1);
+        // this.batchQuadVert(2, x2, y2, u1, v1);
+        // this.batchQuadVert(3, x0, y0, u0, v0);
+        // this.batchQuadVert(4, x2, y2, u1, v1);
+        // this.batchQuadVert(5, x3, y3, u1, v0);
+
+        console.log('SpritePipeline');
+        console.log(this.quadVertexData);
+        console.log(this.quadVertexViewF32);
+    },
+
+    //  These are all needed because the attributes exist on the shader, so have to be in the
+    //  vertex buffer too, otherwise nothing renders:
+
+    batchQuadVert: function (i, x, y, u, v)
+    {
+        var vertexViewF32 = this.quadVertexViewF32;
+        var vertexViewU32 = this.quadVertexViewU32;
+
+        var vertexOffset = (i * 7) - 1;
+
+        vertexViewF32[++vertexOffset] = x;
+        vertexViewF32[++vertexOffset] = y;
+        vertexViewF32[++vertexOffset] = u;
+        vertexViewF32[++vertexOffset] = v;
+        vertexViewF32[++vertexOffset] = 0;
+        vertexViewF32[++vertexOffset] = 0;
+        vertexViewU32[++vertexOffset] = 0xffffff;
     },
 
     /**
@@ -333,6 +376,8 @@ var SpriteFXPipeline = new Class({
      */
     batchQuad: function (gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture)
     {
+        this.setShader(this.drawSpriteShader);
+
         if (!this.drawToFrame)
         {
             //  If we're not drawing to the fbo,
@@ -411,6 +456,9 @@ var SpriteFXPipeline = new Class({
         //  results back to the game in the correct position
 
         this.onBatch(gameObject);
+
+        //  Set this here, so we can immediately call the set uniform functions and it'll work on the correct shader
+        this.setShader(this.copyShader, true, this.quadVertexBuffer);
 
         this.onDraw(target, this.getSwapFrame());
 
@@ -492,42 +540,29 @@ var SpriteFXPipeline = new Class({
         }
     },
 
-    onDraw: function (renderTarget, swapTarget)
+    onDraw: function (target)
     {
-        this.bindAndDraw(renderTarget);
+        this.drawToGame(target);
     },
 
-    copyFrame: function (source, target, clear, clearAlpha)
+    copyFrame: function (source, target, clear, clearAlpha, eraseMode)
     {
         if (clear === undefined) { clear = true; }
         if (clearAlpha === undefined) { clearAlpha = true; }
+        if (eraseMode === undefined) { eraseMode = false; }
 
         var gl = this.gl;
 
-        // this.setShader(this.copyShader);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVertexBuffer);
-
-        this.copyShader.bind(true, false);
+        this.setShader(this.copyShader, true, this.quadVertexBuffer);
 
         this.set1i('uMainSampler', 0);
-        this.set2f('uOffset', (1 / 512) * 2, 0);
-
-        //  TODO - swap for BlitFrame method?
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
-        if (target)
-        {
-            gl.viewport(0, 0, target.width, target.height);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
-        }
-        else
-        {
-            gl.viewport(0, 0, source.width, source.height);
-        }
+        gl.viewport(0, 0, target.width, target.height);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
 
         if (clear)
         {
@@ -543,11 +578,102 @@ var SpriteFXPipeline = new Class({
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
+        if (eraseMode)
+        {
+            var blendMode = this.renderer.currentBlendMode;
+
+            this.renderer.setBlendMode(BlendModes.ERASE);
+        }
+
         gl.bufferData(gl.ARRAY_BUFFER, this.quadVertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
+        if (eraseMode)
+        {
+            this.renderer.setBlendMode(blendMode);
+        }
+
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
+
+        this.resetUVs();
+    },
+
+    /**
+     * Set the UV values for the 6 vertices that make up the quad used by the shaders
+     * in the Utility Pipeline.
+     *
+     * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#setUVs
+     * @since 3.50.0
+     *
+     * @param {number} uA - The u value of vertex A.
+     * @param {number} vA - The v value of vertex A.
+     * @param {number} uB - The u value of vertex B.
+     * @param {number} vB - The v value of vertex B.
+     * @param {number} uC - The u value of vertex C.
+     * @param {number} vC - The v value of vertex C.
+     * @param {number} uD - The u value of vertex D.
+     * @param {number} vD - The v value of vertex D.
+     */
+    setUVs: function (uA, vA, uB, vB, uC, vC, uD, vD)
+    {
+        var vertexViewF32 = this.quadVertexViewF32;
+
+        vertexViewF32[2] = uA;
+        vertexViewF32[3] = vA;
+        vertexViewF32[6] = uB;
+        vertexViewF32[7] = vB;
+        vertexViewF32[10] = uC;
+        vertexViewF32[11] = vC;
+        vertexViewF32[14] = uA;
+        vertexViewF32[15] = vA;
+        vertexViewF32[18] = uC;
+        vertexViewF32[19] = vC;
+        vertexViewF32[22] = uD;
+        vertexViewF32[23] = vD;
+    },
+
+    /**
+     * Sets the vertex UV coordinates of the quad used by the shaders in the Utility Pipeline
+     * so that they correctly adjust the texture coordinates for a blit frame effect.
+     *
+     * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#setTargetUVs
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
+     */
+    setTargetUVs: function (source, target)
+    {
+        var diff = (target.height / source.height);
+
+        if (diff > 0.5)
+        {
+            diff = 0.5 - (diff - 0.5);
+        }
+        else
+        {
+            diff = 0.5 + (0.5 - diff);
+        }
+
+        this.setUVs(0, diff, 0, 1 + diff, 1, 1 + diff, 1, diff);
+    },
+
+    /**
+     * Resets the quad vertice UV values to their default settings.
+     *
+     * The quad is used by all shaders of the Utility Pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#resetUVs
+     * @since 3.50.0
+     */
+    resetUVs: function ()
+    {
+        this.setUVs(0, 0, 0, 1, 1, 1, 1, 0);
     },
 
     /**
@@ -561,7 +687,7 @@ var SpriteFXPipeline = new Class({
      * pipeline. By default `currentShader` will be used. If you need to set a shader but not
      * a target, just pass `null` as the `target` parameter.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#bindAndDraw
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#drawToGame
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw from.
@@ -569,7 +695,7 @@ var SpriteFXPipeline = new Class({
      * @param {boolean} [clear=true] - Clear the target before copying? Only used if `target` parameter is set.
      * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
      */
-    bindAndDraw: function (source, target, clear, clearAlpha)
+    drawToGame: function (source, target, clear, clearAlpha)
     {
         if (clear === undefined) { clear = true; }
         if (clearAlpha === undefined) { clearAlpha = true; }
@@ -577,7 +703,9 @@ var SpriteFXPipeline = new Class({
         var gl = this.gl;
         var renderer = this.renderer;
 
-        this.bind(this.copyShader);
+        this.currentShader = null;
+
+        this.setShader(this.copyShader);
 
         this.set1i('uMainSampler', 0);
 
