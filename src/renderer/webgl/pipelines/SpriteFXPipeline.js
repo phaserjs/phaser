@@ -14,7 +14,6 @@ var Rectangle = require('../../../geom/rectangle/Rectangle');
 var RenderTarget = require('../RenderTarget');
 var SingleQuadFS = require('../shaders/Single-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
-var QuadVS = require('../shaders/Quad-vert.js');
 var SnapCeil = require('../../../math/snap/SnapCeil');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var WEBGL_CONST = require('../const');
@@ -77,6 +76,11 @@ var SpriteFXPipeline = new Class({
                 name: 'CopyFrame',
                 fragShader: fragShader,
                 vertShader: vertShader
+            },
+            {
+                name: 'DrawGame',
+                fragShader: PostFXFS,
+                vertShader: SingleQuadVS
             }
         ];
 
@@ -147,6 +151,8 @@ var SpriteFXPipeline = new Class({
          * @since 3.60.0
          */
         this.copyShader;
+
+        this.gameShader;
 
         /**
          * Raw byte buffer of vertices.
@@ -231,6 +237,7 @@ var SpriteFXPipeline = new Class({
 
         this.drawSpriteShader = shaders[0];
         this.copyShader = shaders[1];
+        this.gameShader = shaders[2];
 
         var minDimension = Math.min(renderer.width, renderer.height);
 
@@ -453,9 +460,8 @@ var SpriteFXPipeline = new Class({
         data.tintBR = tintBR;
         data.tintTR = tintTR;
         data.texture = texture;
-        data.target = target;
 
-        this.drawSprite(true);
+        this.drawSprite(target, true);
 
         //  Now we've drawn the sprite to the target (using our pipeline shader)
         //  we can pass it to the pipeline in case they want to do further
@@ -472,13 +478,12 @@ var SpriteFXPipeline = new Class({
         return true;
     },
 
-    drawSprite: function (clear)
+    drawSprite: function (target, clear)
     {
         if (clear === undefined) { clear = false; }
 
         var gl = this.gl;
         var data = this.spriteData;
-        var target = data.target;
 
         this.setShader(this.drawSpriteShader);
 
@@ -486,6 +491,7 @@ var SpriteFXPipeline = new Class({
 
         this.renderer.setTextureZero(data.texture);
 
+        gl.viewport(0, 0, this.renderer.width, this.renderer.height);
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
 
@@ -552,6 +558,7 @@ var SpriteFXPipeline = new Class({
         this.drawToGame(target);
     },
 
+    //  Draws source to target using the copyShader (which you override in your pipeline)
     copyFrame: function (source, target, clear, clearAlpha, eraseMode)
     {
         if (clear === undefined) { clear = true; }
@@ -631,52 +638,32 @@ var SpriteFXPipeline = new Class({
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw from.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The Render Target to draw to. If not set, it will pop the fbo from the stack.
-     * @param {boolean} [clear=true] - Clear the target before copying? Only used if `target` parameter is set.
-     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
      */
-    drawToGame: function (source, target, clear, clearAlpha)
+    drawToGame: function (source, useCopyShader)
     {
-        if (clear === undefined) { clear = true; }
-        if (clearAlpha === undefined) { clearAlpha = true; }
+        if (useCopyShader === undefined) { useCopyShader = true; }
 
         var gl = this.gl;
         var renderer = this.renderer;
 
         this.currentShader = null;
 
-        this.setShader(this.copyShader);
-
-        this.set1i('uMainSampler', 0);
-
-        if (target)
+        if (useCopyShader)
         {
-            gl.viewport(0, 0, target.width, target.height);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
-
-            if (clear)
-            {
-                if (clearAlpha)
-                {
-                    gl.clearColor(0, 0, 0, 0);
-                }
-                else
-                {
-                    gl.clearColor(0, 0, 0, 1);
-                }
-
-                gl.clear(gl.COLOR_BUFFER_BIT);
-            }
+            this.setShader(this.copyShader);
         }
         else
         {
-            renderer.popFramebuffer(false, false, false);
+            this.setShader(this.gameShader);
+        }
 
-            if (!renderer.currentFramebuffer)
-            {
-                gl.viewport(0, 0, renderer.width, renderer.height);
-            }
+        this.set1i('uMainSampler', 0);
+
+        renderer.popFramebuffer(false, false, false);
+
+        if (!renderer.currentFramebuffer)
+        {
+            gl.viewport(0, 0, renderer.width, renderer.height);
         }
 
         gl.activeTexture(gl.TEXTURE0);
@@ -700,24 +687,16 @@ var SpriteFXPipeline = new Class({
         var y2 = matrix.getY(xw, yh);
         var y3 = matrix.getY(xw, y);
 
-        this.batchVert(x0, y0, 0, 0, 0, 0xffffff, 0);
-        this.batchVert(x1, y1, 0, 1, 0, 0xffffff, 0);
-        this.batchVert(x2, y2, 1, 1, 0, 0xffffff, 0);
-        this.batchVert(x0, y0, 0, 0, 0, 0xffffff, 0);
-        this.batchVert(x2, y2, 1, 1, 0, 0xffffff, 0);
-        this.batchVert(x3, y3, 1, 0, 0, 0xffffff, 0);
+        this.batchVert(x0, y0, 0, 0, 0, 0, 0xffffff);
+        this.batchVert(x1, y1, 0, 1, 0, 0, 0xffffff);
+        this.batchVert(x2, y2, 1, 1, 0, 0, 0xffffff);
+        this.batchVert(x0, y0, 0, 0, 0, 0, 0xffffff);
+        this.batchVert(x2, y2, 1, 1, 0, 0, 0xffffff);
+        this.batchVert(x3, y3, 1, 0, 0, 0, 0xffffff);
 
         this.flush();
 
-        if (!target)
-        {
-            renderer.resetTextures();
-        }
-        else
-        {
-            gl.bindTexture(gl.TEXTURE_2D, null);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        }
+        renderer.resetTextures();
     }
 
 });
