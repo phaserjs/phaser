@@ -13,6 +13,7 @@ var Rectangle = require('../../../geom/rectangle/Rectangle');
 var RenderTarget = require('../RenderTarget');
 var SingleQuadFS = require('../shaders/Single-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
+var QuadVS = require('../shaders/Quad-vert.js');
 var SnapCeil = require('../../../math/snap/SnapCeil');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var WEBGL_CONST = require('../const');
@@ -63,7 +64,7 @@ var SpriteFXPipeline = new Class({
         ]);
 
         var fragShader = GetFastValue(config, 'fragShader', PostFXFS);
-        var vertShader = GetFastValue(config, 'vertShader', SingleQuadVS);
+        var vertShader = GetFastValue(config, 'vertShader', QuadVS);
 
         var defaultShaders = [
             {
@@ -146,9 +147,45 @@ var SpriteFXPipeline = new Class({
          */
         this.copyShader;
 
+        /**
+         * Raw byte buffer of vertices.
+         *
+         * Either set via the config object `vertices` property, or generates a new Array Buffer of
+         * size `vertexCapacity * vertexSize`.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexData
+         * @type {ArrayBuffer}
+         * @readonly
+         * @since 3.0.0
+         */
+        this.quadVertexData;
+
+        /**
+          * The WebGLBuffer that holds the vertex data.
+          *
+          * Created from the `vertexData` ArrayBuffer. If `vertices` are set in the config, a `STATIC_DRAW` buffer
+          * is created. If not, a `DYNAMIC_DRAW` buffer is created.
+          *
+          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
+          * @type {WebGLBuffer}
+          * @readonly
+          * @since 3.0.0
+          */
+        this.quadVertexBuffer;
+
+        /**
+         * Float32 view of the array buffer containing the pipeline's vertices.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexViewF32
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
+        this.quadVertexViewF32;
+
         this.drawToFrame = false;
 
         this.maxDimension = 0;
+        this.swapTargetIndex = 0;
 
         this.spriteBounds = new Rectangle();
         this.targetBounds = new Rectangle();
@@ -214,6 +251,25 @@ var SpriteFXPipeline = new Class({
         }
 
         this.maxDimension = (qty - 1) * 64;
+        this.swapTargetIndex = (qty - 1);
+
+        //  Create our fbo copy vertexData
+        var vertices = [
+            -1, -1, 0, 0,
+            -1, 1, 0, 1,
+            1, 1, 1, 1,
+            -1, -1, 0, 0,
+            1, 1, 1, 1,
+            1, -1, 1, 0
+        ];
+
+        var data = new ArrayBuffer(6 * 28);
+
+        this.quadVertexData = data;
+        this.quadVertexViewF32 = new Float32Array(data);
+
+        this.quadVertexViewF32.set(vertices);
+        this.quadVertexBuffer = renderer.createVertexBuffer(data, this.gl.STATIC_DRAW);
     },
 
     /**
@@ -356,7 +412,7 @@ var SpriteFXPipeline = new Class({
 
         this.onBatch(gameObject);
 
-        this.onDraw(target);
+        this.onDraw(target, this.getSwapFrame());
 
         return true;
     },
@@ -432,177 +488,66 @@ var SpriteFXPipeline = new Class({
         }
         else
         {
-            return targets[index + this.maxDimension];
+            return targets[index + this.swapTargetIndex];
         }
     },
 
-    onDraw: function (renderTarget)
+    onDraw: function (renderTarget, swapTarget)
     {
         this.bindAndDraw(renderTarget);
     },
 
-    /**
-     * Copy the `source` Render Target to the `target` Render Target.
-     *
-     * You can optionally set the brightness factor of the copy.
-     *
-     * The difference between this method and `drawFrame` is that this method
-     * uses a faster copy shader, where only the brightness can be modified.
-     * If you need color level manipulation, see `drawFrame` instead.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#copyFrame
-     * @since 3.60.0
-     *
-     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
-     * @param {number} [brightness=1] - The brightness value applied to the frame copy.
-     * @param {boolean} [clear=true] - Clear the target before copying?
-     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
-     */
-    copyFrame: function (source, target, brightness, clear, clearAlpha)
+    copyFrame: function (source, target, clear, clearAlpha)
     {
-        this.manager.copyFrame(source, target, brightness, clear, clearAlpha);
-    },
+        if (clear === undefined) { clear = true; }
+        if (clearAlpha === undefined) { clearAlpha = true; }
 
-    /**
-     * Pops the framebuffer from the renderers FBO stack and sets that as the active target,
-     * then draws the `source` Render Target to it. It then resets the renderer textures.
-     *
-     * This should be done when you need to draw the _final_ results of a pipeline to the game
-     * canvas, or the next framebuffer in line on the FBO stack. You should only call this once
-     * in the `onDraw` handler and it should be the final thing called. Be careful not to call
-     * this if you need to actually use the pipeline shader, instead of the copy shader. In
-     * those cases, use the `bindAndDraw` method.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#copyToGame
-     * @since 3.60.0
-     *
-     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw from.
-     */
-    copyToGame: function (source)
-    {
-        this.manager.copyToGame(source);
-    },
+        var gl = this.gl;
 
-    /**
-     * Copy the `source` Render Target to the `target` Render Target, using the
-     * given Color Matrix.
-     *
-     * The difference between this method and `copyFrame` is that this method
-     * uses a color matrix shader, where you have full control over the luminance
-     * values used during the copy. If you don't need this, you can use the faster
-     * `copyFrame` method instead.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#drawFrame
-     * @since 3.60.0
-     *
-     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
-     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
-     */
-    drawFrame: function (source, target, clearAlpha)
-    {
-        this.manager.drawFrame(source, target, clearAlpha, this.colorMatrix);
-    },
+        // this.setShader(this.copyShader);
 
-    /**
-     * Draws the `source1` and `source2` Render Targets to the `target` Render Target
-     * using a linear blend effect, which is controlled by the `strength` parameter.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#blendFrames
-     * @since 3.60.0
-     *
-     * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
-     * @param {number} [strength=1] - The strength of the blend.
-     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
-     */
-    blendFrames: function (source1, source2, target, strength, clearAlpha)
-    {
-        this.manager.blendFrames(source1, source2, target, strength, clearAlpha);
-    },
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVertexBuffer);
 
-    /**
-     * Draws the `source1` and `source2` Render Targets to the `target` Render Target
-     * using an additive blend effect, which is controlled by the `strength` parameter.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#blendFramesAdditive
-     * @since 3.60.0
-     *
-     * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
-     * @param {number} [strength=1] - The strength of the blend.
-     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
-     */
-    blendFramesAdditive: function (source1, source2, target, strength, clearAlpha)
-    {
-        this.manager.blendFramesAdditive(source1, source2, target, strength, clearAlpha);
-    },
+        this.copyShader.bind(true, false);
 
-    /**
-     * Clears the given Render Target.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#clearFrame
-     * @since 3.60.0
-     *
-     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to clear.
-     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
-     */
-    clearFrame: function (target, clearAlpha)
-    {
-        this.manager.clearFrame(target, clearAlpha);
-    },
+        this.set1i('uMainSampler', 0);
+        this.set2f('uOffset', (1 / 512) * 2, 0);
 
-    /**
-     * Copy the `source` Render Target to the `target` Render Target.
-     *
-     * The difference with this copy is that no resizing takes place. If the `source`
-     * Render Target is larger than the `target` then only a portion the same size as
-     * the `target` dimensions is copied across.
-     *
-     * You can optionally set the brightness factor of the copy.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#blitFrame
-     * @since 3.60.0
-     *
-     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
-     * @param {number} [brightness=1] - The brightness value applied to the frame copy.
-     * @param {boolean} [clear=true] - Clear the target before copying?
-     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
-     * @param {boolean} [eraseMode=false] - Erase source from target using ERASE Blend Mode?
-     */
-    blitFrame: function (source, target, brightness, clear, clearAlpha, eraseMode)
-    {
-        this.manager.blitFrame(source, target, brightness, clear, clearAlpha, eraseMode);
-    },
+        //  TODO - swap for BlitFrame method?
 
-    /**
-     * Binds the `source` Render Target and then copies a section of it to the `target` Render Target.
-     *
-     * This method is extremely fast because it uses `gl.copyTexSubImage2D` and doesn't
-     * require the use of any shaders. Remember the coordinates are given in standard WebGL format,
-     * where x and y specify the lower-left corner of the section, not the top-left. Also, the
-     * copy entirely replaces the contents of the target texture, no 'merging' or 'blending' takes
-     * place.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#copyFrameRect
-     * @since 3.60.0
-     *
-     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
-     * @param {number} x - The x coordinate of the lower left corner where to start copying.
-     * @param {number} y - The y coordinate of the lower left corner where to start copying.
-     * @param {number} width - The width of the texture.
-     * @param {number} height - The height of the texture.
-     * @param {boolean} [clear=true] - Clear the target before copying?
-     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
-     */
-    copyFrameRect: function (source, target, x, y, width, height, clear, clearAlpha)
-    {
-        this.manager.copyFrameRect(source, target, x, y, width, height, clear, clearAlpha);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+
+        if (target)
+        {
+            gl.viewport(0, 0, target.width, target.height);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+        }
+        else
+        {
+            gl.viewport(0, 0, source.width, source.height);
+        }
+
+        if (clear)
+        {
+            if (clearAlpha)
+            {
+                gl.clearColor(0, 0, 0, 0);
+            }
+            else
+            {
+                gl.clearColor(0, 0, 0, 1);
+            }
+
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
+
+        gl.bufferData(gl.ARRAY_BUFFER, this.quadVertexData, gl.STATIC_DRAW);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
     },
 
     /**
@@ -694,8 +639,7 @@ var SpriteFXPipeline = new Class({
         this.batchVert(x2, y2, 1, 1, 0, 0xffffff, 0);
         this.batchVert(x3, y3, 1, 0, 0, 0xffffff, 0);
 
-        gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        this.flush();
 
         if (!target)
         {
