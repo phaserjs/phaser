@@ -481,6 +481,8 @@ var WebGLPipeline = new Class({
 
         this.vertexCapacity = batchSize * 6;
 
+        console.log(vertexSize);
+
         var data = new ArrayBuffer(this.vertexCapacity * vertexSize);
 
         this.vertexData = data;
@@ -558,10 +560,11 @@ var WebGLPipeline = new Class({
      *
      * @param {Phaser.Renderer.WebGL.WebGLShader} shader - The shader to set as being current.
      * @param {boolean} [setAttributes=false] - Should the vertex attribute pointers be set?
+     * @param {WebGLBuffer} [vertexBuffer] - The vertex buffer to be set before the shader is bound. Defaults to the one owned by this pipeline.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    setShader: function (shader, setAttributes)
+    setShader: function (shader, setAttributes, vertexBuffer)
     {
         var renderer = this.renderer;
 
@@ -571,7 +574,7 @@ var WebGLPipeline = new Class({
 
             renderer.resetTextures();
 
-            var wasBound = this.setVertexBuffer();
+            var wasBound = this.setVertexBuffer(vertexBuffer);
 
             if (wasBound && !setAttributes)
             {
@@ -928,12 +931,15 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setVertexBuffer
      * @since 3.50.0
      *
+     * @param {WebGLBuffer} [buffer] - The Vertex Buffer to be bound. Defaults to the one owned by this pipeline.
+     *
      * @return {boolean} `true` if the vertex buffer was bound, or `false` if it was already bound.
      */
-    setVertexBuffer: function ()
+    setVertexBuffer: function (buffer)
     {
+        if (buffer === undefined) { buffer = this.vertexBuffer; }
+
         var gl = this.gl;
-        var buffer = this.vertexBuffer;
 
         if (gl.getParameter(gl.ARRAY_BUFFER_BINDING) !== buffer)
         {
