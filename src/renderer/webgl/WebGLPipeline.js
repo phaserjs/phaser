@@ -481,8 +481,6 @@ var WebGLPipeline = new Class({
 
         this.vertexCapacity = batchSize * 6;
 
-        console.log(vertexSize);
-
         var data = new ArrayBuffer(this.vertexCapacity * vertexSize);
 
         this.vertexData = data;
