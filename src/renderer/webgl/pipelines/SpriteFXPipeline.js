@@ -77,11 +77,6 @@ var SpriteFXPipeline = new Class({
                 name: 'CopyFrame',
                 fragShader: fragShader,
                 vertShader: vertShader
-            },
-            {
-                name: 'BindAndDraw',
-                fragShader: fragShader,
-                vertShader: SingleQuadVS
             }
         ];
 
@@ -188,15 +183,6 @@ var SpriteFXPipeline = new Class({
          */
         this.quadVertexViewF32;
 
-        /**
-         * Uint32 view of the array buffer containing the pipeline's vertices.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexViewU32
-         * @type {Uint32Array}
-         * @since 3.0.0
-         */
-        this.quadVertexViewU32;
-
         this.drawToFrame = false;
 
         this.maxDimension = 0;
@@ -273,31 +259,51 @@ var SpriteFXPipeline = new Class({
         this.quadVertexData = data;
 
         this.quadVertexViewF32 = new Float32Array(data);
-        this.quadVertexViewU32 = new Float32Array(data);
 
-        this.batchQuadVert(0, -1, -1, 0, 0);
-        this.batchQuadVert(1, -1, 1, 0, 1);
-        this.batchQuadVert(2, 1, 1, 1, 1);
-        this.batchQuadVert(3, -1, -1, 0, 0);
-        this.batchQuadVert(4, 1, 1, 1, 1);
-        this.batchQuadVert(5, 1, -1, 1, 0);
+        this.onResize(renderer.width, renderer.height);
 
         this.quadVertexBuffer = renderer.createVertexBuffer(data, this.gl.STATIC_DRAW);
-
-        // this.batchQuadVert(0, x0, y0, u0, v0);
-        // this.batchQuadVert(1, x1, y1, u0, v1);
-        // this.batchQuadVert(2, x2, y2, u1, v1);
-        // this.batchQuadVert(3, x0, y0, u0, v0);
-        // this.batchQuadVert(4, x2, y2, u1, v1);
-        // this.batchQuadVert(5, x3, y3, u1, v0);
-
-        console.log('SpritePipeline');
-        console.log(this.quadVertexData);
-        console.log(this.quadVertexViewF32);
     },
 
-    //  These are all needed because the attributes exist on the shader, so have to be in the
-    //  vertex buffer too, otherwise nothing renders:
+    onResize: function (width, height)
+    {
+        var vertexViewF32 = this.quadVertexViewF32;
+
+        vertexViewF32[8] = height;
+        vertexViewF32[14] = width;
+        vertexViewF32[15] = height;
+        vertexViewF32[28] = width;
+        vertexViewF32[29] = height;
+        vertexViewF32[35] = width;
+
+        vertexViewF32[10] = 1;
+        vertexViewF32[16] = 1;
+        vertexViewF32[17] = 1;
+        vertexViewF32[30] = 1;
+        vertexViewF32[31] = 1;
+        vertexViewF32[37] = 1;
+    },
+
+    /*
+    var x0 = 0;
+    var y0 = 0;
+    var x1 = 0;
+    var y1 = height;
+    var x2 = width;
+    var y2 = height;
+    var x3 = width;
+    var y3 = 0;
+    var u0 = 0;
+    var v0 = 0;
+    var u1 = 1;
+    var v1 = 1;
+
+    this.batchQuadVert(0, x0, y0, u0, v0); // 0 - 6
+    this.batchQuadVert(1, x1, y1, u0, v1); // 7 - 13
+    this.batchQuadVert(2, x2, y2, u1, v1); // 14 - 20
+    this.batchQuadVert(3, x0, y0, u0, v0); // 21 - 27
+    this.batchQuadVert(4, x2, y2, u1, v1); // 28 - 34
+    this.batchQuadVert(5, x3, y3, u1, v0); // 35 - 41
 
     batchQuadVert: function (i, x, y, u, v)
     {
@@ -314,6 +320,7 @@ var SpriteFXPipeline = new Class({
         vertexViewF32[++vertexOffset] = 0;
         vertexViewU32[++vertexOffset] = 0xffffff;
     },
+    */
 
     /**
      * Takes a Sprite Game Object, or any object that extends it, and renders it via this pipeline.
@@ -560,7 +567,19 @@ var SpriteFXPipeline = new Class({
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
-        gl.viewport(0, 0, target.width, target.height);
+        if (source.height > target.height)
+        {
+            gl.viewport(0, 0, source.width, source.height);
+
+            this.setTargetUVs(source, target);
+        }
+        else
+        {
+            var diff = target.height - source.height;
+
+            gl.viewport(0, diff, source.width, source.height);
+        }
+
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
 
@@ -595,85 +614,6 @@ var SpriteFXPipeline = new Class({
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
-
-        this.resetUVs();
-    },
-
-    /**
-     * Set the UV values for the 6 vertices that make up the quad used by the shaders
-     * in the Utility Pipeline.
-     *
-     * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#setUVs
-     * @since 3.50.0
-     *
-     * @param {number} uA - The u value of vertex A.
-     * @param {number} vA - The v value of vertex A.
-     * @param {number} uB - The u value of vertex B.
-     * @param {number} vB - The v value of vertex B.
-     * @param {number} uC - The u value of vertex C.
-     * @param {number} vC - The v value of vertex C.
-     * @param {number} uD - The u value of vertex D.
-     * @param {number} vD - The v value of vertex D.
-     */
-    setUVs: function (uA, vA, uB, vB, uC, vC, uD, vD)
-    {
-        var vertexViewF32 = this.quadVertexViewF32;
-
-        vertexViewF32[2] = uA;
-        vertexViewF32[3] = vA;
-        vertexViewF32[6] = uB;
-        vertexViewF32[7] = vB;
-        vertexViewF32[10] = uC;
-        vertexViewF32[11] = vC;
-        vertexViewF32[14] = uA;
-        vertexViewF32[15] = vA;
-        vertexViewF32[18] = uC;
-        vertexViewF32[19] = vC;
-        vertexViewF32[22] = uD;
-        vertexViewF32[23] = vD;
-    },
-
-    /**
-     * Sets the vertex UV coordinates of the quad used by the shaders in the Utility Pipeline
-     * so that they correctly adjust the texture coordinates for a blit frame effect.
-     *
-     * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#setTargetUVs
-     * @since 3.50.0
-     *
-     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
-     */
-    setTargetUVs: function (source, target)
-    {
-        var diff = (target.height / source.height);
-
-        if (diff > 0.5)
-        {
-            diff = 0.5 - (diff - 0.5);
-        }
-        else
-        {
-            diff = 0.5 + (0.5 - diff);
-        }
-
-        this.setUVs(0, diff, 0, 1 + diff, 1, 1 + diff, 1, diff);
-    },
-
-    /**
-     * Resets the quad vertice UV values to their default settings.
-     *
-     * The quad is used by all shaders of the Utility Pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.UtilityPipeline#resetUVs
-     * @since 3.50.0
-     */
-    resetUVs: function ()
-    {
-        this.setUVs(0, 0, 0, 1, 1, 1, 1, 0);
     },
 
     /**
