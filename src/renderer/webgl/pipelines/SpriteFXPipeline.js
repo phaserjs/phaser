@@ -646,15 +646,27 @@ var SpriteFXPipeline = new Class({
         var gl = this.gl;
         var renderer = this.renderer;
 
-        this.currentShader = null;
+        // this.currentShader = null;
+
+        renderer.resetTextures();
+
+        this.setVertexBuffer(this.vertexBuffer);
 
         if (useCopyShader)
         {
-            this.setShader(this.copyShader);
+            this.copyShader.bind(true, false);
+
+            this.currentShader = this.copyShader;
+
+            // this.setShader(this.copyShader);
         }
         else
         {
-            this.setShader(this.gameShader);
+            this.gameShader.bind(true, false);
+
+            this.currentShader = this.gameShader;
+
+            // this.setShader(this.gameShader);
         }
 
         this.set1i('uMainSampler', 0);
