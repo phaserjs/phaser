@@ -277,13 +277,26 @@ var SpriteFXPipeline = new Class({
     {
         var vertexViewF32 = this.quadVertexViewF32;
 
-        vertexViewF32[8] = height;
-        vertexViewF32[14] = width;
-        vertexViewF32[15] = height;
-        vertexViewF32[28] = width;
-        vertexViewF32[29] = height;
-        vertexViewF32[35] = width;
+        //  vertexBuffer indexes:
 
+        //  Each vert: [ x, y, u, v, unit, mode, tint ]
+
+        //  0 - 6     - vert 1 - x0/y0
+        //  7 - 13    - vert 2 - x1/y1
+        //  14 - 20   - vert 3 - x2/y2
+        //  21 - 27   - vert 4 - x0/y0
+        //  28 - 34   - vert 5 - x2/y2
+        //  35 - 41   - vert 6 - x3/y3
+
+        //  Verts
+        vertexViewF32[1] = height; // y0
+        vertexViewF32[22] = height; // y0
+        vertexViewF32[14] = width; // x2
+        vertexViewF32[28] = width; // x2
+        vertexViewF32[35] = width; // x3
+        vertexViewF32[36] = height; // y3
+
+        //  UVs
         vertexViewF32[10] = 1;
         vertexViewF32[16] = 1;
         vertexViewF32[17] = 1;
@@ -434,6 +447,8 @@ var SpriteFXPipeline = new Class({
         //  Set this here, so we can immediately call the set uniform functions and it'll work on the correct shader
         this.currentShader = this.copyShader;
 
+        gameObject.onFX(this);
+
         this.onDraw(target, this.getSwapFrame());
 
         return true;
@@ -481,6 +496,7 @@ var SpriteFXPipeline = new Class({
         this.flush();
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
 
         this.renderer.clearTextureZero();
     },
@@ -599,7 +615,6 @@ var SpriteFXPipeline = new Class({
         }
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
     },
 
     /**
@@ -675,8 +690,7 @@ var SpriteFXPipeline = new Class({
 
         this.flush();
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        renderer.resetTextures();
     }
 
 });
