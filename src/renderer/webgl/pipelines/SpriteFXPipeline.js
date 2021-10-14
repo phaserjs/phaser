@@ -439,11 +439,14 @@ var SpriteFXPipeline = new Class({
         return true;
     },
 
+    // eslint-disable-next-line no-unused-vars
+    onPreDrawSprite: function (target)
+    {
+    },
+
     drawSprite: function (target, clear)
     {
         if (clear === undefined) { clear = false; }
-
-        // window.spector.setMarker('drawSprite');
 
         var gl = this.gl;
         var data = this.spriteData;
@@ -451,6 +454,8 @@ var SpriteFXPipeline = new Class({
         this.setShader(this.drawSpriteShader);
 
         this.set1i('uMainSampler', 0);
+
+        this.onPreDrawSprite(target);
 
         this.renderer.setTextureZero(data.texture);
 
@@ -478,8 +483,6 @@ var SpriteFXPipeline = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         this.renderer.clearTextureZero();
-
-        // window.spector.clearMarker();
     },
 
     getFrameFromSize: function (size)
@@ -523,14 +526,17 @@ var SpriteFXPipeline = new Class({
         this.drawToGame(target);
     },
 
+    // eslint-disable-next-line no-unused-vars
+    onPreCopy: function (source, target)
+    {
+    },
+
     //  Draws source to target using the copyShader (which you override in your pipeline)
     copyFrame: function (source, target, clear, clearAlpha, eraseMode)
     {
         if (clear === undefined) { clear = true; }
         if (clearAlpha === undefined) { clearAlpha = true; }
         if (eraseMode === undefined) { eraseMode = false; }
-
-        // window.spector.setMarker('CF' + this.copies);
 
         var gl = this.gl;
 
@@ -540,14 +546,9 @@ var SpriteFXPipeline = new Class({
 
         this.copyShader.bind(wasBound, false);
 
-        //  Need to invoke a callback that sets uniforms?
-
-        this.onPreRender();
-
         this.set1i('uMainSampler', 0);
 
-        // this.set1f('uStrength', 1);
-        // this.set3fv('uColor', [ 1, 1, 1 ]);
+        this.onPreCopy(source, target);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
@@ -599,8 +600,6 @@ var SpriteFXPipeline = new Class({
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
-
-        // window.spector.clearMarker();
     },
 
     /**
@@ -625,8 +624,6 @@ var SpriteFXPipeline = new Class({
 
         var gl = this.gl;
         var renderer = this.renderer;
-
-        // window.spector.setMarker('ToGame');
 
         this.currentShader = null;
 
@@ -680,8 +677,6 @@ var SpriteFXPipeline = new Class({
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
-
-        // window.spector.clearMarker();
     }
 
 });
