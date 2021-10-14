@@ -65,6 +65,7 @@ var SpriteFXPipeline = new Class({
 
         var fragShader = GetFastValue(config, 'fragShader', PostFXFS);
         var vertShader = GetFastValue(config, 'vertShader', SingleQuadVS);
+        var drawShader = GetFastValue(config, 'drawShader', PostFXFS);
 
         var defaultShaders = [
             {
@@ -79,7 +80,7 @@ var SpriteFXPipeline = new Class({
             },
             {
                 name: 'DrawGame',
-                fragShader: PostFXFS,
+                fragShader: drawShader,
                 vertShader: SingleQuadVS
             }
         ];
@@ -267,9 +268,9 @@ var SpriteFXPipeline = new Class({
 
         this.quadVertexViewF32 = new Float32Array(data);
 
-        this.onResize(renderer.width, renderer.height);
-
         this.quadVertexBuffer = renderer.createVertexBuffer(data, this.gl.STATIC_DRAW);
+
+        this.onResize(renderer.width, renderer.height);
     },
 
     onResize: function (width, height)
@@ -290,44 +291,6 @@ var SpriteFXPipeline = new Class({
         vertexViewF32[31] = 1;
         vertexViewF32[37] = 1;
     },
-
-    /*
-    var x0 = 0;
-    var y0 = 0;
-    var x1 = 0;
-    var y1 = height;
-    var x2 = width;
-    var y2 = height;
-    var x3 = width;
-    var y3 = 0;
-    var u0 = 0;
-    var v0 = 0;
-    var u1 = 1;
-    var v1 = 1;
-
-    this.batchQuadVert(0, x0, y0, u0, v0); // 0 - 6
-    this.batchQuadVert(1, x1, y1, u0, v1); // 7 - 13
-    this.batchQuadVert(2, x2, y2, u1, v1); // 14 - 20
-    this.batchQuadVert(3, x0, y0, u0, v0); // 21 - 27
-    this.batchQuadVert(4, x2, y2, u1, v1); // 28 - 34
-    this.batchQuadVert(5, x3, y3, u1, v0); // 35 - 41
-
-    batchQuadVert: function (i, x, y, u, v)
-    {
-        var vertexViewF32 = this.quadVertexViewF32;
-        var vertexViewU32 = this.quadVertexViewU32;
-
-        var vertexOffset = (i * 7) - 1;
-
-        vertexViewF32[++vertexOffset] = x;
-        vertexViewF32[++vertexOffset] = y;
-        vertexViewF32[++vertexOffset] = u;
-        vertexViewF32[++vertexOffset] = v;
-        vertexViewF32[++vertexOffset] = 0;
-        vertexViewF32[++vertexOffset] = 0;
-        vertexViewU32[++vertexOffset] = 0xffffff;
-    },
-    */
 
     /**
      * Takes a Sprite Game Object, or any object that extends it, and renders it via this pipeline.
@@ -390,8 +353,6 @@ var SpriteFXPipeline = new Class({
      */
     batchQuad: function (gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture)
     {
-        this.setShader(this.drawSpriteShader);
-
         if (!this.drawToFrame)
         {
             //  If we're not drawing to the fbo,
@@ -471,7 +432,7 @@ var SpriteFXPipeline = new Class({
         this.onBatch(gameObject);
 
         //  Set this here, so we can immediately call the set uniform functions and it'll work on the correct shader
-        this.setShader(this.copyShader, true, this.quadVertexBuffer);
+        this.currentShader = this.copyShader;
 
         this.onDraw(target, this.getSwapFrame());
 
@@ -481,6 +442,8 @@ var SpriteFXPipeline = new Class({
     drawSprite: function (target, clear)
     {
         if (clear === undefined) { clear = false; }
+
+        // window.spector.setMarker('drawSprite');
 
         var gl = this.gl;
         var data = this.spriteData;
@@ -515,6 +478,8 @@ var SpriteFXPipeline = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         this.renderer.clearTextureZero();
+
+        // window.spector.clearMarker();
     },
 
     getFrameFromSize: function (size)
@@ -565,11 +530,24 @@ var SpriteFXPipeline = new Class({
         if (clearAlpha === undefined) { clearAlpha = true; }
         if (eraseMode === undefined) { eraseMode = false; }
 
+        // window.spector.setMarker('CF' + this.copies);
+
         var gl = this.gl;
 
-        this.setShader(this.copyShader, true, this.quadVertexBuffer);
+        this.currentShader = this.copyShader;
+
+        var wasBound = this.setVertexBuffer(this.quadVertexBuffer);
+
+        this.copyShader.bind(wasBound, false);
+
+        //  Need to invoke a callback that sets uniforms?
+
+        this.onPreRender();
 
         this.set1i('uMainSampler', 0);
+
+        // this.set1f('uStrength', 1);
+        // this.set3fv('uColor', [ 1, 1, 1 ]);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
@@ -621,6 +599,8 @@ var SpriteFXPipeline = new Class({
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
+
+        // window.spector.clearMarker();
     },
 
     /**
@@ -646,27 +626,17 @@ var SpriteFXPipeline = new Class({
         var gl = this.gl;
         var renderer = this.renderer;
 
-        // this.currentShader = null;
+        // window.spector.setMarker('ToGame');
 
-        renderer.resetTextures();
-
-        this.setVertexBuffer(this.vertexBuffer);
+        this.currentShader = null;
 
         if (useCopyShader)
         {
-            this.copyShader.bind(true, false);
-
-            this.currentShader = this.copyShader;
-
-            // this.setShader(this.copyShader);
+            this.setShader(this.copyShader);
         }
         else
         {
-            this.gameShader.bind(true, false);
-
-            this.currentShader = this.gameShader;
-
-            // this.setShader(this.gameShader);
+            this.setShader(this.gameShader);
         }
 
         this.set1i('uMainSampler', 0);
@@ -708,7 +678,10 @@ var SpriteFXPipeline = new Class({
 
         this.flush();
 
-        renderer.resetTextures();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+
+        // window.spector.clearMarker();
     }
 
 });
