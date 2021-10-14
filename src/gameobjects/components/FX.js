@@ -55,6 +55,11 @@ var FX = {
         this.fxPadding = padding;
 
         return this;
+    },
+
+    // eslint-disable-next-line no-unused-vars
+    onFX: function (pipeline)
+    {
     }
 
 };
