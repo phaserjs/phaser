@@ -1981,11 +1981,14 @@ var WebGLRenderer = new Class({
      * @param {number} width - The width of the texture.
      * @param {number} height - The height of the texture.
      * @param {number} scaleMode - The scale mode to be used by the texture.
+     * @param {boolean} [forceClamp=false] - Force the texture to use the CLAMP_TO_EDGE wrap mode, even if a power of two?
      *
      * @return {?WebGLTexture} The WebGL Texture that was created, or `null` if it couldn't be created.
      */
-    createTextureFromSource: function (source, width, height, scaleMode)
+    createTextureFromSource: function (source, width, height, scaleMode, forceClamp)
     {
+        if (forceClamp === undefined) { forceClamp = false; }
+
         var gl = this.gl;
         var minFilter = gl.NEAREST;
         var magFilter = gl.NEAREST;
@@ -1997,7 +2000,7 @@ var WebGLRenderer = new Class({
 
         var pow = IsSizePowerOfTwo(width, height);
 
-        if (pow)
+        if (pow && !forceClamp)
         {
             wrap = gl.REPEAT;
         }
