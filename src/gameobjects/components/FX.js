@@ -57,8 +57,37 @@ var FX = {
         return this;
     },
 
-    // eslint-disable-next-line no-unused-vars
-    onFX: function (pipeline)
+    /**
+     * This callback is invoked when this Game Object is copied by a SpriteFX Pipeline.
+     *
+     * This happens when the pipeline uses its `copySprite` method.
+     *
+     * It's invoked prior to the copy, allowing you to set shader uniforms, etc on the pipeline.
+     *
+     * @method Phaser.GameObjects.Components.FX#onFXCopy
+     * @webglOnly
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline} pipeline - The SpriteFX Pipeline that invoked this callback.
+     */
+    onFXCopy: function ()
+    {
+    },
+
+    /**
+     * This callback is invoked when this Game Object is rendered by a SpriteFX Pipeline.
+     *
+     * This happens when the pipeline uses its `drawSprite` method.
+     *
+     * It's invoked prior to the draw, allowing you to set shader uniforms, etc on the pipeline.
+     *
+     * @method Phaser.GameObjects.Components.FX#onFX
+     * @webglOnly
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline} pipeline - The SpriteFX Pipeline that invoked this callback.
+     */
+    onFX: function ()
     {
     }
 
