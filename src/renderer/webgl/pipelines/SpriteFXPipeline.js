@@ -21,6 +21,7 @@ var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
+ * TODO
  *
  * @class SpriteFXPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -38,8 +39,6 @@ var SpriteFXPipeline = new Class({
 
     function SpriteFXPipeline (config)
     {
-        config.renderTarget = [ { scale: 1 }, { scale: 1 } ];
-
         config.attributes = GetFastValue(config, 'attributes', [
             {
                 name: 'inPosition',
@@ -74,7 +73,7 @@ var SpriteFXPipeline = new Class({
                 vertShader: SingleQuadVS
             },
             {
-                name: 'CopyFrame',
+                name: 'CopySprite',
                 fragShader: fragShader,
                 vertShader: vertShader
             },
@@ -142,7 +141,7 @@ var SpriteFXPipeline = new Class({
         /**
          * A reference to the Copy Shader belonging to this Pipeline.
          *
-         * This shader draws the fbo to the game.
+         * This shader is used when you call the `copySprite` method.
          *
          * This property is set during the `boot` method.
          *
@@ -153,52 +152,113 @@ var SpriteFXPipeline = new Class({
          */
         this.copyShader;
 
+        /**
+         * A reference to the Game Draw Shader belonging to this Pipeline.
+         *
+         * This shader draws the fbo to the game.
+         *
+         * This property is set during the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#gameShader
+         * @type {Phaser.Renderer.WebGL.WebGLShader}
+         * @default null
+         * @since 3.60.0
+         */
         this.gameShader;
 
         /**
-         * Raw byte buffer of vertices.
+         * Raw byte buffer of vertices used specifically during the copySprite method.
          *
-         * Either set via the config object `vertices` property, or generates a new Array Buffer of
-         * size `vertexCapacity * vertexSize`.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexData
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#quadVertexData
          * @type {ArrayBuffer}
          * @readonly
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.quadVertexData;
 
         /**
-          * The WebGLBuffer that holds the vertex data.
-          *
-          * Created from the `vertexData` ArrayBuffer. If `vertices` are set in the config, a `STATIC_DRAW` buffer
-          * is created. If not, a `DYNAMIC_DRAW` buffer is created.
-          *
-          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
-          * @type {WebGLBuffer}
-          * @readonly
-          * @since 3.0.0
-          */
+         * The WebGLBuffer that holds the quadVertexData.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#quadVertexBuffer
+         * @type {WebGLBuffer}
+         * @readonly
+         * @since 3.60.0
+         */
         this.quadVertexBuffer;
 
         /**
-         * Float32 view of the array buffer containing the pipeline's vertices.
+         * Float32 view of the quad array buffer.
          *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexViewF32
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#quadVertexViewF32
          * @type {Float32Array}
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.quadVertexViewF32;
 
-        this.drawToFrame = false;
+        /**
+         * Will this Sprite FX Pipeline draw the sprite to a framebuffer, for further processing,
+         * or directly to the game canvas?
+         *
+         * Set this property to 'true' if you wish to use features like 'copySprite'.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#drawToFrame
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.drawToFrame = GetFastValue(config, 'drawToFrame', false);
 
+        /**
+         * The largest render target dimension before we just use a full-screen target.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#maxDimension
+         * @type {number}
+         * @private
+         * @since 3.60.0
+         */
         this.maxDimension = 0;
-        this.swapTargetIndex = 0;
 
+        /**
+         * The amount in which each target frame will increase.
+         *
+         * Defaults to 64px but can be overridden in the config.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#frameInc
+         * @type {number}
+         * @private
+         * @since 3.60.0
+         */
+        this.frameInc = Math.floor(GetFastValue(config, 'frameInc', 64));
+
+        /**
+         * A temporary Rectangle object re-used internally during sprite drawing.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#spriteBounds
+         * @type {Phaser.Geom.Rectangle}
+         * @private
+         * @since 3.60.0
+         */
         this.spriteBounds = new Rectangle();
+
+        /**
+         * A temporary Rectangle object re-used internally during sprite drawing.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#targetBounds
+         * @type {Phaser.Geom.Rectangle}
+         * @private
+         * @since 3.60.0
+         */
         this.targetBounds = new Rectangle();
 
+        /**
+         * Transient sprite data, used for pipelines that require multiple calls to 'drawSprite'.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#spriteData
+         * @type {object}
+         * @private
+         * @since 3.60.0
+         */
         this.spriteData = {
+            sprite: null,
             x0: 0,
             y0: 0,
             x1: 0,
@@ -242,27 +302,26 @@ var SpriteFXPipeline = new Class({
 
         var minDimension = Math.min(renderer.width, renderer.height);
 
-        var qty = Math.ceil(minDimension / 64);
+        var qty = Math.ceil(minDimension / this.frameInc);
 
         for (var i = 1; i < qty; i++)
         {
-            var targetWidth = i * 64;
+            var targetWidth = i * this.frameInc;
 
-            targets.push(new RenderTarget(renderer, targetWidth, targetWidth, 1, 0, true));
+            targets.push(new RenderTarget(renderer, targetWidth, targetWidth));
+
+            //  Duplicate RT for swap frame
+            targets.push(new RenderTarget(renderer, targetWidth, targetWidth));
         }
 
-        //  Duplicate set of RTs for swap frames
-        for (i = 1; i < qty; i++)
-        {
-            targetWidth = i * 64;
+        //  2 full-screen RTs
+        targets.push(new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, true, true));
+        targets.push(new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, true, true));
 
-            targets.push(new RenderTarget(renderer, targetWidth, targetWidth, 1, 0, true));
-        }
+        this.maxDimension = (qty - 1) * this.frameInc;
 
-        this.maxDimension = (qty - 1) * 64;
-        this.swapTargetIndex = (qty - 1);
-
-        var data = new ArrayBuffer(6 * 28);
+        // 6 verts * 28 bytes
+        var data = new ArrayBuffer(168);
 
         this.quadVertexData = data;
 
@@ -271,8 +330,20 @@ var SpriteFXPipeline = new Class({
         this.quadVertexBuffer = renderer.createVertexBuffer(data, this.gl.STATIC_DRAW);
 
         this.onResize(renderer.width, renderer.height);
+
+        //  So calls to set uniforms in onPreRender target the right shader:
+        this.currentShader = this.copyShader;
     },
 
+    /**
+     * Handles the resizing of the quad vertex data.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#onResize
+     * @since 3.60.0
+     *
+     * @param {number} width - The new width of the quad.
+     * @param {number} height - The new height of the quad.
+     */
     onResize: function (width, height)
     {
         var vertexViewF32 = this.quadVertexViewF32;
@@ -295,14 +366,6 @@ var SpriteFXPipeline = new Class({
         vertexViewF32[28] = width; // x2
         vertexViewF32[35] = width; // x3
         vertexViewF32[36] = height; // y3
-
-        //  UVs
-        vertexViewF32[10] = 1;
-        vertexViewF32[16] = 1;
-        vertexViewF32[17] = 1;
-        vertexViewF32[30] = 1;
-        vertexViewF32[31] = 1;
-        vertexViewF32[37] = 1;
     },
 
     /**
@@ -368,6 +431,10 @@ var SpriteFXPipeline = new Class({
     {
         if (!this.drawToFrame)
         {
+            this.setShader(this.copyShader);
+
+            gameObject.onFX(this);
+
             //  If we're not drawing to the fbo,
             //  we can just pass this on to the WebGLPipeline.batchQuad function
             this.renderer.setTextureZero(texture);
@@ -399,7 +466,7 @@ var SpriteFXPipeline = new Class({
         var height = bh + (padding * 2);
         var maxDimension = Math.abs(Math.max(width, height));
 
-        var target = this.getFrameFromSize(maxDimension);
+        var target = this.getSpriteTarget(maxDimension);
 
         var targetBounds = this.targetBounds.setTo(0, 0, target.width, target.height);
 
@@ -416,6 +483,7 @@ var SpriteFXPipeline = new Class({
 
         var data = this.spriteData;
 
+        data.sprite = gameObject;
         data.x0 = x0 + ox;
         data.y0 = y0 + oy;
         data.x1 = x1 + ox;
@@ -447,34 +515,67 @@ var SpriteFXPipeline = new Class({
         //  Set this here, so we can immediately call the set uniform functions and it'll work on the correct shader
         this.currentShader = this.copyShader;
 
-        gameObject.onFX(this);
-
-        this.onDraw(target, this.getSwapFrame());
+        this.onDraw(target, this.getSwapTarget());
 
         return true;
     },
 
-    // eslint-disable-next-line no-unused-vars
-    onPreDrawSprite: function (target)
+    /**
+     * This callback is invoked when you call the `drawSprite` method.
+     *
+     * It will fire after the shader has been set, but before the sprite has been drawn,
+     * so use it to set any additional uniforms you may need.
+     *
+     * Note: Manipulating the Sprite during this callback will _not_ change how it is drawn to the Render Target.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#onDrawSprite
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Sprite} gameObject - The Sprite being drawn.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target the Sprite will be drawn to.
+     */
+    onDrawSprite: function ()
     {
     },
 
-    drawSprite: function (target, clear)
+    /**
+     * Draws the Sprite to the given Render Target.
+     *
+     * Any transform or tint that has been applied to the Sprite will be retained when drawn.
+     *
+     * Calling this method will invoke the `onDrawSprite` callback. This callback will fire after
+     * the shader has been set, but before the sprite has been drawn, so use it to set any additional
+     * uniforms you may need.
+     *
+     * Note: Manipulating the Sprite during this callback will _not_ change how it is drawn to the Render Target.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#drawSprite
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to draw the Sprite to.
+     * @param {boolean} [clear=false] - Clear the Render Target before drawing the Sprite?
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to use to draw the Sprite. Defaults to the `drawSpriteShader`.
+     */
+    drawSprite: function (target, clear, shader)
     {
         if (clear === undefined) { clear = false; }
+        if (shader === undefined) { shader = this.drawSpriteShader; }
 
         var gl = this.gl;
         var data = this.spriteData;
+        var renderer = this.renderer;
 
-        this.setShader(this.drawSpriteShader);
+        this.setShader(shader);
 
         this.set1i('uMainSampler', 0);
 
-        this.onPreDrawSprite(target);
+        this.onDrawSprite(data.sprite, target);
 
-        this.renderer.setTextureZero(data.texture);
+        data.sprite.onFX(this);
 
-        gl.viewport(0, 0, this.renderer.width, this.renderer.height);
+        renderer.setTextureZero(data.texture);
+
+        gl.viewport(0, 0, renderer.width, renderer.height);
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
 
@@ -498,23 +599,33 @@ var SpriteFXPipeline = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
 
-        this.renderer.clearTextureZero();
+        renderer.clearTextureZero();
     },
 
-    getFrameFromSize: function (size)
+    /**
+     * Gets a Render Target the right size to render the Sprite on.
+     *
+     * If the Sprite exceeds the size of the renderer, the Render Target will only ever be the maximum
+     * size of the renderer.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#getSpriteTarget
+     * @since 3.60.0
+     *
+     * @return {Phaser.Renderer.WebGL.RenderTarget} A Render Target large enough to fit the sprite.
+     */
+    getSpriteTarget: function (size)
     {
         var targets = this.renderTargets;
 
         if (size > this.maxDimension)
         {
-            this.spriteData.textureIndex = 0;
+            this.spriteData.textureIndex = targets.length - 2;
 
-            return targets[0];
+            return targets[this.spriteData.textureIndex];
         }
         else
         {
-            //  +1 because we've got 2 fullFrames at the start of the targets array
-            var index = SnapCeil(size, 64, 0, true) + 1;
+            var index = (SnapCeil(size, 64, 0, true) - 1) * 2;
 
             this.spriteData.textureIndex = index;
 
@@ -522,49 +633,83 @@ var SpriteFXPipeline = new Class({
         }
     },
 
-    getSwapFrame: function ()
+    /**
+     * Gets a matching Render Target, the same size as the one the Sprite was drawn to,
+     * useful for double-buffer style effects such as blurs.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#getSwapTarget
+     * @since 3.60.0
+     *
+     * @return {Phaser.Renderer.WebGL.RenderTarget} The Render Target swap frame.
+     */
+    getSwapTarget: function ()
     {
-        var targets = this.renderTargets;
-        var index = this.spriteData.textureIndex;
-
-        if (index === 0)
-        {
-            return targets[1];
-        }
-        else
-        {
-            return targets[index + this.swapTargetIndex];
-        }
+        return this.renderTargets[this.spriteData.textureIndex + 1];
     },
 
-    onDraw: function (target)
+    /**
+     * This callback is invoked when you call the `copySprite` method.
+     *
+     * It will fire after the shader has been set, but before the source target has been copied,
+     * so use it to set any additional uniforms you may need.
+     *
+     * Note: Manipulating the Sprite during this callback will _not_ change the Render Targets.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#onCopySprite
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target being copied from.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target that will be copied to.
+     * @param {Phaser.GameObjects.Sprite} gameObject - The Sprite being copied.
+     */
+    onCopySprite: function ()
     {
-        this.drawToGame(target);
     },
 
-    // eslint-disable-next-line no-unused-vars
-    onPreCopy: function (source, target)
-    {
-    },
-
-    //  Draws source to target using the copyShader (which you override in your pipeline)
-    copyFrame: function (source, target, clear, clearAlpha, eraseMode)
+    /**
+     * Copy the `source` Render Target to the `target` Render Target.
+     *
+     * No target resizing takes place. If the `source` Render Target is larger than the `target`,
+     * then only a portion the same size as the `target` dimensions is copied across.
+     *
+     * Make sure you have enabled `drawToFrame` on this pipeline, or this method won't do anything.
+     *
+     * Calling this method will invoke the `onCopySprite` handler and will also call
+     * the `onFXCopy` callback on the Sprite. Both of these happen prior to the copy, allowing you
+     * to use them to set shader uniforms and other values.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#copySprite
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target being copied from.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target that will be copied to.
+     * @param {Phaser.GameObjects.Sprite} gameObject - The Sprite being copied.
+     * @param {boolean} [clear=true] - Clear the target before copying?
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     * @param {boolean} [eraseMode=false] - Erase source from target using ERASE Blend Mode?
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to use to copy the target. Defaults to the `copyShader`.
+     */
+    copySprite: function (source, target, clear, clearAlpha, eraseMode, shader)
     {
         if (clear === undefined) { clear = true; }
         if (clearAlpha === undefined) { clearAlpha = true; }
         if (eraseMode === undefined) { eraseMode = false; }
+        if (shader === undefined) { shader = this.copyShader; }
 
         var gl = this.gl;
+        var sprite = this.data.sprite;
 
-        this.currentShader = this.copyShader;
+        this.currentShader = shader;
 
         var wasBound = this.setVertexBuffer(this.quadVertexBuffer);
 
-        this.copyShader.bind(wasBound, false);
+        shader.bind(wasBound, false);
 
         this.set1i('uMainSampler', 0);
 
-        this.onPreCopy(source, target);
+        sprite.onFXCopy(this);
+
+        this.onCopySprite(source, target, sprite);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
@@ -580,6 +725,8 @@ var SpriteFXPipeline = new Class({
             var diff = target.height - source.height;
 
             gl.viewport(0, diff, source.width, source.height);
+
+            this.resetUVs();
         }
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
@@ -587,14 +734,7 @@ var SpriteFXPipeline = new Class({
 
         if (clear)
         {
-            if (clearAlpha)
-            {
-                gl.clearColor(0, 0, 0, 0);
-            }
-            else
-            {
-                gl.clearColor(0, 0, 0, 1);
-            }
+            gl.clearColor(0, 0, 0, !!clearAlpha);
 
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
@@ -618,38 +758,72 @@ var SpriteFXPipeline = new Class({
     },
 
     /**
-     * Binds this pipeline and draws the `source` Render Target to the `target` Render Target.
+     * This method will copy the given Render Target to the game canvas using the `copyShader`.
      *
-     * If no `target` is specified, it will pop the framebuffer from the Renderers FBO stack
-     * and use that instead, which should be done when you need to draw the final results of
-     * this pipeline to the game canvas.
+     * This applies the results of the copy shader during the draw.
      *
-     * You can optionally set the shader to be used for the draw here, if this is a multi-shader
-     * pipeline. By default `currentShader` will be used. If you need to set a shader but not
-     * a target, just pass `null` as the `target` parameter.
+     * If you wish to copy the target without any effects see the `copyToGame` method instead.
+     *
+     * This method should be the final thing called in your pipeline.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#drawToGame
      * @since 3.60.0
      *
-     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw from.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw to the game.
      */
-    drawToGame: function (source, useCopyShader)
+    drawToGame: function (source)
     {
-        if (useCopyShader === undefined) { useCopyShader = true; }
-
-        var gl = this.gl;
-        var renderer = this.renderer;
-
         this.currentShader = null;
 
-        if (useCopyShader)
-        {
-            this.setShader(this.copyShader);
-        }
-        else
-        {
-            this.setShader(this.gameShader);
-        }
+        this.setShader(this.copyShader);
+
+        this.bindAndDraw(source);
+    },
+
+    /**
+     * This method will copy the given Render Target to the game canvas using the `gameShader`.
+     *
+     * Unless you've changed it, the `gameShader` copies the target without modifying it, just
+     * ensuring it is placed in the correct location on the canvas.
+     *
+     * If you wish to draw the target with and apply the fragment shader at the same time,
+     * see the `drawToGame` method instead.
+     *
+     * This method should be the final thing called in your pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#copyToGame
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to copy to the game.
+     */
+    copyToGame: function (source)
+    {
+        this.currentShader = null;
+
+        this.setShader(this.gameShader);
+
+        this.bindAndDraw(source);
+    },
+
+    /**
+     * This method is called by `drawToGame` and `copyToGame`. It takes the source Render Target
+     * and copies it back to the game canvas, or the next frame buffer in the stack, and should
+     * be considered the very last thing this pipeline does.
+     *
+     * You don't normally need to call this method, or override it, however it is left public
+     * should you wish to do so.
+     *
+     * Note that it does _not_ set a shader. You should do this yourself if invoking this.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#bindAndDraw
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw to the game.
+     */
+    bindAndDraw: function (source)
+    {
+        var gl = this.gl;
+        var renderer = this.renderer;
 
         this.set1i('uMainSampler', 0);
 
@@ -691,6 +865,110 @@ var SpriteFXPipeline = new Class({
         this.flush();
 
         renderer.resetTextures();
+
+        //  No hanging references
+        this.spriteData.sprite = null;
+        this.spriteData.texture = null;
+    },
+
+    /**
+     * This method is called every time the `batchSprite` method is called and is passed a
+     * reference to the current render target.
+     *
+     * If you override this method, then it should make sure it calls either the
+     * `drawToGame` or `copyToGame` methods as the final thing it does. However, you can do as
+     * much additional processing as you like prior to this.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#onDraw
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to draw to the game.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} swapTarget - The Swap Render Target, useful for double-buffef effects.
+     */
+    onDraw: function (target)
+    {
+        this.drawToGame(target);
+    },
+
+    /**
+     * Set the UV values for the 6 vertices that make up the quad used by the copy shader.
+     *
+     * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#setUVs
+     * @since 3.60.0
+     *
+     * @param {number} uA - The u value of vertex A.
+     * @param {number} vA - The v value of vertex A.
+     * @param {number} uB - The u value of vertex B.
+     * @param {number} vB - The v value of vertex B.
+     * @param {number} uC - The u value of vertex C.
+     * @param {number} vC - The v value of vertex C.
+     * @param {number} uD - The u value of vertex D.
+     * @param {number} vD - The v value of vertex D.
+     */
+    setUVs: function (uA, vA, uB, vB, uC, vC, uD, vD)
+    {
+        var vertexViewF32 = this.quadVertexViewF32;
+
+        vertexViewF32[2] = uA;
+        vertexViewF32[3] = vA;
+
+        vertexViewF32[9] = uB;
+        vertexViewF32[10] = vB;
+
+        vertexViewF32[16] = uC;
+        vertexViewF32[17] = vC;
+
+        vertexViewF32[23] = uA;
+        vertexViewF32[24] = vA;
+
+        vertexViewF32[30] = uC;
+        vertexViewF32[31] = vC;
+
+        vertexViewF32[37] = uD;
+        vertexViewF32[38] = vD;
+    },
+
+    /**
+     * Sets the vertex UV coordinates of the quad used by the copy shaders
+     * so that they correctly adjust the texture coordinates for a blit frame effect.
+     *
+     * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#setTargetUVs
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
+     */
+    setTargetUVs: function (source, target)
+    {
+        var diff = (target.height / source.height);
+
+        if (diff > 0.5)
+        {
+            diff = 0.5 - (diff - 0.5);
+        }
+        else
+        {
+            diff = 0.5 + (0.5 - diff);
+        }
+
+        this.setUVs(0, diff, 0, 1 + diff, 1, 1 + diff, 1, diff);
+    },
+
+    /**
+     * Resets the quad vertice UV values to their default settings.
+     *
+     * The quad is used by the copy shader in this pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#resetUVs
+     * @since 3.60.0
+     */
+    resetUVs: function ()
+    {
+        this.setUVs(0, 0, 0, 1, 1, 1, 1, 0);
     }
 
 });
