@@ -697,7 +697,7 @@ var SpriteFXPipeline = new Class({
         if (shader === undefined) { shader = this.copyShader; }
 
         var gl = this.gl;
-        var sprite = this.data.sprite;
+        var sprite = this.spriteData.sprite;
 
         this.currentShader = shader;
 
@@ -734,7 +734,7 @@ var SpriteFXPipeline = new Class({
 
         if (clear)
         {
-            gl.clearColor(0, 0, 0, !!clearAlpha);
+            gl.clearColor(0, 0, 0, Number(!clearAlpha));
 
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
