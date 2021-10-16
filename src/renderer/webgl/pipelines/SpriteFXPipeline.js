@@ -196,18 +196,6 @@ var SpriteFXPipeline = new Class({
         this.quadVertexViewF32;
 
         /**
-         * Will this Sprite FX Pipeline draw the sprite to a framebuffer, for further processing,
-         * or directly to the game canvas?
-         *
-         * Set this property to 'true' if you wish to use features like 'copySprite'.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#drawToFrame
-         * @type {boolean}
-         * @since 3.60.0
-         */
-        this.drawToFrame = GetFastValue(config, 'drawToFrame', false);
-
-        /**
          * The largest render target dimension before we just use a full-screen target.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#maxDimension
@@ -386,6 +374,69 @@ var SpriteFXPipeline = new Class({
     },
 
     /**
+     * Generic function for batching a textured quad using argument values instead of a Game Object.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#batchTexture
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject.
+     * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad.
+     * @param {number} textureWidth - Real texture width.
+     * @param {number} textureHeight - Real texture height.
+     * @param {number} srcX - X coordinate of the quad.
+     * @param {number} srcY - Y coordinate of the quad.
+     * @param {number} srcWidth - Width of the quad.
+     * @param {number} srcHeight - Height of the quad.
+     * @param {number} scaleX - X component of scale.
+     * @param {number} scaleY - Y component of scale.
+     * @param {number} rotation - Rotation of the quad.
+     * @param {boolean} flipX - Indicates if the quad is horizontally flipped.
+     * @param {boolean} flipY - Indicates if the quad is vertically flipped.
+     * @param {number} scrollFactorX - By which factor is the quad affected by the camera horizontal scroll.
+     * @param {number} scrollFactorY - By which factor is the quad effected by the camera vertical scroll.
+     * @param {number} displayOriginX - Horizontal origin in pixels.
+     * @param {number} displayOriginY - Vertical origin in pixels.
+     * @param {number} frameX - X coordinate of the texture frame.
+     * @param {number} frameY - Y coordinate of the texture frame.
+     * @param {number} frameWidth - Width of the texture frame.
+     * @param {number} frameHeight - Height of the texture frame.
+     * @param {number} tintTL - Tint for top left.
+     * @param {number} tintTR - Tint for top right.
+     * @param {number} tintBL - Tint for bottom left.
+     * @param {number} tintBR - Tint for bottom right.
+     * @param {number} tintEffect - The tint effect.
+     * @param {number} uOffset - Horizontal offset on texture coordinate.
+     * @param {number} vOffset - Vertical offset on texture coordinate.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container.
+     * @param {boolean} [skipFlip=false] - Skip the renderTexture check.
+     * @param {number} [textureUnit] - Use the currently bound texture unit?
+     */
+    batchTexture: function (
+        gameObject,
+        texture,
+        textureWidth, textureHeight,
+        srcX, srcY,
+        srcWidth, srcHeight,
+        scaleX, scaleY,
+        rotation,
+        flipX, flipY,
+        scrollFactorX, scrollFactorY,
+        displayOriginX, displayOriginY,
+        frameX, frameY, frameWidth, frameHeight,
+        tintTL, tintTR, tintBL, tintBR, tintEffect,
+        uOffset, vOffset,
+        camera,
+        parentTransformMatrix,
+        skipFlip,
+        textureUnit)
+    {
+        //  Proxy this call to the MultiPipeline
+        //  batchQuad will intercept the rendering
+        MultiPipeline.prototype.batchTexture.call(this, gameObject, texture, textureWidth, textureHeight, srcX, srcY, srcWidth, srcHeight, scaleX, scaleY, rotation, flipX, flipY, scrollFactorX, scrollFactorY, displayOriginX, displayOriginY, frameX, frameY, frameWidth, frameHeight, tintTL, tintTR, tintBL, tintBR, tintEffect, uOffset, vOffset, camera, parentTransformMatrix, skipFlip, textureUnit);
+    },
+
+    /**
      * Adds the vertices data into the batch and flushes if full.
      *
      * Assumes 6 vertices in the following arrangement:
@@ -429,25 +480,6 @@ var SpriteFXPipeline = new Class({
      */
     batchQuad: function (gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture)
     {
-        if (!this.drawToFrame)
-        {
-            this.setShader(this.copyShader);
-
-            gameObject.onFX(this);
-
-            //  If we're not drawing to the fbo,
-            //  we can just pass this on to the WebGLPipeline.batchQuad function
-            this.renderer.setTextureZero(texture);
-
-            WebGLPipeline.prototype.batchQuad.call(this, gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, gameObject.tintFill, texture, 0);
-
-            this.flush();
-
-            this.renderer.clearTextureZero();
-
-            return true;
-        }
-
         var padding = gameObject.fxPadding;
 
         //  quad bounds
