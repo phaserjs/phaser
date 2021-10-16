@@ -433,6 +433,10 @@ var SpriteFXPipeline = new Class({
     {
         //  Proxy this call to the MultiPipeline
         //  batchQuad will intercept the rendering
+
+        //  Needed for Text & TileSprite - how about others?
+        flipY = true;
+
         MultiPipeline.prototype.batchTexture.call(this, gameObject, texture, textureWidth, textureHeight, srcX, srcY, srcWidth, srcHeight, scaleX, scaleY, rotation, flipX, flipY, scrollFactorX, scrollFactorY, displayOriginX, displayOriginY, frameX, frameY, frameWidth, frameHeight, tintTL, tintTR, tintBL, tintBR, tintEffect, uOffset, vOffset, camera, parentTransformMatrix, skipFlip, textureUnit);
     },
 
