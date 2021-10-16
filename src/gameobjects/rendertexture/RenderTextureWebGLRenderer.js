@@ -36,8 +36,6 @@ var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var textureUnit = pipeline.setTexture2D(renderTarget.texture);
 
-    renderer.pipelines.preBatch(src);
-
     pipeline.batchTexture(
         src,
         renderTarget.texture,
@@ -63,8 +61,6 @@ var RenderTextureWebGLRenderer = function (renderer, src, camera, parentMatrix)
     );
 
     renderer.resetTextures();
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = RenderTextureWebGLRenderer;

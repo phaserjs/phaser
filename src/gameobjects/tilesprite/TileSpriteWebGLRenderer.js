@@ -34,8 +34,6 @@ var TileSpriteWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     camera.addToRenderList(src);
 
-    renderer.pipelines.preBatch(src);
-
     var getTint = Utils.getTintAppendFloatAlpha;
 
     var pipeline = renderer.pipelines.set(src.pipeline, src);
@@ -66,8 +64,6 @@ var TileSpriteWebGLRenderer = function (renderer, src, camera, parentMatrix)
         false,
         textureUnit
     );
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = TileSpriteWebGLRenderer;
