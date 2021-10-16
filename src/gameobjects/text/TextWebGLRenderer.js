@@ -37,8 +37,6 @@ var TextWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var textureUnit = pipeline.setTexture2D(frame.glTexture, src);
 
-    renderer.pipelines.preBatch(src);
-
     pipeline.batchTexture(
         src,
         frame.glTexture,
@@ -62,8 +60,6 @@ var TextWebGLRenderer = function (renderer, src, camera, parentMatrix)
         false,
         textureUnit
     );
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = TextWebGLRenderer;
