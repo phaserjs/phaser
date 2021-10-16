@@ -21,7 +21,22 @@ var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
- * TODO
+ * The SpriteFX Pipeline is a special kind of pipeline designed specifically for applying
+ * special effects to Sprites. Where-as the Post FX Pipeline applies an effect _after_ the
+ * object has been rendered, the Sprite FX Pipeline allows you to control the rendering of
+ * the object itself - passing it off to its own texture where multi-buffer compositing
+ * can take place.
+ *
+ * You can only use the SpriteFX Pipeline on the following types of Game Objects, or those
+ * that extend from them:
+ *
+ * Sprite
+ * Image
+ * Text
+ * TileSprite
+ * RenderTexture
+ *
+ * // TODO - Explain about the fbos and functions
  *
  * @class SpriteFXPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
