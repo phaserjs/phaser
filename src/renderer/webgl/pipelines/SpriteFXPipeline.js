@@ -238,6 +238,20 @@ var SpriteFXPipeline = new Class({
         this.frameInc = Math.floor(GetFastValue(config, 'frameInc', 64));
 
         /**
+         * Should this pipeline create Alternative Swap Frames as well as
+         * Swap Frames?
+         *
+         * The default is 'false', to avoid creating too many textures,
+         * but some pipelines require it.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#altFrame
+         * @type {number}
+         * @private
+         * @since 3.60.0
+         */
+        this.altFrame = GetFastValue(config, 'altFrame', false);
+
+        /**
          * A temporary Rectangle object re-used internally during sprite drawing.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#spriteBounds
@@ -320,11 +334,22 @@ var SpriteFXPipeline = new Class({
 
             //  Duplicate RT for swap frame
             targets.push(new RenderTarget(renderer, targetWidth, targetWidth));
+
+            if (this.altFrame)
+            {
+                //  Duplicate RT for alt swap frame
+                targets.push(new RenderTarget(renderer, targetWidth, targetWidth));
+            }
         }
 
-        //  2 full-screen RTs
+        //  Full-screen RTs
         targets.push(new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, true, true));
         targets.push(new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, true, true));
+
+        if (this.altFrame)
+        {
+            targets.push(new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, true, true));
+        }
 
         this.maxDimension = (qty - 1) * this.frameInc;
 
@@ -673,15 +698,19 @@ var SpriteFXPipeline = new Class({
     {
         var targets = this.renderTargets;
 
+        //  2 for just swap
+        //  3 for swap + alt swap
+        var offset = (this.altFrame) ? 3 : 2;
+
         if (size > this.maxDimension)
         {
-            this.spriteData.textureIndex = targets.length - 2;
+            this.spriteData.textureIndex = targets.length - offset;
 
             return targets[this.spriteData.textureIndex];
         }
         else
         {
-            var index = (SnapCeil(size, 64, 0, true) - 1) * 2;
+            var index = (SnapCeil(size, 64, 0, true) - 1) * offset;
 
             this.spriteData.textureIndex = index;
 
@@ -701,6 +730,23 @@ var SpriteFXPipeline = new Class({
     getSwapTarget: function ()
     {
         return this.renderTargets[this.spriteData.textureIndex + 1];
+    },
+
+    /**
+     * Gets a matching Render Target, the same size as the one the Sprite was drawn to,
+     * useful for double-buffer style effects such as blurs.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#getAltSwapTarget
+     * @since 3.60.0
+     *
+     * @return {Phaser.Renderer.WebGL.RenderTarget} The Render Target swap frame.
+     */
+    getAltSwapTarget: function ()
+    {
+        if (this.altFrame)
+        {
+            return this.renderTargets[this.spriteData.textureIndex + 2];
+        }
     },
 
     /**
@@ -811,6 +857,42 @@ var SpriteFXPipeline = new Class({
         }
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    },
+
+    /**
+     * Draws the `source1` and `source2` Render Targets to the `target` Render Target
+     * using a linear blend effect, which is controlled by the `strength` parameter.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#blendFrames
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {number} [strength=1] - The strength of the blend.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
+    blendFrames: function (source1, source2, target, strength, clearAlpha)
+    {
+        this.manager.blendFrames(source1, source2, target, strength, clearAlpha);
+    },
+
+    /**
+     * Draws the `source1` and `source2` Render Targets to the `target` Render Target
+     * using an additive blend effect, which is controlled by the `strength` parameter.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#blendFramesAdditive
+     * @since 3.50.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [target] - The target Render Target.
+     * @param {number} [strength=1] - The strength of the blend.
+     * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
+     */
+    blendFramesAdditive: function (source1, source2, target, strength, clearAlpha)
+    {
+        this.manager.blendFramesAdditive(source1, source2, target, strength, clearAlpha);
     },
 
     /**
