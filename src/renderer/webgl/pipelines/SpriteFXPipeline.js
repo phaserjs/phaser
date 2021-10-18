@@ -103,6 +103,11 @@ var SpriteFXPipeline = new Class({
 
         config.shaders = defaultShaders.concat(configShaders);
 
+        if (!config.vertShader)
+        {
+            config.vertShader = vertShader;
+        }
+
         config.batchSize = 1;
 
         WebGLPipeline.call(this, config);
