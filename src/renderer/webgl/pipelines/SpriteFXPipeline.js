@@ -502,7 +502,7 @@ var SpriteFXPipeline = new Class({
      *
      * Where tx0/ty0 = 0, tx1/ty1 = 1, tx2/ty2 = 2 and tx3/ty3 = 3
      *
-     * @method Phaser.Renderer.WebGL.SpriteFXPipeline#batchQuad
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#batchQuad
      * @since 3.60.0
      *
      * @param {(Phaser.GameObjects.GameObject|null)} gameObject - The Game Object, if any, drawing this quad.
@@ -863,8 +863,8 @@ var SpriteFXPipeline = new Class({
      * Draws the `source1` and `source2` Render Targets to the `target` Render Target
      * using a linear blend effect, which is controlled by the `strength` parameter.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#blendFrames
-     * @since 3.50.0
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#blendFrames
+     * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
      * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
@@ -881,8 +881,8 @@ var SpriteFXPipeline = new Class({
      * Draws the `source1` and `source2` Render Targets to the `target` Render Target
      * using an additive blend effect, which is controlled by the `strength` parameter.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#blendFramesAdditive
-     * @since 3.50.0
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#blendFramesAdditive
+     * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
      * @param {Phaser.Renderer.WebGL.RenderTarget} source2 - The second source Render Target.
