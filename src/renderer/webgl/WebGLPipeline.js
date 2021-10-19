@@ -820,6 +820,43 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Adjusts this pipelines ortho Projection Matrix to flip the y
+     * and bottom values. Call with 'false' as the parameter to flip
+     * them back again.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#flipProjectionMatrix
+     * @since 3.60.0
+     *
+     * @param {boolean} [flipY=true] - Flip the y and bottom values?
+     */
+    flipProjectionMatrix: function (flipY)
+    {
+        if (flipY === undefined) { flipY = true; }
+
+        var projectionMatrix = this.projectionMatrix;
+
+        //  Because not all pipelines have them
+        if (!projectionMatrix)
+        {
+            return this;
+        }
+
+        var width = this.projectionWidth;
+        var height = this.projectionHeight;
+
+        if (flipY)
+        {
+            projectionMatrix.ortho(0, width, 0, height, -1000, 1000);
+        }
+        else
+        {
+            projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
+        }
+
+        this.setMatrix4fv('uProjectionMatrix', false, projectionMatrix.val);
+    },
+
+    /**
      * Adjusts this pipelines ortho Projection Matrix to match that of the global
      * WebGL Renderer Projection Matrix.
      *
@@ -2083,8 +2120,8 @@ var WebGLPipeline = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
-     * @param {boolean} transpose - Should the matrix be transpose
-     * @param {Float32Array} matrix - Matrix data
+     * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
+     * @param {Float32Array} matrix - The matrix data. If using a Matrix4 this should be the `Matrix4.val` property.
      * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
