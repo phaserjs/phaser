@@ -39,7 +39,7 @@ module.exports = {
         {
             apply: (compiler) => {
                 compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-                    exec('node scripts/copy-to-examples.js', (err, stdout, stderr) => {
+                    exec('node scripts/copy-to-examples-watch.js', (err, stdout, stderr) => {
                         if (stdout) process.stdout.write(stdout);
                         if (stderr) process.stderr.write(stderr);
                     });
