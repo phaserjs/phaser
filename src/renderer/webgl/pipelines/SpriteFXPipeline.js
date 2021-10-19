@@ -14,7 +14,6 @@ var Rectangle = require('../../../geom/rectangle/Rectangle');
 var RenderTarget = require('../RenderTarget');
 var SingleQuadFS = require('../shaders/Single-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
-var SnapCeil = require('../../../math/snap/SnapCeil');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
@@ -216,42 +215,6 @@ var SpriteFXPipeline = new Class({
         this.quadVertexViewF32;
 
         /**
-         * The largest render target dimension before we just use a full-screen target.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#maxDimension
-         * @type {number}
-         * @private
-         * @since 3.60.0
-         */
-        this.maxDimension = 0;
-
-        /**
-         * The amount in which each target frame will increase.
-         *
-         * Defaults to 64px but can be overridden in the config.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#frameInc
-         * @type {number}
-         * @private
-         * @since 3.60.0
-         */
-        this.frameInc = Math.floor(GetFastValue(config, 'frameInc', 64));
-
-        /**
-         * Should this pipeline create Alternative Swap Frames as well as
-         * Swap Frames?
-         *
-         * The default is 'false', to avoid creating too many textures,
-         * but some pipelines require it.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#altFrame
-         * @type {boolean}
-         * @private
-         * @since 3.60.0
-         */
-        this.altFrame = GetFastValue(config, 'altFrame', false);
-
-        /**
          * A temporary Rectangle object re-used internally during sprite drawing.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#spriteBounds
@@ -325,47 +288,16 @@ var SpriteFXPipeline = new Class({
 
         var shaders = this.shaders;
         var renderer = this.renderer;
-        var targets = this.renderTargets;
 
         this.drawSpriteShader = shaders[0];
         this.copyShader = shaders[1];
         this.gameShader = shaders[2];
 
-        var minDimension = Math.min(renderer.width, renderer.height);
-
-        var qty = Math.ceil(minDimension / this.frameInc);
-
-        for (var i = 1; i < qty; i++)
-        {
-            var targetWidth = i * this.frameInc;
-
-            targets.push(new RenderTarget(renderer, targetWidth, targetWidth));
-
-            //  Duplicate RT for swap frame
-            targets.push(new RenderTarget(renderer, targetWidth, targetWidth));
-
-            if (this.altFrame)
-            {
-                //  Duplicate RT for alt swap frame
-                targets.push(new RenderTarget(renderer, targetWidth, targetWidth));
-            }
-        }
-
-        //  Full-screen RTs
-        targets.push(new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, true, true));
-        targets.push(new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, true, true));
-
-        if (this.altFrame)
-        {
-            targets.push(new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, true, true));
-        }
-
-        //  Our full-screen target
+        //  Our full-screen target (exclusive to this pipeline)
         this.fsTarget = new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, true, true);
 
-        targets.push(this.fsTarget);
-
-        this.maxDimension = (qty - 1) * this.frameInc;
+        //  Copy by reference the RTs in the PipelineManager, plus add our fsTarget
+        this.renderTargets = this.manager.renderTargets.concat(this.fsTarget);
 
         // 6 verts * 28 bytes
         var data = new ArrayBuffer(168);
@@ -561,7 +493,7 @@ var SpriteFXPipeline = new Class({
         var height = bh + (padding * 2);
         var maxDimension = Math.abs(Math.max(width, height));
 
-        var target = this.getSpriteTarget(maxDimension);
+        var target = this.manager.getRenderTarget(maxDimension);
 
         var targetBounds = this.targetBounds.setTo(0, 0, target.width, target.height);
 
@@ -578,6 +510,8 @@ var SpriteFXPipeline = new Class({
         this.setShader(this.drawSpriteShader);
 
         this.set1i('uMainSampler', 0);
+
+        this.flipProjectionMatrix(true);
 
         this.onDrawSprite(gameObject, target);
 
@@ -597,20 +531,24 @@ var SpriteFXPipeline = new Class({
         this.batchVert(x0, y0, u0, v0, 0, tintEffect, tintTL);
         this.batchVert(x1, y1, u0, v1, 0, tintEffect, tintBL);
         this.batchVert(x2, y2, u1, v1, 0, tintEffect, tintBR);
+
         this.batchVert(x0, y0, u0, v0, 0, tintEffect, tintTL);
         this.batchVert(x2, y2, u1, v1, 0, tintEffect, tintBR);
         this.batchVert(x3, y3, u1, v0, 0, tintEffect, tintTR);
 
         this.flush();
 
+        this.flipProjectionMatrix(false);
+
         renderer.clearTextureZero();
 
         //  Now we've got the sprite drawn to our screen-sized fbo, copy the rect we need to our target
+
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, target.texture);
 
         var tx = targetBounds.x;
-        var ty = renderer.height - (bb + (padding * 2));
+        var ty = renderer.height - (bb + padding);
         var tw = Math.min(renderer.width, target.width);
         var th = Math.min(renderer.height, target.height);
 
@@ -634,7 +572,7 @@ var SpriteFXPipeline = new Class({
         //  Set this here, so we can immediately call the set uniform functions and it'll work on the correct shader
         this.currentShader = this.copyShader;
 
-        this.onDraw(target, this.getSwapTarget());
+        this.onDraw(target, this.manager.getSwapRenderTarget());
 
         return true;
     },
@@ -723,72 +661,6 @@ var SpriteFXPipeline = new Class({
 
         renderer.clearTextureZero();
         */
-    },
-
-    /**
-     * Gets a Render Target the right size to render the Sprite on.
-     *
-     * If the Sprite exceeds the size of the renderer, the Render Target will only ever be the maximum
-     * size of the renderer.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#getSpriteTarget
-     * @since 3.60.0
-     *
-     * @return {Phaser.Renderer.WebGL.RenderTarget} A Render Target large enough to fit the sprite.
-     */
-    getSpriteTarget: function (size)
-    {
-        var targets = this.renderTargets;
-
-        //  2 for just swap
-        //  3 for swap + alt swap
-        var offset = (this.altFrame) ? 3 : 2;
-
-        if (size > this.maxDimension)
-        {
-            this.spriteData.textureIndex = targets.length - offset;
-
-            return targets[this.spriteData.textureIndex];
-        }
-        else
-        {
-            var index = (SnapCeil(size, 64, 0, true) - 1) * offset;
-
-            this.spriteData.textureIndex = index;
-
-            return targets[index];
-        }
-    },
-
-    /**
-     * Gets a matching Render Target, the same size as the one the Sprite was drawn to,
-     * useful for double-buffer style effects such as blurs.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#getSwapTarget
-     * @since 3.60.0
-     *
-     * @return {Phaser.Renderer.WebGL.RenderTarget} The Render Target swap frame.
-     */
-    getSwapTarget: function ()
-    {
-        return this.renderTargets[this.spriteData.textureIndex + 1];
-    },
-
-    /**
-     * Gets a matching Render Target, the same size as the one the Sprite was drawn to,
-     * useful for double-buffer style effects such as blurs.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#getAltSwapTarget
-     * @since 3.60.0
-     *
-     * @return {Phaser.Renderer.WebGL.RenderTarget} The Render Target swap frame.
-     */
-    getAltSwapTarget: function ()
-    {
-        if (this.altFrame)
-        {
-            return this.renderTargets[this.spriteData.textureIndex + 2];
-        }
     },
 
     /**
