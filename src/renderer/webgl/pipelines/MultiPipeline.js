@@ -354,6 +354,11 @@ var MultiPipeline = new Class({
         var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
         var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
 
+        // var ty0 = calcMatrix.getYRound(x, y, roundPixels);
+        // var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
+        // var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
+        // var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
+
         var ty0;
         var ty1;
         var ty2;
