@@ -489,16 +489,6 @@ var SpriteFXPipeline = new Class({
 
         bounds.setTo(bx, by, bw, bh);
 
-        gameObject.quadBounds = bounds;
-        gameObject.x0 = x0;
-        gameObject.y0 = y0;
-        gameObject.x1 = x1;
-        gameObject.y1 = y1;
-        gameObject.x2 = x2;
-        gameObject.y2 = y2;
-        gameObject.x3 = x3;
-        gameObject.y3 = y3;
-
         var width = bw + (padding * 2);
         var height = bh + (padding * 2);
         var maxDimension = Math.abs(Math.max(width, height));
@@ -510,8 +500,6 @@ var SpriteFXPipeline = new Class({
         //  targetBounds is the same size as the fbo and centered on the spriteBounds
         //  so we can use it when we re-render this back to the game
         CenterOn(targetBounds, bounds.centerX, bounds.centerY);
-
-        gameObject.targetBounds = targetBounds;
 
         this.spriteData.sprite = gameObject;
 
@@ -556,32 +544,14 @@ var SpriteFXPipeline = new Class({
 
         //  Now we've got the sprite drawn to our screen-sized fbo, copy the rect we need to our target
 
-        var tx = targetBounds.x;
-        var ty = renderer.height - (bb + padding);
-        var tw = targetBounds.width;
-        var th = targetBounds.height;
-
-        if (target.height === renderer.height)
-        {
-            ty = 0;
-        }
-
-        //  320
-        ty = window['ty'];
-
-        // ty = (target.height / 2) - (600 - gameObject.y);
-        // gl.viewport(0, 0, target.width, target.height);
-
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, target.texture);
-        gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, tx, ty, tw, th);
-
-        // gl.viewport(0, 0, renderer.width, renderer.height);
+        gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, targetBounds.x, targetBounds.y, targetBounds.width, targetBounds.height);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
 
-        //  Now we've drawn the sprite to the target (using our pipeline shader)
+        //  We've drawn the sprite to the target (using our pipeline shader)
         //  we can pass it to the pipeline in case they want to do further
         //  manipulations with it, post-fx style, then we need to draw the
         //  results back to the game in the correct position
@@ -629,57 +599,28 @@ var SpriteFXPipeline = new Class({
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to draw the Sprite to.
-     * @param {boolean} [clear=false] - Clear the Render Target before drawing the Sprite?
-     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to use to draw the Sprite. Defaults to the `drawSpriteShader`.
      */
-    drawSprite: function (target, clear, shader)
+    drawSprite: function (target)
     {
-        if (clear === undefined) { clear = false; }
-        if (shader === undefined) { shader = this.drawSpriteShader; }
-
-        //  TODO - Use the image stored in this.fsTarget (and remove spriteData object)
-
-        /*
         var gl = this.gl;
-        var data = this.spriteData;
         var renderer = this.renderer;
-
-        this.setShader(shader);
-
-        this.set1i('uMainSampler', 0);
-
-        this.onDrawSprite(data.sprite, target);
-
-        data.sprite.onFX(this);
-
-        renderer.setTextureZero(data.texture);
+        var fsTarget = this.fsTarget;
+        var targetBounds = this.targetBounds;
 
         gl.viewport(0, 0, renderer.width, renderer.height);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fsTarget.framebuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, fsTarget.texture, 0);
 
-        if (clear)
-        {
-            gl.clearColor(0, 0, 0, 0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-        }
-
-        var tintEffect = data.tintEffect;
-
-        this.batchVert(data.x0, data.y0, data.u0, data.v0, 0, tintEffect, data.tintTL);
-        this.batchVert(data.x1, data.y1, data.u0, data.v1, 0, tintEffect, data.tintBL);
-        this.batchVert(data.x2, data.y2, data.u1, data.v1, 0, tintEffect, data.tintBR);
-        this.batchVert(data.x0, data.y0, data.u0, data.v0, 0, tintEffect, data.tintTL);
-        this.batchVert(data.x2, data.y2, data.u1, data.v1, 0, tintEffect, data.tintBR);
-        this.batchVert(data.x3, data.y3, data.u1, data.v0, 0, tintEffect, data.tintTR);
-
-        this.flush();
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, target.texture);
+        gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, targetBounds.x, targetBounds.y, targetBounds.width, targetBounds.height);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
 
-        renderer.clearTextureZero();
-        */
+        // this.onDrawSprite(data.sprite, target);
+
+        // data.sprite.onFX(this);
     },
 
     /**
