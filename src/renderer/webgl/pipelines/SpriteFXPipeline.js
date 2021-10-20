@@ -489,6 +489,16 @@ var SpriteFXPipeline = new Class({
 
         bounds.setTo(bx, by, bw, bh);
 
+        gameObject.quadBounds = bounds;
+        gameObject.x0 = x0;
+        gameObject.y0 = y0;
+        gameObject.x1 = x1;
+        gameObject.y1 = y1;
+        gameObject.x2 = x2;
+        gameObject.y2 = y2;
+        gameObject.x3 = x3;
+        gameObject.y3 = y3;
+
         var width = bw + (padding * 2);
         var height = bh + (padding * 2);
         var maxDimension = Math.abs(Math.max(width, height));
@@ -500,6 +510,8 @@ var SpriteFXPipeline = new Class({
         //  targetBounds is the same size as the fbo and centered on the spriteBounds
         //  so we can use it when we re-render this back to the game
         CenterOn(targetBounds, bounds.centerX, bounds.centerY);
+
+        gameObject.targetBounds = targetBounds;
 
         this.spriteData.sprite = gameObject;
 
@@ -544,20 +556,27 @@ var SpriteFXPipeline = new Class({
 
         //  Now we've got the sprite drawn to our screen-sized fbo, copy the rect we need to our target
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, target.texture);
-
         var tx = targetBounds.x;
         var ty = renderer.height - (bb + padding);
-        var tw = Math.min(renderer.width, target.width);
-        var th = Math.min(renderer.height, target.height);
+        var tw = targetBounds.width;
+        var th = targetBounds.height;
 
         if (target.height === renderer.height)
         {
             ty = 0;
         }
 
+        //  320
+        ty = window['ty'];
+
+        // ty = (target.height / 2) - (600 - gameObject.y);
+        // gl.viewport(0, 0, target.width, target.height);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, target.texture);
         gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, tx, ty, tw, th);
+
+        // gl.viewport(0, 0, renderer.width, renderer.height);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
