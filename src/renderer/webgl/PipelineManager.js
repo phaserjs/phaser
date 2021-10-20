@@ -7,6 +7,9 @@
 var Class = require('../../utils/Class');
 var CONST = require('./pipelines/const');
 var CustomMap = require('../../structs/Map');
+var GetFastValue = require('../../utils/object/GetFastValue');
+var RenderTarget = require('./RenderTarget');
+var SnapCeil = require('../../math/snap/SnapCeil');
 
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
@@ -232,6 +235,45 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.halfFrame2;
+
+        /**
+         * An array of RenderTarget instances that belong to this pipeline.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#renderTargets
+         * @type {Phaser.Renderer.WebGL.RenderTarget[]}
+         * @since 3.60.0
+         */
+        this.renderTargets = [];
+
+        /**
+         * The largest render target dimension before we just use a full-screen target.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#maxDimension
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.maxDimension = 0;
+
+        /**
+         * The amount in which each target frame will increase.
+         *
+         * Defaults to 64px but can be overridden in the config.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#frameInc
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.frameInc = 32;
+
+        /**
+         * The Render Target index. Used internally by the methods
+         * in this class. Do not modify directly.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#targetIndex
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.targetIndex = 0;
     },
 
     /**
@@ -249,6 +291,39 @@ var PipelineManager = new Class({
      */
     boot: function (pipelineConfig)
     {
+        //  Create the default RenderTextures
+        var renderer = this.renderer;
+        var targets = this.renderTargets;
+
+        this.frameInc = Math.floor(GetFastValue(pipelineConfig, 'frameInc', 32));
+
+        var renderWidth = renderer.width;
+        var renderHeight = renderer.height;
+
+        var minDimension = Math.min(renderWidth, renderHeight);
+
+        var qty = Math.ceil(minDimension / this.frameInc);
+
+        for (var i = 1; i < qty; i++)
+        {
+            var targetWidth = i * this.frameInc;
+
+            targets.push(new RenderTarget(renderer, targetWidth, targetWidth));
+
+            //  Duplicate RT for swap frame
+            targets.push(new RenderTarget(renderer, targetWidth, targetWidth));
+
+            //  Duplicate RT for alt swap frame
+            targets.push(new RenderTarget(renderer, targetWidth, targetWidth));
+        }
+
+        //  Full-screen RTs
+        targets.push(new RenderTarget(renderer, renderWidth, renderHeight, 1, 0, true, true));
+        targets.push(new RenderTarget(renderer, renderWidth, renderHeight, 1, 0, true, true));
+        targets.push(new RenderTarget(renderer, renderWidth, renderHeight, 1, 0, true, true));
+
+        this.maxDimension = (qty - 1) * this.frameInc;
+
         //  Install each of the default pipelines
 
         var instance;
@@ -1094,6 +1169,69 @@ var PipelineManager = new Class({
         renderer.currentProgram = null;
 
         renderer.setBlendMode(0, true);
+    },
+
+    /**
+     * Gets a Render Target the right size to render the Sprite on.
+     *
+     * If the Sprite exceeds the size of the renderer, the Render Target will only ever be the maximum
+     * size of the renderer.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#getRenderTarget
+     * @since 3.60.0
+     *
+     * @return {Phaser.Renderer.WebGL.RenderTarget} A Render Target large enough to fit the sprite.
+     */
+    getRenderTarget: function (size)
+    {
+        var targets = this.renderTargets;
+
+        //  2 for just swap
+        //  3 for swap + alt swap
+        var offset = 3;
+
+        if (size > this.maxDimension)
+        {
+            this.targetIndex = targets.length - offset;
+
+            return targets[this.targetIndex];
+        }
+        else
+        {
+            var index = (SnapCeil(size, this.frameInc, 0, true) - 1) * offset;
+
+            this.targetIndex = index;
+
+            return targets[index];
+        }
+    },
+
+    /**
+     * Gets a matching Render Target, the same size as the one the Sprite was drawn to,
+     * useful for double-buffer style effects such as blurs.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#getSwapRenderTarget
+     * @since 3.60.0
+     *
+     * @return {Phaser.Renderer.WebGL.RenderTarget} The Render Target swap frame.
+     */
+    getSwapRenderTarget: function ()
+    {
+        return this.renderTargets[this.targetIndex + 1];
+    },
+
+    /**
+     * Gets a matching Render Target, the same size as the one the Sprite was drawn to,
+     * useful for double-buffer style effects such as blurs.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#getAltSwapRenderTarget
+     * @since 3.60.0
+     *
+     * @return {Phaser.Renderer.WebGL.RenderTarget} The Render Target swap frame.
+     */
+    getAltSwapRenderTarget: function ()
+    {
+        return this.renderTargets[this.targetIndex + 2];
     },
 
     /**
