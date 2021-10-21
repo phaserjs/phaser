@@ -238,41 +238,20 @@ var SpriteFXPipeline = new Class({
          * The full-screen Render Target that the sprite is first drawn to.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#fsTarget
-         * @type {Phaser.Phaser.Renderer.WebGL.RenderTarget}
+         * @type {Phaser.Renderer.WebGL.RenderTarget}
          * @since 3.60.0
          */
         this.fsTarget;
 
         /**
-         * Transient sprite data, used for pipelines that require multiple calls to 'drawSprite'.
+         * The most recent Game Object drawn.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#spriteData
-         * @type {object}
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#tempSprite
+         * @type {Phaser.GameObjects.Sprite}
          * @private
          * @since 3.60.0
          */
-        this.spriteData = {
-            sprite: null,
-            x0: 0,
-            y0: 0,
-            x1: 0,
-            y1: 0,
-            x2: 0,
-            y2: 0,
-            x3: 0,
-            y3: 0,
-            u0: 0,
-            v0: 0,
-            u1: 0,
-            v1: 0,
-            tintTL: 0,
-            tintTR: 0,
-            tintBL: 0,
-            tintBR: 0,
-            tintEffect: 0,
-            texture: null,
-            textureIndex: 0
-        };
+        this.tempSprite;
 
         if (this.renderer.isBooted)
         {
@@ -349,6 +328,9 @@ var SpriteFXPipeline = new Class({
 
     /**
      * Takes a Sprite Game Object, or any object that extends it, and renders it via this pipeline.
+     *
+     * this method is a proxy for the MultiPipeline method of the same name. The actual rendering
+     * is redirected through to the `batchQuad` method in this pipeline.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#batchSprite
      * @since 3.60.0
@@ -446,7 +428,7 @@ var SpriteFXPipeline = new Class({
      * 1----2
      * ```
      *
-     * Where tx0/ty0 = 0, tx1/ty1 = 1, tx2/ty2 = 2 and tx3/ty3 = 3
+     * Where x0 / y0 = 0, x1 / y1 = 1, x2 / y2 = 2 and x3 / y3 = 3
      *
      * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#batchQuad
      * @since 3.60.0
@@ -475,11 +457,6 @@ var SpriteFXPipeline = new Class({
      */
     batchQuad: function (gameObject, x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture)
     {
-        var padding = gameObject.fxPadding;
-
-        //  quad bounds
-        var bounds = this.spriteBounds;
-
         var bx = Math.min(x0, x1, x2, x3);
         var by = Math.min(y0, y1, y2, y3);
         var br = Math.max(x0, x1, x2, x3);
@@ -487,8 +464,9 @@ var SpriteFXPipeline = new Class({
         var bw = br - bx;
         var bh = bb - by;
 
-        bounds.setTo(bx, by, bw, bh);
+        var bounds = this.spriteBounds.setTo(bx, by, bw, bh);
 
+        var padding = gameObject.fxPadding;
         var width = bw + (padding * 2);
         var height = bh + (padding * 2);
         var maxDimension = Math.abs(Math.max(width, height));
@@ -501,7 +479,7 @@ var SpriteFXPipeline = new Class({
         //  so we can use it when we re-render this back to the game
         CenterOn(targetBounds, bounds.centerX, bounds.centerY);
 
-        this.spriteData.sprite = gameObject;
+        this.tempSprite = gameObject;
 
         //  Now draw the quad
         var gl = this.gl;
@@ -567,7 +545,7 @@ var SpriteFXPipeline = new Class({
     },
 
     /**
-     * This callback is invoked when you call the `drawSprite` method.
+     * This callback is invoked when a sprite is drawn by this pipeline.
      *
      * It will fire after the shader has been set, but before the sprite has been drawn,
      * so use it to set any additional uniforms you may need.
@@ -582,45 +560,6 @@ var SpriteFXPipeline = new Class({
      */
     onDrawSprite: function ()
     {
-    },
-
-    /**
-     * Draws the Sprite to the given Render Target.
-     *
-     * Any transform or tint that has been applied to the Sprite will be retained when drawn.
-     *
-     * Calling this method will invoke the `onDrawSprite` callback. This callback will fire after
-     * the shader has been set, but before the sprite has been drawn, so use it to set any additional
-     * uniforms you may need.
-     *
-     * Note: Manipulating the Sprite during this callback will _not_ change how it is drawn to the Render Target.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#drawSprite
-     * @since 3.60.0
-     *
-     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to draw the Sprite to.
-     */
-    drawSprite: function (target)
-    {
-        var gl = this.gl;
-        var renderer = this.renderer;
-        var fsTarget = this.fsTarget;
-        var targetBounds = this.targetBounds;
-
-        gl.viewport(0, 0, renderer.width, renderer.height);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, fsTarget.framebuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, fsTarget.texture, 0);
-
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, target.texture);
-        gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, targetBounds.x, targetBounds.y, targetBounds.width, targetBounds.height);
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
-
-        // this.onDrawSprite(data.sprite, target);
-
-        // data.sprite.onFX(this);
     },
 
     /**
@@ -648,8 +587,6 @@ var SpriteFXPipeline = new Class({
      * No target resizing takes place. If the `source` Render Target is larger than the `target`,
      * then only a portion the same size as the `target` dimensions is copied across.
      *
-     * Make sure you have enabled `drawToFrame` on this pipeline, or this method won't do anything.
-     *
      * Calling this method will invoke the `onCopySprite` handler and will also call
      * the `onFXCopy` callback on the Sprite. Both of these happen prior to the copy, allowing you
      * to use them to set shader uniforms and other values.
@@ -673,7 +610,7 @@ var SpriteFXPipeline = new Class({
         if (shader === undefined) { shader = this.copyShader; }
 
         var gl = this.gl;
-        var sprite = this.spriteData.sprite;
+        var sprite = this.tempSprite;
 
         this.currentShader = shader;
 
@@ -886,8 +823,7 @@ var SpriteFXPipeline = new Class({
         renderer.resetTextures();
 
         //  No hanging references
-        this.spriteData.sprite = null;
-        this.spriteData.texture = null;
+        this.tempSprite = null;
     },
 
     /**
@@ -988,6 +924,41 @@ var SpriteFXPipeline = new Class({
     resetUVs: function ()
     {
         this.setUVs(0, 0, 0, 1, 1, 1, 1, 0);
+    },
+
+    /**
+     * Destroys all shader instances, removes all object references and nulls all external references.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#destroy
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#DESTROY
+     * @since 3.60.0
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    destroy: function ()
+    {
+        this.gl.deleteBuffer(this.quadVertexBuffer);
+
+        this._tempMatrix1.destroy();
+        this._tempMatrix2.destroy();
+        this._tempMatrix3.destroy();
+
+        this._tempMatrix1 = null;
+        this._tempMatrix1 = null;
+        this._tempMatrix1 = null;
+
+        this.drawSpriteShader = null;
+        this.copyShader = null;
+        this.gameShader = null;
+
+        this.quadVertexData = null;
+        this.quadVertexBuffer = null;
+        this.quadVertexViewF32 = null;
+
+        this.fsTarget = null;
+        this.tempSprite = null;
+
+        WebGLPipeline.prototype.destroy.call(this);
     }
 
 });
