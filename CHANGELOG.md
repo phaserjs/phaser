@@ -11,6 +11,14 @@
 * The `WebGLRenderer.createTextureFromSource` method has a new optional boolean parameter `forceClamp` that will for the clamp wrapping mode even if the texture is a power-of-two.
 * `RenderTarget` will now automatically set the wrapping mode to clamp.
 * `WebGLPipeline.flipProjectionMatrix` is a new method that allows you to flip the y and bottom projection matrix values via a parameter.
+* `PipelineManager.renderTargets` is a new property that holds an array of `RenderTarget` objects that all `SpriteFX` pipelines can share, to keep texture memory as low as possible.
+* `PipelineManager.maxDimension` is a new property that holds the largest possible target dimension.
+* `PipelineManager.frameInc` is a new property that holds the amount the `RenderTarget`s will increase in size in each iteration. The default value is 32, meaning it will create targets of size 32, 64, 96, etc. You can control this via the pipeline config object.
+* `PipelineManager.targetIndex` is a new property that holds the internal target array offset index. Treat it as read-only.
+* The Pipeline Manager will now create a bunch of `RenderTarget` objects during its `boot` method. These are sized incrementally from 32px and up (use the `frameInc` value to alter this). These targets are shared by all Sprite FX Pipelines.
+* `PipelineManager.getRenderTarget` is a new method that will return the a `RenderTarget` that best fits the dimensions given. This is typically called by Sprite FX Pipelines, rather than directly.
+* `PipelineManager.getSwapRenderTarget` is a new method that will return a 'swap' `RenderTarget` that matches the size of the main target. This is called by Sprite FX pipelines and not typically called directly.
+* `PipelineManager.getAltSwapRenderTarget` is a new method that will return a 'alternative swap' `RenderTarget` that matches the size of the main target. This is called by Sprite FX pipelines and not typically called directly.
 
 ### New Features - Compressed Texture Support
 
