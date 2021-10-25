@@ -38,6 +38,14 @@ Development of this feature was kindly sponsored by Club Penguin Rewritten (http
 * `WebGLRenderer.getCompressedTextures` is a new method that will populate the `WebGLRenderer.compression` object and return its value. This is called automatically when the renderer boots.
 * `WebGLRenderer.getCompressedTextureName` is a new method that will return a compressed texture format GLenum based on the given format.
 
+### New Features - Multi Tint Pipeline
+
+* If you have a customised Multi Tint Pipeline fragment shader that uses the `%forloop%` declaration, you should update it to follow the new format defined in `Multi.frag`. This new shader uses a function called `getSampler` instead of the often massive if/else glsl blocks from before. Please see the shader code and update your own shaders accordingly.
+* The `Multi.frag` shader now uses a `highp` precision instead of `mediump`.
+* The `WebGL.Utils.checkShaderMax` function will no longer use a massive if/else glsl shader check and will instead rely on the value given in `gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS)`.
+* The `WebGL.Utils.parseFragmentShaderMaxTextures` function no longer supports the `%forloop%` declaration.
+* The internal WebGL Utils function `GenerateSrc` has been removed as it's no longer required internally.
+
 ### New Features
 
 * `ScaleManager.getViewPort` is a new method that will return a Rectangle geometry object that matches the visible area of the screen (thanks @rexrainbow)
