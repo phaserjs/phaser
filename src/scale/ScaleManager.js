@@ -621,12 +621,13 @@ var ScaleManager = new Class({
     },
 
     /**
-     * Calculates the size of the parent bounds and updates the `parentSize` component, if the canvas has a dom parent.
+     * Calculates the size of the parent bounds and updates the `parentSize`
+     * properties, only if the canvas has a dom parent.
      *
      * @method Phaser.Scale.ScaleManager#getParentBounds
      * @since 3.16.0
      *
-     * @return {boolean} `true` if the parent bounds have changed size, otherwise `false`.
+     * @return {boolean} `true` if the parent bounds have changed size or position, otherwise `false`.
      */
     getParentBounds: function ()
     {
@@ -638,6 +639,11 @@ var ScaleManager = new Class({
         var parentSize = this.parentSize;
 
         // Ref. http://msdn.microsoft.com/en-us/library/hh781509(v=vs.85).aspx for getBoundingClientRect
+
+        // The returned value is a DOMRect object which is the smallest rectangle which contains the entire element,
+        // including its padding and border-width. The left, top, right, bottom, x, y, width, and height properties
+        // describe the position and size of the overall rectangle in pixels. Properties other than width and height
+        // are relative to the top-left of the viewport.
 
         var DOMRect = this.parent.getBoundingClientRect();
 
@@ -657,8 +663,16 @@ var ScaleManager = new Class({
         }
         else
         {
-            return false;
+            var canvasBounds = this.canvasBounds;
+            var canvasRect = this.canvas.getBoundingClientRect();
+
+            if (canvasRect.x !== canvasBounds.x || canvasRect.y !== canvasBounds.y)
+            {
+                return true;
+            }
         }
+
+        return false;
     },
 
     /**
@@ -1489,11 +1503,11 @@ var ScaleManager = new Class({
         var parentSize = this.parentSize;
         var canvasBounds = this.canvasBounds;
         var displayScale = this.displayScale;
-        
+
         var x = (canvasBounds.x >= 0) ? 0 : -(canvasBounds.x * displayScale.x);
-    
+
         var y = (canvasBounds.y >= 0) ? 0 : -(canvasBounds.y * displayScale.y);
-    
+
         var width;
         if (parentSize.width >= canvasBounds.width)
         {
@@ -1503,7 +1517,7 @@ var ScaleManager = new Class({
         {
             width = baseSize.width - (canvasBounds.width - parentSize.width) * displayScale.x;
         }
-    
+
         var height;
         if (parentSize.height >= canvasBounds.height)
         {
@@ -1513,9 +1527,9 @@ var ScaleManager = new Class({
         {
             height = baseSize.height - (canvasBounds.height - parentSize.height) * displayScale.y;
         }
-    
+
         out.setTo(x, y, width, height);
-    
+
         return out;
     },
 
