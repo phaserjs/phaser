@@ -104,8 +104,6 @@ var JSONFile = new Class({
             }
             catch (e)
             {
-                console.warn('Invalid JSON: ' + this.key);
-
                 this.onProcessError();
 
                 throw e;
