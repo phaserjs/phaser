@@ -485,20 +485,12 @@ var SceneManager = new Class({
         {
             scene.preload.call(scene);
 
-            //  Is the loader empty?
-            if (loader.list.size === 0)
-            {
-                this.create(scene);
-            }
-            else
-            {
-                settings.status = CONST.LOADING;
+            settings.status = CONST.LOADING;
 
-                //  Start the loader going as we have something in the queue
-                loader.once(LoaderEvents.COMPLETE, this.loadComplete, this);
+            //  Start the loader going as we have something in the queue
+            loader.once(LoaderEvents.COMPLETE, this.loadComplete, this);
 
-                loader.start();
-            }
+            loader.start();
         }
         else
         {
