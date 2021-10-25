@@ -661,7 +661,7 @@ var ScaleManager = new Class({
 
             return true;
         }
-        else
+        else if (this.canvas)
         {
             var canvasBounds = this.canvasBounds;
             var canvasRect = this.canvas.getBoundingClientRect();
