@@ -976,7 +976,7 @@ var InputPlugin = new Class({
         {
             var gameObject = currentlyOver[i];
 
-            if (!gameObject.input)
+            if (!gameObject.input || !gameObject.input.enabled)
             {
                 continue;
             }
@@ -985,7 +985,7 @@ var InputPlugin = new Class({
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_DOWN, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1416,7 +1416,7 @@ var InputPlugin = new Class({
 
                 //  And finally the dragend event
 
-                if (gameObject.input)
+                if (gameObject.input && gameObject.input.enabled)
                 {
                     gameObject.emit(Events.GAMEOBJECT_DRAG_END, pointer, input.dragX, input.dragY, dropped);
 
@@ -1463,7 +1463,7 @@ var InputPlugin = new Class({
         {
             var gameObject = currentlyOver[i];
 
-            if (!gameObject.input)
+            if (!gameObject.input || !gameObject.input.enabled)
             {
                 continue;
             }
@@ -1472,7 +1472,7 @@ var InputPlugin = new Class({
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_MOVE, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1480,7 +1480,7 @@ var InputPlugin = new Class({
 
             this.emit(Events.GAMEOBJECT_MOVE, pointer, gameObject, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1535,7 +1535,7 @@ var InputPlugin = new Class({
         {
             var gameObject = currentlyOver[i];
 
-            if (!gameObject.input)
+            if (!gameObject.input || !gameObject.input.enabled)
             {
                 continue;
             }
@@ -1544,7 +1544,7 @@ var InputPlugin = new Class({
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_WHEEL, pointer, dx, dy, dz, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1552,7 +1552,7 @@ var InputPlugin = new Class({
 
             this.emit(Events.GAMEOBJECT_WHEEL, pointer, gameObject, dx, dy, dz, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1607,7 +1607,7 @@ var InputPlugin = new Class({
             {
                 var gameObject = currentlyOver[i];
 
-                if (!gameObject.input)
+                if (!gameObject.input || !gameObject.input.enabled)
                 {
                     continue;
                 }
@@ -1620,7 +1620,7 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1628,7 +1628,7 @@ var InputPlugin = new Class({
 
                 this.emit(Events.GAMEOBJECT_OVER, pointer, gameObject, _eventContainer);
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1690,7 +1690,7 @@ var InputPlugin = new Class({
                 //  Call onOut for everything in the previouslyOver array
                 gameObject = previouslyOver[i];
 
-                if (!gameObject.input)
+                if (!gameObject.input || !gameObject.input.enabled)
                 {
                     continue;
                 }
@@ -1701,7 +1701,7 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1709,7 +1709,7 @@ var InputPlugin = new Class({
 
                 this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1814,7 +1814,7 @@ var InputPlugin = new Class({
             {
                 gameObject = justOut[i];
 
-                if (!gameObject.input)
+                if (!gameObject.input || !gameObject.input.enabled)
                 {
                     continue;
                 }
@@ -1826,7 +1826,7 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1834,7 +1834,7 @@ var InputPlugin = new Class({
 
                 this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1863,7 +1863,7 @@ var InputPlugin = new Class({
             {
                 gameObject = justOver[i];
 
-                if (!gameObject.input)
+                if (!gameObject.input || !gameObject.input.enabled)
                 {
                     continue;
                 }
@@ -1875,7 +1875,7 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1883,7 +1883,7 @@ var InputPlugin = new Class({
 
                 this.emit(Events.GAMEOBJECT_OVER, pointer, gameObject, _eventContainer);
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1936,14 +1936,14 @@ var InputPlugin = new Class({
         {
             var gameObject = currentlyOver[i];
 
-            if (!gameObject.input)
+            if (!gameObject.input || !gameObject.input.enabled)
             {
                 continue;
             }
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_UP, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1951,7 +1951,7 @@ var InputPlugin = new Class({
 
             this.emit(Events.GAMEOBJECT_UP, pointer, gameObject, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
