@@ -399,7 +399,7 @@ var Clock = new Class({
                     event.elapsed = remainder;
                     event.hasDispatched = false;
                 }
-                else
+                else if (event.hasDispatched)
                 {
                     this._pendingRemoval.push(event);
                 }
