@@ -838,7 +838,7 @@ var SpriteFXPipeline = new Class({
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to draw to the game.
-     * @param {Phaser.Renderer.WebGL.RenderTarget} swapTarget - The Swap Render Target, useful for double-buffef effects.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [swapTarget] - The Swap Render Target, useful for double-buffer effects.
      */
     onDraw: function (target)
     {
