@@ -1049,6 +1049,7 @@ var WebGLPipeline = new Class({
      * @since 3.50.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} renderTarget - The Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [swapTarget] - A Swap Render Target, useful for double-buffer effects. Only set by SpriteFX Pipelines.
      */
     onDraw: function ()
     {
