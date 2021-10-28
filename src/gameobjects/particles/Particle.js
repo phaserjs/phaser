@@ -369,7 +369,7 @@ var Particle = new Class({
         this.delayCurrent = emitter.delay.onEmit(this, 'delay');
 
         this.scaleX = emitter.scaleX.onEmit(this, 'scaleX');
-        this.scaleY = (emitter.scaleY) ? emitter.scaleY.onEmit(this, 'scaleY') : this.scaleX;
+        this.scaleY = emitter.scaleY.onEmit(this, 'scaleY');
 
         this.angle = emitter.rotate.onEmit(this, 'rotate');
         this.rotation = DegToRad(this.angle);
@@ -531,15 +531,7 @@ var Particle = new Class({
         }
 
         this.scaleX = emitter.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
-
-        if (emitter.scaleY)
-        {
-            this.scaleY = emitter.scaleY.onUpdate(this, 'scaleY', t, this.scaleY);
-        }
-        else
-        {
-            this.scaleY = this.scaleX;
-        }
+        this.scaleY = emitter.scaleY.onUpdate(this, 'scaleY', t, this.scaleY);
 
         this.angle = emitter.rotate.onUpdate(this, 'rotate', t, this.angle);
         this.rotation = DegToRad(this.angle);
