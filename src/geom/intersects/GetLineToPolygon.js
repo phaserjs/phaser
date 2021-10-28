@@ -25,13 +25,14 @@ var tempIntersect = new Vector3();
  * @function Phaser.Geom.Intersects.GetLineToPolygon
  * @since 3.50.0
  *
- * @param {Phaser.Geom.Line} line - The line segment to check.
+ * @param {Phaser.Geom.Line} line - The line segment, or ray, to check. If a ray, set the `isRay` parameter to `true`.
  * @param {Phaser.Geom.Polygon | Phaser.Geom.Polygon[]} polygons - A single polygon, or array of polygons, to check.
+ * @param {boolean} [isRay=false] - Is `line` a ray or a line segment?
  * @param {Phaser.Math.Vector4} [out] - A Vector4 to store the intersection results in.
  *
  * @return {Phaser.Math.Vector4} A Vector4 containing the intersection results, or `null`.
  */
-var GetLineToPolygon = function (line, polygons, out)
+var GetLineToPolygon = function (line, polygons, isRay, out)
 {
     if (out === undefined) { out = new Vector4(); }
 
@@ -48,7 +49,7 @@ var GetLineToPolygon = function (line, polygons, out)
 
     for (var i = 0; i < polygons.length; i++)
     {
-        if (GetLineToPoints(line, polygons[i].points, tempIntersect))
+        if (GetLineToPoints(line, polygons[i].points, isRay, tempIntersect))
         {
             if (!closestIntersect || tempIntersect.z < out.z)
             {
