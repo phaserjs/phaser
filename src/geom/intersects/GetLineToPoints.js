@@ -4,9 +4,9 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Vector3 = require('../../math/Vector3');
 var GetLineToLine = require('./GetLineToLine');
 var Line = require('../line/Line');
+var Vector3 = require('../../math/Vector3');
 
 //  Temp calculation segment
 var segment = new Line();
@@ -28,14 +28,16 @@ var tempIntersect = new Vector3();
  * @function Phaser.Geom.Intersects.GetLineToPoints
  * @since 3.50.0
  *
- * @param {Phaser.Geom.Line} line - The line segment to check.
+ * @param {Phaser.Geom.Line} line - The line segment, or ray, to check. If a ray, set the `isRay` parameter to `true`.
  * @param {Phaser.Math.Vector2[] | Phaser.Geom.Point[]} points - An array of points to check.
+ * @param {boolean} [isRay=false] - Is `line` a ray or a line segment?
  * @param {Phaser.Math.Vector3} [out] - A Vector3 to store the intersection results in.
  *
  * @return {Phaser.Math.Vector3} A Vector3 containing the intersection results, or `null`.
  */
-var GetLineToPoints = function (line, points, out)
+var GetLineToPoints = function (line, points, isRay, out)
 {
+    if (isRay === undefined) { isRay = false; }
     if (out === undefined) { out = new Vector3(); }
 
     var closestIntersect = false;
@@ -54,7 +56,7 @@ var GetLineToPoints = function (line, points, out)
 
         prev = current;
 
-        if (GetLineToLine(line, segment, tempIntersect))
+        if (GetLineToLine(line, segment, isRay, tempIntersect))
         {
             if (!closestIntersect || tempIntersect.z < out.z)
             {
