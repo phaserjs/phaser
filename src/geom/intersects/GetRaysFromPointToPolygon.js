@@ -21,7 +21,7 @@ function CheckIntersects (angle, x, y, polygons, intersects)
 
     segment.setTo(x, y, x + dx, y + dy);
 
-    var closestIntersect = GetLineToPolygon(segment, polygons);
+    var closestIntersect = GetLineToPolygon(segment, polygons, true);
 
     if (closestIntersect)
     {
