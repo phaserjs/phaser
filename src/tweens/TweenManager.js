@@ -447,6 +447,30 @@ var TweenManager = new Class({
     },
 
     /**
+     * Resets the given tween. This will remove it from all TweenManager arrays, then call
+     * `Tween.seek(0)`, add it to the active array and make it active.
+     *
+     * @method Phaser.Tweens.TweenManager#reset
+     * @since 3.60.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - The Tween to be reset.
+     *
+     * @return {Phaser.Tweens.TweenManager} This Tween Manager object.
+     */
+    reset: function (tween)
+    {
+        this.remove(tween);
+
+        this._active.push(tween);
+
+        tween.seek(0);
+
+        tween.state = TWEEN_CONST.ACTIVE;
+
+        return this;
+    },
+
+    /**
      * Checks if a Tween or Timeline is active and adds it to the Tween Manager at the start of the frame if it isn't.
      *
      * @method Phaser.Tweens.TweenManager#makeActive
