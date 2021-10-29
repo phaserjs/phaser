@@ -28,6 +28,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.ScriptFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+ * @param {string} [type='script'] - The script type. Should be either 'script' for classic JavaScript, or 'module' if the file contains an exported module.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var ScriptFile = new Class({
@@ -36,7 +37,7 @@ var ScriptFile = new Class({
 
     initialize:
 
-    function ScriptFile (loader, key, url, xhrSettings)
+    function ScriptFile (loader, key, url, type, xhrSettings)
     {
         var extension = 'js';
 
@@ -46,12 +47,13 @@ var ScriptFile = new Class({
 
             key = GetFastValue(config, 'key');
             url = GetFastValue(config, 'url');
+            type = GetFastValue(config, 'type', 'script');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
         }
 
         var fileConfig = {
-            type: 'script',
+            type: type,
             cache: false,
             extension: extension,
             responseType: 'text',
@@ -99,6 +101,15 @@ var ScriptFile = new Class({
  * }
  * ```
  *
+ * If the script file contains a module, then you should specify that using the 'type' parameter:
+ *
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.script('aliens', 'lib/aliens.js', 'module');
+ * }
+ * ```
+ *
  * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
  * or if it's already running, when the next free load slot becomes available. This happens automatically if you
  * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
@@ -114,7 +125,8 @@ var ScriptFile = new Class({
  * ```javascript
  * this.load.script({
  *     key: 'aliens',
- *     url: 'lib/aliens.js'
+ *     url: 'lib/aliens.js',
+ *     type: 'script' // or 'module'
  * });
  * ```
  *
@@ -140,11 +152,12 @@ var ScriptFile = new Class({
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.ScriptFileConfig|Phaser.Types.Loader.FileTypes.ScriptFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+ * @param {string} [type='script'] - The script type. Should be either 'script' for classic JavaScript, or 'module' if the file contains an exported module.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {this} The Loader instance.
  */
-FileTypesManager.register('script', function (key, url, xhrSettings)
+FileTypesManager.register('script', function (key, url, type, xhrSettings)
 {
     if (Array.isArray(key))
     {
@@ -156,7 +169,7 @@ FileTypesManager.register('script', function (key, url, xhrSettings)
     }
     else
     {
-        this.addFile(new ScriptFile(this, key, url, xhrSettings));
+        this.addFile(new ScriptFile(this, key, url, type, xhrSettings));
     }
 
     return this;
