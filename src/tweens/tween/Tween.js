@@ -505,6 +505,10 @@ var Tween = new Class({
         {
             return this;
         }
+        else if (this.state === TWEEN_CONST.PENDING_REMOVE)
+        {
+            this.parent.reset(this);
+        }
         else
         {
             return this.play();
