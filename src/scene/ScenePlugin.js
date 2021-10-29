@@ -202,7 +202,7 @@ var ScenePlugin = new Class({
      * @since 3.0.0
      *
      * @param {(string|Phaser.Scene)} [key] - The Scene to start.
-     * @param {object} [data] - The Scene data.
+     * @param {object} [data] - The Scene data. If no value is given it will not overwrite any previous data that may exist.
      *
      * @return {this} This Scene Plugin instance.
      */
@@ -224,7 +224,7 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#restart
      * @since 3.4.0
      *
-     * @param {object} [data] - The Scene data.
+     * @param {object} [data] - The Scene data. If no value is given it will not overwrite any previous data that may exist.
      *
      * @return {this} This Scene Plugin instance.
      */
