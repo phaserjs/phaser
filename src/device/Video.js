@@ -18,6 +18,7 @@
  * @property {boolean} h264 - Can this device play h264 mp4 video files?
  * @property {boolean} hls - Can this device play hls video files?
  * @property {boolean} mp4 - Can this device play h264 mp4 video files?
+ * @property {boolean} m4v - Can this device play m4v (typically mp4) video files?
  * @property {boolean} ogg - Can this device play ogg video files?
  * @property {boolean} vp9 - Can this device play vp9 video files?
  * @property {boolean} webm - Can this device play webm video files?
@@ -27,6 +28,7 @@ var Video = {
     h264: false,
     hls: false,
     mp4: false,
+    m4v: false,
     ogg: false,
     vp9: false,
     webm: false
@@ -42,34 +44,40 @@ function init ()
 
     var videoElement = document.createElement('video');
     var result = !!videoElement.canPlayType;
+    var no = /^no$/;
 
     try
     {
         if (result)
         {
-            if (videoElement.canPlayType('video/ogg; codecs="theora"').replace(/^no$/, ''))
+            if (videoElement.canPlayType('video/ogg; codecs="theora"').replace(no, ''))
             {
                 Video.ogg = true;
             }
 
-            if (videoElement.canPlayType('video/mp4; codecs="avc1.42E01E"').replace(/^no$/, ''))
+            if (videoElement.canPlayType('video/mp4; codecs="avc1.42E01E"').replace(no, ''))
             {
                 // Without QuickTime, this value will be `undefined`. github.com/Modernizr/Modernizr/issues/546
                 Video.h264 = true;
                 Video.mp4 = true;
             }
 
-            if (videoElement.canPlayType('video/webm; codecs="vp8, vorbis"').replace(/^no$/, ''))
+            if (videoElement.canPlayType('video/x-m4v').replace(no, ''))
+            {
+                Video.m4v = true;
+            }
+
+            if (videoElement.canPlayType('video/webm; codecs="vp8, vorbis"').replace(no, ''))
             {
                 Video.webm = true;
             }
 
-            if (videoElement.canPlayType('video/webm; codecs="vp9"').replace(/^no$/, ''))
+            if (videoElement.canPlayType('video/webm; codecs="vp9"').replace(no, ''))
             {
                 Video.vp9 = true;
             }
 
-            if (videoElement.canPlayType('application/x-mpegURL; codecs="avc1.42E01E"').replace(/^no$/, ''))
+            if (videoElement.canPlayType('application/x-mpegURL; codecs="avc1.42E01E"').replace(no, ''))
             {
                 Video.hls = true;
             }
