@@ -51,41 +51,41 @@ function init ()
     Audio.webAudio = !!(window['AudioContext'] || window['webkitAudioContext']);
 
     var audioElement = document.createElement('audio');
-
     var result = !!audioElement.canPlayType;
+    var no = /^no$/;
 
     try
     {
         if (result)
         {
-            if (audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ''))
+            if (audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(no, ''))
             {
                 Audio.ogg = true;
             }
 
-            if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, '') || audioElement.canPlayType('audio/opus;').replace(/^no$/, ''))
+            if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(no, '') || audioElement.canPlayType('audio/opus;').replace(no, ''))
             {
                 Audio.opus = true;
             }
 
-            if (audioElement.canPlayType('audio/mpeg;').replace(/^no$/, ''))
+            if (audioElement.canPlayType('audio/mpeg;').replace(no, ''))
             {
                 Audio.mp3 = true;
             }
 
             //  Mimetypes accepted:
             //  developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
-            if (audioElement.canPlayType('audio/wav').replace(/^no$/, ''))
+            if (audioElement.canPlayType('audio/wav').replace(no, ''))
             {
                 Audio.wav = true;
             }
 
-            if (audioElement.canPlayType('audio/x-m4a;') || audioElement.canPlayType('audio/aac;').replace(/^no$/, ''))
+            if (audioElement.canPlayType('audio/x-m4a;') || audioElement.canPlayType('audio/aac;').replace(no, ''))
             {
                 Audio.m4a = true;
             }
 
-            if (audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, ''))
+            if (audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(no, ''))
             {
                 Audio.webm = true;
             }
