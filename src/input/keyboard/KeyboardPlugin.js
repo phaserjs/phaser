@@ -547,12 +547,14 @@ var KeyboardPlugin = new Class({
      *
      * @param {(Phaser.Input.Keyboard.Key|string|number)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      * @param {boolean} [destroy=false] - Call `Key.destroy` on the removed Key object?
+     * @param {boolean} [removeCapture=false] - Remove this Key from being captured? Only applies if set to capture when created.
      *
      * @return {this} This KeyboardPlugin object.
      */
-    removeKey: function (key, destroy)
+    removeKey: function (key, destroy, removeCapture)
     {
         if (destroy === undefined) { destroy = false; }
+        if (removeCapture === undefined) { removeCapture = false; }
 
         var keys = this.keys;
         var ref;
@@ -584,6 +586,11 @@ var KeyboardPlugin = new Class({
         {
             ref.plugin = null;
 
+            if (removeCapture)
+            {
+                this.removeCapture(ref.keyCode);
+            }
+
             if (destroy)
             {
                 ref.destroy();
@@ -600,11 +607,15 @@ var KeyboardPlugin = new Class({
      * @since 3.24.0
      *
      * @param {boolean} [destroy=false] - Call `Key.destroy` on each removed Key object?
+     * @param {boolean} [removeCapture=false] - Remove all key captures for Key objects owened by this plugin?
      *
      * @return {this} This KeyboardPlugin object.
      */
-    removeAllKeys: function (destroy)
+    removeAllKeys: function (destroy, removeCapture)
     {
+        if (destroy === undefined) { destroy = false; }
+        if (removeCapture === undefined) { removeCapture = false; }
+
         var keys = this.keys;
 
         for (var i = 0; i < keys.length; i++)
@@ -614,6 +625,11 @@ var KeyboardPlugin = new Class({
             if (key)
             {
                 keys[i] = undefined;
+
+                if (removeCapture)
+                {
+                    this.removeCapture(key.keyCode);
+                }
 
                 if (destroy)
                 {
