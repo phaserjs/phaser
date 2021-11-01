@@ -367,7 +367,7 @@ var PathFollower = {
 
             if (tweenData.state === TWEEN_CONST.COMPLETE)
             {
-                this.path.getPoint(1, pathVector);
+                this.path.getPoint(tweenData.end, pathVector);
 
                 pathDelta.add(pathVector);
                 pathVector.add(this.pathOffset);
