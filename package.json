@@ -71,7 +71,7 @@
     "eslint-plugin-es5": "^1.5.0",
     "exports-loader": "^3.1.0",
     "fs-extra": "^10.0.0",
-    "imports-loader": "^3.1.0",
+    "imports-loader": "^3.1.1",
     "jsdoc": "^3.6.7",
     "node-sloc": "^0.2.0",
     "remove-files-webpack-plugin": "^1.4.5",
