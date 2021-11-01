@@ -1216,7 +1216,7 @@ var Text = new Class({
 
             if (style.rtl)
             {
-                linePositionX = w - linePositionX;
+                linePositionX = w - linePositionX - padding.left - padding.right;
             }
             else if (style.align === 'right')
             {
