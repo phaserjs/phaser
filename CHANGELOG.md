@@ -60,6 +60,11 @@ Development of this feature was kindly sponsored by Club Penguin Rewritten (http
 * The `Video` config will now detect for `x-m4v` playback support for video formats and store it in the `Video.m4v` property. This is used automatically by the `VideoFile` file loader. Fix #5719 (thanks @patrickkeenan)
 * The `KeyboardPlugin.removeKey` method has a new optional parameter `removeCapture`. This will remove any keyboard capture events for the given Key. Fix #5693 (thanks @cyantree)
 * The `KeyboardPlugin.removeAllKeys` method has a new optional parameter `removeCapture`. This will remove any keyboard capture events for all of the Keys owned by the plugin.
+* `WebGLShader.fragSrc` is a new property that holds the source of the fragment shader.
+* `WebGLShader.vertSrc` is a new property that holds the source of the vertex shader.
+* `WebGLShader#.createProgram` is a new method that will destroy and then re-create the shader program based on the given (or stored) vertex and fragment shader source.
+* `WebGLShader.setBoolean` is a new method that allows you to set a boolean uniform on a shader.
+* `WebGLPipeline.setBoolean` is a new method that allows you to set a boolean uniform on a shader.
 
 ### Geom Updates
 
