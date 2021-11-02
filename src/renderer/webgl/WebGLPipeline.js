@@ -1609,6 +1609,33 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Sets a boolean uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setBoolean
+     * @since 3.60.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {boolean} value - The new value of the `boolean` uniform.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    setBoolean: function (name, value, shader)
+    {
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.setBoolean(name, value);
+
+        return this;
+    },
+
+    /**
      * Sets a 1f uniform value based on the given name on the currently set shader.
      *
      * The current shader is bound, before the uniform is set, making it active within the
