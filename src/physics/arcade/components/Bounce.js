@@ -14,7 +14,7 @@ var Bounce = {
 
     /**
      * Sets the bounce values of this body.
-     * 
+     *
      * Bounce is the amount of restitution, or elasticity, the body has when it collides with another object.
      * A value of 1 means that it will retain its full velocity after the rebound. A value of 0 means it will not rebound at all.
      *
@@ -69,7 +69,7 @@ var Bounce = {
 
     /**
      * Sets whether this Body collides with the world boundary.
-     * 
+     *
      * Optionally also sets the World Bounce values. If the `Body.worldBounce` is null, it's set to a new Phaser.Math.Vector2 first.
      *
      * @method Phaser.Physics.Arcade.Components.Bounce#setCollideWorldBounds
@@ -78,12 +78,13 @@ var Bounce = {
      * @param {boolean} [value=true] - `true` if this body should collide with the world bounds, otherwise `false`.
      * @param {number} [bounceX] - If given this will be replace the `worldBounce.x` value.
      * @param {number} [bounceY] - If given this will be replace the `worldBounce.y` value.
+     * @param {boolean} [onWorldBounds] - If given this replaces the Body's `onWorldBounds` value.
      *
      * @return {this} This Game Object.
      */
-    setCollideWorldBounds: function (value, bounceX, bounceY)
+    setCollideWorldBounds: function (value, bounceX, bounceY, onWorldBounds)
     {
-        this.body.setCollideWorldBounds(value, bounceX, bounceY);
+        this.body.setCollideWorldBounds(value, bounceX, bounceY, onWorldBounds);
 
         return this;
     }
