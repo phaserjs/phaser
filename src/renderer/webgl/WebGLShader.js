@@ -78,6 +78,24 @@ var WebGLShader = new Class({
         this.gl = this.renderer.gl;
 
         /**
+         * The fragment shader source code.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLShader#fragSrc
+         * @type {string}
+         * @since 3.60.0
+         */
+        this.fragSrc = fragmentShader;
+
+        /**
+         * The vertex shader source code.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLShader#vertSrc
+         * @type {string}
+         * @since 3.60.0
+         */
+        this.vertSrc = vertexShader;
+
+        /**
          * The WebGLProgram created from the vertex and fragment shaders.
          *
          * @name Phaser.Renderer.WebGL.WebGLShader#program
@@ -642,6 +660,28 @@ var WebGLShader = new Class({
     },
 
     /**
+     * Sets a boolean uniform value based on the given name on this shader.
+     *
+     * The uniform is only set if the value/s given are different to those previously set.
+     *
+     * This method works by first setting this shader as being the current shader within the
+     * WebGL Renderer, if it isn't already. It also sets this shader as being the current
+     * one within the pipeline it belongs to.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#setBoolean
+     * @since 3.60.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {boolean} value - The new value of the `boolean` uniform.
+     *
+     * @return {this} This WebGLShader instance.
+     */
+    setBoolean: function (name, value)
+    {
+        return this.setUniform1(this.gl.uniform1i, name, Number(value));
+    },
+
+    /**
      * Sets a 1f uniform value based on the given name on this shader.
      *
      * The uniform is only set if the value/s given are different to those previously set.
@@ -1072,6 +1112,51 @@ var WebGLShader = new Class({
     setMatrix4fv: function (name, transpose, matrix)
     {
         return this.setUniform2(this.gl.uniformMatrix4fv, name, transpose, matrix, true);
+    },
+
+    /**
+     * This method will create the Shader Program on the current GL context.
+     *
+     * If a program already exists, it will be destroyed and the new one will take its place.
+     *
+     * After the program is created the uniforms will be reset and
+     * this shader will be rebound.
+     *
+     * This is a very expensive process and if your shader is referenced elsewhere in
+     * your game those references may then be lost, so be sure to use this carefully.
+     *
+     * However, if you need to update say the fragment shader source, then you can pass
+     * the new source into this method and it'll rebuild the program using it. If you
+     * don't want to change the vertex shader src, pass `undefined` as the parameter.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLShader#createProgram
+     * @since 3.60.0
+     *
+     * @param {string} [vertSrc] - The source code of the vertex shader. If not given, uses the source already defined in this Shader.
+     * @param {string} [fragSrc] - The source code of the fragment shader. If not given, uses the source already defined in this Shader.
+     *
+     * @return {this} This WebGLShader instance.
+     */
+    createProgram: function (vertSrc, fragSrc)
+    {
+        if (vertSrc === undefined) { vertSrc = this.vertSrc; }
+        if (fragSrc === undefined) { fragSrc = this.fragSrc; }
+
+        var gl = this.gl;
+
+        if (this.program)
+        {
+            gl.deleteProgram(this.program);
+        }
+
+        this.vertSrc = vertSrc;
+        this.fragSrc = fragSrc;
+
+        this.program = this.renderer.createProgram(vertSrc, fragSrc);
+
+        this.createUniforms();
+
+        return this.rebind();
     },
 
     /**
