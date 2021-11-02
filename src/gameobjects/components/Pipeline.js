@@ -182,7 +182,7 @@ var Pipeline = {
      * If you call this method multiple times, the new pipelines will be appended to any existing
      * post pipelines already set. Use the `resetPostPipeline` method to clear them first, if required.
      *
-     * You can optionally also sets the `pipelineData` property, if the parameter is given.
+     * You can optionally also set the `pipelineData` property, if the parameter is given.
      *
      * Both the pipeline and post pipelines share the pipeline data object together.
      *
