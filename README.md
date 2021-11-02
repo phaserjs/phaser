@@ -72,6 +72,11 @@ There are other benefits to [backing Phaser](https://www.patreon.com/join/photon
 
 We use [Patreon](https://www.patreon.com/photonstorm) to manage the backing and you can [support Phaser](https://www.patreon.com/join/photonstorm?) from $1 per month. The amount you pledge is entirely up to you and can be changed as often as you like. Patreon renews monthly, just like Netflix. You can, of course, cancel at any point. Tears will be shed on this end, but that's not your concern.
 
+You can also support us by using crypto currencies. The Phaser wallet addresses are:
+
+* Ethereum: 0x10412d654b44570950631aA0C3E3f3aFcAEfAB4C
+* Bitcoin: 3MjS5iNH8yUBfYW2emxBk7rRUkP6ncrkXC
+
 Extra special thanks to the following companies whose support makes Phaser possible:
 
 * [Cerebral Fix](https://cerebralfix.com)
