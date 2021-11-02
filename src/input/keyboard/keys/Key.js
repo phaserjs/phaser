@@ -174,7 +174,7 @@ var Key = new Class({
 
         /**
          * When a key is held down should it continuously fire the `down` event each time it repeats?
-         * 
+         *
          * By default it will emit the `down` event just once, but if you wish to receive the event
          * for each repeat as well, enable this property.
          *
@@ -234,9 +234,9 @@ var Key = new Class({
      *
      * @method Phaser.Input.Keyboard.Key#setEmitOnRepeat
      * @since 3.16.0
-     * 
+     *
      * @param {boolean} value - Emit `down` events on repeated key down actions, or just once?
-     * 
+     *
      * @return {this} This Key instance.
      */
     setEmitOnRepeat: function (value)
@@ -253,7 +253,7 @@ var Key = new Class({
      * @method Phaser.Input.Keyboard.Key#onDown
      * @fires Phaser.Input.Keyboard.Events#DOWN
      * @since 3.16.0
-     * 
+     *
      * @param {KeyboardEvent} event - The native DOM Keyboard event.
      */
     onDown: function (event)
@@ -270,7 +270,7 @@ var Key = new Class({
         this.shiftKey = event.shiftKey;
         this.metaKey = event.metaKey;
         this.location = event.location;
-    
+
         this.repeats++;
 
         if (!this.isDown)
@@ -297,7 +297,7 @@ var Key = new Class({
      * @method Phaser.Input.Keyboard.Key#onUp
      * @fires Phaser.Input.Keyboard.Events#UP
      * @since 3.16.0
-     * 
+     *
      * @param {KeyboardEvent} event - The native DOM Keyboard event.
      */
     onUp: function (event)
@@ -308,17 +308,17 @@ var Key = new Class({
         {
             return;
         }
-    
+
         this.isDown = false;
         this.isUp = true;
         this.timeUp = event.timeStamp;
         this.duration = this.timeUp - this.timeDown;
         this.repeats = 0;
-    
+
         this._justDown = false;
         this._justUp = true;
         this._tick = -1;
-        
+
         this.emit(Events.UP, this, event);
     },
 
@@ -327,7 +327,7 @@ var Key = new Class({
      *
      * @method Phaser.Input.Keyboard.Key#reset
      * @since 3.6.0
-     * 
+     *
      * @return {this} This Key instance.
      */
     reset: function ()
@@ -353,15 +353,15 @@ var Key = new Class({
 
     /**
      * Returns the duration, in ms, that the Key has been held down for.
-     * 
+     *
      * If the key is not currently down it will return zero.
-     * 
-     * The get the duration the Key was held down for in the previous up-down cycle,
+     *
+     * To get the duration the Key was held down for in the previous up-down cycle,
      * use the `Key.duration` property value instead.
      *
      * @method Phaser.Input.Keyboard.Key#getDuration
      * @since 3.17.0
-     * 
+     *
      * @return {number} The duration, in ms, that the Key has been held down for if currently down.
      */
     getDuration: function ()
