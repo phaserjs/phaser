@@ -10,6 +10,7 @@ var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var ImageFile = require('./ImageFile');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 var JSONFile = require('./JSONFile');
 var KTXParser = require('../../textures/parsers/KTXParser');
 var Merge = require('../../utils/object/Merge');
@@ -364,6 +365,22 @@ var CompressedTextureFile = new Class({
  *
  * When loading a Multi Atlas you do not need to specify the `textureURL` property as it will be read from the JSON file.
  *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ *
+ * ```javascript
+ * this.load.texture({
+ *     key: 'yourPic',
+ *     url: {
+ *         ASTC: { type: 'PVR', textureURL: 'pic-astc-4x4.pvr' },
+ *         PVRTC: { type: 'PVR', textureURL: 'pic-pvrtc-4bpp-rgba.pvr' },
+ *         S3TC: { type: 'PVR', textureURL: 'pic-dxt5.pvr' },
+ *         IMG: { textureURL: 'pic.png' }
+ *    }
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Types.Loader.FileTypes.CompressedTextureFileConfig` for more details.
+ *
  * The number of formats you provide to this function is up to you, but you should ensure you
  * cover the primary platforms where appropriate.
  *
@@ -426,71 +443,101 @@ var CompressedTextureFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#ADD
  * @since 3.60.0
  *
- * @param {string} key - The key to use for this file within the Texture Manager.
- * @param {Phaser.Types.Loader.FileTypes.CompressedTextureFileConfig} urls - The compressed texture configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.CompressedTextureFileConfig|Phaser.Types.Loader.FileTypes.CompressedTextureFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {Phaser.Types.Loader.FileTypes.CompressedTextureFileConfig} [url] - The compressed texture configuration object. Not required if passing a config object as the `key` parameter.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {this} The Loader instance.
  */
-FileTypesManager.register('texture', function (key, urls, xhrSettings)
+FileTypesManager.register('texture', function (key, url, xhrSettings)
 {
-    var entry = {
-        format: null,
-        type: null,
-        textureURL: null,
-        atlasURL: null,
-        multiAtlasURL: null,
-        multiPath: null,
-        multiBaseURL: null
-    };
-
     var renderer = this.systems.renderer;
 
-    for (var textureBaseFormat in urls)
+    var AddEntry = function (loader, key, urls, xhrSettings)
     {
-        if (renderer.supportsCompressedTexture(textureBaseFormat))
-        {
-            var urlEntry = urls[textureBaseFormat];
+        var entry = {
+            format: null,
+            type: null,
+            textureURL: null,
+            atlasURL: null,
+            multiAtlasURL: null,
+            multiPath: null,
+            multiBaseURL: null
+        };
 
-            if (typeof urlEntry === 'string')
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            urls = GetFastValue(config, 'url'),
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+        }
+
+        var matched = false;
+
+        for (var textureBaseFormat in urls)
+        {
+            if (renderer.supportsCompressedTexture(textureBaseFormat))
             {
-                entry.textureURL = urlEntry;
+                var urlEntry = urls[textureBaseFormat];
+
+                if (typeof urlEntry === 'string')
+                {
+                    entry.textureURL = urlEntry;
+                }
+                else
+                {
+                    entry = Merge(urlEntry, entry);
+                }
+
+                entry.format = textureBaseFormat.toUpperCase();
+
+                matched = true;
+
+                break;
+            }
+        }
+
+        console.log(entry);
+
+        if (!matched)
+        {
+            console.warn('No supported compressed texture format or IMG fallback', key);
+        }
+        else if (entry.format === 'IMG')
+        {
+            if (entry.multiAtlasURL)
+            {
+                loader.addFile(new MultiAtlasFile(loader, key, entry.multiAtlasURL, entry.multiPath, entry.multiBaseURL, xhrSettings));
+            }
+            else if (entry.atlasURL)
+            {
+                loader.addFile(new AtlasJSONFile(loader, key, entry.textureURL, entry.atlasURL, xhrSettings));
             }
             else
             {
-                entry = Merge(urlEntry, entry);
+                loader.addFile(new ImageFile(loader, key, entry.textureURL, xhrSettings));
             }
-
-            entry.format = textureBaseFormat.toUpperCase();
-
-            break;
-        }
-    }
-
-    if (!entry)
-    {
-        console.warn('No supported texture format or IMG fallback', key);
-    }
-    else if (entry.format === 'IMG')
-    {
-        if (entry.multiAtlasURL)
-        {
-            this.addFile(new MultiAtlasFile(this, key, entry.multiAtlasURL, entry.multiPath, entry.multiBaseURL, xhrSettings));
-        }
-        else if (entry.atlasURL)
-        {
-            this.addFile(new AtlasJSONFile(this, key, entry.textureURL, entry.atlasURL, xhrSettings));
         }
         else
         {
-            this.addFile(new ImageFile(this, key, entry.textureURL, xhrSettings));
+            var texture = new CompressedTextureFile(loader, key, entry, xhrSettings);
+
+            loader.addFile(texture.files);
+        }
+    };
+
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            AddEntry(this, key[i]);
         }
     }
     else
     {
-        var texture = new CompressedTextureFile(this, key, entry, xhrSettings);
-
-        this.addFile(texture.files);
+        AddEntry(this, key, url, xhrSettings);
     }
 
     return this;
