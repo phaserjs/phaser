@@ -453,8 +453,6 @@ var File = new Class({
         {
             this.cache.add(this.key, this.data);
         }
-
-        this.pendingDestroy();
     },
 
     /**
@@ -468,6 +466,11 @@ var File = new Class({
      */
     pendingDestroy: function (data)
     {
+        if (this.state === CONST.FILE_PENDING_DESTROY)
+        {
+            return;
+        }
+
         if (data === undefined) { data = this.data; }
 
         var key = this.key;
@@ -477,6 +480,8 @@ var File = new Class({
         this.loader.emit(Events.FILE_KEY_COMPLETE + type + '-' + key, key, type, data);
 
         this.loader.flagForRemoval(this);
+
+        this.state = CONST.FILE_PENDING_DESTROY;
     },
 
     /**
