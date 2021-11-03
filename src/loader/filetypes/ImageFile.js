@@ -201,29 +201,22 @@ var ImageFile = new Class({
      */
     addToCache: function ()
     {
-        var texture;
         var linkFile = this.linkFile;
 
         if (linkFile && linkFile.state === CONST.FILE_COMPLETE)
         {
             if (this.type === 'image')
             {
-                texture = this.cache.addImage(this.key, this.data, linkFile.data);
+                this.cache.addImage(this.key, this.data, linkFile.data);
             }
             else
             {
-                texture = this.cache.addImage(linkFile.key, linkFile.data, this.data);
+                this.cache.addImage(linkFile.key, linkFile.data, this.data);
             }
-
-            this.pendingDestroy(texture);
-
-            linkFile.pendingDestroy(texture);
         }
         else if (!linkFile)
         {
-            texture = this.cache.addImage(this.key, this.data);
-
-            this.pendingDestroy(texture);
+            this.cache.addImage(this.key, this.data);
         }
     }
 

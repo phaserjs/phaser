@@ -100,8 +100,6 @@ var AtlasJSONFile = new Class({
 
             this.loader.textureManager.addAtlas(image.key, image.data, json.data, normalMap);
 
-            json.pendingDestroy();
-
             this.complete = true;
         }
     }

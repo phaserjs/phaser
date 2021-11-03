@@ -93,8 +93,6 @@ var TilemapCSVFile = new Class({
         var tiledata = { format: this.tilemapFormat, data: this.data };
 
         this.cache.add(this.key, tiledata);
-
-        this.pendingDestroy(tiledata);
     }
 
 });

@@ -54,8 +54,6 @@ var TilemapImpactFile = new Class({
         var tiledata = { format: TILEMAP_FORMATS.WELTMEISTER, data: this.data };
 
         this.cache.add(this.key, tiledata);
-
-        this.pendingDestroy(tiledata);
     }
 
 });

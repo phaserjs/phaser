@@ -13,7 +13,7 @@ var ImageFile = require('./ImageFile.js');
  * A single Sprite Sheet Image File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#spritesheet method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#spritesheet.
  *
  * @class SpriteSheetFile
@@ -49,9 +49,7 @@ var SpriteSheetFile = new Class({
      */
     addToCache: function ()
     {
-        var texture = this.cache.addSpriteSheet(this.key, this.data, this.config);
-
-        this.pendingDestroy(texture);
+        this.cache.addSpriteSheet(this.key, this.data, this.config);
     }
 
 });
@@ -66,7 +64,7 @@ var SpriteSheetFile = new Class({
  * what sort of file you're actually trying to load.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -81,7 +79,7 @@ var SpriteSheetFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
  * If you try to load an animated gif only the first frame will be rendered. Browsers do not natively support playback
  * of animated gifs to Canvas elements.
@@ -92,7 +90,7 @@ var SpriteSheetFile = new Class({
  * then remove it from the Texture Manager first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.spritesheet({
  *     key: 'bot',
@@ -109,7 +107,7 @@ var SpriteSheetFile = new Class({
  * See the documentation for `Phaser.Types.Loader.FileTypes.SpriteSheetFileConfig` for more details.
  *
  * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
- * 
+ *
  * ```javascript
  * this.load.spritesheet('bot', 'images/robot.png', { frameWidth: 32, frameHeight: 38 });
  * // and later in your game ...
@@ -128,13 +126,13 @@ var SpriteSheetFile = new Class({
  *
  * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
  * then you can specify it by providing an array as the `url` where the second element is the normal map:
- * 
+ *
  * ```javascript
  * this.load.spritesheet('logo', [ 'images/AtariLogo.png', 'images/AtariLogo-n.png' ], { frameWidth: 256, frameHeight: 80 });
  * ```
  *
  * Or, if you are using a config object use the `normalMap` property:
- * 
+ *
  * ```javascript
  * this.load.spritesheet({
  *     key: 'logo',
@@ -149,7 +147,7 @@ var SpriteSheetFile = new Class({
  *
  * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
  * Normal maps are a WebGL only feature.
- * 
+ *
  * Note: The ability to load this type of file will only be available if the Sprite Sheet File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *

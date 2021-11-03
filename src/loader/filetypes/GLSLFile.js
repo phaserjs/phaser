@@ -150,8 +150,6 @@ var GLSLFile = new Class({
         {
             this.cache.add(this.key, new Shader(this.key, '', this.data));
         }
-
-        this.pendingDestroy();
     },
 
     /**

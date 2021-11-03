@@ -223,11 +223,6 @@ var CompressedTextureFile = new Class({
 
                     textureManager.addCompressedTexture(image.key, textureData, atlasData);
                 }
-
-                if (json)
-                {
-                    json.pendingDestroy();
-                }
             }
 
             this.complete = true;
@@ -310,11 +305,6 @@ var CompressedTextureFile = new Class({
         textureManager.addAtlasJSONArray(this.key, images, data, normalMaps);
 
         this.complete = true;
-
-        for (i = 0; i < this.files.length; i++)
-        {
-            this.files[i].pendingDestroy();
-        }
     }
 
 });

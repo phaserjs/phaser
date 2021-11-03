@@ -54,8 +54,6 @@ var TilemapJSONFile = new Class({
         var tiledata = { format: TILEMAP_FORMATS.TILED_JSON, data: this.data };
 
         this.cache.add(this.key, tiledata);
-
-        this.pendingDestroy(tiledata);
     }
 
 });
