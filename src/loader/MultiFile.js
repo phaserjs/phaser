@@ -5,6 +5,8 @@
  */
 
 var Class = require('../utils/Class');
+var CONST = require('./const');
+var Events = require('./events');
 
 /**
  * @classdesc
@@ -85,6 +87,15 @@ var MultiFile = new Class({
          * @since 3.7.0
          */
         this.files = finalFiles;
+
+        /**
+         * The current state of the file. One of the FILE_CONST values.
+         *
+         * @name Phaser.Loader.MultiFile#state
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.state = CONST.FILE_PENDING;
 
         /**
          * The completion status of this MultiFile.
@@ -235,6 +246,53 @@ var MultiFile = new Class({
             // eslint-disable-next-line no-console
             console.error('File failed: %s "%s" (via %s "%s")', this.type, this.key, file.type, file.key);
         }
+    },
+
+    /**
+     * Called once all children of this multi file have been added to their caches and is now
+     * ready for deletion from the Loader.
+     *
+     * It will emit a `filecomplete` event from the LoaderPlugin.
+     *
+     * @method Phaser.Loader.MultiFile#pendingDestroy
+     * @fires Phaser.Loader.Events#FILE_COMPLETE
+     * @fires Phaser.Loader.Events#FILE_KEY_COMPLETE
+     * @since 3.60.0
+     */
+    pendingDestroy: function ()
+    {
+        if (this.state === CONST.FILE_PENDING_DESTROY)
+        {
+            return;
+        }
+
+        var key = this.key;
+        var type = this.type;
+
+        this.loader.emit(Events.FILE_COMPLETE, key, type);
+        this.loader.emit(Events.FILE_KEY_COMPLETE + type + '-' + key, key, type);
+
+        this.loader.flagForRemoval(this);
+
+        for (var i = 0; i < this.files.length; i++)
+        {
+            this.files[i].pendingDestroy();
+        }
+
+        this.state = CONST.FILE_PENDING_DESTROY;
+    },
+
+    /**
+     * Destroy this Multi File and any references it holds.
+     *
+     * @method Phaser.Loader.MultiFile#destroy
+     * @since 3.60.0
+     */
+    destroy: function ()
+    {
+        this.loader = null;
+        this.files = null;
+        this.config = null;
     }
 
 });
