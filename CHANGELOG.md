@@ -75,6 +75,13 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `Geom.Intersects.GetLineToPolygon` method has a new optional parameter `isRay`. If `true` it will treat the line parameter as a ray, if false, as a line segment (the default).
 * `Geom.Intersects.GetRaysFromPointToPolygon` uses the new `isRay` parameter to enable this function to work fully again.
 
+### Loader Updates
+
+* `MultiFile.pendingDestroy` is a new method that is called by the Loader Plugin and manages preparing the file for deletion. It also emits the `FILE_COMPLETE` and `FILE_KEY_COMPLETE` events, fixing a bug where `MultiFile` related files, such as an Atlas JSON or a Bitmap Font File, wouldn't emit the `filecomplete` events for the parent file, only for the sub-files. This means you can now listen for the file completion event for `multiatlas` files, among others.
+* `MultiFile.destroy` is a new method that clears down all external references of the file, helping free-up resources.
+* `File.addToCache` no longer calls `File.pendingDestroy`, instead this is now handled by the Loader Plugin.
+* There is a new File constant `FILE_PENDING_DESTROY` which is used to ensure Files aren't flagged for destruction more than once.
+
 ### Updates
 
 * When you try to use a frame that is missing on the Texture, it will now give the key of the Texture in the console warning (thanks @samme)
