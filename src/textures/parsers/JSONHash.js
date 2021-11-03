@@ -51,6 +51,13 @@ var JSONHash = function (texture, sourceIndex, json)
         //  The frame values are the exact coordinates to cut the frame out of the atlas from
         newFrame = texture.add(key, sourceIndex, src.frame.x, src.frame.y, src.frame.w, src.frame.h);
 
+        if (!newFrame)
+        {
+            console.warn('Invalid atlas json, frame already exists: ' + key);
+
+            continue;
+        }
+
         //  These are the original (non-trimmed) sprite values
         if (src.trimmed)
         {
