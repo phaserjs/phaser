@@ -889,12 +889,14 @@ var LoaderPlugin = new Class({
                 {
                     //  If we got here then all files the link file needs are ready to add to the cache
                     file.multiFile.addToCache();
+                    file.multiFile.pendingDestroy();
                 }
             }
             else
             {
                 //  If we got here, then the file processed, so let it add itself to its cache
                 file.addToCache();
+                file.pendingDestroy();
             }
         }
 
