@@ -204,11 +204,6 @@ var MultiAtlasFile = new Class({
             this.loader.textureManager.addAtlasJSONArray(this.key, images, data, normalMaps);
 
             this.complete = true;
-
-            for (i = 0; i < this.files.length; i++)
-            {
-                this.files[i].pendingDestroy();
-            }
         }
     }
 
