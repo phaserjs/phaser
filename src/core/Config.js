@@ -116,6 +116,16 @@ var Config = new Class({
          */
         this.maxHeight = GetValue(config, 'maxHeight', 0);
 
+        /**
+         * @const {number} Phaser.Core.Config#snapWidth - The snap width, in pixels. A value of zero means no snapping.
+         */
+        this.snapWidth = 0;
+
+        /**
+         * @const {number} Phaser.Core.Config#snapHeight - The snap height, in pixels. A value of zero means no snapping.
+         */
+        this.snapHeight = 0;
+
         //  Scale Manager - Anything set in here over-rides anything set above
 
         var scaleConfig = GetValue(config, 'scale', null);
@@ -136,6 +146,8 @@ var Config = new Class({
             this.maxWidth = GetValue(scaleConfig, 'max.width', this.maxWidth);
             this.minHeight = GetValue(scaleConfig, 'min.height', this.minHeight);
             this.maxHeight = GetValue(scaleConfig, 'max.height', this.maxHeight);
+            this.snapWidth = GetValue(scaleConfig, 'snap.width', this.snapWidth);
+            this.snapHeight = GetValue(scaleConfig, 'snap.height', this.snapHeight);
         }
 
         /**

@@ -563,6 +563,11 @@ var ScaleManager = new Class({
             this.displaySize.setMax(config.maxWidth * zoom, config.maxHeight * zoom);
         }
 
+        if (config.snapWidth > 0)
+        {
+            this.displaySize.setSnap(config.snapWidth * zoom, config.snapHeight * zoom);
+        }
+
         //  The size used for the canvas style, factoring in the scale mode and parent and zoom value
         //  We just use the w/h here as this is what sets the aspect ratio (which doesn't then change)
         this.displaySize.setSize(width, height);
