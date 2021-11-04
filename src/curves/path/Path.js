@@ -477,7 +477,7 @@ var Path = new Class({
      *
      * @param {number} t - The normalized location on the Path, between 0 and 1.
      *
-     * @return {?Phaser.Curves.Curve} The Curve that is part of this Path at a given location.
+     * @return {?Phaser.Curves.Curve} The Curve that is part of this Path at a given location, or `null` if no curve was found.
      */
     getCurveAt: function (t)
     {
