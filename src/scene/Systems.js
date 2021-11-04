@@ -415,7 +415,8 @@ var Systems = new Class({
 
     /**
      * Pause this Scene.
-     * A paused Scene still renders, it just doesn't run ANY of its update handlers or systems.
+     *
+     * A paused Scene still renders, it just doesn't run any of its update handlers or systems.
      *
      * @method Phaser.Scenes.Systems#pause
      * @fires Phaser.Scenes.Events#PAUSE
@@ -427,16 +428,25 @@ var Systems = new Class({
      */
     pause: function (data)
     {
-        var events = this.events;
         var settings = this.settings;
+        var status = this.getStatus();
 
-        if (this.settings.active)
+        if (status !== CONST.CREATING || status !== CONST.RUNNING)
         {
-            settings.status = CONST.PAUSED;
+            console.warn('Cannot pause non-running Scene', settings.key);
+        }
+        else
+        {
+            var events = this.events;
 
-            settings.active = false;
+            if (this.settings.active)
+            {
+                settings.status = CONST.PAUSED;
 
-            events.emit(Events.PAUSE, this, data);
+                settings.active = false;
+
+                events.emit(Events.PAUSE, this, data);
+            }
         }
 
         return this;
@@ -541,11 +551,24 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#getData
      * @since 3.22.0
      *
-     * @return {any}
+     * @return {any} The Scene Data.
      */
     getData: function ()
     {
         return this.settings.data;
+    },
+
+    /**
+     * Returns the current status of this Scene.
+     *
+     * @method Phaser.Scenes.Systems#getStatus
+     * @since 3.60.0
+     *
+     * @return {number} The status of this Scene. One of the `Phaser.Scene` constants.
+     */
+    getStatus: function ()
+    {
+        return this.settings.status;
     },
 
     /**
