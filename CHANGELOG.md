@@ -67,6 +67,7 @@ Development of this feature was kindly sponsored by Club Penguin Rewritten (http
 * `WebGLPipeline.setBoolean` is a new method that allows you to set a boolean uniform on a shader.
 * `Phaser.Scenes.Systems.getStatus` is a new method that will return the current status of the Scene.
 * `Phaser.Scenes.ScenePlugin.getStatus` is a new method that will return the current status of the given Scene.
+* `Math.LinearXY` is a new function that will interpolate between 2 given Vector2s and return a new Vector2 as a result (thanks @GregDevProjects)
 
 ### Geom Updates
 
