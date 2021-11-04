@@ -43,7 +43,7 @@ var WebAudioSoundManager = new Class({
          * @type {AudioContext}
          * @since 3.0.0
          */
-        this.context = this.createAudioContext(game);
+        this.context;
 
         /**
          * Gain node responsible for controlling global muting.
@@ -52,7 +52,7 @@ var WebAudioSoundManager = new Class({
          * @type {GainNode}
          * @since 3.0.0
          */
-        this.masterMuteNode = this.context.createGain();
+        this.masterMuteNode;
 
         /**
          * Gain node responsible for controlling global volume.
@@ -61,11 +61,7 @@ var WebAudioSoundManager = new Class({
          * @type {GainNode}
          * @since 3.0.0
          */
-        this.masterVolumeNode = this.context.createGain();
-
-        this.masterMuteNode.connect(this.masterVolumeNode);
-
-        this.masterVolumeNode.connect(this.context.destination);
+        this.masterVolumeNode;
 
         /**
          * Destination node for connecting individual sounds to.
@@ -74,9 +70,20 @@ var WebAudioSoundManager = new Class({
          * @type {AudioNode}
          * @since 3.0.0
          */
-        this.destination = this.masterMuteNode;
+        this.destination;
 
-        this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
+        /**
+         * Audio files pending decoding.
+         *
+         * @name Phaser.Sound.WebAudioSoundManager#audioQueue
+         * @type {array}
+         * @since 3.60.0
+         */
+        this.audioQueue = [];
+
+        this.locked = true;
+
+        this.config = game.config.audio;
 
         BaseSoundManager.call(this, game);
 
@@ -95,34 +102,42 @@ var WebAudioSoundManager = new Class({
      * If an instance of an AudioContext class was provided through the game config,
      * that instance will be returned instead. This can come in handy if you are reloading
      * a Phaser game on a page that never properly refreshes (such as in an SPA project)
-     * and you want to reuse already instantiated AudioContext.
+     * and you want to reuse an already instantiated AudioContext.
      *
      * @method Phaser.Sound.WebAudioSoundManager#createAudioContext
      * @since 3.0.0
      *
-     * @param {Phaser.Game} game - Reference to the current game instance.
-     *
      * @return {AudioContext} The AudioContext instance to be used for playback.
      */
-    createAudioContext: function (game)
+    createAudioContext: function ()
     {
-        var audioConfig = game.config.audio;
+        var context;
+        var audioConfig = this.config;
 
         if (audioConfig.context)
         {
             audioConfig.context.resume();
 
-            return audioConfig.context;
+            context = audioConfig.context;
         }
 
         if (window.hasOwnProperty('AudioContext'))
         {
-            return new AudioContext();
+            context = new AudioContext();
         }
         else if (window.hasOwnProperty('webkitAudioContext'))
         {
-            return new window.webkitAudioContext();
+            context = new window.webkitAudioContext();
         }
+
+        this.context = context;
+
+        if (this.audioQueue.length > 0)
+        {
+            this.processQueue();
+        }
+
+        return context;
     },
 
     /**
@@ -189,6 +204,22 @@ var WebAudioSoundManager = new Class({
         return sound;
     },
 
+    processQueue: function ()
+    {
+        var context = this.context;
+        var queue = this.audioQueue;
+
+        if (context)
+        {
+            for (var i = 0; i < queue.length; i++)
+            {
+                var entry = queue[i];
+
+                context.decodeAudioData(entry.data, entry.success, entry.failure);
+            }
+        }
+    },
+
     /**
      * Decode audio data into a format ready for playback via Web Audio.
      *
@@ -226,6 +257,8 @@ var WebAudioSoundManager = new Class({
 
         var cache = this.game.cache.audio;
         var remaining = audioFiles.length;
+        var context = this.context;
+        var queue = this.audioQueue;
 
         for (var i = 0; i < audioFiles.length; i++)
         {
@@ -266,7 +299,14 @@ var WebAudioSoundManager = new Class({
                 }
             }.bind(this, key);
 
-            this.context.decodeAudioData(data, success, failure);
+            if (!context)
+            {
+                queue.push({ key: key, data: data, success: success, failure: failure });
+            }
+            else
+            {
+                context.decodeAudioData(data, success, failure);
+            }
         }
     },
 
@@ -286,11 +326,13 @@ var WebAudioSoundManager = new Class({
 
         var unlockHandler = function unlockHandler ()
         {
-            if (_this.context && body)
+            var context = _this.createAudioContext();
+
+            if (context)
             {
                 var bodyRemove = body.removeEventListener;
 
-                _this.context.resume().then(function ()
+                context.resume().then(function ()
                 {
                     bodyRemove('touchstart', unlockHandler);
                     bodyRemove('touchend', unlockHandler);
@@ -298,6 +340,8 @@ var WebAudioSoundManager = new Class({
                     bodyRemove('keydown', unlockHandler);
 
                     _this.unlocked = true;
+                    _this.locked = false;
+
                 }, function ()
                 {
                     bodyRemove('touchstart', unlockHandler);
@@ -327,7 +371,7 @@ var WebAudioSoundManager = new Class({
      */
     onBlur: function ()
     {
-        if (!this.locked)
+        if (!this.locked && this.context)
         {
             this.context.suspend();
         }
@@ -345,7 +389,7 @@ var WebAudioSoundManager = new Class({
     {
         var context = this.context;
 
-        if ((context.state === 'suspended' || context.state === 'interrupted') && !this.locked)
+        if (context && (context.state === 'suspended' || context.state === 'interrupted') && !this.locked)
         {
             context.resume();
         }
@@ -385,24 +429,36 @@ var WebAudioSoundManager = new Class({
      */
     destroy: function ()
     {
-        this.destination = null;
-        this.masterVolumeNode.disconnect();
-        this.masterVolumeNode = null;
-        this.masterMuteNode.disconnect();
-        this.masterMuteNode = null;
-
-        if (this.game.config.audio.context)
+        if (this.masterVolumeNode)
         {
-            this.context.suspend();
+            this.masterVolumeNode.disconnect();
         }
-        else
-        {
-            var _this = this;
 
-            this.context.close().then(function ()
+        if (this.masterMuteNode)
+        {
+            this.masterMuteNode.disconnect();
+        }
+
+        this.destination = null;
+        this.masterVolumeNode = null;
+        this.masterMuteNode = null;
+        this.audioQueue = null;
+
+        if (this.context)
+        {
+            if (this.config.context)
             {
-                _this.context = null;
-            });
+                this.context.suspend();
+            }
+            else
+            {
+                var _this = this;
+
+                this.context.close().then(function ()
+                {
+                    _this.context = null;
+                });
+            }
         }
 
         BaseSoundManager.prototype.destroy.call(this);
@@ -436,14 +492,17 @@ var WebAudioSoundManager = new Class({
 
         get: function ()
         {
-            return (this.masterMuteNode.gain.value === 0);
+            return (this.masterMuteNode && this.masterMuteNode.gain.value === 0);
         },
 
         set: function (value)
         {
-            this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+            if (this.masterMuteNode)
+            {
+                this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
 
-            this.emit(Events.GLOBAL_MUTE, this, value);
+                this.emit(Events.GLOBAL_MUTE, this, value);
+            }
         }
 
     },
@@ -476,14 +535,24 @@ var WebAudioSoundManager = new Class({
 
         get: function ()
         {
-            return this.masterVolumeNode.gain.value;
+            if (this.masterVolumeNode)
+            {
+                return this.masterVolumeNode.gain.value;
+            }
+            else
+            {
+                return 0;
+            }
         },
 
         set: function (value)
         {
-            this.masterVolumeNode.gain.setValueAtTime(value, 0);
+            if (this.masterVolumeNode)
+            {
+                this.masterVolumeNode.gain.setValueAtTime(value, 0);
 
-            this.emit(Events.GLOBAL_VOLUME, this, value);
+                this.emit(Events.GLOBAL_VOLUME, this, value);
+            }
         }
 
     }

@@ -30,7 +30,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {(string|Phaser.Types.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {any} [urlConfig] - The absolute or relative URL to load this file from in a config object.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- * @param {AudioContext} [audioContext] - The AudioContext this file will use to process itself.
+ * @param {Phaser.Sound.WebAudioSoundManager} [soundManager] - The Web Audio Sound Manager.
  */
 var AudioFile = new Class({
 
@@ -39,7 +39,7 @@ var AudioFile = new Class({
     initialize:
 
     //  URL is an object created by AudioFile.findAudioURL
-    function AudioFile (loader, key, urlConfig, xhrSettings, audioContext)
+    function AudioFile (loader, key, urlConfig, xhrSettings, soundManager)
     {
         if (IsPlainObject(key))
         {
@@ -47,7 +47,6 @@ var AudioFile = new Class({
 
             key = GetFastValue(config, 'key');
             xhrSettings = GetFastValue(config, 'xhrSettings');
-            audioContext = GetFastValue(config, 'context', audioContext);
         }
 
         var fileConfig = {
@@ -58,7 +57,7 @@ var AudioFile = new Class({
             key: key,
             url: urlConfig.url,
             xhrSettings: xhrSettings,
-            config: { context: audioContext }
+            config: { soundManager: soundManager }
         };
 
         File.call(this, loader, fileConfig);
@@ -75,6 +74,11 @@ var AudioFile = new Class({
     {
         this.state = CONST.FILE_PROCESSING;
 
+        this.config.soundManager.decodeAudio(this.key, this.xhrLoader.response);
+
+        this.onProcessComplete();
+
+        /*
         var _this = this;
 
         // interesting read https://github.com/WebAudio/web-audio-api/issues/1305
@@ -95,6 +99,7 @@ var AudioFile = new Class({
         );
 
         this.config.context = null;
+        */
     }
 
 });
@@ -124,7 +129,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if (deviceAudio.webAudio && !audioConfig.disableWebAudio)
     {
-        return new AudioFile(loader, key, urlConfig, xhrSettings, game.sound.context);
+        return new AudioFile(loader, key, urlConfig, xhrSettings, game.sound);
     }
     else
     {
