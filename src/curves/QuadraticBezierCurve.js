@@ -31,7 +31,7 @@ var QuadraticBezier = new Class({
 
     function QuadraticBezier (p0, p1, p2)
     {
-        Curve.call(this, 'QuadraticBezier');
+        Curve.call(this, 'QuadraticBezierCurve');
 
         if (Array.isArray(p0))
         {
