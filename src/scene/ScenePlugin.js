@@ -952,6 +952,26 @@ var ScenePlugin = new Class({
     },
 
     /**
+     * Return the status of the Scene.
+     *
+     * @method Phaser.Scenes.ScenePlugin#getStatus
+     * @since 3.60.0
+     *
+     * @param {(string|Phaser.Scene)} key - The Scene to get the status from.
+     *
+     * @return {number} The Scene status. This maps to the `Phaser.Scene` constants, such as `Phaser.Scene.LOADING`.
+     */
+    getStatus: function (key)
+    {
+        var scene = this.manager.getScene(key);
+
+        if (scene)
+        {
+            return scene.sys.getStatus();
+        }
+    },
+
+    /**
      * Retrieves the numeric index of a Scene in the Scenes list.
      *
      * @method Phaser.Scenes.ScenePlugin#getIndex
