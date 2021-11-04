@@ -68,6 +68,7 @@ Development of this feature was kindly sponsored by Club Penguin Rewritten (http
 * `Phaser.Scenes.Systems.getStatus` is a new method that will return the current status of the Scene.
 * `Phaser.Scenes.ScenePlugin.getStatus` is a new method that will return the current status of the given Scene.
 * `Math.LinearXY` is a new function that will interpolate between 2 given Vector2s and return a new Vector2 as a result (thanks @GregDevProjects)
+* `Curves.Path.getCurveAt` is a new method that will return the curve that forms the path at the given location (thanks @natureofcode)
 
 ### Geom Updates
 
