@@ -43,6 +43,7 @@ var PhaserMath = {
     IsEven: require('./IsEven'),
     IsEvenStrict: require('./IsEvenStrict'),
     Linear: require('./Linear'),
+    LinearXY: require('./LinearXY'),
     MaxAdd: require('./MaxAdd'),
     Median: require('./Median'),
     MinSub: require('./MinSub'),
