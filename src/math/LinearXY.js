@@ -10,7 +10,7 @@
  * Does not modify either of the passed Vectors.
  *
  * @function Phaser.Math.LinearXY
- * @since 3.6.0
+ * @since 3.60.0
  *
  * @param {Phaser.Math.Vector2} vector1 - Starting vector
  * @param {Phaser.Math.Vector2} vector2 - Ending vector
@@ -20,10 +20,8 @@
  */
 var LinearXY = function (vector1, vector2, t)
 {
-    if (t === undefined)
-    {
-        t = 0;
-    }
+    if (t === undefined) { t = 0; }
+
     return vector1.clone().lerp(vector2, t);
 };
 
