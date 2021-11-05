@@ -11,8 +11,9 @@
 module.exports = {
 
     COMPLETE: require('./COMPLETE_EVENT'),
-    DECODED: require('./DECODED_EVENT'),
     DECODED_ALL: require('./DECODED_ALL_EVENT'),
+    DECODED_KEY: require('./DECODED_KEY_EVENT'),
+    DECODED: require('./DECODED_EVENT'),
     DESTROY: require('./DESTROY_EVENT'),
     DETUNE: require('./DETUNE_EVENT'),
     GLOBAL_DETUNE: require('./GLOBAL_DETUNE_EVENT'),
