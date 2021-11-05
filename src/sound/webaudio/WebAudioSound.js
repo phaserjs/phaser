@@ -40,12 +40,7 @@ var WebAudioSound = new Class({
          * @type {AudioBuffer}
          * @since 3.0.0
          */
-        this.audioBuffer = manager.game.cache.audio.get(key);
-
-        if (!this.audioBuffer)
-        {
-            throw new Error('Audio key "' + key + '" missing from cache');
-        }
+        this.audioBuffer;
 
         /**
          * A reference to an audio source node used for playing back audio from
@@ -75,7 +70,7 @@ var WebAudioSound = new Class({
          * @type {GainNode}
          * @since 3.0.0
          */
-        this.muteNode = manager.context.createGain();
+        this.muteNode;
 
         /**
          * Gain node responsible for controlling this sound's volume.
@@ -84,7 +79,7 @@ var WebAudioSound = new Class({
          * @type {GainNode}
          * @since 3.0.0
          */
-        this.volumeNode = manager.context.createGain();
+        this.volumeNode;
 
         /**
          * Panner node responsible for controlling this sound's pan.
@@ -169,11 +164,36 @@ var WebAudioSound = new Class({
          */
         this.hasLooped = false;
 
+        this.pendingPlay = false;
+
+        BaseSound.call(this, manager, key, config);
+
+        if (manager.unlocked)
+        {
+            this.init();
+        }
+        else
+        {
+            manager.once(Events.UNLOCKED, this.init, this);
+        }
+    },
+
+    init: function ()
+    {
+        console.log('WebAudioSound.init', this.key);
+
+        var manager = this.manager;
+
+        var context = manager.context;
+
+        this.muteNode = context.createGain();
+        this.volumeNode = context.createGain();
+
         this.muteNode.connect(this.volumeNode);
 
-        if (manager.context.createStereoPanner)
+        if (context.createStereoPanner)
         {
-            this.pannerNode = manager.context.createStereoPanner();
+            this.pannerNode = context.createStereoPanner();
 
             this.volumeNode.connect(this.pannerNode);
 
@@ -184,11 +204,47 @@ var WebAudioSound = new Class({
             this.volumeNode.connect(manager.destination);
         }
 
-        this.duration = this.audioBuffer.duration;
+        //  AudioBuffer
+        var key = this.key;
 
-        this.totalDuration = this.audioBuffer.duration;
+        var buffer = manager.cache.get(key);
 
-        BaseSound.call(this, manager, key, config);
+        if (buffer)
+        {
+            this.audioBuffer = buffer;
+            this.duration = buffer.duration;
+            this.totalDuration = buffer.duration;
+        }
+        else if (manager.decodeQueue.has(key))
+        {
+            console.log('WebAudioSound.init - decode processing:', this.key);
+
+            manager.once(Events.DECODED_KEY + key, this.setAudioBuffer, this);
+
+            manager.processQueue(key);
+        }
+        else
+        {
+            throw new Error('Missing Audio: "' + key + '"');
+        }
+    },
+
+    setAudioBuffer: function (audioBuffer)
+    {
+        console.log('setAudioBuffer', this.key, audioBuffer);
+
+        this.audioBuffer = audioBuffer;
+        this.duration = audioBuffer.duration;
+        this.totalDuration = audioBuffer.duration;
+
+        var pending = this.pendingPlay;
+
+        if (pending)
+        {
+            this.pendingPlay = null;
+
+            this.play(pending.markerName, pending.config);
+        }
     },
 
     /**
@@ -208,8 +264,24 @@ var WebAudioSound = new Class({
      */
     play: function (markerName, config)
     {
+        if (!this.audioBuffer)
+        {
+            this.pendingPlay = { markerName: markerName, config: config };
+
+            console.log('play - pending', this.key);
+
+            if (this.manager.unlocked)
+            {
+                this.init();
+            }
+
+            return true;
+        }
+
         if (!BaseSound.prototype.play.call(this, markerName, config))
         {
+            console.log('play - abort', this.key);
+
             return false;
         }
 
@@ -218,6 +290,8 @@ var WebAudioSound = new Class({
         this.createAndStartBufferSource();
 
         this.emit(Events.PLAY, this);
+
+        console.log('play - success?', this.key);
 
         return true;
     },
