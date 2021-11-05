@@ -10,6 +10,7 @@ var BaseSoundManager = require('../BaseSoundManager');
 var Class = require('../../utils/Class');
 var Events = require('../events');
 var GameEvents = require('../../core/events');
+var Map = require('../../structs/Map');
 var WebAudioSound = require('./WebAudioSound');
 
 /**
@@ -75,11 +76,13 @@ var WebAudioSoundManager = new Class({
         /**
          * Audio files pending decoding.
          *
-         * @name Phaser.Sound.WebAudioSoundManager#audioQueue
+         * @name Phaser.Sound.WebAudioSoundManager#decodeQueue
          * @type {array}
          * @since 3.60.0
          */
-        this.audioQueue = [];
+        this.decodeQueue = new Map();
+
+        this.cache = game.cache.audio;
 
         this.locked = true;
 
@@ -123,19 +126,19 @@ var WebAudioSoundManager = new Class({
 
         if (window.hasOwnProperty('AudioContext'))
         {
-            context = new AudioContext();
+            context = new AudioContext({ latencyHint: 'interactive' });
         }
         else if (window.hasOwnProperty('webkitAudioContext'))
         {
-            context = new window.webkitAudioContext();
+            context = new window.webkitAudioContext({ latencyHint: 'interactive' });
         }
 
-        this.context = context;
+        this.unlocked = true;
+        this.locked = false;
 
-        if (this.audioQueue.length > 0)
-        {
-            this.processQueue();
-        }
+        this.setAudioContext(context);
+
+        console.log('SoundManager.createAudioContext');
 
         return context;
     },
@@ -204,18 +207,26 @@ var WebAudioSoundManager = new Class({
         return sound;
     },
 
-    processQueue: function ()
+    processQueue: function (key)
     {
         var context = this.context;
-        var queue = this.audioQueue;
+        var queue = this.decodeQueue;
+
+        if (key && !Array.isArray(key))
+        {
+            key = [ key ];
+        }
 
         if (context)
         {
-            for (var i = 0; i < queue.length; i++)
+            for (var i = 0; i < key.length; i++)
             {
-                var entry = queue[i];
+                var entry = queue.get(key[i]);
 
-                context.decodeAudioData(entry.data, entry.success, entry.failure);
+                if (entry)
+                {
+                    context.decodeAudioData(entry.data, entry.success, entry.failure);
+                }
             }
         }
     },
@@ -236,6 +247,7 @@ var WebAudioSoundManager = new Class({
      *
      * @method Phaser.Sound.WebAudioSoundManager#decodeAudio
      * @fires Phaser.Sound.Events#DECODED
+     * @fires Phaser.Sound.Events#DECODED_KEY
      * @fires Phaser.Sound.Events#DECODED_ALL
      * @since 3.18.0
      *
@@ -258,7 +270,7 @@ var WebAudioSoundManager = new Class({
         var cache = this.game.cache.audio;
         var remaining = audioFiles.length;
         var context = this.context;
-        var queue = this.audioQueue;
+        var queue = this.decodeQueue;
 
         for (var i = 0; i < audioFiles.length; i++)
         {
@@ -274,9 +286,12 @@ var WebAudioSoundManager = new Class({
 
             var success = function (key, audioBuffer)
             {
+                console.log('audio decoded', key);
+
                 cache.add(key, audioBuffer);
 
-                this.emit(Events.DECODED, key);
+                this.emit(Events.DECODED, key, audioBuffer);
+                this.emit(Events.DECODED_KEY + key, audioBuffer);
 
                 remaining--;
 
@@ -301,7 +316,7 @@ var WebAudioSoundManager = new Class({
 
             if (!context)
             {
-                queue.push({ key: key, data: data, success: success, failure: failure });
+                queue.set(key, { data: data, success: success, failure: failure });
             }
             else
             {
@@ -323,41 +338,25 @@ var WebAudioSoundManager = new Class({
         var _this = this;
 
         var body = document.body;
+        var bodyAdd = body.addEventListener;
+        var bodyRemove = body.removeEventListener;
 
         var unlockHandler = function unlockHandler ()
         {
-            var context = _this.createAudioContext();
+            _this.createAudioContext();
 
-            if (context)
-            {
-                var bodyRemove = body.removeEventListener;
-
-                context.resume().then(function ()
-                {
-                    bodyRemove('touchstart', unlockHandler);
-                    bodyRemove('touchend', unlockHandler);
-                    bodyRemove('click', unlockHandler);
-                    bodyRemove('keydown', unlockHandler);
-
-                    _this.unlocked = true;
-                    _this.locked = false;
-
-                }, function ()
-                {
-                    bodyRemove('touchstart', unlockHandler);
-                    bodyRemove('touchend', unlockHandler);
-                    bodyRemove('click', unlockHandler);
-                    bodyRemove('keydown', unlockHandler);
-                });
-            }
+            bodyRemove('touchstart', unlockHandler);
+            bodyRemove('touchend', unlockHandler);
+            bodyRemove('click', unlockHandler);
+            bodyRemove('keydown', unlockHandler);
         };
 
         if (body)
         {
-            body.addEventListener('touchstart', unlockHandler, false);
-            body.addEventListener('touchend', unlockHandler, false);
-            body.addEventListener('click', unlockHandler, false);
-            body.addEventListener('keydown', unlockHandler, false);
+            bodyAdd('touchstart', unlockHandler, false);
+            bodyAdd('touchend', unlockHandler, false);
+            bodyAdd('click', unlockHandler, false);
+            bodyAdd('keydown', unlockHandler, false);
         }
     },
 
@@ -442,7 +441,7 @@ var WebAudioSoundManager = new Class({
         this.destination = null;
         this.masterVolumeNode = null;
         this.masterMuteNode = null;
-        this.audioQueue = null;
+        this.decodeQueue = null;
 
         if (this.context)
         {
