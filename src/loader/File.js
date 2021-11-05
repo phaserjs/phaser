@@ -449,7 +449,7 @@ var File = new Class({
      */
     addToCache: function ()
     {
-        if (this.cache)
+        if (this.cache && this.data)
         {
             this.cache.add(this.key, this.data);
         }
