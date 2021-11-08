@@ -2053,7 +2053,7 @@ var WebGLRenderer = new Class({
      */
     createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY)
     {
-        // pma = (pma === undefined || pma === null) ? true : pma;
+        pma = (pma === undefined || pma === null) ? true : pma;
         if (forceSize === undefined) { forceSize = false; }
         if (flipY === undefined) { flipY = false; }
 
@@ -2071,10 +2071,7 @@ var WebGLRenderer = new Class({
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
 
-        if (pma)
-        {
-            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-        }
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, pma);
 
         if (flipY)
         {
