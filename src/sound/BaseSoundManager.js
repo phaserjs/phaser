@@ -563,15 +563,20 @@ var BaseSoundManager = new Class({
      */
     forEachActiveSound: function (callback, scope)
     {
-        var _this = this;
+        // eslint-disable-next-line consistent-this
+        if (scope === undefined) { scope = this; }
 
-        this.sounds.forEach(function (sound, index)
+        var sounds = this.sounds;
+
+        for (var i = 0; i < sounds.length; i++)
         {
+            var sound = sounds[i];
+
             if (sound && !sound.pendingRemove)
             {
-                callback.call(scope || _this, sound, index, _this.sounds);
+                callback.call(scope, sound, i, sounds);
             }
-        });
+        }
     },
 
     /**
