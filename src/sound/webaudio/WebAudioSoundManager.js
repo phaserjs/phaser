@@ -10,6 +10,7 @@ var BaseSoundManager = require('../BaseSoundManager');
 var Class = require('../../utils/Class');
 var Events = require('../events');
 var GameEvents = require('../../core/events');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var Map = require('../../structs/Map');
 var WebAudioSound = require('./WebAudioSound');
 
@@ -37,6 +38,8 @@ var WebAudioSoundManager = new Class({
 
     function WebAudioSoundManager (game)
     {
+        this.config = game.config.audio;
+
         /**
          * The AudioContext being used for playback.
          *
@@ -83,6 +86,23 @@ var WebAudioSoundManager = new Class({
         this.decodeQueue = new Map();
 
         /**
+         * Will audio files be decoded on-demand (i.e. as they are played),
+         * or as they are loaded? They can only be decoded on load if the
+         * audio context has been unlocked, otherwise they are stacked in
+         * the 'decodeQueue' awaiting a user gesture, which once received
+         * will decode them all at once.
+         *
+         * You can also choose to decode any, or all, queued audio by calling
+         * the `processQueue` function directly. Again, this can only be done
+         * after the context has been unlocked.
+         *
+         * @name Phaser.Sound.WebAudioSoundManager#decodeOnDemand
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.decodeOnDemand = GetFastValue(this.config, 'decodeOnDemand', true);
+
+        /**
          * The Audio cache, where decoded audio data is stored.
          *
          * @name Phaser.Sound.WebAudioSoundManager#cache
@@ -92,8 +112,6 @@ var WebAudioSoundManager = new Class({
         this.cache = game.cache.audio;
 
         this.locked = true;
-
-        this.config = game.config.audio;
 
         BaseSoundManager.call(this, game);
 
@@ -343,7 +361,7 @@ var WebAudioSoundManager = new Class({
                 }
             }.bind(this, key);
 
-            if (!context)
+            if (!context || this.decodeOnDemand)
             {
                 queue.set(key, { data: data, success: success, failure: failure, decoding: false });
             }
