@@ -82,6 +82,13 @@ var WebAudioSoundManager = new Class({
          */
         this.decodeQueue = new Map();
 
+        /**
+         * The Audio cache, where decoded audio data is stored.
+         *
+         * @name Phaser.Sound.WebAudioSoundManager#cache
+         * @type {Phaser.Cache.BaseCache}
+         * @since 3.60.0
+         */
         this.cache = game.cache.audio;
 
         this.locked = true;
