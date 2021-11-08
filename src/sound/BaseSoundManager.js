@@ -534,18 +534,21 @@ var BaseSoundManager = new Class({
      */
     update: function (time, delta)
     {
-        for (var i = this.sounds.length - 1; i >= 0; i--)
+        var i;
+        var sounds = this.sounds;
+
+        for (i = sounds.length - 1; i >= 0; i--)
         {
-            if (this.sounds[i].pendingRemove)
+            if (sounds[i].pendingRemove)
             {
-                this.sounds.splice(i, 1);
+                sounds.splice(i, 1);
             }
         }
 
-        this.sounds.forEach(function (sound)
+        for (i = 0; i < sounds.length; i++)
         {
-            sound.update(time, delta);
-        });
+            sounds[i].update(time, delta);
+        }
     },
 
     /**
