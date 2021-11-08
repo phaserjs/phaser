@@ -164,7 +164,7 @@ var BaseSoundManager = new Class({
      * @param {string} key - Asset key for the sound.
      * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
      *
-     * @return {Phaser.Sound.BaseSound} The new sound instance.
+     * @return {(Phaser.Sound.BaseSound|Phaser.Sound.NoAudioSound|Phaser.Sound.HTML5AudioSound|Phaser.Sound.WebAudioSound)} The new sound instance.
      */
     add: NOOP,
 
@@ -179,7 +179,7 @@ var BaseSoundManager = new Class({
      * @param {string} key - Asset key for the sound.
      * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
      *
-     * @return {(Phaser.Sound.HTML5AudioSound|Phaser.Sound.WebAudioSound)} The new audio sprite sound instance.
+     * @return {(Phaser.Sound.BaseSound|Phaser.Sound.NoAudioSound|Phaser.Sound.HTML5AudioSound|Phaser.Sound.WebAudioSound)} The new audio sprite sound instance.
      */
     addAudioSprite: function (key, config)
     {
@@ -221,7 +221,7 @@ var BaseSoundManager = new Class({
      *
      * @param {string} key - Sound asset key.
      *
-     * @return {?Phaser.Sound.BaseSound} - The sound, or null.
+     * @return {?(Phaser.Sound.BaseSound|Phaser.Sound.NoAudioSound|Phaser.Sound.HTML5AudioSound|Phaser.Sound.WebAudioSound)} - The sound, or null.
      */
     get: function (key)
     {
@@ -236,7 +236,7 @@ var BaseSoundManager = new Class({
      *
      * @param {string} key - Sound asset key.
      *
-     * @return {Phaser.Sound.BaseSound[]} - The sounds, or an empty array.
+     * @return {(Phaser.Sound.BaseSound[]|Phaser.Sound.NoAudioSound[]|Phaser.Sound.HTML5AudioSound[]|Phaser.Sound.WebAudioSound[])} - The sounds, or an empty array.
      */
     getAll: function (key)
     {
@@ -433,7 +433,6 @@ var BaseSoundManager = new Class({
         this.emit(Events.STOP_ALL, this);
     },
 
-
     /**
      * Stops any sounds matching the given key.
      *
@@ -558,28 +557,6 @@ var BaseSoundManager = new Class({
     },
 
     /**
-     * Destroys all the sounds in the game and all associated events.
-     *
-     * @method Phaser.Sound.BaseSoundManager#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        this.game.events.off(GameEvents.BLUR, this.onGameBlur, this);
-        this.game.events.off(GameEvents.FOCUS, this.onGameFocus, this);
-        this.game.events.off(GameEvents.PRE_STEP, this.update, this);
-
-        this.removeAllListeners();
-
-        this.removeAll();
-
-        this.sounds.length = 0;
-        this.sounds = null;
-
-        this.game = null;
-    },
-
-    /**
      * Method used internally for iterating only over active sounds and skipping sounds that are marked for removal.
      *
      * @method Phaser.Sound.BaseSoundManager#forEachActiveSound
@@ -701,6 +678,28 @@ var BaseSoundManager = new Class({
             this.emit(Events.GLOBAL_DETUNE, this, value);
         }
 
+    },
+
+    /**
+     * Destroys all the sounds in the game and all associated events.
+     *
+     * @method Phaser.Sound.BaseSoundManager#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.game.events.off(GameEvents.BLUR, this.onGameBlur, this);
+        this.game.events.off(GameEvents.FOCUS, this.onGameFocus, this);
+        this.game.events.off(GameEvents.PRE_STEP, this.update, this);
+
+        this.removeAllListeners();
+
+        this.removeAll();
+
+        this.sounds.length = 0;
+        this.sounds = null;
+
+        this.game = null;
     }
 
 });
