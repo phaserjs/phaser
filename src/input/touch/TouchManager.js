@@ -384,6 +384,7 @@ var TouchManager = new Class({
         {
             window.removeEventListener('touchstart', this.onTouchStartWindow);
             window.removeEventListener('touchend', this.onTouchEndWindow);
+            window.removeEventListener('touchcancel', this.onTouchCancelWindow);
         }
     },
 
