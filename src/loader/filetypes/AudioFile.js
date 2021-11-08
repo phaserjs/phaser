@@ -77,29 +77,6 @@ var AudioFile = new Class({
         this.config.soundManager.decodeAudio(this.key, this.xhrLoader.response);
 
         this.onProcessComplete();
-
-        /*
-        var _this = this;
-
-        // interesting read https://github.com/WebAudio/web-audio-api/issues/1305
-        this.config.context.decodeAudioData(this.xhrLoader.response,
-            function (audioBuffer)
-            {
-                _this.data = audioBuffer;
-
-                _this.onProcessComplete();
-            },
-            function (e)
-            {
-                // eslint-disable-next-line no-console
-                console.error('Error decoding audio: ' + _this.key + ' - ', e ? e.message : null);
-
-                _this.onProcessError();
-            }
-        );
-
-        this.config.context = null;
-        */
     }
 
 });
