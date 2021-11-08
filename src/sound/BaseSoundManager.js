@@ -534,14 +534,6 @@ var BaseSoundManager = new Class({
      */
     update: function (time, delta)
     {
-        if (this.unlocked)
-        {
-            this.unlocked = false;
-            this.locked = false;
-
-            this.emit(Events.UNLOCKED, this);
-        }
-
         for (var i = this.sounds.length - 1; i >= 0; i--)
         {
             if (this.sounds[i].pendingRemove)
