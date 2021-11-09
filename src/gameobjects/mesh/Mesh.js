@@ -553,6 +553,10 @@ var Mesh = new Class({
         if (data)
         {
             GenerateObjVerts(data, this, scale, x, y, z, rotateX, rotateY, rotateZ, zIsUp);
+        } 
+        else
+        {
+            console.warn(`Could not generate valid vertices for: ${key}`);
         }
 
         return this;
@@ -715,6 +719,10 @@ var Mesh = new Class({
         {
             this.faces = this.faces.concat(result.faces);
             this.vertices = this.vertices.concat(result.vertices);
+        } 
+        else 
+        {
+            console.warn('Could not generate valid vertices.');
         }
 
         this.dirtyCache[9] = -1;
