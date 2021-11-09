@@ -233,9 +233,14 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
-     * Processes either the given sound in the decode queue, or all sounds.
+     * This will process either the entire queue of audio awaiting decoding, or,
+     * if an array of keys are given, just those audio files.
      *
-     * This will call `decodeAudioData` on the sounds. If they successfully decode, they will
+     * Decoding only starts of the Audio Context has been unlocked via a user
+     * gesture. If it hasn't, this method will return `false` and no decoding
+     * will take place.
+     *
+     * This will call `AudioContext.decodeAudioData` on the sounds. If they successfully decode, they will
      * be added to the audio cache and can be played via the `play` method by passing their key.
      *
      * If they fail, it will throw an error.
@@ -245,12 +250,17 @@ var WebAudioSoundManager = new Class({
      *
      * If you need to know when something has decoded, please use the relevant audio events.
      *
-     * @method Phaser.Sound.WebAudioSoundManager#processQueue
+     * @method Phaser.Sound.WebAudioSoundManager#decodeAudioQueue
+     * @fires Phaser.Sound.Events#DECODED
+     * @fires Phaser.Sound.Events#DECODED_KEY
+     * @fires Phaser.Sound.Events#DECODED_ALL
      * @since 3.60.0
      *
-     * @param {string} [key] - The key of the sound to be decoded. If not given, all sounds are decoded.
+     * @param {(string|string[])} [key] - The key, or an array of keys, of the sound to be decoded. If not given, all sounds are decoded.
+     *
+     * @return {boolean} `true` if the audio started to decode, otherwise `false`.
      */
-    processQueue: function (key)
+    decodeAudioQueue: function (key)
     {
         var context = this.context;
         var queue = this.decodeQueue;
@@ -259,6 +269,8 @@ var WebAudioSoundManager = new Class({
         {
             key = [ key ];
         }
+
+        var isDecoding = false;
 
         if (context)
         {
@@ -271,9 +283,13 @@ var WebAudioSoundManager = new Class({
                     entry.decoding = true;
 
                     context.decodeAudioData(entry.data, entry.success, entry.failure);
+
+                    isDecoding = true;
                 }
             }
         }
+
+        return isDecoding;
     },
 
     /**

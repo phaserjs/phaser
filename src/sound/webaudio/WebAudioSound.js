@@ -228,7 +228,7 @@ var WebAudioSound = new Class({
         {
             manager.once(Events.DECODED_KEY + key, this.setAudioBuffer, this);
 
-            manager.processQueue(key);
+            manager.decodeAudioQueue(key);
         }
         else
         {
