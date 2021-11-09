@@ -158,12 +158,15 @@ var WebAudioSoundManager = new Class({
             context = new window.webkitAudioContext({ latencyHint: 'interactive' });
         }
 
-        this.unlocked = true;
-        this.locked = false;
-
         this.setAudioContext(context);
 
-        this.emit(Events.UNLOCKED, this);
+        if (this.locked)
+        {
+            this.unlocked = true;
+            this.locked = false;
+
+            this.emit(Events.UNLOCKED, this);
+        }
 
         return context;
     },
