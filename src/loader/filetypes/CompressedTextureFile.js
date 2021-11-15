@@ -458,11 +458,11 @@ FileTypesManager.register('texture', function (key, url, xhrSettings)
         var entry = {
             format: null,
             type: null,
-            textureURL: null,
-            atlasURL: null,
-            multiAtlasURL: null,
-            multiPath: null,
-            multiBaseURL: null
+            textureURL: undefined,
+            atlasURL: undefined,
+            multiAtlasURL: undefined,
+            multiPath: undefined,
+            multiBaseURL: undefined
         };
 
         if (IsPlainObject(key))
@@ -507,13 +507,16 @@ FileTypesManager.register('texture', function (key, url, xhrSettings)
         }
         else if (entry.format === 'IMG')
         {
+            var multifile;
             if (entry.multiAtlasURL)
             {
-                loader.addFile(new MultiAtlasFile(loader, key, entry.multiAtlasURL, entry.multiPath, entry.multiBaseURL, xhrSettings));
+                multifile = new MultiAtlasFile(this, key, entry.multiAtlasURL, entry.multiPath, entry.multiBaseURL, xhrSettings);
+                loader.addFile(multifile.files);
             }
             else if (entry.atlasURL)
             {
-                loader.addFile(new AtlasJSONFile(loader, key, entry.textureURL, entry.atlasURL, xhrSettings));
+                multifile = new AtlasJSONFile(loader, key, entry.textureURL, entry.atlasURL, xhrSettings);
+                loader.addFile(multifile.files);
             }
             else
             {
