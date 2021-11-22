@@ -1,5 +1,5 @@
 /**
- * @callback ArcadePhysicsCallback
+ * @callback Phaser.Types.Physics.Arcade.ArcadePhysicsCallback
  *
  * A callback receiving two Game Objects.
  *
