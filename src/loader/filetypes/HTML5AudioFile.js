@@ -16,7 +16,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * A single Audio File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#audio method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#audio.
  *
  * @class HTML5AudioFile
@@ -190,6 +190,8 @@ var HTML5AudioFile = new Class({
             //  Is there another way?
             setTimeout(this.onLoad.bind(this));
         }
+
+        console.log('Audio loaded', this.key);
     }
 
 });

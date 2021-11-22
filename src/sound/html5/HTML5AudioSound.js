@@ -112,21 +112,26 @@ var HTML5AudioSound = new Class({
     {
         if (this.manager.isLocked(this, 'play', [ markerName, config ]))
         {
+            console.log('HAS.play 1');
             return false;
         }
 
         if (!BaseSound.prototype.play.call(this, markerName, config))
         {
+            console.log('HAS.play 2');
             return false;
         }
 
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
         if (!this.pickAndPlayAudioTag())
         {
+            console.log('HAS.play 3');
             return false;
         }
 
         this.emit(Events.PLAY, this);
+
+        console.log('HAS.play 4');
 
         return true;
     },
