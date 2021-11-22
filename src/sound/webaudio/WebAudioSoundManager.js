@@ -9,7 +9,6 @@ var Base64ToArrayBuffer = require('../../utils/base64/Base64ToArrayBuffer');
 var BaseSoundManager = require('../BaseSoundManager');
 var Class = require('../../utils/Class');
 var Events = require('../events');
-var GameEvents = require('../../core/events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Map = require('../../structs/Map');
 var WebAudioSound = require('./WebAudioSound');
@@ -21,6 +20,8 @@ var WebAudioSound = require('./WebAudioSound');
  * Not all browsers can play all audio formats.
  *
  * There is a good guide to what's supported: [Cross-browser audio basics: Audio codec support](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
+ *
+ * Audio cannot be played without a user-gesture in the browser: https://developer.chrome.com/blog/autoplay/
  *
  * @class WebAudioSoundManager
  * @extends Phaser.Sound.BaseSoundManager
@@ -111,18 +112,18 @@ var WebAudioSoundManager = new Class({
          */
         this.cache = game.cache.audio;
 
-        this.locked = true;
-
         BaseSoundManager.call(this, game);
+    },
 
-        if (this.locked && game.isBooted)
-        {
-            this.unlock();
-        }
-        else
-        {
-            game.events.once(GameEvents.BOOT, this.unlock, this);
-        }
+    /**
+     * Handles additional processing when this Audio Manager is unlocked.
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#unlockHandler
+     * @since 3.60.0
+     */
+    unlockHandler: function ()
+    {
+        this.createAudioContext();
     },
 
     /**
@@ -390,41 +391,6 @@ var WebAudioSoundManager = new Class({
 
                 context.decodeAudioData(data, success, failure);
             }
-        }
-    },
-
-    /**
-     * Unlocks Web Audio API on the initial input event.
-     *
-     * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
-     *
-     * @method Phaser.Sound.WebAudioSoundManager#unlock
-     * @since 3.0.0
-     */
-    unlock: function ()
-    {
-        var _this = this;
-
-        var body = document.body;
-        var bodyAdd = body.addEventListener;
-        var bodyRemove = body.removeEventListener;
-
-        var unlockHandler = function unlockHandler ()
-        {
-            _this.createAudioContext();
-
-            bodyRemove('touchstart', unlockHandler);
-            bodyRemove('touchend', unlockHandler);
-            bodyRemove('click', unlockHandler);
-            bodyRemove('keydown', unlockHandler);
-        };
-
-        if (body)
-        {
-            bodyAdd('touchstart', unlockHandler, false);
-            bodyAdd('touchend', unlockHandler, false);
-            bodyAdd('click', unlockHandler, false);
-            bodyAdd('keydown', unlockHandler, false);
         }
     },
 

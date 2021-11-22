@@ -27,6 +27,8 @@ var HTML5AudioSound = require('./HTML5AudioSound');
  *
  * There is a good guide to what's supported: [Cross-browser audio basics: Audio codec support](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
  *
+ * Audio cannot be played without a user-gesture in the browser: https://developer.chrome.com/blog/autoplay/
+ *
  * @class HTML5AudioSoundManager
  * @extends Phaser.Sound.BaseSoundManager
  * @memberof Phaser.Sound
@@ -144,81 +146,18 @@ var HTML5AudioSoundManager = new Class({
          */
         this.cache = game.cache.audio;
 
-        this.locked = 'ontouchstart' in window;
-
         BaseSoundManager.call(this, game);
-
-        if (this.locked && game.isBooted)
-        {
-            this.unlock();
-        }
-        else
-        {
-            game.events.once(GameEvents.BOOT, this.unlock, this);
-        }
     },
 
     /**
-     * Adds a new sound into the sound manager.
+     * Handles additional processing when this Audio Manager is unlocked.
      *
-     * @method Phaser.Sound.HTML5AudioSoundManager#add
-     * @since 3.0.0
-     *
-     * @param {string} key - Asset key for the sound.
-     * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
-     *
-     * @return {Phaser.Sound.HTML5AudioSound} The new sound instance.
+     * @method Phaser.Sound.HTML5AudioSoundManager#unlockHandler
+     * @since 3.60.0
      */
-    add: function (key, config)
+    unlockHandler: function ()
     {
-        var sound = new HTML5AudioSound(this, key, config);
-
-        this.sounds.push(sound);
-
-        return sound;
-    },
-
-    /**
-     * Unlocks the Audio API on the initial input event.
-     *
-     * @method Phaser.Sound.HTML5AudioSoundManager#unlock
-     * @since 3.0.0
-     */
-    unlock: function ()
-    {
-        console.log('HTML5AudioSoundManager.unlock');
-
-        var _this = this;
-
-        var body = document.body;
-        var bodyAdd = body.addEventListener;
-        var bodyRemove = body.removeEventListener;
-
-        var unlockHandler = function unlockHandler ()
-        {
-            _this.createAudioTags();
-
-            bodyRemove('touchstart', unlockHandler);
-            bodyRemove('touchend', unlockHandler);
-            bodyRemove('click', unlockHandler);
-            bodyRemove('keydown', unlockHandler);
-        };
-
-        if (body)
-        {
-            bodyAdd('touchstart', unlockHandler, false);
-            bodyAdd('touchend', unlockHandler, false);
-            bodyAdd('click', unlockHandler, false);
-            bodyAdd('keydown', unlockHandler, false);
-        }
-
-        this.cache.entries.each(function (key, tags)
-        {
-            for (var i = 0; i < tags.length; i++)
-            {
-                tags[i].dataset.locked = true;
-            }
-        });
+        this.createAudioTags();
     },
 
     /**
@@ -231,9 +170,9 @@ var HTML5AudioSoundManager = new Class({
     {
         console.log('HTML5AudioSoundManager.createAudioTags');
 
-        if (!this.locked)
+        if (!this.pendingUnlock)
         {
-            console.log('unlock bail 1 - unlock already called');
+            console.log('unlock bail 1 - pending unlock false');
             return;
         }
 
@@ -249,13 +188,15 @@ var HTML5AudioSoundManager = new Class({
             {
                 var tag = tags[i];
 
+                console.log('tag unlock', tag.dataset.name, tag.dataset.locked);
+
                 if (tag.dataset.locked === 'true')
                 {
                     lockedTags.push(tag);
                 }
             }
 
-            return true;
+            // return true;
         });
 
         if (lockedTags.length === 0)
@@ -272,15 +213,20 @@ var HTML5AudioSoundManager = new Class({
             lockedTags.forEach(function (tag)
             {
                 tag.dataset.locked = 'false';
+
+                console.log('lastTag unlock', tag.dataset.name);
             });
         };
 
         lockedTags.forEach(function (tag)
         {
             tag.load();
+
+            console.log('tag.load', tag.dataset.name);
         });
 
-        console.log('unlocked event handler', this.lockedActionsQueue.length);
+        /*
+        console.log('unlocked event handler - actions?', this.lockedActionsQueue.length);
 
         this.forEachActiveSound(function (sound)
         {
@@ -309,6 +255,7 @@ var HTML5AudioSoundManager = new Class({
                 lockedAction.sound[lockedAction.prop] = lockedAction.value;
             }
         }
+        */
 
         /*
         var _this = this;
@@ -434,6 +381,26 @@ var HTML5AudioSoundManager = new Class({
         document.body.addEventListener('touchmove', detectMove, false);
         document.body.addEventListener('touchend', unlock, false);
         */
+    },
+
+    /**
+     * Adds a new sound into the sound manager.
+     *
+     * @method Phaser.Sound.HTML5AudioSoundManager#add
+     * @since 3.0.0
+     *
+     * @param {string} key - Asset key for the sound.
+     * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
+     *
+     * @return {Phaser.Sound.HTML5AudioSound} The new sound instance.
+     */
+    add: function (key, config)
+    {
+        var sound = new HTML5AudioSound(this, key, config);
+
+        this.sounds.push(sound);
+
+        return sound;
     },
 
     /**
