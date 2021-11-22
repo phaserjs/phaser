@@ -125,8 +125,11 @@ var BaseSoundManager = new Class({
         this._detune = 0;
 
         /**
-         * Mobile devices require sounds to be triggered from an explicit user action,
-         * such as a tap, before any sound can be loaded/played on a web page.
+         * All browsers require sounds to be triggered from an explicit user action,
+         * such as a tap, before any sound can be loaded / played on a web page.
+         *
+         * https://developer.chrome.com/blog/autoplay/
+         *
          * Set to true if the audio system is currently locked awaiting user interaction.
          *
          * @name Phaser.Sound.BaseSoundManager#locked
@@ -134,11 +137,11 @@ var BaseSoundManager = new Class({
          * @readonly
          * @since 3.0.0
          */
-        this.locked = this.locked || false;
+        this.locked = true;
 
         /**
          * Flag used internally for handling when the audio system
-         * has been unlocked, if there ever was a need for it.
+         * has been unlocked.
          *
          * @name Phaser.Sound.BaseSoundManager#unlocked
          * @type {boolean}
@@ -148,10 +151,76 @@ var BaseSoundManager = new Class({
          */
         this.unlocked = false;
 
+
+        /**
+         *
+         *
+         * @name Phaser.Sound.BaseSoundManager#pendingUnlock
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.pendingUnlock = false;
+
         game.events.on(GameEvents.BLUR, this.onGameBlur, this);
         game.events.on(GameEvents.FOCUS, this.onGameFocus, this);
         game.events.on(GameEvents.PRE_STEP, this.update, this);
         game.events.once(GameEvents.DESTROY, this.destroy, this);
+
+        if (this.locked && game.isBooted)
+        {
+            this.unlock();
+        }
+        else
+        {
+            game.events.once(GameEvents.BOOT, this.unlock, this);
+        }
+    },
+
+    /**
+     * Unlocks the Audio API on the initial input event.
+     *
+     * @method Phaser.Sound.BaseSoundManager#unlock
+     * @since 3.60.0
+     */
+    unlock: function ()
+    {
+        if (this.pendingUnlock)
+        {
+            return;
+        }
+
+        console.log('BaseSoundManager.unlock');
+
+        var _this = this;
+
+        var body = document.body;
+        var bodyAdd = body.addEventListener;
+        var bodyRemove = body.removeEventListener;
+
+        var unlockHandler = function unlockHandler ()
+        {
+            if (!_this.pendingUnlock)
+            {
+                return;
+            }
+
+            _this.unlockHandler();
+
+            bodyRemove('touchstart', unlockHandler);
+            bodyRemove('touchend', unlockHandler);
+            bodyRemove('click', unlockHandler);
+            bodyRemove('keydown', unlockHandler);
+        };
+
+        if (body)
+        {
+            bodyAdd('touchstart', unlockHandler, false);
+            bodyAdd('touchend', unlockHandler, false);
+            bodyAdd('click', unlockHandler, false);
+            bodyAdd('keydown', unlockHandler, false);
+
+            this.pendingUnlock = true;
+        }
     },
 
     /**
@@ -456,19 +525,6 @@ var BaseSoundManager = new Class({
     },
 
     /**
-     * Method used internally for unlocking audio playback on devices that
-     * require user interaction before any sound can be played on a web page.
-     *
-     * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
-     *
-     * @method Phaser.Sound.BaseSoundManager#unlock
-     * @override
-     * @protected
-     * @since 3.0.0
-     */
-    unlock: NOOP,
-
-    /**
      * Method used internally for pausing sound manager if
      * Phaser.Sound.BaseSoundManager#pauseOnBlur is set to true.
      *
@@ -688,9 +744,12 @@ var BaseSoundManager = new Class({
      */
     destroy: function ()
     {
-        this.game.events.off(GameEvents.BLUR, this.onGameBlur, this);
-        this.game.events.off(GameEvents.FOCUS, this.onGameFocus, this);
-        this.game.events.off(GameEvents.PRE_STEP, this.update, this);
+        var events = this.game.events;
+
+        events.off(GameEvents.BLUR, this.onGameBlur, this);
+        events.off(GameEvents.FOCUS, this.onGameFocus, this);
+        events.off(GameEvents.PRE_STEP, this.update, this);
+        events.off(GameEvents.BOOT, this.unlock, this);
 
         this.removeAllListeners();
 
