@@ -137,6 +137,11 @@ var HTML5AudioSoundManager = new Class({
         this._volume = 1;
 
         BaseSoundManager.call(this, game);
+
+        if (this.locked)
+        {
+            this.unlock();
+        }
     },
 
     /**
@@ -168,6 +173,8 @@ var HTML5AudioSoundManager = new Class({
      */
     unlock: function ()
     {
+        console.log('unlock');
+
         this.locked = false;
 
         var _this = this;
@@ -187,10 +194,11 @@ var HTML5AudioSoundManager = new Class({
             return true;
         });
 
-        if (!this.locked)
-        {
-            return;
-        }
+        // if (!this.locked)
+        // {
+        //     console.log('unlock bail 1');
+        //     return;
+        // }
 
         var moved = false;
 
@@ -201,6 +209,8 @@ var HTML5AudioSoundManager = new Class({
 
         var unlock = function ()
         {
+            console.log('unlock->unlock!', moved);
+
             if (moved)
             {
                 moved = false;
@@ -209,6 +219,8 @@ var HTML5AudioSoundManager = new Class({
 
             document.body.removeEventListener('touchmove', detectMove);
             document.body.removeEventListener('touchend', unlock);
+
+            _this.emit(Events.UNLOCKED, _this);
 
             var lockedTags = [];
 
@@ -254,6 +266,9 @@ var HTML5AudioSoundManager = new Class({
 
         this.once(Events.UNLOCKED, function ()
         {
+            console.log('unlocked event handler', this.lockedActionsQueue.length);
+
+            /*
             this.forEachActiveSound(function (sound)
             {
                 if (sound.currentMarker === null && sound.duration === 0)
@@ -277,8 +292,11 @@ var HTML5AudioSoundManager = new Class({
                     lockedAction.sound[lockedAction.prop] = lockedAction.value;
                 }
             }
+            */
 
         }, this);
+
+        console.log('unlock added listeners');
 
         document.body.addEventListener('touchmove', detectMove, false);
         document.body.addEventListener('touchend', unlock, false);
@@ -320,21 +338,6 @@ var HTML5AudioSoundManager = new Class({
         });
 
         this.onBlurPausedSounds.length = 0;
-    },
-
-    /**
-     * Calls Phaser.Sound.BaseSoundManager#destroy method
-     * and cleans up all HTML5 Audio related stuff.
-     *
-     * @method Phaser.Sound.HTML5AudioSoundManager#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        BaseSoundManager.prototype.destroy.call(this);
-
-        this.onBlurPausedSounds.length = 0;
-        this.onBlurPausedSounds = null;
     },
 
     /**
@@ -387,33 +390,6 @@ var HTML5AudioSoundManager = new Class({
     },
 
     /**
-     * @name Phaser.Sound.HTML5AudioSoundManager#mute
-     * @type {boolean}
-     * @fires Phaser.Sound.Events#GLOBAL_MUTE
-     * @since 3.0.0
-     */
-    mute: {
-
-        get: function ()
-        {
-            return this._mute;
-        },
-
-        set: function (value)
-        {
-            this._mute = value;
-
-            this.forEachActiveSound(function (sound)
-            {
-                sound.updateMute();
-            });
-
-            this.emit(Events.GLOBAL_MUTE, this, value);
-        }
-
-    },
-
-    /**
      * Sets the volume of this Sound Manager.
      *
      * @method Phaser.Sound.HTML5AudioSoundManager#setVolume
@@ -456,6 +432,48 @@ var HTML5AudioSoundManager = new Class({
             this.emit(Events.GLOBAL_VOLUME, this, value);
         }
 
+    },
+
+    /**
+     * @name Phaser.Sound.HTML5AudioSoundManager#mute
+     * @type {boolean}
+     * @fires Phaser.Sound.Events#GLOBAL_MUTE
+     * @since 3.0.0
+     */
+    mute: {
+
+        get: function ()
+        {
+            return this._mute;
+        },
+
+        set: function (value)
+        {
+            this._mute = value;
+
+            this.forEachActiveSound(function (sound)
+            {
+                sound.updateMute();
+            });
+
+            this.emit(Events.GLOBAL_MUTE, this, value);
+        }
+
+    },
+
+    /**
+     * Calls Phaser.Sound.BaseSoundManager#destroy method
+     * and cleans up all HTML5 Audio related stuff.
+     *
+     * @method Phaser.Sound.HTML5AudioSoundManager#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        BaseSoundManager.prototype.destroy.call(this);
+
+        this.onBlurPausedSounds.length = 0;
+        this.onBlurPausedSounds = null;
     }
 
 });
