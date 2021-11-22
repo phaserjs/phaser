@@ -594,7 +594,7 @@ var Tilemap = new Class({
 
             if (typeof layerID === 'string')
             {
-                console.warn('Valid tilelayer names:\n\t' + this.getTileLayerNames().join(',\n\t'));
+                console.warn('Valid tilelayer names: %o', this.getTileLayerNames());
             }
 
             return null;
