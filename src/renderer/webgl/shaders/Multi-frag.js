@@ -1,5 +1,5 @@
 module.exports = [
-    '#define SHADER_NAME PHASER_MULTI_FS',
+    '#define SHADER_NAME PHASER_MULTI_V2_FS',
     '#define numTextures %count%',
     '',
     'precision highp float;',
