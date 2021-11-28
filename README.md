@@ -178,13 +178,13 @@ Tutorials and guides on Phaser 3 development are being published every week.
 * [Getting Started with Phaser 3](https://phaser.io/tutorials/getting-started-phaser3) (useful if you are completely new to Phaser)
 * [Making your first Phaser 3 Game](https://phaser.io/tutorials/making-your-first-phaser-3-game)
 * The [Complete Phaser 3 Game Development course](https://academy.zenva.com/product/html5-game-phaser-mini-degree/?a=13) contains over 15 hours of videos covering all kinds of important topics.
-* Plus, there are [over 700 Phaser tutorials](http://phaser.io/learn) listed on the official website.
+* Plus, there are [over 700 Phaser tutorials](https://phaser.io/learn) listed on the official website.
 
 We've 3 tutorials related specifically to creating **Facebook Instant Games** with Phaser:
 
-* [Getting Started with Facebook Instant Games](http://phaser.io/news/2018/10/facebook-instant-games-phaser-tutorial)
-* [Facebook Instant Games Leaderboards Tutorial](http://phaser.io/news/2018/11/facebook-instant-games-leaderboards-tutorial)
-* [Displaying Ads in your Instant Games](http://phaser.io/news/2018/12/facebook-instant-games-ads-tutorial)
+* [Getting Started with Facebook Instant Games](https://phaser.io/news/2018/10/facebook-instant-games-phaser-tutorial)
+* [Facebook Instant Games Leaderboards Tutorial](https://phaser.io/news/2018/11/facebook-instant-games-leaderboards-tutorial)
+* [Displaying Ads in your Instant Games](https://phaser.io/news/2018/12/facebook-instant-games-ads-tutorial)
 
 ### Source Code Examples
 
