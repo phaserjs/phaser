@@ -108,6 +108,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `Scene.pause` will now check to see if the Scene is in either a RUNNING or CREATING state and throw a warning if not. You cannot pause non-running Scenes.
 * `Mesh.addVertices` will now throw a console warning if invalid vertices data is given to the method (thanks @omniowl)
 * `Mesh.addVerticesFromObj` will now throw a console warning if invalid vertices data is given to the method (thanks @omniowl)
+* `TouchManager.onTouchOver` and `onTouchOut` have been removed, along with all of their related event calls as they're not used by any browser any more.
+* `TouchManager.isTop` is a new property, copied from the MouseManager, that retains if the window the touch is interacting with is the top one, or not.
 
 ### Bug Fixes
 
@@ -150,6 +152,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `Input.Touch.TouchManager.stopListeners` forgot to remove the `touchcancel` handler. This is now removed correctly (thanks @teng-z)
 * The `BitmapMask` shader has been recoded so it now works correctly if you mask a Game Object that has alpha set on it, or in its texture. Previously it would alpha the Game Object against black (thanks stever1388)
 * When the Pointer moves out of the canvas and is released it would trigger `Uncaught TypeError: Cannot read properties of undefined (reading 'renderList')` if multiple children existed in the pointer-out array. Fix #5867 (thanks @rexrainbow)
+* If the Input Target in the game config was a string, it wouldn't be correctly parsed by the Touch Manager.
 
 ### Examples, Documentation and TypeScript
 
