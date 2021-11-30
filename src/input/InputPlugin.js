@@ -2424,6 +2424,7 @@ var InputPlugin = new Class({
 
         var offsetx = 0;
         var offsety = 0;
+
         switch (shapeType)
         {
             case GEOM_CONST.CIRCLE:
@@ -2637,7 +2638,7 @@ var InputPlugin = new Class({
      */
     sortGameObjects: function (gameObjects, pointer)
     {
-        if (gameObjects.length < 2)
+        if (gameObjects.length < 2 || !pointer.camera)
         {
             return gameObjects;
         }
