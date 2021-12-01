@@ -431,7 +431,7 @@ var Systems = new Class({
         var settings = this.settings;
         var status = this.getStatus();
 
-        if (status !== CONST.CREATING || status !== CONST.RUNNING)
+        if (status !== CONST.CREATING && status !== CONST.RUNNING)
         {
             console.warn('Cannot pause non-running Scene', settings.key);
         }
@@ -496,7 +496,7 @@ var Systems = new Class({
         var settings = this.settings;
         var status = this.getStatus();
 
-        if (status !== CONST.CREATING || status !== CONST.RUNNING)
+        if (status !== CONST.CREATING && status !== CONST.RUNNING)
         {
             console.warn('Cannot sleep non-running Scene', settings.key);
         }
