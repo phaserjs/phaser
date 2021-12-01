@@ -123,13 +123,13 @@ var Mask = {
      * @method Phaser.GameObjects.Components.Mask#createGeometryMask
      * @since 3.6.2
      *
-     * @param {Phaser.GameObjects.Graphics} [graphics] - A Graphics Game Object. The geometry within it will be used as the mask.
+     * @param {Phaser.GameObjects.Graphics|Phaser.GameObjects.Shape} [graphics] - A Graphics Game Object, or any kind of Shape Game Object. The geometry within it will be used as the mask.
      *
      * @return {Phaser.Display.Masks.GeometryMask} This Geometry Mask that was created.
      */
     createGeometryMask: function (graphics)
     {
-        if (graphics === undefined && this.type === 'Graphics')
+        if (graphics === undefined && (this instanceof Phaser.GameObjects.Graphics || this instanceof Phaser.GameObjects.Shape))
         {
             // eslint-disable-next-line consistent-this
             graphics = this;
