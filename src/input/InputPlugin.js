@@ -2647,7 +2647,10 @@ var InputPlugin = new Class({
 
         return gameObjects.sort(function (childA, childB)
         {
-            return list.indexOf(childB) - list.indexOf(childA);
+            var indexA = Math.max(list.indexOf(childA), 0);
+            var indexB = Math.max(list.indexOf(childB), 0);
+
+            return indexB - indexA;
         });
     },
 
