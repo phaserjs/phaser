@@ -152,7 +152,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `Path.fromJSON` function would use the wrong name for a Quadratic Bezier curve class, meaning it would be skipped in the exported JSON. It's now included correctly (thanks @natureofcode)
 * The `Input.Touch.TouchManager.stopListeners` forgot to remove the `touchcancel` handler. This is now removed correctly (thanks @teng-z)
 * The `BitmapMask` shader has been recoded so it now works correctly if you mask a Game Object that has alpha set on it, or in its texture. Previously it would alpha the Game Object against black (thanks stever1388)
-* When the Pointer moves out of the canvas and is released it would trigger `Uncaught TypeError: Cannot read properties of undefined (reading 'renderList')` if multiple children existed in the pointer-out array. Fix #5867 (thanks @rexrainbow)
+* When the Pointer moves out of the canvas and is released it would trigger `Uncaught TypeError: Cannot read properties of undefined (reading 'renderList')` if multiple children existed in the pointer-out array. Fix #5867 #5699 (thanks @rexrainbow @lyger)
 * If the Input Target in the game config was a string, it wouldn't be correctly parsed by the Touch Manager.
 * The `InputPlugin.sortGameObjects` will now assign a value of 0 to any game object not in the render list, but still viable for input, such as an invisible object with `alwaysEnabled` set to true. This fixes an issue where non-render list objects would be skipped. Fix #5507 (thanks @EmilSV)
 * The `GameObject.willRender` method will now factor in the parent `displayList`, if it has one, to the end result. This fixes issues like that where an invisible Layer will still process input events. Fix #5883 (thanks @rexrainbow)
