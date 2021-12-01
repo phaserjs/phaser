@@ -154,6 +154,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `BitmapMask` shader has been recoded so it now works correctly if you mask a Game Object that has alpha set on it, or in its texture. Previously it would alpha the Game Object against black (thanks stever1388)
 * When the Pointer moves out of the canvas and is released it would trigger `Uncaught TypeError: Cannot read properties of undefined (reading 'renderList')` if multiple children existed in the pointer-out array. Fix #5867 (thanks @rexrainbow)
 * If the Input Target in the game config was a string, it wouldn't be correctly parsed by the Touch Manager.
+* The `InputPlugin.sortGameObjects` will now assign a value of 0 to any game object not in the render list, but still viable for input, such as an invisible object with `alwaysEnabled` set to true. This fixes an issue where non-render list objects would be skipped. Fix #5507 (thanks @EmilSV)
 
 ### Examples, Documentation and TypeScript
 
