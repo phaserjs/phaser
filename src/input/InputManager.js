@@ -605,6 +605,8 @@ var InputManager = new Class({
         {
             var changedTouch = event.changedTouches[c];
 
+            // document.elementFromPoint(0,0)
+
             for (var i = 1; i < this.pointersTotal; i++)
             {
                 var pointer = pointers[i];
