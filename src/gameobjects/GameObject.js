@@ -614,7 +614,9 @@ var GameObject = new Class({
      */
     willRender: function (camera)
     {
-        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
+        var listWillRender = (this.displayList && this.displayList.active) ? this.displayList.willRender(camera) : true;
+
+        return !(!listWillRender || GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
     },
 
     /**
