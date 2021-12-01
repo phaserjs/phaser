@@ -504,10 +504,7 @@ var GameObject = new Class({
      */
     disableInteractive: function ()
     {
-        if (this.input)
-        {
-            this.input.enabled = false;
-        }
+        this.scene.sys.input.disable(this);
 
         return this;
     },
