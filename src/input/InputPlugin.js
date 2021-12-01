@@ -777,12 +777,20 @@ var InputPlugin = new Class({
     {
         if (skipQueue === undefined) { skipQueue = false; }
 
+        this.disable(gameObject);
+
         var input = gameObject.input;
 
         // If GameObject.input already cleared from higher class
-        if (!input)
+        if (input)
         {
-            return;
+            input.gameObject = undefined;
+            input.target = undefined;
+            input.hitArea = undefined;
+            input.hitAreaCallback = undefined;
+            input.callbackContext = undefined;
+
+            gameObject.input = null;
         }
 
         if (!skipQueue)
@@ -790,36 +798,12 @@ var InputPlugin = new Class({
             this.queueForRemoval(gameObject);
         }
 
-        input.gameObject = undefined;
-        input.target = undefined;
-        input.hitArea = undefined;
-        input.hitAreaCallback = undefined;
-        input.callbackContext = undefined;
-
-        gameObject.input = null;
-
         //  Clear from _draggable, _drag and _over
         var index = this._draggable.indexOf(gameObject);
 
         if (index > -1)
         {
             this._draggable.splice(index, 1);
-        }
-
-        index = this._drag[0].indexOf(gameObject);
-
-        if (index > -1)
-        {
-            this._drag[0].splice(index, 1);
-        }
-
-        index = this._over[0].indexOf(gameObject);
-
-        if (index > -1)
-        {
-            this._over[0].splice(index, 1);
-
-            this.manager.resetCursor(input);
         }
 
         return gameObject;
