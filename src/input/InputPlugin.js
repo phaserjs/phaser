@@ -835,43 +835,48 @@ var InputPlugin = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its input system disabled.
+     *
+     * @return {this} This Input Plugin.
      */
     disable: function (gameObject)
     {
         var input = gameObject.input;
 
-        if (!input)
+        if (input)
         {
-            return this;
+            input.enabled = false;
+            input.dragState = 0;
         }
 
-        input.enabled = false;
-        input.dragState = 0;
-
         // Clear from _temp, _drag and _over
-        var index = this._temp.indexOf(gameObject);
+        var temp = this._temp;
+        var drag = this._drag;
+        var over = this._over;
+        var manager = this.manager;
+
+        var index = temp.indexOf(gameObject);
 
         if (index > -1)
         {
-            this._temp.splice(index, 1);
+            temp.splice(index, 1);
         }
 
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < manager.pointersTotal; i++)
         {
-            index = this._drag[i].indexOf(gameObject);
+            index = drag[i].indexOf(gameObject);
 
             if (index > -1)
             {
-                this._drag[i].splice(index, 1);
+                drag[i].splice(index, 1);
             }
 
-            index = this._over[i].indexOf(gameObject);
+            index = over[i].indexOf(gameObject);
 
             if (index > -1)
             {
-                this._over[i].splice(index, 1);
+                over[i].splice(index, 1);
 
-                this.manager.resetCursor(input);
+                manager.resetCursor(input);
             }
         }
 
