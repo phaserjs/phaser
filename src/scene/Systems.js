@@ -435,18 +435,13 @@ var Systems = new Class({
         {
             console.warn('Cannot pause non-running Scene', settings.key);
         }
-        else
+        else if (this.settings.active)
         {
-            var events = this.events;
+            settings.status = CONST.PAUSED;
 
-            if (this.settings.active)
-            {
-                settings.status = CONST.PAUSED;
+            settings.active = false;
 
-                settings.active = false;
-
-                events.emit(Events.PAUSE, this, data);
-            }
+            this.events.emit(Events.PAUSE, this, data);
         }
 
         return this;
@@ -498,15 +493,22 @@ var Systems = new Class({
      */
     sleep: function (data)
     {
-        var events = this.events;
         var settings = this.settings;
+        var status = this.getStatus();
 
-        settings.status = CONST.SLEEPING;
+        if (status !== CONST.CREATING || status !== CONST.RUNNING)
+        {
+            console.warn('Cannot sleep non-running Scene', settings.key);
+        }
+        else
+        {
+            settings.status = CONST.SLEEPING;
 
-        settings.active = false;
-        settings.visible = false;
+            settings.active = false;
+            settings.visible = false;
 
-        events.emit(Events.SLEEP, this, data);
+            this.events.emit(Events.SLEEP, this, data);
+        }
 
         return this;
     },
