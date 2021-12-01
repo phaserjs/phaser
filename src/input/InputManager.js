@@ -315,15 +315,18 @@ var InputManager = new Class({
      */
     boot: function ()
     {
-        this.canvas = this.game.canvas;
+        var game = this.game;
+        var events = game.events;
 
-        this.scaleManager = this.game.scale;
+        this.canvas = game.canvas;
+
+        this.scaleManager = game.scale;
 
         this.events.emit(Events.MANAGER_BOOT);
 
-        this.game.events.on(GameEvents.PRE_RENDER, this.preRender, this);
+        events.on(GameEvents.PRE_RENDER, this.preRender, this);
 
-        this.game.events.once(GameEvents.DESTROY, this.destroy, this);
+        events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -605,19 +608,32 @@ var InputManager = new Class({
         {
             var changedTouch = event.changedTouches[c];
 
-            // document.elementFromPoint(0,0)
-
             for (var i = 1; i < this.pointersTotal; i++)
             {
                 var pointer = pointers[i];
 
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
-                    pointer.touchmove(changedTouch, event);
+                    var element = document.elementFromPoint(changedTouch.pageX, changedTouch.pageY);
+                    var overCanvas = element === this.canvas;
 
-                    this.activePointer = pointer;
+                    if (!this.isOver && overCanvas)
+                    {
+                        this.setCanvasOver(event);
+                    }
+                    else if (this.isOver && !overCanvas)
+                    {
+                        this.setCanvasOut(event);
+                    }
 
-                    changed.push(pointer);
+                    if (this.isOver)
+                    {
+                        pointer.touchmove(changedTouch, event);
+
+                        this.activePointer = pointer;
+
+                        changed.push(pointer);
+                    }
 
                     break;
                 }
