@@ -798,7 +798,6 @@ var InputPlugin = new Class({
             this.queueForRemoval(gameObject);
         }
 
-        //  Clear from _draggable, _drag and _over
         var index = this._draggable.indexOf(gameObject);
 
         if (index > -1)
