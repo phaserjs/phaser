@@ -338,43 +338,112 @@ var Config = new Class({
 
         //  Renderer Settings
         //  These can either be in a `render` object within the Config, or specified on their own
-
-        var renderConfig = GetValue(config, 'render', config);
+        //  The former overrides the latter
 
         /**
          * @const {Phaser.Types.Core.PipelineConfig} Phaser.Core.Config#pipeline - An object mapping WebGL names to WebGLPipeline classes. These should be class constructors, not instances.
          */
-        this.pipeline = GetValue(renderConfig, 'pipeline', null);
+        this.pipeline = GetValue(config, 'pipeline', null);
 
         /**
          * @const {boolean} Phaser.Core.Config#antialias - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
          */
-        this.antialias = GetValue(renderConfig, 'antialias', true);
+        this.antialias = GetValue(config, 'antialias', true);
 
         /**
          * @const {boolean} Phaser.Core.Config#antialiasGL - Sets the `antialias` property when the WebGL context is created. Setting this value does not impact any subsequent textures that are created, or the canvas style attributes.
          */
-        this.antialiasGL = GetValue(renderConfig, 'antialiasGL', true);
+        this.antialiasGL = GetValue(config, 'antialiasGL', true);
 
         /**
          * @const {string} Phaser.Core.Config#mipmapFilter - Sets the `mipmapFilter` property when the WebGL renderer is created.
          */
-        this.mipmapFilter = GetValue(renderConfig, 'mipmapFilter', 'LINEAR');
+        this.mipmapFilter = GetValue(config, 'mipmapFilter', 'LINEAR');
 
         /**
          * @const {boolean} Phaser.Core.Config#desynchronized - When set to `true` it will create a desynchronized context for both 2D and WebGL. See https://developers.google.com/web/updates/2019/05/desynchronized for details.
          */
-        this.desynchronized = GetValue(renderConfig, 'desynchronized', false);
+        this.desynchronized = GetValue(config, 'desynchronized', false);
 
         /**
          * @const {boolean} Phaser.Core.Config#roundPixels - Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
          */
-        this.roundPixels = GetValue(renderConfig, 'roundPixels', false);
+        this.roundPixels = GetValue(config, 'roundPixels', false);
 
         /**
          * @const {boolean} Phaser.Core.Config#pixelArt - Prevent pixel art from becoming blurred when scaled. It will remain crisp (tells the WebGL renderer to automatically create textures using a linear filter mode).
          */
-        this.pixelArt = GetValue(renderConfig, 'pixelArt', this.zoom !== 1);
+        this.pixelArt = GetValue(config, 'pixelArt', this.zoom !== 1);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#transparent - Whether the game canvas will have a transparent background.
+         */
+        this.transparent = GetValue(config, 'transparent', false);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#clearBeforeRender - Whether the game canvas will be cleared between each rendering frame. You can disable this if you have a full-screen background image or game object.
+         */
+        this.clearBeforeRender = GetValue(config, 'clearBeforeRender', true);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#preserveDrawingBuffer - If the value is true the WebGL buffers will not be cleared and will preserve their values until cleared or overwritten by the author.
+         */
+        this.preserveDrawingBuffer = GetValue(config, 'preserveDrawingBuffer', false);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#premultipliedAlpha - In WebGL mode, sets the drawing buffer to contain colors with pre-multiplied alpha.
+         */
+        this.premultipliedAlpha = GetValue(config, 'premultipliedAlpha', true);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#failIfMajorPerformanceCaveat - Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
+         */
+        this.failIfMajorPerformanceCaveat = GetValue(config, 'failIfMajorPerformanceCaveat', false);
+
+        /**
+         * @const {string} Phaser.Core.Config#powerPreference - "high-performance", "low-power" or "default". A hint to the browser on how much device power the game might use.
+         */
+        this.powerPreference = GetValue(config, 'powerPreference', 'default');
+
+        /**
+         * @const {number} Phaser.Core.Config#batchSize - The default WebGL Batch size. Represents the number of _quads_ that can be added to a single batch.
+         */
+        this.batchSize = GetValue(config, 'batchSize', 4096);
+
+        /**
+         * @const {number} Phaser.Core.Config#maxTextures - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
+         */
+        this.maxTextures = GetValue(config, 'maxTextures', -1);
+
+        /**
+         * @const {number} Phaser.Core.Config#maxLights - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
+         */
+        this.maxLights = GetValue(config, 'maxLights', 10);
+
+
+        //  Renderer Settings
+        //  Override fields specified on their own with values from the `render` object
+        var renderConfig = GetValue(config, 'render', config);
+
+        if (renderConfig)
+        {
+            this.pipeline = GetValue(renderConfig, 'pipeline', this.pipeline);
+            this.antialias = GetValue(renderConfig, 'antialias', this.antialias);
+            this.antialiasGL = GetValue(renderConfig, 'antialiasGL', this.antialiasGL);
+            this.mipmapFilter = GetValue(renderConfig, 'mipmapFilter', this.mipmapFilter);
+            this.desynchronized = GetValue(renderConfig, 'desynchronized', this.desynchronized);
+            this.roundPixels = GetValue(renderConfig, 'roundPixels', this.roundPixels);
+            this.pixelArt = GetValue(renderConfig, 'pixelArt', this.pixelArt);
+            this.transparent = GetValue(renderConfig, 'transparent', this.transparent);
+            this.clearBeforeRender = GetValue(renderConfig, 'clearBeforeRender', this.clearBeforeRender);
+            this.preserveDrawingBuffer = GetValue(renderConfig, 'preserveDrawingBuffer', this.preserveDrawingBuffer);
+            this.premultipliedAlpha = GetValue(renderConfig, 'premultipliedAlpha', this.premultipliedAlpha);
+            this.failIfMajorPerformanceCaveat = GetValue(renderConfig, 'failIfMajorPerformanceCaveat', this.failIfMajorPerformanceCaveat);
+            this.powerPreference = GetValue(renderConfig, 'powerPreference', this.powerPreference);
+            this.batchSize = GetValue(renderConfig, 'batchSize', this.batchSize);
+            this.maxTextures = GetValue(renderConfig, 'maxTextures', this.maxTextures);
+            this.maxLights = GetValue(renderConfig, 'maxLights', this.maxLights);
+        }
 
         if (this.pixelArt)
         {
@@ -382,51 +451,6 @@ var Config = new Class({
             this.antialiasGL = false;
             this.roundPixels = true;
         }
-
-        /**
-         * @const {boolean} Phaser.Core.Config#transparent - Whether the game canvas will have a transparent background.
-         */
-        this.transparent = GetValue(renderConfig, 'transparent', false);
-
-        /**
-         * @const {boolean} Phaser.Core.Config#clearBeforeRender - Whether the game canvas will be cleared between each rendering frame. You can disable this if you have a full-screen background image or game object.
-         */
-        this.clearBeforeRender = GetValue(renderConfig, 'clearBeforeRender', true);
-
-        /**
-         * @const {boolean} Phaser.Core.Config#preserveDrawingBuffer - If the value is true the WebGL buffers will not be cleared and will preserve their values until cleared or overwritten by the author.
-         */
-        this.preserveDrawingBuffer = GetValue(renderConfig, 'preserveDrawingBuffer', false);
-
-        /**
-         * @const {boolean} Phaser.Core.Config#premultipliedAlpha - In WebGL mode, sets the drawing buffer to contain colors with pre-multiplied alpha.
-         */
-        this.premultipliedAlpha = GetValue(renderConfig, 'premultipliedAlpha', true);
-
-        /**
-         * @const {boolean} Phaser.Core.Config#failIfMajorPerformanceCaveat - Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
-         */
-        this.failIfMajorPerformanceCaveat = GetValue(renderConfig, 'failIfMajorPerformanceCaveat', false);
-
-        /**
-         * @const {string} Phaser.Core.Config#powerPreference - "high-performance", "low-power" or "default". A hint to the browser on how much device power the game might use.
-         */
-        this.powerPreference = GetValue(renderConfig, 'powerPreference', 'default');
-
-        /**
-         * @const {number} Phaser.Core.Config#batchSize - The default WebGL Batch size. Represents the number of _quads_ that can be added to a single batch.
-         */
-        this.batchSize = GetValue(renderConfig, 'batchSize', 4096);
-
-        /**
-         * @const {number} Phaser.Core.Config#maxTextures - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
-         */
-        this.maxTextures = GetValue(renderConfig, 'maxTextures', -1);
-
-        /**
-         * @const {number} Phaser.Core.Config#maxLights - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
-         */
-        this.maxLights = GetValue(renderConfig, 'maxLights', 10);
 
         var bgc = GetValue(config, 'backgroundColor', 0);
 
