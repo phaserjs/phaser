@@ -69,7 +69,6 @@ var PointLight = new Class({
         Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
-        Components.GetBounds,
         Components.Mask,
         Components.Pipeline,
         Components.ScrollFactor,
