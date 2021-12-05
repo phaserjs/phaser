@@ -1458,7 +1458,7 @@ var SceneManager = new Class({
                 this.scenes.splice(indexB, 1);
 
                 //  Add in new location
-                this.scenes.splice(indexA + 1, 0, tempScene);
+                this.scenes.splice(indexA + (indexB > indexA), 0, tempScene);
             }
         }
 
@@ -1508,7 +1508,7 @@ var SceneManager = new Class({
                 else
                 {
                     //  Add in new location
-                    this.scenes.splice(indexA, 0, tempScene);
+                    this.scenes.splice(indexA - (indexB < indexA), 0, tempScene);
                 }
             }
         }
