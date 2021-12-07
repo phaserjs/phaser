@@ -158,6 +158,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `InputPlugin.sortGameObjects` will now assign a value of 0 to any game object not in the render list, but still viable for input, such as an invisible object with `alwaysEnabled` set to true. This fixes an issue where non-render list objects would be skipped. Fix #5507 (thanks @EmilSV)
 * The `GameObject.willRender` method will now factor in the parent `displayList`, if it has one, to the end result. This fixes issues like that where an invisible Layer will still process input events. Fix #5883 (thanks @rexrainbow)
 * `InputPlugin.disable` will now also reset the drag state of the Game Object as well as remove it from all of the internal temporary arrays. This fixes issues where if you disabled a Game Object for input during an input event it would still remain in the temporary internal arrays. This method now also returns the Input Plugin, to match `enable`. Fix #5828 (thank @natureofcode @thewaver)
+* The `GetBounds` component has been removed from the Point Light Game Object. Fix #5934 (thanks @x-wk @samme)
+* `SceneManager.moveAbove` and `moveBelow` now take into account the modified indexes after the move (thanks @EmilSV)
 
 ### Examples, Documentation and TypeScript
 
