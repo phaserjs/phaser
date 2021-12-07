@@ -36,6 +36,7 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
         return null;
     }
 
+    var index;
     var oldTile = layer.data[tileY][tileX];
     var oldTileCollides = oldTile && oldTile.collides;
 
@@ -50,7 +51,7 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
     }
     else
     {
-        var index = tile;
+        index = tile;
 
         if (layer.data[tileY][tileX] === null)
         {
@@ -68,7 +69,8 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
 
     // Copy properties from tileset to tiles.
     var tiles = BuildTilesetIndex(layer.tilemapLayer.tilemap);
-    var index = tile instanceof Tile ? tile.index : tile;
+
+    index = tile instanceof Tile ? tile.index : tile;
 
     var sid = tiles[index][2];
     var set = layer.tilemapLayer.tileset[sid];
