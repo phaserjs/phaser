@@ -67,7 +67,7 @@
     "@types/source-map": "^0.5.7",
     "clean-webpack-plugin": "^4.0.0",
     "dts-dom": "^3.6.0",
-    "eslint": "^8.4.0",
+    "eslint": "^8.4.1",
     "eslint-plugin-es5": "^1.5.0",
     "exports-loader": "^3.1.0",
     "fs-extra": "^10.0.0",
