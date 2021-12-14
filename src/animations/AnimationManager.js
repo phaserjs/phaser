@@ -392,10 +392,11 @@ var AnimationManager = new Class({
      *
      * @param {string} key - The key of the loaded Aseprite atlas. It must have been loaded prior to calling this method.
      * @param {string[]} [tags] - An array of Tag names. If provided, only animations found in this array will be created.
+     * @param {(Phaser.Animations.AnimationManager|Phaser.GameObjects.GameObject)} [target] - Create the animations on this target Sprite. If not given, they will be created globally in this Animation Manager.
      *
      * @return {Phaser.Animations.Animation[]} An array of Animation instances that were successfully created.
      */
-    createFromAseprite: function (key, tags)
+    createFromAseprite: function (key, tags, target)
     {
         var output = [];
 
@@ -478,7 +479,19 @@ var AnimationManager = new Class({
                         yoyo: (direction === 'pingpong')
                     };
 
-                    var result = _this.create(createConfig);
+                    var result;
+
+                    if (target)
+                    {
+                        if (target.anims)
+                        {
+                            result = target.anims.create(createConfig);
+                        }
+                    }
+                    else
+                    {
+                        result = _this.create(createConfig);
+                    }
 
                     if (result)
                     {
