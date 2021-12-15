@@ -555,16 +555,16 @@ var TransformMatrix = new Class({
     },
 
     /**
-     * Transform a point using this Matrix.
+     * Transform a point in to the local space of this Matrix.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#transformPoint
      * @since 3.0.0
      *
      * @param {number} x - The x coordinate of the point to transform.
      * @param {number} y - The y coordinate of the point to transform.
-     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - The Point object to store the transformed coordinates.
+     * @param {Phaser.Types.Math.Vector2Like} [point] - Optional Point object to store the transformed coordinates in.
      *
-     * @return {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} The Point containing the transformed coordinates.
+     * @return {Phaser.Types.Math.Vector2Like} The Point containing the transformed coordinates.
      */
     transformPoint: function (x, y, point)
     {
