@@ -84,7 +84,6 @@
     "webpack-shell-plugin": "^0.5.0"
   },
   "dependencies": {
-    "eventemitter3": "^4.0.7",
-    "path": "^0.12.7"
+    "eventemitter3": "^4.0.7"
   }
 }
