@@ -115,6 +115,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `TileMap.createBlankDynamicLayer` has now been removed as it was deprecated in 3.50.
 * `TileMap.createDynamicLayer` has now been removed as it was deprecated in 3.50.
 * `TileMap.createStaticLayer` has now been removed as it was deprecated in 3.50.
+* `Animations.AnimationManager.createFromAseprite` has a new optional 3rd parameter `target`. This allows you to create the animations directly on a Sprite, instead of in the global Animation Manager (thanks Telemako)
+* `Animations.AnimationState.createFromAseprite` is a new method that allows you to create animations from exported Aseprite data directly on a Sprite, rather than always in the global Animation Manager (thanks Telemako)
 
 ### Bug Fixes
 

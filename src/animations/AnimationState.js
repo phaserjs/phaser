@@ -1702,6 +1702,93 @@ var AnimationState = new Class({
     },
 
     /**
+     * Create one, or more animations from a loaded Aseprite JSON file.
+     *
+     * Aseprite is a powerful animated sprite editor and pixel art tool.
+     *
+     * You can find more details at https://www.aseprite.org/
+     *
+     * To export a compatible JSON file in Aseprite, please do the following:
+     *
+     * 1. Go to "File - Export Sprite Sheet"
+     *
+     * 2. On the **Layout** tab:
+     * 2a. Set the "Sheet type" to "Packed"
+     * 2b. Set the "Constraints" to "None"
+     * 2c. Check the "Merge Duplicates" checkbox
+     *
+     * 3. On the **Sprite** tab:
+     * 3a. Set "Layers" to "Visible layers"
+     * 3b. Set "Frames" to "All frames", unless you only wish to export a sub-set of tags
+     *
+     * 4. On the **Borders** tab:
+     * 4a. Check the "Trim Sprite" and "Trim Cells" options
+     * 4b. Ensure "Border Padding", "Spacing" and "Inner Padding" are all > 0 (1 is usually enough)
+     *
+     * 5. On the **Output** tab:
+     * 5a. Check "Output File", give your image a name and make sure you choose "png files" as the file type
+     * 5b. Check "JSON Data" and give your json file a name
+     * 5c. The JSON Data type can be either a Hash or Array, Phaser doesn't mind.
+     * 5d. Make sure "Tags" is checked in the Meta options
+     * 5e. In the "Item Filename" input box, make sure it says just "{frame}" and nothing more.
+     *
+     * 6. Click export
+     *
+     * This was tested with Aseprite 1.2.25.
+     *
+     * This will export a png and json file which you can load using the Aseprite Loader, i.e.:
+     *
+     * ```javascript
+     * function preload ()
+     * {
+     *     this.load.path = 'assets/animations/aseprite/';
+     *     this.load.aseprite('paladin', 'paladin.png', 'paladin.json');
+     * }
+     * ```
+     *
+     * Once loaded, you can call this method on a Sprite with the 'atlas' key:
+     *
+     * ```javascript
+     * const sprite = this.add.sprite(400, 300);
+     *
+     * sprite.anims.createFromAseprite('paladin');
+     * ```
+     *
+     * Any animations defined in the JSON will now be available to use on this Sprite and you play them
+     * via their Tag name. For example, if you have an animation called 'War Cry' on your Aseprite timeline,
+     * you can play it on the Sprite using that Tag name:
+     *
+     * ```javascript
+     * const sprite = this.add.sprite(400, 300);
+     *
+     * sprite.anims.createFromAseprite('paladin');
+     *
+     * sprite.play('War Cry');
+     * ```
+     *
+     * When calling this method you can optionally provide an array of tag names, and only those animations
+     * will be created. For example:
+     *
+     * ```javascript
+     * sprite.anims.createFromAseprite('paladin', [ 'step', 'War Cry', 'Magnum Break' ]);
+     * ```
+     *
+     * This will only create the 3 animations defined. Note that the tag names are case-sensitive.
+     *
+     * @method Phaser.Animations.AnimationState#createFromAseprite
+     * @since 3.60.0
+     *
+     * @param {string} key - The key of the loaded Aseprite atlas. It must have been loaded prior to calling this method.
+     * @param {string[]} [tags] - An array of Tag names. If provided, only animations found in this array will be created.
+     *
+     * @return {Phaser.Animations.Animation[]} An array of Animation instances that were successfully created.
+     */
+    createFromAseprite: function (key, tags)
+    {
+        return this.animationManager.createFromAseprite(key, tags, this.parent);
+    },
+
+    /**
      * Generate an array of {@link Phaser.Types.Animations.AnimationFrame} objects from a texture key and configuration object.
      *
      * Generates objects with string based frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNames}.
