@@ -603,6 +603,7 @@ var AnimationManager = new Class({
      * Generates objects with string based frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNames}.
      *
      * It's a helper method, designed to make it easier for you to extract all of the frame names from texture atlases.
+     *
      * If you're working with a sprite sheet, see the `generateFrameNumbers` method instead.
      *
      * Example:
@@ -697,7 +698,6 @@ var AnimationManager = new Class({
      * If you're working with a texture atlas, see the `generateFrameNames` method instead.
      *
      * It's a helper method, designed to make it easier for you to extract frames from sprite sheets.
-     * If you're working with a texture atlas, see the `generateFrameNames` method instead.
      *
      * Example:
      *
