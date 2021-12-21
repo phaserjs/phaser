@@ -117,6 +117,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `TileMap.createStaticLayer` has now been removed as it was deprecated in 3.50.
 * `Animations.AnimationManager.createFromAseprite` has a new optional 3rd parameter `target`. This allows you to create the animations directly on a Sprite, instead of in the global Animation Manager (thanks Telemako)
 * `Animations.AnimationState.createFromAseprite` is a new method that allows you to create animations from exported Aseprite data directly on a Sprite, rather than always in the global Animation Manager (thanks Telemako)
+* The `path` package used by the TS Defs generator has been moved to `devDependencies` (thanks @antkhnvsk)
+* The `GetValue` function has a new optional parameter `altSource` which allows you to provide an alternative object to source the value from.
 
 ### Bug Fixes
 
@@ -165,6 +167,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `InputPlugin.disable` will now also reset the drag state of the Game Object as well as remove it from all of the internal temporary arrays. This fixes issues where if you disabled a Game Object for input during an input event it would still remain in the temporary internal arrays. This method now also returns the Input Plugin, to match `enable`. Fix #5828 (thank @natureofcode @thewaver)
 * The `GetBounds` component has been removed from the Point Light Game Object. Fix #5934 (thanks @x-wk @samme)
 * `SceneManager.moveAbove` and `moveBelow` now take into account the modified indexes after the move (thanks @EmilSV)
+* When forcing a game to use `setTimeout` and then sending the game to sleep, it would accidentally restart by using Request Animation Frame instead (thanks @andymikulski)
+* Including a `render` object within the Game Config will no longer erase any top-level config render settings. The `render` object will now take priority over the game config, but both will be used (thanks @vzhou842)
 
 ### Examples, Documentation and TypeScript
 
