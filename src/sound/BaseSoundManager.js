@@ -194,9 +194,13 @@ var BaseSoundManager = new Class({
         var _this = this;
 
         var body = document.body;
-        var bodyAdd = body.addEventListener;
-        var bodyRemove = body.removeEventListener;
 
+        // function alias throws error in IE9, 10
+        // https://stackoverflow.com/questions/1007340/javascript-function-aliasing-doesnt-seem-to-work
+
+        // var bodyAdd = body.addEventListener;
+        // var bodyRemove = body.removeEventListener;
+        
         var unlockHandler = function unlockHandler ()
         {
             if (!_this.pendingUnlock)
@@ -206,18 +210,18 @@ var BaseSoundManager = new Class({
 
             _this.unlockHandler();
 
-            bodyRemove('touchstart', unlockHandler);
-            bodyRemove('touchend', unlockHandler);
-            bodyRemove('click', unlockHandler);
-            bodyRemove('keydown', unlockHandler);
+            document.body.removeEventListener('touchstart', unlockHandler);
+            document.body.removeEventListener('touchend', unlockHandler);
+            document.body.removeEventListener('click', unlockHandler);
+            document.body.removeEventListener('keydown', unlockHandler);
         };
 
         if (body)
         {
-            bodyAdd('touchstart', unlockHandler, false);
-            bodyAdd('touchend', unlockHandler, false);
-            bodyAdd('click', unlockHandler, false);
-            bodyAdd('keydown', unlockHandler, false);
+            document.body.addEventListener('touchstart', unlockHandler, false);
+            document.body.addEventListener('touchend', unlockHandler, false);
+            document.body.addEventListener('click', unlockHandler, false);
+            document.body.addEventListener('keydown', unlockHandler, false);
 
             this.pendingUnlock = true;
         }

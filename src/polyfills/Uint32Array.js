@@ -44,4 +44,6 @@ if (typeof window.Uint32Array !== 'function' && typeof window.Uint32Array !== 'o
     CheapArray('Uint16Array'); // jshint ignore:line
     CheapArray('Int16Array'); // jshint ignore:line
     CheapArray('ArrayBuffer'); // jshint ignore:line
+    CheapArray('Int8Array'); // jshint ignore:line
+    CheapArray('Uint8Array'); // jshint ignore:line
 }
