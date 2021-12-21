@@ -93,7 +93,7 @@ var HTML5AudioSound = new Class({
 
         BaseSound.call(this, manager, key, config);
 
-        console.log('HTML5AudioSound created', this.tags);
+        // console.log('HTML5AudioSound created', this.tags);
     },
 
     /**
@@ -114,26 +114,26 @@ var HTML5AudioSound = new Class({
     {
         if (this.manager.isLocked(this, 'play', [ markerName, config ]))
         {
-            console.log('HAS.play 1');
+            // console.log('HAS.play 1');
             return false;
         }
 
         if (!BaseSound.prototype.play.call(this, markerName, config))
         {
-            console.log('HAS.play 2');
+            // console.log('HAS.play 2');
             return false;
         }
 
         //  \/\/\/ isPlaying = true, isPaused = false \/\/\/
         if (!this.pickAndPlayAudioTag())
         {
-            console.log('HAS.play 3');
+            // console.log('HAS.play 3');
             return false;
         }
 
         this.emit(Events.PLAY, this);
 
-        console.log('HAS.play 4');
+        // console.log('HAS.play 4');
 
         return true;
     },

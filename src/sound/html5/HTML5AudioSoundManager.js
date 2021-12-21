@@ -168,11 +168,11 @@ var HTML5AudioSoundManager = new Class({
      */
     createAudioTags: function ()
     {
-        console.log('HTML5AudioSoundManager.createAudioTags');
+        // console.log('HTML5AudioSoundManager.createAudioTags');
 
         if (!this.pendingUnlock)
         {
-            console.log('unlock bail 1 - pending unlock false');
+            // console.log('unlock bail 1 - pending unlock false');
             return;
         }
 
@@ -188,7 +188,7 @@ var HTML5AudioSoundManager = new Class({
             {
                 var tag = tags[i];
 
-                console.log('tag unlock', tag.dataset.name, tag.dataset.locked);
+                // console.log('tag unlock', tag.dataset.name, tag.dataset.locked);
 
                 if (tag.dataset.locked === 'true')
                 {
@@ -214,7 +214,7 @@ var HTML5AudioSoundManager = new Class({
             {
                 tag.dataset.locked = 'false';
 
-                console.log('lastTag unlock', tag.dataset.name);
+                // console.log('lastTag unlock', tag.dataset.name);
             });
         };
 
@@ -222,7 +222,7 @@ var HTML5AudioSoundManager = new Class({
         {
             tag.load();
 
-            console.log('tag.load', tag.dataset.name);
+            // console.log('tag.load', tag.dataset.name);
         });
 
         /*
