@@ -664,7 +664,10 @@ var RenderTexture = new Class({
      * * A Texture Frame instance.
      * * A string. This is used to look-up a texture from the Texture Manager.
      *
-     * Note: You cannot draw a Render Texture to itself.
+     * Note 1: You cannot draw a Render Texture to itself.
+     *
+     * Note 2: For Game Objects that have Post FX Pipelines, the pipeline _cannot_ be
+     * used when drawn to this Render Texture.
      *
      * If passing in a Group or Container it will only draw children that return `true`
      * when their `willRender()` method is called. I.e. a Container with 10 children,
