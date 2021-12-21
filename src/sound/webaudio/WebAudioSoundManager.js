@@ -156,7 +156,17 @@ var WebAudioSoundManager = new Class({
         }
         else if (window.hasOwnProperty('webkitAudioContext'))
         {
-            context = new window.webkitAudioContext({ latencyHint: 'interactive' });
+            try
+            {
+                context = new window.webkitAudioContext({ latencyHint: 'interactive' });
+            }
+            catch (e)
+            {
+                console.warn('error occurred while creating webkitAudioContext, now try to create it without options.');
+
+                // create without argument because on some old platforms it does not support passing options to webkitAudioContext.
+                context = new window.webkitAudioContext();
+            }
         }
 
         this.setAudioContext(context);
