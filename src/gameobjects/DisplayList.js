@@ -231,14 +231,10 @@ var DisplayList = new Class({
     {
         var list = this.list;
 
-        var i = list.length;
-
-        while (i--)
+        while (list.length)
         {
-            list[i].destroy(true);
+            list[0].destroy(true);
         }
-
-        list.length = 0;
 
         this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
