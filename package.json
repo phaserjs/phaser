@@ -64,6 +64,7 @@
     "web audio"
   ],
   "devDependencies": {
+    "@types/offscreencanvas": "^2019.6.4",
     "@types/source-map": "^0.5.7",
     "clean-webpack-plugin": "^4.0.0",
     "dts-dom": "^3.6.0",
