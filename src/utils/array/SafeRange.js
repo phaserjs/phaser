@@ -24,8 +24,7 @@ var SafeRange = function (array, startIndex, endIndex, throwError)
     if (startIndex < 0 ||
         startIndex > len ||
         startIndex >= endIndex ||
-        endIndex > len ||
-        startIndex + endIndex > len)
+        endIndex > len)
     {
         if (throwError)
         {
