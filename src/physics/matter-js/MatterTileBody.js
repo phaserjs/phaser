@@ -235,8 +235,9 @@ var MatterTileBody = new Class({
         }
         else if (parts.length > 1)
         {
-            options.parts = parts;
-            this.setBody(Body.create(options), options.addToWorld);
+            var tempOptions = JSON.parse(JSON.stringify(options));
+            tempOptions.parts = parts;
+            this.setBody(Body.create(tempOptions), options.addToWorld);
         }
 
         return this;
