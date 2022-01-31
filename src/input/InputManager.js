@@ -971,8 +971,9 @@ var InputManager = new Class({
         y += gameObject.displayOriginY;
 
         var input = gameObject.input;
+        var hitAreaCallback = input?.hitAreaCallback;
 
-        if (input && input.hitAreaCallback(input.hitArea, x, y, gameObject))
+        if (typeof hitAreaCallback === 'function' && hitAreaCallback(input.hitArea, x, y, gameObject))
         {
             input.localX = x;
             input.localY = y;
