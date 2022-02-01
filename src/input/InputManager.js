@@ -971,7 +971,7 @@ var InputManager = new Class({
         y += gameObject.displayOriginY;
 
         var input = gameObject.input;
-        var hitAreaCallback = input?.hitAreaCallback;
+        var hitAreaCallback = input && input.hitAreaCallback;
 
         if (typeof hitAreaCallback === 'function' && hitAreaCallback(input.hitArea, x, y, gameObject))
         {
