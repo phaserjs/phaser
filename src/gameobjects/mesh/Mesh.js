@@ -1069,7 +1069,7 @@ var Mesh = new Class({
     /**
      * Clears all tint values associated with this Game Object.
      *
-     * Immediately sets the color values back to 0xffffff and the tint type to 'additive',
+     * Immediately sets the color values back to 0xffffff on all vertices,
      * which results in no visible change to the texture.
      *
      * @method Phaser.GameObjects.Mesh#clearTint
@@ -1080,9 +1080,7 @@ var Mesh = new Class({
      */
     clearTint: function ()
     {
-        this.setTint(0xffffff);
- 
-        return this;
+        return this.setTint();
     },
 
     /**
@@ -1096,30 +1094,28 @@ var Mesh = new Class({
      *
      * To remove a tint call `clearTint`.
      *
-     * To swap this from being an additive tint to a fill based tint set the property `tintFill` to `true`.
-     *
      * @method Phaser.GameObjects.Mesh#setTint
      * @webglOnly
      * @since 3.60.0
      *
-     * @param {number} [topLeft=0xffffff] - The tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
+     * @param {number} [tint=0xffffff] - The tint being applied to all vertices of this Mesh Game Object.
      *
      * @return {this} This Game Object instance.
      */
     setTint: function (tint)
     {
         if (tint === undefined) { tint = 0xffffff; }
-  
+
         var vertices = this.vertices;
-    
+
         for (var i = 0; i < vertices.length; i++)
         {
             vertices[i].color = tint;
         }
-  
+
         return this;
     },
- 
+
     /**
      * The tint value being applied to the whole of the Game Object.
      * This property is a setter-only.
