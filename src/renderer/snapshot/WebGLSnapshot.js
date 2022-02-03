@@ -17,12 +17,12 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @function Phaser.Renderer.Snapshot.WebGL
  * @since 3.0.0
  *
- * @param {HTMLCanvasElement} sourceCanvas - The canvas to take a snapshot of.
+ * @param {WebGLRenderingContext} sourceContext - The WebGL context to take a snapshot of.
  * @param {Phaser.Types.Renderer.Snapshot.SnapshotState} config - The snapshot configuration object.
  */
-var WebGLSnapshot = function (sourceCanvas, config)
+var WebGLSnapshot = function (sourceContext, config)
 {
-    var gl = sourceCanvas.getContext('experimental-webgl');
+    var gl = sourceContext;
 
     var callback = GetFastValue(config, 'callback');
     var type = GetFastValue(config, 'type', 'image/png');

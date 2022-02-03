@@ -2654,7 +2654,7 @@ var WebGLRenderer = new Class({
 
         if (state.callback)
         {
-            WebGLSnapshot(this.canvas, state);
+            WebGLSnapshot(this.gl, state);
 
             state.callback = null;
         }
@@ -2814,7 +2814,7 @@ var WebGLRenderer = new Class({
 
         this.setFramebuffer(framebuffer);
 
-        WebGLSnapshot(this.canvas, state);
+        WebGLSnapshot(this.gl, state);
 
         this.setFramebuffer(currentFramebuffer);
 
