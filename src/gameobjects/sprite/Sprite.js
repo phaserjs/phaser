@@ -346,7 +346,7 @@ var Sprite = new Class({
      * @method Phaser.GameObjects.Sprite#chain
      * @since 3.50.0
      *
-     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig|string[]|Phaser.Animations.Animation[]|Phaser.Types.Animations.PlayAnimationConfig[])} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object, or an array of them.
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig|string[]|Phaser.Animations.Animation[]|Phaser.Types.Animations.PlayAnimationConfig[])} [key] - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object, or an array of them.
      *
      * @return {this} This Game Object.
      */
