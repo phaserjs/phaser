@@ -818,7 +818,10 @@ var CanvasRenderer = new Class({
             sprite.mask.preRenderCanvas(this, sprite, camera);
         }
 
-        ctx.drawImage(frame.source.image, frameX, frameY, frameWidth, frameHeight, x, y, frameWidth / res, frameHeight / res);
+        if (frameWidth > 0 && frameHeight > 0)
+        {
+            ctx.drawImage(frame.source.image, frameX, frameY, frameWidth, frameHeight, x, y, frameWidth / res, frameHeight / res);
+        }
 
         if (sprite.mask)
         {
