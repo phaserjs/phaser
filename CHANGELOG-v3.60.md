@@ -175,6 +175,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 * Calling `Tween.stop(0)` would run for an additional delta before stopping, causing the Tween to not be truly 100% "reset". Fix #5986 (thanks @Mesonyx)
 * The `Utils.Array.SafeRange` function would exclude valid certain ranges. Fix #5979 (thanks @ksritharan)
 * The "Skip intersects check by argument" change in Arcade Physics has been reverted. Fix #5956 (thanks @samme)
+* The `Container.pointToContainer` method would ignore the provided `output` parameter, but now uses it (thanks @vforsh)
+* The `Polygon` Game Object would ignore its `closePath` property when rendering in Canvas. Fix #5983 (thanks @optimumsuave)
 
 ### Examples, Documentation and TypeScript
 
