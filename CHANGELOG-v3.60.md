@@ -178,6 +178,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The "Skip intersects check by argument" change in Arcade Physics has been reverted. Fix #5956 (thanks @samme)
 * The `Container.pointToContainer` method would ignore the provided `output` parameter, but now uses it (thanks @vforsh)
 * The `Polygon` Game Object would ignore its `closePath` property when rendering in Canvas. Fix #5983 (thanks @optimumsuave)
+* IE9 Fix: Added 2 missing Typed Array polyfills (thanks @jcyuan)
+* IE9 Fix: CanvasRenderer ignores frames with zero dimensions (thanks @jcyuan)
 
 ### Examples, Documentation and TypeScript
 
