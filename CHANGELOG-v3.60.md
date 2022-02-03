@@ -40,7 +40,7 @@ Development of this feature was kindly sponsored by Club Penguin Rewritten (http
 
 ### New Features - Multi Tint Pipeline
 
-* If you have a customised Multi Tint Pipeline fragment shader that uses the `%forloop%` declaration, you should update it to follow the new format defined in `Multi.frag`. This new shader uses a function called `getSampler` instead of the often massive if/else glsl blocks from before. Please see the shader code and update your own shaders accordingly.
+* If you have a customised Multi Tint Pipeline fragment shader that uses the `%forloop%` declaration, you should update it to follow the new format defined in `Multi.frag`. This new shader uses a function called `getSampler` instead. Please see the shader code and update your own shaders accordingly. You can also see the documentation for the MultiPipeline for details.
 * The `Multi.frag` shader now uses a `highp` precision instead of `mediump`.
 * The `WebGL.Utils.checkShaderMax` function will no longer use a massive if/else glsl shader check and will instead rely on the value given in `gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS)`.
 * The `WebGL.Utils.parseFragmentShaderMaxTextures` function no longer supports the `%forloop%` declaration.

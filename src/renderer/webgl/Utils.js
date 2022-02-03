@@ -126,8 +126,9 @@ module.exports = {
     },
 
     /**
-     * Checks the given Fragment Shader Source for `%count%` declarations and
-     * replaces those with GLSL code for setting `texture = texture2D(uMainSampler[i], outTexCoord)`.
+     * Checks the given Fragment Shader Source for `%count%` and `%getSampler%` declarations and
+     * replaces those with GLSL code for setting `texture = texture2D(uMainSampler[i], outTexCoord)`
+     * and injecting the `getSampler` glsl function.
      *
      * @function Phaser.Renderer.WebGL.Utils.parseFragmentShaderMaxTextures
      * @since 3.50.0
@@ -143,6 +144,22 @@ module.exports = {
         {
             return '';
         }
+
+        var src = 'vec4 getSampler (int index, vec2 uv) {';
+
+        for (var i = 0; i < maxTextures; i++)
+        {
+            if (i > 0 && i < maxTextures)
+            {
+                src += '\nelse ';
+            }
+
+            src += 'if (index == ' + i + ') { return texture2D(uMainSampler[' + i + '], uv); }';
+        }
+
+        src += '\nreturn vec4(0);\n}';
+
+        fragmentShaderSource = fragmentShaderSource.replace(/%getSampler%/gi, src);
 
         return fragmentShaderSource.replace(/%count%/gi, maxTextures.toString());
     }

@@ -10,19 +10,7 @@ varying float outTexId;
 varying float outTintEffect;
 varying vec4 outTint;
 
-vec4 getSampler (int index, vec2 uv)
-{
-    for (int i = 0; i < numTextures; ++i)
-    {
-        if (i == index)
-        {
-            return texture2D(uMainSampler[i], uv);
-        }
-    }
-
-    //  Return black
-    return vec4(0);
-}
+%getSampler%
 
 void main ()
 {
