@@ -162,9 +162,7 @@ var WebAudioSoundManager = new Class({
             }
             catch (e)
             {
-                console.warn('error occurred while creating webkitAudioContext, now try to create it without options.');
-
-                // create without argument because on some old platforms it does not support passing options to webkitAudioContext.
+                //  For iOS10 and legacy devices we create without arguments:
                 context = new window.webkitAudioContext();
             }
         }
