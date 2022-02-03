@@ -498,7 +498,8 @@ var Container = new Class({
         }
         else
         {
-            output = new Vector2(source.x, source.y);
+            output.x = source.x;
+            output.y = source.y;
         }
 
         var tempMatrix = this.tempTransformMatrix;
