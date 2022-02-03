@@ -533,7 +533,6 @@ var TileSprite = new Class({
         this.dirty = true;
         this.fillPattern = null;
         this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
-
     },
 
     /**
