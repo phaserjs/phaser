@@ -195,33 +195,27 @@ var BaseSoundManager = new Class({
 
         var body = document.body;
 
-        // function alias throws error in IE9, 10
-        // https://stackoverflow.com/questions/1007340/javascript-function-aliasing-doesnt-seem-to-work
-
-        // var bodyAdd = body.addEventListener;
-        // var bodyRemove = body.removeEventListener;
-        
-        var unlockHandler = function unlockHandler ()
-        {
-            if (!_this.pendingUnlock)
-            {
-                return;
-            }
-
-            _this.unlockHandler();
-
-            document.body.removeEventListener('touchstart', unlockHandler);
-            document.body.removeEventListener('touchend', unlockHandler);
-            document.body.removeEventListener('click', unlockHandler);
-            document.body.removeEventListener('keydown', unlockHandler);
-        };
-
         if (body)
         {
-            document.body.addEventListener('touchstart', unlockHandler, false);
-            document.body.addEventListener('touchend', unlockHandler, false);
-            document.body.addEventListener('click', unlockHandler, false);
-            document.body.addEventListener('keydown', unlockHandler, false);
+            var unlockHandler = function unlockHandler ()
+            {
+                if (!_this.pendingUnlock)
+                {
+                    return;
+                }
+
+                _this.unlockHandler();
+
+                body.removeEventListener('touchstart', unlockHandler);
+                body.removeEventListener('touchend', unlockHandler);
+                body.removeEventListener('click', unlockHandler);
+                body.removeEventListener('keydown', unlockHandler);
+            };
+
+            body.addEventListener('touchstart', unlockHandler, false);
+            body.addEventListener('touchend', unlockHandler, false);
+            body.addEventListener('click', unlockHandler, false);
+            body.addEventListener('keydown', unlockHandler, false);
 
             this.pendingUnlock = true;
         }
