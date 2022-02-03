@@ -122,6 +122,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `Animations.AnimationState.createFromAseprite` is a new method that allows you to create animations from exported Aseprite data directly on a Sprite, rather than always in the global Animation Manager (thanks Telemako)
 * The `path` package used by the TS Defs generator has been moved to `devDependencies` (thanks @antkhnvsk)
 * The `GetValue` function has a new optional parameter `altSource` which allows you to provide an alternative object to source the value from.
+* The `Renderer.Snapshot.WebGL` function has had its first parameter changed from an `HTMLCanvasElement` to a `WebGLRenderingContext`. This is now passed in from the `snapshot` methods inside the WebGL Renderer. The change was made to allow it to work with WebGL2 custom contexts (thanks @andymikulski)
 
 ### Bug Fixes
 
