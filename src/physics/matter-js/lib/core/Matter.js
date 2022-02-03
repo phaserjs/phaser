@@ -27,7 +27,7 @@ var Common = require('./Common');
      * @readOnly
      * @type {String}
      */
-    Matter.version = '0.14.2';
+    Matter.version = '0.18.0';
 
     /**
      * A list of plugin dependencies to be installed. These are normally set and installed through `Matter.use`.

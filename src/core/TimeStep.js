@@ -651,7 +651,7 @@ var TimeStep = new Class({
             this.startTime += -this.lastTime + (this.lastTime + window.performance.now());
         }
 
-        this.raf.start(this.step.bind(this), this.useRAF);
+        this.raf.start(this.step.bind(this), this.forceSetTimeOut, this._target);
 
         this.running = true;
 

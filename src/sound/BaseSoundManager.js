@@ -194,30 +194,28 @@ var BaseSoundManager = new Class({
         var _this = this;
 
         var body = document.body;
-        var bodyAdd = body.addEventListener;
-        var bodyRemove = body.removeEventListener;
-
-        var unlockHandler = function unlockHandler ()
-        {
-            if (!_this.pendingUnlock)
-            {
-                return;
-            }
-
-            _this.unlockHandler();
-
-            bodyRemove('touchstart', unlockHandler);
-            bodyRemove('touchend', unlockHandler);
-            bodyRemove('click', unlockHandler);
-            bodyRemove('keydown', unlockHandler);
-        };
 
         if (body)
         {
-            bodyAdd('touchstart', unlockHandler, false);
-            bodyAdd('touchend', unlockHandler, false);
-            bodyAdd('click', unlockHandler, false);
-            bodyAdd('keydown', unlockHandler, false);
+            var unlockHandler = function unlockHandler ()
+            {
+                if (!_this.pendingUnlock)
+                {
+                    return;
+                }
+
+                _this.unlockHandler();
+
+                body.removeEventListener('touchstart', unlockHandler);
+                body.removeEventListener('touchend', unlockHandler);
+                body.removeEventListener('click', unlockHandler);
+                body.removeEventListener('keydown', unlockHandler);
+            };
+
+            body.addEventListener('touchstart', unlockHandler, false);
+            body.addEventListener('touchend', unlockHandler, false);
+            body.addEventListener('click', unlockHandler, false);
+            body.addEventListener('keydown', unlockHandler, false);
 
             this.pendingUnlock = true;
         }

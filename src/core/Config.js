@@ -46,97 +46,79 @@ var Config = new Class({
 
         var defaultBannerTextColor = '#ffffff';
 
+        //  Scale Manager - Anything set in here over-rides anything set in the core game config
+
+        var scaleConfig = GetValue(config, 'scale', null);
+
         /**
          * @const {(number|string)} Phaser.Core.Config#width - The width of the underlying canvas, in pixels.
          */
-        this.width = GetValue(config, 'width', 1024);
+        this.width = GetValue(scaleConfig, 'width', 1024, config);
 
         /**
          * @const {(number|string)} Phaser.Core.Config#height - The height of the underlying canvas, in pixels.
          */
-        this.height = GetValue(config, 'height', 768);
+        this.height = GetValue(scaleConfig, 'height', 768, config);
 
         /**
          * @const {(Phaser.Scale.ZoomType|number)} Phaser.Core.Config#zoom - The zoom factor, as used by the Scale Manager.
          */
-        this.zoom = GetValue(config, 'zoom', 1);
+        this.zoom = GetValue(scaleConfig, 'zoom', 1, config);
 
         /**
          * @const {?*} Phaser.Core.Config#parent - A parent DOM element into which the canvas created by the renderer will be injected.
          */
-        this.parent = GetValue(config, 'parent', undefined);
+        this.parent = GetValue(scaleConfig, 'parent', undefined, config);
 
         /**
          * @const {Phaser.Scale.ScaleModeType} Phaser.Core.Config#scaleMode - The scale mode as used by the Scale Manager. The default is zero, which is no scaling.
          */
-        this.scaleMode = GetValue(config, 'scaleMode', 0);
+        this.scaleMode = GetValue(scaleConfig, 'scaleMode', 0, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#expandParent - Is the Scale Manager allowed to adjust the CSS height property of the parent to be 100%?
          */
-        this.expandParent = GetValue(config, 'expandParent', true);
+        this.expandParent = GetValue(scaleConfig, 'expandParent', true, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#autoRound - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
          */
-        this.autoRound = GetValue(config, 'autoRound', false);
+        this.autoRound = GetValue(scaleConfig, 'autoRound', false, config);
 
         /**
          * @const {Phaser.Scale.CenterType} Phaser.Core.Config#autoCenter - Automatically center the canvas within the parent?
          */
-        this.autoCenter = GetValue(config, 'autoCenter', 0);
+        this.autoCenter = GetValue(scaleConfig, 'autoCenter', 0, config);
 
         /**
          * @const {number} Phaser.Core.Config#resizeInterval - How many ms should elapse before checking if the browser size has changed?
          */
-        this.resizeInterval = GetValue(config, 'resizeInterval', 500);
+        this.resizeInterval = GetValue(scaleConfig, 'resizeInterval', 500, config);
 
         /**
          * @const {?(HTMLElement|string)} Phaser.Core.Config#fullscreenTarget - The DOM element that will be sent into full screen mode, or its `id`. If undefined Phaser will create its own div and insert the canvas into it when entering fullscreen mode.
          */
-        this.fullscreenTarget = GetValue(config, 'fullscreenTarget', null);
+        this.fullscreenTarget = GetValue(scaleConfig, 'fullscreenTarget', null, config);
 
         /**
          * @const {number} Phaser.Core.Config#minWidth - The minimum width, in pixels, the canvas will scale down to. A value of zero means no minimum.
          */
-        this.minWidth = GetValue(config, 'minWidth', 0);
+        this.minWidth = GetValue(scaleConfig, 'minWidth', 0, config);
 
         /**
          * @const {number} Phaser.Core.Config#maxWidth - The maximum width, in pixels, the canvas will scale up to. A value of zero means no maximum.
          */
-        this.maxWidth = GetValue(config, 'maxWidth', 0);
+        this.maxWidth = GetValue(scaleConfig, 'maxWidth', 0, config);
 
         /**
          * @const {number} Phaser.Core.Config#minHeight - The minimum height, in pixels, the canvas will scale down to. A value of zero means no minimum.
          */
-        this.minHeight = GetValue(config, 'minHeight', 0);
+        this.minHeight = GetValue(scaleConfig, 'minHeight', 0, config);
 
         /**
          * @const {number} Phaser.Core.Config#maxHeight - The maximum height, in pixels, the canvas will scale up to. A value of zero means no maximum.
          */
-        this.maxHeight = GetValue(config, 'maxHeight', 0);
-
-        //  Scale Manager - Anything set in here over-rides anything set above
-
-        var scaleConfig = GetValue(config, 'scale', null);
-
-        if (scaleConfig)
-        {
-            this.width = GetValue(scaleConfig, 'width', this.width);
-            this.height = GetValue(scaleConfig, 'height', this.height);
-            this.zoom = GetValue(scaleConfig, 'zoom', this.zoom);
-            this.parent = GetValue(scaleConfig, 'parent', this.parent);
-            this.scaleMode = GetValue(scaleConfig, 'mode', this.scaleMode);
-            this.expandParent = GetValue(scaleConfig, 'expandParent', this.expandParent);
-            this.autoRound = GetValue(scaleConfig, 'autoRound', this.autoRound);
-            this.autoCenter = GetValue(scaleConfig, 'autoCenter', this.autoCenter);
-            this.resizeInterval = GetValue(scaleConfig, 'resizeInterval', this.resizeInterval);
-            this.fullscreenTarget = GetValue(scaleConfig, 'fullscreenTarget', this.fullscreenTarget);
-            this.minWidth = GetValue(scaleConfig, 'min.width', this.minWidth);
-            this.maxWidth = GetValue(scaleConfig, 'max.width', this.maxWidth);
-            this.minHeight = GetValue(scaleConfig, 'min.height', this.minHeight);
-            this.maxHeight = GetValue(scaleConfig, 'max.height', this.maxHeight);
-        }
+        this.maxHeight = GetValue(scaleConfig, 'maxHeight', 0, config);
 
         /**
          * @const {number} Phaser.Core.Config#renderType - Force Phaser to use a specific renderer. Can be `CONST.CANVAS`, `CONST.WEBGL`, `CONST.HEADLESS` or `CONST.AUTO` (default)
@@ -336,45 +318,44 @@ var Config = new Class({
          */
         this.fps = GetValue(config, 'fps', null);
 
-        //  Renderer Settings
-        //  These can either be in a `render` object within the Config, or specified on their own
+        //  Render Settings - Anything set in here over-rides anything set in the core game config
 
-        var renderConfig = GetValue(config, 'render', config);
+        var renderConfig = GetValue(config, 'render', null);
 
         /**
          * @const {Phaser.Types.Core.PipelineConfig} Phaser.Core.Config#pipeline - An object mapping WebGL names to WebGLPipeline classes. These should be class constructors, not instances.
          */
-        this.pipeline = GetValue(renderConfig, 'pipeline', null);
+        this.pipeline = GetValue(renderConfig, 'pipeline', null, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#antialias - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
          */
-        this.antialias = GetValue(renderConfig, 'antialias', true);
+        this.antialias = GetValue(renderConfig, 'antialias', true, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#antialiasGL - Sets the `antialias` property when the WebGL context is created. Setting this value does not impact any subsequent textures that are created, or the canvas style attributes.
          */
-        this.antialiasGL = GetValue(renderConfig, 'antialiasGL', true);
+        this.antialiasGL = GetValue(renderConfig, 'antialiasGL', true, config);
 
         /**
          * @const {string} Phaser.Core.Config#mipmapFilter - Sets the `mipmapFilter` property when the WebGL renderer is created.
          */
-        this.mipmapFilter = GetValue(renderConfig, 'mipmapFilter', 'LINEAR');
+        this.mipmapFilter = GetValue(renderConfig, 'mipmapFilter', 'LINEAR', config);
 
         /**
          * @const {boolean} Phaser.Core.Config#desynchronized - When set to `true` it will create a desynchronized context for both 2D and WebGL. See https://developers.google.com/web/updates/2019/05/desynchronized for details.
          */
-        this.desynchronized = GetValue(renderConfig, 'desynchronized', false);
+        this.desynchronized = GetValue(renderConfig, 'desynchronized', false, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#roundPixels - Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
          */
-        this.roundPixels = GetValue(renderConfig, 'roundPixels', false);
+        this.roundPixels = GetValue(renderConfig, 'roundPixels', false, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#pixelArt - Prevent pixel art from becoming blurred when scaled. It will remain crisp (tells the WebGL renderer to automatically create textures using a linear filter mode).
          */
-        this.pixelArt = GetValue(renderConfig, 'pixelArt', this.zoom !== 1);
+        this.pixelArt = GetValue(renderConfig, 'pixelArt', this.zoom !== 1, config);
 
         if (this.pixelArt)
         {
@@ -386,47 +367,47 @@ var Config = new Class({
         /**
          * @const {boolean} Phaser.Core.Config#transparent - Whether the game canvas will have a transparent background.
          */
-        this.transparent = GetValue(renderConfig, 'transparent', false);
+        this.transparent = GetValue(renderConfig, 'transparent', false, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#clearBeforeRender - Whether the game canvas will be cleared between each rendering frame. You can disable this if you have a full-screen background image or game object.
          */
-        this.clearBeforeRender = GetValue(renderConfig, 'clearBeforeRender', true);
+        this.clearBeforeRender = GetValue(renderConfig, 'clearBeforeRender', true, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#preserveDrawingBuffer - If the value is true the WebGL buffers will not be cleared and will preserve their values until cleared or overwritten by the author.
          */
-        this.preserveDrawingBuffer = GetValue(renderConfig, 'preserveDrawingBuffer', false);
+        this.preserveDrawingBuffer = GetValue(renderConfig, 'preserveDrawingBuffer', false, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#premultipliedAlpha - In WebGL mode, sets the drawing buffer to contain colors with pre-multiplied alpha.
          */
-        this.premultipliedAlpha = GetValue(renderConfig, 'premultipliedAlpha', true);
+        this.premultipliedAlpha = GetValue(renderConfig, 'premultipliedAlpha', true, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#failIfMajorPerformanceCaveat - Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
          */
-        this.failIfMajorPerformanceCaveat = GetValue(renderConfig, 'failIfMajorPerformanceCaveat', false);
+        this.failIfMajorPerformanceCaveat = GetValue(renderConfig, 'failIfMajorPerformanceCaveat', false, config);
 
         /**
          * @const {string} Phaser.Core.Config#powerPreference - "high-performance", "low-power" or "default". A hint to the browser on how much device power the game might use.
          */
-        this.powerPreference = GetValue(renderConfig, 'powerPreference', 'default');
+        this.powerPreference = GetValue(renderConfig, 'powerPreference', 'default', config);
 
         /**
          * @const {number} Phaser.Core.Config#batchSize - The default WebGL Batch size. Represents the number of _quads_ that can be added to a single batch.
          */
-        this.batchSize = GetValue(renderConfig, 'batchSize', 4096);
+        this.batchSize = GetValue(renderConfig, 'batchSize', 4096, config);
 
         /**
          * @const {number} Phaser.Core.Config#maxTextures - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
          */
-        this.maxTextures = GetValue(renderConfig, 'maxTextures', -1);
+        this.maxTextures = GetValue(renderConfig, 'maxTextures', -1, config);
 
         /**
          * @const {number} Phaser.Core.Config#maxLights - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
          */
-        this.maxLights = GetValue(renderConfig, 'maxLights', 10);
+        this.maxLights = GetValue(renderConfig, 'maxLights', 10, config);
 
         var bgc = GetValue(config, 'backgroundColor', 0);
 

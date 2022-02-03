@@ -56,7 +56,10 @@ var PolygonCanvasRenderer = function (renderer, src, camera, parentMatrix)
             ctx.lineTo(px2, py2);
         }
 
-        ctx.closePath();
+        if (src.closePath)
+        {
+            ctx.closePath();
+        }
 
         if (src.isFilled)
         {

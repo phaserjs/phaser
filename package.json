@@ -64,27 +64,28 @@
     "web audio"
   ],
   "devDependencies": {
+    "@types/offscreencanvas": "^2019.6.4",
     "@types/source-map": "^0.5.7",
     "clean-webpack-plugin": "^4.0.0",
     "dts-dom": "^3.6.0",
-    "eslint": "^8.4.1",
+    "eslint": "^8.8.0",
     "eslint-plugin-es5": "^1.5.0",
     "exports-loader": "^3.1.0",
     "fs-extra": "^10.0.0",
     "imports-loader": "^3.1.1",
-    "jsdoc": "^3.6.7",
+    "jsdoc": "^3.6.10",
     "node-sloc": "^0.2.1",
+    "path": "^0.12.7",
     "remove-files-webpack-plugin": "^1.5.0",
     "source-map": "^0.7.3",
-    "terser-webpack-plugin": "^5.2.5",
-    "typescript": "^4.5.4",
+    "terser-webpack-plugin": "^5.3.1",
+    "typescript": "^4.5.5",
     "vivid-cli": "^1.1.2",
-    "webpack": "^5.65.0",
-    "webpack-cli": "^4.9.1",
+    "webpack": "^5.68.0",
+    "webpack-cli": "^4.9.2",
     "webpack-shell-plugin": "^0.5.0"
   },
   "dependencies": {
-    "eventemitter3": "^4.0.7",
-    "path": "^0.12.7"
+    "eventemitter3": "^4.0.7"
   }
 }

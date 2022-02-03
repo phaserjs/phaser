@@ -37,7 +37,12 @@ var Body = require('./Body');
             constraints: [], 
             composites: [],
             label: 'Composite',
-            plugin: {}
+            plugin: {},
+            cache: {
+                allBodies: null,
+                allConstraints: null,
+                allComposites: null
+            }
         }, options);
     };
 
@@ -57,12 +62,18 @@ var Body = require('./Body');
 
         composite.isModified = isModified;
 
+        if (isModified && composite.cache) {
+            composite.cache.allBodies = null;
+            composite.cache.allConstraints = null;
+            composite.cache.allComposites = null;
+        }
+
         if (updateParents && composite.parent) {
             Composite.setModified(composite.parent, isModified, updateParents, updateChildren);
         }
 
         if (updateChildren) {
-            for(var i = 0; i < composite.composites.length; i++) {
+            for (var i = 0; i < composite.composites.length; i++) {
                 var childComposite = composite.composites[i];
                 Composite.setModified(childComposite, isModified, updateParents, updateChildren);
             }
@@ -70,11 +81,11 @@ var Body = require('./Body');
     };
 
     /**
-     * Generic add function. Adds one or many body(s), constraint(s) or a composite(s) to the given composite.
+     * Generic single or multi-add function. Adds a single or an array of body(s), constraint(s) or composite(s) to the given composite.
      * Triggers `beforeAdd` and `afterAdd` events on the `composite`.
      * @method add
      * @param {composite} composite
-     * @param {} object
+     * @param {object|array} object A single or an array of body(s), constraint(s) or composite(s)
      * @return {composite} The original composite with the objects added
      */
     Composite.add = function(composite, object) {
@@ -120,7 +131,7 @@ var Body = require('./Body');
      * Triggers `beforeRemove` and `afterRemove` events on the `composite`.
      * @method remove
      * @param {composite} composite
-     * @param {} object
+     * @param {object|array} object
      * @param {boolean} [deep=false]
      * @return {composite} The original composite with the objects removed
      */
@@ -180,10 +191,9 @@ var Body = require('./Body');
      * @return {composite} The original compositeA with the composite removed
      */
     Composite.removeComposite = function(compositeA, compositeB, deep) {
-        var position = compositeA.composites.indexOf(compositeB);
+        var position = Common.indexOf(compositeA.composites, compositeB);
         if (position !== -1) {
             Composite.removeCompositeAt(compositeA, position);
-            Composite.setModified(compositeA, true, true, false);
         }
 
         if (deep) {
@@ -233,10 +243,9 @@ var Body = require('./Body');
      * @return {composite} The original composite with the body removed
      */
     Composite.removeBody = function(composite, body, deep) {
-        var position = composite.bodies.indexOf(body);
+        var position = Common.indexOf(composite.bodies, body);
         if (position !== -1) {
             Composite.removeBodyAt(composite, position);
-            Composite.setModified(composite, true, true, false);
         }
 
         if (deep) {
@@ -286,7 +295,7 @@ var Body = require('./Body');
      * @return {composite} The original composite with the constraint removed
      */
     Composite.removeConstraint = function(composite, constraint, deep) {
-        var position = composite.constraints.indexOf(constraint);
+        var position = Common.indexOf(composite.constraints, constraint);
         if (position !== -1) {
             Composite.removeConstraintAt(composite, position);
         }
@@ -337,6 +346,7 @@ var Body = require('./Body');
 
         composite.constraints.length = 0;
         composite.composites.length = 0;
+
         Composite.setModified(composite, true, true, false);
 
         return composite;
@@ -349,10 +359,18 @@ var Body = require('./Body');
      * @return {body[]} All the bodies
      */
     Composite.allBodies = function(composite) {
+        if (composite.cache && composite.cache.allBodies) {
+            return composite.cache.allBodies;
+        }
+
         var bodies = [].concat(composite.bodies);
 
         for (var i = 0; i < composite.composites.length; i++)
             bodies = bodies.concat(Composite.allBodies(composite.composites[i]));
+
+        if (composite.cache) {
+            composite.cache.allBodies = bodies;
+        }
 
         return bodies;
     };
@@ -364,10 +382,18 @@ var Body = require('./Body');
      * @return {constraint[]} All the constraints
      */
     Composite.allConstraints = function(composite) {
+        if (composite.cache && composite.cache.allConstraints) {
+            return composite.cache.allConstraints;
+        }
+
         var constraints = [].concat(composite.constraints);
 
         for (var i = 0; i < composite.composites.length; i++)
             constraints = constraints.concat(Composite.allConstraints(composite.composites[i]));
+
+        if (composite.cache) {
+            composite.cache.allConstraints = constraints;
+        }
 
         return constraints;
     };
@@ -379,10 +405,18 @@ var Body = require('./Body');
      * @return {composite[]} All the composites
      */
     Composite.allComposites = function(composite) {
+        if (composite.cache && composite.cache.allComposites) {
+            return composite.cache.allComposites;
+        }
+
         var composites = [].concat(composite.composites);
 
         for (var i = 0; i < composite.composites.length; i++)
             composites = composites.concat(Composite.allComposites(composite.composites[i]));
+
+        if (composite.cache) {
+            composite.cache.allComposites = composites;
+        }
 
         return composites;
     };
@@ -450,8 +484,6 @@ var Body = require('./Body');
             objects[i].id = Common.nextId();
         }
 
-        Composite.setModified(composite, true, true, false);
-
         return composite;
     };
 
@@ -469,8 +501,6 @@ var Body = require('./Body');
         for (var i = 0; i < bodies.length; i++) {
             Body.translate(bodies[i], translation);
         }
-
-        Composite.setModified(composite, true, true, false);
 
         return composite;
     };
@@ -501,8 +531,6 @@ var Body = require('./Body');
             Body.rotate(body, rotation);
         }
 
-        Composite.setModified(composite, true, true, false);
-
         return composite;
     };
 
@@ -530,8 +558,6 @@ var Body = require('./Body');
 
             Body.scale(body, scaleX, scaleY);
         }
-
-        Composite.setModified(composite, true, true, false);
 
         return composite;
     };
@@ -682,6 +708,15 @@ var Body = require('./Body');
      * An object reserved for storing plugin-specific properties.
      *
      * @property plugin
+     * @type {}
+     */
+
+    /**
+     * An object used for storing cached results for performance reasons.
+     * This is used internally only and is automatically managed.
+     *
+     * @private
+     * @property cache
      * @type {}
      */
 

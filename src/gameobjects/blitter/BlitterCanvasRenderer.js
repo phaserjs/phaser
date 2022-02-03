@@ -85,17 +85,20 @@ var BlitterCanvasRenderer = function (renderer, src, camera, parentMatrix)
                 dy = Math.round(dy);
             }
 
-            ctx.drawImage(
-                frame.source.image,
-                cd.x,
-                cd.y,
-                cd.width,
-                cd.height,
-                dx + bob.x + cameraScrollX,
-                dy + bob.y + cameraScrollY,
-                cd.width,
-                cd.height
-            );
+            if (cd.width > 0 && cd.height > 0)
+            {
+                ctx.drawImage(
+                    frame.source.image,
+                    cd.x,
+                    cd.y,
+                    cd.width,
+                    cd.height,
+                    dx + bob.x + cameraScrollX,
+                    dy + bob.y + cameraScrollY,
+                    cd.width,
+                    cd.height
+                );
+            }
         }
         else
         {
@@ -111,11 +114,14 @@ var BlitterCanvasRenderer = function (renderer, src, camera, parentMatrix)
                 dy -= cd.height;
             }
 
-            ctx.save();
-            ctx.translate(bob.x + cameraScrollX, bob.y + cameraScrollY);
-            ctx.scale(fx, fy);
-            ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, dx, dy, cd.width, cd.height);
-            ctx.restore();
+            if (cd.width > 0 && cd.height > 0)
+            {
+                ctx.save();
+                ctx.translate(bob.x + cameraScrollX, bob.y + cameraScrollY);
+                ctx.scale(fx, fy);
+                ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, dx, dy, cd.width, cd.height);
+                ctx.restore();
+            }
         }
     }
 

@@ -156,7 +156,15 @@ var WebAudioSoundManager = new Class({
         }
         else if (window.hasOwnProperty('webkitAudioContext'))
         {
-            context = new window.webkitAudioContext({ latencyHint: 'interactive' });
+            try
+            {
+                context = new window.webkitAudioContext({ latencyHint: 'interactive' });
+            }
+            catch (e)
+            {
+                //  For iOS10 and legacy devices we create without arguments:
+                context = new window.webkitAudioContext();
+            }
         }
 
         this.setAudioContext(context);

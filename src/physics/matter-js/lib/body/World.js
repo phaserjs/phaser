@@ -1,11 +1,13 @@
 /**
-* The `Matter.World` module contains methods for creating and manipulating the world composite.
-* A `Matter.World` is a `Matter.Composite` body, which is a collection of `Matter.Body`, `Matter.Constraint` and other `Matter.Composite`.
-* A `Matter.World` has a few additional properties including `gravity` and `bounds`.
-* It is important to use the functions in the `Matter.Composite` module to modify the world composite, rather than directly modifying its properties.
-* There are also a few methods here that alias those in `Matter.Composite` for easier readability.
+* This module has now been replaced by `Matter.Composite`.
 *
-* See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
+* All usage should be migrated to the equivalent functions found on `Matter.Composite`.
+* For example `World.add(world, body)` now becomes `Composite.add(world, body)`.
+*
+* The property `world.gravity` has been moved to `engine.gravity`.
+*
+* For back-compatibility purposes this module will remain as a direct alias to `Matter.Composite` in the short term during migration.
+* Eventually this alias module will be marked as deprecated and then later removed in a future release.
 *
 * @class World
 * @extends Composite
@@ -16,37 +18,19 @@ var World = {};
 module.exports = World;
 
 var Composite = require('./Composite');
-var Constraint = require('../constraint/Constraint');
-var Common = require('../core/Common');
 
 (function() {
 
     /**
-     * Creates a new world composite. The options parameter is an object that specifies any properties you wish to override the defaults.
-     * See the properties section below for detailed information on what you can pass via the `options` object.
-     * @method create
-     * @constructor
-     * @param {} options
-     * @return {world} A new world
+     * See above, aliases for back compatibility only
      */
-    World.create = function(options) {
-        var composite = Composite.create();
-
-        var defaults = {
-            label: 'World',
-            gravity: {
-                x: 0,
-                y: 1,
-                scale: 0.001
-            },
-            bounds: { 
-                min: { x: -Infinity, y: -Infinity }, 
-                max: { x: Infinity, y: Infinity } 
-            }
-        };
-        
-        return Common.extend(composite, defaults, options);
-    };
+    World.create = Composite.create;
+    World.add = Composite.add;
+    World.remove = Composite.remove;
+    World.clear = Composite.clear;
+    World.addComposite = Composite.addComposite;
+    World.addBody = Composite.addBody;
+    World.addConstraint = Composite.addConstraint;
 
     /*
     *
@@ -95,7 +79,7 @@ var Common = require('../core/Common');
 
     // World is a Composite body
     // see src/module/Outro.js for these aliases:
-    
+
     /**
      * An alias for Composite.add
      * @method add
@@ -127,7 +111,7 @@ var Common = require('../core/Common');
      * @param {composite} composite
      * @return {world} The original world with the objects from composite added
      */
-    
+
      /**
       * An alias for Composite.addBody
       * @method addBody

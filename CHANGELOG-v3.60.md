@@ -70,6 +70,9 @@ Development of this feature was kindly sponsored by Club Penguin Rewritten (http
 * `Math.LinearXY` is a new function that will interpolate between 2 given Vector2s and return a new Vector2 as a result (thanks @GregDevProjects)
 * `Curves.Path.getCurveAt` is a new method that will return the curve that forms the path at the given location (thanks @natureofcode)
 * You can now use any `Shape` Game Object as a Geometry Mask. Fix #5900 (thanks @rexrainbow)
+* `Mesh.setTint` is a new method that will set the tint color across all vertices of a Mesh (thanks @rexrainbow)
+* `Mesh.tint` is a new setter that will  set the tint color across all vertices of a Mesh (thanks @rexrainbow)
+* `Mesh.clearTint` is a new method that will clear the tint from all vertices of a Mesh (thanks @rexrainbow)
 
 ### Geom Updates
 
@@ -117,6 +120,9 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `TileMap.createStaticLayer` has now been removed as it was deprecated in 3.50.
 * `Animations.AnimationManager.createFromAseprite` has a new optional 3rd parameter `target`. This allows you to create the animations directly on a Sprite, instead of in the global Animation Manager (thanks Telemako)
 * `Animations.AnimationState.createFromAseprite` is a new method that allows you to create animations from exported Aseprite data directly on a Sprite, rather than always in the global Animation Manager (thanks Telemako)
+* The `path` package used by the TS Defs generator has been moved to `devDependencies` (thanks @antkhnvsk)
+* The `GetValue` function has a new optional parameter `altSource` which allows you to provide an alternative object to source the value from.
+* The `Renderer.Snapshot.WebGL` function has had its first parameter changed from an `HTMLCanvasElement` to a `WebGLRenderingContext`. This is now passed in from the `snapshot` methods inside the WebGL Renderer. The change was made to allow it to work with WebGL2 custom contexts (thanks @andymikulski)
 
 ### Bug Fixes
 
@@ -165,9 +171,24 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `InputPlugin.disable` will now also reset the drag state of the Game Object as well as remove it from all of the internal temporary arrays. This fixes issues where if you disabled a Game Object for input during an input event it would still remain in the temporary internal arrays. This method now also returns the Input Plugin, to match `enable`. Fix #5828 (thank @natureofcode @thewaver)
 * The `GetBounds` component has been removed from the Point Light Game Object. Fix #5934 (thanks @x-wk @samme)
 * `SceneManager.moveAbove` and `moveBelow` now take into account the modified indexes after the move (thanks @EmilSV)
+* When forcing a game to use `setTimeout` and then sending the game to sleep, it would accidentally restart by using Request Animation Frame instead (thanks @andymikulski)
+* Including a `render` object within the Game Config will no longer erase any top-level config render settings. The `render` object will now take priority over the game config, but both will be used (thanks @vzhou842)
+* Calling `Tween.stop(0)` would run for an additional delta before stopping, causing the Tween to not be truly 100% "reset". Fix #5986 (thanks @Mesonyx)
+* The `Utils.Array.SafeRange` function would exclude valid certain ranges. Fix #5979 (thanks @ksritharan)
+* The "Skip intersects check by argument" change in Arcade Physics has been reverted. Fix #5956 (thanks @samme)
+* The `Container.pointToContainer` method would ignore the provided `output` parameter, but now uses it (thanks @vforsh)
+* The `Polygon` Game Object would ignore its `closePath` property when rendering in Canvas. Fix #5983 (thanks @optimumsuave)
+* IE9 Fix: Added 2 missing Typed Array polyfills (thanks @jcyuan)
+* IE9 Fix: CanvasRenderer ignores frames with zero dimensions (thanks @jcyuan)
+* `RenderTexture.batchTextureFrame` will now skip the `drawImage` call in canvas if the frame width or height are zero. Fix #5951 (thanks @Hoshinokoe)
+* `BlitterCanvasRenderer` will now skip the `drawImage` call in canvas if the frame width or height are zero.
+* `ParticleManagerCanvasRenderer` will now skip the `drawImage` call in canvas if the frame width or height are zero.
+* `CanvasSnapshot` will now skip the `drawImage` call in canvas if the frame width or height are zero.
+* `TextureManager.getBase64` will now skip the `drawImage` call in canvas if the frame width or height are zero.
+* `TilemapLayerCanvasRenderer` will now skip the `drawImage` call in canvas if the frame width or height are zero.
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@necrokot Golen @Pythux @samme @danfoster @eltociear @sylvainpolletvillard @hanzooo @etherealmachine @DeweyHur @twoco @austinlyon @Arcanorum OmniOwl @EsteFilipe
+@necrokot Golen @Pythux @samme @danfoster @eltociear @sylvainpolletvillard @hanzooo @etherealmachine @DeweyHur @twoco @austinlyon @Arcanorum OmniOwl @EsteFilipe @PhaserEditor2D @Fake 

@@ -158,13 +158,21 @@ var HTML5AudioFile = new Class({
             var audio = new Audio();
             var dataset = audio.dataset;
 
+            if (dataset === undefined)
+            {
+                audio.dataset = dataset = {
+                    name: '',
+                    used: ''
+                };
+            }
+
             dataset.name = this.key + '-' + i.toString();
             dataset.used = 'false';
 
             if (this.locked)
             {
                 dataset.locked = 'true';
-                console.log('HTML5AudioFile:', dataset.name, 'locked');
+                // console.log('HTML5AudioFile:', dataset.name, 'locked');
             }
             else
             {
@@ -174,7 +182,7 @@ var HTML5AudioFile = new Class({
                 audio.oncanplaythrough = this.onProgress.bind(this);
                 audio.onerror = this.onError.bind(this);
 
-                console.log('HTML5AudioFile:', dataset.name, 'unlocked');
+                // console.log('HTML5AudioFile:', dataset.name, 'unlocked');
             }
 
             this.data.push(audio);
@@ -189,7 +197,7 @@ var HTML5AudioFile = new Class({
             if (!this.locked)
             {
                 audio.load();
-                console.log('HTML5AudioFile:', dataset.name, 'load called');
+                // console.log('HTML5AudioFile:', dataset.name, 'load called');
             }
         }
 
