@@ -103,26 +103,29 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
             var frame = particle.frame;
             var cd = frame.canvasData;
 
-            var x = -(frame.halfWidth);
-            var y = -(frame.halfHeight);
-
-            ctx.globalAlpha = alpha;
-
-            ctx.save();
-
-            calcMatrix.setToContext(ctx);
-
-            if (roundPixels)
+            if (cd.width > 0 && cd.height > 0)
             {
-                x = Math.round(x);
-                y = Math.round(y);
+                var x = -(frame.halfWidth);
+                var y = -(frame.halfHeight);
+
+                ctx.globalAlpha = alpha;
+
+                ctx.save();
+
+                calcMatrix.setToContext(ctx);
+
+                if (roundPixels)
+                {
+                    x = Math.round(x);
+                    y = Math.round(y);
+                }
+
+                ctx.imageSmoothingEnabled = !(!renderer.antialias || frame.source.scaleMode);
+
+                ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
+
+                ctx.restore();
             }
-
-            ctx.imageSmoothingEnabled = !(!renderer.antialias || frame.source.scaleMode);
-
-            ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
-
-            ctx.restore();
         }
 
         ctx.restore();

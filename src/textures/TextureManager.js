@@ -331,17 +331,20 @@ var TextureManager = new Class({
             var canvas = CanvasPool.create2D(this, cd.width, cd.height);
             var ctx = canvas.getContext('2d');
 
-            ctx.drawImage(
-                textureFrame.source.image,
-                cd.x,
-                cd.y,
-                cd.width,
-                cd.height,
-                0,
-                0,
-                cd.width,
-                cd.height
-            );
+            if (cd.width > 0 && cd.height > 0)
+            {
+                ctx.drawImage(
+                    textureFrame.source.image,
+                    cd.x,
+                    cd.y,
+                    cd.width,
+                    cd.height,
+                    0,
+                    0,
+                    cd.width,
+                    cd.height
+                );
+            }
 
             data = canvas.toDataURL(type, encoderOptions);
 

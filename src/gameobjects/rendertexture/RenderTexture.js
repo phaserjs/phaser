@@ -1282,7 +1282,10 @@ var RenderTexture = new Class({
 
             matrix.setToContext(ctx);
 
-            ctx.drawImage(source, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
+            if (cd.width > 0 && cd.height > 0)
+            {
+                ctx.drawImage(source, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
+            }
 
             ctx.restore();
         }

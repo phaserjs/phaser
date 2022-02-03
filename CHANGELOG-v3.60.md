@@ -180,6 +180,12 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `Polygon` Game Object would ignore its `closePath` property when rendering in Canvas. Fix #5983 (thanks @optimumsuave)
 * IE9 Fix: Added 2 missing Typed Array polyfills (thanks @jcyuan)
 * IE9 Fix: CanvasRenderer ignores frames with zero dimensions (thanks @jcyuan)
+* `RenderTexture.batchTextureFrame` will now skip the `drawImage` call in canvas if the frame width or height are zero. Fix #5951 (thanks @Hoshinokoe)
+* `BlitterCanvasRenderer` will now skip the `drawImage` call in canvas if the frame width or height are zero.
+* `ParticleManagerCanvasRenderer` will now skip the `drawImage` call in canvas if the frame width or height are zero.
+* `CanvasSnapshot` will now skip the `drawImage` call in canvas if the frame width or height are zero.
+* `TextureManager.getBase64` will now skip the `drawImage` call in canvas if the frame width or height are zero.
+* `TilemapLayerCanvasRenderer` will now skip the `drawImage` call in canvas if the frame width or height are zero.
 
 ### Examples, Documentation and TypeScript
 
