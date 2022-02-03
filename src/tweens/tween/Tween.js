@@ -967,13 +967,16 @@ var Tween = new Class({
             this.state = TWEEN_CONST.ACTIVE;
         }
 
-        this.isSeeking = true;
-
-        do
+        if (toPosition > 0)
         {
-            this.update(0, delta);
+            this.isSeeking = true;
 
-        } while (this.totalProgress < toPosition);
+            do
+            {
+                this.update(0, delta);
+
+            } while (this.totalProgress < toPosition);
+        }
 
         this.isSeeking = false;
 
