@@ -18,7 +18,6 @@ var Common = require('../core/Common');
 var Body = require('../body/Body');
 var Bounds = require('../geometry/Bounds');
 var Vector = require('../geometry/Vector');
-var decomp = require('../../poly-decomp');
 
 (function() {
 
@@ -177,29 +176,46 @@ var decomp = require('../../poly-decomp');
     };
 
     /**
-     * Creates a body using the supplied vertices (or an array containing multiple sets of vertices).
-     * If the vertices are convex, they will pass through as supplied.
-     * Otherwise if the vertices are concave, they will be decomposed if [poly-decomp.js](https://github.com/schteppe/poly-decomp.js) is available.
-     * Note that this process is not guaranteed to support complex sets of vertices (e.g. those with holes may fail).
-     * By default the decomposition will discard collinear edges (to improve performance).
-     * It can also optionally discard any parts that have an area less than `minimumArea`.
-     * If the vertices can not be decomposed, the result will fall back to using the convex hull.
-     * The options parameter is an object that specifies any `Matter.Body` properties you wish to override the defaults.
+     * Utility to create a compound body based on set(s) of vertices.
+     * 
+     * _Note:_ To optionally enable automatic concave vertices decomposition the [poly-decomp](https://github.com/schteppe/poly-decomp.js) 
+     * package must be first installed and provided see `Common.setDecomp`, otherwise the convex hull of each vertex set will be used.
+     * 
+     * The resulting vertices are reorientated about their centre of mass,
+     * and offset such that `body.position` corresponds to this point.
+     * 
+     * The resulting offset may be found if needed by subtracting `body.bounds` from the original input bounds.
+     * To later move the centre of mass see `Body.setCentre`.
+     * 
+     * Note that automatic conconcave decomposition results are not always optimal. 
+     * For best results, simplify the input vertices as much as possible first.
+     * By default this function applies some addtional simplification to help.
+     * 
+     * Some outputs may also require further manual processing afterwards to be robust.
+     * In particular some parts may need to be overlapped to avoid collision gaps.
+     * Thin parts and sharp points should be avoided or removed where possible.
+     *
+     * The options parameter object specifies any `Matter.Body` properties you wish to override the defaults.
+     * 
      * See the properties section of the `Matter.Body` module for detailed information on what you can pass via the `options` object.
      * @method fromVertices
      * @param {number} x
      * @param {number} y
-     * @param [[vector]] vertexSets
-     * @param {object} [options]
-     * @param {bool} [flagInternal=false]
-     * @param {number} [removeCollinear=0.01]
-     * @param {number} [minimumArea=10]
+     * @param {array} vertexSets One or more arrays of vertex points e.g. `[[{ x: 0, y: 0 }...], ...]`.
+     * @param {object} [options] The body options.
+     * @param {bool} [flagInternal=false] Optionally marks internal edges with `isInternal`.
+     * @param {number} [removeCollinear=0.01] Threshold when simplifying vertices along the same edge.
+     * @param {number} [minimumArea=10] Threshold when removing small parts.
+     * @param {number} [removeDuplicatePoints=0.01] Threshold when simplifying nearby vertices.
      * @return {body}
      */
-    Bodies.fromVertices = function(x, y, vertexSets, options, flagInternal, removeCollinear, minimumArea) {
-        var body,
+    Bodies.fromVertices = function(x, y, vertexSets, options, flagInternal, removeCollinear, minimumArea, removeDuplicatePoints) {
+        var decomp = Common.getDecomp(),
+            canDecomp,
+            body,
             parts,
             isConvex,
+            isConcave,
             vertices,
             i,
             j,
@@ -207,16 +223,16 @@ var decomp = require('../../poly-decomp');
             v,
             z;
 
+        // check decomp is as expected
+        canDecomp = Boolean(decomp && decomp.quickDecomp);
+
         options = options || {};
         parts = [];
 
         flagInternal = typeof flagInternal !== 'undefined' ? flagInternal : false;
         removeCollinear = typeof removeCollinear !== 'undefined' ? removeCollinear : 0.01;
         minimumArea = typeof minimumArea !== 'undefined' ? minimumArea : 10;
-
-        if (!decomp) {
-            Common.warn('Bodies.fromVertices: poly-decomp.js required. Could not decompose vertices. Fallback to convex hull.');
-        }
+        removeDuplicatePoints = typeof removeDuplicatePoints !== 'undefined' ? removeDuplicatePoints : 0.01;
 
         // ensure vertexSets is an array of arrays
         if (!Common.isArray(vertexSets[0])) {
@@ -226,8 +242,15 @@ var decomp = require('../../poly-decomp');
         for (v = 0; v < vertexSets.length; v += 1) {
             vertices = vertexSets[v];
             isConvex = Vertices.isConvex(vertices);
+            isConcave = !isConvex;
 
-            if (isConvex || !decomp) {
+            if (isConcave && !canDecomp) {
+                Common.warnOnce(
+                    'Bodies.fromVertices: Install the \'poly-decomp\' library and use Common.setDecomp or provide \'decomp\' as a global to decompose concave vertices.'
+                );
+            }
+
+            if (isConvex || !canDecomp) {
                 if (isConvex) {
                     vertices = Vertices.clockwiseSort(vertices);
                 } else {
@@ -249,6 +272,8 @@ var decomp = require('../../poly-decomp');
                 decomp.makeCCW(concave);
                 if (removeCollinear !== false)
                     decomp.removeCollinearPoints(concave, removeCollinear);
+                if (removeDuplicatePoints !== false && decomp.removeDuplicatePoints)
+                    decomp.removeDuplicatePoints(concave, removeDuplicatePoints);
 
                 // use the quick decomposition algorithm (Bayazit)
                 var decomposed = decomp.quickDecomp(concave);
@@ -283,70 +308,51 @@ var decomp = require('../../poly-decomp');
             parts[i] = Body.create(Common.extend(parts[i], options));
         }
 
-        if (flagInternal)
-        {
-            Bodies.flagCoincidentParts(parts, 5);
+        // flag internal edges (coincident part edges)
+        if (flagInternal) {
+            var coincident_max_dist = 5;
+
+            for (i = 0; i < parts.length; i++) {
+                var partA = parts[i];
+
+                for (j = i + 1; j < parts.length; j++) {
+                    var partB = parts[j];
+
+                    if (Bounds.overlaps(partA.bounds, partB.bounds)) {
+                        var pav = partA.vertices,
+                            pbv = partB.vertices;
+
+                        // iterate vertices of both parts
+                        for (k = 0; k < partA.vertices.length; k++) {
+                            for (z = 0; z < partB.vertices.length; z++) {
+                                // find distances between the vertices
+                                var da = Vector.magnitudeSquared(Vector.sub(pav[(k + 1) % pav.length], pbv[z])),
+                                    db = Vector.magnitudeSquared(Vector.sub(pav[k], pbv[(z + 1) % pbv.length]));
+
+                                // if both vertices are very close, consider the edge concident (internal)
+                                if (da < coincident_max_dist && db < coincident_max_dist) {
+                                    pav[k].isInternal = true;
+                                    pbv[z].isInternal = true;
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
         }
 
         if (parts.length > 1) {
             // create the parent body to be returned, that contains generated compound parts
             body = Body.create(Common.extend({ parts: parts.slice(0) }, options));
+
+            // offset such that body.position is at the centre off mass
             Body.setPosition(body, { x: x, y: y });
 
             return body;
         } else {
             return parts[0];
         }
-    };
-
-    /**
-     * Takes an array of Body objects and flags all internal edges (coincident parts) based on the maxDistance
-     * value. The array is changed in-place and returned, so you can pass this function a `Body.parts` property.
-     * 
-     * @method flagCoincidentParts
-     * @param {body[]} parts - The Body parts, or array of bodies, to flag.
-     * @param {number} [maxDistance=5]
-     * @return {body[]} The modified `parts` parameter.
-     */
-    Bodies.flagCoincidentParts = function (parts, maxDistance)
-    {
-        if (maxDistance === undefined) { maxDistance = 5; }
-
-        for (var i = 0; i < parts.length; i++)
-        {
-            var partA = parts[i];
-
-            for (var j = i + 1; j < parts.length; j++)
-            {
-                var partB = parts[j];
-
-                if (Bounds.overlaps(partA.bounds, partB.bounds))
-                {
-                    var pav = partA.vertices;
-                    var pbv = partB.vertices;
-
-                    // iterate vertices of both parts
-                    for (var k = 0; k < partA.vertices.length; k++)
-                    {
-                        for (var z = 0; z < partB.vertices.length; z++)
-                        {
-                            // find distances between the vertices
-                            var da = Vector.magnitudeSquared(Vector.sub(pav[(k + 1) % pav.length], pbv[z]));
-                            var db = Vector.magnitudeSquared(Vector.sub(pav[k], pbv[(z + 1) % pbv.length]));
-
-                            // if both vertices are very close, consider the edge concident (internal)
-                            if (da < maxDistance && db < maxDistance)
-                            {
-                                pav[k].isInternal = true;
-                                pbv[z].isInternal = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return parts;
     };
 
 })();

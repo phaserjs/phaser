@@ -9,7 +9,7 @@ var MatterWrap = {
   // plugin meta
   name: 'matter-wrap', // PLUGIN_NAME
   version: '0.1.4', // PLUGIN_VERSION
-  for: 'matter-js@^0.14.2',
+  for: 'matter-js@^0.18.0',
   silent: true, // no console log please
 
   // installs the plugin where `base` is `Matter`
@@ -90,8 +90,8 @@ var MatterWrap = {
 
   Body: {
     /**
-     * Wraps the `body` position such that it always stays within the given bounds. 
-     * Upon crossing a boundary the body will appear on the opposite side of the bounds, 
+     * Wraps the `body` position such that it always stays within the given bounds.
+     * Upon crossing a boundary the body will appear on the opposite side of the bounds,
      * while maintaining its velocity.
      * This is called automatically by the plugin.
      * @function MatterWrap.Body.wrap
@@ -121,7 +121,7 @@ var MatterWrap = {
     bounds: function(composite) {
       var bodies = Matter.Composite.allBodies(composite),
         vertices = [];
-      
+
       for (var i = 0; i < bodies.length; i += 1) {
         var body = bodies[i];
         vertices.push(body.bounds.min, body.bounds.max);
@@ -131,8 +131,8 @@ var MatterWrap = {
     },
 
     /**
-     * Wraps the `composite` position such that it always stays within the given bounds. 
-     * Upon crossing a boundary the composite will appear on the opposite side of the bounds, 
+     * Wraps the `composite` position such that it always stays within the given bounds.
+     * Upon crossing a boundary the composite will appear on the opposite side of the bounds,
      * while maintaining its velocity.
      * This is called automatically by the plugin.
      * @function MatterWrap.Composite.wrap
@@ -142,7 +142,7 @@ var MatterWrap = {
      */
     wrap: function(composite, bounds) {
       var translation = MatterWrap.Bounds.wrap(
-        MatterWrap.Composite.bounds(composite), 
+        MatterWrap.Composite.bounds(composite),
         bounds
       );
 
@@ -163,14 +163,14 @@ module.exports = MatterWrap;
  */
 
 /**
- * This plugin adds a new property `body.plugin.wrap` to instances of `Matter.Body`.  
+ * This plugin adds a new property `body.plugin.wrap` to instances of `Matter.Body`.
  * This is a `Matter.Bounds` instance that specifies the wrapping region.
  * @property {Matter.Bounds} body.plugin.wrap
  * @memberof Matter.Body
  */
 
 /**
- * This plugin adds a new property `composite.plugin.wrap` to instances of `Matter.Composite`.  
+ * This plugin adds a new property `composite.plugin.wrap` to instances of `Matter.Composite`.
  * This is a `Matter.Bounds` instance that specifies the wrapping region.
  * @property {Matter.Bounds} composite.plugin.wrap
  * @memberof Matter.Composite

@@ -44,16 +44,8 @@ var Common = require('../core/Common');
                     y: point.y,
                     index: i,
                     body: body,
-                    isInternal: false,
-                    contact: null,
-                    offset: null
+                    isInternal: false
                 };
-
-            vertex.contact = {
-                vertex: vertex,
-                normalImpulse: 0,
-                tangentImpulse: 0
-            };
 
             vertices.push(vertex);
         }
@@ -177,17 +169,16 @@ var Common = require('../core/Common');
      * @param {number} scalar
      */
     Vertices.translate = function(vertices, vector, scalar) {
-        var i;
-        if (scalar) {
-            for (i = 0; i < vertices.length; i++) {
-                vertices[i].x += vector.x * scalar;
-                vertices[i].y += vector.y * scalar;
-            }
-        } else {
-            for (i = 0; i < vertices.length; i++) {
-                vertices[i].x += vector.x;
-                vertices[i].y += vector.y;
-            }
+        scalar = typeof scalar !== 'undefined' ? scalar : 1;
+
+        var verticesLength = vertices.length,
+            translateX = vector.x * scalar,
+            translateY = vector.y * scalar,
+            i;
+        
+        for (i = 0; i < verticesLength; i++) {
+            vertices[i].x += translateX;
+            vertices[i].y += translateY;
         }
 
         return vertices;
@@ -205,15 +196,21 @@ var Common = require('../core/Common');
             return;
 
         var cos = Math.cos(angle),
-            sin = Math.sin(angle);
+            sin = Math.sin(angle),
+            pointX = point.x,
+            pointY = point.y,
+            verticesLength = vertices.length,
+            vertex,
+            dx,
+            dy,
+            i;
 
-        for (var i = 0; i < vertices.length; i++) {
-            var vertice = vertices[i],
-                dx = vertice.x - point.x,
-                dy = vertice.y - point.y;
-                
-            vertice.x = point.x + (dx * cos - dy * sin);
-            vertice.y = point.y + (dx * sin + dy * cos);
+        for (i = 0; i < verticesLength; i++) {
+            vertex = vertices[i];
+            dx = vertex.x - pointX;
+            dy = vertex.y - pointY;
+            vertex.x = pointX + (dx * cos - dy * sin);
+            vertex.y = pointY + (dx * sin + dy * cos);
         }
 
         return vertices;
@@ -227,12 +224,21 @@ var Common = require('../core/Common');
      * @return {boolean} True if the vertices contains point, otherwise false
      */
     Vertices.contains = function(vertices, point) {
-        for (var i = 0; i < vertices.length; i++) {
-            var vertice = vertices[i],
-                nextVertice = vertices[(i + 1) % vertices.length];
-            if ((point.x - vertice.x) * (nextVertice.y - vertice.y) + (point.y - vertice.y) * (vertice.x - nextVertice.x) > 0) {
+        var pointX = point.x,
+            pointY = point.y,
+            verticesLength = vertices.length,
+            vertex = vertices[verticesLength - 1],
+            nextVertex;
+
+        for (var i = 0; i < verticesLength; i++) {
+            nextVertex = vertices[i];
+
+            if ((pointX - vertex.x) * (nextVertex.y - vertex.y) 
+                + (pointY - vertex.y) * (vertex.x - nextVertex.x) > 0) {
                 return false;
             }
+
+            vertex = nextVertex;
         }
 
         return true;

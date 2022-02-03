@@ -8,6 +8,8 @@ var Pair = {};
 
 module.exports = Pair;
 
+var Contact = require('./Contact');
+
 (function() {
     
     /**
@@ -25,6 +27,8 @@ module.exports = Pair;
             id: Pair.id(bodyA, bodyB),
             bodyA: bodyA,
             bodyB: bodyB,
+            collision: collision,
+            contacts: [],
             activeContacts: [],
             separation: 0,
             isActive: true,
@@ -32,7 +36,6 @@ module.exports = Pair;
             isSensor: bodyA.isSensor || bodyB.isSensor,
             timeCreated: timestamp,
             timeUpdated: timestamp,
-            collision: null,
             inverseMass: 0,
             friction: 0,
             frictionStatic: 0,
@@ -53,35 +56,36 @@ module.exports = Pair;
      * @param {number} timestamp
      */
     Pair.update = function(pair, collision, timestamp) {
+        var contacts = pair.contacts,
+            supports = collision.supports,
+            activeContacts = pair.activeContacts,
+            parentA = collision.parentA,
+            parentB = collision.parentB,
+            parentAVerticesLength = parentA.vertices.length;
+        
+        pair.isActive = true;
+        pair.timeUpdated = timestamp;
         pair.collision = collision;
+        pair.separation = collision.depth;
+        pair.inverseMass = parentA.inverseMass + parentB.inverseMass;
+        pair.friction = parentA.friction < parentB.friction ? parentA.friction : parentB.friction;
+        pair.frictionStatic = parentA.frictionStatic > parentB.frictionStatic ? parentA.frictionStatic : parentB.frictionStatic;
+        pair.restitution = parentA.restitution > parentB.restitution ? parentA.restitution : parentB.restitution;
+        pair.slop = parentA.slop > parentB.slop ? parentA.slop : parentB.slop;
 
-        if (collision.collided) {
-            var supports = collision.supports,
-                activeContacts = pair.activeContacts,
-                parentA = collision.parentA,
-                parentB = collision.parentB;
+        collision.pair = pair;
+        activeContacts.length = 0;
+        
+        for (var i = 0; i < supports.length; i++) {
+            var support = supports[i],
+                contactId = support.body === parentA ? support.index : parentAVerticesLength + support.index,
+                contact = contacts[contactId];
 
-            pair.inverseMass = parentA.inverseMass + parentB.inverseMass;
-            pair.friction = Math.min(parentA.friction, parentB.friction);
-            pair.frictionStatic = Math.max(parentA.frictionStatic, parentB.frictionStatic);
-            pair.restitution = Math.max(parentA.restitution, parentB.restitution);
-            pair.slop = Math.max(parentA.slop, parentB.slop);
-
-            for (var i = 0; i < supports.length; i++) {
-                activeContacts[i] = supports[i].contact;
+            if (contact) {
+                activeContacts.push(contact);
+            } else {
+                activeContacts.push(contacts[contactId] = Contact.create(support));
             }
-
-            // optimise array size
-            var supportCount = supports.length;
-            if (supportCount < activeContacts.length) {
-                activeContacts.length = supportCount;
-            }
-
-            pair.separation = collision.depth;
-            Pair.setActive(pair, true, timestamp);
-        } else {
-            if (pair.isActive === true)
-                Pair.setActive(pair, false, timestamp);
         }
     };
     
