@@ -47,7 +47,6 @@ var Axes = require('../geometry/Axes');
             force: { x: 0, y: 0 },
             torque: 0,
             positionImpulse: { x: 0, y: 0 },
-            previousPositionImpulse: { x: 0, y: 0 },
             constraintImpulse: { x: 0, y: 0, angle: 0 },
             totalContacts: 0,
             speed: 0,
@@ -208,13 +207,13 @@ var Axes = require('../geometry/Axes');
         {
             var centerOfMass = body.centerOfMass;
             var centerOffset = body.centerOffset;
-    
+
             var bodyWidth = bounds.max.x - bounds.min.x;
             var bodyHeight = bounds.max.y - bounds.min.y;
-    
+
             centerOfMass.x = -(bounds.min.x - body.position.x) / bodyWidth;
             centerOfMass.y = -(bounds.min.y - body.position.y) / bodyHeight;
-    
+
             centerOffset.x = bodyWidth * centerOfMass.x;
             centerOffset.y = bodyHeight * centerOfMass.y;
         }
@@ -362,7 +361,7 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
-     * Sets the moment of inertia (i.e. second moment of area) of the body. 
+     * Sets the moment of inertia (i.e. second moment of area) of the body.
      * Inverse inertia is automatically updated to reflect the change. Mass is not changed.
      * @method setInertia
      * @param {body} body
@@ -491,7 +490,7 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
-     * Set the centre of mass of the body. 
+     * Set the centre of mass of the body.
      * The `centre` is a vector in world-space unless `relative` is set, in which case it is a translation.
      * The centre of mass is the point the body rotates about and can be used to simulate non-uniform density.
      * This is equal to moving `body.position` but not the `body.vertices`.
@@ -608,7 +607,7 @@ var Axes = require('../geometry/Axes');
                 sin = Math.sin(rotation),
                 dx = body.position.x - point.x,
                 dy = body.position.y - point.y;
-                
+
             Body.setPosition(body, {
                 x: point.x + (dx * cos - dy * sin),
                 y: point.y + (dx * sin + dy * cos)
@@ -675,7 +674,7 @@ var Axes = require('../geometry/Axes');
         }
 
         // handle circles
-        if (body.circleRadius) { 
+        if (body.circleRadius) {
             if (scaleX === scaleY) {
                 body.circleRadius *= scaleX;
             } else {
@@ -724,7 +723,7 @@ var Axes = require('../geometry/Axes');
             var part = body.parts[i];
 
             Vertices.translate(part.vertices, body.velocity);
-            
+
             if (i > 0) {
                 part.position.x += body.velocity.x;
                 part.position.y += body.velocity.y;
@@ -848,7 +847,7 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
-     * An array of bodies that make up this body. 
+     * An array of bodies that make up this body.
      * The first body in the array must always be a self reference to the current body instance.
      * All bodies in the `parts` array together form a single rigid compound body.
      * Parts are allowed to overlap, have gaps or holes or even form concave bodies.
@@ -890,7 +889,7 @@ var Axes = require('../geometry/Axes');
      *     [{ x: 0, y: 0 }, { x: 25, y: 50 }, { x: 50, y: 0 }]
      *
      * When passed via `Body.create`, the vertices are translated relative to `body.position` (i.e. world-space, and constantly updated by `Body.update` during simulation).
-     * The `Vector` objects are also augmented with additional properties required for efficient collision detection. 
+     * The `Vector` objects are also augmented with additional properties required for efficient collision detection.
      *
      * Other properties such as `inertia` and `bounds` are automatically calculated from the passed vertices (unless provided via `options`).
      * Concave hulls are not currently supported. The module `Matter.Vertices` contains useful methods for working with vertices.
@@ -950,7 +949,7 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
-     * A `Vector` that _measures_ the current velocity of the body after the last `Body.update`. It is read-only. 
+     * A `Vector` that _measures_ the current velocity of the body after the last `Body.update`. It is read-only.
      * If you need to modify a body's velocity directly, you should either apply a force or simply change the body's `position` (as the engine uses position-Verlet integration).
      *
      * @readOnly
@@ -960,7 +959,7 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
-     * A `Number` that _measures_ the current angular velocity of the body after the last `Body.update`. It is read-only. 
+     * A `Number` that _measures_ the current angular velocity of the body after the last `Body.update`. It is read-only.
      * If you need to modify a body's angular velocity directly, you should apply a torque or simply change the body's `angle` (as the engine uses position-Verlet integration).
      *
      * @readOnly
@@ -1058,7 +1057,7 @@ var Axes = require('../geometry/Axes');
 
     /**
      * A `Number` that defines the restitution (elasticity) of the body. The value is always positive and is in the range `(0, 1)`.
-     * A value of `0` means collisions may be perfectly inelastic and no bouncing may occur. 
+     * A value of `0` means collisions may be perfectly inelastic and no bouncing may occur.
      * A value of `0.8` means the body may bounce back with approximately 80% of its kinetic energy.
      * Note that collision response is based on _pairs_ of bodies, and that `restitution` values are _combined_ with the following formula:
      *
@@ -1074,7 +1073,7 @@ var Axes = require('../geometry/Axes');
      * A value of `0` means that the body may slide indefinitely.
      * A value of `1` means the body may come to a stop almost instantly after a force is applied.
      *
-     * The effects of the value may be non-linear. 
+     * The effects of the value may be non-linear.
      * High values may be unstable depending on the body.
      * The engine uses a Coulomb friction model including static and kinetic friction.
      * Note that collision response is based on _pairs_ of bodies, and that `friction` values are _combined_ with the following formula:
@@ -1087,7 +1086,7 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
-     * A `Number` that defines the static friction of the body (in the Coulomb friction model). 
+     * A `Number` that defines the static friction of the body (in the Coulomb friction model).
      * A value of `0` means the body will never 'stick' when it is nearly stationary and only dynamic `friction` is used.
      * The higher the value (e.g. `10`), the more force it will take to initially get the body moving when nearly stationary.
      * This value is multiplied with the `friction` property to make it easier to change `friction` and maintain an appropriate amount of static friction.
@@ -1098,10 +1097,10 @@ var Axes = require('../geometry/Axes');
      */
 
     /**
-     * A `Number` that defines the air friction of the body (air resistance). 
+     * A `Number` that defines the air friction of the body (air resistance).
      * A value of `0` means the body will never slow as it moves through space.
      * The higher the value, the faster a body slows when moving through space.
-     * The effects of the value are non-linear. 
+     * The effects of the value are non-linear.
      *
      * @property frictionAir
      * @type number
@@ -1270,13 +1269,13 @@ var Axes = require('../geometry/Axes');
      * @property axes
      * @type vector[]
      */
-     
+
     /**
      * A `Number` that _measures_ the area of the body's convex hull, calculated at creation by `Body.create`.
      *
      * @property area
      * @type string
-     * @default 
+     * @default
      */
 
     /**
@@ -1337,7 +1336,7 @@ var Axes = require('../geometry/Axes');
 
     /**
      * A callback that is invoked when this Body starts colliding with any other Body.
-     * 
+     *
      * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
      *
      * @property onCollideCallback
@@ -1347,7 +1346,7 @@ var Axes = require('../geometry/Axes');
 
     /**
      * A callback that is invoked when this Body stops colliding with any other Body.
-     * 
+     *
      * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
      *
      * @property onCollideEndCallback
@@ -1357,7 +1356,7 @@ var Axes = require('../geometry/Axes');
 
     /**
      * A callback that is invoked for the duration that this Body is colliding with any other Body.
-     * 
+     *
      * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
      *
      * @property onCollideActiveCallback

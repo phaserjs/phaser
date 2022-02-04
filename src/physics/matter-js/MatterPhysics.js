@@ -20,7 +20,6 @@ var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
-var Grid = require('./lib/collision/Grid');
 var MatterAttractors = require('./lib/plugins/MatterAttractors');
 var MatterCollisionEvents = require('./lib/plugins/MatterCollisionEvents');
 var MatterLib = require('./lib/core/Matter');
@@ -32,7 +31,6 @@ var Plugin = require('./lib/core/Plugin');
 var PluginCache = require('../../plugins/PluginCache');
 var Query = require('./lib/collision/Query');
 var Resolver = require('./lib/collision/Resolver');
-var SAT = require('./lib/collision/SAT');
 var SceneEvents = require('../../scene/events');
 var Svg = require('./lib/geometry/Svg');
 var Vector = require('./lib/geometry/Vector');
@@ -219,17 +217,6 @@ var MatterPhysics = new Class({
         this.detector = Detector;
 
         /**
-         * A reference to the `Matter.Grid` module.
-         *
-         * The `Matter.Grid` module contains methods for creating and manipulating collision broadphase grid structures.
-         *
-         * @name Phaser.Physics.Matter.MatterPhysics#grid
-         * @type {MatterJS.GridFactory}
-         * @since 3.22.0
-         */
-        this.grid = Grid;
-
-        /**
          * A reference to the `Matter.Pair` module.
          *
          * The `Matter.Pair` module contains methods for creating and manipulating collision pairs.
@@ -272,17 +259,6 @@ var MatterPhysics = new Class({
          * @since 3.22.0
          */
         this.resolver = Resolver;
-
-        /**
-         * A reference to the `Matter.SAT` module.
-         *
-         * The `Matter.SAT` module contains methods for detecting collisions using the Separating Axis Theorem.
-         *
-         * @name Phaser.Physics.Matter.MatterPhysics#sat
-         * @type {MatterJS.SATFactory}
-         * @since 3.22.0
-         */
-        this.sat = SAT;
 
         //  Constraint
 
