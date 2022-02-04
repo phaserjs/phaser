@@ -67,6 +67,17 @@ var NOOP = require('../../../src/utils/NOOP');
  * Phaser Loader. However, doing so will not add it to the current Scene. It will be available from any
  * subsequent Scenes.
  *
+ * ## A note about inlined data:
+ *
+ * If you need to load Spine assets from inline / base64 encoded data, then you should not use the Loader
+ * at all. Instead, call the functions directly as required:
+ *
+ * scene.cache.json.add
+ * scene.cache.custom.spine.add
+ * scene.textures.addBase64
+ *
+ * ## Using the plugin
+ *
  * Assuming a default environment you access it from within a Scene by using the `this.spine` reference.
  *
  * When this plugin is installed into a Scene it will add a Loader File Type, allowing you to load
