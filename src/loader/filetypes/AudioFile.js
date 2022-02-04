@@ -30,7 +30,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {(string|Phaser.Types.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {any} [urlConfig] - The absolute or relative URL to load this file from in a config object.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- * @param {Phaser.Sound.WebAudioSoundManager} [soundManager] - The Web Audio Sound Manager.
+ * @param {AudioContext} [audioContext] - The AudioContext this file will use to process itself.
  */
 var AudioFile = new Class({
 
@@ -39,7 +39,7 @@ var AudioFile = new Class({
     initialize:
 
     //  URL is an object created by AudioFile.findAudioURL
-    function AudioFile (loader, key, urlConfig, xhrSettings, soundManager)
+    function AudioFile (loader, key, urlConfig, xhrSettings, audioContext)
     {
         if (IsPlainObject(key))
         {
@@ -47,6 +47,7 @@ var AudioFile = new Class({
 
             key = GetFastValue(config, 'key');
             xhrSettings = GetFastValue(config, 'xhrSettings');
+            audioContext = GetFastValue(config, 'context', audioContext);
         }
 
         var fileConfig = {
@@ -57,7 +58,7 @@ var AudioFile = new Class({
             key: key,
             url: urlConfig.url,
             xhrSettings: xhrSettings,
-            config: { soundManager: soundManager }
+            config: { context: audioContext }
         };
 
         File.call(this, loader, fileConfig);
@@ -74,9 +75,26 @@ var AudioFile = new Class({
     {
         this.state = CONST.FILE_PROCESSING;
 
-        this.config.soundManager.decodeAudio(this.key, this.xhrLoader.response);
+        var _this = this;
 
-        this.onProcessComplete();
+        // interesting read https://github.com/WebAudio/web-audio-api/issues/1305
+        this.config.context.decodeAudioData(this.xhrLoader.response,
+            function (audioBuffer)
+            {
+                _this.data = audioBuffer;
+
+                _this.onProcessComplete();
+            },
+            function (e)
+            {
+                // eslint-disable-next-line no-console
+                console.error('Error decoding audio: ' + _this.key + ' - ', e ? e.message : null);
+
+                _this.onProcessError();
+            }
+        );
+
+        this.config.context = null;
     }
 
 });
@@ -106,7 +124,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if (deviceAudio.webAudio && !audioConfig.disableWebAudio)
     {
-        return new AudioFile(loader, key, urlConfig, xhrSettings, game.sound);
+        return new AudioFile(loader, key, urlConfig, xhrSettings, game.sound.context);
     }
     else
     {

@@ -125,11 +125,8 @@ var BaseSoundManager = new Class({
         this._detune = 0;
 
         /**
-         * All browsers require sounds to be triggered from an explicit user action,
-         * such as a tap, before any sound can be loaded / played on a web page.
-         *
-         * https://developer.chrome.com/blog/autoplay/
-         *
+         * Mobile devices require sounds to be triggered from an explicit user action,
+         * such as a tap, before any sound can be loaded/played on a web page.
          * Set to true if the audio system is currently locked awaiting user interaction.
          *
          * @name Phaser.Sound.BaseSoundManager#locked
@@ -137,11 +134,11 @@ var BaseSoundManager = new Class({
          * @readonly
          * @since 3.0.0
          */
-        this.locked = true;
+        this.locked = this.locked || false;
 
         /**
          * Flag used internally for handling when the audio system
-         * has been unlocked.
+         * has been unlocked, if there ever was a need for it.
          *
          * @name Phaser.Sound.BaseSoundManager#unlocked
          * @type {boolean}
@@ -151,74 +148,10 @@ var BaseSoundManager = new Class({
          */
         this.unlocked = false;
 
-
-        /**
-         *
-         *
-         * @name Phaser.Sound.BaseSoundManager#pendingUnlock
-         * @type {boolean}
-         * @since 3.60.0
-         */
-        this.pendingUnlock = false;
-
         game.events.on(GameEvents.BLUR, this.onGameBlur, this);
         game.events.on(GameEvents.FOCUS, this.onGameFocus, this);
         game.events.on(GameEvents.PRE_STEP, this.update, this);
         game.events.once(GameEvents.DESTROY, this.destroy, this);
-
-        if (this.locked && game.isBooted)
-        {
-            this.unlock();
-        }
-        else
-        {
-            game.events.once(GameEvents.BOOT, this.unlock, this);
-        }
-    },
-
-    /**
-     * Unlocks the Audio API on the initial input event.
-     *
-     * @method Phaser.Sound.BaseSoundManager#unlock
-     * @since 3.60.0
-     */
-    unlock: function ()
-    {
-        if (this.pendingUnlock)
-        {
-            return;
-        }
-
-        console.log('BaseSoundManager.unlock');
-
-        var _this = this;
-
-        var body = document.body;
-
-        if (body)
-        {
-            var unlockHandler = function unlockHandler ()
-            {
-                if (!_this.pendingUnlock)
-                {
-                    return;
-                }
-
-                _this.unlockHandler();
-
-                body.removeEventListener('touchstart', unlockHandler);
-                body.removeEventListener('touchend', unlockHandler);
-                body.removeEventListener('click', unlockHandler);
-                body.removeEventListener('keydown', unlockHandler);
-            };
-
-            body.addEventListener('touchstart', unlockHandler, false);
-            body.addEventListener('touchend', unlockHandler, false);
-            body.addEventListener('click', unlockHandler, false);
-            body.addEventListener('keydown', unlockHandler, false);
-
-            this.pendingUnlock = true;
-        }
     },
 
     /**
@@ -231,7 +164,7 @@ var BaseSoundManager = new Class({
      * @param {string} key - Asset key for the sound.
      * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
      *
-     * @return {(Phaser.Sound.BaseSound|Phaser.Sound.NoAudioSound|Phaser.Sound.HTML5AudioSound|Phaser.Sound.WebAudioSound)} The new sound instance.
+     * @return {Phaser.Sound.BaseSound} The new sound instance.
      */
     add: NOOP,
 
@@ -246,7 +179,7 @@ var BaseSoundManager = new Class({
      * @param {string} key - Asset key for the sound.
      * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
      *
-     * @return {(Phaser.Sound.BaseSound|Phaser.Sound.NoAudioSound|Phaser.Sound.HTML5AudioSound|Phaser.Sound.WebAudioSound)} The new audio sprite sound instance.
+     * @return {(Phaser.Sound.HTML5AudioSound|Phaser.Sound.WebAudioSound)} The new audio sprite sound instance.
      */
     addAudioSprite: function (key, config)
     {
@@ -288,7 +221,7 @@ var BaseSoundManager = new Class({
      *
      * @param {string} key - Sound asset key.
      *
-     * @return {?(Phaser.Sound.BaseSound|Phaser.Sound.NoAudioSound|Phaser.Sound.HTML5AudioSound|Phaser.Sound.WebAudioSound)} - The sound, or null.
+     * @return {?Phaser.Sound.BaseSound} - The sound, or null.
      */
     get: function (key)
     {
@@ -303,7 +236,7 @@ var BaseSoundManager = new Class({
      *
      * @param {string} key - Sound asset key.
      *
-     * @return {(Phaser.Sound.BaseSound[]|Phaser.Sound.NoAudioSound[]|Phaser.Sound.HTML5AudioSound[]|Phaser.Sound.WebAudioSound[])} - The sounds, or an empty array.
+     * @return {Phaser.Sound.BaseSound[]} - The sounds, or an empty array.
      */
     getAll: function (key)
     {
@@ -500,6 +433,7 @@ var BaseSoundManager = new Class({
         this.emit(Events.STOP_ALL, this);
     },
 
+
     /**
      * Stops any sounds matching the given key.
      *
@@ -521,6 +455,19 @@ var BaseSoundManager = new Class({
 
         return stopped;
     },
+
+    /**
+     * Method used internally for unlocking audio playback on devices that
+     * require user interaction before any sound can be played on a web page.
+     *
+     * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
+     *
+     * @method Phaser.Sound.BaseSoundManager#unlock
+     * @override
+     * @protected
+     * @since 3.0.0
+     */
+    unlock: NOOP,
 
     /**
      * Method used internally for pausing sound manager if
@@ -588,21 +535,48 @@ var BaseSoundManager = new Class({
      */
     update: function (time, delta)
     {
-        var i;
-        var sounds = this.sounds;
-
-        for (i = sounds.length - 1; i >= 0; i--)
+        if (this.unlocked)
         {
-            if (sounds[i].pendingRemove)
+            this.unlocked = false;
+            this.locked = false;
+
+            this.emit(Events.UNLOCKED, this);
+        }
+
+        for (var i = this.sounds.length - 1; i >= 0; i--)
+        {
+            if (this.sounds[i].pendingRemove)
             {
-                sounds.splice(i, 1);
+                this.sounds.splice(i, 1);
             }
         }
 
-        for (i = 0; i < sounds.length; i++)
+        this.sounds.forEach(function (sound)
         {
-            sounds[i].update(time, delta);
-        }
+            sound.update(time, delta);
+        });
+    },
+
+    /**
+     * Destroys all the sounds in the game and all associated events.
+     *
+     * @method Phaser.Sound.BaseSoundManager#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.game.events.off(GameEvents.BLUR, this.onGameBlur, this);
+        this.game.events.off(GameEvents.FOCUS, this.onGameFocus, this);
+        this.game.events.off(GameEvents.PRE_STEP, this.update, this);
+
+        this.removeAllListeners();
+
+        this.removeAll();
+
+        this.sounds.length = 0;
+        this.sounds = null;
+
+        this.game = null;
     },
 
     /**
@@ -617,20 +591,15 @@ var BaseSoundManager = new Class({
      */
     forEachActiveSound: function (callback, scope)
     {
-        // eslint-disable-next-line consistent-this
-        if (scope === undefined) { scope = this; }
+        var _this = this;
 
-        var sounds = this.sounds;
-
-        for (var i = 0; i < sounds.length; i++)
+        this.sounds.forEach(function (sound, index)
         {
-            var sound = sounds[i];
-
             if (sound && !sound.pendingRemove)
             {
-                callback.call(scope, sound, i, sounds);
+                callback.call(scope || _this, sound, index, _this.sounds);
             }
-        }
+        });
     },
 
     /**
@@ -732,31 +701,6 @@ var BaseSoundManager = new Class({
             this.emit(Events.GLOBAL_DETUNE, this, value);
         }
 
-    },
-
-    /**
-     * Destroys all the sounds in the game and all associated events.
-     *
-     * @method Phaser.Sound.BaseSoundManager#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        var events = this.game.events;
-
-        events.off(GameEvents.BLUR, this.onGameBlur, this);
-        events.off(GameEvents.FOCUS, this.onGameFocus, this);
-        events.off(GameEvents.PRE_STEP, this.update, this);
-        events.off(GameEvents.BOOT, this.unlock, this);
-
-        this.removeAllListeners();
-
-        this.removeAll();
-
-        this.sounds.length = 0;
-        this.sounds = null;
-
-        this.game = null;
     }
 
 });

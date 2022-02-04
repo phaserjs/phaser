@@ -9,8 +9,7 @@ var Base64ToArrayBuffer = require('../../utils/base64/Base64ToArrayBuffer');
 var BaseSoundManager = require('../BaseSoundManager');
 var Class = require('../../utils/Class');
 var Events = require('../events');
-var GetFastValue = require('../../utils/object/GetFastValue');
-var Map = require('../../structs/Map');
+var GameEvents = require('../../core/events');
 var WebAudioSound = require('./WebAudioSound');
 
 /**
@@ -20,8 +19,6 @@ var WebAudioSound = require('./WebAudioSound');
  * Not all browsers can play all audio formats.
  *
  * There is a good guide to what's supported: [Cross-browser audio basics: Audio codec support](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
- *
- * Audio cannot be played without a user-gesture in the browser: https://developer.chrome.com/blog/autoplay/
  *
  * @class WebAudioSoundManager
  * @extends Phaser.Sound.BaseSoundManager
@@ -39,8 +36,6 @@ var WebAudioSoundManager = new Class({
 
     function WebAudioSoundManager (game)
     {
-        this.config = game.config.audio;
-
         /**
          * The AudioContext being used for playback.
          *
@@ -48,7 +43,7 @@ var WebAudioSoundManager = new Class({
          * @type {AudioContext}
          * @since 3.0.0
          */
-        this.context;
+        this.context = this.createAudioContext(game);
 
         /**
          * Gain node responsible for controlling global muting.
@@ -57,7 +52,7 @@ var WebAudioSoundManager = new Class({
          * @type {GainNode}
          * @since 3.0.0
          */
-        this.masterMuteNode;
+        this.masterMuteNode = this.context.createGain();
 
         /**
          * Gain node responsible for controlling global volume.
@@ -66,7 +61,11 @@ var WebAudioSoundManager = new Class({
          * @type {GainNode}
          * @since 3.0.0
          */
-        this.masterVolumeNode;
+        this.masterVolumeNode = this.context.createGain();
+
+        this.masterMuteNode.connect(this.masterVolumeNode);
+
+        this.masterVolumeNode.connect(this.context.destination);
 
         /**
          * Destination node for connecting individual sounds to.
@@ -75,55 +74,20 @@ var WebAudioSoundManager = new Class({
          * @type {AudioNode}
          * @since 3.0.0
          */
-        this.destination;
+        this.destination = this.masterMuteNode;
 
-        /**
-         * Audio files pending decoding.
-         *
-         * @name Phaser.Sound.WebAudioSoundManager#decodeQueue
-         * @type {Phaser.Structs.Map.<string, Phaser.Types.Sound.WebAudioDecodeEntry>}
-         * @since 3.60.0
-         */
-        this.decodeQueue = new Map();
-
-        /**
-         * Will audio files be decoded on-demand (i.e. as they are played),
-         * or as they are loaded? They can only be decoded on load if the
-         * audio context has been unlocked, otherwise they are stacked in
-         * the 'decodeQueue' awaiting a user gesture, which once received
-         * will decode them all at once.
-         *
-         * You can also choose to decode any, or all, queued audio by calling
-         * the `processQueue` function directly. Again, this can only be done
-         * after the context has been unlocked.
-         *
-         * @name Phaser.Sound.WebAudioSoundManager#decodeOnDemand
-         * @type {boolean}
-         * @since 3.60.0
-         */
-        this.decodeOnDemand = GetFastValue(this.config, 'decodeOnDemand', true);
-
-        /**
-         * The Audio cache, where decoded audio data is stored.
-         *
-         * @name Phaser.Sound.WebAudioSoundManager#cache
-         * @type {Phaser.Cache.BaseCache}
-         * @since 3.60.0
-         */
-        this.cache = game.cache.audio;
+        this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
 
         BaseSoundManager.call(this, game);
-    },
 
-    /**
-     * Handles additional processing when this Audio Manager is unlocked.
-     *
-     * @method Phaser.Sound.WebAudioSoundManager#unlockHandler
-     * @since 3.60.0
-     */
-    unlockHandler: function ()
-    {
-        this.createAudioContext();
+        if (this.locked && game.isBooted)
+        {
+            this.unlock();
+        }
+        else
+        {
+            game.events.once(GameEvents.BOOT, this.unlock, this);
+        }
     },
 
     /**
@@ -131,53 +95,34 @@ var WebAudioSoundManager = new Class({
      * If an instance of an AudioContext class was provided through the game config,
      * that instance will be returned instead. This can come in handy if you are reloading
      * a Phaser game on a page that never properly refreshes (such as in an SPA project)
-     * and you want to reuse an already instantiated AudioContext.
+     * and you want to reuse already instantiated AudioContext.
      *
      * @method Phaser.Sound.WebAudioSoundManager#createAudioContext
      * @since 3.0.0
      *
+     * @param {Phaser.Game} game - Reference to the current game instance.
+     *
      * @return {AudioContext} The AudioContext instance to be used for playback.
      */
-    createAudioContext: function ()
+    createAudioContext: function (game)
     {
-        var context;
-        var audioConfig = this.config;
+        var audioConfig = game.config.audio;
 
         if (audioConfig.context)
         {
             audioConfig.context.resume();
 
-            context = audioConfig.context;
+            return audioConfig.context;
         }
 
         if (window.hasOwnProperty('AudioContext'))
         {
-            context = new AudioContext({ latencyHint: 'interactive' });
+            return new AudioContext();
         }
         else if (window.hasOwnProperty('webkitAudioContext'))
         {
-            try
-            {
-                context = new window.webkitAudioContext({ latencyHint: 'interactive' });
-            }
-            catch (e)
-            {
-                //  For iOS10 and legacy devices we create without arguments:
-                context = new window.webkitAudioContext();
-            }
+            return new window.webkitAudioContext();
         }
-
-        this.setAudioContext(context);
-
-        if (this.locked)
-        {
-            this.unlocked = true;
-            this.locked = false;
-
-            this.emit(Events.UNLOCKED, this);
-        }
-
-        return context;
     },
 
     /**
@@ -245,86 +190,21 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
-     * This will process either the entire queue of audio awaiting decoding, or,
-     * if an array of keys are given, just those audio files.
-     *
-     * Decoding only starts of the Audio Context has been unlocked via a user
-     * gesture. If it hasn't, this method will return `false` and no decoding
-     * will take place.
-     *
-     * This will call `AudioContext.decodeAudioData` on the sounds. If they successfully decode, they will
-     * be added to the audio cache and can be played via the `play` method by passing their key.
-     *
-     * If they fail, it will throw an error.
-     *
-     * Decoding time varies, based on the audio file format, the encoder used, the browser
-     * and the device / CPU it is running on. This decoding time is outside of the control of Phaser.
-     *
-     * If you need to know when something has decoded, please use the relevant audio events.
-     *
-     * @method Phaser.Sound.WebAudioSoundManager#decodeAudioQueue
-     * @fires Phaser.Sound.Events#DECODED
-     * @fires Phaser.Sound.Events#DECODED_KEY
-     * @fires Phaser.Sound.Events#DECODED_ALL
-     * @since 3.60.0
-     *
-     * @param {(string|string[])} [key] - The key, or an array of keys, of the sound to be decoded. If not given, all sounds are decoded.
-     *
-     * @return {boolean} `true` if the audio started to decode, otherwise `false`.
-     */
-    decodeAudioQueue: function (key)
-    {
-        var context = this.context;
-        var queue = this.decodeQueue;
-
-        if (key && !Array.isArray(key))
-        {
-            key = [ key ];
-        }
-
-        var isDecoding = false;
-
-        if (context)
-        {
-            for (var i = 0; i < key.length; i++)
-            {
-                var entry = queue.get(key[i]);
-
-                if (entry && !entry.decoding)
-                {
-                    entry.decoding = true;
-
-                    context.decodeAudioData(entry.data, entry.success, entry.failure);
-
-                    isDecoding = true;
-                }
-            }
-        }
-
-        return isDecoding;
-    },
-
-    /**
      * Decode audio data into a format ready for playback via Web Audio.
      *
      * The audio data can be a base64 encoded string, an audio media-type data uri, or an ArrayBuffer instance.
      *
-     * The `audioKey` is the key that will be used to save the decoded audio to the audio cache and it
-     * must be unique within the cache.
+     * The `audioKey` is the key that will be used to save the decoded audio to the audio cache.
      *
-     * Instead of passing a single entry you can pass an array of `Phaser.Types.Sound.DecodeAudioConfig`
+     * Instead of passing a single entry you can instead pass an array of `Phaser.Types.Sound.DecodeAudioConfig`
      * objects as the first and only argument.
      *
      * Decoding is an async process, so be sure to listen for the events to know when decoding has completed.
      *
-     * Not all browsers can decode all audio formats, so if you're calling this method with your own audio
-     * data please ensure you pass only data suitable for the browser, or it will throw an error.
-     *
-     * Once the audio has decoded it can be played via its key.
+     * Once the audio has decoded it can be added to the Sound Manager or played via its key.
      *
      * @method Phaser.Sound.WebAudioSoundManager#decodeAudio
      * @fires Phaser.Sound.Events#DECODED
-     * @fires Phaser.Sound.Events#DECODED_KEY
      * @fires Phaser.Sound.Events#DECODED_ALL
      * @since 3.18.0
      *
@@ -337,7 +217,7 @@ var WebAudioSoundManager = new Class({
 
         if (!Array.isArray(audioKey))
         {
-            audioFiles = [ { key: audioKey, data: audioData, decoding: false } ];
+            audioFiles = [ { key: audioKey, data: audioData } ];
         }
         else
         {
@@ -346,8 +226,6 @@ var WebAudioSoundManager = new Class({
 
         var cache = this.game.cache.audio;
         var remaining = audioFiles.length;
-        var context = this.context;
-        var queue = this.decodeQueue;
 
         for (var i = 0; i < audioFiles.length; i++)
         {
@@ -365,8 +243,7 @@ var WebAudioSoundManager = new Class({
             {
                 cache.add(key, audioBuffer);
 
-                this.emit(Events.DECODED, key, audioBuffer);
-                this.emit(Events.DECODED_KEY + key, audioBuffer);
+                this.emit(Events.DECODED, key);
 
                 remaining--;
 
@@ -389,16 +266,54 @@ var WebAudioSoundManager = new Class({
                 }
             }.bind(this, key);
 
-            if (!context || this.decodeOnDemand)
-            {
-                queue.set(key, { data: data, success: success, failure: failure, decoding: false });
-            }
-            else
-            {
-                entry.decoding = true;
+            this.context.decodeAudioData(data, success, failure);
+        }
+    },
 
-                context.decodeAudioData(data, success, failure);
+    /**
+     * Unlocks Web Audio API on the initial input event.
+     *
+     * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#unlock
+     * @since 3.0.0
+     */
+    unlock: function ()
+    {
+        var _this = this;
+
+        var body = document.body;
+
+        var unlockHandler = function unlockHandler ()
+        {
+            if (_this.context && body)
+            {
+                var bodyRemove = body.removeEventListener;
+
+                _this.context.resume().then(function ()
+                {
+                    bodyRemove('touchstart', unlockHandler);
+                    bodyRemove('touchend', unlockHandler);
+                    bodyRemove('click', unlockHandler);
+                    bodyRemove('keydown', unlockHandler);
+
+                    _this.unlocked = true;
+                }, function ()
+                {
+                    bodyRemove('touchstart', unlockHandler);
+                    bodyRemove('touchend', unlockHandler);
+                    bodyRemove('click', unlockHandler);
+                    bodyRemove('keydown', unlockHandler);
+                });
             }
+        };
+
+        if (body)
+        {
+            body.addEventListener('touchstart', unlockHandler, false);
+            body.addEventListener('touchend', unlockHandler, false);
+            body.addEventListener('click', unlockHandler, false);
+            body.addEventListener('keydown', unlockHandler, false);
         }
     },
 
@@ -412,7 +327,7 @@ var WebAudioSoundManager = new Class({
      */
     onBlur: function ()
     {
-        if (!this.locked && this.context)
+        if (!this.locked)
         {
             this.context.suspend();
         }
@@ -430,7 +345,7 @@ var WebAudioSoundManager = new Class({
     {
         var context = this.context;
 
-        if (context && (context.state === 'suspended' || context.state === 'interrupted') && !this.locked)
+        if ((context.state === 'suspended' || context.state === 'interrupted') && !this.locked)
         {
             context.resume();
         }
@@ -462,6 +377,38 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
+     * Calls Phaser.Sound.BaseSoundManager#destroy method
+     * and cleans up all Web Audio API related stuff.
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.destination = null;
+        this.masterVolumeNode.disconnect();
+        this.masterVolumeNode = null;
+        this.masterMuteNode.disconnect();
+        this.masterMuteNode = null;
+
+        if (this.game.config.audio.context)
+        {
+            this.context.suspend();
+        }
+        else
+        {
+            var _this = this;
+
+            this.context.close().then(function ()
+            {
+                _this.context = null;
+            });
+        }
+
+        BaseSoundManager.prototype.destroy.call(this);
+    },
+
+    /**
      * Sets the muted state of all this Sound Manager.
      *
      * @method Phaser.Sound.WebAudioSoundManager#setMute
@@ -477,6 +424,28 @@ var WebAudioSoundManager = new Class({
         this.mute = value;
 
         return this;
+    },
+
+    /**
+     * @name Phaser.Sound.WebAudioSoundManager#mute
+     * @type {boolean}
+     * @fires Phaser.Sound.Events#GLOBAL_MUTE
+     * @since 3.0.0
+     */
+    mute: {
+
+        get: function ()
+        {
+            return (this.masterMuteNode.gain.value === 0);
+        },
+
+        set: function (value)
+        {
+            this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+
+            this.emit(Events.GLOBAL_MUTE, this, value);
+        }
+
     },
 
     /**
@@ -498,31 +467,6 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
-     * @name Phaser.Sound.WebAudioSoundManager#mute
-     * @type {boolean}
-     * @fires Phaser.Sound.Events#GLOBAL_MUTE
-     * @since 3.0.0
-     */
-    mute: {
-
-        get: function ()
-        {
-            return (this.masterMuteNode && this.masterMuteNode.gain.value === 0);
-        },
-
-        set: function (value)
-        {
-            if (this.masterMuteNode)
-            {
-                this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
-
-                this.emit(Events.GLOBAL_MUTE, this, value);
-            }
-        }
-
-    },
-
-    /**
      * @name Phaser.Sound.WebAudioSoundManager#volume
      * @type {number}
      * @fires Phaser.Sound.Events#GLOBAL_VOLUME
@@ -532,72 +476,16 @@ var WebAudioSoundManager = new Class({
 
         get: function ()
         {
-            if (this.masterVolumeNode)
-            {
-                return this.masterVolumeNode.gain.value;
-            }
-            else
-            {
-                return 0;
-            }
+            return this.masterVolumeNode.gain.value;
         },
 
         set: function (value)
         {
-            if (this.masterVolumeNode)
-            {
-                this.masterVolumeNode.gain.setValueAtTime(value, 0);
+            this.masterVolumeNode.gain.setValueAtTime(value, 0);
 
-                this.emit(Events.GLOBAL_VOLUME, this, value);
-            }
+            this.emit(Events.GLOBAL_VOLUME, this, value);
         }
 
-    },
-
-    /**
-     * Calls Phaser.Sound.BaseSoundManager#destroy method
-     * and cleans up all Web Audio API related stuff.
-     *
-     * @method Phaser.Sound.WebAudioSoundManager#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        if (this.masterVolumeNode)
-        {
-            this.masterVolumeNode.disconnect();
-        }
-
-        if (this.masterMuteNode)
-        {
-            this.masterMuteNode.disconnect();
-        }
-
-        this.decodeQueue.clear();
-
-        this.destination = null;
-        this.masterVolumeNode = null;
-        this.masterMuteNode = null;
-        this.decodeQueue = null;
-
-        if (this.context)
-        {
-            if (this.config.context)
-            {
-                this.context.suspend();
-            }
-            else
-            {
-                var _this = this;
-
-                this.context.close().then(function ()
-                {
-                    _this.context = null;
-                });
-            }
-        }
-
-        BaseSoundManager.prototype.destroy.call(this);
     }
 
 });

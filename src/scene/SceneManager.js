@@ -512,6 +512,13 @@ var SceneManager = new Class({
      */
     loadComplete: function (loader)
     {
+        //  TODO - Remove. This should *not* be handled here
+        //  Try to unlock HTML5 sounds every time any loader completes
+        if (this.game.sound && this.game.sound.onBlurPausedSounds)
+        {
+            this.game.sound.unlock();
+        }
+
         this.create(loader.scene);
     },
 
