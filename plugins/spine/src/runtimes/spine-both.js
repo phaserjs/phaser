@@ -698,7 +698,7 @@ var spine;
                 .setAttachment(attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
         };
         AttachmentTimeline.prototype.setAttachment = function (skeleton, slot, attachmentName) {
-            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName);
+            slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
         };
         return AttachmentTimeline;
     }());
@@ -1498,7 +1498,7 @@ var spine;
                 var slot = slots[i];
                 if (slot.attachmentState == setupState) {
                     var attachmentName = slot.data.attachmentName;
-                    slot.attachment = (attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
+                    slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
                 }
             }
             this.unkeyedState += 2;
@@ -1611,7 +1611,7 @@ var spine;
                 slot.attachmentState = this.unkeyedState + AnimationState.SETUP;
         };
         AnimationState.prototype.setAttachment = function (skeleton, slot, attachmentName, attachments) {
-            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName);
+            slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
             if (attachments)
                 slot.attachmentState = this.unkeyedState + AnimationState.CURRENT;
         };
@@ -8302,9 +8302,7 @@ var spine;
                     }
                     ctx.scale(1, -1);
                     ctx.translate(-w / 2, -h / 2);
-                    if (color.r != 1 || color.g != 1 || color.b != 1 || color.a != 1) {
-                        ctx.globalAlpha = color.a;
-                    }
+                    ctx.globalAlpha = color.a;
                     ctx.drawImage(image, region.x, region.y, w, h, 0, 0, w, h);
                     if (this.debugRendering)
                         ctx.strokeRect(0, 0, w, h);
@@ -8350,9 +8348,7 @@ var spine;
                         var color = this.tempColor;
                         color.set(skeletonColor.r * slotColor.r * attachmentColor.r, skeletonColor.g * slotColor.g * attachmentColor.g, skeletonColor.b * slotColor.b * attachmentColor.b, alpha);
                         var ctx = this.ctx;
-                        if (color.r != 1 || color.g != 1 || color.b != 1 || color.a != 1) {
-                            ctx.globalAlpha = color.a;
-                        }
+                        ctx.globalAlpha = color.a;
                         for (var j = 0; j < triangles.length; j += 3) {
                             var t1 = triangles[j] * 8, t2 = triangles[j + 1] * 8, t3 = triangles[j + 2] * 8;
                             var x0 = vertices[t1], y0 = vertices[t1 + 1], u0 = vertices[t1 + 6], v0 = vertices[t1 + 7];
@@ -10742,7 +10738,7 @@ var spine;
             function ManagedWebGLRenderingContext(canvasOrContext, contextConfig) {
                 if (contextConfig === void 0) { contextConfig = { alpha: "true" }; }
                 this.restorables = new Array();
-                if (canvasOrContext instanceof HTMLCanvasElement || canvasOrContext instanceof EventTarget) {
+                if (!((canvasOrContext instanceof WebGLRenderingContext) || (canvasOrContext instanceof WebGL2RenderingContext))) {
                     this.setupCanvas(canvasOrContext, contextConfig);
                 }
                 else {

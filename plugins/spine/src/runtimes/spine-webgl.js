@@ -698,7 +698,7 @@ var spine;
                 .setAttachment(attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
         };
         AttachmentTimeline.prototype.setAttachment = function (skeleton, slot, attachmentName) {
-            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName);
+            slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
         };
         return AttachmentTimeline;
     }());
@@ -1498,7 +1498,7 @@ var spine;
                 var slot = slots[i];
                 if (slot.attachmentState == setupState) {
                     var attachmentName = slot.data.attachmentName;
-                    slot.attachment = (attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
+                    slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
                 }
             }
             this.unkeyedState += 2;
@@ -1611,7 +1611,7 @@ var spine;
                 slot.attachmentState = this.unkeyedState + AnimationState.SETUP;
         };
         AnimationState.prototype.setAttachment = function (skeleton, slot, attachmentName, attachments) {
-            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName);
+            slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
             if (attachments)
                 slot.attachmentState = this.unkeyedState + AnimationState.CURRENT;
         };
@@ -10474,7 +10474,7 @@ var spine;
             function ManagedWebGLRenderingContext(canvasOrContext, contextConfig) {
                 if (contextConfig === void 0) { contextConfig = { alpha: "true" }; }
                 this.restorables = new Array();
-                if (canvasOrContext instanceof HTMLCanvasElement || canvasOrContext instanceof EventTarget) {
+                if (!((canvasOrContext instanceof WebGLRenderingContext) || (canvasOrContext instanceof WebGL2RenderingContext))) {
                     this.setupCanvas(canvasOrContext, contextConfig);
                 }
                 else {
