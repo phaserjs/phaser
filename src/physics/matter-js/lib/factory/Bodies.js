@@ -1,5 +1,5 @@
 /**
-* The `Matter.Bodies` module contains factory methods for creating rigid body models 
+* The `Matter.Bodies` module contains factory methods for creating rigid body models
 * with commonly used body configurations (such as rectangles, circles and other polygons).
 *
 * See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
@@ -22,7 +22,7 @@ var Vector = require('../geometry/Vector');
 (function() {
 
     /**
-     * Creates a new rigid body model with a rectangle hull. 
+     * Creates a new rigid body model with a rectangle hull.
      * The options parameter is an object that specifies any properties you wish to override the defaults.
      * See the properties section of the `Matter.Body` module for detailed information on what you can pass via the `options` object.
      * @method rectangle
@@ -36,7 +36,7 @@ var Vector = require('../geometry/Vector');
     Bodies.rectangle = function(x, y, width, height, options) {
         options = options || {};
 
-        var rectangle = { 
+        var rectangle = {
             label: 'Rectangle Body',
             position: { x: x, y: y },
             vertices: Vertices.fromPath('L 0 0 L ' + width + ' 0 L ' + width + ' ' + height + ' L 0 ' + height)
@@ -44,16 +44,16 @@ var Vector = require('../geometry/Vector');
 
         if (options.chamfer) {
             var chamfer = options.chamfer;
-            rectangle.vertices = Vertices.chamfer(rectangle.vertices, chamfer.radius, 
+            rectangle.vertices = Vertices.chamfer(rectangle.vertices, chamfer.radius,
                 chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
 
         return Body.create(Common.extend({}, rectangle, options));
     };
-    
+
     /**
-     * Creates a new rigid body model with a trapezoid hull. 
+     * Creates a new rigid body model with a trapezoid hull.
      * The options parameter is an object that specifies any properties you wish to override the defaults.
      * See the properties section of the `Matter.Body` module for detailed information on what you can pass via the `options` object.
      * @method trapezoid
@@ -70,7 +70,7 @@ var Vector = require('../geometry/Vector');
 
         slope *= 0.5;
         var roof = (1 - (slope * 2)) * width;
-        
+
         var x1 = width * slope,
             x2 = x1 + roof,
             x3 = x2 + x1,
@@ -82,7 +82,7 @@ var Vector = require('../geometry/Vector');
             verticesPath = 'L 0 0 L ' + x2 + ' ' + (-height) + ' L ' + x3 + ' 0';
         }
 
-        var trapezoid = { 
+        var trapezoid = {
             label: 'Trapezoid Body',
             position: { x: x, y: y },
             vertices: Vertices.fromPath(verticesPath)
@@ -90,7 +90,7 @@ var Vector = require('../geometry/Vector');
 
         if (options.chamfer) {
             var chamfer = options.chamfer;
-            trapezoid.vertices = Vertices.chamfer(trapezoid.vertices, chamfer.radius, 
+            trapezoid.vertices = Vertices.chamfer(trapezoid.vertices, chamfer.radius,
                 chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
@@ -99,7 +99,7 @@ var Vector = require('../geometry/Vector');
     };
 
     /**
-     * Creates a new rigid body model with a circle hull. 
+     * Creates a new rigid body model with a circle hull.
      * The options parameter is an object that specifies any properties you wish to override the defaults.
      * See the properties section of the `Matter.Body` module for detailed information on what you can pass via the `options` object.
      * @method circle
@@ -117,7 +117,7 @@ var Vector = require('../geometry/Vector');
             label: 'Circle Body',
             circleRadius: radius
         };
-        
+
         // approximate circles with polygons until true circles implemented in SAT
         maxSides = maxSides || 25;
         var sides = Math.ceil(Math.max(10, Math.min(maxSides, radius)));
@@ -130,7 +130,7 @@ var Vector = require('../geometry/Vector');
     };
 
     /**
-     * Creates a new rigid body model with a regular polygon hull with the given number of sides. 
+     * Creates a new rigid body model with a regular polygon hull with the given number of sides.
      * The options parameter is an object that specifies any properties you wish to override the defaults.
      * See the properties section of the `Matter.Body` module for detailed information on what you can pass via the `options` object.
      * @method polygon
@@ -159,7 +159,7 @@ var Vector = require('../geometry/Vector');
             path += 'L ' + xx.toFixed(3) + ' ' + yy.toFixed(3) + ' ';
         }
 
-        var polygon = { 
+        var polygon = {
             label: 'Polygon Body',
             position: { x: x, y: y },
             vertices: Vertices.fromPath(path)
@@ -167,7 +167,7 @@ var Vector = require('../geometry/Vector');
 
         if (options.chamfer) {
             var chamfer = options.chamfer;
-            polygon.vertices = Vertices.chamfer(polygon.vertices, chamfer.radius, 
+            polygon.vertices = Vertices.chamfer(polygon.vertices, chamfer.radius,
                 chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
@@ -177,26 +177,26 @@ var Vector = require('../geometry/Vector');
 
     /**
      * Utility to create a compound body based on set(s) of vertices.
-     * 
-     * _Note:_ To optionally enable automatic concave vertices decomposition the [poly-decomp](https://github.com/schteppe/poly-decomp.js) 
+     *
+     * _Note:_ To optionally enable automatic concave vertices decomposition the [poly-decomp](https://github.com/schteppe/poly-decomp.js)
      * package must be first installed and provided see `Common.setDecomp`, otherwise the convex hull of each vertex set will be used.
-     * 
+     *
      * The resulting vertices are reorientated about their centre of mass,
      * and offset such that `body.position` corresponds to this point.
-     * 
+     *
      * The resulting offset may be found if needed by subtracting `body.bounds` from the original input bounds.
      * To later move the centre of mass see `Body.setCentre`.
-     * 
-     * Note that automatic conconcave decomposition results are not always optimal. 
+     *
+     * Note that automatic conconcave decomposition results are not always optimal.
      * For best results, simplify the input vertices as much as possible first.
      * By default this function applies some addtional simplification to help.
-     * 
+     *
      * Some outputs may also require further manual processing afterwards to be robust.
      * In particular some parts may need to be overlapped to avoid collision gaps.
      * Thin parts and sharp points should be avoided or removed where possible.
      *
      * The options parameter object specifies any `Matter.Body` properties you wish to override the defaults.
-     * 
+     *
      * See the properties section of the `Matter.Body` module for detailed information on what you can pass via the `options` object.
      * @method fromVertices
      * @param {number} x
@@ -309,37 +309,9 @@ var Vector = require('../geometry/Vector');
         }
 
         // flag internal edges (coincident part edges)
-        if (flagInternal) {
-            var coincident_max_dist = 5;
-
-            for (i = 0; i < parts.length; i++) {
-                var partA = parts[i];
-
-                for (j = i + 1; j < parts.length; j++) {
-                    var partB = parts[j];
-
-                    if (Bounds.overlaps(partA.bounds, partB.bounds)) {
-                        var pav = partA.vertices,
-                            pbv = partB.vertices;
-
-                        // iterate vertices of both parts
-                        for (k = 0; k < partA.vertices.length; k++) {
-                            for (z = 0; z < partB.vertices.length; z++) {
-                                // find distances between the vertices
-                                var da = Vector.magnitudeSquared(Vector.sub(pav[(k + 1) % pav.length], pbv[z])),
-                                    db = Vector.magnitudeSquared(Vector.sub(pav[k], pbv[(z + 1) % pbv.length]));
-
-                                // if both vertices are very close, consider the edge concident (internal)
-                                if (da < coincident_max_dist && db < coincident_max_dist) {
-                                    pav[k].isInternal = true;
-                                    pbv[z].isInternal = true;
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
+        if (flagInternal)
+        {
+            Bodies.flagCoincidentParts(parts, 5);
         }
 
         if (parts.length > 1) {
@@ -353,6 +325,56 @@ var Vector = require('../geometry/Vector');
         } else {
             return parts[0];
         }
+    };
+
+    /**
+     * Takes an array of Body objects and flags all internal edges (coincident parts) based on the maxDistance
+     * value. The array is changed in-place and returned, so you can pass this function a `Body.parts` property.
+     *
+     * @method flagCoincidentParts
+     * @param {body[]} parts - The Body parts, or array of bodies, to flag.
+     * @param {number} [maxDistance=5]
+     * @return {body[]} The modified `parts` parameter.
+     */
+    Bodies.flagCoincidentParts = function (parts, maxDistance)
+    {
+        if (maxDistance === undefined) { maxDistance = 5; }
+
+        for (var i = 0; i < parts.length; i++)
+        {
+            var partA = parts[i];
+
+            for (var j = i + 1; j < parts.length; j++)
+            {
+                var partB = parts[j];
+
+                if (Bounds.overlaps(partA.bounds, partB.bounds))
+                {
+                    var pav = partA.vertices;
+                    var pbv = partB.vertices;
+
+                    // iterate vertices of both parts
+                    for (var k = 0; k < partA.vertices.length; k++)
+                    {
+                        for (var z = 0; z < partB.vertices.length; z++)
+                        {
+                            // find distances between the vertices
+                            var da = Vector.magnitudeSquared(Vector.sub(pav[(k + 1) % pav.length], pbv[z]));
+                            var db = Vector.magnitudeSquared(Vector.sub(pav[k], pbv[(z + 1) % pbv.length]));
+
+                            // if both vertices are very close, consider the edge concident (internal)
+                            if (da < maxDistance && db < maxDistance)
+                            {
+                                pav[k].isInternal = true;
+                                pbv[z].isInternal = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return parts;
     };
 
 })();
