@@ -46,6 +46,21 @@ Development of this feature was kindly sponsored by Club Penguin Rewritten (http
 * The `WebGL.Utils.parseFragmentShaderMaxTextures` function no longer supports the `%forloop%` declaration.
 * The internal WebGL Utils function `GenerateSrc` has been removed as it's no longer required internally.
 
+### New Features - Matter Physics v0.18
+
+We have updated the version of Matter Physics to the latest v0.18 release. This is a big jump and brings with it quite a few internal changes to Matter. The following are the differences we have identified in this release:
+
+* Up to ~40% performance improvement (on average measured over all examples, in Node on a Mac Air M1)
+* Replaces `Matter.Grid` with a faster and more efficient broadphase in `Matter.Detector`.
+* Reduced memory usage and garbage collection.
+* Resolves issues in `Matter.SAT` related to collision reuse.
+* Removes performance issues from `Matter.Grid`.
+* Improved collision accuracy.
+* `MatterPhysics.collision` is a new reference to the `Collision` module, which now handles all Matter collision events.
+* `MatterPhysics.grid` has been removed as this is now handled by the `Collision` module.
+* `MatterPhysics.sat` has been removed as this is now handled by the `Collision` module.
+* The `Matter.Body.previousPositionImpulse` property has been removed as it's no longer used.
+
 ### New Features
 
 * `ScaleManager.getViewPort` is a new method that will return a Rectangle geometry object that matches the visible area of the screen (thanks @rexrainbow)
