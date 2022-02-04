@@ -12,6 +12,8 @@ module.exports = {
         phaser: './phaser.js'
     },
 
+    devtool: 'source-map',
+
     output: {
         path: `${__dirname}/../build/`,
         filename: '[name].js',
