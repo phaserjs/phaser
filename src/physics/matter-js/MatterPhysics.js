@@ -12,6 +12,7 @@ var BodyBounds = require('./BodyBounds');
 var Bounds = require('./lib/geometry/Bounds');
 var Class = require('../../utils/Class');
 var Collision = require('./lib/collision/Collision');
+var Common = require('./lib/core/Common');
 var Composite = require('./lib/body/Composite');
 var Composites = require('./lib/factory/Composites');
 var Constraint = require('./lib/constraint/Constraint');
@@ -36,6 +37,8 @@ var Svg = require('./lib/geometry/Svg');
 var Vector = require('./lib/geometry/Vector');
 var Vertices = require('./lib/geometry/Vertices');
 var World = require('./World');
+
+Common.setDecomp(require('./poly-decomp'));
 
 /**
  * @classdesc
