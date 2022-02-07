@@ -51,6 +51,10 @@ var ScriptFile = new Class({
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
         }
+        else if (type === undefined)
+        {
+            type = 'script';
+        }
 
         var fileConfig = {
             type: type,
