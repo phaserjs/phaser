@@ -1167,6 +1167,10 @@ var RenderTexture = new Class({
         }
         else
         {
+            if (!this._eraseMode)
+            {
+                this.renderer.setBlendMode(gameObject.blendMode);
+            }
             gameObject.renderWebGL(this.renderer, gameObject, this.camera);
         }
 
