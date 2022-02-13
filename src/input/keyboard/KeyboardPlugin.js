@@ -395,9 +395,11 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#createCursorKeys
      * @since 3.10.0
      *
+     * @param {boolean} [enableCapture] - Automatically call `preventDefault` on the native DOM browser event for the key codes being added.
+     *
      * @return {Phaser.Types.Input.Keyboard.CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
      */
-    createCursorKeys: function ()
+    createCursorKeys: function (enableCapture)
     {
         return this.addKeys({
             up: KeyCodes.UP,
@@ -406,7 +408,7 @@ var KeyboardPlugin = new Class({
             right: KeyCodes.RIGHT,
             space: KeyCodes.SPACE,
             shift: KeyCodes.SHIFT
-        });
+        }, enableCapture);
     },
 
     /**
