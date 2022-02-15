@@ -334,6 +334,15 @@ var ScenePlugin = new Class({
             this.manager.start(key, GetFastValue(config, 'data'));
         }
 
+        var onStartCallback = GetFastValue(config, 'onStart', null);
+
+        var onStartScope = GetFastValue(config, 'onStartScope', this.scene);
+
+        if (onStartCallback)
+        {
+            onStartCallback.call(onStartScope, this.scene, target, duration);
+        }
+
         this.systems.events.emit(Events.TRANSITION_OUT, target, duration);
 
         this.systems.events.on(Events.UPDATE, this.step, this);
