@@ -202,6 +202,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `TextureManager.getBase64` will now skip the `drawImage` call in canvas if the frame width or height are zero.
 * `TilemapLayerCanvasRenderer` will now skip the `drawImage` call in canvas if the frame width or height are zero.
 * Audio will now unlock properly again on iOS14 and above in Safari. Fix #5696 (thanks @laineus)
+* Drawing Game Objects to a Render Texture in WebGL would skip their blend modes. This is now applied correctly. Fix #5565 #5996 (thanks @sjb933 @danarcher)
 
 ### Examples, Documentation and TypeScript
 
