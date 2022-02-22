@@ -475,7 +475,6 @@ var Tile = new Class({
             : this.getTop(camera) + this.height;
     },
 
-
     /**
      * Gets the world rectangle bounding box for the tile, factoring in the layers position,
      * scale and scroll.
