@@ -508,9 +508,9 @@ var RenderTexture = new Class({
         if (width === undefined) { width = frame.cutWidth; }
         if (height === undefined) { height = frame.cutHeight; }
 
-        var r = (rgb >> 16 & 0xFF) / 255;
-        var g = (rgb >> 8 & 0xFF) / 255;
-        var b = (rgb & 0xFF) / 255;
+        var r = (rgb >> 16 & 0xFF);
+        var g = (rgb >> 8 & 0xFF);
+        var b = (rgb & 0xFF);
 
         var renderTarget = this.renderTarget;
 
@@ -535,7 +535,7 @@ var RenderTexture = new Class({
 
             pipeline.drawFillRect(
                 x * sx, y * sy, width * sx, height * sy,
-                Utils.getTintFromFloats(b, g, r, 1),
+                Utils.getTintFromFloats(b / 255, g / 255, r / 255, 1),
                 alpha
             );
 
