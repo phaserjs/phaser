@@ -204,6 +204,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * Audio will now unlock properly again on iOS14 and above in Safari. Fix #5696 (thanks @laineus)
 * Drawing Game Objects to a Render Texture in WebGL would skip their blend modes. This is now applied correctly. Fix #5565 #5996 (thanks @sjb933 @danarcher)
 * Loading a Script File Type will now default the 'type' property to 'script' when a type is not provided. Fix #5994 (thanks @samme @ItsGravix)
+* Using `RenderTexture.fill` in CANVAS mode only would produce a nearly always black color due to float conversion (thanks @andymikulski)
 
 ### Examples, Documentation and TypeScript
 
