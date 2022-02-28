@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,7 @@ var RoundAwayFromZero = require('../../math/RoundAwayFromZero');
  *
  * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
  * for forward compatibility make sure to pass in actual numbers.
- * 
+ *
  * @example
  * NumberArrayStep(4);
  * // => [0, 1, 2, 3]

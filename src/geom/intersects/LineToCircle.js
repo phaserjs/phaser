@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -64,10 +64,10 @@ var LineToCircle = function (line, circle, nearest)
 
     nearest.x = line.x1 + px;
     nearest.y = line.y1 + py;
-    
+
     //  len2 of p
     var pLen2 = (px * px) + (py * py);
-    
+
     return (
         pLen2 <= dLen2 &&
         ((px * dx) + (py * dy)) >= 0 &&

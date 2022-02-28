@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,9 +15,9 @@ var ParseToTilemap = require('./ParseToTilemap');
  *
  * @method Phaser.GameObjects.GameObjectCreator#tilemap
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Types.Tilemaps.TilemapConfig} [config] - The config options for the Tilemap.
- * 
+ *
  * @return {Phaser.Tilemaps.Tilemap}
  */
 GameObjectCreator.register('tilemap', function (config)

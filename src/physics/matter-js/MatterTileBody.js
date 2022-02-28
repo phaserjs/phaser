@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -126,7 +126,7 @@ var MatterTileBody = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Types.Physics.Matter.MatterBodyTileOptions} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
-     * 
+     *
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
     setFromTileRectangle: function (options)
@@ -160,7 +160,7 @@ var MatterTileBody = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Types.Physics.Matter.MatterBodyTileOptions} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
-     * 
+     *
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
     setFromTileCollision: function (options)
@@ -251,7 +251,7 @@ var MatterTileBody = new Class({
      *
      * @param {MatterJS.BodyType} body - The new Matter body to use.
      * @param {boolean} [addToWorld=true] - Whether or not to add the body to the Matter world.
-     * 
+     *
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
     setBody: function (body, addToWorld)

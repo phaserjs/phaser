@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26,7 +26,7 @@ var PluginCache = {};
  *
  * @method Phaser.Plugins.PluginCache.register
  * @since 3.8.0
- * 
+ *
  * @param {string} key - A reference used to get this plugin from the plugin cache.
  * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
  * @param {string} mapping - If this plugin is to be injected into the Scene Systems, this is the property key map used.
@@ -45,7 +45,7 @@ PluginCache.register = function (key, plugin, mapping, custom)
  *
  * @method Phaser.Plugins.PluginCache.registerCustom
  * @since 3.8.0
- * 
+ *
  * @param {string} key - A reference used to get this plugin from the plugin cache.
  * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
  * @param {string} mapping - If this plugin is to be injected into the Scene Systems, this is the property key map used.
@@ -61,7 +61,7 @@ PluginCache.registerCustom = function (key, plugin, mapping, data)
  *
  * @method Phaser.Plugins.PluginCache.hasCore
  * @since 3.8.0
- * 
+ *
  * @param {string} key - The key to check for.
  *
  * @return {boolean} `true` if the key is already in use in the core cache, otherwise `false`.
@@ -76,7 +76,7 @@ PluginCache.hasCore = function (key)
  *
  * @method Phaser.Plugins.PluginCache.hasCustom
  * @since 3.8.0
- * 
+ *
  * @param {string} key - The key to check for.
  *
  * @return {boolean} `true` if the key is already in use in the custom cache, otherwise `false`.
@@ -91,7 +91,7 @@ PluginCache.hasCustom = function (key)
  *
  * @method Phaser.Plugins.PluginCache.getCore
  * @since 3.8.0
- * 
+ *
  * @param {string} key - The key of the core plugin to get.
  *
  * @return {Phaser.Types.Plugins.CorePluginContainer} The core plugin object.
@@ -106,7 +106,7 @@ PluginCache.getCore = function (key)
  *
  * @method Phaser.Plugins.PluginCache.getCustom
  * @since 3.8.0
- * 
+ *
  * @param {string} key - The key of the custom plugin to get.
  *
  * @return {Phaser.Types.Plugins.CustomPluginContainer} The custom plugin object.
@@ -121,7 +121,7 @@ PluginCache.getCustom = function (key)
  *
  * @method Phaser.Plugins.PluginCache.getCustomClass
  * @since 3.8.0
- * 
+ *
  * @param {string} key - The key of the custom plugin to get.
  *
  * @return {function} The custom plugin object.
@@ -136,7 +136,7 @@ PluginCache.getCustomClass = function (key)
  *
  * @method Phaser.Plugins.PluginCache.remove
  * @since 3.8.0
- * 
+ *
  * @param {string} key - The key of the core plugin to remove.
  */
 PluginCache.remove = function (key)
@@ -152,7 +152,7 @@ PluginCache.remove = function (key)
  *
  * @method Phaser.Plugins.PluginCache.removeCustom
  * @since 3.8.0
- * 
+ *
  * @param {string} key - The key of the custom plugin to remove.
  */
 PluginCache.removeCustom = function (key)
@@ -165,7 +165,7 @@ PluginCache.removeCustom = function (key)
 
 /**
  * Removes all Core Plugins.
- * 
+ *
  * This includes all of the internal system plugins that Phaser needs, like the Input Plugin and Loader Plugin.
  * So be sure you only call this if you do not wish to run Phaser again.
  *

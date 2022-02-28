@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -55,7 +55,7 @@ var Force = {
 
     /**
      * Apply thrust to the forward position of the body.
-     * 
+     *
      * Use very small values, such as 0.1, depending on the mass and required speed.
      *
      * @method Phaser.Physics.Matter.Components.Force#thrust
@@ -78,7 +78,7 @@ var Force = {
 
     /**
      * Apply thrust to the left position of the body.
-     * 
+     *
      * Use very small values, such as 0.1, depending on the mass and required speed.
      *
      * @method Phaser.Physics.Matter.Components.Force#thrustLeft
@@ -101,7 +101,7 @@ var Force = {
 
     /**
      * Apply thrust to the right position of the body.
-     * 
+     *
      * Use very small values, such as 0.1, depending on the mass and required speed.
      *
      * @method Phaser.Physics.Matter.Components.Force#thrustRight
@@ -124,7 +124,7 @@ var Force = {
 
     /**
      * Apply thrust to the back position of the body.
-     * 
+     *
      * Use very small values, such as 0.1, depending on the mass and required speed.
      *
      * @method Phaser.Physics.Matter.Components.Force#thrustBack

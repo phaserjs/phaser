@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,15 +14,15 @@
 
 /**
  * The Matter Physics After Add Event.
- * 
+ *
  * This event is dispatched by a Matter Physics World instance at the end of the process when a new Body
  * or Constraint has just been added to the world.
- * 
+ *
  * Listen to it from a Scene using: `this.matter.world.on('afteradd', listener)`.
  *
  * @event Phaser.Physics.Matter.Events#AFTER_ADD
  * @since 3.22.0
- * 
+ *
  * @param {Phaser.Physics.Matter.Events.AfterAddEvent} event - The Add Event object.
  */
 module.exports = 'afteradd';

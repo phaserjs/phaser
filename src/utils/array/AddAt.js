@@ -1,21 +1,21 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Adds the given item, or array of items, to the array starting at the index specified.
- * 
+ *
  * Each item must be unique within the array.
- * 
+ *
  * Existing elements in the array are shifted up.
- * 
+ *
  * The array is modified in-place and returned.
- * 
+ *
  * You can optionally specify a limit to the maximum size of the array. If the quantity of items being
  * added will take the array length over this limit, it will stop adding once the limit is reached.
- * 
+ *
  * You can optionally specify a callback to be invoked for each item successfully added to the array.
  *
  * @function Phaser.Utils.Array.AddAt

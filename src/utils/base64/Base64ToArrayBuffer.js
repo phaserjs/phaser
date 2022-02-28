@@ -1,7 +1,7 @@
 /**
  * @author       Niklas von Hertzen (https://github.com/niklasvh/base64-arraybuffer)
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20,9 +20,9 @@ for (var i = 0; i < chars.length; i++)
  *
  * @function Phaser.Utils.Base64.Base64ToArrayBuffer
  * @since 3.18.0
- * 
+ *
  * @param {string} base64 - The base64 string to be decoded. Can optionally contain a data URI header, which will be stripped out prior to decoding.
- * 
+ *
  * @return {ArrayBuffer} An ArrayBuffer decoded from the base64 data.
  */
 var Base64ToArrayBuffer = function (base64)

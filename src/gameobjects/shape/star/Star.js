@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,14 +15,14 @@ var Shape = require('../Shape');
  * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
  * it for input or physics. It provides a quick and easy way for you to render this shape in your
  * game without using a texture, while still taking advantage of being fully batched in WebGL.
- * 
+ *
  * This shape supports both fill and stroke colors.
- * 
+ *
  * As the name implies, the Star shape will display a star in your game. You can control several
  * aspects of it including the number of points that constitute the star. The default is 5. If
  * you change it to 4 it will render as a diamond. If you increase them, you'll get a more spiky
  * star shape.
- * 
+ *
  * You can also control the inner and outer radius, which is how 'long' each point of the star is.
  * Modify these values to create more interesting shapes.
  *
@@ -112,7 +112,7 @@ var Star = new Class({
      *
      * @method Phaser.GameObjects.Star#setPoints
      * @since 3.13.0
-     * 
+     *
      * @param {number} value - The amount of points the Star will have.
      *
      * @return {this} This Game Object instance.
@@ -130,7 +130,7 @@ var Star = new Class({
      *
      * @method Phaser.GameObjects.Star#setInnerRadius
      * @since 3.13.0
-     * 
+     *
      * @param {number} value - The amount to set the inner radius to.
      *
      * @return {this} This Game Object instance.
@@ -148,7 +148,7 @@ var Star = new Class({
      *
      * @method Phaser.GameObjects.Star#setOuterRadius
      * @since 3.13.0
-     * 
+     *
      * @param {number} value - The amount to set the outer radius to.
      *
      * @return {this} This Game Object instance.
@@ -255,7 +255,7 @@ var Star = new Class({
         //  So origin 0.5 = the center of the star
         var x = outerRadius;
         var y = outerRadius;
-    
+
         path.push(x, y + -outerRadius);
 
         for (var i = 0; i < points; i++)
@@ -265,7 +265,7 @@ var Star = new Class({
             rot += step;
 
             path.push(x + Math.cos(rot) * innerRadius, y + Math.sin(rot) * innerRadius);
-    
+
             rot += step;
         }
 

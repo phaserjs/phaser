@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,7 @@ var Debug = {
 
     /**
      * Sets the debug values of this body.
-     * 
+     *
      * Bodies will only draw their debug if debug has been enabled for Arcade Physics as a whole.
      * Note that there is a performance cost in drawing debug displays. It should never be used in production.
      *

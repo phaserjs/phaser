@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16,7 +16,7 @@ var Class = require('../utils/Class');
  * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
- * 
+ *
  * @param {string} name - The name of the image collection in the map data.
  * @param {number} firstgid - The first image index this image collection contains.
  * @param {number} [width=32] - Width of widest image (in pixels).
@@ -38,7 +38,7 @@ var ImageCollection = new Class({
 
         /**
          * The name of the Image Collection.
-         * 
+         *
          * @name Phaser.Tilemaps.ImageCollection#name
          * @type {string}
          * @since 3.0.0
@@ -48,7 +48,7 @@ var ImageCollection = new Class({
         /**
          * The Tiled firstgid value.
          * This is the starting index of the first image index this Image Collection contains.
-         * 
+         *
          * @name Phaser.Tilemaps.ImageCollection#firstgid
          * @type {number}
          * @since 3.0.0
@@ -57,7 +57,7 @@ var ImageCollection = new Class({
 
         /**
          * The width of the widest image (in pixels).
-         * 
+         *
          * @name Phaser.Tilemaps.ImageCollection#imageWidth
          * @type {number}
          * @readonly
@@ -67,7 +67,7 @@ var ImageCollection = new Class({
 
         /**
          * The height of the tallest image (in pixels).
-         * 
+         *
          * @name Phaser.Tilemaps.ImageCollection#imageHeight
          * @type {number}
          * @readonly
@@ -78,7 +78,7 @@ var ImageCollection = new Class({
         /**
          * The margin around the images in the collection (in pixels).
          * Use `setSpacing` to change.
-         * 
+         *
          * @name Phaser.Tilemaps.ImageCollection#imageMarge
          * @type {number}
          * @readonly
@@ -89,7 +89,7 @@ var ImageCollection = new Class({
         /**
          * The spacing between each image in the collection (in pixels).
          * Use `setSpacing` to change.
-         * 
+         *
          * @name Phaser.Tilemaps.ImageCollection#imageSpacing
          * @type {number}
          * @readonly
@@ -99,7 +99,7 @@ var ImageCollection = new Class({
 
         /**
          * Image Collection-specific properties that are typically defined in the Tiled editor.
-         * 
+         *
          * @name Phaser.Tilemaps.ImageCollection#properties
          * @type {object}
          * @since 3.0.0
@@ -108,7 +108,7 @@ var ImageCollection = new Class({
 
         /**
          * The cached images that are a part of this collection.
-         * 
+         *
          * @name Phaser.Tilemaps.ImageCollection#images
          * @type {array}
          * @readonly
@@ -118,7 +118,7 @@ var ImageCollection = new Class({
 
         /**
          * The total number of images in the image collection.
-         * 
+         *
          * @name Phaser.Tilemaps.ImageCollection#total
          * @type {number}
          * @readonly
@@ -132,9 +132,9 @@ var ImageCollection = new Class({
      *
      * @method Phaser.Tilemaps.ImageCollection#containsImageIndex
      * @since 3.0.0
-     * 
+     *
      * @param {number} imageIndex - The image index to search for.
-     * 
+     *
      * @return {boolean} True if this Image Collection contains the given index.
      */
     containsImageIndex: function (imageIndex)
@@ -147,7 +147,7 @@ var ImageCollection = new Class({
      *
      * @method Phaser.Tilemaps.ImageCollection#addImage
      * @since 3.0.0
-     * 
+     *
      * @param {number} gid - The gid of the image in the Image Collection.
      * @param {string} image - The the key of the image in the Image Collection and in the cache.
      *

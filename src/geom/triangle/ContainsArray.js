@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -63,7 +63,7 @@ var ContainsArray = function (triangle, points, returnFirst, out)
 
         u = ((dot11 * dot02) - (dot01 * dot12)) * inv;
         v = ((dot00 * dot12) - (dot01 * dot02)) * inv;
-    
+
         if (u >= 0 && v >= 0 && (u + v < 1))
         {
             out.push({ x: points[i].x, y: points[i].y });

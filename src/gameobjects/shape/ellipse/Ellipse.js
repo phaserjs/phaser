@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16,13 +16,13 @@ var Shape = require('../Shape');
  * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
  * it for input or physics. It provides a quick and easy way for you to render this shape in your
  * game without using a texture, while still taking advantage of being fully batched in WebGL.
- * 
+ *
  * This shape supports both fill and stroke colors.
- * 
+ *
  * When it renders it displays an ellipse shape. You can control the width and height of the ellipse.
  * If the width and height match it will render as a circle. If the width is less than the height,
  * it will look more like an egg shape.
- * 
+ *
  * The Ellipse shape also has a `smoothness` property and corresponding `setSmoothness` method.
  * This allows you to control how smooth the shape renders in WebGL, by controlling the number of iterations
  * that take place during construction. Increase and decrease the default value for smoother, or more
@@ -117,7 +117,7 @@ var Ellipse = new Class({
      *
      * @method Phaser.GameObjects.Ellipse#setSize
      * @since 3.13.0
-     * 
+     *
      * @param {number} width - The width of the ellipse.
      * @param {number} height - The height of the ellipse.
      *
@@ -140,7 +140,7 @@ var Ellipse = new Class({
      *
      * @method Phaser.GameObjects.Ellipse#setSmoothness
      * @since 3.13.0
-     * 
+     *
      * @param {number} value - The value to set the smoothness to.
      *
      * @return {this} This Game Object instance.

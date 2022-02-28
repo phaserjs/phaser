@@ -1,12 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Creates a new Interactive Object.
- * 
+ *
  * This is called automatically by the Input Manager when you enable a Game Object for input.
  *
  * The resulting Interactive Object is mapped to the Game Object's `input` property.

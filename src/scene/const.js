@@ -1,12 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Scene consts.
- * 
+ *
  * @ignore
  */
 
@@ -14,7 +14,7 @@ var CONST = {
 
     /**
      * Scene state.
-     * 
+     *
      * @name Phaser.Scenes.PENDING
      * @readonly
      * @type {number}
@@ -24,7 +24,7 @@ var CONST = {
 
     /**
      * Scene state.
-     * 
+     *
      * @name Phaser.Scenes.INIT
      * @readonly
      * @type {number}
@@ -34,7 +34,7 @@ var CONST = {
 
     /**
      * Scene state.
-     * 
+     *
      * @name Phaser.Scenes.START
      * @readonly
      * @type {number}
@@ -44,7 +44,7 @@ var CONST = {
 
     /**
      * Scene state.
-     * 
+     *
      * @name Phaser.Scenes.LOADING
      * @readonly
      * @type {number}
@@ -54,7 +54,7 @@ var CONST = {
 
     /**
      * Scene state.
-     * 
+     *
      * @name Phaser.Scenes.CREATING
      * @readonly
      * @type {number}
@@ -64,7 +64,7 @@ var CONST = {
 
     /**
      * Scene state.
-     * 
+     *
      * @name Phaser.Scenes.RUNNING
      * @readonly
      * @type {number}
@@ -74,7 +74,7 @@ var CONST = {
 
     /**
      * Scene state.
-     * 
+     *
      * @name Phaser.Scenes.PAUSED
      * @readonly
      * @type {number}
@@ -84,7 +84,7 @@ var CONST = {
 
     /**
      * Scene state.
-     * 
+     *
      * @name Phaser.Scenes.SLEEPING
      * @readonly
      * @type {number}
@@ -94,7 +94,7 @@ var CONST = {
 
     /**
      * Scene state.
-     * 
+     *
      * @name Phaser.Scenes.SHUTDOWN
      * @readonly
      * @type {number}
@@ -104,7 +104,7 @@ var CONST = {
 
     /**
      * Scene state.
-     * 
+     *
      * @name Phaser.Scenes.DESTROYED
      * @readonly
      * @type {number}

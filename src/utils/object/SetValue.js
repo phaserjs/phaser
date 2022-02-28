@@ -1,14 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Sets a value in an object, allowing for dot notation to control the depth of the property.
- * 
+ *
  * For example:
- * 
+ *
  * ```javascript
  * var data = {
  *   world: {
@@ -18,9 +18,9 @@
  *     }
  *   }
  * };
- * 
+ *
  * SetValue(data, 'world.position.y', 300);
- * 
+ *
  * console.log(data.world.position.y); // 300
  * ```
  *
@@ -70,7 +70,7 @@ var SetValue = function (source, key, value)
 
         return true;
     }
-    
+
     return false;
 };
 

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19,7 +19,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {number} width - The width of the Game Object.
  * @param {number} height - The height of the Game Object.
- * 
+ *
  * @return {Phaser.GameObjects.Zone} The Game Object that was created.
  */
 GameObjectFactory.register('zone', function (x, y, width, height)
@@ -28,9 +28,9 @@ GameObjectFactory.register('zone', function (x, y, width, height)
 });
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
-//  
+//
 //  There are several properties available to use:
-//  
+//
 //  this.scene - a reference to the Scene that owns the GameObjectFactory
 //  this.displayList - a reference to the Display List the Scene owns
 //  this.updateList - a reference to the Update List the Scene owns

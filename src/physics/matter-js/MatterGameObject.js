@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26,7 +26,7 @@ function hasGetterOrSetter (def)
 /**
  * A Matter Game Object is a generic object that allows you to combine any Phaser Game Object,
  * including those you have extended or created yourself, with all of the Matter Components.
- * 
+ *
  * This enables you to use component methods such as `setVelocity` or `isSensor` directly from
  * this Game Object.
  *
@@ -110,7 +110,7 @@ var MatterGameObject = function (world, gameObject, options, addToWorld)
         }
 
         options.addToWorld = addToWorld;
-    
+
         gameObject.setBody(shape, options);
     }
 

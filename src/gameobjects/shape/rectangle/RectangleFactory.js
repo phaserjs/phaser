@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,14 +11,14 @@ var Rectangle = require('./Rectangle');
  * Creates a new Rectangle Shape Game Object and adds it to the Scene.
  *
  * Note: This method will only be available if the Rectangle Game Object has been built into Phaser.
- * 
+ *
  * The Rectangle Shape is a Game Object that can be added to a Scene, Group or Container. You can
  * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
  * it for input or physics. It provides a quick and easy way for you to render this shape in your
  * game without using a texture, while still taking advantage of being fully batched in WebGL.
- * 
+ *
  * This shape supports both fill and stroke colors.
- * 
+ *
  * You can change the size of the rectangle by changing the `width` and `height` properties.
  *
  * @method Phaser.GameObjects.GameObjectFactory#rectangle

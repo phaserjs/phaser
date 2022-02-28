@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,7 @@ var Vector2 = require('../math/Vector2');
 /**
  * @classdesc
  * The Size component allows you to set `width` and `height` properties and define the relationship between them.
- * 
+ *
  * The component can automatically maintain the aspect ratios between the two values, and clamp them
  * to a defined min-max range. You can also control the dominant axis. When dimensions are given to the Size component
  * that would cause it to exceed its min-max range, the dimensions are adjusted based on the dominant axis.
@@ -81,7 +81,7 @@ var Size = new Class({
 
         /**
          * The proportional relationship between the width and height.
-         * 
+         *
          * This property is read-only and is updated automatically when either the `width` or `height` properties are changed,
          * depending on the aspect mode.
          *
@@ -140,9 +140,9 @@ var Size = new Class({
 
         /**
          * A Vector2 containing the horizontal and vertical snap values, which the width and height are snapped to during resizing.
-         * 
+         *
          * By default this is disabled.
-         * 
+         *
          * This property is read-only. To change it see the `setSnap` method.
          *
          * @name Phaser.Structs.Size#snapTo
@@ -155,19 +155,19 @@ var Size = new Class({
 
     /**
      * Sets the aspect mode of this Size component.
-     * 
+     *
      * The aspect mode controls what happens when you modify the `width` or `height` properties, or call `setSize`.
-     * 
+     *
      * It can be a number from 0 to 4, or a Size constant:
-     * 
+     *
      * 0. NONE = Do not make the size fit the aspect ratio. Change the ratio when the size changes.
      * 1. WIDTH_CONTROLS_HEIGHT = The height is automatically adjusted based on the width.
      * 2. HEIGHT_CONTROLS_WIDTH = The width is automatically adjusted based on the height.
      * 3. FIT = The width and height are automatically adjusted to fit inside the given target area, while keeping the aspect ratio. Depending on the aspect ratio there may be some space inside the area which is not covered.
      * 4. ENVELOP = The width and height are automatically adjusted to make the size cover the entire target area while keeping the aspect ratio. This may extend further out than the target size.
-     * 
+     *
      * Calling this method automatically recalculates the `width` and the `height`, if required.
-     * 
+     *
      * @method Phaser.Structs.Size#setAspectMode
      * @since 3.16.0
      *
@@ -188,14 +188,14 @@ var Size = new Class({
      * By setting a Snap To value when this Size component is modified its dimensions will automatically
      * by snapped to the nearest grid slice, using floor. For example, if you have snap value of 16,
      * and the width changes to 68, then it will snap down to 64 (the closest multiple of 16 when floored)
-     * 
+     *
      * Note that snapping takes place before adjustments by the parent, or the min / max settings. If these
      * values are not multiples of the given snap values, then this can result in un-snapped dimensions.
-     * 
+     *
      * Call this method with no arguments to reset the snap values.
-     * 
+     *
      * Calling this method automatically recalculates the `width` and the `height`, if required.
-     * 
+     *
      * @method Phaser.Structs.Size#setSnap
      * @since 3.16.0
      *
@@ -216,18 +216,18 @@ var Size = new Class({
 
     /**
      * Sets, or clears, the parent of this Size component.
-     * 
+     *
      * To clear the parent call this method with no arguments.
-     * 
+     *
      * The parent influences the maximum extents to which this Size component can expand,
      * based on the aspect mode:
-     * 
+     *
      * NONE - The parent clamps both the width and height.
      * WIDTH_CONTROLS_HEIGHT - The parent clamps just the width.
      * HEIGHT_CONTROLS_WIDTH - The parent clamps just the height.
      * FIT - The parent clamps whichever axis is required to ensure the size fits within it.
      * ENVELOP - The parent is used to ensure the size fully envelops the parent.
-     * 
+     *
      * Calling this method automatically calls `setSize`.
      *
      * @method Phaser.Structs.Size#setParent
@@ -246,11 +246,11 @@ var Size = new Class({
 
     /**
      * Set the minimum width and height values this Size component will allow.
-     * 
+     *
      * The minimum values can never be below zero, or greater than the maximum values.
-     * 
+     *
      * Setting this will automatically adjust both the `width` and `height` properties to ensure they are within range.
-     * 
+     *
      * Note that based on the aspect mode, and if this Size component has a parent set or not, the minimums set here
      * _can_ be exceed in some situations.
      *
@@ -275,9 +275,9 @@ var Size = new Class({
 
     /**
      * Set the maximum width and height values this Size component will allow.
-     * 
+     *
      * Setting this will automatically adjust both the `width` and `height` properties to ensure they are within range.
-     * 
+     *
      * Note that based on the aspect mode, and if this Size component has a parent set or not, the maximums set here
      * _can_ be exceed in some situations.
      *
@@ -302,16 +302,16 @@ var Size = new Class({
 
     /**
      * Sets the width and height of this Size component based on the aspect mode.
-     * 
+     *
      * If the aspect mode is 'none' then calling this method will change the aspect ratio, otherwise the current
      * aspect ratio is honored across all other modes.
-     * 
+     *
      * If snapTo values have been set then the given width and height are snapped first, prior to any further
      * adjustment via min/max values, or a parent.
-     * 
+     *
      * If minimum and/or maximum dimensions have been specified, the values given to this method will be clamped into
      * that range prior to adjustment, but may still exceed them depending on the aspect mode.
-     * 
+     *
      * If this Size component has a parent set, and the aspect mode is `fit` or `envelop`, then the given sizes will
      * be clamped to the range specified by the parent.
      *
@@ -327,7 +327,7 @@ var Size = new Class({
     {
         if (width === undefined) { width = 0; }
         if (height === undefined) { height = width; }
-    
+
         switch (this.aspectMode)
         {
             case Size.NONE:
@@ -360,7 +360,7 @@ var Size = new Class({
 
     /**
      * Sets a new aspect ratio, overriding what was there previously.
-     * 
+     *
      * It then calls `setSize` immediately using the current dimensions.
      *
      * @method Phaser.Structs.Size#setAspectRatio
@@ -379,7 +379,7 @@ var Size = new Class({
 
     /**
      * Sets a new width and height for this Size component and updates the aspect ratio based on them.
-     * 
+     *
      * It _doesn't_ change the `aspectMode` and still factors in size limits such as the min max and parent bounds.
      *
      * @method Phaser.Structs.Size#resize
@@ -413,7 +413,7 @@ var Size = new Class({
     getNewWidth: function (value, checkParent)
     {
         if (checkParent === undefined) { checkParent = true; }
-        
+
         value = Clamp(value, this.minWidth, this.maxWidth);
 
         if (checkParent && this._parent && value > this._parent.width)
@@ -451,10 +451,10 @@ var Size = new Class({
 
     /**
      * The current `width` and `height` are adjusted to fit inside the given dimensions, while keeping the aspect ratio.
-     * 
+     *
      * If `fit` is true there may be some space inside the target area which is not covered if its aspect ratio differs.
      * If `fit` is false the size may extend further out than the target area if the aspect ratios differ.
-     * 
+     *
      * If this Size component has a parent set, then the width and height passed to this method will be clamped so
      * it cannot exceed that of the parent.
      *
@@ -520,9 +520,9 @@ var Size = new Class({
 
     /**
      * The current `width` and `height` are adjusted to fit inside the given dimensions, while keeping the aspect ratio.
-     * 
+     *
      * There may be some space inside the target area which is not covered if its aspect ratio differs.
-     * 
+     *
      * If this Size component has a parent set, then the width and height passed to this method will be clamped so
      * it cannot exceed that of the parent.
      *
@@ -541,9 +541,9 @@ var Size = new Class({
 
     /**
      * The current `width` and `height` are adjusted so that they fully envelope the given dimensions, while keeping the aspect ratio.
-     * 
+     *
      * The size may extend further out than the target area if the aspect ratios differ.
-     * 
+     *
      * If this Size component has a parent set, then the values are clamped so that it never exceeds the parent
      * on the longest axis.
      *
@@ -562,7 +562,7 @@ var Size = new Class({
 
     /**
      * Sets the width of this Size component.
-     * 
+     *
      * Depending on the aspect mode, changing the width may also update the height and aspect ratio.
      *
      * @method Phaser.Structs.Size#setWidth
@@ -579,7 +579,7 @@ var Size = new Class({
 
     /**
      * Sets the height of this Size component.
-     * 
+     *
      * Depending on the aspect mode, changing the height may also update the width and aspect ratio.
      *
      * @method Phaser.Structs.Size#setHeight
@@ -631,7 +631,7 @@ var Size = new Class({
      *
      * @method Phaser.Structs.Size#copy
      * @since 3.16.0
-     * 
+     *
      * @param {Phaser.Structs.Size} destination - The Size component to copy the values to.
      *
      * @return {Phaser.Structs.Size} The updated destination Size component.
@@ -647,9 +647,9 @@ var Size = new Class({
 
     /**
      * Destroys this Size component.
-     * 
+     *
      * This clears the local properties and any parent object, if set.
-     * 
+     *
      * A destroyed Size component cannot be re-used.
      *
      * @method Phaser.Structs.Size#destroy
@@ -663,11 +663,11 @@ var Size = new Class({
 
     /**
      * The width of this Size component.
-     * 
+     *
      * This value is clamped to the range specified by `minWidth` and `maxWidth`, if enabled.
-     * 
+     *
      * A width can never be less than zero.
-     * 
+     *
      * Changing this value will automatically update the `height` if the aspect ratio lock is enabled.
      * You can also use the `setWidth` and `getWidth` methods.
      *
@@ -691,11 +691,11 @@ var Size = new Class({
 
     /**
      * The height of this Size component.
-     * 
+     *
      * This value is clamped to the range specified by `minHeight` and `maxHeight`, if enabled.
-     * 
+     *
      * A height can never be less than zero.
-     * 
+     *
      * Changing this value will automatically update the `width` if the aspect ratio lock is enabled.
      * You can also use the `setHeight` and `getHeight` methods.
      *
@@ -721,7 +721,7 @@ var Size = new Class({
 
 /**
  * Do not make the size fit the aspect ratio. Change the ratio when the size changes.
- * 
+ *
  * @name Phaser.Structs.Size.NONE
  * @constant
  * @type {number}
@@ -731,7 +731,7 @@ Size.NONE = 0;
 
 /**
  * The height is automatically adjusted based on the width.
- * 
+ *
  * @name Phaser.Structs.Size.WIDTH_CONTROLS_HEIGHT
  * @constant
  * @type {number}
@@ -741,7 +741,7 @@ Size.WIDTH_CONTROLS_HEIGHT = 1;
 
 /**
  * The width is automatically adjusted based on the height.
- * 
+ *
  * @name Phaser.Structs.Size.HEIGHT_CONTROLS_WIDTH
  * @constant
  * @type {number}
@@ -751,7 +751,7 @@ Size.HEIGHT_CONTROLS_WIDTH = 2;
 
 /**
  * The width and height are automatically adjusted to fit inside the given target area, while keeping the aspect ratio. Depending on the aspect ratio there may be some space inside the area which is not covered.
- * 
+ *
  * @name Phaser.Structs.Size.FIT
  * @constant
  * @type {number}
@@ -761,7 +761,7 @@ Size.FIT = 3;
 
 /**
  * The width and height are automatically adjusted to make the size cover the entire target area while keeping the aspect ratio. This may extend further out than the target size.
- * 
+ *
  * @name Phaser.Structs.Size.ENVELOP
  * @constant
  * @type {number}

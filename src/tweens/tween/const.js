@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@ var TWEEN_CONST = {
 
     /**
      * TweenData state.
-     * 
+     *
      * @name Phaser.Tweens.CREATED
      * @type {number}
      * @since 3.0.0
@@ -17,7 +17,7 @@ var TWEEN_CONST = {
 
     /**
      * TweenData state.
-     * 
+     *
      * @name Phaser.Tweens.INIT
      * @type {number}
      * @since 3.0.0
@@ -26,7 +26,7 @@ var TWEEN_CONST = {
 
     /**
      * TweenData state.
-     * 
+     *
      * @name Phaser.Tweens.DELAY
      * @type {number}
      * @since 3.0.0
@@ -35,7 +35,7 @@ var TWEEN_CONST = {
 
     /**
      * TweenData state.
-     * 
+     *
      * @name Phaser.Tweens.OFFSET_DELAY
      * @type {number}
      * @since 3.0.0
@@ -44,7 +44,7 @@ var TWEEN_CONST = {
 
     /**
      * TweenData state.
-     * 
+     *
      * @name Phaser.Tweens.PENDING_RENDER
      * @type {number}
      * @since 3.0.0
@@ -53,7 +53,7 @@ var TWEEN_CONST = {
 
     /**
      * TweenData state.
-     * 
+     *
      * @name Phaser.Tweens.PLAYING_FORWARD
      * @type {number}
      * @since 3.0.0
@@ -62,7 +62,7 @@ var TWEEN_CONST = {
 
     /**
      * TweenData state.
-     * 
+     *
      * @name Phaser.Tweens.PLAYING_BACKWARD
      * @type {number}
      * @since 3.0.0
@@ -71,7 +71,7 @@ var TWEEN_CONST = {
 
     /**
      * TweenData state.
-     * 
+     *
      * @name Phaser.Tweens.HOLD_DELAY
      * @type {number}
      * @since 3.0.0
@@ -80,7 +80,7 @@ var TWEEN_CONST = {
 
     /**
      * TweenData state.
-     * 
+     *
      * @name Phaser.Tweens.REPEAT_DELAY
      * @type {number}
      * @since 3.0.0
@@ -89,7 +89,7 @@ var TWEEN_CONST = {
 
     /**
      * TweenData state.
-     * 
+     *
      * @name Phaser.Tweens.COMPLETE
      * @type {number}
      * @since 3.0.0
@@ -100,7 +100,7 @@ var TWEEN_CONST = {
 
     /**
      * Tween state.
-     * 
+     *
      * @name Phaser.Tweens.PENDING_ADD
      * @type {number}
      * @since 3.0.0
@@ -109,7 +109,7 @@ var TWEEN_CONST = {
 
     /**
      * Tween state.
-     * 
+     *
      * @name Phaser.Tweens.PAUSED
      * @type {number}
      * @since 3.0.0
@@ -118,7 +118,7 @@ var TWEEN_CONST = {
 
     /**
      * Tween state.
-     * 
+     *
      * @name Phaser.Tweens.LOOP_DELAY
      * @type {number}
      * @since 3.0.0
@@ -127,7 +127,7 @@ var TWEEN_CONST = {
 
     /**
      * Tween state.
-     * 
+     *
      * @name Phaser.Tweens.ACTIVE
      * @type {number}
      * @since 3.0.0
@@ -136,7 +136,7 @@ var TWEEN_CONST = {
 
     /**
      * Tween state.
-     * 
+     *
      * @name Phaser.Tweens.COMPLETE_DELAY
      * @type {number}
      * @since 3.0.0
@@ -145,7 +145,7 @@ var TWEEN_CONST = {
 
     /**
      * Tween state.
-     * 
+     *
      * @name Phaser.Tweens.PENDING_REMOVE
      * @type {number}
      * @since 3.0.0
@@ -154,7 +154,7 @@ var TWEEN_CONST = {
 
     /**
      * Tween state.
-     * 
+     *
      * @name Phaser.Tweens.REMOVED
      * @type {number}
      * @since 3.0.0

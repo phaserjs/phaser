@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,7 @@ var Angular = {
 
     /**
      * Sets the angular velocity of the body.
-     * 
+     *
      * In Arcade Physics, bodies cannot rotate. They are always axis-aligned.
      * However, they can have angular motion, which is passed on to the Game Object bound to the body,
      * causing them to visually rotate, even though the body remains axis-aligned.
@@ -35,7 +35,7 @@ var Angular = {
 
     /**
      * Sets the angular acceleration of the body.
-     * 
+     *
      * In Arcade Physics, bodies cannot rotate. They are always axis-aligned.
      * However, they can have angular motion, which is passed on to the Game Object bound to the body,
      * causing them to visually rotate, even though the body remains axis-aligned.

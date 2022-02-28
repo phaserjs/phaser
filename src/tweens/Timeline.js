@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -237,9 +237,9 @@ var Timeline = new Class({
 
         /**
          * An object containing the different Tween callback functions.
-         * 
+         *
          * You can either set these in the Tween config, or by calling the `Tween.setCallback` method.
-         * 
+         *
          * `onComplete` When the Timeline finishes playback fully or `Timeline.stop` is called. Never invoked if timeline is set to repeat infinitely.
          * `onLoop` When a Timeline loops.
          * `onStart` When the Timeline starts playing.
@@ -290,7 +290,7 @@ var Timeline = new Class({
     /**
      * Sets the value of the time scale applied to this Timeline. A value of 1 runs in real-time.
      * A value of 0.5 runs 50% slower, and so on.
-     * 
+     *
      * The value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
      *
      * @method Phaser.Tweens.Timeline#setTimeScale
@@ -466,9 +466,9 @@ var Timeline = new Class({
 
     /**
      * Calculates the total duration of the timeline.
-     * 
+     *
      * Computes all tween durations and returns the full duration of the timeline.
-     * 
+     *
      * The resulting number is stored in the timeline, not as a return value.
      *
      * @method Phaser.Tweens.Timeline#calcDuration
@@ -800,7 +800,7 @@ var Timeline = new Class({
 
     /**
      * Pauses the Timeline, retaining its internal state.
-     * 
+     *
      * Calling this on a Timeline that is already paused has no effect and fires no event.
      *
      * @method Phaser.Tweens.Timeline#pause
@@ -829,7 +829,7 @@ var Timeline = new Class({
 
     /**
      * Resumes a paused Timeline from where it was when it was paused.
-     * 
+     *
      * Calling this on a Timeline that isn't paused has no effect and fires no event.
      *
      * @method Phaser.Tweens.Timeline#resume
@@ -854,7 +854,7 @@ var Timeline = new Class({
 
     /**
      * Checks if any of the Tweens in this Timeline as operating on the target object.
-     * 
+     *
      * Returns `false` if no Tweens operate on the target object.
      *
      * @method Phaser.Tweens.Timeline#hasTarget

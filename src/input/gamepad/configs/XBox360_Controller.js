@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,7 +15,7 @@ module.exports = {
 
     /**
      * D-Pad up
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.UP
      * @const
      * @type {number}
@@ -25,7 +25,7 @@ module.exports = {
 
     /**
      * D-Pad down
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.DOWN
      * @const
      * @type {number}
@@ -35,7 +35,7 @@ module.exports = {
 
     /**
      * D-Pad left
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.LEFT
      * @const
      * @type {number}
@@ -45,7 +45,7 @@ module.exports = {
 
     /**
      * D-Pad right
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.RIGHT
      * @const
      * @type {number}
@@ -55,7 +55,7 @@ module.exports = {
 
     /**
      * XBox menu button
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.MENU
      * @const
      * @type {number}
@@ -65,7 +65,7 @@ module.exports = {
 
     /**
      * A button (Bottom)
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.A
      * @const
      * @type {number}
@@ -75,7 +75,7 @@ module.exports = {
 
     /**
      * B button (Right)
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.B
      * @const
      * @type {number}
@@ -85,7 +85,7 @@ module.exports = {
 
     /**
      * X button (Left)
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.X
      * @const
      * @type {number}
@@ -95,7 +95,7 @@ module.exports = {
 
     /**
      * Y button (Top)
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.Y
      * @const
      * @type {number}
@@ -105,7 +105,7 @@ module.exports = {
 
     /**
      * Left Bumper
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.LB
      * @const
      * @type {number}
@@ -115,7 +115,7 @@ module.exports = {
 
     /**
      * Right Bumper
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.RB
      * @const
      * @type {number}
@@ -125,7 +125,7 @@ module.exports = {
 
     /**
      * Left Trigger
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.LT
      * @const
      * @type {number}
@@ -135,7 +135,7 @@ module.exports = {
 
     /**
      * Right Trigger
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.RT
      * @const
      * @type {number}
@@ -145,7 +145,7 @@ module.exports = {
 
     /**
      * Back / Change View button
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.BACK
      * @const
      * @type {number}
@@ -155,7 +155,7 @@ module.exports = {
 
     /**
      * Start button
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.START
      * @const
      * @type {number}
@@ -165,7 +165,7 @@ module.exports = {
 
     /**
      * Left Stick press
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.LS
      * @const
      * @type {number}
@@ -175,7 +175,7 @@ module.exports = {
 
     /**
      * Right stick press
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.RS
      * @const
      * @type {number}
@@ -185,7 +185,7 @@ module.exports = {
 
     /**
      * Left Stick horizontal
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.LEFT_STICK_H
      * @const
      * @type {number}
@@ -195,7 +195,7 @@ module.exports = {
 
     /**
      * Left Stick vertical
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.LEFT_STICK_V
      * @const
      * @type {number}
@@ -205,7 +205,7 @@ module.exports = {
 
     /**
      * Right Stick horizontal
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.RIGHT_STICK_H
      * @const
      * @type {number}
@@ -215,7 +215,7 @@ module.exports = {
 
     /**
      * Right Stick vertical
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.RIGHT_STICK_V
      * @const
      * @type {number}
