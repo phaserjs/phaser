@@ -523,6 +523,9 @@ export class Parser {
 
                 types.push(type);
             }
+            if (typeDoc.nullable) {
+                types.push(dom.type.null);
+            }
             if (types.length == 1) return types[0];
             else return dom.create.union(types);
         }
