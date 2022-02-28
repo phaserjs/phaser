@@ -1221,6 +1221,11 @@ var SceneManager = new Class({
 
         if (scene && !scene.sys.isTransitioning() && scene.sys.settings.status !== CONST.SHUTDOWN)
         {
+            var loader = scene.sys.load;
+
+            loader.off(LoaderEvents.COMPLETE, this.loadComplete, this);
+            loader.off(LoaderEvents.COMPLETE, this.payloadComplete, this);
+
             scene.sys.shutdown(data);
         }
 
