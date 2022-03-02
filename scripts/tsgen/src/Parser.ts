@@ -486,7 +486,7 @@ export class Parser {
                     continue;
                 }
 
-                let param = dom.create.parameter(paramDoc.name, this.parseType(paramDoc));
+                let param = dom.create.parameter(paramDoc.name, this.parseType(paramDoc, dom.type.undefined));
                 parameters.push(param);
 
                 if (optional && paramDoc.optional != true) {
@@ -510,7 +510,7 @@ export class Parser {
         obj.parameters = parameters;
     }
 
-    private parseType(typeDoc: any): dom.Type {
+    private parseType(typeDoc: any, nullableType = dom.type.null): dom.Type {
         if (!typeDoc || !typeDoc.type) {
             return dom.type.any;
         } else {
@@ -524,7 +524,7 @@ export class Parser {
                 types.push(type);
             }
             if (typeDoc.nullable) {
-                types.push(dom.type.null);
+                types.push(nullableType);
             }
             if (types.length == 1) return types[0];
             else return dom.create.union(types);
