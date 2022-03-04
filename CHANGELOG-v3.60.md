@@ -138,6 +138,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `path` package used by the TS Defs generator has been moved to `devDependencies` (thanks @antkhnvsk)
 * The `GetValue` function has a new optional parameter `altSource` which allows you to provide an alternative object to source the value from.
 * The `Renderer.Snapshot.WebGL` function has had its first parameter changed from an `HTMLCanvasElement` to a `WebGLRenderingContext`. This is now passed in from the `snapshot` methods inside the WebGL Renderer. The change was made to allow it to work with WebGL2 custom contexts (thanks @andymikulski)
+* If you start a Scene that is already starting (START, LOADING, or CREATING) then the start operation is now ignored (thanks @samme)
+* If you start a Scene that is Sleeping, it is shut down before starting again. This matches how Phaser currently handles paused scenes (thanks @samme)
 
 ### Bug Fixes
 
