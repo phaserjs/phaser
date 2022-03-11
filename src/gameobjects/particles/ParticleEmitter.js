@@ -1865,9 +1865,9 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#explode
      * @since 3.0.0
      *
-     * @param {number} count - The amount of Particles to emit.
-     * @param {number} x - The x coordinate to emit the Particles from.
-     * @param {number} y - The y coordinate to emit the Particles from.
+     * @param {number} [count=this.quantity] - The number of Particles to emit.
+     * @param {number} [x=this.x] - The x coordinate to emit the Particles from.
+     * @param {number} [y=this.x] - The y coordinate to emit the Particles from.
      *
      * @return {Phaser.GameObjects.Particles.Particle} The most recently emitted Particle.
      */
