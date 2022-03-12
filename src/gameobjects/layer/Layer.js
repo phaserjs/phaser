@@ -934,7 +934,7 @@ var Layer = new Class({
      * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.50.0
      */
-    destroy: function ()
+    destroy: function (fromScene)
     {
         //  This Game Object has already been destroyed
         if (!this.scene || this.ignoreDestroy)
@@ -944,11 +944,11 @@ var Layer = new Class({
 
         this.emit(GameObjectEvents.DESTROY, this);
 
-        var i = this.list.length;
+        var list = this.list;
 
-        while (i--)
+        while (list.length)
         {
-            this.list[i].destroy();
+            list[0].destroy(fromScene);
         }
 
         this.removeAllListeners();
