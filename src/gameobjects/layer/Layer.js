@@ -933,6 +933,8 @@ var Layer = new Class({
      * @method Phaser.GameObjects.Layer#destroy
      * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.50.0
+     * 
+     * @param {boolean} [fromScene=false] - `True` if this Game Object is being destroyed by the Scene, `false` if not.
      */
     destroy: function (fromScene)
     {
