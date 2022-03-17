@@ -66,14 +66,9 @@ var Rectangle = new Class({
     },
 
     /**
-     * Sets the internal size of this Game Object, as used for frame or physics body creation.
+     * Sets the internal size of this Rectangle, as used for frame or physics body creation.
      *
-     * This will not change the size that the Game Object is rendered in-game.
-     * For that you need to either set the scale of the Game Object (`setScale`) or call the
-     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
-     * to do so by giving pixel values.
-     *
-     * If you have enabled this Game Object for input, changing the size will _not_ change the
+     * If you have assigned a custom input hit area for this Rectangle, changing the Rectangle size will _not_ change the
      * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
      *
      * @method Phaser.GameObjects.Rectangle#setSize
