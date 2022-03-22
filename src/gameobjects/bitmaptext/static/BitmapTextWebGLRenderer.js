@@ -38,6 +38,18 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
+    if (src.isCropped)
+    {
+        pipeline.flush();
+
+        renderer.pushScissor(
+            (src.cropX * calcMatrix.scaleX) + calcMatrix.tx,
+            (src.cropY * calcMatrix.scaleY) + calcMatrix.ty,
+            src.cropWidth * calcMatrix.scaleX,
+            src.cropHeight * calcMatrix.scaleY
+        );
+    }
+
     var roundPixels = camera.roundPixels;
 
     var cameraAlpha = camera.alpha;
@@ -125,6 +137,13 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
         //  Debug test if the characters are in the correct place when rendered:
         // pipeline.drawFillRect(tx0, ty0, tx2 - tx0, ty2 - ty0, 0x00ff00, 0.5);
+    }
+
+    if (src.isCropped)
+    {
+        pipeline.flush();
+
+        renderer.popScissor();
     }
 
     renderer.pipelines.postBatch(src);

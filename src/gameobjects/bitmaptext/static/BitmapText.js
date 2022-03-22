@@ -274,6 +274,58 @@ var BitmapText = new Class({
          */
         this.fromAtlas = entry.fromAtlas;
 
+        /**
+         * A boolean flag indicating if this Game Object is being cropped or not.
+         * You can toggle this at any time after `setCrop` has been called, to turn cropping on or off.
+         * Equally, calling `setCrop` with no arguments will reset the crop and disable it.
+         *
+         * @name Phaser.GameObjects.BitmapText#isCropped
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.isCropped = false;
+
+        /**
+         * The x coordinate to start the crop from.
+         *
+         * @name Phaser.GameObjects.BitmapText#cropX
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.cropX = 0;
+ 
+        /**
+         * The y coordinate to start the crop from.
+         *
+         * @name Phaser.GameObjects.BitmapText#cropY
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.cropY = 0;
+ 
+        /**
+         * The crop width of the Bitmap Text.
+         *
+         * @name Phaser.GameObjects.BitmapText#cropWidth
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.cropWidth = 0;
+ 
+        /**
+         * The crop height of the Bitmap Text.
+         *
+         * @name Phaser.GameObjects.BitmapText#cropHeight
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.cropHeight = 0;
+ 
+
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
@@ -631,6 +683,63 @@ var BitmapText = new Class({
             }
         }
 
+        return this;
+    },
+
+
+    /**
+     * Applies a crop to this Bitmap Text.
+     *
+     * The crop is a rectangle that limits the area of this Bitmap Text that is visible during rendering.
+     *
+     * Cropping a Game Object does not change its size, dimensions, physics body or hit area, it just
+     * changes what is shown when rendered.
+     * You can either pass in numeric values directly, or you can provide a single Rectangle object as the first argument.
+     *
+     * Call this method with no arguments at all to reset the crop, or toggle the property `isCropped` to `false`.
+     *
+     * You should do this if the crop rectangle becomes the same size as this Bitmap Text itself, as it will allow
+     * the renderer to skip several internal calculations.
+     *
+     * @method Phaser.GameObjects.DynamicBitmapText#setCrop
+     * @since 3.60.0
+     *
+     * @param {(number|Phaser.Geom.Rectangle)} [x] - The x coordinate to start the crop from. Or a Phaser.Geom.Rectangle object, in which case the rest of the arguments are ignored.
+     * @param {number} [y] - The y coordinate to start the crop from.
+     * @param {number} [width] - The width of the crop rectangle in pixels.
+     * @param {number} [height] - The height of the crop rectangle in pixels.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setCrop: function (x, y, width, height)
+    {
+        if (x === undefined)
+        {
+            this.isCropped = false;
+        }
+        else
+        {
+            if (typeof x === 'number')
+            {
+                this.cropX = x;
+                this.cropY = y;
+                this.cropWidth = width;
+                this.cropHeight = height;
+ 
+            }
+            else
+            {
+                var rect = x;
+ 
+                this.cropX = rect.x;
+                this.cropY = rect.y;
+                this.cropWidth = rect.width;
+                this.cropHeight = rect.height;
+            }
+ 
+            this.isCropped = true;
+        }
+ 
         return this;
     },
 

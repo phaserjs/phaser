@@ -93,10 +93,10 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, camera, parentMat
 
     var roundPixels = camera.roundPixels;
 
-    if (src.cropWidth > 0 && src.cropHeight > 0)
+    if (src.isCropped)
     {
         ctx.beginPath();
-        ctx.rect(0, 0, src.cropWidth, src.cropHeight);
+        ctx.rect(src.cropX, src.cropY, src.cropWidth, src.cropHeight);
         ctx.clip();
     }
 

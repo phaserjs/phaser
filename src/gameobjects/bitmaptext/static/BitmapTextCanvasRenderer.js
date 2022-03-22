@@ -95,6 +95,13 @@ var BitmapTextCanvasRenderer = function (renderer, src, camera, parentMatrix)
 
     var roundPixels = camera.roundPixels;
 
+    if (src.isCropped)
+    {
+        ctx.beginPath();
+        ctx.rect(src.cropX, src.cropY, src.cropWidth, src.cropHeight);
+        ctx.clip();
+    }
+
     for (var i = 0; i < textLength; i++)
     {
         charCode = text.charCodeAt(i);

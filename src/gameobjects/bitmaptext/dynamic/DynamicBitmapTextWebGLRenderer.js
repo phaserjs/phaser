@@ -45,15 +45,13 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
 
     var fontMatrix = tempMatrix;
 
-    var crop = (src.cropWidth > 0 || src.cropHeight > 0);
-
-    if (crop)
+    if (src.isCropped)
     {
         pipeline.flush();
 
         renderer.pushScissor(
-            calcMatrix.tx,
-            calcMatrix.ty,
+            (src.cropX * calcMatrix.scaleX) + calcMatrix.tx,
+            (src.cropY * calcMatrix.scaleY) + calcMatrix.ty,
             src.cropWidth * calcMatrix.scaleX,
             src.cropHeight * calcMatrix.scaleY
         );
@@ -269,7 +267,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
         pipeline.batchQuad(src, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
     }
 
-    if (crop)
+    if (src.isCropped)
     {
         pipeline.flush();
 
