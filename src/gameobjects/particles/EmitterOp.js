@@ -238,6 +238,12 @@ var EmitterOp = new Class({
         this.onEmit = this.defaultEmit;
         this.onUpdate = this.defaultUpdate;
 
+        //  `moveToX` and `moveToY` are null by default
+        if (value === null)
+        {
+            return;
+        }
+
         if (t === 'number')
         {
             //  Explicit static value:
