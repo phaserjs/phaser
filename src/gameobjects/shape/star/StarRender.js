@@ -5,6 +5,7 @@
  */
 
 var NOOP = require('../../../utils/NOOP');
+var renderWebGL = NOOP, renderCanvas = NOOP;
 
 if (typeof WEBGL_RENDERER)
 {
