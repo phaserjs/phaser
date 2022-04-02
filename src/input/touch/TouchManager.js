@@ -209,7 +209,7 @@ var TouchManager = new Class({
      */
     disableContextMenu: function ()
     {
-        document.body.addEventListener('contextmenu', function (event)
+        this.target.addEventListener('contextmenu', function (event)
         {
             event.preventDefault();
             return false;
