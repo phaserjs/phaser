@@ -312,8 +312,10 @@ var Common = require('../core/Common');
      */
     Constraint.pointAWorld = function(constraint) {
         return {
-            x: (constraint.bodyA ? constraint.bodyA.position.x : 0) + constraint.pointA.x,
-            y: (constraint.bodyA ? constraint.bodyA.position.y : 0) + constraint.pointA.y
+            x: (constraint.bodyA ? constraint.bodyA.position.x : 0) 
+                + (constraint.pointA ? constraint.pointA.x : 0),
+            y: (constraint.bodyA ? constraint.bodyA.position.y : 0) 
+                + (constraint.pointA ? constraint.pointA.y : 0)
         };
     };
 
@@ -325,8 +327,10 @@ var Common = require('../core/Common');
      */
     Constraint.pointBWorld = function(constraint) {
         return {
-            x: (constraint.bodyB ? constraint.bodyB.position.x : 0) + constraint.pointB.x,
-            y: (constraint.bodyB ? constraint.bodyB.position.y : 0) + constraint.pointB.y
+            x: (constraint.bodyB ? constraint.bodyB.position.x : 0) 
+                + (constraint.pointB ? constraint.pointB.x : 0),
+            y: (constraint.bodyB ? constraint.bodyB.position.y : 0) 
+                + (constraint.pointB ? constraint.pointB.y : 0)
         };
     };
 

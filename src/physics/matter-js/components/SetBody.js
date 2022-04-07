@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22,7 +22,7 @@ var SetBody = {
 
     /**
      * Set the body on a Game Object to a rectangle.
-     * 
+     *
      * Calling this methods resets previous properties you may have set on the body, including
      * plugins, mass, friction, etc. So be sure to re-apply these in the options object if needed.
      *
@@ -42,7 +42,7 @@ var SetBody = {
 
     /**
      * Set the body on a Game Object to a circle.
-     * 
+     *
      * Calling this methods resets previous properties you may have set on the body, including
      * plugins, mass, friction, etc. So be sure to re-apply these in the options object if needed.
      *
@@ -61,7 +61,7 @@ var SetBody = {
 
     /**
      * Set the body on the Game Object to a polygon shape.
-     * 
+     *
      * Calling this methods resets previous properties you may have set on the body, including
      * plugins, mass, friction, etc. So be sure to re-apply these in the options object if needed.
      *
@@ -81,7 +81,7 @@ var SetBody = {
 
     /**
      * Set the body on the Game Object to a trapezoid shape.
-     * 
+     *
      * Calling this methods resets previous properties you may have set on the body, including
      * plugins, mass, friction, etc. So be sure to re-apply these in the options object if needed.
      *
@@ -102,7 +102,7 @@ var SetBody = {
 
     /**
      * Set this Game Object to use the given existing Matter Body.
-     * 
+     *
      * The body is first removed from the world before being added to this Game Object.
      *
      * @method Phaser.Physics.Matter.Components.SetBody#setExistingBody
@@ -174,7 +174,7 @@ var SetBody = {
 
     /**
      * Set this Game Object to create and use a new Body based on the configuration object given.
-     * 
+     *
      * Calling this method resets previous properties you may have set on the body, including
      * plugins, mass, friction, etc. So be sure to re-apply these in the options object if needed.
      *
@@ -255,7 +255,7 @@ var SetBody = {
                         var flagInternal = GetFastValue(config, 'flagInternal', false);
                         var removeCollinear = GetFastValue(config, 'removeCollinear', 0.01);
                         var minimumArea = GetFastValue(config, 'minimumArea', 10);
-    
+
                         body = Bodies.fromVertices(bodyX, bodyY, verts, options, flagInternal, removeCollinear, minimumArea);
                     }
                 }

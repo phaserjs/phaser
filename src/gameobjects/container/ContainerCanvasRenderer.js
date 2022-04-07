@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -86,7 +86,7 @@ var ContainerCanvasRenderer = function (renderer, container, camera, parentMatri
         child.setAlpha(childAlpha * alpha);
 
         //  Render
-        child.renderCanvas(renderer, child, camera, transformMatrix);
+        child.renderCanvas(renderer, child, camera, transformMatrix, container);
 
         //  Restore original values
         child.setAlpha(childAlpha);

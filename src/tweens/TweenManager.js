@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -205,6 +205,8 @@ var TweenManager = new Class({
 
     /**
      * Create a Tween and add it to the active Tween list.
+     *
+     * Please note that a Tween will not manipulate any property that begins with an underscore.
      *
      * @method Phaser.Tweens.TweenManager#add
      * @since 3.0.0
@@ -440,6 +442,30 @@ var TweenManager = new Class({
         ArrayRemove(this._destroy, tween);
 
         tween.state = TWEEN_CONST.REMOVED;
+
+        return this;
+    },
+
+    /**
+     * Resets the given tween. This will remove it from all TweenManager arrays, then call
+     * `Tween.seek(0)`, add it to the active array and make it active.
+     *
+     * @method Phaser.Tweens.TweenManager#reset
+     * @since 3.60.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - The Tween to be reset.
+     *
+     * @return {Phaser.Tweens.TweenManager} This Tween Manager object.
+     */
+    reset: function (tween)
+    {
+        this.remove(tween);
+
+        this._active.push(tween);
+
+        tween.seek(0);
+
+        tween.state = TWEEN_CONST.ACTIVE;
 
         return this;
     },

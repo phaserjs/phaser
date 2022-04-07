@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -100,8 +100,6 @@ var AtlasJSONFile = new Class({
 
             this.loader.textureManager.addAtlas(image.key, image.data, json.data, normalMap);
 
-            json.pendingDestroy();
-
             this.complete = true;
         }
     }
@@ -132,7 +130,16 @@ var AtlasJSONFile = new Class({
  * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
  *
  * Phaser expects the atlas data to be provided in a JSON file, using either the JSON Hash or JSON Array format.
- * These files are created by software such as Texture Packer, Shoebox and Adobe Flash / Animate.
+ *
+ * These files are created by software such as:
+ *
+ * * [Texture Packer](https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?source=photonstorm)
+ * * [Shoebox](https://renderhjs.net/shoebox/)
+ * * [Gamma Texture Packer](https://gammafp.com/tool/atlas-packer/)
+ * * [Adobe Flash / Animate](https://www.adobe.com/uk/products/animate.html)
+ * * [Free Texture Packer](http://free-tex-packer.com/)
+ * * [Leshy SpriteSheet Tool](https://www.leshylabs.com/apps/sstool/)
+ *
  * If you are using Texture Packer and have enabled multi-atlas support, then please use the Phaser Multi Atlas loader
  * instead of this one.
  *

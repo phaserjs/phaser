@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -97,7 +97,6 @@ var BitmapFontFile = new Class({
             var xml = this.files[1];
 
             image.addToCache();
-            xml.pendingDestroy();
 
             var texture = image.cache.get(image.key);
 

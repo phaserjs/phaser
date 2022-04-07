@@ -6,6 +6,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -696,7 +698,7 @@ var spine;
                 .setAttachment(attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
         };
         AttachmentTimeline.prototype.setAttachment = function (skeleton, slot, attachmentName) {
-            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName);
+            slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
         };
         return AttachmentTimeline;
     }());
@@ -1496,7 +1498,7 @@ var spine;
                 var slot = slots[i];
                 if (slot.attachmentState == setupState) {
                     var attachmentName = slot.data.attachmentName;
-                    slot.attachment = (attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
+                    slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
                 }
             }
             this.unkeyedState += 2;
@@ -1609,7 +1611,7 @@ var spine;
                 slot.attachmentState = this.unkeyedState + AnimationState.SETUP;
         };
         AnimationState.prototype.setAttachment = function (skeleton, slot, attachmentName, attachments) {
-            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName);
+            slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
             if (attachments)
                 slot.attachmentState = this.unkeyedState + AnimationState.CURRENT;
         };
@@ -2239,9 +2241,9 @@ var spine;
                 _this.toLoad--;
                 _this.loaded++;
             }, function (state, responseText) {
-                _this.errors[path] = "Couldn't load binary " + path + ": status " + status + ", " + responseText;
+                _this.errors[path] = "Couldn't load binary ".concat(path, ": status ").concat(status, ", ").concat(responseText);
                 if (error)
-                    error(path, "Couldn't load binary " + path + ": status " + status + ", " + responseText);
+                    error(path, "Couldn't load binary ".concat(path, ": status ").concat(status, ", ").concat(responseText));
                 _this.toLoad--;
                 _this.loaded++;
             });
@@ -2259,9 +2261,9 @@ var spine;
                 _this.toLoad--;
                 _this.loaded++;
             }, function (state, responseText) {
-                _this.errors[path] = "Couldn't load text " + path + ": status " + status + ", " + responseText;
+                _this.errors[path] = "Couldn't load text ".concat(path, ": status ").concat(status, ", ").concat(responseText);
                 if (error)
-                    error(path, "Couldn't load text " + path + ": status " + status + ", " + responseText);
+                    error(path, "Couldn't load text ".concat(path, ": status ").concat(status, ", ").concat(responseText));
                 _this.toLoad--;
                 _this.loaded++;
             });
@@ -2284,11 +2286,11 @@ var spine;
                     success(path, img);
             };
             img.onerror = function (ev) {
-                _this.errors[path] = "Couldn't load image " + path;
+                _this.errors[path] = "Couldn't load image ".concat(path);
                 _this.toLoad--;
                 _this.loaded++;
                 if (error)
-                    error(path, "Couldn't load image " + path);
+                    error(path, "Couldn't load image ".concat(path));
             };
             if (this.rawDataUris[path])
                 path = this.rawDataUris[path];
@@ -2315,9 +2317,9 @@ var spine;
                 }
                 catch (e) {
                     var ex = e;
-                    _this.errors[path] = "Couldn't load texture atlas " + path + ": " + ex.message;
+                    _this.errors[path] = "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message);
                     if (error)
-                        error(path, "Couldn't load texture atlas " + path + ": " + ex.message);
+                        error(path, "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message));
                     _this.toLoad--;
                     _this.loaded++;
                     return;
@@ -2340,17 +2342,17 @@ var spine;
                                 }
                                 catch (e) {
                                     var ex = e;
-                                    _this.errors[path] = "Couldn't load texture atlas " + path + ": " + ex.message;
+                                    _this.errors[path] = "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message);
                                     if (error)
-                                        error(path, "Couldn't load texture atlas " + path + ": " + ex.message);
+                                        error(path, "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message));
                                     _this.toLoad--;
                                     _this.loaded++;
                                 }
                             }
                             else {
-                                _this.errors[path] = "Couldn't load texture atlas page " + imagePath + "} of atlas " + path;
+                                _this.errors[path] = "Couldn't load texture atlas page ".concat(imagePath, "} of atlas ").concat(path);
                                 if (error)
-                                    error(path, "Couldn't load texture atlas page " + imagePath + " of atlas " + path);
+                                    error(path, "Couldn't load texture atlas page ".concat(imagePath, " of atlas ").concat(path));
                                 _this.toLoad--;
                                 _this.loaded++;
                             }
@@ -2359,9 +2361,9 @@ var spine;
                         pageLoadError = true;
                         pagesLoaded.count++;
                         if (pagesLoaded.count == atlasPages.length) {
-                            _this.errors[path] = "Couldn't load texture atlas page " + imagePath + "} of atlas " + path;
+                            _this.errors[path] = "Couldn't load texture atlas page ".concat(imagePath, "} of atlas ").concat(path);
                             if (error)
-                                error(path, "Couldn't load texture atlas page " + imagePath + " of atlas " + path);
+                                error(path, "Couldn't load texture atlas page ".concat(imagePath, " of atlas ").concat(path));
                             _this.toLoad--;
                             _this.loaded++;
                         }
@@ -2372,9 +2374,9 @@ var spine;
                     _loop_1(atlasPage);
                 }
             }, function (state, responseText) {
-                _this.errors[path] = "Couldn't load texture atlas " + path + ": status " + status + ", " + responseText;
+                _this.errors[path] = "Couldn't load texture atlas ".concat(path, ": status ").concat(status, ", ").concat(responseText);
                 if (error)
-                    error(path, "Couldn't load texture atlas " + path + ": status " + status + ", " + responseText);
+                    error(path, "Couldn't load texture atlas ".concat(path, ": status ").concat(status, ", ").concat(responseText));
                 _this.toLoad--;
                 _this.loaded++;
             });
@@ -3540,7 +3542,7 @@ var spine;
                         _this.rawAssets[path] = request.responseText;
                     }
                     else {
-                        _this.errors[path] = "Couldn't load text " + path + ": status " + request.status + ", " + request.responseText;
+                        _this.errors[path] = "Couldn't load text ".concat(path, ": status ").concat(request.status, ", ").concat(request.responseText);
                     }
                 }
             };
@@ -3560,7 +3562,7 @@ var spine;
                         _this.rawAssets[path] = JSON.parse(request.responseText);
                     }
                     else {
-                        _this.errors[path] = "Couldn't load text " + path + ": status " + request.status + ", " + request.responseText;
+                        _this.errors[path] = "Couldn't load text ".concat(path, ": status ").concat(request.status, ", ").concat(request.responseText);
                     }
                 }
             };
@@ -3597,7 +3599,7 @@ var spine;
                     _this.rawAssets[path] = img_1;
                 };
                 img_1.onerror = function (ev) {
-                    _this.errors[path] = "Couldn't load image " + path;
+                    _this.errors[path] = "Couldn't load image ".concat(path);
                 };
                 img_1.src = path;
             }
@@ -6251,7 +6253,7 @@ var spine;
                 return spine.BlendMode.Multiply;
             if (str == "screen")
                 return spine.BlendMode.Screen;
-            throw new Error("Unknown blend mode: " + str);
+            throw new Error("Unknown blend mode: ".concat(str));
         };
         SkeletonJson.positionModeFromString = function (str) {
             str = str.toLowerCase();
@@ -6259,7 +6261,7 @@ var spine;
                 return spine.PositionMode.Fixed;
             if (str == "percent")
                 return spine.PositionMode.Percent;
-            throw new Error("Unknown position mode: " + str);
+            throw new Error("Unknown position mode: ".concat(str));
         };
         SkeletonJson.spacingModeFromString = function (str) {
             str = str.toLowerCase();
@@ -6269,7 +6271,7 @@ var spine;
                 return spine.SpacingMode.Fixed;
             if (str == "percent")
                 return spine.SpacingMode.Percent;
-            throw new Error("Unknown position mode: " + str);
+            throw new Error("Unknown position mode: ".concat(str));
         };
         SkeletonJson.rotateModeFromString = function (str) {
             str = str.toLowerCase();
@@ -6279,7 +6281,7 @@ var spine;
                 return spine.RotateMode.Chain;
             if (str == "chainscale")
                 return spine.RotateMode.ChainScale;
-            throw new Error("Unknown rotate mode: " + str);
+            throw new Error("Unknown rotate mode: ".concat(str));
         };
         SkeletonJson.transformModeFromString = function (str) {
             str = str.toLowerCase();
@@ -6293,7 +6295,7 @@ var spine;
                 return spine.TransformMode.NoScale;
             if (str == "noscaleorreflection")
                 return spine.TransformMode.NoScaleOrReflection;
-            throw new Error("Unknown transform mode: " + str);
+            throw new Error("Unknown transform mode: ".concat(str));
         };
         return SkeletonJson;
     }());
@@ -6558,7 +6560,7 @@ var spine;
                 case "mipmaplinearnearest": return TextureFilter.MipMapLinearNearest;
                 case "mipmapnearestlinear": return TextureFilter.MipMapNearestLinear;
                 case "mipmaplinearlinear": return TextureFilter.MipMapLinearLinear;
-                default: throw new Error("Unknown texture filter " + text);
+                default: throw new Error("Unknown texture filter ".concat(text));
             }
         };
         Texture.wrapFromString = function (text) {
@@ -6566,7 +6568,7 @@ var spine;
                 case "mirroredtepeat": return TextureWrap.MirroredRepeat;
                 case "clamptoedge": return TextureWrap.ClampToEdge;
                 case "repeat": return TextureWrap.Repeat;
-                default: throw new Error("Unknown texture wrap " + text);
+                default: throw new Error("Unknown texture wrap ".concat(text));
             }
         };
         return Texture;
@@ -9528,14 +9530,14 @@ var spine;
                 var gl = this.context.gl;
                 var location = gl.getUniformLocation(this.program, uniform);
                 if (!location && !gl.isContextLost())
-                    throw new Error("Couldn't find location for uniform " + uniform);
+                    throw new Error("Couldn't find location for uniform ".concat(uniform));
                 return location;
             };
             Shader.prototype.getAttributeLocation = function (attribute) {
                 var gl = this.context.gl;
                 var location = gl.getAttribLocation(this.program, attribute);
                 if (location == -1 && !gl.isContextLost())
-                    throw new Error("Couldn't find location for attribute " + attribute);
+                    throw new Error("Couldn't find location for attribute ".concat(attribute));
                 return location;
             };
             Shader.prototype.dispose = function () {
@@ -9555,17 +9557,17 @@ var spine;
                 }
             };
             Shader.newColoredTextured = function (context) {
-                var vs = "\n\t\t\t\tattribute vec4 " + Shader.POSITION + ";\n\t\t\t\tattribute vec4 " + Shader.COLOR + ";\n\t\t\t\tattribute vec2 " + Shader.TEXCOORDS + ";\n\t\t\t\tuniform mat4 " + Shader.MVP_MATRIX + ";\n\t\t\t\tvarying vec4 v_color;\n\t\t\t\tvarying vec2 v_texCoords;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tv_color = " + Shader.COLOR + ";\n\t\t\t\t\tv_texCoords = " + Shader.TEXCOORDS + ";\n\t\t\t\t\tgl_Position = " + Shader.MVP_MATRIX + " * " + Shader.POSITION + ";\n\t\t\t\t}\n\t\t\t";
+                var vs = "\n\t\t\t\tattribute vec4 ".concat(Shader.POSITION, ";\n\t\t\t\tattribute vec4 ").concat(Shader.COLOR, ";\n\t\t\t\tattribute vec2 ").concat(Shader.TEXCOORDS, ";\n\t\t\t\tuniform mat4 ").concat(Shader.MVP_MATRIX, ";\n\t\t\t\tvarying vec4 v_color;\n\t\t\t\tvarying vec2 v_texCoords;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tv_color = ").concat(Shader.COLOR, ";\n\t\t\t\t\tv_texCoords = ").concat(Shader.TEXCOORDS, ";\n\t\t\t\t\tgl_Position = ").concat(Shader.MVP_MATRIX, " * ").concat(Shader.POSITION, ";\n\t\t\t\t}\n\t\t\t");
                 var fs = "\n\t\t\t\t#ifdef GL_ES\n\t\t\t\t\t#define LOWP lowp\n\t\t\t\t\tprecision mediump float;\n\t\t\t\t#else\n\t\t\t\t\t#define LOWP\n\t\t\t\t#endif\n\t\t\t\tvarying LOWP vec4 v_color;\n\t\t\t\tvarying vec2 v_texCoords;\n\t\t\t\tuniform sampler2D u_texture;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tgl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n\t\t\t\t}\n\t\t\t";
                 return new Shader(context, vs, fs);
             };
             Shader.newTwoColoredTextured = function (context) {
-                var vs = "\n\t\t\t\tattribute vec4 " + Shader.POSITION + ";\n\t\t\t\tattribute vec4 " + Shader.COLOR + ";\n\t\t\t\tattribute vec4 " + Shader.COLOR2 + ";\n\t\t\t\tattribute vec2 " + Shader.TEXCOORDS + ";\n\t\t\t\tuniform mat4 " + Shader.MVP_MATRIX + ";\n\t\t\t\tvarying vec4 v_light;\n\t\t\t\tvarying vec4 v_dark;\n\t\t\t\tvarying vec2 v_texCoords;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tv_light = " + Shader.COLOR + ";\n\t\t\t\t\tv_dark = " + Shader.COLOR2 + ";\n\t\t\t\t\tv_texCoords = " + Shader.TEXCOORDS + ";\n\t\t\t\t\tgl_Position = " + Shader.MVP_MATRIX + " * " + Shader.POSITION + ";\n\t\t\t\t}\n\t\t\t";
+                var vs = "\n\t\t\t\tattribute vec4 ".concat(Shader.POSITION, ";\n\t\t\t\tattribute vec4 ").concat(Shader.COLOR, ";\n\t\t\t\tattribute vec4 ").concat(Shader.COLOR2, ";\n\t\t\t\tattribute vec2 ").concat(Shader.TEXCOORDS, ";\n\t\t\t\tuniform mat4 ").concat(Shader.MVP_MATRIX, ";\n\t\t\t\tvarying vec4 v_light;\n\t\t\t\tvarying vec4 v_dark;\n\t\t\t\tvarying vec2 v_texCoords;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tv_light = ").concat(Shader.COLOR, ";\n\t\t\t\t\tv_dark = ").concat(Shader.COLOR2, ";\n\t\t\t\t\tv_texCoords = ").concat(Shader.TEXCOORDS, ";\n\t\t\t\t\tgl_Position = ").concat(Shader.MVP_MATRIX, " * ").concat(Shader.POSITION, ";\n\t\t\t\t}\n\t\t\t");
                 var fs = "\n\t\t\t\t#ifdef GL_ES\n\t\t\t\t\t#define LOWP lowp\n\t\t\t\t\tprecision mediump float;\n\t\t\t\t#else\n\t\t\t\t\t#define LOWP\n\t\t\t\t#endif\n\t\t\t\tvarying LOWP vec4 v_light;\n\t\t\t\tvarying LOWP vec4 v_dark;\n\t\t\t\tvarying vec2 v_texCoords;\n\t\t\t\tuniform sampler2D u_texture;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tvec4 texColor = texture2D(u_texture, v_texCoords);\n\t\t\t\t\tgl_FragColor.a = texColor.a * v_light.a;\n\t\t\t\t\tgl_FragColor.rgb = ((texColor.a - 1.0) * v_dark.a + 1.0 - texColor.rgb) * v_dark.rgb + texColor.rgb * v_light.rgb;\n\t\t\t\t}\n\t\t\t";
                 return new Shader(context, vs, fs);
             };
             Shader.newColored = function (context) {
-                var vs = "\n\t\t\t\tattribute vec4 " + Shader.POSITION + ";\n\t\t\t\tattribute vec4 " + Shader.COLOR + ";\n\t\t\t\tuniform mat4 " + Shader.MVP_MATRIX + ";\n\t\t\t\tvarying vec4 v_color;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tv_color = " + Shader.COLOR + ";\n\t\t\t\t\tgl_Position = " + Shader.MVP_MATRIX + " * " + Shader.POSITION + ";\n\t\t\t\t}\n\t\t\t";
+                var vs = "\n\t\t\t\tattribute vec4 ".concat(Shader.POSITION, ";\n\t\t\t\tattribute vec4 ").concat(Shader.COLOR, ";\n\t\t\t\tuniform mat4 ").concat(Shader.MVP_MATRIX, ";\n\t\t\t\tvarying vec4 v_color;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tv_color = ").concat(Shader.COLOR, ";\n\t\t\t\t\tgl_Position = ").concat(Shader.MVP_MATRIX, " * ").concat(Shader.POSITION, ";\n\t\t\t\t}\n\t\t\t");
                 var fs = "\n\t\t\t\t#ifdef GL_ES\n\t\t\t\t\t#define LOWP lowp\n\t\t\t\t\tprecision mediump float;\n\t\t\t\t#else\n\t\t\t\t\t#define LOWP\n\t\t\t\t#endif\n\t\t\t\tvarying LOWP vec4 v_color;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tgl_FragColor = v_color;\n\t\t\t\t}\n\t\t\t";
                 return new Shader(context, vs, fs);
             };
@@ -10472,7 +10474,7 @@ var spine;
             function ManagedWebGLRenderingContext(canvasOrContext, contextConfig) {
                 if (contextConfig === void 0) { contextConfig = { alpha: "true" }; }
                 this.restorables = new Array();
-                if (canvasOrContext instanceof HTMLCanvasElement || canvasOrContext instanceof EventTarget) {
+                if (!((canvasOrContext instanceof WebGLRenderingContext) || (canvasOrContext instanceof WebGL2RenderingContext))) {
                     this.setupCanvas(canvasOrContext, contextConfig);
                 }
                 else {

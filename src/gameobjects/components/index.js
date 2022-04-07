@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,6 +17,7 @@ module.exports = {
     Crop: require('./Crop'),
     Depth: require('./Depth'),
     Flip: require('./Flip'),
+    FX: require('./FX'),
     GetBounds: require('./GetBounds'),
     Mask: require('./Mask'),
     Origin: require('./Origin'),

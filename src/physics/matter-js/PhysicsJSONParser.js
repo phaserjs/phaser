@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,29 +9,29 @@ var Body = require('./lib/body/Body');
 
 /**
  * Creates a body using the supplied physics data, as provided by a JSON file.
- * 
+ *
  * The data file should be loaded as JSON:
- * 
+ *
  * ```javascript
  * preload ()
  * {
  *   this.load.json('ninjas', 'assets/ninjas.json);
  * }
- * 
+ *
  * create ()
  * {
  *   const ninjaShapes = this.cache.json.get('ninjas');
- * 
+ *
  *   this.matter.add.fromJSON(400, 300, ninjaShapes.shinobi);
  * }
  * ```
- * 
+ *
  * Do not pass the entire JSON file to this method, but instead pass one of the shapes contained within it.
- * 
+ *
  * If you pas in an `options` object, any settings in there will override those in the config object.
- * 
+ *
  * The structure of the JSON file is as follows:
- * 
+ *
  * ```text
  * {
  *   'generator_info': // The name of the application that created the JSON data
@@ -42,7 +42,7 @@ var Body = require('./lib/body/Body');
  *   }
  * }
  * ```
- * 
+ *
  * At the time of writing, only the Phaser Physics Tracer App exports in this format.
  *
  * @namespace Phaser.Physics.Matter.PhysicsJSONParser
@@ -60,7 +60,7 @@ var PhysicsJSONParser = {
      * @param {number} y - The vertical world location of the body.
      * @param {object} config - The body configuration data.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
-     * 
+     *
      * @return {MatterJS.BodyType} A Matter JS Body.
      */
     parseBody: function (x, y, config, options)

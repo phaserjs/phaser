@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18,9 +18,9 @@ var Smooth = require('../../../geom/polygon/Smooth');
  * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
  * it for input or physics. It provides a quick and easy way for you to render this shape in your
  * game without using a texture, while still taking advantage of being fully batched in WebGL.
- * 
+ *
  * This shape supports both fill and stroke colors.
- * 
+ *
  * The Polygon Shape is created by providing a list of points, which are then used to create an
  * internal Polygon geometry object. The points can be set from a variety of formats:
  *
@@ -29,7 +29,7 @@ var Smooth = require('../../../geom/polygon/Smooth');
  * - An array of objects with public x/y properties: `[obj1, obj2, ...]`
  * - An array of paired numbers that represent point coordinates: `[x1,y1, x2,y2, ...]`
  * - An array of arrays with two elements representing x/y coordinates: `[[x1, y1], [x2, y2], ...]`
- * 
+ *
  * By default the `x` and `y` coordinates of this Shape refer to the center of it. However, depending
  * on the coordinates of the points provided, the final shape may be rendered offset from its origin.
  *
@@ -84,7 +84,7 @@ var Polygon = new Class({
      *
      * @method Phaser.GameObjects.Polygon#smooth
      * @since 3.13.0
-     * 
+     *
      * @param {number} [iterations=1] - The number of times to apply the polygon smoothing.
      *
      * @return {this} This Game Object instance.

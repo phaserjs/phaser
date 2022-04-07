@@ -10,8 +10,8 @@
  * @typedef {object} Phaser.Types.GameObjects.Group.GroupCreateConfig
  * @since 3.0.0
  *
+ * @property {(string|string[])} key - The texture key of each new Game Object. Must be provided or not objects will be created.
  * @property {?Function} [classType] - The class of each new Game Object.
- * @property {(string|string[])} [key] - The texture key of each new Game Object.
  * @property {?(string|string[]|number|number[])} [frame=null] - The texture frame of each new Game Object.
  * @property {?number} [quantity=false] - The number of Game Objects to create. If set, this overrides the `frameQuantity` value. Use `frameQuantity` for more advanced control.
  * @property {?boolean} [visible=true] - The visible state of each new Game Object.

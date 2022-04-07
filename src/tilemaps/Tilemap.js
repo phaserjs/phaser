@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,6 +9,7 @@ var DegToRad = require('../math/DegToRad');
 var Formats = require('./Formats');
 var GetFastValue = require('../utils/object/GetFastValue');
 var LayerData = require('./mapdata/LayerData');
+var ObjectHelper = require('./ObjectHelper');
 var ORIENTATION = require('./const/ORIENTATION_CONST');
 var Rotate = require('../math/Rotate');
 var SpliceOne = require('../utils/array/SpliceOne');
@@ -300,36 +301,6 @@ var Tilemap = new Class({
     },
 
     /**
-     * @ignore
-     */
-    createBlankDynamicLayer: function (name, tileset, x, y, width, height, tileWidth, tileHeight)
-    {
-        console.warn('createBlankDynamicLayer is deprecated. Use createBlankLayer');
-
-        return this.createBlankLayer(name, tileset, x, y, width, height, tileWidth, tileHeight);
-    },
-
-    /**
-     * @ignore
-     */
-    createDynamicLayer: function (layerID, tileset, x, y)
-    {
-        console.warn('createDynamicLayer is deprecated. Use createLayer');
-
-        return this.createLayer(layerID, tileset, x, y);
-    },
-
-    /**
-     * @ignore
-     */
-    createStaticLayer: function (layerID, tileset, x, y)
-    {
-        console.warn('createStaticLayer is deprecated. Use createLayer');
-
-        return this.createLayer(layerID, tileset, x, y);
-    },
-
-    /**
      * Sets the rendering (draw) order of the tiles in this map.
      *
      * The default is 'right-down', meaning it will order the tiles starting from the top-left,
@@ -593,7 +564,7 @@ var Tilemap = new Class({
 
             if (typeof layerID === 'string')
             {
-                console.warn('Valid tilelayer names:\n\t' + this.getTileLayerNames().join(',\n\t'));
+                console.warn('Valid tilelayer names: %o', this.getTileLayerNames());
             }
 
             return null;
@@ -601,7 +572,7 @@ var Tilemap = new Class({
 
         var layerData = this.layers[index];
 
-        // Check for an associated static or dynamic tilemap layer
+        // Check for an associated tilemap layer
         if (layerData.tilemapLayer)
         {
             console.warn('Tilemap Layer ID already exists:' + layerID);
@@ -635,11 +606,12 @@ var Tilemap = new Class({
      * This method will iterate through all of the objects defined in a Tiled Object Layer and then
      * convert the matching results into Phaser Game Objects (by default, Sprites)
      *
-     * Objects are matched on one of 3 criteria: The Object ID, the Object GID or the Object Name.
+     * Objects are matched on one of 4 criteria: The Object ID, the Object GID, the Object Name, or the Object Type.
      *
      * Within Tiled, Object IDs are unique per Object. Object GIDs, however, are shared by all objects
-     * using the same image. Finally, Object Names are strings and the same name can be used on multiple
-     * Objects in Tiled, they do not have to be unique.
+     * using the same image. Finally, Object Names and Types are strings and the same name can be used on multiple
+     * Objects in Tiled, they do not have to be unique; Names are specific to Objects while Types can be inherited
+     * from Object GIDs using the same image.
      *
      * You set the configuration parameter accordingly, based on which type of criteria you wish
      * to match against. For example, to convert all items on an Object Layer with a `gid` of 26:
@@ -666,7 +638,7 @@ var Tilemap = new Class({
      * });
      * ```
      *
-     * You should only specify either `id`, `gid`, `name`, or none of them. Do not add more than
+     * You should only specify either `id`, `gid`, `name`, `type`, or none of them. Do not add more than
      * one criteria to your config. If you do not specify any criteria, then _all_ objects in the
      * Object Layer will be converted.
      *
@@ -683,7 +655,9 @@ var Tilemap = new Class({
      * This will convert all Objects with a gid of 26 into your custom `Coin` class. You can pass
      * any class type here, but it _must_ extend `Phaser.GameObjects.GameObject` as its base class.
      * Your class will always be passed 1 parameter: `scene`, which is a reference to either the Scene
-     * specified in the config object or, if not given, the Scene to which this Tilemap belongs.
+     * specified in the config object or, if not given, the Scene to which this Tilemap belongs. The
+     * class must have {@link Phaser.GameObjects.Components.Transform#setPosition} and
+     * {@link Phaser.GameObjects.Components.Texture#setTexture} methods.
      *
      * All properties from object are copied into the Game Object, so you can use this as an easy
      * way to configure properties from within the map editor. For example giving an object a
@@ -692,8 +666,21 @@ var Tilemap = new Class({
      * Custom object properties that do not exist as a Game Object property are set in the
      * Game Objects {@link Phaser.GameObjects.GameObject#data data store}.
      *
-     * You can use set a `container` property in the config. If given, the class will be added to
+     * Objects that are based on tiles (tilemap objects that are defined using the `gid` property) can be considered "hierarchical" by passing the third parameter `useTileset` true.
+     * Data such as texture, frame (assuming you've matched tileset and spritesheet geometries),
+     * `type` and `properties` will use the tileset information first and then override it with data set at the object level.
+     * For instance, a tileset which includes
+     * `[... a tileset of 16 elements...], [...ids 0, 1, and 2...], {id: 3, type: 'treadmill', speed:4}`
+     * and an object layer which includes
+     * `{id: 7, gid: 19, speed:5, rotation:90}`
+     * will be interpreted as though it were
+     * `{id: 7, gid:19, speed:5, rotation:90, type:'treadmill', texture:..., frame:3}`.
+     * You can then suppress this behavior by setting the boolean `ignoreTileset` for each `config` that should ignore
+     * object gid tilesets.
+     *
+     * You can set a `container` property in the config. If given, the class will be added to
      * the Container instance instead of the Scene.
+     * You can set named texture-`key` and texture-`frame` properties, which will be set on the resultant object.
      *
      * Finally, you can provide an array of config objects, to convert multiple types of object in
      * a single call:
@@ -711,22 +698,29 @@ var Tilemap = new Class({
      *   {
      *     name: 'lava',
      *     classType: LavaTile
+     *   },
+     *   {
+     *     type: 'endzone',
+     *     classType: Phaser.GameObjects.Zone
      *   }
      * ]);
      * ```
      *
-     * The signature of this method changed significantly in v3.50.0. Prior to this, it did not take config objects.
+     * The signature of this method changed significantly in v3.60.0. Prior to this, it did not take config objects.
      *
      * @method Phaser.Tilemaps.Tilemap#createFromObjects
      * @since 3.0.0
      *
      * @param {string} objectLayerName - The name of the Tiled object layer to create the Game Objects from.
      * @param {Phaser.Types.Tilemaps.CreateFromObjectLayerConfig|Phaser.Types.Tilemaps.CreateFromObjectLayerConfig[]} config - A CreateFromObjects configuration object, or an array of them.
+     * @param {boolean} [useTileset=true] - True if objects that set gids should also search the underlying tile for properties and data.
      *
      * @return {Phaser.GameObjects.GameObject[]} An array containing the Game Objects that were created. Empty if invalid object layer, or no matching id/gid/name was found.
      */
-    createFromObjects: function (objectLayerName, config)
+    createFromObjects: function (objectLayerName, config, useTileset)
     {
+        if (useTileset === undefined) { useTileset = true; }
+
         var results = [];
 
         var objectLayer = this.getObjectLayer(objectLayerName);
@@ -737,6 +731,8 @@ var Tilemap = new Class({
 
             return results;
         }
+
+        var objectHelper = new ObjectHelper(useTileset ? this.tilesets : undefined);
 
         if (!Array.isArray(config))
         {
@@ -752,6 +748,8 @@ var Tilemap = new Class({
             var id = GetFastValue(singleConfig, 'id', null);
             var gid = GetFastValue(singleConfig, 'gid', null);
             var name = GetFastValue(singleConfig, 'name', null);
+            var type = GetFastValue(singleConfig, 'type', null);
+            objectHelper.enabled = !GetFastValue(singleConfig, 'ignoreTileset', null);
 
             var obj;
             var toConvert = [];
@@ -762,10 +760,11 @@ var Tilemap = new Class({
                 obj = objects[s];
 
                 if (
-                    (id === null && gid === null && name === null) ||
+                    (id === null && gid === null && name === null && type === null) ||
                     (id !== null && obj.id === id) ||
                     (gid !== null && obj.gid === gid) ||
-                    (name !== null && obj.name === name)
+                    (name !== null && obj.name === name) ||
+                    (type !== null && objectHelper.getTypeIncludingTile(obj) === type)
                 )
                 {
                     toConvert.push(obj);
@@ -788,7 +787,7 @@ var Tilemap = new Class({
 
                 sprite.setName(obj.name);
                 sprite.setPosition(obj.x, obj.y);
-                sprite.setTexture(texture, frame);
+                objectHelper.setTextureAndFrame(sprite, texture, frame, obj);
 
                 if (obj.width)
                 {
@@ -800,11 +799,23 @@ var Tilemap = new Class({
                     sprite.displayHeight = obj.height;
                 }
 
-                //  Origin is (0, 1) in Tiled, so find the offset that matches the Sprites origin.
+                if (this.orientation === ORIENTATION.ISOMETRIC)
+                {
+                    var isometricRatio = this.tileWidth / this.tileHeight;
+                    var isometricPosition = {
+                        x: sprite.x - sprite.y,
+                        y: (sprite.x + sprite.y) / isometricRatio
+                    };
+
+                    sprite.x = isometricPosition.x;
+                    sprite.y = isometricPosition.y;
+                }
+
+                //  Origin is (0, 1) for tile objects or (0, 0) for other objects in Tiled, so find the offset that matches the Sprites origin.
                 //  Do not offset objects with zero dimensions (e.g. points).
                 var offset = {
                     x: sprite.originX * obj.width,
-                    y: (sprite.originY - 1) * obj.height
+                    y: (sprite.originY - (obj.gid ? 1 : 0)) * obj.height
                 };
 
                 //  If the object is rotated, then the origin offset also needs to be rotated.
@@ -830,37 +841,7 @@ var Tilemap = new Class({
                     sprite.visible = false;
                 }
 
-                //  Set properties the class may have, or setData those it doesn't
-                if (Array.isArray(obj.properties))
-                {
-                    // Tiled objects custom properties format
-                    obj.properties.forEach(function (propData)
-                    {
-                        var key = propData['name'];
-                        if (sprite[key] !== undefined)
-                        {
-                            sprite[key] = propData['value'];
-                        }
-                        else
-                        {
-                            sprite.setData(key, propData['value']);
-                        }
-                    });
-                }
-                else
-                {
-                    for (var key in obj.properties)
-                    {
-                        if (sprite[key] !== undefined)
-                        {
-                            sprite[key] = obj.properties[key];
-                        }
-                        else
-                        {
-                            sprite.setData(key, obj.properties[key]);
-                        }
-                    }
-                }
+                objectHelper.setPropertiesFromTiledObject(sprite, obj);
 
                 if (container)
                 {
@@ -2449,13 +2430,13 @@ var Tilemap = new Class({
      *
      * @return {?number} Returns a number, or null if the layer given was invalid.
      */
-    tileToWorldY: function (tileX, camera, layer)
+    tileToWorldY: function (tileY, camera, layer)
     {
         layer = this.getLayer(layer);
 
         if (layer === null) { return null; }
 
-        return this._convert.TileToWorldY(tileX, camera, layer);
+        return this._convert.TileToWorldY(tileY, camera, layer);
     },
 
     /**

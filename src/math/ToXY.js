@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,9 +8,9 @@ var Vector2 = require('./Vector2');
 
 /**
  * Returns a Vector2 containing the x and y position of the given index in a `width` x `height` sized grid.
- * 
+ *
  * For example, in a 6 x 4 grid, index 16 would equal x: 4 y: 2.
- * 
+ *
  * If the given index is out of range an empty Vector2 is returned.
  *
  * @function Phaser.Math.ToXY

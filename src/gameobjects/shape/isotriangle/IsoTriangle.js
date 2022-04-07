@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,13 +14,13 @@ var Shape = require('../Shape');
  * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
  * it for input or physics. It provides a quick and easy way for you to render this shape in your
  * game without using a texture, while still taking advantage of being fully batched in WebGL.
- * 
+ *
  * This shape supports only fill colors and cannot be stroked.
- * 
+ *
  * An IsoTriangle is an 'isometric' triangle. Think of it like a pyramid. Each face has a different
  * fill color. You can set the color of the top, left and right faces of the triangle respectively
  * You can also choose which of the faces are rendered via the `showTop`, `showLeft` and `showRight` properties.
- * 
+ *
  * You cannot view an IsoTriangle from under-neath, however you can change the 'angle' by setting
  * the `projection` property. The `reversed` property controls if the IsoTriangle is rendered upside
  * down or not.
@@ -155,7 +155,7 @@ var IsoTriangle = new Class({
      *
      * @method Phaser.GameObjects.IsoTriangle#setProjection
      * @since 3.13.0
-     * 
+     *
      * @param {number} value - The value to set the projection to.
      *
      * @return {this} This Game Object instance.
@@ -173,7 +173,7 @@ var IsoTriangle = new Class({
      *
      * @method Phaser.GameObjects.IsoTriangle#setReversed
      * @since 3.13.0
-     * 
+     *
      * @param {boolean} reversed - Sets if the iso triangle will be rendered upside down or not.
      *
      * @return {this} This Game Object instance.
@@ -191,7 +191,7 @@ var IsoTriangle = new Class({
      *
      * @method Phaser.GameObjects.IsoTriangle#setFaces
      * @since 3.13.0
-     * 
+     *
      * @param {boolean} [showTop=true] - Show the top-face of the iso triangle (only if `reversed` is true)
      * @param {boolean} [showLeft=true] - Show the left-face of the iso triangle.
      * @param {boolean} [showRight=true] - Show the right-face of the iso triangle.
@@ -217,7 +217,7 @@ var IsoTriangle = new Class({
      *
      * @method Phaser.GameObjects.IsoTriangle#setFillStyle
      * @since 3.13.0
-     * 
+     *
      * @param {number} [fillTop] - The color used to fill the top of the iso triangle.
      * @param {number} [fillLeft] - The color used to fill in the left-facing side of the iso triangle.
      * @param {number} [fillRight] - The color used to fill in the right-facing side of the iso triangle.

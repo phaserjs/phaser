@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,7 @@
  * @param {array} array - The input array.
  * @param {*} item1 - The element to move below base element.
  * @param {*} item2 - The base element.
- * 
+ *
  *
  * @return {array} The input array.
  */

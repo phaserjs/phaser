@@ -8,5 +8,5 @@
  * @property {number} [width=512] - The width of the Tile Sprite. If zero it will use the size of the texture frame.
  * @property {number} [height=512] - The height of the Tile Sprite. If zero it will use the size of the texture frame.
  * @property {string} [key=''] - The key of the Texture this Tile Sprite will use to render with, as stored in the Texture Manager.
- * @property {string} [frame=''] - An optional frame from the Texture this Tile Sprite is rendering with.
+ * @property {(number|string|Phaser.Textures.Frame)} [frame=''] - An optional frame from the Texture this Tile Sprite is rendering with.
  */

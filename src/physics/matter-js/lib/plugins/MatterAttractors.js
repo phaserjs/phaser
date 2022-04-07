@@ -9,7 +9,7 @@ var MatterAttractors =
 {
     name: 'matter-attractors',
     version: '0.1.7',
-    for: 'matter-js@^0.14.2',
+    for: 'matter-js@^0.18.0',
     silent: true,
 
     // installs the plugin where `base` is `Matter`

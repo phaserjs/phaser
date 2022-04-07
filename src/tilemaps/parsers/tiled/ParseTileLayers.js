@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -141,7 +141,7 @@ var ParseTileLayers = function (json, insertNull)
 
             for (var c = 0; c < curl.height; c++)
             {
-                output.push([ null ]);
+                output[c] = [ null ];
 
                 for (var j = 0; j < curl.width; j++)
                 {

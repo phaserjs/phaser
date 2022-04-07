@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -21,7 +21,7 @@ function CheckIntersects (angle, x, y, polygons, intersects)
 
     segment.setTo(x, y, x + dx, y + dy);
 
-    var closestIntersect = GetLineToPolygon(segment, polygons);
+    var closestIntersect = GetLineToPolygon(segment, polygons, true);
 
     if (closestIntersect)
     {

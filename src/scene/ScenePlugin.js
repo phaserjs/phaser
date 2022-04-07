@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -202,7 +202,7 @@ var ScenePlugin = new Class({
      * @since 3.0.0
      *
      * @param {(string|Phaser.Scene)} [key] - The Scene to start.
-     * @param {object} [data] - The Scene data.
+     * @param {object} [data] - The Scene data. If no value is given it will not overwrite any previous data that may exist.
      *
      * @return {this} This Scene Plugin instance.
      */
@@ -224,7 +224,7 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#restart
      * @since 3.4.0
      *
-     * @param {object} [data] - The Scene data.
+     * @param {object} [data] - The Scene data. If no value is given it will not overwrite any previous data that may exist.
      *
      * @return {this} This Scene Plugin instance.
      */
@@ -949,6 +949,26 @@ var ScenePlugin = new Class({
     get: function (key)
     {
         return this.manager.getScene(key);
+    },
+
+    /**
+     * Return the status of the Scene.
+     *
+     * @method Phaser.Scenes.ScenePlugin#getStatus
+     * @since 3.60.0
+     *
+     * @param {(string|Phaser.Scene)} key - The Scene to get the status from.
+     *
+     * @return {number} The Scene status. This maps to the `Phaser.Scene` constants, such as `Phaser.Scene.LOADING`.
+     */
+    getStatus: function (key)
+    {
+        var scene = this.manager.getScene(key);
+
+        if (scene)
+        {
+            return scene.sys.getStatus();
+        }
     },
 
     /**

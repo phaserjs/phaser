@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -92,6 +92,16 @@ var Rectangle = new Class({
         this.geom.setSize(width, height);
 
         this.updateData();
+
+        this.updateDisplayOrigin();
+
+        var input = this.input;
+
+        if (input && !input.customHitArea)
+        {
+            input.hitArea.width = width;
+            input.hitArea.height = height;
+        }
 
         return this;
     },

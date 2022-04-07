@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -763,7 +763,9 @@ var CameraManager = new Class({
 
         this.default.destroy();
 
-        this.scene.sys.events.off(SceneEvents.START, this.start, this);
+        this.systems.events.off(SceneEvents.START, this.start, this);
+        this.systems.events.off(SceneEvents.DESTROY, this.destroy, this);
+        this.systems.game.scale.off(ScaleEvents.RESIZE, this.onResize, this);
 
         this.scene = null;
         this.systems = null;

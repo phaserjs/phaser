@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31,7 +31,7 @@ var QuadraticBezier = new Class({
 
     function QuadraticBezier (p0, p1, p2)
     {
-        Curve.call(this, 'QuadraticBezier');
+        Curve.call(this, 'QuadraticBezierCurve');
 
         if (Array.isArray(p0))
         {

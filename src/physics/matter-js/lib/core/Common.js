@@ -13,7 +13,9 @@ module.exports = Common;
     Common._nextId = 0;
     Common._seed = 0;
     Common._nowStartTime = +(new Date());
-
+    Common._warnedOnce = {};
+    Common._decomp = null;
+    
     /**
      * Extends the object in the first argument using the object in the second argument.
      * @method extend
@@ -221,7 +223,7 @@ module.exports = Common;
      * @return {boolean} True if the object is a string, otherwise false
      */
     Common.isString = function(obj) {
-        return Object.prototype.toString.call(obj) === '[object String]';
+        return toString.call(obj) === '[object String]';
     };
     
     /**
@@ -252,9 +254,9 @@ module.exports = Common;
     
     /**
      * Returns the current timestamp since the time origin (e.g. from page load).
-     * The result will be high-resolution including decimal places if available.
+     * The result is in milliseconds and will use high-resolution timing if available.
      * @method now
-     * @return {number} the current timestamp
+     * @return {number} the current timestamp in milliseconds
      */
     Common.now = function() {
         if (typeof window !== 'undefined' && window.performance) {
@@ -263,6 +265,10 @@ module.exports = Common;
             } else if (window.performance.webkitNow) {
                 return window.performance.webkitNow();
             }
+        }
+
+        if (Date.now) {
+            return Date.now();
         }
 
         return (new Date()) - Common._nowStartTime;
@@ -356,6 +362,35 @@ module.exports = Common;
         if (console && Common.logLevel > 0 && Common.logLevel <= 3) {
             console.warn.apply(console, ['matter-js:'].concat(Array.prototype.slice.call(arguments)));
         }
+    };
+
+    /**
+     * Uses `Common.warn` to log the given message one time only.
+     * @method warnOnce
+     * @param ...objs {} The objects to log.
+     */
+    Common.warnOnce = function() {
+        var message = Array.prototype.slice.call(arguments).join(' ');
+
+        if (!Common._warnedOnce[message]) {
+            Common.warn(message);
+            Common._warnedOnce[message] = true;
+        }
+    };
+
+    /**
+     * Shows a deprecated console warning when the function on the given object is called.
+     * The target function will be replaced with a new function that first shows the warning
+     * and then calls the original function.
+     * @method deprecated
+     * @param {object} obj The object or module
+     * @param {string} name The property name of the function on obj
+     * @param {string} warning The one-time message to show if the function is called
+     */
+    Common.deprecated = function(obj, prop, warning) {
+        obj[prop] = Common.chain(function() {
+            Common.warnOnce('🔅 deprecated 🔅', warning);
+        }, obj[prop]);
     };
 
     /**
@@ -534,5 +569,43 @@ module.exports = Common;
             Common.get(base, path),
             func
         ));
+    };
+
+    /**
+     * Provide the [poly-decomp](https://github.com/schteppe/poly-decomp.js) library module to enable
+     * concave vertex decomposition support when using `Bodies.fromVertices` e.g. `Common.setDecomp(require('poly-decomp'))`.
+     * @method setDecomp
+     * @param {} decomp The [poly-decomp](https://github.com/schteppe/poly-decomp.js) library module.
+     */
+    Common.setDecomp = function(decomp) {
+        Common._decomp = decomp;
+    };
+
+    /**
+     * Returns the [poly-decomp](https://github.com/schteppe/poly-decomp.js) library module provided through `Common.setDecomp`,
+     * otherwise returns the global `decomp` if set.
+     * @method getDecomp
+     * @return {} The [poly-decomp](https://github.com/schteppe/poly-decomp.js) library module if provided.
+     */
+    Common.getDecomp = function() {
+        // get user provided decomp if set
+        var decomp = Common._decomp;
+
+        try {
+            // otherwise from window global
+            if (!decomp && typeof window !== 'undefined') {
+                decomp = window.decomp;
+            }
+    
+            // otherwise from node global
+            if (!decomp && typeof global !== 'undefined') {
+                decomp = global.decomp;
+            }
+        } catch (e) {
+            // decomp not available
+            decomp = null;
+        }
+
+        return decomp;
     };
 })();

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -216,7 +216,7 @@ var RenderTarget = new Class({
                 height = 1;
             }
 
-            this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter);
+            this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter, true);
             this.framebuffer = renderer.createFramebuffer(width, height, this.texture, false);
 
             this.width = width;

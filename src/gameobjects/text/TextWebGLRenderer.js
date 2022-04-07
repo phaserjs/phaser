@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -37,8 +37,6 @@ var TextWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var textureUnit = pipeline.setTexture2D(frame.glTexture, src);
 
-    renderer.pipelines.preBatch(src);
-
     pipeline.batchTexture(
         src,
         frame.glTexture,
@@ -62,8 +60,6 @@ var TextWebGLRenderer = function (renderer, src, camera, parentMatrix)
         false,
         textureUnit
     );
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = TextWebGLRenderer;

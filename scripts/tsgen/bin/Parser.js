@@ -50,6 +50,7 @@ class Parser {
                 case 'Phaser.GameObjects.Components.Crop':
                 case 'Phaser.GameObjects.Components.Depth':
                 case 'Phaser.GameObjects.Components.Flip':
+                case 'Phaser.GameObjects.Components.FX':
                 case 'Phaser.GameObjects.Components.GetBounds':
                 case 'Phaser.GameObjects.Components.Mask':
                 case 'Phaser.GameObjects.Components.Origin':

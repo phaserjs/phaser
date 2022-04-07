@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18,6 +18,7 @@ module.exports = {
     AudioSpriteFile: require('./AudioSpriteFile'),
     BinaryFile: require('./BinaryFile'),
     BitmapFontFile: require('./BitmapFontFile'),
+    CompressedTextureFile: require('./CompressedTextureFile'),
     CSSFile: require('./CSSFile'),
     GLSLFile: require('./GLSLFile'),
     HTML5AudioFile: require('./HTML5AudioFile'),

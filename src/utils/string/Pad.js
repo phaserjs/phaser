@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,13 +13,13 @@
  * This would return: `bob---` as it has padded it out to 6 characters, using the `-` on the right.
  *
  * You can also use it to pad numbers (they are always returned as strings):
- * 
+ *
  * `pad(512, 6, '0', 1)`
  *
  * Would return: `000512` with the string padded to the left.
  *
  * If you don't specify a direction it'll pad to both sides:
- * 
+ *
  * `pad('c64', 7, '*')`
  *
  * Would return: `**c64**`
@@ -31,7 +31,7 @@
  * @param {number} [len=0] - The number of characters to be added.
  * @param {string} [pad=" "] - The string to pad it out with (defaults to a space).
  * @param {number} [dir=3] - The direction dir = 1 (left), 2 (right), 3 (both).
- * 
+ *
  * @return {string} The padded string.
  */
 var Pad = function (str, len, pad, dir)

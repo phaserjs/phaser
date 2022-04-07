@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -66,9 +66,10 @@ var SpineGameObjectRender = require('./SpineGameObjectRender');
  * ```
  *
  * It's possible to enable Spine Game Objects for input, but you should be aware that it will use
- * the bounds of the skeletons current pose to create the hit area from. Sometimes this is ok, but
- * often not. Make use of the `InputPlugin.enableDebug` method to view the input shape being created.
- * If it's not suitable, provide your own shape to the `setInteractive` method.
+ * the bounds of the skeletons current pose to create the hit area from. Ensure that your setup
+ * post in the Spine Editor does _not_ have everything turned off, or the runtimes will be unable
+ * to get an accurate bounds. You can make use of the `InputPlugin.enableDebug` method to view the
+ * input shape being created. If it's not suitable, provide your own shape to the `setInteractive` method.
  *
  * Due to the way Spine handles scaling, it's not recommended to enable a Spine Game Object for
  * physics directly. Instead, you should look at creating a proxy body and syncing the Spine Game

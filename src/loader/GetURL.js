@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22,7 +22,7 @@ var GetURL = function (file, baseURL)
         return false;
     }
 
-    if (file.url.match(/^(?:blob:|data:|http:\/\/|https:\/\/|\/\/)/))
+    if (file.url.match(/^(?:blob:|data:|capacitor:\/\/|http:\/\/|https:\/\/|\/\/)/))
     {
         return file.url;
     }

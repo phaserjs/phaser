@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,7 @@ module.exports = {
 
     /**
      * CSV Map Type
-     * 
+     *
      * @name Phaser.Tilemaps.Formats.CSV
      * @type {number}
      * @since 3.0.0
@@ -21,7 +21,7 @@ module.exports = {
 
     /**
      * Tiled JSON Map Type
-     * 
+     *
      * @name Phaser.Tilemaps.Formats.TILED_JSON
      * @type {number}
      * @since 3.0.0
@@ -30,7 +30,7 @@ module.exports = {
 
     /**
      * 2D Array Map Type
-     * 
+     *
      * @name Phaser.Tilemaps.Formats.ARRAY_2D
      * @type {number}
      * @since 3.0.0
@@ -39,7 +39,7 @@ module.exports = {
 
     /**
      * Weltmeister (Impact.js) Map Type
-     * 
+     *
      * @name Phaser.Tilemaps.Formats.WELTMEISTER
      * @type {number}
      * @since 3.0.0

@@ -1,22 +1,22 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Round a value to the given precision.
- * 
+ *
  * For example:
- * 
+ *
  * ```javascript
  * RoundTo(123.456, 0) = 123
  * RoundTo(123.456, 1) = 120
  * RoundTo(123.456, 2) = 100
  * ```
- * 
+ *
  * To round the decimal, i.e. to round to precision, pass in a negative `place`:
- * 
+ *
  * ```javascript
  * RoundTo(123.456789, 0) = 123
  * RoundTo(123.456789, -1) = 123.5

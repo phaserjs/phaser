@@ -1,16 +1,16 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Timeline Pause Event.
- * 
+ *
  * This event is dispatched by a Tween Timeline when it is paused.
- * 
+ *
  * Listen to it from a Timeline instance using `Timeline.on('pause', listener)`, i.e.:
- * 
+ *
  * ```javascript
  * var timeline = this.tweens.timeline({
  *     targets: image,
@@ -25,7 +25,7 @@
  *
  * @event Phaser.Tweens.Events#TIMELINE_PAUSE
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Tweens.Timeline} timeline - A reference to the Timeline instance that emitted the event.
  */
 module.exports = 'pause';

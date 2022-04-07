@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -14,9 +14,6 @@ var SpineFile = require('./SpineFile');
 var SpineGameObject = require('./gameobject/SpineGameObject');
 var SpineContainer = require('./container/SpineContainer');
 var NOOP = require('../../../src/utils/NOOP');
-
-//  Plugin specific instance of the Spine Scene Renderer
-var sceneRenderer;
 
 /**
  * @classdesc
@@ -69,6 +66,17 @@ var sceneRenderer;
  * same Scene. Alternatively, you can use the method `this.load.plugin` to load the plugin via the normal
  * Phaser Loader. However, doing so will not add it to the current Scene. It will be available from any
  * subsequent Scenes.
+ *
+ * ## A note about inlined data:
+ *
+ * If you need to load Spine assets from inline / base64 encoded data, then you should not use the Loader
+ * at all. Instead, call the functions directly as required:
+ *
+ * scene.cache.json.add
+ * scene.cache.custom.spine.add
+ * scene.textures.addBase64
+ *
+ * ## Using the plugin
  *
  * Assuming a default environment you access it from within a Scene by using the `this.spine` reference.
  *
@@ -463,14 +471,18 @@ var SpinePlugin = new Class({
             }
         };
 
+        var sceneRenderer = this.renderer.spineSceneRenderer;
+
         if (!sceneRenderer)
         {
             sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
             sceneRenderer.batcher.setBlendMode = setBlendMode;
             sceneRenderer.shapes.setBlendMode = setBlendMode;
+
+            this.renderer.spineSceneRenderer = sceneRenderer;
         }
 
-        //  All share the same instance
+        //  All scene share the same instance
         this.sceneRenderer = sceneRenderer;
         this.skeletonRenderer = sceneRenderer.skeletonRenderer;
         this.skeletonDebugRenderer = sceneRenderer.skeletonDebugRenderer;
@@ -1136,12 +1148,14 @@ var SpinePlugin = new Class({
 
         this.pluginManager = null;
 
+        var sceneRenderer = this.renderer.spineSceneRenderer;
+
         if (sceneRenderer)
         {
             sceneRenderer.dispose();
-            sceneRenderer = null;
         }
 
+        this.renderer.spineSceneRenderer = null;
         this.sceneRenderer = null;
     }
 

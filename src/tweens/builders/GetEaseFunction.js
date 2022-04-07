@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,7 +9,7 @@ var UppercaseFirst = require('../../utils/string/UppercaseFirst');
 
 /**
  * This internal function is used to return the correct ease function for a Tween.
- * 
+ *
  * It can take a variety of input, including an EaseMap based string, or a custom function.
  *
  * @function Phaser.Tweens.Builders.GetEaseFunction

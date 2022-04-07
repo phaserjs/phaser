@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -386,7 +386,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             i: charIndex,
             char: text[i],
             code: charCode,
-            x: (glyph.xOffset + xAdvance) * scale,
+            x: (glyph.xOffset + x) * scale,
             y: (glyph.yOffset + yAdvance) * scale,
             w: glyph.width * scale,
             h: glyph.height * scale,
@@ -397,7 +397,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             glyph: glyph
         });
 
-        xAdvance += glyph.xAdvance + letterSpacing;
+        xAdvance += glyph.xAdvance + letterSpacing + ((kerningOffset !== undefined) ? kerningOffset : 0);
         lastGlyph = glyph;
         lastCharCode = charCode;
         currentLineWidth = gw * scale;

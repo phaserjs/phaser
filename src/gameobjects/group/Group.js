@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -125,7 +125,7 @@ var Group = new Class({
          * The class to create new group members from.
          *
          * @name Phaser.GameObjects.Group#classType
-         * @type {Function}
+         * @type {Phaser.Types.GameObjects.Group.GroupClassTypeConstructor}
          * @since 3.0.0
          * @default Phaser.GameObjects.Sprite
          */

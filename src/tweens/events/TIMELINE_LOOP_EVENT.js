@@ -1,16 +1,16 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Timeline Loop Event.
- * 
+ *
  * This event is dispatched by a Tween Timeline every time it loops.
- * 
+ *
  * Listen to it from a Timeline instance using `Timeline.on('loop', listener)`, i.e.:
- * 
+ *
  * ```javascript
  * var timeline = this.tweens.timeline({
  *     targets: image,
@@ -25,7 +25,7 @@
  *
  * @event Phaser.Tweens.Events#TIMELINE_LOOP
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Tweens.Timeline} timeline - A reference to the Timeline instance that emitted the event.
  */
 module.exports = 'loop';

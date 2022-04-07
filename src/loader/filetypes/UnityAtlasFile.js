@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -97,8 +97,6 @@ var UnityAtlasFile = new Class({
             var normalMap = (this.files[2]) ? this.files[2].data : null;
 
             this.loader.textureManager.addUnityAtlas(image.key, image.data, text.data, normalMap);
-
-            text.pendingDestroy();
 
             this.complete = true;
         }

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,6 +17,8 @@ var MATH_CONST = require('../../math/const');
  * A Tween is able to manipulate the properties of one or more objects to any given value, based
  * on a duration and type of ease. They are rarely instantiated directly and instead should be
  * created via the TweenManager.
+ *
+ * Please note that a Tween will not manipulate any property that begins with an underscore.
  *
  * @class Tween
  * @memberof Phaser.Tweens
@@ -236,7 +238,7 @@ var Tween = new Class({
          * @private
          * @since 3.0.0
          */
-        this._pausedState = TWEEN_CONST.INIT;
+        this._pausedState = TWEEN_CONST.PENDING_ADD;
 
         /**
          * Does the Tween start off paused? (if so it needs to be started with Tween.play)
@@ -502,6 +504,10 @@ var Tween = new Class({
         else if (this.state === TWEEN_CONST.PENDING_ADD)
         {
             return this;
+        }
+        else if (this.state === TWEEN_CONST.PENDING_REMOVE)
+        {
+            this.parent.reset(this);
         }
         else
         {
@@ -961,13 +967,16 @@ var Tween = new Class({
             this.state = TWEEN_CONST.ACTIVE;
         }
 
-        this.isSeeking = true;
-
-        do
+        if (toPosition > 0)
         {
-            this.update(0, delta);
+            this.isSeeking = true;
 
-        } while (this.totalProgress < toPosition);
+            do
+            {
+                this.update(0, delta);
+
+            } while (this.totalProgress < toPosition);
+        }
 
         this.isSeeking = false;
 
@@ -1006,7 +1015,7 @@ var Tween = new Class({
      */
     setCallback: function (type, callback, params, scope)
     {
-        this.callbacks[type] = { func: callback, scope: scope, params: params };
+        this.callbacks[type] = { func: callback, scope: scope, params: [ this, null ].concat(params) };
 
         return this;
     },

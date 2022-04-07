@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -367,7 +367,7 @@ var PathFollower = {
 
             if (tweenData.state === TWEEN_CONST.COMPLETE)
             {
-                this.path.getPoint(1, pathVector);
+                this.path.getPoint(tweenData.end, pathVector);
 
                 pathDelta.add(pathVector);
                 pathVector.add(this.pathOffset);

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -549,10 +549,16 @@ var Mesh = new Class({
     addVerticesFromObj: function (key, scale, x, y, z, rotateX, rotateY, rotateZ, zIsUp)
     {
         var data = this.scene.sys.cache.obj.get(key);
+        var parsedData;
 
         if (data)
         {
-            GenerateObjVerts(data, this, scale, x, y, z, rotateX, rotateY, rotateZ, zIsUp);
+            parsedData = GenerateObjVerts(data, this, scale, x, y, z, rotateX, rotateY, rotateZ, zIsUp);
+        }
+
+        if (!parsedData || parsedData.verts.length === 0)
+        {
+            console.warn('Mesh.addVerticesFromObj data empty:', key);
         }
 
         return this;
@@ -715,6 +721,10 @@ var Mesh = new Class({
         {
             this.faces = this.faces.concat(result.faces);
             this.vertices = this.vertices.concat(result.vertices);
+        }
+        else
+        {
+            console.warn('Mesh.addVertices data empty or invalid');
         }
 
         this.dirtyCache[9] = -1;
@@ -1054,8 +1064,74 @@ var Mesh = new Class({
 
         this.debugCallback = null;
         this.debugGraphic = null;
-    }
+    },
 
+    /**
+     * Clears all tint values associated with this Game Object.
+     *
+     * Immediately sets the color values back to 0xffffff on all vertices,
+     * which results in no visible change to the texture.
+     *
+     * @method Phaser.GameObjects.Mesh#clearTint
+     * @webglOnly
+     * @since 3.60.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearTint: function ()
+    {
+        return this.setTint();
+    },
+
+    /**
+     * Sets an additive tint on all vertices of this Mesh Game Object.
+     *
+     * The tint works by taking the pixel color values from the Game Objects texture, and then
+     * multiplying it by the color value of the tint.
+     *
+     * To modify the tint color once set, either call this method again with new values or use the
+     * `tint` property to set all colors at once.
+     *
+     * To remove a tint call `clearTint`.
+     *
+     * @method Phaser.GameObjects.Mesh#setTint
+     * @webglOnly
+     * @since 3.60.0
+     *
+     * @param {number} [tint=0xffffff] - The tint being applied to all vertices of this Mesh Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTint: function (tint)
+    {
+        if (tint === undefined) { tint = 0xffffff; }
+
+        var vertices = this.vertices;
+
+        for (var i = 0; i < vertices.length; i++)
+        {
+            vertices[i].color = tint;
+        }
+
+        return this;
+    },
+
+    /**
+     * The tint value being applied to the whole of the Game Object.
+     * This property is a setter-only.
+     *
+     * @method Phaser.GameObjects.Mesh#tint
+     * @type {number}
+     * @webglOnly
+     * @since 3.60.0
+     */
+    tint: {
+
+        set: function (value)
+        {
+            this.setTint(value);
+        }
+    }
 });
 
 module.exports = Mesh;

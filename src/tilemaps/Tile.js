@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -404,7 +404,14 @@ var Tile = new Class({
     {
         var tilemapLayer = this.tilemapLayer;
 
-        return (tilemapLayer) ? tilemapLayer.tileToWorldX(this.x, camera) : this.x * this.baseWidth;
+        if (tilemapLayer)
+        {
+            var point = tilemapLayer.tileToWorldXY(this.x, this.y, undefined, camera);
+
+            return point.x;
+        }
+
+        return this.x * this.baseWidth;
     },
 
     /**
@@ -468,7 +475,6 @@ var Tile = new Class({
             : this.getTop(camera) + this.height;
     },
 
-
     /**
      * Gets the world rectangle bounding box for the tile, factoring in the layers position,
      * scale and scroll.
@@ -485,10 +491,10 @@ var Tile = new Class({
     {
         if (output === undefined) { output = new Rectangle(); }
 
-        output.x = this.getLeft();
-        output.y = this.getTop();
-        output.width = this.getRight() - output.x;
-        output.height = this.getBottom() - output.y;
+        output.x = this.getLeft(camera);
+        output.y = this.getTop(camera);
+        output.width = this.getRight(camera) - output.x;
+        output.height = this.getBottom(camera) - output.y;
 
         return output;
     },

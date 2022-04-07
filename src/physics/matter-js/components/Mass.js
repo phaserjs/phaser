@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -51,9 +51,9 @@ var Mass = {
 
     /**
      * The body's center of mass.
-     * 
+     *
      * Calling this creates a new `Vector2 each time to avoid mutation.
-     * 
+     *
      * If you only need to read the value and won't change it, you can get it from `GameObject.body.centerOfMass`.
      *
      * @name Phaser.Physics.Matter.Components.Mass#centerOfMass

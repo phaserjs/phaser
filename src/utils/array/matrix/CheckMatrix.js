@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@
  * Checks if an array can be used as a matrix.
  *
  * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
- * have the same length. There must be at least two rows. This is an example matrix:
+ * have the same length. This is an example matrix:
  *
  * ```
  * [
@@ -33,7 +33,7 @@
  */
 var CheckMatrix = function (matrix)
 {
-    if (!Array.isArray(matrix) || matrix.length < 2 || !Array.isArray(matrix[0]))
+    if (!Array.isArray(matrix) || !Array.isArray(matrix[0]))
     {
         return false;
     }

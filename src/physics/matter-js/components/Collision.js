@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -86,7 +86,7 @@ var Collision = {
 
     /**
      * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-     * 
+     *
      * This does not change the bodies collision category, group or filter. Those must be set in addition
      * to the callback.
      *
@@ -106,7 +106,7 @@ var Collision = {
 
     /**
      * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-     * 
+     *
      * This does not change the bodies collision category, group or filter. Those must be set in addition
      * to the callback.
      *
@@ -126,7 +126,7 @@ var Collision = {
 
     /**
      * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-     * 
+     *
      * This does not change the bodies collision category, group or filter. Those must be set in addition
      * to the callback.
      *
@@ -146,7 +146,7 @@ var Collision = {
 
     /**
      * The callback is sent a reference to the other body, along with a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-     * 
+     *
      * This does not change the bodies collision category, group or filter. Those must be set in addition
      * to the callback.
      *

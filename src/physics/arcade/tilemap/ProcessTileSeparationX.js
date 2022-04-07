@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -27,6 +27,7 @@ var ProcessTileSeparationX = function (body, x)
     }
 
     body.position.x -= x;
+    body.updateCenter();
 
     if (body.bounce.x === 0)
     {

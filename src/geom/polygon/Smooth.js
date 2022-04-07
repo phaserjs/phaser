@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Igor Ognichenko <ognichenko.igor@gmail.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,7 @@ var copy = function (out, a)
 {
     out[0] = a[0];
     out[1] = a[1];
-  
+
     return out;
 };
 
@@ -40,12 +40,12 @@ var Smooth = function (polygon)
     }
 
     var output = [];
-  
+
     if (points.length > 0)
     {
         output.push(copy([ 0, 0 ], points[0]));
     }
-  
+
     for (i = 0; i < points.length - 1; i++)
     {
         var p0 = points[i];
@@ -58,12 +58,12 @@ var Smooth = function (polygon)
         output.push([ 0.85 * p0x + 0.15 * p1x, 0.85 * p0y + 0.15 * p1y ]);
         output.push([ 0.15 * p0x + 0.85 * p1x, 0.15 * p0y + 0.85 * p1y ]);
     }
-  
+
     if (points.length > 1)
     {
         output.push(copy([ 0, 0 ], points[points.length - 1]));
     }
-  
+
     return polygon.setTo(output);
 };
 

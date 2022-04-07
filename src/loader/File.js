@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -59,6 +59,11 @@ var File = new Class({
          */
         this.type = GetFastValue(fileConfig, 'type', false);
 
+        if (!this.type)
+        {
+            throw new Error('Invalid File type: ' + this.type);
+        }
+
         /**
          * Unique cache key (unique within its file type)
          *
@@ -75,9 +80,9 @@ var File = new Class({
             this.key = loader.prefix + loadKey;
         }
 
-        if (!this.type || !this.key)
+        if (!this.key)
         {
-            throw new Error('Invalid Loader.' + this.type + ' key');
+            throw new Error('Invalid File key: ' + this.key);
         }
 
         var url = GetFastValue(fileConfig, 'url');
@@ -86,7 +91,7 @@ var File = new Class({
         {
             url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
         }
-        else if (typeof url === 'string' && !url.match(/^(?:blob:|data:|http:\/\/|https:\/\/|\/\/)/))
+        else if (typeof url === 'string' && !url.match(/^(?:blob:|data:|capacitor:\/\/|http:\/\/|https:\/\/|\/\/)/))
         {
             url = loader.path + url;
         }
@@ -413,6 +418,9 @@ var File = new Class({
      */
     onProcessError: function ()
     {
+        // eslint-disable-next-line no-console
+        console.error('Failed to process file: %s "%s"', this.type, this.key);
+
         this.state = CONST.FILE_ERRORED;
 
         if (this.multiFile)
@@ -447,12 +455,10 @@ var File = new Class({
      */
     addToCache: function ()
     {
-        if (this.cache)
+        if (this.cache && this.data)
         {
             this.cache.add(this.key, this.data);
         }
-
-        this.pendingDestroy();
     },
 
     /**
@@ -466,6 +472,11 @@ var File = new Class({
      */
     pendingDestroy: function (data)
     {
+        if (this.state === CONST.FILE_PENDING_DESTROY)
+        {
+            return;
+        }
+
         if (data === undefined) { data = this.data; }
 
         var key = this.key;
@@ -475,6 +486,8 @@ var File = new Class({
         this.loader.emit(Events.FILE_KEY_COMPLETE + type + '-' + key, key, type, data);
 
         this.loader.flagForRemoval(this);
+
+        this.state = CONST.FILE_PENDING_DESTROY;
     },
 
     /**

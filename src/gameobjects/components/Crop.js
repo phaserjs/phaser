@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -44,24 +44,24 @@ var Crop = {
 
     /**
      * Applies a crop to a texture based Game Object, such as a Sprite or Image.
-     * 
+     *
      * The crop is a rectangle that limits the area of the texture frame that is visible during rendering.
-     * 
+     *
      * Cropping a Game Object does not change its size, dimensions, physics body or hit area, it just
      * changes what is shown when rendered.
-     * 
+     *
      * The crop coordinates are relative to the texture frame, not the Game Object, meaning 0 x 0 is the top-left.
-     * 
+     *
      * Therefore, if you had a Game Object that had an 800x600 sized texture, and you wanted to show only the left
      * half of it, you could call `setCrop(0, 0, 400, 600)`.
-     * 
+     *
      * It is also scaled to match the Game Object scale automatically. Therefore a crop rect of 100x50 would crop
      * an area of 200x100 when applied to a Game Object that had a scale factor of 2.
-     * 
+     *
      * You can either pass in numeric values directly, or you can provide a single Rectangle object as the first argument.
-     * 
+     *
      * Call this method with no arguments at all to reset the crop, or toggle the property `isCropped` to `false`.
-     * 
+     *
      * You should do this if the crop rectangle becomes the same size as the frame itself, as it will allow
      * the renderer to skip several internal calculations.
      *
@@ -106,7 +106,7 @@ var Crop = {
      * @method Phaser.GameObjects.Components.Crop#resetCropObject
      * @private
      * @since 3.12.0
-     * 
+     *
      * @return {object} The crop object.
      */
     resetCropObject: function ()

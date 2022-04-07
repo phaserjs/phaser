@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,18 +11,18 @@ var Line = require('./Line');
  * Creates a new Line Shape Game Object and adds it to the Scene.
  *
  * Note: This method will only be available if the Line Game Object has been built into Phaser.
- * 
+ *
  * The Line Shape is a Game Object that can be added to a Scene, Group or Container. You can
  * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
  * it for input or physics. It provides a quick and easy way for you to render this shape in your
  * game without using a texture, while still taking advantage of being fully batched in WebGL.
- * 
+ *
  * This shape supports only stroke colors and cannot be filled.
- * 
+ *
  * A Line Shape allows you to draw a line between two points in your game. You can control the
  * stroke color and thickness of the line. In WebGL only you can also specify a different
  * thickness for the start and end of the line, allowing you to render lines that taper-off.
- * 
+ *
  * If you need to draw multiple lines in a sequence you may wish to use the Polygon Shape instead.
  *
  * @method Phaser.GameObjects.GameObjectFactory#line

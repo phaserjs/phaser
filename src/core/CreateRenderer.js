@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31,22 +31,22 @@ var CreateRenderer = function (game)
     //  Not a custom environment, didn't provide their own canvas and not headless, so determine the renderer:
     if (!config.customEnvironment && !config.canvas && config.renderType !== CONST.HEADLESS)
     {
-        if (config.renderType === CONST.CANVAS || (config.renderType !== CONST.CANVAS && !Features.webGL))
+        if (config.renderType === CONST.AUTO)
         {
-            if (Features.canvas)
-            {
-                //  They requested Canvas and their browser supports it
-                config.renderType = CONST.CANVAS;
-            }
-            else
-            {
-                throw new Error('Cannot create Canvas or WebGL context, aborting.');
-            }
+            config.renderType = Features.webGL ? CONST.WEBGL : CONST.CANVAS;
+        }
+
+        if (config.renderType === CONST.WEBGL)
+        {
+            if (!Features.webGL) { throw new Error('Cannot create WebGL context, aborting.'); }
+        }
+        else if (config.renderType === CONST.CANVAS)
+        {
+            if (!Features.canvas) { throw new Error('Cannot create Canvas context, aborting.'); }
         }
         else
         {
-            //  Game requested WebGL and browser says it supports it
-            config.renderType = CONST.WEBGL;
+            throw new Error('Unknown value for renderer type: ' + config.renderType);
         }
     }
 

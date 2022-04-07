@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -124,7 +124,7 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
         child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
 
         //  Render
-        child.renderWebGL(renderer, child, camera, transformMatrix);
+        child.renderWebGL(renderer, child, camera, transformMatrix, container);
 
         //  Restore original values
 

@@ -1,14 +1,14 @@
 /**
  * @author       Richard Davey
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Vector3 = require('../../math/Vector3');
 
 /**
- * Checks for intersection between the two line segments and returns the intersection point as a Vector3,
- * or `null` if the lines are parallel, or do not intersect.
+ * Checks for intersection between the two line segments, or a ray and a line segment,
+ * and returns the intersection point as a Vector3, or `null` if the lines are parallel, or do not intersect.
  *
  * The `z` property of the Vector3 contains the intersection distance, which can be used to find
  * the closest intersecting point from a group of line segments.
@@ -16,14 +16,17 @@ var Vector3 = require('../../math/Vector3');
  * @function Phaser.Geom.Intersects.GetLineToLine
  * @since 3.50.0
  *
- * @param {Phaser.Geom.Line} line1 - The first line segment to check.
+ * @param {Phaser.Geom.Line} line1 - The first line segment, or a ray, to check.
  * @param {Phaser.Geom.Line} line2 - The second line segment to check.
+ * @param {boolean} [isRay=false] - Is `line1` a ray or a line segment?
  * @param {Phaser.Math.Vector3} [out] - A Vector3 to store the intersection results in.
  *
  * @return {Phaser.Math.Vector3} A Vector3 containing the intersection results, or `null`.
  */
-var GetLineToLine = function (line1, line2, out)
+var GetLineToLine = function (line1, line2, isRay, out)
 {
+    if (isRay === undefined) { isRay = false; }
+
     var x1 = line1.x1;
     var y1 = line1.y1;
     var x2 = line1.x2;
@@ -40,24 +43,46 @@ var GetLineToLine = function (line1, line2, out)
     var dx2 = x4 - x3;
     var dy2 = y4 - y3;
 
-    var denom = dy2 * dx1 - dx2 * dy1;
+    var denom = (dx1 * dy2 - dy1 * dx2);
 
     //  Make sure there is not a division by zero - this also indicates that the lines are parallel.
     //  If numA and numB were both equal to zero the lines would be on top of each other (coincidental).
     //  This check is not done because it is not necessary for this implementation (the parallel check accounts for this).
 
-    if (dx1 === 0 || denom === 0)
+    if (denom === 0)
     {
         return false;
     }
 
-    var T2 = (dx1 * (y3 - y1) + dy1 * (x1 - x3)) / (dx2 * dy1 - dy2 * dx1);
-    var T1 = (x3 + dx2 * T2 - x1) / dx1;
+    var t;
+    var u;
+    var s;
 
-    //  Intersects?
-    if (T1 < 0 || T2 < 0 || T2 > 1)
+    if (isRay)
     {
-        return null;
+        t = (dx1 * (y3 - y1) + dy1 * (x1 - x3)) / (dx2 * dy1 - dy2 * dx1);
+        u = (x3 + dx2 * t - x1) / dx1;
+
+        //  Intersects?
+        if (u < 0 || t < 0 || t > 1)
+        {
+            return null;
+        }
+
+        s = u;
+    }
+    else
+    {
+        t = ((x3 - x1) * dy2 - (y3 - y1) * dx2) / denom;
+        u = ((y1 - y3) * dx1 - (x1 - x3) * dy1) / denom;
+
+        //  Intersects?
+        if (t < 0 || t > 1 || u < 0 || u > 1)
+        {
+            return null;
+        }
+
+        s = t;
     }
 
     if (out === undefined)
@@ -66,9 +91,9 @@ var GetLineToLine = function (line1, line2, out)
     }
 
     return out.set(
-        x1 + dx1 * T1,
-        y1 + dy1 * T1,
-        T1
+        x1 + dx1 * s,
+        y1 + dy1 * s,
+        s
     );
 };
 

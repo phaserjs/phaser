@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,6 +15,8 @@ module.exports = {
     Image: require('./Image'),
     JSONArray: require('./JSONArray'),
     JSONHash: require('./JSONHash'),
+    KTXParser: require('./KTXParser'),
+    PVRParser: require('./PVRParser'),
     SpriteSheet: require('./SpriteSheet'),
     SpriteSheetFromAtlas: require('./SpriteSheetFromAtlas'),
     UnityYAML: require('./UnityYAML')

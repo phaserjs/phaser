@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -415,7 +415,8 @@ var Systems = new Class({
 
     /**
      * Pause this Scene.
-     * A paused Scene still renders, it just doesn't run ANY of its update handlers or systems.
+     *
+     * A paused Scene still renders, it just doesn't run any of its update handlers or systems.
      *
      * @method Phaser.Scenes.Systems#pause
      * @fires Phaser.Scenes.Events#PAUSE
@@ -427,16 +428,20 @@ var Systems = new Class({
      */
     pause: function (data)
     {
-        var events = this.events;
         var settings = this.settings;
+        var status = this.getStatus();
 
-        if (this.settings.active)
+        if (status !== CONST.CREATING && status !== CONST.RUNNING)
+        {
+            console.warn('Cannot pause non-running Scene', settings.key);
+        }
+        else if (this.settings.active)
         {
             settings.status = CONST.PAUSED;
 
             settings.active = false;
 
-            events.emit(Events.PAUSE, this, data);
+            this.events.emit(Events.PAUSE, this, data);
         }
 
         return this;
@@ -488,15 +493,22 @@ var Systems = new Class({
      */
     sleep: function (data)
     {
-        var events = this.events;
         var settings = this.settings;
+        var status = this.getStatus();
 
-        settings.status = CONST.SLEEPING;
+        if (status !== CONST.CREATING && status !== CONST.RUNNING)
+        {
+            console.warn('Cannot sleep non-running Scene', settings.key);
+        }
+        else
+        {
+            settings.status = CONST.SLEEPING;
 
-        settings.active = false;
-        settings.visible = false;
+            settings.active = false;
+            settings.visible = false;
 
-        events.emit(Events.SLEEP, this, data);
+            this.events.emit(Events.SLEEP, this, data);
+        }
 
         return this;
     },
@@ -541,11 +553,24 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#getData
      * @since 3.22.0
      *
-     * @return {any}
+     * @return {any} The Scene Data.
      */
     getData: function ()
     {
         return this.settings.data;
+    },
+
+    /**
+     * Returns the current status of this Scene.
+     *
+     * @method Phaser.Scenes.Systems#getStatus
+     * @since 3.60.0
+     *
+     * @return {number} The status of this Scene. One of the `Phaser.Scene` constants.
+     */
+    getStatus: function ()
+    {
+        return this.settings.status;
     },
 
     /**

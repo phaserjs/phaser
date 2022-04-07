@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -777,12 +777,20 @@ var InputPlugin = new Class({
     {
         if (skipQueue === undefined) { skipQueue = false; }
 
+        this.disable(gameObject);
+
         var input = gameObject.input;
 
         // If GameObject.input already cleared from higher class
-        if (!input)
+        if (input)
         {
-            return;
+            input.gameObject = undefined;
+            input.target = undefined;
+            input.hitArea = undefined;
+            input.hitAreaCallback = undefined;
+            input.callbackContext = undefined;
+
+            gameObject.input = null;
         }
 
         if (!skipQueue)
@@ -790,36 +798,11 @@ var InputPlugin = new Class({
             this.queueForRemoval(gameObject);
         }
 
-        input.gameObject = undefined;
-        input.target = undefined;
-        input.hitArea = undefined;
-        input.hitAreaCallback = undefined;
-        input.callbackContext = undefined;
-
-        gameObject.input = null;
-
-        //  Clear from _draggable, _drag and _over
         var index = this._draggable.indexOf(gameObject);
 
         if (index > -1)
         {
             this._draggable.splice(index, 1);
-        }
-
-        index = this._drag[0].indexOf(gameObject);
-
-        if (index > -1)
-        {
-            this._drag[0].splice(index, 1);
-        }
-
-        index = this._over[0].indexOf(gameObject);
-
-        if (index > -1)
-        {
-            this._over[0].splice(index, 1);
-
-            this.manager.resetCursor(input);
         }
 
         return gameObject;
@@ -835,10 +818,52 @@ var InputPlugin = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its input system disabled.
+     *
+     * @return {this} This Input Plugin.
      */
     disable: function (gameObject)
     {
-        gameObject.input.enabled = false;
+        var input = gameObject.input;
+
+        if (input)
+        {
+            input.enabled = false;
+            input.dragState = 0;
+        }
+
+        // Clear from _temp, _drag and _over
+        var temp = this._temp;
+        var drag = this._drag;
+        var over = this._over;
+        var manager = this.manager;
+
+        var index = temp.indexOf(gameObject);
+
+        if (index > -1)
+        {
+            temp.splice(index, 1);
+        }
+
+        for (var i = 0; i < manager.pointersTotal; i++)
+        {
+            index = drag[i].indexOf(gameObject);
+
+            if (index > -1)
+            {
+                drag[i].splice(index, 1);
+            }
+
+            index = over[i].indexOf(gameObject);
+
+            if (index > -1)
+            {
+                over[i].splice(index, 1);
+
+                manager.resetCursor(input);
+            }
+        }
+
+        return this;
     },
 
     /**
@@ -976,7 +1001,7 @@ var InputPlugin = new Class({
         {
             var gameObject = currentlyOver[i];
 
-            if (!gameObject.input)
+            if (!gameObject.input || !gameObject.input.enabled)
             {
                 continue;
             }
@@ -985,7 +1010,7 @@ var InputPlugin = new Class({
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_DOWN, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1416,7 +1441,7 @@ var InputPlugin = new Class({
 
                 //  And finally the dragend event
 
-                if (gameObject.input)
+                if (gameObject.input && gameObject.input.enabled)
                 {
                     gameObject.emit(Events.GAMEOBJECT_DRAG_END, pointer, input.dragX, input.dragY, dropped);
 
@@ -1463,7 +1488,7 @@ var InputPlugin = new Class({
         {
             var gameObject = currentlyOver[i];
 
-            if (!gameObject.input)
+            if (!gameObject.input || !gameObject.input.enabled)
             {
                 continue;
             }
@@ -1472,7 +1497,7 @@ var InputPlugin = new Class({
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_MOVE, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1480,7 +1505,7 @@ var InputPlugin = new Class({
 
             this.emit(Events.GAMEOBJECT_MOVE, pointer, gameObject, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1535,7 +1560,7 @@ var InputPlugin = new Class({
         {
             var gameObject = currentlyOver[i];
 
-            if (!gameObject.input)
+            if (!gameObject.input || !gameObject.input.enabled)
             {
                 continue;
             }
@@ -1544,7 +1569,7 @@ var InputPlugin = new Class({
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_WHEEL, pointer, dx, dy, dz, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1552,7 +1577,7 @@ var InputPlugin = new Class({
 
             this.emit(Events.GAMEOBJECT_WHEEL, pointer, gameObject, dx, dy, dz, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1607,7 +1632,7 @@ var InputPlugin = new Class({
             {
                 var gameObject = currentlyOver[i];
 
-                if (!gameObject.input)
+                if (!gameObject.input || !gameObject.input.enabled)
                 {
                     continue;
                 }
@@ -1620,7 +1645,7 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1628,7 +1653,7 @@ var InputPlugin = new Class({
 
                 this.emit(Events.GAMEOBJECT_OVER, pointer, gameObject, _eventContainer);
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1690,7 +1715,7 @@ var InputPlugin = new Class({
                 //  Call onOut for everything in the previouslyOver array
                 gameObject = previouslyOver[i];
 
-                if (!gameObject.input)
+                if (!gameObject.input || !gameObject.input.enabled)
                 {
                     continue;
                 }
@@ -1701,7 +1726,7 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1709,7 +1734,7 @@ var InputPlugin = new Class({
 
                 this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1814,7 +1839,7 @@ var InputPlugin = new Class({
             {
                 gameObject = justOut[i];
 
-                if (!gameObject.input)
+                if (!gameObject.input || !gameObject.input.enabled)
                 {
                     continue;
                 }
@@ -1826,7 +1851,7 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1834,7 +1859,7 @@ var InputPlugin = new Class({
 
                 this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1863,7 +1888,7 @@ var InputPlugin = new Class({
             {
                 gameObject = justOver[i];
 
-                if (!gameObject.input)
+                if (!gameObject.input || !gameObject.input.enabled)
                 {
                     continue;
                 }
@@ -1875,7 +1900,7 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1883,7 +1908,7 @@ var InputPlugin = new Class({
 
                 this.emit(Events.GAMEOBJECT_OVER, pointer, gameObject, _eventContainer);
 
-                if (_eventData.cancelled || !gameObject.input)
+                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
                 {
                     aborted = true;
                     break;
@@ -1936,14 +1961,14 @@ var InputPlugin = new Class({
         {
             var gameObject = currentlyOver[i];
 
-            if (!gameObject.input)
+            if (!gameObject.input || !gameObject.input.enabled)
             {
                 continue;
             }
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_UP, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -1951,7 +1976,7 @@ var InputPlugin = new Class({
 
             this.emit(Events.GAMEOBJECT_UP, pointer, gameObject, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input)
+            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
             {
                 aborted = true;
                 break;
@@ -2424,6 +2449,7 @@ var InputPlugin = new Class({
 
         var offsetx = 0;
         var offsety = 0;
+
         switch (shapeType)
         {
             case GEOM_CONST.CIRCLE:
@@ -2637,7 +2663,7 @@ var InputPlugin = new Class({
      */
     sortGameObjects: function (gameObjects, pointer)
     {
-        if (gameObjects.length < 2)
+        if (gameObjects.length < 2 || !pointer.camera)
         {
             return gameObjects;
         }
@@ -2646,7 +2672,10 @@ var InputPlugin = new Class({
 
         return gameObjects.sort(function (childA, childB)
         {
-            return list.indexOf(childB) - list.indexOf(childA);
+            var indexA = Math.max(list.indexOf(childA), 0);
+            var indexB = Math.max(list.indexOf(childB), 0);
+
+            return indexB - indexA;
         });
     },
 

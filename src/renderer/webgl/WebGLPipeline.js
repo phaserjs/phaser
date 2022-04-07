@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -279,6 +279,16 @@ var WebGLPipeline = new Class({
         this.isPostFX = false;
 
         /**
+         * Indicates if this is a Sprite FX Pipeline, or not.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#isSpriteFX
+         * @type {boolean}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.isSpriteFX = false;
+
+        /**
          * An array of RenderTarget instances that belong to this pipeline.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#renderTargets
@@ -429,8 +439,17 @@ var WebGLPipeline = new Class({
                 var scale = GetFastValue(targets[i], 'scale', 1);
                 var minFilter = GetFastValue(targets[i], 'minFilter', 0);
                 var autoClear = GetFastValue(targets[i], 'autoClear', 1);
+                var targetWidth = GetFastValue(targets[i], 'width', null);
+                var targetHeight = GetFastValue(targets[i], 'height', targetWidth);
 
-                renderTargets.push(new RenderTarget(renderer, width, height, scale, minFilter, autoClear));
+                if (targetWidth)
+                {
+                    renderTargets.push(new RenderTarget(renderer, targetWidth, targetHeight, 1, minFilter, autoClear));
+                }
+                else
+                {
+                    renderTargets.push(new RenderTarget(renderer, width, height, scale, minFilter, autoClear));
+                }
             }
         }
 
@@ -539,10 +558,11 @@ var WebGLPipeline = new Class({
      *
      * @param {Phaser.Renderer.WebGL.WebGLShader} shader - The shader to set as being current.
      * @param {boolean} [setAttributes=false] - Should the vertex attribute pointers be set?
+     * @param {WebGLBuffer} [vertexBuffer] - The vertex buffer to be set before the shader is bound. Defaults to the one owned by this pipeline.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    setShader: function (shader, setAttributes)
+    setShader: function (shader, setAttributes, vertexBuffer)
     {
         var renderer = this.renderer;
 
@@ -552,7 +572,7 @@ var WebGLPipeline = new Class({
 
             renderer.resetTextures();
 
-            var wasBound = this.setVertexBuffer();
+            var wasBound = this.setVertexBuffer(vertexBuffer);
 
             if (wasBound && !setAttributes)
             {
@@ -800,6 +820,43 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Adjusts this pipelines ortho Projection Matrix to flip the y
+     * and bottom values. Call with 'false' as the parameter to flip
+     * them back again.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#flipProjectionMatrix
+     * @since 3.60.0
+     *
+     * @param {boolean} [flipY=true] - Flip the y and bottom values?
+     */
+    flipProjectionMatrix: function (flipY)
+    {
+        if (flipY === undefined) { flipY = true; }
+
+        var projectionMatrix = this.projectionMatrix;
+
+        //  Because not all pipelines have them
+        if (!projectionMatrix)
+        {
+            return this;
+        }
+
+        var width = this.projectionWidth;
+        var height = this.projectionHeight;
+
+        if (flipY)
+        {
+            projectionMatrix.ortho(0, width, 0, height, -1000, 1000);
+        }
+        else
+        {
+            projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
+        }
+
+        this.setMatrix4fv('uProjectionMatrix', false, projectionMatrix.val);
+    },
+
+    /**
      * Adjusts this pipelines ortho Projection Matrix to match that of the global
      * WebGL Renderer Projection Matrix.
      *
@@ -909,12 +966,15 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setVertexBuffer
      * @since 3.50.0
      *
+     * @param {WebGLBuffer} [buffer] - The Vertex Buffer to be bound. Defaults to the one owned by this pipeline.
+     *
      * @return {boolean} `true` if the vertex buffer was bound, or `false` if it was already bound.
      */
-    setVertexBuffer: function ()
+    setVertexBuffer: function (buffer)
     {
+        if (buffer === undefined) { buffer = this.vertexBuffer; }
+
         var gl = this.gl;
-        var buffer = this.vertexBuffer;
 
         if (gl.getParameter(gl.ARRAY_BUFFER_BINDING) !== buffer)
         {
@@ -976,7 +1036,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * This method is only used by Post FX Pipelines and those that extend from them.
+     * This method is only used by Sprite FX and Post FX Pipelines and those that extend from them.
      *
      * This method is called every time the `postBatch` method is called and is passed a
      * reference to the current render target.
@@ -989,6 +1049,7 @@ var WebGLPipeline = new Class({
      * @since 3.50.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} renderTarget - The Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [swapTarget] - A Swap Render Target, useful for double-buffer effects. Only set by SpriteFX Pipelines.
      */
     onDraw: function ()
     {
@@ -1548,6 +1609,33 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Sets a boolean uniform value based on the given name on the currently set shader.
+     *
+     * The current shader is bound, before the uniform is set, making it active within the
+     * WebGLRenderer. This means you can safely call this method from a location such as
+     * a Scene `create` or `update` method. However, when working within a Shader file
+     * directly, use the `WebGLShader` method equivalent instead, to avoid the program
+     * being set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setBoolean
+     * @since 3.60.0
+     *
+     * @param {string} name - The name of the uniform to set.
+     * @param {boolean} value - The new value of the `boolean` uniform.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    setBoolean: function (name, value, shader)
+    {
+        if (shader === undefined) { shader = this.currentShader; }
+
+        shader.setBoolean(name, value);
+
+        return this;
+    },
+
+    /**
      * Sets a 1f uniform value based on the given name on the currently set shader.
      *
      * The current shader is bound, before the uniform is set, making it active within the
@@ -2060,8 +2148,8 @@ var WebGLPipeline = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
-     * @param {boolean} transpose - Should the matrix be transpose
-     * @param {Float32Array} matrix - Matrix data
+     * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
+     * @param {Float32Array} matrix - The matrix data. If using a Matrix4 this should be the `Matrix4.val` property.
      * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.

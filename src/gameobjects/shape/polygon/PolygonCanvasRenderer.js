@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -56,7 +56,10 @@ var PolygonCanvasRenderer = function (renderer, src, camera, parentMatrix)
             ctx.lineTo(px2, py2);
         }
 
-        ctx.closePath();
+        if (src.closePath)
+        {
+            ctx.closePath();
+        }
 
         if (src.isFilled)
         {

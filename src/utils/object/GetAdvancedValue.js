@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,7 +11,7 @@ var GetValue = require('./GetValue');
  * Retrieves a value from an object. Allows for more advanced selection options, including:
  *
  * Allowed types:
- * 
+ *
  * Implicit
  * {
  *     x: 4
@@ -36,7 +36,7 @@ var GetValue = require('./GetValue');
  * {
  *     x: { randFloat: [min, max] }
  * }
- * 
+ *
  *
  * @function Phaser.Utils.Objects.GetAdvancedValue
  * @since 3.0.0

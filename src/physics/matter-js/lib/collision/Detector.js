@@ -1,84 +1,132 @@
 /**
-* The `Matter.Detector` module contains methods for detecting collisions given a set of pairs.
+* The `Matter.Detector` module contains methods for efficiently detecting collisions between a list of bodies using a broadphase algorithm.
 *
 * @class Detector
 */
-
-// TODO: speculative contacts
 
 var Detector = {};
 
 module.exports = Detector;
 
-var SAT = require('./SAT');
-var Pair = require('./Pair');
-var Bounds = require('../geometry/Bounds');
+var Common = require('../core/Common');
+var Collision = require('./Collision');
 
 (function() {
 
     /**
-     * Finds all collisions given a list of pairs.
-     * @method collisions
-     * @param {pair[]} broadphasePairs
-     * @param {engine} engine
-     * @return {array} collisions
+     * Creates a new collision detector.
+     * @method create
+     * @param {} options
+     * @return {detector} A new collision detector
      */
-    Detector.collisions = function(broadphasePairs, engine) {
+    Detector.create = function(options) {
+        var defaults = {
+            bodies: [],
+            pairs: null
+        };
+
+        return Common.extend(defaults, options);
+    };
+
+    /**
+     * Sets the list of bodies in the detector.
+     * @method setBodies
+     * @param {detector} detector
+     * @param {body[]} bodies
+     */
+    Detector.setBodies = function(detector, bodies) {
+        detector.bodies = bodies.slice(0);
+    };
+
+    /**
+     * Clears the detector including its list of bodies.
+     * @method clear
+     * @param {detector} detector
+     */
+    Detector.clear = function(detector) {
+        detector.bodies = [];
+    };
+
+    /**
+     * Efficiently finds all collisions among all the bodies in `detector.bodies` using a broadphase algorithm.
+     * 
+     * _Note:_ The specific ordering of collisions returned is not guaranteed between releases and may change for performance reasons.
+     * If a specific ordering is required then apply a sort to the resulting array.
+     * @method collisions
+     * @param {detector} detector
+     * @return {collision[]} collisions
+     */
+    Detector.collisions = function(detector) {
         var collisions = [],
-            pairsTable = engine.pairs.table;
+            pairs = detector.pairs,
+            bodies = detector.bodies,
+            bodiesLength = bodies.length,
+            canCollide = Detector.canCollide,
+            collides = Collision.collides,
+            i,
+            j;
 
-        // @if DEBUG
-        var metrics = engine.metrics;
-        // @endif
-        
-        for (var i = 0; i < broadphasePairs.length; i++) {
-            var bodyA = broadphasePairs[i][0], 
-                bodyB = broadphasePairs[i][1];
+        bodies.sort(Detector._compareBoundsX);
 
-            if ((bodyA.isStatic || bodyA.isSleeping) && (bodyB.isStatic || bodyB.isSleeping))
-                continue;
-            
-            if (!Detector.canCollide(bodyA.collisionFilter, bodyB.collisionFilter))
-                continue;
+        for (i = 0; i < bodiesLength; i++) {
+            var bodyA = bodies[i],
+                boundsA = bodyA.bounds,
+                boundXMax = bodyA.bounds.max.x,
+                boundYMax = bodyA.bounds.max.y,
+                boundYMin = bodyA.bounds.min.y,
+                bodyAStatic = bodyA.isStatic || bodyA.isSleeping,
+                partsALength = bodyA.parts.length,
+                partsASingle = partsALength === 1;
 
-            // @if DEBUG
-            metrics.midphaseTests += 1;
-            // @endif
+            for (j = i + 1; j < bodiesLength; j++) {
+                var bodyB = bodies[j],
+                    boundsB = bodyB.bounds;
 
-            // mid phase
-            if (Bounds.overlaps(bodyA.bounds, bodyB.bounds)) {
-                for (var j = bodyA.parts.length > 1 ? 1 : 0; j < bodyA.parts.length; j++) {
-                    var partA = bodyA.parts[j];
+                if (boundsB.min.x > boundXMax) {
+                    break;
+                }
 
-                    for (var k = bodyB.parts.length > 1 ? 1 : 0; k < bodyB.parts.length; k++) {
-                        var partB = bodyB.parts[k];
+                if (boundYMax < boundsB.min.y || boundYMin > boundsB.max.y) {
+                    continue;
+                }
 
-                        if ((partA === bodyA && partB === bodyB) || Bounds.overlaps(partA.bounds, partB.bounds)) {
-                            // find a previous collision we could reuse
-                            var pairId = Pair.id(partA, partB),
-                                pair = pairsTable[pairId],
-                                previousCollision;
+                if (bodyAStatic && (bodyB.isStatic || bodyB.isSleeping)) {
+                    continue;
+                }
 
-                            if (pair && pair.isActive) {
-                                previousCollision = pair.collision;
-                            } else {
-                                previousCollision = null;
+                if (!canCollide(bodyA.collisionFilter, bodyB.collisionFilter)) {
+                    continue;
+                }
+
+                var partsBLength = bodyB.parts.length;
+
+                if (partsASingle && partsBLength === 1) {
+                    var collision = collides(bodyA, bodyB, pairs);
+
+                    if (collision) {
+                        collisions.push(collision);
+                    }
+                } else {
+                    var partsAStart = partsALength > 1 ? 1 : 0,
+                        partsBStart = partsBLength > 1 ? 1 : 0;
+                    
+                    for (var k = partsAStart; k < partsALength; k++) {
+                        var partA = bodyA.parts[k],
+                            boundsA = partA.bounds;
+
+                        for (var z = partsBStart; z < partsBLength; z++) {
+                            var partB = bodyB.parts[z],
+                                boundsB = partB.bounds;
+
+                            if (boundsA.min.x > boundsB.max.x || boundsA.max.x < boundsB.min.x
+                                || boundsA.max.y < boundsB.min.y || boundsA.min.y > boundsB.max.y) {
+                                continue;
                             }
 
-                            // narrow phase
-                            var collision = SAT.collides(partA, partB, previousCollision);
+                            var collision = collides(partA, partB, pairs);
 
-                            // @if DEBUG
-                            metrics.narrowphaseTests += 1;
-                            if (collision.reused)
-                                metrics.narrowReuseCount += 1;
-                            // @endif
-
-                            if (collision.collided) {
+                            if (collision) {
                                 collisions.push(collision);
-                                // @if DEBUG
-                                metrics.narrowDetections += 1;
-                                // @endif
                             }
                         }
                     }
@@ -103,5 +151,40 @@ var Bounds = require('../geometry/Bounds');
 
         return (filterA.mask & filterB.category) !== 0 && (filterB.mask & filterA.category) !== 0;
     };
+
+    /**
+     * The comparison function used in the broadphase algorithm.
+     * Returns the signed delta of the bodies bounds on the x-axis.
+     * @private
+     * @method _sortCompare
+     * @param {body} bodyA
+     * @param {body} bodyB
+     * @return {number} The signed delta used for sorting
+     */
+    Detector._compareBoundsX = function(bodyA, bodyB) {
+        return bodyA.bounds.min.x - bodyB.bounds.min.x;
+    };
+
+    /*
+    *
+    *  Properties Documentation
+    *
+    */
+
+    /**
+     * The array of `Matter.Body` between which the detector finds collisions.
+     * 
+     * _Note:_ The order of bodies in this array _is not fixed_ and will be continually managed by the detector.
+     * @property bodies
+     * @type body[]
+     * @default []
+     */
+
+    /**
+     * Optional. A `Matter.Pairs` object from which previous collision objects may be reused. Intended for internal `Matter.Engine` usage.
+     * @property pairs
+     * @type {pairs|null}
+     * @default null
+     */
 
 })();

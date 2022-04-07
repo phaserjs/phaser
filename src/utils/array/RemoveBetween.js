@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,9 +8,9 @@ var SafeRange = require('./SafeRange');
 
 /**
  * Removes the item within the given range in the array.
- * 
+ *
  * The array is modified in-place.
- * 
+ *
  * You can optionally specify a callback to be invoked for the item/s successfully removed from the array.
  *
  * @function Phaser.Utils.Array.RemoveBetween

@@ -1,7 +1,7 @@
 module.exports = [
     '#define SHADER_NAME PHASER_MULTI_VS',
     '',
-    'precision mediump float;',
+    'precision highp float;',
     '',
     'uniform mat4 uProjectionMatrix;',
     '',

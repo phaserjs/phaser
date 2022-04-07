@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -52,6 +52,7 @@ var _FLAG = 8; // 1000
  * @extends Phaser.GameObjects.Components.Crop
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
+ * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
@@ -80,6 +81,7 @@ var TileSprite = new Class({
         Components.Crop,
         Components.Depth,
         Components.Flip,
+        Components.FX,
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
@@ -275,20 +277,7 @@ var TileSprite = new Class({
         this.setOriginFromFrame();
         this.initPipeline();
 
-        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function (renderer)
-        {
-            if (!renderer)
-            {
-                return;
-            }
-            
-            var gl = renderer.gl;
-
-            this.dirty = true;
-            this.fillPattern = null;
-            this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
-
-        }, this);
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     },
 
     /**
@@ -526,6 +515,27 @@ var TileSprite = new Class({
     },
 
     /**
+     * Internal context-restored handler.
+     *
+     * @method Phaser.GameObjects.TileSprite#onContextRestored
+     * @protected
+     * @since 3.60.0
+     */
+    onContextRestored: function (renderer)
+    {
+        if (!renderer)
+        {
+            return;
+        }
+
+        var gl = renderer.gl;
+
+        this.dirty = true;
+        this.fillPattern = null;
+        this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
+    },
+
+    /**
      * Internal destroy handler, called as part of the destroy process.
      *
      * @method Phaser.GameObjects.TileSprite#preDestroy
@@ -552,6 +562,8 @@ var TileSprite = new Class({
         this.texture.destroy();
 
         this.renderer = null;
+
+        this.scene.sys.game.events.off(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     },
 
     /**

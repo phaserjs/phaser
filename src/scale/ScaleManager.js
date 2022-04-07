@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -621,12 +621,13 @@ var ScaleManager = new Class({
     },
 
     /**
-     * Calculates the size of the parent bounds and updates the `parentSize` component, if the canvas has a dom parent.
+     * Calculates the size of the parent bounds and updates the `parentSize`
+     * properties, only if the canvas has a dom parent.
      *
      * @method Phaser.Scale.ScaleManager#getParentBounds
      * @since 3.16.0
      *
-     * @return {boolean} `true` if the parent bounds have changed size, otherwise `false`.
+     * @return {boolean} `true` if the parent bounds have changed size or position, otherwise `false`.
      */
     getParentBounds: function ()
     {
@@ -638,6 +639,11 @@ var ScaleManager = new Class({
         var parentSize = this.parentSize;
 
         // Ref. http://msdn.microsoft.com/en-us/library/hh781509(v=vs.85).aspx for getBoundingClientRect
+
+        // The returned value is a DOMRect object which is the smallest rectangle which contains the entire element,
+        // including its padding and border-width. The left, top, right, bottom, x, y, width, and height properties
+        // describe the position and size of the overall rectangle in pixels. Properties other than width and height
+        // are relative to the top-left of the viewport.
 
         var DOMRect = this.parent.getBoundingClientRect();
 
@@ -655,10 +661,18 @@ var ScaleManager = new Class({
 
             return true;
         }
-        else
+        else if (this.canvas)
         {
-            return false;
+            var canvasBounds = this.canvasBounds;
+            var canvasRect = this.canvas.getBoundingClientRect();
+
+            if (canvasRect.x !== canvasBounds.x || canvasRect.y !== canvasBounds.y)
+            {
+                return true;
+            }
         }
+
+        return false;
     },
 
     /**
@@ -1466,6 +1480,57 @@ var ScaleManager = new Class({
     onFullScreenError: function ()
     {
         this.removeFullscreenTarget();
+    },
+
+    /**
+     * Get Rectange of visible area, this Rectange does NOT factor in camera scroll.
+     *
+     * @method Phaser.Scale.ScaleManager#getViewPort
+     * @since 3.56.0
+     *
+     * @param {Phaser.Geom.Rectangle} [out] - The Rectangle of visible area.
+     *
+     * @return {Phaser.Geom.Rectangle} The Rectangle of visible area.
+     */
+    getViewPort: function (out)
+    {
+        if (out === undefined)
+        {
+            out = new Rectangle();
+        }
+
+        var baseSize = this.baseSize;
+        var parentSize = this.parentSize;
+        var canvasBounds = this.canvasBounds;
+        var displayScale = this.displayScale;
+
+        var x = (canvasBounds.x >= 0) ? 0 : -(canvasBounds.x * displayScale.x);
+
+        var y = (canvasBounds.y >= 0) ? 0 : -(canvasBounds.y * displayScale.y);
+
+        var width;
+        if (parentSize.width >= canvasBounds.width)
+        {
+            width = baseSize.width;
+        }
+        else
+        {
+            width = baseSize.width - (canvasBounds.width - parentSize.width) * displayScale.x;
+        }
+
+        var height;
+        if (parentSize.height >= canvasBounds.height)
+        {
+            height = baseSize.height;
+        }
+        else
+        {
+            height = baseSize.height - (canvasBounds.height - parentSize.height) * displayScale.y;
+        }
+
+        out.setTo(x, y, width, height);
+
+        return out;
     },
 
     /**

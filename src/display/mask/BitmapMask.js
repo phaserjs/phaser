@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -141,6 +141,15 @@ var BitmapMask = new Class({
          * @since 3.17.0
          */
         this.isStencil = false;
+
+        /**
+         * The Scene which this Bitmap Mask will be used in.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#scene
+         * @type {Phaser.Scene}
+         * @since 3.60.0
+         */
+        this.scene = scene;
 
         this.createMask();
 
@@ -302,11 +311,13 @@ var BitmapMask = new Class({
     {
         this.clearMask();
 
+        this.scene.sys.game.events.off(GameEvents.CONTEXT_RESTORED, this.createMask, this);
+
         if (this.renderer)
         {
             this.renderer.off(RenderEvents.RESIZE, this.createMask, this);
         }
-        
+
         this.bitmapMask = null;
         this.prevFramebuffer = null;
         this.renderer = null;

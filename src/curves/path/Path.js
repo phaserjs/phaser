@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -467,6 +467,35 @@ var Path = new Class({
         this.cacheLengths = lengths;
 
         return lengths;
+    },
+
+    /**
+     * Returns the Curve that forms the Path at the given normalized location (between 0 and 1).
+     *
+     * @method Phaser.Curves.Path#getCurveAt
+     * @since 3.60.0
+     *
+     * @param {number} t - The normalized location on the Path, between 0 and 1.
+     *
+     * @return {?Phaser.Curves.Curve} The Curve that is part of this Path at a given location, or `null` if no curve was found.
+     */
+    getCurveAt: function (t)
+    {
+        var d = t * this.getLength();
+        var curveLengths = this.getCurveLengths();
+        var i = 0;
+
+        while (i < curveLengths.length)
+        {
+            if (curveLengths[i] >= d)
+            {
+                return this.curves[i];
+            }
+
+            i++;
+        }
+
+        return null;
     },
 
     /**

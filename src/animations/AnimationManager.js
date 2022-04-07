@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -392,10 +392,11 @@ var AnimationManager = new Class({
      *
      * @param {string} key - The key of the loaded Aseprite atlas. It must have been loaded prior to calling this method.
      * @param {string[]} [tags] - An array of Tag names. If provided, only animations found in this array will be created.
+     * @param {(Phaser.Animations.AnimationManager|Phaser.GameObjects.GameObject)} [target] - Create the animations on this target Sprite. If not given, they will be created globally in this Animation Manager.
      *
      * @return {Phaser.Animations.Animation[]} An array of Animation instances that were successfully created.
      */
-    createFromAseprite: function (key, tags)
+    createFromAseprite: function (key, tags, target)
     {
         var output = [];
 
@@ -459,7 +460,7 @@ var AnimationManager = new Class({
                         animFrames.push({
                             key: key,
                             frame: entry.frame,
-                            duration: (minDuration - entry.duration)
+                            duration: (entry.duration - minDuration)
                         });
                     });
 
@@ -478,7 +479,19 @@ var AnimationManager = new Class({
                         yoyo: (direction === 'pingpong')
                     };
 
-                    var result = _this.create(createConfig);
+                    var result;
+
+                    if (target)
+                    {
+                        if (target.anims)
+                        {
+                            result = target.anims.create(createConfig);
+                        }
+                    }
+                    else
+                    {
+                        result = _this.create(createConfig);
+                    }
 
                     if (result)
                     {
@@ -590,6 +603,7 @@ var AnimationManager = new Class({
      * Generates objects with string based frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNames}.
      *
      * It's a helper method, designed to make it easier for you to extract all of the frame names from texture atlases.
+     *
      * If you're working with a sprite sheet, see the `generateFrameNumbers` method instead.
      *
      * Example:
@@ -684,7 +698,6 @@ var AnimationManager = new Class({
      * If you're working with a texture atlas, see the `generateFrameNames` method instead.
      *
      * It's a helper method, designed to make it easier for you to extract frames from sprite sheets.
-     * If you're working with a texture atlas, see the `generateFrameNames` method instead.
      *
      * Example:
      *

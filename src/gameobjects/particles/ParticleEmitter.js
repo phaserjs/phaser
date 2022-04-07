@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -167,7 +167,7 @@ var ParticleEmitter = new Class({
          * The Particle Class which will be emitted by this Emitter.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#particleClass
-         * @type {Phaser.GameObjects.Particles.Particle}
+         * @type {Phaser.Types.GameObjects.Particles.ParticleClassConstructor}
          * @default Phaser.GameObjects.Particles.Particle
          * @since 3.0.0
          */
@@ -827,7 +827,7 @@ var ParticleEmitter = new Class({
         if (HasValue(config, 'scale'))
         {
             this.scaleX.loadConfig(config, 'scale');
-            this.scaleY = null;
+            this.scaleY.loadConfig(config, 'scale');
         }
 
         if (HasValue(config, 'callbackScope'))
@@ -912,9 +912,10 @@ var ParticleEmitter = new Class({
             output.speed = this.speedX.toJSON();
         }
 
-        if (!this.scaleY)
+        if (this.scaleX === this.scaleY)
         {
             delete output.scaleX;
+            delete output.scaleY;
             output.scale = this.scaleX.toJSON();
         }
 
@@ -1241,7 +1242,7 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Sets the scale of emitted particles.
+     * Sets the scale of emitted particles. This updates both the scaleX and scaleY values.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setScale
      * @since 3.0.0
@@ -1253,7 +1254,7 @@ var ParticleEmitter = new Class({
     setScale: function (value)
     {
         this.scaleX.onChange(value);
-        this.scaleY = null;
+        this.scaleY.onChange(value);
 
         return this;
     },

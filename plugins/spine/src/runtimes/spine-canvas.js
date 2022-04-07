@@ -6,6 +6,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -696,7 +698,7 @@ var spine;
                 .setAttachment(attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
         };
         AttachmentTimeline.prototype.setAttachment = function (skeleton, slot, attachmentName) {
-            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName);
+            slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
         };
         return AttachmentTimeline;
     }());
@@ -1496,7 +1498,7 @@ var spine;
                 var slot = slots[i];
                 if (slot.attachmentState == setupState) {
                     var attachmentName = slot.data.attachmentName;
-                    slot.attachment = (attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
+                    slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
                 }
             }
             this.unkeyedState += 2;
@@ -1609,7 +1611,7 @@ var spine;
                 slot.attachmentState = this.unkeyedState + AnimationState.SETUP;
         };
         AnimationState.prototype.setAttachment = function (skeleton, slot, attachmentName, attachments) {
-            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName);
+            slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
             if (attachments)
                 slot.attachmentState = this.unkeyedState + AnimationState.CURRENT;
         };
@@ -2239,9 +2241,9 @@ var spine;
                 _this.toLoad--;
                 _this.loaded++;
             }, function (state, responseText) {
-                _this.errors[path] = "Couldn't load binary " + path + ": status " + status + ", " + responseText;
+                _this.errors[path] = "Couldn't load binary ".concat(path, ": status ").concat(status, ", ").concat(responseText);
                 if (error)
-                    error(path, "Couldn't load binary " + path + ": status " + status + ", " + responseText);
+                    error(path, "Couldn't load binary ".concat(path, ": status ").concat(status, ", ").concat(responseText));
                 _this.toLoad--;
                 _this.loaded++;
             });
@@ -2259,9 +2261,9 @@ var spine;
                 _this.toLoad--;
                 _this.loaded++;
             }, function (state, responseText) {
-                _this.errors[path] = "Couldn't load text " + path + ": status " + status + ", " + responseText;
+                _this.errors[path] = "Couldn't load text ".concat(path, ": status ").concat(status, ", ").concat(responseText);
                 if (error)
-                    error(path, "Couldn't load text " + path + ": status " + status + ", " + responseText);
+                    error(path, "Couldn't load text ".concat(path, ": status ").concat(status, ", ").concat(responseText));
                 _this.toLoad--;
                 _this.loaded++;
             });
@@ -2284,11 +2286,11 @@ var spine;
                     success(path, img);
             };
             img.onerror = function (ev) {
-                _this.errors[path] = "Couldn't load image " + path;
+                _this.errors[path] = "Couldn't load image ".concat(path);
                 _this.toLoad--;
                 _this.loaded++;
                 if (error)
-                    error(path, "Couldn't load image " + path);
+                    error(path, "Couldn't load image ".concat(path));
             };
             if (this.rawDataUris[path])
                 path = this.rawDataUris[path];
@@ -2315,9 +2317,9 @@ var spine;
                 }
                 catch (e) {
                     var ex = e;
-                    _this.errors[path] = "Couldn't load texture atlas " + path + ": " + ex.message;
+                    _this.errors[path] = "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message);
                     if (error)
-                        error(path, "Couldn't load texture atlas " + path + ": " + ex.message);
+                        error(path, "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message));
                     _this.toLoad--;
                     _this.loaded++;
                     return;
@@ -2340,17 +2342,17 @@ var spine;
                                 }
                                 catch (e) {
                                     var ex = e;
-                                    _this.errors[path] = "Couldn't load texture atlas " + path + ": " + ex.message;
+                                    _this.errors[path] = "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message);
                                     if (error)
-                                        error(path, "Couldn't load texture atlas " + path + ": " + ex.message);
+                                        error(path, "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message));
                                     _this.toLoad--;
                                     _this.loaded++;
                                 }
                             }
                             else {
-                                _this.errors[path] = "Couldn't load texture atlas page " + imagePath + "} of atlas " + path;
+                                _this.errors[path] = "Couldn't load texture atlas page ".concat(imagePath, "} of atlas ").concat(path);
                                 if (error)
-                                    error(path, "Couldn't load texture atlas page " + imagePath + " of atlas " + path);
+                                    error(path, "Couldn't load texture atlas page ".concat(imagePath, " of atlas ").concat(path));
                                 _this.toLoad--;
                                 _this.loaded++;
                             }
@@ -2359,9 +2361,9 @@ var spine;
                         pageLoadError = true;
                         pagesLoaded.count++;
                         if (pagesLoaded.count == atlasPages.length) {
-                            _this.errors[path] = "Couldn't load texture atlas page " + imagePath + "} of atlas " + path;
+                            _this.errors[path] = "Couldn't load texture atlas page ".concat(imagePath, "} of atlas ").concat(path);
                             if (error)
-                                error(path, "Couldn't load texture atlas page " + imagePath + " of atlas " + path);
+                                error(path, "Couldn't load texture atlas page ".concat(imagePath, " of atlas ").concat(path));
                             _this.toLoad--;
                             _this.loaded++;
                         }
@@ -2372,9 +2374,9 @@ var spine;
                     _loop_1(atlasPage);
                 }
             }, function (state, responseText) {
-                _this.errors[path] = "Couldn't load texture atlas " + path + ": status " + status + ", " + responseText;
+                _this.errors[path] = "Couldn't load texture atlas ".concat(path, ": status ").concat(status, ", ").concat(responseText);
                 if (error)
-                    error(path, "Couldn't load texture atlas " + path + ": status " + status + ", " + responseText);
+                    error(path, "Couldn't load texture atlas ".concat(path, ": status ").concat(status, ", ").concat(responseText));
                 _this.toLoad--;
                 _this.loaded++;
             });
@@ -3540,7 +3542,7 @@ var spine;
                         _this.rawAssets[path] = request.responseText;
                     }
                     else {
-                        _this.errors[path] = "Couldn't load text " + path + ": status " + request.status + ", " + request.responseText;
+                        _this.errors[path] = "Couldn't load text ".concat(path, ": status ").concat(request.status, ", ").concat(request.responseText);
                     }
                 }
             };
@@ -3560,7 +3562,7 @@ var spine;
                         _this.rawAssets[path] = JSON.parse(request.responseText);
                     }
                     else {
-                        _this.errors[path] = "Couldn't load text " + path + ": status " + request.status + ", " + request.responseText;
+                        _this.errors[path] = "Couldn't load text ".concat(path, ": status ").concat(request.status, ", ").concat(request.responseText);
                     }
                 }
             };
@@ -3597,7 +3599,7 @@ var spine;
                     _this.rawAssets[path] = img_1;
                 };
                 img_1.onerror = function (ev) {
-                    _this.errors[path] = "Couldn't load image " + path;
+                    _this.errors[path] = "Couldn't load image ".concat(path);
                 };
                 img_1.src = path;
             }
@@ -6251,7 +6253,7 @@ var spine;
                 return spine.BlendMode.Multiply;
             if (str == "screen")
                 return spine.BlendMode.Screen;
-            throw new Error("Unknown blend mode: " + str);
+            throw new Error("Unknown blend mode: ".concat(str));
         };
         SkeletonJson.positionModeFromString = function (str) {
             str = str.toLowerCase();
@@ -6259,7 +6261,7 @@ var spine;
                 return spine.PositionMode.Fixed;
             if (str == "percent")
                 return spine.PositionMode.Percent;
-            throw new Error("Unknown position mode: " + str);
+            throw new Error("Unknown position mode: ".concat(str));
         };
         SkeletonJson.spacingModeFromString = function (str) {
             str = str.toLowerCase();
@@ -6269,7 +6271,7 @@ var spine;
                 return spine.SpacingMode.Fixed;
             if (str == "percent")
                 return spine.SpacingMode.Percent;
-            throw new Error("Unknown position mode: " + str);
+            throw new Error("Unknown position mode: ".concat(str));
         };
         SkeletonJson.rotateModeFromString = function (str) {
             str = str.toLowerCase();
@@ -6279,7 +6281,7 @@ var spine;
                 return spine.RotateMode.Chain;
             if (str == "chainscale")
                 return spine.RotateMode.ChainScale;
-            throw new Error("Unknown rotate mode: " + str);
+            throw new Error("Unknown rotate mode: ".concat(str));
         };
         SkeletonJson.transformModeFromString = function (str) {
             str = str.toLowerCase();
@@ -6293,7 +6295,7 @@ var spine;
                 return spine.TransformMode.NoScale;
             if (str == "noscaleorreflection")
                 return spine.TransformMode.NoScaleOrReflection;
-            throw new Error("Unknown transform mode: " + str);
+            throw new Error("Unknown transform mode: ".concat(str));
         };
         return SkeletonJson;
     }());
@@ -6558,7 +6560,7 @@ var spine;
                 case "mipmaplinearnearest": return TextureFilter.MipMapLinearNearest;
                 case "mipmapnearestlinear": return TextureFilter.MipMapNearestLinear;
                 case "mipmaplinearlinear": return TextureFilter.MipMapLinearLinear;
-                default: throw new Error("Unknown texture filter " + text);
+                default: throw new Error("Unknown texture filter ".concat(text));
             }
         };
         Texture.wrapFromString = function (text) {
@@ -6566,7 +6568,7 @@ var spine;
                 case "mirroredtepeat": return TextureWrap.MirroredRepeat;
                 case "clamptoedge": return TextureWrap.ClampToEdge;
                 case "repeat": return TextureWrap.Repeat;
-                default: throw new Error("Unknown texture wrap " + text);
+                default: throw new Error("Unknown texture wrap ".concat(text));
             }
         };
         return Texture;
@@ -8300,9 +8302,7 @@ var spine;
                     }
                     ctx.scale(1, -1);
                     ctx.translate(-w / 2, -h / 2);
-                    if (color.r != 1 || color.g != 1 || color.b != 1 || color.a != 1) {
-                        ctx.globalAlpha = color.a;
-                    }
+                    ctx.globalAlpha = color.a;
                     ctx.drawImage(image, region.x, region.y, w, h, 0, 0, w, h);
                     if (this.debugRendering)
                         ctx.strokeRect(0, 0, w, h);
@@ -8348,9 +8348,7 @@ var spine;
                         var color = this.tempColor;
                         color.set(skeletonColor.r * slotColor.r * attachmentColor.r, skeletonColor.g * slotColor.g * attachmentColor.g, skeletonColor.b * slotColor.b * attachmentColor.b, alpha);
                         var ctx = this.ctx;
-                        if (color.r != 1 || color.g != 1 || color.b != 1 || color.a != 1) {
-                            ctx.globalAlpha = color.a;
-                        }
+                        ctx.globalAlpha = color.a;
                         for (var j = 0; j < triangles.length; j += 3) {
                             var t1 = triangles[j] * 8, t2 = triangles[j + 1] * 8, t3 = triangles[j + 2] * 8;
                             var x0 = vertices[t1], y0 = vertices[t1 + 1], u0 = vertices[t1 + 6], v0 = vertices[t1 + 7];

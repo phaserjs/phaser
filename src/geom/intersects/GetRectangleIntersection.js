@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,9 +9,9 @@ var RectangleToRectangle = require('./RectangleToRectangle');
 
 /**
  * Checks if two Rectangle shapes intersect and returns the area of this intersection as Rectangle object.
- * 
+ *
  * If optional `output` parameter is omitted, new Rectangle object is created and returned. If there is intersection, it will contain intersection area. If there is no intersection, it wil be empty Rectangle (all values set to zero).
- * 
+ *
  * If Rectangle object is passed as `output` and there is intersection, then intersection area data will be loaded into it and it will be returned. If there is no intersection, it will be returned without any change.
  *
  * @function Phaser.Geom.Intersects.GetRectangleIntersection

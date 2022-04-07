@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,15 +14,15 @@
 
 /**
  * The Matter Physics Before Add Event.
- * 
+ *
  * This event is dispatched by a Matter Physics World instance at the start of the process when a new Body
  * or Constraint is being added to the world.
- * 
+ *
  * Listen to it from a Scene using: `this.matter.world.on('beforeadd', listener)`.
  *
  * @event Phaser.Physics.Matter.Events#BEFORE_ADD
  * @since 3.22.0
- * 
+ *
  * @param {Phaser.Physics.Matter.Events.BeforeAddEvent} event - The Add Event object.
  */
 module.exports = 'beforeadd';

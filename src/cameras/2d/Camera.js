@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -44,8 +44,6 @@ var Vector2 = require('../../math/Vector2');
  * @since 3.0.0
  *
  * @extends Phaser.Cameras.Scene2D.BaseCamera
- * @extends Phaser.GameObjects.Components.Flip
- * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Pipeline
  *
  * @param {number} x - The x position of the Camera, relative to the top-left of the game canvas.
@@ -58,8 +56,6 @@ var Camera = new Class({
     Extends: BaseCamera,
 
     Mixins: [
-        Components.Flip,
-        Components.Tint,
         Components.Pipeline
     ],
 

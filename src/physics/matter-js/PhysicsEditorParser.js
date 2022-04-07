@@ -2,7 +2,7 @@
  * @author       Joachim Grill <joachim@codeandweb.com>
  * @author       Richard Davey <rich@photonstorm.com>
  * @copyright    2018 CodeAndWeb GmbH
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31,7 +31,7 @@ var PhysicsEditorParser = {
      * @param {number} y - The vertical world location of the body.
      * @param {object} config - The body configuration and fixture (child body) definitions, as exported by PhysicsEditor.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
-     * 
+     *
      * @return {MatterJS.BodyType} A compound Matter JS Body.
      */
     parseBody: function (x, y, config, options)
@@ -61,7 +61,7 @@ var PhysicsEditorParser = {
         var body = Body.create(matterConfig);
 
         Body.setParts(body, fixtures);
-        
+
         Body.setPosition(body, { x: x, y: y });
 
         return body;
@@ -74,7 +74,7 @@ var PhysicsEditorParser = {
      * @since 3.10.0
      *
      * @param {object} fixtureConfig - The fixture object to parse.
-     * 
+     *
      * @return {MatterJS.BodyType[]} - An array of Matter JS Bodies.
      */
     parseFixture: function (fixtureConfig)
@@ -109,7 +109,7 @@ var PhysicsEditorParser = {
      *
      * @param {array} vertexSets - The vertex lists to parse.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
-     * 
+     *
      * @return {MatterJS.BodyType[]} - An array of Matter JS Bodies.
      */
     parseVertices: function (vertexSets, options)

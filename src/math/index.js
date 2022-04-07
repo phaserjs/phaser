@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -43,6 +43,7 @@ var PhaserMath = {
     IsEven: require('./IsEven'),
     IsEvenStrict: require('./IsEvenStrict'),
     Linear: require('./Linear'),
+    LinearXY: require('./LinearXY'),
     MaxAdd: require('./MaxAdd'),
     Median: require('./Median'),
     MinSub: require('./MinSub'),

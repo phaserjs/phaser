@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -173,10 +173,10 @@ var MapData = new Class({
          * An object of Tiled Object Layers.
          *
          * @name Phaser.Tilemaps.MapData#objects
-         * @type {object}
+         * @type {Phaser.Types.Tilemaps.ObjectLayerConfig[]}
          * @since 3.0.0
          */
-        this.objects = GetFastValue(config, 'objects', {});
+        this.objects = GetFastValue(config, 'objects', []);
 
         /**
           * An object of collision data. Must be created as physics object or will return undefined.

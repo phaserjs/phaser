@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -293,6 +293,11 @@ var Particle = new Class({
 
         this.frame = emitter.getFrame();
 
+        if (!this.frame)
+        {
+            throw new Error('Particle has no texture frame');
+        }
+
         if (emitter.emitZone)
         {
             //  Updates particle.x and particle.y during this call
@@ -364,7 +369,7 @@ var Particle = new Class({
         this.delayCurrent = emitter.delay.onEmit(this, 'delay');
 
         this.scaleX = emitter.scaleX.onEmit(this, 'scaleX');
-        this.scaleY = (emitter.scaleY) ? emitter.scaleY.onEmit(this, 'scaleY') : this.scaleX;
+        this.scaleY = emitter.scaleY.onEmit(this, 'scaleY');
 
         this.angle = emitter.rotate.onEmit(this, 'rotate');
         this.rotation = DegToRad(this.angle);
@@ -526,15 +531,7 @@ var Particle = new Class({
         }
 
         this.scaleX = emitter.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
-
-        if (emitter.scaleY)
-        {
-            this.scaleY = emitter.scaleY.onUpdate(this, 'scaleY', t, this.scaleY);
-        }
-        else
-        {
-            this.scaleY = this.scaleX;
-        }
+        this.scaleY = emitter.scaleY.onUpdate(this, 'scaleY', t, this.scaleY);
 
         this.angle = emitter.rotate.onUpdate(this, 'rotate', t, this.angle);
         this.rotation = DegToRad(this.angle);

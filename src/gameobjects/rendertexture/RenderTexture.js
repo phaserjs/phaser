@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -44,6 +44,7 @@ var UUID = require('../../utils/string/UUID');
  * @extends Phaser.GameObjects.Components.Crop
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
+ * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
@@ -72,6 +73,7 @@ var RenderTexture = new Class({
         Components.Crop,
         Components.Depth,
         Components.Flip,
+        Components.FX,
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
@@ -506,9 +508,9 @@ var RenderTexture = new Class({
         if (width === undefined) { width = frame.cutWidth; }
         if (height === undefined) { height = frame.cutHeight; }
 
-        var r = (rgb >> 16 & 0xFF) / 255;
-        var g = (rgb >> 8 & 0xFF) / 255;
-        var b = (rgb & 0xFF) / 255;
+        var r = (rgb >> 16 & 0xFF);
+        var g = (rgb >> 8 & 0xFF);
+        var b = (rgb & 0xFF);
 
         var renderTarget = this.renderTarget;
 
@@ -533,7 +535,7 @@ var RenderTexture = new Class({
 
             pipeline.drawFillRect(
                 x * sx, y * sy, width * sx, height * sy,
-                Utils.getTintFromFloats(b, g, r, 1),
+                Utils.getTintFromFloats(b / 255, g / 255, r / 255, 1),
                 alpha
             );
 
@@ -662,7 +664,10 @@ var RenderTexture = new Class({
      * * A Texture Frame instance.
      * * A string. This is used to look-up a texture from the Texture Manager.
      *
-     * Note: You cannot draw a Render Texture to itself.
+     * Note 1: You cannot draw a Render Texture to itself.
+     *
+     * Note 2: For Game Objects that have Post FX Pipelines, the pipeline _cannot_ be
+     * used when drawn to this Render Texture.
      *
      * If passing in a Group or Container it will only draw children that return `true`
      * when their `willRender()` method is called. I.e. a Container with 10 children,
@@ -1167,6 +1172,11 @@ var RenderTexture = new Class({
         }
         else
         {
+            if (!this._eraseMode)
+            {
+                this.renderer.setBlendMode(gameObject.blendMode);
+            }
+
             gameObject.renderWebGL(this.renderer, gameObject, this.camera);
         }
 
@@ -1277,7 +1287,10 @@ var RenderTexture = new Class({
 
             matrix.setToContext(ctx);
 
-            ctx.drawImage(source, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
+            if (cd.width > 0 && cd.height > 0)
+            {
+                ctx.drawImage(source, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
+            }
 
             ctx.restore();
         }

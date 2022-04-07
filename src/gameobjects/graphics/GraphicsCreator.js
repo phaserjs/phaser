@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,7 +15,7 @@ var Graphics = require('./Graphics');
  * @method Phaser.GameObjects.GameObjectCreator#graphics
  * @since 3.0.0
  *
- * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.Types.GameObjects.Graphics.Options} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Graphics} The Game Object that was created.
@@ -35,7 +35,7 @@ GameObjectCreator.register('graphics', function (config, addToScene)
     {
         this.scene.sys.displayList.add(graphics);
     }
-    
+
     return graphics;
 });
 

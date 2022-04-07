@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,13 +14,12 @@ Matter.Body = require('./lib/body/Body');
 Matter.Composite = require('./lib/body/Composite');
 Matter.World = require('./lib/body/World');
 
+Matter.Collision = require('./lib/collision/Collision');
 Matter.Detector = require('./lib/collision/Detector');
-Matter.Grid = require('./lib/collision/Grid');
 Matter.Pairs = require('./lib/collision/Pairs');
 Matter.Pair = require('./lib/collision/Pair');
 Matter.Query = require('./lib/collision/Query');
 Matter.Resolver = require('./lib/collision/Resolver');
-Matter.SAT = require('./lib/collision/SAT');
 
 Matter.Constraint = require('./lib/constraint/Constraint');
 

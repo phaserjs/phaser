@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,14 +10,14 @@ var MATH_CONST = require('../../math/const');
 
 /**
  * Creates a Stagger function to be used by a Tween property.
- * 
+ *
  * The stagger function will allow you to stagger changes to the value of the property across all targets of the tween.
- * 
+ *
  * This is only worth using if the tween has multiple targets.
- * 
+ *
  * The following will stagger the delay by 100ms across all targets of the tween, causing them to scale down to 0.2
  * over the duration specified:
- * 
+ *
  * ```javascript
  * this.tweens.add({
  *     targets: [ ... ],
@@ -27,10 +27,10 @@ var MATH_CONST = require('../../math/const');
  *     delay: this.tweens.stagger(100)
  * });
  * ```
- * 
+ *
  * The following will stagger the delay by 500ms across all targets of the tween using a 10 x 6 grid, staggering
  * from the center out, using a cubic ease.
- * 
+ *
  * ```javascript
  * this.tweens.add({
  *     targets: [ ... ],
@@ -138,18 +138,18 @@ var StaggerBuilder = function (value, options)
             var gridSpace = 0;
             var toX = index % gridWidth;
             var toY = Math.floor(index / gridWidth);
-    
+
             if (toX >= 0 && toX < gridWidth && toY >= 0 && toY < gridHeight)
             {
                 gridSpace = gridValues[toY][toX];
             }
 
             var output;
-   
+
             if (isRange)
             {
                 var diff = (value2 - value1);
-    
+
                 if (easeFunction)
                 {
                     output = ((gridSpace / gridMax) * diff) * easeFunction(gridSpace / gridMax);
@@ -177,9 +177,9 @@ var StaggerBuilder = function (value, options)
         {
             //  zero offset
             total--;
-    
+
             var fromIndex;
-    
+
             if (fromFirst)
             {
                 fromIndex = index;
@@ -196,9 +196,9 @@ var StaggerBuilder = function (value, options)
             {
                 fromIndex = Math.abs(from - index);
             }
-    
+
             var output;
-        
+
             if (isRange)
             {
                 var spacing;
@@ -211,7 +211,7 @@ var StaggerBuilder = function (value, options)
                 {
                     spacing = ((value2 - value1) / total) * fromIndex;
                 }
-                    
+
                 if (easeFunction)
                 {
                     output = spacing * easeFunction(fromIndex / total);
@@ -229,7 +229,7 @@ var StaggerBuilder = function (value, options)
             {
                 output = fromIndex * value1;
             }
-    
+
             return output + start;
         };
     }

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,9 +10,9 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 /**
  * @classdesc
  * The GravityWell action applies a force on the particle to draw it towards, or repel it from, a single point.
- * 
+ *
  * The force applied is inversely proportional to the square of the distance from the particle to the point, in accordance with Newton's law of gravity.
- * 
+ *
  * This simulates the effect of gravity over large distances (as between planets, for example).
  *
  * @class GravityWell

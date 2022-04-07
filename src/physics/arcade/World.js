@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1346,14 +1346,12 @@ var World = new Class({
      * @param {ArcadePhysicsCallback} [processCallback] - The process callback.
      * @param {*} [callbackContext] - The context in which to invoke the callback.
      * @param {boolean} [overlapOnly] - If this a collide or overlap check?
-     * @param {boolean} [intersects] - Assert that the bodies intersect and should not be tested before separation.
      *
      * @return {boolean} True if separation occurred, otherwise false.
      */
-    separate: function (body1, body2, processCallback, callbackContext, overlapOnly, intersects)
+    separate: function (body1, body2, processCallback, callbackContext, overlapOnly)
     {
         if (
-            !intersects &&
             !body1.enable ||
             !body2.enable ||
             body1.checkCollision.none ||
@@ -1759,7 +1757,7 @@ var World = new Class({
         var i;
         var j;
 
-        if (object1.isParent && object1.physicsType === undefined)
+        if (object1.isParent && (object1.physicsType === undefined || object2 === undefined || object1 === object2))
         {
             object1 = object1.children.entries;
         }
@@ -2002,7 +2000,7 @@ var World = new Class({
                     continue;
                 }
 
-                if (this.separate(bodyA, bodyB, processCallback, callbackContext, overlapOnly, true))
+                if (this.separate(bodyA, bodyB, processCallback, callbackContext, overlapOnly))
                 {
                     if (collideCallback)
                     {

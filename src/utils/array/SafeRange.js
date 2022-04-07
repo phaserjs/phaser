@@ -1,12 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Tests if the start and end indexes are a safe range for the given array.
- * 
+ *
  * @function Phaser.Utils.Array.SafeRange
  * @since 3.4.0
  *
@@ -24,8 +24,7 @@ var SafeRange = function (array, startIndex, endIndex, throwError)
     if (startIndex < 0 ||
         startIndex > len ||
         startIndex >= endIndex ||
-        endIndex > len ||
-        startIndex + endIndex > len)
+        endIndex > len)
     {
         if (throwError)
         {

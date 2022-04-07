@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@ var GEOM_CONST = {
 
     /**
      * A Circle Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.CIRCLE
      * @type {number}
      * @since 3.19.0
@@ -17,7 +17,7 @@ var GEOM_CONST = {
 
     /**
      * An Ellipse Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.ELLIPSE
      * @type {number}
      * @since 3.19.0
@@ -26,7 +26,7 @@ var GEOM_CONST = {
 
     /**
      * A Line Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.LINE
      * @type {number}
      * @since 3.19.0
@@ -35,7 +35,7 @@ var GEOM_CONST = {
 
     /**
      * A Point Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.POINT
      * @type {number}
      * @since 3.19.0
@@ -44,7 +44,7 @@ var GEOM_CONST = {
 
     /**
      * A Polygon Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.POLYGON
      * @type {number}
      * @since 3.19.0
@@ -53,7 +53,7 @@ var GEOM_CONST = {
 
     /**
      * A Rectangle Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.RECTANGLE
      * @type {number}
      * @since 3.19.0
@@ -62,7 +62,7 @@ var GEOM_CONST = {
 
     /**
      * A Triangle Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.TRIANGLE
      * @type {number}
      * @since 3.19.0

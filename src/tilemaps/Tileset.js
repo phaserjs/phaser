@@ -1,10 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../utils/Class');
+var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
@@ -24,14 +25,14 @@ var Class = require('../utils/Class');
  * @param {number} [tileSpacing=0] - The spacing between each tile in the sheet (in pixels).
  * @param {object} [tileProperties={}] - Custom properties defined per tile in the Tileset.
  * These typically are custom properties created in Tiled when editing a tileset.
- * @param {object} [tileData={}] - Data stored per tile. These typically are created in Tiled
- * when editing a tileset, e.g. from Tiled's tile collision editor or terrain editor.
+ * @param {object} [tileData={}] - Data stored per tile. These typically are created in Tiled when editing a tileset, e.g. from Tiled's tile collision editor or terrain editor.
+ * @param {object} [tileOffset={x: 0, y: 0}] - Tile texture drawing offset.
  */
 var Tileset = new Class({
 
     initialize:
 
-    function Tileset (name, firstgid, tileWidth, tileHeight, tileMargin, tileSpacing, tileProperties, tileData)
+    function Tileset (name, firstgid, tileWidth, tileHeight, tileMargin, tileSpacing, tileProperties, tileData, tileOffset)
     {
         if (tileWidth === undefined || tileWidth <= 0) { tileWidth = 32; }
         if (tileHeight === undefined || tileHeight <= 0) { tileHeight = 32; }
@@ -117,6 +118,21 @@ var Tileset = new Class({
          * @since 3.0.0
          */
         this.tileData = tileData;
+
+        /**
+         * Controls the drawing offset from the tile origin.
+         * Defaults to 0x0, no offset.
+         *
+         * @name Phaser.Tilemaps.Tileset#tileOffset
+         * @type {Phaser.Math.Vector2}
+         * @since 3.60.0
+         */
+        this.tileOffset = new Vector2();
+
+        if (tileOffset !== undefined)
+        {
+            this.tileOffset.set(tileOffset.x, tileOffset.y);
+        }
 
         /**
          * The cached image that contains the individual tiles. Use setImage to set.

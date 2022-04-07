@@ -1,8 +1,9 @@
 /**
  * @typedef {object} Phaser.Types.Physics.Matter.MatterBodyConfig
  * @since 3.22.0
- * 
+ *
  * @property {string} [label='Body'] - An arbitrary string-based name to help identify this body.
+ * @property {(string|Phaser.Types.Physics.Matter.MatterSetBodyConfig)} [shape=null] - Set this Game Object to create and use a new Body based on the configuration object given.
  * @property {MatterJS.BodyType[]} [parts] - An array of bodies that make up this body. The first body in the array must always be a self reference to the current body instance. All bodies in the `parts` array together form a single rigid compound body.
  * @property {any} [plugin] - An object reserved for storing plugin-specific properties.
  * @property {number} [angle=0] - A number specifying the angle of the body, in radians.

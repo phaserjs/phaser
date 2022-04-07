@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -206,6 +206,15 @@ var LoaderPlugin = new Class({
          * @since 3.0.0
          */
         this.crossOrigin = GetFastValue(sceneConfig, 'crossOrigin', gameConfig.loaderCrossOrigin);
+
+        /**
+         * Optional load type for image files. `XHR` is the default. Set to `HTMLImageElement` to load images using the Image tag instead.
+         *
+         * @name Phaser.Loader.LoaderPlugin#imageLoadType
+         * @type {string}
+         * @since 3.60.0
+         */
+        this.imageLoadType = GetFastValue(sceneConfig, 'imageLoadType', gameConfig.loaderImageLoadType);
 
         /**
          * The total number of files to load. It may not always be accurate because you may add to the Loader during the process
@@ -880,12 +889,14 @@ var LoaderPlugin = new Class({
                 {
                     //  If we got here then all files the link file needs are ready to add to the cache
                     file.multiFile.addToCache();
+                    file.multiFile.pendingDestroy();
                 }
             }
             else
             {
                 //  If we got here, then the file processed, so let it add itself to its cache
                 file.addToCache();
+                file.pendingDestroy();
             }
         }
 

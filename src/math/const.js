@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@ var MATH_CONST = {
 
     /**
      * The value of PI * 2.
-     * 
+     *
      * @name Phaser.Math.PI2
      * @type {number}
      * @since 3.0.0
@@ -17,7 +17,7 @@ var MATH_CONST = {
 
     /**
      * The value of PI * 0.5.
-     * 
+     *
      * @name Phaser.Math.TAU
      * @type {number}
      * @since 3.0.0
@@ -26,7 +26,7 @@ var MATH_CONST = {
 
     /**
      * An epsilon value (1.0e-6)
-     * 
+     *
      * @name Phaser.Math.EPSILON
      * @type {number}
      * @since 3.0.0
@@ -35,7 +35,7 @@ var MATH_CONST = {
 
     /**
      * For converting degrees to radians (PI / 180)
-     * 
+     *
      * @name Phaser.Math.DEG_TO_RAD
      * @type {number}
      * @since 3.0.0
@@ -44,7 +44,7 @@ var MATH_CONST = {
 
     /**
      * For converting radians to degrees (180 / PI)
-     * 
+     *
      * @name Phaser.Math.RAD_TO_DEG
      * @type {number}
      * @since 3.0.0
@@ -54,7 +54,7 @@ var MATH_CONST = {
     /**
      * An instance of the Random Number Generator.
      * This is not set until the Game boots.
-     * 
+     *
      * @name Phaser.Math.RND
      * @type {Phaser.Math.RandomDataGenerator}
      * @since 3.0.0
@@ -64,7 +64,7 @@ var MATH_CONST = {
     /**
      * The minimum safe integer this browser supports.
      * We use a const for backward compatibility with Internet Explorer.
-     * 
+     *
      * @name Phaser.Math.MIN_SAFE_INTEGER
      * @type {number}
      * @since 3.21.0
@@ -74,7 +74,7 @@ var MATH_CONST = {
     /**
      * The maximum safe integer this browser supports.
      * We use a const for backward compatibility with Internet Explorer.
-     * 
+     *
      * @name Phaser.Math.MAX_SAFE_INTEGER
      * @type {number}
      * @since 3.21.0

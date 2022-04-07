@@ -46,7 +46,7 @@ var Common = require('./Common');
     };
 
     /**
-     * Resolves a dependency to a plugin object from the registry if it exists. 
+     * Resolves a dependency to a plugin object from the registry if it exists.
      * The `dependency` may contain a version, but only the name matters when resolving.
      * @method resolve
      * @param dependency {string} The dependency.
@@ -240,7 +240,7 @@ var Common = require('./Common');
      */
     Plugin.dependencyParse = function(dependency) {
         if (Common.isString(dependency)) {
-            var pattern = /^[\w-]+(@(\*|[\^~]?\d+\.\d+\.\d+(-[0-9A-Za-z-]+)?))?$/;
+            var pattern = /^[\w-]+(@(\*|[\^~]?\d+\.\d+\.\d+(-[0-9A-Za-z-+]+)?))?$/;
 
             if (!pattern.test(dependency)) {
                 Common.warn('Plugin.dependencyParse:', dependency, 'is not a valid dependency string.');
@@ -259,13 +259,15 @@ var Common = require('./Common');
     };
 
     /**
-     * Parses a version string into its components.  
+     * Parses a version string into its components.
      * Versions are strictly of the format `x.y.z` (as in [semver](http://semver.org/)).
      * Versions may optionally have a prerelease tag in the format `x.y.z-alpha`.
      * Ranges are a strict subset of [npm ranges](https://docs.npmjs.com/misc/semver#advanced-range-syntax).
      * Only the following range types are supported:
      * - Tilde ranges e.g. `~1.2.3`
      * - Caret ranges e.g. `^1.2.3`
+     * - Greater than ranges e.g. `>1.2.3`
+     * - Greater than or equal ranges e.g. `>=1.2.3`
      * - Exact version e.g. `1.2.3`
      * - Any version `*`
      * @method versionParse
@@ -273,29 +275,28 @@ var Common = require('./Common');
      * @return {object} The version range parsed into its components.
      */
     Plugin.versionParse = function(range) {
-        var pattern = /^\*|[\^~]?\d+\.\d+\.\d+(-[0-9A-Za-z-]+)?$/;
+        var pattern = /^(\*)|(\^|~|>=|>)?\s*((\d+)\.(\d+)\.(\d+))(-[0-9A-Za-z-+]+)?$/;
 
         if (!pattern.test(range)) {
             Common.warn('Plugin.versionParse:', range, 'is not a valid version or range.');
         }
 
-        var identifiers = range.split('-');
-        range = identifiers[0];
-
-        var isRange = isNaN(Number(range[0])),
-            version = isRange ? range.substr(1) : range,
-            parts = Common.map(version.split('.'), function(part) {
-                return Number(part);
-            });
+        var parts = pattern.exec(range);
+        var major = Number(parts[4]);
+        var minor = Number(parts[5]);
+        var patch = Number(parts[6]);
 
         return {
-            isRange: isRange,
-            version: version,
+            isRange: Boolean(parts[1] || parts[2]),
+            version: parts[3],
             range: range,
-            operator: isRange ? range[0] : '',
-            parts: parts,
-            prerelease: identifiers[1],
-            number: parts[0] * 1e8 + parts[1] * 1e4 + parts[2]
+            operator: parts[1] || parts[2] || '',
+            major: major,
+            minor: minor,
+            patch: patch,
+            parts: [major, minor, patch],
+            prerelease: parts[7],
+            number: major * 1e8 + minor * 1e4 + patch
         };
     };
 
@@ -311,30 +312,36 @@ var Common = require('./Common');
     Plugin.versionSatisfies = function(version, range) {
         range = range || '*';
 
-        var rangeParsed = Plugin.versionParse(range),
-            rangeParts = rangeParsed.parts,
-            versionParsed = Plugin.versionParse(version),
-            versionParts = versionParsed.parts;
+        var r = Plugin.versionParse(range),
+            v = Plugin.versionParse(version);
 
-        if (rangeParsed.isRange) {
-            if (rangeParsed.operator === '*' || version === '*') {
+        if (r.isRange) {
+            if (r.operator === '*' || version === '*') {
                 return true;
             }
 
-            if (rangeParsed.operator === '~') {
-                return versionParts[0] === rangeParts[0] && versionParts[1] === rangeParts[1] && versionParts[2] >= rangeParts[2];
+            if (r.operator === '>') {
+                return v.number > r.number;
             }
 
-            if (rangeParsed.operator === '^') {
-                if (rangeParts[0] > 0) {
-                    return versionParts[0] === rangeParts[0] && versionParsed.number >= rangeParsed.number;
+            if (r.operator === '>=') {
+                return v.number >= r.number;
+            }
+
+            if (r.operator === '~') {
+                return v.major === r.major && v.minor === r.minor && v.patch >= r.patch;
+            }
+
+            if (r.operator === '^') {
+                if (r.major > 0) {
+                    return v.major === r.major && v.number >= r.number;
                 }
 
-                if (rangeParts[1] > 0) {
-                    return versionParts[1] === rangeParts[1] && versionParts[2] >= rangeParts[2];
+                if (r.minor > 0) {
+                    return v.minor === r.minor && v.patch >= r.patch;
                 }
 
-                return versionParts[2] === rangeParts[2];
+                return v.patch === r.patch;
             }
         }
 

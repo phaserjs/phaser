@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -427,6 +427,8 @@ var CanvasRenderer = new Class({
             ctx.clip();
         }
 
+        camera.emit(CameraEvents.PRE_RENDER, camera);
+
         this.currentContext = ctx;
 
         var mask = camera.mask;
@@ -498,6 +500,8 @@ var CanvasRenderer = new Class({
                 scene.sys.context.drawImage(camera.canvas, cx, cy);
             }
         }
+
+        camera.emit(CameraEvents.POST_RENDER, camera);
     },
 
     /**
@@ -560,7 +564,7 @@ var CanvasRenderer = new Class({
 
         state.getPixel = getPixel;
 
-        CanvasSnapshot(this.canvas, state);
+        CanvasSnapshot(canvas, state);
 
         state.callback = null;
 
@@ -793,6 +797,12 @@ var CanvasRenderer = new Class({
         //  Multiply by the Sprite matrix
         camMatrix.multiply(spriteMatrix);
 
+        if (camera.roundPixels)
+        {
+            camMatrix.e = Math.round(camMatrix.e);
+            camMatrix.f = Math.round(camMatrix.f);
+        }
+
         ctx.save();
 
         camMatrix.setToContext(ctx);
@@ -808,7 +818,10 @@ var CanvasRenderer = new Class({
             sprite.mask.preRenderCanvas(this, sprite, camera);
         }
 
-        ctx.drawImage(frame.source.image, frameX, frameY, frameWidth, frameHeight, x, y, frameWidth / res, frameHeight / res);
+        if (frameWidth > 0 && frameHeight > 0)
+        {
+            ctx.drawImage(frame.source.image, frameX, frameY, frameWidth, frameHeight, x, y, frameWidth / res, frameHeight / res);
+        }
 
         if (sprite.mask)
         {

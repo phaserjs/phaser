@@ -1,5 +1,5 @@
 /**
- * @callback ArcadePhysicsCallback
+ * @callback Phaser.Types.Physics.Arcade.ArcadePhysicsCallback
  *
  * A callback receiving two Game Objects.
  *
@@ -7,6 +7,6 @@
  *
  * For all other cases, `object1` and `object2` match the same arguments in `collide()` or `overlap()`.
  *
- * @param {Phaser.Types.Physics.Arcade.GameObjectWithBody} object1 - The first Game Object.
- * @param {Phaser.Types.Physics.Arcade.GameObjectWithBody} object2 - The second Game Object.
+ * @param {(Phaser.Types.Physics.Arcade.GameObjectWithBody|Phaser.Tilemaps.Tile)} object1 - The first Game Object.
+ * @param {(Phaser.Types.Physics.Arcade.GameObjectWithBody|Phaser.Tilemaps.Tile)} object2 - The second Game Object.
  */

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -32,6 +32,7 @@ var SpriteRender = require('./SpriteRender');
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
+ * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
@@ -58,6 +59,7 @@ var Sprite = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.Flip,
+        Components.FX,
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
@@ -344,7 +346,7 @@ var Sprite = new Class({
      * @method Phaser.GameObjects.Sprite#chain
      * @since 3.50.0
      *
-     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig|string[]|Phaser.Animations.Animation[]|Phaser.Types.Animations.PlayAnimationConfig[])} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object, or an array of them.
+     * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig|string[]|Phaser.Animations.Animation[]|Phaser.Types.Animations.PlayAnimationConfig[])} [key] - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object, or an array of them.
      *
      * @return {this} This Game Object.
      */

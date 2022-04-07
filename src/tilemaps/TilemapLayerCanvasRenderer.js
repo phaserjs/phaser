@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -90,17 +90,19 @@ var TilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
         var image = tileset.image.getSourceImage();
 
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+        var tileWidth = tileset.tileWidth;
+        var tileHeight = tileset.tileHeight;
 
-        if (tileTexCoords === null)
+        if (tileTexCoords === null || tileWidth === 0 || tileHeight === 0)
         {
             continue;
         }
 
-        var tileWidth = tileset.tileWidth;
-        var tileHeight = tileset.tileHeight;
-
         var halfWidth = tileWidth * 0.5;
         var halfHeight = tileHeight * 0.5;
+
+        tileTexCoords.x += tileset.tileOffset.x;
+        tileTexCoords.y += tileset.tileOffset.y;
 
         ctx.save();
 

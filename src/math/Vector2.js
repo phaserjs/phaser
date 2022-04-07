@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -21,8 +21,8 @@ var FuzzyEqual = require('../math/fuzzy/Equal');
  * @constructor
  * @since 3.0.0
  *
- * @param {number|Phaser.Types.Math.Vector2Like} [x] - The x component, or an object with `x` and `y` properties.
- * @param {number} [y] - The y component.
+ * @param {number|Phaser.Types.Math.Vector2Like} [x=0] - The x component, or an object with `x` and `y` properties.
+ * @param {number} [y=x] - The y component.
  */
 var Vector2 = new Class({
 

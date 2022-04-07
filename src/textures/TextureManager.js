@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -331,17 +331,20 @@ var TextureManager = new Class({
             var canvas = CanvasPool.create2D(this, cd.width, cd.height);
             var ctx = canvas.getContext('2d');
 
-            ctx.drawImage(
-                textureFrame.source.image,
-                cd.x,
-                cd.y,
-                cd.width,
-                cd.height,
-                0,
-                0,
-                cd.width,
-                cd.height
-            );
+            if (cd.width > 0 && cd.height > 0)
+            {
+                ctx.drawImage(
+                    textureFrame.source.image,
+                    cd.x,
+                    cd.y,
+                    cd.width,
+                    cd.height,
+                    0,
+                    0,
+                    cd.width,
+                    cd.height
+                );
+            }
 
             data = canvas.toDataURL(type, encoderOptions);
 
@@ -418,6 +421,56 @@ var TextureManager = new Class({
             texture = this.create(key, glTexture, width, height);
 
             texture.add('__BASE', 0, 0, 0, width, height);
+
+            this.emit(Events.ADD, key, texture);
+        }
+
+        return texture;
+    },
+
+    /**
+     * Adds a Compressed Texture to this Texture Manager.
+     *
+     * The texture should typically have been loaded via the `CompressedTextureFile` loader,
+     * in order to prepare the correct data object this method requires.
+     *
+     * You can optionally also pass atlas data to this method, in which case a texture atlas
+     * will be generated from the given compressed texture, combined with the atlas data.
+     *
+     * @method Phaser.Textures.TextureManager#addCompressedTexture
+     * @fires Phaser.Textures.Events#ADD
+     * @since 3.60.0
+     *
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {Phaser.Types.Textures.CompressedTextureData} textureData - The Compressed Texture data object.
+     * @param {object} [atlasData] - Optional Texture Atlas data.
+     *
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
+     */
+    addCompressedTexture: function (key, textureData, atlasData)
+    {
+        var texture = null;
+
+        if (this.checkKey(key))
+        {
+            texture = this.create(key, textureData);
+
+            texture.add('__BASE', 0, 0, 0, textureData.width, textureData.height);
+
+            if (atlasData)
+            {
+                if (Array.isArray(atlasData))
+                {
+                    for (var i = 0; i < atlasData.length; i++)
+                    {
+                        Parser.JSONHash(texture, i, atlasData[i]);
+                    }
+                }
+                else
+                {
+                    Parser.JSONHash(texture, 0, atlasData);
+                }
+            }
 
             this.emit(Events.ADD, key, texture);
         }

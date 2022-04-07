@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -204,11 +204,6 @@ var MultiAtlasFile = new Class({
             this.loader.textureManager.addAtlasJSONArray(this.key, images, data, normalMaps);
 
             this.complete = true;
-
-            for (i = 0; i < this.files.length; i++)
-            {
-                this.files[i].pendingDestroy();
-            }
         }
     }
 

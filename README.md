@@ -15,7 +15,7 @@ Thousands of developers from indie and multi-national digital agencies, and univ
 
 **Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)<br />
 **Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
-**Learn:** [API Docs](https://photonstorm.github.io/phaser3-docs/index.html), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
+**Learn:** [API Docs](https://newdocs.phaser.io), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
 **Code:** 1770+ [Examples](https://phaser.io/examples) (source available in this [repo][examples])<br />
 **Read:** The [Phaser World](#newsletter) Newsletter<br />
 **Discord:** Join us on [Discord](https://phaser.io/community/discord)<br />
@@ -56,6 +56,8 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 
 ![boogie](https://www.phaser.io/images/spacedancer.gif)
 
+[![](https://www.phaser.io/images/github/twilioquest838.png)](https://www.twilio.com/blog/unlock-your-power-to-teach-with-twilioquest?utm_source=github&utm_medium=banner&utm_campaign=phaser)
+
 ![Support Phaser](https://phaser.io/images/github/div-support-phaser.png "Support Phaser")
 
 Because Phaser is an open source project, we cannot charge for it in the same way as traditional retail software. What's more, we don't ever want to. After all, it's built on, and was born from, open web standards. It's part of our manifesto that the core framework will always be free, even if you use it commercially, as many of you do.
@@ -70,22 +72,27 @@ There are other benefits to [backing Phaser](https://www.patreon.com/join/photon
 
 We use [Patreon](https://www.patreon.com/photonstorm) to manage the backing and you can [support Phaser](https://www.patreon.com/join/photonstorm?) from $1 per month. The amount you pledge is entirely up to you and can be changed as often as you like. Patreon renews monthly, just like Netflix. You can, of course, cancel at any point. Tears will be shed on this end, but that's not your concern.
 
+You can also support us by using crypto currencies. The Phaser wallet addresses are:
+
+* Ethereum: 0x10412d654b44570950631aA0C3E3f3aFcAEfAB4C
+* Bitcoin: 3MjS5iNH8yUBfYW2emxBk7rRUkP6ncrkXC
+
 Extra special thanks to the following companies whose support makes Phaser possible:
 
 * [Cerebral Fix](https://cerebralfix.com)
-* [CrossInstall](https://crossinstall.com)
+* [MoPub](https://www.mopub.com/en)
 * [Facebook](https://www.facebook.com)
 * [Game Distribution](https://gamedistribution.com)
 * [GameCommerce](https://www.gamecommerce.com)
 * [Mozilla](https://www.mozilla.org)
 * [Texture Packer](https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16)
-* [Twilio](https://www.twilio.com)
+* [TwilioQuest](https://www.twilio.com/blog/unlock-your-power-to-teach-with-twilioquest?utm_source=github&utm_medium=banner&utm_campaign=phaser)
 * [Poki](https://developers.poki.com/)
 * [CrazyGames](https://www.crazygames.com)
 * [Lagged](https://www.lagged.com)
 * [Nakama](https://heroiclabs.com/phaserjs/)
 
-![Sponsors](https://phaser.io/images/github/sponsors-2020-12.png "Our Awesome Sponsors")
+![Sponsors](https://phaser.io/images/github/sponsors-2021-08.png "Our Awesome Sponsors")
 
 ![Phaser Newsletter](https://phaser.io/images/github/div-newsletter.png "Phaser Newsletter")
 
@@ -171,13 +178,13 @@ Tutorials and guides on Phaser 3 development are being published every week.
 * [Getting Started with Phaser 3](https://phaser.io/tutorials/getting-started-phaser3) (useful if you are completely new to Phaser)
 * [Making your first Phaser 3 Game](https://phaser.io/tutorials/making-your-first-phaser-3-game)
 * The [Complete Phaser 3 Game Development course](https://academy.zenva.com/product/html5-game-phaser-mini-degree/?a=13) contains over 15 hours of videos covering all kinds of important topics.
-* Plus, there are [over 700 Phaser tutorials](http://phaser.io/learn) listed on the official website.
+* Plus, there are [over 700 Phaser tutorials](https://phaser.io/learn) listed on the official website.
 
 We've 3 tutorials related specifically to creating **Facebook Instant Games** with Phaser:
 
-* [Getting Started with Facebook Instant Games](http://phaser.io/news/2018/10/facebook-instant-games-phaser-tutorial)
-* [Facebook Instant Games Leaderboards Tutorial](http://phaser.io/news/2018/11/facebook-instant-games-leaderboards-tutorial)
-* [Displaying Ads in your Instant Games](http://phaser.io/news/2018/12/facebook-instant-games-ads-tutorial)
+* [Getting Started with Facebook Instant Games](https://phaser.io/news/2018/10/facebook-instant-games-phaser-tutorial)
+* [Facebook Instant Games Leaderboards Tutorial](https://phaser.io/news/2018/11/facebook-instant-games-leaderboards-tutorial)
+* [Displaying Ads in your Instant Games](https://phaser.io/news/2018/12/facebook-instant-games-ads-tutorial)
 
 ### Source Code Examples
 

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -651,7 +651,7 @@ var TimeStep = new Class({
             this.startTime += -this.lastTime + (this.lastTime + window.performance.now());
         }
 
-        this.raf.start(this.step.bind(this), this.useRAF);
+        this.raf.start(this.step.bind(this), this.forceSetTimeOut, this._target);
 
         this.running = true;
 

@@ -1,3 +1,5 @@
+For details about the in-development 3.60 release, please see the `CHANGELOG-v3.60.md` file instead.
+
 ## Version 3.55.2 - Ichika - 27th May 2021
 
 ### Bug Fixes

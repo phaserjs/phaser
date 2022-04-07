@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,15 +14,15 @@
 
 /**
  * The Matter Physics After Remove Event.
- * 
- * This event is dispatched by a Matter Physics World instance at the end of the process when a 
+ *
+ * This event is dispatched by a Matter Physics World instance at the end of the process when a
  * Body or Constraint was removed from the world.
- * 
+ *
  * Listen to it from a Scene using: `this.matter.world.on('afterremove', listener)`.
  *
  * @event Phaser.Physics.Matter.Events#AFTER_REMOVE
  * @since 3.22.0
- * 
+ *
  * @param {Phaser.Physics.Matter.Events.AfterRemoveEvent} event - The Remove Event object.
  */
 module.exports = 'afterremove';

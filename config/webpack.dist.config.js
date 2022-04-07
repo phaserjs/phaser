@@ -1,7 +1,7 @@
 'use strict';
 
 const webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
@@ -31,18 +31,19 @@ module.exports = {
 
     optimization: {
         minimizer: [
-            new UglifyJSPlugin({
+            new TerserPlugin({
                 include: /\.min\.js$/,
                 parallel: true,
-                sourceMap: false,
-                uglifyOptions: {
+                extractComments: false,
+                terserOptions: {
+                    format: {
+                        comments: false
+                    },
                     compress: true,
                     ie8: false,
                     ecma: 5,
-                    output: {comments: false},
                     warnings: false
-                },
-                warningsFilter: () => false
+                }
             })
         ]
     },

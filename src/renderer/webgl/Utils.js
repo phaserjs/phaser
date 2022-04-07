@@ -2,36 +2,9 @@
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
  * @author       Matthew Groves <@doormat>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
-
-/**
- * Generate shader source to test maximum ifs.
- *
- * @private
- * @ignore
- * @param {number} maxIfs - The number of if statements to generate
- */
-function GenerateSrc (maxIfs)
-{
-    var src = '';
-
-    for (var i = 0; i < maxIfs; ++i)
-    {
-        if (i > 0)
-        {
-            src += '\nelse ';
-        }
-
-        if (i < maxIfs - 1)
-        {
-            src += 'if(test == ' + i + '.0){}';
-        }
-    }
-
-    return src;
-}
 
 /**
  * @namespace Phaser.Renderer.WebGL.Utils
@@ -124,8 +97,8 @@ module.exports = {
     },
 
     /**
-     * Check to see how many texture units the GPU supports, based on the given config value.
-     * Then tests this against the maximum number of iterations GLSL can support.
+     * Check to see how many texture units the GPU supports in a fragment shader
+     * and if the value specific in the game config is allowed.
      *
      * @function Phaser.Renderer.WebGL.Utils.checkShaderMax
      * @since 3.50.0
@@ -137,47 +110,25 @@ module.exports = {
      */
     checkShaderMax: function (gl, maxTextures)
     {
+        //  Note: This is the maximum number of TIUs that a _fragment_ shader supports
+        //  https://www.khronos.org/opengl/wiki/Common_Mistakes#Texture_Unit
+
+        var gpuMax = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+
         if (!maxTextures || maxTextures === -1)
         {
-            maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+            return gpuMax;
         }
-
-        var shader = gl.createShader(gl.FRAGMENT_SHADER);
-
-        var fragTemplate = [
-            'precision mediump float;',
-            'void main(void){',
-            'float test = 0.1;',
-            '%forloop%',
-            'gl_FragColor = vec4(0.0);',
-            '}'
-        ].join('\n');
-
-        // eslint-disable-next-line no-constant-condition
-        while (true)
+        else
         {
-            var fragmentSrc = fragTemplate.replace(/%forloop%/gi, GenerateSrc(maxTextures));
-
-            gl.shaderSource(shader, fragmentSrc);
-            gl.compileShader(shader);
-
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
-            {
-                maxTextures = (maxTextures / 2) | 0;
-            }
-            else
-            {
-                // valid!
-                break;
-            }
+            return Math.min(gpuMax, maxTextures);
         }
-
-        return maxTextures;
     },
 
     /**
-     * Checks the given Fragment Shader Source for `%count%` and `%forloop%` declarations and
-     * replaces those with GLSL code for setting `texture = texture2D(uMainSampler[i], outTexCoord)`.
+     * Checks the given Fragment Shader Source for `%count%` and `%getSampler%` declarations and
+     * replaces those with GLSL code for setting `texture = texture2D(uMainSampler[i], outTexCoord)`
+     * and injecting the `getSampler` glsl function.
      *
      * @function Phaser.Renderer.WebGL.Utils.parseFragmentShaderMaxTextures
      * @since 3.50.0
@@ -194,27 +145,22 @@ module.exports = {
             return '';
         }
 
-        var src = '';
+        var src = 'vec4 getSampler (int index, vec2 uv) {';
 
         for (var i = 0; i < maxTextures; i++)
         {
-            if (i > 0)
+            if (i > 0 && i < maxTextures)
             {
-                src += '\n\telse ';
+                src += '\nelse ';
             }
 
-            if (i < maxTextures - 1)
-            {
-                src += 'if (outTexId < ' + i + '.5)';
-            }
-
-            src += '\n\t{';
-            src += '\n\t\ttexture = texture2D(uMainSampler[' + i + '], outTexCoord);';
-            src += '\n\t}';
+            src += 'if (index == ' + i + ') { return texture2D(uMainSampler[' + i + '], uv); }';
         }
 
-        fragmentShaderSource = fragmentShaderSource.replace(/%count%/gi, maxTextures.toString());
+        src += '\nreturn vec4(0);\n}';
 
-        return fragmentShaderSource.replace(/%forloop%/gi, src);
+        fragmentShaderSource = fragmentShaderSource.replace(/%getSampler%/gi, src);
+
+        return fragmentShaderSource.replace(/%count%/gi, maxTextures.toString());
     }
 };

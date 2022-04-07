@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -41,7 +41,7 @@ var TextStyle = require('./TextStyle');
  * ```
  *
  * You can only display fonts that are currently loaded and available to the browser: therefore fonts must
- * be pre-loaded. Phaser does not do ths for you, so you will require the use of a 3rd party font loader,
+ * be pre-loaded. Phaser does not do this for you, so you will require the use of a 3rd party font loader,
  * or have the fonts ready available in the CSS on the page in which your Phaser game resides.
  *
  * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts
@@ -65,6 +65,7 @@ var TextStyle = require('./TextStyle');
  * @extends Phaser.GameObjects.Components.Crop
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
+ * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
@@ -93,6 +94,7 @@ var Text = new Class({
         Components.Crop,
         Components.Depth,
         Components.Flip,
+        Components.FX,
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
@@ -287,10 +289,7 @@ var Text = new Class({
             this.setLineSpacing(style.lineSpacing);
         }
 
-        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, function ()
-        {
-            this.dirty = true;
-        }, this);
+        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     },
 
     /**
@@ -1217,7 +1216,7 @@ var Text = new Class({
 
             if (style.rtl)
             {
-                linePositionX = w - linePositionX;
+                linePositionX = w - linePositionX - padding.left - padding.right;
             }
             else if (style.align === 'right')
             {
@@ -1364,6 +1363,18 @@ var Text = new Class({
     },
 
     /**
+     * Internal context-restored handler.
+     *
+     * @method Phaser.GameObjects.Text#onContextRestored
+     * @protected
+     * @since 3.60.0
+     */
+    onContextRestored: function ()
+    {
+        this.dirty = true;
+    },
+
+    /**
      * Internal destroy handler, called as part of the destroy process.
      *
      * @method Phaser.GameObjects.Text#preDestroy
@@ -1380,6 +1391,8 @@ var Text = new Class({
         CanvasPool.remove(this.canvas);
 
         this.texture.destroy();
+
+        this.scene.sys.game.events.off(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     }
 
     /**
