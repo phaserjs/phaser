@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -77,6 +77,7 @@ var MATH_CONST = require('../../math/const');
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
+ * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
@@ -102,6 +103,7 @@ var Video = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.Flip,
+        Components.FX,
         Components.GetBounds,
         Components.Mask,
         Components.Origin,

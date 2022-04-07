@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,7 +15,7 @@ var Gravity = {
 
     /**
      * Set the X and Y values of the gravitational pull to act upon this Arcade Physics Game Object. Values can be positive or negative. Larger values result in a stronger effect.
-     * 
+     *
      * If only one value is provided, this value will be used for both the X and Y axis.
      *
      * @method Phaser.Physics.Arcade.Components.Gravity#setGravity

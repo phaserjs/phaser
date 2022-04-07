@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,7 +15,7 @@ var CONST = {
 
     /**
      * Linear filter type.
-     * 
+     *
      * @name Phaser.Textures.FilterMode.LINEAR
      * @type {number}
      * @const
@@ -25,14 +25,14 @@ var CONST = {
 
     /**
      * Nearest neighbor filter type.
-     * 
+     *
      * @name Phaser.Textures.FilterMode.NEAREST
      * @type {number}
      * @const
      * @since 3.0.0
      */
     NEAREST: 1
-    
+
 };
 
 module.exports = CONST;

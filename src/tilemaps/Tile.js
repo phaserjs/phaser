@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -474,7 +474,6 @@ var Tile = new Class({
             ? this.getTop(camera) + this.height * tilemapLayer.scaleY
             : this.getTop(camera) + this.height;
     },
-
 
     /**
      * Gets the world rectangle bounding box for the tile, factoring in the layers position,

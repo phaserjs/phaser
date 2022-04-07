@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16,7 +16,7 @@ module.exports = {
 
     /**
      * D-Pad up
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.UP
      * @const
      * @type {number}
@@ -26,7 +26,7 @@ module.exports = {
 
     /**
      * D-Pad down
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.DOWN
      * @const
      * @type {number}
@@ -36,7 +36,7 @@ module.exports = {
 
     /**
      * D-Pad left
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.LEFT
      * @const
      * @type {number}
@@ -46,7 +46,7 @@ module.exports = {
 
     /**
      * D-Pad right
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.RIGHT
      * @const
      * @type {number}
@@ -56,7 +56,7 @@ module.exports = {
 
     /**
      * Select button
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.SELECT
      * @const
      * @type {number}
@@ -66,7 +66,7 @@ module.exports = {
 
     /**
      * Start button
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.START
      * @const
      * @type {number}
@@ -76,7 +76,7 @@ module.exports = {
 
     /**
      * B Button (Bottom)
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.B
      * @const
      * @type {number}
@@ -86,7 +86,7 @@ module.exports = {
 
     /**
      * A Button (Right)
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.A
      * @const
      * @type {number}
@@ -96,7 +96,7 @@ module.exports = {
 
     /**
      * Y Button (Left)
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.Y
      * @const
      * @type {number}
@@ -106,7 +106,7 @@ module.exports = {
 
     /**
      * X Button (Top)
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.X
      * @const
      * @type {number}
@@ -116,7 +116,7 @@ module.exports = {
 
     /**
      * Left bumper
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.LEFT_SHOULDER
      * @const
      * @type {number}
@@ -126,7 +126,7 @@ module.exports = {
 
     /**
      * Right bumper
-     * 
+     *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.RIGHT_SHOULDER
      * @const
      * @type {number}

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -59,6 +59,11 @@ var File = new Class({
          */
         this.type = GetFastValue(fileConfig, 'type', false);
 
+        if (!this.type)
+        {
+            throw new Error('Invalid File type: ' + this.type);
+        }
+
         /**
          * Unique cache key (unique within its file type)
          *
@@ -75,9 +80,9 @@ var File = new Class({
             this.key = loader.prefix + loadKey;
         }
 
-        if (!this.type || !this.key)
+        if (!this.key)
         {
-            throw new Error('Invalid Loader.' + this.type + ' key');
+            throw new Error('Invalid File key: ' + this.key);
         }
 
         var url = GetFastValue(fileConfig, 'url');

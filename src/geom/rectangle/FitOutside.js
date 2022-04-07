@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,7 @@ var GetAspectRatio = require('./GetAspectRatio');
  * Adjusts the target rectangle, changing its width, height and position,
  * so that it fully covers the area of the source rectangle, while maintaining its original
  * aspect ratio.
- * 
+ *
  * Unlike the `FitInside` function, the target rectangle may extend further out than the source.
  *
  * @function Phaser.Geom.Rectangle.FitOutside

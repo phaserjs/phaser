@@ -1,16 +1,16 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Timeline Start Event.
- * 
+ *
  * This event is dispatched by a Tween Timeline when it starts.
- * 
+ *
  * Listen to it from a Timeline instance using `Timeline.on('start', listener)`, i.e.:
- * 
+ *
  * ```javascript
  * var timeline = this.tweens.timeline({
  *     targets: image,
@@ -24,7 +24,7 @@
  *
  * @event Phaser.Tweens.Events#TIMELINE_START
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Tweens.Timeline} timeline - A reference to the Timeline instance that emitted the event.
  */
 module.exports = 'start';

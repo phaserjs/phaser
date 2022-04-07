@@ -138,6 +138,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `path` package used by the TS Defs generator has been moved to `devDependencies` (thanks @antkhnvsk)
 * The `GetValue` function has a new optional parameter `altSource` which allows you to provide an alternative object to source the value from.
 * The `Renderer.Snapshot.WebGL` function has had its first parameter changed from an `HTMLCanvasElement` to a `WebGLRenderingContext`. This is now passed in from the `snapshot` methods inside the WebGL Renderer. The change was made to allow it to work with WebGL2 custom contexts (thanks @andymikulski)
+* If you start a Scene that is already starting (START, LOADING, or CREATING) then the start operation is now ignored (thanks @samme)
+* If you start a Scene that is Sleeping, it is shut down before starting again. This matches how Phaser currently handles paused scenes (thanks @samme)
 
 ### Bug Fixes
 
@@ -202,6 +204,13 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `TextureManager.getBase64` will now skip the `drawImage` call in canvas if the frame width or height are zero.
 * `TilemapLayerCanvasRenderer` will now skip the `drawImage` call in canvas if the frame width or height are zero.
 * Audio will now unlock properly again on iOS14 and above in Safari. Fix #5696 (thanks @laineus)
+* Drawing Game Objects to a Render Texture in WebGL would skip their blend modes. This is now applied correctly. Fix #5565 #5996 (thanks @sjb933 @danarcher)
+* Loading a Script File Type will now default the 'type' property to 'script' when a type is not provided. Fix #5994 (thanks @samme @ItsGravix)
+* Using `RenderTexture.fill` in CANVAS mode only would produce a nearly always black color due to float conversion (thanks @andymikulski)
+* If you Paused or Stopped a Scene that was in a preload state, it would still call 'create' after the Scene had shutdown (thanks @samme)
+* BitmapText rendering wouldn't correctly apply per-character kerning offsets. These are now implemented during rendering (thanks @arbassic)
+* Child Spine objects inside Containers wouldn't correctly inherit the parent Containers alpha. Fix #5853 (thanks @spayton)
+* The DisplayList will now enter a while loop until all Game Objects are destroyed, rather than cache the list length. This prevents "cannot read property 'destroy' of undefined" errors in Scenes. Fix #5520 (thanks @schontz @astei)
 
 ### Examples, Documentation and TypeScript
 

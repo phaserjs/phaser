@@ -1,12 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Game Resume Event.
- * 
+ *
  * This event is dispatched when the game loop leaves a paused state and resumes running.
  *
  * @event Phaser.Core.Events#RESUME

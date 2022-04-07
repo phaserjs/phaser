@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -33,7 +33,7 @@ var ParseToTilemap = require('./ParseToTilemap');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
- * 
+ *
  * @return {Phaser.Tilemaps.Tilemap}
  */
 GameObjectFactory.register('tilemap', function (key, tileWidth, tileHeight, width, height, data, insertNull)

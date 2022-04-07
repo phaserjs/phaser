@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26,7 +26,7 @@ var GetInnerHeight = function (iOS)
     var axis = Math.abs(window.orientation);
 
     var size = { w: 0, h: 0 };
-    
+
     var ruler = document.createElement('div');
 
     ruler.setAttribute('style', 'position: fixed; height: 100vh; width: 0; top: 0');

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -34,7 +34,7 @@ var Parse2DArray = function (name, data, tileWidth, tileHeight, insertNull)
         tileWidth: tileWidth,
         tileHeight: tileHeight
     });
-    
+
     var mapData = new MapData({
         name: name,
         tileWidth: tileWidth,

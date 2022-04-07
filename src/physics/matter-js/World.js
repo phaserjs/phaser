@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23,15 +23,15 @@ var Vector = require('./lib/geometry/Vector');
 /**
  * @classdesc
  * The Matter World class is responsible for managing one single instance of a Matter Physics World for Phaser.
- * 
+ *
  * Access this via `this.matter.world` from within a Scene.
- * 
+ *
  * This class creates a Matter JS World Composite along with the Matter JS Engine during instantiation. It also
  * handles delta timing, bounds, body and constraint creation and debug drawing.
- * 
+ *
  * If you wish to access the Matter JS World object directly, see the `localWorld` property.
  * If you wish to access the Matter Engine directly, see the `engine` property.
- * 
+ *
  * This class is an Event Emitter and will proxy _all_ Matter JS events, as they are received.
  *
  * @class World
@@ -127,13 +127,13 @@ var World = new Class({
         /**
          * This function is called every time the core game loop steps, which is bound to the
          * Request Animation Frame frequency unless otherwise modified.
-         * 
+         *
          * The function is passed two values: `time` and `delta`, both of which come from the game step values.
-         * 
+         *
          * It must return a number. This number is used as the delta value passed to Matter.Engine.update.
-         * 
+         *
          * You can override this function with your own to define your own timestep.
-         * 
+         *
          * If you need to update the Engine multiple times in a single game step then call
          * `World.update` as many times as required. Each call will trigger the `getDelta` function.
          * If you wish to have full control over when the Engine updates then see the property `autoUpdate`.
@@ -171,7 +171,7 @@ var World = new Class({
 
         /**
          * The Matter JS Runner Configuration object.
-         * 
+         *
          * This object is populated via the Matter Configuration object's `runner` property and is
          * updated constantly during the game step.
          *
@@ -230,12 +230,12 @@ var World = new Class({
 
         /**
          * The debug configuration object.
-         * 
+         *
          * The values stored in this object are read from the Matter World Config `debug` property.
-         * 
+         *
          * When a new Body or Constraint is _added to the World_, they are given the values stored in this object,
          * unless they have their own `render` object set that will override them.
-         * 
+         *
          * Note that while you can modify the values of properties in this object at run-time, it will not change
          * any of the Matter objects _already added_. It will only impact objects newly added to the world, or one
          * that is removed and then re-added at a later time.
@@ -346,16 +346,16 @@ var World = new Class({
 
     /**
      * Sets the debug render style for the children of the given Matter Composite.
-     * 
+     *
      * Composites themselves do not render, but they can contain bodies, constraints and other composites that may do.
      * So the children of this composite are passed to the `setBodyRenderStyle`, `setCompositeRenderStyle` and
      * `setConstraintRenderStyle` methods accordingly.
-     * 
+     *
      * @method Phaser.Physics.Matter.World#setCompositeRenderStyle
      * @since 3.22.0
      *
      * @param {MatterJS.CompositeType} composite - The Matter Composite to set the render style on.
-     * 
+     *
      * @return {this} This Matter World instance for method chaining.
      */
     setCompositeRenderStyle: function (composite)
@@ -396,15 +396,15 @@ var World = new Class({
 
     /**
      * Sets the debug render style for the given Matter Body.
-     * 
+     *
      * If you are using this on a Phaser Game Object, such as a Matter Sprite, then pass in the body property
      * to this method, not the Game Object itself.
-     * 
+     *
      * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
-     * 
+     *
      * If you wish to reset the Body render colors to the defaults found in the World Debug Config, then call
      * this method with just the `body` parameter provided and no others.
-     * 
+     *
      * @method Phaser.Physics.Matter.World#setBodyRenderStyle
      * @since 3.22.0
      *
@@ -414,7 +414,7 @@ var World = new Class({
      * @param {number} [lineThickness] - The line thickness. If `null` it will use the World Debug Config value.
      * @param {number} [fillColor] - The fill color. If `null` it will use the World Debug Config value.
      * @param {number} [fillOpacity] - The fill opacity, between 0 and 1. If `null` it will use the World Debug Config value.
-     * 
+     *
      * @return {this} This Matter World instance for method chaining.
      */
     setBodyRenderStyle: function (body, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity)
@@ -482,15 +482,15 @@ var World = new Class({
 
     /**
      * Sets the debug render style for the given Matter Constraint.
-     * 
+     *
      * If you are using this on a Phaser Game Object, then pass in the body property
      * to this method, not the Game Object itself.
-     * 
+     *
      * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
-     * 
+     *
      * If you wish to reset the Constraint render colors to the defaults found in the World Debug Config, then call
      * this method with just the `constraint` parameter provided and no others.
-     * 
+     *
      * @method Phaser.Physics.Matter.World#setConstraintRenderStyle
      * @since 3.22.0
      *
@@ -501,7 +501,7 @@ var World = new Class({
      * @param {number} [pinSize] - If this constraint is a pin, this sets the size of the pin circle. If `null` it will use the World Debug Config value.
      * @param {number} [anchorColor] - The color used when rendering this constraints anchors.  If `null` it will use the World Debug Config value.
      * @param {number} [anchorSize] - The size of the anchor circle, if this constraint has anchors. If `null` it will use the World Debug Config value.
-     * 
+     *
      * @return {this} This Matter World instance for method chaining.
      */
     setConstraintRenderStyle: function (constraint, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize)
@@ -616,12 +616,12 @@ var World = new Class({
             MatterEvents.on(world, 'beforeAdd', function (event)
             {
                 var objects = [].concat(event.object);
-    
+
                 for (var i = 0; i < objects.length; i++)
                 {
                     var obj = objects[i];
                     var render = obj.render;
-    
+
                     if (obj.type === 'body')
                     {
                         _this.setBodyRenderStyle(obj, render.lineColor, render.lineOpacity, render.lineThickness, render.fillColor, render.fillOpacity);
@@ -801,12 +801,12 @@ var World = new Class({
 
     /**
      * Creates a Phaser.GameObjects.Graphics object that is used to render all of the debug bodies and joints to.
-     * 
+     *
      * This method is called automatically by the constructor, if debugging has been enabled.
-     * 
+     *
      * The created Graphics object is automatically added to the Scene at 0x0 and given a depth of `Number.MAX_VALUE`,
      * so it renders above all else in the Scene.
-     * 
+     *
      * The Graphics object is assigned to the `debugGraphic` property of this class and `drawDebug` is enabled.
      *
      * @method Phaser.Physics.Matter.World#createDebugGraphic
@@ -846,7 +846,7 @@ var World = new Class({
 
     /**
      * Sets the worlds gravity to the values given.
-     * 
+     *
      * Gravity effects all bodies in the world, unless they have the `ignoreGravity` flag set.
      *
      * @method Phaser.Physics.Matter.World#setGravity
@@ -899,9 +899,9 @@ var World = new Class({
 
     /**
      * Adds a Matter JS object, or array of objects, to the world.
-     * 
+     *
      * The objects should be valid Matter JS entities, such as a Body, Composite or Constraint.
-     * 
+     *
      * Triggers `beforeAdd` and `afterAdd` events.
      *
      * @method Phaser.Physics.Matter.World#add
@@ -920,9 +920,9 @@ var World = new Class({
 
     /**
      * Removes a Matter JS object, or array of objects, from the world.
-     * 
+     *
      * The objects should be valid Matter JS entities, such as a Body, Composite or Constraint.
-     * 
+     *
      * Triggers `beforeRemove` and `afterRemove` events.
      *
      * @method Phaser.Physics.Matter.World#remove
@@ -954,7 +954,7 @@ var World = new Class({
 
     /**
      * Removes a Matter JS constraint, or array of constraints, from the world.
-     * 
+     *
      * Triggers `beforeRemove` and `afterRemove` events.
      *
      * @method Phaser.Physics.Matter.World#removeConstraint
@@ -974,7 +974,7 @@ var World = new Class({
 
     /**
      * Adds `MatterTileBody` instances for all the colliding tiles within the given tilemap layer.
-     * 
+     *
      * Set the appropriate tiles in your layer to collide before calling this method!
      *
      * @method Phaser.Physics.Matter.World#convertTilemapLayer
@@ -1054,7 +1054,7 @@ var World = new Class({
 
     /**
      * Pauses this Matter World instance and sets `enabled` to `false`.
-     * 
+     *
      * A paused world will not run any simulations for the duration it is paused.
      *
      * @method Phaser.Physics.Matter.World#pause
@@ -1092,16 +1092,16 @@ var World = new Class({
 
     /**
      * The internal update method. This is called automatically by the parent Scene.
-     * 
+     *
      * Moves the simulation forward in time by delta ms. Uses `World.correction` value as an optional number that
      * specifies the time correction factor to apply to the update. This can help improve the accuracy of the
      * simulation in cases where delta is changing between updates. The value of correction is defined as `delta / lastDelta`,
      * i.e. the percentage change of delta over the last step. Therefore the value is always 1 (no correction) when
      * delta is constant (or when no correction is desired, which is the default).
      * See the paper on Time Corrected Verlet for more information.
-     * 
+     *
      * Triggers `beforeUpdate` and `afterUpdate` events. Triggers `collisionStart`, `collisionActive` and `collisionEnd` events.
-     * 
+     *
      * If the World is paused, `update` is still run, but exits early and does not update the Matter Engine.
      *
      * @method Phaser.Physics.Matter.World#update
@@ -1138,7 +1138,7 @@ var World = new Class({
             runner.deltaHistory.push(delta);
             runner.deltaHistory = runner.deltaHistory.slice(-runner.deltaSampleSize);
             delta = Math.min.apply(null, runner.deltaHistory);
-            
+
             // limit delta
             delta = delta < runner.deltaMin ? runner.deltaMin : delta;
             delta = delta > runner.deltaMax ? runner.deltaMax : delta;
@@ -1179,12 +1179,12 @@ var World = new Class({
 
     /**
      * Manually advances the physics simulation by one iteration.
-     * 
+     *
      * You can optionally pass in the `delta` and `correction` values to be used by Engine.update.
      * If undefined they use the Matter defaults of 60Hz and no correction.
-     * 
+     *
      * Calling `step` directly bypasses any checks of `enabled` or `autoUpdate`.
-     * 
+     *
      * It also ignores any custom `getDelta` functions, as you should be passing the delta
      * value in to this call.
      *
@@ -1240,9 +1240,9 @@ var World = new Class({
      *
      * @method Phaser.Physics.Matter.World#has
      * @since 3.22.0
-     * 
+     *
      * @param {(MatterJS.Body|Phaser.GameObjects.GameObject)} body - The Matter Body, or Game Object, to search for within the world.
-     * 
+     *
      * @return {MatterJS.BodyType[]} An array of all the Matter JS Bodies in this World.
      */
     has: function (body)
@@ -1257,7 +1257,7 @@ var World = new Class({
      *
      * @method Phaser.Physics.Matter.World#getAllBodies
      * @since 3.22.0
-     * 
+     *
      * @return {MatterJS.BodyType[]} An array of all the Matter JS Bodies in this World.
      */
     getAllBodies: function ()
@@ -1270,7 +1270,7 @@ var World = new Class({
      *
      * @method Phaser.Physics.Matter.World#getAllConstraints
      * @since 3.22.0
-     * 
+     *
      * @return {MatterJS.ConstraintType[]} An array of all the Matter JS Constraints in this World.
      */
     getAllConstraints: function ()
@@ -1283,7 +1283,7 @@ var World = new Class({
      *
      * @method Phaser.Physics.Matter.World#getAllComposites
      * @since 3.22.0
-     * 
+     *
      * @return {MatterJS.CompositeType[]} An array of all the Matter JS Composites in this World.
      */
     getAllComposites: function ()
@@ -1293,7 +1293,7 @@ var World = new Class({
 
     /**
      * Handles the rendering of bodies and debug information to the debug Graphics object, if enabled.
-     * 
+     *
      * This method is called automatically by the Scene after all processing has taken place.
      *
      * @method Phaser.Physics.Matter.World#postUpdate
@@ -1358,20 +1358,20 @@ var World = new Class({
 
     /**
      * Renders the Engine Broadphase Controller Grid to the given Graphics instance.
-     * 
+     *
      * The debug renderer calls this method if the `showBroadphase` config value is set.
-     * 
+     *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render the Grid to your own Graphics instance.
-     * 
+     *
      * @method Phaser.Physics.Matter.World#renderGrid
      * @since 3.22.0
-     * 
+     *
      * @param {MatterJS.Grid} grid - The Matter Grid to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} lineColor - The line color.
      * @param {number} lineOpacity - The line opacity, between 0 and 1.
-     * 
+     *
      * @return {this} This Matter World instance for method chaining.
      */
     renderGrid: function (grid, graphics, lineColor, lineOpacity)
@@ -1404,19 +1404,19 @@ var World = new Class({
 
     /**
      * Renders the list of Pair separations to the given Graphics instance.
-     * 
+     *
      * The debug renderer calls this method if the `showSeparations` config value is set.
-     * 
+     *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render the Grid to your own Graphics instance.
-     * 
+     *
      * @method Phaser.Physics.Matter.World#renderSeparations
      * @since 3.22.0
-     * 
+     *
      * @param {MatterJS.Pair[]} pairs - An array of Matter Pairs to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} lineColor - The line color.
-     * 
+     *
      * @return {this} This Matter World instance for method chaining.
      */
     renderSeparations: function (pairs, graphics, lineColor)
@@ -1440,7 +1440,7 @@ var World = new Class({
             var penetration = collision.penetration;
 
             var k = (!bodyA.isStatic && !bodyB.isStatic) ? 4 : 1;
-            
+
             if (bodyB.isStatic)
             {
                 k = 0;
@@ -1473,19 +1473,19 @@ var World = new Class({
 
     /**
      * Renders the list of collision points and normals to the given Graphics instance.
-     * 
+     *
      * The debug renderer calls this method if the `showCollisions` config value is set.
-     * 
+     *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render the Grid to your own Graphics instance.
-     * 
+     *
      * @method Phaser.Physics.Matter.World#renderCollisions
      * @since 3.22.0
-     * 
+     *
      * @param {MatterJS.Pair[]} pairs - An array of Matter Pairs to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} lineColor - The line color.
-     * 
+     *
      * @return {this} This Matter World instance for method chaining.
      */
     renderCollisions: function (pairs, graphics, lineColor)
@@ -1567,17 +1567,17 @@ var World = new Class({
 
     /**
      * Renders the bounds of an array of Bodies to the given Graphics instance.
-     * 
+     *
      * If the body is a compound body, it will render the bounds for the parent compound.
-     * 
+     *
      * The debug renderer calls this method if the `showBounds` config value is set.
-     * 
+     *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render bounds to your own Graphics instance.
      *
      * @method Phaser.Physics.Matter.World#renderBodyBounds
      * @since 3.22.0
-     * 
+     *
      * @param {array} bodies - An array of bodies from the localWorld.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} lineColor - The line color.
@@ -1615,7 +1615,7 @@ var World = new Class({
                 for (var j = parts.length > 1 ? 1 : 0; j < parts.length; j++)
                 {
                     var part = parts[j];
-    
+
                     graphics.strokeRect(
                         part.bounds.min.x,
                         part.bounds.min.y,
@@ -1631,15 +1631,15 @@ var World = new Class({
 
     /**
      * Renders either all axes, or a single axis indicator, for an array of Bodies, to the given Graphics instance.
-     * 
+     *
      * The debug renderer calls this method if the `showAxes` or `showAngleIndicator` config values are set.
-     * 
+     *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render bounds to your own Graphics instance.
      *
      * @method Phaser.Physics.Matter.World#renderBodyAxes
      * @since 3.22.0
-     * 
+     *
      * @param {array} bodies - An array of bodies from the localWorld.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {boolean} showAxes - If `true` it will render all body axes. If `false` it will render a single axis indicator.
@@ -1670,7 +1670,7 @@ var World = new Class({
                 for (j = parts.length > 1 ? 1 : 0; j < parts.length; j++)
                 {
                     part = parts[j];
-    
+
                     for (k = 0; k < part.axes.length; k++)
                     {
                         var axis = part.axes[k];
@@ -1689,7 +1689,7 @@ var World = new Class({
                 for (j = parts.length > 1 ? 1 : 0; j < parts.length; j++)
                 {
                     part = parts[j];
-    
+
                     for (k = 0; k < part.axes.length; k++)
                     {
                         graphics.lineBetween(
@@ -1708,15 +1708,15 @@ var World = new Class({
 
     /**
      * Renders a velocity indicator for an array of Bodies, to the given Graphics instance.
-     * 
+     *
      * The debug renderer calls this method if the `showVelocity` config value is set.
-     * 
+     *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render bounds to your own Graphics instance.
      *
      * @method Phaser.Physics.Matter.World#renderBodyVelocity
      * @since 3.22.0
-     * 
+     *
      * @param {array} bodies - An array of bodies from the localWorld.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} lineColor - The line color.
@@ -1750,13 +1750,13 @@ var World = new Class({
 
     /**
      * Renders the given array of Bodies to the debug graphics instance.
-     * 
+     *
      * Called automatically by the `postUpdate` method.
      *
      * @method Phaser.Physics.Matter.World#renderBodies
      * @private
      * @since 3.14.0
-     * 
+     *
      * @param {array} bodies - An array of bodies from the localWorld.
      */
     renderBodies: function (bodies)
@@ -1840,16 +1840,16 @@ var World = new Class({
 
     /**
      * Renders a single Matter Body to the given Phaser Graphics Game Object.
-     * 
+     *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render a Body to your own Graphics instance.
-     * 
+     *
      * If you don't wish to render a line around the body, set the `lineColor` parameter to `null`.
      * Equally, if you don't wish to render a fill, set the `fillColor` parameter to `null`.
-     * 
+     *
      * @method Phaser.Physics.Matter.World#renderBody
      * @since 3.22.0
-     * 
+     *
      * @param {MatterJS.BodyType} body - The Matter Body to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {boolean} showInternalEdges - Render internal edges of the polygon?
@@ -1858,7 +1858,7 @@ var World = new Class({
      * @param {number} [lineThickness=1] - The line thickness.
      * @param {number} [fillColor] - The fill color.
      * @param {number} [fillOpacity] - The fill opacity, between 0 and 1.
-     * 
+     *
      * @return {this} This Matter World instance for method chaining.
      */
     renderBody: function (body, graphics, showInternalEdges, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity)
@@ -1900,7 +1900,7 @@ var World = new Class({
                 {
                     graphics.fillStyle(sensorFillColor, fillOpacity * opacity);
                 }
-    
+
                 if (lineColor !== null)
                 {
                     graphics.lineStyle(lineThickness, sensorLineColor, lineOpacity * opacity);
@@ -1912,7 +1912,7 @@ var World = new Class({
                 {
                     graphics.fillStyle(fillColor, fillOpacity * opacity);
                 }
-    
+
                 if (lineColor !== null)
                 {
                     graphics.lineStyle(lineThickness, lineColor, lineOpacity * opacity);
@@ -1950,7 +1950,7 @@ var World = new Class({
                         graphics.moveTo(vertices[nextIndex].x, vertices[nextIndex].y);
                     }
                 }
-                
+
                 graphics.closePath();
             }
 
@@ -1980,18 +1980,18 @@ var World = new Class({
 
     /**
      * Renders the Convex Hull for a single Matter Body to the given Phaser Graphics Game Object.
-     * 
+     *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render a Body hull to your own Graphics instance.
-     * 
+     *
      * @method Phaser.Physics.Matter.World#renderConvexHull
      * @since 3.22.0
-     * 
+     *
      * @param {MatterJS.BodyType} body - The Matter Body to be rendered.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} hullColor - The color used to render the hull.
      * @param {number} [lineThickness=1] - The hull line thickness.
-     * 
+     *
      * @return {this} This Matter World instance for method chaining.
      */
     renderConvexHull: function (body, graphics, hullColor, lineThickness)
@@ -2016,7 +2016,7 @@ var World = new Class({
             {
                 graphics.lineTo(verts[v].x, verts[v].y);
             }
-            
+
             graphics.lineTo(verts[0].x, verts[0].y);
 
             graphics.strokePath();
@@ -2027,7 +2027,7 @@ var World = new Class({
 
     /**
      * Renders all of the constraints in the world (unless they are specifically set to invisible).
-     * 
+     *
      * Called automatically by the `postUpdate` method.
      *
      * @method Phaser.Physics.Matter.World#renderJoints
@@ -2038,7 +2038,7 @@ var World = new Class({
     {
         var graphics = this.debugGraphic;
 
-        // Render constraints 
+        // Render constraints
         var constraints = Composite.allConstraints(this.localWorld);
 
         for (var i = 0; i < constraints.length; i++)
@@ -2058,13 +2058,13 @@ var World = new Class({
 
     /**
      * Renders a single Matter Constraint, such as a Pin or a Spring, to the given Phaser Graphics Game Object.
-     * 
+     *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
      * you wish to render a Constraint to your own Graphics instance.
-     * 
+     *
      * @method Phaser.Physics.Matter.World#renderConstraint
      * @since 3.22.0
-     * 
+     *
      * @param {MatterJS.ConstraintType} constraint - The Matter Constraint to render.
      * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to render to.
      * @param {number} lineColor - The line color.
@@ -2073,7 +2073,7 @@ var World = new Class({
      * @param {number} pinSize - If this constraint is a pin, this sets the size of the pin circle.
      * @param {number} anchorColor - The color used when rendering this constraints anchors. Set to `null` to not render anchors.
      * @param {number} anchorSize - The size of the anchor circle, if this constraint has anchors and is rendering them.
-     * 
+     *
      * @return {this} This Matter World instance for method chaining.
      */
     renderConstraint: function (constraint, graphics, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize)
@@ -2154,7 +2154,7 @@ var World = new Class({
 
     /**
      * Resets the internal collision IDs that Matter.JS uses for Body collision groups.
-     * 
+     *
      * You should call this before destroying your game if you need to restart the game
      * again on the same page, without first reloading the page. Or, if you wish to
      * consistently destroy a Scene that contains Matter.js and then run it again

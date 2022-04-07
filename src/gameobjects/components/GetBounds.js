@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -287,7 +287,7 @@ var GetBounds = {
 
         var TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy;
 
-        // Instead of doing a check if parent container is 
+        // Instead of doing a check if parent container is
         // defined per corner we only do it once.
         if (this.parentContainer)
         {

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -231,14 +231,10 @@ var DisplayList = new Class({
     {
         var list = this.list;
 
-        var i = list.length;
-
-        while (i--)
+        while (list.length)
         {
-            list[i].destroy(true);
+            list[0].destroy(true);
         }
-
-        list.length = 0;
 
         this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },

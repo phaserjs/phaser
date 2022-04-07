@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -86,7 +86,7 @@ var Transform = {
         {
             var factorX = 1 / this._scaleX;
             var factorY = 1 / this._scaleY;
-    
+
             this._scaleX = value;
 
             if (this._scaleX === 0)

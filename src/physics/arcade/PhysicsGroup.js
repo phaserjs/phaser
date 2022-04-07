@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -103,7 +103,7 @@ var PhysicsGroup = new Class({
          * This should be either `Phaser.Physics.Arcade.Image`, `Phaser.Physics.Arcade.Sprite`, or a class extending one of those.
          *
          * @name Phaser.Physics.Arcade.Group#classType
-         * @type {Function}
+         * @type {Phaser.Types.GameObjects.Group.GroupClassTypeConstructor}
          * @default ArcadeSprite
          * @since 3.0.0
          */

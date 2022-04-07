@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@ var Clone = require('./Clone');
 
 /**
  * Creates a new Object using all values from obj1.
- * 
+ *
  * Then scans obj2. If a property is found in obj2 that *also* exists in obj1, the value from obj2 is used, otherwise the property is skipped.
  *
  * @function Phaser.Utils.Objects.MergeRight

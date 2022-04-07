@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23,7 +23,7 @@ var Vertices = require('./lib/geometry/Vertices');
  * and when one is pressed down it checks to see if that hit any part of any active
  * body in the world. If it did, and the body has input enabled, it will begin to
  * drag it until either released, or you stop it via the `stopDrag` method.
- * 
+ *
  * You can adjust the stiffness, length and other properties of the constraint via
  * the `options` object on creation.
  *
@@ -101,7 +101,7 @@ var PointerConstraint = new Class({
 
         /**
          * Is this Constraint active or not?
-         * 
+         *
          * An active constraint will be processed each update. An inactive one will be skipped.
          * Use this to toggle a Pointer Constraint on and off.
          *
@@ -156,7 +156,7 @@ var PointerConstraint = new Class({
 
     /**
      * A Pointer has been pressed down onto the Scene.
-     * 
+     *
      * If this Constraint doesn't have an active Pointer then a hit test is set to
      * run against all active bodies in the world during the _next_ call to `update`.
      * If a body is found, it is bound to this constraint and the drag begins.
@@ -199,7 +199,7 @@ var PointerConstraint = new Class({
      * @method Phaser.Physics.Matter.PointerConstraint#getBody
      * @fires Phaser.Physics.Matter.Events#DRAG_START
      * @since 3.16.2
-     * 
+     *
      * @return {boolean} `true` if a body was found and set, otherwise `false`.
      */
     getBody: function (pointer)
@@ -314,9 +314,9 @@ var PointerConstraint = new Class({
 
             var pos = this.position;
             var constraint = this.constraint;
-    
+
             this.camera.getWorldPoint(pointer.x, pointer.y, pos);
-   
+
             //  Drag update
             constraint.pointA.x = pos.x;
             constraint.pointA.y = pos.y;
@@ -329,7 +329,7 @@ var PointerConstraint = new Class({
 
     /**
      * Stops the Pointer Constraint from dragging the body any further.
-     * 
+     *
      * This is called automatically if the Pointer is released while actively
      * dragging a body. Or, you can call it manually to release a body from a
      * constraint without having to first release the pointer.

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,17 +9,17 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
- * 
+ *
  * The Body Bounds class contains methods to help you extract the world coordinates from various points around
  * the bounds of a Matter Body. Because Matter bodies are positioned based on their center of mass, and not a
  * dimension based center, you often need to get the bounds coordinates in order to properly align them in the world.
- * 
+ *
  * You can access this class via the MatterPhysics class from a Scene, i.e.:
- * 
+ *
  * ```javascript
  * this.matter.bodyBounds.getTopLeft(body);
  * ```
- * 
+ *
  * See also the `MatterPhysics.alignBody` method.
  *
  * @class BodyBounds
@@ -54,9 +54,9 @@ var BodyBounds = new Class({
 
     /**
      * Parses the given body to get the bounds diff values from it.
-     * 
+     *
      * They're stored in this class in the temporary properties `boundsCenter` and `centerDiff`.
-     * 
+     *
      * This method is called automatically by all other methods in this class.
      *
      * @method Phaser.Physics.Matter.BodyBounds#parseBody
@@ -92,7 +92,7 @@ var BodyBounds = new Class({
 
     /**
      * Takes a Body and returns the world coordinates of the top-left of its _bounds_.
-     * 
+     *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
      * This will return the world coordinate based on the bodies _current_ position and bounds.
      *
@@ -126,7 +126,7 @@ var BodyBounds = new Class({
 
     /**
      * Takes a Body and returns the world coordinates of the top-center of its _bounds_.
-     * 
+     *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
      * This will return the world coordinate based on the bodies _current_ position and bounds.
      *
@@ -160,7 +160,7 @@ var BodyBounds = new Class({
 
     /**
      * Takes a Body and returns the world coordinates of the top-right of its _bounds_.
-     * 
+     *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
      * This will return the world coordinate based on the bodies _current_ position and bounds.
      *
@@ -194,7 +194,7 @@ var BodyBounds = new Class({
 
     /**
      * Takes a Body and returns the world coordinates of the left-center of its _bounds_.
-     * 
+     *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
      * This will return the world coordinate based on the bodies _current_ position and bounds.
      *
@@ -228,7 +228,7 @@ var BodyBounds = new Class({
 
     /**
      * Takes a Body and returns the world coordinates of the center of its _bounds_.
-     * 
+     *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
      * This will return the world coordinate based on the bodies _current_ position and bounds.
      *
@@ -261,7 +261,7 @@ var BodyBounds = new Class({
 
     /**
      * Takes a Body and returns the world coordinates of the right-center of its _bounds_.
-     * 
+     *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
      * This will return the world coordinate based on the bodies _current_ position and bounds.
      *
@@ -295,7 +295,7 @@ var BodyBounds = new Class({
 
     /**
      * Takes a Body and returns the world coordinates of the bottom-left of its _bounds_.
-     * 
+     *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
      * This will return the world coordinate based on the bodies _current_ position and bounds.
      *
@@ -329,7 +329,7 @@ var BodyBounds = new Class({
 
     /**
      * Takes a Body and returns the world coordinates of the bottom-center of its _bounds_.
-     * 
+     *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
      * This will return the world coordinate based on the bodies _current_ position and bounds.
      *
@@ -363,7 +363,7 @@ var BodyBounds = new Class({
 
     /**
      * Takes a Body and returns the world coordinates of the bottom-right of its _bounds_.
-     * 
+     *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
      * This will return the world coordinate based on the bodies _current_ position and bounds.
      *

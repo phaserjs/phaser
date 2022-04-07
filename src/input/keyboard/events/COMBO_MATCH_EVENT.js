@@ -1,16 +1,16 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Key Combo Match Event.
- * 
+ *
  * This event is dispatched by the Keyboard Plugin when a [Key Combo]{@link Phaser.Input.Keyboard.KeyCombo} is matched.
- * 
+ *
  * Listen for this event from the Key Plugin after a combo has been created:
- * 
+ *
  * ```javascript
  * this.input.keyboard.createCombo([ 38, 38, 40, 40, 37, 39, 37, 39, 66, 65, 13 ], { resetOnMatch: true });
  *
@@ -21,7 +21,7 @@
  *
  * @event Phaser.Input.Keyboard.Events#COMBO_MATCH
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Input.Keyboard.KeyCombo} keycombo - The Key Combo object that was matched.
  * @param {KeyboardEvent} event - The native DOM Keyboard Event of the final key in the combo. You can inspect this to learn more about any modifiers, etc.
  */
