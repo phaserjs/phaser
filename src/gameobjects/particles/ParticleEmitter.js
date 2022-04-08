@@ -305,6 +305,9 @@ var ParticleEmitter = new Class({
         /**
          * Whether moveToX and moveToY are nonzero. Set automatically during configuration.
          *
+         * When true the particles move toward the moveToX and moveToY coordinates and arrive at the end of their life.
+         * Emitter angle, speedX, and speedY are ignored.
+         *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#moveTo
          * @type {boolean}
          * @default false
