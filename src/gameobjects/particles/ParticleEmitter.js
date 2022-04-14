@@ -303,7 +303,7 @@ var ParticleEmitter = new Class({
         this.speedY = new EmitterOp(config, 'speedY', 0, true);
 
         /**
-         * Whether moveToX and moveToY are nonzero. Set automatically during configuration.
+         * Whether moveToX and moveToY are set. Set automatically during configuration.
          *
          * When true the particles move toward the moveToX and moveToY coordinates and arrive at the end of their life.
          * Emitter angle, speedX, and speedY are ignored.
@@ -323,7 +323,7 @@ var ParticleEmitter = new Class({
          * @default 0
          * @since 3.0.0
          */
-        this.moveToX = new EmitterOp(config, 'moveToX', 0, true);
+        this.moveToX = new EmitterOp(config, 'moveToX', null, true);
 
         /**
          * The y-coordinate emitted particles move toward, when {@link Phaser.GameObjects.Particles.ParticleEmitter#moveTo} is true.
@@ -333,7 +333,7 @@ var ParticleEmitter = new Class({
          * @default 0
          * @since 3.0.0
          */
-        this.moveToY = new EmitterOp(config, 'moveToY', 0, true);
+        this.moveToY = new EmitterOp(config, 'moveToY', null, true);
 
         /**
          * Whether particles will rebound when they meet the emitter bounds.
@@ -809,7 +809,7 @@ var ParticleEmitter = new Class({
 
         this.acceleration = (this.accelerationX.propertyValue !== 0 || this.accelerationY.propertyValue !== 0);
 
-        this.moveTo = (this.moveToX.propertyValue !== 0 || this.moveToY.propertyValue !== 0);
+        this.moveTo = (this.moveToX.propertyValue !== null && this.moveToY.propertyValue !== null);
 
         //  Special 'speed' override
 
