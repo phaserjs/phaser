@@ -11,6 +11,7 @@ var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var FileTypesManager = require('./FileTypesManager');
 var GetFastValue = require('../utils/object/GetFastValue');
+var GetValue = require('../utils/object/GetValue');
 var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
 var XHRSettings = require('./XHRSettings');
@@ -603,9 +604,12 @@ var LoaderPlugin = new Class({
     addPack: function (pack, packKey)
     {
         //  if no packKey provided we'll add everything to the queue
-        if (packKey && pack.hasOwnProperty(packKey))
+        if (packKey)
         {
-            pack = { packKey: pack[packKey] };
+            var subPack = GetValue(pack, packKey);
+            if (subPack) {
+                pack = { packKey: subPack };
+            }
         }
 
         var total = 0;
