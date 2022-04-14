@@ -433,7 +433,11 @@ export class Parser {
 
         } else {
             if (doclet.type.names[0] == "function") {
-                type = dom.create.functionType(null, dom.type.void);
+                let returnType: dom.Type = dom.type.void;
+                if (doclet.returns) {
+                    returnType = this.parseType(doclet.returns[0]);
+                }
+                type = dom.create.functionType(null, returnType);
                 this.setParams(doclet, type);
             } else {
                 type = this.parseType(doclet);
