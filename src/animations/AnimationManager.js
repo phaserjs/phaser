@@ -609,9 +609,9 @@ var AnimationManager = new Class({
      * Example:
      *
      * If you have a texture atlases loaded called `gems` and it contains 6 frames called `ruby_0001`, `ruby_0002`, and so on,
-     * then you can call this method using: `this.anims.generateFrameNames('gems', { prefix: 'ruby_', end: 6, zeroPad: 4 })`.
+     * then you can call this method using: `this.anims.generateFrameNames('gems', { prefix: 'ruby_', start: 1, end: 6, zeroPad: 4 })`.
      *
-     * The `end` value tells it to look for 6 frames, incrementally numbered, all starting with the prefix `ruby_`. The `zeroPad`
+     * The `end` value tells it to select frames 1 through 6, incrementally numbered, all starting with the prefix `ruby_`. The `zeroPad`
      * value tells it how many zeroes pad out the numbers. To create an animation using this method, you can do:
      *
      * ```javascript
