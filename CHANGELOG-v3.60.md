@@ -88,6 +88,7 @@ We have updated the version of Matter Physics to the latest v0.18 release. This 
 * `Mesh.setTint` is a new method that will set the tint color across all vertices of a Mesh (thanks @rexrainbow)
 * `Mesh.tint` is a new setter that will  set the tint color across all vertices of a Mesh (thanks @rexrainbow)
 * `Mesh.clearTint` is a new method that will clear the tint from all vertices of a Mesh (thanks @rexrainbow)
+* You can now use dot notation as the datakey when defining a Loader Pack File (thanks @rexrainbow)
 
 ### Geom Updates
 
@@ -141,6 +142,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * If you start a Scene that is already starting (START, LOADING, or CREATING) then the start operation is now ignored (thanks @samme)
 * If you start a Scene that is Sleeping, it is shut down before starting again. This matches how Phaser currently handles paused scenes (thanks @samme)
 * The right-click context menu used to be disabled on the document.body via the `disableContextMenu` function, but instead now uses the MouseManager / TouchManager targets, which if not specified defaults to the game canvas. Fix # (thanks @lukashass)
+* The Particle 'moveTo' calculations have been simplied and made more efficient (thanks @samme)
 
 ### Bug Fixes
 
@@ -212,6 +214,9 @@ The following are API-breaking, in that a new optional parameter has been insert
 * BitmapText rendering wouldn't correctly apply per-character kerning offsets. These are now implemented during rendering (thanks @arbassic)
 * Child Spine objects inside Containers wouldn't correctly inherit the parent Containers alpha. Fix #5853 (thanks @spayton)
 * The DisplayList will now enter a while loop until all Game Objects are destroyed, rather than cache the list length. This prevents "cannot read property 'destroy' of undefined" errors in Scenes. Fix #5520 (thanks @schontz @astei)
+* Particles can now be moved to 0x0. `moveToX` and `moveToY` now default to null instead of 0 (thanks @samme)
+* Layers will now destroy more carefully when children destroy themselves (thanks @rexrainbow)
+* An error in the `GetBitmapTextSize` function caused kerning to not be applied correctly to Bitmap Text objects. This now works across WebGL and Canvas (thanks @arbassic @TJ09)
 
 ### Examples, Documentation and TypeScript
 
