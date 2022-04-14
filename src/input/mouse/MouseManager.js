@@ -270,11 +270,11 @@ var MouseManager = new Class({
     },
 
     /**
-     * Attempts to disable the context menu from appearing if you right-click on the browser.
+     * Attempts to disable the context menu from appearing if you right-click on the game canvas, or specified input target.
      *
      * Works by listening for the `contextmenu` event and prevent defaulting it.
      *
-     * Use this if you need to enable right-button mouse support in your game, and the browser
+     * Use this if you need to enable right-button mouse support in your game, and the context
      * menu keeps getting in the way.
      *
      * @method Phaser.Input.Mouse.MouseManager#disableContextMenu
