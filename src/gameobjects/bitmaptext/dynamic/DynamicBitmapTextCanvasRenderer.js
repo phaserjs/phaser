@@ -173,7 +173,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, camera, parentMat
 
         x += lineOffsetX;
 
-        xAdvance += glyph.xAdvance + letterSpacing;
+        xAdvance += glyph.xAdvance + letterSpacing + ((kerningOffset !== undefined) ? kerningOffset : 0);
         lastGlyph = glyph;
         lastCharCode = charCode;
 

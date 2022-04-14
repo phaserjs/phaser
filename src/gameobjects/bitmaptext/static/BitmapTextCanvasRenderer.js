@@ -146,7 +146,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, camera, parentMatrix)
 
         x += lineOffsetX;
 
-        xAdvance += glyph.xAdvance + letterSpacing;
+        xAdvance += glyph.xAdvance + letterSpacing + ((kerningOffset !== undefined) ? kerningOffset : 0);
         lastGlyph = glyph;
         lastCharCode = charCode;
 
