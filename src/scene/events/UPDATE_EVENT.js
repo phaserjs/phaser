@@ -13,7 +13,7 @@
  *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
- * 3. The `Scene.update` method is called, if it exists
+ * 3. The `Scene.update` method is called, if it exists and the Scene is in a Running state, otherwise this is skipped.
  * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
