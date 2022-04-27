@@ -358,6 +358,7 @@ var RenderTexture = new Class({
                     frame.source.isRenderTexture = true;
                     frame.source.isGLTexture = true;
                     frame.source.glTexture = renderTarget.texture;
+                    frame.source.glTexture.flipY = true;
                 }
 
                 this.camera.setSize(width, height);
