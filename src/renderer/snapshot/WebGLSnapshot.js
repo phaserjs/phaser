@@ -27,8 +27,8 @@ var WebGLSnapshot = function (sourceContext, config)
     var callback = GetFastValue(config, 'callback');
     var type = GetFastValue(config, 'type', 'image/png');
     var encoderOptions = GetFastValue(config, 'encoder', 0.92);
-    var x = GetFastValue(config, 'x', 0);
-    var y = GetFastValue(config, 'y', 0);
+    var x = Math.abs(Math.round(GetFastValue(config, 'x', 0)));
+    var y = Math.abs(Math.round(GetFastValue(config, 'y', 0)));
 
     var getPixel = GetFastValue(config, 'getPixel', false);
 
@@ -49,8 +49,8 @@ var WebGLSnapshot = function (sourceContext, config)
     }
     else
     {
-        var width = GetFastValue(config, 'width', bufferWidth);
-        var height = GetFastValue(config, 'height', bufferHeight);
+        var width = Math.floor(GetFastValue(config, 'width', bufferWidth));
+        var height = Math.floor(GetFastValue(config, 'height', bufferHeight));
 
         var total = width * height * 4;
 

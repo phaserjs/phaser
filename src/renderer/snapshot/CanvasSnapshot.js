@@ -27,8 +27,8 @@ var CanvasSnapshot = function (canvas, config)
     var encoderOptions = GetFastValue(config, 'encoder', 0.92);
     var x = Math.abs(Math.round(GetFastValue(config, 'x', 0)));
     var y = Math.abs(Math.round(GetFastValue(config, 'y', 0)));
-    var width = GetFastValue(config, 'width', canvas.width);
-    var height = GetFastValue(config, 'height', canvas.height);
+    var width = Math.floor(GetFastValue(config, 'width', canvas.width));
+    var height = Math.floor(GetFastValue(config, 'height', canvas.height));
     var getPixel = GetFastValue(config, 'getPixel', false);
 
     if (getPixel)
