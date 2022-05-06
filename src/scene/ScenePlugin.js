@@ -241,6 +241,8 @@ var ScenePlugin = new Class({
     /**
      * This will start a transition from the current Scene to the target Scene given.
      *
+     * The target Scene cannot be the same as the current Scene.
+     *
      * The transition will last for the duration specified in milliseconds.
      *
      * You can have the target Scene moved above or below this one in the display list.
