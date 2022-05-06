@@ -1475,7 +1475,7 @@ var SceneManager = new Class({
             var indexA = this.getIndex(keyA);
             var indexB = this.getIndex(keyB);
 
-            if (indexA !== -1 && indexB !== -1)
+            if (indexA !== -1 && indexB !== -1 && indexB < indexA)
             {
                 var tempScene = this.getAt(indexB);
 
@@ -1498,7 +1498,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#moveBelow
      * @since 3.2.0
      *
-     * @param {(string|Phaser.Scene)} keyA - The Scene that Scene B will be moved above.
+     * @param {(string|Phaser.Scene)} keyA - The Scene that Scene B will be moved below.
      * @param {(string|Phaser.Scene)} keyB - The Scene to be moved.
      *
      * @return {this} This Scene Manager instance.
@@ -1519,7 +1519,7 @@ var SceneManager = new Class({
             var indexA = this.getIndex(keyA);
             var indexB = this.getIndex(keyB);
 
-            if (indexA !== -1 && indexB !== -1)
+            if (indexA !== -1 && indexB !== -1 && indexB > indexA)
             {
                 var tempScene = this.getAt(indexB);
 
