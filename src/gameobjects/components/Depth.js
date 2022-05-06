@@ -26,7 +26,7 @@ var Depth = {
     _depth: 0,
 
     /**
-     * The depth of this Game Object within the Scene.
+     * The depth of this Game Object within the Scene. Ensure this value is only ever set to a number data-type.
      *
      * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
      * of Game Objects, without actually moving their position in the display list.
@@ -73,7 +73,7 @@ var Depth = {
      * @method Phaser.GameObjects.Components.Depth#setDepth
      * @since 3.0.0
      *
-     * @param {number} value - The depth of this Game Object.
+     * @param {number} value - The depth of this Game Object. Ensure this value is only ever a number data-type.
      *
      * @return {this} This Game Object instance.
      */
