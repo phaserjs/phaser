@@ -64,7 +64,7 @@ var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
     var yStart = pointStart.y;
 
     // Bottom right corner of the shapes's bounding box, rounded up to include partial tiles
-    layer.tilemapLayer.worldToTileXY(shape.right, shape.bottom, true, pointEnd, camera);
+    layer.tilemapLayer.worldToTileXY(shape.right, shape.bottom, false, pointEnd, camera);
 
     var xEnd = Math.ceil(pointEnd.x);
     var yEnd = Math.ceil(pointEnd.y);
