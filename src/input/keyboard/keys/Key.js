@@ -325,6 +325,8 @@ var Key = new Class({
     /**
      * Resets this Key object back to its default un-pressed state.
      *
+     * As of version 3.60.0 it no longer resets the `enabled` or `preventDefault` flags.
+     *
      * @method Phaser.Input.Keyboard.Key#reset
      * @since 3.6.0
      *
@@ -332,8 +334,6 @@ var Key = new Class({
      */
     reset: function ()
     {
-        this.preventDefault = true;
-        this.enabled = true;
         this.isDown = false;
         this.isUp = true;
         this.altKey = false;
