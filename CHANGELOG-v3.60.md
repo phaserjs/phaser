@@ -217,6 +217,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * Particles can now be moved to 0x0. `moveToX` and `moveToY` now default to null instead of 0 (thanks @samme)
 * Layers will now destroy more carefully when children destroy themselves (thanks @rexrainbow)
 * An error in the `GetBitmapTextSize` function caused kerning to not be applied correctly to Bitmap Text objects. This now works across WebGL and Canvas (thanks @arbassic @TJ09)
+* `WebGLSnapshot` and `CanvasSnapshot` will now Math.floor the width/height values to ensure no sub-pixel dimensions, which corrupts the resulting texture. Fix #6099 (thanks @orjandh)
 
 ### Examples, Documentation and TypeScript
 
