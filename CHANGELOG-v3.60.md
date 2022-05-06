@@ -143,6 +143,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * If you start a Scene that is Sleeping, it is shut down before starting again. This matches how Phaser currently handles paused scenes (thanks @samme)
 * The right-click context menu used to be disabled on the document.body via the `disableContextMenu` function, but instead now uses the MouseManager / TouchManager targets, which if not specified defaults to the game canvas. Fix # (thanks @lukashass)
 * The Particle 'moveTo' calculations have been simplied and made more efficient (thanks @samme)
+* The `Key.reset` method no longer resets the `Key.enabled` or `Key.preventDefault` booleans back to `true` again, but only resets the state of the Key. Fix #6098 (thanks @descodifica)
 
 ### Bug Fixes
 
