@@ -235,7 +235,7 @@ var Graphics = new Class({
     },
 
     /**
-     * Set the current line style.
+     * Set the current line style. Used for all 'stroke' related functions.
      *
      * @method Phaser.GameObjects.Graphics#lineStyle
      * @since 3.0.0
@@ -261,7 +261,7 @@ var Graphics = new Class({
     },
 
     /**
-     * Set the current fill style.
+     * Set the current fill style. Used for all 'fill' related functions.
      *
      * @method Phaser.GameObjects.Graphics#fillStyle
      * @since 3.0.0
