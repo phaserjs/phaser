@@ -59,7 +59,10 @@ var GetValue = function (source, key, defaultValue, altSource)
         var keys = key.split('.');
         var parentA = source;
         var parentB = altSource;
-        var value = defaultValue;
+        var valueA = defaultValue;
+        var valueB = defaultValue;
+        var valueAFound = true;
+        var valueBFound = true;
 
         //  Use for loop here so we can break early
         for (var i = 0; i < keys.length; i++)
@@ -67,26 +70,38 @@ var GetValue = function (source, key, defaultValue, altSource)
             if (parentA && parentA.hasOwnProperty(keys[i]))
             {
                 //  Yes parentA has a key property, let's carry on down
-                value = parentA[keys[i]];
-
+                valueA = parentA[keys[i]];
                 parentA = parentA[keys[i]];
             }
-            else if (parentB && parentB.hasOwnProperty(keys[i]))
+            else
+            {
+                valueAFound = false;
+            }
+
+            if (parentB && parentB.hasOwnProperty(keys[i]))
             {
                 //  Yes parentB has a key property, let's carry on down
-                value = parentB[keys[i]];
-
+                valueB = parentB[keys[i]];
                 parentB = parentB[keys[i]];
             }
             else
             {
-                //  Can't go any further, so reset to default
-                value = defaultValue;
-                break;
+                valueBFound = false;
             }
         }
 
-        return value;
+        if (valueAFound)
+        {
+            return valueA;
+        }
+        else if (valueBFound)
+        {
+            return valueB;
+        }
+        else
+        {
+            return defaultValue;
+        }
     }
     else
     {
