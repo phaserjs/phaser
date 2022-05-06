@@ -73,7 +73,7 @@ var Config = new Class({
         /**
          * @const {Phaser.Scale.ScaleModeType} Phaser.Core.Config#scaleMode - The scale mode as used by the Scale Manager. The default is zero, which is no scaling.
          */
-        this.scaleMode = GetValue(scaleConfig, 'scaleMode', 0, config);
+        this.scaleMode = GetValue(scaleConfig, (scaleConfig) ? 'mode' : 'scaleMode', 0, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#expandParent - Is the Scale Manager allowed to adjust the CSS height property of the parent to be 100%?
