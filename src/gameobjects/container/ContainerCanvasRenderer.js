@@ -86,7 +86,7 @@ var ContainerCanvasRenderer = function (renderer, container, camera, parentMatri
         child.setAlpha(childAlpha * alpha);
 
         //  Render
-        child.renderCanvas(renderer, child, camera, transformMatrix, container);
+        child.renderCanvas(renderer, child, camera, transformMatrix);
 
         //  Restore original values
         child.setAlpha(childAlpha);
