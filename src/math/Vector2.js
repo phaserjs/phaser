@@ -691,6 +691,23 @@ var Vector2 = new Class({
         var sin = Math.sin(delta);
 
         return this.set(cos * this.x - sin * this.y, sin * this.x + cos * this.y);
+    },
+
+    /**
+     * Project this Vector onto another.
+     *
+     * @method Phaser.Math.Vector2#project
+     * @since 3.60.0
+     *
+     * @param {Phaser.Math.Vector2} src - The vector to project onto.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    project: function (src)
+    {
+        var scalar = this.dot(src) / src.dot(src);
+
+        return this.copy(src).scale(scalar);
     }
 
 });
