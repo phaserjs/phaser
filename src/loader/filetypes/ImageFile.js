@@ -203,7 +203,7 @@ var ImageFile = new Class({
     {
         var linkFile = this.linkFile;
 
-        if (linkFile && linkFile.state === CONST.FILE_COMPLETE)
+        if (linkFile && linkFile.state >= CONST.FILE_COMPLETE)
         {
             if (this.type === 'image')
             {
