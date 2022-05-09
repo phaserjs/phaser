@@ -106,6 +106,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `MultiFile.destroy` is a new method that clears down all external references of the file, helping free-up resources.
 * `File.addToCache` no longer calls `File.pendingDestroy`, instead this is now handled by the Loader Plugin.
 * There is a new File constant `FILE_PENDING_DESTROY` which is used to ensure Files aren't flagged for destruction more than once.
+* `LoaderPlugin.localSchemes` is a new array of scheme strings that the Loader considers as being local files. This is populated by the new `Phaser.Core.Config#loaderLocalScheme` game / scene config property. It defaults to `[ 'file://', 'capacitor://' ]` but additional schemes can be defined or pushed onto this array. Based on #6010 (thanks @kglogocki)
 
 ### Updates
 
