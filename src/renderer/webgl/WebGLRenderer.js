@@ -550,7 +550,7 @@ var WebGLRenderer = new Class({
          *
          * You can specify this as a string in the game config, i.e.:
          *
-         * `renderer: { mipmapFilter: 'NEAREST_MIPMAP_LINEAR' }`
+         * `render: { mipmapFilter: 'NEAREST_MIPMAP_LINEAR' }`
          *
          * The 6 options for WebGL1 are, in order from least to most computationally expensive:
          *
