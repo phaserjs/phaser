@@ -11,5 +11,5 @@
  * @property {string} [user] - Optional username for all XHR requests.
  * @property {string} [password] - Optional password for all XHR requests.
  * @property {number} [timeout=0] - Optional XHR timeout value, in ms.
- * @property {string} [localScheme] - Optional local scheme definition.
+ * @property {string[]} [localScheme] - An optional array of schemes that the Loader considers as being 'local' files. Defaults to: `[ 'file://', 'capacitor://' ]` if not specified.
  */

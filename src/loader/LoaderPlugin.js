@@ -218,6 +218,18 @@ var LoaderPlugin = new Class({
         this.imageLoadType = GetFastValue(sceneConfig, 'imageLoadType', gameConfig.loaderImageLoadType);
 
         /**
+         * An array of all schemes that the Loader considers as being 'local'.
+         *
+         * This is populated by the `Phaser.Core.Config#loaderLocalScheme` game configuration setting and defaults to
+         * `[ 'file://', 'capacitor://' ]`. Additional local schemes can be added to this array as needed.
+         *
+         * @name Phaser.Loader.LoaderPlugin#localSchemes
+         * @type {string[]}
+         * @since 3.60.0
+         */
+        this.localSchemes = GetFastValue(sceneConfig, 'localScheme', gameConfig.loaderLocalScheme);
+
+        /**
          * The total number of files to load. It may not always be accurate because you may add to the Loader during the process
          * of loading, especially if you load a Pack File. Therefore this value can change, but in most cases remains static.
          *

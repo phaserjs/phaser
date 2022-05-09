@@ -455,9 +455,7 @@ var Config = new Class({
         /**
          * @const {number} Phaser.Core.Config#loaderMaxParallelDownloads - Maximum parallel downloads allowed for resources (Default to 32).
          */
-        var defaultParallel = (Device.os.android) ? 6 : 32;
-
-        this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', defaultParallel);
+        this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', (Device.os.android) ? 6 : 32);
 
         /**
          * @const {(string|undefined)} Phaser.Core.Config#loaderCrossOrigin - 'anonymous', 'use-credentials', or `undefined`. If you're not making cross-origin requests, leave this as `undefined`. See {@link https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes}.
@@ -499,10 +497,13 @@ var Config = new Class({
          */
         this.loaderImageLoadType = GetValue(config, 'loader.imageLoadType', 'XHR');
 
+        // On iOS, Capacitor often runs on a capacitor:// protocol, meaning local files are served from capacitor:// rather than file://
+        // See: https://github.com/photonstorm/phaser/issues/5685
+
         /**
-         * @const {string} Phaser.Core.Config#loaderLocalScheme - Optional local scheme definition.
+         * @const {string[]} Phaser.Core.Config#loaderLocalScheme - An array of schemes that the Loader considers as being 'local' files. Defaults to: `[ 'file://', 'capacitor://' ]`.
          */
-        this.loaderLocalScheme = GetValue(config, 'loader.localScheme', '');
+        this.loaderLocalScheme = GetValue(config, 'loader.localScheme', [ 'file://', 'capacitor://' ]);
 
         /*
          * Allows `plugins` property to either be an array, in which case it just replaces

@@ -315,11 +315,10 @@ var File = new Class({
      */
     onLoad: function (xhr, event)
     {
-        // On iOS, Capacitor often runs on a capacitor:// protocol, meaning local files are served from capacitor:// rather than file://
-        // See: https://github.com/photonstorm/phaser/issues/5685
-
-        var localSchemes = [ 'file://', 'capacitor://', this.loader.systems.game.config.loaderLocalScheme ];
-        var isLocalFile = xhr.responseURL && localSchemes.some(function (scheme) { return xhr.responseURL.indexOf(scheme) === 0; });
+        var isLocalFile = xhr.responseURL && this.loader.localSchemes.some(function (scheme)
+        {
+            return xhr.responseURL.indexOf(scheme) === 0;
+        });
 
         var localFileOk = (isLocalFile && event.target.status === 0);
 
