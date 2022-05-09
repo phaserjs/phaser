@@ -433,10 +433,8 @@ var AnimationManager = new Class({
 
                 if (!tags || (tags && tags.indexOf(name) > -1))
                 {
-                    //  Get all the frames for this tag
-                    var tempFrames = [];
-                    var minDuration = Number.MAX_SAFE_INTEGER;
-
+                    //  Get all the frames for this tag and calculate the total duration in milliseconds.
+                    var totalDuration = 0;
                     for (var i = from; i <= to; i++)
                     {
                         var frameKey = i.toString();
@@ -445,26 +443,16 @@ var AnimationManager = new Class({
                         if (frame)
                         {
                             var frameDuration = GetFastValue(frame, 'duration', Number.MAX_SAFE_INTEGER);
-
-                            if (frameDuration < minDuration)
-                            {
-                                minDuration = frameDuration;
-                            }
-
-                            tempFrames.push({ frame: frameKey, duration: frameDuration });
+                            animFrames.push({ key: key, frame: frameKey, duration: frameDuration });
+                            totalDuration += frameDuration;
                         }
                     }
 
-                    tempFrames.forEach(function (entry)
-                    {
-                        animFrames.push({
-                            key: key,
-                            frame: entry.frame,
-                            duration: (entry.duration - minDuration)
-                        });
+                    // Fix duration to play nice with how the next tick is calculated.
+                    var msPerFrame = totalDuration / animFrames.length;
+                    animFrames.forEach(function(entry) {
+                      entry.duration -= msPerFrame;
                     });
-
-                    var totalDuration = (minDuration * animFrames.length);
 
                     if (direction === 'reverse')
                     {
