@@ -450,9 +450,14 @@ var Tile = new Class({
         // Tiled places tiles on a grid of baseWidth x baseHeight. The origin for a tile in grid
         // units is the bottom left, so the y coordinate needs to be adjusted by the difference
         // between the base size and this tile's size.
-        return tilemapLayer
-            ? tilemapLayer.tileToWorldY(this.y, camera) - (this.height - this.baseHeight) * tilemapLayer.scaleY
-            : this.y * this.baseHeight - (this.height - this.baseHeight);
+        if (tilemapLayer)
+        {
+            var point = tilemapLayer.tileToWorldXY(this.x, this.y, undefined, camera);
+
+            return point.y;
+        }
+
+        return this.y * this.baseWidth - (this.height - this.baseHeight);
     },
 
     /**
