@@ -28,15 +28,31 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 27th May 2021
+> 10th May 2022
 
-After 13 beta releases, over 200 resolved issues, thousands of lines of new code and the culmination of over 6 months incredibly hard work, Phaser 3.50 was finally released in December 2020 and we're continuing with updates into 2021 with this new 3.55 release. 3.55 focuses mostly on fixing issues, but also addresses a performance issue with mixing Sprites and Graphics objects together.
+We've been quietly but solidly working away on Phaser 3.60 for months now and are very close to release. Today I'm happy to say that 3.60 Beta 7 has been published and I would urge you to test it, if you can do so. It should be a safe drop-in replacement for Phaser 3.55, with very little need for changes to your code. However, it does bring a lot of new features and fixes to the table.
 
-It's not hyperbole or exaggeration when I say that Phaser 3.50 is the single biggest point release ever in the history of Phaser. There are quite literally hundreds of new features to explore, updates to key areas and of course bug fixes. I did actually try counting all the changes, but gave up after I'd reached 900 of them! Thankfully, they are, as always, meticulously detailed in the [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.50.md). The changes for 3.50 actually grew so large that I had to split them out from the main Change Log and put them into their own file.
+Some of the new features include:
 
-However, don't let this overwhelm you. A massive number of the changes are purely internal and while there are absolutely some API breaking changes in this release (hence the large version number jump), we've kept them as sensible as possible. We already know of lots of devs who have upgraded with minimal, or no, changes to their actual game code. We cannot guarantee that for everyone, of course, but depending on how complex your game is, the chances are good.
+**Sprite FX** - The ability to create and use SpriteFX Pipelines directly on Sprite Game Objects. These allow a really easy way to define per-Sprite shaders, including extra padding space, perfect for effects such as blur, distort, glow, outline, shadow and more.
 
-There is plenty to be excited about in this version. It pulls together most of the R&D that took place earlier this year for Phaser 4 and delivers it to you in version 3. New features include full support for post-processing effects via the new Post FX Pipeline, multi-texture support for faster WebGL rendering, a brand new Layer Game Object for the ability to group and post process objects without impacting their transforms, new event hooks, a massive overhaul of the Animation system, funky looking new Point Lights, a new Pipeline Manager, new Camera effects, the latest version of the Spine Plugin, an extremely powerful new Mesh Game Object, a brand new Render Texture, huge improvements to Bitmap Text, isometric and hexagonal Tilemap support, a new Pushable Arcade Physics Body type, new Geometry Intersection tests, Light 2D Updates and lots, lots, **lots** more!
+**Compressed Texture Support** - Phaser 3.60 contains support for Compressed Textures. It can parse both KTX and PVR containers and within those has support for the following formats: ETC, ETC1, ATC, ASTC, BPTC, RGTC, PVRTC, S3TC and S3TCSRB. Compressed Textures differ from normal textures in that their structure is optimized for fast GPU data reads and lower memory consumption. Popular tools that can create compressed textures include PVRTexTool, ASTC Encoder and Texture Packer.
+
+**Matter Physics v0.18** - We have updated the version of Matter Physics to the latest v0.18 release. This is a big jump and brings with it quite a few internal changes to Matter, as well as a ~40% performance improvement.
+
+There are also hundreds of updates and bug fixes across the entire codebase.
+
+As always, I have been careful to record all of these in their own [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.60.md). So it's easier for you to identify which change happened in the 3.60 version specifically.
+
+Beta 7 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases). You can also download it from npm:
+
+```
+npm i phaser@3.60.0-beta.7
+```
+
+I have published new TypeScript defs files that align with this version. You can find them in the `types` folder of this repository.
+
+> If you find any problems with this release I'd urge you to please report them in GitHub issues.
 
 As usual, I'd like to send my thanks to the Phaser community for their help in both reporting issues and submitting pull requests to fix them. So, please do spend some time digging through the [Change Log](#changelog). I assure you, it's worth while :)
 
@@ -66,16 +82,13 @@ Because Phaser is an open source project, we cannot charge for it in the same wa
 
 Those funds allow Phaser to improve, and when it improves, everyone involved benefits. Your support helps secure a constant cycle of updates, fixes, new features and planning for the future.
 
-There are other benefits to [backing Phaser](https://www.patreon.com/join/photonstorm), too:
-
-![Backers Perks](https://phaser.io/images/github/patreon-perk-chart.png)
-
 We use [Patreon](https://www.patreon.com/photonstorm) to manage the backing and you can [support Phaser](https://www.patreon.com/join/photonstorm?) from $1 per month. The amount you pledge is entirely up to you and can be changed as often as you like. Patreon renews monthly, just like Netflix. You can, of course, cancel at any point. Tears will be shed on this end, but that's not your concern.
 
 You can also support us by using crypto currencies. The Phaser wallet addresses are:
 
 * Ethereum: 0x10412d654b44570950631aA0C3E3f3aFcAEfAB4C
 * Bitcoin: 3MjS5iNH8yUBfYW2emxBk7rRUkP6ncrkXC
+* BSC / AVAX / Polygon: 0x94aC3F640b8749AbD1d44f29A62ffeB32CA34628
 
 Extra special thanks to the following companies whose support makes Phaser possible:
 
@@ -319,9 +332,10 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 # Change Log
 
-Due to the increasing size of our Change Logs we have now split them up into three parts:
+Due to the increasing size of our Change Logs we have now split them up into four parts:
 
-* [v3.50.1+ Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md) (this is the most recent Change Log)
+* [v3.60.0 Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.60.md) (the 3.60 specific change log, still in Beta)
+* [v3.50.1+ Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md) (this is the most recent Change Log, for 3.55+)
 * [v3.50.0 Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.50.md) (all the changes 3.50 contained)
 * [v3.0.0 to v3.24.1. Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.00-v3.24.1.md) (everything that came before)
 
@@ -348,7 +362,7 @@ Phaser is a [Photon Storm](http://www.photonstorm.com) production.
 
 Created by [Richard Davey](mailto:rich@photonstorm.com). Powered by coffee, anime, pixels and love.
 
-The Phaser logo and characters are &copy; 2021 Photon Storm Limited.
+The Phaser logo and characters are &copy; 2011 - 2022 Photon Storm Limited.
 
 All rights reserved.
 
