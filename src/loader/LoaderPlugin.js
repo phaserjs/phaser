@@ -616,7 +616,7 @@ var LoaderPlugin = new Class({
     addPack: function (pack, packKey)
     {
         //  if no packKey provided we'll add everything to the queue
-        if (packKey)
+        if (typeof(packKey) === 'string')
         {
             var subPack = GetValue(pack, packKey);
             if (subPack)
