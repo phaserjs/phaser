@@ -105,7 +105,7 @@ declare namespace MatterJS {
          * @default { x: 0, y: 0 }
          */
         force?: Vector;
-        
+
         /**
          * A `Number` that defines the friction of the body. The value is always positive and is in the range `(0, 1)`.
          * A value of `0` means that the body may slide indefinitely.
@@ -436,7 +436,7 @@ declare namespace MatterJS {
 
         /**
          * A callback that is invoked when this Body starts colliding with any other Body.
-         * 
+         *
          * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
          *
          * @property onCollideCallback
@@ -447,7 +447,7 @@ declare namespace MatterJS {
 
         /**
          * A callback that is invoked when this Body stops colliding with any other Body.
-         * 
+         *
          * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
          *
          * @property onCollideEndCallback
@@ -458,7 +458,7 @@ declare namespace MatterJS {
 
         /**
          * A callback that is invoked for the duration that this Body is colliding with any other Body.
-         * 
+         *
          * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
          *
          * @property onCollideActiveCallback
@@ -743,7 +743,7 @@ declare namespace MatterJS {
         stiffness?: number;
 
         /**
-         * A `Number` that specifies the damping of the constraint, 
+         * A `Number` that specifies the damping of the constraint,
          * i.e. the amount of resistance applied to each body based on their velocities to limit the amount of oscillation.
          * Damping will only be apparent when the constraint also has a very low `stiffness`.
          * A value of `0.1` means the constraint will apply heavy damping, resulting in little to no oscillation.
@@ -877,7 +877,7 @@ declare namespace MatterJS {
          * @default 2
          */
         constraintIterations?: number;
-        
+
         /**
          * A flag that specifies whether the engine should allow sleeping via the `Matter.Sleeping` module.
          * Sleeping can improve stability and performance, but often at the expense of accuracy.
@@ -1267,7 +1267,7 @@ declare namespace MatterJS {
         pointB: Vector;
 
         /**
-         * A `Number` that specifies the target resting length of the constraint. 
+         * A `Number` that specifies the target resting length of the constraint.
          * It is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
          *
          * @property length
@@ -1314,7 +1314,7 @@ declare namespace MatterJS {
         stiffness: number;
 
         /**
-         * A `Number` that specifies the damping of the constraint, 
+         * A `Number` that specifies the damping of the constraint,
          * i.e. the amount of resistance applied to each body based on their velocities to limit the amount of oscillation.
          * Damping will only be apparent when the constraint also has a very low `stiffness`.
          * A value of `0.1` means the constraint will apply heavy damping, resulting in little to no oscillation.
@@ -1401,7 +1401,7 @@ declare namespace MatterJS {
         label: string;
 
         /**
-         * An array of bodies that make up this body. 
+         * An array of bodies that make up this body.
          * The first body in the array must always be a self reference to the current body instance.
          * All bodies in the `parts` array together form a single rigid compound body.
          * Parts are allowed to overlap, have gaps or holes or even form concave bodies.
@@ -1437,7 +1437,7 @@ declare namespace MatterJS {
          *     [{ x: 0, y: 0 }, { x: 25, y: 50 }, { x: 50, y: 0 }]
          *
          * When passed via `Body.create`, the vertices are translated relative to `body.position` (i.e. world-space, and constantly updated by `Body.update` during simulation).
-         * The `Vector` objects are also augmented with additional properties required for efficient collision detection. 
+         * The `Vector` objects are also augmented with additional properties required for efficient collision detection.
          *
          * Other properties such as `inertia` and `bounds` are automatically calculated from the passed vertices (unless provided via `options`).
          * Concave hulls are not currently supported. The module `Matter.Vertices` contains useful methods for working with vertices.
@@ -1915,7 +1915,7 @@ declare namespace MatterJS {
 
         /**
          * A callback that is invoked when this Body starts colliding with any other Body.
-         * 
+         *
          * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
          *
          * @property onCollideCallback
@@ -1926,7 +1926,7 @@ declare namespace MatterJS {
 
         /**
          * A callback that is invoked when this Body stops colliding with any other Body.
-         * 
+         *
          * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
          *
          * @property onCollideEndCallback
@@ -1937,7 +1937,7 @@ declare namespace MatterJS {
 
         /**
          * A callback that is invoked for the duration that this Body is colliding with any other Body.
-         * 
+         *
          * You can register callbacks by providing a function of type `( pair: Matter.Pair) => void`.
          *
          * @property onCollideActiveCallback
@@ -2200,7 +2200,7 @@ declare namespace MatterJS {
      * Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the module `Matter.Bodies`.
      *
      * See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
-     * 
+     *
      * @class Body
      */
     class Body {
@@ -3360,7 +3360,7 @@ declare namespace MatterJS {
         world: World;
 
     }
-    
+
     /**
      * The `Matter.Grid` module contains methods for creating and manipulating collision broadphase grid structures.
      *
@@ -4883,7 +4883,7 @@ declare namespace MatterJS {
         static trigger(object: any, eventNames: string, event?: (e: any) => void): void;
 
     }
-    
+
     type Dependency = {name: string, range: string} | {name: string, version: string} | string;
 
     class Plugin {
@@ -4892,7 +4892,7 @@ declare namespace MatterJS {
         version: string;
         install: () => void;
         for?: string;
-        
+
         /**
          * Registers a plugin object so it can be resolved later by name.
          * @method register
@@ -4900,16 +4900,16 @@ declare namespace MatterJS {
          * @return {object} The plugin.
          */
         static register (plugin: Plugin): Plugin;
-      
+
         /**
-         * Resolves a dependency to a plugin object from the registry if it exists. 
+         * Resolves a dependency to a plugin object from the registry if it exists.
          * The `dependency` may contain a version, but only the name matters when resolving.
          * @method resolve
          * @param dependency {string} The dependency.
          * @return {object} The plugin if resolved, otherwise `undefined`.
          */
         static resolve (dependency: string): Plugin | undefined;
-        
+
         /**
          * Returns `true` if the object meets the minimum standard to be considered a plugin.
          * This means it must define the following properties:
@@ -4977,7 +4977,7 @@ declare namespace MatterJS {
          * @return {object} The dependency parsed into its components.
          */
         static dependencyParse (dependency: Dependency) : {name: string, range: string};
-        
+
         /**
          * Parses a version string into its components.
          * Versions are strictly of the format `x.y.z` (as in [semver](http://semver.org/)).
@@ -5012,6 +5012,31 @@ declare namespace MatterJS {
          * @return {boolean} `true` if `version` satisfies `range`, otherwise `false`.
          */
         static versionSatisfies (version: string, range: string): boolean;
+
+    }
+
+    //  v0.18 Release Updates
+
+    class Collision {
+
+        /**
+         * Creates a new collision record.
+         * @method create
+         * @param {BodyType} bodyA The first body part represented by the collision record
+         * @param {BodyType} bodyB The second body part represented by the collision record
+         * @return {collision} A new collision record
+         */
+        create (bodyA: BodyType, bodyB: BodyType): any;
+
+        /**
+         * Detect collision between two bodies.
+         * @method collides
+         * @param {BodyType} bodyA
+         * @param {BodyType} bodyB
+         * @param {Pairs} [pairs] Optionally reuse collision records from existing pairs.
+         * @return {collision|null} A collision record if detected, otherwise null
+         */
+        collides (bodyA: BodyType, bodyB: BodyType, pairs: Pairs): any;
 
     }
 }
