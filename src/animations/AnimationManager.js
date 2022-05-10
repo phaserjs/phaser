@@ -450,8 +450,10 @@ var AnimationManager = new Class({
 
                     // Fix duration to play nice with how the next tick is calculated.
                     var msPerFrame = totalDuration / animFrames.length;
-                    animFrames.forEach(function(entry) {
-                      entry.duration -= msPerFrame;
+
+                    animFrames.forEach(function (entry)
+                    {
+                        entry.duration -= msPerFrame;
                     });
 
                     if (direction === 'reverse')

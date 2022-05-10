@@ -6,7 +6,6 @@
 
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
-var DistanceBetween = require('../../math/distance/DistanceBetween');
 
 /**
  * @classdesc
