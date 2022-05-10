@@ -873,8 +873,8 @@ var MatterPhysics = new Class({
      *
      * @param {(Phaser.Types.Physics.Matter.MatterBody|Phaser.Types.Physics.Matter.MatterBody[])} target - The target body, or array of target bodies, to check.
      * @param {Phaser.Types.Physics.Matter.MatterBody[]} [bodies] - The second body, or array of bodies, to check. If falsey it will check against all bodies in the world.
-     * @param {ArcadePhysicsCallback} [overlapCallback] - An optional callback function that is called if the bodies overlap.
-     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two bodies if they overlap. If this is set then `overlapCallback` will only be invoked if this callback returns `true`.
+     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [overlapCallback] - An optional callback function that is called if the bodies overlap.
+     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two bodies if they overlap. If this is set then `overlapCallback` will only be invoked if this callback returns `true`.
      * @param {*} [callbackContext] - The context, or scope, in which to run the callbacks.
      *
      * @return {boolean} `true` if the target body intersects with _any_ of the bodies given, otherwise `false`.

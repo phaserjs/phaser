@@ -20,8 +20,8 @@ var Class = require('../../utils/Class');
  * @param {boolean} overlapOnly - Whether to check for collisions or overlap.
  * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} object1 - The first object to check for collision.
  * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} object2 - The second object to check for collision.
- * @param {ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
- * @param {ArcadePhysicsCallback} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
+ * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
+ * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
  * @param {any} callbackContext - The scope in which to call the callbacks.
  */
 var Collider = new Class({
@@ -89,7 +89,7 @@ var Collider = new Class({
          * The callback to invoke when the two objects collide.
          *
          * @name Phaser.Physics.Arcade.Collider#collideCallback
-         * @type {ArcadePhysicsCallback}
+         * @type {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback}
          * @since 3.0.0
          */
         this.collideCallback = collideCallback;
@@ -98,7 +98,7 @@ var Collider = new Class({
          * If a processCallback exists it must return true or collision checking will be skipped.
          *
          * @name Phaser.Physics.Arcade.Collider#processCallback
-         * @type {ArcadePhysicsCallback}
+         * @type {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback}
          * @since 3.0.0
          */
         this.processCallback = processCallback;
