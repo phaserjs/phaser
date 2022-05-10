@@ -105,14 +105,6 @@ Extra special thanks to the following companies whose support makes Phaser possi
 
 ![Sponsors](https://phaser.io/images/github/sponsors-2021-08.png "Our Awesome Sponsors")
 
-![Phaser Newsletter](https://phaser.io/images/github/div-newsletter.png "Phaser Newsletter")
-
-<div align="center"><img src="https://phaser.io/images/github/phaser-world.png"></div>
-
-Subscribe to the [Phaser World](https://phaser.io/community/newsletter) newsletter for all the latest Phaser games, tutorials, videos and more. It's published every 2 weeks.
-
-Over 150 previous editions can be found on our [Back Issues](https://phaser.io/community/backissues) page.
-
 ![Download Phaser](https://phaser.io/images/github/div-download.png "Download Phaser")
 <a name="download"></a>
 
