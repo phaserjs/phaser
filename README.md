@@ -28,9 +28,9 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 10th May 2022
+> 13th May 2022
 
-We've been quietly but solidly working away on Phaser 3.60 for months now and are very close to release. Today I'm happy to say that 3.60 Beta 7 has been published and I would urge you to test it, if you can do so. It should be a safe drop-in replacement for Phaser 3.55, with very little need for changes to your code. However, it does bring a lot of new features and fixes to the table.
+We've been quietly but solidly working away on Phaser 3.60 for months now and are very close to release. Today I'm happy to say that 3.60 Beta 8 has been published and I would urge you to test it, if you can do so. It should be a safe drop-in replacement for Phaser 3.55, with very little need for changes to your code. However, it does bring a lot of new features and fixes to the table.
 
 Some of the new features include:
 
@@ -44,10 +44,10 @@ There are also hundreds of updates and bug fixes across the entire codebase.
 
 As always, I have been careful to record all of these in their own [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.60.md). So it's easier for you to identify which change happened in the 3.60 version specifically.
 
-Beta 7 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases). You can also download it from npm:
+Beta 8 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases). You can also download it from npm:
 
 ```
-npm i phaser@3.60.0-beta.7
+npm i phaser@3.60.0-beta.8
 ```
 
 I have published new TypeScript defs files that align with this version. You can find them in the `types` folder of this repository.
