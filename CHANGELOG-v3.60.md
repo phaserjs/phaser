@@ -90,6 +90,7 @@ We have updated the version of Matter Physics to the latest v0.18 release. This 
 * `Mesh.clearTint` is a new method that will clear the tint from all vertices of a Mesh (thanks @rexrainbow)
 * You can now use dot notation as the datakey when defining a Loader Pack File (thanks @rexrainbow)
 * `Vector2.project` is a new method that will project the vector onto the given vector (thanks @samme)
+* Experimental feature: The `TilemapLayer` now has the `Mask` component - meaning you can apply a mask to tilemaps (thanks @samme)
 
 ### Geom Updates
 
