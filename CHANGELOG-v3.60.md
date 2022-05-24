@@ -91,6 +91,7 @@ We have updated the version of Matter Physics to the latest v0.18 release. This 
 * You can now use dot notation as the datakey when defining a Loader Pack File (thanks @rexrainbow)
 * `Vector2.project` is a new method that will project the vector onto the given vector (thanks @samme)
 * Experimental feature: The `TilemapLayer` now has the `Mask` component - meaning you can apply a mask to tilemaps (thanks @samme)
+* `TilemapLayer.setTint` is a new method that allows you to set the tint color of all tiles in the given area, optionally based on the filtering search options. This is a WebGL only feature.
 
 ### Geom Updates
 
