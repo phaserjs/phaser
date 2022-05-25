@@ -2208,6 +2208,9 @@ var World = new Class({
 
         var mapData = GetTilesWithinWorldXY(x, y, w, h, null, tilemapLayer.scene.cameras.main, tilemapLayer.layer);
 
+        // var mapData = GetTilesWithinWorldXY(x, y, w, h, { isColliding: true, isNotEmpty: true }, tilemapLayer.scene.cameras.main, tilemapLayer.layer);
+        // console.log(mapData.length);
+
         if (mapData.length === 0)
         {
             return false;
