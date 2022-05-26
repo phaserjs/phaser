@@ -399,6 +399,15 @@ var World = new Class({
          */
         this._tempMatrix2 = new TransformMatrix();
 
+        /**
+         * The Filtering Options passed to `GetTilesWithinWorldXY` as part of the `collideSpriteVsTilemapLayer` check.
+         *
+         * @name Phaser.Physics.Arcade.World#tileFilterOptions
+         * @type {Phaser.Types.Tilemaps.FilteringOptions}
+         * @since 3.60.0
+         */
+        this.tileFilterOptions = { isColliding: true, isNotEmpty: true, hasInterestingFace: true };
+
         if (this.drawDebug)
         {
             this.createDebugGraphic();
@@ -2206,10 +2215,9 @@ var World = new Class({
             h += yDiff;
         }
 
-        var mapData = GetTilesWithinWorldXY(x, y, w, h, null, tilemapLayer.scene.cameras.main, tilemapLayer.layer);
+        var options = (overlapOnly) ? null : this.tileFilterOptions;
 
-        // var mapData = GetTilesWithinWorldXY(x, y, w, h, { isColliding: true, isNotEmpty: true }, tilemapLayer.scene.cameras.main, tilemapLayer.layer);
-        // console.log(mapData.length);
+        var mapData = GetTilesWithinWorldXY(x, y, w, h, options, tilemapLayer.scene.cameras.main, tilemapLayer.layer);
 
         if (mapData.length === 0)
         {
