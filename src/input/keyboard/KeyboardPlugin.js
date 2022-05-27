@@ -49,7 +49,8 @@ var SnapFloor = require('../../math/snap/SnapFloor');
  * Scene to stop all input, or `this.input.keyboard.preventDefault = false` to stop a Scene halting input on another Scene.
  *
  * _Note_: Many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
- * See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.
+ * See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details
+ * and use the site https://w3c.github.io/uievents/tools/key-event-viewer.html to test your n-key support in browser.
  *
  * Also please be aware that certain browser extensions can disable or override Phaser keyboard handling.
  * For example the Chrome extension vimium is known to disable Phaser from using the D key, while EverNote disables the backtick key.
