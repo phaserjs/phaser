@@ -2046,12 +2046,12 @@ var ParticleEmitter = new Class({
         {
             this._counter -= delta;
 
-            if (this._counter <= 0)
+            while (this._counter <= 0)
             {
                 this.emitParticle();
 
                 //  counter = frequency - remained from previous delta
-                this._counter = (this.frequency - Math.abs(this._counter));
+                this._counter += this.frequency;
             }
         }
     },
