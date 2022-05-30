@@ -339,13 +339,15 @@ var UtilityPipeline = new Class({
      * @param {boolean} [clear=true] - Clear the target before copying?
      * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
      * @param {boolean} [eraseMode=false] - Erase source from target using ERASE Blend Mode?
+     * @param {boolean} [flipY=false] - Flip the UV on the Y axis before drawing?
      */
-    blitFrame: function (source, target, brightness, clear, clearAlpha, eraseMode)
+    blitFrame: function (source, target, brightness, clear, clearAlpha, eraseMode, flipY)
     {
         if (brightness === undefined) { brightness = 1; }
         if (clear === undefined) { clear = true; }
         if (clearAlpha === undefined) { clearAlpha = true; }
         if (eraseMode === undefined) { eraseMode = false; }
+        if (flipY === undefined) { flipY = false; }
 
         var gl = this.gl;
 
@@ -392,6 +394,11 @@ var UtilityPipeline = new Class({
             var blendMode = this.renderer.currentBlendMode;
 
             this.renderer.setBlendMode(BlendModes.ERASE);
+        }
+
+        if (flipY)
+        {
+            this.flipY();
         }
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
