@@ -151,6 +151,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The Particle 'moveTo' calculations have been simplied and made more efficient (thanks @samme)
 * The `Key.reset` method no longer resets the `Key.enabled` or `Key.preventDefault` booleans back to `true` again, but only resets the state of the Key. Fix #6098 (thanks @descodifica)
 * When setting the Input Debug Hit Area color it was previously fixed to the value given when created. The value is now taken from the object directly, meaning you can set `gameObject.hitAreaDebug.strokeColor` in real-time (thanks @spayton)
+* You can now have a particle frequency smaller than the delta step, which would previously lead to inconsistencies in emission rates (thanks @samme)
 
 ### Bug Fixes
 
