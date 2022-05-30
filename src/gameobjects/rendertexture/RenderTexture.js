@@ -32,6 +32,10 @@ var UUID = require('../../utils/string/UUID');
  * is a technical limitation of WebGL. To get around it, create your shape as a texture in an art package, then draw that
  * to the Render Texture.
  *
+ * If you are planning on using this Render Texture as a base texture for Sprite
+ * Game Objects, then you should set `RenderTexture.isSpriteTexture = true` _before_
+ * calling any `draw` methods, otherwise you will get inverted frames in WebGL.
+ *
  * @class RenderTexture
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects
@@ -190,6 +194,20 @@ var RenderTexture = new Class({
          */
         this._saved = false;
 
+        /**
+         * Is this Render Texture being used as the base texture for a Sprite Game Object?
+         *
+         * If so, you should enable this property _prior_ to drawing to it, so that it correctly
+         * inverses the frames for WebGL rendering. Not doing so will result in inverted frames.
+         *
+         * You can also toggle this property at run-time. It it used in the `endDraw` method.
+         *
+         * @name Phaser.GameObjects.RenderTexture#isSpriteTexture
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.isSpriteTexture = false;
+
         if (key === undefined)
         {
             this.canvas = CanvasPool.create2D(this, width, height);
@@ -270,6 +288,8 @@ var RenderTexture = new Class({
             this.drawGameObject = this.batchGameObjectWebGL;
 
             this.renderTarget = new RenderTarget(renderer, width, height, 1, 0, false);
+
+            this.setFlipY(true);
         }
         else if (renderer.type === CONST.CANVAS)
         {
@@ -304,6 +324,25 @@ var RenderTexture = new Class({
     setSize: function (width, height)
     {
         return this.resize(width, height);
+    },
+
+    /**
+     * If you are planning on using this Render Texture as a base texture for Sprite
+     * Game Objects, then you should call this method with a value of `true` before
+     * calling drawing anything to it, otherwise you will get inverted frames in WebGL.
+     *
+     * @method Phaser.GameObjects.RenderTexture#setIsSpriteTexture
+     * @since 3.60.0
+     *
+     * @param {boolean} value - Is this Render Target being used as a Sprite Texture, or not?
+     *
+     * @return {this} This Game Object instance.
+     */
+    setIsSpriteTexture: function (value)
+    {
+        this.isSpriteTexture = value;
+
+        return this;
     },
 
     /**
@@ -695,6 +734,10 @@ var RenderTexture = new Class({
      * try and pass them in an array in one single call, rather than making lots of
      * separate calls.
      *
+     * If you are planning on using this Render Texture as a base texture for Sprite
+     * Game Objects, then you should set `RenderTexture.isSpriteTexture = true` before
+     * calling this method, otherwise you will get inverted frames in WebGL.
+     *
      * @method Phaser.GameObjects.RenderTexture#draw
      * @since 3.2.0
      *
@@ -732,6 +775,10 @@ var RenderTexture = new Class({
      * in a tight loop, try using the `draw` method instead.
      *
      * If you need to draw a Sprite to this Render Texture, use the `draw` method instead.
+     *
+     * If you are planning on using this Render Texture as a base texture for Sprite
+     * Game Objects, then you should set `RenderTexture.isSpriteTexture = true` before
+     * calling this method, otherwise you will get inverted frames in WebGL.
      *
      * @method Phaser.GameObjects.RenderTexture#drawFrame
      * @since 3.12.0
@@ -1046,7 +1093,7 @@ var RenderTexture = new Class({
 
             var util = renderer.pipelines.setUtility();
 
-            util.blitFrame(canvasTarget, renderTarget, 1, false, false, erase);
+            util.blitFrame(canvasTarget, renderTarget, 1, false, false, erase, this.isSpriteTexture);
 
             renderer.resetScissor();
             renderer.resetViewport();
