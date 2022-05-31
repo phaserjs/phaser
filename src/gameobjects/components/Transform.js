@@ -24,6 +24,17 @@ var _FLAG = 4; // 0100
 var Transform = {
 
     /**
+     * A property indicating that a Game Object has this component.
+     *
+     * @name Phaser.GameObjects.Components.Transform#hasTransformComponent
+     * @type {boolean}
+     * @readonly
+     * @default true
+     * @since 3.60.0
+     */
+    hasTransformComponent: true,
+
+    /**
      * Private internal value. Holds the horizontal scale value.
      *
      * @name Phaser.GameObjects.Components.Transform#_scaleX
