@@ -516,19 +516,22 @@ var World = new Class({
     {
         if (bodyType === undefined) { bodyType = CONST.DYNAMIC_BODY; }
 
-        if (!object.body)
+        if (object.hasTransformComponent)
         {
-            if (bodyType === CONST.DYNAMIC_BODY)
+            if (!object.body)
             {
-                object.body = new Body(this, object);
+                if (bodyType === CONST.DYNAMIC_BODY)
+                {
+                    object.body = new Body(this, object);
+                }
+                else if (bodyType === CONST.STATIC_BODY)
+                {
+                    object.body = new StaticBody(this, object);
+                }
             }
-            else if (bodyType === CONST.STATIC_BODY)
-            {
-                object.body = new StaticBody(this, object);
-            }
-        }
 
-        this.add(object.body);
+            this.add(object.body);
+        }
 
         return object;
     },
