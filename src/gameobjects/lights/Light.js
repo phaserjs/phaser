@@ -20,13 +20,19 @@ var Utils = require('../../renderer/webgl/Utils');
  *
  * They can also simply be used to represent a point light for your own purposes.
  *
+ * As of Phaser 3.60 this Game Object now has the Transform and Origin components. However, changing the scale,
+ * rotation or origin properties will not make any difference to the Light. They are simply present to allow you
+ * to add this Light to a Container, or enable it for Physics.
+ *
  * @class Light
  * @extends Phaser.Geom.Circle
  * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
+ * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.ScrollFactor
+ * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {number} x - The horizontal position of the light.
@@ -42,7 +48,9 @@ var Light = new Class({
     Extends: Circle,
 
     Mixins: [
+        Components.Origin,
         Components.ScrollFactor,
+        Components.Transform,
         Components.Visible
     ],
 
@@ -98,6 +106,92 @@ var Light = new Class({
         this.cameraFilter = 0;
 
         this.setScrollFactor(1, 1);
+        this.setOrigin();
+        this.setDisplayOrigin(radius);
+    },
+
+    /**
+     * The width of this Light Game Object. This is the same as `Light.diameter`.
+     *
+     * @name Phaser.GameObjects.Light#displayWidth
+     * @type {number}
+     * @since 3.60.0
+     */
+    displayWidth: {
+
+        get: function ()
+        {
+            return this.diameter;
+        },
+
+        set: function (value)
+        {
+            this.diameter = value;
+        }
+
+    },
+
+    /**
+     * The height of this Light Game Object. This is the same as `Light.diameter`.
+     *
+     * @name Phaser.GameObjects.Light#displayHeight
+     * @type {number}
+     * @since 3.60.0
+     */
+    displayHeight: {
+
+        get: function ()
+        {
+            return this.diameter;
+        },
+
+        set: function (value)
+        {
+            this.diameter = value;
+        }
+
+    },
+
+    /**
+     * The width of this Light Game Object. This is the same as `Light.diameter`.
+     *
+     * @name Phaser.GameObjects.Light#width
+     * @type {number}
+     * @since 3.60.0
+     */
+    width: {
+
+        get: function ()
+        {
+            return this.diameter;
+        },
+
+        set: function (value)
+        {
+            this.diameter = value;
+        }
+
+    },
+
+    /**
+     * The height of this Light Game Object. This is the same as `Light.diameter`.
+     *
+     * @name Phaser.GameObjects.Light#height
+     * @type {number}
+     * @since 3.60.0
+     */
+    height: {
+
+        get: function ()
+        {
+            return this.diameter;
+        },
+
+        set: function (value)
+        {
+            this.diameter = value;
+        }
+
     },
 
     /**
