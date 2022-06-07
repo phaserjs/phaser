@@ -113,6 +113,11 @@ var DisplayList = new Class({
             gameObject.removeFromDisplayList();
         }
 
+        if (gameObject.parentContainer)
+        {
+            gameObject.parentContainer.remove(gameObject);
+        }
+
         if (!gameObject.displayList)
         {
             this.queueDepthSort();
