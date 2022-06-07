@@ -468,7 +468,7 @@ var Container = new Class({
      */
     removeHandler: function (gameObject)
     {
-        gameObject.off(Events.DESTROY, this.remove);
+        gameObject.off(Events.DESTROY, this.remove, this);
 
         if (this.exclusive)
         {
