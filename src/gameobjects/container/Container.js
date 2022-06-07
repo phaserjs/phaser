@@ -931,14 +931,22 @@ var Container = new Class({
      */
     removeAll: function (destroyChild)
     {
-        var removed = ArrayUtils.RemoveBetween(this.list, 0, this.list.length, this.removeHandler, this);
+        var list = this.list;
 
         if (destroyChild)
         {
-            for (var i = 0; i < removed.length; i++)
+            for (var i = 0; i < list.length; i++)
             {
-                removed[i].destroy();
+                list[i].off(Events.DESTROY, this.remove, this);
+
+                list[i].destroy();
             }
+
+            list = [];
+        }
+        else
+        {
+            ArrayUtils.RemoveBetween(list, 0, list.length, this.removeHandler, this);
         }
 
         return this;
