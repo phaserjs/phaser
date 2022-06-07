@@ -100,6 +100,60 @@ var ProcessQueue = new Class({
     },
 
     /**
+     * Checks the given item to see if it is already active within this Process Queue.
+     *
+     * @method Phaser.Structs.ProcessQueue#isActive
+     * @since 3.60.0
+     *
+     * @genericUse {T} - [item]
+     * @genericUse {Phaser.Structs.ProcessQueue.<T>} - [$return]
+     *
+     * @param {*} item - The item to check.
+     *
+     * @return {boolean} `true` if the item is active, otherwise `false`.
+     */
+    isActive: function (item)
+    {
+        return (this._active.indexOf(item) > -1);
+    },
+
+    /**
+     * Checks the given item to see if it is already pending addition to this Process Queue.
+     *
+     * @method Phaser.Structs.ProcessQueue#isPending
+     * @since 3.60.0
+     *
+     * @genericUse {T} - [item]
+     * @genericUse {Phaser.Structs.ProcessQueue.<T>} - [$return]
+     *
+     * @param {*} item - The item to check.
+     *
+     * @return {boolean} `true` if the item is pending insertion, otherwise `false`.
+     */
+    isPending: function (item)
+    {
+        return (this._toProcess > 0 && this._pending.indexOf(item) > -1);
+    },
+
+    /**
+     * Checks the given item to see if it is already pending destruction from this Process Queue.
+     *
+     * @method Phaser.Structs.ProcessQueue#isDestroying
+     * @since 3.60.0
+     *
+     * @genericUse {T} - [item]
+     * @genericUse {Phaser.Structs.ProcessQueue.<T>} - [$return]
+     *
+     * @param {*} item - The item to check.
+     *
+     * @return {boolean} `true` if the item is pending destruction, otherwise `false`.
+     */
+    isDestroying: function (item)
+    {
+        return (this._destroy.indexOf(item) > -1);
+    },
+
+    /**
      * Adds a new item to the Process Queue.
      *
      * The item is added to the pending list and made active in the next update.
@@ -116,6 +170,12 @@ var ProcessQueue = new Class({
      */
     add: function (item)
     {
+        //  Don't add if already active or pending
+        if (this.checkQueue && (this.isActive(item) || this.isPending(item)))
+        {
+            return item;
+        }
+
         this._pending.push(item);
 
         this._toProcess++;
@@ -126,7 +186,7 @@ var ProcessQueue = new Class({
     /**
      * Removes an item from the Process Queue.
      *
-     * The item is added to the pending destroy and fully removed in the next update.
+     * The item is added to the 'destroy' list and is fully removed in the next update.
      *
      * @method Phaser.Structs.ProcessQueue#remove
      * @since 3.0.0
@@ -140,9 +200,29 @@ var ProcessQueue = new Class({
      */
     remove: function (item)
     {
-        this._destroy.push(item);
+        //  Check if it's in the _pending list
+        if (this.isPending(item))
+        {
+            var pending = this._pending;
 
-        this._toProcess++;
+            var idx = pending.indexOf(item);
+
+            if (idx !== -1)
+            {
+                //  Remove directly, no need to wait for an update loop
+                pending.splice(idx, 1);
+            }
+        }
+        else if (this.isActive(item))
+        {
+            //  Item is actively running? Queue it for deletion
+            this._destroy.push(item);
+
+            this._toProcess++;
+        }
+
+        //  If neither of the above conditions pass, then the item is either already in the destroy list,
+        //  or isn't pending or active, so cannot be removed anyway
 
         return item;
     },
