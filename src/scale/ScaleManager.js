@@ -1486,7 +1486,7 @@ var ScaleManager = new Class({
      * Get Rectange of visible area, this Rectange does NOT factor in camera scroll.
      *
      * @method Phaser.Scale.ScaleManager#getViewPort
-     * @since 3.56.0
+     * @since 3.60.0
      *
      * @param {Phaser.Geom.Rectangle} [out] - The Rectangle of visible area.
      *
