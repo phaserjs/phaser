@@ -120,7 +120,7 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
                     y = Math.round(y);
                 }
 
-                ctx.imageSmoothingEnabled = !(!renderer.antialias || frame.source.scaleMode);
+                ctx.imageSmoothingEnabled = !frame.source.scaleMode;
 
                 ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
 
