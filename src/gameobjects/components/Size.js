@@ -125,6 +125,14 @@ var Size = {
         this.width = frame.realWidth;
         this.height = frame.realHeight;
 
+        var input = this.input;
+    
+        if (input && !input.customHitArea)
+        {
+            input.hitArea.width = this.width;
+            input.hitArea.height = this.height;
+        }
+
         return this;
     },
 
