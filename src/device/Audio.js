@@ -19,6 +19,7 @@ var Browser = require('./Browser');
  * @property {boolean} dolby - Can this device play EC-3 Dolby Digital Plus files?
  * @property {boolean} m4a - Can this device can play m4a files.
  * @property {boolean} mp3 - Can this device play mp3 files?
+ * @property {boolean} aac - Can this device play aac files?
  * @property {boolean} ogg - Can this device play ogg files?
  * @property {boolean} opus - Can this device play opus files?
  * @property {boolean} wav - Can this device play wav files?
