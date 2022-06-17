@@ -31,6 +31,7 @@ var Audio = {
     dolby: false,
     m4a: false,
     mp3: false,
+    aac: false,
     ogg: false,
     opus: false,
     wav: false,
@@ -71,6 +72,11 @@ function init ()
             if (audioElement.canPlayType('audio/mpeg;').replace(no, ''))
             {
                 Audio.mp3 = true;
+            }
+
+            if (audioElement.canPlayType('audio/aac;').replace(no, ''))
+            {
+                Audio.aac = true;
             }
 
             //  Mimetypes accepted:
