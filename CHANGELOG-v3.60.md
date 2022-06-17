@@ -162,6 +162,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `ProcessQueue.remove` will check if the item is in the pending list, and simply remove it, rather than destroying it.
 * `Container.addHandler` will now call `GameObject.addedToScene`.
 * `Container.removeHandler` will now call `GameObject.removedFromScene`.
+* If defined, the width and height of an input hit area will now be changed if the Frame of a Game Object changes. Fix #6144 (thanks @rexrainbow)
 
 ### Bug Fixes
 
