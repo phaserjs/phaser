@@ -33,7 +33,7 @@ var UUID = require('../../utils/string/UUID');
  * to the Render Texture.
  *
  * If you are planning on using this Render Texture as a base texture for Sprite
- * Game Objects, then you should set `RenderTexture.isSpriteTexture = true` _before_
+ * Game Objects, then you should call `RenderTexture.setIsSpriteTexture()` _before_
  * calling any `draw` methods, otherwise you will get inverted frames in WebGL.
  *
  * @class RenderTexture
@@ -197,13 +197,16 @@ var RenderTexture = new Class({
         /**
          * Is this Render Texture being used as the base texture for a Sprite Game Object?
          *
-         * If so, you should enable this property _prior_ to drawing to it, so that it correctly
+         * To enable this, call `RenderTexture.setIsSpriteTexture(true)`.
+         *
+         * You should do this _before_ drawing to this RenderTexture, so that it correctly
          * inverses the frames for WebGL rendering. Not doing so will result in inverted frames.
          *
-         * You can also toggle this property at run-time. It it used in the `endDraw` method.
+         * This property is used in the `endDraw` method.
          *
          * @name Phaser.GameObjects.RenderTexture#isSpriteTexture
          * @type {boolean}
+         * @readonly
          * @since 3.60.0
          */
         this.isSpriteTexture = false;
@@ -289,7 +292,7 @@ var RenderTexture = new Class({
 
             this.renderTarget = new RenderTarget(renderer, width, height, 1, 0, false);
 
-            this.setFlipY(true);
+            this.setFlipY(this.isSpriteTexture);
         }
         else if (renderer.type === CONST.CANVAS)
         {
@@ -341,6 +344,8 @@ var RenderTexture = new Class({
     setIsSpriteTexture: function (value)
     {
         this.isSpriteTexture = value;
+
+        this.setFlipY(value);
 
         return this;
     },
