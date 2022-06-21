@@ -102,6 +102,42 @@ var Polygon = new Class({
     },
 
     /**
+     * Sets this Polygon to the given points.
+     *
+     * The points can be set from a variety of formats:
+     *
+     * - A string containing paired values separated by a single space: `'40 0 40 20 100 20 100 80 40 80 40 100 0 50'`
+     * - An array of Point objects: `[new Phaser.Point(x1, y1), ...]`
+     * - An array of objects with public x/y properties: `[obj1, obj2, ...]`
+     * - An array of paired numbers that represent point coordinates: `[x1,y1, x2,y2, ...]`
+     * - An array of arrays with two elements representing x/y coordinates: `[[x1, y1], [x2, y2], ...]`
+     *
+     * Calling this method will reset the size (width, height) and display origin of this Shape.
+     *
+     * It also runs both GetAABB and EarCut on the given points, so please be careful not to do this
+     * at a high frequency, or with too many points.
+     *
+     * @method Phaser.GameObjects.Polygon#setTo
+     * @since 3.60.0
+     *
+     * @param {(string|number[]|Phaser.Types.Math.Vector2Like[])} [points] - Points defining the perimeter of this polygon. Please check function description above for the different supported formats.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTo: function (points)
+    {
+        this.geom.setTo(points);
+
+        var bounds = GetAABB(this.geom);
+
+        this.setSize(bounds.width, bounds.height);
+
+        this.updateDisplayOrigin();
+
+        return this.updateData();
+    },
+
+    /**
      * Internal method that updates the data and path values.
      *
      * @method Phaser.GameObjects.Polygon#updateData
