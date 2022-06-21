@@ -94,6 +94,7 @@ We have updated the version of Matter Physics to the latest v0.18 release. This 
 * `TilemapLayer.setTint` is a new method that allows you to set the tint color of all tiles in the given area, optionally based on the filtering search options. This is a WebGL only feature.
 * `RenderTexture.setIsSpriteTexture` is a new method that allows you to flag a Render Texture as being used as the source for Sprite Game Object textures. Doing this ensures that images drawn to the Render Texture are correctly inverted for rendering in WebGL. Not doing so can cause inverted frames. If you use this method, you must use it before drawing anything to the Render Texture. Fix #6057 #6017 (thanks @andymikulski @Grandnainconnu)
 * `UtilityPipeline.blitFrame` has a new optional boolean parameter `flipY` which, if set, will invert the source Render Target while drawing it to the destination Render Target.
+* `GameObjects.Polygon.setTo` is a new method that allows you to change the points being used to render a Polygon Shape Game Object. Fix #6151 (thanks @PhaserEditor2D)
 
 ### Geom Updates
 
