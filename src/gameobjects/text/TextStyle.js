@@ -358,23 +358,6 @@ var TextStyle = new Class({
 
         //  Set to defaults + user style
         this.setStyle(style, false, true);
-
-        var metrics = GetValue(style, 'metrics', false);
-
-        //  Provide optional TextMetrics in the style object to avoid the canvas look-up / scanning
-        //  Doing this is reset if you then change the font of this TextStyle after creation
-        if (metrics)
-        {
-            this.metrics = {
-                ascent: GetValue(metrics, 'ascent', 0),
-                descent: GetValue(metrics, 'descent', 0),
-                fontSize: GetValue(metrics, 'fontSize', 0)
-            };
-        }
-        else
-        {
-            this.metrics = MeasureText(this);
-        }
     },
 
     /**
@@ -443,9 +426,26 @@ var TextStyle = new Class({
             this.color = fill;
         }
 
+        var metrics = GetValue(style, 'metrics', false);
+
+        //  Provide optional TextMetrics in the style object to avoid the canvas look-up / scanning
+        //  Doing this is reset if you then change the font of this TextStyle after creation
+        if (metrics)
+        {
+            this.metrics = {
+                ascent: GetValue(metrics, 'ascent', 0),
+                descent: GetValue(metrics, 'descent', 0),
+                fontSize: GetValue(metrics, 'fontSize', 0)
+            };
+        }
+        else if (updateText)
+        {
+            this.metrics = MeasureText(this);
+        }
+
         if (updateText)
         {
-            return this.update(true);
+            return this.parent.updateText();
         }
         else
         {
