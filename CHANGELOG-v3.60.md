@@ -164,6 +164,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * `Container.addHandler` will now call `GameObject.addedToScene`.
 * `Container.removeHandler` will now call `GameObject.removedFromScene`.
 * If defined, the width and height of an input hit area will now be changed if the Frame of a Game Object changes. Fix #6144 (thanks @rexrainbow)
+* When passing a `TextStyle` configuration object to the Text Game Objects `setStyle` method, it would ignore any `metrics` data it may contain and reset it back to the defaults. It will now respect the `metrics` config and use it, if present. Fix #6149 (thanks @michalfialadev)
 
 ### Bug Fixes
 
