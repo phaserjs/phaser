@@ -945,7 +945,7 @@ var Container = new Class({
                 }
             }
 
-            list = [];
+            this.list = [];
         }
         else
         {
