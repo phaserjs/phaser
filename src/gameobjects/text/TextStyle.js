@@ -438,7 +438,7 @@ var TextStyle = new Class({
                 fontSize: GetValue(metrics, 'fontSize', 0)
             };
         }
-        else if (updateText)
+        else if (updateText || !this.metrics)
         {
             this.metrics = MeasureText(this);
         }
