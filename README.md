@@ -192,6 +192,10 @@ We've 3 tutorials related specifically to creating **Facebook Instant Games** wi
 
 During our development of Phaser 3, we created hundreds of examples with the full source code and assets ready available. These examples are now fully integrated into the [Phaser website](https://phaser.io/examples). You can also browse them on [Phaser 3 Labs](https://labs.phaser.io) via a more advanced interface, or clone the [examples repo][examples]. We are constantly adding to and refining these examples.
 
+### Hathora
+
+Hathora is a framework for creating online multiplayer games with a focus on providing the best developer experience possible. The framework handles aspects such as State Synchronization, persistence, and authentication so that you can focus on building your game. Once you’ve built your game, you can deploy it to Hathora Cloud with a single command, and it will push your game to servers all over the world, automatically scaling up or down based on the user load. Visit the [Hathora documentation](https://docs.hathora.dev/#/) to learn more.
+
 ### Huge list of Phaser 3 Plugins
 
 Super community member RexRainbow has been publishing Phaser 3 content for years, building up an impressive catalogue in that time. You'll find [loads of plugins](https://rexrainbow.github.io/phaser3-rex-notes/docs/site/index.html#list-of-my-plugins), from UI controls such as text input boxes, to Firebase support, Finite State Machines and lots more. As well as the plugins there is also a comprehensive set of 'Notes' about Phaser 3, going into great detail about how the various systems work. It's an invaluable resource and well worth checking out at [https://rexrainbow.github.io](https://rexrainbow.github.io/phaser3-rex-notes/docs/site/index.html)
