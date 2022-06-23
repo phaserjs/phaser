@@ -103,7 +103,7 @@ var RGB = new Class({
     {
         var rgb = this._rgb;
 
-        return (rgb.r === red && rgb.g === green && rgb.b === blue);
+        return (rgb[0] === red && rgb[1] === green && rgb[2] === blue);
     },
 
     /**
