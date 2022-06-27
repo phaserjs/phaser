@@ -63,12 +63,12 @@ function init ()
                 Audio.ogg = true;
             }
 
-            if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(no, '') || audioElement.canPlayType('audio/opus;').replace(no, ''))
+            if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(no, '') || audioElement.canPlayType('audio/opus').replace(no, ''))
             {
                 Audio.opus = true;
             }
 
-            if (audioElement.canPlayType('audio/mpeg;').replace(no, ''))
+            if (audioElement.canPlayType('audio/mpeg').replace(no, ''))
             {
                 Audio.mp3 = true;
             }
@@ -80,7 +80,7 @@ function init ()
                 Audio.wav = true;
             }
 
-            if (audioElement.canPlayType('audio/x-m4a;') || audioElement.canPlayType('audio/aac;').replace(no, ''))
+            if (audioElement.canPlayType('audio/x-m4a') || audioElement.canPlayType('audio/aac').replace(no, ''))
             {
                 Audio.m4a = true;
             }
@@ -90,7 +90,7 @@ function init ()
                 Audio.webm = true;
             }
 
-            if (audioElement.canPlayType('audio/mp4;codecs="ec-3"') !== '')
+            if (audioElement.canPlayType('audio/mp4; codecs="ec-3"') !== '')
             {
                 if (Browser.edge)
                 {
