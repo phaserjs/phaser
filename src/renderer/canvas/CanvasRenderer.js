@@ -811,7 +811,7 @@ var CanvasRenderer = new Class({
 
         ctx.globalAlpha = alpha;
 
-        ctx.imageSmoothingEnabled = !(!this.antialias || frame.source.scaleMode);
+        ctx.imageSmoothingEnabled = !frame.source.scaleMode;
 
         if (sprite.mask)
         {
