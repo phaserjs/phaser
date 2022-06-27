@@ -104,6 +104,13 @@ var TileSprite = new Class({
         var displayTexture = scene.sys.textures.get(textureKey);
         var displayFrame = displayTexture.get(frameKey);
 
+        if (displayFrame.source.compressionAlgorithm)
+        {
+            console.warn('TileSprite cannot use compressed textures');
+            displayTexture = scene.sys.textures.get('__MISSING');
+            displayFrame = displayTexture.get();
+        }
+
         if (!width || !height)
         {
             width = displayFrame.width;
