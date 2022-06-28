@@ -28,7 +28,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.VideoFileConfig)} key - The key to use for this file, or a file configuration object.
- * @param {any} [urlConfig] - The absolute or relative URL to load this file from in a config object.
+ * @param {Phaser.Types.Loader.FileTypes.VideoFileURLConfig} [urlConfig] - The absolute or relative URL to load this file from in a config object.
  * @param {string} [loadEvent] - The load event to listen for when _not_ loading as a blob. Either 'loadeddata', 'canplay' or 'canplaythrough'.
  * @param {boolean} [asBlob] - Load the video as a data blob, or via the Video element?
  * @param {boolean} [noAudio] - Does the video have an audio track? If not you can enable auto-playing on it.
@@ -348,7 +348,7 @@ VideoFile.getVideoURL = function (game, urls)
  * @since 3.20.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.VideoFileConfig|Phaser.Types.Loader.FileTypes.VideoFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
- * @param {(string|string[])} [urls] - The absolute or relative URL to load the video files from.
+ * @param {(string|string[]|Phaser.Types.Loader.FileTypes.VideoFileURLConfig|Phaser.Types.Loader.FileTypes.VideoFileURLConfig[])} [urls] - The absolute or relative URL to load the video files from.
  * @param {string} [loadEvent='loadeddata'] - The load event to listen for when _not_ loading as a blob. Either `loadeddata`, `canplay` or `canplaythrough`.
  * @param {boolean} [asBlob=false] - Load the video as a data blob, or stream it via the Video element?
  * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
