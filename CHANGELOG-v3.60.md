@@ -166,6 +166,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 * If defined, the width and height of an input hit area will now be changed if the Frame of a Game Object changes. Fix #6144 (thanks @rexrainbow)
 * When passing a `TextStyle` configuration object to the Text Game Objects `setStyle` method, it would ignore any `metrics` data it may contain and reset it back to the defaults. It will now respect the `metrics` config and use it, if present. Fix #6149 (thanks @michalfialadev)
 * A Texture `ScaleMode` will now override the Game Config `antialias` setting under the Canvas Renderer, where-as before if `antialias` was `true` then it would ignore the scale mode of the texture (thanks @Cirras)
+* The `Device.Audio` module has been rewritten to use a new internal `CanPlay` function that cuts down on the amount of code required greatly.
+* `Device.Audio.aac` is a new boolean property that defines if the browser can play aac audio files or not, allowing them to be loaded via the Loader (thanks @Ariorh1337)
 
 ### Bug Fixes
 
