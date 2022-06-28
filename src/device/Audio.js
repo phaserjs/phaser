@@ -18,6 +18,7 @@ var Browser = require('./Browser');
  * @property {boolean} audioData - Can this device play HTML Audio tags?
  * @property {boolean} dolby - Can this device play EC-3 Dolby Digital Plus files?
  * @property {boolean} m4a - Can this device can play m4a files.
+ * @property {boolean} aac - Can this device can play aac files.
  * @property {boolean} mp3 - Can this device play mp3 files?
  * @property {boolean} ogg - Can this device play ogg files?
  * @property {boolean} opus - Can this device play opus files?
@@ -27,6 +28,7 @@ var Browser = require('./Browser');
  */
 var Audio = {
 
+    aac: false,
     audioData: false,
     dolby: false,
     m4a: false,
@@ -52,43 +54,35 @@ function init ()
 
     var audioElement = document.createElement('audio');
     var result = !!audioElement.canPlayType;
-    var no = /^no$/;
 
     try
     {
         if (result)
         {
-            if (audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(no, ''))
+            var CanPlay = function (type1, type2)
             {
-                Audio.ogg = true;
-            }
+                var canPlayType1 = audioElement.canPlayType('audio/' + type1).replace(/^no$/, '');
 
-            if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(no, '') || audioElement.canPlayType('audio/opus').replace(no, ''))
-            {
-                Audio.opus = true;
-            }
+                if (type2)
+                {
+                    return Boolean(canPlayType1 || audioElement.canPlayType('audio/' + type2).replace(/^no$/, ''));
+                }
+                else
+                {
+                    return Boolean(canPlayType1);
+                }
+            };
 
-            if (audioElement.canPlayType('audio/mpeg').replace(no, ''))
-            {
-                Audio.mp3 = true;
-            }
-
-            //  Mimetypes accepted:
+            //  wav Mimetypes accepted:
             //  developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
-            if (audioElement.canPlayType('audio/wav').replace(no, ''))
-            {
-                Audio.wav = true;
-            }
 
-            if (audioElement.canPlayType('audio/x-m4a') || audioElement.canPlayType('audio/aac').replace(no, ''))
-            {
-                Audio.m4a = true;
-            }
-
-            if (audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(no, ''))
-            {
-                Audio.webm = true;
-            }
+            Audio.ogg = CanPlay('ogg; codecs="vorbis"');
+            Audio.opus = CanPlay('ogg; codecs="opus"', 'opus');
+            Audio.mp3 = CanPlay('mpeg');
+            Audio.wav = CanPlay('wav');
+            Audio.m4a = CanPlay('x-m4a');
+            Audio.aac = CanPlay('aac');
+            Audio.webm = CanPlay('webm; codecs="vorbis"');
 
             if (audioElement.canPlayType('audio/mp4; codecs="ec-3"') !== '')
             {
