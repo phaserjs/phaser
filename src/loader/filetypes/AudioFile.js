@@ -28,7 +28,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
- * @param {any} [urlConfig] - The absolute or relative URL to load this file from in a config object.
+ * @param {Phaser.Types.Loader.FileTypes.AudioFileURLConfig} [urlConfig] - The absolute or relative URL to load this file from in a config object.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {AudioContext} [audioContext] - The AudioContext this file will use to process itself.
  */
@@ -219,7 +219,7 @@ AudioFile.getAudioURL = function (game, urls)
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.AudioFileConfig|Phaser.Types.Loader.FileTypes.AudioFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
- * @param {(string|string[])} [urls] - The absolute or relative URL to load the audio files from.
+ * @param {(string|string[]|Phaser.Types.Loader.FileTypes.AudioFileURLConfig|Phaser.Types.Loader.FileTypes.AudioFileURLConfig[])} [urls] - The absolute or relative URL to load the audio files from.
  * @param {any} [config] - An object containing an `instances` property for HTML5Audio. Defaults to 1.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
