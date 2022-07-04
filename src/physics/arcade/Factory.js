@@ -6,9 +6,11 @@
 
 var ArcadeImage = require('./ArcadeImage');
 var ArcadeSprite = require('./ArcadeSprite');
+var Body = require('./Body');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var PhysicsGroup = require('./PhysicsGroup');
+var StaticBody = require('./StaticBody');
 var StaticPhysicsGroup = require('./StaticPhysicsGroup');
 
 /**
@@ -247,6 +249,70 @@ var Factory = new Class({
     group: function (children, config)
     {
         return this.sys.updateList.add(new PhysicsGroup(this.world, this.world.scene, children, config));
+    },
+
+    /**
+     * Creates a new physics Body with the given position and size.
+     *
+     * This Body is not associated with any Game Object, but still exists within the world
+     * and can have velocity, collision, etc.
+     *
+     * @method Phaser.Physics.Arcade.Factory#body
+     * @since 3.60.0
+     *
+     * @param {number} x - The horizontal position of this Body in the physics world.
+     * @param {number} y - The vertical position of this Body in the physics world.
+     * @param {number} [width=64] - The width of the Body in pixels. Cannot be negative or zero.
+     * @param {number} [height=64] - The height of the Body in pixels. Cannot be negative or zero.
+     *
+     * @return {Phaser.Physics.Arcade.Body} The Body that was created.
+     */
+    body: function (x, y, width, height)
+    {
+        var body = new Body(this.world);
+
+        body.position.set(x, y);
+
+        if (width && height)
+        {
+            body.setSize(width, height);
+        }
+
+        this.world.add(body, CONST.DYNAMIC_BODY);
+
+        return body;
+    },
+
+    /**
+     * Creates a new physics Body with the given position and size.
+     *
+     * This Body is not associated with any Game Object, but still exists within the world
+     * and can have velocity, collision, etc.
+     *
+     * @method Phaser.Physics.Arcade.Factory#body
+     * @since 3.60.0
+     *
+     * @param {number} x - The horizontal position of this Body in the physics world.
+     * @param {number} y - The vertical position of this Body in the physics world.
+     * @param {number} [width=64] - The width of the Body in pixels. Cannot be negative or zero.
+     * @param {number} [height=64] - The height of the Body in pixels. Cannot be negative or zero.
+     *
+     * @return {Phaser.Physics.Arcade.Body} The Body that was created.
+     */
+    staticBody: function (x, y, width, height)
+    {
+        var body = new Body(this.world);
+
+        body.position.set(x, y);
+
+        if (width && height)
+        {
+            body.setSize(width, height);
+        }
+
+        this.world.add(body, CONST.STATIC_BODY);
+
+        return body;
     },
 
     /**
