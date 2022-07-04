@@ -81,6 +81,16 @@ var Body = new Class({
         this.gameObject = (hasGameObject) ? gameObject : undefined;
 
         /**
+         * A quick-test flag that signifies this is a Body, used in the World collision handler.
+         *
+         * @name Phaser.Physics.Arcade.Body#isBody
+         * @type {boolean}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.isBody = true;
+
+        /**
          * Transformations applied to this Body.
          *
          * @name Phaser.Physics.Arcade.Body#transform

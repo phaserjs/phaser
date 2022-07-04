@@ -82,6 +82,17 @@ var StaticBody = new Class({
          */
         this.gameObject = (hasGameObject) ? gameObject : undefined;
 
+
+        /**
+         * A quick-test flag that signifies this is a Body, used in the World collision handler.
+         *
+         * @name Phaser.Physics.Arcade.StaticBody#isBody
+         * @type {boolean}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.isBody = true;
+
         /**
          * Whether the Static Body's boundary is drawn to the debug display.
          *
