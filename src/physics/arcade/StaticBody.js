@@ -27,7 +27,7 @@ var Vector2 = require('../../math/Vector2');
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Arcade.World} world - The Arcade Physics simulation this Static Body belongs to.
- * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object this Static Body belongs to.
+ * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object this Body belongs to. As of Phaser 3.60 this is now optional.
  */
 var StaticBody = new Class({
 
@@ -35,8 +35,32 @@ var StaticBody = new Class({
 
     function StaticBody (world, gameObject)
     {
-        var width = (gameObject.displayWidth) ? gameObject.displayWidth : 64;
-        var height = (gameObject.displayHeight) ? gameObject.displayHeight : 64;
+        var width = 64;
+        var height = 64;
+
+        var dummyGameObject = {
+            x: 0,
+            y: 0,
+            angle: 0,
+            rotation: 0,
+            scaleX: 1,
+            scaleY: 1,
+            displayOriginX: 0,
+            displayOriginY: 0
+        };
+
+        var hasGameObject = (gameObject !== undefined);
+
+        if (hasGameObject && gameObject.displayWidth)
+        {
+            width = gameObject.displayWidth;
+            height = gameObject.displayHeight;
+        }
+
+        if (!hasGameObject)
+        {
+            gameObject = dummyGameObject;
+        }
 
         /**
          * The Arcade Physics simulation this Static Body belongs to.
@@ -50,11 +74,13 @@ var StaticBody = new Class({
         /**
          * The Game Object this Static Body belongs to.
          *
+         * As of Phaser 3.60 this is now optional and can be undefined.
+         *
          * @name Phaser.Physics.Arcade.StaticBody#gameObject
          * @type {Phaser.GameObjects.GameObject}
          * @since 3.0.0
          */
-        this.gameObject = gameObject;
+        this.gameObject = (hasGameObject) ? gameObject : undefined;
 
         /**
          * Whether the Static Body's boundary is drawn to the debug display.
