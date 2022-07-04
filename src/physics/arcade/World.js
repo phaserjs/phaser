@@ -1872,10 +1872,12 @@ var World = new Class({
             return false;
         }
 
-        //  A Body
-        if (object1.body)
+        //  TODO - Convert to fast-path index for Collider
+
+        //  SPRITE
+        if (object1.body || object1.isBody)
         {
-            if (object2.body)
+            if (object2.body || object2.isBody)
             {
                 return this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
@@ -1892,7 +1894,7 @@ var World = new Class({
         //  GROUPS
         else if (object1.isParent)
         {
-            if (object2.body)
+            if (object2.body || object2.isBody)
             {
                 return this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
             }
@@ -1909,7 +1911,7 @@ var World = new Class({
         //  TILEMAP LAYERS
         else if (object1.isTilemap)
         {
-            if (object2.body)
+            if (object2.body || object2.isBody)
             {
                 return this.collideSpriteVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
             }
@@ -1939,12 +1941,15 @@ var World = new Class({
      */
     collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
-        if (!sprite1.body || !sprite2.body)
+        var body1 = (sprite1.isBody) ? sprite1 : sprite1.body;
+        var body2 = (sprite2.isBody) ? sprite2 : sprite2.body;
+
+        if (!body1 || !body2)
         {
             return false;
         }
 
-        if (this.separate(sprite1.body, sprite2.body, processCallback, callbackContext, overlapOnly))
+        if (this.separate(body1, body2, processCallback, callbackContext, overlapOnly))
         {
             if (collideCallback)
             {
@@ -1976,7 +1981,7 @@ var World = new Class({
      */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly)
     {
-        var bodyA = sprite.body;
+        var bodyA = (sprite.isBody) ? sprite : sprite.body;
 
         if (group.length === 0 || !bodyA || !bodyA.enable || bodyA.checkCollision.none)
         {
@@ -2082,7 +2087,7 @@ var World = new Class({
 
         for (var i = 0; i < children.length; i++)
         {
-            if (children[i].body)
+            if (children[i].body || children[i].isBody)
             {
                 if (this.collideSpriteVsTilemapLayer(children[i], tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly))
                 {
@@ -2124,7 +2129,7 @@ var World = new Class({
      */
     collideTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
     {
-        if (!sprite.body.enable || tiles.length === 0)
+        if (tiles.length === 0 || (sprite.body && !sprite.body.enable) || (sprite.isBody && !sprite.enable))
         {
             return false;
         }
@@ -2159,7 +2164,7 @@ var World = new Class({
      */
     overlapTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
     {
-        if (!sprite.body.enable || tiles.length === 0)
+        if (tiles.length === 0 || (sprite.body && !sprite.body.enable) || (sprite.isBody && !sprite.enable))
         {
             return false;
         }
@@ -2189,7 +2194,7 @@ var World = new Class({
      */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)
     {
-        var body = sprite.body;
+        var body = (sprite.isBody) ? sprite : sprite.body;
 
         if (!body.enable || body.checkCollision.none)
         {
@@ -2254,7 +2259,7 @@ var World = new Class({
      */
     collideSpriteVsTilesHandler: function (sprite, tiles, collideCallback, processCallback, callbackContext, overlapOnly, isLayer)
     {
-        var body = sprite.body;
+        var body = (sprite.isBody) ? sprite : sprite.body;
 
         var tile;
         var tileWorldRect = { left: 0, right: 0, top: 0, bottom: 0 };
