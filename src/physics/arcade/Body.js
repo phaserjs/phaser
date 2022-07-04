@@ -25,7 +25,7 @@ var Vector2 = require('../../math/Vector2');
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Arcade.World} world - The Arcade Physics simulation this Body belongs to.
- * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object this Body belongs to.
+ * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object this Body belongs to. As of Phaser 3.60 this is now optional.
  */
 var Body = new Class({
 
@@ -33,8 +33,32 @@ var Body = new Class({
 
     function Body (world, gameObject)
     {
-        var width = (gameObject.displayWidth) ? gameObject.displayWidth : 64;
-        var height = (gameObject.displayHeight) ? gameObject.displayHeight : 64;
+        var width = 64;
+        var height = 64;
+
+        var dummyGameObject = {
+            x: 0,
+            y: 0,
+            angle: 0,
+            rotation: 0,
+            scaleX: 1,
+            scaleY: 1,
+            displayOriginX: 0,
+            displayOriginY: 0
+        };
+
+        var hasGameObject = (gameObject !== undefined);
+
+        if (hasGameObject && gameObject.displayWidth)
+        {
+            width = gameObject.displayWidth;
+            height = gameObject.displayHeight;
+        }
+
+        if (!hasGameObject)
+        {
+            gameObject = dummyGameObject;
+        }
 
         /**
          * The Arcade Physics simulation this Body belongs to.
@@ -48,11 +72,13 @@ var Body = new Class({
         /**
          * The Game Object this Body belongs to.
          *
+         * As of Phaser 3.60 this is now optional and can be undefined.
+         *
          * @name Phaser.Physics.Arcade.Body#gameObject
          * @type {Phaser.GameObjects.GameObject}
          * @since 3.0.0
          */
-        this.gameObject = gameObject;
+        this.gameObject = (hasGameObject) ? gameObject : undefined;
 
         /**
          * Transformations applied to this Body.
@@ -1024,7 +1050,10 @@ var Body = new Class({
             this.resetFlags();
         }
 
-        this.updateFromGameObject();
+        if (this.gameObject)
+        {
+            this.updateFromGameObject();
+        }
 
         this.rotation = this.transform.rotation;
         this.preRotation = this.rotation;
@@ -1102,6 +1131,7 @@ var Body = new Class({
     {
         var dx = this.position.x - this.prevFrame.x;
         var dy = this.position.y - this.prevFrame.y;
+        var gameObject = this.gameObject;
 
         if (this.moves)
         {
@@ -1132,8 +1162,11 @@ var Body = new Class({
                 }
             }
 
-            this.gameObject.x += dx;
-            this.gameObject.y += dy;
+            if (gameObject)
+            {
+                gameObject.x += dx;
+                gameObject.y += dy;
+            }
         }
 
         if (dx < 0)
@@ -1154,9 +1187,9 @@ var Body = new Class({
             this.facing = CONST.FACING_DOWN;
         }
 
-        if (this.allowRotation)
+        if (this.allowRotation && gameObject)
         {
-            this.gameObject.angle += this.deltaZ();
+            gameObject.angle += this.deltaZ();
         }
 
         this._tx = dx;
@@ -1261,6 +1294,53 @@ var Body = new Class({
     },
 
     /**
+     * Assign this Body to a new Game Object.
+     *
+     * Removes this body from the Physics World, assigns to the new Game Object, calls `setSize` and then
+     * adds this body back into the World again, setting it enabled, unless the `enable` argument is set to `false`.
+     *
+     * If this body already has a Game Object, then it will remove itself from that Game Object first.
+     *
+     * Only if the given `gameObject` has a `body` property will this Body be assigned to it.
+     *
+     * @method Phaser.Physics.Arcade.Body#setGameObject
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object this Body belongs to.
+     * @param {boolean} [enable=true] - Automatically enable this Body for physics.
+     *
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setGameObject: function (gameObject, enable)
+    {
+        if (enable === undefined) { enable = true; }
+
+        //  Remove from the World
+        this.world.remove(this);
+
+        if (this.gameObject && this.gameObject.body)
+        {
+            //  Disconnect the current Game Object
+            this.gameObject.body = null;
+        }
+
+        this.gameObject = gameObject;
+
+        if (gameObject.body)
+        {
+            gameObject.body = this;
+        }
+
+        this.setSize();
+
+        this.world.add(this);
+
+        this.enable = enable;
+
+        return this;
+    },
+
+    /**
      * Sizes and positions this Body, as a rectangle.
      * Modifies the Body `offset` if `center` is true (the default).
      * Resets the width and height to match current frame, if no width and height provided and a frame is found.
@@ -1280,14 +1360,17 @@ var Body = new Class({
 
         var gameObject = this.gameObject;
 
-        if (!width && gameObject.frame)
+        if (gameObject)
         {
-            width = gameObject.frame.realWidth;
-        }
+            if (!width && gameObject.frame)
+            {
+                width = gameObject.frame.realWidth;
+            }
 
-        if (!height && gameObject.frame)
-        {
-            height = gameObject.frame.realHeight;
+            if (!height && gameObject.frame)
+            {
+                height = gameObject.frame.realHeight;
+            }
         }
 
         this.sourceWidth = width;
@@ -1301,7 +1384,7 @@ var Body = new Class({
 
         this.updateCenter();
 
-        if (center && gameObject.getCenter)
+        if (center && gameObject && gameObject.getCenter)
         {
             var ox = (gameObject.width - width) / 2;
             var oy = (gameObject.height - height) / 2;
@@ -1374,9 +1457,15 @@ var Body = new Class({
 
         var gameObject = this.gameObject;
 
-        gameObject.setPosition(x, y);
+        if (gameObject)
+        {
+            gameObject.setPosition(x, y);
 
-        if (gameObject.getTopLeft)
+            this.rotation = gameObject.angle;
+            this.preRotation = gameObject.angle;
+        }
+
+        if (gameObject && gameObject.getTopLeft)
         {
             gameObject.getTopLeft(this.position);
         }
@@ -1388,11 +1477,13 @@ var Body = new Class({
         this.prev.copy(this.position);
         this.prevFrame.copy(this.position);
 
-        this.rotation = gameObject.angle;
-        this.preRotation = gameObject.angle;
+        if (gameObject)
+        {
+            this.updateBounds();
+        }
 
-        this.updateBounds();
         this.updateCenter();
+
         this.resetFlags(true);
     },
 
@@ -1756,6 +1847,16 @@ var Body = new Class({
         return this;
     },
 
+    setValue: function (vec2, x, y)
+    {
+        if (x === undefined) { x = vec2.x; }
+        if (y === undefined) { y = vec2.y; }
+
+        vec2.set(x, y);
+
+        return this;
+    },
+
     /**
      * Sets the Body's velocity.
      *
@@ -1791,14 +1892,7 @@ var Body = new Class({
      */
     setVelocityX: function (value)
     {
-        this.velocity.x = value;
-
-        var x = value;
-        var y = this.velocity.y;
-
-        this.speed = Math.sqrt(x * x + y * y);
-
-        return this;
+        return this.setVelocity(value, this.velocity.y);
     },
 
     /**
@@ -1813,14 +1907,7 @@ var Body = new Class({
      */
     setVelocityY: function (value)
     {
-        this.velocity.y = value;
-
-        var x = this.velocity.x;
-        var y = value;
-
-        this.speed = Math.sqrt(x * x + y * y);
-
-        return this;
+        return this.setVelocity(this.velocity.x, value);
     },
 
     /**
