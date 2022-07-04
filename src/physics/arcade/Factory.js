@@ -65,8 +65,8 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#collider
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object1 - The first object to check for collision.
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object2 - The second object to check for collision.
+     * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} object1 - The first object to check for collision.
+     * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} object2 - The second object to check for collision.
      * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects collide.
      * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects collide. Must return a boolean.
      * @param {*} [callbackContext] - The scope in which to call the callbacks.
@@ -84,8 +84,8 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#overlap
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object1 - The first object to check for overlap.
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object2 - The second object to check for overlap.
+     * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} object1 - The first object to check for overlap.
+     * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} object2 - The second object to check for overlap.
      * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects collide.
      * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects collide. Must return a boolean.
      * @param {*} [callbackContext] - The scope in which to call the callbacks.
@@ -255,7 +255,7 @@ var Factory = new Class({
      * Creates a new physics Body with the given position and size.
      *
      * This Body is not associated with any Game Object, but still exists within the world
-     * and can have velocity, collision, etc.
+     * and can be tested for collision, have velocity, etc.
      *
      * @method Phaser.Physics.Arcade.Factory#body
      * @since 3.60.0
@@ -284,12 +284,12 @@ var Factory = new Class({
     },
 
     /**
-     * Creates a new physics Body with the given position and size.
+     * Creates a new static physics Body with the given position and size.
      *
      * This Body is not associated with any Game Object, but still exists within the world
-     * and can have velocity, collision, etc.
+     * and can be tested for collision, etc.
      *
-     * @method Phaser.Physics.Arcade.Factory#body
+     * @method Phaser.Physics.Arcade.Factory#staticBody
      * @since 3.60.0
      *
      * @param {number} x - The horizontal position of this Body in the physics world.
@@ -301,7 +301,7 @@ var Factory = new Class({
      */
     staticBody: function (x, y, width, height)
     {
-        var body = new Body(this.world);
+        var body = new StaticBody(this.world);
 
         body.position.set(x, y);
 
