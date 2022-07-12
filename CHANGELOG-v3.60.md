@@ -46,6 +46,10 @@ Development of this feature was kindly sponsored by Club Penguin Rewritten (http
 * The `WebGL.Utils.parseFragmentShaderMaxTextures` function no longer supports the `%forloop%` declaration.
 * The internal WebGL Utils function `GenerateSrc` has been removed as it's no longer required internally.
 
+### Removed - Graphics Pipeline
+
+The WebGL Graphics Pipeline has been removed. This pipeline wasn't used in v3.55, as all Graphics rendering is handled by the MultiTint pipeline, for better batching support. No Phaser Game Objects use the Graphics pipeline any longer, so to save space it has been removed and is no longer installed by the Pipeline Manager.
+
 ### New Features - Matter Physics v0.18
 
 We have updated the version of Matter Physics to the latest v0.18 release. This is a big jump and brings with it quite a few internal changes to Matter. The following are the differences we have identified in this release:
