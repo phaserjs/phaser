@@ -111,6 +111,7 @@ var ParticleEmitter = new Class({
             'gravityX',
             'gravityY',
             'maxParticles',
+            'maxAliveParticles',
             'name',
             'on',
             'particleBringToTop',
@@ -472,6 +473,19 @@ var ParticleEmitter = new Class({
          * @since 3.0.0
          */
         this.maxParticles = 0;
+
+        /**
+         * The maximum number of alive (and rendering) particles this emitter will update.
+         * When this limit is reached, a particle needs to die before another can be emitted.
+         *
+         * 0 means no limits.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#maxAliveParticles
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.maxAliveParticles = 0;
 
         /**
          * How many particles are emitted each time particles are emitted (one explosion or one flow cycle).
@@ -1594,7 +1608,8 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Whether this emitter is at its limit (if set).
+     * Whether this emitter is at either its hard-cap limit (maxParticles), if set, or
+     * the max allowed number of 'alive' particles (maxAliveParticles).
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#atLimit
      * @since 3.0.0
@@ -1603,7 +1618,12 @@ var ParticleEmitter = new Class({
      */
     atLimit: function ()
     {
-        return (this.maxParticles > 0 && this.getParticleCount() === this.maxParticles);
+        if (this.maxParticles > 0 && this.getParticleCount() >= this.maxParticles)
+        {
+            return true;
+        }
+
+        return (this.maxAliveParticles > 0 && this.getAliveParticleCount() >= this.maxAliveParticles);
     },
 
     /**
