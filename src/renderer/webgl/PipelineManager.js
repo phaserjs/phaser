@@ -13,7 +13,6 @@ var SnapCeil = require('../../math/snap/SnapCeil');
 
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
-var GraphicsPipeline = require('./pipelines/GraphicsPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
 var MultiPipeline = require('./pipelines/MultiPipeline');
 var PointLightPipeline = require('./pipelines/PointLightPipeline');
@@ -29,16 +28,15 @@ var UtilityPipeline = require('./pipelines/UtilityPipeline');
  * The `WebGLRenderer` owns a single instance of the Pipeline Manager, which you can access
  * via the `WebGLRenderer.pipelines` property.
  *
- * By default, there are 8 pipelines installed into the Pipeline Manager when Phaser boots:
+ * By default, there are 7 pipelines installed into the Pipeline Manager when Phaser boots:
  *
  * 1. The Multi Pipeline. Responsible for all multi-texture rendering, i.e. Sprites and Tilemaps.
- * 2. The Graphics Pipeline. Responsible for rendering Graphics and Shape objects.
- * 3. The Rope Pipeline. Responsible for rendering the Rope Game Object.
- * 4. The Light Pipeline. Responsible for rendering the Light Game Object.
- * 5. The Point Light Pipeline. Responsible for rendering the Point Light Game Object.
- * 6. The Single Pipeline. Responsible for rendering Game Objects that explicitly require one bound texture.
- * 7. The Bitmap Mask Pipeline. Responsible for Bitmap Mask rendering.
- * 8. The Utility Pipeline. Responsible for providing lots of handy texture manipulation functions.
+ * 2. The Rope Pipeline. Responsible for rendering the Rope Game Object.
+ * 3. The Light Pipeline. Responsible for rendering the Light Game Object.
+ * 4. The Point Light Pipeline. Responsible for rendering the Point Light Game Object.
+ * 5. The Single Pipeline. Responsible for rendering Game Objects that explicitly require one bound texture.
+ * 6. The Bitmap Mask Pipeline. Responsible for Bitmap Mask rendering.
+ * 7. The Utility Pipeline. Responsible for providing lots of handy texture manipulation functions.
  *
  * You can add your own custom pipeline via the `PipelineManager.add` method. Pipelines are
  * identified by unique string-based keys.
@@ -90,8 +88,7 @@ var PipelineManager = new Class({
             [ CONST.SINGLE_PIPELINE, SinglePipeline ],
             [ CONST.ROPE_PIPELINE, RopePipeline ],
             [ CONST.LIGHT_PIPELINE, LightPipeline ],
-            [ CONST.POINTLIGHT_PIPELINE, PointLightPipeline ],
-            [ CONST.GRAPHICS_PIPELINE, GraphicsPipeline ]
+            [ CONST.POINTLIGHT_PIPELINE, PointLightPipeline ]
         ]);
 
         /**
