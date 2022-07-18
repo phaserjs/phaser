@@ -69,7 +69,7 @@ var TweenManager = new Class({
          * @private
          * @since 3.0.0
          */
-        this._add = [];
+        // this._add = [];
 
         /**
          * An array of Tweens and Timelines pending to be later added to the Tween Manager.
@@ -79,7 +79,7 @@ var TweenManager = new Class({
          * @private
          * @since 3.0.0
          */
-        this._pending = [];
+        // this._pending = [];
 
         /**
          * An array of Tweens and Timelines which are still incomplete and are actively processed by the Tween Manager.
@@ -89,7 +89,7 @@ var TweenManager = new Class({
          * @private
          * @since 3.0.0
          */
-        this._active = [];
+        // this._active = [];
 
         /**
          * An array of Tweens and Timelines which will be removed from the Tween Manager at the start of the frame.
@@ -99,7 +99,7 @@ var TweenManager = new Class({
          * @private
          * @since 3.0.0
          */
-        this._destroy = [];
+        // this._destroy = [];
 
         /**
          * The number of Tweens and Timelines which need to be processed by the Tween Manager at the start of the frame.
@@ -110,7 +110,16 @@ var TweenManager = new Class({
          * @default 0
          * @since 3.0.0
          */
-        this._toProcess = 0;
+        // this._toProcess = 0;
+
+        /**
+         * An array of Tweens and Timelines which are actively being processed by the Tween Manager.
+         *
+         * @name Phaser.Tweens.TweenManager#tweens
+         * @type {(Phaser.Tweens.Tween[]|Phaser.Tweens.Timeline[])}
+         * @since 3.60.0
+         */
+        this.tweens = [];
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
@@ -142,7 +151,7 @@ var TweenManager = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
+        // eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
         eventEmitter.on(SceneEvents.UPDATE, this.update, this);
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
 
@@ -219,9 +228,12 @@ var TweenManager = new Class({
     {
         var tween = TweenBuilder(this, config);
 
-        this._add.push(tween);
+        tween.init();
 
-        this._toProcess++;
+        this.tweens.push(tween);
+
+        // this._add.push(tween);
+        // this._toProcess++;
 
         return tween;
     },
@@ -238,9 +250,12 @@ var TweenManager = new Class({
      */
     existing: function (tween)
     {
-        this._add.push(tween);
+        tween.init();
 
-        this._toProcess++;
+        this.tweens.push(tween);
+
+        // this._add.push(tween);
+        // this._toProcess++;
 
         return this;
     },
@@ -259,9 +274,12 @@ var TweenManager = new Class({
     {
         var tween = NumberTweenBuilder(this, config);
 
-        this._add.push(tween);
+        tween.init();
 
-        this._toProcess++;
+        this.tweens.push(tween);
+
+        // this._add.push(tween);
+        // this._toProcess++;
 
         return tween;
     },
@@ -319,7 +337,6 @@ var TweenManager = new Class({
      *
      * @method Phaser.Tweens.TweenManager#preUpdate
      * @since 3.0.0
-     */
     preUpdate: function ()
     {
         if (this._toProcess === 0)
@@ -391,6 +408,7 @@ var TweenManager = new Class({
 
         this._toProcess = 0;
     },
+    */
 
     /**
      * Updates all Tweens and Timelines of the Tween Manager.
@@ -403,6 +421,48 @@ var TweenManager = new Class({
      */
     update: function (timestamp, delta)
     {
+        //  Scale the delta
+        delta *= this.timeScale;
+
+        var i;
+        var tween;
+        var toDestroy = [];
+        var list = this.tweens;
+
+        //  By not caching the length we can immediately update tweens added this frame
+        for (i = 0; i < list.length; i++)
+        {
+            tween = list[i];
+
+            //  If Tween.update returns 'true' then it means it has completed,
+            //  so move it to the destroy list
+            if (tween.update(timestamp, delta))
+            {
+                toDestroy.push(tween);
+            }
+        }
+
+        //  Clean-up the 'toDestroy' list
+        var count = toDestroy.length;
+
+        if (count)
+        {
+            for (i = 0; i < count; i++)
+            {
+                tween = toDestroy[i];
+
+                var idx = list.indexOf(tween);
+
+                if (idx > -1)
+                {
+                    list.splice(idx, 1);
+                }
+            }
+
+            toDestroy.length = 0;
+        }
+
+        /*
         //  Process active tweens
         var list = this._active;
         var tween;
@@ -422,6 +482,7 @@ var TweenManager = new Class({
                 this._toProcess++;
             }
         }
+        */
     },
 
     /**

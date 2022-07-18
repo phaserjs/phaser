@@ -238,10 +238,10 @@ var Tween = new Class({
          * @private
          * @since 3.0.0
          */
-        this._pausedState = TWEEN_CONST.PENDING_ADD;
+        // this._pausedState = TWEEN_CONST.PENDING_ADD;
 
         /**
-         * Does the Tween start off paused? (if so it needs to be started with Tween.play)
+         * Is the Tween paused? If so it needs to be started, or resumed, with Tween.play)
          *
          * @name Phaser.Tweens.Tween#paused
          * @type {boolean}
@@ -1137,10 +1137,12 @@ var Tween = new Class({
      */
     update: function (timestamp, delta)
     {
-        if (this.state === TWEEN_CONST.PAUSED)
+        if (this.paused || this.state === TWEEN_CONST.PAUSED)
         {
             return false;
         }
+
+
 
         if (this.useFrames)
         {
