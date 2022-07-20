@@ -105,7 +105,7 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.0.0
      */
-    PENDING_ADD: 20,
+    // PENDING_ADD: 20,
 
     /**
      * Tween state.
@@ -114,7 +114,7 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.0.0
      */
-    PAUSED: 21,
+    // PAUSED: 21,
 
     /**
      * Tween state.
@@ -132,7 +132,16 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.0.0
      */
-    ACTIVE: 23,
+    // ACTIVE: 23,
+
+    /**
+     * Tween state.
+     *
+     * @name Phaser.Tweens.PLAYING
+     * @type {number}
+     * @since 3.0.0
+     */
+    PLAYING: 23,
 
     /**
      * Tween state.
@@ -150,7 +159,16 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.0.0
      */
-    PENDING_REMOVE: 25,
+    // PENDING_REMOVE: 25,
+
+    /**
+     * Tween state.
+     *
+     * @name Phaser.Tweens.DESTROYED
+     * @type {number}
+     * @since 3.0.0
+     */
+    DESTROYED: 25
 
     /**
      * Tween state.
@@ -159,7 +177,7 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.0.0
      */
-    REMOVED: 26
+    // REMOVED: 26
 
 };
 

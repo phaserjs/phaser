@@ -42,7 +42,8 @@ var Tween = new Class({
 
         /**
          * A reference to the parent of this Tween.
-         * Either the Tween Manager or a Tween Timeline instance.
+         *
+         * This is either a Tween Manager, or a Tween Timeline instance.
          *
          * @name Phaser.Tweens.Tween#parent
          * @type {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)}
@@ -202,7 +203,7 @@ var Tween = new Class({
         this.countdown = 0;
 
         /**
-         * Set only if this Tween is part of a Timeline.
+         * This property is set only if this Tween is part of a Timeline.
          *
          * @name Phaser.Tweens.Tween#offset
          * @type {number}
@@ -212,7 +213,7 @@ var Tween = new Class({
         this.offset = 0;
 
         /**
-         * Set only if this Tween is part of a Timeline. The calculated offset amount.
+         * This property is set only if this Tween is part of a Timeline. The calculated offset amount.
          *
          * @name Phaser.Tweens.Tween#calculatedOffset
          * @type {number}
@@ -222,7 +223,7 @@ var Tween = new Class({
         this.calculatedOffset = 0;
 
         /**
-         * The current state of the tween
+         * The current state of the tween.
          *
          * @name Phaser.Tweens.Tween#state
          * @type {number}
@@ -241,7 +242,7 @@ var Tween = new Class({
         // this._pausedState = TWEEN_CONST.PENDING_ADD;
 
         /**
-         * Is the Tween paused? If so it needs to be started, or resumed, with Tween.play)
+         * Is the Tween paused? If so it needs to be started, or resumed, with Tween.play.
          *
          * @name Phaser.Tweens.Tween#paused
          * @type {boolean}
@@ -281,7 +282,7 @@ var Tween = new Class({
         this.duration = 0;
 
         /**
-         * Value between 0 and 1. The amount through the Tween, excluding loops.
+         * Value between 0 and 1. The amount of progress through the Tween, excluding loops.
          *
          * @name Phaser.Tweens.Tween#progress
          * @type {number}
@@ -291,7 +292,7 @@ var Tween = new Class({
         this.progress = 0;
 
         /**
-         * Time in ms/frames for the Tween to complete (including looping)
+         * Time in ms/frames it takes for the Tween to complete a full playthrough (including looping)
          *
          * @name Phaser.Tweens.Tween#totalDuration
          * @type {number}
@@ -373,7 +374,7 @@ var Tween = new Class({
      *
      * @param {number} value - The scale factor for timescale.
      *
-     * @return {this} - This Tween instance.
+     * @return {this} This Tween instance.
      */
     setTimeScale: function (value)
     {
@@ -405,7 +406,8 @@ var Tween = new Class({
      */
     isPlaying: function ()
     {
-        return (this.state === TWEEN_CONST.ACTIVE);
+        // return (this.state === TWEEN_CONST.ACTIVE);
+        return (this.state === TWEEN_CONST.PLAYING);
     },
 
     /**
@@ -418,7 +420,8 @@ var Tween = new Class({
      */
     isPaused: function ()
     {
-        return (this.state === TWEEN_CONST.PAUSED);
+        // return (this.state === TWEEN_CONST.PAUSED);
+        return this.paused;
     },
 
     /**
@@ -450,7 +453,7 @@ var Tween = new Class({
      * @param {*} value - The new value of the property.
      * @param {boolean} [startToCurrent=false] - Should this change set the start value to be the current value?
      *
-     * @return {this} - This Tween instance.
+     * @return {this} This Tween instance.
      */
     updateTo: function (key, value, startToCurrent)
     {
@@ -489,6 +492,8 @@ var Tween = new Class({
         this.progress = 0;
         this.totalElapsed = 0;
         this.totalProgress = 0;
+
+        //
 
         if (this.state === TWEEN_CONST.ACTIVE)
         {
@@ -706,20 +711,20 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#pause
      * @since 3.0.0
      *
-     * @return {this} - This Tween instance.
+     * @return {this} This Tween instance.
      */
     pause: function ()
     {
-        if (this.state === TWEEN_CONST.PAUSED)
-        {
-            return this;
-        }
+        // if (this.state === TWEEN_CONST.PAUSED)
+        // {
+        //     return this;
+        // }
 
         this.paused = true;
 
-        this._pausedState = this.state;
+        // this._pausedState = this.state;
 
-        this.state = TWEEN_CONST.PAUSED;
+        // this.state = TWEEN_CONST.PAUSED;
 
         return this;
     },
@@ -863,20 +868,22 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#resume
      * @since 3.0.0
      *
-     * @return {this} - This Tween instance.
+     * @return {this} This Tween instance.
      */
     resume: function ()
     {
-        if (this.state === TWEEN_CONST.PAUSED)
-        {
-            this.paused = false;
+        this.paused = false;
 
-            this.state = this._pausedState;
-        }
-        else
-        {
-            this.play();
-        }
+        // if (this.state === TWEEN_CONST.PAUSED)
+        // {
+        //     this.paused = false;
+
+        //     this.state = this._pausedState;
+        // }
+        // else
+        // {
+        //     this.play();
+        // }
 
         return this;
     },
@@ -1137,12 +1144,10 @@ var Tween = new Class({
      */
     update: function (timestamp, delta)
     {
-        if (this.paused || this.state === TWEEN_CONST.PAUSED)
+        if (this.paused)
         {
             return false;
         }
-
-
 
         if (this.useFrames)
         {
@@ -1160,6 +1165,8 @@ var Tween = new Class({
         switch (this.state)
         {
             case TWEEN_CONST.ACTIVE:
+
+                //  +++ Move this to its own function
 
                 if (!this.hasStarted && !this.isSeeking)
                 {
@@ -1192,6 +1199,8 @@ var Tween = new Class({
                 }
 
                 break;
+
+                //  +++ Move these above the main update, so they can start the same frame, not the next frame
 
             case TWEEN_CONST.LOOP_DELAY:
 
