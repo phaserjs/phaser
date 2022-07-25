@@ -965,14 +965,14 @@ var Tween = new Class({
 
         this.calcDuration();
 
-        var wasPaused = false;
+        // var wasPaused = false;
 
-        if (this.state === TWEEN_CONST.PAUSED)
-        {
-            wasPaused = true;
+        // if (this.state === TWEEN_CONST.PAUSED)
+        // {
+        //     wasPaused = true;
 
-            this.state = TWEEN_CONST.ACTIVE;
-        }
+        //     this.state = TWEEN_CONST.ACTIVE;
+        // }
 
         if (toPosition > 0)
         {
@@ -987,10 +987,10 @@ var Tween = new Class({
 
         this.isSeeking = false;
 
-        if (wasPaused)
-        {
-            this.state = TWEEN_CONST.PAUSED;
-        }
+        // if (wasPaused)
+        // {
+        //     this.state = TWEEN_CONST.PAUSED;
+        // }
 
         return this;
     },
@@ -1104,6 +1104,7 @@ var Tween = new Class({
 
         if (this.state !== TWEEN_CONST.REMOVED)
         {
+            /*
             if (this.state === TWEEN_CONST.PAUSED || this.state === TWEEN_CONST.PENDING_ADD)
             {
                 if (this.parentIsTimeline)
@@ -1117,6 +1118,7 @@ var Tween = new Class({
                     this.parent._toProcess++;
                 }
             }
+            */
 
             this.dispatchTweenEvent(Events.TWEEN_STOP, this.callbacks.onStop);
 
@@ -1144,7 +1146,12 @@ var Tween = new Class({
      */
     update: function (timestamp, delta)
     {
-        if (this.paused)
+        if (this.state === TWEEN_CONST.PENDING_REMOVE)
+        {
+            return true;
+        }
+
+        if (this.paused && !this.isSeeking)
         {
             return false;
         }
@@ -1162,85 +1169,74 @@ var Tween = new Class({
         this.totalElapsed += delta;
         this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
 
-        switch (this.state)
+        var state = this.state;
+
+        if (state === TWEEN_CONST.LOOP_DELAY)
         {
-            case TWEEN_CONST.ACTIVE:
+            this.updateCountdown(delta, TWEEN_CONST.ACTIVE, Events.TWEEN_LOOP, this.callbacks.onLoop);
+        }
+        else if (state === TWEEN_CONST.OFFSET_DELAY)
+        {
+            this.updateCountdown(delta, TWEEN_CONST.ACTIVE);
+        }
+        else if (state === TWEEN_CONST.COMPLETE_DELAY)
+        {
+            this.updateCountdown(delta, TWEEN_CONST.PENDING_REMOVE, Events.TWEEN_COMPLETE, this.callbacks.onComplete);
+        }
 
-                //  +++ Move this to its own function
-
-                if (!this.hasStarted && !this.isSeeking)
-                {
-                    this.startDelay -= delta;
-
-                    if (this.startDelay <= 0)
-                    {
-                        this.hasStarted = true;
-
-                        this.dispatchTweenEvent(Events.TWEEN_START, this.callbacks.onStart);
-                    }
-                }
-
-                var stillRunning = false;
-
-                for (var i = 0; i < this.totalData; i++)
-                {
-                    var tweenData = this.data[i];
-
-                    if (this.updateTweenData(this, tweenData, delta))
-                    {
-                        stillRunning = true;
-                    }
-                }
-
-                //  Anything still running? If not, we're done
-                if (!stillRunning)
-                {
-                    this.nextState();
-                }
-
-                break;
-
-                //  +++ Move these above the main update, so they can start the same frame, not the next frame
-
-            case TWEEN_CONST.LOOP_DELAY:
-
-                this.countdown -= delta;
-
-                if (this.countdown <= 0)
-                {
-                    this.state = TWEEN_CONST.ACTIVE;
-
-                    this.dispatchTweenEvent(Events.TWEEN_LOOP, this.callbacks.onLoop);
-                }
-
-                break;
-
-            case TWEEN_CONST.OFFSET_DELAY:
-
-                this.countdown -= delta;
-
-                if (this.countdown <= 0)
-                {
-                    this.state = TWEEN_CONST.ACTIVE;
-                }
-
-                break;
-
-            case TWEEN_CONST.COMPLETE_DELAY:
-
-                this.countdown -= delta;
-
-                if (this.countdown <= 0)
-                {
-                    this.state = TWEEN_CONST.PENDING_REMOVE;
-
-                    this.dispatchTweenEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
-                }
-
-                break;
+        //  Make its own check so the states above can toggle to active on this frame
+        if (this.state === TWEEN_CONST.ACTIVE)
+        {
+            this.updateActive(delta);
         }
 
         return (this.state === TWEEN_CONST.PENDING_REMOVE);
+    },
+
+    updateCountdown: function (delta, state, event, callback)
+    {
+        this.countdown -= delta;
+
+        if (this.countdown <= 0)
+        {
+            this.state = state;
+
+            if (callback)
+            {
+                this.dispatchTweenEvent(event, callback);
+            }
+        }
+    },
+
+    updateActive: function (delta)
+    {
+        if (!this.hasStarted && !this.isSeeking)
+        {
+            this.startDelay -= delta;
+
+            if (this.startDelay <= 0)
+            {
+                this.hasStarted = true;
+
+                this.dispatchTweenEvent(Events.TWEEN_START, this.callbacks.onStart);
+            }
+        }
+
+        var stillRunning = false;
+
+        for (var i = 0; i < this.totalData; i++)
+        {
+            if (this.updateTweenData(this, this.data[i], delta))
+            {
+                stillRunning = true;
+            }
+        }
+
+        //  Anything still running? If not, we're done
+        if (!stillRunning)
+        {
+            this.nextState();
+        }
     },
 
     /**

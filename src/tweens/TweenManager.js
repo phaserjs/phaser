@@ -253,6 +253,27 @@ var TweenManager = new Class({
     },
 
     /**
+     * Check to see if the given Tween instance belongs to this Tween Manager.
+     *
+     * Will return `true` as long as the Tween is being processed by the Tween Manager.
+     *
+     * Will return `false` if not present, or has a state of `REMOVED`.
+     *
+     * @method Phaser.Tweens.TweenManager#has
+     * @since 3.60.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - The Tween instance to check.
+     *
+     * @return {boolean} `true` if the Tween exists within this Tween Manager, otherwise `false`.
+     */
+    has: function (tween)
+    {
+        var idx = this.tweens.indexOf(tween);
+
+        return (idx >= 0 && tween.state !== TWEEN_CONST.REMOVED);
+    },
+
+    /**
      * Add an existing tween into the active Tween list.
      *
      * @method Phaser.Tweens.TweenManager#existing
@@ -264,9 +285,12 @@ var TweenManager = new Class({
      */
     existing: function (tween)
     {
-        tween.init();
+        if (!this.has(tween))
+        {
+            tween.init();
 
-        this.tweens.push(tween);
+            this.tweens.push(tween);
+        }
 
         // this._add.push(tween);
         // this._toProcess++;
@@ -470,6 +494,8 @@ var TweenManager = new Class({
             {
                 tween = toDestroy[i];
 
+                tween.state = TWEEN_CONST.REMOVED;
+
                 var idx = list.indexOf(tween);
 
                 if (idx > -1)
@@ -516,14 +542,14 @@ var TweenManager = new Class({
      */
     remove: function (tween)
     {
-        ArrayRemove(this.tweens, tween);
+        // ArrayRemove(this.tweens, tween);
 
         // ArrayRemove(this._add, tween);
         // ArrayRemove(this._pending, tween);
         // ArrayRemove(this._active, tween);
         // ArrayRemove(this._destroy, tween);
 
-        // tween.state = TWEEN_CONST.REMOVED;
+        tween.state = TWEEN_CONST.PENDING_REMOVE;
 
         return this;
     },
@@ -561,8 +587,10 @@ var TweenManager = new Class({
      * @param {Phaser.Tweens.Tween} tween - The Tween to check.
      *
      * @return {this} This Tween Manager instance.
+     */
     makeActive: function (tween)
     {
+        /*
         if (this._add.indexOf(tween) !== -1 || this._active.indexOf(tween) !== -1)
         {
             return this;
@@ -580,10 +608,17 @@ var TweenManager = new Class({
         tween.state = TWEEN_CONST.PENDING_ADD;
 
         this._toProcess++;
+        */
+
+        if (!this.has(tween))
+        {
+            this.tweens.push(tween);
+
+            tween.state = TWEEN_CONST.PENDING_ADD;
+        }
 
         return this;
     },
-     */
 
     /**
      * Passes all Tweens to the given callback.
@@ -594,6 +629,8 @@ var TweenManager = new Class({
      * @param {function} callback - The function to call.
      * @param {object} [scope] - The scope (`this` object) to call the function with.
      * @param {...*} [args] - The arguments to pass into the function. Its first argument will always be the Tween currently being iterated.
+     *
+     * @return {this} This Tween Manager instance.
      */
     each: function (callback, scope)
     {
@@ -618,6 +655,8 @@ var TweenManager = new Class({
 
             callback.apply(scope, args);
         });
+
+        return this;
     },
 
     /**

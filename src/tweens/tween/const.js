@@ -159,7 +159,7 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.0.0
      */
-    // PENDING_REMOVE: 25,
+    PENDING_REMOVE: 25,
 
     /**
      * Tween state.
@@ -168,7 +168,7 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.0.0
      */
-    DESTROYED: 25
+    // DESTROYED: 26
 
     /**
      * Tween state.
@@ -177,7 +177,7 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.0.0
      */
-    // REMOVED: 26
+    REMOVED: 26
 
 };
 
