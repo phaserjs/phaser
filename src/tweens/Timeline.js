@@ -153,17 +153,7 @@ var Timeline = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.state = TWEEN_CONST.PENDING_ADD;
-
-        /**
-         * The state of the Timeline when it was paused (used by Resume)
-         *
-         * @name Phaser.Tweens.Timeline#_pausedState
-         * @type {number}
-         * @private
-         * @since 3.0.0
-         */
-        this._pausedState = TWEEN_CONST.PENDING_ADD;
+        this.state = TWEEN_CONST.PENDING;
 
         /**
          * Does the Timeline start off paused? (if so it needs to be started with Timeline.play)
@@ -266,6 +256,103 @@ var Timeline = new Class({
          * @since 3.0.0
          */
         this.callbackScope;
+
+        this.init();
+    },
+
+    /**
+     * Initializes the timeline, which means all Tweens get their init() called, and the total duration will be computed.
+     * Returns a boolean indicating whether the timeline is auto-started or not.
+     *
+     * @method Phaser.Tweens.Timeline#init
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if the Timeline is started. `false` if it is paused.
+     */
+    init: function ()
+    {
+        this.calcDuration();
+
+        this.progress = 0;
+        this.totalProgress = 0;
+
+        if (this.paused)
+        {
+            this.state = TWEEN_CONST.PAUSED;
+
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    },
+
+    /**
+     * Calculates the total duration of the timeline.
+     *
+     * Computes all tween durations and returns the full duration of the timeline.
+     *
+     * The resulting number is stored in the timeline, not as a return value.
+     *
+     * @method Phaser.Tweens.Timeline#calcDuration
+     * @since 3.0.0
+     */
+    calcDuration: function ()
+    {
+        var prevEnd = 0;
+        var totalDuration = 0;
+        var offsetDuration = 0;
+
+        for (var i = 0; i < this.totalData; i++)
+        {
+            var tween = this.data[i];
+
+            tween.init();
+
+            if (this.hasOffset(tween))
+            {
+                if (this.isOffsetAbsolute(tween.offset))
+                {
+                    //  An actual number, so it defines the start point from the beginning of the timeline
+                    tween.calculatedOffset = tween.offset;
+
+                    if (tween.offset === 0)
+                    {
+                        offsetDuration = 0;
+                    }
+                }
+                else if (this.isOffsetRelative(tween.offset))
+                {
+                    //  A relative offset (i.e. '-=1000', so starts at 'offset' ms relative to the PREVIOUS Tweens ending time)
+                    tween.calculatedOffset = this.getRelativeOffset(tween.offset, prevEnd);
+                }
+            }
+            else
+            {
+                //  Sequential
+                tween.calculatedOffset = offsetDuration;
+            }
+
+            prevEnd = tween.totalDuration + tween.calculatedOffset;
+
+            totalDuration += tween.totalDuration;
+            offsetDuration += tween.totalDuration;
+        }
+
+        //  Excludes loop values
+        this.duration = totalDuration;
+
+        this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
+
+        if (this.loopCounter > 0)
+        {
+            this.totalDuration = this.duration + this.completeDelay + ((this.duration + this.loopDelay) * this.loopCounter);
+        }
+        else
+        {
+            this.totalDuration = this.duration + this.completeDelay;
+        }
     },
 
     /**
@@ -462,101 +549,6 @@ var Timeline = new Class({
 
         //  Cannot ever be < 0
         return Math.max(0, result);
-    },
-
-    /**
-     * Calculates the total duration of the timeline.
-     *
-     * Computes all tween durations and returns the full duration of the timeline.
-     *
-     * The resulting number is stored in the timeline, not as a return value.
-     *
-     * @method Phaser.Tweens.Timeline#calcDuration
-     * @since 3.0.0
-     */
-    calcDuration: function ()
-    {
-        var prevEnd = 0;
-        var totalDuration = 0;
-        var offsetDuration = 0;
-
-        for (var i = 0; i < this.totalData; i++)
-        {
-            var tween = this.data[i];
-
-            tween.init();
-
-            if (this.hasOffset(tween))
-            {
-                if (this.isOffsetAbsolute(tween.offset))
-                {
-                    //  An actual number, so it defines the start point from the beginning of the timeline
-                    tween.calculatedOffset = tween.offset;
-
-                    if (tween.offset === 0)
-                    {
-                        offsetDuration = 0;
-                    }
-                }
-                else if (this.isOffsetRelative(tween.offset))
-                {
-                    //  A relative offset (i.e. '-=1000', so starts at 'offset' ms relative to the PREVIOUS Tweens ending time)
-                    tween.calculatedOffset = this.getRelativeOffset(tween.offset, prevEnd);
-                }
-            }
-            else
-            {
-                //  Sequential
-                tween.calculatedOffset = offsetDuration;
-            }
-
-            prevEnd = tween.totalDuration + tween.calculatedOffset;
-
-            totalDuration += tween.totalDuration;
-            offsetDuration += tween.totalDuration;
-        }
-
-        //  Excludes loop values
-        this.duration = totalDuration;
-
-        this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
-
-        if (this.loopCounter > 0)
-        {
-            this.totalDuration = this.duration + this.completeDelay + ((this.duration + this.loopDelay) * this.loopCounter);
-        }
-        else
-        {
-            this.totalDuration = this.duration + this.completeDelay;
-        }
-    },
-
-    /**
-     * Initializes the timeline, which means all Tweens get their init() called, and the total duration will be computed.
-     * Returns a boolean indicating whether the timeline is auto-started or not.
-     *
-     * @method Phaser.Tweens.Timeline#init
-     * @since 3.0.0
-     *
-     * @return {boolean} `true` if the Timeline is started. `false` if it is paused.
-     */
-    init: function ()
-    {
-        this.calcDuration();
-
-        this.progress = 0;
-        this.totalProgress = 0;
-
-        if (this.paused)
-        {
-            this.state = TWEEN_CONST.PAUSED;
-
-            return false;
-        }
-        else
-        {
-            return true;
-        }
     },
 
     /**
