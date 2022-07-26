@@ -357,10 +357,12 @@ var Tween = new Class({
         for (var i = 0; i < this.totalData; i++)
         {
             var tweenData = data[i];
+
             var target = tweenData.target;
-            var gen = tweenData.gen;
             var key = tweenData.key;
             var targetIndex = tweenData.index;
+
+            var gen = tweenData.gen;
 
             //  Function signature: target, key, value, index, total, tween
 
@@ -369,6 +371,26 @@ var Tween = new Class({
             tweenData.hold = gen.hold(target, key, 0, targetIndex, totalTargets, this);
             tweenData.repeat = gen.repeat(target, key, 0, targetIndex, totalTargets, this);
             tweenData.repeatDelay = gen.repeatDelay(target, key, 0, targetIndex, totalTargets, this);
+
+            //  ResetTweenData:
+            // tweenData.progress = 0;
+            // tweenData.elapsed = 0;
+
+            tweenData.repeatCounter = (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
+
+            tweenData.state = TWEEN_CONST.PENDING_RENDER;
+
+            if (tweenData.delay > 0)
+            {
+                tweenData.elapsed = tweenData.delay;
+
+                tweenData.state = TWEEN_CONST.DELAY;
+            }
+
+            if (tweenData.getActiveValue)
+            {
+                target[key] = tweenData.getActiveValue(tweenData.target, tweenData.key, tweenData.start);
+            }
         }
 
         this.calcDuration();
