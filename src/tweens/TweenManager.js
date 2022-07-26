@@ -128,7 +128,6 @@ var TweenManager = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        // eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
         eventEmitter.on(SceneEvents.UPDATE, this.update, this);
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
 
