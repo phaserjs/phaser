@@ -72,6 +72,7 @@ The Phaser 3.60 Tween system has been recoded to help with performance and resol
 * `killTweensOf(targets)` now supports deeply-nested arrays of items as the `target` parameter. Fix #6016 (thanks @michalfialadev)
 * `killTweensOf(target)` did not stop target tweens if called immediately after tween creation. Fix #6173 (thanks @michalfialadev)
 * It wasn't possible to resume a Tween that was immediately paused after creation. Fix #6169 (thanks @trynx)
+* Calling `Tween.setCallback()` without specifying the `params` argument would cause an error invoking the callback params. This parameter is now fully optional. Fix #6047 (thanks @orcomarcio)
 
 ### New Features
 
