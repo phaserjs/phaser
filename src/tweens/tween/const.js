@@ -99,25 +99,25 @@ var TWEEN_CONST = {
     //  Tween specific (starts from 20 to cleanly allow extra TweenData consts in the future)
 
     /**
-     * Tween state.
+     * Tween state. The tween has been created and is pending playback.
      *
-     * @name Phaser.Tweens.PENDING_ADD
+     * @name Phaser.Tweens.PENDING
      * @type {number}
      * @since 3.0.0
      */
-    // PENDING_ADD: 20,
+    PENDING: 20,
 
     /**
-     * Tween state.
+     * Tween state. The tween is actively playing, or was playing and is paused.
      *
-     * @name Phaser.Tweens.PAUSED
+     * @name Phaser.Tweens.PLAYING
      * @type {number}
      * @since 3.0.0
      */
-    // PAUSED: 21,
+    PLAYING: 21,
 
     /**
-     * Tween state.
+     * Tween state. The tween is waiting for a loop countdown to elapse.
      *
      * @name Phaser.Tweens.LOOP_DELAY
      * @type {number}
@@ -126,58 +126,31 @@ var TWEEN_CONST = {
     LOOP_DELAY: 22,
 
     /**
-     * Tween state.
-     *
-     * @name Phaser.Tweens.ACTIVE
-     * @type {number}
-     * @since 3.0.0
-     */
-    // ACTIVE: 23,
-
-    /**
-     * Tween state.
-     *
-     * @name Phaser.Tweens.PLAYING
-     * @type {number}
-     * @since 3.0.0
-     */
-    PLAYING: 23,
-
-    /**
-     * Tween state.
+     * Tween state. The tween is waiting for a complete delay to elapse.
      *
      * @name Phaser.Tweens.COMPLETE_DELAY
      * @type {number}
      * @since 3.0.0
      */
-    COMPLETE_DELAY: 24,
+    COMPLETE_DELAY: 23,
 
     /**
-     * Tween state.
+     * Tween state. The tween has finished playback and is waiting to be removed from the Tween Manager.
      *
      * @name Phaser.Tweens.PENDING_REMOVE
      * @type {number}
      * @since 3.0.0
      */
-    PENDING_REMOVE: 25,
+    PENDING_REMOVE: 24,
 
     /**
-     * Tween state.
-     *
-     * @name Phaser.Tweens.DESTROYED
-     * @type {number}
-     * @since 3.0.0
-     */
-    // DESTROYED: 26
-
-    /**
-     * Tween state.
+     * Tween state. The tween has been removed from the Tween Manager.
      *
      * @name Phaser.Tweens.REMOVED
      * @type {number}
      * @since 3.0.0
      */
-    REMOVED: 26
+    REMOVED: 25
 
 };
 

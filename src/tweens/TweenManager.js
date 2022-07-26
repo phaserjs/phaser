@@ -75,56 +75,19 @@ var TweenManager = new Class({
          */
         this.paused = false;
 
-        /**
-         * An array of Tweens and Timelines which will be added to the Tween Manager at the start of the frame.
-         *
-         * @name Phaser.Tweens.TweenManager#_add
-         * @type {array}
-         * @private
-         * @since 3.0.0
-         */
-        // this._add = [];
 
         /**
-         * An array of Tweens and Timelines pending to be later added to the Tween Manager.
+         * Is this Tween Manager currently processing the tweens as part of
+         * its 'update' loop? This is set to 'true' at the start of 'update'
+         * and reset to 'false' at the end of the function. Allows you to trap
+         * Tween Manager status during tween callbacks.
          *
-         * @name Phaser.Tweens.TweenManager#_pending
-         * @type {array}
-         * @private
-         * @since 3.0.0
+         * @name Phaser.Tweens.TweenManager#processing
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
          */
-        // this._pending = [];
-
-        /**
-         * An array of Tweens and Timelines which are still incomplete and are actively processed by the Tween Manager.
-         *
-         * @name Phaser.Tweens.TweenManager#_active
-         * @type {array}
-         * @private
-         * @since 3.0.0
-         */
-        // this._active = [];
-
-        /**
-         * An array of Tweens and Timelines which will be removed from the Tween Manager at the start of the frame.
-         *
-         * @name Phaser.Tweens.TweenManager#_destroy
-         * @type {array}
-         * @private
-         * @since 3.0.0
-         */
-        // this._destroy = [];
-
-        /**
-         * The number of Tweens and Timelines which need to be processed by the Tween Manager at the start of the frame.
-         *
-         * @name Phaser.Tweens.TweenManager#_toProcess
-         * @type {number}
-         * @private
-         * @default 0
-         * @since 3.0.0
-         */
-        // this._toProcess = 0;
+        this.processing = false;
 
         /**
          * An array of Tweens and Timelines which are actively being processed by the Tween Manager.
@@ -212,7 +175,12 @@ var TweenManager = new Class({
     },
 
     /**
-     * Create a Tween and return it, but do NOT add it to the active or pending Tween lists.
+     * Create a Tween and return it, but does not add it to this Tween Manager.
+     *
+     * Please note that a Tween will not manipulate any target property that begins with an underscore.
+     *
+     * In order to play this tween, you'll need to add it to a Tween Manager via
+     * the `TweenManager.existing` method.
      *
      * @method Phaser.Tweens.TweenManager#create
      * @since 3.0.0
@@ -227,9 +195,11 @@ var TweenManager = new Class({
     },
 
     /**
-     * Create a Tween and add it to the active Tween list.
+     * Create a Tween and add it to this Tween Manager.
      *
-     * Please note that a Tween will not manipulate any property that begins with an underscore.
+     * Playback will start immediately unless the tween has been configured to be paused.
+     *
+     * Please note that a Tween will not manipulate any target property that begins with an underscore.
      *
      * @method Phaser.Tweens.TweenManager#add
      * @since 3.0.0
@@ -242,20 +212,15 @@ var TweenManager = new Class({
     {
         var tween = TweenBuilder(this, config);
 
-        tween.init();
-
         this.tweens.push(tween);
-
-        // this._add.push(tween);
-        // this._toProcess++;
 
         return tween;
     },
 
     /**
-     * Check to see if the given Tween instance belongs to this Tween Manager.
+     * Check to see if the given Tween instance exists within this Tween Manager.
      *
-     * Will return `true` as long as the Tween is being processed by the Tween Manager.
+     * Will return `true` as long as the Tween is being processed by this Tween Manager.
      *
      * Will return `false` if not present, or has a state of `REMOVED`.
      *
@@ -268,13 +233,13 @@ var TweenManager = new Class({
      */
     has: function (tween)
     {
-        var idx = this.tweens.indexOf(tween);
-
-        return (idx >= 0 && tween.state !== TWEEN_CONST.REMOVED);
+        return (this.tweens.indexOf(tween) > -1);
     },
 
     /**
-     * Add an existing tween into the active Tween list.
+     * Add an existing tween to this Tween Manager.
+     *
+     * Playback will start immediately unless the tween has been configured to be paused.
      *
      * @method Phaser.Tweens.TweenManager#existing
      * @since 3.0.0
@@ -287,19 +252,18 @@ var TweenManager = new Class({
     {
         if (!this.has(tween))
         {
-            tween.init();
-
             this.tweens.push(tween);
         }
-
-        // this._add.push(tween);
-        // this._toProcess++;
 
         return this;
     },
 
     /**
      * Create a Number Tween and add it to the active Tween list.
+     *
+     * Playback will start immediately unless the tween has been configured to be paused.
+     *
+     * Please note that a Tween will not manipulate any target property that begins with an underscore.
      *
      * @method Phaser.Tweens.TweenManager#addCounter
      * @since 3.0.0
@@ -312,12 +276,7 @@ var TweenManager = new Class({
     {
         var tween = NumberTweenBuilder(this, config);
 
-        tween.init();
-
         this.tweens.push(tween);
-
-        // this._add.push(tween);
-        // this._toProcess++;
 
         return tween;
     },
@@ -369,87 +328,9 @@ var TweenManager = new Class({
     },
 
     /**
-     * Updates the Tween Manager's internal lists at the start of the frame.
+     * Updates all Tweens and Timelines belonging to this Tween Manager.
      *
-     * This method will return immediately if no changes have been indicated.
-     *
-     * @method Phaser.Tweens.TweenManager#preUpdate
-     * @since 3.0.0
-    preUpdate: function ()
-    {
-        if (this._toProcess === 0)
-        {
-            //  Quick bail
-            return;
-        }
-
-        var list = this._destroy;
-        var active = this._active;
-        var pending = this._pending;
-        var i;
-        var tween;
-
-        //  Clear the 'destroy' list
-        for (i = 0; i < list.length; i++)
-        {
-            tween = list[i];
-
-            //  Remove from the 'active' array
-            var idx = active.indexOf(tween);
-
-            if (idx === -1)
-            {
-                //  Not in the active array, is it in pending instead?
-                idx = pending.indexOf(tween);
-
-                if (idx > -1)
-                {
-                    tween.state = TWEEN_CONST.REMOVED;
-                    pending.splice(idx, 1);
-                }
-            }
-            else
-            {
-                tween.state = TWEEN_CONST.REMOVED;
-                active.splice(idx, 1);
-            }
-        }
-
-        list.length = 0;
-
-        //  Process the addition list
-        //  This stops callbacks and out of sync events from populating the active array mid-way during the update
-
-        list = this._add;
-
-        for (i = 0; i < list.length; i++)
-        {
-            tween = list[i];
-
-            if (tween.state === TWEEN_CONST.PENDING_ADD)
-            {
-                //  Return true if the Tween should be started right away, otherwise false
-                if (tween.init())
-                {
-                    tween.play();
-
-                    this._active.push(tween);
-                }
-                else
-                {
-                    this._pending.push(tween);
-                }
-            }
-        }
-
-        list.length = 0;
-
-        this._toProcess = 0;
-    },
-    */
-
-    /**
-     * Updates all Tweens and Timelines of the Tween Manager.
+     * This is skipped is `TweenManager.paused = true`.
      *
      * @method Phaser.Tweens.TweenManager#update
      * @since 3.0.0
@@ -463,6 +344,8 @@ var TweenManager = new Class({
         {
             return;
         }
+
+        this.processing = true;
 
         //  Scale the delta
         delta *= this.timeScale;
@@ -494,44 +377,27 @@ var TweenManager = new Class({
             {
                 tween = toDestroy[i];
 
-                tween.state = TWEEN_CONST.REMOVED;
-
                 var idx = list.indexOf(tween);
 
-                if (idx > -1)
+                if (idx > -1 && tween.state === TWEEN_CONST.PENDING_REMOVE)
                 {
                     list.splice(idx, 1);
+
+                    tween.state = TWEEN_CONST.REMOVED;
                 }
             }
 
             toDestroy.length = 0;
         }
 
-        /*
-        //  Process active tweens
-        var list = this._active;
-        var tween;
-
-        //  Scale the delta
-        delta *= this.timeScale;
-
-        for (var i = 0; i < list.length; i++)
-        {
-            tween = list[i];
-
-            //  If Tween.update returns 'true' then it means it has completed,
-            //  so move it to the destroy list
-            if (tween.update(timestamp, delta))
-            {
-                this._destroy.push(tween);
-                this._toProcess++;
-            }
-        }
-        */
+        this.processing = false;
     },
 
     /**
-     * Removes the given Tween from this Tween Manager, regardless of its state (pending or active).
+     * Removes the given Tween from this Tween Manager, even if it hasn't started
+     * playback yet. If this method is called while the Tween Manager is processing
+     * an update loop, then the tween will be flagged for removal at the start of
+     * the next frame. Otherwise, it is removed immediately.
      *
      * @method Phaser.Tweens.TweenManager#remove
      * @since 3.17.0
@@ -542,21 +408,28 @@ var TweenManager = new Class({
      */
     remove: function (tween)
     {
-        // ArrayRemove(this.tweens, tween);
+        if (this.processing)
+        {
+            //  Remove it on the next frame
+            tween.state = TWEEN_CONST.PENDING_REMOVE;
+        }
+        else
+        {
+            //  Remove it immediately
+            ArrayRemove(this.tweens, tween);
 
-        // ArrayRemove(this._add, tween);
-        // ArrayRemove(this._pending, tween);
-        // ArrayRemove(this._active, tween);
-        // ArrayRemove(this._destroy, tween);
-
-        tween.state = TWEEN_CONST.PENDING_REMOVE;
+            tween.state = TWEEN_CONST.REMOVED;
+        }
 
         return this;
     },
 
     /**
-     * Resets the given tween. This will remove it from all TweenManager arrays, then call
-     * `Tween.seek(0)`, add it to the active array and make it active.
+     * Resets the given tween.
+     *
+     * If the Tween does not belong to this Tween Manager, it will first be added.
+     *
+     * Then it will seek to position 0 and playback will start on the next frame.
      *
      * @method Phaser.Tweens.TweenManager#reset
      * @since 3.60.0
@@ -567,13 +440,11 @@ var TweenManager = new Class({
      */
     reset: function (tween)
     {
-        // this.remove(tween);
-
-        // this._active.push(tween);
+        this.existing(tween);
 
         tween.seek(0);
 
-        tween.state = TWEEN_CONST.ACTIVE;
+        tween.state = TWEEN_CONST.PLAYING;
 
         return this;
     },
@@ -590,32 +461,9 @@ var TweenManager = new Class({
      */
     makeActive: function (tween)
     {
-        /*
-        if (this._add.indexOf(tween) !== -1 || this._active.indexOf(tween) !== -1)
-        {
-            return this;
-        }
+        this.existing(tween);
 
-        var idx = this._pending.indexOf(tween);
-
-        if (idx !== -1)
-        {
-            this._pending.splice(idx, 1);
-        }
-
-        this._add.push(tween);
-
-        tween.state = TWEEN_CONST.PENDING_ADD;
-
-        this._toProcess++;
-        */
-
-        if (!this.has(tween))
-        {
-            this.tweens.push(tween);
-
-            tween.state = TWEEN_CONST.PENDING_ADD;
-        }
+        tween.state = TWEEN_CONST.PLAYING;
 
         return this;
     },
