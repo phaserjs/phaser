@@ -19,6 +19,7 @@ module.exports = {
     Each: require('./Each'),
     EachInRange: require('./EachInRange'),
     FindClosestInSorted: require('./FindClosestInSorted'),
+    Flatten: require('./Flatten'),
     GetAll: require('./GetAll'),
     GetFirst: require('./GetFirst'),
     GetRandom: require('./GetRandom'),
