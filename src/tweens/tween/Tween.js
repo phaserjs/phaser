@@ -371,16 +371,12 @@ var Tween = new Class({
             tweenData.hold = gen.hold(target, key, 0, targetIndex, totalTargets, this);
             tweenData.repeat = gen.repeat(target, key, 0, targetIndex, totalTargets, this);
             tweenData.repeatDelay = gen.repeatDelay(target, key, 0, targetIndex, totalTargets, this);
-
-            //  ResetTweenData:
             tweenData.repeatCounter = (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
-
             tweenData.state = TWEEN_CONST.PENDING_RENDER;
 
             if (tweenData.delay > 0)
             {
                 tweenData.elapsed = tweenData.delay;
-
                 tweenData.state = TWEEN_CONST.DELAY;
             }
 
@@ -521,16 +517,18 @@ var Tween = new Class({
     },
 
     /**
-     * Checks if the Tween is currently active.
+     * Checks if this Tween is currently playing.
+     *
+     * If this Tween is paused, this method will return false.
      *
      * @method Phaser.Tweens.Tween#isPlaying
      * @since 3.0.0
      *
-     * @return {boolean} `true` if the Tween is active, otherwise `false`.
+     * @return {boolean} `true` if the Tween is playing, otherwise `false`.
      */
     isPlaying: function ()
     {
-        return (this.state === TWEEN_CONST.PLAYING);
+        return (this.state === TWEEN_CONST.PLAYING && !this.paused);
     },
 
     /**
@@ -1082,14 +1080,12 @@ var Tween = new Class({
      */
     stop: function (resetTo)
     {
-        var state = this.state;
-
-        if (state === TWEEN_CONST.PLAYING && resetTo !== undefined)
+        if (this.state === TWEEN_CONST.PLAYING && resetTo !== undefined)
         {
             this.seek(resetTo);
         }
 
-        if (state !== TWEEN_CONST.REMOVED)
+        if (this.state !== TWEEN_CONST.REMOVED)
         {
             this.dispatchTweenEvent(Events.TWEEN_STOP, this.callbacks.onStop);
 
@@ -1117,7 +1113,7 @@ var Tween = new Class({
      */
     update: function (timestamp, delta)
     {
-        if (this.state === TWEEN_CONST.PENDING_REMOVE)
+        if (this.state === TWEEN_CONST.PENDING_REMOVE || this.state === TWEEN_CONST.DESTROYED)
         {
             return true;
         }
@@ -1208,6 +1204,28 @@ var Tween = new Class({
         {
             this.nextState();
         }
+    },
+
+    destroy: function ()
+    {
+        for (var i = 0; i < this.totalData; i++)
+        {
+            var data = this.data[i];
+
+            data.target = null;
+            data.getActiveValue = null;
+            data.getEndValue = null;
+            data.getStartValue = null;
+            data.ease = null;
+            data.gen = null;
+        }
+
+        this.state = TWEEN_CONST.DESTROYED;
+
+        this.parent = null;
+        this.callbacks = null;
+        this.data = null;
+        this.targets = null;
     },
 
     /**

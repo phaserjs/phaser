@@ -99,7 +99,7 @@ var TWEEN_CONST = {
     //  Tween specific (starts from 20 to cleanly allow extra TweenData consts in the future)
 
     /**
-     * Tween state. The tween has been created and is pending playback.
+     * Tween state. The tween has been created and is paused, pending playback.
      *
      * @name Phaser.Tweens.PENDING
      * @type {number}
@@ -150,7 +150,16 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.0.0
      */
-    REMOVED: 25
+    REMOVED: 25,
+
+    /**
+     * Tween state. The tween has been destroyed and can no longer be played by a Tween Manager.
+     *
+     * @name Phaser.Tweens.DESTROYED
+     * @type {number}
+     * @since 3.60.0
+     */
+    DESTROYED: 26
 
 };
 

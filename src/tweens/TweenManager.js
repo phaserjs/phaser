@@ -75,7 +75,6 @@ var TweenManager = new Class({
          */
         this.paused = false;
 
-
         /**
          * Is this Tween Manager currently processing the tweens as part of
          * its 'update' loop? This is set to 'true' at the start of 'update'
@@ -132,6 +131,7 @@ var TweenManager = new Class({
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
 
         this.timeScale = 1;
+        this.paused = false;
     },
 
     /**
@@ -378,7 +378,7 @@ var TweenManager = new Class({
 
                 var idx = list.indexOf(tween);
 
-                if (idx > -1 && tween.state === TWEEN_CONST.PENDING_REMOVE)
+                if (idx > -1 && (tween.state === TWEEN_CONST.PENDING_REMOVE || tween.state === TWEEN_CONST.DESTROYED))
                 {
                     list.splice(idx, 1);
 
@@ -397,6 +397,8 @@ var TweenManager = new Class({
      * playback yet. If this method is called while the Tween Manager is processing
      * an update loop, then the tween will be flagged for removal at the start of
      * the next frame. Otherwise, it is removed immediately.
+     *
+     * The removed tween is _not_ destroyed. It is just removed from this Tween Manager.
      *
      * @method Phaser.Tweens.TweenManager#remove
      * @since 3.17.0
@@ -489,13 +491,6 @@ var TweenManager = new Class({
             args.push(arguments[i]);
         }
 
-        // for (var texture in this.list)
-        // {
-        //     args[0] = this.list[texture];
-
-        //     callback.apply(scope, args);
-        // }
-
         this.tweens.forEach(function (tween)
         {
             args[0] = tween;
@@ -517,16 +512,6 @@ var TweenManager = new Class({
     getAllTweens: function ()
     {
         return this.tweens.slice();
-
-        // var list = this._active;
-        // var output = [];
-
-        // for (var i = 0; i < list.length; i++)
-        // {
-        //     output.push(list[i]);
-        // }
-
-        // return output;
     },
 
     /**
@@ -562,71 +547,20 @@ var TweenManager = new Class({
     },
 
     /**
-     * Returns an array of all Tweens or Timelines in the Tween Manager which affect the given target or array of targets.
+     * Returns an array of all Tweens or Timelines in the Tween Manager which affect the given target, or array of targets.
      *
-     * Only the currently active tweens are tested. A tween that has completed and is
-     * awaiting removal will not be included in the results.
+     * It's possible for this method to return tweens that are about to be removed from
+     * the Tween Manager. You should check the state of the returned tween before acting
+     * upon it.
      *
-     * If you wish to also search pending tweens, use the `includePending` flag.
      *
      * @method Phaser.Tweens.TweenManager#getTweensOf
      * @since 3.0.0
      *
-     * @param {(object|array)} target - The target to look for. Provide an array to look for multiple targets.
-     * @param {boolean} [includePending=false] - Also check for pending tweens, not just active ones?
+     * @param {object|array} target - The target to look for. Provide an array to look for multiple targets.
      *
      * @return {Phaser.Tweens.Tween[]} A new array containing all Tweens and Timelines which affect the given target(s).
      */
-    /*
-    getTweensOf: function (target, includePending)
-    {
-        if (includePending === undefined) { includePending = false; }
-
-        var list = this._active;
-        var tween;
-        var output = [];
-        var i;
-        var t;
-
-        if (!Array.isArray(target))
-        {
-            target = [ target ];
-        }
-
-        for (i = 0; i < list.length; i++)
-        {
-            tween = list[i];
-
-            for (t = 0; t < target.length; t++)
-            {
-                if (tween.hasTarget(target[t]))
-                {
-                    output.push(tween);
-                }
-            }
-        }
-
-        if (includePending)
-        {
-            list = this._pending;
-
-            for (i = 0; i < list.length; i++)
-            {
-                tween = list[i];
-
-                for (t = 0; t < target.length; t++)
-                {
-                    if (tween.hasTarget(target[t]))
-                    {
-                        output.push(tween);
-                    }
-                }
-            }
-        }
-
-        return output;
-    },
-    */
     getTweensOf: function (target)
     {
         var output = [];
@@ -658,6 +592,8 @@ var TweenManager = new Class({
     /**
      * Checks if the given object is being affected by a _playing_ Tween.
      *
+     * If the Tween is paused, this method will return false.
+     *
      * @method Phaser.Tweens.TweenManager#isTweening
      * @since 3.0.0
      *
@@ -667,7 +603,6 @@ var TweenManager = new Class({
      */
     isTweening: function (target)
     {
-        // var list = this._active;
         var list = this.tweens;
         var tween;
 
@@ -685,7 +620,14 @@ var TweenManager = new Class({
     },
 
     /**
-     * Stops all Tweens in this Tween Manager. They will be removed at the start of the frame.
+     * Destroys all Tweens in this Tween Manager.
+     *
+     * The tweens will erase all references to any targets they hold
+     * and be stopped immediately.
+     *
+     * If this method is called while the Tween Manager is running its
+     * update process, then the tweens will be removed at the start of
+     * the next frame. Outside of this, they are removed immediately.
      *
      * @method Phaser.Tweens.TweenManager#killAll
      * @since 3.0.0
@@ -694,25 +636,37 @@ var TweenManager = new Class({
      */
     killAll: function ()
     {
-        var tweens = this.getAllTweens();
+        var tweens = (this.processing) ? this.getAllTweens() : this.tweens;
 
         for (var i = 0; i < tweens.length; i++)
         {
-            tweens[i].stop();
+            tweens[i].destroy();
+        }
+
+        if (!this.processing)
+        {
+            tweens.length = 0;
         }
 
         return this;
     },
 
     /**
-     * Stops all Tweens which affect the given target or array of targets. The Tweens will be removed from the Tween Manager at the start of the frame.
+     * Stops all Tweens which affect the given target or array of targets.
+     *
+     * The tweens will erase all references to any targets they hold
+     * and be stopped immediately.
+     *
+     * If this method is called while the Tween Manager is running its
+     * update process, then the tweens will be removed at the start of
+     * the next frame. Outside of this, they are removed immediately.
      *
      * @see {@link #getTweensOf}
      *
      * @method Phaser.Tweens.TweenManager#killTweensOf
      * @since 3.0.0
      *
-     * @param {(object|array)} target - The target to look for. Provide an array to look for multiple targets.
+     * @param {(object|array)} target - The target to kill the tweens of. Provide an array to use multiple targets.
      *
      * @return {this} This Tween Manager instance.
      */
@@ -722,7 +676,7 @@ var TweenManager = new Class({
 
         for (var i = 0; i < tweens.length; i++)
         {
-            tweens[i].stop();
+            tweens[i].destroy();
         }
 
         return this;
@@ -735,6 +689,8 @@ var TweenManager = new Class({
      *
      * See `TweenManager#resumeAll` to resume the playback.
      *
+     * As of Phaser 3.60 you can also toggle the boolean property `TweenManager.paused`.
+     *
      * @method Phaser.Tweens.TweenManager#pauseAll
      * @since 3.0.0
      *
@@ -743,14 +699,6 @@ var TweenManager = new Class({
     pauseAll: function ()
     {
         this.paused = true;
-
-        // var list = this._active;
-        // var list = this.tweens;
-
-        // for (var i = 0; i < list.length; i++)
-        // {
-        //     list[i].pause();
-        // }
 
         return this;
     },
@@ -762,6 +710,8 @@ var TweenManager = new Class({
      *
      * See `TweenManager#pauseAll` to pause the playback.
      *
+     * As of Phaser 3.60 you can also toggle the boolean property `TweenManager.paused`.
+     *
      * @method Phaser.Tweens.TweenManager#resumeAll
      * @since 3.0.0
      *
@@ -771,19 +721,12 @@ var TweenManager = new Class({
     {
         this.paused = false;
 
-        // var list = this._active;
-        // var list = this.tweens;
-
-        // for (var i = 0; i < list.length; i++)
-        // {
-        //     list[i].resume();
-        // }
-
         return this;
     },
 
     /**
      * The Scene that owns this plugin is shutting down.
+     *
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.Tweens.TweenManager#shutdown
@@ -795,16 +738,8 @@ var TweenManager = new Class({
 
         this.tweens = [];
 
-        // this._add = [];
-        // this._pending = [];
-        // this._active = [];
-        // this._destroy = [];
-
-        // this._toProcess = 0;
-
         var eventEmitter = this.systems.events;
 
-        // eventEmitter.off(SceneEvents.PRE_UPDATE, this.preUpdate, this);
         eventEmitter.off(SceneEvents.UPDATE, this.update, this);
         eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
