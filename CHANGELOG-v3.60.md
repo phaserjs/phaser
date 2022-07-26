@@ -65,6 +65,14 @@ We have updated the version of Matter Physics to the latest v0.18 release. This 
 * `MatterPhysics.sat` has been removed as this is now handled by the `Collision` module.
 * The `Matter.Body.previousPositionImpulse` property has been removed as it's no longer used.
 
+### New Features - New Tween Manager
+
+The Phaser 3.60 Tween system has been recoded to help with performance and resolving some of its lingering issues.
+
+* `killTweensOf(targets)` now supports deeply-nested arrays of items as the `target` parameter. Fix #6016 (thanks @michalfialadev)
+* `killTweensOf(target)` did not stop target tweens if called immediately after tween creation. Fix #6173 (thanks @michalfialadev)
+* It wasn't possible to resume a Tween that was immediately paused after creation. Fix #6169 (thanks @trynx)
+
 ### New Features
 
 * `ScaleManager.getViewPort` is a new method that will return a Rectangle geometry object that matches the visible area of the screen (thanks @rexrainbow)
@@ -100,6 +108,7 @@ We have updated the version of Matter Physics to the latest v0.18 release. This 
 * `UtilityPipeline.blitFrame` has a new optional boolean parameter `flipY` which, if set, will invert the source Render Target while drawing it to the destination Render Target.
 * `GameObjects.Polygon.setTo` is a new method that allows you to change the points being used to render a Polygon Shape Game Object. Fix #6151 (thanks @PhaserEditor2D)
 * `maxAliveParticles` is a new Particle Emitter config property that sets the maximum number of _alive_ particles the emitter is allowed to update. When this limit is reached a particle will have to die before another can be spawned.
+* `Utils.Array.Flatten` is a new function that will return a flattened version of an array, regardless of how deeply-nested it is.
 
 ### Geom Updates
 
