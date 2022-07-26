@@ -73,6 +73,7 @@ The Phaser 3.60 Tween system has been recoded to help with performance and resol
 * `killTweensOf(target)` did not stop target tweens if called immediately after tween creation. Fix #6173 (thanks @michalfialadev)
 * It wasn't possible to resume a Tween that was immediately paused after creation. Fix #6169 (thanks @trynx)
 * Calling `Tween.setCallback()` without specifying the `params` argument would cause an error invoking the callback params. This parameter is now fully optional. Fix #6047 (thanks @orcomarcio)
+* Calling `Tween.play` immediately after creating a tween with `paused: true` in the config wouldn't start playback. Fix #6005 (thanks @MartinEyebab)
 
 ### New Features
 
