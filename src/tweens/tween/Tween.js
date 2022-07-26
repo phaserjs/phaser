@@ -373,9 +373,6 @@ var Tween = new Class({
             tweenData.repeatDelay = gen.repeatDelay(target, key, 0, targetIndex, totalTargets, this);
 
             //  ResetTweenData:
-            // tweenData.progress = 0;
-            // tweenData.elapsed = 0;
-
             tweenData.repeatCounter = (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
 
             tweenData.state = TWEEN_CONST.PENDING_RENDER;
