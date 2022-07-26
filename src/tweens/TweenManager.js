@@ -6,6 +6,7 @@
 
 var ArrayRemove = require('../utils/array/Remove');
 var Class = require('../utils/Class');
+var Flatten = require('../utils/array/Flatten');
 var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
 var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
@@ -370,7 +371,7 @@ var TweenManager = new Class({
         //  Clean-up the 'toDestroy' list
         var count = toDestroy.length;
 
-        if (count)
+        if (count && list.length > 0)
         {
             for (i = 0; i < count; i++)
             {
@@ -553,7 +554,6 @@ var TweenManager = new Class({
      * the Tween Manager. You should check the state of the returned tween before acting
      * upon it.
      *
-     *
      * @method Phaser.Tweens.TweenManager#getTweensOf
      * @since 3.0.0
      *
@@ -566,10 +566,7 @@ var TweenManager = new Class({
         var output = [];
         var list = this.tweens;
 
-        if (!Array.isArray(target))
-        {
-            target = [ target ];
-        }
+        target = Flatten(target);
 
         var targetLen = target.length;
 
