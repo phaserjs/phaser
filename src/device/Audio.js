@@ -19,6 +19,7 @@ var Browser = require('./Browser');
  * @property {boolean} dolby - Can this device play EC-3 Dolby Digital Plus files?
  * @property {boolean} m4a - Can this device can play m4a files.
  * @property {boolean} aac - Can this device can play aac files.
+ * @property {boolean} flac - Can this device can play flac files.
  * @property {boolean} mp3 - Can this device play mp3 files?
  * @property {boolean} ogg - Can this device play ogg files?
  * @property {boolean} opus - Can this device play opus files?
@@ -28,6 +29,7 @@ var Browser = require('./Browser');
  */
 var Audio = {
 
+    flac: false,
     aac: false,
     audioData: false,
     dolby: false,
@@ -82,6 +84,7 @@ function init ()
             Audio.wav = CanPlay('wav');
             Audio.m4a = CanPlay('x-m4a');
             Audio.aac = CanPlay('aac');
+            Audio.flac = CanPlay('flac');
             Audio.webm = CanPlay('webm; codecs="vorbis"');
 
             if (audioElement.canPlayType('audio/mp4; codecs="ec-3"') !== '')
