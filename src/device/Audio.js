@@ -84,7 +84,7 @@ function init ()
             Audio.wav = CanPlay('wav');
             Audio.m4a = CanPlay('x-m4a');
             Audio.aac = CanPlay('aac');
-            Audio.flac = CanPlay('flac');
+            Audio.flac = CanPlay('flac', 'x-flac');
             Audio.webm = CanPlay('webm; codecs="vorbis"');
 
             if (audioElement.canPlayType('audio/mp4; codecs="ec-3"') !== '')
