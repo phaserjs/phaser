@@ -4,11 +4,11 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BaseTween = require('./tween/BaseTween');
 var Class = require('../utils/Class');
-var EventEmitter = require('eventemitter3');
 var Events = require('./events');
-var TweenBuilder = require('./builders/TweenBuilder');
 var TWEEN_CONST = require('./tween/const');
+var TweenBuilder = require('./builders/TweenBuilder');
 
 /**
  * @classdesc
@@ -19,7 +19,7 @@ var TWEEN_CONST = require('./tween/const');
  *
  * @class Timeline
  * @memberof Phaser.Tweens
- * @extends Phaser.Events.EventEmitter
+ * @extends Phaser.Tweens.BaseTween
  * @constructor
  * @since 3.0.0
  *
@@ -27,235 +27,13 @@ var TWEEN_CONST = require('./tween/const');
  */
 var Timeline = new Class({
 
-    Extends: EventEmitter,
+    Extends: BaseTween,
 
     initialize:
 
     function Timeline (manager)
     {
-        EventEmitter.call(this);
-
-        /**
-         * The Tween Manager which owns this Timeline.
-         *
-         * @name Phaser.Tweens.Timeline#manager
-         * @type {Phaser.Tweens.TweenManager}
-         * @since 3.0.0
-         */
-        this.manager = manager;
-
-        /**
-         * A constant value which allows this Timeline to be easily identified as one.
-         *
-         * @name Phaser.Tweens.Timeline#isTimeline
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.isTimeline = true;
-
-        /**
-         * An array of Tween objects, each containing a unique property and target being tweened.
-         *
-         * @name Phaser.Tweens.Timeline#data
-         * @type {array}
-         * @default []
-         * @since 3.0.0
-         */
-        this.data = [];
-
-        /**
-         * The cached size of the data array.
-         *
-         * @name Phaser.Tweens.Timeline#totalData
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.totalData = 0;
-
-        /**
-         * If true then duration, delay, etc values are all frame totals, rather than ms.
-         *
-         * @name Phaser.Tweens.Timeline#useFrames
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.useFrames = false;
-
-        /**
-         * Scales the time applied to this Timeline. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
-         * Value isn't used when calculating total duration of the Timeline, it's a run-time delta adjustment only.
-         *
-         * @name Phaser.Tweens.Timeline#timeScale
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.timeScale = 1;
-
-        /**
-         * Loop this Timeline? Can be -1 for an infinite loop, or an integer.
-         * When enabled it will play through ALL Tweens again (use Tween.repeat to loop a single tween)
-         *
-         * @name Phaser.Tweens.Timeline#loop
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.loop = 0;
-
-        /**
-         * Time in ms/frames before this Timeline loops.
-         *
-         * @name Phaser.Tweens.Timeline#loopDelay
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.loopDelay = 0;
-
-        /**
-         * How many loops are left to run?
-         *
-         * @name Phaser.Tweens.Timeline#loopCounter
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.loopCounter = 0;
-
-        /**
-         * Time in ms/frames before the 'onComplete' event fires. This never fires if loop = true (as it never completes)
-         *
-         * @name Phaser.Tweens.Timeline#completeDelay
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.completeDelay = 0;
-
-        /**
-         * Countdown timer value, as used by `loopDelay` and `completeDelay`.
-         *
-         * @name Phaser.Tweens.Timeline#countdown
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.countdown = 0;
-
-        /**
-         * The current state of the Timeline.
-         *
-         * @name Phaser.Tweens.Timeline#state
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.state = TWEEN_CONST.PENDING;
-
-        /**
-         * Does the Timeline start off paused? (if so it needs to be started with Timeline.play)
-         *
-         * @name Phaser.Tweens.Timeline#paused
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.paused = false;
-
-        /**
-         * Elapsed time in ms/frames of this run through of the Timeline.
-         *
-         * @name Phaser.Tweens.Timeline#elapsed
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.elapsed = 0;
-
-        /**
-         * Total elapsed time in ms/frames of the entire Timeline, including looping.
-         *
-         * @name Phaser.Tweens.Timeline#totalElapsed
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.totalElapsed = 0;
-
-        /**
-         * Time in ms/frames for the whole Timeline to play through once, excluding loop amounts and loop delays.
-         *
-         * @name Phaser.Tweens.Timeline#duration
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.duration = 0;
-
-        /**
-         * Value between 0 and 1. The amount of progress through the Timeline, _excluding loops_.
-         *
-         * @name Phaser.Tweens.Timeline#progress
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.progress = 0;
-
-        /**
-         * Time in ms/frames for all Tweens in this Timeline to complete (including looping)
-         *
-         * @name Phaser.Tweens.Timeline#totalDuration
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.totalDuration = 0;
-
-        /**
-         * Value between 0 and 1. The amount through the entire Timeline, including looping.
-         *
-         * @name Phaser.Tweens.Timeline#totalProgress
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.totalProgress = 0;
-
-        /**
-         * An object containing the different Tween callback functions.
-         *
-         * You can either set these in the Tween config, or by calling the `Tween.setCallback` method.
-         *
-         * `onComplete` When the Timeline finishes playback fully or `Timeline.stop` is called. Never invoked if timeline is set to repeat infinitely.
-         * `onLoop` When a Timeline loops.
-         * `onStart` When the Timeline starts playing.
-         * `onUpdate` When a Timeline updates a child Tween.
-         * `onYoyo` When a Timeline starts a yoyo.
-         *
-         * @name Phaser.Tweens.Timeline#callbacks
-         * @type {object}
-         * @since 3.0.0
-         */
-        this.callbacks = {
-            onComplete: null,
-            onLoop: null,
-            onStart: null,
-            onUpdate: null,
-            onYoyo: null
-        };
-
-        /**
-         * The context in which all callbacks are invoked.
-         *
-         * @name Phaser.Tweens.Timeline#callbackScope
-         * @type {any}
-         * @since 3.0.0
-         */
-        this.callbackScope;
+        BaseTween.call(this, manager);
 
         this.init();
     },
@@ -353,72 +131,6 @@ var Timeline = new Class({
         {
             this.totalDuration = this.duration + this.completeDelay;
         }
-    },
-
-    /**
-     * Internal method that will emit a Timeline based Event and invoke the given callback.
-     *
-     * @method Phaser.Tweens.Timeline#dispatchTimelineEvent
-     * @since 3.19.0
-     *
-     * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
-     * @param {function} callback - The callback to be invoked. Can be `null` or `undefined` to skip invocation.
-     */
-    dispatchTimelineEvent: function (event, callback)
-    {
-        this.emit(event, this);
-
-        if (callback)
-        {
-            callback.func.apply(callback.scope, callback.params);
-        }
-    },
-
-    /**
-     * Sets the value of the time scale applied to this Timeline. A value of 1 runs in real-time.
-     * A value of 0.5 runs 50% slower, and so on.
-     *
-     * The value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
-     *
-     * @method Phaser.Tweens.Timeline#setTimeScale
-     * @since 3.0.0
-     *
-     * @param {number} value - The time scale value to set.
-     *
-     * @return {this} This Timeline object.
-     */
-    setTimeScale: function (value)
-    {
-        this.timeScale = value;
-
-        return this;
-    },
-
-    /**
-     * Gets the value of the time scale applied to this Timeline. A value of 1 runs in real-time.
-     * A value of 0.5 runs 50% slower, and so on.
-     *
-     * @method Phaser.Tweens.Timeline#getTimeScale
-     * @since 3.0.0
-     *
-     * @return {number} The value of the time scale applied to this Timeline.
-     */
-    getTimeScale: function ()
-    {
-        return this.timeScale;
-    },
-
-    /**
-     * Check whether or not the Timeline is playing.
-     *
-     * @method Phaser.Tweens.Timeline#isPlaying
-     * @since 3.0.0
-     *
-     * @return {boolean} `true` if this Timeline is active, otherwise `false`.
-     */
-    isPlaying: function ()
-    {
-        return (this.state === TWEEN_CONST.ACTIVE);
     },
 
     /**
@@ -571,44 +283,6 @@ var Timeline = new Class({
     },
 
     /**
-     * Sets a callback for the Timeline.
-     *
-     * @method Phaser.Tweens.Timeline#setCallback
-     * @since 3.0.0
-     *
-     * @param {string} type - The internal type of callback to set.
-     * @param {function} callback - Timeline allows multiple tweens to be linked together to create a streaming sequence.
-     * @param {array} [params] - The parameters to pass to the callback.
-     * @param {object} [scope] - The context scope of the callback.
-     *
-     * @return {this} This Timeline object.
-     */
-    setCallback: function (type, callback, params, scope)
-    {
-        if (Timeline.TYPES.indexOf(type) !== -1)
-        {
-            this.callbacks[type] = { func: callback, scope: scope, params: [ this ].concat(params) };
-        }
-
-        return this;
-    },
-
-    /**
-     * Passed a Tween to the Tween Manager and requests it be made active.
-     *
-     * @method Phaser.Tweens.Timeline#makeActive
-     * @since 3.3.0
-     *
-     * @param {Phaser.Tweens.Tween} tween - The tween object to make active.
-     *
-     * @return {Phaser.Tweens.TweenManager} The Timeline's Tween Manager reference.
-     */
-    makeActive: function (tween)
-    {
-        return this.manager.makeActive(tween);
-    },
-
-    /**
      * Starts playing the Timeline.
      *
      * @method Phaser.Tweens.Timeline#play
@@ -617,16 +291,12 @@ var Timeline = new Class({
      */
     play: function ()
     {
-        if (this.state === TWEEN_CONST.ACTIVE)
-        {
-            return;
-        }
-
+        /*
         if (this.paused)
         {
             this.paused = false;
 
-            this.manager.makeActive(this);
+            this.makeActive(this);
 
             return;
         }
@@ -634,10 +304,11 @@ var Timeline = new Class({
         {
             this.resetTweens(false);
 
-            this.state = TWEEN_CONST.ACTIVE;
+            this.state = TWEEN_CONST.PLAYING;
         }
 
-        this.dispatchTimelineEvent(Events.TIMELINE_START, this.callbacks.onStart);
+        this.dispatchEvent(Events.TIMELINE_START, this.callbacks.onStart);
+        */
     },
 
     /**
@@ -672,7 +343,7 @@ var Timeline = new Class({
             {
                 this.state = TWEEN_CONST.ACTIVE;
 
-                this.dispatchTimelineEvent(Events.TIMELINE_LOOP, this.callbacks.onLoop);
+                this.dispatchEvent(Events.TIMELINE_LOOP, this.callbacks.onLoop);
             }
         }
         else if (this.completeDelay > 0)
@@ -685,7 +356,7 @@ var Timeline = new Class({
         {
             this.state = TWEEN_CONST.PENDING_REMOVE;
 
-            this.dispatchTimelineEvent(Events.TIMELINE_COMPLETE, this.callbacks.onComplete);
+            this.dispatchEvent(Events.TIMELINE_COMPLETE, this.callbacks.onComplete);
         }
     },
 
@@ -739,7 +410,7 @@ var Timeline = new Class({
                     }
                 }
 
-                this.dispatchTimelineEvent(Events.TIMELINE_UPDATE, this.callbacks.onUpdate);
+                this.dispatchEvent(Events.TIMELINE_UPDATE, this.callbacks.onUpdate);
 
                 //  Anything still running? If not, we're done
                 if (stillRunning === 0)
@@ -757,7 +428,7 @@ var Timeline = new Class({
                 {
                     this.state = TWEEN_CONST.ACTIVE;
 
-                    this.dispatchTimelineEvent(Events.TIMELINE_LOOP, this.callbacks.onLoop);
+                    this.dispatchEvent(Events.TIMELINE_LOOP, this.callbacks.onLoop);
                 }
 
                 break;
@@ -770,7 +441,7 @@ var Timeline = new Class({
                 {
                     this.state = TWEEN_CONST.PENDING_REMOVE;
 
-                    this.dispatchTimelineEvent(Events.TIMELINE_COMPLETE, this.callbacks.onComplete);
+                    this.dispatchEvent(Events.TIMELINE_COMPLETE, this.callbacks.onComplete);
                 }
 
                 break;
@@ -788,60 +459,6 @@ var Timeline = new Class({
     stop: function ()
     {
         this.state = TWEEN_CONST.PENDING_REMOVE;
-    },
-
-    /**
-     * Pauses the Timeline, retaining its internal state.
-     *
-     * Calling this on a Timeline that is already paused has no effect and fires no event.
-     *
-     * @method Phaser.Tweens.Timeline#pause
-     * @fires Phaser.Tweens.Events#TIMELINE_PAUSE
-     * @since 3.0.0
-     *
-     * @return {this} This Timeline object.
-     */
-    pause: function ()
-    {
-        if (this.state === TWEEN_CONST.PAUSED)
-        {
-            return;
-        }
-
-        this.paused = true;
-
-        this._pausedState = this.state;
-
-        this.state = TWEEN_CONST.PAUSED;
-
-        this.emit(Events.TIMELINE_PAUSE, this);
-
-        return this;
-    },
-
-    /**
-     * Resumes a paused Timeline from where it was when it was paused.
-     *
-     * Calling this on a Timeline that isn't paused has no effect and fires no event.
-     *
-     * @method Phaser.Tweens.Timeline#resume
-     * @fires Phaser.Tweens.Events#TIMELINE_RESUME
-     * @since 3.0.0
-     *
-     * @return {this} This Timeline object.
-     */
-    resume: function ()
-    {
-        if (this.state === TWEEN_CONST.PAUSED)
-        {
-            this.paused = false;
-
-            this.state = this._pausedState;
-
-            this.emit(Events.TIMELINE_RESUME, this);
-        }
-
-        return this;
     },
 
     /**
@@ -878,14 +495,16 @@ var Timeline = new Class({
      */
     destroy: function ()
     {
+        BaseTween.prototype.destroy.call(this);
+
         for (var i = 0; i < this.data.length; i++)
         {
             this.data[i].stop();
         }
+
+        this.data = null;
     }
 
 });
-
-Timeline.TYPES = [ 'onStart', 'onUpdate', 'onLoop', 'onComplete', 'onYoyo' ];
 
 module.exports = Timeline;
