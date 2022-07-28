@@ -762,8 +762,10 @@ var Tween = new Class({
         {
             delta = 1 * this.parent.timeScale;
         }
-
-        delta *= this.timeScale;
+        else
+        {
+            delta *= this.timeScale * this.parent.timeScale;
+        }
 
         this.elapsed += delta;
         this.progress = Math.min(this.elapsed / this.duration, 1);

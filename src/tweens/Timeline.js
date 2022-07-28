@@ -372,21 +372,28 @@ var Timeline = new Class({
      * @param {number} timestamp - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      *
-     * @return {boolean} Returns `true` if this Timeline has finished and should be removed from the Tween Manager.
+     * @return {boolean} Returns `true` if this Timeline has finished and should be removed from the Tween Manager, otherwise `false`.
      */
     update: function (timestamp, delta)
     {
-        if (this.state === TWEEN_CONST.PAUSED)
+        if (this.state === TWEEN_CONST.PENDING_REMOVE || this.state === TWEEN_CONST.DESTROYED)
         {
-            return;
+            return true;
+        }
+
+        if (this.paused)
+        {
+            return false;
         }
 
         if (this.useFrames)
         {
-            delta = 1 * this.manager.timeScale;
+            delta = 1 * this.parent.timeScale;
         }
-
-        delta *= this.timeScale;
+        else
+        {
+            delta *= this.timeScale * this.parent.timeScale;
+        }
 
         this.elapsed += delta;
         this.progress = Math.min(this.elapsed / this.duration, 1);
