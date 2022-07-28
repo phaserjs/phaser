@@ -186,6 +186,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `Device.Audio` module has been rewritten to use a new internal `CanPlay` function that cuts down on the amount of code required greatly.
 * `Device.Audio.aac` is a new boolean property that defines if the browser can play aac audio files or not, allowing them to be loaded via the Loader (thanks @Ariorh1337)
 * `Device.Audio.flac` is a new boolean property that defines if the browser can play flac audio files or not, allowing them to be loaded via the Loader (thanks @Ariorh1337)
+* The `Physics.Arcade.Body.reset()` method will now call `Body.checkWorldBounds` as part of the process, moving the body outside of the bounds, should you have positioned it so they overlap during the reset. Fix #5978 (thanks @lukasharing)
 
 ### Bug Fixes
 
