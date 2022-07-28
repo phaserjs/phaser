@@ -1475,17 +1475,19 @@ var Body = new Class({
             this.preRotation = gameObject.angle;
         }
 
+        var pos = this.position;
+
         if (gameObject && gameObject.getTopLeft)
         {
-            gameObject.getTopLeft(this.position);
+            gameObject.getTopLeft(pos);
         }
         else
         {
-            this.position.set(x, y);
+            pos.set(x, y);
         }
 
-        this.prev.copy(this.position);
-        this.prevFrame.copy(this.position);
+        this.prev.copy(pos);
+        this.prevFrame.copy(pos);
 
         if (gameObject)
         {
@@ -1493,7 +1495,7 @@ var Body = new Class({
         }
 
         this.updateCenter();
-
+        this.checkWorldBounds();
         this.resetFlags(true);
     },
 
