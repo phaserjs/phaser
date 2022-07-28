@@ -74,6 +74,7 @@ The Phaser 3.60 Tween system has been recoded to help with performance and resol
 * It wasn't possible to resume a Tween that was immediately paused after creation. Fix #6169 (thanks @trynx)
 * Calling `Tween.setCallback()` without specifying the `params` argument would cause an error invoking the callback params. This parameter is now fully optional. Fix #6047 (thanks @orcomarcio)
 * Calling `Tween.play` immediately after creating a tween with `paused: true` in the config wouldn't start playback. Fix #6005 (thanks @MartinEyebab)
+* Fixed an issue where neither Tweens or Timelines would factor in the Tween Manager `timeScale` value unless they were using frame-based timing instead of delta timing.
 
 ### New Features
 
