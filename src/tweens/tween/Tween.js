@@ -686,7 +686,7 @@ var Tween = new Class({
 
     /**
      * Immediately removes this Tween from the TweenManager and all of its internal arrays,
-     * no matter what stage it as it. Then sets the tween state to `REMOVED`.
+     * no matter what stage it is at. Then sets the tween state to `REMOVED`.
      *
      * You should dispose of your reference to this tween after calling this method, to
      * free it from memory.
@@ -748,7 +748,9 @@ var Tween = new Class({
      */
     update: function (timestamp, delta)
     {
-        if (this.state === TWEEN_CONST.PENDING_REMOVE || this.state === TWEEN_CONST.DESTROYED)
+        var state = this.state;
+
+        if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.DESTROYED)
         {
             return true;
         }
@@ -773,8 +775,6 @@ var Tween = new Class({
         this.totalElapsed += delta;
         this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
 
-        var state = this.state;
-
         if (state === TWEEN_CONST.LOOP_DELAY)
         {
             this.updateCountdown(delta, TWEEN_CONST.PLAYING, Events.TWEEN_LOOP, this.callbacks.onLoop);
@@ -788,7 +788,8 @@ var Tween = new Class({
             this.updateCountdown(delta, TWEEN_CONST.PENDING_REMOVE, Events.TWEEN_COMPLETE, this.callbacks.onComplete);
         }
 
-        //  Make its own check so the states above can toggle to active on this frame
+        //  Make its own check so the states above can toggle to active on the same frame.
+        //  Check 'this.state', not 'state' as it may have been updated by the functions above.
         if (this.state === TWEEN_CONST.PLAYING)
         {
             this.updateActive(delta);
