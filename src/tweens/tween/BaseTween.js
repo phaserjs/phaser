@@ -37,198 +37,203 @@ var BaseTween = new Class({
          *
          * This is either a Tween Manager, or a Tween Timeline instance.
          *
-         * @name Phaser.Tweens.Tween#parent
+         * @name Phaser.Tweens.BaseTween#parent
          * @type {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)}
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.parent = parent;
 
         /**
-         * A constant value which allows this Timeline to be easily identified as one.
+         * A constant value which allows this BaseTween to be quickly identified as a Timeline.
          *
-         * @name Phaser.Tweens.Timeline#isTimeline
+         * @name Phaser.Tweens.BaseTween#isTimeline
          * @type {boolean}
-         * @default true
-         * @since 3.0.0
+         * @default false
+         * @since 3.60.0
          */
         this.isTimeline = false;
 
         /**
          * Is the parent of this Tween a Timeline?
          *
-         * @name Phaser.Tweens.Tween#parentIsTimeline
+         * @name Phaser.Tweens.BaseTween#parentIsTimeline
          * @type {boolean}
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.parentIsTimeline = parent.hasOwnProperty('isTimeline');
 
         /**
-         * An array of TweenData objects, each containing a unique property and target being tweened.
+         * For a Tween, this is an array of TweenData objects, each containing a unique property and target being tweened.
          *
-         * @name Phaser.Tweens.Tween#data
-         * @type {Phaser.Types.Tweens.TweenDataConfig[]}
-         * @since 3.0.0
+         * For a Timeline, this is an array of Tween objects.
+         *
+         * @name Phaser.Tweens.BaseTween#data
+         * @type {(Phaser.Types.Tweens.TweenDataConfig[]|Phaser.Tweens.Tween[])}
+         * @since 3.60.0
          */
         this.data = data;
 
         /**
          * The cached size of the data array.
          *
-         * @name Phaser.Tweens.Timeline#totalData
+         * @name Phaser.Tweens.BaseTween#totalData
          * @type {number}
-         * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.totalData = data.length;
 
         /**
-         * If `true` then the Tween is timed based on the number of elapsed frames, rather than time.
+         * If `true` then the Tween is timed based on the number of elapsed frames, rather than delta time.
          *
-         * @name Phaser.Tweens.Timeline#useFrames
+         * @name Phaser.Tweens.BaseTween#useFrames
          * @type {boolean}
          * @default false
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.useFrames = false;
 
         /**
          * Scales the time applied to this Tween. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
-         * Value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
          *
-         * @name Phaser.Tweens.Tween#timeScale
+         * The value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
+         *
+         * @name Phaser.Tweens.BaseTween#timeScale
          * @type {number}
          * @default 1
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.timeScale = 1;
 
         /**
-         * Loop this tween? Can be -1 for an infinite loop, or an integer.
+         * Loop this tween? Can be -1 for an infinite loop, or a positive integer.
+         *
          * When enabled it will play through ALL TweenDatas again. Use TweenData.repeat to loop a single element.
          *
-         * @name Phaser.Tweens.Tween#loop
+         * @name Phaser.Tweens.BaseTween#loop
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.loop = 0;
 
         /**
-         * Time in ms/frames before the tween loops.
+         * Time in ms/frames before the Tween loops.
          *
-         * @name Phaser.Tweens.Tween#loopDelay
+         * @name Phaser.Tweens.BaseTween#loopDelay
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.loopDelay = 0;
 
         /**
-         * How many loops are left to run?
+         * Internal counter recording how many loops are left to run.
          *
-         * @name Phaser.Tweens.Tween#loopCounter
+         * @name Phaser.Tweens.BaseTween#loopCounter
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.loopCounter = 0;
 
         /**
-         * Time in ms/frames before the 'onComplete' event fires. This never fires if loop = -1 (as it never completes)
+         * The time in ms/frames before the 'onComplete' event fires.
          *
-         * @name Phaser.Tweens.Tween#completeDelay
+         * This never fires if loop = -1 (as it never completes)
+         *
+         * @name Phaser.Tweens.BaseTween#completeDelay
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.completeDelay = 0;
 
         /**
-         * Countdown timer (used by timeline offset, loopDelay and completeDelay)
+         * An internal countdown timer (used by timeline offset, loopDelay and completeDelay)
          *
-         * @name Phaser.Tweens.Tween#countdown
+         * @name Phaser.Tweens.BaseTween#countdown
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.countdown = 0;
 
         /**
-         * The current state of the tween.
+         * The current state of the Tween.
          *
-         * @name Phaser.Tweens.Tween#state
+         * @name Phaser.Tweens.BaseTween#state
          * @type {number}
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.state = TWEEN_CONST.PENDING;
 
         /**
          * Is the Tween paused? If so it needs to be started, or resumed, with Tween.play.
          *
-         * @name Phaser.Tweens.Tween#paused
+         * @name Phaser.Tweens.BaseTween#paused
          * @type {boolean}
          * @default false
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.paused = false;
 
         /**
-         * Elapsed time in ms/frames of this run through the Tween.
+         * Elapsed time in ms/frames of this run through of the Tween.
          *
-         * @name Phaser.Tweens.Tween#elapsed
+         * @name Phaser.Tweens.BaseTween#elapsed
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.elapsed = 0;
 
         /**
          * Total elapsed time in ms/frames of the entire Tween, including looping.
          *
-         * @name Phaser.Tweens.Tween#totalElapsed
+         * @name Phaser.Tweens.BaseTween#totalElapsed
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.totalElapsed = 0;
 
         /**
          * Time in ms/frames for the whole Tween to play through once, excluding loop amounts and loop delays.
          *
-         * @name Phaser.Tweens.Tween#duration
+         * @name Phaser.Tweens.BaseTween#duration
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.duration = 0;
 
         /**
          * Value between 0 and 1. The amount of progress through the Tween, excluding loops.
          *
-         * @name Phaser.Tweens.Tween#progress
+         * @name Phaser.Tweens.BaseTween#progress
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.progress = 0;
 
         /**
          * Time in ms/frames it takes for the Tween to complete a full playthrough (including looping)
          *
-         * @name Phaser.Tweens.Tween#totalDuration
+         * @name Phaser.Tweens.BaseTween#totalDuration
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.totalDuration = 0;
 
         /**
          * Value between 0 and 1. The amount through the entire Tween, including looping.
          *
-         * @name Phaser.Tweens.Tween#totalProgress
+         * @name Phaser.Tweens.BaseTween#totalProgress
          * @type {number}
          * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.totalProgress = 0;
 
@@ -245,9 +250,9 @@ var BaseTween = new Class({
          * `onUpdate` When a TweenData updates a property on a source target during playback.
          * `onLoop` When a Tween loops. This happens _after_ the `loopDelay` expires, if set.
          *
-         * @name Phaser.Tweens.Tween#callbacks
+         * @name Phaser.Tweens.BaseTween#callbacks
          * @type {object}
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.callbacks = {
             onActive: null,
@@ -263,25 +268,25 @@ var BaseTween = new Class({
         /**
          * The context in which all callbacks are invoked.
          *
-         * @name Phaser.Tweens.Tween#callbackScope
+         * @name Phaser.Tweens.BaseTween#callbackScope
          * @type {any}
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.callbackScope;
     },
 
     /**
-     * Sets the value of the time scale applied to this Timeline. A value of 1 runs in real-time.
+     * Sets the value of the time scale applied to this Tween. A value of 1 runs in real-time.
      * A value of 0.5 runs 50% slower, and so on.
      *
      * The value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
      *
-     * @method Phaser.Tweens.Timeline#setTimeScale
-     * @since 3.0.0
+     * @method Phaser.Tweens.BaseTween#setTimeScale
+     * @since 3.60.0
      *
      * @param {number} value - The time scale value to set.
      *
-     * @return {this} This Timeline object.
+     * @return {this} This Tween instance.
      */
     setTimeScale: function (value)
     {
@@ -291,13 +296,13 @@ var BaseTween = new Class({
     },
 
     /**
-     * Gets the value of the time scale applied to this Timeline. A value of 1 runs in real-time.
+     * Gets the value of the time scale applied to this Tween. A value of 1 runs in real-time.
      * A value of 0.5 runs 50% slower, and so on.
      *
-     * @method Phaser.Tweens.Timeline#getTimeScale
-     * @since 3.0.0
+     * @method Phaser.Tweens.BaseTween#getTimeScale
+     * @since 3.60.0
      *
-     * @return {number} The value of the time scale applied to this Timeline.
+     * @return {number} The value of the time scale applied to this Tween.
      */
     getTimeScale: function ()
     {
@@ -309,8 +314,8 @@ var BaseTween = new Class({
      *
      * If this Tween is paused, this method will return false.
      *
-     * @method Phaser.Tweens.Tween#isPlaying
-     * @since 3.0.0
+     * @method Phaser.Tweens.BaseTween#isPlaying
+     * @since 3.60.0
      *
      * @return {boolean} `true` if the Tween is playing, otherwise `false`.
      */
@@ -322,8 +327,8 @@ var BaseTween = new Class({
     /**
      * Checks if the Tween is currently paused.
      *
-     * @method Phaser.Tweens.Tween#isPaused
-     * @since 3.0.0
+     * @method Phaser.Tweens.BaseTween#isPaused
+     * @since 3.60.0
      *
      * @return {boolean} `true` if the Tween is paused, otherwise `false`.
      */
@@ -337,9 +342,10 @@ var BaseTween = new Class({
      *
      * You can also toggle the `Tween.paused` boolean property, but doing so will not trigger the PAUSE event.
      *
-     * @method Phaser.Tweens.Tween#pause
+     * @method Phaser.Tweens.BaseTween#pause
+     * @fires Phaser.Tweens.Events#TWEEN_PAUSE
      * @fires Phaser.Tweens.Events#TIMELINE_PAUSE
-     * @since 3.0.0
+     * @since 3.60.0
      *
      * @return {this} This Tween instance.
      */
@@ -349,7 +355,9 @@ var BaseTween = new Class({
         {
             this.paused = true;
 
-            this.emit(Events.TIMELINE_PAUSE, this);
+            var event = (this.isTimeline) ? Events.TIMELINE_PAUSE : Events.TWEEN_PAUSE;
+
+            this.emit(event, this);
         }
 
         return this;
@@ -360,9 +368,10 @@ var BaseTween = new Class({
      *
      * You can also toggle the `Tween.paused` boolean property, but doing so will not trigger the RESUME event.
      *
-     * @method Phaser.Tweens.Tween#resume
+     * @method Phaser.Tweens.BaseTween#resume
+     * @fires Phaser.Tweens.Events#TWEEN_RESUME
      * @fires Phaser.Tweens.Events#TIMELINE_RESUME
-     * @since 3.0.0
+     * @since 3.60.0
      *
      * @return {this} This Tween instance.
      */
@@ -372,7 +381,9 @@ var BaseTween = new Class({
         {
             this.paused = false;
 
-            this.emit(Events.TIMELINE_RESUME, this);
+            var event = (this.isTimeline) ? Events.TIMELINE_RESUME : Events.TWEEN_RESUME;
+
+            this.emit(event, this);
         }
 
         return this;
@@ -382,9 +393,9 @@ var BaseTween = new Class({
      * Internal method that makes this Tween active within the TweenManager
      * and emits the onActive event and callback.
      *
-     * @method Phaser.Tweens.Tween#makeActive
+     * @method Phaser.Tweens.BaseTween#makeActive
      * @fires Phaser.Tweens.Events#TWEEN_ACTIVE
-     * @since 3.19.0
+     * @since 3.60.0
      */
     makeActive: function ()
     {
@@ -394,9 +405,9 @@ var BaseTween = new Class({
     },
 
     /**
-     * Internal method that will emit a Timeline based Event and invoke the given callback.
+     * Internal method that will emit a Tween based Event and invoke the given callback.
      *
-     * @method Phaser.Tweens.Timeline#dispatchEvent
+     * @method Phaser.Tweens.BaseTween#dispatchEvent
      * @since 3.60.0
      *
      * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
@@ -427,8 +438,8 @@ var BaseTween = new Class({
      * `onUpdate` When a TweenData updates a property on a source target during playback.
      * `onLoop` When a Tween loops. This happens _after_ the `loopDelay` expires, if set.
      *
-     * @method Phaser.Tweens.Timeline#setCallback
-     * @since 3.0.0
+     * @method Phaser.Tweens.BaseTween#setCallback
+     * @since 3.60.0
      *
      * @param {string} type - The internal type of callback to set.
      * @param {function} callback - Timeline allows multiple tweens to be linked together to create a streaming sequence.
@@ -453,8 +464,8 @@ var BaseTween = new Class({
      * Stops all the Tweens in the Timeline immediately, whatever stage of progress they are at and flags
      * them for removal by the TweenManager.
      *
-     * @method Phaser.Tweens.Timeline#destroy
-     * @since 3.0.0
+     * @method Phaser.Tweens.BaseTween#destroy
+     * @since 3.60.0
      */
     destroy: function ()
     {
