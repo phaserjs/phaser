@@ -32,10 +32,14 @@ var Tilemap = require('./Tilemap');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
+ * @param {object} externalTilesets - In case Tiled JSON: An optional object mapping external
+ * tileset file names to their data. Specifically, an object whose OwnProperties (keys) match
+ * the "source" entries of the exported map's external tilesets,
+ * and whose values are parsed json objects acquired by exporting an external tileset.
  *
  * @return {Phaser.Tilemaps.Tilemap}
  */
-var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height, data, insertNull)
+var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height, data, insertNull, externalTilesets)
 {
     if (tileWidth === undefined) { tileWidth = 32; }
     if (tileHeight === undefined) { tileHeight = 32; }
@@ -60,7 +64,7 @@ var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height,
         }
         else
         {
-            mapData = Parse(key, tilemapData.format, tilemapData.data, tileWidth, tileHeight, insertNull);
+            mapData = Parse(key, tilemapData.format, tilemapData.data, tileWidth, tileHeight, insertNull, externalTilesets);
         }
     }
 

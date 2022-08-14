@@ -29,10 +29,13 @@ var ParseTilesets = require('./ParseTilesets');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
+ * @param {object} externalTilesets - An optional object mapping external tileset file names to their data.
+ * Specifically, an object whose OwnProperties (keys) match the "source" entries of the exported map's external tilesets,
+ * and whose values are parsed json objects acquired by exporting an external tileset.  
  *
  * @return {?Phaser.Tilemaps.MapData} The created MapData object, or `null` if the data can't be parsed.
  */
-var ParseJSONTiled = function (name, json, insertNull)
+var ParseJSONTiled = function (name, json, insertNull, externalTilesets)
 {
     //  Map data will consist of: layers, objects, images, tilesets, sizes
     var mapData = new MapData({
@@ -57,7 +60,7 @@ var ParseJSONTiled = function (name, json, insertNull)
     mapData.layers = ParseTileLayers(json, insertNull);
     mapData.images = ParseImageLayers(json);
 
-    var sets = ParseTilesets(json);
+    var sets = ParseTilesets(json, externalTilesets);
 
     mapData.tilesets = sets.tilesets;
     mapData.imageCollections = sets.imageCollections;

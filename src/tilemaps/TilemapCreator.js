@@ -33,6 +33,7 @@ GameObjectCreator.register('tilemap', function (config)
         c.width,
         c.height,
         c.data,
-        c.insertNull
+        c.insertNull,
+        c.externalTilesets
     );
 });

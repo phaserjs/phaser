@@ -32,10 +32,14 @@ var ParseWeltmeister = require('./impact/ParseWeltmeister');
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
+ * @param {object} externalTilesets - In case Tiled JSON: An optional object mapping external
+ * tileset file names to their data. Specifically, an object whose OwnProperties (keys) match
+ * the "source" entries of the exported map's external tilesets,
+ * and whose values are parsed json objects acquired by exporting an external tileset.
  *
  * @return {Phaser.Tilemaps.MapData} The created `MapData` object.
  */
-var Parse = function (name, mapFormat, data, tileWidth, tileHeight, insertNull)
+var Parse = function (name, mapFormat, data, tileWidth, tileHeight, insertNull, externalTilesets)
 {
     var newMap;
 
@@ -48,7 +52,7 @@ var Parse = function (name, mapFormat, data, tileWidth, tileHeight, insertNull)
             newMap = ParseCSV(name, data, tileWidth, tileHeight, insertNull);
             break;
         case (Formats.TILED_JSON):
-            newMap = ParseJSONTiled(name, data, insertNull);
+            newMap = ParseJSONTiled(name, data, insertNull, externalTilesets);
             break;
         case (Formats.WELTMEISTER):
             newMap = ParseWeltmeister(name, data, insertNull);

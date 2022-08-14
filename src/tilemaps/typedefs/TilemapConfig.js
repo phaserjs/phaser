@@ -14,4 +14,8 @@
  * map and the tile data doesn't need to change then setting this value to `true` will help with
  * memory consumption. However if your map is small or you need to update the tiles dynamically,
  * then leave the default value set.
+ * @property {object} [externalTilesets=undefined] - In case Tiled JSON: An optional object mapping external
+ * tileset file names to their data. Specifically, an object whose OwnProperties (keys) match
+ * the "source" entries of the exported map's external tilesets,
+ * and whose values are parsed json objects acquired by exporting an external tileset.
  */
