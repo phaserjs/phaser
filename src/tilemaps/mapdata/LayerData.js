@@ -156,6 +156,15 @@ var LayerData = new Class({
         this.visible = GetFastValue(config, 'visible', true);
 
         /**
+         * The Tint Color assigned to this layer in Tiled.
+         *
+         * @name Phaser.Tilemaps.LayerData#tintColor
+         * @type {string | null}
+         * @since 3.0.0
+         */
+        this.tintColor = GetFastValue(config, 'tintColor', null);
+
+        /**
          * Layer specific properties (can be specified in Tiled)
          *
          * @name Phaser.Tilemaps.LayerData#properties

@@ -130,6 +130,7 @@ var ParseTileLayers = function (json, insertNull)
                 tileHeight: json.tileheight,
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
+                tintColor: json.tintColor,
                 properties: GetFastValue(curl, 'properties', []),
                 orientation: FromOrientationString(json.orientation)
             });
@@ -208,6 +209,7 @@ var ParseTileLayers = function (json, insertNull)
                 tileHeight: json.tileheight,
                 alpha: (curGroupState.opacity * curl.opacity),
                 visible: (curGroupState.visible && curl.visible),
+                tintColor: json.tintColor,
                 properties: GetFastValue(curl, 'properties', []),
                 orientation: FromOrientationString(json.orientation)
             });
