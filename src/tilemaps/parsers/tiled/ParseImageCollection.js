@@ -10,6 +10,7 @@ var ParseImageCollection = function (set)
 {
     var collection = new ImageCollection(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
 
+    var t, tile;
     var maxId = 0;
 
     for (t = 0; t < set.tiles.length; t++)
@@ -27,6 +28,6 @@ var ParseImageCollection = function (set)
     collection.maxId = maxId;
     return collection;
 
-}
+};
 
-module.exports = ParseImageCollection
+module.exports = ParseImageCollection;

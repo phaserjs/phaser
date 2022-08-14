@@ -19,8 +19,8 @@ var ParseWangsets = require('./ParseWangsets');
  *
  * @return {Tileset} An object containing the tileset and image collection data.
  */
-var ParseTileset = function (set, version) {
-
+var ParseTileset = function (set, version)
+{
     var tileSet = new Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, undefined, undefined, set.tileoffset);
 
     if (version > 1)
@@ -109,10 +109,11 @@ var ParseTileset = function (set, version) {
         // Object & terrain shapes stored per-tile in object with string indexes starting at "0"
         if (set.tiles)
         {
+            var stringID;
             tileSet.tileData = set.tiles;
 
             // Parse the objects into Phaser format to match handling of other Tiled objects
-            for (let stringID in tileSet.tileData)
+            for (stringID in tileSet.tileData)
             {
                 var objectGroup = tileSet.tileData[stringID].objectgroup;
 
@@ -133,6 +134,6 @@ var ParseTileset = function (set, version) {
     // This is done (again) after the image is set.
     tileSet.updateTileData(set.imagewidth, set.imageheight);
     return tileSet;
-}
+};
 
 module.exports = ParseTileset;

@@ -25,6 +25,7 @@ var ParseTilesets = function (json, externalTilesets)
     var tilesets = [];
     var imageCollections = [];
     var lastSet = null;
+    var newSet, newCollection;
 
     for (var i = 0; i < json.tilesets.length; i++)
     {
@@ -33,36 +34,35 @@ var ParseTilesets = function (json, externalTilesets)
 
         if (set.source)
         {
-            if( externalTilesets !== undefined && set.source in externalTilesets ) {
-                console.info('Found external tileset', set.source);
+            if (externalTilesets !== undefined && externalTilesets[set.source])
+            {
+                var externalSet = externalTilesets[set.source];
+                externalSet.firstgid = set.firstgid;
 
-                // Clone the external tileset config file, and set the firstgid property
-                var externalSet = Object.assign({firstgid: set.firstgid}, externalTilesets[set.source]);
-
-                if( externalSet.image )
+                if (externalSet.image)
                 {
-                    var newSet = ParseTileset(externalSet, externalSet.version);
+                    newSet = ParseTileset(externalSet, externalSet.version);
                     tilesets.push(newSet);
                 }
                 else
                 {
-                    var newCollection = ParseImageCollection(externalSet);
+                    newCollection = ParseImageCollection(externalSet);
                     imageCollections.push(newCollection);
                 }
             }
             else
             {
-                console.error(`Map uses external tileset with source "${set.source}" which was not given.`);
+                console.warn('Map uses external tileset with source "' + set.source + '" which was not given.');
             }
         }
         else if (set.image)
         {
-            var newSet = ParseTileset(set, json.version);
+            newSet = ParseTileset(set, json.version);
             tilesets.push(newSet);
         }
         else
         {
-            var newCollection = ParseImageCollection(set);
+            newCollection = ParseImageCollection(set);
             imageCollections.push(newCollection);
         }
 

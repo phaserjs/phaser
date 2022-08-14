@@ -22,6 +22,6 @@ module.exports = {
     ParseTileLayers: require('./ParseTileLayers'),
     ParseTilesets: require('./ParseTilesets'),
     ParseTileset: require('./ParseTileset'),
-    ParseImageCollection: require('./ParseImageCollection'),
+    ParseImageCollection: require('./ParseImageCollection')
 
 };
