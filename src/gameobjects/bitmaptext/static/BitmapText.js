@@ -31,7 +31,8 @@ var Render = require('./BitmapTextRender');
  *
  * BMFont (Windows, free): {@link http://www.angelcode.com/products/bmfont/|http://www.angelcode.com/products/bmfont/}
  * Glyph Designer (OS X, commercial): {@link http://www.71squared.com/en/glyphdesigner|http://www.71squared.com/en/glyphdesigner}
- * Littera (Web-based, free): {@link http://kvazars.com/littera/|http://kvazars.com/littera/}
+ * Snow BMF (Web-based, free): {@link https://snowb.org//|https://snowb.org/}
+ * Littera (Flash-based, free): {@link http://kvazars.com/littera/|http://kvazars.com/littera/}
  *
  * For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of
  * converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: {@link http://codebeautify.org/xmltojson|http://codebeautify.org/xmltojson}
