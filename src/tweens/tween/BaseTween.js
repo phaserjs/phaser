@@ -487,4 +487,15 @@ var BaseTween = new Class({
 
 });
 
+BaseTween.TYPES = [
+    'onActive',
+    'onStart',
+    'onLoop',
+    'onComplete',
+    'onStop',
+    'onYoyo',
+    'onRepeat',
+    'onUpdate'
+];
+
 module.exports = BaseTween;
