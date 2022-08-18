@@ -121,6 +121,7 @@ var Tween = new Class({
      * Called by the Tween constructor and should not be called directly.
      *
      * @method Phaser.Tweens.Tween#init
+     * @fires Phaser.Tweens.Events#TWEEN_ACTIVE
      * @since 3.0.0
      */
     init: function ()
@@ -167,7 +168,9 @@ var Tween = new Class({
         this.elapsed = 0;
         this.totalElapsed = 0;
 
-        this.state = TWEEN_CONST.PLAYING;
+        this.state = TWEEN_CONST.ACTIVE;
+
+        this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
     },
 
     /**
@@ -329,7 +332,7 @@ var Tween = new Class({
         this.totalElapsed = 0;
         this.totalProgress = 0;
 
-        if (this.state === TWEEN_CONST.PLAYING)
+        if (this.state === TWEEN_CONST.ACTIVE)
         {
             this.seek(0);
         }
@@ -341,6 +344,10 @@ var Tween = new Class({
         else if (this.state === TWEEN_CONST.PENDING_REMOVE)
         {
             this.parent.reset(this);
+        }
+        else if (this.state === TWEEN_CONST.DESTROYED)
+        {
+            console.warn('Cannot restart destroyed Tweens');
         }
         else
         {
@@ -375,7 +382,7 @@ var Tween = new Class({
             }
             else
             {
-                this.state = TWEEN_CONST.PLAYING;
+                this.state = TWEEN_CONST.ACTIVE;
 
                 this.dispatchEvent(Events.TWEEN_LOOP, this.callbacks.onLoop);
             }
@@ -418,6 +425,13 @@ var Tween = new Class({
 
         var state = this.state;
 
+        if (state === TWEEN_CONST.DESTROYED)
+        {
+            console.warn('Cannot play destroyed Tween');
+
+            return this;
+        }
+
         if (!this.parentIsTimeline)
         {
             if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.REMOVED)
@@ -427,11 +441,7 @@ var Tween = new Class({
             }
 
             this.paused = false;
-            this.state = TWEEN_CONST.PLAYING;
-
-            //  When should we call this?
-            // this.resetTweenData(resetFromTimeline);
-            // this.makeActive();
+            this.state = TWEEN_CONST.ACTIVE;
         }
         else
         {
@@ -439,7 +449,7 @@ var Tween = new Class({
 
             if (this.calculatedOffset === 0)
             {
-                this.state = TWEEN_CONST.PLAYING;
+                this.state = TWEEN_CONST.ACTIVE;
             }
             else
             {
@@ -448,54 +458,6 @@ var Tween = new Class({
                 this.state = TWEEN_CONST.OFFSET_DELAY;
             }
         }
-
-        /*
-        if (state === TWEEN_CONST.INIT && !this.parentIsTimeline)
-        {
-            this.resetTweenData(false);
-
-            this.state = TWEEN_CONST.PLAYING;
-
-            return this;
-        }
-        else if (!this.parentIsTimeline && (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.REMOVED))
-        {
-            this.seek(0);
-            this.parent.makeActive(this);
-
-            return this;
-        }
-
-        if (this.parentIsTimeline)
-        {
-            this.resetTweenData(resetFromTimeline);
-
-            if (this.calculatedOffset === 0)
-            {
-                this.state = TWEEN_CONST.PLAYING;
-            }
-            else
-            {
-                this.countdown = this.calculatedOffset;
-
-                this.state = TWEEN_CONST.OFFSET_DELAY;
-            }
-        }
-        else if (this.paused)
-        {
-            this.paused = false;
-
-            this.makeActive();
-        }
-        else
-        {
-            this.resetTweenData(resetFromTimeline);
-
-            this.state = TWEEN_CONST.PLAYING;
-
-            this.makeActive();
-        }
-        */
 
         return this;
     },
@@ -651,10 +613,10 @@ var Tween = new Class({
     /**
      * Flags the Tween as being complete, whatever stage of progress it is at.
      *
-     * If an onComplete callback has been defined it will automatically invoke it, unless a `delay`
+     * If an `onComplete` callback has been defined it will automatically invoke it, unless a `delay`
      * argument is provided, in which case the Tween will delay for that period of time before calling the callback.
      *
-     * If you don't need a delay, or have an onComplete callback, then call `Tween.stop` instead.
+     * If you don't need a delay, or don't have an `onComplete` callback, then call `Tween.stop` instead.
      *
      * @method Phaser.Tweens.Tween#complete
      * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
@@ -706,6 +668,8 @@ var Tween = new Class({
     /**
      * Stops the Tween immediately, whatever stage of progress it is at and flags it for removal by the Tween Manager.
      *
+     * If an `onStop` callback has been defined it will automatically invoke it.
+     *
      * @method Phaser.Tweens.Tween#stop
      * @since 3.0.0
      *
@@ -715,12 +679,12 @@ var Tween = new Class({
      */
     stop: function (resetTo)
     {
-        if (this.state === TWEEN_CONST.PLAYING && resetTo !== undefined)
+        if (this.state === TWEEN_CONST.ACTIVE && resetTo !== undefined)
         {
             this.seek(resetTo);
         }
 
-        if (this.state !== TWEEN_CONST.REMOVED)
+        if (this.state !== TWEEN_CONST.REMOVED && this.state !== TWEEN_CONST.PENDING_REMOVE)
         {
             this.dispatchEvent(Events.TWEEN_STOP, this.callbacks.onStop);
 
@@ -777,11 +741,11 @@ var Tween = new Class({
 
         if (state === TWEEN_CONST.LOOP_DELAY)
         {
-            this.updateCountdown(delta, TWEEN_CONST.PLAYING, Events.TWEEN_LOOP, this.callbacks.onLoop);
+            this.updateCountdown(delta, TWEEN_CONST.ACTIVE, Events.TWEEN_LOOP, this.callbacks.onLoop);
         }
         else if (state === TWEEN_CONST.OFFSET_DELAY)
         {
-            this.updateCountdown(delta, TWEEN_CONST.PLAYING);
+            this.updateCountdown(delta, TWEEN_CONST.ACTIVE);
         }
         else if (state === TWEEN_CONST.COMPLETE_DELAY)
         {
@@ -790,7 +754,7 @@ var Tween = new Class({
 
         //  Make its own check so the states above can toggle to active on the same frame.
         //  Check 'this.state', not 'state' as it may have been updated by the functions above.
-        if (this.state === TWEEN_CONST.PLAYING)
+        if (this.state === TWEEN_CONST.ACTIVE)
         {
             this.updateActive(delta);
         }
@@ -798,6 +762,18 @@ var Tween = new Class({
         return (this.state === TWEEN_CONST.PENDING_REMOVE);
     },
 
+    /**
+     * Internal method that handles the processing of a countdown timer and
+     * the dispatch of related events. Called automatically by `Tween.update`.
+     *
+     * @method Phaser.Tweens.Tween#updateCountdown
+     * @since 3.60.0
+     *
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+     * @param {number} state - The new Tween State to be set.
+     * @param {Phaser.Types.Tweens.Event} [event] - The Tween Event to dispatch, if any.
+     * @param {function} [callback] - The Tween Callback to invoke, if any.
+     */
     updateCountdown: function (delta, state, event, callback)
     {
         this.countdown -= delta;
@@ -813,6 +789,16 @@ var Tween = new Class({
         }
     },
 
+    /**
+     * Internal method that handles the updating of the Tween Data and
+     * related dispatching of events. Called automatically by `Tween.update`.
+     *
+     * @method Phaser.Tweens.Tween#updateActive
+     * @fires Phaser.Tweens.Events#TWEEN_START
+     * @since 3.60.0
+     *
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+     */
     updateActive: function (delta)
     {
         if (!this.hasStarted && !this.isSeeking)
@@ -842,26 +828,6 @@ var Tween = new Class({
         {
             this.nextState();
         }
-    },
-
-    destroy: function ()
-    {
-        BaseTween.prototype.destroy.call(this);
-
-        for (var i = 0; i < this.totalData; i++)
-        {
-            var data = this.data[i];
-
-            data.target = null;
-            data.getActiveValue = null;
-            data.getEndValue = null;
-            data.getStartValue = null;
-            data.ease = null;
-            data.gen = null;
-        }
-
-        this.data = null;
-        this.targets = null;
     },
 
     /**
@@ -1207,6 +1173,34 @@ var Tween = new Class({
 
         //  Return TRUE if this TweenData still playing, otherwise return FALSE
         return (tweenData.state !== TWEEN_CONST.COMPLETE);
+    },
+
+    /**
+     * Handles the destroy process of this Tween, clearing out the
+     * Tween Data and resetting the targets. A Tween that has been
+     * destroyed cannot ever be played or used again.
+     *
+     * @method Phaser.Tweens.Tween#destroy
+     * @since 3.60.0
+     */
+    destroy: function ()
+    {
+        BaseTween.prototype.destroy.call(this);
+
+        for (var i = 0; i < this.totalData; i++)
+        {
+            var data = this.data[i];
+
+            data.target = null;
+            data.getActiveValue = null;
+            data.getEndValue = null;
+            data.getStartValue = null;
+            data.ease = null;
+            data.gen = null;
+        }
+
+        this.data = null;
+        this.targets = null;
     }
 
 });
