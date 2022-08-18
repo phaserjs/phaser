@@ -11,6 +11,7 @@ var EventEmitter = require('eventemitter3');
 var GetAll = require('../../utils/array/GetAll');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
+var HasValue = require('../../utils/object/HasValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 var Range = require('../../utils/array/Range');
 var Set = require('../../structs/Set');
@@ -443,48 +444,69 @@ var Group = new Class({
 
         //  Post-creation options (applied only to those items created in this call):
 
-        var x = GetValue(options, 'setXY.x', 0);
-        var y = GetValue(options, 'setXY.y', 0);
-        var stepX = GetValue(options, 'setXY.stepX', 0);
-        var stepY = GetValue(options, 'setXY.stepY', 0);
+        if (HasValue(options, 'setXY'))
+        {
+            var x = GetValue(options, 'setXY.x', 0);
+            var y = GetValue(options, 'setXY.y', 0);
+            var stepX = GetValue(options, 'setXY.stepX', 0);
+            var stepY = GetValue(options, 'setXY.stepY', 0);
 
-        Actions.SetXY(entries, x, y, stepX, stepY);
+            Actions.SetXY(entries, x, y, stepX, stepY);
+        }
 
-        var rotation = GetValue(options, 'setRotation.value', 0);
-        var stepRotation = GetValue(options, 'setRotation.step', 0);
+        if (HasValue(options, 'setRotation'))
+        {
+            var rotation = GetValue(options, 'setRotation.value', 0);
+            var stepRotation = GetValue(options, 'setRotation.step', 0);
 
-        Actions.SetRotation(entries, rotation, stepRotation);
+            Actions.SetRotation(entries, rotation, stepRotation);
+        }
 
-        var scaleX = GetValue(options, 'setScale.x', 1);
-        var scaleY = GetValue(options, 'setScale.y', scaleX);
-        var stepScaleX = GetValue(options, 'setScale.stepX', 0);
-        var stepScaleY = GetValue(options, 'setScale.stepY', 0);
+        if (HasValue(options, 'setScale'))
+        {
+            var scaleX = GetValue(options, 'setScale.x', 1);
+            var scaleY = GetValue(options, 'setScale.y', scaleX);
+            var stepScaleX = GetValue(options, 'setScale.stepX', 0);
+            var stepScaleY = GetValue(options, 'setScale.stepY', 0);
 
-        Actions.SetScale(entries, scaleX, scaleY, stepScaleX, stepScaleY);
+            Actions.SetScale(entries, scaleX, scaleY, stepScaleX, stepScaleY);
+        }
 
-        var originX = GetValue(options, 'setOrigin.x', 0.5);
-        var originY = GetValue(options, 'setOrigin.y', originX);
-        var stepOriginX = GetValue(options, 'setOrigin.stepX', 0);
-        var stepOriginY = GetValue(options, 'setOrigin.stepY', 0);
+        if (HasValue(options, 'setOrigin'))
+        {
+            var originX = GetValue(options, 'setOrigin.x', 0.5);
+            var originY = GetValue(options, 'setOrigin.y', originX);
+            var stepOriginX = GetValue(options, 'setOrigin.stepX', 0);
+            var stepOriginY = GetValue(options, 'setOrigin.stepY', 0);
 
-        Actions.SetOrigin(entries, originX, originY, stepOriginX, stepOriginY);
+            Actions.SetOrigin(entries, originX, originY, stepOriginX, stepOriginY);
+        }
 
-        var alpha = GetValue(options, 'setAlpha.value', 1);
-        var stepAlpha = GetValue(options, 'setAlpha.step', 0);
+        if (HasValue(options, 'setAlpha'))
+        {
+            var alpha = GetValue(options, 'setAlpha.value', 1);
+            var stepAlpha = GetValue(options, 'setAlpha.step', 0);
 
-        Actions.SetAlpha(entries, alpha, stepAlpha);
+            Actions.SetAlpha(entries, alpha, stepAlpha);
+        }
 
-        var depth = GetValue(options, 'setDepth.value', 0);
-        var stepDepth = GetValue(options, 'setDepth.step', 0);
+        if (HasValue(options, 'setDepth'))
+        {
+            var depth = GetValue(options, 'setDepth.value', 0);
+            var stepDepth = GetValue(options, 'setDepth.step', 0);
 
-        Actions.SetDepth(entries, depth, stepDepth);
+            Actions.SetDepth(entries, depth, stepDepth);
+        }
 
-        var scrollFactorX = GetValue(options, 'setScrollFactor.x', 1);
-        var scrollFactorY = GetValue(options, 'setScrollFactor.y', scrollFactorX);
-        var stepScrollFactorX = GetValue(options, 'setScrollFactor.stepX', 0);
-        var stepScrollFactorY = GetValue(options, 'setScrollFactor.stepY', 0);
+        if (HasValue(options, 'setScrollFactor'))
+        {
+            var scrollFactorX = GetValue(options, 'setScrollFactor.x', 1);
+            var scrollFactorY = GetValue(options, 'setScrollFactor.y', scrollFactorX);
+            var stepScrollFactorX = GetValue(options, 'setScrollFactor.stepX', 0);
+            var stepScrollFactorY = GetValue(options, 'setScrollFactor.stepY', 0);
 
-        Actions.SetScrollFactor(entries, scrollFactorX, scrollFactorY, stepScrollFactorX, stepScrollFactorY);
+            Actions.SetScrollFactor(entries, scrollFactorX, scrollFactorY, stepScrollFactorX, stepScrollFactorY);
+        }
 
         var hitArea = GetFastValue(options, 'hitArea', null);
         var hitAreaCallback = GetFastValue(options, 'hitAreaCallback', null);
