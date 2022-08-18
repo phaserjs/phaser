@@ -616,6 +616,47 @@ var Text = new Class({
     },
 
     /**
+     * Appends the given text to the content already being displayed by this Text object.
+     *
+     * An array of strings will be joined with `\n` line breaks.
+     *
+     * @method Phaser.GameObjects.Text#appendText
+     * @since 3.60.0
+     *
+     * @param {(string|string[])} value - The string, or array of strings, to be appended to the existing content of this Text object.
+     * @param {boolean} [addCR=true] - Insert a carriage-return before the string value.
+     *
+     * @return {this} This Text object.
+     */
+    appendText: function (value, addCR)
+    {
+        if (addCR === undefined) { addCR = true; }
+
+        if (!value && value !== 0)
+        {
+            value = '';
+        }
+
+        if (Array.isArray(value))
+        {
+            value = value.join('\n');
+        }
+
+        value = value.toString();
+
+        var newText = this._text.concat((addCR) ? '\n' + value : value);
+
+        if (newText !== this._text)
+        {
+            this._text = newText;
+
+            this.updateText();
+        }
+
+        return this;
+    },
+
+    /**
      * Set the text style.
      *
      * @example
