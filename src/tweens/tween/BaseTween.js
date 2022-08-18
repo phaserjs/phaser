@@ -244,22 +244,23 @@ var BaseTween = new Class({
          *
          * `onActive` When the Tween is moved from the pending to the active list in the Tween Manager, even if playback paused.
          * `onStart` When the Tween starts playing after a delayed state. Will happen at the same time as `onActive` if it has no delay.
-         * `onYoyo` When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
-         * `onRepeat` When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
          * `onComplete` When the Tween finishes playback fully. Never invoked if tween is set to repeat infinitely.
-         * `onUpdate` When a TweenData updates a property on a source target during playback.
          * `onLoop` When a Tween loops. This happens _after_ the `loopDelay` expires, if set.
+         * `onRepeat` When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
+         * `onStop` When a Tween is stopped by a call to the Tween.stop method.
+         * `onUpdate` When a TweenData updates a property on a source target during playback.
+         * `onYoyo` When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
          *
          * @name Phaser.Tweens.BaseTween#callbacks
-         * @type {object}
+         * @type {Phaser.Types.Tweens.TweenCallbacks}
          * @since 3.60.0
          */
         this.callbacks = {
             onActive: null,
+            onStart: null,
             onComplete: null,
             onLoop: null,
             onRepeat: null,
-            onStart: null,
             onStop: null,
             onUpdate: null,
             onYoyo: null
@@ -321,7 +322,7 @@ var BaseTween = new Class({
      */
     isPlaying: function ()
     {
-        return (this.state === TWEEN_CONST.PLAYING && !this.paused);
+        return (!this.paused && this.state === TWEEN_CONST.ACTIVE);
     },
 
     /**
