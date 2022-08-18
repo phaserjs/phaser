@@ -67,7 +67,8 @@ var WebGLRenderer = new Class({
             stencil: true,
             failIfMajorPerformanceCaveat: gameConfig.failIfMajorPerformanceCaveat,
             powerPreference: gameConfig.powerPreference,
-            preserveDrawingBuffer: gameConfig.preserveDrawingBuffer
+            preserveDrawingBuffer: gameConfig.preserveDrawingBuffer,
+            willReadFrequently: false
         };
 
         /**

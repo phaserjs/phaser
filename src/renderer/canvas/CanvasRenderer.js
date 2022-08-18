@@ -114,7 +114,8 @@ var CanvasRenderer = new Class({
 
         var contextOptions = {
             alpha: game.config.transparent,
-            desynchronized: game.config.desynchronized
+            desynchronized: game.config.desynchronized,
+            willReadFrequently: false
         };
 
         /**
