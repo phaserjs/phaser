@@ -111,18 +111,18 @@ var Tween = new Class({
          * @since 3.0.0
          */
         this.calculatedOffset = 0;
-
-        //  Prepare this tween for playback
-        this.init();
     },
 
     /**
      * Prepares this Tween for playback.
-     * Called by the Tween constructor and should not be called directly.
+     *
+     * Called automatically by the TweenBuilder. Should not be called directly.
      *
      * @method Phaser.Tweens.Tween#init
      * @fires Phaser.Tweens.Events#TWEEN_ACTIVE
      * @since 3.0.0
+     *
+     * @return {this} This Tween instance.
      */
     init: function ()
     {
@@ -171,6 +171,8 @@ var Tween = new Class({
         this.state = TWEEN_CONST.ACTIVE;
 
         this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
+
+        return this;
     },
 
     /**
