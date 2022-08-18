@@ -106,8 +106,6 @@ function init ()
         CanvasFeatures.supportInverseAlpha = checkInverseAlpha();
     }
 
-    console.log('canvas pool', CanvasPool.pool);
-
     return CanvasFeatures;
 }
 
