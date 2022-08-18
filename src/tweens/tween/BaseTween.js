@@ -242,14 +242,19 @@ var BaseTween = new Class({
          *
          * You can either set these in the Tween config, or by calling the `Tween.setCallback` method.
          *
-         * `onActive` When the Tween is moved from the pending to the active list in the Tween Manager, even if playback paused.
-         * `onStart` When the Tween starts playing after a delayed state. Will happen at the same time as `onActive` if it has no delay.
-         * `onComplete` When the Tween finishes playback fully. Never invoked if tween is set to repeat infinitely.
-         * `onLoop` When a Tween loops. This happens _after_ the `loopDelay` expires, if set.
-         * `onRepeat` When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
-         * `onStop` When a Tween is stopped by a call to the Tween.stop method.
-         * `onUpdate` When a TweenData updates a property on a source target during playback.
-         * `onYoyo` When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
+         * The types available are:
+         *
+         * `onActive` - When the Tween is first created it moves to an 'active' state when added to the Tween Manager. 'Active' does not mean 'playing'.
+         * `onStart` - When the Tween starts playing after a delayed or paused state. This will happen at the same time as `onActive` if the tween has no delay and isn't paused.
+         * `onLoop` - When a Tween loops, if it has been set to do so. This happens _after_ the `loopDelay` expires, if set.
+         * `onComplete` - When the Tween finishes playback fully. Never invoked if the Tween is set to repeat infinitely.
+         * `onStop` - Invoked only if the `Tween.stop` method is called.
+         *
+         * The following types are also available and are invoked on a TweenData level, that is per-object, per-property being tweened:
+         *
+         * `onYoyo` - When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
+         * `onRepeat` - When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
+         * `onUpdate` - When a TweenData updates a property on a source target during playback.
          *
          * @name Phaser.Tweens.BaseTween#callbacks
          * @type {Phaser.Types.Tweens.TweenCallbacks}
@@ -431,29 +436,34 @@ var BaseTween = new Class({
      *
      * The types available are:
      *
-     * `onActive` When the Tween is moved from the pending to the active list in the Tween Manager, even if playback paused.
-     * `onStart` When the Tween starts playing after a delayed state. Will happen at the same time as `onActive` if it has no delay.
-     * `onYoyo` When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
-     * `onRepeat` When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
-     * `onComplete` When the Tween finishes playback fully or `Tween.stop` is called. Never invoked if tween is set to repeat infinitely.
-     * `onUpdate` When a TweenData updates a property on a source target during playback.
-     * `onLoop` When a Tween loops. This happens _after_ the `loopDelay` expires, if set.
+     * `onActive` - When the Tween is first created it moves to an 'active' state when added to the Tween Manager. 'Active' does not mean 'playing'.
+     * `onStart` - When the Tween starts playing after a delayed or paused state. This will happen at the same time as `onActive` if the tween has no delay and isn't paused.
+     * `onLoop` - When a Tween loops, if it has been set to do so. This happens _after_ the `loopDelay` expires, if set.
+     * `onComplete` - When the Tween finishes playback fully. Never invoked if the Tween is set to repeat infinitely.
+     * `onStop` - Invoked only if the `Tween.stop` method is called.
+     *
+     * The following types are also available and are invoked on a TweenData level, that is per-object, per-property being tweened:
+     *
+     * `onYoyo` - When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
+     * `onRepeat` - When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
+     * `onUpdate` - When a TweenData updates a property on a source target during playback.
      *
      * @method Phaser.Tweens.BaseTween#setCallback
      * @since 3.60.0
      *
-     * @param {string} type - The internal type of callback to set.
-     * @param {function} callback - Timeline allows multiple tweens to be linked together to create a streaming sequence.
-     * @param {array} [params] - The parameters to pass to the callback.
-     * @param {object} [scope] - The context scope of the callback.
+     * @param {string} type - The type of callback to set. One of: `onActive`, `onStart`, `onComplete`, `onLoop`, `onRepeat`, `onStop`, `onUpdate` or  onYoyo`.
+     * @param {function} callback - Your callback that will be invoked.
+     * @param {array} [params] - The parameters to pass to the callback. Pass an empty array if you don't want to define any.
+     * @param {object} [scope] - The context scope of the callback. If not given, will use the callback itself as the scope.
      *
-     * @return {this} This Timeline object.
+     * @return {this} This Tween instance.
      */
     setCallback: function (type, callback, params, scope)
     {
         if (params === undefined) { params = []; }
+        if (scope === undefined) { scope = callback; }
 
-        if (BaseTween.TYPES.indexOf(type) !== -1)
+        if (this.callbacks.hasOwnProperty(type))
         {
             this.callbacks[type] = { func: callback, scope: scope, params: [ this ].concat(params) };
         }
@@ -462,8 +472,7 @@ var BaseTween = new Class({
     },
 
     /**
-     * Stops all the Tweens in the Timeline immediately, whatever stage of progress they are at and flags
-     * them for removal by the TweenManager.
+     * The BaseTween destroy method. Not typically invoked directly.
      *
      * @method Phaser.Tweens.BaseTween#destroy
      * @since 3.60.0
@@ -477,17 +486,5 @@ var BaseTween = new Class({
     }
 
 });
-
-BaseTween.TYPES = [
-    'onActive',
-    'onStart',
-    'onUpdate',
-    'onLoop',
-    'onRepeat',
-    'onYoyo',
-    'onStop',
-    'onComplete',
-    'onRemoved'
-];
 
 module.exports = BaseTween;

@@ -99,7 +99,7 @@ var TWEEN_CONST = {
     //  Tween specific (starts from 20 to cleanly allow extra TweenData consts in the future)
 
     /**
-     * Tween state. The tween has been created and is paused, pending playback.
+     * Tween state. The Tween has been created but has not yet been added to the Tween Manager.
      *
      * @name Phaser.Tweens.PENDING
      * @type {number}
@@ -108,7 +108,7 @@ var TWEEN_CONST = {
     PENDING: 20,
 
     /**
-     * Tween state. The tween is active witin the Tween Manager. This means it is either playing,
+     * Tween state. The Tween is active witin the Tween Manager. This means it is either playing,
      * or was playing and is currently paused, but in both cases it's still being processed by
      * the Tween Manager, so is considered 'active'.
      *
@@ -119,7 +119,7 @@ var TWEEN_CONST = {
     ACTIVE: 21,
 
     /**
-     * Tween state. The tween is waiting for a loop countdown to elapse.
+     * Tween state. The Tween is waiting for a loop countdown to elapse.
      *
      * @name Phaser.Tweens.LOOP_DELAY
      * @type {number}
@@ -128,7 +128,7 @@ var TWEEN_CONST = {
     LOOP_DELAY: 22,
 
     /**
-     * Tween state. The tween is waiting for a complete delay to elapse.
+     * Tween state. The Tween is waiting for a complete delay to elapse.
      *
      * @name Phaser.Tweens.COMPLETE_DELAY
      * @type {number}
@@ -137,7 +137,7 @@ var TWEEN_CONST = {
     COMPLETE_DELAY: 23,
 
     /**
-     * Tween state. The tween has finished playback and is waiting to be removed from the Tween Manager.
+     * Tween state. The Tween has finished playback and is waiting to be removed from the Tween Manager.
      *
      * @name Phaser.Tweens.PENDING_REMOVE
      * @type {number}
@@ -146,7 +146,7 @@ var TWEEN_CONST = {
     PENDING_REMOVE: 24,
 
     /**
-     * Tween state. The tween has been removed from the Tween Manager.
+     * Tween state. The Tween has been removed from the Tween Manager.
      *
      * @name Phaser.Tweens.REMOVED
      * @type {number}
@@ -155,7 +155,7 @@ var TWEEN_CONST = {
     REMOVED: 25,
 
     /**
-     * Tween state. The tween has been destroyed and can no longer be played by a Tween Manager.
+     * Tween state. The Tween has been destroyed and can no longer be played by a Tween Manager.
      *
      * @name Phaser.Tweens.DESTROYED
      * @type {number}
