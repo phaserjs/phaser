@@ -427,7 +427,7 @@ var TweenManager = new Class({
     },
 
     /**
-     * Resets the given tween.
+     * Resets the given Tween.
      *
      * If the Tween does not belong to this Tween Manager, it will first be added.
      *
