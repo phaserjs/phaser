@@ -108,13 +108,15 @@ var TWEEN_CONST = {
     PENDING: 20,
 
     /**
-     * Tween state. The tween is actively playing, or was playing and is paused.
+     * Tween state. The tween is active witin the Tween Manager. This means it is either playing,
+     * or was playing and is currently paused, but in both cases it's still being processed by
+     * the Tween Manager, so is considered 'active'.
      *
-     * @name Phaser.Tweens.PLAYING
+     * @name Phaser.Tweens.ACTIVE
      * @type {number}
      * @since 3.0.0
      */
-    PLAYING: 21,
+    ACTIVE: 21,
 
     /**
      * Tween state. The tween is waiting for a loop countdown to elapse.
