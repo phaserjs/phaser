@@ -88,7 +88,7 @@ var TextureManager = new Class({
          * @private
          * @since 3.0.0
          */
-        this._tempCanvas = CanvasPool.create2D(this, 1, 1);
+        this._tempCanvas = CanvasPool.create2D(this);
 
         /**
          * The context of the temporary canvas element made to save an pixel data in getPixel() and getPixelAlpha() method.
@@ -98,7 +98,7 @@ var TextureManager = new Class({
          * @private
          * @since 3.0.0
          */
-        this._tempContext = this._tempCanvas.getContext('2d');
+        this._tempContext = this._tempCanvas.getContext('2d', { willReadFrequently: true });
 
         /**
          * An counting value used for emitting 'ready' event after all of managers in game is loaded.

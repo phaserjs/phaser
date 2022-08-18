@@ -38,8 +38,8 @@ function checkBlendMode ()
 
         yellow.onload = function ()
         {
-            var canvas = CanvasPool.create(yellow, 6, 1);
-            var context = canvas.getContext('2d');
+            var canvas = CanvasPool.create2D(yellow, 6);
+            var context = canvas.getContext('2d', { willReadFrequently: true });
 
             context.globalCompositeOperation = 'multiply';
 
@@ -68,8 +68,8 @@ function checkBlendMode ()
 
 function checkInverseAlpha ()
 {
-    var canvas = CanvasPool.create(this, 2, 1);
-    var context = canvas.getContext('2d');
+    var canvas = CanvasPool.create2D(this, 2);
+    var context = canvas.getContext('2d', { willReadFrequently: true });
 
     context.fillStyle = 'rgba(10, 20, 30, 0.5)';
 
@@ -90,8 +90,12 @@ function checkInverseAlpha ()
     //  Get those values
     var s2 = context.getImageData(1, 0, 1, 1);
 
+    var result = (s2.data[0] === s1.data[0] && s2.data[1] === s1.data[1] && s2.data[2] === s1.data[2] && s2.data[3] === s1.data[3]);
+
+    CanvasPool.remove(this);
+
     //  Compare and return
-    return (s2.data[0] === s1.data[0] && s2.data[1] === s1.data[1] && s2.data[2] === s1.data[2] && s2.data[3] === s1.data[3]);
+    return result;
 }
 
 function init ()
@@ -101,6 +105,8 @@ function init ()
         CanvasFeatures.supportNewBlendModes = checkBlendMode();
         CanvasFeatures.supportInverseAlpha = checkInverseAlpha();
     }
+
+    console.log('canvas pool', CanvasPool.pool);
 
     return CanvasFeatures;
 }
