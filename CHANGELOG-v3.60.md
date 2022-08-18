@@ -112,6 +112,7 @@ The Phaser 3.60 Tween system has been recoded to help with performance and resol
 * `GameObjects.Polygon.setTo` is a new method that allows you to change the points being used to render a Polygon Shape Game Object. Fix #6151 (thanks @PhaserEditor2D)
 * `maxAliveParticles` is a new Particle Emitter config property that sets the maximum number of _alive_ particles the emitter is allowed to update. When this limit is reached a particle will have to die before another can be spawned.
 * `Utils.Array.Flatten` is a new function that will return a flattened version of an array, regardless of how deeply-nested it is.
+* `GameObjects.Text.appendText` is a new method that will append the given text, or array of text, to the end of the content already stored in the Text object.
 
 ### Geom Updates
 
