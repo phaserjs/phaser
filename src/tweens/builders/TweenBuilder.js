@@ -116,7 +116,7 @@ var TweenBuilder = function (parent, config, defaults)
         }
     }
 
-    return tween;
+    return tween.init();
 };
 
 module.exports = TweenBuilder;
