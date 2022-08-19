@@ -2440,6 +2440,12 @@ var World = new Class({
         this.shutdown();
 
         this.scene = null;
+
+        if (this.debugGraphic)
+        {
+            this.debugGraphic.destroy();
+            this.debugGraphic = null;
+        }
     }
 
 });
