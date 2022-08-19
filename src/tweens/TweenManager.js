@@ -212,7 +212,7 @@ var TweenManager = new Class({
     {
         var tween = TweenBuilder(this, config);
 
-        this.tweens.push(tween);
+        this.tweens.push(tween.init());
 
         return tween;
     },
@@ -252,7 +252,7 @@ var TweenManager = new Class({
     {
         if (!this.has(tween))
         {
-            this.tweens.push(tween);
+            this.tweens.push(tween.init());
         }
 
         return this;
@@ -276,7 +276,7 @@ var TweenManager = new Class({
     {
         var tween = NumberTweenBuilder(this, config);
 
-        this.tweens.push(tween);
+        this.tweens.push(tween.init());
 
         return tween;
     },
