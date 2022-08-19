@@ -442,7 +442,7 @@ var BaseTween = new Class({
      * `onComplete` - When the Tween finishes playback fully. Never invoked if the Tween is set to repeat infinitely.
      * `onStop` - Invoked only if the `Tween.stop` method is called.
      *
-     * The following types are also available and are invoked on a TweenData level, that is per-object, per-property being tweened:
+     * The following types are also available and are invoked on a TweenData level, that is per-target object, per-property, being tweened:
      *
      * `onYoyo` - When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
      * `onRepeat` - When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
@@ -453,7 +453,7 @@ var BaseTween = new Class({
      *
      * @param {string} type - The type of callback to set. One of: `onActive`, `onStart`, `onComplete`, `onLoop`, `onRepeat`, `onStop`, `onUpdate` or  onYoyo`.
      * @param {function} callback - Your callback that will be invoked.
-     * @param {array} [params] - The parameters to pass to the callback. Pass an empty array if you don't want to define any.
+     * @param {array} [params] - The parameters to pass to the callback. Pass an empty array if you don't want to define any, but do wish to set the scope.
      * @param {object} [scope] - The context scope of the callback. If not given, will use the callback itself as the scope.
      *
      * @return {this} This Tween instance.
