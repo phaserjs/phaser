@@ -263,22 +263,13 @@ var BaseTween = new Class({
         this.callbacks = {
             onActive: null,
             onStart: null,
-            onComplete: null,
             onLoop: null,
-            onRepeat: null,
+            onComplete: null,
             onStop: null,
-            onUpdate: null,
-            onYoyo: null
+            onYoyo: null,
+            onRepeat: null,
+            onUpdate: null
         };
-
-        /**
-         * The context in which all callbacks are invoked.
-         *
-         * @name Phaser.Tweens.BaseTween#callbackScope
-         * @type {any}
-         * @since 3.60.0
-         */
-        this.callbackScope;
     },
 
     /**
