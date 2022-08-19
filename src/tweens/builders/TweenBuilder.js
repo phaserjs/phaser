@@ -55,6 +55,31 @@ var TweenBuilder = function (parent, config, defaults)
 
     var data = [];
 
+    var addTarget = function (target, t, key, value)
+    {
+        var ops = GetValueOp(key, value);
+
+        var tweenData = TweenData(
+            target,
+            t,
+            key,
+            ops.getEnd,
+            ops.getStart,
+            ops.getActive,
+            GetEaseFunction(GetValue(value, 'ease', ease), GetValue(value, 'easeParams', easeParams)),
+            GetNewValue(value, 'delay', delay),
+            GetNewValue(value, 'duration', duration),
+            GetBoolean(value, 'yoyo', yoyo),
+            GetNewValue(value, 'hold', hold),
+            GetNewValue(value, 'repeat', repeat),
+            GetNewValue(value, 'repeatDelay', repeatDelay),
+            GetBoolean(value, 'flipX', flipX),
+            GetBoolean(value, 'flipY', flipY)
+        );
+
+        data.push(tweenData);
+    };
+
     //  Loop through every property defined in the Tween, i.e.: props { x, y, alpha }
     for (var p = 0; p < props.length; p++)
     {
@@ -64,27 +89,16 @@ var TweenBuilder = function (parent, config, defaults)
         //  Create 1 TweenData per target, per property
         for (var t = 0; t < targets.length; t++)
         {
-            var ops = GetValueOp(key, value);
-
-            var tweenData = TweenData(
-                targets[t],
-                t,
-                key,
-                ops.getEnd,
-                ops.getStart,
-                ops.getActive,
-                GetEaseFunction(GetValue(value, 'ease', ease), GetValue(value, 'easeParams', easeParams)),
-                GetNewValue(value, 'delay', delay),
-                GetNewValue(value, 'duration', duration),
-                GetBoolean(value, 'yoyo', yoyo),
-                GetNewValue(value, 'hold', hold),
-                GetNewValue(value, 'repeat', repeat),
-                GetNewValue(value, 'repeatDelay', repeatDelay),
-                GetBoolean(value, 'flipX', flipX),
-                GetBoolean(value, 'flipY', flipY)
-            );
-
-            data.push(tweenData);
+            //  Special-case for scale short-cut:
+            if (key === 'scale' && !targets[t].hasOwnProperty('scale'))
+            {
+                addTarget(targets[t], t, 'scaleX', value);
+                addTarget(targets[t], t, 'scaleY', value);
+            }
+            else
+            {
+                addTarget(targets[t], t, key, value);
+            }
         }
     }
 
