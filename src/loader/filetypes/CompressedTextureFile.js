@@ -499,8 +499,6 @@ FileTypesManager.register('texture', function (key, url, xhrSettings)
             }
         }
 
-        console.log(entry);
-
         if (!matched)
         {
             console.warn('No supported compressed texture format or IMG fallback', key);
