@@ -474,6 +474,8 @@ var BaseTween = new Class({
 
         this.parent = null;
         this.callbacks = null;
+
+        this.removeAllListeners();
     }
 
 });
