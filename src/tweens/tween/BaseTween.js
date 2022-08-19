@@ -465,7 +465,7 @@ var BaseTween = new Class({
 
         if (this.callbacks.hasOwnProperty(type))
         {
-            this.callbacks[type] = { func: callback, scope: scope, params: [ this ].concat(params) };
+            this.callbacks[type] = { func: callback, scope: scope, params: params };
         }
 
         return this;
