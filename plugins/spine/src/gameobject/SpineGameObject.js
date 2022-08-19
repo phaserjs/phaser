@@ -513,9 +513,9 @@ var SpineGameObject = new Class({
      * @since 3.19.0
      *
      * @param {string} atlasDataKey - The key of the Spine data to use for this Skeleton.
-     * @param {object} skeletonJSON - The JSON data for the Skeleton.
      * @param {string} [animationName] - Optional name of the animation to set on the Skeleton.
      * @param {boolean} [loop=false] - Should the animation, if set, loop or not?
+     * @param {object} [skeletonJSON] - The JSON data for the Skeleton.
      *
      * @return {this} This Game Object.
      */
