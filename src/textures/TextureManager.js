@@ -159,6 +159,7 @@ var TextureManager = new Class({
 
     /**
      * Checks the given texture key and throws a console.warn if the key is already in use, then returns false.
+     *
      * If you wish to avoid the console.warn then use `TextureManager.exists` instead.
      *
      * @method Phaser.Textures.TextureManager#checkKey
