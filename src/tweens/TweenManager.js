@@ -383,7 +383,7 @@ var TweenManager = new Class({
                 {
                     list.splice(idx, 1);
 
-                    tween.state = TWEEN_CONST.REMOVED;
+                    tween.destroy();
                 }
             }
 
@@ -500,6 +500,22 @@ var TweenManager = new Class({
         });
 
         return this;
+    },
+
+    getTotal: function ()
+    {
+        var tweens = this.tweens;
+        var active = 0;
+
+        for (var i = 0; i < tweens.length; i++)
+        {
+            if (tweens[i].state === TWEEN_CONST.ACTIVE)
+            {
+                active++;
+            }
+        }
+
+        return { active: active, total: tweens.length };
     },
 
     /**
