@@ -33,6 +33,6 @@
  * @since 3.19.0
  *
  * @param {Phaser.Tweens.Tween} tween - A reference to the Tween instance that emitted the event.
- * @param {any[]} targets - An array of references to the target/s the Tween is operating on.
+ * @param {(any|any[])} targets - The targets of the Tween. If this Tween has multiple targets this will be an array of the targets.
  */
 module.exports = 'loop';
