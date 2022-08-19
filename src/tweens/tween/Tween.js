@@ -850,9 +850,7 @@ var Tween = new Class({
 
             if (callback)
             {
-                callback.params[1] = tweenData.target;
-
-                callback.func.apply(callback.scope, callback.params);
+                callback.func.apply(callback.scope, [ this, tweenData.target, tweenData.key, tweenData.current, tweenData.previous ].concat(callback.params));
             }
         }
     },
@@ -874,9 +872,7 @@ var Tween = new Class({
 
             if (callback)
             {
-                callback.params[1] = this.targets;
-
-                callback.func.apply(callback.scope, callback.params);
+                callback.func.apply(callback.scope, [ this, this.targets ].concat(callback.params));
             }
         }
     },
