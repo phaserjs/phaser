@@ -67,7 +67,15 @@ We have updated the version of Matter Physics to the latest v0.18 release. This 
 
 ### New Features - New Tween Manager
 
-The Phaser 3.60 Tween system has been recoded to help with performance and resolving some of its lingering issues.
+The Phaser 3.60 Tween system has been recoded to help with performance and resolving some of its lingering issues and unifying the Tween events and callbacks.
+
+The following are breaking changes with regard to the event and callback parameter orders:
+
+* The `TweenOnUpdateCallback` now has the following parameters: `tween`, `targets`, `key` (the property being tweened), `current` (the current value of the property), `previous` (the previous value of the property) and finally any of the params that were passed in the `onUpdateParams` array when the Tween was created.
+* The `TweenOnYoyoCallback` now has the following parameters: `tween`, `targets`, `key` (the property being tweened), `current` (the current value of the property), `previous` (the previous value of the property) and finally any of the params that were passed in the `onYoyoParams` array when the Tween was created.
+* The `TweenOnRepeatCallback` now has the following parameters: `tween`, `targets`, `key` (the property being tweened), `current` (the current value of the property), `previous` (the previous value of the property) and finally any of the params that were passed in the `onRepeatParams` array when the Tween was created.
+
+The following are further changes within the Tween system:
 
 * `killTweensOf(targets)` now supports deeply-nested arrays of items as the `target` parameter. Fix #6016 (thanks @michalfialadev)
 * `killTweensOf(target)` did not stop target tweens if called immediately after tween creation. Fix #6173 (thanks @michalfialadev)
