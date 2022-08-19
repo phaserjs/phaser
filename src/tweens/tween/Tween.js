@@ -116,7 +116,7 @@ var Tween = new Class({
     /**
      * Prepares this Tween for playback.
      *
-     * Called automatically by the TweenBuilder. Should not be called directly.
+     * Called automatically by the TweenManager. Should not be called directly.
      *
      * @method Phaser.Tweens.Tween#init
      * @fires Phaser.Tweens.Events#TWEEN_ACTIVE
