@@ -11,7 +11,6 @@
 //  duration: The duration of the tween
 //  ease: The ease function used by the tween
 //  easeParams: The parameters to go with the ease function (if any)
-//  scale: Sets both scaleX and scaleY on the target object, if they exist, otherwise sets the `scale` property.
 //  flipX: flip X the GameObject on tween end
 //  flipY: flip Y the GameObject on tween end
 //  hold: The time the tween will pause before running a yoyo
@@ -33,7 +32,6 @@ module.exports = [
     'duration',
     'ease',
     'easeParams',
-    'scale',
     'flipX',
     'flipY',
     'hold',
