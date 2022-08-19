@@ -77,6 +77,7 @@ The following are breaking changes with regard to the event and callback paramet
 
 The following are further changes within the Tween system:
 
+* You can now specify a `scale` property in a Tween config and, if the target _does not_ have a `scale` property itself (i.e. a GameObject) then it will automatically apply the value to both `scaleX` and `scaleY` together during the tween. This is a nice short-cut way to tween the scale of Game Objects by only specifying one property, instead of two.
 * `killTweensOf(targets)` now supports deeply-nested arrays of items as the `target` parameter. Fix #6016 (thanks @michalfialadev)
 * `killTweensOf(target)` did not stop target tweens if called immediately after tween creation. Fix #6173 (thanks @michalfialadev)
 * It wasn't possible to resume a Tween that was immediately paused after creation. Fix #6169 (thanks @trynx)
