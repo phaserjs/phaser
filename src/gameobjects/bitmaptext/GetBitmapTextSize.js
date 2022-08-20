@@ -384,6 +384,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
         characters.push({
             i: charIndex,
+            idx: i,
             char: text[i],
             code: charCode,
             x: (glyph.xOffset + x) * scale,
