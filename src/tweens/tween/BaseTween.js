@@ -249,6 +249,8 @@ var BaseTween = new Class({
          * `onLoop` - When a Tween loops, if it has been set to do so. This happens _after_ the `loopDelay` expires, if set.
          * `onComplete` - When the Tween finishes playback fully. Never invoked if the Tween is set to repeat infinitely.
          * `onStop` - Invoked only if the `Tween.stop` method is called.
+         * `onPause` - Invoked only if the `Tween.pause` method is called. Not invoked if the Tween Manager is paused.
+         * `onResume` - Invoked only if the `Tween.resume` method is called. Not invoked if the Tween Manager is resumed.
          *
          * The following types are also available and are invoked on a TweenData level, that is per-object, per-property being tweened:
          *
@@ -262,13 +264,15 @@ var BaseTween = new Class({
          */
         this.callbacks = {
             onActive: null,
-            onStart: null,
-            onLoop: null,
             onComplete: null,
-            onStop: null,
-            onYoyo: null,
+            onLoop: null,
+            onPause: null,
             onRepeat: null,
-            onUpdate: null
+            onResume: null,
+            onStart: null,
+            onStop: null,
+            onUpdate: null,
+            onYoyo: null
         };
 
         /**
@@ -497,13 +501,15 @@ var BaseTween = new Class({
 
 BaseTween.TYPES = [
     'onActive',
-    'onStart',
-    'onLoop',
     'onComplete',
-    'onStop',
-    'onYoyo',
+    'onLoop',
+    'onPause',
     'onRepeat',
-    'onUpdate'
+    'onResume',
+    'onStart',
+    'onStop',
+    'onUpdate',
+    'onYoyo'
 ];
 
 module.exports = BaseTween;
