@@ -762,6 +762,8 @@ var Tween = new Class({
             this.updateActive(delta);
         }
 
+        // console.log('Tween.update', this.progress, this.state, this.state === TWEEN_CONST.PENDING_REMOVE);
+
         return (this.state === TWEEN_CONST.PENDING_REMOVE);
     },
 
