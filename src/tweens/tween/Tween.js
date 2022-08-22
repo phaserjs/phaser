@@ -319,7 +319,12 @@ var Tween = new Class({
     },
 
     /**
-     * Restarts the tween from the beginning.
+     * Restarts the Tween from the beginning.
+     *
+     * You can only restart a Tween that is currently playing. If the Tween has already been stopped, restarting
+     * it will throw an error.
+     *
+     * If you wish to restart the Tween from a specific point, use the `Tween.seek` method instead.
      *
      * @method Phaser.Tweens.Tween#restart
      * @since 3.0.0
@@ -328,32 +333,26 @@ var Tween = new Class({
      */
     restart: function ()
     {
-        //  Reset these so they're ready for the next update
-        this.elapsed = 0;
-        this.progress = 0;
-        this.totalElapsed = 0;
-        this.totalProgress = 0;
+        switch (this.state)
+        {
+            case TWEEN_CONST.REMOVED:
+            case TWEEN_CONST.FINISHED:
+                this.seek();
+                this.parent.makeActive(this);
+                break;
 
-        if (this.state === TWEEN_CONST.ACTIVE)
-        {
-            this.seek(0);
-        }
-        else if (this.state === TWEEN_CONST.REMOVED)
-        {
-            this.seek(0);
-            this.parent.makeActive(this);
-        }
-        else if (this.state === TWEEN_CONST.PENDING_REMOVE)
-        {
-            this.parent.reset(this);
-        }
-        else if (this.state === TWEEN_CONST.DESTROYED)
-        {
-            console.warn('Cannot restart destroyed Tweens');
-        }
-        else
-        {
-            this.play();
+            case TWEEN_CONST.PENDING:
+            case TWEEN_CONST.PENDING_REMOVE:
+                this.parent.reset(this);
+                break;
+
+            case TWEEN_CONST.DESTROYED:
+                console.warn('Cannot restart destroyed Tweens');
+                break;
+
+            default:
+                this.seek();
+                break;
         }
 
         return this;
@@ -539,16 +538,17 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#seek
      * @since 3.0.0
      *
-     * @param {number} toPosition - A value between 0 and 1 which represents the progress point to seek to.
+     * @param {number} [toPosition=0] - A value between 0 and 1 which represents the progress point to seek to.
      * @param {number} [delta=16.6] - The size of each step when seeking through the Tween. A higher value completes faster but at the cost of less precision.
      *
      * @return {this} This Tween instance.
      */
     seek: function (toPosition, delta)
     {
+        if (toPosition === undefined) { toPosition = 0; }
         if (delta === undefined) { delta = 16.6; }
 
-        if (this.state === TWEEN_CONST.REMOVED)
+        if (this.state === TWEEN_CONST.REMOVED || this.state === TWEEN_CONST.FINISHED)
         {
             this.makeActive();
         }
@@ -719,7 +719,7 @@ var Tween = new Class({
             return true;
         }
 
-        if (this.paused && !this.isSeeking)
+        if ((this.paused && !this.isSeeking) || state === TWEEN_CONST.FINISHED)
         {
             return false;
         }
