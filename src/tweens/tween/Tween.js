@@ -355,6 +355,8 @@ var Tween = new Class({
                 break;
         }
 
+        this.paused = false;
+
         return this;
     },
 
