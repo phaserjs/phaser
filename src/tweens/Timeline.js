@@ -34,8 +34,6 @@ var Timeline = new Class({
     function Timeline (manager)
     {
         BaseTween.call(this, manager);
-
-        this.init();
     },
 
     /**
@@ -45,7 +43,7 @@ var Timeline = new Class({
      * @method Phaser.Tweens.Timeline#init
      * @since 3.0.0
      *
-     * @return {boolean} `true` if the Timeline is started. `false` if it is paused.
+     * @return {this} This Tween instance.
      */
     init: function ()
     {
@@ -54,16 +52,11 @@ var Timeline = new Class({
         this.progress = 0;
         this.totalProgress = 0;
 
-        if (this.paused)
-        {
-            this.state = TWEEN_CONST.PAUSED;
+        this.state = TWEEN_CONST.ACTIVE;
 
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
+
+        return this;
     },
 
     /**
@@ -111,6 +104,8 @@ var Timeline = new Class({
                 //  Sequential
                 tween.calculatedOffset = offsetDuration;
             }
+
+            // tween.state = TWEEN_CONST.OFFSET_DELAY;
 
             prevEnd = tween.totalDuration + tween.calculatedOffset;
 
@@ -216,19 +211,7 @@ var Timeline = new Class({
      */
     isOffsetRelative: function (value)
     {
-        var t = typeof(value);
-
-        if (t === 'string')
-        {
-            var op = value[0];
-
-            if (op === '-' || op === '+')
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return (typeof(value) === 'string' && (value[0] === '-' || value[0] === '+'));
     },
 
     /**
@@ -245,18 +228,16 @@ var Timeline = new Class({
     getRelativeOffset: function (value, base)
     {
         var op = value[0];
-        var num = parseFloat(value.substr(2));
+        var num = parseFloat(value.substring(2));
         var result = base;
 
-        switch (op)
+        if (op === '+')
         {
-            case '+':
-                result += num;
-                break;
-
-            case '-':
-                result -= num;
-                break;
+            result += num;
+        }
+        else if (op === '-')
+        {
+            result -= num;
         }
 
         //  Cannot ever be < 0
@@ -291,24 +272,36 @@ var Timeline = new Class({
      */
     play: function ()
     {
-        /*
-        if (this.paused)
+        var state = this.state;
+
+        if (state === TWEEN_CONST.DESTROYED)
         {
-            this.paused = false;
+            console.warn('Cannot play destroyed Timeline');
 
-            this.makeActive(this);
-
-            return;
-        }
-        else
-        {
-            this.resetTweens(false);
-
-            this.state = TWEEN_CONST.PLAYING;
+            return this;
         }
 
-        this.dispatchEvent(Events.TIMELINE_START, this.callbacks.onStart);
-        */
+        this.paused = false;
+        this.state = TWEEN_CONST.ACTIVE;
+
+        return this;
+
+        // if (this.paused)
+        // {
+        //     this.paused = false;
+
+        //     this.makeActive(this);
+
+        //     return;
+        // }
+        // else
+        // {
+        //     this.resetTweens(false);
+
+        //     this.state = TWEEN_CONST.ACTIVE;
+        // }
+
+        // this.dispatchEvent(Events.TIMELINE_START, this.callbacks.onStart);
     },
 
     /**
@@ -376,12 +369,14 @@ var Timeline = new Class({
      */
     update: function (timestamp, delta)
     {
-        if (this.state === TWEEN_CONST.PENDING_REMOVE || this.state === TWEEN_CONST.DESTROYED)
+        var state = this.state;
+
+        if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.DESTROYED)
         {
             return true;
         }
 
-        if (this.paused)
+        if ((this.paused && !this.isSeeking) || state === TWEEN_CONST.FINISHED)
         {
             return false;
         }
@@ -401,60 +396,108 @@ var Timeline = new Class({
         this.totalElapsed += delta;
         this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
 
-        switch (this.state)
+        if (state === TWEEN_CONST.LOOP_DELAY)
         {
-            case TWEEN_CONST.ACTIVE:
+            this.updateCountdown(delta, TWEEN_CONST.ACTIVE, Events.TIMELINE_LOOP, this.callbacks.onLoop);
+        }
+        else if (state === TWEEN_CONST.COMPLETE_DELAY)
+        {
+            this.updateCountdown(delta, TWEEN_CONST.PENDING_REMOVE, Events.TIMELINE_COMPLETE, this.callbacks.onComplete);
+        }
 
-                var stillRunning = this.totalData;
-
-                for (var i = 0; i < this.totalData; i++)
-                {
-                    var tween = this.data[i];
-
-                    if (tween.update(timestamp, delta))
-                    {
-                        stillRunning--;
-                    }
-                }
-
-                this.dispatchEvent(Events.TIMELINE_UPDATE, this.callbacks.onUpdate);
-
-                //  Anything still running? If not, we're done
-                if (stillRunning === 0)
-                {
-                    this.nextState();
-                }
-
-                break;
-
-            case TWEEN_CONST.LOOP_DELAY:
-
-                this.countdown -= delta;
-
-                if (this.countdown <= 0)
-                {
-                    this.state = TWEEN_CONST.ACTIVE;
-
-                    this.dispatchEvent(Events.TIMELINE_LOOP, this.callbacks.onLoop);
-                }
-
-                break;
-
-            case TWEEN_CONST.COMPLETE_DELAY:
-
-                this.countdown -= delta;
-
-                if (this.countdown <= 0)
-                {
-                    this.state = TWEEN_CONST.PENDING_REMOVE;
-
-                    this.dispatchEvent(Events.TIMELINE_COMPLETE, this.callbacks.onComplete);
-                }
-
-                break;
+        //  Make its own check so the states above can toggle to active on the same frame.
+        //  Check 'this.state', not 'state' as it may have been updated by the functions above.
+        if (this.state === TWEEN_CONST.ACTIVE)
+        {
+            this.updateActive(timestamp, delta);
         }
 
         return (this.state === TWEEN_CONST.PENDING_REMOVE);
+    },
+
+    /**
+     * Internal method that handles the processing of a countdown timer and
+     * the dispatch of related events. Called automatically by `Tween.update`.
+     *
+     * @method Phaser.Tweens.Timeline#updateCountdown
+     * @since 3.60.0
+     *
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+     * @param {number} state - The new Tween State to be set.
+     * @param {Phaser.Types.Tweens.Event} [event] - The Tween Event to dispatch, if any.
+     * @param {function} [callback] - The Tween Callback to invoke, if any.
+     */
+    updateCountdown: function (delta, state, event, callback)
+    {
+        this.countdown -= delta;
+
+        if (this.countdown <= 0)
+        {
+            this.state = state;
+
+            if (callback)
+            {
+                this.dispatchEvent(event, callback);
+            }
+        }
+    },
+
+    /**
+     * Internal method that handles the updating of the Tween Data and
+     * related dispatching of events. Called automatically by `Tween.update`.
+     *
+     * @method Phaser.Tweens.Timeline#updateActive
+     * @fires Phaser.Tweens.Events#TWEEN_START
+     * @since 3.60.0
+     *
+     * @param {number} timestamp - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+     */
+    updateActive: function (timestamp, delta)
+    {
+        if (!this.hasStarted)
+        {
+            this.hasStarted = true;
+
+            this.dispatchEvent(Events.TIMELINE_START, this.callbacks.onStart);
+
+            // this.startDelay -= delta;
+
+            // if (this.startDelay <= 0)
+            // {
+            //     this.hasStarted = true;
+
+            //     this.dispatchEvent(Events.TWEEN_START, this.callbacks.onStart);
+            // }
+        }
+
+        var stillRunning = false;
+
+        // console.log('updateActive', this.totalData);
+
+        for (var i = 0; i < this.totalData; i++)
+        {
+            var tween = this.data[i];
+
+            // console.log('updateActive', i, tween.state);
+
+            if (!tween.update(timestamp, delta))
+            {
+                // console.log('tween', i, 'updated');
+
+                //  As long as at least one Tween returns 'false' then we're still running
+                stillRunning = true;
+            }
+        }
+
+        this.dispatchEvent(Events.TIMELINE_UPDATE, this.callbacks.onUpdate);
+
+        //  Anything still running? If not, we're done
+        if (!stillRunning)
+        {
+            console.log('nothing running any more');
+            this.nextState();
+        }
     },
 
     /**
