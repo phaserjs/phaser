@@ -364,7 +364,14 @@ var TweenManager = new Class({
             //  so move it to the destroy list
             if (tween.update(timestamp, delta))
             {
-                toDestroy.push(tween);
+                if (tween.persist)
+                {
+                    tween.state = TWEEN_CONST.FINISHED;
+                }
+                else
+                {
+                    toDestroy.push(tween);
+                }
             }
         }
 
@@ -444,9 +451,9 @@ var TweenManager = new Class({
     {
         this.existing(tween);
 
-        tween.seek(0);
+        tween.seek();
 
-        tween.state = TWEEN_CONST.PLAYING;
+        tween.state = TWEEN_CONST.ACTIVE;
 
         return this;
     },
@@ -465,7 +472,7 @@ var TweenManager = new Class({
     {
         this.existing(tween);
 
-        tween.state = TWEEN_CONST.PLAYING;
+        tween.state = TWEEN_CONST.ACTIVE;
 
         return this;
     },
