@@ -155,13 +155,23 @@ var TWEEN_CONST = {
     REMOVED: 25,
 
     /**
+     * Tween state. The Tween has finished playback but was flagged as 'persistent' during creation,
+     * so will not be automatically removed by the Tween Manager.
+     *
+     * @name Phaser.Tweens.FINISHED
+     * @type {number}
+     * @since 3.60.0
+     */
+    FINISHED: 26,
+
+    /**
      * Tween state. The Tween has been destroyed and can no longer be played by a Tween Manager.
      *
      * @name Phaser.Tweens.DESTROYED
      * @type {number}
      * @since 3.60.0
      */
-    DESTROYED: 26
+    DESTROYED: 27
 
 };
 
