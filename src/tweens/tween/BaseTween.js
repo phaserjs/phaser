@@ -417,7 +417,15 @@ var BaseTween = new Class({
     {
         this.parent.makeActive(this);
 
-        this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
+        if (this.isTimeline)
+        {
+            //  TIMELINE_ACTIVE?
+            this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
+        }
+        else
+        {
+            this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
+        }
     },
 
     /**
