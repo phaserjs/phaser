@@ -270,6 +270,21 @@ var BaseTween = new Class({
             onRepeat: null,
             onUpdate: null
         };
+
+        /**
+         * Will this Tween persist after playback? A Tween that persists will _not_ be destroyed by the
+         * Tween Manager, or when calling `Tween.stop`, and can be re-played as required. You can either
+         * set this property when creating the tween, or toggle it prior to playback.
+         *
+         * However, it's up to you to ensure you destroy persistent tweens when you are finished with them,
+         * or they will retain references you may no longer require and general waste memory.
+         *
+         * @name Phaser.Tweens.BaseTween#persist
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
+         */
+        this.persist = false;
     },
 
     /**

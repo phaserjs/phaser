@@ -63,6 +63,7 @@ module.exports = [
     'onYoyoParams',
     'onYoyoScope',
     'paused',
+    'persist',
     'props',
     'repeat',
     'repeatDelay',
