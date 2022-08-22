@@ -356,6 +356,7 @@ var Tween = new Class({
         }
 
         this.paused = false;
+        this.hasStarted = false;
 
         return this;
     },
@@ -440,7 +441,7 @@ var Tween = new Class({
             if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.REMOVED)
             {
                 //  This makes the tween active as well:
-                this.seek(0);
+                this.seek();
             }
 
             this.paused = false;
