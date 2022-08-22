@@ -672,27 +672,20 @@ var Tween = new Class({
      *
      * If an `onStop` callback has been defined it will automatically invoke it.
      *
-     * The tween will be removed during the next game frame.
+     * The Tween will be removed during the next game frame, but should be considered 'destroyed' from this point on.
      *
-     * Typically you cannot play a Tween that has been stopped. If you just wish to pause the tween, not destroy it,
-     * then call the `pause` method instead and use `resume` to continue playback. If you wish to restart the tween,
-     * use the `seek` method.
+     * Typically, you cannot play a Tween that has been stopped. If you just wish to pause the tween, not destroy it,
+     * then call the `pause` method instead and use `resume` to continue playback. If you wish to restart the Tween,
+     * use the `restart` or `seek` methods.
      *
      * @method Phaser.Tweens.Tween#stop
      * @fires Phaser.Tweens.Events#TWEEN_STOP
      * @since 3.0.0
      *
-     * @param {number} [resetTo] - If you want to seek the tween, provide a value between 0 and 1.
-     *
      * @return {this} This Tween instance.
      */
-    stop: function (resetTo)
+    stop: function ()
     {
-        if (this.state === TWEEN_CONST.ACTIVE && resetTo !== undefined)
-        {
-            this.seek(resetTo);
-        }
-
         if (this.state !== TWEEN_CONST.REMOVED && this.state !== TWEEN_CONST.PENDING_REMOVE)
         {
             this.dispatchEvent(Events.TWEEN_STOP, this.callbacks.onStop);
