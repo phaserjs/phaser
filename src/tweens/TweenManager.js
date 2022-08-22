@@ -164,12 +164,9 @@ var TweenManager = new Class({
     {
         var timeline = TimelineBuilder(this, config);
 
-        if (!timeline.paused)
-        {
-            this._add.push(timeline);
+        timeline.persist = true;
 
-            this._toProcess++;
-        }
+        this.tweens.push(timeline.init());
 
         return timeline;
     },
@@ -218,16 +215,16 @@ var TweenManager = new Class({
     },
 
     /**
-     * Check to see if the given Tween instance exists within this Tween Manager.
+     * Check to see if the given Tween or Timeline instance exists within this Tween Manager.
      *
      * Will return `true` as long as the Tween is being processed by this Tween Manager.
      *
-     * Will return `false` if not present, or has a state of `REMOVED`.
+     * Will return `false` if not present, or has a state of `REMOVED` or `DESTROYED`.
      *
      * @method Phaser.Tweens.TweenManager#has
      * @since 3.60.0
      *
-     * @param {Phaser.Tweens.Tween} tween - The Tween instance to check.
+     * @param {(Phaser.Tweens.Tween|Phaser.Tweens.Timeline)} tween - The Tween or Timeline instance to check.
      *
      * @return {boolean} `true` if the Tween exists within this Tween Manager, otherwise `false`.
      */
@@ -237,14 +234,14 @@ var TweenManager = new Class({
     },
 
     /**
-     * Add an existing tween to this Tween Manager.
+     * Add an existing Tween to this Tween Manager.
      *
      * Playback will start immediately unless the tween has been configured to be paused.
      *
      * @method Phaser.Tweens.TweenManager#existing
      * @since 3.0.0
      *
-     * @param {Phaser.Tweens.Tween} tween - The Tween to add.
+     * @param {(Phaser.Tweens.Tween|Phaser.Tweens.Timeline)} tween - The Tween to add.
      *
      * @return {this} This Tween Manager instance.
      */
@@ -364,7 +361,7 @@ var TweenManager = new Class({
             //  so move it to the destroy list
             if (tween.update(timestamp, delta))
             {
-                if (tween.persist)
+                if (tween.persist || tween.parentIsTimeline)
                 {
                     tween.state = TWEEN_CONST.FINISHED;
                 }
