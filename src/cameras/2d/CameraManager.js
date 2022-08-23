@@ -618,7 +618,7 @@ var CameraManager = new Class({
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject[]} children - An array of Game Objects to be checked against the camera.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to filte the Game Objects against.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to filter the Game Objects against.
      *
      * @return {Phaser.GameObjects.GameObject[]} A filtered list of only Game Objects within the Scene that will render against the given Camera.
      */
