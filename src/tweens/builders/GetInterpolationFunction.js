@@ -6,26 +6,13 @@
 
 var Bezier = require('../../math/interpolation/BezierInterpolation');
 var CatmullRom = require('../../math/interpolation/CatmullRomInterpolation');
-var CubicBezier = require('../../math/interpolation/CubicBezierInterpolation');
 var Linear = require('../../math/interpolation/LinearInterpolation');
-var QuadraticBezier = require('../../math/interpolation/QuadraticBezierInterpolation');
-var SmoothStep = require('../../math/interpolation/SmoothStepInterpolation');
-var SmootherStep = require('../../math/interpolation/SmootherStepInterpolation');
 
 var FuncMap = {
     bezier: Bezier,
     catmull: CatmullRom,
     catmullrom: CatmullRom,
-    cubic: CubicBezier,
-    cubicbezier: CubicBezier,
-    linear: Linear,
-    quad: QuadraticBezier,
-    quadratic: QuadraticBezier,
-    quadraticbezier: QuadraticBezier,
-    smooth: SmoothStep,
-    smoothstep: SmoothStep,
-    smoother: SmootherStep,
-    smootherstep: SmootherStep
+    linear: Linear
 };
 
 /**
