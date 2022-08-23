@@ -4,7 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseTween = require('../tween/BaseTween');
 var Defaults = require('../tween/Defaults');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetBoolean = require('./GetBoolean');
@@ -118,7 +117,7 @@ var TweenBuilder = function (parent, config, defaults)
 
     //  Set the Callbacks
     var scope = GetValue(config, 'callbackScope', tween);
-    var callbacks = BaseTween.TYPES;
+    var callbacks = Tween.TYPES;
 
     for (var i = 0; i < callbacks.length; i++)
     {
