@@ -1038,7 +1038,7 @@ var TextureManager = new Class({
 
     /**
      * Returns an array with all of the keys of all Textures in this Texture Manager.
-     * The output array will exclude the `__DEFAULT` and `__MISSING` keys.
+     * The output array will exclude the `__DEFAULT`, `__MISSING`, and `__WHITE` keys.
      *
      * @method Phaser.Textures.TextureManager#getTextureKeys
      * @since 3.0.0
@@ -1051,7 +1051,7 @@ var TextureManager = new Class({
 
         for (var key in this.list)
         {
-            if (key !== '__DEFAULT' && key !== '__MISSING')
+            if (key !== '__DEFAULT' && key !== '__MISSING' && key !== '__WHITE')
             {
                 output.push(key);
             }
