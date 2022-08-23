@@ -1102,7 +1102,14 @@ var Tween = new Class({
                 {
                     var v = (forward) ? tweenData.ease(progress) : tweenData.ease(1 - progress);
 
-                    tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
+                    if (tweenData.interpolation)
+                    {
+                        tweenData.current = tweenData.interpolation(tweenData.interpolationData, v);
+                    }
+                    else
+                    {
+                        tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
+                    }
 
                     target[tweenData.key] = tweenData.current;
                 }
