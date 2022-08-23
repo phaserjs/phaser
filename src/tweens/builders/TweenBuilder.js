@@ -9,6 +9,7 @@ var Defaults = require('../tween/Defaults');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetBoolean = require('./GetBoolean');
 var GetEaseFunction = require('./GetEaseFunction');
+var GetInterpolationFunction = require('./GetInterpolationFunction');
 var GetNewValue = require('./GetNewValue');
 var GetProps = require('./GetProps');
 var GetTargets = require('./GetTargets');
@@ -52,6 +53,7 @@ var TweenBuilder = function (parent, config, defaults)
     var yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
     var flipX = GetBoolean(config, 'flipX', defaults.flipX);
     var flipY = GetBoolean(config, 'flipY', defaults.flipY);
+    var interpolation = GetInterpolationFunction(GetValue(config, 'interpolation'));
 
     var data = [];
 
@@ -74,7 +76,8 @@ var TweenBuilder = function (parent, config, defaults)
             GetNewValue(value, 'repeat', repeat),
             GetNewValue(value, 'repeatDelay', repeatDelay),
             GetBoolean(value, 'flipX', flipX),
-            GetBoolean(value, 'flipY', flipY)
+            GetBoolean(value, 'flipY', flipY),
+            GetInterpolationFunction(GetValue(value, 'interpolation', interpolation))
         );
 
         data.push(tweenData);
