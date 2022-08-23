@@ -43,22 +43,25 @@ var TweenBuilder = function (parent, config, defaults)
     var props = GetProps(config);
 
     //  Default Tween values
-    var delay = GetNewValue(config, 'delay', defaults.delay);
-    var duration = GetNewValue(config, 'duration', defaults.duration);
+
+    var delay = GetValue(config, 'delay', defaults.delay);
+    var duration = GetValue(config, 'duration', defaults.duration);
     var easeParams = GetValue(config, 'easeParams', defaults.easeParams);
-    var ease = GetEaseFunction(GetValue(config, 'ease', defaults.ease), easeParams);
-    var hold = GetNewValue(config, 'hold', defaults.hold);
-    var repeat = GetNewValue(config, 'repeat', defaults.repeat);
-    var repeatDelay = GetNewValue(config, 'repeatDelay', defaults.repeatDelay);
+    var ease = GetValue(config, 'ease', defaults.ease);
+    var hold = GetValue(config, 'hold', defaults.hold);
+    var repeat = GetValue(config, 'repeat', defaults.repeat);
+    var repeatDelay = GetValue(config, 'repeatDelay', defaults.repeatDelay);
     var yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
     var flipX = GetBoolean(config, 'flipX', defaults.flipX);
     var flipY = GetBoolean(config, 'flipY', defaults.flipY);
-    var interpolation = GetInterpolationFunction(GetValue(config, 'interpolation'));
+    var interpolation = GetValue(config, 'interpolation', defaults.interpolation);
 
     var data = [];
 
     var addTarget = function (target, t, key, value)
     {
+        console.log('addTarget', target, t, key, value);
+
         var ops = GetValueOp(key, value);
 
         var tweenData = TweenData(
@@ -77,7 +80,8 @@ var TweenBuilder = function (parent, config, defaults)
             GetNewValue(value, 'repeatDelay', repeatDelay),
             GetBoolean(value, 'flipX', flipX),
             GetBoolean(value, 'flipY', flipY),
-            GetInterpolationFunction(GetValue(value, 'interpolation', interpolation))
+            GetInterpolationFunction(GetValue(value, 'interpolation', interpolation)),
+            value
         );
 
         data.push(tweenData);
