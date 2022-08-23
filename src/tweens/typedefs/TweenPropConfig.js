@@ -2,7 +2,7 @@
  * @typedef {object} Phaser.Types.Tweens.TweenPropConfig
  * @since 3.18.0
  *
- * @property {(number|string|Phaser.Types.Tweens.GetEndCallback|Phaser.Types.Tweens.TweenPropConfig)} [value] - What the property will be at the END of the Tween.
+ * @property {(number|number[]|string|Phaser.Types.Tweens.GetEndCallback|Phaser.Types.Tweens.TweenPropConfig)} [value] - What the property will be at the END of the Tween.
  * @property {Phaser.Types.Tweens.GetActiveCallback} [getActive] - What the property will be set to immediately when this tween becomes active.
  * @property {Phaser.Types.Tweens.GetEndCallback} [getEnd] - What the property will be at the END of the Tween.
  * @property {Phaser.Types.Tweens.GetStartCallback} [getStart] - What the property will be at the START of the Tween.
@@ -15,4 +15,5 @@
  * @property {number} [repeatDelay] - Time in ms/frames before the repeat will start.
  * @property {boolean} [flipX] - Should toggleFlipX be called when yoyo or repeat happens?
  * @property {boolean} [flipY] - Should toggleFlipY be called when yoyo or repeat happens?
+ * @property {(string|function)} [interpolation] - The interpolation function to use if the `value` given is an array of numbers.
  */

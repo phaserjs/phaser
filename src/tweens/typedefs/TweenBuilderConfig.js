@@ -45,6 +45,14 @@
  * @property {Phaser.Types.Tweens.TweenOnActiveCallback} [onActive] - A function to call when the tween becomes active within the Tween Manager.
  * @property {array} [onActiveParams] - Additional parameters to pass to `onActive`.
  * @property {any} [onActiveScope] - Scope (this) for `onActive`.
+ * @property {Phaser.Types.Tweens.TweenOnPauseCallback} [onPause] - A function to call when the tween is paused.
+ * @property {array} [onPauseParams] - Additional parameters to pass to `onPause`.
+ * @property {any} [onPauseScope] - Scope (this) for `onPause`.
+ * @property {Phaser.Types.Tweens.TweenOnResumeCallback} [onResume] - A function to call when the tween is resumed after being paused.
+ * @property {array} [onResumeParams] - Additional parameters to pass to `onResume`.
+ * @property {any} [onResumeScope] - Scope (this) for `onResume`.
+ * @property {boolean} [persist] - Will the Tween be automatically destroyed on completion, or retained for future playback?
+ * @property {(string|function)} [interpolation] - The interpolation function to use if the `value` given is an array of numbers.
  *
  * @example
  * {
