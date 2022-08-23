@@ -60,8 +60,6 @@ var TweenBuilder = function (parent, config, defaults)
 
     var addTarget = function (target, t, key, value)
     {
-        console.log('addTarget', target, t, key, value);
-
         var ops = GetValueOp(key, value);
 
         var tweenData = TweenData(
