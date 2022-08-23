@@ -168,7 +168,7 @@ var BaseTween = new Class({
         this.state = TWEEN_CONST.PENDING;
 
         /**
-         * Is the Tween paused? If so it needs to be started, or resumed, with Tween.play.
+         * Is the Tween paused? If so it needs to be started with `Tween.play` or resumed with `Tween.resume`.
          *
          * @name Phaser.Tweens.BaseTween#paused
          * @type {boolean}
@@ -371,9 +371,14 @@ var BaseTween = new Class({
         {
             this.paused = true;
 
-            var event = (this.isTimeline) ? Events.TIMELINE_PAUSE : Events.TWEEN_PAUSE;
-
-            this.emit(event, this);
+            if (this.isTimeline)
+            {
+                this.dispatchEvent(Events.TIMELINE_PAUSE, this.callbacks.onPause);
+            }
+            else
+            {
+                this.dispatchEvent(Events.TWEEN_PAUSE, this.callbacks.onPause);
+            }
         }
 
         return this;
@@ -397,9 +402,14 @@ var BaseTween = new Class({
         {
             this.paused = false;
 
-            var event = (this.isTimeline) ? Events.TIMELINE_RESUME : Events.TWEEN_RESUME;
-
-            this.emit(event, this);
+            if (this.isTimeline)
+            {
+                this.dispatchEvent(Events.TIMELINE_RESUME, this.callbacks.onResume);
+            }
+            else
+            {
+                this.dispatchEvent(Events.TWEEN_RESUME, this.callbacks.onResume);
+            }
         }
 
         return this;
