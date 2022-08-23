@@ -50,7 +50,7 @@ function hasGetters (def)
  *
  * A function can be provided to allow greater control over the end value; it will receive the target
  * object being tweened, the name of the property being tweened, and the current value of the property
- * as its arguments.
+ * as its arguments and must return a value.
  *
  * If both the starting and the ending values need to be controlled, an object with `getStart` and `getEnd`
  * callbacks, which will receive the same arguments, can be provided instead. If an object with a `value`
@@ -89,6 +89,18 @@ var GetValueOp = function (key, propertyValue)
         getEnd = function ()
         {
             return propertyValue;
+        };
+    }
+    else if (Array.isArray(t))
+    {
+        // props: {
+        //     x: [ 400, 300, 200 ],
+        //     y: [ 10, 500, 10 ]
+        // }
+
+        getEnd = function (target, key, value, targetIndex, totalTargets, tween, tweenData)
+        {
+            return tweenData.interpolation(propertyValue, tweenData.progress);
         };
     }
     else if (t === 'string')
@@ -145,7 +157,7 @@ var GetValueOp = function (key, propertyValue)
         //  The same as setting just the getEnd function and no getStart
 
         // props: {
-        //     x: function (target, key, value, targetIndex, totalTargets, tween) { return value + 50); },
+        //     x: function (target, key, value, targetIndex, totalTargets, tween, tweenData) { return value + 50); },
         // }
 
         getEnd = propertyValue;
@@ -157,19 +169,19 @@ var GetValueOp = function (key, propertyValue)
             /*
             x: {
                 //  Called the moment Tween is active. The returned value sets the property on the target immediately.
-                getActive: function (target, key, value, targetIndex, totalTargets, tween)
+                getActive: function (target, key, value, targetIndex, totalTargets, tween, tweenData)
                 {
                     return value;
                 },
 
                 //  Called at the start of the Tween. The returned value sets what the property will be at the END of the Tween.
-                getEnd: function (target, key, value, targetIndex, totalTargets, tween)
+                getEnd: function (target, key, value, targetIndex, totalTargets, tween, tweenData)
                 {
                     return value;
                 },
 
                 //  Called at the end of the Tween. The returned value sets what the property will be at the START of the Tween.
-                getStart: function (target, key, value, targetIndex, totalTargets, tween)
+                getStart: function (target, key, value, targetIndex, totalTargets, tween, tweenData)
                 {
                     return value;
                 }
