@@ -35,6 +35,7 @@ module.exports = [
     'flipX',
     'flipY',
     'hold',
+    'interpolation',
     'loop',
     'loopDelay',
     'offset',
