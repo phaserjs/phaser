@@ -91,16 +91,21 @@ var GetValueOp = function (key, propertyValue)
             return propertyValue;
         };
     }
-    else if (Array.isArray(t))
+    else if (Array.isArray(propertyValue))
     {
         // props: {
         //     x: [ 400, 300, 200 ],
         //     y: [ 10, 500, 10 ]
         // }
 
-        getEnd = function (target, key, value, targetIndex, totalTargets, tween, tweenData)
+        getStart = function ()
         {
-            return tweenData.interpolation(propertyValue, tweenData.progress);
+            return propertyValue[0];
+        };
+
+        getEnd = function ()
+        {
+            return propertyValue[propertyValue.length - 1];
         };
     }
     else if (t === 'string')
