@@ -29,11 +29,12 @@
  * @param {number} repeatDelay - Time in ms/frames before the repeat will start.
  * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
  * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
- * @param {function} interpolation - The interpolation function to be used for arrays of data. Defaults to 'Linear'.
+ * @param {?function} interpolation - The interpolation function to be used for arrays of data. Defaults to 'null'.
+ * @param {number[]} interpolationData - The array of interpolation data to be set. Defaults to 'null'.
  *
  * @return {Phaser.Types.Tweens.TweenDataConfig} The config object describing this TweenData.
  */
-var TweenData = function (target, index, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation)
+var TweenData = function (target, index, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData)
 {
     return {
 
@@ -117,8 +118,11 @@ var TweenData = function (target, index, key, getEnd, getStart, getActive, ease,
         //  TWEEN_CONST.CREATED
         state: 0,
 
-        //  The interpolation function to be used for arrays of data. Defaults to 'Linear'.
-        interpolation: interpolation
+        //  The interpolation function to be used for arrays of data. Defaults to null.
+        interpolation: interpolation,
+
+        //  The array of data to interpolate
+        interpolationData: (interpolation) ? interpolationData : null
     };
 };
 
