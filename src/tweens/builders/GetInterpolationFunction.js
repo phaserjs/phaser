@@ -36,16 +36,21 @@ var FuncMap = {
  * @function Phaser.Tweens.Builders.GetInterpolationFunction
  * @since 3.60.0
  *
- * @param {(string|function)} interpolation - The interpolation function to find. This can be either a string, or a custom function.
+ * @param {(string|function|null)} interpolation - The interpolation function to find. This can be either a string, or a custom function, or null.
  *
- * @return {function} The ease function.
+ * @return {?function} The interpolation function to use, or `null`.
  */
 var GetInterpolationFunction = function (interpolation)
 {
+    if (interpolation === null)
+    {
+        return null;
+    }
+
     //  Default interpolation function
     var interpolationFunction = FuncMap.linear;
 
-    //  Prepare ease function
+    //  Prepare interpolation function
     if (typeof interpolation === 'string')
     {
         //  String based look-up
@@ -56,13 +61,13 @@ var GetInterpolationFunction = function (interpolation)
             interpolationFunction = FuncMap[interpolation];
         }
     }
-    else if (typeof ease === 'function')
+    else if (typeof interpolation === 'function')
     {
         //  Custom function
         interpolationFunction = interpolation;
     }
 
-    //  Return ease function
+    //  Return interpolation function
     return interpolationFunction;
 };
 
