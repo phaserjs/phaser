@@ -18,7 +18,7 @@ var TWEEN_CONST = require('./const');
  * @constructor
  * @since 3.60.0
  *
- * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - A reference to the parent of this Tween. Either the Tween Manager or a Tween Timeline instance.
+ * @param {Phaser.Tweens.TweenManager} parent - A reference to the Tween Manager that owns this Tween.
  */
 var BaseTween = new Class({
 
@@ -33,42 +33,19 @@ var BaseTween = new Class({
         EventEmitter.call(this);
 
         /**
-         * A reference to the parent of this Tween.
-         *
-         * This is either a Tween Manager, or a Tween Timeline instance.
+         * A reference to the Tween Manager that owns this Tween.
          *
          * @name Phaser.Tweens.BaseTween#parent
-         * @type {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)}
+         * @type {Phaser.Tweens.TweenManager}
          * @since 3.60.0
          */
         this.parent = parent;
 
         /**
-         * A constant value which allows this BaseTween to be quickly identified as a Timeline.
-         *
-         * @name Phaser.Tweens.BaseTween#isTimeline
-         * @type {boolean}
-         * @default false
-         * @since 3.60.0
-         */
-        this.isTimeline = false;
-
-        /**
-         * Is the parent of this Tween a Timeline?
-         *
-         * @name Phaser.Tweens.BaseTween#parentIsTimeline
-         * @type {boolean}
-         * @since 3.60.0
-         */
-        this.parentIsTimeline = parent.hasOwnProperty('isTimeline');
-
-        /**
-         * For a Tween, this is an array of TweenData objects, each containing a unique property and target being tweened.
-         *
-         * For a Timeline, this is an array of Tween objects.
+         * An array of TweenData objects, each containing a unique property and target being tweened.
          *
          * @name Phaser.Tweens.BaseTween#data
-         * @type {(Phaser.Types.Tweens.TweenDataConfig[]|Phaser.Tweens.Tween[])}
+         * @type {Phaser.Types.Tweens.TweenDataConfig[]}
          * @since 3.60.0
          */
         this.data = data;
@@ -149,7 +126,7 @@ var BaseTween = new Class({
         this.completeDelay = 0;
 
         /**
-         * An internal countdown timer (used by timeline offset, loopDelay and completeDelay)
+         * An internal countdown timer (used by loopDelay and completeDelay)
          *
          * @name Phaser.Tweens.BaseTween#countdown
          * @type {number}
@@ -360,7 +337,6 @@ var BaseTween = new Class({
      *
      * @method Phaser.Tweens.BaseTween#pause
      * @fires Phaser.Tweens.Events#TWEEN_PAUSE
-     * @fires Phaser.Tweens.Events#TIMELINE_PAUSE
      * @since 3.60.0
      *
      * @return {this} This Tween instance.
@@ -371,14 +347,7 @@ var BaseTween = new Class({
         {
             this.paused = true;
 
-            if (this.isTimeline)
-            {
-                this.dispatchEvent(Events.TIMELINE_PAUSE, this.callbacks.onPause);
-            }
-            else
-            {
-                this.dispatchEvent(Events.TWEEN_PAUSE, this.callbacks.onPause);
-            }
+            this.dispatchEvent(Events.TWEEN_PAUSE, this.callbacks.onPause);
         }
 
         return this;
@@ -391,7 +360,6 @@ var BaseTween = new Class({
      *
      * @method Phaser.Tweens.BaseTween#resume
      * @fires Phaser.Tweens.Events#TWEEN_RESUME
-     * @fires Phaser.Tweens.Events#TIMELINE_RESUME
      * @since 3.60.0
      *
      * @return {this} This Tween instance.
@@ -402,14 +370,7 @@ var BaseTween = new Class({
         {
             this.paused = false;
 
-            if (this.isTimeline)
-            {
-                this.dispatchEvent(Events.TIMELINE_RESUME, this.callbacks.onResume);
-            }
-            else
-            {
-                this.dispatchEvent(Events.TWEEN_RESUME, this.callbacks.onResume);
-            }
+            this.dispatchEvent(Events.TWEEN_RESUME, this.callbacks.onResume);
         }
 
         return this;
@@ -427,15 +388,7 @@ var BaseTween = new Class({
     {
         this.parent.makeActive(this);
 
-        if (this.isTimeline)
-        {
-            //  TIMELINE_ACTIVE?
-            this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
-        }
-        else
-        {
-            this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
-        }
+        this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
     },
 
     /**

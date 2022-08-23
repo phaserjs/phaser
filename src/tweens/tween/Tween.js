@@ -26,7 +26,7 @@ var MATH_CONST = require('../../math/const');
  * @constructor
  * @since 3.0.0
  *
- * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - A reference to the parent of this Tween. Either the Tween Manager or a Tween Timeline instance.
+ * @param {Phaser.Tweens.TweenManager} parent - A reference to the Tween Manager that owns this Tween.
  * @param {Phaser.Types.Tweens.TweenDataConfig[]} data - An array of TweenData objects, each containing a unique property to be tweened.
  * @param {array} targets - An array of targets to be tweened.
  */
@@ -91,26 +91,6 @@ var Tween = new Class({
          * @since 3.19.0
          */
         this.isSeeking = false;
-
-        /**
-         * This property is set only if this Tween is part of a Timeline.
-         *
-         * @name Phaser.Tweens.Tween#offset
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.offset = 0;
-
-        /**
-         * This property is set only if this Tween is part of a Timeline. The calculated offset amount.
-         *
-         * @name Phaser.Tweens.Tween#calculatedOffset
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.calculatedOffset = 0;
     },
 
     /**
@@ -419,14 +399,10 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#play
      * @since 3.0.0
      *
-     * @param {boolean} [resetFromTimeline=false] - Is this Tween being played as part of a Timeline?
-     *
      * @return {this} This Tween instance.
      */
-    play: function (resetFromTimeline)
+    play: function ()
     {
-        if (resetFromTimeline === undefined) { resetFromTimeline = false; }
-
         var state = this.state;
 
         if (state === TWEEN_CONST.DESTROYED)
@@ -436,32 +412,14 @@ var Tween = new Class({
             return this;
         }
 
-        if (!this.parentIsTimeline)
+        if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.REMOVED)
         {
-            if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.REMOVED)
-            {
-                //  This makes the tween active as well:
-                this.seek();
-            }
-
-            this.paused = false;
-            this.state = TWEEN_CONST.ACTIVE;
+            //  This makes the tween active as well:
+            this.seek();
         }
-        else
-        {
-            this.resetTweenData(resetFromTimeline);
 
-            if (this.calculatedOffset === 0)
-            {
-                this.state = TWEEN_CONST.ACTIVE;
-            }
-            else
-            {
-                this.countdown = this.calculatedOffset;
-
-                this.state = TWEEN_CONST.OFFSET_DELAY;
-            }
-        }
+        this.paused = false;
+        this.state = TWEEN_CONST.ACTIVE;
 
         return this;
     },
@@ -746,10 +704,6 @@ var Tween = new Class({
         {
             this.updateCountdown(delta, TWEEN_CONST.ACTIVE, Events.TWEEN_LOOP, this.callbacks.onLoop);
         }
-        else if (state === TWEEN_CONST.OFFSET_DELAY)
-        {
-            this.updateCountdown(delta, TWEEN_CONST.ACTIVE);
-        }
         else if (state === TWEEN_CONST.COMPLETE_DELAY)
         {
             this.updateCountdown(delta, TWEEN_CONST.PENDING_REMOVE, Events.TWEEN_COMPLETE, this.callbacks.onComplete);
@@ -761,8 +715,6 @@ var Tween = new Class({
         {
             this.updateActive(delta);
         }
-
-        // console.log('Tween.update', this.progress, this.state, this.state === TWEEN_CONST.PENDING_REMOVE);
 
         return (this.state === TWEEN_CONST.PENDING_REMOVE);
     },

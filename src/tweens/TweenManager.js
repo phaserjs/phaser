@@ -11,13 +11,12 @@ var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
 var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
 var StaggerBuilder = require('./builders/StaggerBuilder');
-var TimelineBuilder = require('./builders/TimelineBuilder');
 var TWEEN_CONST = require('./tween/const');
 var TweenBuilder = require('./builders/TweenBuilder');
 
 /**
  * @classdesc
- * The Tween Manager is a default Scene Plugin which controls and updates Tweens and Timelines.
+ * The Tween Manager is a default Scene Plugin which controls and updates Tweens.
  *
  * @class TweenManager
  * @memberof Phaser.Tweens
@@ -90,10 +89,10 @@ var TweenManager = new Class({
         this.processing = false;
 
         /**
-         * An array of Tweens and Timelines which are actively being processed by the Tween Manager.
+         * An array of Tweens which are actively being processed by the Tween Manager.
          *
          * @name Phaser.Tweens.TweenManager#tweens
-         * @type {(Phaser.Tweens.Tween[]|Phaser.Tweens.Timeline[])}
+         * @type {Phaser.Tweens.Tween[]}
          * @since 3.60.0
          */
         this.tweens = [];
@@ -133,42 +132,6 @@ var TweenManager = new Class({
 
         this.timeScale = 1;
         this.paused = false;
-    },
-
-    /**
-     * Create a Tween Timeline and return it, but do NOT add it to the active or pending Tween lists.
-     *
-     * @method Phaser.Tweens.TweenManager#createTimeline
-     * @since 3.0.0
-     *
-     * @param {Phaser.Types.Tweens.TimelineBuilderConfig} [config] - The configuration object for the Timeline and its Tweens.
-     *
-     * @return {Phaser.Tweens.Timeline} The created Timeline object.
-     */
-    createTimeline: function (config)
-    {
-        return TimelineBuilder(this, config);
-    },
-
-    /**
-     * Create a Tween Timeline and add it to the active Tween list.
-     *
-     * @method Phaser.Tweens.TweenManager#timeline
-     * @since 3.0.0
-     *
-     * @param {Phaser.Types.Tweens.TimelineBuilderConfig} [config] - The configuration object for the Timeline and its Tweens.
-     *
-     * @return {Phaser.Tweens.Timeline} The created Timeline object.
-     */
-    timeline: function (config)
-    {
-        var timeline = TimelineBuilder(this, config);
-
-        timeline.persist = true;
-
-        this.tweens.push(timeline.init());
-
-        return timeline;
     },
 
     /**
@@ -215,7 +178,7 @@ var TweenManager = new Class({
     },
 
     /**
-     * Check to see if the given Tween or Timeline instance exists within this Tween Manager.
+     * Check to see if the given Tween instance exists within this Tween Manager.
      *
      * Will return `true` as long as the Tween is being processed by this Tween Manager.
      *
@@ -224,7 +187,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#has
      * @since 3.60.0
      *
-     * @param {(Phaser.Tweens.Tween|Phaser.Tweens.Timeline)} tween - The Tween or Timeline instance to check.
+     * @param {Phaser.Tweens.Tween} tween - The Tween instance to check.
      *
      * @return {boolean} `true` if the Tween exists within this Tween Manager, otherwise `false`.
      */
@@ -241,7 +204,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#existing
      * @since 3.0.0
      *
-     * @param {(Phaser.Tweens.Tween|Phaser.Tweens.Timeline)} tween - The Tween to add.
+     * @param {Phaser.Tweens.Tween} tween - The Tween to add.
      *
      * @return {this} This Tween Manager instance.
      */
@@ -325,7 +288,7 @@ var TweenManager = new Class({
     },
 
     /**
-     * Updates all Tweens and Timelines belonging to this Tween Manager.
+     * Updates all Tweens belonging to this Tween Manager.
      *
      * This is skipped is `TweenManager.paused = true`.
      *
@@ -361,7 +324,7 @@ var TweenManager = new Class({
             //  so move it to the destroy list
             if (tween.update(timestamp, delta))
             {
-                if (tween.persist || tween.parentIsTimeline)
+                if (tween.persist)
                 {
                     tween.state = TWEEN_CONST.FINISHED;
                 }
@@ -456,7 +419,7 @@ var TweenManager = new Class({
     },
 
     /**
-     * Checks if a Tween or Timeline is active and adds it to the Tween Manager at the start of the frame if it isn't.
+     * Checks if a Tween is active and adds it to the Tween Manager at the start of the frame if it isn't.
      *
      * @method Phaser.Tweens.TweenManager#makeActive
      * @since 3.0.0
@@ -506,6 +469,14 @@ var TweenManager = new Class({
         return this;
     },
 
+    /**
+     *
+     *
+     * @method Phaser.Tweens.TweenManager#getTotal
+     * @since 3.60.0
+     *
+     * @return {} stuff
+     */
     getTotal: function ()
     {
         var tweens = this.tweens;
@@ -523,12 +494,12 @@ var TweenManager = new Class({
     },
 
     /**
-     * Returns an array containing references to of all Tweens and Timelines in this Tween Manager.
+     * Returns an array containing references to of all Tweens in this Tween Manager.
      *
      * @method Phaser.Tweens.TweenManager#getAllTweens
      * @since 3.0.0
      *
-     * @return {Phaser.Tweens.Tween[]} A new array containing references to all Tweens and Timelines.
+     * @return {Phaser.Tweens.Tween[]} A new array containing references to all Tweens.
      */
     getAllTweens: function ()
     {
@@ -536,7 +507,7 @@ var TweenManager = new Class({
     },
 
     /**
-     * Returns the scale of the time delta for all Tweens and Timelines owned by this Tween Manager.
+     * Returns the scale of the time delta for all Tweens owned by this Tween Manager.
      *
      * @method Phaser.Tweens.TweenManager#getGlobalTimeScale
      * @since 3.0.0
@@ -568,7 +539,7 @@ var TweenManager = new Class({
     },
 
     /**
-     * Returns an array of all Tweens or Timelines in the Tween Manager which affect the given target, or array of targets.
+     * Returns an array of all Tweens in the Tween Manager which affect the given target, or array of targets.
      *
      * It's possible for this method to return tweens that are about to be removed from
      * the Tween Manager. You should check the state of the returned tween before acting
@@ -579,7 +550,7 @@ var TweenManager = new Class({
      *
      * @param {object|array} target - The target to look for. Provide an array to look for multiple targets.
      *
-     * @return {Phaser.Tweens.Tween[]} A new array containing all Tweens and Timelines which affect the given target(s).
+     * @return {Phaser.Tweens.Tween[]} A new array containing all Tweens which affect the given target(s).
      */
     getTweensOf: function (target)
     {
@@ -700,7 +671,7 @@ var TweenManager = new Class({
     },
 
     /**
-     * Pauses this Tween Manager. No Tweens or Timelines will update while paused.
+     * Pauses this Tween Manager. No Tweens will update while paused.
      *
      * This includes tweens created after this method was called.
      *
@@ -723,7 +694,7 @@ var TweenManager = new Class({
     /**
      * Resumes playback of this Tween Manager.
      *
-     * All active Tweens and Timelines will continue updating.
+     * All active Tweens will continue updating.
      *
      * See `TweenManager#pauseAll` to pause the playback.
      *

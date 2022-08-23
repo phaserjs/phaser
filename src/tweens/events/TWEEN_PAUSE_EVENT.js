@@ -12,15 +12,15 @@
  * Listen to it from a Tween instance using `Tween.on('pause', listener)`, i.e.:
  *
  * ```javascript
- * var timeline = this.tweens.twe({
+ * var tween = this.tweens.add({
  *     targets: image,
  *     ease: 'Power1',
  *     duration: 3000,
- *     tweens: [ { x: 600 }, { y: 500 }, { x: 100 }, { y: 100 } ]
+ *     x: 600
  * });
- * timeline.on('pause', listener);
+ * tween.on('pause', listener);
  * // At some point later ...
- * timeline.pause();
+ * tween.pause();
  * ```
  *
  * @event Phaser.Tweens.Events#TWEEN_PAUSE

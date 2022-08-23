@@ -33,14 +33,7 @@ var TWEEN_CONST = {
      */
     DELAY: 2,
 
-    /**
-     * TweenData state.
-     *
-     * @name Phaser.Tweens.OFFSET_DELAY
-     * @type {number}
-     * @since 3.0.0
-     */
-    OFFSET_DELAY: 3,
+    //  3 used to be used by OFFSET_DELAY prior to 3.60
 
     /**
      * TweenData state.

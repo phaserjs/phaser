@@ -16,7 +16,6 @@
 //  hold: The time the tween will pause before running a yoyo
 //  loop: The time the tween will pause before starting either a yoyo or returning to the start for a repeat
 //  loopDelay:
-//  offset: Used when the Tween is part of a Timeline
 //  paused: Does the tween start in a paused state, or playing?
 //  props: The properties being tweened by the tween
 //  repeat: The number of times the tween will repeat itself (a value of 1 means the tween will play twice, as it repeated once)
@@ -38,7 +37,6 @@ module.exports = [
     'interpolation',
     'loop',
     'loopDelay',
-    'offset',
     'onActive',
     'onActiveParams',
     'onActiveScope',

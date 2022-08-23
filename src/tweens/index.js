@@ -18,8 +18,7 @@ var Tweens = {
 
     TweenManager: require('./TweenManager'),
     Tween: require('./tween/Tween'),
-    TweenData: require('./tween/TweenData'),
-    Timeline: require('./Timeline')
+    TweenData: require('./tween/TweenData')
 
 };
 
