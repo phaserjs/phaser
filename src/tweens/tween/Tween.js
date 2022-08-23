@@ -495,9 +495,9 @@ var Tween = new Class({
 
             if (resetFromLoop)
             {
-                tweenData.start = tweenData.getStartValue(target, key, tweenData.start, targetIndex, totalTargets, this, tweenData);
+                tweenData.start = tweenData.getStartValue(target, key, tweenData.start, targetIndex, totalTargets, this);
 
-                tweenData.end = tweenData.getEndValue(target, key, tweenData.end, targetIndex, totalTargets, this, tweenData);
+                tweenData.end = tweenData.getEndValue(target, key, tweenData.end, targetIndex, totalTargets, this);
 
                 tweenData.current = tweenData.start;
 
@@ -916,7 +916,7 @@ var Tween = new Class({
 
             this.dispatchTweenDataEvent(Events.TWEEN_YOYO, tween.callbacks.onYoyo, tweenData);
 
-            tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start, tweenData.index, tween.totalTargets, tween, tweenData);
+            tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start, tweenData.index, tween.totalTargets, tween);
 
             return TWEEN_CONST.PLAYING_BACKWARD;
         }
@@ -941,9 +941,9 @@ var Tween = new Class({
                 tweenData.target.toggleFlipY();
             }
 
-            tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start, tweenData.index, tween.totalTargets, tween, tweenData);
+            tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start, tweenData.index, tween.totalTargets, tween);
 
-            tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start, tweenData.index, tween.totalTargets, tween, tweenData);
+            tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start, tweenData.index, tween.totalTargets, tween);
 
             //  Delay?
             if (tweenData.repeatDelay > 0)
@@ -1161,9 +1161,9 @@ var Tween = new Class({
 
                 if (target)
                 {
-                    tweenData.start = tweenData.getStartValue(target, tweenData.key, target[tweenData.key], tweenData.index, tween.totalTargets, tween, tweenData);
+                    tweenData.start = tweenData.getStartValue(target, tweenData.key, target[tweenData.key], tweenData.index, tween.totalTargets, tween);
 
-                    tweenData.end = tweenData.getEndValue(target, tweenData.key, tweenData.start, tweenData.index, tween.totalTargets, tween, tweenData);
+                    tweenData.end = tweenData.getEndValue(target, tweenData.key, tweenData.start, tweenData.index, tween.totalTargets, tween);
 
                     tweenData.current = tweenData.start;
 
