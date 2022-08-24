@@ -49,7 +49,6 @@ var Tween = new Class({
          */
         this.parent = parent;
 
-
         /**
          * An array of TweenData objects, each containing a unique property and target being tweened.
          *
@@ -196,7 +195,6 @@ var Tween = new Class({
          */
         this.countdown = 0;
 
-
         /**
          * The current state of the Tween.
          *
@@ -340,6 +338,18 @@ var Tween = new Class({
          * @since 3.60.0
          */
         this.chainedTween = null;
+
+        /**
+         * When this Tween updates, any excess time is stored in this property.
+         *
+         * @name Phaser.Tweens.Tween#overshoot
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.overshoot = 0;
+
+        this.prevTime = 0;
     },
 
     /**
@@ -351,10 +361,14 @@ var Tween = new Class({
      * @fires Phaser.Tweens.Events#TWEEN_ACTIVE
      * @since 3.0.0
      *
+     * @param {boolean} [isChained=false] - Is this Tween chained to another?
+     *
      * @return {this} This Tween instance.
      */
-    init: function ()
+    init: function (isChained)
     {
+        if (isChained === undefined) { isChained = false; }
+
         var data = this.data;
         var totalTargets = this.totalTargets;
 
@@ -397,9 +411,12 @@ var Tween = new Class({
         this.elapsed = 0;
         this.totalElapsed = 0;
 
-        this.state = TWEEN_CONST.ACTIVE;
+        if (!isChained)
+        {
+            this.state = TWEEN_CONST.ACTIVE;
 
-        this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
+            this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
+        }
 
         return this;
     },
@@ -478,6 +495,32 @@ var Tween = new Class({
     },
 
     /**
+     * Chain a Tween to be started as soon as this Tween reaches an 'onComplete' state.
+     *
+     * If this Tween never achieves 'onComplete' (i.e. has been set to loop or repeat forever),
+     * then the chained Tween will not be started unless the `Tween.complete` method is called.
+     *
+     * @method Phaser.Tweens.Tween#chain
+     * @since 3.60.0
+     *
+     * @param {Phaser.Tweens.Tween} [tween] - The Tween to chain to this Tween, or don't pass an argument to remove a chain.
+     *
+     * @return {this} This Tween instance.
+     */
+    chain: function (tween)
+    {
+        this.chainedTween = tween;
+
+        if (tween)
+        {
+            //  Needs to be told its a chained tween? Or just use the 'paused' property?
+            tween.state = TWEEN_CONST.CHAINED;
+        }
+
+        return this;
+    },
+
+    /**
      * Sets the value of the time scale applied to this Tween. A value of 1 runs in real-time.
      * A value of 0.5 runs 50% slower, and so on.
      *
@@ -493,31 +536,6 @@ var Tween = new Class({
     setTimeScale: function (value)
     {
         this.timeScale = value;
-
-        return this;
-    },
-
-    /**
-     * Chain a Tween to be started as soon as this Tween reaches an 'onComplete' state.
-     *
-     * If this Tween never achieves 'onComplete' (i.e. has been set to loop or repeat forever),
-     * then the chained Tween will not be started unless `Tween.stop` is called.
-     *
-     * @method Phaser.Tweens.Tween#chain
-     * @since 3.60.0
-     *
-     * @param {Phaser.Tweens.Tween} [tween] - The Tween to chain to this Tween, or don't pass an argument to remove a chain.
-     *
-     * @return {this} This Tween instance.
-     */
-    chain: function (tween)
-    {
-        this.chainedTween = tween;
-
-        if (tween)
-        {
-            //  Needs to be told its a chained tween?
-        }
 
         return this;
     },
@@ -778,8 +796,24 @@ var Tween = new Class({
         {
             this.state = TWEEN_CONST.PENDING_REMOVE;
 
-            this.dispatchEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
+            this.onCompleteHandler();
         }
+    },
+
+    onCompleteHandler: function ()
+    {
+        this.dispatchEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
+
+        //  Chain ...
+        //  Additional time overstep may be in 'countdown' or the diff between 'elasped' and 'duration' ?
+        // var overshoot = Math.max(0, this.elapsed - this.duration);
+        var overshoot = Math.max(0, this.elapsed - this.duration);
+
+        console.log('onComplete', Date.now(), performance.now());
+
+        console.log('onCompleteHandler - overshot by', overshoot, 'ms - vs.', this.overshoot);
+        console.log('elapsed / duration =', this.elapsed, '=', this.duration);
+        console.log('completeDelay', this.completeDelay, 'countdown', this.countdown);
     },
 
     /**
@@ -817,6 +851,8 @@ var Tween = new Class({
 
         this.paused = false;
         this.state = TWEEN_CONST.ACTIVE;
+
+        this.prevTime = performance.now();
 
         return this;
     },
@@ -976,7 +1012,9 @@ var Tween = new Class({
      * If an `onComplete` callback has been defined it will automatically invoke it, unless a `delay`
      * argument is provided, in which case the Tween will delay for that period of time before calling the callback.
      *
-     * If you don't need a delay, or don't have an `onComplete` callback, then call `Tween.stop` instead.
+     * If this Tween has a chained Tween, that will now be started.
+     *
+     * If you don't need a delay, don't have an `onComplete` callback or have a chained tween, then call `Tween.stop` instead.
      *
      * @method Phaser.Tweens.Tween#complete
      * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
@@ -1000,7 +1038,7 @@ var Tween = new Class({
         {
             this.state = TWEEN_CONST.PENDING_REMOVE;
 
-            this.dispatchEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
+            this.onCompleteHandler();
         }
 
         return this;
@@ -1077,10 +1115,18 @@ var Tween = new Class({
             return true;
         }
 
-        if ((this.paused && !this.isSeeking) || state === TWEEN_CONST.FINISHED)
+        if ((this.paused && !this.isSeeking) || state === TWEEN_CONST.FINISHED || state === TWEEN_CONST.CHAINED)
         {
             return false;
         }
+
+        timestamp = performance.now();
+
+        delta = timestamp - this.prevTime;
+
+        // console.log(delta);
+
+        this.prevTime = timestamp;
 
         if (this.useFrames)
         {
@@ -1097,13 +1143,18 @@ var Tween = new Class({
         this.totalElapsed += delta;
         this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
 
+        this.overshoot = delta;
+
         if (state === TWEEN_CONST.LOOP_DELAY)
         {
             this.updateCountdown(delta, TWEEN_CONST.ACTIVE, Events.TWEEN_LOOP, this.callbacks.onLoop);
         }
         else if (state === TWEEN_CONST.COMPLETE_DELAY)
         {
-            this.updateCountdown(delta, TWEEN_CONST.PENDING_REMOVE, Events.TWEEN_COMPLETE, this.callbacks.onComplete);
+            if (this.updateCountdown(delta, TWEEN_CONST.PENDING_REMOVE))
+            {
+                this.onCompleteHandler();
+            }
         }
 
         //  Make its own check so the states above can toggle to active on the same frame.
@@ -1127,6 +1178,8 @@ var Tween = new Class({
      * @param {number} state - The new Tween State to be set.
      * @param {Phaser.Types.Tweens.Event} [event] - The Tween Event to dispatch, if any.
      * @param {function} [callback] - The Tween Callback to invoke, if any.
+     *
+     * @return {boolean} `true` if the countdown was reached, otherwise `false`.
      */
     updateCountdown: function (delta, state, event, callback)
     {
@@ -1140,7 +1193,11 @@ var Tween = new Class({
             {
                 this.dispatchEvent(event, callback);
             }
+
+            return true;
         }
+
+        return false;
     },
 
     /**
@@ -1164,6 +1221,16 @@ var Tween = new Class({
                 this.hasStarted = true;
 
                 this.dispatchEvent(Events.TWEEN_START, this.callbacks.onStart);
+
+                console.log('onStart', Date.now(), performance.now());
+
+                this.prevTime = performance.now();
+
+                delta = 0;
+            }
+            else
+            {
+                return;
             }
         }
 
@@ -1413,6 +1480,162 @@ var Tween = new Class({
         }
 
         return TWEEN_CONST.COMPLETE;
+    },
+
+    /**
+     * Internal method that advances the TweenData based on the time value given.
+     *
+     * @method Phaser.Tweens.Tween#updateTweenData
+     * @fires Phaser.Tweens.Events#TWEEN_UPDATE
+     * @fires Phaser.Tweens.Events#TWEEN_REPEAT
+     * @since 3.0.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - The Tween to update.
+     * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
+     * @param {number} delta - Either a value in ms, or 1 if Tween.useFrames is true.
+     *
+     * @return {boolean} True if the tween is not complete (e.g., playing), or false if the tween is complete.
+     */
+    NEWupdateTweenData: function (tween, tweenData, delta)
+    {
+        var target = tweenData.target;
+
+        if (tweenData.state === TWEEN_CONST.REPEAT_DELAY)
+        {
+            tweenData.elapsed -= delta;
+
+            if (tweenData.elapsed <= 0)
+            {
+                tweenData.elapsed = Math.abs(tweenData.elapsed);
+
+                tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
+
+                //  Adjust the delta for the PLAYING_FORWARD block below
+                delta = tweenData.elapsed;
+
+                this.dispatchTweenDataEvent(Events.TWEEN_REPEAT, tween.callbacks.onRepeat, tweenData);
+            }
+        }
+
+        var forward = (tweenData.state === TWEEN_CONST.PLAYING_FORWARD);
+        var backward = (tweenData.state === TWEEN_CONST.PLAYING_BACKWARD);
+
+        if (forward || backward)
+        {
+            if (!target)
+            {
+                tweenData.state = TWEEN_CONST.COMPLETE;
+
+                return false;
+            }
+
+            var elapsed = tweenData.elapsed;
+            var duration = tweenData.duration;
+            var diff = 0;
+
+            elapsed += delta;
+
+            if (elapsed > duration)
+            {
+                diff = elapsed - duration;
+                elapsed = duration;
+            }
+
+            var progress = elapsed / duration;
+
+            tweenData.elapsed = elapsed;
+            tweenData.progress = progress;
+            tweenData.previous = tweenData.current;
+
+            if (progress === 1)
+            {
+                if (forward)
+                {
+                    tweenData.current = tweenData.end;
+                    target[tweenData.key] = tweenData.end;
+
+                    if (tweenData.hold > 0)
+                    {
+                        tweenData.elapsed = tweenData.hold - diff;
+
+                        tweenData.state = TWEEN_CONST.HOLD_DELAY;
+                    }
+                    else
+                    {
+                        tweenData.state = this.setStateFromEnd(tween, tweenData, diff);
+                    }
+                }
+                else
+                {
+                    tweenData.current = tweenData.start;
+                    target[tweenData.key] = tweenData.start;
+
+                    tweenData.state = this.setStateFromStart(tween, tweenData, diff);
+                }
+            }
+            else
+            {
+                var v = (forward) ? tweenData.ease(progress) : tweenData.ease(1 - progress);
+
+                if (tweenData.interpolation)
+                {
+                    tweenData.current = tweenData.interpolation(tweenData.interpolationData, v);
+                }
+                else
+                {
+                    tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
+                }
+
+                target[tweenData.key] = tweenData.current;
+            }
+
+            this.dispatchTweenDataEvent(Events.TWEEN_UPDATE, tween.callbacks.onUpdate, tweenData);
+        }
+
+        if (tweenData.state === TWEEN_CONST.DELAY)
+        {
+            tweenData.elapsed -= delta;
+
+            if (tweenData.elapsed <= 0)
+            {
+                tweenData.elapsed = Math.abs(tweenData.elapsed);
+
+                tweenData.state = TWEEN_CONST.PENDING_RENDER;
+            }
+        }
+
+        if (tweenData.state === TWEEN_CONST.HOLD_DELAY)
+        {
+            tweenData.elapsed -= delta;
+
+            if (tweenData.elapsed <= 0)
+            {
+                tweenData.state = this.setStateFromEnd(tween, tweenData, Math.abs(tweenData.elapsed));
+            }
+        }
+
+        if (tweenData.state === TWEEN_CONST.PENDING_RENDER)
+        {
+            if (target)
+            {
+                tweenData.start = tweenData.getStartValue(target, tweenData.key, target[tweenData.key], tweenData.index, tween.totalTargets, tween);
+
+                tweenData.end = tweenData.getEndValue(target, tweenData.key, tweenData.start, tweenData.index, tween.totalTargets, tween);
+
+                tweenData.current = tweenData.start;
+
+                target[tweenData.key] = tweenData.start;
+
+                tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
+            }
+            else
+            {
+                tweenData.state = TWEEN_CONST.COMPLETE;
+            }
+        }
+
+        //  Return TRUE if this TweenData still playing, otherwise return FALSE
+        return (tweenData.state !== TWEEN_CONST.COMPLETE);
     },
 
     /**
