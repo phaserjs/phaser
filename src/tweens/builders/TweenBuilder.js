@@ -112,7 +112,6 @@ var TweenBuilder = function (parent, config, defaults)
     tween.loop = Math.round(GetAdvancedValue(config, 'loop', 0));
     tween.loopDelay = Math.round(GetAdvancedValue(config, 'loopDelay', 0));
     tween.paused = GetBoolean(config, 'paused', false);
-    tween.useFrames = GetBoolean(config, 'useFrames', false);
     tween.persist = GetBoolean(config, 'persist', false);
 
     //  Set the Callbacks

@@ -21,7 +21,6 @@
 //  repeat: The number of times the tween will repeat itself (a value of 1 means the tween will play twice, as it repeated once)
 //  repeatDelay: The time the tween will pause for before starting a repeat. The tween holds in the start state.
 //  targets: The targets the tween is updating.
-//  useFrames: Use frames or milliseconds?
 //  yoyo: boolean - Does the tween reverse itself (yoyo) when it reaches the end?
 
 module.exports = [
@@ -73,6 +72,5 @@ module.exports = [
     'repeat',
     'repeatDelay',
     'targets',
-    'useFrames',
     'yoyo'
 ];

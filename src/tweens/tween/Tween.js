@@ -120,16 +120,6 @@ var Tween = new Class({
         this.isSeeking = false;
 
         /**
-         * If `true` then the Tween is timed based on the number of elapsed frames, rather than delta time.
-         *
-         * @name Phaser.Tweens.Tween#useFrames
-         * @type {boolean}
-         * @default false
-         * @since 3.60.0
-         */
-        this.useFrames = false;
-
-        /**
          * Scales the time applied to this Tween. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
          *
          * The value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
@@ -1124,18 +1114,11 @@ var Tween = new Class({
 
         delta = timestamp - this.prevTime;
 
-        // console.log(delta);
+        console.log(delta);
 
         this.prevTime = timestamp;
 
-        if (this.useFrames)
-        {
-            delta = 1 * this.parent.timeScale;
-        }
-        else
-        {
-            delta *= this.timeScale * this.parent.timeScale;
-        }
+        delta *= this.timeScale * this.parent.timeScale;
 
         this.elapsed += delta;
         this.progress = Math.min(this.elapsed / this.duration, 1);
@@ -1492,7 +1475,7 @@ var Tween = new Class({
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to update.
      * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
-     * @param {number} delta - Either a value in ms, or 1 if Tween.useFrames is true.
+     * @param {number} delta - The elapsed delta time in ms.
      *
      * @return {boolean} True if the tween is not complete (e.g., playing), or false if the tween is complete.
      */
@@ -1648,7 +1631,7 @@ var Tween = new Class({
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to update.
      * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
-     * @param {number} delta - Either a value in ms, or 1 if Tween.useFrames is true.
+     * @param {number} delta - The elapsed delta time in ms.
      *
      * @return {boolean} True if the tween is not complete (e.g., playing), or false if the tween is complete.
      */
