@@ -220,6 +220,7 @@ var TextureManager = new Class({
             key.destroy();
 
             this.emit(Events.REMOVE, key.key);
+            this.emit(Events.REMOVE_KEY + key.key);
         }
 
         return this;
@@ -283,7 +284,7 @@ var TextureManager = new Class({
                 Parser.Image(texture, 0);
 
                 _this.emit(Events.ADD, key, texture);
-
+                _this.emit(Events.ADD_KEY + key, texture);
                 _this.emit(Events.LOAD, key, texture);
             };
 
@@ -384,6 +385,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -424,6 +426,7 @@ var TextureManager = new Class({
             texture.add('__BASE', 0, 0, 0, width, height);
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -474,6 +477,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -503,6 +507,7 @@ var TextureManager = new Class({
             texture.add('__BASE', 0, 0, 0, renderTexture.width, renderTexture.height);
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -630,6 +635,7 @@ var TextureManager = new Class({
             this.list[key] = texture;
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -710,6 +716,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -757,6 +764,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -793,6 +801,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -829,6 +838,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -864,6 +874,7 @@ var TextureManager = new Class({
             Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -917,6 +928,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
 
             return texture;
         }
@@ -1038,7 +1050,7 @@ var TextureManager = new Class({
 
     /**
      * Returns an array with all of the keys of all Textures in this Texture Manager.
-     * The output array will exclude the `__DEFAULT` and `__MISSING` keys.
+     * The output array will exclude the `__DEFAULT`, `__MISSING`, and `__WHITE` keys.
      *
      * @method Phaser.Textures.TextureManager#getTextureKeys
      * @since 3.0.0
@@ -1051,7 +1063,7 @@ var TextureManager = new Class({
 
         for (var key in this.list)
         {
-            if (key !== '__DEFAULT' && key !== '__MISSING')
+            if (key !== '__DEFAULT' && key !== '__MISSING' && key !== '__WHITE')
             {
                 output.push(key);
             }
