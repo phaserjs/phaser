@@ -220,6 +220,7 @@ var TextureManager = new Class({
             key.destroy();
 
             this.emit(Events.REMOVE, key.key);
+            this.emit(Events.REMOVE_KEY + key.key);
         }
 
         return this;
@@ -283,7 +284,7 @@ var TextureManager = new Class({
                 Parser.Image(texture, 0);
 
                 _this.emit(Events.ADD, key, texture);
-
+                _this.emit(Events.ADD_KEY + key, texture);
                 _this.emit(Events.LOAD, key, texture);
             };
 
@@ -384,6 +385,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -424,6 +426,7 @@ var TextureManager = new Class({
             texture.add('__BASE', 0, 0, 0, width, height);
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -474,6 +477,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -503,6 +507,7 @@ var TextureManager = new Class({
             texture.add('__BASE', 0, 0, 0, renderTexture.width, renderTexture.height);
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -630,6 +635,7 @@ var TextureManager = new Class({
             this.list[key] = texture;
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -710,6 +716,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -757,6 +764,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -793,6 +801,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -829,6 +838,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -864,6 +874,7 @@ var TextureManager = new Class({
             Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -917,6 +928,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
 
             return texture;
         }
