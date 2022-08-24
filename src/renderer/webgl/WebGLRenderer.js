@@ -1580,6 +1580,7 @@ var WebGLRenderer = new Class({
             gl.bindTexture(gl.TEXTURE_2D, texture);
 
             this.textureZero = texture;
+            this.isTextureClean = false;
         }
     },
 
