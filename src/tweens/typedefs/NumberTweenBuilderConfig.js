@@ -16,7 +16,6 @@
  * @property {string|number|function|object|array} [loop=0] - The number of times the tween will repeat. (A value of 1 means the tween will play twice, as it repeated once.) The first loop starts after every property tween has completed once.
  * @property {string|number|function|object|array} [loopDelay=0] - The time the tween will pause before starting either a yoyo or returning to the start for a repeat.
  * @property {boolean} [paused=false] - Does the tween start in a paused state (true) or playing (false)?
- * @property {boolean} [useFrames=false] - Use frames or milliseconds?
  * @property {any} [callbackScope] - Scope (this) for the callbacks. The default scope is the tween.
  * @property {Phaser.Types.Tweens.TweenOnCompleteCallback} [onComplete] - A function to call when the tween completes.
  * @property {array} [onCompleteParams] - Additional parameters to pass to `onComplete`.
