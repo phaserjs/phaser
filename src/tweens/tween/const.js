@@ -33,7 +33,7 @@ var TWEEN_CONST = {
      */
     DELAY: 2,
 
-    //  3 used to be used by OFFSET_DELAY prior to 3.60
+    //  3 used to be OFFSET_DELAY prior to 3.60
 
     /**
      * TweenData state.
@@ -101,7 +101,7 @@ var TWEEN_CONST = {
     PENDING: 20,
 
     /**
-     * Tween state. The Tween is active witin the Tween Manager. This means it is either playing,
+     * Tween state. The Tween is active within the Tween Manager. This means it is either playing,
      * or was playing and is currently paused, but in both cases it's still being processed by
      * the Tween Manager, so is considered 'active'.
      *
@@ -164,7 +164,16 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.60.0
      */
-    DESTROYED: 27
+    DESTROYED: 27,
+
+    /**
+     * Tween state. The is a chained Tween and is awaiting playback.
+     *
+     * @name Phaser.Tweens.CHAINED
+     * @type {number}
+     * @since 3.60.0
+     */
+    CHAINED: 28
 
 };
 
