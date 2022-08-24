@@ -164,17 +164,45 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#add
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The configuration object for the Tween.
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenBuilderConfig[]|object|object[]} config - The configuration object for the Tween. Or an array of configuration objects, in which case a series of chained Tweens is created.
      *
-     * @return {Phaser.Tweens.Tween} The created Tween.
+     * @return {Phaser.Tweens.Tween|Phaser.Tweens.Tween[]} The created Tween, or if an array of configs was provided then an array of Tweens is returned.
      */
     add: function (config)
     {
-        var tween = TweenBuilder(this, config);
+        var tween;
 
-        this.tweens.push(tween.init());
+        if (Array.isArray(config))
+        {
+            var result = [];
+            var prevTween = null;
 
-        return tween;
+            for (var i = 0; i < config.length; i++)
+            {
+                tween = TweenBuilder(this, config[i]);
+
+                this.tweens.push(tween.init(i > 0));
+
+                if (i > 0)
+                {
+                    prevTween.chain(tween);
+                }
+
+                prevTween = tween;
+
+                result.push(tween);
+            }
+
+            return result;
+        }
+        else
+        {
+            tween = TweenBuilder(this, config);
+
+            this.tweens.push(tween.init());
+
+            return tween;
+        }
     },
 
     /**
