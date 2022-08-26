@@ -222,6 +222,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `RequestAnimationFrame.tick` property has been removed as it's no longer used internally.
 * The `RequestAnimationFrame.lastTime` property has been removed as it's no longer used internally.
 * The `RequestAnimationFrame` class no longer calculates the tick or lastTime values and doesn't call `performance.now` as these values were never used internally and not used by the receiving callback either.
+* The `RequestAnimationFrame.target` property has been renamed to `delay` to better describe what it does.
 
 ### Bug Fixes
 
