@@ -15,11 +15,11 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
  * @classdesc
  * The core runner class that Phaser uses to handle the game loop. It can use either Request Animation Frame,
  * or SetTimeout, based on browser support and config settings, to create a continuous loop within the browser.
- * 
+ *
  * Each time the loop fires, `TimeStep.step` is called and this is then passed onto the core Game update loop,
  * it is the core heartbeat of your game. It will fire as often as Request Animation Frame is capable of handling
  * on the target device.
- * 
+ *
  * Note that there are lots of situations where a browser will stop updating your game. Such as if the player
  * switches tabs, or covers up the browser window with another application. In these cases, the 'heartbeat'
  * of your game will pause, and only resume when focus is returned to it by the player. There is no way to avoid
@@ -295,7 +295,7 @@ var TimeStep = new Class({
 
         /**
          * The maximum number of delta values that are retained in order to calculate a smoothed moving average.
-         * 
+         *
          * This can be changed in the Game Config via the `fps.deltaHistory` property. The default is 10.
          *
          * @name Phaser.Core.TimeStep#deltaSmoothingMax
@@ -308,7 +308,7 @@ var TimeStep = new Class({
         /**
          * The number of frames that the cooldown is set to after the browser panics over the FPS rate, usually
          * as a result of switching tabs and regaining focus.
-         * 
+         *
          * This can be changed in the Game Config via the `fps.panicMax` property. The default is 120.
          *
          * @name Phaser.Core.TimeStep#panicMax
@@ -320,7 +320,7 @@ var TimeStep = new Class({
 
         /**
          * The actual elapsed time in ms between one update and the next.
-         * 
+         *
          * Unlike with `delta`, no smoothing, capping, or averaging is applied to this value.
          * So please be careful when using this value in math calculations.
          *
@@ -344,9 +344,9 @@ var TimeStep = new Class({
 
         /**
          * Apply smoothing to the delta value used within Phasers internal calculations?
-         * 
+         *
          * This can be changed in the Game Config via the `fps.smoothStep` property. The default is `true`.
-         * 
+         *
          * Smoothing helps settle down the delta values after browser tab switches, or other situations
          * which could cause significant delta spikes or dips. By default it has been enabled in Phaser 3
          * since the first version, but is now exposed under this property (and the corresponding game config
@@ -516,43 +516,43 @@ var TimeStep = new Class({
             if (this._coolDown > 0 || !this.inFocus)
             {
                 this._coolDown--;
-    
+
                 dt = Math.min(dt, this._target);
             }
-    
+
             if (dt > this._min)
             {
                 //  Probably super bad start time or browser tab context loss,
                 //  so use the last 'sane' dt value
-    
+
                 dt = history[idx];
-    
+
                 //  Clamp delta to min (in case history has become corrupted somehow)
                 dt = Math.min(dt, this._min);
             }
-    
+
             //  Smooth out the delta over the previous X frames
-    
+
             //  add the delta to the smoothing array
             history[idx] = dt;
-    
+
             //  adjusts the delta history array index based on the smoothing count
             //  this stops the array growing beyond the size of deltaSmoothingMax
             this.deltaIndex++;
-    
+
             if (this.deltaIndex > max)
             {
                 this.deltaIndex = 0;
             }
-    
+
             //  Loop the history array, adding the delta values together
             avg = 0;
-    
+
             for (var i = 0; i < max; i++)
             {
                 avg += history[i];
             }
-    
+
             //  Then divide by the array length to get the average delta
             avg /= max;
         }
@@ -593,10 +593,7 @@ var TimeStep = new Class({
 
         this.framesThisSecond++;
 
-        //  Interpolation - how far between what is expected and where we are?
-        var interpolation = avg / this._target;
-
-        this.callback(time, avg, interpolation);
+        this.callback(time, avg);
 
         //  Shift time value over
         this.lastTime = time;
