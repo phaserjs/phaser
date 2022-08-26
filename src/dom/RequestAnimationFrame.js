@@ -115,7 +115,10 @@ var RequestAnimationFrame = new Class({
 
             _this.callback(timestamp);
 
-            _this.timeOutID = window.requestAnimationFrame(step);
+            if (_this.isRunning)
+            {
+                _this.timeOutID = window.requestAnimationFrame(step);
+            }
         };
 
         /**
