@@ -66,12 +66,12 @@ var RequestAnimationFrame = new Class({
         /**
          * The delay rate in ms for setTimeOut.
          *
-         * @name Phaser.DOM.RequestAnimationFrame#target
+         * @name Phaser.DOM.RequestAnimationFrame#delay
          * @type {number}
          * @default 0
-         * @since 3.21.0
+         * @since 3.60.0
          */
-        this.target = 0;
+        this.delay = 0;
 
         var _this = this;
 
@@ -109,7 +109,7 @@ var RequestAnimationFrame = new Class({
 
             if (_this.isRunning)
             {
-                _this.timeOutID = window.setTimeout(stepTimeout, _this.target);
+                _this.timeOutID = window.setTimeout(stepTimeout, _this.delay);
             }
         };
     },
@@ -135,7 +135,7 @@ var RequestAnimationFrame = new Class({
 
         this.isSetTimeOut = forceSetTimeOut;
 
-        this.target = delay;
+        this.delay = delay;
 
         this.isRunning = true;
 
