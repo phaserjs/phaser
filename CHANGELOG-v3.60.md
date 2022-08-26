@@ -217,8 +217,11 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The temporary canvas created in `CanvasFeatures` for the `checkInverseAlpha` test is now removed from the CanvasPool after use.
 * The `CanvasFeatures` tests and the TextureManager `_tempContext` now specify the `{ willReadFrequently: true }` hint to inform the browser the canvas is to be read from, not composited.
 * When calling `TextureManager.getTextureKeys` it will now exclude the default `__WHITE` texture from the results (thanks @samme)
-* `RequestAnimationFrame.step` will now no longer call `requestAnimationFrame` is `isRunning` has been set to `false` (via the `stop` method)
+* `RequestAnimationFrame.step` will now no longer call `requestAnimationFrame` if `isRunning` has been set to `false` (via the `stop` method)
 * The `TimeStep` no longer calculates or passes the `interpolation` value to Game.step as it was removed several versions ago, so is redundant.
+* The `RequestAnimationFrame.tick` property has been removed as it's no longer used internally.
+* The `RequestAnimationFrame.lastTime` property has been removed as it's no longer used internally.
+* The `RequestAnimationFrame` class no longer calculates the tick or lastTime values and doesn't call `performance.now` as these values were never used internally and not used by the receiving callback either.
 
 ### Bug Fixes
 
