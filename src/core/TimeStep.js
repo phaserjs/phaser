@@ -110,6 +110,23 @@ var TimeStep = new Class({
         this.targetFps = GetValue(config, 'target', 60);
 
         /**
+         * Enforce a frame rate limit. This forces how often the Game step will run. By default it is zero,
+         * which means it will run at whatever limit the browser (via RequestAnimationFrame) can handle, which
+         * is the optimum rate for fast-action games. However, if you are building a non-game like a graphics
+         * generator, or low-intensity game, you can lower the step rate via this value (and its related config
+         * value). Setting this _beyond_ the rate of RequestAnimationFrame will make no difference at all.
+         * Use it purely to _restrict_ updates in low-intensity situations.
+         *
+         * @name Phaser.Core.TimeStep#limitFps
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.limitFps = GetValue(config, 'limit', 0);
+
+        this.limitFpsTriggered = false;
+
+        /**
          * The minFps value in ms.
          * Defaults to 200ms between frames (i.e. super slow!)
          *
@@ -589,11 +606,17 @@ var TimeStep = new Class({
             this.actualFps = 0.25 * this.framesThisSecond + 0.75 * this.actualFps;
             this.nextFpsUpdate = time + 1000;
             this.framesThisSecond = 0;
+            this.limitFpsTriggered = false;
         }
 
         this.framesThisSecond++;
 
-        this.callback(time, avg);
+        if (this.limitFps === 0 || (!this.limitFpsTriggered && this.framesThisSecond >= this.limitFps))
+        {
+            this.callback(time, avg);
+
+            this.limitFpsTriggered = true;
+        }
 
         //  Shift time value over
         this.lastTime = time;
