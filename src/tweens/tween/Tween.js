@@ -339,7 +339,7 @@ var Tween = new Class({
          */
         this.overshoot = 0;
 
-        this.prevTime = 0;
+        this.debug = {};
     },
 
     /**
@@ -754,7 +754,7 @@ var Tween = new Class({
      * @fires Phaser.Tweens.Events#TWEEN_LOOP
      * @since 3.0.0
      */
-    nextState: function ()
+    nextState: function (timestamp)
     {
         if (this.loopCounter > 0)
         {
@@ -786,24 +786,35 @@ var Tween = new Class({
         {
             this.state = TWEEN_CONST.PENDING_REMOVE;
 
-            this.onCompleteHandler();
+            this.onCompleteHandler(timestamp);
         }
     },
 
-    onCompleteHandler: function ()
+    onCompleteHandler: function (timestamp)
     {
         this.dispatchEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
+
+        this.debug.onComplete = timestamp;
+        this.debug.onCompleteNow = performance.now();
 
         //  Chain ...
         //  Additional time overstep may be in 'countdown' or the diff between 'elasped' and 'duration' ?
         // var overshoot = Math.max(0, this.elapsed - this.duration);
-        var overshoot = Math.max(0, this.elapsed - this.duration);
+        // var overshoot = Math.max(0, this.elapsed - this.duration);
 
-        console.log('onComplete', Date.now(), performance.now());
+        // console.log('onComplete', timestamp, 'dn', Date.now(), performance.now());
 
-        console.log('onCompleteHandler - overshot by', overshoot, 'ms - vs.', this.overshoot);
-        console.log('elapsed / duration =', this.elapsed, '=', this.duration);
-        console.log('completeDelay', this.completeDelay, 'countdown', this.countdown);
+        // console.log('onCompleteHandler - overshot by', overshoot, 'ms - vs.', this.overshoot);
+        // console.log('elapsed / duration =', this.elapsed, '=', this.duration);
+        // console.log('completeDelay', this.completeDelay, 'countdown', this.countdown);
+
+        console.log('onStart', this.debug.onStart);
+        console.log('onComplete', this.debug.onComplete);
+        console.log('duration', this.debug.onComplete - this.debug.onStart, 'overshoot', (this.debug.onComplete - this.debug.onStart) - this.duration);
+
+        console.log('onStartNow', this.debug.onStartNow);
+        console.log('onCompleteNow', this.debug.onCompleteNow);
+        console.log('duration', this.debug.onCompleteNow - this.debug.onStartNow, 'overshoot', (this.debug.onCompleteNow - this.debug.onStartNow) - this.duration);
     },
 
     /**
@@ -1110,13 +1121,13 @@ var Tween = new Class({
             return false;
         }
 
-        timestamp = performance.now();
+        // timestamp = performance.now();
 
-        delta = timestamp - this.prevTime;
+        // delta = timestamp - this.prevTime;
 
-        console.log(delta);
+        // console.log(delta);
 
-        this.prevTime = timestamp;
+        // this.prevTime = timestamp;
 
         delta *= this.timeScale * this.parent.timeScale;
 
@@ -1144,7 +1155,7 @@ var Tween = new Class({
         //  Check 'this.state', not 'state' as it may have been updated by the functions above.
         if (this.state === TWEEN_CONST.ACTIVE)
         {
-            this.updateActive(delta);
+            this.updateActive(delta, timestamp);
         }
 
         return (this.state === TWEEN_CONST.PENDING_REMOVE);
@@ -1193,7 +1204,7 @@ var Tween = new Class({
      *
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    updateActive: function (delta)
+    updateActive: function (delta, timestamp)
     {
         if (!this.hasStarted && !this.isSeeking)
         {
@@ -1205,11 +1216,12 @@ var Tween = new Class({
 
                 this.dispatchEvent(Events.TWEEN_START, this.callbacks.onStart);
 
-                console.log('onStart', Date.now(), performance.now());
-
-                this.prevTime = performance.now();
+                this.debug.onStart = timestamp;
+                this.debug.onStartNow = performance.now();
 
                 delta = 0;
+
+                // console.log('onStart', timestamp, 'now', performance.now(), 'diff', performance.now() - timestamp);
             }
             else
             {
@@ -1230,7 +1242,7 @@ var Tween = new Class({
         //  Anything still running? If not, we're done
         if (!stillRunning)
         {
-            this.nextState();
+            this.nextState(timestamp);
         }
     },
 
