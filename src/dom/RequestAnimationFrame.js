@@ -10,6 +10,7 @@ var NOOP = require('../utils/NOOP');
 /**
  * @classdesc
  * Abstracts away the use of RAF or setTimeOut for the core game update loop.
+ *
  * This is invoked automatically by the Phaser.Game instance.
  *
  * @class RequestAnimationFrame
@@ -43,16 +44,6 @@ var RequestAnimationFrame = new Class({
         this.callback = NOOP;
 
         /**
-         * The most recent timestamp. Either a DOMHighResTimeStamp under RAF or `Date.now` under SetTimeout.
-         *
-         * @name Phaser.DOM.RequestAnimationFrame#tick
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.tick = 0;
-
-        /**
          * True if the step is using setTimeout instead of RAF.
          *
          * @name Phaser.DOM.RequestAnimationFrame#isSetTimeOut
@@ -73,18 +64,7 @@ var RequestAnimationFrame = new Class({
         this.timeOutID = null;
 
         /**
-         * The previous time the step was called.
-         *
-         * @name Phaser.DOM.RequestAnimationFrame#lastTime
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.lastTime = 0;
-
-        /**
-         * The target FPS rate in ms.
-         * Only used when setTimeout is used instead of RAF.
+         * The delay rate in ms for setTimeOut.
          *
          * @name Phaser.DOM.RequestAnimationFrame#target
          * @type {number}
@@ -97,7 +77,8 @@ var RequestAnimationFrame = new Class({
 
         /**
          * The RAF step function.
-         * Updates the local tick value, invokes the callback and schedules another call to requestAnimationFrame.
+         *
+         * Invokes the callback and schedules another call to requestAnimationFrame.
          *
          * @name Phaser.DOM.RequestAnimationFrame#step
          * @type {FrameRequestCallback}
@@ -105,15 +86,7 @@ var RequestAnimationFrame = new Class({
          */
         this.step = function step ()
         {
-            //  Because we cannot trust the time passed to this callback from the browser and need it kept in sync with event times
-            var timestamp = window.performance.now();
-
-            //  DOMHighResTimeStamp
-            _this.lastTime = _this.tick;
-
-            _this.tick = timestamp;
-
-            _this.callback(timestamp);
+            _this.callback();
 
             if (_this.isRunning)
             {
@@ -123,7 +96,8 @@ var RequestAnimationFrame = new Class({
 
         /**
          * The SetTimeout step function.
-         * Updates the local tick value, invokes the callback and schedules another call to setTimeout.
+         *
+         * Invokes the callback and schedules another call to setTimeout.
          *
          * @name Phaser.DOM.RequestAnimationFrame#stepTimeout
          * @type {function}
@@ -131,17 +105,12 @@ var RequestAnimationFrame = new Class({
          */
         this.stepTimeout = function stepTimeout ()
         {
-            var d = Date.now();
+            _this.callback();
 
-            var delay = Math.min(Math.max(_this.target * 2 + _this.tick - d, 0), _this.target);
-
-            _this.lastTime = _this.tick;
-
-            _this.tick = d;
-
-            _this.callback(d);
-
-            _this.timeOutID = window.setTimeout(stepTimeout, delay);
+            if (_this.isRunning)
+            {
+                _this.timeOutID = window.setTimeout(stepTimeout, _this.target);
+            }
         };
     },
 
@@ -153,9 +122,9 @@ var RequestAnimationFrame = new Class({
      *
      * @param {FrameRequestCallback} callback - The callback to invoke each step.
      * @param {boolean} forceSetTimeOut - Should it use SetTimeout, even if RAF is available?
-     * @param {number} targetFPS - The target fps rate (in ms). Only used when setTimeout is used.
+     * @param {number} delay - The setTimeout delay rate in ms.
      */
-    start: function (callback, forceSetTimeOut, targetFPS)
+    start: function (callback, forceSetTimeOut, delay)
     {
         if (this.isRunning)
         {
@@ -166,7 +135,7 @@ var RequestAnimationFrame = new Class({
 
         this.isSetTimeOut = forceSetTimeOut;
 
-        this.target = targetFPS;
+        this.target = delay;
 
         this.isRunning = true;
 
