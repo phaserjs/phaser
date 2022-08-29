@@ -154,6 +154,7 @@ module.exports = {
         \n}`;
 
         fragmentShaderSource = fragmentShaderSource.replace(/%getSampler%/gi, src);
+
         return fragmentShaderSource.replace(/%count%/gi, maxTextures.toString());
     }
 };
