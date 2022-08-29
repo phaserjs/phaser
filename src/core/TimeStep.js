@@ -138,16 +138,6 @@ var TimeStep = new Class({
         this.fpsLimit = GetValue(config, 'limit', 0);
 
         /**
-         * Internal value tracking if the fps has been rated limited this step.
-         *
-         * @name Phaser.Core.TimeStep#fpsLimitTriggered
-         * @type {boolean}
-         * @default false
-         * @since 3.60.0
-         */
-        this.fpsLimitTriggered = false;
-
-        /**
          * Is the FPS rate limited?
          *
          * This is set by setting the Game Config `limit` value to a value above zero.
@@ -160,6 +150,16 @@ var TimeStep = new Class({
          * @since 3.60.0
          */
         this.hasFpsLimit = (this.fpsLimit > 0);
+
+        /**
+         * Internal value holding the fps rate limit in ms.
+         *
+         * @name Phaser.Core.TimeStep#_limitRate
+         * @type {number}
+         * @private
+         * @since 3.60.0
+         */
+        this._limitRate = (this.hasFpsLimit) ? (1000 / this.fpsLimit) : 0;
 
         /**
          * The minimum fps value in ms.
@@ -633,7 +633,6 @@ var TimeStep = new Class({
         this.actualFps = 0.25 * this.framesThisSecond + 0.75 * this.actualFps;
         this.nextFpsUpdate = time + 1000;
         this.framesThisSecond = 0;
-        this.fpsLimitTriggered = false;
     },
 
     /**
@@ -665,7 +664,7 @@ var TimeStep = new Class({
         }
 
         //  Set as the world delta value (after smoothing, if applied)
-        this.delta = delta;
+        this.delta += delta;
 
         if (time >= this.nextFpsUpdate)
         {
@@ -674,11 +673,11 @@ var TimeStep = new Class({
 
         this.framesThisSecond++;
 
-        if (!this.fpsLimitTriggered && this.framesThisSecond >= this.fpsLimit)
+        if (this.delta >= this._limitRate)
         {
-            this.callback(time, delta);
+            this.callback(time, this.delta);
 
-            this.fpsLimitTriggered = true;
+            this.delta = 0;
         }
 
         //  Shift time value over
