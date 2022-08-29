@@ -140,16 +140,17 @@ module.exports = {
      */
     parseFragmentShaderMaxTextures: function (fragmentShaderSource, maxTextures)
     {
-        if (!fragmentShaderSource) {
-            return "";
+        if (!fragmentShaderSource)
+        {
+            return '';
         }
 
         const src = `
         vec4 getSampler (int index, vec2 uv) {
-        \nfor (int i=0; i < ${maxTextures}; i++) {
-        \nif (index == i) { return texture2D(uMainSampler[i], uv); }
-        \n}
-        \nreturn vec4(0);
+        \n  for (int i=0; i < ${maxTextures}; i++) {
+        \n    if (index == i) { return texture2D(uMainSampler[i], uv); }
+        \n  }
+        \n  return vec4(0);
         \n}`;
 
         fragmentShaderSource = fragmentShaderSource.replace(/%getSampler%/gi, src);
