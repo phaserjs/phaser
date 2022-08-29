@@ -103,7 +103,7 @@ The following are further updates within the Tween system:
 ### TimeStep Updates
 
 * You can now enforce an FPS rate on your game by setting the `fps: { limit: 30 }` value in your game config. In this case, it will set an fps rate of 30. This forces Phaser to not run the game step more than 30 times per second (or whatever value you set) and works for both Request Animation Frame and SetTimeOut.
-* `TimeStep.fpsLimitTriggered` is a new internal property allowing the Timestep to keep track of fps-limited steps.
+* `TimeStep._limitRate` is a new internal private property allowing the Timestep to keep track of fps-limited steps.
 * `TimeStep.hasFpsLimit` is a new internal boolean so the Timestep knows if the step is fps rate limited, or not.
 * There is now a `TimeStep.step` method and `TimeStep.setLimitFPS` method. Which one is called depends on if you have fps limited your game, or not. This switch is made internally, automatically.
 * `TimeStep.smoothDelta` is a new method that encapsulates the delta smoothing.
