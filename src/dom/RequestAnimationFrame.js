@@ -83,10 +83,12 @@ var RequestAnimationFrame = new Class({
          * @name Phaser.DOM.RequestAnimationFrame#step
          * @type {FrameRequestCallback}
          * @since 3.0.0
+         *
+         * @param {number} time - The timestamp passed in from RequestAnimationFrame.
          */
-        this.step = function step ()
+        this.step = function step (time)
         {
-            _this.callback();
+            _this.callback(time);
 
             if (_this.isRunning)
             {
@@ -105,7 +107,7 @@ var RequestAnimationFrame = new Class({
          */
         this.stepTimeout = function stepTimeout ()
         {
-            _this.callback();
+            _this.callback(window.performance.now());
 
             if (_this.isRunning)
             {
