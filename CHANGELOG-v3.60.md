@@ -100,6 +100,23 @@ The following are further updates within the Tween system:
 * The keyword `interpolation` has been added to the Reserved Words list and Defaults list (it defaults to `null`).
 * The keyword `persists` has been added to the Reserved Words list and Defaults list (it defaults to `false`).
 
+### TimeStep Updates
+
+* You can now enforce an FPS rate on your game by setting the `fps: { limit: 30 }` value in your game config. In this case, it will set an fps rate of 30. This forces Phaser to not run the game step more than 30 times per second (or whatever value you set) and works for both Request Animation Frame and SetTimeOut.
+* `TimeStep.fpsLimitTriggered` is a new internal property allowing the Timestep to keep track of fps-limited steps.
+* `TimeStep.hasFpsLimit` is a new internal boolean so the Timestep knows if the step is fps rate limited, or not.
+* There is now a `TimeStep.step` method and `TimeStep.setLimitFPS` method. Which one is called depends on if you have fps limited your game, or not. This switch is made internally, automatically.
+* `TimeStep.smoothDelta` is a new method that encapsulates the delta smoothing.
+* `TimeStep.updateFPS` is a new method that calculates the moving frame rate average.
+* `TimeStep.wake` will now automatically reset the fps limits and internal update counters.
+* `TimeStep.destroy` will now call `RequestAnimationFrame.destroy`, properly cleaning it down.
+* `RequestAnimationFrame.step` will now no longer call `requestAnimationFrame` if `isRunning` has been set to `false` (via the `stop` method)
+* The `TimeStep` no longer calculates or passes the `interpolation` value to Game.step as it was removed several versions ago, so is redundant.
+* The `RequestAnimationFrame.tick` property has been removed as it's no longer used internally.
+* The `RequestAnimationFrame.lastTime` property has been removed as it's no longer used internally.
+* The `RequestAnimationFrame` class no longer calculates the tick or lastTime values and doesn't call `performance.now` as these values were never used internally and were not used by the receiving callback either.
+* The `RequestAnimationFrame.target` property has been renamed to `delay` to better describe what it does.
+
 ### New Features
 
 * `ScaleManager.getViewPort` is a new method that will return a Rectangle geometry object that matches the visible area of the screen (thanks @rexrainbow)
@@ -217,12 +234,6 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The temporary canvas created in `CanvasFeatures` for the `checkInverseAlpha` test is now removed from the CanvasPool after use.
 * The `CanvasFeatures` tests and the TextureManager `_tempContext` now specify the `{ willReadFrequently: true }` hint to inform the browser the canvas is to be read from, not composited.
 * When calling `TextureManager.getTextureKeys` it will now exclude the default `__WHITE` texture from the results (thanks @samme)
-* `RequestAnimationFrame.step` will now no longer call `requestAnimationFrame` if `isRunning` has been set to `false` (via the `stop` method)
-* The `TimeStep` no longer calculates or passes the `interpolation` value to Game.step as it was removed several versions ago, so is redundant.
-* The `RequestAnimationFrame.tick` property has been removed as it's no longer used internally.
-* The `RequestAnimationFrame.lastTime` property has been removed as it's no longer used internally.
-* The `RequestAnimationFrame` class no longer calculates the tick or lastTime values and doesn't call `performance.now` as these values were never used internally and not used by the receiving callback either.
-* The `RequestAnimationFrame.target` property has been renamed to `delay` to better describe what it does.
 
 ### Bug Fixes
 
