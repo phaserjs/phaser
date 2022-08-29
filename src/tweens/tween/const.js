@@ -173,7 +173,9 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.60.0
      */
-    CHAINED: 28
+    CHAINED: 28,
+
+    PENDING_ACTIVE: 29
 
 };
 

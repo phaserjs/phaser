@@ -330,16 +330,14 @@ var Tween = new Class({
         this.chainedTween = null;
 
         /**
-         * When this Tween updates, any excess time is stored in this property.
+         * The delta used in the current update.
          *
-         * @name Phaser.Tweens.Tween#overshoot
+         * @name Phaser.Tweens.Tween#delta
          * @type {number}
          * @default 0
          * @since 3.60.0
          */
-        this.overshoot = 0;
-
-        this.debug = {};
+        this.delta = 0;
     },
 
     /**
@@ -503,7 +501,7 @@ var Tween = new Class({
 
         if (tween)
         {
-            //  Needs to be told its a chained tween? Or just use the 'paused' property?
+            //  Needs to be told its a chained tween, or it'll start playing
             tween.state = TWEEN_CONST.CHAINED;
         }
 
@@ -754,7 +752,7 @@ var Tween = new Class({
      * @fires Phaser.Tweens.Events#TWEEN_LOOP
      * @since 3.0.0
      */
-    nextState: function (timestamp)
+    nextState: function (t)
     {
         if (this.loopCounter > 0)
         {
@@ -786,35 +784,32 @@ var Tween = new Class({
         {
             this.state = TWEEN_CONST.PENDING_REMOVE;
 
-            this.onCompleteHandler(timestamp);
+            this.onCompleteHandler(t);
         }
     },
 
-    onCompleteHandler: function (timestamp)
+    onCompleteHandler: function (t)
     {
+        //  Additional time overstep may be in 'countdown' or the diff between 'elasped' and 'duration'
+        // var diff = Math.max(0, (this.elapsed - this.duration) - this.delta);
+
+        var diff = this.elapsed - this.duration;
+
+        console.log('end', t);
+        console.log('elapsed', this.elapsed);
+        console.log('duration', this.duration);
+        console.log('delta', this.delta);
+        console.log('diff', diff);
+
         this.dispatchEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
 
-        this.debug.onComplete = timestamp;
-        this.debug.onCompleteNow = performance.now();
-
         //  Chain ...
-        //  Additional time overstep may be in 'countdown' or the diff between 'elasped' and 'duration' ?
-        // var overshoot = Math.max(0, this.elapsed - this.duration);
-        // var overshoot = Math.max(0, this.elapsed - this.duration);
+        if (this.chainedTween)
+        {
+            this.chainedTween.state = TWEEN_CONST.PENDING_ACTIVE;
+        }
 
-        // console.log('onComplete', timestamp, 'dn', Date.now(), performance.now());
-
-        // console.log('onCompleteHandler - overshot by', overshoot, 'ms - vs.', this.overshoot);
-        // console.log('elapsed / duration =', this.elapsed, '=', this.duration);
-        // console.log('completeDelay', this.completeDelay, 'countdown', this.countdown);
-
-        console.log('onStart', this.debug.onStart);
-        console.log('onComplete', this.debug.onComplete);
-        console.log('duration', this.debug.onComplete - this.debug.onStart, 'overshoot', (this.debug.onComplete - this.debug.onStart) - this.duration);
-
-        console.log('onStartNow', this.debug.onStartNow);
-        console.log('onCompleteNow', this.debug.onCompleteNow);
-        console.log('duration', this.debug.onCompleteNow - this.debug.onStartNow, 'overshoot', (this.debug.onCompleteNow - this.debug.onStartNow) - this.duration);
+        console.log('-------------------------------------------------------');
     },
 
     /**
@@ -852,8 +847,6 @@ var Tween = new Class({
 
         this.paused = false;
         this.state = TWEEN_CONST.ACTIVE;
-
-        this.prevTime = performance.now();
 
         return this;
     },
@@ -1111,6 +1104,13 @@ var Tween = new Class({
     {
         var state = this.state;
 
+        if (state === TWEEN_CONST.PENDING_ACTIVE)
+        {
+            this.state = TWEEN_CONST.ACTIVE;
+
+            return false;
+        }
+
         if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.DESTROYED)
         {
             return true;
@@ -1121,15 +1121,9 @@ var Tween = new Class({
             return false;
         }
 
-        // timestamp = performance.now();
-
-        // delta = timestamp - this.prevTime;
-
-        // console.log(delta);
-
-        // this.prevTime = timestamp;
-
         delta *= this.timeScale * this.parent.timeScale;
+
+        this.delta = delta;
 
         this.elapsed += delta;
         this.progress = Math.min(this.elapsed / this.duration, 1);
@@ -1137,15 +1131,13 @@ var Tween = new Class({
         this.totalElapsed += delta;
         this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
 
-        this.overshoot = delta;
-
         if (state === TWEEN_CONST.LOOP_DELAY)
         {
-            this.updateCountdown(delta, TWEEN_CONST.ACTIVE, Events.TWEEN_LOOP, this.callbacks.onLoop);
+            this.updateCountdown(TWEEN_CONST.ACTIVE, Events.TWEEN_LOOP, this.callbacks.onLoop);
         }
         else if (state === TWEEN_CONST.COMPLETE_DELAY)
         {
-            if (this.updateCountdown(delta, TWEEN_CONST.PENDING_REMOVE))
+            if (this.updateCountdown(TWEEN_CONST.PENDING_REMOVE))
             {
                 this.onCompleteHandler();
             }
@@ -1168,16 +1160,15 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#updateCountdown
      * @since 3.60.0
      *
-     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      * @param {number} state - The new Tween State to be set.
      * @param {Phaser.Types.Tweens.Event} [event] - The Tween Event to dispatch, if any.
      * @param {function} [callback] - The Tween Callback to invoke, if any.
      *
      * @return {boolean} `true` if the countdown was reached, otherwise `false`.
      */
-    updateCountdown: function (delta, state, event, callback)
+    updateCountdown: function (state, event, callback)
     {
-        this.countdown -= delta;
+        this.countdown -= this.delta;
 
         if (this.countdown <= 0)
         {
@@ -1204,7 +1195,7 @@ var Tween = new Class({
      *
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    updateActive: function (delta, timestamp)
+    updateActive: function (delta, t)
     {
         if (!this.hasStarted && !this.isSeeking)
         {
@@ -1216,12 +1207,9 @@ var Tween = new Class({
 
                 this.dispatchEvent(Events.TWEEN_START, this.callbacks.onStart);
 
-                this.debug.onStart = timestamp;
-                this.debug.onStartNow = performance.now();
+                delta = Math.abs(this.startDelay);
 
-                delta = 0;
-
-                // console.log('onStart', timestamp, 'now', performance.now(), 'diff', performance.now() - timestamp);
+                console.log('start', t, 'delta adjust', delta);
             }
             else
             {
@@ -1242,7 +1230,8 @@ var Tween = new Class({
         //  Anything still running? If not, we're done
         if (!stillRunning)
         {
-            this.nextState(timestamp);
+            //  This calls onCompleteHandler if this tween is over
+            this.nextState(t);
         }
     },
 
@@ -1491,7 +1480,7 @@ var Tween = new Class({
      *
      * @return {boolean} True if the tween is not complete (e.g., playing), or false if the tween is complete.
      */
-    NEWupdateTweenData: function (tween, tweenData, delta)
+    updateTweenData: function (tween, tweenData, delta)
     {
         var target = tweenData.target;
 
@@ -1646,7 +1635,6 @@ var Tween = new Class({
      * @param {number} delta - The elapsed delta time in ms.
      *
      * @return {boolean} True if the tween is not complete (e.g., playing), or false if the tween is complete.
-     */
     updateTweenData: function (tween, tweenData, delta)
     {
         var target = tweenData.target;
@@ -1791,6 +1779,7 @@ var Tween = new Class({
         //  Return TRUE if this TweenData still playing, otherwise return FALSE
         return (tweenData.state !== TWEEN_CONST.COMPLETE);
     },
+     */
 
     /**
      * Handles the destroy process of this Tween, clearing out the
