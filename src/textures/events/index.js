@@ -16,6 +16,6 @@ module.exports = {
     LOAD: require('./LOAD_EVENT'),
     READY: require('./READY_EVENT'),
     REMOVE: require('./REMOVE_EVENT'),
-    REMOVE_KEY: require('./REMOVE_KEY_EVENT'),
+    REMOVE_KEY: require('./REMOVE_KEY_EVENT')
 
 };

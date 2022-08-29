@@ -6,6 +6,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var OS = require('../../device/OS');
+
 /**
  * @namespace Phaser.Renderer.WebGL.Utils
  * @since 3.0.0
@@ -145,13 +147,28 @@ module.exports = {
             return '';
         }
 
-        const src = `
-        vec4 getSampler (int index, vec2 uv) {
-        \n  for (int i=0; i < ${maxTextures}; i++) {
-        \n    if (index == i) { return texture2D(uMainSampler[i], uv); }
-        \n  }
-        \n  return vec4(0);
-        \n}`;
+        var src = 'vec4 getSampler (int index, vec2 uv) {';
+
+        if (OS.iOS)
+        {
+            for (var i = 0; i < maxTextures; i++)
+            {
+                if (i > 0)
+                {
+                    src += '\nelse ';
+                }
+
+                src += 'if (index == ' + i + ') { return texture2D(uMainSampler[' + i + '], uv); }';
+            }
+        }
+        else
+        {
+            src += '\nfor (int i=0; i < ' + maxTextures + '; i++) {';
+            src += '\nif (index == i) { return texture2D(uMainSampler[i], uv); }';
+            src += '\n}';
+        }
+
+        src += '\nreturn vec4(0);\n}';
 
         fragmentShaderSource = fragmentShaderSource.replace(/%getSampler%/gi, src);
 
