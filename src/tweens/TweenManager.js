@@ -161,17 +161,23 @@ var TweenManager = new Class({
      *
      * Please note that a Tween will not manipulate any target property that begins with an underscore.
      *
-     * You can optionally pass an array of Tween Configuration objects to this method and it will create
-     * one Tween per array element and return them all in an array.
+     * Tweens are designed to be 'fire-and-forget'. They automatically destroy themselves once playback
+     * is complete, to free-up memory and resources. If you wish to keep a tween after playback, i.e. to
+     * play it again at a later time, then you should set the `persist` property to `true` in the config.
+     * However, doing so means it's entirely up to _you_ to destroy the tween when you're finished with it,
+     * otherwise it will linger in memory forever.
+     *
+     * You can optionally pass an **array** of Tween Configuration objects to this method and it will create
+     * one Tween per entry in the array. If an array is given, an array of tweens is returned.
      *
      * If you wish to chain Tweens together for sequential playback, see the `TweenManager.chain` method.
      *
      * @method Phaser.Tweens.TweenManager#add
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenBuilderConfig[]|object|object[]} config - The configuration object for the Tween. Or an array of configuration objects, in which case all of the Tweens are created together.
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenBuilderConfig[]|object|object[]} config - A Tween Configuration object. Or an array of Tween Configuration objects.
      *
-     * @return {Phaser.Tweens.Tween|Phaser.Tweens.Tween[]} The created Tween, or if an array of configs was provided then an array of Tweens is returned.
+     * @return {Phaser.Tweens.Tween|Phaser.Tweens.Tween[]} The created Tween, or an array of Tweens if an array of tween configs was provided.
      */
     add: function (config)
     {
@@ -203,9 +209,14 @@ var TweenManager = new Class({
     },
 
     /**
-     * Create a sequence of Tweens, chained to one-another, and add it to this Tween Manager.
+     * Create a sequence of Tweens, chained to one-another, and add them to this Tween Manager.
      *
-     * Playback will start immediately unless the first Tween has been configured to be paused.
+     * The tweens are played in order, from start to finish. You can optionally set the chain
+     * to repeat as many times as you like. Once the chain has finished playing, or repeating if set,
+     * all tweens in the chain will be destroyed automatically. To override this, set the 'persists'
+     * argument to 'true'.
+     *
+     * Playback will start immediately unless the _first_ Tween has been configured to be paused.
      *
      * Please note that Tweens will not manipulate any target property that begins with an underscore.
      *
@@ -216,14 +227,14 @@ var TweenManager = new Class({
      *
      * @return {Phaser.Tweens.Tween} The first Tween in the chain.
      */
-    chain: function (config, repeat, repeatDelay)
+    chain: function (tweens, repeat, repeatDelay)
     {
         if (repeat === undefined) { repeat = false; }
         if (repeatDelay === undefined) { repeatDelay = 0; }
 
-        if (!Array.isArray(config))
+        if (!Array.isArray(tweens))
         {
-            config = [ config ];
+            tweens = [ tweens ];
         }
 
         var tween;
@@ -231,9 +242,9 @@ var TweenManager = new Class({
         var result = [];
         var prevTween = null;
 
-        for (var i = 0; i < config.length; i++)
+        for (var i = 0; i < tweens.length; i++)
         {
-            tween = TweenBuilder(this, config[i]);
+            tween = TweenBuilder(this, tweens[i]);
 
             this.tweens.push(tween.init(i > 0));
 
@@ -253,6 +264,24 @@ var TweenManager = new Class({
         }
 
         return result[0];
+    },
+
+    /**
+     * Returns an array containing this Tween and all Tweens chained to it,
+     * in the order in which they will be played.
+     *
+     * If there are no chained Tweens an empty array is returned.
+     *
+     * @method Phaser.Tweens.TweenManager#getChainedTweens
+     * @since 3.60.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - The Tween to return the chain from.
+     *
+     * @return {Phaser.Tweens.Tween[]} An array of the chained tweens, or an empty array if there aren't any.
+     */
+    getChainedTweens: function (tween)
+    {
+        return tween.getChainedTweens();
     },
 
     /**
