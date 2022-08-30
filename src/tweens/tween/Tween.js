@@ -399,6 +399,8 @@ var Tween = new Class({
         this.elapsed = 0;
         this.totalElapsed = 0;
 
+        console.log('Tween.init', this.duration, 'sd', this.startDelay);
+
         if (!isChained)
         {
             this.state = TWEEN_CONST.ACTIVE;
@@ -449,10 +451,12 @@ var Tween = new Class({
                 tweenData.totalDuration += (tweenData.t2 * tweenData.repeat);
             }
 
-            if (tweenData.totalDuration > maxDuration)
+            // if (tweenData.totalDuration > maxDuration)
+            if (tweenData.t1 > maxDuration)
             {
                 //  Get the longest TweenData from the Tween, used to calculate the Tween TD
-                maxDuration = tweenData.totalDuration;
+                // maxDuration = tweenData.totalDuration;
+                maxDuration = tweenData.t1;
             }
 
             if (tweenData.delay < minDelay)
@@ -467,6 +471,9 @@ var Tween = new Class({
         //  renders at least 1 frame, but no more, without causing divided by zero errors elsewhere.
         this.duration = Math.max(maxDuration, 0.001);
 
+        //  How long before this Tween starts playback?
+        this.startDelay = minDelay;
+
         this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
 
         if (this.loopCounter > 0)
@@ -477,9 +484,6 @@ var Tween = new Class({
         {
             this.totalDuration = this.duration + this.completeDelay;
         }
-
-        //  How long before this Tween starts playback?
-        this.startDelay = minDelay;
     },
 
     /**
@@ -798,21 +802,12 @@ var Tween = new Class({
     onCompleteHandler: function (t)
     {
         //  Additional time overstep may be in 'countdown' or the diff between 'elasped' and 'duration'
-
-        // var diff = Math.max(0, (this.elapsed - this.duration) - this.delta);
-
         var diff = this.elapsed - this.duration;
 
         if (diff > this.delta)
         {
             diff -= this.delta;
         }
-
-        console.log('end', t);
-        console.log('elapsed', this.elapsed);
-        console.log('duration', this.duration);
-        console.log('delta', this.delta);
-        console.log('delta diff', diff);
 
         this.dispatchEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
 
@@ -822,9 +817,18 @@ var Tween = new Class({
             // this.chainedTween.state = TWEEN_CONST.ACTIVE;
             this.chainedTween.state = TWEEN_CONST.PENDING_ACTIVE;
             this.chainedTween.delta = diff;
+            console.log('end', t);
+            console.log('elapsed', this.elapsed);
+            console.log('---------------------------------------');
         }
-
-        console.log('-------------------------------------------------------');
+        else
+        {
+            console.log('end', t);
+            console.log('elapsed', this.elapsed);
+            console.log('duration', this.duration);
+            console.log('delta', this.delta);
+            console.log('delta diff', diff);
+        }
     },
 
     /**
@@ -1124,7 +1128,7 @@ var Tween = new Class({
             this.state = TWEEN_CONST.ACTIVE;
 
             //  Override the delta with whatever was left over from the previously chained tween
-            delta = this.delta;
+            // delta = this.delta;
         }
         else if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.DESTROYED)
         {
@@ -1136,14 +1140,6 @@ var Tween = new Class({
         }
 
         delta *= this.timeScale * this.parent.timeScale;
-
-        this.delta = delta;
-
-        this.elapsed += delta;
-        this.progress = Math.min(this.elapsed / this.duration, 1);
-
-        this.totalElapsed += delta;
-        this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
 
         if (state === TWEEN_CONST.LOOP_DELAY)
         {
@@ -1162,6 +1158,17 @@ var Tween = new Class({
         if (this.state === TWEEN_CONST.ACTIVE)
         {
             this.updateActive(delta, timestamp);
+
+            if (this.hasStarted)
+            {
+                this.delta = delta;
+
+                this.elapsed += delta;
+                this.progress = Math.min(this.elapsed / this.duration, 1);
+
+                this.totalElapsed += delta;
+                this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
+            }
         }
 
         return (this.state === TWEEN_CONST.PENDING_REMOVE);
@@ -1221,9 +1228,9 @@ var Tween = new Class({
 
                 this.dispatchEvent(Events.TWEEN_START, this.callbacks.onStart);
 
-                delta = Math.abs(this.startDelay);
+                // delta = Math.abs(this.startDelay);
 
-                console.log('start', t, 'delta adjust', delta);
+                console.log('start', t, 'delta adjust', this.startDelay, 'd', delta);
             }
             else
             {
