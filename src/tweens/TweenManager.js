@@ -161,10 +161,15 @@ var TweenManager = new Class({
      *
      * Please note that a Tween will not manipulate any target property that begins with an underscore.
      *
+     * You can optionally pass an array of Tween Configuration objects to this method and it will create
+     * one Tween per array element and return them all in an array.
+     *
+     * If you wish to chain Tweens together for sequential playback, see the `TweenManager.chain` method.
+     *
      * @method Phaser.Tweens.TweenManager#add
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenBuilderConfig[]|object|object[]} config - The configuration object for the Tween. Or an array of configuration objects, in which case a series of chained Tweens is created.
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenBuilderConfig[]|object|object[]} config - The configuration object for the Tween. Or an array of configuration objects, in which case all of the Tweens are created together.
      *
      * @return {Phaser.Tweens.Tween|Phaser.Tweens.Tween[]} The created Tween, or if an array of configs was provided then an array of Tweens is returned.
      */
@@ -175,20 +180,12 @@ var TweenManager = new Class({
         if (Array.isArray(config))
         {
             var result = [];
-            var prevTween = null;
 
             for (var i = 0; i < config.length; i++)
             {
                 tween = TweenBuilder(this, config[i]);
 
-                this.tweens.push(tween.init(i > 0));
-
-                if (i > 0)
-                {
-                    prevTween.chain(tween);
-                }
-
-                prevTween = tween;
+                this.tweens.push(tween.init());
 
                 result.push(tween);
             }
@@ -203,6 +200,59 @@ var TweenManager = new Class({
 
             return tween;
         }
+    },
+
+    /**
+     * Create a sequence of Tweens, chained to one-another, and add it to this Tween Manager.
+     *
+     * Playback will start immediately unless the first Tween has been configured to be paused.
+     *
+     * Please note that Tweens will not manipulate any target property that begins with an underscore.
+     *
+     * @method Phaser.Tweens.TweenManager#chain
+     * @since 3.60.0
+     *
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig[]|object[]} tweens - An array of Tween configuration objects for the Tweens in this chain.
+     *
+     * @return {Phaser.Tweens.Tween} The first Tween in the chain.
+     */
+    chain: function (config, repeat, repeatDelay)
+    {
+        if (repeat === undefined) { repeat = false; }
+        if (repeatDelay === undefined) { repeatDelay = 0; }
+
+        if (!Array.isArray(config))
+        {
+            config = [ config ];
+        }
+
+        var tween;
+
+        var result = [];
+        var prevTween = null;
+
+        for (var i = 0; i < config.length; i++)
+        {
+            tween = TweenBuilder(this, config[i]);
+
+            this.tweens.push(tween.init(i > 0));
+
+            if (i > 0)
+            {
+                prevTween.chain(tween);
+            }
+
+            prevTween = tween;
+
+            result.push(tween);
+
+            if (repeat > 0)
+            {
+                tween.persist = true;
+            }
+        }
+
+        return result[0];
     },
 
     /**
