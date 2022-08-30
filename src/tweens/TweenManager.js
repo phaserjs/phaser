@@ -142,20 +142,52 @@ var TweenManager = new Class({
      * In order to play this tween, you'll need to add it to a Tween Manager via
      * the `TweenManager.existing` method.
      *
+     * You can optionally pass an **array** of Tween Configuration objects to this method and it will create
+     * one Tween per entry in the array. If an array is given, an array of tweens is returned.
+     *
      * @method Phaser.Tweens.TweenManager#create
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The configuration object for the Tween.
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenBuilderConfig[]|object|object[]} config - A Tween Configuration object. Or an array of Tween Configuration objects.
      *
-     * @return {Phaser.Tweens.Tween} The created Tween object.
+     * @return {Phaser.Tweens.Tween|Phaser.Tweens.Tween[]} The created Tween, or an array of Tweens if an array of tween configs was provided.
      */
     create: function (config)
     {
-        return TweenBuilder(this, config);
+        if (Array.isArray(config))
+        {
+            var result = [];
+
+            for (var i = 0; i < config.length; i++)
+            {
+                result.push(TweenBuilder(this, config[i]));
+            }
+
+            return result;
+        }
+        else
+        {
+            return TweenBuilder(this, config);
+        }
     },
 
     /**
-     * Create a Tween and add it to this Tween Manager.
+     * Create a Tween and add it to this Tween Manager by passing a Tween Configuration object.
+     *
+     * Example, run from within a Scene:
+     *
+     * ```js
+     * const logo = this.add.image(100, 100, 'logo');
+     *
+     * this.tweens.add({
+     *   targets: logo,
+     *   x: 600,
+     *   ease: 'Power1',
+     *   duration: 2000
+     * });
+     * ```
+     *
+     * See the `TweenBuilderConfig` for all of the options you have available.
      *
      * Playback will start immediately unless the tween has been configured to be paused.
      *
