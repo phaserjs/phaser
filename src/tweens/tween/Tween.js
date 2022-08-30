@@ -305,10 +305,10 @@ var Tween = new Class({
         /**
          * Will this Tween persist after playback? A Tween that persists will _not_ be destroyed by the
          * Tween Manager, or when calling `Tween.stop`, and can be re-played as required. You can either
-         * set this property when creating the tween, or toggle it prior to playback.
+         * set this property when creating the tween in the tween config, or set it _prior_ to playback.
          *
          * However, it's up to you to ensure you destroy persistent tweens when you are finished with them,
-         * or they will retain references you may no longer require and general waste memory.
+         * or they will retain references you may no longer require and waste memory.
          *
          * @name Phaser.Tweens.Tween#persist
          * @type {boolean}
@@ -488,6 +488,8 @@ var Tween = new Class({
      * If this Tween never achieves 'onComplete' (i.e. has been set to loop or repeat forever),
      * then the chained Tween will not be started unless the `Tween.complete` method is called.
      *
+     * You cannot chain a Tween that is already in a sequence of Tweens.
+     *
      * @method Phaser.Tweens.Tween#chain
      * @since 3.60.0
      *
@@ -497,12 +499,17 @@ var Tween = new Class({
      */
     chain: function (tween)
     {
-        this.chainedTween = tween;
+        var tweens = this.getChainedTweens();
 
-        if (tween)
+        if (tweens.indexOf(tween) === -1)
         {
-            //  Needs to be told its a chained tween, or it'll start playing
-            tween.state = TWEEN_CONST.CHAINED;
+            this.chainedTween = tween;
+
+            if (tween)
+            {
+                //  Needs to be told its a chained tween, or it'll start playing
+                tween.state = TWEEN_CONST.CHAINED;
+            }
         }
 
         return this;
@@ -791,22 +798,30 @@ var Tween = new Class({
     onCompleteHandler: function (t)
     {
         //  Additional time overstep may be in 'countdown' or the diff between 'elasped' and 'duration'
+
         // var diff = Math.max(0, (this.elapsed - this.duration) - this.delta);
 
         var diff = this.elapsed - this.duration;
+
+        if (diff > this.delta)
+        {
+            diff -= this.delta;
+        }
 
         console.log('end', t);
         console.log('elapsed', this.elapsed);
         console.log('duration', this.duration);
         console.log('delta', this.delta);
-        console.log('diff', diff);
+        console.log('delta diff', diff);
 
         this.dispatchEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
 
         //  Chain ...
         if (this.chainedTween)
         {
+            // this.chainedTween.state = TWEEN_CONST.ACTIVE;
             this.chainedTween.state = TWEEN_CONST.PENDING_ACTIVE;
+            this.chainedTween.delta = diff;
         }
 
         console.log('-------------------------------------------------------');
@@ -1108,15 +1123,14 @@ var Tween = new Class({
         {
             this.state = TWEEN_CONST.ACTIVE;
 
-            return false;
+            //  Override the delta with whatever was left over from the previously chained tween
+            delta = this.delta;
         }
-
-        if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.DESTROYED)
+        else if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.DESTROYED)
         {
             return true;
         }
-
-        if ((this.paused && !this.isSeeking) || state === TWEEN_CONST.FINISHED || state === TWEEN_CONST.CHAINED)
+        else if (state === TWEEN_CONST.FINISHED || state === TWEEN_CONST.CHAINED || (this.paused && !this.isSeeking))
         {
             return false;
         }
@@ -1320,6 +1334,47 @@ var Tween = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Returns an array containing this Tween and all Tweens chained to it,
+     * in the order in which they will be played.
+     *
+     * If there are no chained Tweens an empty array is returned.
+     *
+     * @method Phaser.Tweens.Tween#getChainedTweens
+     * @since 3.60.0
+     *
+     * @return {Phaser.Tweens.Tween[]} An array of the chained tweens, or an empty array if there aren't any.
+     */
+    getChainedTweens: function ()
+    {
+        var result = [];
+
+        var tween = this.chainedTween;
+
+        do
+        {
+            //  Safety-check to ensure they didn't chain a Tween to another Tween already in the chain
+            if (tween && result.indexOf(tween) === -1)
+            {
+                result.push(tween);
+
+                tween = tween.chainedTween;
+            }
+            else
+            {
+                tween = null;
+            }
+
+        } while (tween);
+
+        if (result.length > 0)
+        {
+            result.unshift(this);
+        }
+
+        return result;
     },
 
     /**
