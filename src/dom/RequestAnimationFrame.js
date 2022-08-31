@@ -107,12 +107,13 @@ var RequestAnimationFrame = new Class({
          */
         this.stepTimeout = function stepTimeout ()
         {
-            _this.callback(window.performance.now());
-
             if (_this.isRunning)
             {
+                //  Make the next request before the callback, so that timing is maintained
                 _this.timeOutID = window.setTimeout(stepTimeout, _this.delay);
             }
+
+            _this.callback(window.performance.now());
         };
     },
 
