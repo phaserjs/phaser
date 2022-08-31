@@ -465,7 +465,7 @@ var TweenManager = new Class({
      * @param {number} timestamp - The current time in milliseconds.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    update: function (timestampX, deltaX)
+    update: function (timestamp, deltaX)
     {
         if (this.paused)
         {
