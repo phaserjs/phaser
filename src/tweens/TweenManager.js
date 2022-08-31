@@ -97,6 +97,14 @@ var TweenManager = new Class({
          */
         this.tweens = [];
 
+        this.lagThreshold = 500;
+        this.adjustedLag = 33;
+        this.startTime = 0;
+        this.lastUpdate = 0;
+        this.gap = 1000 / 240;
+        this.nextTime = this.gap;
+        this.time = 0;
+
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
     },
@@ -132,6 +140,9 @@ var TweenManager = new Class({
 
         this.timeScale = 1;
         this.paused = false;
+
+        this.startTime = Date.now();
+        this.lastUpdate = this.startTime;
     },
 
     /**
@@ -426,10 +437,27 @@ var TweenManager = new Class({
         return StaggerBuilder(value, options);
     },
 
+    setLagSmooth: function (threshold, adjustedLag)
+    {
+        if (threshold === undefined) { threshold = 1 / 0.000001; }
+        if (adjustedLag === undefined) { adjustedLag = 0; }
+
+        this.lagThreshold = threshold;
+        this.adjustedLag = Math.min(adjustedLag, this.lagThreshold);
+    },
+
+    setFps: function (fps)
+    {
+        if (fps === undefined) { fps = 240; }
+
+        this.gap = 1000 / fps;
+        this.nextTime = this.time * 1000 + this.gap;
+    },
+
     /**
      * Updates all Tweens belonging to this Tween Manager.
      *
-     * This is skipped is `TweenManager.paused = true`.
+     * This is skipped if `TweenManager.paused = true`.
      *
      * @method Phaser.Tweens.TweenManager#update
      * @since 3.0.0
@@ -437,7 +465,7 @@ var TweenManager = new Class({
      * @param {number} timestamp - The current time in milliseconds.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    update: function (timestamp, delta)
+    update: function (timestampX, deltaX)
     {
         if (this.paused)
         {
@@ -446,8 +474,24 @@ var TweenManager = new Class({
 
         this.processing = true;
 
-        //  Scale the delta
-        delta *= this.timeScale;
+        //  New timing test:
+        var now = Date.now();
+        var elapsed = now - this.lastUpdate;
+        elapsed > this.lagThreshold && (this.startTime += elapsed - this.adjustedLag);
+        this.lastUpdate += elapsed;
+        var time = this.lastUpdate - this.startTime;
+        var overlap = time - this.nextTime;
+        var delta = time - this.time * 1000;
+
+        if (overlap > 0)
+        {
+            this.time = time = time / 1000;
+            this.nextTime += overlap + (overlap >= this.gap ? 4 : this.gap - overlap);
+        }
+        else
+        {
+            return;
+        }
 
         var i;
         var tween;
@@ -461,7 +505,7 @@ var TweenManager = new Class({
 
             //  If Tween.update returns 'true' then it means it has completed,
             //  so move it to the destroy list
-            if (tween.update(timestamp, delta))
+            if (tween.update(now, delta))
             {
                 if (tween.persist)
                 {

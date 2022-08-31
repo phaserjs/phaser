@@ -359,7 +359,7 @@ var Tween = new Class({
 
         this.initTweenData();
 
-        console.log('Tween.init', this.duration, 'sd', this.startDelay);
+        // console.log('Tween.init', this.duration, 'sd', this.startDelay);
 
         if (!isChained)
         {
@@ -680,8 +680,12 @@ var Tween = new Class({
         {
             this.state = TWEEN_CONST.PENDING_REMOVE;
 
-            this.onCompleteHandler(t);
+            // this.onCompleteHandler(t);
+
+            return true;
         }
+
+        return false;
     },
 
     onCompleteHandler: function (t)
@@ -689,9 +693,9 @@ var Tween = new Class({
         //  Additional time overstep may be in 'countdown' or the diff between 'elasped' and 'duration'
         var diff = this.elapsed - this.duration;
 
-        if (diff > this.delta)
+        if (diff < 0)
         {
-            diff -= this.delta;
+            diff = 0;
         }
 
         this.dispatchEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
@@ -704,15 +708,18 @@ var Tween = new Class({
             this.chainedTween.delta = diff;
             console.log('end', t);
             console.log('elapsed', this.elapsed);
+            // console.log('over', this.elapsed - this.duration);
+            console.log('delta diff', diff);
             console.log('---------------------------------------');
         }
         else
         {
             console.log('end', t);
             console.log('elapsed', this.elapsed);
-            console.log('duration', this.duration);
-            console.log('delta', this.delta);
-            console.log('delta diff', diff);
+            console.log('over', (this.elapsed - this.duration) - this.delta);
+            // console.log('duration', this.duration);
+            // console.log('delta', this.delta);
+            // console.log('delta diff', diff);
         }
     },
 
@@ -1095,13 +1102,14 @@ var Tween = new Class({
     update: function (timestamp, delta)
     {
         var state = this.state;
+        var deltaOver = 0;
 
         if (state === TWEEN_CONST.PENDING_ACTIVE)
         {
             this.state = TWEEN_CONST.ACTIVE;
 
             //  Override the delta with whatever was left over from the previously chained tween
-            // delta = this.delta;
+            // deltaOver = this.delta;
         }
         else if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.DESTROYED)
         {
@@ -1130,7 +1138,26 @@ var Tween = new Class({
         //  Check 'this.state', not 'state' as it may have been updated by the functions above.
         if (this.state === TWEEN_CONST.ACTIVE)
         {
-            this.updateActive(delta, timestamp);
+            if (!this.hasStarted && !this.isSeeking)
+            {
+                this.startDelay -= delta;
+
+                if (this.startDelay <= 0)
+                {
+                    this.hasStarted = true;
+
+                    this.dispatchEvent(Events.TWEEN_START, this.callbacks.onStart);
+
+                    //  Override the delta with whatever was left over from the previously chained tween (if any)
+                    delta = deltaOver;
+
+                    console.log('start', timestamp, 'delta reset', deltaOver);
+                }
+                else
+                {
+                    return false;
+                }
+            }
 
             if (this.hasStarted)
             {
@@ -1141,6 +1168,26 @@ var Tween = new Class({
 
                 this.totalElapsed += delta;
                 this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
+
+                var stillRunning = false;
+
+                for (var i = 0; i < this.totalData; i++)
+                {
+                    if (this.updateTweenData(this, this.data[i], delta))
+                    {
+                        stillRunning = true;
+                    }
+                }
+
+                //  Anything still running? If not, we're done
+                if (!stillRunning)
+                {
+                    if (this.nextState(timestamp))
+                    {
+                        //  If we get here, this Tween has completed
+                        this.onCompleteHandler(timestamp);
+                    }
+                }
             }
         }
 
@@ -1551,6 +1598,7 @@ var Tween = new Class({
             var elapsed = tweenData.elapsed;
             var duration = tweenData.duration;
             var diff = 0;
+            var complete = false;
 
             elapsed += delta;
 
@@ -1558,6 +1606,7 @@ var Tween = new Class({
             {
                 diff = elapsed - duration;
                 elapsed = duration;
+                complete = true;
             }
 
             var progress = elapsed / duration;
@@ -1566,7 +1615,7 @@ var Tween = new Class({
             tweenData.progress = progress;
             tweenData.previous = tweenData.current;
 
-            if (progress === 1)
+            if (complete)
             {
                 if (forward)
                 {
