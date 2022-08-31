@@ -357,47 +357,7 @@ var Tween = new Class({
     {
         if (isChained === undefined) { isChained = false; }
 
-        var data = this.data;
-        var totalTargets = this.totalTargets;
-
-        for (var i = 0; i < this.totalData; i++)
-        {
-            var tweenData = data[i];
-
-            var target = tweenData.target;
-            var key = tweenData.key;
-            var targetIndex = tweenData.index;
-
-            var gen = tweenData.gen;
-
-            //  Function signature: target, key, value, index, total, tween
-
-            tweenData.delay = gen.delay(target, key, 0, targetIndex, totalTargets, this);
-            tweenData.duration = Math.max(gen.duration(target, key, 0, targetIndex, totalTargets, this), 0.001);
-            tweenData.hold = gen.hold(target, key, 0, targetIndex, totalTargets, this);
-            tweenData.repeat = gen.repeat(target, key, 0, targetIndex, totalTargets, this);
-            tweenData.repeatDelay = gen.repeatDelay(target, key, 0, targetIndex, totalTargets, this);
-            tweenData.repeatCounter = (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
-            tweenData.state = TWEEN_CONST.PENDING_RENDER;
-
-            if (tweenData.delay > 0)
-            {
-                tweenData.elapsed = tweenData.delay;
-                tweenData.state = TWEEN_CONST.DELAY;
-            }
-
-            if (tweenData.getActiveValue)
-            {
-                target[key] = tweenData.getActiveValue(tweenData.target, tweenData.key, tweenData.start);
-            }
-        }
-
-        this.calcDuration();
-
-        this.progress = 0;
-        this.totalProgress = 0;
-        this.elapsed = 0;
-        this.totalElapsed = 0;
+        this.initTweenData();
 
         console.log('Tween.init', this.duration, 'sd', this.startDelay);
 
@@ -409,81 +369,6 @@ var Tween = new Class({
         }
 
         return this;
-    },
-
-    /**
-     * Internal method that calculates the overall duration of the Tween.
-     *
-     * @method Phaser.Tweens.Tween#calcDuration
-     * @since 3.0.0
-     */
-    calcDuration: function ()
-    {
-        var maxDuration = 0;
-        var minDelay = MATH_CONST.MAX_SAFE_INTEGER;
-
-        var data = this.data;
-
-        for (var i = 0; i < this.totalData; i++)
-        {
-            var tweenData = data[i];
-
-            //  Set t1 (duration + hold + yoyo)
-            tweenData.t1 = tweenData.duration + tweenData.hold;
-
-            if (tweenData.yoyo)
-            {
-                tweenData.t1 += tweenData.duration;
-            }
-
-            //  Set t2 (repeatDelay + duration + hold + yoyo)
-            tweenData.t2 = tweenData.t1 + tweenData.repeatDelay;
-
-            //  Total Duration
-            tweenData.totalDuration = tweenData.delay + tweenData.t1;
-
-            if (tweenData.repeat === -1)
-            {
-                tweenData.totalDuration += (tweenData.t2 * 999999999999);
-            }
-            else if (tweenData.repeat > 0)
-            {
-                tweenData.totalDuration += (tweenData.t2 * tweenData.repeat);
-            }
-
-            // if (tweenData.totalDuration > maxDuration)
-            if (tweenData.t1 > maxDuration)
-            {
-                //  Get the longest TweenData from the Tween, used to calculate the Tween TD
-                // maxDuration = tweenData.totalDuration;
-                maxDuration = tweenData.t1;
-            }
-
-            if (tweenData.delay < minDelay)
-            {
-                minDelay = tweenData.delay;
-            }
-        }
-
-        //  Excludes loop values
-
-        //  If duration has been set to 0 then we give it a super-low value so that it always
-        //  renders at least 1 frame, but no more, without causing divided by zero errors elsewhere.
-        this.duration = Math.max(maxDuration, 0.001);
-
-        //  How long before this Tween starts playback?
-        this.startDelay = minDelay;
-
-        this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
-
-        if (this.loopCounter > 0)
-        {
-            this.totalDuration = this.duration + this.completeDelay + ((this.duration + this.loopDelay) * this.loopCounter);
-        }
-        else
-        {
-            this.totalDuration = this.duration + this.completeDelay;
-        }
     },
 
     /**
@@ -960,48 +845,7 @@ var Tween = new Class({
             this.makeActive();
         }
 
-        this.elapsed = 0;
-        this.progress = 0;
-        this.totalElapsed = 0;
-        this.totalProgress = 0;
-
-        var data = this.data;
-        var totalTargets = this.totalTargets;
-
-        for (var i = 0; i < this.totalData; i++)
-        {
-            var tweenData = data[i];
-            var target = tweenData.target;
-            var gen = tweenData.gen;
-            var key = tweenData.key;
-            var targetIndex = tweenData.index;
-
-            tweenData.progress = 0;
-            tweenData.elapsed = 0;
-
-            tweenData.repeatCounter = (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
-
-            //  Function signature: target, key, value, index, total, tween
-
-            tweenData.delay = gen.delay(target, key, 0, targetIndex, totalTargets, this);
-            tweenData.duration = Math.max(gen.duration(target, key, 0, targetIndex, totalTargets, this), 0.001);
-            tweenData.hold = gen.hold(target, key, 0, targetIndex, totalTargets, this);
-            tweenData.repeat = gen.repeat(target, key, 0, targetIndex, totalTargets, this);
-            tweenData.repeatDelay = gen.repeatDelay(target, key, 0, targetIndex, totalTargets, this);
-
-            tweenData.current = tweenData.start;
-            tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
-
-            this.updateTweenData(this, tweenData, 0, targetIndex, totalTargets);
-
-            if (tweenData.delay > 0)
-            {
-                tweenData.elapsed = tweenData.delay;
-                tweenData.state = TWEEN_CONST.DELAY;
-            }
-        }
-
-        this.calcDuration();
+        this.initTweenData(true);
 
         if (toPosition > 0)
         {
@@ -1017,6 +861,135 @@ var Tween = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Initialises all of the Tween Data and Tween values.
+     *
+     * This is called automatically and should not typically be invoked directly.
+     *
+     * @method Phaser.Tweens.Tween#initTweenData
+     * @since 3.60.0
+     *
+     * @param {boolean} [isSeek=false] - Is this being called as part of a seek, or not?
+     */
+    initTweenData: function (isSeek)
+    {
+        if (isSeek === undefined) { isSeek = false; }
+
+        this.elapsed = 0;
+        this.progress = 0;
+        this.totalElapsed = 0;
+        this.totalProgress = 0;
+
+        var maxDuration = 0;
+        var minDelay = MATH_CONST.MAX_SAFE_INTEGER;
+
+        var data = this.data;
+        var totalTargets = this.totalTargets;
+
+        for (var i = 0; i < this.totalData; i++)
+        {
+            var tweenData = data[i];
+
+            var target = tweenData.target;
+            var key = tweenData.key;
+            var targetIndex = tweenData.index;
+
+            var gen = tweenData.gen;
+
+            //  Function signature: target, key, value, index, total, tween
+
+            tweenData.delay = gen.delay(target, key, 0, targetIndex, totalTargets, this);
+            tweenData.duration = Math.max(gen.duration(target, key, 0, targetIndex, totalTargets, this), 0.001);
+            tweenData.hold = gen.hold(target, key, 0, targetIndex, totalTargets, this);
+            tweenData.repeat = gen.repeat(target, key, 0, targetIndex, totalTargets, this);
+            tweenData.repeatDelay = gen.repeatDelay(target, key, 0, targetIndex, totalTargets, this);
+            tweenData.repeatCounter = (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
+            tweenData.state = TWEEN_CONST.PENDING_RENDER;
+
+            //  calcDuration:
+
+            //  Set t1 (duration + hold + yoyo)
+            tweenData.t1 = tweenData.duration + tweenData.hold;
+
+            if (tweenData.yoyo)
+            {
+                tweenData.t1 += tweenData.duration;
+            }
+
+            //  Set t2 (repeatDelay + duration + hold + yoyo)
+            tweenData.t2 = tweenData.t1 + tweenData.repeatDelay;
+
+            //  Total Duration
+            tweenData.totalDuration = tweenData.delay + tweenData.t1;
+
+            if (tweenData.repeat === -1)
+            {
+                tweenData.totalDuration += (tweenData.t2 * 999999999999);
+            }
+            else if (tweenData.repeat > 0)
+            {
+                tweenData.totalDuration += (tweenData.t2 * tweenData.repeat);
+            }
+
+            // if (tweenData.totalDuration > maxDuration)
+            if (tweenData.t1 > maxDuration)
+            {
+                //  Get the longest TweenData from the Tween, used to calculate the Tween TD
+                maxDuration = tweenData.totalDuration;
+
+                // maxDuration = tweenData.t1;
+            }
+
+            if (tweenData.delay < minDelay)
+            {
+                minDelay = tweenData.delay;
+            }
+
+            //  seek specific:
+            if (isSeek)
+            {
+                tweenData.current = tweenData.start;
+                tweenData.progress = 0;
+                tweenData.elapsed = 0;
+
+                tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
+
+                this.updateTweenData(this, tweenData, 0, targetIndex, totalTargets);
+            }
+
+            if (tweenData.delay > 0)
+            {
+                tweenData.elapsed = tweenData.delay;
+                tweenData.state = TWEEN_CONST.DELAY;
+            }
+
+            if (!isSeek && tweenData.getActiveValue)
+            {
+                target[key] = tweenData.getActiveValue(tweenData.target, tweenData.key, tweenData.start);
+            }
+        }
+
+        //  Excludes loop values
+
+        //  If duration has been set to 0 then we give it a super-low value so that it always
+        //  renders at least 1 frame, but no more, without causing divided by zero errors elsewhere.
+        this.duration = Math.max(maxDuration, 0.001);
+
+        //  How long before this Tween starts playback?
+        this.startDelay = minDelay;
+
+        this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
+
+        if (this.loopCounter > 0)
+        {
+            this.totalDuration = this.duration + this.completeDelay + ((this.duration + this.loopDelay) * this.loopCounter);
+        }
+        else
+        {
+            this.totalDuration = this.duration + this.completeDelay;
+        }
     },
 
     /**
