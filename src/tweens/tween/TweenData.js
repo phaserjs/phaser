@@ -21,12 +21,12 @@
  * @param {function} getStart - What the property will be at the START of the Tween.
  * @param {?function} getActive - If not null, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
  * @param {function} ease - The ease function this tween uses.
- * @param {number} delay - Time in ms/frames before tween will start.
- * @param {number} duration - Duration of the tween in ms/frames.
+ * @param {function} delay - Function that returns the time in ms/frames before tween will start.
+ * @param {function} duration - Function that returns the duration of the tween in ms/frames.
  * @param {boolean} yoyo - Determines whether the tween should return back to its start value after hold has expired.
- * @param {number} hold - Time in ms/frames the tween will pause before repeating or returning to its starting value if yoyo is set to true.
- * @param {number} repeat - Number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
- * @param {number} repeatDelay - Time in ms/frames before the repeat will start.
+ * @param {function} hold - Function that returns the time in ms/frames the tween will pause before repeating or returning to its starting value if yoyo is set to true.
+ * @param {function} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
+ * @param {function} repeatDelay - Function that returns the time in ms/frames before the repeat will start.
  * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
  * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
  * @param {?function} interpolation - The interpolation function to be used for arrays of data. Defaults to 'null'.
