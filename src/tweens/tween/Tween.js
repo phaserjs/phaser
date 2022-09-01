@@ -9,8 +9,9 @@ var EventEmitter = require('eventemitter3');
 var Events = require('../events');
 var GameObjectCreator = require('../../gameobjects/GameObjectCreator');
 var GameObjectFactory = require('../../gameobjects/GameObjectFactory');
-var TWEEN_CONST = require('./const');
 var MATH_CONST = require('../../math/const');
+var TWEEN_CONST = require('./const');
+var TweenData = require('./TweenData');
 
 /**
  * @classdesc
@@ -27,7 +28,6 @@ var MATH_CONST = require('../../math/const');
  * @since 3.0.0
  *
  * @param {Phaser.Tweens.TweenManager} parent - A reference to the Tween Manager that owns this Tween.
- * @param {Phaser.Types.Tweens.TweenDataConfig[]} data - An array of TweenData objects, each containing a unique property to be tweened.
  * @param {array} targets - An array of targets to be tweened.
  */
 var Tween = new Class({
@@ -36,7 +36,7 @@ var Tween = new Class({
 
     initialize:
 
-    function Tween (parent, data, targets)
+    function Tween (parent, targets)
     {
         EventEmitter.call(this);
 
@@ -53,10 +53,10 @@ var Tween = new Class({
          * An array of TweenData objects, each containing a unique property and target being tweened.
          *
          * @name Phaser.Tweens.Tween#data
-         * @type {Phaser.Types.Tweens.TweenDataConfig[]}
+         * @type {Phaser.Tweens.TweenData[]}
          * @since 3.60.0
          */
-        this.data = data;
+        this.data = [];
 
         /**
          * The cached size of the data array.
@@ -65,7 +65,7 @@ var Tween = new Class({
          * @type {number}
          * @since 3.60.0
          */
-        this.totalData = data.length;
+        this.totalData = 0;
 
         /**
          * An array of references to the target/s this Tween is operating on.
@@ -367,6 +367,12 @@ var Tween = new Class({
         }
 
         return this;
+    },
+
+    //  TODO - We could remove the target from the TweenData and just pass the index
+    add: function (target, index, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData)
+    {
+        this.totalData = this.data.push(new TweenData(this, target, index, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData));
     },
 
     /**
@@ -767,12 +773,16 @@ var Tween = new Class({
     {
         var data = this.data;
         var total = this.totalData;
-        var totalTargets = this.totalTargets;
+
+        // var totalTargets = this.totalTargets;
 
         for (var i = 0; i < total; i++)
         {
             var tweenData = data[i];
 
+            tweenData.reset(resetFromLoop);
+
+            /*
             var target = tweenData.target;
             var key = tweenData.key;
             var targetIndex = tweenData.index;
@@ -808,6 +818,7 @@ var Tween = new Class({
             {
                 target[key] = tweenData.getActiveValue(tweenData.target, tweenData.key, tweenData.start);
             }
+            */
         }
     },
 
@@ -882,103 +893,21 @@ var Tween = new Class({
         this.totalElapsed = 0;
         this.totalProgress = 0;
 
-        var maxDuration = 0;
-        var minDelay = MATH_CONST.MAX_SAFE_INTEGER;
+        this.duration = 0;
+        this.startDelay = MATH_CONST.MAX_SAFE_INTEGER;
 
         var data = this.data;
-        var totalTargets = this.totalTargets;
 
         for (var i = 0; i < this.totalData; i++)
         {
-            var tweenData = data[i];
-
-            var target = tweenData.target;
-            var key = tweenData.key;
-            var targetIndex = tweenData.index;
-
-            var gen = tweenData.gen;
-
-            //  Function signature: target, key, value, index, total, tween
-
-            tweenData.delay = gen.delay(target, key, 0, targetIndex, totalTargets, this);
-            tweenData.duration = Math.max(gen.duration(target, key, 0, targetIndex, totalTargets, this), 0.001);
-            tweenData.hold = gen.hold(target, key, 0, targetIndex, totalTargets, this);
-            tweenData.repeat = gen.repeat(target, key, 0, targetIndex, totalTargets, this);
-            tweenData.repeatDelay = gen.repeatDelay(target, key, 0, targetIndex, totalTargets, this);
-            tweenData.repeatCounter = (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
-            tweenData.state = TWEEN_CONST.PENDING_RENDER;
-
-            //  calcDuration:
-
-            //  Set t1 (duration + hold + yoyo)
-            tweenData.t1 = tweenData.duration + tweenData.hold;
-
-            if (tweenData.yoyo)
-            {
-                tweenData.t1 += tweenData.duration;
-            }
-
-            //  Set t2 (repeatDelay + duration + hold + yoyo)
-            tweenData.t2 = tweenData.t1 + tweenData.repeatDelay;
-
-            //  Total Duration
-            tweenData.totalDuration = tweenData.delay + tweenData.t1;
-
-            if (tweenData.repeat === -1)
-            {
-                tweenData.totalDuration += (tweenData.t2 * 999999999999);
-            }
-            else if (tweenData.repeat > 0)
-            {
-                tweenData.totalDuration += (tweenData.t2 * tweenData.repeat);
-            }
-
-            // if (tweenData.totalDuration > maxDuration)
-            if (tweenData.t1 > maxDuration)
-            {
-                //  Get the longest TweenData from the Tween, used to calculate the Tween TD
-                maxDuration = tweenData.totalDuration;
-
-                // maxDuration = tweenData.t1;
-            }
-
-            if (tweenData.delay < minDelay)
-            {
-                minDelay = tweenData.delay;
-            }
-
-            //  seek specific:
-            if (isSeek)
-            {
-                tweenData.current = tweenData.start;
-                tweenData.progress = 0;
-                tweenData.elapsed = 0;
-
-                tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
-
-                this.updateTweenData(tweenData, 0);
-            }
-
-            if (tweenData.delay > 0)
-            {
-                tweenData.elapsed = tweenData.delay;
-                tweenData.state = TWEEN_CONST.DELAY;
-            }
-
-            if (!isSeek && tweenData.getActiveValue)
-            {
-                target[key] = tweenData.getActiveValue(tweenData.target, tweenData.key, tweenData.start);
-            }
+            data[i].init(isSeek);
         }
 
         //  Excludes loop values
 
         //  If duration has been set to 0 then we give it a super-low value so that it always
         //  renders at least 1 frame, but no more, without causing divided by zero errors elsewhere.
-        this.duration = Math.max(maxDuration, 0.001);
-
-        //  How long before this Tween starts playback?
-        this.startDelay = minDelay;
+        this.duration = Math.max(this.duration, 0.001);
 
         this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
 
@@ -1206,11 +1135,12 @@ var Tween = new Class({
             }
         }
 
+        var data = this.data;
         var stillRunning = false;
 
         for (var i = 0; i < this.totalData; i++)
         {
-            if (this.updateTweenData(this.data[i], delta))
+            if (data[i].update(delta))
             {
                 stillRunning = true;
             }
@@ -1221,29 +1151,6 @@ var Tween = new Class({
         {
             //  This calls onCompleteHandler if this tween is over
             this.nextState();
-        }
-    },
-
-    /**
-     * Internal method that will emit a TweenData based Event and invoke the given callback.
-     *
-     * @method Phaser.Tweens.Tween#dispatchTweenDataEvent
-     * @since 3.19.0
-     *
-     * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
-     * @param {function} callback - The callback to be invoked. Can be `null` or `undefined` to skip invocation.
-     * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData object that caused this event.
-     */
-    dispatchTweenDataEvent: function (event, callback, tweenData)
-    {
-        if (!this.isSeeking)
-        {
-            this.emit(event, this, tweenData.key, tweenData.target, tweenData.current, tweenData.previous);
-
-            if (callback)
-            {
-                callback.func.apply(callback.scope, [ this, tweenData.target, tweenData.key, tweenData.current, tweenData.previous ].concat(callback.params));
-            }
         }
     },
 
@@ -1353,305 +1260,6 @@ var Tween = new Class({
     },
 
     /**
-     * Internal method used as part of the playback process that sets a tween to play in reverse.
-     *
-     * @method Phaser.Tweens.Tween#setStateFromEnd
-     * @fires Phaser.Tweens.Events#TWEEN_REPEAT
-     * @fires Phaser.Tweens.Events#TWEEN_YOYO
-     * @since 3.0.0
-     *
-     * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData object to update.
-     * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
-     *
-     * @return {number} The state of this Tween.
-     */
-    setStateFromEnd: function (tweenData, diff)
-    {
-        if (tweenData.yoyo)
-        {
-            //  We've hit the end of a Playing Forward TweenData and we have a yoyo
-
-            //  Account for any extra time we got from the previous frame
-            tweenData.elapsed = diff;
-            tweenData.progress = diff / tweenData.duration;
-
-            if (tweenData.flipX)
-            {
-                tweenData.target.toggleFlipX();
-            }
-
-            if (tweenData.flipY)
-            {
-                tweenData.target.toggleFlipY();
-            }
-
-            this.dispatchTweenDataEvent(Events.TWEEN_YOYO, this.callbacks.onYoyo, tweenData);
-
-            tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start, tweenData.index, this.totalTargets, this);
-
-            return TWEEN_CONST.PLAYING_BACKWARD;
-        }
-        else if (tweenData.repeatCounter > 0)
-        {
-            //  We've hit the end of a Playing Forward TweenData and we have a Repeat.
-            //  So we're going to go right back to the start to repeat it again.
-
-            tweenData.repeatCounter--;
-
-            //  Account for any extra time we got from the previous frame
-            tweenData.elapsed = diff;
-            tweenData.progress = diff / tweenData.duration;
-
-            if (tweenData.flipX)
-            {
-                tweenData.target.toggleFlipX();
-            }
-
-            if (tweenData.flipY)
-            {
-                tweenData.target.toggleFlipY();
-            }
-
-            tweenData.start = tweenData.getStartValue(tweenData.target, tweenData.key, tweenData.start, tweenData.index, this.totalTargets, this);
-
-            tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start, tweenData.index, this.totalTargets, this);
-
-            //  Delay?
-            if (tweenData.repeatDelay > 0)
-            {
-                tweenData.elapsed = tweenData.repeatDelay - diff;
-
-                tweenData.current = tweenData.start;
-
-                tweenData.target[tweenData.key] = tweenData.current;
-
-                return TWEEN_CONST.REPEAT_DELAY;
-            }
-            else
-            {
-                this.dispatchTweenDataEvent(Events.TWEEN_REPEAT, this.callbacks.onRepeat, tweenData);
-
-                return TWEEN_CONST.PLAYING_FORWARD;
-            }
-        }
-
-        return TWEEN_CONST.COMPLETE;
-    },
-
-    /**
-     * Internal method used as part of the playback process that sets a tween to play from the start.
-     *
-     * @method Phaser.Tweens.Tween#setStateFromStart
-     * @fires Phaser.Tweens.Events#TWEEN_REPEAT
-     * @since 3.0.0
-     *
-     * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData object to update.
-     * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
-     *
-     * @return {number} The state of this Tween.
-     */
-    setStateFromStart: function (tweenData, diff)
-    {
-        if (tweenData.repeatCounter > 0)
-        {
-            tweenData.repeatCounter--;
-
-            //  Account for any extra time we got from the previous frame
-            tweenData.elapsed = diff;
-            tweenData.progress = diff / tweenData.duration;
-
-            if (tweenData.flipX)
-            {
-                tweenData.target.toggleFlipX();
-            }
-
-            if (tweenData.flipY)
-            {
-                tweenData.target.toggleFlipY();
-            }
-
-            tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start, tweenData.index, this.totalTargets, this);
-
-            //  Delay?
-            if (tweenData.repeatDelay > 0)
-            {
-                tweenData.elapsed = tweenData.repeatDelay - diff;
-
-                tweenData.current = tweenData.start;
-
-                tweenData.target[tweenData.key] = tweenData.current;
-
-                return TWEEN_CONST.REPEAT_DELAY;
-            }
-            else
-            {
-                this.dispatchTweenDataEvent(Events.TWEEN_REPEAT, this.callbacks.onRepeat, tweenData);
-
-                return TWEEN_CONST.PLAYING_FORWARD;
-            }
-        }
-
-        return TWEEN_CONST.COMPLETE;
-    },
-
-    /**
-     * Internal method that advances the TweenData based on the time value given.
-     *
-     * @method Phaser.Tweens.Tween#updateTweenData
-     * @fires Phaser.Tweens.Events#TWEEN_UPDATE
-     * @fires Phaser.Tweens.Events#TWEEN_REPEAT
-     * @since 3.0.0
-     *
-     * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
-     * @param {number} delta - The elapsed delta time in ms.
-     *
-     * @return {boolean} True if the tween is not complete (e.g., playing), or false if the tween is complete.
-     */
-    updateTweenData: function (tweenData, delta)
-    {
-        var target = tweenData.target;
-
-        if (tweenData.state === TWEEN_CONST.DELAY)
-        {
-            tweenData.elapsed -= delta;
-
-            if (tweenData.elapsed <= 0)
-            {
-                tweenData.elapsed = Math.abs(tweenData.elapsed);
-
-                tweenData.state = TWEEN_CONST.PENDING_RENDER;
-            }
-        }
-        else if (tweenData.state === TWEEN_CONST.REPEAT_DELAY)
-        {
-            tweenData.elapsed -= delta;
-
-            if (tweenData.elapsed <= 0)
-            {
-                tweenData.elapsed = Math.abs(tweenData.elapsed);
-
-                tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
-
-                //  Adjust the delta for the PLAYING_FORWARD block below
-                delta = tweenData.elapsed;
-
-                this.dispatchTweenDataEvent(Events.TWEEN_REPEAT, this.callbacks.onRepeat, tweenData);
-            }
-        }
-        else if (tweenData.state === TWEEN_CONST.HOLD_DELAY)
-        {
-            tweenData.elapsed -= delta;
-
-            if (tweenData.elapsed <= 0)
-            {
-                tweenData.state = this.setStateFromEnd(tweenData, Math.abs(tweenData.elapsed));
-            }
-        }
-
-        //  All of the above have the ability to set the state to PLAYING
-
-        if (tweenData.state === TWEEN_CONST.PENDING_RENDER)
-        {
-            if (target)
-            {
-                tweenData.start = tweenData.getStartValue(target, tweenData.key, target[tweenData.key], tweenData.index, this.totalTargets, this);
-
-                tweenData.end = tweenData.getEndValue(target, tweenData.key, tweenData.start, tweenData.index, this.totalTargets, this);
-
-                tweenData.current = tweenData.start;
-
-                target[tweenData.key] = tweenData.start;
-
-                tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
-            }
-            else
-            {
-                tweenData.state = TWEEN_CONST.COMPLETE;
-            }
-        }
-
-        var forward = (tweenData.state === TWEEN_CONST.PLAYING_FORWARD);
-        var backward = (tweenData.state === TWEEN_CONST.PLAYING_BACKWARD);
-
-        if (forward || backward)
-        {
-            if (!target)
-            {
-                tweenData.state = TWEEN_CONST.COMPLETE;
-
-                return false;
-            }
-
-            var elapsed = tweenData.elapsed;
-            var duration = tweenData.duration;
-            var diff = 0;
-            var complete = false;
-
-            elapsed += delta;
-
-            if (elapsed > duration)
-            {
-                diff = elapsed - duration;
-                elapsed = duration;
-                complete = true;
-            }
-
-            var progress = elapsed / duration;
-
-            tweenData.elapsed = elapsed;
-            tweenData.progress = progress;
-            tweenData.previous = tweenData.current;
-
-            if (complete)
-            {
-                if (forward)
-                {
-                    tweenData.current = tweenData.end;
-                    target[tweenData.key] = tweenData.end;
-
-                    if (tweenData.hold > 0)
-                    {
-                        tweenData.elapsed = tweenData.hold - diff;
-
-                        tweenData.state = TWEEN_CONST.HOLD_DELAY;
-                    }
-                    else
-                    {
-                        tweenData.state = this.setStateFromEnd(tweenData, diff);
-                    }
-                }
-                else
-                {
-                    tweenData.current = tweenData.start;
-                    target[tweenData.key] = tweenData.start;
-
-                    tweenData.state = this.setStateFromStart(tweenData, diff);
-                }
-            }
-            else
-            {
-                var v = (forward) ? tweenData.ease(progress) : tweenData.ease(1 - progress);
-
-                if (tweenData.interpolation)
-                {
-                    tweenData.current = tweenData.interpolation(tweenData.interpolationData, v);
-                }
-                else
-                {
-                    tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
-                }
-
-                target[tweenData.key] = tweenData.current;
-            }
-
-            this.dispatchTweenDataEvent(Events.TWEEN_UPDATE, this.callbacks.onUpdate, tweenData);
-        }
-
-        //  Return TRUE if this TweenData still playing, otherwise FALSE
-        return (tweenData.state !== TWEEN_CONST.COMPLETE);
-    },
-
-    /**
      * Handles the destroy process of this Tween, clearing out the
      * Tween Data and resetting the targets. A Tween that has been
      * destroyed cannot ever be played or used again.
@@ -1663,14 +1271,7 @@ var Tween = new Class({
     {
         for (var i = 0; i < this.totalData; i++)
         {
-            var data = this.data[i];
-
-            data.target = null;
-            data.getActiveValue = null;
-            data.getEndValue = null;
-            data.getStartValue = null;
-            data.ease = null;
-            data.gen = null;
+            this.data[i].destroy();
         }
 
         this.removeAllListeners();

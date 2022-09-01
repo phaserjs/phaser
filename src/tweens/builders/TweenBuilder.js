@@ -15,7 +15,6 @@ var GetTargets = require('./GetTargets');
 var GetValue = require('../../utils/object/GetValue');
 var GetValueOp = require('./GetValueOp');
 var Tween = require('../tween/Tween');
-var TweenData = require('../tween/TweenData');
 
 /**
  * Creates a new Tween.
@@ -55,13 +54,11 @@ var TweenBuilder = function (parent, config, defaults)
     var flipY = GetBoolean(config, 'flipY', defaults.flipY);
     var interpolation = GetValue(config, 'interpolation', defaults.interpolation);
 
-    var data = [];
-
-    var addTarget = function (target, t, key, value)
+    var addTarget = function (tween, target, t, key, value)
     {
         var ops = GetValueOp(key, value);
 
-        var tweenData = TweenData(
+        tween.add(
             target,
             t,
             key,
@@ -80,9 +77,9 @@ var TweenBuilder = function (parent, config, defaults)
             GetInterpolationFunction(GetValue(value, 'interpolation', interpolation)),
             value
         );
-
-        data.push(tweenData);
     };
+
+    var tween = new Tween(parent, targets);
 
     //  Loop through every property defined in the Tween, i.e.: props { x, y, alpha }
     for (var p = 0; p < props.length; p++)
@@ -96,17 +93,15 @@ var TweenBuilder = function (parent, config, defaults)
             //  Special-case for scale short-cut:
             if (key === 'scale' && !targets[t].hasOwnProperty('scale'))
             {
-                addTarget(targets[t], t, 'scaleX', value);
-                addTarget(targets[t], t, 'scaleY', value);
+                addTarget(tween, targets[t], t, 'scaleX', value);
+                addTarget(tween, targets[t], t, 'scaleY', value);
             }
             else
             {
-                addTarget(targets[t], t, key, value);
+                addTarget(tween, targets[t], t, key, value);
             }
         }
     }
-
-    var tween = new Tween(parent, data, targets);
 
     tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
     tween.loop = Math.round(GetAdvancedValue(config, 'loop', 0));
