@@ -97,13 +97,76 @@ var TweenManager = new Class({
          */
         this.tweens = [];
 
-        this.lagThreshold = 500;
-        this.adjustedLag = 33;
-        this.startTime = 0;
-        this.lastUpdate = 0;
-        this.gap = 1000 / 240;
-        this.nextTime = this.gap;
+        /**
+         * The time the Tween Manager was updated.
+         *
+         * @name Phaser.Tweens.TweenManager#time
+         * @type {number}
+         * @since 3.60.0
+         */
         this.time = 0;
+
+        /**
+         * The time the Tween Manager was started.
+         *
+         * @name Phaser.Tweens.TweenManager#startTime
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.startTime = 0;
+
+        /**
+         * The time the Tween Manager should next update.
+         *
+         * @name Phaser.Tweens.TweenManager#nextTime
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.nextTime = 0;
+
+        /**
+         * The time the Tween Manager previously updated.
+         *
+         * @name Phaser.Tweens.TweenManager#prevTime
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.prevTime = 0;
+
+        /**
+         * The maximum amount of time, in milliseconds, the browser can
+         * lag for, before lag smoothing is applied.
+         *
+         * See the `TweenManager.setLagSmooth` method for further details.
+         *
+         * @name Phaser.Tweens.TweenManager#maxLag
+         * @type {number}
+         * @default 500
+         * @since 3.60.0
+         */
+        this.maxLag = 500;
+
+        /**
+         * The amount of time, in milliseconds, that is used to set the
+         * delta when lag smoothing is applied.
+         *
+         * See the `TweenManager.setLagSmooth` method for further details.
+         *
+         * @name Phaser.Tweens.TweenManager#lagSkip
+         * @type {number}
+         * @default 33
+         * @since 3.60.0
+         */
+        this.lagSkip = 33;
+
+        /**
+         * An internal value that holds the fps rate.
+         *
+         * @name Phaser.Tweens.TweenManager#gap
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.gap = 1000 / 240;
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
@@ -142,7 +205,8 @@ var TweenManager = new Class({
         this.paused = false;
 
         this.startTime = Date.now();
-        this.lastUpdate = this.startTime;
+        this.prevTime = this.startTime;
+        this.nextTime = this.gap;
     },
 
     /**
@@ -437,84 +501,179 @@ var TweenManager = new Class({
         return StaggerBuilder(value, options);
     },
 
-    setLagSmooth: function (threshold, adjustedLag)
+    /**
+     * Set the limits that are used when a browser encounters lag, or delays that cause the elapsed
+     * time between two frames to exceed the expected amount. If this occurs, the Tween Manager will
+     * act as if the 'skip' amount of times has passed, in order to maintain strict tween sequencing.
+     *
+     * This is enabled by default with the values 500ms for the lag limit and 33ms for the skip.
+     *
+     * You should not set these to low values, as it won't give time for the browser to ever
+     * catch-up with itself and reclaim sync.
+     *
+     * Call this method with no arguments to disable smoothing.
+     *
+     * Call it with the arguments `500` and `33` to reset to the defaults.
+     *
+     * @method Phaser.Tweens.TweenManager#setLagSmooth
+     * @since 3.60.0
+     *
+     * @param {number} [limit=0] - If the browser exceeds this amount, in milliseconds, it will act as if the 'skip' amount has elapsed instead.
+     * @param {number} [skip=0] - The amount, in milliseconds, to use as the step delta should the browser lag beyond the 'limit'.
+     *
+     * @return {this} This Tween Manager instance.
+     */
+    setLagSmooth: function (limit, skip)
     {
-        if (threshold === undefined) { threshold = 1 / 0.000001; }
-        if (adjustedLag === undefined) { adjustedLag = 0; }
+        if (limit === undefined) { limit = 1 / 1e-8; }
+        if (skip === undefined) { skip = 0; }
 
-        this.lagThreshold = threshold;
-        this.adjustedLag = Math.min(adjustedLag, this.lagThreshold);
+        this.maxLag = limit;
+        this.lagSkip = Math.min(skip, this.maxLag);
+
+        return this;
     },
 
+    /**
+     * Limits the Tween system to run at a particular frame rate.
+     *
+     * You should not set this _above_ the frequency of the browser,
+     * but instead can use it to throttle the frame rate lower, should
+     * you need to in certain situations.
+     *
+     * @method Phaser.Tweens.TweenManager#setFps
+     * @since 3.60.0
+     *
+     * @param {number} [fps=240] - The frame rate to tick at.
+     *
+     * @return {this} This Tween Manager instance.
+     */
     setFps: function (fps)
     {
         if (fps === undefined) { fps = 240; }
 
         this.gap = 1000 / fps;
         this.nextTime = this.time * 1000 + this.gap;
+
+        return this;
+    },
+
+    /**
+     * Internal method that calculates the delta value, along with the other timing values,
+     * and returns the new delta.
+     *
+     * You should not typically call this method directly.
+     *
+     * @method Phaser.Tweens.TweenManager#getDelta
+     * @since 3.60.0
+     *
+     * @param {boolean} [tick=false] - Is this a manual tick, or an automated tick?
+     *
+     * @return {number} The new delta value.
+     */
+    getDelta: function (tick)
+    {
+        var elapsed = Date.now() - this.prevTime;
+
+        if (elapsed > this.maxLag)
+        {
+            this.startTime += elapsed - this.lagSkip;
+        }
+
+        this.prevTime += elapsed;
+
+        var time = this.prevTime - this.startTime;
+        var overlap = time - this.nextTime;
+        var delta = time - this.time * 1000;
+
+        if (overlap > 0 || tick)
+        {
+            time /= 1000;
+            this.time = time;
+            this.nextTime += overlap + (overlap >= this.gap ? 4 : this.gap - overlap);
+        }
+        else
+        {
+            delta = 0;
+        }
+
+        return delta;
+    },
+
+    /**
+     * Manually advance the Tween system by one step.
+     *
+     * This will update all Tweens even if the Tween Manager is currently
+     * paused.
+     *
+     * @method Phaser.Tweens.TweenManager#tick
+     * @since 3.60.0
+     *
+     * @return {this} This Tween Manager instance.
+     */
+    tick: function ()
+    {
+        this.step(true);
+
+        return this;
+    },
+
+    /**
+     * Internal update handler.
+     *
+     * Calls `TweenManager.step` as long as the Tween Manager has not
+     * been paused.
+     *
+     * @method Phaser.Tweens.TweenManager#update
+     * @since 3.0.0
+     */
+    update: function ()
+    {
+        if (!this.paused)
+        {
+            this.step(false);
+        }
     },
 
     /**
      * Updates all Tweens belonging to this Tween Manager.
      *
-     * This is skipped if `TweenManager.paused = true`.
+     * Called automatically by `update` and `tick`.
      *
-     * @method Phaser.Tweens.TweenManager#update
-     * @since 3.0.0
+     * @method Phaser.Tweens.TweenManager#step
+     * @since 3.60.0
      *
-     * @param {number} timestamp - The current time in milliseconds.
-     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+     * @param {boolean} [tick=false] - Is this a manual tick, or an automated tick?
      */
-    update: function (timestamp, deltaX)
+    step: function (tick)
     {
-        if (this.paused)
+        if (tick === undefined) { tick = false; }
+
+        var delta = this.getDelta(tick);
+
+        if (delta === 0)
         {
             return;
         }
 
         this.processing = true;
 
-        //  New timing test:
-        var now = Date.now();
-        var elapsed = now - this.lastUpdate;
-        elapsed > this.lagThreshold && (this.startTime += elapsed - this.adjustedLag);
-        this.lastUpdate += elapsed;
-        var time = this.lastUpdate - this.startTime;
-        var overlap = time - this.nextTime;
-        var delta = time - this.time * 1000;
-
-        if (overlap > 0)
-        {
-            this.time = time = time / 1000;
-            this.nextTime += overlap + (overlap >= this.gap ? 4 : this.gap - overlap);
-        }
-        else
-        {
-            return;
-        }
-
         var i;
         var tween;
         var toDestroy = [];
         var list = this.tweens;
 
-        //  By not caching the length we can immediately update tweens added this frame
+        //  By not caching the length we can immediately update tweens added
+        //  this frame (such as chained tweens)
         for (i = 0; i < list.length; i++)
         {
             tween = list[i];
 
             //  If Tween.update returns 'true' then it means it has completed,
             //  so move it to the destroy list
-            if (tween.update(now, delta))
+            if (tween.update(delta))
             {
-                if (tween.persist)
-                {
-                    tween.state = TWEEN_CONST.FINISHED;
-                }
-                else
-                {
-                    toDestroy.push(tween);
-                }
+                toDestroy.push(tween);
             }
         }
 
