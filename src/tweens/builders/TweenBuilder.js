@@ -58,6 +58,8 @@ var TweenBuilder = function (parent, config, defaults)
     {
         var ops = GetValueOp(key, value);
 
+        var interpolationFunc = GetInterpolationFunction(GetValue(value, 'interpolation', interpolation));
+
         tween.add(
             targetIndex,
             key,
@@ -73,8 +75,8 @@ var TweenBuilder = function (parent, config, defaults)
             GetValue(value, 'repeatDelay', repeatDelay),
             GetBoolean(value, 'flipX', flipX),
             GetBoolean(value, 'flipY', flipY),
-            GetInterpolationFunction(GetValue(value, 'interpolation', interpolation)),
-            value
+            interpolationFunc,
+            (interpolationFunc) ? value : null
         );
     };
 
