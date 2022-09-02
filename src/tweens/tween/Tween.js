@@ -189,7 +189,7 @@ var Tween = new Class({
          * The current state of the Tween.
          *
          * @name Phaser.Tweens.Tween#state
-         * @type {number}
+         * @type {Phaser.Types.Tweens.TweenState}
          * @since 3.60.0
          */
         this.state = TWEEN_CONST.PENDING;
@@ -369,10 +369,9 @@ var Tween = new Class({
         return this;
     },
 
-    //  TODO - We could remove the target from the TweenData and just pass the index
-    add: function (target, index, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData)
+    add: function (targetIndex, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData)
     {
-        this.totalData = this.data.push(new TweenData(this, target, index, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData));
+        this.totalData = this.data.push(new TweenData(this, targetIndex, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData));
     },
 
     /**
@@ -651,6 +650,8 @@ var Tween = new Class({
      * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
      * @fires Phaser.Tweens.Events#TWEEN_LOOP
      * @since 3.0.0
+     *
+     * @return {boolean} `true` if this Tween has completed, otherwise `false`.
      */
     nextState: function ()
     {
@@ -774,51 +775,9 @@ var Tween = new Class({
         var data = this.data;
         var total = this.totalData;
 
-        // var totalTargets = this.totalTargets;
-
         for (var i = 0; i < total; i++)
         {
-            var tweenData = data[i];
-
-            tweenData.reset(resetFromLoop);
-
-            /*
-            var target = tweenData.target;
-            var key = tweenData.key;
-            var targetIndex = tweenData.index;
-
-            tweenData.progress = 0;
-            tweenData.elapsed = 0;
-
-            tweenData.repeatCounter = (tweenData.repeat === -1) ? 999999999999 : tweenData.repeat;
-
-            if (resetFromLoop)
-            {
-                tweenData.start = tweenData.getStartValue(target, key, tweenData.start, targetIndex, totalTargets, this);
-
-                tweenData.end = tweenData.getEndValue(target, key, tweenData.end, targetIndex, totalTargets, this);
-
-                tweenData.current = tweenData.start;
-
-                tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
-            }
-            else
-            {
-                tweenData.state = TWEEN_CONST.PENDING_RENDER;
-            }
-
-            if (tweenData.delay > 0)
-            {
-                tweenData.elapsed = tweenData.delay;
-
-                tweenData.state = TWEEN_CONST.DELAY;
-            }
-
-            if (tweenData.getActiveValue)
-            {
-                target[key] = tweenData.getActiveValue(tweenData.target, tweenData.key, tweenData.start);
-            }
-            */
+            data[i].reset(resetFromLoop);
         }
     },
 
@@ -864,9 +823,9 @@ var Tween = new Class({
 
             do
             {
-                this.update(0, delta);
+                this.update(delta);
 
-            } while (this.totalProgress < toPosition);
+            } while (this.totalProgress <= toPosition);
 
             this.isSeeking = false;
         }
@@ -1188,6 +1147,8 @@ var Tween = new Class({
      * `onLoop` - When a Tween loops, if it has been set to do so. This happens _after_ the `loopDelay` expires, if set.
      * `onComplete` - When the Tween finishes playback fully. Never invoked if the Tween is set to repeat infinitely.
      * `onStop` - Invoked only if the `Tween.stop` method is called.
+     * `onPause` - Invoked only if the `Tween.pause` method is called. Not invoked if the Tween Manager is paused.
+     * `onResume` - Invoked only if the `Tween.resume` method is called. Not invoked if the Tween Manager is resumed.
      *
      * The following types are also available and are invoked on a TweenData level, that is per-target object, per-property, being tweened:
      *
@@ -1198,7 +1159,7 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#setCallback
      * @since 3.60.0
      *
-     * @param {string} type - The type of callback to set. One of: `onActive`, `onStart`, `onComplete`, `onLoop`, `onRepeat`, `onStop`, `onUpdate` or  onYoyo`.
+     * @param {Phaser.Types.Tweens.TweenCallbackTypes} type - The type of callback to set. One of: `onActive`, `onComplete`, `onLoop`, `onPause`, `onRepeat`, `onResume`, `onStart`, `onStop`, `onUpdate` or `onYoyo`.
      * @param {function} callback - Your callback that will be invoked.
      * @param {array} [params] - The parameters to pass to the callback. Pass an empty array if you don't want to define any, but do wish to set the scope.
      * @param {object} [scope] - The context scope of the callback. If not given, will use the callback itself as the scope.
