@@ -335,10 +335,9 @@ var TweenData = new Class({
          *
          * @name Phaser.Tweens.TweenData#interpolationData
          * @type {?number[]}
-         * @default null
          * @since 3.60.0
          */
-        this.interpolationData = (interpolation) ? interpolationData : null;
+        this.interpolationData = interpolationData;
     },
 
     /**
