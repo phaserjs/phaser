@@ -48,21 +48,17 @@ var NumberTweenBuilder = function (parent, config, defaults)
 
     var targets = [ { value: from } ];
 
-    var delay = GetNewValue(config, 'delay', defaults.delay);
-    var duration = GetNewValue(config, 'duration', defaults.duration);
+    var delay = GetValue(config, 'delay', defaults.delay);
     var easeParams = GetValue(config, 'easeParams', defaults.easeParams);
-    var ease = GetEaseFunction(GetValue(config, 'ease', defaults.ease), easeParams);
-    var hold = GetNewValue(config, 'hold', defaults.hold);
-    var repeat = GetNewValue(config, 'repeat', defaults.repeat);
-    var repeatDelay = GetNewValue(config, 'repeatDelay', defaults.repeatDelay);
-    var yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
-
-    var data = [];
+    var ease = GetValue(config, 'ease', defaults.ease);
 
     var ops = GetValueOp('value', to);
 
-    var tweenData = TweenData(
-        targets[0],
+    var tween = new Tween(parent, targets);
+
+    //  TODO - Needs tidying up + easeParams being used, etc
+
+    var tweenData = tween.add(
         0,
         'value',
         ops.getEnd,
@@ -70,31 +66,26 @@ var NumberTweenBuilder = function (parent, config, defaults)
         ops.getActive,
         ease,
         delay,
-        duration,
-        yoyo,
-        hold,
-        repeat,
-        repeatDelay,
+        GetValue(config, 'duration', defaults.duration),
+        GetBoolean(config, 'yoyo', defaults.yoyo),
+        GetValue(config, 'hold', defaults.hold),
+        GetValue(config, 'repeat', defaults.repeat),
+        GetValue(config, 'repeatDelay', defaults.repeatDelay),
         false,
         false
     );
 
     tweenData.start = from;
     tweenData.current = from;
-    tweenData.to = to;
-
-    data.push(tweenData);
-
-    var tween = new Tween(parent, data, targets);
 
     tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
     tween.loop = Math.round(GetAdvancedValue(config, 'loop', 0));
     tween.loopDelay = Math.round(GetAdvancedValue(config, 'loopDelay', 0));
     tween.paused = GetBoolean(config, 'paused', false);
+    tween.persist = GetBoolean(config, 'persist', false);
 
     //  Set the Callbacks
     var scope = GetValue(config, 'callbackScope', tween);
-
     var callbacks = Tween.TYPES;
 
     for (var i = 0; i < callbacks.length; i++)
