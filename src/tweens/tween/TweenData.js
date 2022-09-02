@@ -20,8 +20,8 @@ var TWEEN_CONST = require('./const');
  * @constructor
  * @since 3.60.0
  *
- * @param {any} target - The target to tween.
- * @param {number} index - The target index within the Tween targets array.
+ * @param {Phaser.Tweens.Tween} tween - The tween this TweenData instance belongs to.
+ * @param {number} targetIndex - The target index within the Tween targets array.
  * @param {string} key - The property of the target to tween.
  * @param {function} getEnd - What the property will be at the END of the Tween.
  * @param {function} getStart - What the property will be at the START of the Tween.
@@ -37,22 +37,17 @@ var TWEEN_CONST = require('./const');
  * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
  * @param {?function} interpolation - The interpolation function to be used for arrays of data. Defaults to 'null'.
  * @param {number[]} interpolationData - The array of interpolation data to be set. Defaults to 'null'.
- *
- * @return {Phaser.Types.Tweens.TweenDataConfig} The config object describing this TweenData.
  */
 var TweenData = new Class({
 
     initialize:
 
-    function TweenData (tween, target, index, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData)
+    function TweenData (tween, targetIndex, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData)
     {
         this.tween = tween;
 
-        //  The target to tween
-        this.target = target;
-
         //  The index of the target within the tween targets array
-        this.index = index;
+        this.targetIndex = targetIndex;
 
         //  The property of the target to tween
         this.key = key;
@@ -140,9 +135,9 @@ var TweenData = new Class({
         var tween = this.tween;
         var totalTargets = tween.totalTargets;
 
-        var target = this.target;
+        var targetIndex = this.targetIndex;
+        var target = tween.targets[targetIndex];
         var key = this.key;
-        var targetIndex = this.index;
 
         var gen = this.gen;
 
@@ -215,7 +210,7 @@ var TweenData = new Class({
 
         if (!isSeek && this.getActiveValue)
         {
-            target[key] = this.getActiveValue(this.target, this.key, this.start);
+            target[key] = this.getActiveValue(target, key, this.start);
         }
     },
 
@@ -233,7 +228,12 @@ var TweenData = new Class({
      */
     update: function (delta)
     {
-        var target = this.target;
+        var tween = this.tween;
+        var totalTargets = tween.totalTargets;
+
+        var targetIndex = this.targetIndex;
+        var target = tween.targets[targetIndex];
+        var key = this.key;
 
         if (this.state === TWEEN_CONST.DELAY)
         {
@@ -278,13 +278,13 @@ var TweenData = new Class({
         {
             if (target)
             {
-                this.start = this.getStartValue(target, this.key, target[this.key], this.index, this.totalTargets, this);
+                this.start = this.getStartValue(target, key, target[key], targetIndex, totalTargets, tween);
 
-                this.end = this.getEndValue(target, this.key, this.start, this.index, this.totalTargets, this);
+                this.end = this.getEndValue(target, key, this.start, targetIndex, totalTargets, tween);
 
                 this.current = this.start;
 
-                target[this.key] = this.start;
+                target[key] = this.start;
 
                 this.state = TWEEN_CONST.PLAYING_FORWARD;
             }
@@ -331,7 +331,7 @@ var TweenData = new Class({
                 if (forward)
                 {
                     this.current = this.end;
-                    target[this.key] = this.end;
+                    target[key] = this.end;
 
                     if (this.hold > 0)
                     {
@@ -347,7 +347,7 @@ var TweenData = new Class({
                 else
                 {
                     this.current = this.start;
-                    target[this.key] = this.start;
+                    target[key] = this.start;
 
                     this.state = this.setStateFromStart(diff);
                 }
@@ -365,7 +365,7 @@ var TweenData = new Class({
                     this.current = this.start + ((this.end - this.start) * v);
                 }
 
-                target[this.key] = this.current;
+                target[key] = this.current;
             }
 
             this.dispatchTweenDataEvent(Events.TWEEN_UPDATE, 'onUpdate', this);
@@ -388,9 +388,9 @@ var TweenData = new Class({
         var tween = this.tween;
         var totalTargets = tween.totalTargets;
 
-        var target = this.target;
+        var targetIndex = this.targetIndex;
+        var target = tween.targets[targetIndex];
         var key = this.key;
-        var targetIndex = this.index;
 
         this.progress = 0;
         this.elapsed = 0;
@@ -421,7 +421,7 @@ var TweenData = new Class({
 
         if (this.getActiveValue)
         {
-            target[key] = this.getActiveValue(this.target, this.key, this.start);
+            target[key] = this.getActiveValue(target, key, this.start);
         }
     },
 
@@ -436,15 +436,23 @@ var TweenData = new Class({
      */
     dispatchTweenDataEvent: function (event, callback)
     {
-        if (!this.tween.isSeeking)
-        {
-            this.tween.emit(event, this.tween, this.key, this.target, this.current, this.previous);
+        var tween = this.tween;
 
-            var handler = this.tween.callbacks[callback];
+        if (!tween.isSeeking)
+        {
+            var target = tween.targets[this.targetIndex];
+            var key = this.key;
+
+            var current = this.current;
+            var previous = this.previoius;
+
+            tween.emit(event, tween, key, target, current, previous);
+
+            var handler = tween.callbacks[callback];
 
             if (handler)
             {
-                handler.func.apply(handler.scope, [ this.tween, this.target, this.key, this.current, this.previous ].concat(handler.params));
+                handler.func.apply(handler.scope, [ tween, target, key, current, previous ].concat(handler.params));
             }
         }
     },
@@ -467,6 +475,10 @@ var TweenData = new Class({
         var tween = this.tween;
         var totalTargets = tween.totalTargets;
 
+        var targetIndex = this.targetIndex;
+        var target = tween.targets[targetIndex];
+        var key = this.key;
+
         if (this.yoyo)
         {
             //  We've hit the end of a Playing Forward TweenData and we have a yoyo
@@ -477,17 +489,17 @@ var TweenData = new Class({
 
             if (this.flipX)
             {
-                this.target.toggleFlipX();
+                target.toggleFlipX();
             }
 
             if (this.flipY)
             {
-                this.target.toggleFlipY();
+                target.toggleFlipY();
             }
 
             this.dispatchTweenDataEvent(Events.TWEEN_YOYO, 'onYoyo');
 
-            this.start = this.getStartValue(this.target, this.key, this.start, this.index, totalTargets, tween);
+            this.start = this.getStartValue(target, key, this.start, targetIndex, totalTargets, tween);
 
             return TWEEN_CONST.PLAYING_BACKWARD;
         }
@@ -504,17 +516,17 @@ var TweenData = new Class({
 
             if (this.flipX)
             {
-                this.target.toggleFlipX();
+                target.toggleFlipX();
             }
 
             if (this.flipY)
             {
-                this.target.toggleFlipY();
+                target.toggleFlipY();
             }
 
-            this.start = this.getStartValue(this.target, this.key, this.start, this.index, totalTargets, tween);
+            this.start = this.getStartValue(target, key, this.start, targetIndex, totalTargets, tween);
 
-            this.end = this.getEndValue(this.target, this.key, this.start, this.index, totalTargets, tween);
+            this.end = this.getEndValue(target, key, this.start, targetIndex, totalTargets, tween);
 
             //  Delay?
             if (this.repeatDelay > 0)
@@ -523,7 +535,7 @@ var TweenData = new Class({
 
                 this.current = this.start;
 
-                this.target[this.key] = this.current;
+                target[key] = this.current;
 
                 return TWEEN_CONST.REPEAT_DELAY;
             }
@@ -555,6 +567,10 @@ var TweenData = new Class({
         var tween = this.tween;
         var totalTargets = tween.totalTargets;
 
+        var targetIndex = this.targetIndex;
+        var target = tween.targets[targetIndex];
+        var key = this.key;
+
         if (this.repeatCounter > 0)
         {
             this.repeatCounter--;
@@ -565,15 +581,15 @@ var TweenData = new Class({
 
             if (this.flipX)
             {
-                this.target.toggleFlipX();
+                target.toggleFlipX();
             }
 
             if (this.flipY)
             {
-                this.target.toggleFlipY();
+                target.toggleFlipY();
             }
 
-            this.end = this.getEndValue(this.target, this.key, this.start, this.index, totalTargets, tween);
+            this.end = this.getEndValue(target, key, this.start, targetIndex, totalTargets, tween);
 
             //  Delay?
             if (this.repeatDelay > 0)
@@ -582,7 +598,7 @@ var TweenData = new Class({
 
                 this.current = this.start;
 
-                this.target[this.key] = this.current;
+                target[key] = this.current;
 
                 return TWEEN_CONST.REPEAT_DELAY;
             }
@@ -600,7 +616,6 @@ var TweenData = new Class({
     destroy: function ()
     {
         this.tween = null;
-        this.target = null;
         this.getActiveValue = null;
         this.getEndValue = null;
         this.getStartValue = null;

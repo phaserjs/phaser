@@ -54,13 +54,12 @@ var TweenBuilder = function (parent, config, defaults)
     var flipY = GetBoolean(config, 'flipY', defaults.flipY);
     var interpolation = GetValue(config, 'interpolation', defaults.interpolation);
 
-    var addTarget = function (tween, target, t, key, value)
+    var addTarget = function (tween, targetIndex, key, value)
     {
         var ops = GetValueOp(key, value);
 
         tween.add(
-            target,
-            t,
+            targetIndex,
             key,
             ops.getEnd,
             ops.getStart,
@@ -88,17 +87,17 @@ var TweenBuilder = function (parent, config, defaults)
         var value = props[p].value;
 
         //  Create 1 TweenData per target, per property
-        for (var t = 0; t < targets.length; t++)
+        for (var targetIndex = 0; targetIndex < targets.length; targetIndex++)
         {
             //  Special-case for scale short-cut:
-            if (key === 'scale' && !targets[t].hasOwnProperty('scale'))
+            if (key === 'scale' && !targets[targetIndex].hasOwnProperty('scale'))
             {
-                addTarget(tween, targets[t], t, 'scaleX', value);
-                addTarget(tween, targets[t], t, 'scaleY', value);
+                addTarget(tween, targetIndex, 'scaleX', value);
+                addTarget(tween, targetIndex, 'scaleY', value);
             }
             else
             {
-                addTarget(tween, targets[t], t, key, value);
+                addTarget(tween, targetIndex, key, value);
             }
         }
     }
