@@ -715,9 +715,9 @@ var Tween = new Class({
             // this.chainedTween.delta = diff;
         }
 
-        console.log('end', performance.now());
-        console.log('elapsed', this.elapsed);
-        console.log('over', this.elapsed - this.duration);
+        // console.log('end', performance.now());
+        // console.log('elapsed', this.elapsed);
+        // console.log('over', this.elapsed - this.duration);
 
         // console.log('over', (this.elapsed - this.duration) - this.delta);
     },
@@ -1131,7 +1131,7 @@ var Tween = new Class({
                 //  Override the delta to adjust for the time we needed for the startDelay
                 delta = Math.max(0, delta - Math.abs(this.startDelay));
 
-                console.log('onStart', performance.now(), 'delay', this.startDelay, 'delta', delta);
+                // console.log('onStart', performance.now(), 'delay', this.startDelay, 'delta', delta);
             }
         }
 
