@@ -9,11 +9,17 @@ var Events = require('../events');
 var TWEEN_CONST = require('./const');
 
 /**
- * Returns a TweenDataConfig object that describes the tween data for a unique property of a unique target.
- * A single Tween consists of multiple TweenDatas, depending on how many properties are being changed by the Tween.
+ * The TweenData is a class that contains a single target and property that is being tweened.
  *
- * This is an internal function used by the TweenBuilder and should not be accessed directly, instead,
- * Tweens should be created using the GameObjectFactory or GameObjectCreator.
+ * Tweens create TweenData instances when they are created, with one TweenData instance per
+ * target and/or property. A Tween can own multiple TweenData instances, but a TweenData only
+ * ever belongs to a single Tween.
+ *
+ * You should not typically create these yourself, but rather use the TweenBuilder,
+ * or the `Tween.add` method.
+ *
+ * Prior to Phaser 3.60 the TweenData was just an object, but was refactored to make
+ * it responsible for its own state and updating.
  *
  * @class TweenData
  * @memberof Phaser.Tweens
@@ -23,20 +29,20 @@ var TWEEN_CONST = require('./const');
  * @param {Phaser.Tweens.Tween} tween - The tween this TweenData instance belongs to.
  * @param {number} targetIndex - The target index within the Tween targets array.
  * @param {string} key - The property of the target to tween.
- * @param {function} getEnd - What the property will be at the END of the Tween.
- * @param {function} getStart - What the property will be at the START of the Tween.
- * @param {?function} getActive - If not null, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
+ * @param {Phaser.Types.Tweens.GetEndCallback} getEnd - What the property will be at the END of the Tween.
+ * @param {Phaser.Types.Tweens.GetStartCallback} getStart - What the property will be at the START of the Tween.
+ * @param {?Phaser.Types.Tweens.GetActiveCallback} getActive - If not null, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
  * @param {function} ease - The ease function this tween uses.
  * @param {function} delay - Function that returns the time in ms/frames before tween will start.
- * @param {function} duration - Function that returns the duration of the tween in ms/frames.
+ * @param {number} duration - The duration of the tween in ms/frames.
  * @param {boolean} yoyo - Determines whether the tween should return back to its start value after hold has expired.
- * @param {function} hold - Function that returns the time in ms/frames the tween will pause before repeating or returning to its starting value if yoyo is set to true.
- * @param {function} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
- * @param {function} repeatDelay - Function that returns the time in ms/frames before the repeat will start.
+ * @param {number} hold - Function that returns the time in ms/frames the tween will pause before repeating or returning to its starting value if yoyo is set to true.
+ * @param {number} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
+ * @param {number} repeatDelay - Function that returns the time in ms/frames before the repeat will start.
  * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
  * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
  * @param {?function} interpolation - The interpolation function to be used for arrays of data. Defaults to 'null'.
- * @param {number[]} interpolationData - The array of interpolation data to be set. Defaults to 'null'.
+ * @param {?number[]} interpolationData - The array of interpolation data to be set. Defaults to 'null'.
  */
 var TweenData = new Class({
 
@@ -44,92 +50,307 @@ var TweenData = new Class({
 
     function TweenData (tween, targetIndex, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData)
     {
+        /**
+         * A reference to the Tween that this TweenData instance belongs to.
+         *
+         * @name Phaser.Tweens.TweenData#tween
+         * @type {Phaser.Tweens.Tween}
+         * @since 3.60.0
+         */
         this.tween = tween;
 
-        //  The index of the target within the tween targets array
+        /**
+         * The index of the target within the Tween `targets` array.
+         *
+         * @name Phaser.Tweens.TweenData#targetIndex
+         * @type {number}
+         * @since 3.60.0
+         */
         this.targetIndex = targetIndex;
 
-        //  The property of the target to tween
+        /**
+         * The property of the target to be tweened.
+         *
+         * @name Phaser.Tweens.TweenData#key
+         * @type {string}
+         * @since 3.60.0
+         */
         this.key = key;
 
-        //  What to set the property to the moment the TweenData is invoked.
+        /**
+         * A function that returns what to set the target property to,
+         * the moment the TweenData is invoked.
+         *
+         * This is called when this TweenData is inititalised or reset.
+         *
+         * @name Phaser.Tweens.TweenData#getActiveValue
+         * @type {?Phaser.Types.Tweens.GetActiveCallback}
+         * @since 3.60.0
+         */
         this.getActiveValue = getActive;
 
-        //  The returned value sets what the property will be at the END of the Tween.
+        /**
+         * A function that returns what to set the target property to
+         * at the end of the tween.
+         *
+         * This is called when the tween starts playing, after any initial
+         * start delay, or if the tween is reset, or is set to repeat.
+         *
+         * @name Phaser.Tweens.TweenData#getEndValue
+         * @type {Phaser.Types.Tweens.GetEndCallback}
+         * @since 3.60.0
+         */
         this.getEndValue = getEnd;
 
-        //  The returned value sets what the property will be at the START of the Tween.
+        /**
+         * A function that returns what to set the target property to
+         * at the start of the tween.
+         *
+         * This is called when the tween starts playing, after any initial
+         * start delay, or if the tween is reset, or is set to repeat.
+         *
+         * @name Phaser.Tweens.TweenData#getStartValue
+         * @type {Phaser.Types.Tweens.GetStartCallback}
+         * @since 3.60.0
+         */
         this.getStartValue = getStart;
 
-        //  The ease function this tween uses.
+        /**
+         * The ease function this Tween uses to calculate the target value.
+         *
+         * @name Phaser.Tweens.TweenData#ease
+         * @type {function}
+         * @since 3.60.0
+         */
         this.ease = ease;
 
-        //  Duration of the tween in ms/frames, excludes time for yoyo or repeats.
-        this.duration = 0;
+        /**
+         * The duration of the tween in milliseconds, excluding any time required
+         * for yoyo or repeats.
+         *
+         * @name Phaser.Tweens.TweenData#duration
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.duration = duration;
 
-        //  The total calculated duration of this TweenData (based on duration, repeat, delay and yoyo)
+        /**
+         * The total calculated duration, in milliseconds, of this TweenData.
+         * Factoring in the duration, repeats, delays and yoyos.
+         *
+         * @name Phaser.Tweens.TweenData#totalDuration
+         * @type {number}
+         * @since 3.60.0
+         */
         this.totalDuration = 0;
 
-        //  Time in ms/frames before tween will start.
+        /**
+         * The time, in milliseconds, before this tween will start playing.
+         *
+         * This value is generated by the `getDelay` function.
+         *
+         * @name Phaser.Tweens.TweenData#delay
+         * @type {number}
+         * @since 3.60.0
+         */
         this.delay = 0;
 
-        //  Cause the tween to return back to its start value after hold has expired.
+        /**
+         * This function returns the value to be used for `TweenData.delay`.
+         *
+         * @name Phaser.Tweens.TweenData#getDelay
+         * @type {function}
+         * @since 3.60.0
+         */
+        this.getDelay = delay;
+
+        /**
+         * Will the Tween ease back to its starting values, after reaching the end
+         * and any `hold` value that may be set?
+         *
+         * @name Phaser.Tweens.TweenData#yoyo
+         * @type {boolean}
+         * @since 3.60.0
+         */
         this.yoyo = yoyo;
 
-        //  Time in ms/frames the tween will pause before running the yoyo or starting a repeat.
-        this.hold = 0;
+        /**
+         * The time, in milliseconds, before this tween will start a yoyo to repeat.
+         *
+         * @name Phaser.Tweens.TweenData#hold
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.hold = hold;
 
-        //  Number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
-        this.repeat = 0;
+        /**
+         * The number of times this tween will repeat.
+         *
+         * The tween will always run once regardless of this value,
+         * so a repeat value of '1' will play the tween twice: I.e. the original
+         * play-through and then it repeats that once (1).
+         *
+         * If this value is set to -1 this tween will repeat forever.
+         *
+         * @name Phaser.Tweens.TweenData#repeat
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.repeat = repeat;
 
-        //  Time in ms/frames before the repeat will start.
-        this.repeatDelay = 0;
+        /**
+         * The time, in milliseconds, before the repeat will start.
+         *
+         * @name Phaser.Tweens.TweenData#repeatDelay
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.repeatDelay = repeatDelay;
 
-        //  Automatically call toggleFlipX when the TweenData yoyos or repeats
-        this.flipX = flipX;
-
-        //  Automatically call toggleFlipY when the TweenData yoyos or repeats
-        this.flipY = flipY;
-
-        //  Between 0 and 1 showing completion of this TweenData.
-        this.progress = 0;
-
-        //  Delta counter.
-        this.elapsed = 0;
-
-        //  How many repeats are left to run?
+        /**
+         * How many repeats are left to run?
+         *
+         * @name Phaser.Tweens.TweenData#repeatCounter
+         * @type {number}
+         * @since 3.60.0
+         */
         this.repeatCounter = 0;
 
-        //  Ease Value Data:
+        /**
+         * If `true` this Tween will call `toggleFlipX` on the Tween target
+         * whenever it yoyo's or repeats. It will only be called if the target
+         * has a function matching this name, like most Phaser GameObjects do.
+         *
+         * @name Phaser.Tweens.TweenData#flipX
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.flipX = flipX;
 
+        /**
+         * If `true` this Tween will call `toggleFlipY` on the Tween target
+         * whenever it yoyo's or repeats. It will only be called if the target
+         * has a function matching this name, like most Phaser GameObjects do.
+         *
+         * @name Phaser.Tweens.TweenData#flipY
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.flipY = flipY;
+
+        /**
+         * A value between 0 and 1 holding the progress of this TweenData.
+         *
+         * @name Phaser.Tweens.TweenData#progress
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.progress = 0;
+
+        /**
+         * The amount of time, in milliseconds, that has elapsed since this
+         * TweenData was made active.
+         *
+         * @name Phaser.Tweens.TweenData#elapsed
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.elapsed = 0;
+
+        /**
+         * The target's starting value, as returned by `getStartValue`.
+         *
+         * @name Phaser.Tweens.TweenData#start
+         * @type {number}
+         * @since 3.60.0
+         */
         this.start = 0;
+
+        /**
+         * The target value from the previous step.
+         *
+         * @name Phaser.Tweens.TweenData#previous
+         * @type {number}
+         * @since 3.60.0
+         */
         this.previous = 0;
+
+        /**
+         * The target's current value, as record in the most recent step.
+         *
+         * @name Phaser.Tweens.TweenData#current
+         * @type {number}
+         * @since 3.60.0
+         */
         this.current = 0;
+
+        /**
+         * The target's ending value, as returned by `getEndValue`.
+         *
+         * @name Phaser.Tweens.TweenData#end
+         * @type {number}
+         * @since 3.60.0
+         */
         this.end = 0;
 
-        //  Time Durations
+        /**
+         * Internal tween timer.
+         *
+         * @name Phaser.Tweens.TweenData#t1
+         * @type {number}
+         * @since 3.60.0
+         */
         this.t1 = 0;
+
+        /**
+         * Internal tween timer.
+         *
+         * @name Phaser.Tweens.TweenData#t2
+         * @type {number}
+         * @since 3.60.0
+         */
         this.t2 = 0;
 
-        //  LoadValue generation functions
-        this.gen = {
-            delay: delay,
-            duration: duration,
-            hold: hold,
-            repeat: repeat,
-            repeatDelay: repeatDelay
-        };
-
-        //  TWEEN_CONST.CREATED
+        /**
+         * The state of this TweenData.
+         *
+         * @name Phaser.Tweens.TweenData#state
+         * @type {Phaser.Types.Tweens.TweenDataState}
+         * @since 3.60.0
+         */
         this.state = 0;
 
-        //  The interpolation function to be used for arrays of data. Defaults to null.
+        /**
+         * The interpolation function to be used for arrays of data.
+         *
+         * @name Phaser.Tweens.TweenData#interpolation
+         * @type {?function}
+         * @default null
+         * @since 3.60.0
+         */
         this.interpolation = interpolation;
 
-        //  The array of data to interpolate
+        /**
+         * The array of data to interpolate, if interpolation is being used.
+         *
+         * @name Phaser.Tweens.TweenData#interpolationData
+         * @type {?number[]}
+         * @default null
+         * @since 3.60.0
+         */
         this.interpolationData = (interpolation) ? interpolationData : null;
     },
 
+    /**
+     * Prepares this TweenData for playback.
+     *
+     * Called automatically by the parent Tween. Should not be called directly.
+     *
+     * @method Phaser.Tweens.TweenData#init
+     * @since 3.60.0
+     *
+     * @param {boolean} [isSeek=false] - Is the parent Tween currently seeking?
+     */
     init: function (isSeek)
     {
         var tween = this.tween;
@@ -139,16 +360,12 @@ var TweenData = new Class({
         var target = tween.targets[targetIndex];
         var key = this.key;
 
-        var gen = this.gen;
-
         //  Function signature: target, key, value, index, total, tween
 
-        this.delay = gen.delay(target, key, 0, targetIndex, totalTargets, tween);
-        this.duration = Math.max(gen.duration(target, key, 0, targetIndex, totalTargets, tween), 0.001);
-        this.hold = gen.hold(target, key, 0, targetIndex, totalTargets, tween);
-        this.repeat = gen.repeat(target, key, 0, targetIndex, totalTargets, tween);
-        this.repeatDelay = gen.repeatDelay(target, key, 0, targetIndex, totalTargets, tween);
+        this.delay = this.getDelay(target, key, 0, targetIndex, totalTargets, tween);
+
         this.repeatCounter = (this.repeat === -1) ? 999999999999 : this.repeat;
+
         this.state = TWEEN_CONST.PENDING_RENDER;
 
         //  calcDuration:
@@ -215,16 +432,16 @@ var TweenData = new Class({
     },
 
     /**
-     * Internal method that advances a TweenData based on the time value given.
+     * Internal method that advances this TweenData based on the delta value given.
      *
-     * @method Phaser.Tweens.Tween#update
+     * @method Phaser.Tweens.TweenData#update
      * @fires Phaser.Tweens.Events#TWEEN_UPDATE
      * @fires Phaser.Tweens.Events#TWEEN_REPEAT
-     * @since 3.0.0
+     * @since 3.60.0
      *
      * @param {number} delta - The elapsed delta time in ms.
      *
-     * @return {boolean} True if the Tween Data is still playing, or false if it has finished entirely.
+     * @return {boolean} `true` if this TweenData is still playing, or `false` if it has finished entirely.
      */
     update: function (delta)
     {
@@ -259,7 +476,7 @@ var TweenData = new Class({
                 //  Adjust the delta for the PLAYING_FORWARD block below
                 delta = this.elapsed;
 
-                this.dispatchTweenDataEvent(Events.TWEEN_REPEAT, 'onRepeat', this);
+                this.dispatchEvent(Events.TWEEN_REPEAT, 'onRepeat');
             }
         }
         else if (this.state === TWEEN_CONST.HOLD_DELAY)
@@ -331,6 +548,7 @@ var TweenData = new Class({
                 if (forward)
                 {
                     this.current = this.end;
+
                     target[key] = this.end;
 
                     if (this.hold > 0)
@@ -347,6 +565,7 @@ var TweenData = new Class({
                 else
                 {
                     this.current = this.start;
+
                     target[key] = this.start;
 
                     this.state = this.setStateFromStart(diff);
@@ -368,7 +587,7 @@ var TweenData = new Class({
                 target[key] = this.current;
             }
 
-            this.dispatchTweenDataEvent(Events.TWEEN_UPDATE, 'onUpdate', this);
+            this.dispatchEvent(Events.TWEEN_UPDATE, 'onUpdate');
         }
 
         //  Return TRUE if this TweenData still playing, otherwise FALSE
@@ -376,10 +595,10 @@ var TweenData = new Class({
     },
 
     /**
-     * Internal method that resets all of the Tween Data, including the progress and elapsed values.
+     * Internal method that resets this Tween Data, including the progress and elapsed values.
      *
-     * @method Phaser.Tweens.Tween#reset
-     * @since 3.0.0
+     * @method Phaser.Tweens.TweenData#reset
+     * @since 3.60.0
      *
      * @param {boolean} resetFromLoop - Has this method been called as part of a loop?
      */
@@ -426,15 +645,16 @@ var TweenData = new Class({
     },
 
     /**
-     * Internal method that will emit a TweenData based Event and invoke the given callback.
+     * Internal method that will emit a TweenData based Event on the
+     * parent Tween and also invoke the given callback, if provided.
      *
-     * @method Phaser.Tweens.Tween#dispatchTweenDataEvent
-     * @since 3.19.0
+     * @method Phaser.Tweens.TweenData#dispatchEvent
+     * @since 3.60.0
      *
      * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
      * @param {string} [callback] - The callback to be invoked. Can be `null` or `undefined` to skip invocation.
      */
-    dispatchTweenDataEvent: function (event, callback)
+    dispatchEvent: function (event, callback)
     {
         var tween = this.tween;
 
@@ -458,17 +678,17 @@ var TweenData = new Class({
     },
 
     /**
-     * Internal method used as part of the playback process that sets a tween to play in reverse.
+     * Internal method used as part of the playback process that checks if this
+     * TweenData should yoyo, repeat or has completed.
      *
-     * @method Phaser.Tweens.Tween#setStateFromEnd
+     * @method Phaser.Tweens.TweenData#setStateFromEnd
      * @fires Phaser.Tweens.Events#TWEEN_REPEAT
      * @fires Phaser.Tweens.Events#TWEEN_YOYO
-     * @since 3.0.0
+     * @since 3.60.0
      *
-     * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData object to update.
      * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
      *
-     * @return {number} The state of this Tween.
+     * @return {Phaser.Types.Tweens.TweenDataState} The new state of this TweenData.
      */
     setStateFromEnd: function (diff)
     {
@@ -497,7 +717,7 @@ var TweenData = new Class({
                 target.toggleFlipY();
             }
 
-            this.dispatchTweenDataEvent(Events.TWEEN_YOYO, 'onYoyo');
+            this.dispatchEvent(Events.TWEEN_YOYO, 'onYoyo');
 
             this.start = this.getStartValue(target, key, this.start, targetIndex, totalTargets, tween);
 
@@ -541,7 +761,7 @@ var TweenData = new Class({
             }
             else
             {
-                this.dispatchTweenDataEvent(Events.TWEEN_REPEAT, 'onRepeat');
+                this.dispatchEvent(Events.TWEEN_REPEAT, 'onRepeat');
 
                 return TWEEN_CONST.PLAYING_FORWARD;
             }
@@ -551,16 +771,16 @@ var TweenData = new Class({
     },
 
     /**
-     * Internal method used as part of the playback process that sets a tween to play from the start.
+     * Internal method used as part of the playback process that checks if this
+     * TweenData should repeat or has completed.
      *
-     * @method Phaser.Tweens.Tween#setStateFromStart
+     * @method Phaser.Tweens.TweenData#setStateFromStart
      * @fires Phaser.Tweens.Events#TWEEN_REPEAT
-     * @since 3.0.0
+     * @since 3.60.0
      *
-     * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData object to update.
      * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
      *
-     * @return {number} The state of this Tween.
+     * @return {Phaser.Types.Tweens.TweenDataState} The new state of this TweenData.
      */
     setStateFromStart: function (diff)
     {
@@ -604,7 +824,7 @@ var TweenData = new Class({
             }
             else
             {
-                this.dispatchTweenDataEvent(Events.TWEEN_REPEAT, 'onRepeat');
+                this.dispatchEvent(Events.TWEEN_REPEAT, 'onRepeat');
 
                 return TWEEN_CONST.PLAYING_FORWARD;
             }
@@ -613,6 +833,12 @@ var TweenData = new Class({
         return TWEEN_CONST.COMPLETE;
     },
 
+    /**
+     * Immediately destroys this TweenData, nulling of all its references.
+     *
+     * @method Phaser.Tweens.TweenData#destroy
+     * @since 3.60.0
+     */
     destroy: function ()
     {
         this.tween = null;
@@ -620,7 +846,8 @@ var TweenData = new Class({
         this.getEndValue = null;
         this.getStartValue = null;
         this.ease = null;
-        this.gen = null;
+        this.getDelay = null;
+        this.state = TWEEN_CONST.COMPLETE;
     }
 
 });
