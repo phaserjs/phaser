@@ -363,7 +363,7 @@ var Tween = new Class({
         {
             this.state = TWEEN_CONST.ACTIVE;
 
-            this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
+            this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
         }
 
         return this;
@@ -486,7 +486,7 @@ var Tween = new Class({
         {
             this.paused = true;
 
-            this.dispatchEvent(Events.TWEEN_PAUSE, this.callbacks.onPause);
+            this.dispatchEvent(Events.TWEEN_PAUSE, 'onPause');
         }
 
         return this;
@@ -509,7 +509,7 @@ var Tween = new Class({
         {
             this.paused = false;
 
-            this.dispatchEvent(Events.TWEEN_RESUME, this.callbacks.onResume);
+            this.dispatchEvent(Events.TWEEN_RESUME, 'onResume');
         }
 
         return this;
@@ -527,7 +527,7 @@ var Tween = new Class({
     {
         this.parent.makeActive(this);
 
-        this.dispatchEvent(Events.TWEEN_ACTIVE, this.callbacks.onActive);
+        this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
     },
 
     /**
@@ -672,7 +672,7 @@ var Tween = new Class({
             {
                 this.state = TWEEN_CONST.ACTIVE;
 
-                this.dispatchEvent(Events.TWEEN_LOOP, this.callbacks.onLoop);
+                this.dispatchEvent(Events.TWEEN_LOOP, 'onLoop');
             }
         }
         else if (this.completeDelay > 0)
@@ -706,7 +706,7 @@ var Tween = new Class({
         this.progress = 1;
         this.totalProgress = 1;
 
-        this.dispatchEvent(Events.TWEEN_COMPLETE, this.callbacks.onComplete);
+        this.dispatchEvent(Events.TWEEN_COMPLETE, 'onComplete');
 
         //  Chain ...
         if (this.chainedTween)
@@ -958,7 +958,7 @@ var Tween = new Class({
     {
         if (this.state !== TWEEN_CONST.REMOVED && this.state !== TWEEN_CONST.PENDING_REMOVE)
         {
-            this.dispatchEvent(Events.TWEEN_STOP, this.callbacks.onStop);
+            this.dispatchEvent(Events.TWEEN_STOP, 'onStop');
 
             this.state = TWEEN_CONST.PENDING_REMOVE;
         }
@@ -1004,7 +1004,7 @@ var Tween = new Class({
 
         if (state === TWEEN_CONST.LOOP_DELAY)
         {
-            this.updateCountdown(TWEEN_CONST.ACTIVE, Events.TWEEN_LOOP, this.callbacks.onLoop);
+            this.updateCountdown(TWEEN_CONST.ACTIVE, Events.TWEEN_LOOP, 'onLoop');
         }
         else if (state === TWEEN_CONST.COMPLETE_DELAY)
         {
@@ -1042,7 +1042,7 @@ var Tween = new Class({
      *
      * @param {number} state - The new Tween State to be set.
      * @param {Phaser.Types.Tweens.Event} [event] - The Tween Event to dispatch, if any.
-     * @param {function} [callback] - The Tween Callback to invoke, if any.
+     * @param {Phaser.Types.Tweens.TweenCallbackTypes} [callback] - The name of the callback to be invoked. Can be `null` or `undefined` to skip invocation.
      *
      * @return {boolean} `true` if the countdown was reached, otherwise `false`.
      */
@@ -1054,7 +1054,7 @@ var Tween = new Class({
         {
             this.state = state;
 
-            if (callback)
+            if (event)
             {
                 this.dispatchEvent(event, callback);
             }
@@ -1085,7 +1085,7 @@ var Tween = new Class({
             {
                 this.hasStarted = true;
 
-                this.dispatchEvent(Events.TWEEN_START, this.callbacks.onStart);
+                this.dispatchEvent(Events.TWEEN_START, 'onStart');
 
                 //  Override the delta to adjust for the time we needed for the startDelay
                 delta = Math.max(0, delta - Math.abs(this.startDelay));
@@ -1120,7 +1120,7 @@ var Tween = new Class({
      * @since 3.60.0
      *
      * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
-     * @param {function} [callback] - The callback to be invoked. Can be `null` or `undefined` to skip invocation.
+     * @param {Phaser.Types.Tweens.TweenCallbackTypes} [callback] - The name of the callback to be invoked. Can be `null` or `undefined` to skip invocation.
      */
     dispatchEvent: function (event, callback)
     {
@@ -1128,9 +1128,11 @@ var Tween = new Class({
         {
             this.emit(event, this, this.targets);
 
-            if (callback)
+            var handler = this.callbacks[callback];
+
+            if (handler)
             {
-                callback.func.apply(callback.scope, [ this, this.targets ].concat(callback.params));
+                handler.func.apply(handler.scope, [ this, this.targets ].concat(handler.params));
             }
         }
     },

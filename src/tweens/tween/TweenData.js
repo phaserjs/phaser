@@ -652,7 +652,7 @@ var TweenData = new Class({
      * @since 3.60.0
      *
      * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
-     * @param {string} [callback] - The callback to be invoked. Can be `null` or `undefined` to skip invocation.
+     * @param {Phaser.Types.Tweens.TweenCallbackTypes} [callback] - The name of the callback to be invoked. Can be `null` or `undefined` to skip invocation.
      */
     dispatchEvent: function (event, callback)
     {
