@@ -369,9 +369,40 @@ var Tween = new Class({
         return this;
     },
 
+    /**
+     * Adds a new TweenData to this Tween. Typically, this method is called
+     * automatically by the TweenBuilder, however you can also invoke it
+     * yourself.
+     *
+     * @method Phaser.Tweens.Tween#add
+     * @since 3.60.0
+     *
+     * @param {number} targetIndex - The target index within the Tween targets array.
+     * @param {string} key - The property of the target to tween.
+     * @param {Phaser.Types.Tweens.GetEndCallback} getEnd - What the property will be at the END of the Tween.
+     * @param {Phaser.Types.Tweens.GetStartCallback} getStart - What the property will be at the START of the Tween.
+     * @param {?Phaser.Types.Tweens.GetActiveCallback} getActive - If not null, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
+     * @param {function} ease - The ease function this tween uses.
+     * @param {function} delay - Function that returns the time in ms/frames before tween will start.
+     * @param {number} duration - The duration of the tween in ms/frames.
+     * @param {boolean} yoyo - Determines whether the tween should return back to its start value after hold has expired.
+     * @param {number} hold - Function that returns the time in ms/frames the tween will pause before repeating or returning to its starting value if yoyo is set to true.
+     * @param {number} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
+     * @param {number} repeatDelay - Function that returns the time in ms/frames before the repeat will start.
+     * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
+     * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
+     * @param {?function} interpolation - The interpolation function to be used for arrays of data. Defaults to 'null'.
+     * @param {?number[]} interpolationData - The array of interpolation data to be set. Defaults to 'null'.
+     *
+     * @return {Phaser.Tweens.TweenData} The TweenData instance that was added.
+     */
     add: function (targetIndex, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData)
     {
-        this.totalData = this.data.push(new TweenData(this, targetIndex, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData));
+        var tweenData = new TweenData(this, targetIndex, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData);
+
+        this.totalData = this.data.push(tweenData);
+
+        return tweenData;
     },
 
     /**
