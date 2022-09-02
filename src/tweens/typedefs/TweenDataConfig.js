@@ -28,5 +28,5 @@
  * @property {number} [t1=0] - Time duration 1.
  * @property {number} [t2=0] - Time duration 2.
  * @property {Phaser.Types.Tweens.TweenDataGenConfig} [gen] - LoadValue generation functions.
- * @property {number} [state=0] - TWEEN_CONST.CREATED
+ * @property {Phaser.Types.Tweens.TweenDataState} [state=0] - TWEEN_CONST.CREATED
  */
