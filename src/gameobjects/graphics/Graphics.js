@@ -710,6 +710,8 @@ var Graphics = new Class({
         var tr = radius;
         var bl = radius;
         var br = radius;
+        
+        var maxRadius = Math.min(width, height) / 2;
 
         if (typeof radius !== 'number')
         {
@@ -718,7 +720,12 @@ var Graphics = new Class({
             bl = GetFastValue(radius, 'bl', 20);
             br = GetFastValue(radius, 'br', 20);
         }
-
+        
+        tl = Math.min(tl, maxRadius);
+        tr = Math.min(tr, maxRadius);
+        bl = Math.min(bl, maxRadius);
+        br = Math.min(br, maxRadius);
+        
         this.beginPath();
         this.moveTo(x + tl, y);
         this.lineTo(x + width - tr, y);
