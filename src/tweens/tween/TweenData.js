@@ -276,7 +276,7 @@ var TweenData = new Class({
         this.previous = 0;
 
         /**
-         * The target's current value, as record in the most recent step.
+         * The target's current value, as recorded in the most recent step.
          *
          * @name Phaser.Tweens.TweenData#current
          * @type {number}
@@ -392,13 +392,13 @@ var TweenData = new Class({
             this.totalDuration += (this.t2 * this.repeat);
         }
 
-        // if (this.totalDuration > tween.duration)
-        if (this.t1 > tween.duration)
+        if (this.totalDuration > tween.duration)
+        // if (this.t1 > tween.duration)
         {
             //  Get the longest TweenData from the Tween, used to calculate the Tween TD
-            tween.duration = this.totalDuration;
+            // tween.duration = this.totalDuration;
 
-            // tween.duration = this.t1;
+            tween.duration = this.t1;
         }
 
         if (this.delay < tween.startDelay)
