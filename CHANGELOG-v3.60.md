@@ -246,6 +246,9 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The temporary canvas created in `CanvasFeatures` for the `checkInverseAlpha` test is now removed from the CanvasPool after use.
 * The `CanvasFeatures` tests and the TextureManager `_tempContext` now specify the `{ willReadFrequently: true }` hint to inform the browser the canvas is to be read from, not composited.
 * When calling `TextureManager.getTextureKeys` it will now exclude the default `__WHITE` texture from the results (thanks @samme)
+* If the WebGL Renderer logs an error, it will now show the error string, or the code if not present in the error map (thanks @zpxp)
+* The `snapshotPixel` function, used by the Canvas and WebGL Renderers and the RenderTexture would mistakenly divide the alpha value. These values now return correctly (thanks @samme)
+* The `NoAudioSoundManager` now has all of the missing methods, such as `removeAll` and `get` to allow it to be a direct replacement for the HTML5 and WebAudio Sound Managers (thanks @orjandh @samme)
 
 ### Bug Fixes
 
@@ -337,6 +340,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `DisplayList.addChildCallback` method will now check to see if the child has a parent container, and if it does, remove it from there before adding it to the Scene Display List. Fix #6091 (thanks @michalfialadev)
 * `Display.RGB.equals` will now return the correct result. Previously, it would always return `false` (thanks @samme)
 * When destroying the Arcade Physics World it will now destroy the debug Graphics object, had one been created. Previously, these would continue to stack-up should you restart the physics world (thanks @samme)
+* `Graphics.strokeRoundedRect` would incorrectly draw the rectangle if you passed in a radius greater than half of the smaller side. This is now clamped internally (thanks @temajm)
 
 ### Examples, Documentation and TypeScript
 
