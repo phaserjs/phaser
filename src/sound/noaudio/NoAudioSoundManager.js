@@ -66,6 +66,16 @@ var NoAudioSoundManager = new Class({
         return sound;
     },
 
+    get: function (key)
+    {
+        return BaseSoundManager.prototype.get.call(this, key);
+    },
+
+    getAll: function (key)
+    {
+        return BaseSoundManager.prototype.getAll.call(this, key);
+    },
+
     // eslint-disable-next-line no-unused-vars
     play: function (key, extra)
     {
@@ -83,11 +93,25 @@ var NoAudioSoundManager = new Class({
         return BaseSoundManager.prototype.remove.call(this, sound);
     },
 
+    removeAll: function ()
+    {
+        return BaseSoundManager.prototype.removeAll.call(this);
+    },
+
     removeByKey: function (key)
     {
         return BaseSoundManager.prototype.removeByKey.call(this, key);
     },
 
+    stopByKey: function (key)
+    {
+        return BaseSoundManager.prototype.stopByKey.call(this, key);
+    },
+
+    onBlur: NOOP,
+    onFocus: NOOP,
+    onGameBlur: NOOP,
+    onGameFocus: NOOP,
     pauseAll: NOOP,
     resumeAll: NOOP,
     stopAll: NOOP,
@@ -96,6 +120,7 @@ var NoAudioSoundManager = new Class({
     setDetune: NOOP,
     setMute: NOOP,
     setVolume: NOOP,
+    unlock: NOOP,
 
     forEachActiveSound: function (callbackfn, scope)
     {
