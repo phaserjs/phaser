@@ -907,8 +907,7 @@ var Tween = new Class({
 
         //  Excludes loop values
 
-        //  If duration has been set to 0 then we give it a super-low value so that it always
-        //  renders at least 1 frame, but no more, without causing divided by zero errors elsewhere.
+        //  Clamp duration to ensure we never divide by zero
         this.duration = Math.max(this.duration, 0.001);
 
         this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
