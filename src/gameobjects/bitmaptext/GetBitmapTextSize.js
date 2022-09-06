@@ -172,7 +172,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
                 }
 
                 current.word = current.word.concat(text[i]);
-                current.w += glyph.xOffset + glyph.xAdvance + ((glyphKerningOffset !== undefined) ? glyphKerningOffset : 0);
+                current.w += glyph.xOffset + glyph.width + ((glyphKerningOffset !== undefined) ? glyphKerningOffset : 0);
             }
 
             xAdvance += glyph.xAdvance + letterSpacing;
@@ -339,7 +339,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             by = y;
         }
 
-        var gw = x + glyph.xAdvance;
+        var gw = x + glyph.width;
         var gh = y + lineHeight;
 
         if (bw < gw)
@@ -352,7 +352,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             bh = gh;
         }
 
-        var charWidth = glyph.xOffset + glyph.xAdvance + ((kerningOffset !== undefined) ? kerningOffset : 0);
+        var charWidth = glyph.xOffset + glyph.width + ((kerningOffset !== undefined) ? kerningOffset : 0);
 
         if (charCode === wordWrapCharCode)
         {
