@@ -18,37 +18,27 @@
  * @property {string|number|function|object|array} [loopDelay=0] - The time the tween will pause before starting either a yoyo or returning to the start for a repeat.
  * @property {boolean} [paused=false] - Does the tween start in a paused state (true) or playing (false)?
  * @property {Object.<string,(number|string|Phaser.Types.Tweens.GetEndCallback|Phaser.Types.Tweens.TweenPropConfig)>} [props] - The properties to tween.
- * @property {any} [callbackScope] - Scope (this) for the callbacks. The default scope is the tween.
+ * @property {any} [callbackScope] - The scope (or context) for all of the callbacks. The default scope is the tween.
  * @property {Phaser.Types.Tweens.TweenOnCompleteCallback} [onComplete] - A function to call when the tween completes.
  * @property {array} [onCompleteParams] - Additional parameters to pass to `onComplete`.
- * @property {any} [onCompleteScope] - Scope (this) for `onComplete`.
  * @property {Phaser.Types.Tweens.TweenOnLoopCallback} [onLoop] - A function to call each time the tween loops.
  * @property {array} [onLoopParams] - Additional parameters to pass to `onLoop`.
- * @property {any} [onLoopScope] - Scope (this) for `onLoop`.
  * @property {Phaser.Types.Tweens.TweenOnRepeatCallback} [onRepeat] - A function to call each time the tween repeats. Called once per property per target.
  * @property {array} [onRepeatParams] - Additional parameters to pass to `onRepeat`.
- * @property {any} [onRepeatScope] - Scope (this) for `onRepeat`.
  * @property {Phaser.Types.Tweens.TweenOnStartCallback} [onStart] - A function to call when the tween starts playback, after any delays have expired.
  * @property {array} [onStartParams] - Additional parameters to pass to `onStart`.
- * @property {any} [onStartScope] - Scope (this) for `onStart`.
  * @property {Phaser.Types.Tweens.TweenOnStopCallback} [onStop] - A function to call when the tween is stopped.
  * @property {array} [onStopParams] - Additional parameters to pass to `onStop`.
- * @property {any} [onStopScope] - Scope (this) for `onStop`.
  * @property {Phaser.Types.Tweens.TweenOnUpdateCallback} [onUpdate] - A function to call each time the tween steps. Called once per property per target.
  * @property {array} [onUpdateParams] - Additional parameters to pass to `onUpdate`.
- * @property {any} [onUpdateScope] - Scope (this) for `onUpdate`.
  * @property {Phaser.Types.Tweens.TweenOnYoyoCallback} [onYoyo] - A function to call each time the tween yoyos. Called once per property per target.
  * @property {array} [onYoyoParams] - Additional parameters to pass to `onYoyo`.
- * @property {any} [onYoyoScope] - Scope (this) for `onYoyo`.
  * @property {Phaser.Types.Tweens.TweenOnActiveCallback} [onActive] - A function to call when the tween becomes active within the Tween Manager.
  * @property {array} [onActiveParams] - Additional parameters to pass to `onActive`.
- * @property {any} [onActiveScope] - Scope (this) for `onActive`.
  * @property {Phaser.Types.Tweens.TweenOnPauseCallback} [onPause] - A function to call when the tween is paused.
  * @property {array} [onPauseParams] - Additional parameters to pass to `onPause`.
- * @property {any} [onPauseScope] - Scope (this) for `onPause`.
  * @property {Phaser.Types.Tweens.TweenOnResumeCallback} [onResume] - A function to call when the tween is resumed after being paused.
  * @property {array} [onResumeParams] - Additional parameters to pass to `onResume`.
- * @property {any} [onResumeScope] - Scope (this) for `onResume`.
  * @property {boolean} [persist] - Will the Tween be automatically destroyed on completion, or retained for future playback?
  * @property {(string|function)} [interpolation] - The interpolation function to use if the `value` given is an array of numbers.
  *

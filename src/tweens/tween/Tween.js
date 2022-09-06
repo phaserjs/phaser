@@ -303,6 +303,18 @@ var Tween = new Class({
         };
 
         /**
+         * The scope (or context) in which all of the callbacks are invoked.
+         *
+         * This defaults to be this Tween, but you can override this property
+         * to set it to whatever object you require.
+         *
+         * @name Phaser.Tweens.Tween#callbackScope
+         * @type {any}
+         * @since 3.60.0
+         */
+        this.callbackScope;
+
+        /**
          * Will this Tween persist after playback? A Tween that persists will _not_ be destroyed by the
          * Tween Manager, or when calling `Tween.stop`, and can be re-played as required. You can either
          * set this property when creating the tween in the tween config, or set it _prior_ to playback.
@@ -1195,18 +1207,16 @@ var Tween = new Class({
      * @param {Phaser.Types.Tweens.TweenCallbackTypes} type - The type of callback to set. One of: `onActive`, `onComplete`, `onLoop`, `onPause`, `onRepeat`, `onResume`, `onStart`, `onStop`, `onUpdate` or `onYoyo`.
      * @param {function} callback - Your callback that will be invoked.
      * @param {array} [params] - The parameters to pass to the callback. Pass an empty array if you don't want to define any, but do wish to set the scope.
-     * @param {object} [scope] - The context scope of the callback. If not given, will use the callback itself as the scope.
      *
      * @return {this} This Tween instance.
      */
-    setCallback: function (type, callback, params, scope)
+    setCallback: function (type, callback, params)
     {
         if (params === undefined) { params = []; }
-        if (scope === undefined) { scope = callback; }
 
         if (this.callbacks.hasOwnProperty(type))
         {
-            this.callbacks[type] = { func: callback, scope: scope, params: params };
+            this.callbacks[type] = { func: callback, params: params };
         }
 
         return this;

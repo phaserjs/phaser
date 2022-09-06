@@ -111,7 +111,8 @@ var TweenBuilder = function (parent, config, defaults)
     tween.persist = GetBoolean(config, 'persist', false);
 
     //  Set the Callbacks
-    var scope = GetValue(config, 'callbackScope', tween);
+    tween.callbackScope = GetValue(config, 'callbackScope', tween);
+
     var callbacks = Tween.TYPES;
 
     for (var i = 0; i < callbacks.length; i++)
@@ -122,10 +123,9 @@ var TweenBuilder = function (parent, config, defaults)
 
         if (callback)
         {
-            var callbackScope = GetValue(config, type + 'Scope', scope);
             var callbackParams = GetValue(config, type + 'Params', []);
 
-            tween.setCallback(type, callback, callbackParams, callbackScope);
+            tween.setCallback(type, callback, callbackParams);
         }
     }
 
