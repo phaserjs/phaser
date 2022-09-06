@@ -87,7 +87,7 @@ The following are to do with the new Chained Tweens feature:
 
 * `Tween.getChainedTweens` is a new method that will return all of the tweens in a chained sequence, starting from the point of the Tween this is called on.
 * `TweenManager.getChainedTweens(tween)` is a new method that will return all of the tweens in a chained sequence, starting from the given tween.
-* You can now specify a target property as 'random' to have the Tween pick a random float between the two given values. For example: `alpha: 'random(0.25, 0.75)'`. If you wish to only select a random integer, you can use 'int' instead: `x: int(300, 600)'`.
+* You can now specify a target property as 'random' to have the Tween pick a random float between two given values, for example: `alpha: 'random(0.25, 0.75)'`. If you wish to force it to select a random integer, use 'int' instead: `x: 'int(300, 600)'`.
 
 The following are further updates within the Tween system:
 
