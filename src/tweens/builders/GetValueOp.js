@@ -4,6 +4,9 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Between = require('../../math/Between');
+var FloatBetween = require('../../math/FloatBetween');
+
 /**
  * @ignore
  */
@@ -114,47 +117,89 @@ var GetValueOp = function (key, propertyValue)
         //     x: '+=400',
         //     y: '-=300',
         //     z: '*=2',
-        //     w: '/=2'
+        //     w: '/=2',
+        //     p: 'random(10, 100)' - random float
+        //     p: 'int(10, 100)' - random int
         // }
 
-        var op = propertyValue[0];
-        var num = parseFloat(propertyValue.substr(2));
+        var op = propertyValue.toLowerCase();
+        var isRandom = (op.substring(0, 6) === 'random');
+        var isInt = (op.substring(0, 3) === 'int');
 
-        switch (op)
+        if (isRandom || isInt)
         {
-            case '+':
-                getEnd = function (target, key, value)
-                {
-                    return value + num;
-                };
-                break;
+            //  random(0.5, 3.45)
+            //  int(10, 100)
+            var brace1 = op.indexOf('(');
+            var brace2 = op.indexOf(')');
+            var comma = op.indexOf(',');
 
-            case '-':
-                getEnd = function (target, key, value)
-                {
-                    return value - num;
-                };
-                break;
+            if (brace1 && brace2 && comma)
+            {
+                var value1 = parseFloat(op.substring(brace1 + 1, comma));
+                var value2 = parseFloat(op.substring(comma + 1, brace2));
 
-            case '*':
-                getEnd = function (target, key, value)
+                if (isRandom)
                 {
-                    return value * num;
-                };
-                break;
+                    getEnd = function ()
+                    {
+                        return FloatBetween(value1, value2);
+                    };
+                }
+                else
+                {
+                    getEnd = function ()
+                    {
+                        return Between(value1, value2);
+                    };
+                }
+            }
+            else
+            {
+                throw new Error('invalid random() format');
+            }
+        }
+        else
+        {
+            op = op[0];
+            var num = parseFloat(propertyValue.substr(2));
 
-            case '/':
-                getEnd = function (target, key, value)
-                {
-                    return value / num;
-                };
-                break;
+            switch (op)
+            {
+                case '+':
+                    getEnd = function (target, key, value)
+                    {
+                        return value + num;
+                    };
+                    break;
 
-            default:
-                getEnd = function ()
-                {
-                    return parseFloat(propertyValue);
-                };
+                case '-':
+                    getEnd = function (target, key, value)
+                    {
+                        return value - num;
+                    };
+                    break;
+
+                case '*':
+                    getEnd = function (target, key, value)
+                    {
+                        return value * num;
+                    };
+                    break;
+
+                case '/':
+                    getEnd = function (target, key, value)
+                    {
+                        return value / num;
+                    };
+                    break;
+
+                default:
+                    getEnd = function ()
+                    {
+                        return parseFloat(propertyValue);
+                    };
+            }
         }
     }
     else if (t === 'function')
