@@ -581,7 +581,7 @@ var TimeStep = new Class({
         //  this stops the array growing beyond the size of deltaSmoothingMax
         this.deltaIndex++;
 
-        if (this.deltaIndex > max)
+        if (this.deltaIndex >= max)
         {
             this.deltaIndex = 0;
         }
