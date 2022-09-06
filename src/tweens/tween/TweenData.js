@@ -393,12 +393,9 @@ var TweenData = new Class({
         }
 
         if (this.totalDuration > tween.duration)
-        // if (this.t1 > tween.duration)
         {
-            //  Get the longest TweenData from the Tween, used to calculate the Tween TD
-            // tween.duration = this.totalDuration;
-
-            tween.duration = this.t1;
+            //  Set the longest duration in the parent Tween
+            tween.duration = this.totalDuration;
         }
 
         if (this.delay < tween.startDelay)
@@ -457,7 +454,7 @@ var TweenData = new Class({
 
             if (this.elapsed <= 0)
             {
-                this.elapsed = Math.abs(this.elapsed);
+                this.elapsed = 0;
 
                 this.state = TWEEN_CONST.PENDING_RENDER;
             }
@@ -468,12 +465,12 @@ var TweenData = new Class({
 
             if (this.elapsed <= 0)
             {
-                this.elapsed = Math.abs(this.elapsed);
+                //  Adjust the delta for the PLAYING_FORWARD block below
+                this.elapsed = 0;
+
+                delta = 0;
 
                 this.state = TWEEN_CONST.PLAYING_FORWARD;
-
-                //  Adjust the delta for the PLAYING_FORWARD block below
-                delta = this.elapsed;
 
                 this.dispatchEvent(Events.TWEEN_REPEAT, 'onRepeat');
             }
@@ -484,7 +481,10 @@ var TweenData = new Class({
 
             if (this.elapsed <= 0)
             {
-                this.state = this.setStateFromEnd(Math.abs(this.elapsed));
+                //  This will set elapsed to 0 too
+                this.state = this.setStateFromEnd(0);
+
+                delta = 0;
             }
         }
 
@@ -503,10 +503,14 @@ var TweenData = new Class({
                 target[key] = this.start;
 
                 this.state = TWEEN_CONST.PLAYING_FORWARD;
+
+                return true;
             }
             else
             {
                 this.state = TWEEN_CONST.COMPLETE;
+
+                return false;
             }
         }
 
@@ -529,7 +533,7 @@ var TweenData = new Class({
 
             elapsed += delta;
 
-            if (elapsed > duration)
+            if (elapsed >= duration)
             {
                 diff = elapsed - duration;
                 elapsed = duration;
@@ -552,7 +556,8 @@ var TweenData = new Class({
 
                     if (this.hold > 0)
                     {
-                        this.elapsed = this.hold - diff;
+                        // this.elapsed = this.hold - diff;
+                        this.elapsed = this.hold;
 
                         this.state = TWEEN_CONST.HOLD_DELAY;
                     }
@@ -572,7 +577,12 @@ var TweenData = new Class({
             }
             else
             {
-                var v = (forward) ? this.ease(progress) : this.ease(1 - progress);
+                if (!forward)
+                {
+                    progress = 1 - progress;
+                }
+
+                var v = this.ease(progress);
 
                 if (this.interpolation)
                 {
