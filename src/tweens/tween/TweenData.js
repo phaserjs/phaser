@@ -342,11 +342,11 @@ var TweenData = new Class({
         /**
          * Is this Tween Data currently waiting for a countdown to elapse, or not?
          *
-         * @name Phaser.Tweens.TweenData#countdown
+         * @name Phaser.Tweens.TweenData#isCountdown
          * @type {boolean}
          * @since 3.60.0
          */
-        this.countdown = false;
+        this.isCountdown = false;
     },
 
     /**
@@ -466,7 +466,7 @@ var TweenData = new Class({
             return false;
         }
 
-        if (this.countdown)
+        if (this.isCountdown)
         {
             this.elapsed -= delta;
 
@@ -808,7 +808,7 @@ var TweenData = new Class({
     setCreatedState: function ()
     {
         this.state = TWEEN_CONST.CREATED;
-        this.countdown = false;
+        this.isCountdown = false;
     },
 
     /**
@@ -820,7 +820,7 @@ var TweenData = new Class({
     setDelayState: function ()
     {
         this.state = TWEEN_CONST.DELAY;
-        this.countdown = true;
+        this.isCountdown = true;
     },
 
     /**
@@ -832,7 +832,7 @@ var TweenData = new Class({
     setPendingRenderState: function ()
     {
         this.state = TWEEN_CONST.PENDING_RENDER;
-        this.countdown = false;
+        this.isCountdown = false;
     },
 
     /**
@@ -844,7 +844,7 @@ var TweenData = new Class({
     setPlayingForwardState: function ()
     {
         this.state = TWEEN_CONST.PLAYING_FORWARD;
-        this.countdown = false;
+        this.isCountdown = false;
     },
 
     /**
@@ -856,7 +856,7 @@ var TweenData = new Class({
     setPlayingBackwardState: function ()
     {
         this.state = TWEEN_CONST.PLAYING_BACKWARD;
-        this.countdown = false;
+        this.isCountdown = false;
     },
 
     /**
@@ -868,7 +868,7 @@ var TweenData = new Class({
     setHoldState: function ()
     {
         this.state = TWEEN_CONST.HOLD_DELAY;
-        this.countdown = true;
+        this.isCountdown = true;
     },
 
     /**
@@ -880,7 +880,7 @@ var TweenData = new Class({
     setRepeatState: function ()
     {
         this.state = TWEEN_CONST.REPEAT_DELAY;
-        this.countdown = true;
+        this.isCountdown = true;
     },
 
     /**
@@ -892,7 +892,7 @@ var TweenData = new Class({
     setCompleteState: function ()
     {
         this.state = TWEEN_CONST.COMPLETE;
-        this.countdown = false;
+        this.isCountdown = false;
     },
 
     /**
