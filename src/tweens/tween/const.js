@@ -15,14 +15,7 @@ var TWEEN_CONST = {
      */
     CREATED: 0,
 
-    /**
-     * TweenData state.
-     *
-     * @name Phaser.Tweens.INIT
-     * @type {number}
-     * @since 3.0.0
-     */
-    INIT: 1,
+    //  1 used to be INIT prior to 3.60
 
     /**
      * TweenData state.
