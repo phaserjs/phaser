@@ -134,6 +134,7 @@ The following are further updates within the Tween system:
 * The `RequestAnimationFrame.lastTime` property has been removed as it's no longer used internally.
 * The `RequestAnimationFrame` class no longer calculates the tick or lastTime values and doesn't call `performance.now` as these values were never used internally and were not used by the receiving callback either.
 * The `RequestAnimationFrame.target` property has been renamed to `delay` to better describe what it does.
+* The TimeStep would always allocate 1 more entry than the `deltaSmoothingMax` value set in the game config. This is now clamped correctly (thanks @vzhou842)
 
 ### New Features
 
