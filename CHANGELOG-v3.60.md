@@ -117,6 +117,7 @@ The following are further updates within the Tween system:
 * The keyword `persists` has been added to the Reserved Words list and Defaults list (it defaults to `false`).
 * `Tween.initTweenData` is a new method that handles the initialisation of all the Tween Data and Tween values. This replaces what took place in the `init` and `seek` methods previously. This is called automatically and should not usually be invoked directly.
 * The internal `Tween.calcDuration` method has been removed. This is now handled as part of the `initTweenData` call.
+* Fixed a bug where setting `repeat` and `hold` would cause the Tween to include one final hold before marking itself as complete. It now completes as soon as the final repeat concludes, not after an addition hold.
 
 ### TimeStep Updates
 
