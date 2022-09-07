@@ -9,17 +9,18 @@ var Events = require('../events');
 var TWEEN_CONST = require('./const');
 
 /**
+ * @classdesc
  * The TweenData is a class that contains a single target and property that is being tweened.
  *
  * Tweens create TweenData instances when they are created, with one TweenData instance per
- * target and/or property. A Tween can own multiple TweenData instances, but a TweenData only
+ * target, per property. A Tween can own multiple TweenData instances, but a TweenData only
  * ever belongs to a single Tween.
  *
  * You should not typically create these yourself, but rather use the TweenBuilder,
  * or the `Tween.add` method.
  *
- * Prior to Phaser 3.60 the TweenData was just an object, but was refactored to make
- * it responsible for its own state and updating.
+ * Prior to Phaser 3.60 the TweenData was just an object, but was refactored  to a class,
+ * to make it responsible for its own state and updating.
  *
  * @class TweenData
  * @memberof Phaser.Tweens
@@ -543,7 +544,7 @@ var TweenData = new Class({
 
                     target[key] = this.end;
 
-                    if (this.hold > 0)
+                    if (this.hold > 0 && this.repeatCounter > 0)
                     {
                         this.elapsed = this.hold;
 

@@ -737,16 +737,15 @@ var Tween = new Class({
         return false;
     },
 
+    /**
+     * Internal method that handles this tween completing and starting
+     * the next tween in the chain, if any.
+     *
+     * @method Phaser.Tweens.Tween#onCompleteHandler
+     * @since 3.60.0
+     */
     onCompleteHandler: function ()
     {
-        //  Additional time overstep may be in 'countdown' or the diff between 'elasped' and 'duration'
-        // var diff = this.elapsed - this.duration;
-
-        // if (diff < 0)
-        // {
-        //     diff = 0;
-        // }
-
         this.progress = 1;
         this.totalProgress = 1;
 
@@ -756,15 +755,7 @@ var Tween = new Class({
         if (this.chainedTween)
         {
             this.chainedTween.setActiveState();
-
-            // this.chainedTween.delta = diff;
         }
-
-        // console.log('end', performance.now());
-        // console.log('elapsed', this.elapsed);
-        // console.log('over', this.elapsed - this.duration);
-
-        // console.log('over', (this.elapsed - this.duration) - this.delta);
     },
 
     /**
@@ -1130,9 +1121,8 @@ var Tween = new Class({
                 this.dispatchEvent(Events.TWEEN_START, 'onStart');
 
                 //  Override the delta to adjust for the time we needed for the startDelay
-                delta = Math.max(0, delta - Math.abs(this.startDelay));
-
-                // console.log('onStart', performance.now(), 'delay', this.startDelay, 'delta', delta);
+                // delta = Math.max(0, delta - Math.abs(this.startDelay));
+                delta = 0;
             }
         }
 
