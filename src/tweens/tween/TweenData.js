@@ -365,7 +365,7 @@ var TweenData = new Class({
 
         this.repeatCounter = (this.repeat === -1) ? 999999999999 : this.repeat;
 
-        this.state = TWEEN_CONST.PENDING_RENDER;
+        this.setPendingRenderState();
 
         //  calcDuration:
 
@@ -410,7 +410,7 @@ var TweenData = new Class({
             this.progress = 0;
             this.elapsed = 0;
 
-            this.state = TWEEN_CONST.PLAYING_FORWARD;
+            this.setPlayingForwardState();
 
             this.update(0);
         }
@@ -418,7 +418,8 @@ var TweenData = new Class({
         if (this.delay > 0)
         {
             this.elapsed = this.delay;
-            this.state = TWEEN_CONST.DELAY;
+
+            this.setDelayState();
         }
 
         if (!isSeek && this.getActiveValue)
@@ -448,7 +449,15 @@ var TweenData = new Class({
         var target = tween.targets[targetIndex];
         var key = this.key;
 
-        if (this.state === TWEEN_CONST.DELAY)
+        //  Bail out if we don't have a target to act upon
+        if (!target)
+        {
+            this.setCompleteState();
+
+            return false;
+        }
+
+        if (this.isDelayed())
         {
             this.elapsed -= delta;
 
@@ -456,10 +465,10 @@ var TweenData = new Class({
             {
                 this.elapsed = 0;
 
-                this.state = TWEEN_CONST.PENDING_RENDER;
+                this.setPendingRenderState();
             }
         }
-        else if (this.state === TWEEN_CONST.REPEAT_DELAY)
+        else if (this.isRepeating())
         {
             this.elapsed -= delta;
 
@@ -470,12 +479,12 @@ var TweenData = new Class({
 
                 delta = 0;
 
-                this.state = TWEEN_CONST.PLAYING_FORWARD;
+                this.setPlayingForwardState();
 
                 this.dispatchEvent(Events.TWEEN_REPEAT, 'onRepeat');
             }
         }
-        else if (this.state === TWEEN_CONST.HOLD_DELAY)
+        else if (this.isHolding())
         {
             this.elapsed -= delta;
 
@@ -490,42 +499,26 @@ var TweenData = new Class({
 
         //  All of the above have the ability to set the state to PLAYING
 
-        if (this.state === TWEEN_CONST.PENDING_RENDER)
+        if (this.isPendingRender())
         {
-            if (target)
-            {
-                this.start = this.getStartValue(target, key, target[key], targetIndex, totalTargets, tween);
+            this.start = this.getStartValue(target, key, target[key], targetIndex, totalTargets, tween);
 
-                this.end = this.getEndValue(target, key, this.start, targetIndex, totalTargets, tween);
+            this.end = this.getEndValue(target, key, this.start, targetIndex, totalTargets, tween);
 
-                this.current = this.start;
+            this.current = this.start;
 
-                target[key] = this.start;
+            target[key] = this.start;
 
-                this.state = TWEEN_CONST.PLAYING_FORWARD;
+            this.setPlayingForwardState();
 
-                return true;
-            }
-            else
-            {
-                this.state = TWEEN_CONST.COMPLETE;
-
-                return false;
-            }
+            return true;
         }
 
-        var forward = (this.state === TWEEN_CONST.PLAYING_FORWARD);
-        var backward = (this.state === TWEEN_CONST.PLAYING_BACKWARD);
+        var forward = this.isPlayingForward();
+        var backward = this.isPlayingBackward();
 
         if (forward || backward)
         {
-            if (!target)
-            {
-                this.state = TWEEN_CONST.COMPLETE;
-
-                return false;
-            }
-
             var elapsed = this.elapsed;
             var duration = this.duration;
             var diff = 0;
@@ -556,14 +549,13 @@ var TweenData = new Class({
 
                     if (this.hold > 0)
                     {
-                        // this.elapsed = this.hold - diff;
                         this.elapsed = this.hold;
 
-                        this.state = TWEEN_CONST.HOLD_DELAY;
+                        this.setHoldState();
                     }
                     else
                     {
-                        this.state = this.setStateFromEnd(diff);
+                        this.setStateFromEnd(diff);
                     }
                 }
                 else
@@ -572,7 +564,7 @@ var TweenData = new Class({
 
                     target[key] = this.start;
 
-                    this.state = this.setStateFromStart(diff);
+                    this.setStateFromStart(diff);
                 }
             }
             else
@@ -600,7 +592,7 @@ var TweenData = new Class({
         }
 
         //  Return TRUE if this TweenData still playing, otherwise FALSE
-        return (this.state !== TWEEN_CONST.COMPLETE);
+        return !this.isComplete();
     },
 
     /**
@@ -633,18 +625,18 @@ var TweenData = new Class({
 
             this.current = this.start;
 
-            this.state = TWEEN_CONST.PLAYING_FORWARD;
+            this.setPlayingForwardState();
         }
         else
         {
-            this.state = TWEEN_CONST.PENDING_RENDER;
+            this.setPendingRenderState();
         }
 
         if (this.delay > 0)
         {
             this.elapsed = this.delay;
 
-            this.state = TWEEN_CONST.DELAY;
+            this.setDelayState();
         }
 
         if (this.getActiveValue)
@@ -688,7 +680,7 @@ var TweenData = new Class({
 
     /**
      * Internal method used as part of the playback process that checks if this
-     * TweenData should yoyo, repeat or has completed.
+     * TweenData should yoyo, repeat, or has completed.
      *
      * @method Phaser.Tweens.TweenData#setStateFromEnd
      * @fires Phaser.Tweens.Events#TWEEN_REPEAT
@@ -696,87 +688,21 @@ var TweenData = new Class({
      * @since 3.60.0
      *
      * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
-     *
-     * @return {Phaser.Types.Tweens.TweenDataState} The new state of this TweenData.
      */
     setStateFromEnd: function (diff)
     {
-        var tween = this.tween;
-        var totalTargets = tween.totalTargets;
-
-        var targetIndex = this.targetIndex;
-        var target = tween.targets[targetIndex];
-        var key = this.key;
-
         if (this.yoyo)
         {
-            //  We've hit the end of a Playing Forward TweenData and we have a yoyo
-
-            //  Account for any extra time we got from the previous frame
-            this.elapsed = diff;
-            this.progress = diff / this.duration;
-
-            if (this.flipX)
-            {
-                target.toggleFlipX();
-            }
-
-            if (this.flipY)
-            {
-                target.toggleFlipY();
-            }
-
-            this.dispatchEvent(Events.TWEEN_YOYO, 'onYoyo');
-
-            this.start = this.getStartValue(target, key, this.start, targetIndex, totalTargets, tween);
-
-            return TWEEN_CONST.PLAYING_BACKWARD;
+            this.onRepeat(diff, true, true);
         }
         else if (this.repeatCounter > 0)
         {
-            //  We've hit the end of a Playing Forward TweenData and we have a Repeat.
-            //  So we're going to go right back to the start to repeat it again.
-
-            this.repeatCounter--;
-
-            //  Account for any extra time we got from the previous frame
-            this.elapsed = diff;
-            this.progress = diff / this.duration;
-
-            if (this.flipX)
-            {
-                target.toggleFlipX();
-            }
-
-            if (this.flipY)
-            {
-                target.toggleFlipY();
-            }
-
-            this.start = this.getStartValue(target, key, this.start, targetIndex, totalTargets, tween);
-
-            this.end = this.getEndValue(target, key, this.start, targetIndex, totalTargets, tween);
-
-            //  Delay?
-            if (this.repeatDelay > 0)
-            {
-                this.elapsed = this.repeatDelay - diff;
-
-                this.current = this.start;
-
-                target[key] = this.current;
-
-                return TWEEN_CONST.REPEAT_DELAY;
-            }
-            else
-            {
-                this.dispatchEvent(Events.TWEEN_REPEAT, 'onRepeat');
-
-                return TWEEN_CONST.PLAYING_FORWARD;
-            }
+            this.onRepeat(diff, true);
         }
-
-        return TWEEN_CONST.COMPLETE;
+        else
+        {
+            this.setCompleteState();
+        }
     },
 
     /**
@@ -788,11 +714,37 @@ var TweenData = new Class({
      * @since 3.60.0
      *
      * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
-     *
-     * @return {Phaser.Types.Tweens.TweenDataState} The new state of this TweenData.
      */
     setStateFromStart: function (diff)
     {
+        if (this.repeatCounter > 0)
+        {
+            this.onRepeat(diff, false);
+        }
+        else
+        {
+            this.setCompleteState();
+        }
+    },
+
+    /**
+     * Internal method that handles repeating or yoyo'ing this TweenData.
+     *
+     * Called automatically by `setStateFromStart` and `setStateFromEnd`.
+     *
+     * @method Phaser.Tweens.TweenData#onRepeat
+     * @fires Phaser.Tweens.Events#TWEEN_REPEAT
+     * @fires Phaser.Tweens.Events#TWEEN_YOYO
+     * @since 3.60.0
+     *
+     * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
+     * @param {boolean} setStart - Set the TweenData start values?
+     * @param {boolean} [isYoyo=false] - Is this call a Yoyo check?
+     */
+    onRepeat: function (diff, setStart, isYoyo)
+    {
+        if (isYoyo === undefined) { isYoyo = false; }
+
         var tween = this.tween;
         var totalTargets = tween.totalTargets;
 
@@ -800,46 +752,247 @@ var TweenData = new Class({
         var target = tween.targets[targetIndex];
         var key = this.key;
 
-        if (this.repeatCounter > 0)
+        //  Account for any extra time we got from the previous frame
+        this.elapsed = diff;
+        this.progress = diff / this.duration;
+
+        if (this.flipX)
         {
-            this.repeatCounter--;
-
-            //  Account for any extra time we got from the previous frame
-            this.elapsed = diff;
-            this.progress = diff / this.duration;
-
-            if (this.flipX)
-            {
-                target.toggleFlipX();
-            }
-
-            if (this.flipY)
-            {
-                target.toggleFlipY();
-            }
-
-            this.end = this.getEndValue(target, key, this.start, targetIndex, totalTargets, tween);
-
-            //  Delay?
-            if (this.repeatDelay > 0)
-            {
-                this.elapsed = this.repeatDelay - diff;
-
-                this.current = this.start;
-
-                target[key] = this.current;
-
-                return TWEEN_CONST.REPEAT_DELAY;
-            }
-            else
-            {
-                this.dispatchEvent(Events.TWEEN_REPEAT, 'onRepeat');
-
-                return TWEEN_CONST.PLAYING_FORWARD;
-            }
+            target.toggleFlipX();
         }
 
-        return TWEEN_CONST.COMPLETE;
+        if (this.flipY)
+        {
+            target.toggleFlipY();
+        }
+
+        if (setStart || isYoyo)
+        {
+            this.start = this.getStartValue(target, key, this.start, targetIndex, totalTargets, tween);
+        }
+
+        if (isYoyo)
+        {
+            this.setPlayingBackwardState();
+
+            this.dispatchEvent(Events.TWEEN_YOYO, 'onYoyo');
+
+            return;
+        }
+
+        this.repeatCounter--;
+
+        this.end = this.getEndValue(target, key, this.start, targetIndex, totalTargets, tween);
+
+        //  Delay?
+        if (this.repeatDelay > 0)
+        {
+            this.elapsed = this.repeatDelay - diff;
+
+            this.current = this.start;
+
+            target[key] = this.current;
+
+            this.setRepeatState();
+        }
+        else
+        {
+            this.setPlayingForwardState();
+
+            this.dispatchEvent(Events.TWEEN_REPEAT, 'onRepeat');
+        }
+    },
+
+    /**
+     * Sets this TweenData state to CREATED.
+     *
+     * @method Phaser.Tweens.TweenData#setCreatedState
+     * @since 3.60.0
+     */
+    setCreatedState: function ()
+    {
+        this.state = TWEEN_CONST.CREATED;
+    },
+
+    /**
+     * Sets this TweenData state to DELAY.
+     *
+     * @method Phaser.Tweens.TweenData#setDelayState
+     * @since 3.60.0
+     */
+    setDelayState: function ()
+    {
+        this.state = TWEEN_CONST.DELAY;
+    },
+
+    /**
+     * Sets this TweenData state to PENDING_RENDER.
+     *
+     * @method Phaser.Tweens.TweenData#setPendingRenderState
+     * @since 3.60.0
+     */
+    setPendingRenderState: function ()
+    {
+        this.state = TWEEN_CONST.PENDING_RENDER;
+    },
+
+    /**
+     * Sets this TweenData state to PLAYING_FORWARD.
+     *
+     * @method Phaser.Tweens.TweenData#setPlayingForwardState
+     * @since 3.60.0
+     */
+    setPlayingForwardState: function ()
+    {
+        this.state = TWEEN_CONST.PLAYING_FORWARD;
+    },
+
+    /**
+     * Sets this TweenData state to PLAYING_BACKWARD.
+     *
+     * @method Phaser.Tweens.TweenData#setPlayingBackwardState
+     * @since 3.60.0
+     */
+    setPlayingBackwardState: function ()
+    {
+        this.state = TWEEN_CONST.PLAYING_BACKWARD;
+    },
+
+    /**
+     * Sets this TweenData state to HOLD_DELAY.
+     *
+     * @method Phaser.Tweens.TweenData#setHoldState
+     * @since 3.60.0
+     */
+    setHoldState: function ()
+    {
+        this.state = TWEEN_CONST.HOLD_DELAY;
+    },
+
+    /**
+     * Sets this TweenData state to REPEAT_DELAY.
+     *
+     * @method Phaser.Tweens.TweenData#setRepeatState
+     * @since 3.60.0
+     */
+    setRepeatState: function ()
+    {
+        this.state = TWEEN_CONST.REPEAT_DELAY;
+    },
+
+    /**
+     * Sets this TweenData state to COMPLETE.
+     *
+     * @method Phaser.Tweens.TweenData#setCompleteState
+     * @since 3.60.0
+     */
+    setCompleteState: function ()
+    {
+        this.state = TWEEN_CONST.COMPLETE;
+    },
+
+    /**
+     * Returns `true` if this TweenData has a _current_ state of CREATED, otherwise `false`.
+     *
+     * @method Phaser.Tweens.TweenData#isCreated
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this TweenData has a _current_ state of CREATED, otherwise `false`.
+     */
+    isCreated: function ()
+    {
+        return (this.state === TWEEN_CONST.CREATED);
+    },
+
+    /**
+     * Returns `true` if this TweenData has a _current_ state of DELAY, otherwise `false`.
+     *
+     * @method Phaser.Tweens.TweenData#isDelayed
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this TweenData has a _current_ state of DELAY, otherwise `false`.
+     */
+    isDelayed: function ()
+    {
+        return (this.state === TWEEN_CONST.DELAY);
+    },
+
+    /**
+     * Returns `true` if this TweenData has a _current_ state of PENDING_RENDER, otherwise `false`.
+     *
+     * @method Phaser.Tweens.TweenData#isPendingRender
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this TweenData has a _current_ state of PENDING_RENDER, otherwise `false`.
+     */
+    isPendingRender: function ()
+    {
+        return (this.state === TWEEN_CONST.PENDING_RENDER);
+    },
+
+    /**
+     * Returns `true` if this TweenData has a _current_ state of PLAYING_FORWARD, otherwise `false`.
+     *
+     * @method Phaser.Tweens.TweenData#isPlayingForward
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this TweenData has a _current_ state of PLAYING_FORWARD, otherwise `false`.
+     */
+    isPlayingForward: function ()
+    {
+        return (this.state === TWEEN_CONST.PLAYING_FORWARD);
+    },
+
+    /**
+     * Returns `true` if this TweenData has a _current_ state of PLAYING_BACKWARD, otherwise `false`.
+     *
+     * @method Phaser.Tweens.TweenData#isPlayingBackward
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this TweenData has a _current_ state of PLAYING_BACKWARD, otherwise `false`.
+     */
+    isPlayingBackward: function ()
+    {
+        return (this.state === TWEEN_CONST.PLAYING_BACKWARD);
+    },
+
+    /**
+     * Returns `true` if this TweenData has a _current_ state of HOLD_DELAY, otherwise `false`.
+     *
+     * @method Phaser.Tweens.TweenData#isHolding
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this TweenData has a _current_ state of HOLD_DELAY, otherwise `false`.
+     */
+    isHolding: function ()
+    {
+        return (this.state === TWEEN_CONST.HOLD_DELAY);
+    },
+
+    /**
+     * Returns `true` if this TweenData has a _current_ state of REPEAT_DELAY, otherwise `false`.
+     *
+     * @method Phaser.Tweens.TweenData#isRepeating
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this TweenData has a _current_ state of REPEAT_DELAY, otherwise `false`.
+     */
+    isRepeating: function ()
+    {
+        return (this.state === TWEEN_CONST.REPEAT_DELAY);
+    },
+
+    /**
+     * Returns `true` if this TweenData has a _current_ state of COMPLETE, otherwise `false`.
+     *
+     * @method Phaser.Tweens.TweenData#isComplete
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this TweenData has a _current_ state of COMPLETE, otherwise `false`.
+     */
+    isComplete: function ()
+    {
+        return (this.state === TWEEN_CONST.COMPLETE);
     },
 
     /**
@@ -856,7 +1009,7 @@ var TweenData = new Class({
         this.getStartValue = null;
         this.ease = null;
         this.getDelay = null;
-        this.state = TWEEN_CONST.COMPLETE;
+        this.setCompleteState();
     }
 
 });

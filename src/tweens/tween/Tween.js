@@ -373,7 +373,7 @@ var Tween = new Class({
 
         if (!isChained)
         {
-            this.state = TWEEN_CONST.ACTIVE;
+            this.setActiveState();
 
             this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
         }
@@ -443,7 +443,7 @@ var Tween = new Class({
             if (tween)
             {
                 //  Needs to be told its a chained tween, or it'll start playing
-                tween.state = TWEEN_CONST.CHAINED;
+                tween.setChainedState();
             }
         }
 
@@ -496,7 +496,7 @@ var Tween = new Class({
      */
     isPlaying: function ()
     {
-        return (!this.paused && this.state === TWEEN_CONST.ACTIVE);
+        return (!this.paused && this.isActive());
     },
 
     /**
@@ -709,24 +709,25 @@ var Tween = new Class({
             if (this.loopDelay > 0)
             {
                 this.countdown = this.loopDelay;
-                this.state = TWEEN_CONST.LOOP_DELAY;
+
+                this.setLoopDelayState();
             }
             else
             {
-                this.state = TWEEN_CONST.ACTIVE;
+                this.setActiveState();
 
                 this.dispatchEvent(Events.TWEEN_LOOP, 'onLoop');
             }
         }
         else if (this.completeDelay > 0)
         {
-            this.state = TWEEN_CONST.COMPLETE_DELAY;
+            this.setCompleteDelayState();
 
             this.countdown = this.completeDelay;
         }
         else
         {
-            this.state = TWEEN_CONST.PENDING_REMOVE;
+            this.setPendingRemoveState();
 
             this.onCompleteHandler();
 
@@ -754,7 +755,7 @@ var Tween = new Class({
         //  Chain ...
         if (this.chainedTween)
         {
-            this.chainedTween.state = TWEEN_CONST.ACTIVE;
+            this.chainedTween.setActiveState();
 
             // this.chainedTween.delta = diff;
         }
@@ -784,23 +785,22 @@ var Tween = new Class({
      */
     play: function ()
     {
-        var state = this.state;
-
-        if (state === TWEEN_CONST.DESTROYED)
+        if (this.isDestroyed())
         {
             console.warn('Cannot play destroyed Tween');
 
             return this;
         }
 
-        if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.REMOVED)
+        if (this.isPendingRemove() || this.isPending())
         {
             //  This makes the tween active as well:
             this.seek();
         }
 
         this.paused = false;
-        this.state = TWEEN_CONST.ACTIVE;
+
+        this.setActiveState();
 
         return this;
     },
@@ -853,7 +853,7 @@ var Tween = new Class({
         if (toPosition === undefined) { toPosition = 0; }
         if (delta === undefined) { delta = 16.6; }
 
-        if (this.state === TWEEN_CONST.REMOVED || this.state === TWEEN_CONST.FINISHED)
+        if (this.isRemoved() || this.isFinished())
         {
             this.makeActive();
         }
@@ -946,13 +946,13 @@ var Tween = new Class({
 
         if (delay)
         {
-            this.state = TWEEN_CONST.COMPLETE_DELAY;
+            this.setCompleteDelayState();
 
             this.countdown = delay;
         }
         else
         {
-            this.state = TWEEN_CONST.PENDING_REMOVE;
+            this.setPendingRemoveState();
 
             this.onCompleteHandler();
         }
@@ -998,11 +998,11 @@ var Tween = new Class({
      */
     stop: function ()
     {
-        if (this.state !== TWEEN_CONST.REMOVED && this.state !== TWEEN_CONST.PENDING_REMOVE)
+        if (!this.isRemoved() && !this.isPendingRemove())
         {
             this.dispatchEvent(Events.TWEEN_STOP, 'onStop');
 
-            this.state = TWEEN_CONST.PENDING_REMOVE;
+            this.setPendingRemoveState();
         }
 
         return this;
@@ -1023,13 +1023,13 @@ var Tween = new Class({
      */
     update: function (delta)
     {
-        var state = this.state;
+        // var state = this.state;
 
-        if (state === TWEEN_CONST.PENDING_REMOVE || state === TWEEN_CONST.DESTROYED)
+        if (this.isPendingRemove() || this.isDestroyed())
         {
             return true;
         }
-        else if (state === TWEEN_CONST.FINISHED || state === TWEEN_CONST.CHAINED || (this.paused && !this.isSeeking))
+        else if (this.isFinished() || this.isChained() || (this.paused && !this.isSeeking))
         {
             return false;
         }
@@ -1044,11 +1044,11 @@ var Tween = new Class({
         this.totalElapsed += delta;
         this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
 
-        if (state === TWEEN_CONST.LOOP_DELAY)
+        if (this.isLoopDelayed())
         {
             this.updateCountdown(TWEEN_CONST.ACTIVE, Events.TWEEN_LOOP, 'onLoop');
         }
-        else if (state === TWEEN_CONST.COMPLETE_DELAY)
+        else if (this.isCompleteDelayed())
         {
             if (this.updateCountdown(TWEEN_CONST.PENDING_REMOVE))
             {
@@ -1058,16 +1058,16 @@ var Tween = new Class({
 
         //  Make its own check so the states above can toggle to active on the same frame.
         //  Check 'this.state', not 'state' as it may have been updated by the functions above.
-        if (this.state === TWEEN_CONST.ACTIVE)
+        if (this.isActive())
         {
             this.updateActive(delta);
         }
 
-        var remove = (this.state === TWEEN_CONST.PENDING_REMOVE);
+        var remove = this.isPendingRemove();
 
         if (remove && this.persist)
         {
-            this.state = TWEEN_CONST.FINISHED;
+            this.setFinishedState();
 
             remove = false;
         }
@@ -1263,6 +1263,222 @@ var Tween = new Class({
     },
 
     /**
+     * Sets this Tween state to PENDING.
+     *
+     * @method Phaser.Tweens.Tween#setPendingState
+     * @since 3.60.0
+     */
+    setPendingState: function ()
+    {
+        this.state = TWEEN_CONST.PENDING;
+    },
+
+    /**
+     * Sets this Tween state to ACTIVE.
+     *
+     * @method Phaser.Tweens.Tween#setActiveState
+     * @since 3.60.0
+     */
+    setActiveState: function ()
+    {
+        this.state = TWEEN_CONST.ACTIVE;
+    },
+
+    /**
+     * Sets this Tween state to LOOP_DELAY.
+     *
+     * @method Phaser.Tweens.Tween#setLoopDelayState
+     * @since 3.60.0
+     */
+    setLoopDelayState: function ()
+    {
+        this.state = TWEEN_CONST.LOOP_DELAY;
+    },
+
+    /**
+     * Sets this Tween state to COMPLETE_DELAY.
+     *
+     * @method Phaser.Tweens.Tween#setCompleteDelayState
+     * @since 3.60.0
+     */
+    setCompleteDelayState: function ()
+    {
+        this.state = TWEEN_CONST.COMPLETE_DELAY;
+    },
+
+    /**
+     * Sets this Tween state to PENDING_REMOVE.
+     *
+     * @method Phaser.Tweens.Tween#setPendingRemoveState
+     * @since 3.60.0
+     */
+    setPendingRemoveState: function ()
+    {
+        this.state = TWEEN_CONST.PENDING_REMOVE;
+    },
+
+    /**
+     * Sets this Tween state to REMOVED.
+     *
+     * @method Phaser.Tweens.Tween#setRemovedState
+     * @since 3.60.0
+     */
+    setRemovedState: function ()
+    {
+        this.state = TWEEN_CONST.REMOVED;
+    },
+
+    /**
+     * Sets this Tween state to FINISHED.
+     *
+     * @method Phaser.Tweens.Tween#setFinishedState
+     * @since 3.60.0
+     */
+    setFinishedState: function ()
+    {
+        this.state = TWEEN_CONST.FINISHED;
+    },
+
+    /**
+     * Sets this Tween state to DESTROYED.
+     *
+     * @method Phaser.Tweens.Tween#setDestroyedState
+     * @since 3.60.0
+     */
+    setDestroyedState: function ()
+    {
+        this.state = TWEEN_CONST.DESTROYED;
+    },
+
+    /**
+     * Sets this Tween state to CHAINED.
+     *
+     * @method Phaser.Tweens.Tween#setChainedState
+     * @since 3.60.0
+     */
+    setChainedState: function ()
+    {
+        this.state = TWEEN_CONST.CHAINED;
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of PENDING, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isPending
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of PENDING, otherwise `false`.
+     */
+    isPending: function ()
+    {
+        return (this.state === TWEEN_CONST.PENDING);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of ACTIVE, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isActive
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of ACTIVE, otherwise `false`.
+     */
+    isActive: function ()
+    {
+        return (this.state === TWEEN_CONST.ACTIVE);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of LOOP_DELAY, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isLoopDelayed
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of LOOP_DELAY, otherwise `false`.
+     */
+    isLoopDelayed: function ()
+    {
+        return (this.state === TWEEN_CONST.LOOP_DELAY);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of COMPLETE_DELAY, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isCompleteDelayed
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of COMPLETE_DELAY, otherwise `false`.
+     */
+    isCompleteDelayed: function ()
+    {
+        return (this.state === TWEEN_CONST.COMPLETE_DELAY);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of PENDING_REMOVE, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isPendingRemove
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of PENDING_REMOVE, otherwise `false`.
+     */
+    isPendingRemove: function ()
+    {
+        return (this.state === TWEEN_CONST.PENDING_REMOVE);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of REMOVED, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isRemoved
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of REMOVED, otherwise `false`.
+     */
+    isRemoved: function ()
+    {
+        return (this.state === TWEEN_CONST.REMOVED);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of FINISHED, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isFinished
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of FINISHED, otherwise `false`.
+     */
+    isFinished: function ()
+    {
+        return (this.state === TWEEN_CONST.FINISHED);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of DESTROYED, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isDestroyed
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of DESTROYED, otherwise `false`.
+     */
+    isDestroyed: function ()
+    {
+        return (this.state === TWEEN_CONST.DESTROYED);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of CHAINED, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isChained
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of CHAINED, otherwise `false`.
+     */
+    isChained: function ()
+    {
+        return (this.state === TWEEN_CONST.CHAINED);
+    },
+
+    /**
      * Handles the destroy process of this Tween, clearing out the
      * Tween Data and resetting the targets. A Tween that has been
      * destroyed cannot ever be played or used again.
@@ -1284,7 +1500,7 @@ var Tween = new Class({
         this.parent = null;
         this.targets = null;
 
-        this.state = TWEEN_CONST.DESTROYED;
+        this.setDestroyedState();
     }
 
 });

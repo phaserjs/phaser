@@ -11,7 +11,6 @@ var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
 var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
 var StaggerBuilder = require('./builders/StaggerBuilder');
-var TWEEN_CONST = require('./tween/const');
 var TweenBuilder = require('./builders/TweenBuilder');
 
 /**
@@ -688,7 +687,7 @@ var TweenManager = new Class({
 
                 var idx = list.indexOf(tween);
 
-                if (idx > -1 && (tween.state === TWEEN_CONST.PENDING_REMOVE || tween.state === TWEEN_CONST.DESTROYED))
+                if (idx > -1 && (tween.isPendingRemove() || tween.isDestroyed()))
                 {
                     list.splice(idx, 1);
 
@@ -722,14 +721,14 @@ var TweenManager = new Class({
         if (this.processing)
         {
             //  Remove it on the next frame
-            tween.state = TWEEN_CONST.PENDING_REMOVE;
+            tween.setPendingRemoveState();
         }
         else
         {
             //  Remove it immediately
             ArrayRemove(this.tweens, tween);
 
-            tween.state = TWEEN_CONST.REMOVED;
+            tween.setRemovedState();
         }
 
         return this;
@@ -755,7 +754,7 @@ var TweenManager = new Class({
 
         tween.seek();
 
-        tween.state = TWEEN_CONST.ACTIVE;
+        tween.setActiveState();
 
         return this;
     },
@@ -774,7 +773,7 @@ var TweenManager = new Class({
     {
         this.existing(tween);
 
-        tween.state = TWEEN_CONST.ACTIVE;
+        tween.setActiveState();
 
         return this;
     },
@@ -812,72 +811,24 @@ var TweenManager = new Class({
     },
 
     /**
+     * Returns an array containing references to all Tweens in this Tween Manager.
      *
+     * It is safe to mutate the returned array. However, acting upon any of the Tweens
+     * within it, will adjust those stored in this Tween Manager, as they are passed
+     * by reference and not cloned.
      *
-     * @method Phaser.Tweens.TweenManager#getTotal
-     * @since 3.60.0
+     * If you wish to get tweens for a specific target, see `getTweensOf`.
      *
-     * @return {} stuff
-     */
-    getTotal: function ()
-    {
-        var tweens = this.tweens;
-        var active = 0;
-
-        for (var i = 0; i < tweens.length; i++)
-        {
-            if (tweens[i].state === TWEEN_CONST.ACTIVE)
-            {
-                active++;
-            }
-        }
-
-        return { active: active, total: tweens.length };
-    },
-
-    /**
-     * Returns an array containing references to of all Tweens in this Tween Manager.
-     *
-     * @method Phaser.Tweens.TweenManager#getAllTweens
+     * @method Phaser.Tweens.TweenManager#getTweens
      * @since 3.0.0
+     *
+     * @param {}
      *
      * @return {Phaser.Tweens.Tween[]} A new array containing references to all Tweens.
      */
-    getAllTweens: function ()
+    getTweens: function ()
     {
         return this.tweens.slice();
-    },
-
-    /**
-     * Returns the scale of the time delta for all Tweens owned by this Tween Manager.
-     *
-     * @method Phaser.Tweens.TweenManager#getGlobalTimeScale
-     * @since 3.0.0
-     *
-     * @return {number} The scale of the time delta, usually 1.
-     */
-    getGlobalTimeScale: function ()
-    {
-        return this.timeScale;
-    },
-
-    /**
-     * Sets a new scale of the time delta for this Tween Manager.
-     *
-     * The time delta is the time elapsed between two consecutive frames and influences the speed of time for this Tween Manager and all Tweens it owns. Values higher than 1 increase the speed of time, while values smaller than 1 decrease it. A value of 0 freezes time and is effectively equivalent to pausing all Tweens.
-     *
-     * @method Phaser.Tweens.TweenManager#setGlobalTimeScale
-     * @since 3.0.0
-     *
-     * @param {number} value - The new scale of the time delta, where 1 is the normal speed.
-     *
-     * @return {this} This Tween Manager instance.
-     */
-    setGlobalTimeScale: function (value)
-    {
-        this.timeScale = value;
-
-        return this;
     },
 
     /**
@@ -917,6 +868,38 @@ var TweenManager = new Class({
         }
 
         return output;
+    },
+
+    /**
+     * Returns the scale of the time delta for all Tweens owned by this Tween Manager.
+     *
+     * @method Phaser.Tweens.TweenManager#getGlobalTimeScale
+     * @since 3.0.0
+     *
+     * @return {number} The scale of the time delta, usually 1.
+     */
+    getGlobalTimeScale: function ()
+    {
+        return this.timeScale;
+    },
+
+    /**
+     * Sets a new scale of the time delta for this Tween Manager.
+     *
+     * The time delta is the time elapsed between two consecutive frames and influences the speed of time for this Tween Manager and all Tweens it owns. Values higher than 1 increase the speed of time, while values smaller than 1 decrease it. A value of 0 freezes time and is effectively equivalent to pausing all Tweens.
+     *
+     * @method Phaser.Tweens.TweenManager#setGlobalTimeScale
+     * @since 3.0.0
+     *
+     * @param {number} value - The new scale of the time delta, where 1 is the normal speed.
+     *
+     * @return {this} This Tween Manager instance.
+     */
+    setGlobalTimeScale: function (value)
+    {
+        this.timeScale = value;
+
+        return this;
     },
 
     /**
