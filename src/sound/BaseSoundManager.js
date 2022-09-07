@@ -333,7 +333,6 @@ var BaseSoundManager = new Class({
         return false;
     },
 
-
     /**
      * Removes all sounds from the manager, destroying the sounds.
      *
@@ -432,7 +431,6 @@ var BaseSoundManager = new Class({
 
         this.emit(Events.STOP_ALL, this);
     },
-
 
     /**
      * Stops any sounds matching the given key.
