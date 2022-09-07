@@ -338,6 +338,15 @@ var TweenData = new Class({
          * @since 3.60.0
          */
         this.interpolationData = interpolationData;
+
+        /**
+         * Is this Tween Data currently waiting for a countdown to elapse, or not?
+         *
+         * @name Phaser.Tweens.TweenData#countdown
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.countdown = false;
     },
 
     /**
@@ -457,7 +466,7 @@ var TweenData = new Class({
             return false;
         }
 
-        if (this.isDelayed())
+        if (this.countdown)
         {
             this.elapsed -= delta;
 
@@ -465,39 +474,26 @@ var TweenData = new Class({
             {
                 this.elapsed = 0;
 
-                this.setPendingRenderState();
-            }
-        }
-        else if (this.isRepeating())
-        {
-            this.elapsed -= delta;
-
-            if (this.elapsed <= 0)
-            {
-                //  Adjust the delta for the PLAYING_FORWARD block below
-                this.elapsed = 0;
-
                 delta = 0;
 
-                this.setPlayingForwardState();
+                if (this.isDelayed())
+                {
+                    this.setPendingRenderState();
+                }
+                else if (this.isRepeating())
+                {
+                    this.setPlayingForwardState();
 
-                this.dispatchEvent(Events.TWEEN_REPEAT, 'onRepeat');
+                    this.dispatchEvent(Events.TWEEN_REPEAT, 'onRepeat');
+                }
+                else if (this.isHolding())
+                {
+                    this.setStateFromEnd(0);
+                }
             }
         }
-        else if (this.isHolding())
-        {
-            this.elapsed -= delta;
 
-            if (this.elapsed <= 0)
-            {
-                //  This will set elapsed to 0 too
-                this.setStateFromEnd(0);
-
-                delta = 0;
-            }
-        }
-
-        //  All of the above have the ability to set the state to PLAYING
+        //  All of the above have the ability to change the state, so put this in its own check
 
         if (this.isPendingRender())
         {
@@ -812,6 +808,7 @@ var TweenData = new Class({
     setCreatedState: function ()
     {
         this.state = TWEEN_CONST.CREATED;
+        this.countdown = false;
     },
 
     /**
@@ -823,6 +820,7 @@ var TweenData = new Class({
     setDelayState: function ()
     {
         this.state = TWEEN_CONST.DELAY;
+        this.countdown = true;
     },
 
     /**
@@ -834,6 +832,7 @@ var TweenData = new Class({
     setPendingRenderState: function ()
     {
         this.state = TWEEN_CONST.PENDING_RENDER;
+        this.countdown = false;
     },
 
     /**
@@ -845,6 +844,7 @@ var TweenData = new Class({
     setPlayingForwardState: function ()
     {
         this.state = TWEEN_CONST.PLAYING_FORWARD;
+        this.countdown = false;
     },
 
     /**
@@ -856,6 +856,7 @@ var TweenData = new Class({
     setPlayingBackwardState: function ()
     {
         this.state = TWEEN_CONST.PLAYING_BACKWARD;
+        this.countdown = false;
     },
 
     /**
@@ -867,6 +868,7 @@ var TweenData = new Class({
     setHoldState: function ()
     {
         this.state = TWEEN_CONST.HOLD_DELAY;
+        this.countdown = true;
     },
 
     /**
@@ -878,6 +880,7 @@ var TweenData = new Class({
     setRepeatState: function ()
     {
         this.state = TWEEN_CONST.REPEAT_DELAY;
+        this.countdown = true;
     },
 
     /**
@@ -889,6 +892,7 @@ var TweenData = new Class({
     setCompleteState: function ()
     {
         this.state = TWEEN_CONST.COMPLETE;
+        this.countdown = false;
     },
 
     /**
