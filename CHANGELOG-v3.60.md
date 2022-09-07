@@ -67,12 +67,17 @@ We have updated the version of Matter Physics to the latest v0.18 release. This 
 
 ### New Features - New Tween Manager
 
+TODO - TweenData to class
+TODO - TweenData and Tween State methods
+TODO - CONST removals
+
 The Phaser 3.60 Tween system has been recoded to help with performance and resolving some of its lingering issues and unifying the Tween events and callbacks.
 
 The following are breaking changes:
 
 * Tween Timelines have been removed entirely. Due to the way they were implemented they tended to cause a range of esoteric timing bugs which were non-trivial to resolve. To that end, we made the decision to remove Timelines entirely and introduced the ability to chain tweens together using the new `chain` method. This should give most developers the same level of sequencing they had using Timelines, without the timing issues.
 * When creating a Tween, you can no longer pass a function for the following properties: `duration`, `hold`, `repeat` and `repeatDelay`. These should be numbers only. You can, however, still provide a function for `delay`, to keep it compatible with the StaggerBuilder.
+* The `TweenManager#getAllTweens` method has been renamed to `TweenManager#getTweens`. Functionally, it is the same.
 * The property and feature `Tween.useFrames` has been removed and is no longer a valid Tween Config option. Tweens are now entirely ms/time based.
 * The `TweenOnUpdateCallback` now has the following parameters: `tween`, `targets`, `key` (the property being tweened), `current` (the current value of the property), `previous` (the previous value of the property) and finally any of the params that were passed in the `onUpdateParams` array when the Tween was created.
 * The `TweenOnYoyoCallback` now has the following parameters: `tween`, `targets`, `key` (the property being tweened), `current` (the current value of the property), `previous` (the previous value of the property) and finally any of the params that were passed in the `onYoyoParams` array when the Tween was created.
@@ -132,6 +137,8 @@ The following are further updates within the Tween system:
 
 ### New Features
 
+* `Game.pause` is a new method that will pause the entire game and all Phaser systems.
+* `Game.resume` is a new method that will resume the entire game and resume all of Phaser's systems.
 * `RenderTexture.fillFrame` is a new method that will take a given texture and draw it to the Render Texture as a fill-pattern. You can control the offset, alpha and tint of the draw (thanks xlapiz)
 * `ScaleManager.getViewPort` is a new method that will return a Rectangle geometry object that matches the visible area of the screen (thanks @rexrainbow)
 * When starting a Scene and using an invalid key, Phaser will now raise a console warning informing you of this, instead of silently failing. Fix #5811 (thanks @ubershmekel)
