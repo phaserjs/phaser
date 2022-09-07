@@ -491,7 +491,7 @@ var TweenData = new Class({
             if (this.elapsed <= 0)
             {
                 //  This will set elapsed to 0 too
-                this.state = this.setStateFromEnd(0);
+                this.setStateFromEnd(0);
 
                 delta = 0;
             }
