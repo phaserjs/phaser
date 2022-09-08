@@ -498,6 +498,11 @@ var WebAudioSound = new Class({
      */
     destroy: function ()
     {
+        if (this.pendingRemove)
+        {
+            return;
+        }
+
         BaseSound.prototype.destroy.call(this);
 
         this.audioBuffer = null;
