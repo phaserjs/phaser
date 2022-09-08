@@ -350,6 +350,8 @@ var Tween = new Class({
          * @since 3.60.0
          */
         this.delta = 0;
+
+        this.debug = [];
     },
 
     /**
@@ -751,6 +753,8 @@ var Tween = new Class({
 
         this.dispatchEvent(Events.TWEEN_COMPLETE, 'onComplete');
 
+        console.log(this.debug);
+
         //  Chain ...
         if (this.chainedTween)
         {
@@ -1014,8 +1018,6 @@ var Tween = new Class({
      */
     update: function (delta)
     {
-        // var state = this.state;
-
         if (this.isPendingRemove() || this.isDestroyed())
         {
             return true;
@@ -1027,6 +1029,44 @@ var Tween = new Class({
 
         delta *= this.timeScale * this.parent.timeScale;
 
+        if (this.isLoopDelayed())
+        {
+            this.updateLoopCountdown(delta);
+        }
+        else if (this.isCompleteDelayed())
+        {
+            this.updateCompleteDelay(delta);
+        }
+        else if (!this.hasStarted && !this.isSeeking)
+        {
+            this.startDelay -= delta;
+
+            if (this.startDelay <= 0)
+            {
+                this.hasStarted = true;
+
+                this.dispatchEvent(Events.TWEEN_START, 'onStart');
+
+                //  Reset the delta so we always start progress from zero
+                delta = 0;
+            }
+        }
+
+        var stillRunning = false;
+
+        if (this.isActive())
+        {
+            var data = this.data;
+
+            for (var i = 0; i < this.totalData; i++)
+            {
+                if (data[i].update(delta))
+                {
+                    stillRunning = true;
+                }
+            }
+        }
+
         this.delta = delta;
 
         this.elapsed += delta;
@@ -1035,25 +1075,16 @@ var Tween = new Class({
         this.totalElapsed += delta;
         this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
 
-        if (this.isLoopDelayed())
+        this.debug.push({ progress: this.progress, delta: delta });
+
+        //  Anything still running? If not, we're done
+        if (!stillRunning)
         {
-            this.updateCountdown(TWEEN_CONST.ACTIVE, Events.TWEEN_LOOP, 'onLoop');
-        }
-        else if (this.isCompleteDelayed())
-        {
-            if (this.updateCountdown(TWEEN_CONST.PENDING_REMOVE))
-            {
-                this.onCompleteHandler();
-            }
+            //  This calls onCompleteHandler if this tween is over
+            this.nextState();
         }
 
-        //  Make its own check so the states above can toggle to active on the same frame.
-        //  Check 'this.state', not 'state' as it may have been updated by the functions above.
-        if (this.isActive())
-        {
-            this.updateActive(delta);
-        }
-
+        //  if nextState called onCompleteHandler then we're ready to be removed, unless we persist
         var remove = this.isPendingRemove();
 
         if (remove && this.persist)
@@ -1067,35 +1098,45 @@ var Tween = new Class({
     },
 
     /**
-     * Internal method that handles the processing of a countdown timer and
+     * Internal method that handles the processing of the loop delay countdown timer and
      * the dispatch of related events. Called automatically by `Tween.update`.
      *
-     * @method Phaser.Tweens.Tween#updateCountdown
+     * @method Phaser.Tweens.Tween#updateLoopCountdown
      * @since 3.60.0
      *
-     * @param {number} state - The new Tween State to be set.
-     * @param {Phaser.Types.Tweens.Event} [event] - The Tween Event to dispatch, if any.
-     * @param {Phaser.Types.Tweens.TweenCallbackTypes} [callback] - The name of the callback to be invoked. Can be `null` or `undefined` to skip invocation.
-     *
-     * @return {boolean} `true` if the countdown was reached, otherwise `false`.
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    updateCountdown: function (state, event, callback)
+    updateLoopCountdown: function (delta)
     {
-        this.countdown -= this.delta;
+        this.countdown -= delta;
 
         if (this.countdown <= 0)
         {
-            this.state = state;
+            this.setActiveState();
 
-            if (event)
-            {
-                this.dispatchEvent(event, callback);
-            }
-
-            return true;
+            this.dispatchEvent(Events.TWEEN_LOOP, 'onLoop');
         }
+    },
 
-        return false;
+    /**
+     * Internal method that handles the processing of the complete delay countdown timer and
+     * the dispatch of related events. Called automatically by `Tween.update`.
+     *
+     * @method Phaser.Tweens.Tween#updateCompleteDelay
+     * @since 3.60.0
+     *
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+     */
+    updateCompleteDelay: function (delta)
+    {
+        this.countdown -= delta;
+
+        if (this.countdown <= 0)
+        {
+            this.setPendingRemoveState();
+
+            this.onCompleteHandler();
+        }
     },
 
     /**
@@ -1107,22 +1148,20 @@ var Tween = new Class({
      * @since 3.60.0
      *
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
-     */
-    updateActive: function (delta)
-    {
-        if (!this.hasStarted && !this.isSeeking)
-        {
-            this.startDelay -= delta;
+     updateActive: function (delta)
+     {
+         if (!this.hasStarted && !this.isSeeking)
+         {
+             this.startDelay -= delta;
 
-            if (this.startDelay <= 0)
-            {
-                this.hasStarted = true;
+             if (this.startDelay <= 0)
+             {
+                 this.hasStarted = true;
 
-                this.dispatchEvent(Events.TWEEN_START, 'onStart');
+                 this.dispatchEvent(Events.TWEEN_START, 'onStart');
 
-                //  Override the delta to adjust for the time we needed for the startDelay
-                // delta = Math.max(0, delta - Math.abs(this.startDelay));
-                delta = 0;
+                 //  Reset the delta so we always start from zero
+                 delta = 0;
             }
         }
 
@@ -1143,7 +1182,10 @@ var Tween = new Class({
             //  This calls onCompleteHandler if this tween is over
             this.nextState();
         }
+
+        return delta;
     },
+    */
 
     /**
      * Internal method that will emit a Tween based Event and invoke the given callback.
