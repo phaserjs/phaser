@@ -723,14 +723,12 @@ var Tween = new Class({
         }
         else if (this.completeDelay > 0)
         {
-            this.setCompleteDelayState();
-
             this.countdown = this.completeDelay;
+
+            this.setCompleteDelayState();
         }
         else
         {
-            this.setPendingRemoveState();
-
             this.onCompleteHandler();
 
             return true;
@@ -750,6 +748,8 @@ var Tween = new Class({
     {
         this.progress = 1;
         this.totalProgress = 1;
+
+        this.setPendingRemoveState();
 
         this.dispatchEvent(Events.TWEEN_COMPLETE, 'onComplete');
 
@@ -947,8 +947,6 @@ var Tween = new Class({
         }
         else
         {
-            this.setPendingRemoveState();
-
             this.onCompleteHandler();
         }
 
@@ -1075,7 +1073,7 @@ var Tween = new Class({
         this.totalElapsed += delta;
         this.totalProgress = Math.min(this.totalElapsed / this.totalDuration, 1);
 
-        this.debug.push({ progress: this.progress, delta: delta });
+        this.debug.push({ progress: this.progress, elapsed: this.elapsed, delta: delta });
 
         //  Anything still running? If not, we're done
         if (!stillRunning)
@@ -1133,8 +1131,6 @@ var Tween = new Class({
 
         if (this.countdown <= 0)
         {
-            this.setPendingRemoveState();
-
             this.onCompleteHandler();
         }
     },
