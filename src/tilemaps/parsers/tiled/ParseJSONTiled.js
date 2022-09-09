@@ -7,6 +7,7 @@
 var AssignTileProperties = require('./AssignTileProperties');
 var BuildTilesetIndex = require('./BuildTilesetIndex');
 var CONST = require('../../const/ORIENTATION_CONST');
+var DeepCopy = require("../../../utils/object/DeepCopy");
 var Formats = require('../../Formats');
 var FromOrientationString = require('../FromOrientationString');
 var MapData = require('../../mapdata/MapData');
@@ -34,35 +35,37 @@ var ParseTilesets = require('./ParseTilesets');
  */
 var ParseJSONTiled = function (name, json, insertNull)
 {
+    var copyJsonData = DeepCopy(json);
+    
     //  Map data will consist of: layers, objects, images, tilesets, sizes
     var mapData = new MapData({
-        width: json.width,
-        height: json.height,
+        width: copyJsonData.width,
+        height: copyJsonData.height,
         name: name,
-        tileWidth: json.tilewidth,
-        tileHeight: json.tileheight,
-        orientation: FromOrientationString(json.orientation),
+        tileWidth: copyJsonData.tilewidth,
+        tileHeight: copyJsonData.tileheight,
+        orientation: FromOrientationString(copyJsonData.orientation),
         format: Formats.TILED_JSON,
-        version: json.version,
-        properties: json.properties,
-        renderOrder: json.renderorder,
-        infinite: json.infinite
+        version: copyJsonData.version,
+        properties: copyJsonData.properties,
+        renderOrder: copyJsonData.renderorder,
+        infinite: copyJsonData.infinite
     });
 
     if (mapData.orientation === CONST.HEXAGONAL)
     {
-        mapData.hexSideLength = json.hexsidelength;
+        mapData.hexSideLength = copyJsonData.hexsidelength;
     }
 
-    mapData.layers = ParseTileLayers(json, insertNull);
-    mapData.images = ParseImageLayers(json);
+    mapData.layers = ParseTileLayers(copyJsonData, insertNull);
+    mapData.images = ParseImageLayers(copyJsonData);
 
-    var sets = ParseTilesets(json);
+    var sets = ParseTilesets(copyJsonData);
 
     mapData.tilesets = sets.tilesets;
     mapData.imageCollections = sets.imageCollections;
 
-    mapData.objects = ParseObjectLayers(json);
+    mapData.objects = ParseObjectLayers(copyJsonData);
 
     mapData.tiles = BuildTilesetIndex(mapData);
 
