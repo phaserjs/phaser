@@ -43,11 +43,6 @@ GameObjectCreator.register('rope', function (config, addToScene)
 
     BuildGameObject(this.scene, rope, config);
 
-    if (!config.add)
-    {
-        this.updateList.add(rope);
-    }
-
     return rope;
 });
 
