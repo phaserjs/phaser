@@ -593,6 +593,12 @@ var Config = new Class({
                 this.renderType = CONST.CANVAS;
             }
         }
+
+
+        /**
+         * @const {boolean} Phaser.Core.Config#es2019 - Use native ES2019 features
+         */
+        this.es2019 = GetValue(config, 'es2019', false);
     }
 
 });

@@ -55,4 +55,5 @@
  * @property {Phaser.Scale.CenterType} [autoCenter=Phaser.Scale.Center.NO_CENTER] - Automatically center the canvas within the parent?
  * @property {number} [resizeInterval=500] - How many ms should elapse before checking if the browser size has changed?
  * @property {?(HTMLElement|string)} [fullscreenTarget] - The DOM element that will be sent into full screen mode, or its `id`. If undefined Phaser will create its own div and insert the canvas into it when entering fullscreen mode.
+ * @property {boolean} [es2019=false] - Use es2019 features
  */

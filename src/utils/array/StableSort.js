@@ -149,12 +149,17 @@ function RunPass (arr, comp, chk, result)
  *
  * @param {array} array - The input array to be sorted.
  * @param {function} [compare] - The comparison function.
+ * @param {boolean} es2019 - Use the native `Array.prototype.sort()` if available.
  *
  * @return {array} The sorted result.
  */
-var StableSort = function (array, compare)
+var StableSort = function (array, compare, es2019)
 {
     if (compare === undefined) { compare = Compare; }
+
+    if(es2019){
+        return array.sort(compare);
+    }
 
     var result = Process(array, compare);
 

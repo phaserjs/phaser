@@ -80,6 +80,8 @@ var DisplayList = new Class({
 
         this.events.once(SceneEvents.BOOT, this.boot, this);
         this.events.on(SceneEvents.START, this.start, this);
+
+        this.gameConfig = scene.sys.game.config;
     },
 
     /**
@@ -187,7 +189,7 @@ var DisplayList = new Class({
     {
         if (this.sortChildrenFlag)
         {
-            StableSort(this.list, this.sortByDepth);
+            StableSort(this.list, this.sortByDepth, this.gameConfig.es2019);
 
             this.sortChildrenFlag = false;
         }
