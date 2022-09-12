@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var Events = require('../events');
 var TWEEN_CONST = require('./const');
+var TweenBuilder = require('../builders/TweenBuilder');
 
 /**
  * @classdesc
@@ -39,9 +40,24 @@ var TweenChain = new Class({
 
         this.currentTween = null;
 
+        this.currentIndex = 0;
+
+        //  Chain States
         this.state = 0;
 
-        this.paused = false;
+        this.paused = true;
+
+        /**
+         * Scales the time applied to this Tween. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
+         *
+         * The value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
+         *
+         * @name Phaser.Tweens.Tween#timeScale
+         * @type {number}
+         * @default 1
+         * @since 3.60.0
+         */
+        this.timeScale = 1;
 
         /**
          * The time, in milliseconds, before this tween will start playing.
@@ -116,11 +132,6 @@ var TweenChain = new Class({
         this.isCountdown = false;
     },
 
-    init: function ()
-    {
-
-    },
-
     /**
      * Create a sequence of Tweens, chained to one-another, and add them to this Tween Manager.
      *
@@ -140,24 +151,333 @@ var TweenChain = new Class({
      *
      * @return {Phaser.Tweens.TweenChain} This TweenChain instance.
      */
-    add: function (tween)
+    add: function (tweens)
     {
+        if (!Array.isArray(tweens))
+        {
+            tweens = [ tweens ];
+        }
 
+        var tween;
+
+        for (var i = 0; i < tweens.length; i++)
+        {
+            tween = TweenBuilder(this.manager, tweens[i]);
+
+            this.data.push(tween.init());
+        }
+
+        return this;
     },
 
-    play: function ()
+    /**
+     * Internal method that advances the Tween based on the time values.
+     *
+     * @method Phaser.Tweens.Tween#update
+     * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
+     * @fires Phaser.Tweens.Events#TWEEN_LOOP
+     * @fires Phaser.Tweens.Events#TWEEN_START
+     * @since 3.0.0
+     *
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+     *
+     * @return {boolean} Returns `true` if this Tween has finished and should be removed from the Tween Manager, otherwise returns `false`.
+     */
+    update: function (delta)
     {
+        if (this.paused)
+        {
+            return false;
+        }
 
+        // if (this.isPendingRemove() || this.isDestroyed())
+        // {
+        //     return true;
+        // }
+        // else if (this.isFinished() || this.paused)
+        // {
+        //     return false;
+        // }
+
+        delta *= this.timeScale * this.manager.timeScale;
+
+        if (!this.currentTween)
+        {
+            this.currentTween = this.data[0];
+
+            this.currentTween.setActiveState();
+
+            this.currentTween.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
+        }
+
+        if (this.currentTween.update(delta))
+        {
+            //  This tween has finshed playback, so move to the next one
+            this.currentIndex++;
+
+            if (this.currentIndex === this.data.length)
+            {
+                //  We're at the end of the chain - for now, let's just pause the chain
+                console.log('chain over');
+
+                this.paused = true;
+            }
+            else
+            {
+                this.currentTween = this.data[this.currentIndex];
+
+                this.currentTween.setActiveState();
+
+                this.currentTween.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
+            }
+        }
+
+        return false;
     },
 
+    /**
+     * Sets the value of the time scale applied to this Tween. A value of 1 runs in real-time.
+     * A value of 0.5 runs 50% slower, and so on.
+     *
+     * The value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
+     *
+     * @method Phaser.Tweens.Tween#setTimeScale
+     * @since 3.60.0
+     *
+     * @param {number} value - The time scale value to set.
+     *
+     * @return {this} This Tween instance.
+     */
+    setTimeScale: function (value)
+    {
+        this.timeScale = value;
+
+        return this;
+    },
+
+    /**
+     * Gets the value of the time scale applied to this Tween. A value of 1 runs in real-time.
+     * A value of 0.5 runs 50% slower, and so on.
+     *
+     * @method Phaser.Tweens.Tween#getTimeScale
+     * @since 3.60.0
+     *
+     * @return {number} The value of the time scale applied to this Tween.
+     */
+    getTimeScale: function ()
+    {
+        return this.timeScale;
+    },
+
+    /**
+     * Checks if this Tween is currently playing.
+     *
+     * If this Tween is paused, this method will return false.
+     *
+     * @method Phaser.Tweens.Tween#isPlaying
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if the Tween is playing, otherwise `false`.
+     */
+    isPlaying: function ()
+    {
+        return (!this.paused && this.isActive());
+    },
+
+    /**
+     * Checks if the Tween is currently paused.
+     *
+     * @method Phaser.Tweens.Tween#isPaused
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if the Tween is paused, otherwise `false`.
+     */
+    isPaused: function ()
+    {
+        return this.paused;
+    },
+
+    /**
+     * Pauses the Tween immediately. Use `resume` to continue playback.
+     *
+     * You can also toggle the `Tween.paused` boolean property, but doing so will not trigger the PAUSE event.
+     *
+     * @method Phaser.Tweens.Tween#pause
+     * @fires Phaser.Tweens.Events#TWEEN_PAUSE
+     * @since 3.60.0
+     *
+     * @return {this} This Tween instance.
+     */
     pause: function ()
     {
+        if (!this.paused)
+        {
+            this.paused = true;
 
+            this.dispatchEvent(Events.TWEEN_PAUSE, 'onPause');
+        }
+
+        return this;
     },
 
+    /**
+     * Resumes the playback of a previously paused Tween.
+     *
+     * You can also toggle the `Tween.paused` boolean property, but doing so will not trigger the RESUME event.
+     *
+     * @method Phaser.Tweens.Tween#resume
+     * @fires Phaser.Tweens.Events#TWEEN_RESUME
+     * @since 3.60.0
+     *
+     * @return {this} This Tween instance.
+     */
     resume: function ()
     {
+        if (this.paused)
+        {
+            this.paused = false;
 
+            this.dispatchEvent(Events.TWEEN_RESUME, 'onResume');
+        }
+
+        return this;
+    },
+
+    /**
+     * Starts a Tween playing.
+     *
+     * You only need to call this method if you have configured the tween to be paused on creation.
+     *
+     * If the Tween is already playing, calling this method again will have no effect. If you wish to
+     * restart the Tween, use `Tween.restart` instead.
+     *
+     * Calling this method after the Tween has completed will start the Tween playing again from the beginning.
+     * This is the same as calling `Tween.seek(0)` and then `Tween.play()`.
+     *
+     * @method Phaser.Tweens.Tween#play
+     * @since 3.0.0
+     *
+     * @return {this} This Tween instance.
+     */
+    play: function ()
+    {
+        if (this.isDestroyed())
+        {
+            console.warn('Cannot play destroyed TweenChain');
+
+            return this;
+        }
+
+        if (this.isPendingRemove() || this.isPending())
+        {
+            //  ?
+        }
+
+        this.paused = false;
+
+        this.setActiveState();
+
+        return this;
+    },
+
+    /**
+     * Sets this Tween state to PENDING.
+     *
+     * @method Phaser.Tweens.Tween#setPendingState
+     * @since 3.60.0
+     */
+    setPendingState: function ()
+    {
+        this.state = TWEEN_CONST.PENDING;
+    },
+
+    /**
+     * Sets this Tween state to ACTIVE.
+     *
+     * @method Phaser.Tweens.Tween#setActiveState
+     * @since 3.60.0
+     */
+    setActiveState: function ()
+    {
+        this.state = TWEEN_CONST.ACTIVE;
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of PENDING, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isPending
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of PENDING, otherwise `false`.
+     */
+    isPending: function ()
+    {
+        return (this.state === TWEEN_CONST.PENDING);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of ACTIVE, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isActive
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of ACTIVE, otherwise `false`.
+     */
+    isActive: function ()
+    {
+        return (this.state === TWEEN_CONST.ACTIVE);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of PENDING_REMOVE, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isPendingRemove
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of PENDING_REMOVE, otherwise `false`.
+     */
+    isPendingRemove: function ()
+    {
+        return (this.state === TWEEN_CONST.PENDING_REMOVE);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of REMOVED, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isRemoved
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of REMOVED, otherwise `false`.
+     */
+    isRemoved: function ()
+    {
+        return (this.state === TWEEN_CONST.REMOVED);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of FINISHED, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isFinished
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of FINISHED, otherwise `false`.
+     */
+    isFinished: function ()
+    {
+        return (this.state === TWEEN_CONST.FINISHED);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of DESTROYED, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isDestroyed
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of DESTROYED, otherwise `false`.
+     */
+    isDestroyed: function ()
+    {
+        return (this.state === TWEEN_CONST.DESTROYED);
     },
 
     /**
