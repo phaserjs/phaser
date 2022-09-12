@@ -12,6 +12,7 @@ var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
 var StaggerBuilder = require('./builders/StaggerBuilder');
 var TweenBuilder = require('./builders/TweenBuilder');
+var TweenChain = require('./tween/TweenChain');
 
 /**
  * @classdesc
@@ -333,43 +334,13 @@ var TweenManager = new Class({
      *
      * @return {Phaser.Tweens.Tween} The first Tween in the chain.
      */
-    chain: function (tweens, repeat, repeatDelay)
+    chain: function (tweens)
     {
-        if (repeat === undefined) { repeat = false; }
-        if (repeatDelay === undefined) { repeatDelay = 0; }
+        var chain = new TweenChain(this);
 
-        if (!Array.isArray(tweens))
-        {
-            tweens = [ tweens ];
-        }
+        this.tweens.push(chain);
 
-        var tween;
-
-        var result = [];
-        var prevTween = null;
-
-        for (var i = 0; i < tweens.length; i++)
-        {
-            tween = TweenBuilder(this, tweens[i]);
-
-            this.tweens.push(tween.init(i > 0));
-
-            if (i > 0)
-            {
-                prevTween.chain(tween);
-            }
-
-            prevTween = tween;
-
-            result.push(tween);
-
-            if (repeat > 0)
-            {
-                tween.persist = true;
-            }
-        }
-
-        return result[0];
+        return chain.add(tweens);
     },
 
     /**
