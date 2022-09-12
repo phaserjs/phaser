@@ -753,7 +753,7 @@ var Tween = new Class({
 
         this.dispatchEvent(Events.TWEEN_COMPLETE, 'onComplete');
 
-        console.log(this.debug);
+        // console.log(this.debug);
 
         //  Chain ...
         if (this.chainedTween)
