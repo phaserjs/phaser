@@ -19,7 +19,7 @@ var TWEEN_CONST = require('./const');
  * @constructor
  * @since 3.60.0
  *
- * @param {Phaser.Tweens.TweenManager} parent - A reference to the Tween Manager that owns this Tween.
+ * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.TweenChain)} parent - A reference to the Tween Manager, or Tween Chain, that owns this Tween.
  */
 var BaseTween = new Class({
 
@@ -32,19 +32,23 @@ var BaseTween = new Class({
         EventEmitter.call(this);
 
         /**
-         * A reference to the Tween Manager that owns this Tween.
+         * A reference to the Tween Manager, or Tween Chain, that owns this Tween.
          *
-         * @name Phaser.Tweens.Tween#parent
-         * @type {Phaser.Tweens.TweenManager}
+         * @name Phaser.Tweens.BaseTween#parent
+         * @type {(Phaser.Tweens.TweenManager|Phaser.Tweens.TweenChain)}
          * @since 3.60.0
          */
         this.parent = parent;
 
         /**
-         * An array of TweenData objects, each containing a unique property and target being tweened.
+         * The main data array. For a Tween, this contains all of the `TweenData` objects, each
+         * containing a unique property and target that is being tweened.
          *
-         * @name Phaser.Tweens.Tween#data
-         * @type {Phaser.Tweens.TweenData[]}
+         * For a TweenChain, this contains an array of `Tween` instances, which are being played
+         * through in sequence.
+         *
+         * @name Phaser.Tweens.BaseTween#data
+         * @type {(Phaser.Tweens.TweenData[]|Phaser.Tweens.Tween[])}
          * @since 3.60.0
          */
         this.data = [];
@@ -52,31 +56,34 @@ var BaseTween = new Class({
         /**
          * The cached size of the data array.
          *
-         * @name Phaser.Tweens.Tween#totalData
+         * @name Phaser.Tweens.BaseTween#totalData
          * @type {number}
          * @since 3.60.0
          */
         this.totalData = 0;
 
         /**
-         * Time in ms/frames before the 'onStart' event fires.
-         * This is the shortest `delay` value across all of the TweenDatas of this Tween.
+         * The time in milliseconds before the 'onStart' event fires.
          *
-         * @name Phaser.Tweens.Tween#startDelay
+         * For a Tween, this is the shortest `delay` value across all of the TweenDatas it owns.
+         * For a TweenChain, it is whatever delay value was given in the configuration.
+         *
+         * @name Phaser.Tweens.BaseTween#startDelay
          * @type {number}
          * @default 0
-         * @since 3.19.0
+         * @since 3.60.0
          */
         this.startDelay = 0;
 
         /**
          * Has this Tween started playback yet?
-         * This boolean is toggled when the Tween leaves the 'delayed' state and starts running.
          *
-         * @name Phaser.Tweens.Tween#hasStarted
+         * This boolean is toggled when the Tween leaves the 'start delayed' state and begins running.
+         *
+         * @name Phaser.Tweens.BaseTween#hasStarted
          * @type {boolean}
          * @readonly
-         * @since 3.19.0
+         * @since 3.60.0
          */
         this.hasStarted = false;
 
@@ -85,7 +92,9 @@ var BaseTween = new Class({
          *
          * The value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
          *
-         * @name Phaser.Tweens.Tween#timeScale
+         * This value is multiplied by the `TweenManager.timeScale`.
+         *
+         * @name Phaser.Tweens.BaseTween#timeScale
          * @type {number}
          * @default 1
          * @since 3.60.0
@@ -93,11 +102,18 @@ var BaseTween = new Class({
         this.timeScale = 1;
 
         /**
-         * Loop this tween? Can be -1 for an infinite loop, or a positive integer.
+         * The number of times this Tween will loop.
          *
-         * When enabled it will play through ALL TweenDatas again. Use TweenData.repeat to loop a single element.
+         * Can be -1 for an infinite loop, zero for none, or a positive integer.
          *
-         * @name Phaser.Tweens.Tween#loop
+         * Typically this is set in the configuration object, but can also be set directly
+         * as long as this Tween is paused and hasn't started playback.
+         *
+         * When enabled it will play through ALL Tweens again.
+         *
+         * Use TweenData.repeat to loop a single element.
+         *
+         * @name Phaser.Tweens.BaseTween#loop
          * @type {number}
          * @default 0
          * @since 3.60.0
@@ -105,9 +121,11 @@ var BaseTween = new Class({
         this.loop = 0;
 
         /**
-         * Time in ms/frames before the Tween loops.
+         * The time in milliseconds before the Tween loops.
          *
-         * @name Phaser.Tweens.Tween#loopDelay
+         * Only used if `loop` is > 0.
+         *
+         * @name Phaser.Tweens.BaseTween#loopDelay
          * @type {number}
          * @default 0
          * @since 3.60.0
@@ -117,7 +135,7 @@ var BaseTween = new Class({
         /**
          * Internal counter recording how many loops are left to run.
          *
-         * @name Phaser.Tweens.Tween#loopCounter
+         * @name Phaser.Tweens.BaseTween#loopCounter
          * @type {number}
          * @default 0
          * @since 3.60.0
@@ -125,11 +143,12 @@ var BaseTween = new Class({
         this.loopCounter = 0;
 
         /**
-         * The time in ms/frames before the 'onComplete' event fires.
+         * The time in milliseconds before the 'onComplete' event fires.
          *
-         * This never fires if loop = -1 (as it never completes)
+         * This never fires if `loop = -1` as it never completes because it has been
+         * set to loop forever.
          *
-         * @name Phaser.Tweens.Tween#completeDelay
+         * @name Phaser.Tweens.BaseTween#completeDelay
          * @type {number}
          * @default 0
          * @since 3.60.0
@@ -139,7 +158,7 @@ var BaseTween = new Class({
         /**
          * An internal countdown timer (used by loopDelay and completeDelay)
          *
-         * @name Phaser.Tweens.Tween#countdown
+         * @name Phaser.Tweens.BaseTween#countdown
          * @type {number}
          * @default 0
          * @since 3.60.0
@@ -149,16 +168,20 @@ var BaseTween = new Class({
         /**
          * The current state of the Tween.
          *
-         * @name Phaser.Tweens.Tween#state
+         * @name Phaser.Tweens.BaseTween#state
          * @type {Phaser.Types.Tweens.TweenState}
          * @since 3.60.0
          */
         this.state = TWEEN_CONST.PENDING;
 
         /**
-         * Is the Tween paused? If so it needs to be started with `Tween.play` or resumed with `Tween.resume`.
+         * Is the Tween currently paused?
          *
-         * @name Phaser.Tweens.Tween#paused
+         * A paused Tween needs to be started with the `play` method, or resumed with the `resume` method.
+         *
+         * This property can be toggled at runtime if required.
+         *
+         * @name Phaser.Tweens.BaseTween#paused
          * @type {boolean}
          * @default false
          * @since 3.60.0
@@ -180,13 +203,13 @@ var BaseTween = new Class({
          * `onPause` - Invoked only if the `Tween.pause` method is called. Not invoked if the Tween Manager is paused.
          * `onResume` - Invoked only if the `Tween.resume` method is called. Not invoked if the Tween Manager is resumed.
          *
-         * The following types are also available and are invoked on a TweenData level, that is per-object, per-property being tweened:
+         * The following types are also available and are invoked on a `TweenData` level - that is per-object, per-property, being tweened.
          *
          * `onYoyo` - When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
          * `onRepeat` - When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
          * `onUpdate` - When a TweenData updates a property on a source target during playback.
          *
-         * @name Phaser.Tweens.Tween#callbacks
+         * @name Phaser.Tweens.BaseTween#callbacks
          * @type {Phaser.Types.Tweens.TweenCallbacks}
          * @since 3.60.0
          */
@@ -209,7 +232,7 @@ var BaseTween = new Class({
          * This defaults to be this Tween, but you can override this property
          * to set it to whatever object you require.
          *
-         * @name Phaser.Tweens.Tween#callbackScope
+         * @name Phaser.Tweens.BaseTween#callbackScope
          * @type {any}
          * @since 3.60.0
          */
@@ -223,9 +246,13 @@ var BaseTween = new Class({
          * However, it's up to you to ensure you destroy persistent tweens when you are finished with them,
          * or they will retain references you may no longer require and waste memory.
          *
-         * @name Phaser.Tweens.Tween#persist
+         * By default, `Tweens` are set to _not_ persist, so they are automatically cleaned-up by
+         * the Tween Manager. But `TweenChains` _do_ persist by default, unless overridden in their
+         * config. This is because the type of situations you use a chain for is far more likely to
+         * need to be replayed again in the future, rather than disposed of.
+         *
+         * @name Phaser.Tweens.BaseTween#persist
          * @type {boolean}
-         * @default false
          * @since 3.60.0
          */
         this.persist = false;
@@ -236,9 +263,9 @@ var BaseTween = new Class({
      *
      * Called automatically by the TweenManager. Should not be called directly.
      *
-     * @method Phaser.Tweens.Tween#init
+     * @method Phaser.Tweens.BaseTween#init
      * @fires Phaser.Tweens.Events#TWEEN_ACTIVE
-     * @since 3.0.0
+     * @since 3.60.0
      *
      * @return {this} This Tween instance.
      */
@@ -259,7 +286,9 @@ var BaseTween = new Class({
      *
      * The value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
      *
-     * @method Phaser.Tweens.Tween#setTimeScale
+     * This value is multiplied by the `TweenManager.timeScale`.
+     *
+     * @method Phaser.Tweens.BaseTween#setTimeScale
      * @since 3.60.0
      *
      * @param {number} value - The time scale value to set.
@@ -277,7 +306,7 @@ var BaseTween = new Class({
      * Gets the value of the time scale applied to this Tween. A value of 1 runs in real-time.
      * A value of 0.5 runs 50% slower, and so on.
      *
-     * @method Phaser.Tweens.Tween#getTimeScale
+     * @method Phaser.Tweens.BaseTween#getTimeScale
      * @since 3.60.0
      *
      * @return {number} The value of the time scale applied to this Tween.
@@ -290,9 +319,9 @@ var BaseTween = new Class({
     /**
      * Checks if this Tween is currently playing.
      *
-     * If this Tween is paused, this method will return false.
+     * If this Tween is paused, or not active, this method will return false.
      *
-     * @method Phaser.Tweens.Tween#isPlaying
+     * @method Phaser.Tweens.BaseTween#isPlaying
      * @since 3.60.0
      *
      * @return {boolean} `true` if the Tween is playing, otherwise `false`.
@@ -305,7 +334,9 @@ var BaseTween = new Class({
     /**
      * Checks if the Tween is currently paused.
      *
-     * @method Phaser.Tweens.Tween#isPaused
+     * This is the same as inspecting the `BaseTween.paused` property directly.
+     *
+     * @method Phaser.Tweens.BaseTween#isPaused
      * @since 3.60.0
      *
      * @return {boolean} `true` if the Tween is paused, otherwise `false`.
@@ -320,7 +351,7 @@ var BaseTween = new Class({
      *
      * You can also toggle the `Tween.paused` boolean property, but doing so will not trigger the PAUSE event.
      *
-     * @method Phaser.Tweens.Tween#pause
+     * @method Phaser.Tweens.BaseTween#pause
      * @fires Phaser.Tweens.Events#TWEEN_PAUSE
      * @since 3.60.0
      *
@@ -343,7 +374,7 @@ var BaseTween = new Class({
      *
      * You can also toggle the `Tween.paused` boolean property, but doing so will not trigger the RESUME event.
      *
-     * @method Phaser.Tweens.Tween#resume
+     * @method Phaser.Tweens.BaseTween#resume
      * @fires Phaser.Tweens.Events#TWEEN_RESUME
      * @since 3.60.0
      *
@@ -365,7 +396,7 @@ var BaseTween = new Class({
      * Internal method that makes this Tween active within the TweenManager
      * and emits the onActive event and callback.
      *
-     * @method Phaser.Tweens.Tween#makeActive
+     * @method Phaser.Tweens.BaseTween#makeActive
      * @fires Phaser.Tweens.Events#TWEEN_ACTIVE
      * @since 3.60.0
      */
@@ -377,10 +408,10 @@ var BaseTween = new Class({
     },
 
     /**
-     * Internal method that handles this tween completing and starting
-     * the next tween in the chain, if any.
+     * Internal method that handles this tween completing and emitting the onComplete event
+     * and callback.
      *
-     * @method Phaser.Tweens.Tween#onCompleteHandler
+     * @method Phaser.Tweens.BaseTween#onCompleteHandler
      * @since 3.60.0
      */
     onCompleteHandler: function ()
@@ -396,11 +427,9 @@ var BaseTween = new Class({
      * If an `onComplete` callback has been defined it will automatically invoke it, unless a `delay`
      * argument is provided, in which case the Tween will delay for that period of time before calling the callback.
      *
-     * If this Tween has a chained Tween, that will now be started.
+     * If you don't need a delay or don't have an `onComplete` callback then call `Tween.stop` instead.
      *
-     * If you don't need a delay, don't have an `onComplete` callback or have a chained tween, then call `Tween.stop` instead.
-     *
-     * @method Phaser.Tweens.Tween#complete
+     * @method Phaser.Tweens.BaseTween#complete
      * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
      * @since 3.2.0
      *
@@ -431,10 +460,10 @@ var BaseTween = new Class({
      * no matter what stage it is at. Then sets the tween state to `REMOVED`.
      *
      * You should dispose of your reference to this tween after calling this method, to
-     * free it from memory.
+     * free it from memory. If you no longer require it, call `Tween.destroy()` on it.
      *
-     * @method Phaser.Tweens.Tween#remove
-     * @since 3.17.0
+     * @method Phaser.Tweens.BaseTween#remove
+     * @since 3.60.0
      *
      * @return {this} This Tween instance.
      */
@@ -446,7 +475,9 @@ var BaseTween = new Class({
     },
 
     /**
-     * Stops the Tween immediately, whatever stage of progress it is at and flags it for removal by the Tween Manager.
+     * Stops the Tween immediately, whatever stage of progress it is at.
+     *
+     * If not a part of a Tween Chain it is also flagged for removal by the Tween Manager.
      *
      * If an `onStop` callback has been defined it will automatically invoke it.
      *
@@ -456,9 +487,9 @@ var BaseTween = new Class({
      * then call the `pause` method instead and use `resume` to continue playback. If you wish to restart the Tween,
      * use the `restart` or `seek` methods.
      *
-     * @method Phaser.Tweens.Tween#stop
+     * @method Phaser.Tweens.BaseTween#stop
      * @fires Phaser.Tweens.Events#TWEEN_STOP
-     * @since 3.0.0
+     * @since 3.60.0
      *
      * @return {this} This Tween instance.
      */
@@ -478,7 +509,7 @@ var BaseTween = new Class({
      * Internal method that handles the processing of the loop delay countdown timer and
      * the dispatch of related events. Called automatically by `Tween.update`.
      *
-     * @method Phaser.Tweens.Tween#updateLoopCountdown
+     * @method Phaser.Tweens.BaseTween#updateLoopCountdown
      * @since 3.60.0
      *
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -496,10 +527,10 @@ var BaseTween = new Class({
     },
 
     /**
-     * Internal method that handles the processing of the loop delay countdown timer and
+     * Internal method that handles the processing of the start delay countdown timer and
      * the dispatch of related events. Called automatically by `Tween.update`.
      *
-     * @method Phaser.Tweens.Tween#updateStartCountdown
+     * @method Phaser.Tweens.BaseTween#updateStartCountdown
      * @since 3.60.0
      *
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -527,7 +558,7 @@ var BaseTween = new Class({
      * Internal method that handles the processing of the complete delay countdown timer and
      * the dispatch of related events. Called automatically by `Tween.update`.
      *
-     * @method Phaser.Tweens.Tween#updateCompleteDelay
+     * @method Phaser.Tweens.BaseTween#updateCompleteDelay
      * @since 3.60.0
      *
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -557,13 +588,13 @@ var BaseTween = new Class({
      * `onPause` - Invoked only if the `Tween.pause` method is called. Not invoked if the Tween Manager is paused.
      * `onResume` - Invoked only if the `Tween.resume` method is called. Not invoked if the Tween Manager is resumed.
      *
-     * The following types are also available and are invoked on a TweenData level, that is per-target object, per-property, being tweened:
+         * The following types are also available and are invoked on a `TweenData` level - that is per-object, per-property, being tweened.
      *
      * `onYoyo` - When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
      * `onRepeat` - When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
      * `onUpdate` - When a TweenData updates a property on a source target during playback.
      *
-     * @method Phaser.Tweens.Tween#setCallback
+     * @method Phaser.Tweens.BaseTween#setCallback
      * @since 3.60.0
      *
      * @param {Phaser.Types.Tweens.TweenCallbackTypes} type - The type of callback to set. One of: `onActive`, `onComplete`, `onLoop`, `onPause`, `onRepeat`, `onResume`, `onStart`, `onStop`, `onUpdate` or `onYoyo`.
@@ -587,7 +618,7 @@ var BaseTween = new Class({
     /**
      * Sets this Tween state to PENDING.
      *
-     * @method Phaser.Tweens.Tween#setPendingState
+     * @method Phaser.Tweens.BaseTween#setPendingState
      * @since 3.60.0
      */
     setPendingState: function ()
@@ -598,7 +629,7 @@ var BaseTween = new Class({
     /**
      * Sets this Tween state to ACTIVE.
      *
-     * @method Phaser.Tweens.Tween#setActiveState
+     * @method Phaser.Tweens.BaseTween#setActiveState
      * @since 3.60.0
      */
     setActiveState: function ()
@@ -609,7 +640,7 @@ var BaseTween = new Class({
     /**
      * Sets this Tween state to LOOP_DELAY.
      *
-     * @method Phaser.Tweens.Tween#setLoopDelayState
+     * @method Phaser.Tweens.BaseTween#setLoopDelayState
      * @since 3.60.0
      */
     setLoopDelayState: function ()
@@ -620,7 +651,7 @@ var BaseTween = new Class({
     /**
      * Sets this Tween state to COMPLETE_DELAY.
      *
-     * @method Phaser.Tweens.Tween#setCompleteDelayState
+     * @method Phaser.Tweens.BaseTween#setCompleteDelayState
      * @since 3.60.0
      */
     setCompleteDelayState: function ()
@@ -631,7 +662,7 @@ var BaseTween = new Class({
     /**
      * Sets this Tween state to START_DELAY.
      *
-     * @method Phaser.Tweens.Tween#setStartDelayState
+     * @method Phaser.Tweens.BaseTween#setStartDelayState
      * @since 3.60.0
      */
     setStartDelayState: function ()
@@ -646,7 +677,7 @@ var BaseTween = new Class({
     /**
      * Sets this Tween state to PENDING_REMOVE.
      *
-     * @method Phaser.Tweens.Tween#setPendingRemoveState
+     * @method Phaser.Tweens.BaseTween#setPendingRemoveState
      * @since 3.60.0
      */
     setPendingRemoveState: function ()
@@ -657,7 +688,7 @@ var BaseTween = new Class({
     /**
      * Sets this Tween state to REMOVED.
      *
-     * @method Phaser.Tweens.Tween#setRemovedState
+     * @method Phaser.Tweens.BaseTween#setRemovedState
      * @since 3.60.0
      */
     setRemovedState: function ()
@@ -668,7 +699,7 @@ var BaseTween = new Class({
     /**
      * Sets this Tween state to FINISHED.
      *
-     * @method Phaser.Tweens.Tween#setFinishedState
+     * @method Phaser.Tweens.BaseTween#setFinishedState
      * @since 3.60.0
      */
     setFinishedState: function ()
@@ -679,7 +710,7 @@ var BaseTween = new Class({
     /**
      * Sets this Tween state to DESTROYED.
      *
-     * @method Phaser.Tweens.Tween#setDestroyedState
+     * @method Phaser.Tweens.BaseTween#setDestroyedState
      * @since 3.60.0
      */
     setDestroyedState: function ()
@@ -690,7 +721,7 @@ var BaseTween = new Class({
     /**
      * Returns `true` if this Tween has a _current_ state of PENDING, otherwise `false`.
      *
-     * @method Phaser.Tweens.Tween#isPending
+     * @method Phaser.Tweens.BaseTween#isPending
      * @since 3.60.0
      *
      * @return {boolean} `true` if this Tween has a _current_ state of PENDING, otherwise `false`.
@@ -703,7 +734,7 @@ var BaseTween = new Class({
     /**
      * Returns `true` if this Tween has a _current_ state of ACTIVE, otherwise `false`.
      *
-     * @method Phaser.Tweens.Tween#isActive
+     * @method Phaser.Tweens.BaseTween#isActive
      * @since 3.60.0
      *
      * @return {boolean} `true` if this Tween has a _current_ state of ACTIVE, otherwise `false`.
@@ -716,7 +747,7 @@ var BaseTween = new Class({
     /**
      * Returns `true` if this Tween has a _current_ state of LOOP_DELAY, otherwise `false`.
      *
-     * @method Phaser.Tweens.Tween#isLoopDelayed
+     * @method Phaser.Tweens.BaseTween#isLoopDelayed
      * @since 3.60.0
      *
      * @return {boolean} `true` if this Tween has a _current_ state of LOOP_DELAY, otherwise `false`.
@@ -729,7 +760,7 @@ var BaseTween = new Class({
     /**
      * Returns `true` if this Tween has a _current_ state of COMPLETE_DELAY, otherwise `false`.
      *
-     * @method Phaser.Tweens.Tween#isCompleteDelayed
+     * @method Phaser.Tweens.BaseTween#isCompleteDelayed
      * @since 3.60.0
      *
      * @return {boolean} `true` if this Tween has a _current_ state of COMPLETE_DELAY, otherwise `false`.
@@ -742,7 +773,7 @@ var BaseTween = new Class({
     /**
      * Returns `true` if this Tween has a _current_ state of START_DELAY, otherwise `false`.
      *
-     * @method Phaser.Tweens.Tween#isStartDelayed
+     * @method Phaser.Tweens.BaseTween#isStartDelayed
      * @since 3.60.0
      *
      * @return {boolean} `true` if this Tween has a _current_ state of START_DELAY, otherwise `false`.
@@ -755,7 +786,7 @@ var BaseTween = new Class({
     /**
      * Returns `true` if this Tween has a _current_ state of PENDING_REMOVE, otherwise `false`.
      *
-     * @method Phaser.Tweens.Tween#isPendingRemove
+     * @method Phaser.Tweens.BaseTween#isPendingRemove
      * @since 3.60.0
      *
      * @return {boolean} `true` if this Tween has a _current_ state of PENDING_REMOVE, otherwise `false`.
@@ -768,7 +799,7 @@ var BaseTween = new Class({
     /**
      * Returns `true` if this Tween has a _current_ state of REMOVED, otherwise `false`.
      *
-     * @method Phaser.Tweens.Tween#isRemoved
+     * @method Phaser.Tweens.BaseTween#isRemoved
      * @since 3.60.0
      *
      * @return {boolean} `true` if this Tween has a _current_ state of REMOVED, otherwise `false`.
@@ -781,7 +812,7 @@ var BaseTween = new Class({
     /**
      * Returns `true` if this Tween has a _current_ state of FINISHED, otherwise `false`.
      *
-     * @method Phaser.Tweens.Tween#isFinished
+     * @method Phaser.Tweens.BaseTween#isFinished
      * @since 3.60.0
      *
      * @return {boolean} `true` if this Tween has a _current_ state of FINISHED, otherwise `false`.
@@ -794,7 +825,7 @@ var BaseTween = new Class({
     /**
      * Returns `true` if this Tween has a _current_ state of DESTROYED, otherwise `false`.
      *
-     * @method Phaser.Tweens.Tween#isDestroyed
+     * @method Phaser.Tweens.BaseTween#isDestroyed
      * @since 3.60.0
      *
      * @return {boolean} `true` if this Tween has a _current_ state of DESTROYED, otherwise `false`.
@@ -809,7 +840,7 @@ var BaseTween = new Class({
      * Tween Data and resetting the targets. A Tween that has been
      * destroyed cannot ever be played or used again.
      *
-     * @method Phaser.Tweens.Tween#destroy
+     * @method Phaser.Tweens.BaseTween#destroy
      * @since 3.60.0
      */
     destroy: function ()
