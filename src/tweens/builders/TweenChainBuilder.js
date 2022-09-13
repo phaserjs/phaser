@@ -36,9 +36,6 @@ var TweenChainBuilder = function (parent, config)
 
     var chain = new TweenChain(parent);
 
-    // chain.hold = GetValue(config, 'hold', 0);
-    // chain.yoyo = GetBoolean(config, 'yoyo', false);
-
     chain.startDelay = GetValue(config, 'delay', 0);
     chain.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
     chain.loop = Math.round(GetAdvancedValue(config, 'loop', GetValue(config, 'repeat', 0)));
