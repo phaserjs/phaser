@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var ArrayRemove = require('../utils/array/Remove');
 var BaseTween = require('./BaseTween');
 var Class = require('../../utils/Class');
 var Events = require('../events');
@@ -122,6 +123,38 @@ var TweenChain = new Class({
         }
 
         this.totalData = data.length;
+
+        return this;
+    },
+
+    /**
+     * Removes the given Tween from this Tween Chain.
+     *
+     * The removed tween is _not_ destroyed. It is just removed from this Tween Chain.
+     *
+     * If the given Tween is currently playing then the chain will automatically move
+     * to the next tween in the chain. If there are no more tweens, this chain will complete.
+     *
+     * @method Phaser.Tweens.TweenChain#remove
+     * @since 3.60.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - The Tween to be removed.
+     *
+     * @return {this} This Tween Chain instance.
+     */
+    remove: function (tween)
+    {
+        //  Remove it immediately
+        ArrayRemove(this.data, tween);
+
+        tween.setRemovedState();
+
+        if (tween === this.currentTween)
+        {
+            this.nextTween();
+        }
+
+        this.totalData = this.data.length;
 
         return this;
     },
