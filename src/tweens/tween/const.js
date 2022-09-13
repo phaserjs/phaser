@@ -157,16 +157,7 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.60.0
      */
-    DESTROYED: 27,
-
-    /**
-     * Tween state. The is a chained Tween and is awaiting playback.
-     *
-     * @name Phaser.Tweens.CHAINED
-     * @type {number}
-     * @since 3.60.0
-     */
-    CHAINED: 28
+    DESTROYED: 27
 
 };
 

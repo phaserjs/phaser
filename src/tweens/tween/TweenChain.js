@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var EventEmitter = require('eventemitter3');
 var Events = require('../events');
 var TWEEN_CONST = require('./const');
 var TweenBuilder = require('../builders/TweenBuilder');
@@ -15,6 +16,7 @@ var TweenBuilder = require('../builders/TweenBuilder');
  *
  * @class TweenChain
  * @memberof Phaser.Tweens
+ * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.60.0
  *
@@ -22,10 +24,14 @@ var TweenBuilder = require('../builders/TweenBuilder');
  */
 var TweenChain = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function TweenChain (manager)
     {
+        EventEmitter.call(this);
+
         /**
          * A reference to the TweenManager that this TweenChain instance belongs to.
          *
@@ -58,6 +64,60 @@ var TweenChain = new Class({
          * @since 3.60.0
          */
         this.timeScale = 1;
+
+        /**
+         * Loop this tween? Can be -1 for an infinite loop, or a positive integer.
+         *
+         * When enabled it will play through ALL TweenDatas again. Use TweenData.repeat to loop a single element.
+         *
+         * @name Phaser.Tweens.Tween#loop
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.loop = 0;
+
+        /**
+         * Time in ms/frames before the Tween loops.
+         *
+         * @name Phaser.Tweens.Tween#loopDelay
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.loopDelay = 0;
+
+        /**
+         * Internal counter recording how many loops are left to run.
+         *
+         * @name Phaser.Tweens.Tween#loopCounter
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.loopCounter = 0;
+
+        /**
+         * The time in ms/frames before the 'onComplete' event fires.
+         *
+         * This never fires if loop = -1 (as it never completes)
+         *
+         * @name Phaser.Tweens.Tween#completeDelay
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.completeDelay = 0;
+
+        /**
+         * An internal countdown timer (used by loopDelay and completeDelay)
+         *
+         * @name Phaser.Tweens.Tween#countdown
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.countdown = 0;
 
         /**
          * The time, in milliseconds, before this tween will start playing.
@@ -217,10 +277,7 @@ var TweenChain = new Class({
 
             if (this.currentIndex === this.data.length)
             {
-                //  We're at the end of the chain - for now, let's just pause the chain
-                console.log('chain over');
-
-                this.paused = true;
+                this.nextState();
             }
             else
             {
@@ -233,6 +290,74 @@ var TweenChain = new Class({
         }
 
         return false;
+    },
+
+    /**
+     * Internal method that advances to the next state of the Tween during playback.
+     *
+     * @method Phaser.Tweens.Tween#nextState
+     * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
+     * @fires Phaser.Tweens.Events#TWEEN_LOOP
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if this Tween has completed, otherwise `false`.
+     */
+    nextState: function ()
+    {
+        if (this.loopCounter > 0)
+        {
+            this.loopCounter--;
+
+            this.resetTweens();
+
+            if (this.loopDelay > 0)
+            {
+                this.countdown = this.loopDelay;
+
+                this.setLoopDelayState();
+            }
+            else
+            {
+                this.setActiveState();
+
+                this.dispatchEvent(Events.TWEEN_LOOP, 'onLoop');
+            }
+        }
+        else if (this.completeDelay > 0)
+        {
+            this.countdown = this.completeDelay;
+
+            this.setCompleteDelayState();
+        }
+        else
+        {
+            this.onCompleteHandler();
+
+            return true;
+        }
+
+        return false;
+    },
+
+    /**
+     * Internal method that resets all of the Tween Data, including the progress and elapsed values.
+     *
+     * @method Phaser.Tweens.Tween#resetTweenData
+     * @since 3.0.0
+     *
+     * @param {boolean} resetFromLoop - Has this method been called as part of a loop?
+     */
+    resetTweens: function ()
+    {
+        var data = this.data;
+
+        for (var i = 0; i < data.length; i++)
+        {
+            data[i].resetTweenData(true);
+        }
+
+        this.currentIndex = 0;
+        this.currentTween = this.data[0];
     },
 
     /**
@@ -403,6 +528,73 @@ var TweenChain = new Class({
     },
 
     /**
+     * Sets this Tween state to LOOP_DELAY.
+     *
+     * @method Phaser.Tweens.Tween#setLoopDelayState
+     * @since 3.60.0
+     */
+    setLoopDelayState: function ()
+    {
+        this.state = TWEEN_CONST.LOOP_DELAY;
+    },
+
+    /**
+     * Sets this Tween state to COMPLETE_DELAY.
+     *
+     * @method Phaser.Tweens.Tween#setCompleteDelayState
+     * @since 3.60.0
+     */
+    setCompleteDelayState: function ()
+    {
+        this.state = TWEEN_CONST.COMPLETE_DELAY;
+    },
+
+    /**
+     * Sets this Tween state to PENDING_REMOVE.
+     *
+     * @method Phaser.Tweens.Tween#setPendingRemoveState
+     * @since 3.60.0
+     */
+    setPendingRemoveState: function ()
+    {
+        this.state = TWEEN_CONST.PENDING_REMOVE;
+    },
+
+    /**
+     * Sets this Tween state to REMOVED.
+     *
+     * @method Phaser.Tweens.Tween#setRemovedState
+     * @since 3.60.0
+     */
+    setRemovedState: function ()
+    {
+        this.state = TWEEN_CONST.REMOVED;
+    },
+
+    /**
+     * Sets this Tween state to FINISHED.
+     *
+     * @method Phaser.Tweens.Tween#setFinishedState
+     * @since 3.60.0
+     */
+    setFinishedState: function ()
+    {
+        this.state = TWEEN_CONST.FINISHED;
+    },
+
+    /**
+     * Sets this Tween state to DESTROYED.
+     *
+     * @method Phaser.Tweens.Tween#setDestroyedState
+     * @since 3.60.0
+     */
+    setDestroyedState: function ()
+    {
+        this.state = TWEEN_CONST.DESTROYED;
+    },
+
+
+    /**
      * Returns `true` if this Tween has a _current_ state of PENDING, otherwise `false`.
      *
      * @method Phaser.Tweens.Tween#isPending
@@ -426,6 +618,32 @@ var TweenChain = new Class({
     isActive: function ()
     {
         return (this.state === TWEEN_CONST.ACTIVE);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of LOOP_DELAY, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isLoopDelayed
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of LOOP_DELAY, otherwise `false`.
+     */
+    isLoopDelayed: function ()
+    {
+        return (this.state === TWEEN_CONST.LOOP_DELAY);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of COMPLETE_DELAY, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isCompleteDelayed
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of COMPLETE_DELAY, otherwise `false`.
+     */
+    isCompleteDelayed: function ()
+    {
+        return (this.state === TWEEN_CONST.COMPLETE_DELAY);
     },
 
     /**
@@ -488,6 +706,18 @@ var TweenChain = new Class({
      */
     destroy: function ()
     {
+        for (var i = 0; i < this.data.length; i++)
+        {
+            this.data[i].destroy();
+        }
+
+        this.removeAllListeners();
+
+        this.callbacks = null;
+        this.data = null;
+        this.manager = null;
+
+        this.setDestroyedState();
     }
 
 });
