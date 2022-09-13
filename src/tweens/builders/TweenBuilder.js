@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BaseTween = require('../tween/BaseTween');
 var Defaults = require('../tween/Defaults');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetBoolean = require('./GetBoolean');
@@ -14,6 +15,7 @@ var GetProps = require('./GetProps');
 var GetTargets = require('./GetTargets');
 var GetValue = require('../../utils/object/GetValue');
 var GetValueOp = require('./GetValueOp');
+var MergeRight = require('../../utils/object/MergeRight');
 var Tween = require('../tween/Tween');
 
 /**
@@ -30,9 +32,20 @@ var Tween = require('../tween/Tween');
  */
 var TweenBuilder = function (parent, config, defaults)
 {
+    if (config instanceof Tween)
+    {
+        config.parent = parent;
+
+        return config;
+    }
+
     if (defaults === undefined)
     {
         defaults = Defaults;
+    }
+    else
+    {
+        defaults = MergeRight(Defaults, defaults);
     }
 
     //  Create arrays of the Targets and the Properties
@@ -113,7 +126,7 @@ var TweenBuilder = function (parent, config, defaults)
     //  Set the Callbacks
     tween.callbackScope = GetValue(config, 'callbackScope', tween);
 
-    var callbacks = Tween.TYPES;
+    var callbacks = BaseTween.TYPES;
 
     for (var i = 0; i < callbacks.length; i++)
     {
