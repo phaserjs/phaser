@@ -11,7 +11,9 @@ var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
 var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
 var StaggerBuilder = require('./builders/StaggerBuilder');
+var Tween = require('./tween/Tween');
 var TweenBuilder = require('./builders/TweenBuilder');
+var TweenChain = require('./tween/TweenChain');
 var TweenChainBuilder = require('./builders/TweenChainBuilder');
 
 /**
@@ -229,21 +231,33 @@ var TweenManager = new Class({
      */
     create: function (config)
     {
-        if (Array.isArray(config))
+        if (!Array.isArray(config))
         {
-            var result = [];
+            config = [ config ];
+        }
 
-            for (var i = 0; i < config.length; i++)
+        var result = [];
+
+        for (var i = 0; i < config.length; i++)
+        {
+            var tween = config[i];
+
+            if (tween instanceof Tween || tween instanceof TweenChain)
             {
-                result.push(TweenBuilder(this, config[i]));
+                //  Allow them to send an array of mixed instances and configs
+                result.push(tween);
             }
+            else if (Array.isArray(tween.tweens))
+            {
+                result.push(TweenChainBuilder(this, tween));
+            }
+            else
+            {
+                result.push(TweenBuilder(this, tween));
+            }
+        }
 
-            return result;
-        }
-        else
-        {
-            return TweenBuilder(this, config);
-        }
+        return (result.length === 1) ? result[0] : result;
     },
 
     /**
@@ -289,31 +303,40 @@ var TweenManager = new Class({
     add: function (config)
     {
         var tween;
+        var result = [];
         var tweens = this.tweens;
 
-        if (Array.isArray(config))
+        if (!Array.isArray(config))
         {
-            var result = [];
+            config = [ config ];
+        }
 
-            for (var i = 0; i < config.length; i++)
+        for (var i = 0; i < config.length; i++)
+        {
+            tween = config[i];
+
+            if (tween instanceof Tween || tween instanceof TweenChain)
             {
-                tween = TweenBuilder(this, config[i]);
+                tweens.push(tween.init());
+            }
+            else
+            {
+                if (Array.isArray(tween.tweens))
+                {
+                    tween = TweenChainBuilder(this, tween);
+                }
+                else
+                {
+                    tween = TweenBuilder(this, tween);
+                }
 
                 tweens.push(tween.init());
-
-                result.push(tween);
             }
 
-            return result;
+            result.push(tween);
         }
-        else
-        {
-            tween = TweenBuilder(this, config);
 
-            tweens.push(tween.init());
-
-            return tween;
-        }
+        return (result.length === 1) ? result[0] : result;
     },
 
     /**
