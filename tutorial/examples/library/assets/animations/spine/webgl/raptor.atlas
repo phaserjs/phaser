@@ -1,0 +1,300 @@
+
+raptor.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+back-arm
+  rotate: true
+  xy: 274, 394
+  size: 46, 29
+  orig: 46, 29
+  offset: 0, 0
+  index: -1
+back-bracer
+  rotate: true
+  xy: 140, 247
+  size: 39, 28
+  orig: 39, 28
+  offset: 0, 0
+  index: -1
+back-hand
+  rotate: false
+  xy: 824, 699
+  size: 36, 34
+  orig: 36, 34
+  offset: 0, 0
+  index: -1
+back-knee
+  rotate: false
+  xy: 360, 507
+  size: 49, 67
+  orig: 49, 67
+  offset: 0, 0
+  index: -1
+back-thigh
+  rotate: true
+  xy: 140, 206
+  size: 39, 24
+  orig: 39, 24
+  offset: 0, 0
+  index: -1
+dust01
+  rotate: false
+  xy: 219, 299
+  size: 48, 37
+  orig: 48, 37
+  offset: 0, 0
+  index: -1
+dust02
+  rotate: false
+  xy: 895, 833
+  size: 43, 44
+  orig: 43, 44
+  offset: 0, 0
+  index: -1
+dust03
+  rotate: true
+  xy: 167, 445
+  size: 31, 26
+  orig: 31, 26
+  offset: 0, 0
+  index: -1
+eyes-open
+  rotate: true
+  xy: 2, 2
+  size: 47, 45
+  orig: 47, 45
+  offset: 0, 0
+  index: -1
+front-arm
+  rotate: false
+  xy: 470, 544
+  size: 48, 30
+  orig: 48, 30
+  offset: 0, 0
+  index: -1
+front-bracer
+  rotate: true
+  xy: 274, 351
+  size: 41, 29
+  orig: 41, 29
+  offset: 0, 0
+  index: -1
+front-hand
+  rotate: false
+  xy: 827, 773
+  size: 41, 38
+  orig: 41, 38
+  offset: 0, 0
+  index: -1
+front-open-hand
+  rotate: false
+  xy: 360, 461
+  size: 43, 44
+  orig: 43, 44
+  offset: 0, 0
+  index: -1
+front-thigh
+  rotate: false
+  xy: 411, 545
+  size: 57, 29
+  orig: 57, 29
+  offset: 0, 0
+  index: -1
+gun
+  rotate: false
+  xy: 195, 442
+  size: 107, 103
+  orig: 107, 103
+  offset: 0, 0
+  index: -1
+gun-nohand
+  rotate: false
+  xy: 167, 338
+  size: 105, 102
+  orig: 105, 102
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 2, 137
+  size: 136, 149
+  orig: 136, 149
+  offset: 0, 0
+  index: -1
+lower-leg
+  rotate: true
+  xy: 648, 667
+  size: 73, 98
+  orig: 73, 98
+  offset: 0, 0
+  index: -1
+mouth-grind
+  rotate: true
+  xy: 49, 2
+  size: 47, 30
+  orig: 47, 30
+  offset: 0, 0
+  index: -1
+mouth-smile
+  rotate: true
+  xy: 81, 2
+  size: 47, 30
+  orig: 47, 30
+  offset: 0, 0
+  index: -1
+neck
+  rotate: false
+  xy: 626, 631
+  size: 18, 21
+  orig: 18, 21
+  offset: 0, 0
+  index: -1
+raptor-arm-back
+  rotate: true
+  xy: 538, 570
+  size: 82, 86
+  orig: 82, 86
+  offset: 0, 0
+  index: -1
+raptor-body
+  rotate: false
+  xy: 2, 737
+  size: 632, 285
+  orig: 632, 285
+  offset: 0, 0
+  index: -1
+raptor-front-arm
+  rotate: true
+  xy: 544, 654
+  size: 81, 102
+  orig: 81, 102
+  offset: 0, 0
+  index: -1
+raptor-front-leg
+  rotate: false
+  xy: 2, 478
+  size: 191, 257
+  orig: 191, 257
+  offset: 0, 0
+  index: -1
+raptor-hindleg-back
+  rotate: false
+  xy: 636, 807
+  size: 169, 215
+  orig: 169, 215
+  offset: 0, 0
+  index: -1
+raptor-horn
+  rotate: false
+  xy: 360, 655
+  size: 182, 80
+  orig: 182, 80
+  offset: 0, 0
+  index: -1
+raptor-horn-back
+  rotate: false
+  xy: 360, 576
+  size: 176, 77
+  orig: 176, 77
+  offset: 0, 0
+  index: -1
+raptor-jaw
+  rotate: false
+  xy: 807, 879
+  size: 153, 143
+  orig: 153, 143
+  offset: 0, 0
+  index: -1
+raptor-jaw-tooth
+  rotate: true
+  xy: 940, 840
+  size: 37, 48
+  orig: 37, 48
+  offset: 0, 0
+  index: -1
+raptor-mouth-inside
+  rotate: true
+  xy: 827, 735
+  size: 36, 41
+  orig: 36, 41
+  offset: 0, 0
+  index: -1
+raptor-saddle-noshadow
+  rotate: false
+  xy: 2, 288
+  size: 163, 188
+  orig: 163, 188
+  offset: 0, 0
+  index: -1
+raptor-saddle-strap-front
+  rotate: false
+  xy: 962, 927
+  size: 57, 95
+  orig: 57, 95
+  offset: 0, 0
+  index: -1
+raptor-saddle-strap-rear
+  rotate: true
+  xy: 748, 686
+  size: 54, 74
+  orig: 54, 74
+  offset: 0, 0
+  index: -1
+raptor-saddle-w-shadow
+  rotate: false
+  xy: 195, 547
+  size: 163, 188
+  orig: 163, 188
+  offset: 0, 0
+  index: -1
+raptor-tail-shadow
+  rotate: false
+  xy: 636, 742
+  size: 189, 63
+  orig: 189, 63
+  offset: 0, 0
+  index: -1
+raptor-tongue
+  rotate: false
+  xy: 807, 813
+  size: 86, 64
+  orig: 86, 64
+  offset: 0, 0
+  index: -1
+stirrup-back
+  rotate: false
+  xy: 411, 508
+  size: 44, 35
+  orig: 44, 35
+  offset: 0, 0
+  index: -1
+stirrup-front
+  rotate: true
+  xy: 167, 291
+  size: 45, 50
+  orig: 45, 50
+  offset: 0, 0
+  index: -1
+stirrup-strap
+  rotate: false
+  xy: 962, 879
+  size: 49, 46
+  orig: 49, 46
+  offset: 0, 0
+  index: -1
+torso
+  rotate: false
+  xy: 304, 454
+  size: 54, 91
+  orig: 54, 91
+  offset: 0, 0
+  index: -1
+visor
+  rotate: false
+  xy: 2, 51
+  size: 131, 84
+  orig: 131, 84
+  offset: 0, 0
+  index: -1

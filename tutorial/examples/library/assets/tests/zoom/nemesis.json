@@ -1,0 +1,57 @@
+{"frames": {
+
+"background":
+{
+	"frame": {"x":2,"y":2,"w":256,"h":144},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":144},
+	"sourceSize": {"w":256,"h":144},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"baddie1":
+{
+	"frame": {"x":424,"y":2,"w":16,"h":15},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":15},
+	"sourceSize": {"w":16,"h":15},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"bullet":
+{
+	"frame": {"x":424,"y":35,"w":16,"h":3},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":3},
+	"sourceSize": {"w":16,"h":3},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"title":
+{
+	"frame": {"x":261,"y":2,"w":160,"h":144},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":144},
+	"sourceSize": {"w":160,"h":144},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"viper":
+{
+	"frame": {"x":424,"y":20,"w":16,"h":12},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":12},
+	"sourceSize": {"w":16,"h":12},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "nemesis.png",
+	"format": "RGBA8888",
+	"size": {"w":442,"h":148},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:c87e34db806c0f2800e7537ae2ae0a91:15e5c3a51ed9060d4cd2668d7a16e138:962b8a7e86c6193427d2a9a4a534838b$"
+}
+}

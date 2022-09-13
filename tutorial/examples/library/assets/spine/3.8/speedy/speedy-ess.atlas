@@ -1,0 +1,195 @@
+
+speedy-ess.png
+size: 795,131
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+belt-ends
+  rotate: true
+  xy: 611, 10
+  size: 43, 56
+  orig: 45, 56
+  offset: 0, 0
+  index: -1
+hair-1
+  rotate: false
+  xy: 669, 17
+  size: 67, 39
+  orig: 82, 39
+  offset: 0, 0
+  index: -1
+hair-2
+  rotate: false
+  xy: 494, 5
+  size: 60, 43
+  orig: 74, 43
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 2, 8
+  size: 116, 121
+  orig: 116, 124
+  offset: 0, 3
+  index: -1
+hood-end1a
+  rotate: false
+  xy: 298, 45
+  size: 23, 84
+  orig: 23, 84
+  offset: 0, 0
+  index: -1
+hood-end1b
+  rotate: false
+  xy: 523, 50
+  size: 28, 79
+  orig: 28, 79
+  offset: 0, 0
+  index: -1
+hood-end1c
+  rotate: true
+  xy: 200, 6
+  size: 31, 70
+  orig: 31, 70
+  offset: 0, 0
+  index: -1
+hood-end1d
+  rotate: false
+  xy: 398, 47
+  size: 29, 82
+  orig: 29, 82
+  offset: 0, 0
+  index: -1
+hood-end1e
+  rotate: true
+  xy: 120, 2
+  size: 35, 78
+  orig: 35, 78
+  offset: 0, 0
+  index: -1
+hood-end1f
+  rotate: true
+  xy: 272, 3
+  size: 39, 71
+  orig: 39, 71
+  offset: 0, 0
+  index: -1
+hood-end2a
+  rotate: false
+  xy: 553, 53
+  size: 30, 76
+  orig: 30, 76
+  offset: 0, 0
+  index: -1
+hood-end2b
+  rotate: false
+  xy: 639, 58
+  size: 38, 71
+  orig: 38, 71
+  offset: 0, 0
+  index: -1
+hood-end2c
+  rotate: true
+  xy: 345, 2
+  size: 42, 64
+  orig: 42, 64
+  offset: 0, 0
+  index: -1
+hood-end2d
+  rotate: false
+  xy: 585, 53
+  size: 23, 76
+  orig: 23, 76
+  offset: 0, 0
+  index: -1
+hood-end2e
+  rotate: false
+  xy: 610, 55
+  size: 27, 74
+  orig: 28, 74
+  offset: 1, 0
+  index: -1
+hood-end2f
+  rotate: false
+  xy: 679, 59
+  size: 30, 70
+  orig: 31, 70
+  offset: 1, 0
+  index: -1
+left-foot
+  rotate: true
+  xy: 429, 49
+  size: 80, 47
+  orig: 80, 47
+  offset: 0, 0
+  index: -1
+left-foot-bent01
+  rotate: true
+  xy: 208, 42
+  size: 87, 43
+  orig: 87, 43
+  offset: 0, 0
+  index: -1
+left-foot-bent02
+  rotate: false
+  xy: 411, 2
+  size: 81, 43
+  orig: 82, 43
+  offset: 0, 0
+  index: -1
+left-foot-side
+  rotate: true
+  xy: 120, 39
+  size: 90, 42
+  orig: 90, 42
+  offset: 0, 0
+  index: -1
+left-hand
+  rotate: true
+  xy: 556, 3
+  size: 48, 53
+  orig: 52, 53
+  offset: 4, 0
+  index: -1
+right-foot
+  rotate: true
+  xy: 711, 63
+  size: 66, 56
+  orig: 66, 56
+  offset: 0, 0
+  index: -1
+right-foot-bent01
+  rotate: true
+  xy: 253, 44
+  size: 85, 43
+  orig: 85, 43
+  offset: 0, 0
+  index: -1
+right-foot-bent02
+  rotate: true
+  xy: 478, 50
+  size: 79, 43
+  orig: 79, 43
+  offset: 0, 0
+  index: -1
+right-foot-side
+  rotate: true
+  xy: 164, 39
+  size: 90, 42
+  orig: 90, 42
+  offset: 0, 0
+  index: -1
+right-hand
+  rotate: false
+  xy: 738, 3
+  size: 55, 58
+  orig: 56, 58
+  offset: 0, 0
+  index: -1
+torso
+  rotate: false
+  xy: 323, 46
+  size: 73, 83
+  orig: 77, 85
+  offset: 0, 0
+  index: -1

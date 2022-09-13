@@ -1,0 +1,8 @@
+{
+    "files": [
+        "Preloader.js",
+        "MainMenu.js",
+        "Game.js",
+        "main.js"
+    ]
+}

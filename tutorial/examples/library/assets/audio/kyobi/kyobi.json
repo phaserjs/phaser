@@ -1,0 +1,96 @@
+{
+  "resources": [
+    "kyobi.ogg",
+    "kyobi.m4a",
+    "kyobi.mp3",
+    "kyobi.ac3"
+  ],
+  "spritemap": {
+    "10xChain": {
+      "start": 0,
+      "end": 2.819342403628118,
+      "loop": false
+    },
+    "5xChain": {
+      "start": 4,
+      "end": 6.552018140589569,
+      "loop": false
+    },
+    "gameOver": {
+      "start": 8,
+      "end": 12.183038548752833,
+      "loop": false
+    },
+    "hitWall": {
+      "start": 14,
+      "end": 14.389501133786847,
+      "loop": false
+    },
+    "impactHeavy": {
+      "start": 16,
+      "end": 17.56485260770975,
+      "loop": false
+    },
+    "impactLight1": {
+      "start": 19,
+      "end": 19.510680272108843,
+      "loop": false
+    },
+    "impactLight2": {
+      "start": 21,
+      "end": 21.548004535147392,
+      "loop": false
+    },
+    "impactLight3": {
+      "start": 23,
+      "end": 23.778684807256237,
+      "loop": false
+    },
+    "impactMedium": {
+      "start": 25,
+      "end": 25.996666666666666,
+      "loop": false
+    },
+    "match3": {
+      "start": 27,
+      "end": 28.48,
+      "loop": false
+    },
+    "match4": {
+      "start": 30,
+      "end": 32.15684807256236,
+      "loop": false
+    },
+    "match5": {
+      "start": 34,
+      "end": 35.99659863945578,
+      "loop": false
+    },
+    "menuClick": {
+      "start": 37,
+      "end": 39.1609977324263,
+      "loop": false
+    },
+    "nextLevel": {
+      "start": 41,
+      "end": 43.4,
+      "loop": false
+    },
+    "title": {
+      "start": 45,
+      "end": 60.86775510204082,
+      "loop": true
+    },
+    "warning": {
+      "start": 62,
+      "end": 63.9918820861678,
+      "loop": false
+    },
+    "whoosh": {
+      "start": 65,
+      "end": 66.22736961451247,
+      "loop": false
+    }
+  },
+  "autoplay": "title"
+}

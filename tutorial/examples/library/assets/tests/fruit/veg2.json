@@ -1,0 +1,1008 @@
+{
+	"textures": [
+		{
+			"image": "veg2.png",
+			"normalMap": "veg_n.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 127,
+				"h": 487
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "0",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46,
+						"h": 48
+					},
+					"frame": {
+						"x": 3,
+						"y": 3,
+						"w": 46,
+						"h": 48
+					}
+				},
+				{
+					"filename": "2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46,
+						"h": 48
+					},
+					"frame": {
+						"x": 3,
+						"y": 55,
+						"w": 46,
+						"h": 48
+					}
+				},
+				{
+					"filename": "3",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46,
+						"h": 48
+					},
+					"frame": {
+						"x": 53,
+						"y": 3,
+						"w": 46,
+						"h": 48
+					}
+				},
+				{
+					"filename": "4",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46,
+						"h": 48
+					},
+					"frame": {
+						"x": 3,
+						"y": 107,
+						"w": 46,
+						"h": 48
+					}
+				},
+				{
+					"filename": "5",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46,
+						"h": 48
+					},
+					"frame": {
+						"x": 53,
+						"y": 55,
+						"w": 46,
+						"h": 48
+					}
+				},
+				{
+					"filename": "6",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46,
+						"h": 48
+					},
+					"frame": {
+						"x": 3,
+						"y": 159,
+						"w": 46,
+						"h": 48
+					}
+				},
+				{
+					"filename": "7",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46,
+						"h": 48
+					},
+					"frame": {
+						"x": 53,
+						"y": 107,
+						"w": 46,
+						"h": 48
+					}
+				},
+				{
+					"filename": "8",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46,
+						"h": 48
+					},
+					"frame": {
+						"x": 3,
+						"y": 211,
+						"w": 46,
+						"h": 48
+					}
+				},
+				{
+					"filename": "9",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 46,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 46,
+						"h": 48
+					},
+					"frame": {
+						"x": 53,
+						"y": 159,
+						"w": 46,
+						"h": 48
+					}
+				},
+				{
+					"filename": "veg33",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 21
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 21
+					},
+					"frame": {
+						"x": 103,
+						"y": 3,
+						"w": 32,
+						"h": 21
+					}
+				},
+				{
+					"filename": "veg12",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 29,
+						"h": 21
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 29,
+						"h": 21
+					},
+					"frame": {
+						"x": 103,
+						"y": 39,
+						"w": 29,
+						"h": 21
+					}
+				},
+				{
+					"filename": "veg06",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 21
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 21
+					},
+					"frame": {
+						"x": 103,
+						"y": 72,
+						"w": 28,
+						"h": 21
+					}
+				},
+				{
+					"filename": "veg05",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 21,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 21,
+						"h": 27
+					},
+					"frame": {
+						"x": 103,
+						"y": 104,
+						"w": 21,
+						"h": 27
+					}
+				},
+				{
+					"filename": "veg23",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 21,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 21,
+						"h": 27
+					},
+					"frame": {
+						"x": 103,
+						"y": 135,
+						"w": 21,
+						"h": 27
+					}
+				},
+				{
+					"filename": "veg15",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 27,
+						"h": 21
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 27,
+						"h": 21
+					},
+					"frame": {
+						"x": 103,
+						"y": 166,
+						"w": 27,
+						"h": 21
+					}
+				},
+				{
+					"filename": "1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 30,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 30,
+						"h": 48
+					},
+					"frame": {
+						"x": 3,
+						"y": 263,
+						"w": 30,
+						"h": 48
+					}
+				},
+				{
+					"filename": "veg11",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 31,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 31,
+						"h": 32
+					},
+					"frame": {
+						"x": 53,
+						"y": 211,
+						"w": 31,
+						"h": 32
+					}
+				},
+				{
+					"filename": "veg36",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 29
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 29
+					},
+					"frame": {
+						"x": 3,
+						"y": 315,
+						"w": 32,
+						"h": 29
+					}
+				},
+				{
+					"filename": "veg08",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 31
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 31
+					},
+					"frame": {
+						"x": 3,
+						"y": 351,
+						"w": 28,
+						"h": 31
+					}
+				},
+				{
+					"filename": "veg17",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 24,
+						"h": 21
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 24,
+						"h": 21
+					},
+					"frame": {
+						"x": 103,
+						"y": 197,
+						"w": 24,
+						"h": 21
+					}
+				},
+				{
+					"filename": "veg03",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 30
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 30
+					},
+					"frame": {
+						"x": 3,
+						"y": 386,
+						"w": 28,
+						"h": 30
+					}
+				},
+				{
+					"filename": "veg18",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 29,
+						"h": 30
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 29,
+						"h": 30
+					},
+					"frame": {
+						"x": 3,
+						"y": 420,
+						"w": 29,
+						"h": 30
+					}
+				},
+				{
+					"filename": "veg22",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 30,
+						"h": 28
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 30,
+						"h": 28
+					},
+					"frame": {
+						"x": 3,
+						"y": 454,
+						"w": 30,
+						"h": 28
+					}
+				},
+				{
+					"filename": "veg13",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 24
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 24
+					},
+					"frame": {
+						"x": 37,
+						"y": 263,
+						"w": 32,
+						"h": 24
+					}
+				},
+				{
+					"filename": "veg02",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 25,
+						"h": 20
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 25,
+						"h": 20
+					},
+					"frame": {
+						"x": 37,
+						"y": 299,
+						"w": 25,
+						"h": 20
+					}
+				},
+				{
+					"filename": "veg07",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 29,
+						"h": 24
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 29,
+						"h": 24
+					},
+					"frame": {
+						"x": 36,
+						"y": 323,
+						"w": 29,
+						"h": 24
+					}
+				},
+				{
+					"filename": "veg19",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 29,
+						"h": 28
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 29,
+						"h": 28
+					},
+					"frame": {
+						"x": 35,
+						"y": 351,
+						"w": 29,
+						"h": 28
+					}
+				},
+				{
+					"filename": "veg21",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 30,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 30,
+						"h": 27
+					},
+					"frame": {
+						"x": 35,
+						"y": 383,
+						"w": 30,
+						"h": 27
+					}
+				},
+				{
+					"filename": "veg20",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 31,
+						"h": 25
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 31,
+						"h": 25
+					},
+					"frame": {
+						"x": 36,
+						"y": 417,
+						"w": 31,
+						"h": 25
+					}
+				},
+				{
+					"filename": "veg30",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 32,
+						"h": 20
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 32,
+						"h": 20
+					},
+					"frame": {
+						"x": 88,
+						"y": 225,
+						"w": 32,
+						"h": 20
+					}
+				},
+				{
+					"filename": "veg34",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 19,
+						"h": 30
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 19,
+						"h": 30
+					},
+					"frame": {
+						"x": 65,
+						"y": 247,
+						"w": 19,
+						"h": 30
+					}
+				},
+				{
+					"filename": "veg28",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 30,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 30,
+						"h": 27
+					},
+					"frame": {
+						"x": 88,
+						"y": 249,
+						"w": 30,
+						"h": 27
+					}
+				},
+				{
+					"filename": "veg26",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 31,
+						"h": 24
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 31,
+						"h": 24
+					},
+					"frame": {
+						"x": 66,
+						"y": 281,
+						"w": 31,
+						"h": 24
+					}
+				},
+				{
+					"filename": "veg10",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 30,
+						"h": 25
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 30,
+						"h": 25
+					},
+					"frame": {
+						"x": 94,
+						"y": 280,
+						"w": 30,
+						"h": 25
+					}
+				},
+				{
+					"filename": "veg31",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 31,
+						"h": 24
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 31,
+						"h": 24
+					},
+					"frame": {
+						"x": 69,
+						"y": 316,
+						"w": 31,
+						"h": 24
+					}
+				},
+				{
+					"filename": "veg16",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 27,
+						"h": 29
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 27,
+						"h": 29
+					},
+					"frame": {
+						"x": 97,
+						"y": 309,
+						"w": 27,
+						"h": 29
+					}
+				},
+				{
+					"filename": "veg25",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 27,
+						"h": 25
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 27,
+						"h": 25
+					},
+					"frame": {
+						"x": 97,
+						"y": 342,
+						"w": 27,
+						"h": 25
+					}
+				},
+				{
+					"filename": "veg32",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 25
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 25
+					},
+					"frame": {
+						"x": 68,
+						"y": 351,
+						"w": 28,
+						"h": 25
+					}
+				},
+				{
+					"filename": "veg37",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 27,
+						"h": 24
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 27,
+						"h": 24
+					},
+					"frame": {
+						"x": 97,
+						"y": 371,
+						"w": 27,
+						"h": 24
+					}
+				},
+				{
+					"filename": "veg14",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 27,
+						"h": 20
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 27,
+						"h": 20
+					},
+					"frame": {
+						"x": 66,
+						"y": 383,
+						"w": 27,
+						"h": 20
+					}
+				},
+				{
+					"filename": "veg24",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 22,
+						"h": 28
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 22,
+						"h": 28
+					},
+					"frame": {
+						"x": 66,
+						"y": 407,
+						"w": 22,
+						"h": 28
+					}
+				},
+				{
+					"filename": "veg29",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 26,
+						"h": 28
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 26,
+						"h": 28
+					},
+					"frame": {
+						"x": 98,
+						"y": 399,
+						"w": 26,
+						"h": 28
+					}
+				},
+				{
+					"filename": "veg35",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 24,
+						"h": 29
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 24,
+						"h": 29
+					},
+					"frame": {
+						"x": 65,
+						"y": 433,
+						"w": 24,
+						"h": 29
+					}
+				},
+				{
+					"filename": "veg09",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 25,
+						"h": 22
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 25,
+						"h": 22
+					},
+					"frame": {
+						"x": 98,
+						"y": 431,
+						"w": 25,
+						"h": 22
+					}
+				},
+				{
+					"filename": "veg27",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 24,
+						"h": 22
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 24,
+						"h": 22
+					},
+					"frame": {
+						"x": 98,
+						"y": 457,
+						"w": 24,
+						"h": 22
+					}
+				},
+				{
+					"filename": "veg04",
+					"rotated": true,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 20,
+						"h": 23
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 20,
+						"h": 23
+					},
+					"frame": {
+						"x": 36,
+						"y": 452,
+						"w": 20,
+						"h": 23
+					}
+				},
+				{
+					"filename": "veg01",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 21,
+						"h": 21
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 21,
+						"h": 21
+					},
+					"frame": {
+						"x": 63,
+						"y": 461,
+						"w": 21,
+						"h": 21
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:09e89633cc3e659f44df7f7546f831ad:617f25bd56b1a681fe4312987e308594:13ff346aabe130dbdc7cf43294d2f13c$"
+	}
+}

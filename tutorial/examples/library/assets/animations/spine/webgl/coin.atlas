@@ -1,0 +1,27 @@
+
+coin.png
+size: 1024,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+coin
+  rotate: false
+  xy: 2, 2
+  size: 259, 245
+  orig: 259, 245
+  offset: 0, 0
+  index: -1
+coin-invert
+  rotate: false
+  xy: 263, 2
+  size: 259, 245
+  orig: 259, 245
+  offset: 0, 0
+  index: -1
+shine
+  rotate: false
+  xy: 524, 2
+  size: 72, 245
+  orig: 72, 245
+  offset: 0, 0
+  index: -1

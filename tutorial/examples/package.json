@@ -1,0 +1,30 @@
+{
+  "name": "phaser3-examples",
+  "version": "2.0.0",
+  "description": "Phaser 3 Examples",
+  "main": "index.js",
+  "scripts": {
+    "start": "./node_modules/.bin/http-server -s -o",
+    "update": "node ./build.js",
+    "screenshots": "node ./generate-screenshots.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/photonstorm/phaser3-examples.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/photonstorm/phaser3-examples/issues"
+  },
+  "homepage": "https://github.com/photonstorm/phaser3-examples#readme",
+  "devDependencies": {
+    "directory-tree": "^2.2.4",
+    "fs-extra": "^8.1.0",
+    "http-server": "^0.12.3",
+    "monaco-editor": "^0.18.1",
+    "puppeteer": "^2.0.0"
+  },
+  "dependencies": {}
+}

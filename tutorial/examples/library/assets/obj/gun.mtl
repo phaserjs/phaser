@@ -1,0 +1,114 @@
+newmtl mat0
+  Ka 0.73 0.41 0.78
+  Kd 0.73 0.41 0.78
+
+newmtl mat1
+  Ka 0.61 0.15 0.69
+  Kd 0.61 0.15 0.69
+
+newmtl mat2
+  Ka 0.40 0.23 0.72
+  Kd 0.40 0.23 0.72
+
+newmtl mat3
+  Ka 0.50 0.87 0.92
+  Kd 0.50 0.87 0.92
+
+newmtl mat4
+  Ka 0.00 0.74 0.83
+  Kd 0.00 0.74 0.83
+
+newmtl mat5
+  Ka 0.01 0.61 0.90
+  Kd 0.01 0.61 0.90
+
+newmtl mat6
+  Ka 0.97 0.73 0.82
+  Kd 0.97 0.73 0.82
+
+newmtl mat7
+  Ka 0.94 0.38 0.57
+  Kd 0.94 0.38 0.57
+
+newmtl mat8
+  Ka 0.96 0.26 0.21
+  Kd 0.96 0.26 0.21
+
+newmtl mat9
+  Ka 0.55 0.76 0.29
+  Kd 0.55 0.76 0.29
+
+newmtl mat10
+  Ka 0.30 0.69 0.31
+  Kd 0.30 0.69 0.31
+
+newmtl mat11
+  Ka 0.00 0.59 0.53
+  Kd 0.00 0.59 0.53
+
+newmtl mat12
+  Ka 1.00 0.92 0.23
+  Kd 1.00 0.92 0.23
+
+newmtl mat13
+  Ka 1.00 0.60 0.00
+  Kd 1.00 0.60 0.00
+
+newmtl mat14
+  Ka 1.00 0.34 0.13
+  Kd 1.00 0.34 0.13
+
+newmtl mat15
+  Ka 0.81 0.85 0.86
+  Kd 0.81 0.85 0.86
+
+newmtl mat16
+  Ka 0.47 0.56 0.61
+  Kd 0.47 0.56 0.61
+
+newmtl mat17
+  Ka 0.27 0.35 0.39
+  Kd 0.27 0.35 0.39
+
+newmtl mat18
+  Ka 1.00 0.80 0.53
+  Kd 1.00 0.80 0.53
+
+newmtl mat19
+  Ka 0.87 0.60 0.27
+  Kd 0.87 0.60 0.27
+
+newmtl mat20
+  Ka 0.47 0.33 0.28
+  Kd 0.47 0.33 0.28
+
+newmtl mat21
+  Ka 1.00 1.00 1.00
+  Kd 1.00 1.00 1.00
+
+newmtl mat22
+  Ka 0.62 0.62 0.62
+  Kd 0.62 0.62 0.62
+
+newmtl mat23
+  Ka 0.10 0.10 0.10
+  Kd 0.10 0.10 0.10
+
+newmtl mat24
+  Ka 0.58 0.65 1.00
+  Kd 0.92 0.95 0.94
+  Ks 1 1 1
+  illum 4
+  Ns 300
+  d 0.4
+  Ni 1.5
+
+newmtl mat25
+  Ka 1.00 0.65 0.67
+  Kd 0.92 0.95 0.94
+  Ks 1 1 1
+  illum 4
+  Ns 300
+  d 0.4
+  Ni 1.5
+

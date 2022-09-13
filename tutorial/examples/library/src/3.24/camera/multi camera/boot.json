@@ -1,0 +1,11 @@
+{
+    "files": [
+        "Controller.js",
+        "DemoA.js",
+        "DemoB.js",
+        "DemoC.js",
+        "DemoD.js",
+        "Obj3D.js",
+        "game.js"
+    ]
+}

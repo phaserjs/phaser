@@ -1,0 +1,22 @@
+{
+  "name": "phaser3-examples-tester",
+  "version": "1.0.0",
+  "description": "Phaser 3 Examples Tester",
+  "main": "index.js",
+  "scripts": {
+    "view": "./node_modules/.bin/http-server -p 8081 -c-1 -s -o",
+    "run-tests": "node ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/photonstorm/phaser3-examples/issues"
+  },
+  "homepage": "https://github.com/photonstorm/phaser3-examples#readme",
+  "devDependencies": {
+    "http-server": "^0.9.0",
+    "directory-tree": "^1.2.0",
+    "puppeteer": "^1.0.0"
+  }
+}

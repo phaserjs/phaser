@@ -1,0 +1,41 @@
+
+stretchyman-pma.png
+size: 1024,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+back-arm
+  rotate: true
+  xy: 679, 173
+  size: 72, 202
+  orig: 72, 202
+  offset: 0, 0
+  index: -1
+back-leg
+  rotate: true
+  xy: 2, 2
+  size: 100, 318
+  orig: 100, 318
+  offset: 0, 0
+  index: -1
+body
+  rotate: true
+  xy: 2, 104
+  size: 141, 452
+  orig: 141, 452
+  offset: 0, 0
+  index: -1
+front-arm
+  rotate: true
+  xy: 456, 100
+  size: 145, 221
+  orig: 145, 221
+  offset: 0, 0
+  index: -1
+head
+  rotate: true
+  xy: 322, 15
+  size: 87, 102
+  orig: 87, 102
+  offset: 0, 0
+  index: -1

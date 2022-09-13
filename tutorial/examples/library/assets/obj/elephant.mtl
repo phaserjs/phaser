@@ -1,0 +1,35 @@
+# Blender MTL File: 'Elephant.blend'
+# Material Count: 3
+
+newmtl elephant_skin
+Ns 76.470588
+Ka 1.000000 1.000000 1.000000
+Kd 0.314491 0.314491 0.314491
+Ks 0.040984 0.040984 0.040984
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd skin
+
+newmtl elephant_skin_skin
+Ns 76.470588
+Ka 1.000000 1.000000 1.000000
+Kd 0.314491 0.314491 0.314491
+Ks 0.040984 0.040984 0.040984
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd skin
+
+newmtl tusks
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.631928 0.398490
+Ks 0.127660 0.127660 0.127660
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/alexsafayan/Desktop/Alex/Blender/tusk.tif

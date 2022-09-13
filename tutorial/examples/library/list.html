@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Phaser 3 Examples</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="./css/bootstrap.min.css">
+        <link rel="stylesheet" href="./css/list.css">
+        <script src="./js/jquery-3.1.1.min.js"></script>
+        <script src="./js/getQueryString.js"></script>
+    </head>
+    <body>
+
+    <nav class="breadcrumb" id="breadcrumb">
+        <a class="breadcrumb-item" href="list.html">Home</a>
+    </nav>
+
+    <div class="album">
+        <div class="container">
+            <div class="row" id="folderList"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+    var dir = '';
+    var data = {};
+    var folder = [];
+    var trail = [];
+    var well = [];
+    var index = {};
+
+    function openFolder ()
+    {
+        $('#folderList').empty();
+
+        createBackFolder();
+
+        var isBootable = false;
+
+        for (var i = 0; i < folder.length; i++)
+        {
+            var child = folder[i];
+
+            if (child.name === 'boot.json')
+            {
+                isBootable = true;
+
+                break;
+            }
+        }
+
+        if (isBootable)
+        {
+            createBootFile(i, child.name, child.path);
+        }
+        else
+        {
+            for (var i = 0; i < folder.length; i++)
+            {
+                var child = folder[i];
+
+                if (child.hasOwnProperty('children'))
+                {
+                    createFolder(i, child.name, child.path);
+                }
+            }
+
+            for (var i = 0; i < folder.length; i++)
+            {
+                var child = folder[i];
+
+                if (!child.hasOwnProperty('children'))
+                {
+                    createFile(i, child.name, child.path);
+                }
+            }
+        }
+
+        //  Update browser history
+
+        var stateObj = { well: well };
+
+        history.pushState(stateObj, '', 'list.html' + getURLWell());
+    }
+
+    function getURLWell (skipLast, add)
+    {
+        if (skipLast === undefined) { skipLast = false; }
+
+        var output = '';
+        var len = (skipLast) ? well.length - 1 : well.length;
+
+        for (var i = 0; i < len; i++)
+        {
+            output = output.concat(encodeURI(well[i])) + '/';
+        }
+
+        if (add !== undefined)
+        {
+            output = output.concat(encodeURI(add)) + '/';
+        }
+
+        return '?dir=' + output;
+    }
+
+    function addBreadcrumb (filename)
+    {
+        var nav = $('<a></a>', { class: 'breadcrumb-item', href: 'list.html' + getURLWell() }).text(filename);
+
+        $('#breadcrumb').append(nav);
+    }
+
+    function removeBreadcrumb ()
+    {
+        $('#breadcrumb > a').last().remove();
+    }
+
+    function downLevel (index, filename, skipOpen)
+    {
+        if (skipOpen === undefined) { skipOpen = false; }
+
+        if (!folder[index].hasOwnProperty('children'))
+        {
+            // console.log('No children, aborting');
+            return;
+        }
+
+        //  Record the trail
+        trail.push(folder);
+
+        folder = folder[index].children;
+
+        well.push(filename);
+
+        addBreadcrumb(filename);
+
+        if (!skipOpen)
+        {
+            openFolder();
+        }
+    }
+
+    function upLevel ()
+    {
+        removeBreadcrumb();
+
+        if (trail.length === 1)
+        {
+            createTopLevelFolders();
+        }
+        else
+        {
+            folder = trail[trail.length - 1];
+
+            trail.pop();
+
+            well.pop();
+
+            openFolder();
+        }
+    }
+
+    function createBackFolder ()
+    {
+        var div = $('<div></div>').addClass('card');
+
+        var a = $('<a></a>', { href: 'list.html' + getURLWell(true) });
+
+        var img = $('<img />', { src: 'images/back.png', width: 32, height: 32 });
+
+        img.click(function (event) {
+
+            upLevel();
+        });
+
+        a.append(img);
+
+        div.append(a);
+
+        $('#folderList').append(div);
+    }
+
+    function createBootFile (index, filename, filepath)
+    {
+        var div = $('<div></div>');
+
+        var a = $('<a></a>', { href: 'boot.html?src=' + filepath });
+
+        const imgPath = filepath
+          .replace(/^src/, 'screenshots')
+          .replace(/\.json$/, '.png')
+          .replace(/\.js$/, '.png');
+        var img = $('<img />', { src: imgPath, width: 240, height: 180 });
+
+        a.append(img);
+
+        var p = $('<p></p>').addClass('card-text').text('Play Game');
+        // p.append($('<a></a>', { href: 'edit.html?src=' + filepath }).text(filename.replace('.js', '')));
+
+        div.append(a).append(p);
+
+        $('#folderList').append(div);
+    }
+
+    function createFile (index, filename, filepath)
+    {
+        if (filename.substr(0, 1) === '_')
+        {
+            return;
+        }
+
+        var div = $('<div></div>').addClass('entry');
+
+        var a = $('<a></a>', { href: '100.html?src=' + filepath });
+
+        const imgPath = filepath
+          .replace(/^src/, 'screenshots')
+          .replace(/\.json$/, '.png')
+          .replace(/\.js$/, '.png');
+        var img = $('<img />', { src: imgPath, width: 120, height: 90 });
+
+        a.append(img);
+
+        var p = $('<p></p>').addClass('card-text');
+
+        p.append($('<a></a>', { href: '100.html?src=' + filepath }).text(filename.replace('.js', '')));
+
+        div.append(a).append(p);
+
+        $('#folderList').append(div);
+    }
+
+    function createFolder (index, filename, filepath)
+    {
+        if (filename === 'archived' || filename.substr(0, 1) === '_')
+        {
+            return;
+        }
+
+        var div = $('<div></div>').addClass('card');
+
+        var a = $('<a></a>', { href: 'list.html' + getURLWell(false, filename) });
+
+        var p = $('<p></p>').addClass('card-text');
+
+        p.append($('<a></a>', { href: 'list.html' + getURLWell(false, filename) }).text(filename));
+
+        div.append(a).append(p);
+
+        $('#folderList').append(div);
+    }
+
+    function createTopLevelFolders ()
+    {
+        $('#folderList').empty();
+
+        trail = [];
+        well = [];
+        folder = data.children;
+
+        for (var i = 0; i < folder.length; i++)
+        {
+            createFolder(i, folder[i].name, folder[i].path);
+        }
+    }
+
+    function loadFolders (param)
+    {
+        trail = [];
+        well = [];
+        folder = data.children;
+
+        var dirs = [];
+        var raw = param.split('/');
+
+        for (var i = 0; i < raw.length; i++)
+        {
+            raw[i] = decodeURI(raw[i]);
+
+            if (raw[i] !== '')
+            {
+                dirs.push(raw[i]);
+            }
+        }
+
+        var current = data.children;
+
+        dirs.forEach(function(level) {
+
+            for (i = 0; i < current.length; i++)
+            {
+                if (current[i].name === level)
+                {
+                    downLevel(i, current[i].name, true);
+
+                    current = current[i].children;
+
+                    break;
+                }
+            }
+
+        });
+
+        openFolder();
+
+    }
+
+    $(document).ready(function () {
+
+        $.getJSON('examples.json', function (json) {
+
+            data = json;
+
+            dir = getQueryString('dir');
+
+            if (dir)
+            {
+                loadFolders(dir);
+            }
+            else
+            {
+                createTopLevelFolders();
+            }
+
+        });
+
+    });
+
+    </script>
+
+    </body>
+</html>

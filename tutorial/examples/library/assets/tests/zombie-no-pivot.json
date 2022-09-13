@@ -1,0 +1,230 @@
+{
+	"textures": [
+		{
+			"image": "zombie-no-pivot.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1546,
+				"h": 948
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "Walk8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 430,
+						"h": 519
+					},
+					"spriteSourceSize": {
+						"x": 70,
+						"y": 40,
+						"w": 278,
+						"h": 478
+					},
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 278,
+						"h": 478
+					}
+				},
+				{
+					"filename": "Walk6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 430,
+						"h": 519
+					},
+					"spriteSourceSize": {
+						"x": 45,
+						"y": 48,
+						"w": 311,
+						"h": 460
+					},
+					"frame": {
+						"x": 2,
+						"y": 482,
+						"w": 311,
+						"h": 460
+					}
+				},
+				{
+					"filename": "Walk7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 430,
+						"h": 519
+					},
+					"spriteSourceSize": {
+						"x": 79,
+						"y": 44,
+						"w": 273,
+						"h": 475
+					},
+					"frame": {
+						"x": 282,
+						"y": 2,
+						"w": 273,
+						"h": 475
+					}
+				},
+				{
+					"filename": "Walk5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 430,
+						"h": 519
+					},
+					"spriteSourceSize": {
+						"x": 32,
+						"y": 45,
+						"w": 322,
+						"h": 466
+					},
+					"frame": {
+						"x": 315,
+						"y": 479,
+						"w": 322,
+						"h": 466
+					}
+				},
+				{
+					"filename": "Walk3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 430,
+						"h": 519
+					},
+					"spriteSourceSize": {
+						"x": 16,
+						"y": 42,
+						"w": 336,
+						"h": 474
+					},
+					"frame": {
+						"x": 557,
+						"y": 2,
+						"w": 336,
+						"h": 474
+					}
+				},
+				{
+					"filename": "Walk4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 430,
+						"h": 519
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 42,
+						"w": 335,
+						"h": 468
+					},
+					"frame": {
+						"x": 639,
+						"y": 478,
+						"w": 335,
+						"h": 468
+					}
+				},
+				{
+					"filename": "Walk2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 430,
+						"h": 519
+					},
+					"spriteSourceSize": {
+						"x": 39,
+						"y": 45,
+						"w": 315,
+						"h": 474
+					},
+					"frame": {
+						"x": 895,
+						"y": 2,
+						"w": 315,
+						"h": 474
+					}
+				},
+				{
+					"filename": "Walk10",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 430,
+						"h": 519
+					},
+					"spriteSourceSize": {
+						"x": 70,
+						"y": 44,
+						"w": 282,
+						"h": 468
+					},
+					"frame": {
+						"x": 976,
+						"y": 478,
+						"w": 282,
+						"h": 468
+					}
+				},
+				{
+					"filename": "Walk9",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 430,
+						"h": 519
+					},
+					"spriteSourceSize": {
+						"x": 61,
+						"y": 40,
+						"w": 287,
+						"h": 472
+					},
+					"frame": {
+						"x": 1212,
+						"y": 2,
+						"w": 287,
+						"h": 472
+					}
+				},
+				{
+					"filename": "Walk1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 430,
+						"h": 519
+					},
+					"spriteSourceSize": {
+						"x": 72,
+						"y": 48,
+						"w": 284,
+						"h": 460
+					},
+					"frame": {
+						"x": 1260,
+						"y": 476,
+						"w": 284,
+						"h": 460
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:7d3d0c040dc8ed03e2c55708aa15c5f9:3dbbb634f7a63c0672e3dc3efd57b6e1:e161ddd55ddfa678a26a54f2c7483dda$"
+	}
+}

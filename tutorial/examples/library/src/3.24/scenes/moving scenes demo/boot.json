@@ -1,0 +1,12 @@
+{
+    "files": [
+        "Controller.js",
+        "SceneA.js",
+        "SceneB.js",
+        "SceneC.js",
+        "SceneD.js",
+        "SceneE.js",
+        "SceneF.js",
+        "main.js"
+    ]
+}

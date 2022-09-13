@@ -1,0 +1,146 @@
+
+hero-pro.png
+size: 281,464
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: false
+  xy: 2, 45
+  size: 97, 95
+  orig: 97, 95
+  offset: 0, 0
+  index: -1
+cape
+  rotate: true
+  xy: 2, 142
+  size: 146, 159
+  orig: 146, 159
+  offset: 0, 0
+  index: -1
+eyes
+  rotate: true
+  xy: 248, 380
+  size: 82, 31
+  orig: 82, 31
+  offset: 0, 0
+  index: -1
+fingers
+  rotate: false
+  xy: 248, 272
+  size: 30, 33
+  orig: 31, 33
+  offset: 1, 0
+  index: -1
+foot1
+  rotate: false
+  xy: 159, 11
+  size: 49, 42
+  orig: 50, 42
+  offset: 1, 0
+  index: -1
+foot2
+  rotate: false
+  xy: 210, 7
+  size: 53, 38
+  orig: 53, 38
+  offset: 0, 0
+  index: -1
+forearm1
+  rotate: true
+  xy: 2, 2
+  size: 41, 49
+  orig: 41, 49
+  offset: 0, 0
+  index: -1
+forearm2
+  rotate: false
+  xy: 248, 307
+  size: 31, 32
+  orig: 31, 32
+  offset: 0, 0
+  index: -1
+hand1
+  rotate: true
+  xy: 53, 6
+  size: 37, 46
+  orig: 37, 48
+  offset: 0, 0
+  index: -1
+hand2
+  rotate: false
+  xy: 248, 341
+  size: 31, 37
+  orig: 31, 37
+  offset: 0, 0
+  index: -1
+head
+  rotate: true
+  xy: 2, 290
+  size: 172, 173
+  orig: 172, 173
+  offset: 0, 0
+  index: -1
+mantles
+  rotate: true
+  xy: 163, 108
+  size: 136, 55
+  orig: 136, 55
+  offset: 0, 0
+  index: -1
+mouth
+  rotate: true
+  xy: 248, 209
+  size: 61, 13
+  orig: 61, 13
+  offset: 0, 0
+  index: -1
+shin1
+  rotate: true
+  xy: 220, 88
+  size: 53, 57
+  orig: 53, 57
+  offset: 0, 0
+  index: -1
+shin2
+  rotate: true
+  xy: 163, 55
+  size: 51, 54
+  orig: 51, 54
+  offset: 0, 0
+  index: -1
+sword
+  rotate: true
+  xy: 177, 246
+  size: 216, 69
+  orig: 216, 69
+  offset: 0, 0
+  index: -1
+thigh1
+  rotate: false
+  xy: 101, 77
+  size: 60, 63
+  orig: 60, 63
+  offset: 0, 0
+  index: -1
+thigh2
+  rotate: false
+  xy: 220, 143
+  size: 57, 64
+  orig: 57, 64
+  offset: 0, 0
+  index: -1
+upper-arm1
+  rotate: true
+  xy: 101, 26
+  size: 49, 56
+  orig: 50, 56
+  offset: 1, 0
+  index: -1
+upper-arm2
+  rotate: true
+  xy: 219, 47
+  size: 39, 58
+  orig: 39, 59
+  offset: 0, 0
+  index: -1

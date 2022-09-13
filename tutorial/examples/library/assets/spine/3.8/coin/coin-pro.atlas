@@ -1,0 +1,55 @@
+
+coin-pro.png
+size: 710,584
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+coin-front-logo
+  rotate: false
+  xy: 2, 284
+  size: 298, 298
+  orig: 305, 302
+  offset: 2, 2
+  index: -1
+coin-front-shine-logo
+  rotate: false
+  xy: 2, 2
+  size: 280, 280
+  orig: 282, 282
+  offset: 1, 1
+  index: -1
+coin-front-shine-spineboy
+  rotate: false
+  xy: 284, 2
+  size: 280, 280
+  orig: 282, 282
+  offset: 1, 1
+  index: -1
+coin-front-spineboy
+  rotate: false
+  xy: 302, 284
+  size: 298, 298
+  orig: 305, 302
+  offset: 2, 2
+  index: -1
+coin-side-round
+  rotate: false
+  xy: 566, 2
+  size: 142, 280
+  orig: 144, 282
+  offset: 1, 1
+  index: -1
+coin-side-straight
+  rotate: false
+  xy: 674, 302
+  size: 15, 280
+  orig: 17, 282
+  offset: 1, 1
+  index: -1
+shine
+  rotate: false
+  xy: 602, 339
+  size: 70, 243
+  orig: 72, 245
+  offset: 1, 1
+  index: -1

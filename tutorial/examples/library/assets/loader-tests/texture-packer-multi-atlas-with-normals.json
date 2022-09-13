@@ -1,0 +1,465 @@
+{
+	"textures": [
+		{
+			"image": "texture-packer-multi-atlas-with-normals-0.png",
+			"normalMap": "texture-packer-multi-atlas-with-normals-0_n.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1028,
+				"h": 1028
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "brick",
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 1024,
+						"h": 1024
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1024,
+						"h": 1024
+					},
+					"sourceSize": {
+						"w": 1024,
+						"h": 1024
+					}
+				}
+			]
+		},
+		{
+			"image": "texture-packer-multi-atlas-with-normals-1.png",
+			"normalMap": "texture-packer-multi-atlas-with-normals-1_n.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1020,
+				"h": 997
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "ayu",
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 404,
+						"h": 371
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 404,
+						"h": 371
+					},
+					"sourceSize": {
+						"w": 404,
+						"h": 371
+					}
+				},
+				{
+					"filename": "phaser-large",
+					"frame": {
+						"x": 408,
+						"y": 2,
+						"w": 597,
+						"h": 127
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 2,
+						"w": 597,
+						"h": 127
+					},
+					"sourceSize": {
+						"w": 600,
+						"h": 131
+					}
+				},
+				{
+					"filename": "phaser2",
+					"frame": {
+						"x": 2,
+						"y": 375,
+						"w": 382,
+						"h": 327
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 382,
+						"h": 327
+					},
+					"sourceSize": {
+						"w": 382,
+						"h": 331
+					}
+				},
+				{
+					"filename": "nayuki",
+					"frame": {
+						"x": 408,
+						"y": 131,
+						"w": 272,
+						"h": 399
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 272,
+						"h": 399
+					},
+					"sourceSize": {
+						"w": 272,
+						"h": 399
+					}
+				},
+				{
+					"filename": "aya-touhou-teng-soldier",
+					"frame": {
+						"x": 2,
+						"y": 704,
+						"w": 206,
+						"h": 274
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 206,
+						"h": 274
+					},
+					"sourceSize": {
+						"w": 206,
+						"h": 274
+					}
+				},
+				{
+					"filename": "contra3",
+					"frame": {
+						"x": 682,
+						"y": 131,
+						"w": 246,
+						"h": 201
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 246,
+						"h": 201
+					},
+					"sourceSize": {
+						"w": 246,
+						"h": 201
+					}
+				},
+				{
+					"filename": "nanoha-taiken-pink",
+					"frame": {
+						"x": 210,
+						"y": 704,
+						"w": 200,
+						"h": 241
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 200,
+						"h": 241
+					},
+					"sourceSize": {
+						"w": 200,
+						"h": 241
+					}
+				},
+				{
+					"filename": "shocktroopers-leon2",
+					"frame": {
+						"x": 682,
+						"y": 334,
+						"w": 168,
+						"h": 225
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 168,
+						"h": 225
+					},
+					"sourceSize": {
+						"w": 168,
+						"h": 242
+					}
+				},
+				{
+					"filename": "nanoha-taiken-blue",
+					"frame": {
+						"x": 852,
+						"y": 334,
+						"w": 156,
+						"h": 224
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 156,
+						"h": 224
+					},
+					"sourceSize": {
+						"w": 156,
+						"h": 224
+					}
+				},
+				{
+					"filename": "contra1",
+					"frame": {
+						"x": 930,
+						"y": 131,
+						"w": 83,
+						"h": 169
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 83,
+						"h": 169
+					},
+					"sourceSize": {
+						"w": 83,
+						"h": 169
+					}
+				},
+				{
+					"filename": "saw",
+					"frame": {
+						"x": 386,
+						"y": 532,
+						"w": 128,
+						"h": 128
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 128,
+						"h": 128
+					},
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					}
+				},
+				{
+					"filename": "shocktroopers-angel",
+					"frame": {
+						"x": 412,
+						"y": 662,
+						"w": 141,
+						"h": 224
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 141,
+						"h": 224
+					},
+					"sourceSize": {
+						"w": 141,
+						"h": 224
+					}
+				},
+				{
+					"filename": "shocktroopers-leon",
+					"frame": {
+						"x": 852,
+						"y": 560,
+						"w": 166,
+						"h": 201
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 166,
+						"h": 201
+					},
+					"sourceSize": {
+						"w": 166,
+						"h": 201
+					}
+				},
+				{
+					"filename": "shocktroopers-toy2",
+					"frame": {
+						"x": 555,
+						"y": 561,
+						"w": 148,
+						"h": 219
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 148,
+						"h": 219
+					},
+					"sourceSize": {
+						"w": 148,
+						"h": 219
+					}
+				},
+				{
+					"filename": "contra2",
+					"frame": {
+						"x": 705,
+						"y": 561,
+						"w": 142,
+						"h": 222
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 142,
+						"h": 222
+					},
+					"sourceSize": {
+						"w": 142,
+						"h": 222
+					}
+				},
+				{
+					"filename": "shocktroopers-toy",
+					"frame": {
+						"x": 555,
+						"y": 782,
+						"w": 148,
+						"h": 174
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 148,
+						"h": 174
+					},
+					"sourceSize": {
+						"w": 148,
+						"h": 174
+					}
+				},
+				{
+					"filename": "shocktroopers-lulu",
+					"frame": {
+						"x": 705,
+						"y": 785,
+						"w": 149,
+						"h": 210
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 149,
+						"h": 210
+					},
+					"sourceSize": {
+						"w": 149,
+						"h": 224
+					}
+				},
+				{
+					"filename": "shocktroopers-lulu2",
+					"frame": {
+						"x": 856,
+						"y": 763,
+						"w": 133,
+						"h": 188
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 133,
+						"h": 188
+					},
+					"sourceSize": {
+						"w": 133,
+						"h": 188
+					}
+				}
+			]
+		},
+		{
+			"image": "texture-packer-multi-atlas-with-normals-2.png",
+			"normalMap": "texture-packer-multi-atlas-with-normals-2_n.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 258,
+				"h": 371
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "ayu2",
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 254,
+						"h": 367
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 254,
+						"h": 367
+					},
+					"sourceSize": {
+						"w": 254,
+						"h": 367
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:57169da9fb82569d0e911f1a8342fdb3:c32a33498b7ab1e5f0d576edbf40191c:4722d5cc6f2d958a1870ab173a7ef63e$"
+	}
+}

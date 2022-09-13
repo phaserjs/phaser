@@ -1,0 +1,39 @@
+{"frames": {
+
+"96":
+{
+	"frame": {"x":1,"y":1,"w":320,"h":240},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":320,"h":240},
+	"sourceSize": {"w":320,"h":240},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"97":
+{
+	"frame": {"x":323,"y":1,"w":320,"h":240},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":320,"h":240},
+	"sourceSize": {"w":320,"h":240},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"98":
+{
+	"frame": {"x":645,"y":1,"w":320,"h":240},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":320,"h":240},
+	"sourceSize": {"w":320,"h":240},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "cybercity2.png",
+	"format": "RGBA8888",
+	"size": {"w":966,"h":242},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:747b719d3898418f4dcea92a4cf10a91:168f975f6f7e6feb0fce3542ab4b87dd:209ea1a9dade18d07b953a3847dba49b$"
+}
+}

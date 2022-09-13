@@ -1,0 +1,78 @@
+{
+    "type": "Path",
+    "x": 50,
+    "y": 500,
+    "autoClose": false,
+    "curves": [
+        {
+            "type": "SplineCurve",
+            "points": [
+                50,
+                500,
+                164,
+                446,
+                274,
+                542,
+                412,
+                457,
+                522,
+                541,
+                664,
+                464
+            ]
+        },
+        {
+            "type": "LineCurve",
+            "points": [
+                664,
+                464,
+                700,
+                300
+            ]
+        },
+        {
+            "type": "LineCurve",
+            "points": [
+                700,
+                300,
+                600,
+                350
+            ]
+        },
+        {
+            "type": "EllipseCurve",
+            "x": 634.729635533386,
+            "y": 251.5192246987792,
+            "xRadius": 200,
+            "yRadius": 100,
+            "startAngle": 100,
+            "endAngle": 250.00000000000003,
+            "clockwise": false,
+            "rotation": 0
+        },
+        {
+            "type": "CubicBezierCurve",
+            "points": [
+                566.3256068682523,
+                157.54996262018835,
+                308,
+                107,
+                208,
+                368,
+                222,
+                119
+            ]
+        },
+        {
+            "type": "EllipseCurve",
+            "x": 162,
+            "y": 119,
+            "xRadius": 60,
+            "yRadius": 60,
+            "startAngle": 0,
+            "endAngle": 360,
+            "clockwise": true,
+            "rotation": 0
+        }
+    ]
+}

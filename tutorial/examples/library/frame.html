@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Phaser Sandbox Frame</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            background-color: white;
+        }
+    </style>
+    <script src="./js/versions.js"></script>
+    <script src="./js/getQueryString.js"></script>
+    <script src="./js/datgui.js"></script>
+</head>
+
+<body>
+
+    <div id="phaser-example"></div>
+
+    <script type="text/javascript">
+
+    var _isAlive = false;
+
+    window.onload = function ()
+    {
+        _isAlive = true;
+
+        var i = window.top;
+        var phaserVersion = getQueryString('v', versions[1].val, i.location);
+        var phaserScript = document.createElement('script');
+
+        phaserScript.onload = function () {
+            i.postMessage('getCode', '*');
+        };
+
+        phaserScript.type = 'text/javascript';
+        phaserScript.src = './build/' + phaserVersion + '.js';
+
+        document.head.appendChild(phaserScript);
+    }
+
+    window.addEventListener('message', function (event) {
+
+        // console.log('iframe received message');
+        // console.log(event);
+
+        var mainWindow = event.source;
+
+        if (event.data === 'ping')
+        {
+            mainWindow.postMessage(_isAlive, event.origin);
+        }
+        else if (event.data === 'reload')
+        {
+            //  Otherwise it fires a shutdown event when the page reloads
+            window.onbeforeunload = function() {};
+            window.location.reload();
+            console.clear();
+            // console.log.apply(console, ['%c                                        >>>', 'background: #ff0000; color: #ffffff']);
+        }
+        else
+        {
+            try {
+                // Module system
+                if (event.data.substr(0, 10) === '// #module')
+                {
+                    const script_tag = document.createElement("script");
+                    script_tag.type = "module";
+                    script_tag.text = event.data;
+                    document.body.appendChild(script_tag);
+                }
+                else
+                {
+                    eval(event.data);
+                }
+            }
+            catch (e)
+            {
+                console.warn(e);
+            }
+        }
+
+    });
+
+    </script>
+
+</body>
+</html>

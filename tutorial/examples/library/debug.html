@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Phaser 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon" />
+    <script src="./js/getQueryString.js"></script>
+    <script src="./js/jquery-3.1.1.min.js"></script>
+    <script src="./build/dev.js"></script>
+    <script src="./js/TweenMax.min.js"></script> 
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="phaser-example"></div>
+
+    <p>
+        <input type="text" id="v1" value="" /><br />
+        <input type="text" id="v2" value="" /><br />
+        <input type="text" id="v3" value="" /><br />
+        <input type="text" id="v4" value="" /><br />
+        <input type="text" id="v5" value="" /><br />
+        <input type="text" id="v6" value="" />
+    </p>
+
+    <script type="text/javascript">
+
+    window.logIndex = 0;
+    window.logLimit = 300;
+
+    window.log = function ()
+    {
+        if (window.logIndex < window.logLimit)
+        {
+            window.logIndex++;
+
+            console.log.apply(this, arguments);
+        }
+    }
+
+    $(document).ready(function () {
+
+        var filename = getQueryString('src');
+
+        if (filename.substr(-3) === '.js')
+        {
+            document.title = document.title.concat(' :: ' + filename);
+
+            //  Inject the example source
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = filename;
+            document.body.appendChild(s);
+        }
+
+    });
+    </script>
+
+</body>
+</html>

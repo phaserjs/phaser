@@ -1,0 +1,96 @@
+{
+    "type": "Path",
+    "x": 0,
+    "y": 300,
+    "autoClose": false,
+    "curves": [
+        {
+            "type": "EllipseCurve",
+            "x": 50,
+            "y": 300,
+            "xRadius": 50,
+            "yRadius": 80,
+            "startAngle": 180,
+            "endAngle": 360,
+            "clockwise": true,
+            "rotation": 0
+        },
+        {
+            "type": "EllipseCurve",
+            "x": 150,
+            "y": 300,
+            "xRadius": 50,
+            "yRadius": 80,
+            "startAngle": 180,
+            "endAngle": 360,
+            "clockwise": false,
+            "rotation": 0
+        },
+        {
+            "type": "EllipseCurve",
+            "x": 250,
+            "y": 300,
+            "xRadius": 50,
+            "yRadius": 80,
+            "startAngle": 180,
+            "endAngle": 360,
+            "clockwise": true,
+            "rotation": 0
+        },
+        {
+            "type": "EllipseCurve",
+            "x": 350,
+            "y": 300,
+            "xRadius": 50,
+            "yRadius": 80,
+            "startAngle": 180,
+            "endAngle": 360,
+            "clockwise": false,
+            "rotation": 0
+        },
+        {
+            "type": "EllipseCurve",
+            "x": 450,
+            "y": 300,
+            "xRadius": 50,
+            "yRadius": 80,
+            "startAngle": 180,
+            "endAngle": 360,
+            "clockwise": true,
+            "rotation": 0
+        },
+        {
+            "type": "EllipseCurve",
+            "x": 550,
+            "y": 300,
+            "xRadius": 50,
+            "yRadius": 80,
+            "startAngle": 180,
+            "endAngle": 360,
+            "clockwise": false,
+            "rotation": 0
+        },
+        {
+            "type": "EllipseCurve",
+            "x": 650,
+            "y": 300,
+            "xRadius": 50,
+            "yRadius": 80,
+            "startAngle": 180,
+            "endAngle": 360,
+            "clockwise": true,
+            "rotation": 0
+        },
+        {
+            "type": "EllipseCurve",
+            "x": 750,
+            "y": 300,
+            "xRadius": 50,
+            "yRadius": 80,
+            "startAngle": 180,
+            "endAngle": 360,
+            "clockwise": false,
+            "rotation": 0
+        }
+    ]
+}

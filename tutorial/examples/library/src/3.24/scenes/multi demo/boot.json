@@ -1,0 +1,12 @@
+{
+    "files": [
+        "Controller.js",
+        "Boing.js",
+        "Clock.js",
+        "Eyes.js",
+        "Invaders.js",
+        "Juggler.js",
+        "Stars.js",
+        "main.js"
+    ]
+}

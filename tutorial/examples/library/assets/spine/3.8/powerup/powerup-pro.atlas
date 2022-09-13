@@ -1,0 +1,27 @@
+
+powerup-pro.png
+size: 352,141
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+star
+  rotate: true
+  xy: 278, 63
+  size: 76, 72
+  orig: 76, 72
+  offset: 0, 0
+  index: -1
+token
+  rotate: true
+  xy: 154, 16
+  size: 123, 122
+  orig: 123, 122
+  offset: 0, 0
+  index: -1
+wing
+  rotate: true
+  xy: 2, 2
+  size: 137, 150
+  orig: 137, 150
+  offset: 0, 0
+  index: -1

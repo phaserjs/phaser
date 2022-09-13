@@ -1,0 +1,1154 @@
+{
+	"textures": [
+		{
+			"image": "soldier.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 957,
+				"h": 465
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "soldier_3_shoot_up_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 42,
+						"y": 0,
+						"w": 69,
+						"h": 140
+					},
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 69,
+						"h": 140
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_up_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 40,
+						"y": 2,
+						"w": 69,
+						"h": 138
+					},
+					"frame": {
+						"x": 2,
+						"y": 145,
+						"w": 69,
+						"h": 138
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_up_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 53,
+						"y": 4,
+						"w": 70,
+						"h": 132
+					},
+					"frame": {
+						"x": 2,
+						"y": 286,
+						"w": 70,
+						"h": 132
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_up_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 46,
+						"y": 8,
+						"w": 63,
+						"h": 132
+					},
+					"frame": {
+						"x": 74,
+						"y": 2,
+						"w": 63,
+						"h": 132
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_up_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 52,
+						"y": 7,
+						"w": 70,
+						"h": 129
+					},
+					"frame": {
+						"x": 74,
+						"y": 137,
+						"w": 70,
+						"h": 129
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_up_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 48,
+						"y": 14,
+						"w": 71,
+						"h": 122
+					},
+					"frame": {
+						"x": 140,
+						"y": 2,
+						"w": 71,
+						"h": 122
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_up_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 48,
+						"y": 14,
+						"w": 71,
+						"h": 122
+					},
+					"frame": {
+						"x": 140,
+						"y": 2,
+						"w": 71,
+						"h": 122
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_front_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 19,
+						"y": 26,
+						"w": 91,
+						"h": 114
+					},
+					"frame": {
+						"x": 75,
+						"y": 269,
+						"w": 91,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_front_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 19,
+						"y": 26,
+						"w": 90,
+						"h": 114
+					},
+					"frame": {
+						"x": 147,
+						"y": 127,
+						"w": 90,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_front_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 23,
+						"y": 26,
+						"w": 86,
+						"h": 114
+					},
+					"frame": {
+						"x": 214,
+						"y": 2,
+						"w": 86,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_front_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 26,
+						"y": 26,
+						"w": 85,
+						"h": 114
+					},
+					"frame": {
+						"x": 169,
+						"y": 244,
+						"w": 85,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_front_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 26,
+						"y": 26,
+						"w": 84,
+						"h": 114
+					},
+					"frame": {
+						"x": 240,
+						"y": 119,
+						"w": 84,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_front_9",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 26,
+						"y": 26,
+						"w": 84,
+						"h": 114
+					},
+					"frame": {
+						"x": 303,
+						"y": 2,
+						"w": 84,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_front_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 28,
+						"y": 26,
+						"w": 81,
+						"h": 114
+					},
+					"frame": {
+						"x": 257,
+						"y": 236,
+						"w": 81,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_up_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 30,
+						"y": 26,
+						"w": 80,
+						"h": 114
+					},
+					"frame": {
+						"x": 327,
+						"y": 119,
+						"w": 80,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_up_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 30,
+						"y": 26,
+						"w": 80,
+						"h": 114
+					},
+					"frame": {
+						"x": 390,
+						"y": 2,
+						"w": 80,
+						"h": 114
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_front_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 18,
+						"y": 26,
+						"w": 94,
+						"h": 110
+					},
+					"frame": {
+						"x": 257,
+						"y": 353,
+						"w": 94,
+						"h": 110
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_front_10",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 26,
+						"w": 77,
+						"h": 114
+					},
+					"frame": {
+						"x": 341,
+						"y": 236,
+						"w": 77,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_front_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 26,
+						"w": 77,
+						"h": 114
+					},
+					"frame": {
+						"x": 341,
+						"y": 236,
+						"w": 77,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_default-2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 36,
+						"y": 26,
+						"w": 74,
+						"h": 114
+					},
+					"frame": {
+						"x": 410,
+						"y": 119,
+						"w": 74,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_default",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 36,
+						"y": 26,
+						"w": 74,
+						"h": 114
+					},
+					"frame": {
+						"x": 410,
+						"y": 119,
+						"w": 74,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_front_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 36,
+						"y": 26,
+						"w": 74,
+						"h": 114
+					},
+					"frame": {
+						"x": 473,
+						"y": 2,
+						"w": 74,
+						"h": 114
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_front_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 19,
+						"y": 26,
+						"w": 93,
+						"h": 110
+					},
+					"frame": {
+						"x": 354,
+						"y": 353,
+						"w": 93,
+						"h": 110
+					}
+				},
+				{
+					"filename": "soldier_3_shoot_front_11",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 36,
+						"y": 26,
+						"w": 74,
+						"h": 114
+					},
+					"frame": {
+						"x": 421,
+						"y": 236,
+						"w": 74,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_walk_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 26,
+						"w": 74,
+						"h": 114
+					},
+					"frame": {
+						"x": 487,
+						"y": 119,
+						"w": 74,
+						"h": 114
+					}
+				},
+				{
+					"filename": "soldier_3_walk_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 26,
+						"w": 74,
+						"h": 114
+					},
+					"frame": {
+						"x": 550,
+						"y": 2,
+						"w": 74,
+						"h": 114
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_front_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 25,
+						"y": 26,
+						"w": 87,
+						"h": 110
+					},
+					"frame": {
+						"x": 450,
+						"y": 353,
+						"w": 87,
+						"h": 110
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_front_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 25,
+						"y": 26,
+						"w": 87,
+						"h": 110
+					},
+					"frame": {
+						"x": 450,
+						"y": 353,
+						"w": 87,
+						"h": 110
+					}
+				},
+				{
+					"filename": "Soldier_2_walk_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 36,
+						"y": 23,
+						"w": 76,
+						"h": 113
+					},
+					"frame": {
+						"x": 498,
+						"y": 236,
+						"w": 76,
+						"h": 113
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_front_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 29,
+						"y": 25,
+						"w": 83,
+						"h": 111
+					},
+					"frame": {
+						"x": 540,
+						"y": 352,
+						"w": 83,
+						"h": 111
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_front_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 29,
+						"y": 25,
+						"w": 83,
+						"h": 111
+					},
+					"frame": {
+						"x": 540,
+						"y": 352,
+						"w": 83,
+						"h": 111
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_up_11",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 29,
+						"y": 25,
+						"w": 83,
+						"h": 111
+					},
+					"frame": {
+						"x": 540,
+						"y": 352,
+						"w": 83,
+						"h": 111
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_up_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 29,
+						"y": 25,
+						"w": 83,
+						"h": 111
+					},
+					"frame": {
+						"x": 540,
+						"y": 352,
+						"w": 83,
+						"h": 111
+					}
+				},
+				{
+					"filename": "Soldier_2_walk_7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 35,
+						"y": 23,
+						"w": 76,
+						"h": 113
+					},
+					"frame": {
+						"x": 564,
+						"y": 119,
+						"w": 76,
+						"h": 113
+					}
+				},
+				{
+					"filename": "Soldier_2_default",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 35,
+						"y": 25,
+						"w": 75,
+						"h": 113
+					},
+					"frame": {
+						"x": 627,
+						"y": 2,
+						"w": 75,
+						"h": 113
+					}
+				},
+				{
+					"filename": "Soldier_2_walk_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 37,
+						"y": 23,
+						"w": 75,
+						"h": 113
+					},
+					"frame": {
+						"x": 577,
+						"y": 235,
+						"w": 75,
+						"h": 113
+					}
+				},
+				{
+					"filename": "soldier_3_walk_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 35,
+						"y": 28,
+						"w": 80,
+						"h": 112
+					},
+					"frame": {
+						"x": 626,
+						"y": 351,
+						"w": 80,
+						"h": 112
+					}
+				},
+				{
+					"filename": "soldier_3_walk_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 32,
+						"y": 27,
+						"w": 75,
+						"h": 113
+					},
+					"frame": {
+						"x": 643,
+						"y": 118,
+						"w": 75,
+						"h": 113
+					}
+				},
+				{
+					"filename": "soldier_3_walk_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 32,
+						"y": 27,
+						"w": 75,
+						"h": 113
+					},
+					"frame": {
+						"x": 705,
+						"y": 2,
+						"w": 75,
+						"h": 113
+					}
+				},
+				{
+					"filename": "Soldier_2_walk_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 34,
+						"y": 23,
+						"w": 74,
+						"h": 113
+					},
+					"frame": {
+						"x": 655,
+						"y": 234,
+						"w": 74,
+						"h": 113
+					}
+				},
+				{
+					"filename": "soldier_3_walk_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 34,
+						"y": 27,
+						"w": 73,
+						"h": 113
+					},
+					"frame": {
+						"x": 721,
+						"y": 118,
+						"w": 73,
+						"h": 113
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_up_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 39,
+						"y": 24,
+						"w": 79,
+						"h": 112
+					},
+					"frame": {
+						"x": 783,
+						"y": 2,
+						"w": 79,
+						"h": 112
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_up_9",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 39,
+						"y": 24,
+						"w": 79,
+						"h": 112
+					},
+					"frame": {
+						"x": 783,
+						"y": 2,
+						"w": 79,
+						"h": 112
+					}
+				},
+				{
+					"filename": "soldier_3_walk_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 28,
+						"w": 78,
+						"h": 112
+					},
+					"frame": {
+						"x": 709,
+						"y": 350,
+						"w": 78,
+						"h": 112
+					}
+				},
+				{
+					"filename": "Soldier_2_walk_5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 37,
+						"y": 25,
+						"w": 77,
+						"h": 112
+					},
+					"frame": {
+						"x": 732,
+						"y": 234,
+						"w": 77,
+						"h": 112
+					}
+				},
+				{
+					"filename": "soldier_3_walk_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 28,
+						"w": 77,
+						"h": 112
+					},
+					"frame": {
+						"x": 797,
+						"y": 117,
+						"w": 77,
+						"h": 112
+					}
+				},
+				{
+					"filename": "Soldier_2_walk_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 35,
+						"y": 24,
+						"w": 76,
+						"h": 112
+					},
+					"frame": {
+						"x": 865,
+						"y": 2,
+						"w": 76,
+						"h": 112
+					}
+				},
+				{
+					"filename": "Soldier_2_walk_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 34,
+						"y": 25,
+						"w": 78,
+						"h": 111
+					},
+					"frame": {
+						"x": 790,
+						"y": 349,
+						"w": 78,
+						"h": 111
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_front_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 35,
+						"y": 25,
+						"w": 77,
+						"h": 111
+					},
+					"frame": {
+						"x": 812,
+						"y": 232,
+						"w": 77,
+						"h": 111
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_front_8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 35,
+						"y": 25,
+						"w": 77,
+						"h": 111
+					},
+					"frame": {
+						"x": 812,
+						"y": 232,
+						"w": 77,
+						"h": 111
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_up_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 35,
+						"y": 25,
+						"w": 77,
+						"h": 111
+					},
+					"frame": {
+						"x": 812,
+						"y": 232,
+						"w": 77,
+						"h": 111
+					}
+				},
+				{
+					"filename": "Soldier_2_walk_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 36,
+						"y": 25,
+						"w": 75,
+						"h": 111
+					},
+					"frame": {
+						"x": 877,
+						"y": 117,
+						"w": 75,
+						"h": 111
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_up_10",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 29,
+						"y": 26,
+						"w": 84,
+						"h": 110
+					},
+					"frame": {
+						"x": 871,
+						"y": 346,
+						"w": 84,
+						"h": 110
+					}
+				},
+				{
+					"filename": "Soldier_2_shot_up_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 29,
+						"y": 26,
+						"w": 84,
+						"h": 110
+					},
+					"frame": {
+						"x": 871,
+						"y": 346,
+						"w": 84,
+						"h": 110
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:ddaed3846e91cfb3b034546f73e7b15d:0b5b3a1160074a9bbfd7fef18fd53318:1365469667d93bb6b74b9d28a96b6600$"
+	}
+}

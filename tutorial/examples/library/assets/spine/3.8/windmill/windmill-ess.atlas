@@ -1,0 +1,188 @@
+
+windmill-ess.png
+size: 1666,926
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bush1
+  rotate: true
+  xy: 1272, 39
+  size: 110, 74
+  orig: 112, 76
+  offset: 1, 1
+  index: -1
+bush2
+  rotate: true
+  xy: 1464, 94
+  size: 131, 88
+  orig: 133, 90
+  offset: 1, 1
+  index: -1
+flower-leaf-back
+  rotate: true
+  xy: 1243, 89
+  size: 30, 20
+  orig: 32, 22
+  offset: 1, 1
+  index: -1
+flower-leaf-front
+  rotate: false
+  xy: 1208, 28
+  size: 30, 20
+  orig: 32, 22
+  offset: 1, 1
+  index: -1
+flower-shadow
+  rotate: true
+  xy: 1650, 882
+  size: 42, 14
+  orig: 46, 17
+  offset: 1, 2
+  index: -1
+flower-stem
+  rotate: false
+  xy: 1650, 832
+  size: 8, 48
+  orig: 10, 53
+  offset: 1, 3
+  index: -1
+flower1
+  rotate: true
+  xy: 1205, 108
+  size: 42, 36
+  orig: 44, 38
+  offset: 1, 1
+  index: -1
+flower2
+  rotate: true
+  xy: 1208, 50
+  size: 37, 32
+  orig: 39, 34
+  offset: 1, 1
+  index: -1
+flower3
+  rotate: false
+  xy: 1243, 121
+  size: 27, 29
+  orig: 30, 31
+  offset: 2, 1
+  index: -1
+heat
+  rotate: false
+  xy: 1370, 153
+  size: 92, 101
+  orig: 96, 103
+  offset: 2, 1
+  index: -1
+rooster
+  rotate: true
+  xy: 1205, 152
+  size: 52, 46
+  orig: 54, 49
+  offset: 1, 2
+  index: -1
+tree1-leaves1
+  rotate: false
+  xy: 1274, 151
+  size: 94, 103
+  orig: 97, 106
+  offset: 2, 1
+  index: -1
+tree1-leaves2
+  rotate: false
+  xy: 1110, 108
+  size: 93, 96
+  orig: 95, 99
+  offset: 1, 2
+  index: -1
+tree1-leaves3
+  rotate: false
+  xy: 1537, 12
+  size: 83, 80
+  orig: 85, 84
+  offset: 1, 2
+  index: -1
+tree1-leaves4
+  rotate: false
+  xy: 1561, 251
+  size: 82, 80
+  orig: 85, 84
+  offset: 2, 2
+  index: -1
+tree1-trunk
+  rotate: true
+  xy: 1110, 206
+  size: 125, 162
+  orig: 127, 165
+  offset: 1, 2
+  index: -1
+tree2-leaves1
+  rotate: false
+  xy: 1464, 227
+  size: 95, 104
+  orig: 99, 106
+  offset: 3, 1
+  index: -1
+tree2-leaves2
+  rotate: true
+  xy: 1110, 13
+  size: 93, 96
+  orig: 95, 99
+  offset: 1, 2
+  index: -1
+tree2-leaves3
+  rotate: true
+  xy: 1554, 142
+  size: 83, 80
+  orig: 87, 84
+  offset: 2, 2
+  index: -1
+tree2-leaves4
+  rotate: true
+  xy: 1370, 69
+  size: 82, 81
+  orig: 85, 84
+  offset: 2, 2
+  index: -1
+tree2-leaves5
+  rotate: true
+  xy: 1453, 11
+  size: 81, 82
+  orig: 84, 84
+  offset: 2, 2
+  index: -1
+tree2-trunk
+  rotate: true
+  xy: 1274, 256
+  size: 75, 188
+  orig: 77, 190
+  offset: 1, 1
+  index: -1
+windmill-base
+  rotate: false
+  xy: 2, 2
+  size: 1106, 922
+  orig: 1108, 924
+  offset: 1, 1
+  index: -1
+windmill-blades
+  rotate: true
+  xy: 1110, 384
+  size: 540, 538
+  orig: 542, 540
+  offset: 1, 1
+  index: -1
+windmill-blades-wood-h
+  rotate: false
+  xy: 1110, 359
+  size: 540, 23
+  orig: 542, 25
+  offset: 1, 1
+  index: -1
+windmill-blades-wood-v
+  rotate: true
+  xy: 1110, 333
+  size: 24, 538
+  orig: 26, 540
+  offset: 1, 1
+  index: -1

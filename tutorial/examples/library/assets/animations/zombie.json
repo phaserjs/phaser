@@ -1,0 +1,335 @@
+{
+	"textures": [
+		{
+			"image": "zombie.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 949,
+				"h": 978
+			},
+			"scale": 0.5,
+			"frames": [
+				{
+					"filename": "Death_005",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 352,
+						"h": 466
+					},
+					"spriteSourceSize": {
+						"x": 26,
+						"y": 6,
+						"w": 281,
+						"h": 352
+					},
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 281,
+						"h": 352
+					}
+				},
+				{
+					"filename": "Death_004",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 352,
+						"h": 466
+					},
+					"spriteSourceSize": {
+						"x": 37,
+						"y": 12,
+						"w": 278,
+						"h": 346
+					},
+					"frame": {
+						"x": 2,
+						"y": 357,
+						"w": 278,
+						"h": 346
+					}
+				},
+				{
+					"filename": "Death_002",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 352,
+						"h": 466
+					},
+					"spriteSourceSize": {
+						"x": 4,
+						"y": 164,
+						"w": 346,
+						"h": 194
+					},
+					"frame": {
+						"x": 2,
+						"y": 706,
+						"w": 346,
+						"h": 194
+					}
+				},
+				{
+					"filename": "Death_003",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 352,
+						"h": 466
+					},
+					"spriteSourceSize": {
+						"x": 67,
+						"y": 22,
+						"w": 223,
+						"h": 336
+					},
+					"frame": {
+						"x": 283,
+						"y": 357,
+						"w": 223,
+						"h": 336
+					}
+				},
+				{
+					"filename": "walk_002",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 251
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 16,
+						"w": 202,
+						"h": 221
+					},
+					"frame": {
+						"x": 351,
+						"y": 696,
+						"w": 202,
+						"h": 221
+					}
+				},
+				{
+					"filename": "walk_003",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 251
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 18,
+						"w": 202,
+						"h": 219
+					},
+					"frame": {
+						"x": 286,
+						"y": 2,
+						"w": 202,
+						"h": 219
+					}
+				},
+				{
+					"filename": "walk_007",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 251
+					},
+					"spriteSourceSize": {
+						"x": 80,
+						"y": 10,
+						"w": 174,
+						"h": 235
+					},
+					"frame": {
+						"x": 491,
+						"y": 2,
+						"w": 174,
+						"h": 235
+					}
+				},
+				{
+					"filename": "Death_001",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 352,
+						"h": 466
+					},
+					"spriteSourceSize": {
+						"x": 59,
+						"y": 270,
+						"w": 235,
+						"h": 174
+					},
+					"frame": {
+						"x": 509,
+						"y": 240,
+						"w": 235,
+						"h": 174
+					}
+				},
+				{
+					"filename": "walk_001",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 251
+					},
+					"spriteSourceSize": {
+						"x": 14,
+						"y": 27,
+						"w": 199,
+						"h": 204
+					},
+					"frame": {
+						"x": 668,
+						"y": 2,
+						"w": 199,
+						"h": 204
+					}
+				},
+				{
+					"filename": "walk_008",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 251
+					},
+					"spriteSourceSize": {
+						"x": 72,
+						"y": 16,
+						"w": 178,
+						"h": 225
+					},
+					"frame": {
+						"x": 509,
+						"y": 417,
+						"w": 178,
+						"h": 225
+					}
+				},
+				{
+					"filename": "walk_006",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 251
+					},
+					"spriteSourceSize": {
+						"x": 65,
+						"y": 21,
+						"w": 184,
+						"h": 216
+					},
+					"frame": {
+						"x": 556,
+						"y": 645,
+						"w": 184,
+						"h": 216
+					}
+				},
+				{
+					"filename": "walk_004",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 251
+					},
+					"spriteSourceSize": {
+						"x": 20,
+						"y": 29,
+						"w": 197,
+						"h": 198
+					},
+					"frame": {
+						"x": 690,
+						"y": 417,
+						"w": 197,
+						"h": 198
+					}
+				},
+				{
+					"filename": "walk_005",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 251
+					},
+					"spriteSourceSize": {
+						"x": 45,
+						"y": 33,
+						"w": 200,
+						"h": 184
+					},
+					"frame": {
+						"x": 747,
+						"y": 209,
+						"w": 200,
+						"h": 184
+					}
+				},
+				{
+					"filename": "walk_000",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 256,
+						"h": 251
+					},
+					"spriteSourceSize": {
+						"x": 42,
+						"y": 34,
+						"w": 201,
+						"h": 178
+					},
+					"frame": {
+						"x": 743,
+						"y": 618,
+						"w": 201,
+						"h": 178
+					}
+				},
+				{
+					"filename": "Death_000",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 352,
+						"h": 466
+					},
+					"spriteSourceSize": {
+						"x": 76,
+						"y": 289,
+						"w": 200,
+						"h": 177
+					},
+					"frame": {
+						"x": 743,
+						"y": 799,
+						"w": 200,
+						"h": 177
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:7492b051858a8a6be00edca6911a993d:caff96aae44c629915d1e568d75230a9:671cfcca2facf02865d2d7530477df67$"
+	}
+}

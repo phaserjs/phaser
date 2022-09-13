@@ -1,0 +1,174 @@
+
+tank-pro.png
+size: 1415,1526
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+antenna
+  rotate: false
+  xy: 1281, 1221
+  size: 22, 303
+  orig: 22, 303
+  offset: 0, 0
+  index: -1
+cannon
+  rotate: false
+  xy: 2, 2
+  size: 931, 58
+  orig: 931, 58
+  offset: 0, 0
+  index: -1
+cannon-connector
+  rotate: false
+  xy: 1287, 259
+  size: 112, 135
+  orig: 112, 135
+  offset: 0, 0
+  index: -1
+ground
+  rotate: false
+  xy: 2, 353
+  size: 1024, 353
+  orig: 1024, 353
+  offset: 0, 0
+  index: -1
+guntower
+  rotate: false
+  xy: 2, 62
+  size: 730, 289
+  orig: 730, 289
+  offset: 0, 0
+  index: -1
+machinegun
+  rotate: true
+  xy: 1149, 375
+  size: 331, 57
+  orig: 331, 57
+  offset: 0, 0
+  index: -1
+machinegun-mount
+  rotate: false
+  xy: 889, 62
+  size: 72, 96
+  orig: 72, 96
+  offset: 0, 0
+  index: -1
+rock
+  rotate: true
+  xy: 1028, 177
+  size: 529, 119
+  orig: 580, 127
+  offset: 14, 3
+  index: -1
+smoke-glow
+  rotate: false
+  xy: 1287, 157
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+smoke-puff01-bg
+  rotate: false
+  xy: 1208, 396
+  size: 184, 122
+  orig: 184, 123
+  offset: 0, 0
+  index: -1
+smoke-puff01-fg
+  rotate: true
+  xy: 1289, 1010
+  size: 170, 114
+  orig: 175, 118
+  offset: 2, 2
+  index: -1
+smoke-puff02-fg
+  rotate: true
+  xy: 1305, 1354
+  size: 170, 106
+  orig: 184, 123
+  offset: 7, 11
+  index: -1
+smoke-puff03-fg
+  rotate: true
+  xy: 1305, 1182
+  size: 170, 105
+  orig: 184, 123
+  offset: 7, 12
+  index: -1
+smoke-puff04-fg
+  rotate: false
+  xy: 734, 62
+  size: 153, 96
+  orig: 155, 96
+  offset: 1, 0
+  index: -1
+tank-bottom
+  rotate: false
+  xy: 2, 922
+  size: 1285, 276
+  orig: 1285, 276
+  offset: 0, 0
+  index: -1
+tank-bottom-shadow
+  rotate: false
+  xy: 2, 1200
+  size: 1277, 324
+  orig: 1291, 341
+  offset: 1, 16
+  index: -1
+tank-top
+  rotate: false
+  xy: 2, 708
+  size: 1373, 212
+  orig: 1407, 222
+  offset: 26, 10
+  index: -1
+tread
+  rotate: false
+  xy: 1287, 125
+  size: 96, 30
+  orig: 96, 30
+  offset: 0, 0
+  index: -1
+tread-inside
+  rotate: true
+  xy: 1385, 130
+  size: 25, 28
+  orig: 25, 28
+  offset: 0, 0
+  index: -1
+wheel-big
+  rotate: false
+  xy: 734, 160
+  size: 191, 191
+  orig: 191, 191
+  offset: 0, 0
+  index: -1
+wheel-big-overlay
+  rotate: false
+  xy: 1208, 520
+  size: 186, 186
+  orig: 186, 186
+  offset: 0, 0
+  index: -1
+wheel-mid
+  rotate: false
+  xy: 1149, 237
+  size: 136, 136
+  orig: 136, 136
+  offset: 0, 0
+  index: -1
+wheel-mid-overlay
+  rotate: false
+  xy: 1149, 99
+  size: 136, 136
+  orig: 136, 136
+  offset: 0, 0
+  index: -1
+wheel-small
+  rotate: false
+  xy: 1289, 937
+  size: 71, 71
+  orig: 71, 71
+  offset: 0, 0
+  index: -1

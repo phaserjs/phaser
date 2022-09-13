@@ -1,0 +1,420 @@
+{
+	"textures": [
+		{
+			"image": "diamond.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 783,
+				"h": 64
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "diamond_0000",
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 58,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 2,
+						"w": 58,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0015",
+					"frame": {
+						"x": 62,
+						"y": 2,
+						"w": 58,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 2,
+						"w": 58,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0001",
+					"frame": {
+						"x": 122,
+						"y": 2,
+						"w": 57,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 2,
+						"w": 57,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0014",
+					"frame": {
+						"x": 181,
+						"y": 2,
+						"w": 57,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 5,
+						"y": 2,
+						"w": 57,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0013",
+					"frame": {
+						"x": 240,
+						"y": 2,
+						"w": 54,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 7,
+						"y": 2,
+						"w": 54,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0002",
+					"frame": {
+						"x": 296,
+						"y": 2,
+						"w": 53,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 4,
+						"y": 2,
+						"w": 53,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0012",
+					"frame": {
+						"x": 351,
+						"y": 2,
+						"w": 49,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 10,
+						"y": 2,
+						"w": 49,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0003",
+					"frame": {
+						"x": 402,
+						"y": 2,
+						"w": 48,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 6,
+						"y": 2,
+						"w": 48,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0004",
+					"frame": {
+						"x": 452,
+						"y": 2,
+						"w": 44,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 9,
+						"y": 2,
+						"w": 44,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0011",
+					"frame": {
+						"x": 498,
+						"y": 2,
+						"w": 43,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 12,
+						"y": 2,
+						"w": 43,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0005",
+					"frame": {
+						"x": 543,
+						"y": 2,
+						"w": 40,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 11,
+						"y": 2,
+						"w": 40,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0010",
+					"frame": {
+						"x": 585,
+						"y": 2,
+						"w": 40,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 2,
+						"w": 40,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0006",
+					"frame": {
+						"x": 627,
+						"y": 2,
+						"w": 37,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 2,
+						"w": 37,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0007",
+					"frame": {
+						"x": 666,
+						"y": 2,
+						"w": 37,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 14,
+						"y": 2,
+						"w": 37,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0008",
+					"frame": {
+						"x": 705,
+						"y": 2,
+						"w": 37,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 14,
+						"y": 2,
+						"w": 37,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				},
+				{
+					"filename": "diamond_0009",
+					"frame": {
+						"x": 744,
+						"y": 2,
+						"w": 37,
+						"h": 60
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 14,
+						"y": 2,
+						"w": 37,
+						"h": 60
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 1
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:e736cd8cf1cc6c21cdecd89617e57b40:3f67279da100055ce060055b288ffd38:705052c6a040f848fc5007c977cd7b91$"
+	}
+}

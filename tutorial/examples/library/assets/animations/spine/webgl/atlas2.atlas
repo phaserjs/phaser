@@ -1,0 +1,1063 @@
+
+atlas2.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+armorgirl/Layer 100
+  rotate: true
+  xy: 588, 198
+  size: 31, 40
+  orig: 31, 40
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 101
+  rotate: true
+  xy: 604, 272
+  size: 53, 24
+  orig: 53, 24
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 102
+  rotate: false
+  xy: 730, 581
+  size: 60, 33
+  orig: 60, 33
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 103
+  rotate: false
+  xy: 934, 596
+  size: 57, 93
+  orig: 57, 93
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 104
+  rotate: false
+  xy: 991, 846
+  size: 31, 42
+  orig: 31, 42
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 106
+  rotate: false
+  xy: 688, 321
+  size: 38, 53
+  orig: 38, 53
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 107
+  rotate: false
+  xy: 416, 196
+  size: 70, 127
+  orig: 70, 127
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 108
+  rotate: true
+  xy: 2, 2
+  size: 92, 94
+  orig: 92, 94
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 109
+  rotate: false
+  xy: 720, 187
+  size: 20, 32
+  orig: 20, 32
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 110
+  rotate: true
+  xy: 993, 605
+  size: 84, 29
+  orig: 84, 29
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 111
+  rotate: true
+  xy: 351, 113
+  size: 87, 62
+  orig: 87, 62
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 112
+  rotate: false
+  xy: 991, 890
+  size: 31, 46
+  orig: 31, 46
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 113
+  rotate: false
+  xy: 657, 116
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 114
+  rotate: true
+  xy: 839, 542
+  size: 20, 26
+  orig: 20, 26
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 115
+  rotate: false
+  xy: 131, 70
+  size: 26, 25
+  orig: 26, 25
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 116
+  rotate: true
+  xy: 792, 574
+  size: 40, 45
+  orig: 40, 45
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 117
+  rotate: false
+  xy: 999, 692
+  size: 23, 31
+  orig: 23, 31
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 118
+  rotate: false
+  xy: 680, 269
+  size: 40, 49
+  orig: 40, 49
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 66
+  rotate: true
+  xy: 388, 472
+  size: 118, 84
+  orig: 118, 84
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 68
+  rotate: false
+  xy: 567, 83
+  size: 31, 35
+  orig: 31, 35
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 69
+  rotate: true
+  xy: 488, 201
+  size: 40, 59
+  orig: 40, 59
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 70
+  rotate: true
+  xy: 576, 265
+  size: 57, 26
+  orig: 57, 26
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 72
+  rotate: false
+  xy: 98, 70
+  size: 31, 25
+  orig: 31, 25
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 73
+  rotate: true
+  xy: 489, 324
+  size: 43, 90
+  orig: 43, 90
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 74
+  rotate: false
+  xy: 335, 2
+  size: 51, 66
+  orig: 51, 66
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 75
+  rotate: false
+  xy: 567, 164
+  size: 41, 32
+  orig: 41, 32
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 76
+  rotate: true
+  xy: 714, 116
+  size: 33, 15
+  orig: 33, 15
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 77
+  rotate: false
+  xy: 619, 90
+  size: 35, 27
+  orig: 35, 27
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 78
+  rotate: true
+  xy: 561, 2
+  size: 23, 46
+  orig: 23, 46
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 79
+  rotate: true
+  xy: 76, 97
+  size: 17, 82
+  orig: 17, 82
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 80
+  rotate: true
+  xy: 630, 155
+  size: 30, 41
+  orig: 30, 41
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 81
+  rotate: false
+  xy: 409, 461
+  size: 8, 9
+  orig: 8, 9
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 82
+  rotate: true
+  xy: 746, 159
+  size: 29, 15
+  orig: 29, 15
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 84
+  rotate: false
+  xy: 761, 563
+  size: 29, 16
+  orig: 29, 16
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 85
+  rotate: true
+  xy: 1010, 811
+  size: 15, 12
+  orig: 15, 12
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 851
+  rotate: true
+  xy: 1010, 794
+  size: 15, 12
+  orig: 15, 12
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 86
+  rotate: true
+  xy: 846, 810
+  size: 13, 4
+  orig: 13, 4
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 87
+  rotate: false
+  xy: 549, 231
+  size: 9, 10
+  orig: 9, 10
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 871
+  rotate: false
+  xy: 340, 116
+  size: 9, 10
+  orig: 9, 10
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 88
+  rotate: false
+  xy: 813, 616
+  size: 7, 6
+  orig: 7, 6
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 89
+  rotate: false
+  xy: 1010, 784
+  size: 9, 8
+  orig: 9, 8
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 90
+  rotate: true
+  xy: 98, 2
+  size: 66, 111
+  orig: 66, 111
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 91
+  rotate: false
+  xy: 733, 92
+  size: 20, 29
+  orig: 20, 29
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 92
+  rotate: false
+  xy: 166, 202
+  size: 134, 130
+  orig: 134, 130
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 93
+  rotate: false
+  xy: 578, 380
+  size: 56, 98
+  orig: 56, 98
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 94
+  rotate: false
+  xy: 820, 549
+  size: 17, 23
+  orig: 17, 23
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 95
+  rotate: false
+  xy: 567, 120
+  size: 30, 42
+  orig: 30, 42
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 96
+  rotate: true
+  xy: 549, 201
+  size: 28, 37
+  orig: 28, 37
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 97
+  rotate: false
+  xy: 720, 221
+  size: 27, 32
+  orig: 27, 32
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 98
+  rotate: true
+  xy: 733, 73
+  size: 17, 20
+  orig: 17, 20
+  offset: 0, 0
+  index: -1
+armorgirl/Layer 99
+  rotate: true
+  xy: 516, 2
+  size: 19, 35
+  orig: 19, 35
+  offset: 0, 0
+  index: -1
+greengirl/Layer 17
+  rotate: false
+  xy: 202, 334
+  size: 222, 120
+  orig: 222, 120
+  offset: 0, 0
+  index: -1
+greengirl/Layer 20
+  rotate: false
+  xy: 198, 645
+  size: 190, 377
+  orig: 190, 377
+  offset: 0, 0
+  index: -1
+greengirl/Layer 21
+  rotate: false
+  xy: 516, 23
+  size: 43, 55
+  orig: 43, 55
+  offset: 0, 0
+  index: -1
+greengirl/Layer 22
+  rotate: false
+  xy: 710, 579
+  size: 18, 38
+  orig: 18, 38
+  offset: 0, 0
+  index: -1
+greengirl/Layer 23
+  rotate: false
+  xy: 609, 2
+  size: 23, 23
+  orig: 23, 23
+  offset: 0, 0
+  index: -1
+greengirl/Layer 24
+  rotate: false
+  xy: 692, 111
+  size: 20, 37
+  orig: 20, 37
+  offset: 0, 0
+  index: -1
+greengirl/Layer 25
+  rotate: false
+  xy: 742, 190
+  size: 17, 29
+  orig: 17, 29
+  offset: 0, 0
+  index: -1
+greengirl/Layer 26
+  rotate: true
+  xy: 792, 553
+  size: 19, 26
+  orig: 19, 26
+  offset: 0, 0
+  index: -1
+greengirl/Layer 27
+  rotate: true
+  xy: 893, 541
+  size: 18, 25
+  orig: 18, 25
+  offset: 0, 0
+  index: -1
+greengirl/Layer 28
+  rotate: false
+  xy: 610, 166
+  size: 18, 30
+  orig: 18, 30
+  offset: 0, 0
+  index: -1
+greengirl/Layer 29
+  rotate: false
+  xy: 714, 84
+  size: 17, 30
+  orig: 17, 30
+  offset: 0, 0
+  index: -1
+greengirl/Layer 30
+  rotate: false
+  xy: 600, 88
+  size: 17, 33
+  orig: 17, 33
+  offset: 0, 0
+  index: -1
+greengirl/Layer 32
+  rotate: false
+  xy: 55, 302
+  size: 19, 43
+  orig: 19, 43
+  offset: 0, 0
+  index: -1
+greengirl/Layer 33
+  rotate: true
+  xy: 991, 828
+  size: 16, 31
+  orig: 16, 31
+  offset: 0, 0
+  index: -1
+greengirl/Layer 34
+  rotate: false
+  xy: 709, 151
+  size: 17, 33
+  orig: 17, 33
+  offset: 0, 0
+  index: -1
+greengirl/Layer 35
+  rotate: false
+  xy: 728, 155
+  size: 16, 30
+  orig: 16, 30
+  offset: 0, 0
+  index: -1
+greengirl/Layer 36
+  rotate: true
+  xy: 592, 27
+  size: 20, 31
+  orig: 20, 31
+  offset: 0, 0
+  index: -1
+greengirl/Layer 37
+  rotate: false
+  xy: 606, 231
+  size: 22, 39
+  orig: 22, 39
+  offset: 0, 0
+  index: -1
+greengirl/Layer 38
+  rotate: true
+  xy: 390, 592
+  size: 110, 100
+  orig: 110, 100
+  offset: 0, 0
+  index: -1
+greengirl/Layer 39
+  rotate: false
+  xy: 697, 514
+  size: 30, 63
+  orig: 30, 63
+  offset: 0, 0
+  index: -1
+greengirl/Layer 40
+  rotate: false
+  xy: 839, 564
+  size: 60, 30
+  orig: 60, 30
+  offset: 0, 0
+  index: -1
+greengirl/Layer 41
+  rotate: true
+  xy: 817, 866
+  size: 70, 27
+  orig: 70, 27
+  offset: 0, 0
+  index: -1
+greengirl/Layer 42
+  rotate: false
+  xy: 630, 320
+  size: 56, 54
+  orig: 56, 54
+  offset: 0, 0
+  index: -1
+greengirl/Layer 43
+  rotate: false
+  xy: 166, 335
+  size: 27, 10
+  orig: 27, 10
+  offset: 0, 0
+  index: -1
+greengirl/Layer 44
+  rotate: false
+  xy: 501, 70
+  size: 9, 8
+  orig: 9, 8
+  offset: 0, 0
+  index: -1
+greengirl/Layer 45
+  rotate: true
+  xy: 592, 49
+  size: 32, 20
+  orig: 32, 20
+  offset: 0, 0
+  index: -1
+greengirl/Layer 46
+  rotate: false
+  xy: 474, 571
+  size: 16, 19
+  orig: 16, 19
+  offset: 0, 0
+  index: -1
+greengirl/Layer 47
+  rotate: true
+  xy: 749, 234
+  size: 19, 13
+  orig: 19, 13
+  offset: 0, 0
+  index: -1
+greengirl/Layer 48
+  rotate: false
+  xy: 722, 255
+  size: 31, 30
+  orig: 31, 30
+  offset: 0, 0
+  index: -1
+greengirl/Layer 49
+  rotate: false
+  xy: 488, 243
+  size: 70, 79
+  orig: 70, 79
+  offset: 0, 0
+  index: -1
+greengirl/Layer 50
+  rotate: true
+  xy: 388, 2
+  size: 57, 42
+  orig: 57, 42
+  offset: 0, 0
+  index: -1
+greengirl/Layer 51
+  rotate: false
+  xy: 76, 116
+  size: 88, 60
+  orig: 88, 60
+  offset: 0, 0
+  index: -1
+greengirl/Layer 52
+  rotate: true
+  xy: 852, 725
+  size: 98, 156
+  orig: 98, 156
+  offset: 0, 0
+  index: -1
+greengirl/Layer 53
+  rotate: false
+  xy: 492, 621
+  size: 140, 78
+  orig: 140, 78
+  offset: 0, 0
+  index: -1
+greengirl/Layer 54
+  rotate: true
+  xy: 415, 113
+  size: 81, 80
+  orig: 81, 80
+  offset: 0, 0
+  index: -1
+greengirl/Layer 55
+  rotate: false
+  xy: 731, 123
+  size: 20, 30
+  orig: 20, 30
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 14
+  rotate: true
+  xy: 202, 456
+  size: 187, 184
+  orig: 187, 184
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 15
+  rotate: true
+  xy: 750, 717
+  size: 89, 100
+  orig: 89, 100
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 16
+  rotate: false
+  xy: 576, 231
+  size: 28, 32
+  orig: 28, 32
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 17
+  rotate: false
+  xy: 692, 84
+  size: 20, 25
+  orig: 20, 25
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 18
+  rotate: false
+  xy: 388, 456
+  size: 19, 14
+  orig: 19, 14
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 19
+  rotate: false
+  xy: 388, 61
+  size: 13, 7
+  orig: 13, 7
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 20
+  rotate: false
+  xy: 867, 543
+  size: 24, 19
+  orig: 24, 19
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 21
+  rotate: false
+  xy: 634, 619
+  size: 99, 80
+  orig: 99, 80
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 22
+  rotate: true
+  xy: 417, 61
+  size: 50, 82
+  orig: 50, 82
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 23
+  rotate: false
+  xy: 572, 480
+  size: 53, 89
+  orig: 53, 89
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 24
+  rotate: true
+  xy: 958, 559
+  size: 35, 33
+  orig: 35, 33
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 25
+  rotate: true
+  xy: 993, 543
+  size: 60, 29
+  orig: 60, 29
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 26
+  rotate: true
+  xy: 561, 27
+  size: 51, 29
+  orig: 51, 29
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 27
+  rotate: true
+  xy: 432, 3
+  size: 56, 82
+  orig: 56, 82
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 28
+  rotate: true
+  xy: 340, 70
+  size: 41, 75
+  orig: 41, 75
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 29
+  rotate: false
+  xy: 901, 561
+  size: 55, 33
+  orig: 55, 33
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 30
+  rotate: false
+  xy: 636, 429
+  size: 56, 78
+  orig: 56, 78
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 31
+  rotate: false
+  xy: 76, 178
+  size: 88, 167
+  orig: 88, 167
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 32
+  rotate: true
+  xy: 630, 187
+  size: 32, 47
+  orig: 32, 47
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 33
+  rotate: true
+  xy: 846, 825
+  size: 111, 143
+  orig: 111, 143
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 34
+  rotate: false
+  xy: 636, 376
+  size: 56, 51
+  orig: 56, 51
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 35
+  rotate: true
+  xy: 211, 2
+  size: 66, 69
+  orig: 66, 69
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 36
+  rotate: true
+  xy: 735, 624
+  size: 91, 102
+  orig: 91, 102
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 37
+  rotate: true
+  xy: 166, 70
+  size: 56, 172
+  orig: 56, 172
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 38
+  rotate: true
+  xy: 623, 579
+  size: 38, 85
+  orig: 38, 85
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 39
+  rotate: false
+  xy: 581, 327
+  size: 47, 51
+  orig: 47, 51
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 40
+  rotate: true
+  xy: 679, 225
+  size: 42, 39
+  orig: 42, 39
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 41
+  rotate: true
+  xy: 817, 938
+  size: 84, 199
+  orig: 84, 199
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 42
+  rotate: true
+  xy: 492, 571
+  size: 48, 129
+  orig: 48, 129
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 43
+  rotate: false
+  xy: 599, 123
+  size: 20, 39
+  orig: 20, 39
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 44
+  rotate: false
+  xy: 426, 325
+  size: 61, 145
+  orig: 61, 145
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 45
+  rotate: false
+  xy: 501, 80
+  size: 64, 49
+  orig: 64, 49
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 46
+  rotate: false
+  xy: 679, 186
+  size: 39, 37
+  orig: 39, 37
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 47
+  rotate: true
+  xy: 722, 287
+  size: 32, 31
+  orig: 32, 31
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 48
+  rotate: false
+  xy: 282, 2
+  size: 51, 66
+  orig: 51, 66
+  offset: 0, 0
+  index: -1
+orangegirl/Layer 49
+  rotate: false
+  xy: 302, 202
+  size: 112, 130
+  orig: 112, 130
+  offset: 0, 0
+  index: -1
+stretchyman/back arm
+  rotate: false
+  xy: 2, 96
+  size: 72, 202
+  orig: 72, 202
+  offset: 0, 0
+  index: -1
+stretchyman/back leg
+  rotate: false
+  xy: 390, 704
+  size: 100, 318
+  orig: 100, 318
+  offset: 0, 0
+  index: -1
+stretchyman/body
+  rotate: false
+  xy: 55, 570
+  size: 141, 452
+  orig: 141, 452
+  offset: 0, 0
+  index: -1
+stretchyman/front arm
+  rotate: false
+  xy: 55, 347
+  size: 145, 221
+  orig: 145, 221
+  offset: 0, 0
+  index: -1
+stretchyman/head
+  rotate: false
+  xy: 489, 369
+  size: 87, 102
+  orig: 87, 102
+  offset: 0, 0
+  index: -1
+tank/antenna
+  rotate: true
+  xy: 735, 616
+  size: 6, 76
+  orig: 6, 76
+  offset: 0, 0
+  index: -1
+tank/cannon
+  rotate: false
+  xy: 492, 701
+  size: 233, 15
+  orig: 233, 15
+  offset: 0, 0
+  index: -1
+tank/cannonConnector
+  rotate: true
+  xy: 656, 86
+  size: 28, 34
+  orig: 28, 34
+  offset: 0, 0
+  index: -1
+tank/ground
+  rotate: false
+  xy: 492, 718
+  size: 256, 88
+  orig: 256, 88
+  offset: 0, 0
+  index: -1
+tank/guntower
+  rotate: false
+  xy: 166, 128
+  size: 183, 72
+  orig: 183, 72
+  offset: 0, 0
+  index: -1
+tank/machinegun
+  rotate: true
+  xy: 560, 239
+  size: 83, 14
+  orig: 83, 14
+  offset: 0, 0
+  index: -1
+tank/machinegun-mount
+  rotate: true
+  xy: 920, 541
+  size: 18, 24
+  orig: 18, 24
+  offset: 0, 0
+  index: -1
+tank/rock
+  rotate: false
+  xy: 852, 691
+  size: 145, 32
+  orig: 145, 32
+  offset: 0, 0
+  index: -1
+tank/tankBottom
+  rotate: false
+  xy: 492, 866
+  size: 321, 69
+  orig: 321, 69
+  offset: 0, 0
+  index: -1
+tank/tankBottom-shadow
+  rotate: false
+  xy: 492, 937
+  size: 323, 85
+  orig: 323, 85
+  offset: 0, 0
+  index: -1
+tank/tankTop
+  rotate: false
+  xy: 492, 808
+  size: 352, 56
+  orig: 352, 56
+  offset: 0, 0
+  index: -1
+tank/tread
+  rotate: true
+  xy: 839, 691
+  size: 24, 8
+  orig: 24, 8
+  offset: 0, 0
+  index: -1
+tank/tread-inside
+  rotate: false
+  xy: 553, 14
+  size: 6, 7
+  orig: 6, 7
+  offset: 0, 0
+  index: -1
+tank/wheel-big
+  rotate: false
+  xy: 630, 270
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+tank/wheel-big-overlay
+  rotate: false
+  xy: 630, 221
+  size: 47, 47
+  orig: 47, 47
+  offset: 0, 0
+  index: -1
+tank/wheel-mid
+  rotate: false
+  xy: 673, 150
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+tank/wheel-mid-overlay
+  rotate: false
+  xy: 621, 119
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+tank/wheel-small
+  rotate: false
+  xy: 753, 139
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: -1
+transforms/wheel-big
+  rotate: false
+  xy: 474, 473
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+transforms/wheel-big-overlay
+  rotate: false
+  xy: 839, 596
+  size: 93, 93
+  orig: 93, 93
+  offset: 0, 0
+  index: -1
+transforms/wheel-mid
+  rotate: false
+  xy: 627, 509
+  size: 68, 68
+  orig: 68, 68
+  offset: 0, 0
+  index: -1
+transforms/wheel-mid-overlay
+  rotate: false
+  xy: 497, 131
+  size: 68, 68
+  orig: 68, 68
+  offset: 0, 0
+  index: -1
+vine/vine
+  rotate: false
+  xy: 2, 300
+  size: 51, 722
+  orig: 51, 722
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Phaser 3 - Test Table</title>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+    <style>
+        .extra-data {
+            cursor: pointer;
+        }
+        .logs {
+            background-color: #a3a3a3;
+        }
+        .errors {
+            background-color: #ff7777;
+        }
+    </style>
+</head>
+
+<body>
+    <table border="0" cellspacing="5" cellpadding="5">
+        <tbody><tr>
+            <td>Search error/logs:</td>
+            <td><input type="text" id="error-log-search" name="error-log-search"></td>
+        </tr>
+        <tr>
+            <td>Search path:</td>
+            <td><input type="text" id="path-search" name="path-search"></td>
+        </tr>
+    </tbody></table>
+    <table id="table" class="display">
+    </table>
+
+<script>
+//apply custom search
+$.fn.dataTable.ext.search.push(
+    function(settings, data, dataIndex, rowData) {
+        var errorlog = $('#error-log-search').val();
+        var path = $('#path-search').val();
+
+        return (errorlog == "" || rowData.errors.some(function(val) { return val.indexOf(errorlog) != -1; })
+                || rowData.logs.some(function(val) { return val.indexOf(errorlog) != -1 }))
+                && (path == "" || rowData.uri.indexOf(path) != -1)
+    }
+);
+
+$(document).ready(function() {
+    $.getJSON('results.json', function (json) {
+        var table = $("#table").DataTable ({
+            data : json,
+            columns : [
+
+            {
+                    "className":      'extra-data',
+                    "orderable":      false,
+                    "data":           null,
+                    "defaultContent": 'LOGS'
+                },
+                {
+                    title: "Link",
+                    data : "uri",
+                    render: function(data) {
+                        return '<a target="_blank" href="'+data+'">Open</a>';
+                    }
+                },
+                {
+                    title: "Name",
+                    data : "name"
+                },
+                {
+                    title: "Screenshot",
+                    data : "screenName",
+                    render: function(data) {
+                        return '<img height="120" width="160" src="screens/'+data+'">'
+                    }
+                },
+                {
+                    title: "Has Phaser Header",
+                    data : "logs",
+                    render: function(data) {
+                        for(var i = 0; i < data.length; i++) {
+                            if(data[i].indexOf("Phaser v3.0.0") != -1) return 'TRUE';
+                        }
+                        return 'FALSE';
+                    }
+                },
+                {
+                    title: "Has Errors",
+                    data : "errors",
+                    render: function(data) {
+                        if(data.length > 0) return 'TRUE';
+                        else return 'FALSE';
+                    }
+                },
+                {
+                    title: "Has Logs",
+                    data : "logs",
+                    render: function(data) {
+                        if(data.length > 0) return 'TRUE';
+                        else return 'FALSE';
+                    }
+                }
+            ],
+            bFilter: false,
+            searching: true,
+            paging: false
+        });
+
+        // Add event listener for opening and closing details
+        $('#table tbody').on('click', 'td.extra-data', function() {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                var data = row.data();
+                var html = '<div><div class="errors">';
+                for(var i = 0; i < data.errors.length; i++) {
+                    html += '<p>' + data.errors[i] + '</p>';
+                }
+                html += '</div></br><div class="logs">';
+                for(var i = 0; i < data.logs.length; i++) {
+                    html += '<p>' + data.logs[i] + '</p>';
+                }
+                html += '</div></div>';
+                row.child(html).show();
+                tr.addClass('shown');
+            }
+        });
+
+        // apply search
+        $('#error-log-search, #path-search').keyup( function() {
+            table.draw();
+        } );
+
+    });
+
+} );
+</script>
+
+</body>
+</html>

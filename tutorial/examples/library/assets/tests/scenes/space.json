@@ -1,0 +1,167 @@
+{
+	"textures": [
+		{
+			"image": "space.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1945,
+				"h": 1125
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "nebula",
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 1024,
+						"h": 1024
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1024,
+						"h": 1024
+					},
+					"sourceSize": {
+						"w": 1024,
+						"h": 1024
+					}
+				},
+				{
+					"filename": "ship",
+					"frame": {
+						"x": 1,
+						"y": 1027,
+						"w": 64,
+						"h": 64
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 64,
+						"h": 64
+					},
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					}
+				},
+				{
+					"filename": "sun",
+					"frame": {
+						"x": 1027,
+						"y": 1,
+						"w": 659,
+						"h": 645
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 659,
+						"h": 645
+					},
+					"sourceSize": {
+						"w": 659,
+						"h": 645
+					}
+				},
+				{
+					"filename": "asteroid",
+					"frame": {
+						"x": 1027,
+						"y": 648,
+						"w": 472,
+						"h": 476
+					},
+					"rotated": false,
+					"trimmed": true,
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 3,
+						"w": 472,
+						"h": 476
+					},
+					"sourceSize": {
+						"w": 480,
+						"h": 480
+					}
+				},
+				{
+					"filename": "mine",
+					"frame": {
+						"x": 1688,
+						"y": 1,
+						"w": 256,
+						"h": 256
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 256,
+						"h": 256
+					},
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					}
+				},
+				{
+					"filename": "planet",
+					"frame": {
+						"x": 1501,
+						"y": 648,
+						"w": 400,
+						"h": 407
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 400,
+						"h": 407
+					},
+					"sourceSize": {
+						"w": 400,
+						"h": 407
+					}
+				},
+				{
+					"filename": "blue",
+					"frame": {
+						"x": 1688,
+						"y": 259,
+						"w": 128,
+						"h": 128
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 128,
+						"h": 128
+					},
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:f2181c60dbc313fde6f7a8fb6b74a063:b6e40fad593063fb498ec09c70f95dfb:5c66d13d521b19a155e36d6dbcb34ba3$"
+	}
+}

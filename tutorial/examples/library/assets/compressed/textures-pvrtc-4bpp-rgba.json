@@ -1,0 +1,84 @@
+{"frames": {
+
+"boxing-glove":
+{
+	"frame": {"x":916,"y":2,"w":89,"h":127},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":89,"h":127},
+	"sourceSize": {"w":89,"h":127}
+},
+"brain":
+{
+	"frame": {"x":133,"y":829,"w":128,"h":112},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":112},
+	"sourceSize": {"w":128,"h":112}
+},
+"bubble256":
+{
+	"frame": {"x":2,"y":570,"w":256,"h":256},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
+	"sourceSize": {"w":256,"h":256}
+},
+"cream":
+{
+	"frame": {"x":2,"y":2,"w":396,"h":565},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":396,"h":565},
+	"sourceSize": {"w":396,"h":565}
+},
+"logo":
+{
+	"frame": {"x":261,"y":570,"w":405,"h":107},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":19,"y":48,"w":405,"h":107},
+	"sourceSize": {"w":444,"h":212}
+},
+"orange-cat1":
+{
+	"frame": {"x":957,"y":132,"w":26,"h":39},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":26,"h":39},
+	"sourceSize": {"w":26,"h":39}
+},
+"red":
+{
+	"frame": {"x":2,"y":829,"w":128,"h":128},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128}
+},
+"sonic":
+{
+	"frame": {"x":916,"y":132,"w":38,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":38,"h":42},
+	"sourceSize": {"w":38,"h":42}
+},
+"stonegrass":
+{
+	"frame": {"x":401,"y":2,"w":512,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
+	"sourceSize": {"w":512,"h":512}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "textures-pvrtc-4bpp-rgba.pvr",
+	"format": "PVRTCI_4BPP_RGBA",
+	"size": {"w":1024,"h":1024},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:71f925f5d1e9615ff14c5c5b3c165a2a:ba441179c0f0e534c853b55bdc8f082b:ddf6bd801be4105d48d05d29c7659817$"
+}
+}

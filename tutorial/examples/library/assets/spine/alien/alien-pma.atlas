@@ -1,0 +1,195 @@
+
+alien-pma.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+back-foot
+  rotate: false
+  xy: 2, 2
+  size: 8, 6
+  orig: 8, 6
+  offset: 0, 0
+  index: -1
+back-shin
+  rotate: false
+  xy: 231, 203
+  size: 21, 24
+  orig: 21, 24
+  offset: 0, 0
+  index: -1
+back-thigh
+  rotate: false
+  xy: 971, 877
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+backarmor
+  rotate: false
+  xy: 261, 325
+  size: 81, 91
+  orig: 81, 91
+  offset: 0, 0
+  index: -1
+blown-up-neck
+  rotate: false
+  xy: 571, 652
+  size: 77, 52
+  orig: 77, 52
+  offset: 0, 0
+  index: -1
+body
+  rotate: false
+  xy: 918, 903
+  size: 98, 118
+  orig: 98, 118
+  offset: 0, 0
+  index: -1
+burst01
+  rotate: true
+  xy: 576, 706
+  size: 143, 155
+  orig: 143, 155
+  offset: 0, 0
+  index: -1
+burst02
+  rotate: true
+  xy: 735, 865
+  size: 156, 181
+  orig: 156, 181
+  offset: 0, 0
+  index: -1
+burst03-bg
+  rotate: true
+  xy: 2, 10
+  size: 276, 227
+  orig: 276, 227
+  offset: 0, 0
+  index: -1
+burst03-fg
+  rotate: false
+  xy: 2, 542
+  size: 339, 221
+  orig: 339, 221
+  offset: 0, 0
+  index: -1
+eye
+  rotate: false
+  xy: 494, 640
+  size: 75, 75
+  orig: 75, 75
+  offset: 0, 0
+  index: -1
+eye-highlight
+  rotate: false
+  xy: 261, 256
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+eye-pupil
+  rotate: false
+  xy: 293, 305
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: -1
+eye-stalk
+  rotate: false
+  xy: 494, 572
+  size: 74, 66
+  orig: 74, 66
+  offset: 0, 0
+  index: -1
+front-foot
+  rotate: false
+  xy: 343, 542
+  size: 10, 6
+  orig: 10, 6
+  offset: 0, 0
+  index: -1
+front-lower-arm
+  rotate: true
+  xy: 650, 649
+  size: 55, 63
+  orig: 55, 63
+  offset: 0, 0
+  index: -1
+front-shin
+  rotate: false
+  xy: 343, 735
+  size: 25, 28
+  orig: 25, 28
+  offset: 0, 0
+  index: -1
+front-thigh
+  rotate: false
+  xy: 343, 550
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: -1
+front-upper-arm
+  rotate: true
+  xy: 231, 229
+  size: 57, 28
+  orig: 57, 28
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 343, 579
+  size: 149, 136
+  orig: 149, 136
+  offset: 0, 0
+  index: -1
+lower-back-arm
+  rotate: false
+  xy: 918, 855
+  size: 51, 46
+  orig: 51, 46
+  offset: 0, 0
+  index: -1
+metaljaw
+  rotate: true
+  xy: 261, 418
+  size: 122, 86
+  orig: 122, 86
+  offset: 0, 0
+  index: -1
+splat01
+  rotate: false
+  xy: 2, 288
+  size: 257, 252
+  orig: 257, 252
+  offset: 0, 0
+  index: -1
+splat01-fg
+  rotate: false
+  xy: 371, 717
+  size: 203, 132
+  orig: 203, 132
+  offset: 0, 0
+  index: -1
+splat02
+  rotate: false
+  xy: 2, 765
+  size: 367, 256
+  orig: 367, 256
+  offset: 0, 0
+  index: -1
+splat03
+  rotate: false
+  xy: 371, 851
+  size: 362, 170
+  orig: 362, 170
+  offset: 0, 0
+  index: -1
+upper-back-arm
+  rotate: false
+  xy: 261, 280
+  size: 30, 43
+  orig: 30, 43
+  offset: 0, 0
+  index: -1

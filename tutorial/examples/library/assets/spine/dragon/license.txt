@@ -1,0 +1,5 @@
+Copyright (c) 2013, Thiago Brayner - www.thiagobrayner.com
+
+The project file and images in this "dragon" project are provided for
+demonstration purposes only and may not be redistributed for any reason nor
+used as the basis for derivative work.

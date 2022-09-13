@@ -1,0 +1,21 @@
+{"frames": {
+
+"chiller.png":
+{
+	"frame": {"x":4,"y":4,"w":1006,"h":968},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":7,"w":1006,"h":968},
+	"sourceSize": {"w":1024,"h":1024},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "chiller.png",
+	"format": "RGBA8888",
+	"size": {"w":1014,"h":976},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:565cce18dd44ab279dd18e6f7af36763:d0b967e8bc3d81f783498c6b9be540de:aa4aa7d021e67f67f18f9e7542152d25$"
+}
+}

@@ -1,0 +1,13 @@
+
+vine-pma.png
+size: 128,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+vine
+  rotate: false
+  xy: 2, 2
+  size: 68, 962
+  orig: 68, 962
+  offset: 0, 0
+  index: -1

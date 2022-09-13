@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.3.2" orientation="hexagonal" renderorder="right-down" compressionlevel="-1" width="14" height="9" tilewidth="32" tileheight="34" infinite="0" hexsidelength="16" staggeraxis="y" staggerindex="odd" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="34" tilecount="13" columns="13">
+  <image source="../tilesets/tileset.png" trans="ffffff" width="416" height="34"/>
+ </tileset>
+ <tileset firstgid="14" name="tileset" tilewidth="32" tileheight="34" tilecount="13" columns="13">
+  <image source="../tilesets/tileset.png" trans="ffffff" width="416" height="34"/>
+ </tileset>
+ <layer id="1" name="Calque 1" width="14" height="9">
+  <data encoding="csv">
+16,16,16,16,18,18,18,18,19,18,18,15,15,15,
+16,16,16,22,22,16,14,18,19,18,18,15,15,15,
+16,16,16,16,22,16,16,14,18,19,18,15,15,15,
+16,16,16,22,22,16,16,14,18,19,18,15,15,15,
+16,16,16,16,22,22,16,14,18,19,18,18,15,15,
+20,22,22,22,22,22,16,14,18,19,18,18,15,15,
+20,20,22,22,16,16,16,14,14,18,19,18,18,15,
+20,18,18,16,16,16,14,14,18,19,18,18,18,15,
+20,20,18,18,18,18,18,18,18,19,18,18,18,15
+</data>
+ </layer>
+</map>

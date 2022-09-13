@@ -1,0 +1,37 @@
+{ 
+    "test1": {
+        "files": [
+            {
+                "type": "image",
+                "key": "taikodrummaster",
+                "url": "assets/pics/taikodrummaster.jpg"
+            },
+            {
+                "type": "image",
+                "key": "sukasuka-chtholly",
+                "url": "assets/pics/sukasuka-chtholly.png"
+            }
+        ]
+    },
+    "test2": {
+        "prefix": "TEST2.",
+        "path": "assets/pics",
+        "defaultType": "image",
+        "files": [
+            {
+                "key": "donuts",
+                "extension": "jpg"
+            },
+            {
+                "key": "ayu"
+            }
+        ]
+    },
+    "meta": {
+        "generated": "1401380327373",
+        "app": "Phaser 3 Asset Packer",
+        "url": "https://phaser.io",
+        "version": "1.0",
+        "copyright": "Photon Storm Ltd. 2018"
+    }
+}

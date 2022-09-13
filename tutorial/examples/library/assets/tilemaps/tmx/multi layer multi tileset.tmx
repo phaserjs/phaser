@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="64" tileheight="64" nextobjectid="1">
+ <tileset firstgid="1" name="kenny_ground_64x64" tilewidth="64" tileheight="64">
+  <image source="../tiles/kenny_ground_64x64.png" width="512" height="1024"/>
+ </tileset>
+ <tileset firstgid="129" name="kenny_items_64x64" tilewidth="64" tileheight="64">
+  <image source="../tiles/kenny_items_64x64.png" width="512" height="256"/>
+ </tileset>
+ <tileset firstgid="161" name="kenny_platformer_64x64" tilewidth="64" tileheight="64">
+  <image source="../tiles/kenny_platformer_64x64.png" width="320" height="1024"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJyrZGBgqKQyphYgxbxEIOYE4kgqmYcLFELt4aSSecgAZl4mmjgxfsNnHrUAtcyDhSGt3UdMuOFTM1jDD9089PRCqXn4AClpcbD4V5IBkWeRMTnuA5nlCcRMWDCp5uEzC9k8bG4nB1O7nAdhADxwK7Y=
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBj+YAqNze/BItZJYzuHK5hFhJrZNHcFbQG29DKcAbn+nYuER8HgBABhWgXO
+  </data>
+ </layer>
+ <layer name="Tile Layer 3" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgY8JSA/AMq20dt80YSOEai+htUtPs9Eh4FhMFGLGJ78ajBpp4a4BqVzbtNZfNoDVag8fdC8Sso/yB9nUMzAAAdtA9f
+  </data>
+ </layer>
+</map>

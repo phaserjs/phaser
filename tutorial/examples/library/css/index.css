@@ -1,0 +1,202 @@
+html {
+    min-height: 100%;
+}
+
+body {
+    width: 100%;
+    min-height: 100%;
+    background: #2a0845;
+    /* background: -webkit-linear-gradient(to bottom, #2a0845, #6441a5); */
+    /* background: linear-gradient(to bottom, #2a0845, #6441a5); */
+}
+
+#folderList,
+#fileList {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+}
+
+.album {
+    padding-top: 5rem;
+    padding-bottom: 3rem;
+}
+
+.album .container #folderList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+    align-items: stretch;
+    padding: 20px;
+}
+
+.card {
+    text-align: center;
+    padding-bottom: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+}
+
+.card .imageHolder {
+    position: relative;
+    left: 0;
+    top: 0;
+}
+
+.card .imageHolder .shot1 {
+    position: relative;
+    left: 0;
+    top: 0;
+}
+
+.card .imageHolder .shot2 {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.card .card-image {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.card > img {
+    margin-bottom: 0.75rem;
+}
+
+.card:hover {
+    cursor: pointer;
+    background-color: rgba(255, 0, 0, 0.1);
+    outline: 1px solid white;
+}
+
+.card-text {
+    margin-top: auto;
+    margin-bottom: 5px;
+    font-size: 85%;
+    text-transform: capitalize;
+    color: white;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+}
+
+.card-text a {
+    color: white;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+}
+
+.card-text a:hover {
+    color: #30ddba;
+}
+
+#breadcrumb {
+    /* background-color: rgba(255, 255, 255, 0.1); */
+    background-color: #442760;
+    box-shadow: 0px 0.5px 1px 1px #331053;
+    border-radius: 0px !important;
+    position: fixed;
+    width: 100%;
+    z-index: 2;
+    /* border-radius: 8px; */
+    /* -moz-border-radius: 8px; */
+    /* margin: 8px; */
+}
+
+#breadcrumb img,
+#breadcrumb .search {
+    float: right;
+}
+
+#breadcrumb .search {
+    position: relative;
+}
+
+#breadcrumb .search input {
+    color: white;
+    font-size: 80%;
+    display: inline-block;
+    background-color: #442760;
+    border-radius: 3px;
+    margin-right: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-sizing: border-box;
+    outline: none;
+    padding: 3px 24px 3px 6px;
+}
+
+.search-icon-wrapper {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 1px;
+    right: 17px;
+    margin: 0 auto;
+}
+
+.search-icon-circle {
+    position: absolute;
+    width: 65%;
+    height: 65%;
+    border-radius: 50%;
+    border: 3px solid rgb(165, 150, 180);
+    top: 4px;
+    right: 4px;
+}
+.search-icon-rectangle {
+    position: absolute;
+    height: 35%;
+    transform: rotate(-135deg);
+    border: 2px solid rgb(165, 150, 180);
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    top: 13px;
+    right: 15px;
+}
+
+#breadcrumb a {
+    text-transform: capitalize;
+    color: white;
+}
+
+.result {
+    clear: both;
+    background-color: #442760;
+    margin: 3px;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+#search-results {
+    display: none;
+    line-height: 15px;
+    width: 353px;
+    padding: 4px;
+    background-color: #6e538a;
+    border: 1px solid #331053;
+    border-radius: 4px;
+    position: absolute;
+    top: 35px;
+    right: -60px;
+    z-index: 3;
+    max-height: 492px;
+    overflow: auto;
+}
+
+#search-results .relevancy {
+    float: right;
+    color: #777777;
+    font-size: 12px;
+}
+#search-results .path {
+    font-size: 12px;
+    color: #777777;
+    letter-spacing: 1px;
+}
+
+#search-results .searching {
+    text-align: center;
+    padding: 10px;
+    color: white;
+}

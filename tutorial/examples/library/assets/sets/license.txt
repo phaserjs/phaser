@@ -1,0 +1,3 @@
+The assets in this folder come from the Free Platformer Game Tileset published by Game Art 2D:
+
+https://www.gameart2d.com/free-platformer-game-tileset.html

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="15" height="15" tilewidth="64" tileheight="64" nextobjectid="1">
+ <tileset firstgid="1" name="kenny_platformer_64x64" tilewidth="64" tileheight="64" tilecount="80" columns="5">
+  <image source="../tiles/kenny_platformer_64x64.png" width="320" height="1024"/>
+  <terraintypes>
+   <terrain name="New Terrain" tile="67"/>
+  </terraintypes>
+  <tile id="0">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="type" value="water"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="type" value="lava"/>
+   </properties>
+   <objectgroup draworder="index"/>
+  </tile>
+  <tile id="4">
+   <objectgroup draworder="index">
+    <object id="3" x="0" y="0" width="63" height="23"/>
+   </objectgroup>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="type" value="water"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <objectgroup draworder="index">
+    <object id="11" x="5" y="8" width="33" height="29"/>
+    <object id="12" x="18" y="0" width="11" height="64"/>
+    <object id="14" x="38" y="0">
+     <polygon points="0,0 4,0 20,19 20,27 4,45 0,46"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="type" value="lava"/>
+   </properties>
+   <objectgroup draworder="index">
+    <object id="2" x="0" y="19" width="64" height="45"/>
+    <object id="3" x="0" y="19">
+     <polygon points="0,0 0,-15 35,0"/>
+    </object>
+    <object id="4" x="12" y="8">
+     <polygon points="0,0 36,-8 52,-4 52,11 22,11"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="color" type="color" value="#ff000000"/>
+   </properties>
+   <objectgroup draworder="index">
+    <object id="1" x="1" y="1" width="62" height="62"/>
+   </objectgroup>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="11">
+   <properties>
+    <property name="collides" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index">
+    <properties>
+     <property name="collides" type="bool" value="true"/>
+    </properties>
+   </objectgroup>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="type" value="lava"/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="collides" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index">
+    <object id="3" x="21" y="24" width="21" height="34"/>
+   </objectgroup>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="collides" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index">
+    <object id="1" x="20" y="53">
+     <polygon points="0,0 0,-29 9,-47 22,-28 22,0 12,5"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="33">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="16" width="64" height="48"/>
+   </objectgroup>
+  </tile>
+  <tile id="37">
+   <properties>
+    <property name="type" value="mushroom"/>
+   </properties>
+  </tile>
+  <tile id="42">
+   <properties>
+    <property name="type" value="mushroom"/>
+   </properties>
+  </tile>
+  <tile id="47">
+   <objectgroup draworder="index"/>
+  </tile>
+  <tile id="50">
+   <objectgroup draworder="index">
+    <object id="1" x="6" y="13" width="52" height="50">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="53">
+   <objectgroup draworder="index">
+    <object id="2" x="0" y="64">
+     <polygon points="0,0 3,-23 14,-35 30,-37 48,-35 59,-25 64,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="58">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="64" height="64"/>
+   </objectgroup>
+  </tile>
+  <tile id="62">
+   <objectgroup draworder="index">
+    <properties>
+     <property name="collideIndex" type="int" value="2"/>
+    </properties>
+   </objectgroup>
+  </tile>
+  <tile id="63">
+   <objectgroup draworder="index">
+    <object id="3" x="22" y="44" width="20" height="20">
+     <ellipse/>
+    </object>
+    <object id="4" x="22" y="0" width="20" height="20">
+     <ellipse/>
+    </object>
+    <object id="5" x="22" y="33" width="20" height="20">
+     <ellipse/>
+    </object>
+    <object id="6" x="22" y="11" width="20" height="20">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="65">
+   <objectgroup draworder="index">
+    <properties>
+     <property name="collisionType" value="solid"/>
+    </properties>
+   </objectgroup>
+  </tile>
+  <tile id="66">
+   <objectgroup draworder="index">
+    <object id="1" x="14" y="64">
+     <polygon points="0,0 0,-27 -14,-27 -14,-46 50,-46 50,-27 38,-27 38,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="67" terrain="0,0,0,">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="switchType" value="lever"/>
+   </properties>
+   <objectgroup draworder="index">
+    <properties>
+     <property name="isInteractive" type="bool" value="true"/>
+    </properties>
+    <object id="1" x="4" y="46" width="56" height="18"/>
+    <object id="2" x="22" y="45">
+     <polygon points="0,1 33,-28 41,-19 20,1"/>
+    </object>
+   </objectgroup>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="15" height="15">
+  <data encoding="csv">
+10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+10,0,0,0,0,0,0,0,0,0,0,0,0,0,10,
+10,0,0,0,0,0,0,0,0,0,0,0,0,0,10,
+10,0,0,0,0,38,6,11,6,43,0,0,0,0,10,
+10,0,0,22,0,10,10,10,10,10,0,22,0,0,10,
+10,0,0,0,0,0,0,0,0,0,0,54,0,0,10,
+10,0,0,66,63,0,0,0,0,0,68,59,0,0,10,
+10,0,10,10,10,0,0,12,0,0,10,10,10,0,10,
+10,0,0,0,0,0,0,0,0,0,0,0,0,0,10,
+10,0,0,0,0,0,10,10,10,0,0,0,0,0,10,
+2,2,2,2,2,2,2,10,9,9,9,9,9,9,9,
+7,7,7,7,7,7,7,10,14,14,14,14,14,14,14,
+7,7,7,7,7,7,7,10,14,14,14,14,14,14,14,
+7,7,7,7,7,7,7,10,14,14,14,14,14,14,14,
+7,7,7,7,7,7,7,10,14,14,14,14,14,14,14
+</data>
+ </layer>
+</map>

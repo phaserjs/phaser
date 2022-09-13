@@ -1,0 +1,31 @@
+# Created by Kenney (www.kenney.nl) 
+
+mtllib grass.mtl 
+
+g grass
+
+v 0 0 0 
+v 0 0 1 
+v -1 0 0 
+v -1 0 1 
+
+vn 0 1 0 
+
+vt 0 0 
+vt 0 39.37008 
+vt 39.37008 0 
+vt 39.37008 39.37008 
+
+usemtl grass
+
+f 2/2/1 1/1/1 3/3/1 
+f 3/3/1 4/4/1 2/2/1 
+g grass
+
+
+
+
+usemtl grass
+
+f 2/2/1 1/1/1 3/3/1 
+f 3/3/1 4/4/1 2/2/1 

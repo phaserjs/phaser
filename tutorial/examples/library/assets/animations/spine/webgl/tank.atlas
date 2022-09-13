@@ -1,0 +1,174 @@
+
+tank.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+antenna
+  rotate: true
+  xy: 650, 857
+  size: 11, 152
+  orig: 11, 152
+  offset: 0, 0
+  index: -1
+cannon
+  rotate: true
+  xy: 434, 376
+  size: 466, 29
+  orig: 466, 29
+  offset: 0, 0
+  index: -1
+cannon-connector
+  rotate: true
+  xy: 349, 241
+  size: 56, 68
+  orig: 56, 68
+  offset: 0, 0
+  index: -1
+ground
+  rotate: true
+  xy: 255, 330
+  size: 512, 177
+  orig: 512, 177
+  offset: 0, 0
+  index: -1
+guntower
+  rotate: false
+  xy: 650, 870
+  size: 365, 145
+  orig: 365, 145
+  offset: 0, 0
+  index: -1
+machinegun
+  rotate: false
+  xy: 255, 299
+  size: 166, 29
+  orig: 166, 29
+  offset: 0, 0
+  index: -1
+machinegun-mount
+  rotate: true
+  xy: 2, 2
+  size: 36, 48
+  orig: 36, 48
+  offset: 0, 0
+  index: -1
+rock
+  rotate: true
+  xy: 465, 552
+  size: 290, 64
+  orig: 290, 64
+  offset: 0, 0
+  index: -1
+smoke-glow
+  rotate: false
+  xy: 531, 563
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+smoke-puff01-bg
+  rotate: true
+  xy: 465, 458
+  size: 92, 62
+  orig: 92, 62
+  offset: 0, 0
+  index: -1
+smoke-puff01-fg
+  rotate: false
+  xy: 115, 138
+  size: 88, 59
+  orig: 88, 59
+  offset: 0, 0
+  index: -1
+smoke-puff02-fg
+  rotate: false
+  xy: 255, 235
+  size: 92, 62
+  orig: 92, 62
+  offset: 0, 0
+  index: -1
+smoke-puff03-fg
+  rotate: false
+  xy: 531, 685
+  size: 92, 62
+  orig: 92, 62
+  offset: 0, 0
+  index: -1
+smoke-puff04-fg
+  rotate: true
+  xy: 465, 378
+  size: 78, 48
+  orig: 78, 48
+  offset: 0, 0
+  index: -1
+tank-bottom
+  rotate: true
+  xy: 115, 199
+  size: 643, 138
+  orig: 643, 138
+  offset: 0, 0
+  index: -1
+tank-bottom-shadow
+  rotate: false
+  xy: 2, 844
+  size: 646, 171
+  orig: 646, 171
+  offset: 0, 0
+  index: -1
+tank-top
+  rotate: true
+  xy: 2, 138
+  size: 704, 111
+  orig: 704, 111
+  offset: 0, 0
+  index: -1
+tread
+  rotate: true
+  xy: 626, 794
+  size: 48, 15
+  orig: 48, 15
+  offset: 0, 0
+  index: -1
+tread-inside
+  rotate: false
+  xy: 434, 360
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: -1
+wheel-big
+  rotate: false
+  xy: 2, 40
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+wheel-big-overlay
+  rotate: false
+  xy: 531, 749
+  size: 93, 93
+  orig: 93, 93
+  offset: 0, 0
+  index: -1
+wheel-mid
+  rotate: false
+  xy: 100, 68
+  size: 68, 68
+  orig: 68, 68
+  offset: 0, 0
+  index: -1
+wheel-mid-overlay
+  rotate: false
+  xy: 531, 615
+  size: 68, 68
+  orig: 68, 68
+  offset: 0, 0
+  index: -1
+wheel-small
+  rotate: false
+  xy: 205, 161
+  size: 36, 36
+  orig: 36, 36
+  offset: 0, 0
+  index: -1

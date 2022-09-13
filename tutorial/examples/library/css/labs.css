@@ -1,0 +1,52 @@
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #331053;
+}
+
+#feedback {
+    width: 600px;
+    margin: 0px 0px 0px 32px;
+    font: 14px Arial;
+    padding: 20px;
+    background-color: #efefef;
+    box-shadow: 0 5px 3px rgba(0, 0, 0, 0.3);
+}
+
+#feedback textarea {
+    font: Courier;
+    width: 500px;
+    height: 100px;
+    border: 1px solid black;
+}
+
+#nav {
+    display: none;
+    width: 1200px;
+    height: 120px;
+    margin: 16px 0px 0px 16px;
+}
+
+#nav a, #nav select {
+    background: linear-gradient(135deg, #e570e7 0%,#79f1fc 100%);
+    text-align: center;
+    font-family: Helvetica, Arial;
+    letter-spacing: 1px;
+    text-decoration: none;
+    box-shadow: 0 5px 3px rgba(0, 0, 0, 0.7);
+    outline: none;
+    margin: 0px 32px 32px 0px;
+    padding: 10px 20px;
+    color: #2d2d2d;
+    width: 200px;
+    cursor: pointer;
+}
+
+#nav a:Hover {
+    text-decoration: underline;
+    color: #fff;
+}
+
+#phaser-example > canvas {
+    box-shadow: 1px 1px 20px 2px black;
+}

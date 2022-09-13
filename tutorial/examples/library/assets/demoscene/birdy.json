@@ -1,0 +1,543 @@
+{
+    "anims": [
+        {
+            "key": "hatch",
+            "type": "frame",
+            "defaultTextureKey": "birdy",
+            "frames": [
+                {
+                    "frame": "hatch1"
+                },
+                {
+                    "frame": "hatch2"
+                },
+                {
+                    "frame": "hatch3"
+                },
+                {
+                    "frame": "hatch4"
+                },
+                {
+                    "frame": "front"
+                }
+            ],
+            "frameRate": 12,
+            "skipMissedFrames": true,
+            "delay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "lookLeft",
+            "type": "frame",
+            "defaultTextureKey": "birdy",
+            "frames": [
+                {
+                    "frame": "front",
+                    "duration": 1000
+                },
+                {
+                    "frame": "left",
+                    "duration": 6500
+                },
+                {
+                    "frame": "front",
+                    "duration": 500
+                },
+                {
+                    "frame": "left",
+                    "duration": 500
+                },
+                {
+                    "frame": "front",
+                    "duration": 500
+                },
+                {
+                    "frame": "left",
+                    "duration": 500
+                },
+                {
+                    "frame": "front",
+                    "duration": 500
+                },
+                {
+                    "frame": "left",
+                    "duration": 1500
+                },
+                {
+                    "frame": "left",
+                    "duration": 900
+                },
+                {
+                    "frame": "front",
+                    "duration": 900
+                },
+                {
+                    "frame": "left",
+                    "duration": 900
+                },
+                {
+                    "frame": "front",
+                    "duration": 900
+                },
+                {
+                    "frame": "left",
+                    "duration": 900
+                },
+                {
+                    "frame": "front",
+                    "duration": 900
+                },
+                {
+                    "frame": "left",
+                    "duration": 900
+                },
+                {
+                    "frame": "front",
+                    "duration": 900
+                },
+                {
+                    "frame": "left",
+                    "duration": 900
+                },
+                {
+                    "frame": "front",
+                    "duration": 900
+                }
+            ],
+            "frameRate": 12,
+            "skipMissedFrames": true,
+            "delay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "lookRight",
+            "type": "frame",
+            "defaultTextureKey": "birdy",
+            "frames": [
+                {
+                    "frame": "front",
+                    "duration": 1000
+                },
+                {
+                    "frame": "right",
+                    "duration": 6500
+                },
+                {
+                    "frame": "front",
+                    "duration": 500
+                },
+                {
+                    "frame": "right",
+                    "duration": 500
+                },
+                {
+                    "frame": "front",
+                    "duration": 500
+                },
+                {
+                    "frame": "right",
+                    "duration": 500
+                },
+                {
+                    "frame": "front",
+                    "duration": 500
+                },
+                {
+                    "frame": "right",
+                    "duration": 1500
+                },
+                {
+                    "frame": "right",
+                    "duration": 900
+                },
+                {
+                    "frame": "front",
+                    "duration": 900
+                },
+                {
+                    "frame": "right",
+                    "duration": 900
+                },
+                {
+                    "frame": "front",
+                    "duration": 900
+                },
+                {
+                    "frame": "right",
+                    "duration": 900
+                },
+                {
+                    "frame": "front",
+                    "duration": 900
+                },
+                {
+                    "frame": "right",
+                    "duration": 900
+                },
+                {
+                    "frame": "front",
+                    "duration": 900
+                },
+                {
+                    "frame": "right",
+                    "duration": 900
+                },
+                {
+                    "frame": "front",
+                    "duration": 900
+                }
+            ],
+            "frameRate": 12,
+            "skipMissedFrames": true,
+            "delay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "checkDisOut",
+            "type": "frame",
+            "defaultTextureKey": "birdy",
+            "frames": [
+                {
+                    "frame": "sing1"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing1"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing1"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing1"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing1"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing1"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing1"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing1"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing1"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing1"
+                },
+                {
+                    "frame": "front",
+                    "duration": 5000
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing3"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                },
+                {
+                    "frame": "sing2"
+                },
+                {
+                    "frame": "front"
+                }
+            ],
+            "frameRate": 6.5,
+            "skipMissedFrames": true,
+            "delay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        }
+    ],
+    "globalTimeScale": 1
+}

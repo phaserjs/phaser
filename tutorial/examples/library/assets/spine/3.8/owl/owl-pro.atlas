@@ -1,0 +1,195 @@
+
+owl-pro.png
+size: 2001,885
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+L_eye-closed
+  rotate: true
+  xy: 2, 120
+  size: 179, 171
+  orig: 179, 171
+  offset: 0, 0
+  index: -1
+L_eye-iris
+  rotate: true
+  xy: 175, 120
+  size: 179, 171
+  orig: 179, 171
+  offset: 0, 0
+  index: -1
+L_eye-light
+  rotate: true
+  xy: 1901, 37
+  size: 42, 39
+  orig: 42, 39
+  offset: 0, 0
+  index: -1
+L_eye-pupil
+  rotate: true
+  xy: 896, 47
+  size: 123, 117
+  orig: 125, 119
+  offset: 1, 1
+  index: -1
+L_foot
+  rotate: true
+  xy: 1134, 173
+  size: 126, 93
+  orig: 128, 95
+  offset: 1, 1
+  index: -1
+L_wing
+  rotate: false
+  xy: 1837, 663
+  size: 162, 220
+  orig: 162, 220
+  offset: 0, 0
+  index: -1
+R_eye-closed
+  rotate: true
+  xy: 348, 120
+  size: 179, 171
+  orig: 179, 171
+  offset: 0, 0
+  index: -1
+R_eye-iris
+  rotate: true
+  xy: 521, 120
+  size: 179, 171
+  orig: 179, 171
+  offset: 0, 0
+  index: -1
+R_eye-light
+  rotate: true
+  xy: 1942, 37
+  size: 42, 39
+  orig: 42, 39
+  offset: 0, 0
+  index: -1
+R_eye-pupil
+  rotate: true
+  xy: 1015, 47
+  size: 123, 117
+  orig: 125, 119
+  offset: 1, 1
+  index: -1
+R_foot
+  rotate: true
+  xy: 1134, 45
+  size: 126, 93
+  orig: 128, 95
+  offset: 1, 1
+  index: -1
+R_wing
+  rotate: false
+  xy: 1837, 441
+  size: 162, 220
+  orig: 162, 220
+  offset: 0, 0
+  index: -1
+beak
+  rotate: true
+  xy: 1736, 2
+  size: 77, 82
+  orig: 77, 82
+  offset: 0, 0
+  index: -1
+beak-down
+  rotate: true
+  xy: 1820, 6
+  size: 73, 79
+  orig: 73, 79
+  offset: 0, 0
+  index: -1
+body
+  rotate: false
+  xy: 1238, 15
+  size: 496, 392
+  orig: 496, 392
+  offset: 0, 0
+  index: -1
+feather-1
+  rotate: false
+  xy: 1018, 183
+  size: 114, 116
+  orig: 117, 119
+  offset: 1, 1
+  index: -1
+feather-2
+  rotate: false
+  xy: 895, 172
+  size: 121, 127
+  orig: 124, 130
+  offset: 2, 1
+  index: -1
+feather-3
+  rotate: true
+  xy: 557, 9
+  size: 109, 149
+  orig: 111, 152
+  offset: 1, 1
+  index: -1
+head-base
+  rotate: false
+  xy: 1238, 409
+  size: 597, 474
+  orig: 597, 474
+  offset: 0, 0
+  index: -1
+leaf-1
+  rotate: true
+  xy: 694, 149
+  size: 150, 199
+  orig: 152, 202
+  offset: 1, 2
+  index: -1
+leaf-2
+  rotate: true
+  xy: 708, 20
+  size: 127, 186
+  orig: 130, 189
+  offset: 2, 1
+  index: -1
+leaf-3
+  rotate: false
+  xy: 1736, 81
+  size: 259, 151
+  orig: 263, 154
+  offset: 2, 2
+  index: -1
+leaf-4
+  rotate: false
+  xy: 381, 22
+  size: 174, 96
+  orig: 178, 98
+  offset: 2, 1
+  index: -1
+leaf-5
+  rotate: true
+  xy: 2, 14
+  size: 104, 207
+  orig: 106, 211
+  offset: 1, 2
+  index: -1
+leaf-6
+  rotate: true
+  xy: 1736, 234
+  size: 173, 227
+  orig: 176, 231
+  offset: 1, 2
+  index: -1
+leaf-7
+  rotate: true
+  xy: 211, 13
+  size: 105, 168
+  orig: 108, 172
+  offset: 2, 3
+  index: -1
+wood
+  rotate: false
+  xy: 2, 301
+  size: 1234, 582
+  orig: 1234, 609
+  offset: 0, 0
+  index: -1

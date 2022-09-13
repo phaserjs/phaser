@@ -1,0 +1,295 @@
+{
+	"textures": [
+		{
+			"image": "tp3test.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 501,
+				"h": 450
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "bunny.png",
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 248,
+						"h": 340
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 248,
+						"h": 340
+					},
+					"sourceSize": {
+						"w": 248,
+						"h": 340
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "atari130xe.png",
+					"frame": {
+						"x": 2,
+						"y": 344,
+						"w": 220,
+						"h": 104
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 220,
+						"h": 104
+					},
+					"sourceSize": {
+						"w": 220,
+						"h": 104
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": -0.46153846
+					}
+				},
+				{
+					"filename": "elephant.png",
+					"frame": {
+						"x": 224,
+						"y": 344,
+						"w": 97,
+						"h": 92
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 97,
+						"h": 92
+					},
+					"sourceSize": {
+						"w": 97,
+						"h": 92
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "exocet_spaceman.png",
+					"frame": {
+						"x": 252,
+						"y": 2,
+						"w": 153,
+						"h": 175
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 153,
+						"h": 175
+					},
+					"sourceSize": {
+						"w": 153,
+						"h": 175
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "copy-that-floppy.png",
+					"frame": {
+						"x": 252,
+						"y": 179,
+						"w": 144,
+						"h": 148
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 144,
+						"h": 148
+					},
+					"sourceSize": {
+						"w": 144,
+						"h": 148
+					},
+					"anchor": {
+						"x": 0.10416667,
+						"y": 0.11486486
+					}
+				},
+				{
+					"filename": "fuji.png",
+					"frame": {
+						"x": 323,
+						"y": 329,
+						"w": 106,
+						"h": 111
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 106,
+						"h": 111
+					},
+					"sourceSize": {
+						"w": 106,
+						"h": 111
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "kirito_by_vali233.png",
+					"frame": {
+						"x": 398,
+						"y": 179,
+						"w": 59,
+						"h": 130
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 59,
+						"h": 130
+					},
+					"sourceSize": {
+						"w": 59,
+						"h": 130
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "asuna_by_vali233.png",
+					"frame": {
+						"x": 431,
+						"y": 311,
+						"w": 51,
+						"h": 129
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 51,
+						"h": 129
+					},
+					"sourceSize": {
+						"w": 51,
+						"h": 129
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "cokecan.png",
+					"frame": {
+						"x": 407,
+						"y": 2,
+						"w": 76,
+						"h": 96
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 76,
+						"h": 96
+					},
+					"sourceSize": {
+						"w": 76,
+						"h": 96
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "ilkke.png",
+					"frame": {
+						"x": 407,
+						"y": 100,
+						"w": 53,
+						"h": 71
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 53,
+						"h": 71
+					},
+					"sourceSize": {
+						"w": 53,
+						"h": 71
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "gem.png",
+					"frame": {
+						"x": 459,
+						"y": 173,
+						"w": 40,
+						"h": 88
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 40,
+						"h": 88
+					},
+					"sourceSize": {
+						"w": 40,
+						"h": 88
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:182f3dd7db0d5c90c778298ce02bd6fd:b4b9f695522f6bb054912bdd44885b61:7193c5a814ea8853eb0f9e702e58eb9a$"
+	}
+}

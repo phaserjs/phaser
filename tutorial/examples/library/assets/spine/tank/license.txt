@@ -1,0 +1,8 @@
+Copyright (c) 2016, Esoteric Software
+
+The images in this project may be redistributed as long as they are accompanied
+by this license file. The images may not be used for commercial use of any
+kind.
+
+The project file is released into the public domain. It may be used as the basis
+for derivative work.

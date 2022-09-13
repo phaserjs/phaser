@@ -1,0 +1,1616 @@
+{
+	"textures": [
+		{
+			"image": "sprites.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1007,
+				"h": 955
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "controls",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 344,
+						"h": 82
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 342,
+						"h": 81
+					},
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 342,
+						"h": 81
+					}
+				},
+				{
+					"filename": "panel-best",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 260,
+						"h": 80
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 260,
+						"h": 79
+					},
+					"frame": {
+						"x": 2,
+						"y": 86,
+						"w": 260,
+						"h": 79
+					}
+				},
+				{
+					"filename": "panel-score",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 260,
+						"h": 80
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 260,
+						"h": 79
+					},
+					"frame": {
+						"x": 347,
+						"y": 2,
+						"w": 260,
+						"h": 79
+					}
+				},
+				{
+					"filename": "snowman-big-die1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 12,
+						"y": 32,
+						"w": 149,
+						"h": 141
+					},
+					"frame": {
+						"x": 2,
+						"y": 168,
+						"w": 149,
+						"h": 141
+					}
+				},
+				{
+					"filename": "snowman-big-die0",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 19,
+						"y": 36,
+						"w": 142,
+						"h": 137
+					},
+					"frame": {
+						"x": 2,
+						"y": 312,
+						"w": 142,
+						"h": 137
+					}
+				},
+				{
+					"filename": "snowman-big-idle3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 31,
+						"y": 34,
+						"w": 130,
+						"h": 139
+					},
+					"frame": {
+						"x": 2,
+						"y": 452,
+						"w": 130,
+						"h": 139
+					}
+				},
+				{
+					"filename": "snowman-big-throw5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 32,
+						"w": 128,
+						"h": 141
+					},
+					"frame": {
+						"x": 2,
+						"y": 594,
+						"w": 128,
+						"h": 141
+					}
+				},
+				{
+					"filename": "snowman-big-throw4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 33,
+						"w": 128,
+						"h": 140
+					},
+					"frame": {
+						"x": 2,
+						"y": 738,
+						"w": 128,
+						"h": 140
+					}
+				},
+				{
+					"filename": "snowman-big-throw3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 37,
+						"w": 128,
+						"h": 136
+					},
+					"frame": {
+						"x": 154,
+						"y": 168,
+						"w": 128,
+						"h": 136
+					}
+				},
+				{
+					"filename": "snowman-big-die3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 65,
+						"w": 148,
+						"h": 108
+					},
+					"frame": {
+						"x": 610,
+						"y": 2,
+						"w": 148,
+						"h": 108
+					}
+				},
+				{
+					"filename": "snowman-big-die2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 14,
+						"y": 53,
+						"w": 147,
+						"h": 120
+					},
+					"frame": {
+						"x": 761,
+						"y": 2,
+						"w": 147,
+						"h": 120
+					}
+				},
+				{
+					"filename": "throw010",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 15,
+						"y": 24,
+						"w": 70,
+						"h": 72
+					},
+					"frame": {
+						"x": 2,
+						"y": 881,
+						"w": 70,
+						"h": 72
+					}
+				},
+				{
+					"filename": "throw006",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 16,
+						"y": 14,
+						"w": 78,
+						"h": 82
+					},
+					"frame": {
+						"x": 911,
+						"y": 2,
+						"w": 78,
+						"h": 82
+					}
+				},
+				{
+					"filename": "snowman-small-die3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 7,
+						"y": 58,
+						"w": 111,
+						"h": 77
+					},
+					"frame": {
+						"x": 265,
+						"y": 86,
+						"w": 111,
+						"h": 77
+					}
+				},
+				{
+					"filename": "snowman-big-die4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 78,
+						"w": 148,
+						"h": 95
+					},
+					"frame": {
+						"x": 379,
+						"y": 84,
+						"w": 148,
+						"h": 95
+					}
+				},
+				{
+					"filename": "snowman-big-throw6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 50,
+						"w": 132,
+						"h": 123
+					},
+					"frame": {
+						"x": 285,
+						"y": 182,
+						"w": 132,
+						"h": 123
+					}
+				},
+				{
+					"filename": "snowman-big-idle0",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 45,
+						"w": 128,
+						"h": 128
+					},
+					"frame": {
+						"x": 420,
+						"y": 182,
+						"w": 128,
+						"h": 128
+					}
+				},
+				{
+					"filename": "idle003",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 10,
+						"y": 16,
+						"w": 75,
+						"h": 80
+					},
+					"frame": {
+						"x": 530,
+						"y": 84,
+						"w": 75,
+						"h": 80
+					}
+				},
+				{
+					"filename": "snowman-big-throw7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 56,
+						"w": 132,
+						"h": 117
+					},
+					"frame": {
+						"x": 608,
+						"y": 113,
+						"w": 132,
+						"h": 117
+					}
+				},
+				{
+					"filename": "snowman-big-walk0",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 42,
+						"w": 129,
+						"h": 131
+					},
+					"frame": {
+						"x": 743,
+						"y": 125,
+						"w": 129,
+						"h": 131
+					}
+				},
+				{
+					"filename": "snowman-big-idle1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 41,
+						"w": 128,
+						"h": 132
+					},
+					"frame": {
+						"x": 875,
+						"y": 125,
+						"w": 128,
+						"h": 132
+					}
+				},
+				{
+					"filename": "snowman-big-walk4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 46,
+						"w": 129,
+						"h": 127
+					},
+					"frame": {
+						"x": 551,
+						"y": 233,
+						"w": 129,
+						"h": 127
+					}
+				},
+				{
+					"filename": "snowman-big-idle2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 38,
+						"w": 128,
+						"h": 135
+					},
+					"frame": {
+						"x": 683,
+						"y": 259,
+						"w": 128,
+						"h": 135
+					}
+				},
+				{
+					"filename": "snowman-big-throw2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 40,
+						"w": 128,
+						"h": 133
+					},
+					"frame": {
+						"x": 814,
+						"y": 260,
+						"w": 128,
+						"h": 133
+					}
+				},
+				{
+					"filename": "snowman-big-throw1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 43,
+						"w": 128,
+						"h": 130
+					},
+					"frame": {
+						"x": 135,
+						"y": 452,
+						"w": 128,
+						"h": 130
+					}
+				},
+				{
+					"filename": "snowman-small-throw8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 49,
+						"w": 101,
+						"h": 86
+					},
+					"frame": {
+						"x": 147,
+						"y": 363,
+						"w": 101,
+						"h": 86
+					}
+				},
+				{
+					"filename": "snowman-big-throw0",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 45,
+						"w": 128,
+						"h": 128
+					},
+					"frame": {
+						"x": 251,
+						"y": 308,
+						"w": 128,
+						"h": 128
+					}
+				},
+				{
+					"filename": "snowman-big-walk1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 47,
+						"w": 128,
+						"h": 126
+					},
+					"frame": {
+						"x": 266,
+						"y": 439,
+						"w": 128,
+						"h": 126
+					}
+				},
+				{
+					"filename": "snowman-big-throw8",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 51,
+						"w": 128,
+						"h": 122
+					},
+					"frame": {
+						"x": 382,
+						"y": 313,
+						"w": 128,
+						"h": 122
+					}
+				},
+				{
+					"filename": "snowman-big-walk3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 47,
+						"w": 128,
+						"h": 126
+					},
+					"frame": {
+						"x": 397,
+						"y": 438,
+						"w": 128,
+						"h": 126
+					}
+				},
+				{
+					"filename": "snowman-big-walk5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 47,
+						"w": 128,
+						"h": 126
+					},
+					"frame": {
+						"x": 528,
+						"y": 363,
+						"w": 128,
+						"h": 126
+					}
+				},
+				{
+					"filename": "snowman-big-walk2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 48,
+						"w": 128,
+						"h": 125
+					},
+					"frame": {
+						"x": 528,
+						"y": 492,
+						"w": 128,
+						"h": 125
+					}
+				},
+				{
+					"filename": "snowman-big-walk7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 47,
+						"w": 128,
+						"h": 126
+					},
+					"frame": {
+						"x": 659,
+						"y": 397,
+						"w": 128,
+						"h": 126
+					}
+				},
+				{
+					"filename": "snowman-big-walk6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 180,
+						"h": 180
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 48,
+						"w": 128,
+						"h": 125
+					},
+					"frame": {
+						"x": 659,
+						"y": 526,
+						"w": 128,
+						"h": 125
+					}
+				},
+				{
+					"filename": "nest",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 80,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 80,
+						"h": 48
+					},
+					"frame": {
+						"x": 147,
+						"y": 312,
+						"w": 80,
+						"h": 48
+					}
+				},
+				{
+					"filename": "snowman-small-die4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 5,
+						"y": 68,
+						"w": 113,
+						"h": 67
+					},
+					"frame": {
+						"x": 266,
+						"y": 568,
+						"w": 113,
+						"h": 67
+					}
+				},
+				{
+					"filename": "throw009",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 10,
+						"y": 27,
+						"w": 75,
+						"h": 69
+					},
+					"frame": {
+						"x": 75,
+						"y": 881,
+						"w": 75,
+						"h": 69
+					}
+				},
+				{
+					"filename": "snowman-small-throw5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 34,
+						"w": 101,
+						"h": 101
+					},
+					"frame": {
+						"x": 790,
+						"y": 397,
+						"w": 101,
+						"h": 101
+					}
+				},
+				{
+					"filename": "snowman-small-die1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 9,
+						"y": 35,
+						"w": 109,
+						"h": 100
+					},
+					"frame": {
+						"x": 790,
+						"y": 501,
+						"w": 109,
+						"h": 100
+					}
+				},
+				{
+					"filename": "snowman-small-die2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 11,
+						"y": 52,
+						"w": 107,
+						"h": 83
+					},
+					"frame": {
+						"x": 790,
+						"y": 604,
+						"w": 107,
+						"h": 83
+					}
+				},
+				{
+					"filename": "snowman-small-throw4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 35,
+						"w": 101,
+						"h": 100
+					},
+					"frame": {
+						"x": 894,
+						"y": 396,
+						"w": 101,
+						"h": 100
+					}
+				},
+				{
+					"filename": "snowman-small-idle3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 37,
+						"w": 101,
+						"h": 98
+					},
+					"frame": {
+						"x": 902,
+						"y": 499,
+						"w": 101,
+						"h": 98
+					}
+				},
+				{
+					"filename": "snowball3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 3,
+						"w": 60,
+						"h": 58
+					},
+					"frame": {
+						"x": 945,
+						"y": 260,
+						"w": 60,
+						"h": 58
+					}
+				},
+				{
+					"filename": "snowman-small-throw7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 53,
+						"w": 104,
+						"h": 82
+					},
+					"frame": {
+						"x": 135,
+						"y": 585,
+						"w": 104,
+						"h": 82
+					}
+				},
+				{
+					"filename": "snowman-small-die0",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 38,
+						"w": 101,
+						"h": 97
+					},
+					"frame": {
+						"x": 133,
+						"y": 670,
+						"w": 101,
+						"h": 97
+					}
+				},
+				{
+					"filename": "snowman-small-throw3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 38,
+						"w": 101,
+						"h": 97
+					},
+					"frame": {
+						"x": 133,
+						"y": 770,
+						"w": 101,
+						"h": 97
+					}
+				},
+				{
+					"filename": "throw007",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 7,
+						"y": 19,
+						"w": 78,
+						"h": 77
+					},
+					"frame": {
+						"x": 153,
+						"y": 870,
+						"w": 78,
+						"h": 77
+					}
+				},
+				{
+					"filename": "snowman-small-throw6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 48,
+						"w": 103,
+						"h": 87
+					},
+					"frame": {
+						"x": 242,
+						"y": 638,
+						"w": 103,
+						"h": 87
+					}
+				},
+				{
+					"filename": "snowman-small-idle2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 39,
+						"w": 101,
+						"h": 96
+					},
+					"frame": {
+						"x": 237,
+						"y": 728,
+						"w": 101,
+						"h": 96
+					}
+				},
+				{
+					"filename": "snowman-small-idle0",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 45,
+						"w": 101,
+						"h": 90
+					},
+					"frame": {
+						"x": 237,
+						"y": 827,
+						"w": 101,
+						"h": 90
+					}
+				},
+				{
+					"filename": "snowman-small-idle1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 41,
+						"w": 101,
+						"h": 94
+					},
+					"frame": {
+						"x": 348,
+						"y": 638,
+						"w": 101,
+						"h": 94
+					}
+				},
+				{
+					"filename": "snowman-small-throw2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 41,
+						"w": 101,
+						"h": 94
+					},
+					"frame": {
+						"x": 341,
+						"y": 735,
+						"w": 101,
+						"h": 94
+					}
+				},
+				{
+					"filename": "snowman-small-throw0",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 44,
+						"w": 101,
+						"h": 91
+					},
+					"frame": {
+						"x": 341,
+						"y": 832,
+						"w": 101,
+						"h": 91
+					}
+				},
+				{
+					"filename": "idle001",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 12,
+						"y": 20,
+						"w": 73,
+						"h": 76
+					},
+					"frame": {
+						"x": 452,
+						"y": 567,
+						"w": 73,
+						"h": 76
+					}
+				},
+				{
+					"filename": "snowman-small-throw1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 43,
+						"w": 101,
+						"h": 92
+					},
+					"frame": {
+						"x": 452,
+						"y": 646,
+						"w": 101,
+						"h": 92
+					}
+				},
+				{
+					"filename": "snowman-small-walk0",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 42,
+						"w": 101,
+						"h": 93
+					},
+					"frame": {
+						"x": 445,
+						"y": 741,
+						"w": 101,
+						"h": 93
+					}
+				},
+				{
+					"filename": "snowman-small-walk1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 46,
+						"w": 101,
+						"h": 89
+					},
+					"frame": {
+						"x": 445,
+						"y": 837,
+						"w": 101,
+						"h": 89
+					}
+				},
+				{
+					"filename": "idle002",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 11,
+						"y": 18,
+						"w": 74,
+						"h": 78
+					},
+					"frame": {
+						"x": 556,
+						"y": 620,
+						"w": 74,
+						"h": 78
+					}
+				},
+				{
+					"filename": "snowman-small-walk2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 47,
+						"w": 101,
+						"h": 88
+					},
+					"frame": {
+						"x": 633,
+						"y": 654,
+						"w": 101,
+						"h": 88
+					}
+				},
+				{
+					"filename": "throw000",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 21,
+						"w": 72,
+						"h": 75
+					},
+					"frame": {
+						"x": 556,
+						"y": 701,
+						"w": 72,
+						"h": 75
+					}
+				},
+				{
+					"filename": "snowman-small-walk4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 45,
+						"w": 101,
+						"h": 90
+					},
+					"frame": {
+						"x": 549,
+						"y": 779,
+						"w": 101,
+						"h": 90
+					}
+				},
+				{
+					"filename": "snowman-small-walk3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 46,
+						"w": 101,
+						"h": 89
+					},
+					"frame": {
+						"x": 653,
+						"y": 745,
+						"w": 101,
+						"h": 89
+					}
+				},
+				{
+					"filename": "snowman-small-walk5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 46,
+						"w": 101,
+						"h": 89
+					},
+					"frame": {
+						"x": 653,
+						"y": 837,
+						"w": 101,
+						"h": 89
+					}
+				},
+				{
+					"filename": "die000",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 14,
+						"y": 14,
+						"w": 75,
+						"h": 74
+					},
+					"frame": {
+						"x": 549,
+						"y": 872,
+						"w": 75,
+						"h": 74
+					}
+				},
+				{
+					"filename": "snowman-small-walk6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 47,
+						"w": 101,
+						"h": 88
+					},
+					"frame": {
+						"x": 902,
+						"y": 600,
+						"w": 101,
+						"h": 88
+					}
+				},
+				{
+					"filename": "snowman-small-walk7",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 140,
+						"h": 140
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 46,
+						"w": 101,
+						"h": 89
+					},
+					"frame": {
+						"x": 757,
+						"y": 690,
+						"w": 101,
+						"h": 89
+					}
+				},
+				{
+					"filename": "throw008",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 10,
+						"y": 22,
+						"w": 75,
+						"h": 74
+					},
+					"frame": {
+						"x": 757,
+						"y": 782,
+						"w": 75,
+						"h": 74
+					}
+				},
+				{
+					"filename": "throw003",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 21,
+						"w": 72,
+						"h": 75
+					},
+					"frame": {
+						"x": 757,
+						"y": 859,
+						"w": 72,
+						"h": 75
+					}
+				},
+				{
+					"filename": "idle000",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 14,
+						"y": 21,
+						"w": 71,
+						"h": 75
+					},
+					"frame": {
+						"x": 861,
+						"y": 691,
+						"w": 71,
+						"h": 75
+					}
+				},
+				{
+					"filename": "throw001",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 15,
+						"y": 21,
+						"w": 70,
+						"h": 75
+					},
+					"frame": {
+						"x": 935,
+						"y": 691,
+						"w": 70,
+						"h": 75
+					}
+				},
+				{
+					"filename": "throw002",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 16,
+						"y": 21,
+						"w": 69,
+						"h": 75
+					},
+					"frame": {
+						"x": 835,
+						"y": 782,
+						"w": 69,
+						"h": 75
+					}
+				},
+				{
+					"filename": "throw004",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 16,
+						"y": 22,
+						"w": 69,
+						"h": 74
+					},
+					"frame": {
+						"x": 832,
+						"y": 860,
+						"w": 69,
+						"h": 74
+					}
+				},
+				{
+					"filename": "throw005",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 16,
+						"y": 20,
+						"w": 69,
+						"h": 76
+					},
+					"frame": {
+						"x": 907,
+						"y": 769,
+						"w": 69,
+						"h": 76
+					}
+				},
+				{
+					"filename": "snowball1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 15,
+						"y": 15,
+						"w": 34,
+						"h": 33
+					},
+					"frame": {
+						"x": 234,
+						"y": 920,
+						"w": 34,
+						"h": 33
+					}
+				},
+				{
+					"filename": "throw011",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 16,
+						"y": 21,
+						"w": 69,
+						"h": 75
+					},
+					"frame": {
+						"x": 907,
+						"y": 848,
+						"w": 69,
+						"h": 75
+					}
+				},
+				{
+					"filename": "snowball2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 64,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 64,
+						"h": 64
+					},
+					"frame": {
+						"x": 382,
+						"y": 568,
+						"w": 64,
+						"h": 64
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:6d03f34ef1c94384cb843dee3d2c1f74:736abce3dfcc435d7d40164bac9579de:1eabdf11f75e3a4fe3147baf7b5be24b$"
+	}
+}

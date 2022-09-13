@@ -1,0 +1,39 @@
+body {
+  background: #6441A5;
+  padding: 4px;
+}
+
+.breadcrumb {
+  background-color: unset;
+}
+
+.card {
+  float: left;
+  width: 50%;
+  border: 0;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.card-text {
+  text-transform: capitalize;
+  color: white;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+}
+
+.card-text a {
+  color: white;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+}
+
+.entry {
+  margin-bottom: 16px;
+}
+
+#breadcrumb {
+  padding: 0px;
+}
+
+#breadcrumb a {
+  text-transform: capitalize;
+  color: white;
+}

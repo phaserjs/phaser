@@ -1,0 +1,19 @@
+{ 
+    "test": {
+        "files": [
+            {
+                "type": "multiatlas",
+                "key": "megaset",
+                "url": "assets/loader-tests/texture-packer-multi-atlas.json",
+                "path": "assets/loader-tests/"
+            }
+        ]
+    },
+    "meta": {
+        "generated": "1401380327373",
+        "app": "Phaser 3 Asset Packer",
+        "url": "https://phaser.io",
+        "version": "1.0",
+        "copyright": "Photon Storm Ltd. 2018"
+    }
+}

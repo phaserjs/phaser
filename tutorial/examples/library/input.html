@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Phaser 3 Runner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon" />
+    <script src="./js/getQueryString.js"></script>
+    <style type="text/css">
+        body {
+            margin: 64px;
+        }
+    </style>
+    <script src="./build/dev.js"></script>
+</head>
+
+<body>
+
+    <p>Atari is a corporate and brand name owned by several entities since its inception in 1972, currently by Atari Interactive, a subsidiary of the French publisher Atari, SA (ASA).[1][2][3] The original Atari, Inc. founded in 1972 by Nolan Bushnell and Ted Dabney was a pioneer in arcade games, home video game consoles, and home computers. The company's products, such as Pong and the Atari 2600, helped define the electronic entertainment industry from the 1970s to the mid-1980s.</p>
+
+    <p>In 1984, the original Atari Inc. was split due to its role in the video game crash of 1983, and the arcade division was turned into Atari Games Inc.[4] Atari Games received the rights to use the logo and brand name with appended text "Games" on arcade games, as well as rights to the original 1972–1984 arcade hardware properties. The Atari Consumer Electronics Division properties were in turn sold to Jack Tramiel's Tramel Technology Ltd., which then renamed itself to Atari Corporation.[5][6] In 1996, Atari Corporation reverse-merged with disk-drive manufacturer JT Storage (JTS),[7] becoming a division within the company.</p>
+
+    <div id="phaser-example"></div>
+
+    <script type="text/javascript">
+
+    window.onload = function ()
+    {
+        var filename = getQueryString('src');
+
+        if (filename.substr(-3) === '.js')
+        {
+            var s = document.createElement('script');
+
+            s.type = 'text/javascript';
+            s.src = filename;
+
+            document.body.appendChild(s);
+        }
+
+    };
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+Copyright (c) 2014, XDTech
+
+The project file and images in this "Hero" project are provided for
+demonstration purposes only and may not be redistributed for any reason nor
+used as the basis for derivative work.

@@ -1,0 +1,19 @@
+{ 
+    "test1": {
+        "files": [
+            {
+                "type": "atlas",
+                "key": "megaset",
+                "textureURL": "assets/atlas/megaset-0.png",
+                "atlasURL": "assets/atlas/megaset-0.json"
+            }
+        ]
+    },
+    "meta": {
+        "generated": "1401380327373",
+        "app": "Phaser 3 Asset Packer",
+        "url": "https://phaser.io",
+        "version": "1.0",
+        "copyright": "Photon Storm Ltd. 2018"
+    }
+}

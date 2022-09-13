@@ -1,0 +1,28 @@
+{ 
+    "test3": {
+        "files": [
+            {
+                "type": "image",
+                "key": "makoto",
+                "url": "assets/pics/makoto.png"
+            },
+            {
+                "type": "image",
+                "key": "nayuki",
+                "url": "assets/pics/nayuki.png"
+            },
+            {
+                "type": "pack",
+                "key": "pack3",
+                "url": "assets/loader-tests/pack3.json"
+            }
+        ]
+    },
+    "meta": {
+        "generated": "1401380327373",
+        "app": "Phaser 3 Asset Packer",
+        "url": "https://phaser.io",
+        "version": "1.0",
+        "copyright": "Photon Storm Ltd. 2018"
+    }
+}

@@ -1,0 +1,356 @@
+{
+	"textures": [
+		{
+			"image": "boing.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 465,
+				"h": 607
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "boing-window",
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 344,
+						"h": 266
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 344,
+						"h": 266
+					},
+					"sourceSize": {
+						"w": 344,
+						"h": 266
+					}
+				},
+				{
+					"filename": "boing1",
+					"frame": {
+						"x": 349,
+						"y": 2,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing10",
+					"frame": {
+						"x": 349,
+						"y": 103,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing11",
+					"frame": {
+						"x": 349,
+						"y": 204,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing12",
+					"frame": {
+						"x": 2,
+						"y": 271,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing13",
+					"frame": {
+						"x": 118,
+						"y": 271,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "shadow",
+					"frame": {
+						"x": 234,
+						"y": 271,
+						"w": 74,
+						"h": 100
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 74,
+						"h": 100
+					},
+					"sourceSize": {
+						"w": 74,
+						"h": 100
+					}
+				},
+				{
+					"filename": "boing14",
+					"frame": {
+						"x": 311,
+						"y": 305,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing2",
+					"frame": {
+						"x": 2,
+						"y": 372,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing3",
+					"frame": {
+						"x": 118,
+						"y": 372,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing4",
+					"frame": {
+						"x": 234,
+						"y": 406,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing5",
+					"frame": {
+						"x": 350,
+						"y": 406,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing6",
+					"frame": {
+						"x": 2,
+						"y": 473,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing7",
+					"frame": {
+						"x": 118,
+						"y": 473,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing8",
+					"frame": {
+						"x": 234,
+						"y": 507,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				},
+				{
+					"filename": "boing9",
+					"frame": {
+						"x": 350,
+						"y": 507,
+						"w": 113,
+						"h": 98
+					},
+					"rotated": false,
+					"trimmed": false,
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 113,
+						"h": 98
+					},
+					"sourceSize": {
+						"w": 113,
+						"h": 98
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:02e4ce10347b301d83857ecc1465ca13:278a348d59e68638241dfcba74c95ed6:adaec9326814e9636dcd9a2afa06a981$"
+	}
+}

@@ -1,0 +1,671 @@
+{
+	"textures": [
+		{
+			"image": "jellies.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1976,
+				"h": 1262
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "WithShadow/Jelly5",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 335,
+						"h": 304
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 335,
+						"h": 304
+					},
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 335,
+						"h": 304
+					}
+				},
+				{
+					"filename": "WithShadow/Jelly2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 334,
+						"h": 330
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 334,
+						"h": 330
+					},
+					"frame": {
+						"x": 340,
+						"y": 2,
+						"w": 334,
+						"h": 330
+					}
+				},
+				{
+					"filename": "WithShadow/Jelly4",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 334,
+						"h": 307
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 334,
+						"h": 307
+					},
+					"frame": {
+						"x": 2,
+						"y": 309,
+						"w": 334,
+						"h": 307
+					}
+				},
+				{
+					"filename": "WithShadow/Jelly6",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 334,
+						"h": 301
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 334,
+						"h": 301
+					},
+					"frame": {
+						"x": 677,
+						"y": 2,
+						"w": 334,
+						"h": 301
+					}
+				},
+				{
+					"filename": "Blank/Jelly2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 298,
+						"h": 301
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 298,
+						"h": 301
+					},
+					"frame": {
+						"x": 1014,
+						"y": 2,
+						"w": 298,
+						"h": 301
+					}
+				},
+				{
+					"filename": "NoShadow/Jelly2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 298,
+						"h": 301
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 298,
+						"h": 301
+					},
+					"frame": {
+						"x": 1315,
+						"y": 2,
+						"w": 298,
+						"h": 301
+					}
+				},
+				{
+					"filename": "WithEyeShades/Jelly2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 298,
+						"h": 301
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 298,
+						"h": 301
+					},
+					"frame": {
+						"x": 1616,
+						"y": 2,
+						"w": 298,
+						"h": 301
+					}
+				},
+				{
+					"filename": "WithShadow/Jelly1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 334,
+						"h": 299
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 334,
+						"h": 299
+					},
+					"frame": {
+						"x": 677,
+						"y": 306,
+						"w": 334,
+						"h": 299
+					}
+				},
+				{
+					"filename": "WithShadow/Jelly3",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 334,
+						"h": 281
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 334,
+						"h": 281
+					},
+					"frame": {
+						"x": 339,
+						"y": 335,
+						"w": 334,
+						"h": 281
+					}
+				},
+				{
+					"filename": "NoShadow/Jelly1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 311,
+						"h": 270
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 311,
+						"h": 270
+					},
+					"frame": {
+						"x": 1014,
+						"y": 306,
+						"w": 311,
+						"h": 270
+					}
+				},
+				{
+					"filename": "Shadow",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 334,
+						"h": 150
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 334,
+						"h": 150
+					},
+					"frame": {
+						"x": 1014,
+						"y": 579,
+						"w": 334,
+						"h": 150
+					}
+				},
+				{
+					"filename": "Blank/Jelly4",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 297,
+						"h": 278
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 297,
+						"h": 278
+					},
+					"frame": {
+						"x": 676,
+						"y": 608,
+						"w": 297,
+						"h": 278
+					}
+				},
+				{
+					"filename": "NoShadow/Jelly5",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 306,
+						"h": 275
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 306,
+						"h": 275
+					},
+					"frame": {
+						"x": 2,
+						"y": 619,
+						"w": 306,
+						"h": 275
+					}
+				},
+				{
+					"filename": "NoShadow/Jelly4",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 297,
+						"h": 278
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 297,
+						"h": 278
+					},
+					"frame": {
+						"x": 311,
+						"y": 619,
+						"w": 297,
+						"h": 278
+					}
+				},
+				{
+					"filename": "WithEyeShades/Jelly4",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 297,
+						"h": 278
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 297,
+						"h": 278
+					},
+					"frame": {
+						"x": 2,
+						"y": 897,
+						"w": 297,
+						"h": 278
+					}
+				},
+				{
+					"filename": "WithEyeShades/Jelly1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 311,
+						"h": 270
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 311,
+						"h": 270
+					},
+					"frame": {
+						"x": 1328,
+						"y": 306,
+						"w": 311,
+						"h": 270
+					}
+				},
+				{
+					"filename": "WithEyeShades/Jelly5",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 306,
+						"h": 275
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 306,
+						"h": 275
+					},
+					"frame": {
+						"x": 1351,
+						"y": 579,
+						"w": 306,
+						"h": 275
+					}
+				},
+				{
+					"filename": "Blank/Jelly1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 311,
+						"h": 269
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 311,
+						"h": 269
+					},
+					"frame": {
+						"x": 1642,
+						"y": 306,
+						"w": 311,
+						"h": 269
+					}
+				},
+				{
+					"filename": "Blank/Jelly5",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 306,
+						"h": 274
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 306,
+						"h": 274
+					},
+					"frame": {
+						"x": 976,
+						"y": 732,
+						"w": 306,
+						"h": 274
+					}
+				},
+				{
+					"filename": "NoShadow/Jelly6",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 297,
+						"h": 272
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 297,
+						"h": 272
+					},
+					"frame": {
+						"x": 611,
+						"y": 889,
+						"w": 297,
+						"h": 272
+					}
+				},
+				{
+					"filename": "WithEyeShades/Jelly6",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 297,
+						"h": 272
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 297,
+						"h": 272
+					},
+					"frame": {
+						"x": 302,
+						"y": 900,
+						"w": 297,
+						"h": 272
+					}
+				},
+				{
+					"filename": "Blank/Jelly6",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 297,
+						"h": 271
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 297,
+						"h": 271
+					},
+					"frame": {
+						"x": 1660,
+						"y": 578,
+						"w": 297,
+						"h": 271
+					}
+				},
+				{
+					"filename": "NoShadow/Jelly3",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 297,
+						"h": 252
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 297,
+						"h": 252
+					},
+					"frame": {
+						"x": 1660,
+						"y": 852,
+						"w": 297,
+						"h": 252
+					}
+				},
+				{
+					"filename": "WithEyeShades/Jelly3",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 297,
+						"h": 252
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 297,
+						"h": 252
+					},
+					"frame": {
+						"x": 1285,
+						"y": 857,
+						"w": 297,
+						"h": 252
+					}
+				},
+				{
+					"filename": "Blank/Jelly3",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 297,
+						"h": 251
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 297,
+						"h": 251
+					},
+					"frame": {
+						"x": 911,
+						"y": 1009,
+						"w": 297,
+						"h": 251
+					}
+				},
+				{
+					"filename": "Face1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 258,
+						"h": 93
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 258,
+						"h": 93
+					},
+					"frame": {
+						"x": 602,
+						"y": 1164,
+						"w": 258,
+						"h": 93
+					}
+				},
+				{
+					"filename": "Face4",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 258,
+						"h": 79
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 258,
+						"h": 79
+					},
+					"frame": {
+						"x": 302,
+						"y": 1175,
+						"w": 258,
+						"h": 79
+					}
+				},
+				{
+					"filename": "Face2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 258,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 258,
+						"h": 72
+					},
+					"frame": {
+						"x": 2,
+						"y": 1178,
+						"w": 258,
+						"h": 72
+					}
+				},
+				{
+					"filename": "Face3",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 258,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 258,
+						"h": 72
+					},
+					"frame": {
+						"x": 1585,
+						"y": 1107,
+						"w": 258,
+						"h": 72
+					}
+				},
+				{
+					"filename": "Face6",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 128,
+						"h": 128
+					},
+					"frame": {
+						"x": 1846,
+						"y": 1107,
+						"w": 128,
+						"h": 128
+					}
+				},
+				{
+					"filename": "Face5",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 256,
+						"h": 48
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 256,
+						"h": 48
+					},
+					"frame": {
+						"x": 1211,
+						"y": 1112,
+						"w": 256,
+						"h": 48
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:609f4af01f28e0ce6e2eb71bcce30d22:973730005ecf120d8797e391dbd87695:9611049bebfabf7e79d5c2223ba48065$"
+	}
+}

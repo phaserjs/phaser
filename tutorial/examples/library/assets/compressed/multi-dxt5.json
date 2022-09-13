@@ -1,0 +1,1144 @@
+{
+	"textures": [
+		{
+			"image": "multi-dxt5-0.pvr",
+			"format": "DXT5",
+			"size": {
+				"w": 1024,
+				"h": 1024
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "phaser3-logo-x2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 824,
+						"h": 186
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 822,
+						"h": 184
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 822,
+						"h": 184
+					}
+				},
+				{
+					"filename": "speakers",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 174,
+						"h": 250
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 174,
+						"h": 250
+					},
+					"frame": {
+						"x": 825,
+						"y": 1,
+						"w": 174,
+						"h": 250
+					}
+				},
+				{
+					"filename": "catstick",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 247,
+						"h": 555
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 247,
+						"h": 555
+					},
+					"frame": {
+						"x": 1,
+						"y": 253,
+						"w": 247,
+						"h": 555
+					}
+				},
+				{
+					"filename": "platform",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 500,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 500,
+						"h": 64
+					},
+					"frame": {
+						"x": 1,
+						"y": 187,
+						"w": 500,
+						"h": 64
+					}
+				},
+				{
+					"filename": "magnify-glass-outside",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 300,
+						"h": 301
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 300,
+						"h": 301
+					},
+					"frame": {
+						"x": 503,
+						"y": 187,
+						"w": 300,
+						"h": 301
+					}
+				},
+				{
+					"filename": "bunny",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 248,
+						"h": 340
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 248,
+						"h": 340
+					},
+					"frame": {
+						"x": 250,
+						"y": 253,
+						"w": 248,
+						"h": 340
+					}
+				},
+				{
+					"filename": "gameboy_seize_color_40x60",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 201,
+						"h": 60
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 201,
+						"h": 60
+					},
+					"frame": {
+						"x": 805,
+						"y": 253,
+						"w": 201,
+						"h": 60
+					}
+				},
+				{
+					"filename": "exocet_spaceman",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 153,
+						"h": 175
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 153,
+						"h": 175
+					},
+					"frame": {
+						"x": 1,
+						"y": 810,
+						"w": 153,
+						"h": 175
+					}
+				},
+				{
+					"filename": "spinObj_01",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 174,
+						"h": 174
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 174,
+						"h": 174
+					},
+					"frame": {
+						"x": 156,
+						"y": 810,
+						"w": 174,
+						"h": 174
+					}
+				},
+				{
+					"filename": "spinObj_02",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 174,
+						"h": 174
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 174,
+						"h": 174
+					},
+					"frame": {
+						"x": 250,
+						"y": 595,
+						"w": 174,
+						"h": 174
+					}
+				},
+				{
+					"filename": "mouse_jim_sachs",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 134,
+						"h": 388
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 134,
+						"h": 388
+					},
+					"frame": {
+						"x": 426,
+						"y": 595,
+						"w": 134,
+						"h": 388
+					}
+				},
+				{
+					"filename": "atari800xl",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 233,
+						"h": 99
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 233,
+						"h": 99
+					},
+					"frame": {
+						"x": 500,
+						"y": 490,
+						"w": 233,
+						"h": 99
+					}
+				},
+				{
+					"filename": "palm-tree-left",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 78,
+						"h": 168
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 78,
+						"h": 168
+					},
+					"frame": {
+						"x": 332,
+						"y": 771,
+						"w": 78,
+						"h": 168
+					}
+				},
+				{
+					"filename": "atari400",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 265,
+						"h": 156
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 265,
+						"h": 156
+					},
+					"frame": {
+						"x": 735,
+						"y": 490,
+						"w": 265,
+						"h": 156
+					}
+				},
+				{
+					"filename": "palm-tree-right",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 78,
+						"h": 168
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 78,
+						"h": 168
+					},
+					"frame": {
+						"x": 805,
+						"y": 315,
+						"w": 78,
+						"h": 168
+					}
+				},
+				{
+					"filename": "sonic_havok_sanity",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 98,
+						"h": 167
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 98,
+						"h": 167
+					},
+					"frame": {
+						"x": 885,
+						"y": 315,
+						"w": 98,
+						"h": 167
+					}
+				},
+				{
+					"filename": "alienbusters",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 163,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 163,
+						"h": 64
+					},
+					"frame": {
+						"x": 562,
+						"y": 591,
+						"w": 163,
+						"h": 64
+					}
+				},
+				{
+					"filename": "phaser2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 382,
+						"h": 331
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 382,
+						"h": 331
+					},
+					"frame": {
+						"x": 562,
+						"y": 657,
+						"w": 382,
+						"h": 331
+					}
+				},
+				{
+					"filename": "car-red",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 64,
+						"h": 138
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 64,
+						"h": 138
+					},
+					"frame": {
+						"x": 946,
+						"y": 648,
+						"w": 64,
+						"h": 138
+					}
+				},
+				{
+					"filename": "car-police",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 64,
+						"h": 136
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 64,
+						"h": 136
+					},
+					"frame": {
+						"x": 946,
+						"y": 788,
+						"w": 64,
+						"h": 136
+					}
+				}
+			]
+		},
+		{
+			"image": "multi-dxt5-1.pvr",
+			"format": "DXT5",
+			"size": {
+				"w": 1024,
+				"h": 1024
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "ra_dont_crack_under_pressure",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 232,
+						"h": 328
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 232,
+						"h": 328
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 232,
+						"h": 328
+					}
+				},
+				{
+					"filename": "rick",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 220,
+						"h": 300
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 220,
+						"h": 300
+					},
+					"frame": {
+						"x": 1,
+						"y": 331,
+						"w": 220,
+						"h": 300
+					}
+				},
+				{
+					"filename": "p2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 256,
+						"h": 256
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 256,
+						"h": 256
+					},
+					"frame": {
+						"x": 1,
+						"y": 633,
+						"w": 256,
+						"h": 256
+					}
+				},
+				{
+					"filename": "asuna_by_vali233",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 51,
+						"h": 129
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 51,
+						"h": 129
+					},
+					"frame": {
+						"x": 1,
+						"y": 891,
+						"w": 51,
+						"h": 129
+					}
+				},
+				{
+					"filename": "128x128-v2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 128,
+						"h": 128
+					},
+					"frame": {
+						"x": 54,
+						"y": 891,
+						"w": 128,
+						"h": 128
+					}
+				},
+				{
+					"filename": "128x128",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 128,
+						"h": 128
+					},
+					"frame": {
+						"x": 184,
+						"y": 891,
+						"w": 128,
+						"h": 128
+					}
+				},
+				{
+					"filename": "spinObj_03",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 174,
+						"h": 174
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 174,
+						"h": 174
+					},
+					"frame": {
+						"x": 223,
+						"y": 331,
+						"w": 174,
+						"h": 174
+					}
+				},
+				{
+					"filename": "poo",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 4,
+						"w": 128,
+						"h": 124
+					},
+					"frame": {
+						"x": 223,
+						"y": 507,
+						"w": 128,
+						"h": 124
+					}
+				},
+				{
+					"filename": "spinObj_04",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 174,
+						"h": 174
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 174,
+						"h": 174
+					},
+					"frame": {
+						"x": 259,
+						"y": 633,
+						"w": 174,
+						"h": 174
+					}
+				},
+				{
+					"filename": "coffee",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 7,
+						"y": 0,
+						"w": 118,
+						"h": 123
+					},
+					"frame": {
+						"x": 353,
+						"y": 507,
+						"w": 118,
+						"h": 123
+					}
+				},
+				{
+					"filename": "car-yellow",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 132,
+						"h": 64
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 132,
+						"h": 64
+					},
+					"frame": {
+						"x": 259,
+						"y": 809,
+						"w": 132,
+						"h": 64
+					}
+				},
+				{
+					"filename": "copy-that-floppy",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 144,
+						"h": 148
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 144,
+						"h": 148
+					},
+					"frame": {
+						"x": 314,
+						"y": 875,
+						"w": 144,
+						"h": 148
+					}
+				},
+				{
+					"filename": "spinObj_05",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 174,
+						"h": 174
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 174,
+						"h": 174
+					},
+					"frame": {
+						"x": 435,
+						"y": 632,
+						"w": 174,
+						"h": 174
+					}
+				},
+				{
+					"filename": "spinObj_06",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 174,
+						"h": 174
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 174,
+						"h": 174
+					},
+					"frame": {
+						"x": 460,
+						"y": 808,
+						"w": 174,
+						"h": 174
+					}
+				},
+				{
+					"filename": "atari800",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 261,
+						"h": 142
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 261,
+						"h": 142
+					},
+					"frame": {
+						"x": 636,
+						"y": 1,
+						"w": 261,
+						"h": 142
+					}
+				},
+				{
+					"filename": "gingerbread",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 0,
+						"w": 123,
+						"h": 128
+					},
+					"frame": {
+						"x": 899,
+						"y": 1,
+						"w": 123,
+						"h": 128
+					}
+				},
+				{
+					"filename": "atari1200xl",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 233,
+						"h": 149
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 233,
+						"h": 149
+					},
+					"frame": {
+						"x": 399,
+						"y": 1,
+						"w": 233,
+						"h": 149
+					}
+				},
+				{
+					"filename": "spinObj_07",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 174,
+						"h": 174
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 174,
+						"h": 174
+					},
+					"frame": {
+						"x": 235,
+						"y": 152,
+						"w": 174,
+						"h": 174
+					}
+				},
+				{
+					"filename": "spinObj_08",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 174,
+						"h": 174
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 174,
+						"h": 174
+					},
+					"frame": {
+						"x": 399,
+						"y": 328,
+						"w": 174,
+						"h": 174
+					}
+				},
+				{
+					"filename": "cake",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 5,
+						"y": 0,
+						"w": 121,
+						"h": 128
+					},
+					"frame": {
+						"x": 899,
+						"y": 131,
+						"w": 121,
+						"h": 128
+					}
+				},
+				{
+					"filename": "astorm-truck",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 157,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 157,
+						"h": 96
+					},
+					"frame": {
+						"x": 235,
+						"y": 1,
+						"w": 157,
+						"h": 96
+					}
+				},
+				{
+					"filename": "beer",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 5,
+						"y": 5,
+						"w": 117,
+						"h": 119
+					},
+					"frame": {
+						"x": 473,
+						"y": 504,
+						"w": 117,
+						"h": 119
+					}
+				},
+				{
+					"filename": "hotdog",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 229,
+						"h": 111
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 229,
+						"h": 111
+					},
+					"frame": {
+						"x": 636,
+						"y": 145,
+						"w": 229,
+						"h": 111
+					}
+				},
+				{
+					"filename": "atari130xe",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 220,
+						"h": 104
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 220,
+						"h": 104
+					},
+					"frame": {
+						"x": 411,
+						"y": 152,
+						"w": 220,
+						"h": 104
+					}
+				},
+				{
+					"filename": "donut",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 128,
+						"h": 128
+					},
+					"frame": {
+						"x": 575,
+						"y": 261,
+						"w": 128,
+						"h": 128
+					}
+				},
+				{
+					"filename": "fuji",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 106,
+						"h": 111
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 106,
+						"h": 111
+					},
+					"frame": {
+						"x": 575,
+						"y": 391,
+						"w": 106,
+						"h": 111
+					}
+				},
+				{
+					"filename": "cocktail",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 6,
+						"w": 121,
+						"h": 117
+					},
+					"frame": {
+						"x": 592,
+						"y": 504,
+						"w": 121,
+						"h": 117
+					}
+				},
+				{
+					"filename": "lollipop",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 10,
+						"w": 126,
+						"h": 108
+					},
+					"frame": {
+						"x": 683,
+						"y": 391,
+						"w": 126,
+						"h": 108
+					}
+				},
+				{
+					"filename": "saw",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 128,
+						"h": 128
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 128,
+						"h": 128
+					},
+					"frame": {
+						"x": 705,
+						"y": 261,
+						"w": 128,
+						"h": 128
+					}
+				},
+				{
+					"filename": "oz_pov_melting_disk",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 62,
+						"h": 116
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 62,
+						"h": 116
+					},
+					"frame": {
+						"x": 835,
+						"y": 258,
+						"w": 62,
+						"h": 116
+					}
+				},
+				{
+					"filename": "elephant",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 97,
+						"h": 92
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 97,
+						"h": 92
+					},
+					"frame": {
+						"x": 899,
+						"y": 261,
+						"w": 97,
+						"h": 92
+					}
+				},
+				{
+					"filename": "spikedball",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 96,
+						"h": 96
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 96,
+						"h": 96
+					},
+					"frame": {
+						"x": 899,
+						"y": 355,
+						"w": 96,
+						"h": 96
+					}
+				},
+				{
+					"filename": "brain",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 128,
+						"h": 112
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 128,
+						"h": 112
+					},
+					"frame": {
+						"x": 611,
+						"y": 623,
+						"w": 128,
+						"h": 112
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:3a4632089bcb85d3a03a9e83901ae3d6:ed942b48d381f89a3742128aa10d611d:f559ef42f27dd78ee36830dfd2048a06$"
+	}
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.2" orientation="hexagonal" renderorder="right-down" width="14" height="9" tilewidth="32" tileheight="34" infinite="0" hexsidelength="16" staggeraxis="y" staggerindex="odd" nextlayerid="2" nextobjectid="1">
+ <editorsettings>
+  <export target="hexagonal.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="34" tilecount="13" columns="13">
+  <image source="C:/Users/rdave/Downloads/svipal.github.io-master/svipal.github.io-master/assets/tilesets/tileset.png" trans="ffffff" width="416" height="34"/>
+ </tileset>
+ <layer id="1" name="Calque 1" width="14" height="9">
+  <data encoding="csv">
+3,3,3,3,5,5,5,5,6,5,5,2,2,2,
+3,3,3,9,9,3,1,5,6,5,5,2,2,2,
+3,3,3,3,9,3,3,1,5,6,5,2,2,2,
+3,3,3,9,9,3,3,1,5,6,5,2,2,2,
+3,3,3,3,9,9,3,1,5,6,5,5,2,2,
+7,9,9,9,9,9,3,1,5,6,5,5,2,2,
+7,7,9,9,3,3,3,1,1,5,6,5,5,2,
+7,5,5,3,3,3,1,1,5,6,5,5,5,2,
+7,7,5,5,5,5,5,5,5,6,5,5,5,2
+</data>
+ </layer>
+</map>

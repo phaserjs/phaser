@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="5" height="6" tilewidth="64" tileheight="64" nextobjectid="1">
+ <tileset firstgid="1" name="kenny_platformer_64x64" tilewidth="64" tileheight="64" tilecount="80" columns="5">
+  <image source="../tiles/kenny_platformer_64x64.png" width="320" height="1024"/>
+  <tile id="0">
+   <objectgroup draworder="index">
+    <object id="1" x="4" y="0">
+     <polyline points="0,0 -4,4 -4,60 2,64 55,64 60,58 60,5 56,0 0,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="1">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="2" width="64" height="62"/>
+   </objectgroup>
+  </tile>
+  <tile id="2">
+   <objectgroup draworder="index"/>
+  </tile>
+  <tile id="3">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="64">
+     <polygon points="0,0 0,-41 17,-37 48,-46 64,-42 64,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="1" width="20" height="20">
+     <ellipse/>
+    </object>
+    <object id="4" x="21" y="1" width="20" height="20">
+     <ellipse/>
+    </object>
+    <object id="5" x="42" y="1" width="20" height="20">
+     <ellipse/>
+    </object>
+   </objectgroup>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="5" height="6">
+  <data encoding="csv">
+1,1,1,1,1,
+2,2,2,2,2,
+4,4,4,4,4,
+5,5,5,5,5,
+3,3,3,3,3,
+12,12,12,12,12
+</data>
+ </layer>
+</map>

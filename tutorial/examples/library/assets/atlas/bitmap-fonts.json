@@ -1,0 +1,48 @@
+{"frames": {
+
+"atari-sunset":
+{
+	"frame": {"x":1024,"y":2,"w":509,"h":469},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":1,"w":509,"h":469},
+	"sourceSize": {"w":512,"h":512},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"azo-fire":
+{
+	"frame": {"x":2,"y":2,"w":1020,"h":376},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":1,"w":1020,"h":376},
+	"sourceSize": {"w":1024,"h":512},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"hyperdrive":
+{
+	"frame": {"x":2,"y":380,"w":1015,"h":404},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":1,"w":1015,"h":404},
+	"sourceSize": {"w":1024,"h":512},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"topaz-fill":
+{
+	"frame": {"x":1019,"y":473,"w":509,"h":286},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":1,"w":509,"h":286},
+	"sourceSize": {"w":512,"h":512},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "bitmap-fonts.png",
+	"format": "RGBA8888",
+	"size": {"w":1535,"h":786},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:aaeb283920a30d20e81183bcf988208f:7d0f7deb8939a043e5b4be8309386099:10213eef109c7f57e808475af63c073f$"
+}
+}

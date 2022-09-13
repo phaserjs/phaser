@@ -1,0 +1,5 @@
+Some of the particle images in this folder are low-resolution PNGS of those found in the Animated Sprite Pack by The Game Creators. They may not be used in your games unless you purchase a copy of the full pack. They are included here thanks to the kind permission of the authors.
+
+The Animated Sprite Pack consists of 60 professional quality animated billboard sprites designed to enhance the realism of your games. Animations include effects such as energy, fire, smoke, water impact and surface effects. The Billboard effects are 1024 x 1024 pixels in size, containing 16 frames of 256 x 256 pixels. Also included are 40 static sprites in high resolution.
+
+It costs only $19.99 USD and is available at http://www.thegamecreators.com/?m=view_product&id=2154
