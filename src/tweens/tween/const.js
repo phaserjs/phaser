@@ -123,13 +123,22 @@ var TWEEN_CONST = {
     COMPLETE_DELAY: 23,
 
     /**
+     * Tween state. The Tween is waiting for a starting delay to elapse.
+     *
+     * @name Phaser.Tweens.START_DELAY
+     * @type {number}
+     * @since 3.0.0
+     */
+    START_DELAY: 24,
+
+    /**
      * Tween state. The Tween has finished playback and is waiting to be removed from the Tween Manager.
      *
      * @name Phaser.Tweens.PENDING_REMOVE
      * @type {number}
      * @since 3.0.0
      */
-    PENDING_REMOVE: 24,
+    PENDING_REMOVE: 25,
 
     /**
      * Tween state. The Tween has been removed from the Tween Manager.
@@ -138,7 +147,7 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.0.0
      */
-    REMOVED: 25,
+    REMOVED: 26,
 
     /**
      * Tween state. The Tween has finished playback but was flagged as 'persistent' during creation,
@@ -148,7 +157,7 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.60.0
      */
-    FINISHED: 26,
+    FINISHED: 27,
 
     /**
      * Tween state. The Tween has been destroyed and can no longer be played by a Tween Manager.
@@ -157,7 +166,7 @@ var TWEEN_CONST = {
      * @type {number}
      * @since 3.60.0
      */
-    DESTROYED: 27
+    DESTROYED: 28
 
 };
 
