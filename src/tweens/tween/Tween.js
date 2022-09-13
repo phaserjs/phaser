@@ -276,7 +276,7 @@ var Tween = new Class({
                 break;
 
             case TWEEN_CONST.DESTROYED:
-                console.warn('Cannot restart destroyed Tweens');
+                console.warn('Cannot restart destroyed Tweens', this);
                 break;
 
             default:
@@ -649,47 +649,6 @@ var Tween = new Class({
             }
         }
     },
-
-    /**
-     * Returns an array containing this Tween and all Tweens chained to it,
-     * in the order in which they will be played.
-     *
-     * If there are no chained Tweens an empty array is returned.
-     *
-     * @method Phaser.Tweens.Tween#getChainedTweens
-     * @since 3.60.0
-     *
-     * @return {Phaser.Tweens.Tween[]} An array of the chained tweens, or an empty array if there aren't any.
-    getChainedTweens: function ()
-    {
-        var result = [];
-
-        var tween = this.chainedTween;
-
-        do
-        {
-            //  Safety-check to ensure they didn't chain a Tween to another Tween already in the chain
-            if (tween && result.indexOf(tween) === -1)
-            {
-                result.push(tween);
-
-                tween = tween.chainedTween;
-            }
-            else
-            {
-                tween = null;
-            }
-
-        } while (tween);
-
-        if (result.length > 0)
-        {
-            result.unshift(this);
-        }
-
-        return result;
-    },
-     */
 
     /**
      * Handles the destroy process of this Tween, clearing out the
