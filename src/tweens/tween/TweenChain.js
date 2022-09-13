@@ -9,9 +9,6 @@ var Class = require('../../utils/Class');
 var Events = require('../events');
 var GameObjectCreator = require('../../gameobjects/GameObjectCreator');
 var GameObjectFactory = require('../../gameobjects/GameObjectFactory');
-var Tween = require('./Tween');
-var TWEEN_CONST = require('./const');
-var TweenBuilder = require('../builders/TweenBuilder');
 
 /**
  * @classdesc
@@ -23,7 +20,7 @@ var TweenBuilder = require('../builders/TweenBuilder');
  * @constructor
  * @since 3.60.0
  *
- * @param {Phaser.Tweens.TweenManager} parent - A reference to the Tween Manager that owns this Tween.
+ * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.TweenChain)} parent - A reference to the Tween Manager, or TweenChain, that owns this TweenChain.
  */
 var TweenChain = new Class({
 
@@ -35,21 +32,35 @@ var TweenChain = new Class({
     {
         BaseTween.call(this, parent);
 
+        /**
+         * A reference to the Tween that this TweenChain is currently playing.
+         *
+         * @name Phaser.Tweens.TweenChain#currentTween
+         * @type {Phaser.Tweens.Tween}
+         * @since 3.60.0
+         */
         this.currentTween = null;
 
+        /**
+         * A reference to the data array index of the currently playing tween.
+         *
+         * @name Phaser.Tweens.TweenChain#currentIndex
+         * @type {number}
+         * @since 3.60.0
+         */
         this.currentIndex = 0;
     },
 
     /**
-     * Prepares this Tween for playback.
+     * Prepares this TweenChain for playback.
      *
      * Called automatically by the TweenManager. Should not be called directly.
      *
-     * @method Phaser.Tweens.Tween#init
+     * @method Phaser.Tweens.TweenChain#init
      * @fires Phaser.Tweens.Events#TWEEN_ACTIVE
-     * @since 3.0.0
+     * @since 3.60.0
      *
-     * @return {this} This Tween instance.
+     * @return {this} This TweenChain instance.
      */
     init: function ()
     {
@@ -57,7 +68,7 @@ var TweenChain = new Class({
 
         this.setCurrentTween(0);
 
-        if (this.startDelay > 0)
+        if (this.startDelay > 0 && !this.isStartDelayed())
         {
             this.setStartDelayState();
         }
@@ -83,36 +94,31 @@ var TweenChain = new Class({
      *
      * Please note that Tweens will not manipulate any target property that begins with an underscore.
      *
-     * @method Phaser.Tweens.TweenManager#add
+     * @method Phaser.Tweens.TweenChain#add
      * @since 3.60.0
      *
      * @param {Phaser.Types.Tweens.TweenBuilderConfig[]|object[]} tweens - An array of Tween configuration objects for the Tweens in this chain.
      *
-     * @return {Phaser.Tweens.TweenChain} This TweenChain instance.
+     * @return {this} This TweenChain instance.
      */
     add: function (tweens)
     {
-        if (!Array.isArray(tweens))
+        var newTweens = this.parent.create(tweens);
+
+        if (!Array.isArray(newTweens))
         {
-            tweens = [ tweens ];
+            newTweens = [ newTweens ];
         }
 
         var data = this.data;
 
-        for (var i = 0; i < tweens.length; i++)
+        for (var i = 0; i < newTweens.length; i++)
         {
-            var tween = tweens[i];
+            var tween = newTweens[i];
 
-            if (tween instanceof Tween)
-            {
-                data.push(tween.init());
-            }
-            else
-            {
-                tween = TweenBuilder(this, tween);
+            tween.parent = this;
 
-                data.push(tween.init());
-            }
+            data.push(tween.init());
         }
 
         this.totalData = data.length;
@@ -121,14 +127,14 @@ var TweenChain = new Class({
     },
 
     /**
-     * See if this Tween is currently acting upon the given target.
+     * See if any of the tweens in this Tween Chain is currently acting upon the given target.
      *
-     * @method Phaser.Tweens.Tween#hasTarget
-     * @since 3.0.0
+     * @method Phaser.Tweens.TweenChain#hasTarget
+     * @since 3.60.0
      *
-     * @param {object} target - The target to check against this Tween.
+     * @param {object} target - The target to check against this TweenChain.
      *
-     * @return {boolean} `true` if the given target is a target of this Tween, otherwise `false`.
+     * @return {boolean} `true` if the given target is a target of this TweenChain, otherwise `false`.
      */
     hasTarget: function (target)
     {
@@ -146,62 +152,49 @@ var TweenChain = new Class({
     },
 
     /**
-     * Restarts the Tween from the beginning.
+     * Restarts the TweenChain from the beginning.
      *
-     * You can only restart a Tween that is currently playing. If the Tween has already been stopped, restarting
-     * it will throw an error.
+     * If this TweenChain was configured to have a loop, or start delay, those
+     * are reset to their initial values as well. It will also dispatch the
+     * `onActive` callback and event again.
      *
-     * If you wish to restart the Tween from a specific point, use the `Tween.seek` method instead.
+     * @method Phaser.Tweens.TweenChain#restart
+     * @since 3.60.0
      *
-     * @method Phaser.Tweens.Tween#restart
-     * @since 3.0.0
-     *
-     * @return {this} This Tween instance.
+     * @return {this} This TweenChain instance.
      */
     restart: function ()
     {
-        switch (this.state)
+        if (this.isDestroyed())
         {
-            case TWEEN_CONST.REMOVED:
-            case TWEEN_CONST.FINISHED:
-                this.parent.makeActive(this);
-                break;
+            console.warn('Cannot restart destroyed TweenChain', this);
 
-            case TWEEN_CONST.PENDING:
-            case TWEEN_CONST.PENDING_REMOVE:
-                this.parent.reset(this);
-                break;
-
-            case TWEEN_CONST.DESTROYED:
-                console.warn('Cannot restart destroyed TweenChain');
-                break;
-
-            default:
-                // this.seek();
-                break;
+            return this;
         }
 
-        this.paused = false;
-        this.hasStarted = false;
-        this.currentIndex = 0;
-        this.currentTween = this.data[0];
+        if (this.isRemoved())
+        {
+            this.parent.makeActive(this);
+        }
 
-        return this;
+        this.resetTweens();
+
+        this.paused = false;
+
+        return this.init();
     },
 
     /**
      * Resets the given Tween.
      *
-     * If the Tween does not belong to this Tween Manager, it will first be added.
+     * It will seek to position 0 and playback will start on the next frame.
      *
-     * Then it will seek to position 0 and playback will start on the next frame.
-     *
-     * @method Phaser.Tweens.TweenManager#reset
+     * @method Phaser.Tweens.TweenChain#reset
      * @since 3.60.0
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to be reset.
      *
-     * @return {this} This Tween Manager instance.
+     * @return {this} This TweenChain instance.
      */
     reset: function (tween)
     {
@@ -213,14 +206,14 @@ var TweenChain = new Class({
     },
 
     /**
-     * Checks if a Tween is active and adds it to the Tween Manager at the start of the frame if it isn't.
+     * Re-initiases the given Tween and sets it to the Active state.
      *
-     * @method Phaser.Tweens.TweenManager#makeActive
-     * @since 3.0.0
+     * @method Phaser.Tweens.TweenChain#makeActive
+     * @since 3.60.0
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to check.
      *
-     * @return {this} This Tween Manager instance.
+     * @return {this} This TweenChain instance.
      */
     makeActive: function (tween)
     {
@@ -232,14 +225,14 @@ var TweenChain = new Class({
     },
 
     /**
-     * Internal method that advances to the next state of the Tween during playback.
+     * Internal method that advances to the next state of the TweenChain playback.
      *
-     * @method Phaser.Tweens.Tween#nextState
+     * @method Phaser.Tweens.TweenChain#nextState
      * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
      * @fires Phaser.Tweens.Events#TWEEN_LOOP
-     * @since 3.0.0
+     * @since 3.60.0
      *
-     * @return {boolean} `true` if this Tween has completed, otherwise `false`.
+     * @return {boolean} `true` if this TweenChain has completed, otherwise `false`.
      */
     nextState: function ()
     {
@@ -279,20 +272,19 @@ var TweenChain = new Class({
     },
 
     /**
-     * Starts a Tween playing.
+     * Starts this TweenChain playing.
      *
-     * You only need to call this method if you have configured the tween to be paused on creation.
+     * You only need to call this method if you have configured this TweenChain to be paused on creation.
      *
-     * If the Tween is already playing, calling this method again will have no effect. If you wish to
-     * restart the Tween, use `Tween.restart` instead.
+     * If the TweenChain is already playing, calling this method again will have no effect. If you wish to
+     * restart the chain, use `TweenChain.restart` instead.
      *
-     * Calling this method after the Tween has completed will start the Tween playing again from the beginning.
-     * This is the same as calling `Tween.seek(0)` and then `Tween.play()`.
+     * Calling this method after the TweenChain has completed will start the chain playing again from the beginning.
      *
-     * @method Phaser.Tweens.Tween#play
-     * @since 3.0.0
+     * @method Phaser.Tweens.TweenChain#play
+     * @since 3.60.0
      *
-     * @return {this} This Tween instance.
+     * @return {this} This TweenChain instance.
      */
     play: function ()
     {
@@ -310,7 +302,7 @@ var TweenChain = new Class({
 
         this.paused = false;
 
-        if (this.startDelay > 0)
+        if (this.startDelay > 0 && !this.isStartDelayed())
         {
             this.setStartDelayState();
         }
@@ -323,10 +315,10 @@ var TweenChain = new Class({
     },
 
     /**
-     * Internal method that resets all of the Tween Data, including the progress and elapsed values.
+     * Internal method that resets all of the Tweens and the current index pointer.
      *
-     * @method Phaser.Tweens.Tween#resetTweens
-     * @since 3.0.0
+     * @method Phaser.Tweens.TweenChain#resetTweens
+     * @since 3.60.0
      */
     resetTweens: function ()
     {
@@ -343,17 +335,17 @@ var TweenChain = new Class({
     },
 
     /**
-     * Internal method that advances the Tween based on the time values.
+     * Internal method that advances the TweenChain based on the time values.
      *
-     * @method Phaser.Tweens.Tween#update
+     * @method Phaser.Tweens.TweenChain#update
      * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
      * @fires Phaser.Tweens.Events#TWEEN_LOOP
      * @fires Phaser.Tweens.Events#TWEEN_START
-     * @since 3.0.0
+     * @since 3.60.0
      *
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      *
-     * @return {boolean} Returns `true` if this Tween has finished and should be removed from the Tween Manager, otherwise returns `false`.
+     * @return {boolean} Returns `true` if this TweenChain has finished and should be removed from the Tween Manager, otherwise returns `false`.
      */
     update: function (delta)
     {
@@ -410,11 +402,17 @@ var TweenChain = new Class({
         return remove;
     },
 
-    getCurrentTween: function ()
-    {
-        return this.data[this.currentIndex];
-    },
-
+    /**
+     * Immediately advances to the next Tween in the chain.
+     *
+     * This is typically called internally, but can be used if you need to
+     * advance playback for some reason.
+     *
+     * @method Phaser.Tweens.TweenChain#nextTween
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if there are no more Tweens in the chain, otherwise `false`.
+     */
     nextTween: function ()
     {
         this.currentIndex++;
@@ -427,8 +425,19 @@ var TweenChain = new Class({
         {
             this.setCurrentTween(this.currentIndex);
         }
+
+        return false;
     },
 
+    /**
+     * Sets the current active Tween to the given index, based on its
+     * entry in the TweenChain data array.
+     *
+     * @method Phaser.Tweens.TweenChain#setCurrentTween
+     * @since 3.60.0
+     *
+     * @param {number} index - The index of the Tween to be made current.
+     */
     setCurrentTween: function (index)
     {
         this.currentIndex = index;
@@ -441,9 +450,9 @@ var TweenChain = new Class({
     },
 
     /**
-     * Internal method that will emit a Tween based Event and invoke the given callback.
+     * Internal method that will emit a TweenChain based Event and invoke the given callback.
      *
-     * @method Phaser.Tweens.Tween#dispatchEvent
+     * @method Phaser.Tweens.TweenChain#dispatchEvent
      * @since 3.60.0
      *
      * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
@@ -451,13 +460,13 @@ var TweenChain = new Class({
      */
     dispatchEvent: function (event, callback)
     {
-        this.emit(event, this, this.targets);
+        this.emit(event, this);
 
         var handler = this.callbacks[callback];
 
         if (handler)
         {
-            handler.func.apply(handler.scope, [ this, this.targets ].concat(handler.params));
+            handler.func.apply(handler.scope, [ this ].concat(handler.params));
         }
     },
 
@@ -471,39 +480,39 @@ var TweenChain = new Class({
     {
         BaseTween.prototype.destroy.call(this);
 
-        console.log('TweenChain destroyed');
+        this.currentTween = null;
     }
 
 });
 
 /**
- * Creates a new Tween object.
+ * Creates a new TweenChain object and adds it to the Tween Manager.
  *
  * Note: This method will only be available if Tweens have been built into Phaser.
  *
  * @method Phaser.GameObjects.GameObjectFactory#tweenchain
- * @since 3.0.0
+ * @since 3.60.0
  *
- * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The Tween configuration.
+ * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The TweenChain configuration.
  *
- * @return {Phaser.Tweens.Tween} The Tween that was created.
+ * @return {Phaser.Tweens.TweenChain} The TweenChain that was created.
  */
 GameObjectFactory.register('tweenchain', function (config)
 {
-    return this.scene.sys.tweens.add(config);
+    return this.scene.sys.tweens.chain(config);
 });
 
 /**
- * Creates a new Tween object and returns it.
+ * Creates a new TweenChain object and returns it, without adding it to the Tween Manager.
  *
  * Note: This method will only be available if Tweens have been built into Phaser.
  *
  * @method Phaser.GameObjects.GameObjectCreator#tweenchain
- * @since 3.0.0
+ * @since 3.60.0
  *
- * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The Tween configuration.
+ * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The TweenChain configuration.
  *
- * @return {Phaser.Tweens.Tween} The Tween that was created.
+ * @return {Phaser.Tweens.TweenChain} The TweenChain that was created.
  */
 GameObjectCreator.register('tweenchain', function (config)
 {
