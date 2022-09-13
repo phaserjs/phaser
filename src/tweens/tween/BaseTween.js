@@ -377,113 +377,6 @@ var BaseTween = new Class({
     },
 
     /**
-     * See if this Tween is currently acting upon the given target.
-     *
-     * @method Phaser.Tweens.Tween#hasTarget
-     * @since 3.0.0
-     *
-     * @param {object} target - The target to check against this Tween.
-     *
-     * @return {boolean} `true` if the given target is a target of this Tween, otherwise `false`.
-    hasTarget: function (target)
-    {
-        return (this.targets.indexOf(target) !== -1);
-    },
-     */
-
-    /**
-     * Restarts the Tween from the beginning.
-     *
-     * You can only restart a Tween that is currently playing. If the Tween has already been stopped, restarting
-     * it will throw an error.
-     *
-     * If you wish to restart the Tween from a specific point, use the `Tween.seek` method instead.
-     *
-     * @method Phaser.Tweens.Tween#restart
-     * @since 3.0.0
-     *
-     * @return {this} This Tween instance.
-    restart: function ()
-    {
-        switch (this.state)
-        {
-            case TWEEN_CONST.REMOVED:
-            case TWEEN_CONST.FINISHED:
-                this.seek();
-                this.parent.makeActive(this);
-                break;
-
-            case TWEEN_CONST.PENDING:
-            case TWEEN_CONST.PENDING_REMOVE:
-                this.parent.reset(this);
-                break;
-
-            case TWEEN_CONST.DESTROYED:
-                console.warn('Cannot restart destroyed Tweens');
-                break;
-
-            default:
-                this.seek();
-                break;
-        }
-
-        this.paused = false;
-        this.hasStarted = false;
-
-        return this;
-    },
-     */
-
-    /**
-     * Internal method that advances to the next state of the Tween during playback.
-     *
-     * @method Phaser.Tweens.Tween#nextState
-     * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
-     * @fires Phaser.Tweens.Events#TWEEN_LOOP
-     * @since 3.0.0
-     *
-     * @return {boolean} `true` if this Tween has completed, otherwise `false`.
-     */
-    nextState: function ()
-    {
-        if (this.loopCounter > 0)
-        {
-            this.elapsed = 0;
-            this.progress = 0;
-            this.loopCounter--;
-
-            this.resetTweenData(true);
-
-            if (this.loopDelay > 0)
-            {
-                this.countdown = this.loopDelay;
-
-                this.setLoopDelayState();
-            }
-            else
-            {
-                this.setActiveState();
-
-                this.dispatchEvent(Events.TWEEN_LOOP, 'onLoop');
-            }
-        }
-        else if (this.completeDelay > 0)
-        {
-            this.countdown = this.completeDelay;
-
-            this.setCompleteDelayState();
-        }
-        else
-        {
-            this.onCompleteHandler();
-
-            return true;
-        }
-
-        return false;
-    },
-
-    /**
      * Internal method that handles this tween completing and starting
      * the next tween in the chain, if any.
      *
@@ -492,103 +385,10 @@ var BaseTween = new Class({
      */
     onCompleteHandler: function ()
     {
-        this.progress = 1;
-        this.totalProgress = 1;
-
         this.setPendingRemoveState();
 
         this.dispatchEvent(Events.TWEEN_COMPLETE, 'onComplete');
     },
-
-    /**
-     * Starts a Tween playing.
-     *
-     * You only need to call this method if you have configured the tween to be paused on creation.
-     *
-     * If the Tween is already playing, calling this method again will have no effect. If you wish to
-     * restart the Tween, use `Tween.restart` instead.
-     *
-     * Calling this method after the Tween has completed will start the Tween playing again from the beginning.
-     * This is the same as calling `Tween.seek(0)` and then `Tween.play()`.
-     *
-     * @method Phaser.Tweens.Tween#play
-     * @since 3.0.0
-     *
-     * @return {this} This Tween instance.
-     */
-    play: function ()
-    {
-        if (this.isDestroyed())
-        {
-            console.warn('Cannot play destroyed Tween');
-
-            return this;
-        }
-
-        if (this.isPendingRemove() || this.isPending())
-        {
-            //  This makes the tween active as well:
-            this.seek();
-        }
-
-        this.paused = false;
-
-        this.setActiveState();
-
-        return this;
-    },
-
-    /**
-     * Seeks to a specific point in the Tween.
-     *
-     * **Note:** Be careful when seeking a Tween that repeats or loops forever,
-     * or that has an unusually long total duration, as it's possible to hang the browser.
-     *
-     * The given position is a value between 0 and 1 which represents how far through the Tween to seek to.
-     * A value of 0.5 would seek to half-way through the Tween, where-as a value of zero would seek to the start.
-     *
-     * Note that the seek takes the entire duration of the Tween into account, including delays, loops and repeats.
-     * For example, a Tween that lasts for 2 seconds, but that loops 3 times, would have a total duration of 6 seconds,
-     * so seeking to 0.5 would seek to 3 seconds into the Tween, as that's half-way through its _entire_ duration.
-     *
-     * Seeking works by resetting the Tween to its initial values and then iterating through the Tween at `delta`
-     * jumps per step. The longer the Tween, the longer this can take.
-     *
-     * @method Phaser.Tweens.Tween#seek
-     * @since 3.0.0
-     *
-     * @param {number} [toPosition=0] - A value between 0 and 1 which represents the progress point to seek to.
-     * @param {number} [delta=16.6] - The size of each step when seeking through the Tween. A higher value completes faster but at the cost of less precision.
-     *
-     * @return {this} This Tween instance.
-    seek: function (toPosition, delta)
-    {
-        if (toPosition === undefined) { toPosition = 0; }
-        if (delta === undefined) { delta = 16.6; }
-
-        if (this.isRemoved() || this.isFinished())
-        {
-            this.makeActive();
-        }
-
-        this.initTweenData(true);
-
-        if (toPosition > 0)
-        {
-            this.isSeeking = true;
-
-            do
-            {
-                this.update(delta);
-
-            } while (this.totalProgress <= toPosition);
-
-            this.isSeeking = false;
-        }
-
-        return this;
-    },
-     */
 
     /**
      * Flags the Tween as being complete, whatever stage of progress it is at.
@@ -696,6 +496,34 @@ var BaseTween = new Class({
     },
 
     /**
+     * Internal method that handles the processing of the loop delay countdown timer and
+     * the dispatch of related events. Called automatically by `Tween.update`.
+     *
+     * @method Phaser.Tweens.Tween#updateStartCountdown
+     * @since 3.60.0
+     *
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
+     */
+    updateStartCountdown: function (delta)
+    {
+        this.countdown -= delta;
+
+        if (this.countdown <= 0)
+        {
+            this.hasStarted = true;
+
+            this.setActiveState();
+
+            this.dispatchEvent(Events.TWEEN_START, 'onStart');
+
+            //  Reset the delta so we always start progress from zero
+            delta = 0;
+        }
+
+        return delta;
+    },
+
+    /**
      * Internal method that handles the processing of the complete delay countdown timer and
      * the dispatch of related events. Called automatically by `Tween.update`.
      *
@@ -713,30 +541,6 @@ var BaseTween = new Class({
             this.onCompleteHandler();
         }
     },
-
-    /**
-     * Internal method that will emit a Tween based Event and invoke the given callback.
-     *
-     * @method Phaser.Tweens.Tween#dispatchEvent
-     * @since 3.60.0
-     *
-     * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
-     * @param {Phaser.Types.Tweens.TweenCallbackTypes} [callback] - The name of the callback to be invoked. Can be `null` or `undefined` to skip invocation.
-    dispatchEvent: function (event, callback)
-    {
-        if (!this.isSeeking)
-        {
-            this.emit(event, this, this.targets);
-
-            var handler = this.callbacks[callback];
-
-            if (handler)
-            {
-                handler.func.apply(handler.scope, [ this, this.targets ].concat(handler.params));
-            }
-        }
-    },
-     */
 
     /**
      * Sets an event based callback to be invoked during playback.
@@ -822,6 +626,21 @@ var BaseTween = new Class({
     setCompleteDelayState: function ()
     {
         this.state = TWEEN_CONST.COMPLETE_DELAY;
+    },
+
+    /**
+     * Sets this Tween state to START_DELAY.
+     *
+     * @method Phaser.Tweens.Tween#setStartDelayState
+     * @since 3.60.0
+     */
+    setStartDelayState: function ()
+    {
+        this.state = TWEEN_CONST.START_DELAY;
+
+        this.countdown = this.startDelay;
+
+        this.hasStarted = false;
     },
 
     /**
@@ -918,6 +737,19 @@ var BaseTween = new Class({
     isCompleteDelayed: function ()
     {
         return (this.state === TWEEN_CONST.COMPLETE_DELAY);
+    },
+
+    /**
+     * Returns `true` if this Tween has a _current_ state of START_DELAY, otherwise `false`.
+     *
+     * @method Phaser.Tweens.Tween#isStartDelayed
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Tween has a _current_ state of START_DELAY, otherwise `false`.
+     */
+    isStartDelayed: function ()
+    {
+        return (this.state === TWEEN_CONST.START_DELAY);
     },
 
     /**
