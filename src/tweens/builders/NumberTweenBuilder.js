@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BaseTween = require('../tween/BaseTween');
 var Defaults = require('../tween/Defaults');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetBoolean = require('./GetBoolean');
@@ -11,8 +12,8 @@ var GetEaseFunction = require('./GetEaseFunction');
 var GetNewValue = require('./GetNewValue');
 var GetValue = require('../../utils/object/GetValue');
 var GetValueOp = require('./GetValueOp');
+var MergeRight = require('../../utils/object/MergeRight');
 var Tween = require('../tween/Tween');
-var TweenData = require('../tween/TweenData');
 
 /**
  * Creates a new Number Tween.
@@ -28,9 +29,20 @@ var TweenData = require('../tween/TweenData');
  */
 var NumberTweenBuilder = function (parent, config, defaults)
 {
+    if (config instanceof Tween)
+    {
+        config.parent = parent;
+
+        return config;
+    }
+
     if (defaults === undefined)
     {
         defaults = Defaults;
+    }
+    else
+    {
+        defaults = MergeRight(Defaults, defaults);
     }
 
     //  var tween = this.tweens.addCounter({
@@ -64,8 +76,8 @@ var NumberTweenBuilder = function (parent, config, defaults)
         ops.getEnd,
         ops.getStart,
         ops.getActive,
-        ease,
-        delay,
+        GetEaseFunction(GetValue(config, 'ease', ease), GetValue(config, 'easeParams', easeParams)),
+        GetNewValue(config, 'delay', delay),
         GetValue(config, 'duration', defaults.duration),
         GetBoolean(config, 'yoyo', defaults.yoyo),
         GetValue(config, 'hold', defaults.hold),
@@ -85,8 +97,9 @@ var NumberTweenBuilder = function (parent, config, defaults)
     tween.persist = GetBoolean(config, 'persist', false);
 
     //  Set the Callbacks
-    var scope = GetValue(config, 'callbackScope', tween);
-    var callbacks = Tween.TYPES;
+    tween.callbackScope = GetValue(config, 'callbackScope', tween);
+
+    var callbacks = BaseTween.TYPES;
 
     for (var i = 0; i < callbacks.length; i++)
     {
@@ -96,10 +109,9 @@ var NumberTweenBuilder = function (parent, config, defaults)
 
         if (callback)
         {
-            var callbackScope = GetValue(config, type + 'Scope', scope);
             var callbackParams = GetValue(config, type + 'Params', []);
 
-            tween.setCallback(type, callback, callbackParams, callbackScope);
+            tween.setCallback(type, callback, callbackParams);
         }
     }
 
