@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var ArrayRemove = require('../utils/array/Remove');
+var ArrayRemove = require('../../utils/array/Remove');
 var BaseTween = require('./BaseTween');
 var Class = require('../../utils/Class');
 var Events = require('../events');
