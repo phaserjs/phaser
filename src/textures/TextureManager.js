@@ -848,26 +848,38 @@ var TextureManager = new Class({
      * Adds a Sprite Sheet to this Texture Manager.
      *
      * In Phaser terminology a Sprite Sheet is a texture containing different frames, but each frame is the exact
-     * same size and cannot be trimmed or rotated.
+     * same size and cannot be trimmed or rotated. This is different to a Texture Atlas, created by tools such as
+     * Texture Packer, and more akin with the fixed-frame exports you get from apps like Aseprite or old arcade
+     * games.
+     *
+     * As of Phaser 3.60 you can use this method to add a sprite sheet to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addSpriteSheet
      * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
-     * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
+     * @param {string} key - The unique string-based key of the Texture. Give an empty string if you provide a Phaser Texture as the 2nd argument.
+     * @param {(HTMLImageElement|Phaser.Textures.Texture)} source - The source Image element, or a Phaser Texture.
      * @param {Phaser.Types.Textures.SpriteSheetConfig} config - The configuration object for this Sprite Sheet.
      *
-     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
+     * @return {?Phaser.Textures.Texture} The Texture that was created or updated, or `null` if the key is already in use.
      */
     addSpriteSheet: function (key, source, config)
     {
         var texture = null;
 
-        if (this.checkKey(key))
+        if (source instanceof Texture)
+        {
+            key = texture.key;
+            texture = source;
+        }
+        else if (this.checkKey(key))
         {
             texture = this.create(key, source);
+        }
 
+        if (texture)
+        {
             var width = texture.source[0].width;
             var height = texture.source[0].height;
 
