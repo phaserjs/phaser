@@ -139,6 +139,7 @@ The following are further updates within the Tween system:
 
 ### New Features
 
+* The `TextureManager.addSpriteSheet` method will now allow you to pass in a Phaser Texture as the 2nd parameter. This allows you to add sprite sheet data to textures that came from external sources, such as SVG files or canvas elements.
 * `Game.pause` is a new method that will pause the entire game and all Phaser systems.
 * `Game.resume` is a new method that will resume the entire game and resume all of Phaser's systems.
 * `RenderTexture.fillFrame` is a new method that will take a given texture and draw it to the Render Texture as a fill-pattern. You can control the offset, alpha and tint of the draw (thanks xlapiz)
