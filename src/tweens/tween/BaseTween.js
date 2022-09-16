@@ -460,6 +460,34 @@ var BaseTween = new Class({
     },
 
     /**
+     * Flags the Tween as being complete only once the current loop has finished.
+     *
+     * This is a useful way to stop an infinitely looping tween once a complete cycle is over,
+     * rather than abruptly.
+     *
+     * If you don't have a loop then call `Tween.stop` instead.
+     *
+     * @method Phaser.Tweens.BaseTween#completeAfterLoop
+     * @fires Phaser.Tweens.Events#TWEEN_COMPLETE
+     * @since 3.60.0
+     *
+     * @param {number} [loops=0] - The number of loops that should finish before this tween completes. Zero means complete just the current loop.
+     *
+     * @return {this} This Tween instance.
+     */
+    completeAfterLoop: function (loops)
+    {
+        if (loops === undefined) { loops = 0; }
+
+        if (this.loopCounter > loops)
+        {
+            this.loopCounter = loops;
+        }
+
+        return this;
+    },
+
+    /**
      * Immediately removes this Tween from the TweenManager and all of its internal arrays,
      * no matter what stage it is at. Then sets the tween state to `REMOVED`.
      *
