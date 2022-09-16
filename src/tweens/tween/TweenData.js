@@ -295,24 +295,6 @@ var TweenData = new Class({
         this.end = 0;
 
         /**
-         * Internal tween timer.
-         *
-         * @name Phaser.Tweens.TweenData#t1
-         * @type {number}
-         * @since 3.60.0
-         */
-        this.t1 = 0;
-
-        /**
-         * Internal tween timer.
-         *
-         * @name Phaser.Tweens.TweenData#t2
-         * @type {number}
-         * @since 3.60.0
-         */
-        this.t2 = 0;
-
-        /**
          * The state of this TweenData.
          *
          * @name Phaser.Tweens.TweenData#state
@@ -380,26 +362,26 @@ var TweenData = new Class({
         //  calcDuration:
 
         //  Set t1 (duration + hold + yoyo)
-        this.t1 = this.duration + this.hold;
+        var t1 = this.duration + this.hold;
 
         if (this.yoyo)
         {
-            this.t1 += this.duration;
+            t1 += this.duration;
         }
 
         //  Set t2 (repeatDelay + duration + hold + yoyo)
-        this.t2 = this.t1 + this.repeatDelay;
+        var t2 = t1 + this.repeatDelay;
 
         //  Total Duration
-        this.totalDuration = this.delay + this.t1;
+        this.totalDuration = this.delay + t1;
 
         if (this.repeat === -1)
         {
-            this.totalDuration += (this.t2 * 999999999999);
+            this.totalDuration += (t2 * 999999999999);
         }
         else if (this.repeat > 0)
         {
-            this.totalDuration += (this.t2 * this.repeat);
+            this.totalDuration += (t2 * this.repeat);
         }
 
         if (this.totalDuration > tween.duration)
