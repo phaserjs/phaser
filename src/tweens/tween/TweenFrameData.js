@@ -30,7 +30,6 @@ var TWEEN_CONST = require('./const');
  * @param {(string|number)} frame - The texture frame to set at the end of this tween.
  * @param {function} delay - Function that returns the time in ms/frames before tween will start.
  * @param {number} duration - The duration of the tween in ms/frames.
- * @param {boolean} yoyo - Determines whether the tween should return back to its start value after hold has expired.
  * @param {number} hold - Function that returns the time in ms/frames the tween will pause before repeating or returning to its starting value if yoyo is set to true.
  * @param {number} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
  * @param {number} repeatDelay - Function that returns the time in ms/frames before the repeat will start.
@@ -41,7 +40,7 @@ var TweenFrameData = new Class({
 
     initialize:
 
-    function TweenFrameData (tween, targetIndex, texture, frame, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY)
+    function TweenFrameData (tween, targetIndex, texture, frame, delay, duration, hold, repeat, repeatDelay, flipX, flipY)
     {
         /**
          * A reference to the Tween that this TweenData instance belongs to.
@@ -145,7 +144,7 @@ var TweenFrameData = new Class({
          * @type {boolean}
          * @since 3.60.0
          */
-        this.yoyo = yoyo;
+        this.yoyo = (repeat > 0) ? true : false;
 
         /**
          * The time, in milliseconds, before this tween will start a yoyo to repeat.
@@ -533,11 +532,7 @@ var TweenFrameData = new Class({
      */
     setStateFromEnd: function (diff)
     {
-        if (this.yoyo)
-        {
-            this.onRepeat(diff, true, true);
-        }
-        else if (this.repeatCounter > 0)
+        if (this.repeatCounter > 0)
         {
             this.onRepeat(diff, true);
         }
@@ -580,10 +575,9 @@ var TweenFrameData = new Class({
      * @since 3.60.0
      *
      * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
-     * @param {boolean} setStart - Set the TweenData start values?
      * @param {boolean} [isYoyo=false] - Is this call a Yoyo check?
      */
-    onRepeat: function (diff, setStart, isYoyo)
+    onRepeat: function (diff, isYoyo)
     {
         if (isYoyo === undefined) { isYoyo = false; }
 
@@ -606,11 +600,6 @@ var TweenFrameData = new Class({
             target.toggleFlipY();
         }
 
-        if (setStart || isYoyo)
-        {
-            target.setTexture(this.startTexture, this.startFrame);
-        }
-
         if (isYoyo)
         {
             this.setPlayingBackwardState();
@@ -626,8 +615,6 @@ var TweenFrameData = new Class({
         if (this.repeatDelay > 0)
         {
             this.elapsed = this.repeatDelay - diff;
-
-            target.setTexture(this.startTexture, this.startFrame);
 
             this.setRepeatState();
         }
