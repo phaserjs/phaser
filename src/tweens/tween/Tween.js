@@ -12,6 +12,7 @@ var GameObjectFactory = require('../../gameobjects/GameObjectFactory');
 var MATH_CONST = require('../../math/const');
 var TWEEN_CONST = require('./const');
 var TweenData = require('./TweenData');
+var TweenFrameData = require('./TweenFrameData');
 
 /**
  * @classdesc
@@ -171,6 +172,15 @@ var Tween = new Class({
     add: function (targetIndex, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData)
     {
         var tweenData = new TweenData(this, targetIndex, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData);
+
+        this.totalData = this.data.push(tweenData);
+
+        return tweenData;
+    },
+
+    addFrameData: function (targetIndex, texture, frame, delay, duration, hold, repeat, repeatDelay, flipX, flipY)
+    {
+        var tweenData = new TweenFrameData(this, targetIndex, texture, frame, delay, duration, hold, repeat, repeatDelay, flipX, flipY);
 
         this.totalData = this.data.push(tweenData);
 
