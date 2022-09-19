@@ -17,7 +17,6 @@ var GetValue = require('../../utils/object/GetValue');
 var GetValueOp = require('./GetValueOp');
 var MergeRight = require('../../utils/object/MergeRight');
 var Tween = require('../tween/Tween');
-var TweenFrameData = require('../tween/TweenFrameData');
 
 /**
  * Creates a new Tween.
@@ -70,28 +69,65 @@ var TweenBuilder = function (parent, config, defaults)
 
     var addTarget = function (tween, targetIndex, key, value)
     {
-        var ops = GetValueOp(key, value);
+        if (key === 'texture')
+        {
+            var texture = value;
+            var frame = undefined;
 
-        var interpolationFunc = GetInterpolationFunction(GetValue(value, 'interpolation', interpolation));
+            if (Array.isArray(value))
+            {
+                texture = value[0];
+                frame = value[1];
+            }
+            else if (value.hasOwnProperty('value'))
+            {
+                texture = value.value;
 
-        tween.add(
-            targetIndex,
-            key,
-            ops.getEnd,
-            ops.getStart,
-            ops.getActive,
-            GetEaseFunction(GetValue(value, 'ease', ease), GetValue(value, 'easeParams', easeParams)),
-            GetNewValue(value, 'delay', delay),
-            GetValue(value, 'duration', duration),
-            GetBoolean(value, 'yoyo', yoyo),
-            GetValue(value, 'hold', hold),
-            GetValue(value, 'repeat', repeat),
-            GetValue(value, 'repeatDelay', repeatDelay),
-            GetBoolean(value, 'flipX', flipX),
-            GetBoolean(value, 'flipY', flipY),
-            interpolationFunc,
-            (interpolationFunc) ? value : null
-        );
+                if (Array.isArray(value.value))
+                {
+                    texture = value.value[0];
+                    frame = value.value[1];
+                }
+            }
+
+            tween.addFrameData(
+                targetIndex,
+                texture,
+                frame,
+                GetNewValue(value, 'delay', delay),
+                GetValue(value, 'duration', duration),
+                GetValue(value, 'hold', hold),
+                GetValue(value, 'repeat', repeat),
+                GetValue(value, 'repeatDelay', repeatDelay),
+                GetBoolean(value, 'flipX', flipX),
+                GetBoolean(value, 'flipY', flipY)
+            );
+        }
+        else
+        {
+            var ops = GetValueOp(key, value);
+
+            var interpolationFunc = GetInterpolationFunction(GetValue(value, 'interpolation', interpolation));
+
+            tween.add(
+                targetIndex,
+                key,
+                ops.getEnd,
+                ops.getStart,
+                ops.getActive,
+                GetEaseFunction(GetValue(value, 'ease', ease), GetValue(value, 'easeParams', easeParams)),
+                GetNewValue(value, 'delay', delay),
+                GetValue(value, 'duration', duration),
+                GetBoolean(value, 'yoyo', yoyo),
+                GetValue(value, 'hold', hold),
+                GetValue(value, 'repeat', repeat),
+                GetValue(value, 'repeatDelay', repeatDelay),
+                GetBoolean(value, 'flipX', flipX),
+                GetBoolean(value, 'flipY', flipY),
+                interpolationFunc,
+                (interpolationFunc) ? value : null
+            );
+        }
     };
 
     var tween = new Tween(parent, targets);
@@ -110,36 +146,6 @@ var TweenBuilder = function (parent, config, defaults)
             {
                 addTarget(tween, targetIndex, 'scaleX', value);
                 addTarget(tween, targetIndex, 'scaleY', value);
-            }
-            else if (key === 'texture')
-            {
-                var texture = value;
-                var frame = undefined;
-
-                if (Array.isArray(value))
-                {
-                    texture = value[0];
-                    frame = value[1];
-                }
-
-                var tweenData = new TweenFrameData(
-                    tween,
-                    targetIndex,
-                    texture,
-                    frame,
-                    GetNewValue(value, 'delay', delay),
-                    GetValue(value, 'duration', duration),
-                    GetBoolean(value, 'yoyo', yoyo),
-                    GetValue(value, 'hold', hold),
-                    GetValue(value, 'repeat', repeat),
-                    GetValue(value, 'repeatDelay', repeatDelay),
-                    GetBoolean(value, 'flipX', flipX),
-                    GetBoolean(value, 'flipY', flipY)
-                );
-
-                console.log('TweenFrameData created');
-
-                tween.totalData = tween.data.push(tweenData);
             }
             else
             {
