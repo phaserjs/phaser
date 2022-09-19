@@ -49,7 +49,12 @@ var TweenBuilder = function (parent, config, defaults)
     }
 
     //  Create arrays of the Targets and the Properties
-    var targets = (defaults.targets) ? defaults.targets : GetTargets(config);
+    var targets = GetTargets(config);
+
+    if (!targets && defaults.targets)
+    {
+        targets = defaults.targets;
+    }
 
     var props = GetProps(config);
 
