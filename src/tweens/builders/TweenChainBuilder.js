@@ -13,7 +13,7 @@ var TweenBuilder = require('./TweenBuilder');
 var TweenChain = require('../tween/TweenChain');
 
 /**
- * Creates a new Tween.
+ * Creates a new Tween Chain instance.
  *
  * @function Phaser.Tweens.Builders.TweenChainBuilder
  * @since 3.60.0
@@ -21,7 +21,7 @@ var TweenChain = require('../tween/TweenChain');
  * @param {Phaser.Tweens.TweenManager} parent - The owner of the new Tween.
  * @param {Phaser.Types.Tweens.TweenChainBuilderConfig|object} config - Configuration for the new Tween.
  *
- * @return {Phaser.Tweens.Tween} The new tween.
+ * @return {Phaser.Tweens.TweenChain} The new Tween Chain.
  */
 var TweenChainBuilder = function (parent, config)
 {

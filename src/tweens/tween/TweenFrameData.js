@@ -53,7 +53,7 @@ var TweenFrameData = new Class({
         /**
          * The texture to be set at the start of the tween.
          *
-         * @name Phaser.Tweens.TweenData#startTexture
+         * @name Phaser.Tweens.TweenFrameData#startTexture
          * @type {string}
          * @since 3.60.0
          */
@@ -62,7 +62,7 @@ var TweenFrameData = new Class({
         /**
          * The texture to be set at the end of the tween.
          *
-         * @name Phaser.Tweens.TweenData#endTexture
+         * @name Phaser.Tweens.TweenFrameData#endTexture
          * @type {string}
          * @since 3.60.0
          */
@@ -71,7 +71,7 @@ var TweenFrameData = new Class({
         /**
          * The frame to be set at the start of the tween.
          *
-         * @name Phaser.Tweens.TweenData#startFrame
+         * @name Phaser.Tweens.TweenFrameData#startFrame
          * @type {(string|number)}
          * @since 3.60.0
          */
@@ -80,7 +80,7 @@ var TweenFrameData = new Class({
         /**
          * The frame to be set at the end of the tween.
          *
-         * @name Phaser.Tweens.TweenData#endFrame
+         * @name Phaser.Tweens.TweenFrameData#endFrame
          * @type {(string|number)}
          * @since 3.60.0
          */
@@ -90,7 +90,7 @@ var TweenFrameData = new Class({
          * Will the Tween ease back to its starting values, after reaching the end
          * and any `hold` value that may be set?
          *
-         * @name Phaser.Tweens.TweenData#yoyo
+         * @name Phaser.Tweens.TweenFrameData#yoyo
          * @type {boolean}
          * @since 3.60.0
          */
@@ -102,7 +102,7 @@ var TweenFrameData = new Class({
      *
      * Called automatically by the parent Tween. Should not be called directly.
      *
-     * @method Phaser.Tweens.TweenData#init
+     * @method Phaser.Tweens.TweenFrameData#init
      * @since 3.60.0
      *
      * @param {boolean} [isSeek=false] - Is the parent Tween currently seeking?
@@ -187,7 +187,7 @@ var TweenFrameData = new Class({
     /**
      * Internal method that advances this TweenData based on the delta value given.
      *
-     * @method Phaser.Tweens.TweenData#update
+     * @method Phaser.Tweens.TweenFrameData#update
      * @fires Phaser.Tweens.Events#TWEEN_UPDATE
      * @fires Phaser.Tweens.Events#TWEEN_REPEAT
      * @since 3.60.0
@@ -310,7 +310,7 @@ var TweenFrameData = new Class({
     /**
      * Internal method that resets this Tween Data, including the progress and elapsed values.
      *
-     * @method Phaser.Tweens.TweenData#reset
+     * @method Phaser.Tweens.TweenFrameData#reset
      * @since 3.60.0
      *
      * @param {boolean} resetFromLoop - Has this method been called as part of a loop?
@@ -343,7 +343,7 @@ var TweenFrameData = new Class({
      * Internal method that will emit a TweenData based Event on the
      * parent Tween and also invoke the given callback, if provided.
      *
-     * @method Phaser.Tweens.TweenData#dispatchEvent
+     * @method Phaser.Tweens.TweenFrameData#dispatchEvent
      * @since 3.60.0
      *
      * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
@@ -372,7 +372,7 @@ var TweenFrameData = new Class({
      * Internal method used as part of the playback process that checks if this
      * TweenData should yoyo, repeat, or has completed.
      *
-     * @method Phaser.Tweens.TweenData#setStateFromEnd
+     * @method Phaser.Tweens.TweenFrameData#setStateFromEnd
      * @fires Phaser.Tweens.Events#TWEEN_REPEAT
      * @fires Phaser.Tweens.Events#TWEEN_YOYO
      * @since 3.60.0
@@ -395,7 +395,7 @@ var TweenFrameData = new Class({
      * Internal method used as part of the playback process that checks if this
      * TweenData should repeat or has completed.
      *
-     * @method Phaser.Tweens.TweenData#setStateFromStart
+     * @method Phaser.Tweens.TweenFrameData#setStateFromStart
      * @fires Phaser.Tweens.Events#TWEEN_REPEAT
      * @since 3.60.0
      *
@@ -418,7 +418,7 @@ var TweenFrameData = new Class({
      *
      * Called automatically by `setStateFromStart` and `setStateFromEnd`.
      *
-     * @method Phaser.Tweens.TweenData#onRepeat
+     * @method Phaser.Tweens.TweenFrameData#onRepeat
      * @fires Phaser.Tweens.Events#TWEEN_REPEAT
      * @fires Phaser.Tweens.Events#TWEEN_YOYO
      * @since 3.60.0
