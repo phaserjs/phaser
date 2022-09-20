@@ -95,7 +95,7 @@ var TweenBuilder = function (parent, config, defaults)
                 }
             }
 
-            tween.addFrameData(
+            tween.addFrame(
                 targetIndex,
                 texture,
                 frame,
