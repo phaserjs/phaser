@@ -9,7 +9,7 @@ var BaseSound = require('../BaseSound');
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
 var Extend = require('../../utils/object/Extend');
-var NOOP = require('../utils/NOOP');
+var NOOP = require('../../utils/NOOP');
 
 var returnFalse = function ()
 {
