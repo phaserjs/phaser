@@ -284,6 +284,8 @@ var NoAudioSoundManager = new Class({
      *
      * @method Phaser.Sound.NoAudioSoundManager#setRate
      * @since 3.0.0
+     *
+     * @return {this} This Sound Manager.
      */
     setRate: NOOP,
 
@@ -292,6 +294,8 @@ var NoAudioSoundManager = new Class({
      *
      * @method Phaser.Sound.NoAudioSoundManager#setDetune
      * @since 3.0.0
+     *
+     * @return {this} This Sound Manager.
      */
     setDetune: NOOP,
 

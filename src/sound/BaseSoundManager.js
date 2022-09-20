@@ -179,7 +179,7 @@ var BaseSoundManager = new Class({
      * @param {string} key - Asset key for the sound.
      * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
      *
-     * @return {(Phaser.Sound.HTML5AudioSound|Phaser.Sound.WebAudioSound)} The new audio sprite sound instance.
+     * @return {(Phaser.Sound.NoAudioSound|Phaser.Sound.HTML5AudioSound|Phaser.Sound.WebAudioSound)} The new audio sprite sound instance.
      */
     addAudioSprite: function (key, config)
     {
@@ -612,7 +612,7 @@ var BaseSoundManager = new Class({
      *
      * @param {number} value - Global playback rate at which all the sounds will be played.
      *
-     * @return {Phaser.Sound.BaseSoundManager} This Sound Manager.
+     * @return {this} This Sound Manager.
      */
     setRate: function (value)
     {
@@ -662,7 +662,7 @@ var BaseSoundManager = new Class({
      *
      * @param {number} value - The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
      *
-     * @return {Phaser.Sound.BaseSoundManager} This Sound Manager.
+     * @return {this} This Sound Manager.
      */
     setDetune: function (value)
     {

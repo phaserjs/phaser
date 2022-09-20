@@ -99,11 +99,13 @@ var WebAudioSound = new Class({
 
         /**
          * The time at which the sound should have started playback from the beginning.
-         * Based on BaseAudioContext.currentTime value.
+         *
+         * Treat this property as read-only.
+         *
+         * Based on `BaseAudioContext.currentTime` value.
          *
          * @name Phaser.Sound.WebAudioSound#playTime
          * @type {number}
-         * @private
          * @default 0
          * @since 3.0.0
          */
@@ -111,11 +113,13 @@ var WebAudioSound = new Class({
 
         /**
          * The time at which the sound source should have actually started playback.
-         * Based on BaseAudioContext.currentTime value.
+         *
+         * Treat this property as read-only.
+         *
+         * Based on `BaseAudioContext.currentTime` value.
          *
          * @name Phaser.Sound.WebAudioSound#startTime
          * @type {number}
-         * @private
          * @default 0
          * @since 3.0.0
          */
@@ -123,11 +127,11 @@ var WebAudioSound = new Class({
 
         /**
          * The time at which the sound loop source should actually start playback.
-         * Based on BaseAudioContext.currentTime value.
+         *
+         * Based on `BaseAudioContext.currentTime` value.
          *
          * @name Phaser.Sound.WebAudioSound#loopTime
          * @type {number}
-         * @private
          * @default 0
          * @since 3.0.0
          */
@@ -135,11 +139,13 @@ var WebAudioSound = new Class({
 
         /**
          * An array where we keep track of all rate updates during playback.
-         * Array of object types: { time: number, rate: number }
+         *
+         * Treat this property as read-only.
+         *
+         * Array of object types: `{ time: number, rate: number }`
          *
          * @name Phaser.Sound.WebAudioSound#rateUpdates
          * @type {array}
-         * @private
          * @default []
          * @since 3.0.0
          */
@@ -332,10 +338,9 @@ var WebAudioSound = new Class({
     },
 
     /**
-     * Used internally.
+     * This method is only used internally and it creates a looping buffer source.
      *
      * @method Phaser.Sound.WebAudioSound#createAndStartLoopBufferSource
-     * @private
      * @since 3.0.0
      */
     createAndStartLoopBufferSource: function ()
@@ -351,10 +356,9 @@ var WebAudioSound = new Class({
     },
 
     /**
-     * Used internally.
+     * This method is only used internally and it creates a buffer source.
      *
      * @method Phaser.Sound.WebAudioSound#createBufferSource
-     * @private
      * @since 3.0.0
      *
      * @return {AudioBufferSourceNode}
@@ -390,10 +394,9 @@ var WebAudioSound = new Class({
     },
 
     /**
-     * Used internally.
+     * This method is only used internally and it stops and removes a buffer source.
      *
      * @method Phaser.Sound.WebAudioSound#stopAndRemoveBufferSource
-     * @private
      * @since 3.0.0
      */
     stopAndRemoveBufferSource: function ()
@@ -412,10 +415,9 @@ var WebAudioSound = new Class({
     },
 
     /**
-     * Used internally.
+     * This method is only used internally and it stops and removes a looping buffer source.
      *
      * @method Phaser.Sound.WebAudioSound#stopAndRemoveLoopBufferSource
-     * @private
      * @since 3.0.0
      */
     stopAndRemoveLoopBufferSource: function ()
@@ -434,7 +436,6 @@ var WebAudioSound = new Class({
      * Method used internally for applying config values to some of the sound properties.
      *
      * @method Phaser.Sound.WebAudioSound#applyConfig
-     * @protected
      * @since 3.0.0
      */
     applyConfig: function ()
@@ -455,7 +456,6 @@ var WebAudioSound = new Class({
      * @method Phaser.Sound.WebAudioSound#update
      * @fires Phaser.Sound.Events#COMPLETE
      * @fires Phaser.Sound.Events#LOOPED
-     * @protected
      * @since 3.0.0
      */
     update: function ()
@@ -526,7 +526,6 @@ var WebAudioSound = new Class({
      * Method used internally to calculate total playback rate of the sound.
      *
      * @method Phaser.Sound.WebAudioSound#calculateRate
-     * @protected
      * @since 3.0.0
      */
     calculateRate: function ()
@@ -559,7 +558,6 @@ var WebAudioSound = new Class({
      * Method used internally for calculating current playback time of a playing sound.
      *
      * @method Phaser.Sound.WebAudioSound#getCurrentTime
-     * @private
      * @since 3.0.0
      */
     getCurrentTime: function ()
@@ -590,7 +588,6 @@ var WebAudioSound = new Class({
      * at witch the loop source should start playing.
      *
      * @method Phaser.Sound.WebAudioSound#getLoopTime
-     * @private
      * @since 3.0.0
      */
     getLoopTime: function ()
