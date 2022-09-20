@@ -4,14 +4,13 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('./tween/const');
-var Extend = require('../utils/object/Extend');
-
 /**
  * @namespace Phaser.Tweens
  */
 
 var Tweens = {
+
+    States: require('./tween/const'),
 
     Builders: require('./builders'),
     Events: require('./events'),
@@ -21,8 +20,5 @@ var Tweens = {
     TweenData: require('./tween/TweenData')
 
 };
-
-//   Merge in the consts
-Tweens = Extend(false, Tweens, CONST);
 
 module.exports = Tweens;

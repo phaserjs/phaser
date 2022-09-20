@@ -200,7 +200,7 @@ var BaseTweenData = new Class({
          * The state of this TweenData.
          *
          * @name Phaser.Tweens.BaseTweenData#state
-         * @type {Phaser.Types.Tweens.TweenDataState}
+         * @type {Phaser.Tweens.StateType}
          * @since 3.60.0
          */
         this.state = 0;

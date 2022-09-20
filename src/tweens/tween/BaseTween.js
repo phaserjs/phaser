@@ -173,7 +173,7 @@ var BaseTween = new Class({
          * The current state of the Tween.
          *
          * @name Phaser.Tweens.BaseTween#state
-         * @type {Phaser.Types.Tweens.TweenState}
+         * @type {Phaser.Tweens.StateType}
          * @since 3.60.0
          */
         this.state = TWEEN_CONST.PENDING;

@@ -4,13 +4,30 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+/**
+ * Phaser Tween States.
+ *
+ * @namespace Phaser.Tweens.States
+ * @memberof Phaser.Tweens
+ * @since 3.60.0
+ */
+
+/**
+ * Phaser Tween state constants.
+ *
+ * @typedef {Phaser.Tweens.States} Phaser.Tweens.StateType
+ * @memberof Phaser.Tweens
+ * @since 3.60.0
+ */
+
 var TWEEN_CONST = {
 
     /**
      * TweenData state.
      *
-     * @name Phaser.Tweens.CREATED
+     * @name Phaser.Tweens.States.CREATED
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     CREATED: 0,
@@ -20,8 +37,9 @@ var TWEEN_CONST = {
     /**
      * TweenData state.
      *
-     * @name Phaser.Tweens.DELAY
+     * @name Phaser.Tweens.States.DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     DELAY: 2,
@@ -31,8 +49,9 @@ var TWEEN_CONST = {
     /**
      * TweenData state.
      *
-     * @name Phaser.Tweens.PENDING_RENDER
+     * @name Phaser.Tweens.States.PENDING_RENDER
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     PENDING_RENDER: 4,
@@ -40,8 +59,9 @@ var TWEEN_CONST = {
     /**
      * TweenData state.
      *
-     * @name Phaser.Tweens.PLAYING_FORWARD
+     * @name Phaser.Tweens.States.PLAYING_FORWARD
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     PLAYING_FORWARD: 5,
@@ -49,8 +69,9 @@ var TWEEN_CONST = {
     /**
      * TweenData state.
      *
-     * @name Phaser.Tweens.PLAYING_BACKWARD
+     * @name Phaser.Tweens.States.PLAYING_BACKWARD
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     PLAYING_BACKWARD: 6,
@@ -58,8 +79,9 @@ var TWEEN_CONST = {
     /**
      * TweenData state.
      *
-     * @name Phaser.Tweens.HOLD_DELAY
+     * @name Phaser.Tweens.States.HOLD_DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     HOLD_DELAY: 7,
@@ -67,8 +89,9 @@ var TWEEN_CONST = {
     /**
      * TweenData state.
      *
-     * @name Phaser.Tweens.REPEAT_DELAY
+     * @name Phaser.Tweens.States.REPEAT_DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     REPEAT_DELAY: 8,
@@ -76,8 +99,9 @@ var TWEEN_CONST = {
     /**
      * TweenData state.
      *
-     * @name Phaser.Tweens.COMPLETE
+     * @name Phaser.Tweens.States.COMPLETE
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     COMPLETE: 9,
@@ -87,8 +111,9 @@ var TWEEN_CONST = {
     /**
      * Tween state. The Tween has been created but has not yet been added to the Tween Manager.
      *
-     * @name Phaser.Tweens.PENDING
+     * @name Phaser.Tweens.States.PENDING
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     PENDING: 20,
@@ -98,8 +123,9 @@ var TWEEN_CONST = {
      * or was playing and is currently paused, but in both cases it's still being processed by
      * the Tween Manager, so is considered 'active'.
      *
-     * @name Phaser.Tweens.ACTIVE
+     * @name Phaser.Tweens.States.ACTIVE
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     ACTIVE: 21,
@@ -107,8 +133,9 @@ var TWEEN_CONST = {
     /**
      * Tween state. The Tween is waiting for a loop countdown to elapse.
      *
-     * @name Phaser.Tweens.LOOP_DELAY
+     * @name Phaser.Tweens.States.LOOP_DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     LOOP_DELAY: 22,
@@ -116,8 +143,9 @@ var TWEEN_CONST = {
     /**
      * Tween state. The Tween is waiting for a complete delay to elapse.
      *
-     * @name Phaser.Tweens.COMPLETE_DELAY
+     * @name Phaser.Tweens.States.COMPLETE_DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     COMPLETE_DELAY: 23,
@@ -125,8 +153,9 @@ var TWEEN_CONST = {
     /**
      * Tween state. The Tween is waiting for a starting delay to elapse.
      *
-     * @name Phaser.Tweens.START_DELAY
+     * @name Phaser.Tweens.States.START_DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     START_DELAY: 24,
@@ -134,8 +163,9 @@ var TWEEN_CONST = {
     /**
      * Tween state. The Tween has finished playback and is waiting to be removed from the Tween Manager.
      *
-     * @name Phaser.Tweens.PENDING_REMOVE
+     * @name Phaser.Tweens.States.PENDING_REMOVE
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     PENDING_REMOVE: 25,
@@ -143,8 +173,9 @@ var TWEEN_CONST = {
     /**
      * Tween state. The Tween has been removed from the Tween Manager.
      *
-     * @name Phaser.Tweens.REMOVED
+     * @name Phaser.Tweens.States.REMOVED
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     REMOVED: 26,
@@ -153,8 +184,9 @@ var TWEEN_CONST = {
      * Tween state. The Tween has finished playback but was flagged as 'persistent' during creation,
      * so will not be automatically removed by the Tween Manager.
      *
-     * @name Phaser.Tweens.FINISHED
+     * @name Phaser.Tweens.States.FINISHED
      * @type {number}
+     * @const
      * @since 3.60.0
      */
     FINISHED: 27,
@@ -162,8 +194,9 @@ var TWEEN_CONST = {
     /**
      * Tween state. The Tween has been destroyed and can no longer be played by a Tween Manager.
      *
-     * @name Phaser.Tweens.DESTROYED
+     * @name Phaser.Tweens.States.DESTROYED
      * @type {number}
+     * @const
      * @since 3.60.0
      */
     DESTROYED: 28

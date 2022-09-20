@@ -137,6 +137,7 @@ var TweenChain = new Class({
      *
      * @method Phaser.Tweens.TweenChain#remove
      * @since 3.60.0
+     * @override
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to be removed.
      *
@@ -243,6 +244,7 @@ var TweenChain = new Class({
      *
      * @method Phaser.Tweens.TweenChain#makeActive
      * @since 3.60.0
+     * @override
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to check.
      *
