@@ -877,9 +877,12 @@ var BaseTween = new Class({
      */
     destroy: function ()
     {
-        for (var i = 0; i < this.totalData; i++)
+        if (this.data)
         {
-            this.data[i].destroy();
+            this.data.forEach(function (tweenData)
+            {
+                tweenData.destroy();
+            });
         }
 
         this.removeAllListeners();
