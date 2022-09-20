@@ -10,14 +10,17 @@ var Events = require('../events');
 
 /**
  * @classdesc
- * The TweenFrameData is a class that contains a single target that it will change the texture frame on.
+ * The TweenFrameData is a class that contains a single target that will change the texture frame
+ * and the conclusion of the tween.
  *
- * Tweens create TweenFrameData instances when they are created, with one TweenData instance per
- * target, per property. A Tween can own multiple TweenData instances, but a TweenData only
+ * TweenFrameData instances are typically created by the TweenBuilder automatically, when it
+ * detects the prescence of a 'texture' property as the key being tweened.
+ *
+ * A Tween can own multiple TweenFrameData instances, but a TweenFrameData only
  * ever belongs to a single Tween.
  *
  * You should not typically create these yourself, but rather use the TweenBuilder,
- * or the `Tween.add` method.
+ * or the `Tween.addFrame` method.
  *
  * @class TweenFrameData
  * @memberof Phaser.Tweens

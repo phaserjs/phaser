@@ -19,7 +19,7 @@ var Events = require('../events');
  * You should not typically create these yourself, but rather use the TweenBuilder,
  * or the `Tween.add` method.
  *
- * Prior to Phaser 3.60 the TweenData was just an object, but was refactored  to a class,
+ * Prior to Phaser 3.60 the TweenData was just an object, but was refactored to a class,
  * to make it responsible for its own state and updating.
  *
  * @class TweenData
