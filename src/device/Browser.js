@@ -11,10 +11,10 @@ var OS = require('./OS');
  * These values are read-only and populated during the boot sequence of the game.
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.browser` from within any Scene.
- * 
+ *
  * @typedef {object} Phaser.Device.Browser
  * @since 3.0.0
- * 
+ *
  * @property {boolean} chrome - Set to true if running in Chrome.
  * @property {boolean} edge - Set to true if running in Microsoft Edge browser.
  * @property {boolean} firefox - Set to true if running in Firefox.
@@ -45,7 +45,8 @@ var Browser = {
     safariVersion: 0,
     silk: false,
     trident: false,
-    tridentVersion: 0
+    tridentVersion: 0,
+    es2019: false
 
 };
 
@@ -56,16 +57,19 @@ function init ()
     if ((/Edge\/\d+/).test(ua))
     {
         Browser.edge = true;
+        Browser.es2019 = true;
     }
     else if ((/Chrome\/(\d+)/).test(ua) && !OS.windowsPhone)
     {
         Browser.chrome = true;
         Browser.chromeVersion = parseInt(RegExp.$1, 10);
+        Browser.es2019 = (Browser.chromeVersion > 69);
     }
     else if ((/Firefox\D+(\d+)/).test(ua))
     {
         Browser.firefox = true;
         Browser.firefoxVersion = parseInt(RegExp.$1, 10);
+        Browser.es2019 = (Browser.firefoxVersion > 10);
     }
     else if ((/AppleWebKit/).test(ua) && OS.iOS)
     {
@@ -79,10 +83,13 @@ function init ()
     else if ((/Opera/).test(ua))
     {
         Browser.opera = true;
+        Browser.es2019 = true;
     }
-    else if ((/Safari/).test(ua) && !OS.windowsPhone)
+    else if ((/Version\/(\d+\.\d+) Safari/).test(ua) && !OS.windowsPhone)
     {
         Browser.safari = true;
+        Browser.safariVersion = parseInt(RegExp.$1, 10);
+        Browser.es2019 = (Browser.safariVersion > 10);
     }
     else if ((/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/).test(ua))
     {
