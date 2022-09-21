@@ -85,7 +85,7 @@ var TextStyle = new Class({
          * The font size.
          *
          * @name Phaser.GameObjects.TextStyle#fontSize
-         * @type {string}
+         * @type {(string|number)}
          * @default '16px'
          * @since 3.0.0
          */
@@ -638,7 +638,7 @@ var TextStyle = new Class({
     },
 
     /**
-     * Set the font size.
+     * Set the font size. Can be a string with a valid CSS unit, i.e. `16px`, or a number.
      *
      * @method Phaser.GameObjects.TextStyle#setFontSize
      * @since 3.0.0
