@@ -261,6 +261,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * If the WebGL Renderer logs an error, it will now show the error string, or the code if not present in the error map (thanks @zpxp)
 * The `snapshotPixel` function, used by the Canvas and WebGL Renderers and the RenderTexture would mistakenly divide the alpha value. These values now return correctly (thanks @samme)
 * The `NoAudioSoundManager` now has all of the missing methods, such as `removeAll` and `get` to allow it to be a direct replacement for the HTML5 and WebAudio Sound Managers (thanks @orjandh @samme)
+* The `Texture.destroy` method will only destroy sources, dataSources and frames if they exist, protecting against previously destroyed instances.
 
 ### Bug Fixes
 
