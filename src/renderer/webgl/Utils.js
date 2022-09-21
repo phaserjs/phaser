@@ -113,7 +113,8 @@ module.exports = {
         //  Note: This is the maximum number of TIUs that a _fragment_ shader supports
         //  https://www.khronos.org/opengl/wiki/Common_Mistakes#Texture_Unit
 
-        var gpuMax = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+        //  Hard-clamp this to 16 to avoid run-away texture counts such as on Android
+        var gpuMax = Math.min(16, gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS));
 
         if (!maxTextures || maxTextures === -1)
         {
@@ -145,6 +146,7 @@ module.exports = {
             return '';
         }
 
+        /*
         var src = 'vec4 getSampler (int index, vec2 uv) {';
 
         for (var i = 0; i < maxTextures; i++)
@@ -160,6 +162,7 @@ module.exports = {
         src += '\nreturn vec4(0);\n}';
 
         fragmentShaderSource = fragmentShaderSource.replace(/%getSampler%/gi, src);
+        */
 
         return fragmentShaderSource.replace(/%count%/gi, maxTextures.toString());
     }
