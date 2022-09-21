@@ -182,22 +182,9 @@ var Config = new Class({
          */
         this.stableSort = GetValue(config, 'stableSort', -1);
 
-        if (this.stableSort === -1)
+        if (this.stableSort === -1 && Device.browser.es2019)
         {
-            //  Try and determine it automatically
-            var browser = Device.browser;
-
-            if (
-                browser.ie ||
-                browser.silk ||
-                browser.trident ||
-                (browser.chrome && browser.chromeVersion < 70) ||
-                (browser.firefox && browser.firefoxVersion < 100) ||
-                (browser.safari && browser.safariVersion < 11)
-            )
-            {
-                this.stableSort = 1;
-            }
+            this.stableSort = 0;
         }
 
         //  DOM Element Container
