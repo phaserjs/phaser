@@ -22,6 +22,7 @@
  * ```
  *
  * @event Phaser.Tweens.Events#TWEEN_STOP
+ * @type {string}
  * @since 3.24.0
  *
  * @param {Phaser.Tweens.Tween} tween - A reference to the Tween instance that emitted the event.

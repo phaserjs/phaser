@@ -14,6 +14,7 @@
  * Listen for it from a Video Game Object instance using `Video.on('created', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_CREATED
+ * @type {string}
  * @since 3.20.0
  *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which raised the event.

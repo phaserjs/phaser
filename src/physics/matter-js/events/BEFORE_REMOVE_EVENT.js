@@ -21,6 +21,7 @@
  * Listen to it from a Scene using: `this.matter.world.on('beforeremove', listener)`.
  *
  * @event Phaser.Physics.Matter.Events#BEFORE_REMOVE
+ * @type {string}
  * @since 3.22.0
  *
  * @param {Phaser.Physics.Matter.Events.BeforeRemoveEvent} event - The Remove Event object.

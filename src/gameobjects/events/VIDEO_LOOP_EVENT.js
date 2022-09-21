@@ -19,6 +19,7 @@
  * Listen for it from a Video Game Object instance using `Video.on('loop', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_LOOP
+ * @type {string}
  * @since 3.20.0
  *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which has looped.

@@ -15,6 +15,7 @@
  * errors the next time they try to render. Be sure to clear all use of the texture in this event handler.
  *
  * @event Phaser.Textures.Events#REMOVE_KEY
+ * @type {string}
  * @since 3.60.0
  */
 module.exports = 'removetexture-';

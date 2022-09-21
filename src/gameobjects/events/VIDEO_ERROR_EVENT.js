@@ -12,6 +12,7 @@
  * Listen for it from a Video Game Object instance using `Video.on('error', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_ERROR
+ * @type {string}
  * @since 3.20.0
  *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which threw the error.

@@ -21,6 +21,7 @@
  * Listen to it from a Scene using: `this.matter.world.on('afterremove', listener)`.
  *
  * @event Phaser.Physics.Matter.Events#AFTER_REMOVE
+ * @type {string}
  * @since 3.22.0
  *
  * @param {Phaser.Physics.Matter.Events.AfterRemoveEvent} event - The Remove Event object.

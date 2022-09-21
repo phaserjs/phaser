@@ -16,6 +16,7 @@
  * See [GameObject.setInteractive](Phaser.GameObjects.GameObject#setInteractive) for more details.
  *
  * @event Phaser.Input.Events#GAMEOBJECT_DRAG_END
+ * @type {string}
  * @since 3.0.0
  *
  * @param {Phaser.Input.Pointer} pointer - The Pointer responsible for triggering this event.

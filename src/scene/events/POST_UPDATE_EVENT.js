@@ -23,6 +23,7 @@
  * A Scene will only run its step if it is active.
  *
  * @event Phaser.Scenes.Events#POST_UPDATE
+ * @type {string}
  * @since 3.0.0
  *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.

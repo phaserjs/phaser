@@ -21,6 +21,7 @@
  * the propagation of this event.
  *
  * @event Phaser.Input.Events#POINTER_OVER
+ * @type {string}
  * @since 3.0.0
  *
  * @param {Phaser.Input.Pointer} pointer - The Pointer responsible for triggering this event.

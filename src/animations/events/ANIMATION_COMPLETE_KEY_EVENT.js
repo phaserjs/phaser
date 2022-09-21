@@ -34,6 +34,7 @@
  * If the animation is restarted while it is already playing, `ANIMATION_RESTART` is emitted.
  *
  * @event Phaser.Animations.Events#ANIMATION_COMPLETE_KEY
+ * @type {string}
  * @since 3.50.0
  *
  * @param {Phaser.Animations.Animation} animation - A reference to the Animation that completed.

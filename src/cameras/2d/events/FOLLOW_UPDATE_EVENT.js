@@ -14,6 +14,7 @@
  * Listen to it from a Camera instance using: `camera.on('followupdate', listener)`.
  *
  * @event Phaser.Cameras.Scene2D.Events#FOLLOW_UPDATE
+ * @type {string}
  * @since 3.50.0
  *
  * @param {Phaser.Cameras.Scene2D.BaseCamera} camera - The camera that emitted the event.
