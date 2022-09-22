@@ -12,9 +12,6 @@ var MultiPipeline = require('./MultiPipeline');
 var Vec2 = require('../../../math/Vector2');
 var WebGLPipeline = require('../WebGLPipeline');
 
-var LIGHT_COUNT = 10;
-var tempVec2 = new Vec2();
-
 /**
  * @classdesc
  * The Light Pipeline is an extension of the Multi Pipeline and uses a custom shader
@@ -67,21 +64,9 @@ var LightPipeline = new Class({
 
     function LightPipeline (config)
     {
-        LIGHT_COUNT = config.game.renderer.config.maxLights;
-
         var fragShader = GetFastValue(config, 'fragShader', LightShaderSourceFS);
 
-        var shaders = [];
-
-        for (var i = 1; i <= LIGHT_COUNT; i++)
-        {
-            shaders.push({
-                name: 'lights' + i,
-                fragShader: fragShader.replace('%LIGHT_COUNT%', i.toString())
-            });
-        }
-
-        config.shaders = shaders;
+        config.fragShader = fragShader.replace('%LIGHT_COUNT%', config.game.renderer.config.maxLights);
 
         MultiPipeline.call(this, config);
 
@@ -119,6 +104,15 @@ var LightPipeline = new Class({
          * @since 3.53.0
          */
         this.lightsActive = true;
+
+        /**
+         * A persistent calculation vector used when processing the lights.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#tempVec2
+         * @type {Phaser.Math.Vec2}
+         * @since 3.60.0
+         */
+        this.tempVec2 = new Vec2();
     },
 
     /**
@@ -145,12 +139,6 @@ var LightPipeline = new Class({
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 127, 127, 255, 255 ]));
 
         this.defaultNormalMap = { glTexture: tempTexture };
-
-        //  Set the lights shaders
-        for (var i = 0; i < this.shaders.length; i++)
-        {
-            this['lightShader' + (i + 1)] = this.shaders[i];
-        }
     },
 
     /**
@@ -177,27 +165,22 @@ var LightPipeline = new Class({
         var lights = lightManager.getLights(camera);
         var lightsCount = lights.length;
 
-        if (lightsCount === 0)
-        {
-            return;
-        }
-
         //  Ok, we're good to go ...
 
         this.lightsActive = true;
-
-        this.setShader(this['lightShader' + lightsCount], true);
 
         var i;
         var renderer = this.renderer;
         var height = renderer.height;
         var cameraMatrix = camera.matrix;
+        var tempVec2 = this.tempVec2;
 
         this.set1i('uMainSampler', 0);
         this.set1i('uNormSampler', 1);
         this.set2f('uResolution', this.width / 2, this.height / 2);
         this.set4f('uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
         this.set3f('uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
+        this.set1i('uLightCount', lightsCount);
 
         for (i = 0; i < lightsCount; i++)
         {
@@ -514,7 +497,5 @@ var LightPipeline = new Class({
     }
 
 });
-
-LightPipeline.LIGHT_COUNT = LIGHT_COUNT;
 
 module.exports = LightPipeline;
