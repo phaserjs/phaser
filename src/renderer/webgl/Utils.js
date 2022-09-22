@@ -100,6 +100,8 @@ module.exports = {
      * Check to see how many texture units the GPU supports in a fragment shader
      * and if the value specific in the game config is allowed.
      *
+     * This value is hard-clamped to 16 for performance reasons on Android devices.
+     *
      * @function Phaser.Renderer.WebGL.Utils.checkShaderMax
      * @since 3.50.0
      *
