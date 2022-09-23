@@ -354,7 +354,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#chain
      * @since 3.60.0
      *
-     * @param {Phaser.Types.Tweens.TweenBuilderConfig[]|object[]} tweens - A Tween Chain configuration object, or an array of them to create multiple chains at once.
+     * @param {Phaser.Types.Tweens.TweenChainBuilderConfig | Phaser.Types.Tweens.TweenChainBuilderConfig[]| object | object[]} tweens - A Tween Chain configuration object, or an array of them to create multiple chains at once.
      *
      * @return {(Phaser.Tweens.TweenChain|Phaser.Tweens.TweenChain[])} The Tween Chain instance, or an array of them if you passed in an array of configs.
      */
