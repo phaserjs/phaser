@@ -74,15 +74,16 @@ var SpriteSheet = function (texture, sourceIndex, x, y, width, height, config)
         startFrame = total + startFrame;
     }
 
-    if (endFrame !== -1)
+    if (endFrame === -1 || endFrame > total || endFrame < startFrame)
     {
-        total = startFrame + (endFrame + 1);
+        endFrame = total;
     }
 
     var fx = margin;
     var fy = margin;
     var ax = 0;
     var ay = 0;
+    var c = 0;
 
     for (var i = 0; i < total; i++)
     {
@@ -102,7 +103,12 @@ var SpriteSheet = function (texture, sourceIndex, x, y, width, height, config)
             ay = h - height;
         }
 
-        texture.add(i, sourceIndex, x + fx, y + fy, frameWidth - ax, frameHeight - ay);
+        if (i >= startFrame && i <= endFrame)
+        {
+            texture.add(c, sourceIndex, x + fx, y + fy, frameWidth - ax, frameHeight - ay);
+
+            c++;
+        }
 
         fx += frameWidth + spacing;
 
