@@ -886,25 +886,25 @@ var RenderTexture = new Class({
         //  How many stamps can we fit in horizontally?
         var c = Math.floor(width / frame.width);
 
-        var dx;
+        var dx = x;
 
         for (var i = 0; i < c; i++)
         {
-            dx = x + (i * frame.width);
-
             this.drawGameObject(stamp, dx, y);
+
+            dx += frame.width;
         }
 
         //  Left over?
         var diff = width - (c * frame.width);
 
-        // console.log('diff', c * frame.width, 'vs', width, 'diff', diff);
+        // console.log('hdiff', c * frame.width, 'vs', width, 'diff', diff);
 
         if (diff > 0)
         {
             stamp.setCrop(0, 0, diff, frame.height);
 
-            this.drawGameObject(stamp, dx + frame.width, y);
+            this.drawGameObject(stamp, dx, y);
         }
     },
 
@@ -918,27 +918,25 @@ var RenderTexture = new Class({
         //  How many stamps can we fit in vertically?
         var c = Math.floor(height / frame.height);
 
-        var dy;
+        var dy = y;
 
         for (var i = 0; i < c; i++)
         {
-            dy = y + (i * frame.height);
-
-            // console.log('vslice', x, dy);
-
             this.drawGameObject(stamp, x, dy);
+
+            dy += frame.height;
         }
 
         //  Left over?
         var diff = height - (c * frame.height);
 
-        // console.log('diff', c * frame.height, 'vs', height, 'diff', diff);
+        // console.log('vdiff', c * frame.height, 'vs', height, 'diff', diff);
 
         if (diff > 0)
         {
             stamp.setCrop(0, 0, frame.width, diff);
 
-            this.drawGameObject(stamp, x, dy + frame.height);
+            this.drawGameObject(stamp, x, dy);
         }
     },
 
@@ -1771,6 +1769,7 @@ var RenderTexture = new Class({
 
             this.texture.destroy();
             this.camera.destroy();
+            this.stamp.destroy();
 
             this.canvas = null;
             this.context = null;
