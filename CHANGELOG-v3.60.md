@@ -145,6 +145,7 @@ The following are further updates within the Tween system:
 
 ### New Features
 
+* `TextureManager.parseFrame` is a new method that will return a Texture Frame instance from the given argument, which can be a string, array, object or Texture instance.
 * `GameConfig.stableSort` is a new optional property that will control if the internal depth sorting routine uses our own StableSort function, or the built-in browser Array.sort one. Only modern browsers have a _stable_ Array.sort implementation, which Phaser requires. Older ones need to use our function instead. Set to 1 to use the legacy version, 0 to use the ES2019 version or -1 to have Phaser try and detect which is best for the browser (thanks @JernejHabjan)
 * `Device.es2019` is a new boolean that will do a basic browser type + version detection to see if it supports ES2019 features natively, such as stable array sorting.
 * The `TextureManager.addSpriteSheet` method will now allow you to pass in a Phaser Texture as the 2nd parameter. This allows you to add sprite sheet data to textures that came from external sources, such as SVG files or canvas elements.
