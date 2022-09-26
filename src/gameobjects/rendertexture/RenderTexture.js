@@ -16,6 +16,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Image = require('../image/Image');
 var NOOP = require('../../utils/NOOP');
 var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
+var Rectangle = require('../../geom/rectangle/Rectangle');
 var Render = require('./RenderTextureRender');
 var RenderTarget = require('../../renderer/webgl/RenderTarget');
 var Utils = require('../../renderer/webgl/Utils');
@@ -217,6 +218,16 @@ var RenderTexture = new Class({
         this._saved = false;
 
         /**
+         * The internal crop Rectangle, as used by the Stamp when it needs to crop itself.
+         *
+         * @name Phaser.GameObjects.RenderTexture#_stampCrop
+         * @type {Phaser.Geom.Rectangle}
+         * @private
+         * @since 3.60.0
+         */
+        this._stampCrop = new Rectangle();
+
+        /**
          * Is this Render Texture being used as the base texture for a Sprite Game Object?
          *
          * To enable this, call `RenderTexture.setIsSpriteTexture(true)`.
@@ -330,7 +341,9 @@ var RenderTexture = new Class({
             this.setSize(width, height);
         }
 
-        this.setOrigin(0, 0);
+        this.stamp.setOrigin(0);
+
+        this.setOrigin(0);
 
         this.initPipeline(PIPELINE_CONST.SINGLE_PIPELINE);
     },
@@ -829,126 +842,175 @@ var RenderTexture = new Class({
     },
 
     /**
-     * Takes the given Texture Frame and draws it to this Render Texture
-     * as a fill pattern, i.e. in a grid-layout based on the frame dimensions.
+     * Resets the internal Stamp object, ready for drawing.
+     *
+     * @method Phaser.GameObjects.RenderTexture#resetStamp
+     * @since 3.60.0
+     *
+     * @param {number} [alpha=1] - The alpha to use.
+     * @param {number} [tint=0xffffff] - WebGL only. The tint color to use.
+     *
+     * @return {Phaser.GameObjects.Image} A reference to the Stamp Game Object.
+     */
+    resetStamp: function (alpha, tint)
+    {
+        if (alpha === undefined) { alpha = 1; }
+        if (tint === undefined) { tint = 0xffffff; }
+
+        var stamp = this.stamp;
+
+        stamp.setCrop();
+        stamp.setAlpha(alpha);
+        stamp.setTint(tint);
+
+        return stamp;
+    },
+
+    /**
+     * Takes the given Texture Frame and draws it to this Render Texture as a fill pattern,
+     * i.e. in a grid-layout based on the frame dimensions.
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
      *
      * ```javascript
      * var rt = this.add.renderTexture(0, 0, 800, 600);
-     * rt.fillFrame(key, frame);
+     *
+     * rt.repeat(key, frame);
      * ```
      *
-     * You can optionally provide a position, alpha and tint value to apply to the frames
-     * before they are drawn. The position controls the offset of the first frame to be drawn
-     * and can be negative if required.
+     * You can optionally provide a position, width, height, alpha and tint value to apply to
+     * the frames before they are drawn. The position controls the top-left where the repeating
+     * fill will start from. The width and height control the size of the filled area.
      *
-     * Calling this method will cause a batch flush, so if you've got a stack of things to draw
-     * in a tight loop, try using the `draw` method instead.
+     * The position can be negative if required, but the dimensions cannot.
+     *
+     * Calling this method will cause a batch flush by default. Use the `skipBatch` argument
+     * to disable this, if this call is part of a larger batch draw.
      *
      * If you are planning on using this Render Texture as a base texture for Sprite
      * Game Objects, then you should set `RenderTexture.isSpriteTexture = true` before
      * calling this method, otherwise you will get inverted frames in WebGL.
      *
-     * @method Phaser.GameObjects.RenderTexture#fillFrame
+     * @method Phaser.GameObjects.RenderTexture#repeat
      * @since 3.60.0
      *
      * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
      * @param {(string|number)} [frame] - The name or index of the frame within the Texture. Set to `null` to skip this argument if not required.
      * @param {number} [x=0] - The x position to start drawing the frames from (can be negative to offset).
      * @param {number} [y=0] - The y position to start drawing the frames from (can be negative to offset).
-     * @param {number} [alpha] - The alpha to use. If not specified it uses the `globalAlpha` property.
-     * @param {number} [tint] - WebGL only. The tint color to use. If not specified it uses the `globalTint` property.
+     * @param {number} [width] - The width of the area to repeat the frame within. Defaults to the width of this Render Texture.
+     * @param {number} [height] - The height of the area to repeat the frame within. Defaults to the height of this Render Texture.
+     * @param {number} [alpha=1] - The alpha to use. Defaults to 1, no alpha.
+     * @param {number} [tint=0xffffff] - WebGL only. The tint color to use. Leave as undefined, or 0xffffff to have no tint.
+     * @param {boolean} [skipBatch=false] - Skip beginning and ending a batch with this call. Use if this is part of a bigger batched draw.
      *
      * @return {this} This Render Texture instance.
      */
-    fillFrame: function (key, frame, x, y, alpha, tint)
+    repeat: function (key, frame, x, y, width, height, alpha, tint, skipBatch)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
+        if (alpha === undefined) { alpha = 1; }
+        if (tint === undefined) { tint = 0xffffff; }
+        if (skipBatch === undefined) { skipBatch = false; }
 
-        var textureFrame = this.textureManager.getFrame(key, frame);
+        if (key instanceof Frame)
+        {
+            frame = key;
+        }
+        else
+        {
+            frame = this.textureManager.getFrame(key, frame);
+        }
 
-        if (textureFrame)
+        if (!frame)
+        {
+            return this;
+        }
+
+        var stamp = this.resetStamp(alpha, tint);
+
+        stamp.setFrame(frame);
+
+        var frameWidth = frame.width;
+        var frameHeight = frame.height;
+
+        //  How many stamps can we fit in horizontally and verticall?
+        //  We round this number up to allow for excess overflow
+        var hmax = Math.ceil(width / frameWidth);
+        var vmax = Math.ceil(height / frameHeight);
+
+        //  How much extra horizontal and vertical space do we have?
+        var hdiff = (hmax * frameWidth) - width;
+        var vdiff = (vmax * frameHeight) - height;
+
+        if (hdiff > 0)
+        {
+            hdiff = frameWidth - hdiff;
+        }
+
+        if (vdiff > 0)
+        {
+            vdiff = frameHeight - vdiff;
+        }
+
+        var dx = x;
+        var dy = y;
+
+        var useCrop = false;
+        var cropRect = this._stampCrop.setTo(0, 0, frameWidth, frameHeight);
+
+        if (!skipBatch)
         {
             this.beginDraw();
+        }
 
-            for (var sy = y; sy < this.height; sy += textureFrame.height)
+        for (var ty = 0; ty < vmax; ty++)
+        {
+            for (var tx = 0; tx < hmax; tx++)
             {
-                for (var sx = x; sx < this.width; sx += textureFrame.width)
+                useCrop = false;
+
+                if (hdiff > 0 && tx === hmax - 1)
                 {
-                    this.batchDrawFrame(key, frame, sx, sy, alpha, tint);
+                    useCrop = true;
+                    cropRect.width = hdiff;
                 }
+
+                if (vdiff > 0 && ty === vmax - 1)
+                {
+                    useCrop = true;
+                    cropRect.height = vdiff;
+                }
+
+                if (useCrop)
+                {
+                    stamp.setCrop(cropRect);
+                }
+
+                this.drawGameObject(stamp, dx, dy);
+
+                //  Reset crop
+                stamp.isCropped = false;
+
+                cropRect.width = frameWidth;
+                cropRect.height = frameHeight;
+
+                dx += frameWidth;
             }
 
+            dx = x;
+            dy += frameHeight;
+        }
+
+        if (!skipBatch)
+        {
             this.endDraw();
         }
 
         return this;
-    },
-
-    repeatFrameHorizontally: function (frame, x, y, width)
-    {
-        var stamp = this.stamp;
-
-        stamp.setCrop();
-        stamp.setFrame(frame);
-
-        //  How many stamps can we fit in horizontally?
-        var c = Math.floor(width / frame.width);
-
-        var dx = x;
-
-        for (var i = 0; i < c; i++)
-        {
-            this.drawGameObject(stamp, dx, y);
-
-            dx += frame.width;
-        }
-
-        //  Left over?
-        var diff = width - (c * frame.width);
-
-        // console.log('hdiff', c * frame.width, 'vs', width, 'diff', diff);
-
-        if (diff > 0)
-        {
-            stamp.setCrop(0, 0, diff, frame.height);
-
-            this.drawGameObject(stamp, dx, y);
-        }
-    },
-
-    repeatFrameVertically: function (frame, x, y, height)
-    {
-        var stamp = this.stamp;
-
-        stamp.setCrop();
-        stamp.setFrame(frame);
-
-        //  How many stamps can we fit in vertically?
-        var c = Math.floor(height / frame.height);
-
-        var dy = y;
-
-        for (var i = 0; i < c; i++)
-        {
-            this.drawGameObject(stamp, x, dy);
-
-            dy += frame.height;
-        }
-
-        //  Left over?
-        var diff = height - (c * frame.height);
-
-        // console.log('vdiff', c * frame.height, 'vs', height, 'diff', diff);
-
-        if (diff > 0)
-        {
-            stamp.setCrop(0, 0, frame.width, diff);
-
-            this.drawGameObject(stamp, x, dy);
-        }
     },
 
     nineSlice: function (slices, clear, x, y, width, height, alpha, tint)
@@ -1033,12 +1095,7 @@ var RenderTexture = new Class({
         // console.log('leftPos', leftPos);
         // console.log('rightPos', rightPos);
 
-        var stamp = this.stamp;
-
-        stamp.setAlpha(alpha);
-        stamp.setTint(tint);
-        stamp.setCrop();
-        stamp.setOrigin(0);
+        var stamp = this.resetStamp(alpha, tint);
 
         if (clear)
         {
@@ -1081,22 +1138,22 @@ var RenderTexture = new Class({
 
         if (topBg)
         {
-            this.repeatFrameHorizontally(topBg, topPos.x, topPos.y, topPos.w);
+            this.repeat(topBg, null, topPos.x, topPos.y, topPos.w, topBg.height, alpha, tint, true);
         }
 
         if (leftBg)
         {
-            this.repeatFrameVertically(leftBg, leftPos.x, leftPos.y, leftPos.h);
+            this.repeat(leftBg, null, leftPos.x, leftPos.y, leftBg.width, leftPos.h, alpha, tint, true);
         }
 
         if (rightBg)
         {
-            this.repeatFrameVertically(rightBg, rightPos.x, rightPos.y, rightPos.h);
+            this.repeat(rightBg, null, rightPos.x, rightPos.y, rightBg.width, rightPos.h, alpha, tint, true);
         }
 
         if (botBg)
         {
-            this.repeatFrameHorizontally(botBg, botPos.x, botPos.y, botPos.w);
+            this.repeat(botBg, null, botPos.x, botPos.y, botPos.w, botBg.height, alpha, tint, true);
         }
 
         this.endDraw();
@@ -1110,9 +1167,11 @@ var RenderTexture = new Class({
      *
      * This method starts the beginning of a batched draw.
      *
-     * It is faster than calling `draw`, but you must be very careful to manage the
-     * flow of code and remember to call `endDraw()`. If you don't need to draw large
-     * numbers of objects it's much safer and easier to use the `draw` method instead.
+     * Batch drawing is faster than calling `draw`, but you must be very careful to manage the
+     * flow of code and remember to call `endDraw()` when you're finished.
+     *
+     * If you don't need to draw large numbers of objects it's much safer and easier
+     * to use the `draw` method instead.
      *
      * The flow should be:
      *
@@ -1131,7 +1190,10 @@ var RenderTexture = new Class({
      *
      * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
      * have started a batch. Also, be very careful not to destroy this Render Texture while the
-     * batch is still open, or call `beginDraw` again.
+     * batch is still open.
+     *
+     * You can use the `RenderTexture.isDrawing` boolean property to tell if a batch is
+     * currently open, or not.
      *
      * @method Phaser.GameObjects.RenderTexture#beginDraw
      * @since 3.50.0
@@ -1140,22 +1202,25 @@ var RenderTexture = new Class({
      */
     beginDraw: function ()
     {
-        var camera = this.camera;
-        var renderer = this.renderer;
-        var renderTarget = this.renderTarget;
-
-        camera.preRender();
-
-        if (renderTarget)
+        if (!this.isDrawing)
         {
-            renderer.beginCapture(renderTarget.width, renderTarget.height);
-        }
-        else
-        {
-            renderer.setContext(this.context);
-        }
+            var camera = this.camera;
+            var renderer = this.renderer;
+            var renderTarget = this.renderTarget;
 
-        this.isDrawing = true;
+            camera.preRender();
+
+            if (renderTarget)
+            {
+                renderer.beginCapture(renderTarget.width, renderTarget.height);
+            }
+            else
+            {
+                renderer.setContext(this.context);
+            }
+
+            this.isDrawing = true;
+        }
 
         return this;
     },
@@ -1352,11 +1417,13 @@ var RenderTexture = new Class({
     /**
      * Use this method to finish batch drawing to this Render Texture.
      *
-     * Never call this method without first calling `beginDraw`.
+     * Calling this method without first calling `beginDraw` will have no effect.
      *
-     * It is faster than calling `draw`, but you must be very careful to manage the
-     * flow of code and remember to call `endDraw()`. If you don't need to draw large
-     * numbers of objects it's much safer and easier to use the `draw` method instead.
+     * Batch drawing is faster than calling `draw`, but you must be very careful to manage the
+     * flow of code and remember to call `endDraw()` when you're finished.
+     *
+     * If you don't need to draw large numbers of objects it's much safer and easier
+     * to use the `draw` method instead.
      *
      * The flow should be:
      *
@@ -1375,7 +1442,10 @@ var RenderTexture = new Class({
      *
      * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
      * have started a batch. Also, be very careful not to destroy this Render Texture while the
-     * batch is still open, or call `beginDraw` again.
+     * batch is still open.
+     *
+     * You can use the `RenderTexture.isDrawing` boolean property to tell if a batch is
+     * currently open, or not.
      *
      * @method Phaser.GameObjects.RenderTexture#endDraw
      * @since 3.50.0
@@ -1388,28 +1458,31 @@ var RenderTexture = new Class({
     {
         if (erase === undefined) { erase = this._eraseMode; }
 
-        var renderer = this.renderer;
-
-        var renderTarget = this.renderTarget;
-
-        if (renderTarget)
+        if (this.isDrawing)
         {
-            var canvasTarget = renderer.endCapture();
+            var renderer = this.renderer;
 
-            var util = renderer.pipelines.setUtility();
+            var renderTarget = this.renderTarget;
 
-            util.blitFrame(canvasTarget, renderTarget, 1, false, false, erase, this.isSpriteTexture);
+            if (renderTarget)
+            {
+                var canvasTarget = renderer.endCapture();
 
-            renderer.resetScissor();
-            renderer.resetViewport();
+                var util = renderer.pipelines.setUtility();
+
+                util.blitFrame(canvasTarget, renderTarget, 1, false, false, erase, this.isSpriteTexture);
+
+                renderer.resetScissor();
+                renderer.resetViewport();
+            }
+            else
+            {
+                renderer.setContext();
+            }
+
+            this.dirty = true;
+            this.isDrawing = false;
         }
-        else
-        {
-            renderer.setContext();
-        }
-
-        this.dirty = true;
-        this.isDrawing = false;
 
         return this;
     },
