@@ -4,6 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Frame = require('../../textures/Frame');
+
 //  bitmask flag for GameObject.renderMask
 var _FLAG = 8; // 1000
 
@@ -126,17 +128,19 @@ var TextureCrop = {
     /**
      * Sets the frame this Game Object will use to render with.
      *
-     * The Frame has to belong to the current Texture being used.
+     * If you pass a string or index then the Frame has to belong to the current Texture being used
+     * by this Game Object.
      *
-     * It can be either a string or an index.
+     * If you pass a Frame instance, then the Texture being used by this Game Object will also be updated.
      *
      * Calling `setFrame` will modify the `width` and `height` properties of your Game Object.
+     *
      * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
      *
      * @method Phaser.GameObjects.Components.TextureCrop#setFrame
      * @since 3.0.0
      *
-     * @param {(string|number)} frame - The name or index of the frame within the Texture.
+     * @param {(string|number|Phaser.Textures.Frame)} frame - The name or index of the frame within the Texture, or a Frame instance.
      * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
      * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
      *
@@ -147,7 +151,16 @@ var TextureCrop = {
         if (updateSize === undefined) { updateSize = true; }
         if (updateOrigin === undefined) { updateOrigin = true; }
 
-        this.frame = this.texture.get(frame);
+        if (frame instanceof Frame)
+        {
+            this.texture = this.scene.sys.textures.get(frame.texture.key);
+
+            this.frame = frame;
+        }
+        else
+        {
+            this.frame = this.texture.get(frame);
+        }
 
         if (!this.frame.cutWidth || !this.frame.cutHeight)
         {
