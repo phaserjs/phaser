@@ -995,16 +995,18 @@ var TextureManager = new Class({
      *
      * If the key is `undefined` it will return the `__DEFAULT` Texture.
      *
-     * If the key is an instance of a Texture, it will return the key directly.
+     * If the key is an instance of a Texture, it will return the instance.
      *
-     * Finally. if the key is given, but not found and not a Texture instance, it will return the `__MISSING` Texture.
+     * If the key is an instance of a Frame, it will return the frames parent Texture instance.
+     *
+     * Finally, if the key is given, but not found, and not a Texture or Frame instance, it will return the `__MISSING` Texture.
      *
      * @method Phaser.Textures.TextureManager#get
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Textures.Texture)} key - The unique string-based key of the Texture, or a Texture instance.
+     * @param {(string|Phaser.Textures.Texture|Phaser.Textures.Frame)} key - The unique string-based key of the Texture, or a Texture, or Frame instance.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {Phaser.Textures.Texture} The Texture matching the given key.
      */
     get: function (key)
     {
@@ -1017,6 +1019,10 @@ var TextureManager = new Class({
         else if (key instanceof Texture)
         {
             return key;
+        }
+        else if (key instanceof Frame)
+        {
+            return key.texture;
         }
         else
         {
@@ -1082,7 +1088,11 @@ var TextureManager = new Class({
      */
     parseFrame: function (key)
     {
-        if (typeof key === 'string')
+        if (!key)
+        {
+            return undefined;
+        }
+        else if (typeof key === 'string')
         {
             return this.getFrame(key);
         }
