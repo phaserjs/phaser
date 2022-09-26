@@ -151,7 +151,7 @@ The following are further updates within the Tween system:
 * The `TextureManager.addSpriteSheet` method will now allow you to pass in a Phaser Texture as the 2nd parameter. This allows you to add sprite sheet data to textures that came from external sources, such as SVG files or canvas elements.
 * `Game.pause` is a new method that will pause the entire game and all Phaser systems.
 * `Game.resume` is a new method that will resume the entire game and resume all of Phaser's systems.
-* `RenderTexture.fillFrame` is a new method that will take a given texture and draw it to the Render Texture as a fill-pattern. You can control the offset, alpha and tint of the draw (thanks xlapiz)
+* `RenderTexture.repeat` is a new method that will take a given texture and draw it to the Render Texture as a fill-pattern. You can control the offset, width, height, alpha and tint of the draw (thanks xlapiz)
 * `ScaleManager.getViewPort` is a new method that will return a Rectangle geometry object that matches the visible area of the screen (thanks @rexrainbow)
 * When starting a Scene and using an invalid key, Phaser will now raise a console warning informing you of this, instead of silently failing. Fix #5811 (thanks @ubershmekel)
 * `GameObjects.Layer.addToDisplayList` and `removeFromDisplayList` are new methods that allows for you to now add a Layer as a child of another Layer. Fix #5799 (thanks @samme)
