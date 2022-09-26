@@ -488,7 +488,7 @@ var TweenData = new Class({
 
             if (handler)
             {
-                handler.func.apply(handler.scope, [ tween, target, key, current, previous ].concat(handler.params));
+                handler.func.apply(tween.callbackScope, [ tween, target, key, current, previous ].concat(handler.params));
             }
         }
     },
