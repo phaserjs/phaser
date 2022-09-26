@@ -130,6 +130,17 @@ var RenderTexture = new Class({
         this.stamp = new Image(scene);
 
         /**
+         * This flag is set to 'true' during `beginDraw` and reset to 'false` in `endDraw`,
+         * allowing you to determine if this Render Texture is batch drawing, or not.
+         *
+         * @name Phaser.GameObjects.RenderTexture#isDrawing
+         * @type {boolean}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.isDrawing = false;
+
+        /**
          * The tint of the Render Texture when rendered.
          *
          * @name Phaser.GameObjects.RenderTexture#globalTint
@@ -876,7 +887,7 @@ var RenderTexture = new Class({
         return this;
     },
 
-    repeatSliceH: function (frame, x, y, width)
+    repeatFrameHorizontally: function (frame, x, y, width)
     {
         var stamp = this.stamp;
 
@@ -908,7 +919,7 @@ var RenderTexture = new Class({
         }
     },
 
-    repeatSliceV: function (frame, x, y, height)
+    repeatFrameVertically: function (frame, x, y, height)
     {
         var stamp = this.stamp;
 
@@ -962,26 +973,14 @@ var RenderTexture = new Class({
         var botBg = textureManager.parseFrame(GetFastValue(slices, 'botBackground', null));
         var botRight = textureManager.parseFrame(GetFastValue(slices, 'botRight', null));
 
-        if (clear)
-        {
-            this.clear();
-        }
-
-        this.beginDraw();
-
-        //  Draw the top-strip (both left and right are optional)
-
-        var offsetX = x;
-        var offsetY = y;
-
-        var topLeftPos = { x: offsetX, y: offsetY };
-        var topRightPos = { x: offsetX + width, y: offsetY };
-        var topPos = { x: offsetX, y: offsetY, w: width };
-        var botLeftPos = { x: offsetX, y: offsetY + height };
-        var botRightPos = { x: offsetX + width, y: offsetY + height };
-        var botPos = { x: offsetX, y: offsetY + height, w: width };
-        var leftPos = { x: offsetX, y: offsetY, h: height };
-        var rightPos = { x: offsetX + width, y: offsetY, h: height };
+        var topLeftPos = { x: x, y: y };
+        var topRightPos = { x: x + width, y: y };
+        var topPos = { x: x, y: y, w: width };
+        var botLeftPos = { x: x, y: y + height };
+        var botRightPos = { x: x + width, y: y + height };
+        var botPos = { x: x, y: y + height, w: width };
+        var leftPos = { x: x, y: y, h: height };
+        var rightPos = { x: x + width, y: y, h: height };
 
         if (topLeft)
         {
@@ -1025,14 +1024,14 @@ var RenderTexture = new Class({
             rightPos.x -= rightBg.width;
         }
 
-        console.log('topLeftPos', topLeftPos);
-        console.log('topRightPos', topRightPos);
-        console.log('topPos', topPos);
-        console.log('botLeftPos', botLeftPos);
-        console.log('botRightPos', botRightPos);
-        console.log('botPos', botPos);
-        console.log('leftPos', leftPos);
-        console.log('rightPos', rightPos);
+        // console.log('topLeftPos', topLeftPos);
+        // console.log('topRightPos', topRightPos);
+        // console.log('topPos', topPos);
+        // console.log('botLeftPos', botLeftPos);
+        // console.log('botRightPos', botRightPos);
+        // console.log('botPos', botPos);
+        // console.log('leftPos', leftPos);
+        // console.log('rightPos', rightPos);
 
         var stamp = this.stamp;
 
@@ -1040,6 +1039,13 @@ var RenderTexture = new Class({
         stamp.setTint(tint);
         stamp.setCrop();
         stamp.setOrigin(0);
+
+        if (clear)
+        {
+            this.clear();
+        }
+
+        this.beginDraw();
 
         //  None of these need cropping:
 
@@ -1071,24 +1077,26 @@ var RenderTexture = new Class({
             this.drawGameObject(stamp, botRightPos.x, botRightPos.y);
         }
 
+        //  These all use crop if they don't fit perfectly
+
         if (topBg)
         {
-            this.repeatSliceH(topBg, topPos.x, topPos.y, topPos.w);
+            this.repeatFrameHorizontally(topBg, topPos.x, topPos.y, topPos.w);
         }
 
         if (leftBg)
         {
-            this.repeatSliceV(leftBg, leftPos.x, leftPos.y, leftPos.h);
+            this.repeatFrameVertically(leftBg, leftPos.x, leftPos.y, leftPos.h);
         }
 
         if (rightBg)
         {
-            this.repeatSliceV(rightBg, rightPos.x, rightPos.y, rightPos.h);
+            this.repeatFrameVertically(rightBg, rightPos.x, rightPos.y, rightPos.h);
         }
 
         if (botBg)
         {
-            this.repeatSliceH(botBg, botPos.x, botPos.y, botPos.w);
+            this.repeatFrameHorizontally(botBg, botPos.x, botPos.y, botPos.w);
         }
 
         this.endDraw();
@@ -1146,6 +1154,8 @@ var RenderTexture = new Class({
         {
             renderer.setContext(this.context);
         }
+
+        this.isDrawing = true;
 
         return this;
     },
@@ -1399,6 +1409,7 @@ var RenderTexture = new Class({
         }
 
         this.dirty = true;
+        this.isDrawing = false;
 
         return this;
     },
