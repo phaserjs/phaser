@@ -11,9 +11,11 @@ var Color = require('../display/color/Color');
 var CONST = require('../const');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
+var Frame = require('./Frame');
 var GameEvents = require('../core/events');
 var GenerateTexture = require('../create/GenerateTexture');
 var GetValue = require('../utils/object/GetValue');
+var IsPlainObject = require('../utils/object/IsPlainObject');
 var Parser = require('./parsers');
 var Texture = require('./Texture');
 
@@ -1057,6 +1059,48 @@ var TextureManager = new Class({
         if (this.list[key])
         {
             return this.list[key].get(frame);
+        }
+    },
+
+    /**
+     * Parses the 'key' parameter and returns a Texture Frame instance.
+     *
+     * It can accept the following formats:
+     *
+     * 1) A string
+     * 2) An array: [ key, frameName ]
+     * 3) An object: { key, frame }
+     * 4) A Texture instance
+     * 5) A Frame instance
+     *
+     * @method Phaser.Textures.TextureManager#parseFrame
+     * @since 3.60.0
+     *
+     * @param {(string|array|object|Phaser.Textures.Texture|Phaser.Textures.Frame)} key - The unique Texture key to be parsed.
+     *
+     * @return {Phaser.Textures.Frame} A Texture Frame object, if found, or undefined if not.
+     */
+    parseFrame: function (key)
+    {
+        if (typeof key === 'string')
+        {
+            return this.getFrame(key);
+        }
+        else if (Array.isArray(key) && key.length === 2)
+        {
+            return this.getFrame(key[0], key[1]);
+        }
+        else if (IsPlainObject(key))
+        {
+            return this.getFrame(key.key, key.frame);
+        }
+        else if (key instanceof Texture)
+        {
+            return key.get();
+        }
+        else if (key instanceof Frame)
+        {
+            return key;
         }
     },
 
