@@ -12,6 +12,8 @@ var Components = require('../components');
 var CONST = require('../../const');
 var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
+var GetFastValue = require('../../utils/object/GetFastValue');
+var Image = require('../image/Image');
 var NOOP = require('../../utils/NOOP');
 var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
 var Render = require('./RenderTextureRender');
@@ -117,6 +119,15 @@ var RenderTexture = new Class({
          * @since 3.12.0
          */
         this.textureManager = scene.sys.textures;
+
+        /**
+         * Internal Image Game Object used as a Stamp within this Render Texture.
+         *
+         * @name Phaser.GameObjects.RenderTexture#stamp
+         * @type {Phaser.GameObjects.Image}
+         * @since 3.60.0
+         */
+        this.stamp = new Image(scene);
 
         /**
          * The tint of the Render Texture when rendered.
@@ -332,7 +343,7 @@ var RenderTexture = new Class({
     /**
      * If you are planning on using this Render Texture as a base texture for Sprite
      * Game Objects, then you should call this method with a value of `true` before
-     * calling drawing anything to it, otherwise you will get inverted frames in WebGL.
+     * drawing anything to it, otherwise you will get inverted frames in WebGL.
      *
      * @method Phaser.GameObjects.RenderTexture#setIsSpriteTexture
      * @since 3.60.0
@@ -865,6 +876,228 @@ var RenderTexture = new Class({
         return this;
     },
 
+    repeatSliceH: function (frame, x, y, width)
+    {
+        var stamp = this.stamp;
+
+        stamp.setCrop();
+        stamp.setFrame(frame);
+
+        //  How many stamps can we fit in horizontally?
+        var c = Math.floor(width / frame.width);
+
+        var dx;
+
+        for (var i = 0; i < c; i++)
+        {
+            dx = x + (i * frame.width);
+
+            this.drawGameObject(stamp, dx, y);
+        }
+
+        //  Left over?
+        var diff = width - (c * frame.width);
+
+        // console.log('diff', c * frame.width, 'vs', width, 'diff', diff);
+
+        if (diff > 0)
+        {
+            stamp.setCrop(0, 0, diff, frame.height);
+
+            this.drawGameObject(stamp, dx + frame.width, y);
+        }
+    },
+
+    repeatSliceV: function (frame, x, y, height)
+    {
+        var stamp = this.stamp;
+
+        stamp.setCrop();
+        stamp.setFrame(frame);
+
+        //  How many stamps can we fit in vertically?
+        var c = Math.floor(height / frame.height);
+
+        var dy;
+
+        for (var i = 0; i < c; i++)
+        {
+            dy = y + (i * frame.height);
+
+            // console.log('vslice', x, dy);
+
+            this.drawGameObject(stamp, x, dy);
+        }
+
+        //  Left over?
+        var diff = height - (c * frame.height);
+
+        // console.log('diff', c * frame.height, 'vs', height, 'diff', diff);
+
+        if (diff > 0)
+        {
+            stamp.setCrop(0, 0, frame.width, diff);
+
+            this.drawGameObject(stamp, x, dy + frame.height);
+        }
+    },
+
+    nineSlice: function (slices, clear, x, y, width, height, alpha, tint)
+    {
+        if (clear === undefined) { clear = false; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
+        if (alpha === undefined) { alpha = 1; }
+        if (tint === undefined) { tint = 0xffffff; }
+
+        var textureManager = this.textureManager;
+
+        var topLeft = textureManager.parseFrame(GetFastValue(slices, 'topLeft', null));
+        var topBg = textureManager.parseFrame(GetFastValue(slices, 'topBackground', null));
+        var topRight = textureManager.parseFrame(GetFastValue(slices, 'topRight', null));
+        var leftBg = textureManager.parseFrame(GetFastValue(slices, 'left', null));
+        var rightBg = textureManager.parseFrame(GetFastValue(slices, 'right', null));
+        var background = textureManager.parseFrame(GetFastValue(slices, 'background', null));
+        var botLeft = textureManager.parseFrame(GetFastValue(slices, 'botLeft', null));
+        var botBg = textureManager.parseFrame(GetFastValue(slices, 'botBackground', null));
+        var botRight = textureManager.parseFrame(GetFastValue(slices, 'botRight', null));
+
+        if (clear)
+        {
+            this.clear();
+        }
+
+        this.beginDraw();
+
+        //  Draw the top-strip (both left and right are optional)
+
+        var offsetX = x;
+        var offsetY = y;
+
+        var topLeftPos = { x: offsetX, y: offsetY };
+        var topRightPos = { x: offsetX + width, y: offsetY };
+        var topPos = { x: offsetX, y: offsetY, w: width };
+        var botLeftPos = { x: offsetX, y: offsetY + height };
+        var botRightPos = { x: offsetX + width, y: offsetY + height };
+        var botPos = { x: offsetX, y: offsetY + height, w: width };
+        var leftPos = { x: offsetX, y: offsetY, h: height };
+        var rightPos = { x: offsetX + width, y: offsetY, h: height };
+
+        if (topLeft)
+        {
+            topPos.x += topLeft.width;
+            topPos.w -= topLeft.width;
+            leftPos.y += topLeft.height;
+            leftPos.h -= topLeft.height;
+        }
+
+        if (topRight)
+        {
+            topRightPos.x -= topRight.width;
+            topPos.w -= topRight.width;
+            rightPos.y += topRight.height;
+            rightPos.h -= topRight.height;
+        }
+
+        if (botBg)
+        {
+            botPos.y -= botBg.height;
+        }
+
+        if (botLeft)
+        {
+            botLeftPos.y -= botLeft.height;
+            botPos.x += botLeft.width;
+            botPos.w -= botLeft.width;
+            leftPos.h -= botLeft.height;
+        }
+
+        if (botRight)
+        {
+            botRightPos.x -= botRight.width;
+            botRightPos.y -= botRight.height;
+            botPos.w -= botRight.width;
+            rightPos.h -= botRight.height;
+        }
+
+        if (rightBg)
+        {
+            rightPos.x -= rightBg.width;
+        }
+
+        console.log('topLeftPos', topLeftPos);
+        console.log('topRightPos', topRightPos);
+        console.log('topPos', topPos);
+        console.log('botLeftPos', botLeftPos);
+        console.log('botRightPos', botRightPos);
+        console.log('botPos', botPos);
+        console.log('leftPos', leftPos);
+        console.log('rightPos', rightPos);
+
+        var stamp = this.stamp;
+
+        stamp.setAlpha(alpha);
+        stamp.setTint(tint);
+        stamp.setCrop();
+        stamp.setOrigin(0);
+
+        //  None of these need cropping:
+
+        if (topLeft)
+        {
+            stamp.setFrame(topLeft);
+
+            this.drawGameObject(stamp, topLeftPos.x, topLeftPos.y);
+        }
+
+        if (topRight)
+        {
+            stamp.setFrame(topRight);
+
+            this.drawGameObject(stamp, topRightPos.x, topRightPos.y);
+        }
+
+        if (botLeft)
+        {
+            stamp.setFrame(botLeft);
+
+            this.drawGameObject(stamp, botLeftPos.x, botLeftPos.y);
+        }
+
+        if (botRight)
+        {
+            stamp.setFrame(botRight);
+
+            this.drawGameObject(stamp, botRightPos.x, botRightPos.y);
+        }
+
+        if (topBg)
+        {
+            this.repeatSliceH(topBg, topPos.x, topPos.y, topPos.w);
+        }
+
+        if (leftBg)
+        {
+            this.repeatSliceV(leftBg, leftPos.x, leftPos.y, leftPos.h);
+        }
+
+        if (rightBg)
+        {
+            this.repeatSliceV(rightBg, rightPos.x, rightPos.y, rightPos.h);
+        }
+
+        if (botBg)
+        {
+            this.repeatSliceH(botBg, botPos.x, botPos.y, botPos.w);
+        }
+
+        this.endDraw();
+
+        return this;
+    },
+
     /**
      * Use this method if you need to batch draw a large number of Game Objects to
      * this Render Texture in a single go, or on a frequent basis.
@@ -1367,12 +1600,14 @@ var RenderTexture = new Class({
      * @param {Phaser.Textures.Frame} textureFrame - The Texture Frame to draw.
      * @param {number} [x=0] - The x position to draw the Frame at.
      * @param {number} [y=0] - The y position to draw the Frame at.
+     * @param {number} [alpha=1] - The alpha value to be applied to the frame drawn to the Render Texture.
      * @param {number} [tint] - A tint color to be applied to the frame drawn to the Render Texture.
      */
     batchTextureFrame: function (textureFrame, x, y, alpha, tint)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
+        if (alpha === undefined) { alpha = 1; }
 
         x += this.frame.cutX;
         y += this.frame.cutY;
