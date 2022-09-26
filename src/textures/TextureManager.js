@@ -1074,15 +1074,15 @@ var TextureManager = new Class({
      * It can accept the following formats:
      *
      * 1) A string
-     * 2) An array: [ key, frameName ]
-     * 3) An object: { key, frame }
-     * 4) A Texture instance
-     * 5) A Frame instance
+     * 2) An array where the elements are: [ key, [frame] ]
+     * 3) An object with the properties: { key, [frame] }
+     * 4) A Texture instance - which returns the default frame from the Texture
+     * 5) A Frame instance - returns itself
      *
      * @method Phaser.Textures.TextureManager#parseFrame
      * @since 3.60.0
      *
-     * @param {(string|array|object|Phaser.Textures.Texture|Phaser.Textures.Frame)} key - The unique Texture key to be parsed.
+     * @param {(string|array|object|Phaser.Textures.Texture|Phaser.Textures.Frame)} key - The key to be parsed.
      *
      * @return {Phaser.Textures.Frame} A Texture Frame object, if found, or undefined if not.
      */
