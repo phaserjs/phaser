@@ -209,6 +209,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `RenderTexture.isDrawing` is a new read-only flag that tells if the Render Texture is currently batch drawing, or not.
 * The `TextureManager.get` methof can now accept a `Frame` instance as its parameter, which will return the frames parent Texture.
 * The `GameObject.setFrame` method can now accept a `Frame` instance as its parameter, which will also automatically update the Texture the Game Object is using.
 * `Device.safariVersion` is now set to the version of Safari running, previously it was always undefined.
