@@ -937,12 +937,16 @@ var RenderTexture = new Class({
         var frameWidth = frame.width;
         var frameHeight = frame.height;
 
-        //  How many stamps can we fit in horizontally and verticall?
+        //  Clamp to integer
+        width = Math.floor(width);
+        height = Math.floor(height);
+
+        //  How many stamps can we fit in horizontally and vertically?
         //  We round this number up to allow for excess overflow
         var hmax = Math.ceil(width / frameWidth);
         var vmax = Math.ceil(height / frameHeight);
 
-        //  How much extra horizontal and vertical space do we have?
+        //  How much extra horizontal and vertical space do we have on the right/bottom?
         var hdiff = (hmax * frameWidth) - width;
         var vdiff = (vmax * frameHeight) - height;
 
@@ -954,6 +958,18 @@ var RenderTexture = new Class({
         if (vdiff > 0)
         {
             vdiff = frameHeight - vdiff;
+        }
+
+        //  x/y may be negative
+
+        if (x < 0)
+        {
+            hmax += Math.ceil(Math.abs(x) / frameWidth);
+        }
+
+        if (y < 0)
+        {
+            vmax += Math.ceil(Math.abs(y) / frameHeight);
         }
 
         var dx = x;
@@ -969,9 +985,41 @@ var RenderTexture = new Class({
 
         for (var ty = 0; ty < vmax; ty++)
         {
+            //  Negative offset?
+            if (dy + frameHeight < 0)
+            {
+                //  We can't see it, as it's off the top
+                dy += frameHeight;
+                continue;
+            }
+
             for (var tx = 0; tx < hmax; tx++)
             {
                 useCrop = false;
+
+                //  Negative offset?
+                if (dx + frameWidth < 0)
+                {
+                    //  We can't see it, as it's fully off the left
+                    dx += frameWidth;
+                    continue;
+                }
+                else if (dx < 0)
+                {
+                    //  Partially off the left
+                    useCrop = true;
+                    cropRect.width = (frameWidth + dx);
+                    cropRect.x = frameWidth - cropRect.width;
+                }
+
+                //  Negative vertical offset
+                if (dy < 0)
+                {
+                    //  Partially off the top
+                    useCrop = true;
+                    cropRect.height = (frameHeight + dy);
+                    cropRect.y = frameHeight - cropRect.height;
+                }
 
                 if (hdiff > 0 && tx === hmax - 1)
                 {
@@ -995,8 +1043,7 @@ var RenderTexture = new Class({
                 //  Reset crop
                 stamp.isCropped = false;
 
-                cropRect.width = frameWidth;
-                cropRect.height = frameHeight;
+                cropRect.setTo(0, 0, frameWidth, frameHeight);
 
                 dx += frameWidth;
             }
