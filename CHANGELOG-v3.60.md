@@ -209,6 +209,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `SceneManager.systemScene` is a new property that is set during the game boot and is a system Scene reference that plugins and managers can use, that lives outside of the Scene list.
 * `RenderTexture.isDrawing` is a new read-only flag that tells if the Render Texture is currently batch drawing, or not.
 * The `TextureManager.get` methof can now accept a `Frame` instance as its parameter, which will return the frames parent Texture.
 * The `GameObject.setFrame` method can now accept a `Frame` instance as its parameter, which will also automatically update the Texture the Game Object is using.
