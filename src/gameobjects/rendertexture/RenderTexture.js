@@ -12,10 +12,8 @@ var Components = require('../components');
 var CONST = require('../../const');
 var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
-var GetFastValue = require('../../utils/object/GetFastValue');
 var Image = require('../image/Image');
 var NOOP = require('../../utils/NOOP');
-var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Render = require('./RenderTextureRender');
 var RenderTarget = require('../../renderer/webgl/RenderTarget');
@@ -345,7 +343,7 @@ var RenderTexture = new Class({
 
         this.setOrigin(0);
 
-        this.initPipeline(PIPELINE_CONST.SINGLE_PIPELINE);
+        this.initPipeline();
     },
 
     /**
@@ -1060,154 +1058,6 @@ var RenderTexture = new Class({
         return this;
     },
 
-    nineSlice: function (slices, clear, x, y, width, height, alpha, tint)
-    {
-        if (clear === undefined) { clear = false; }
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.width; }
-        if (height === undefined) { height = this.height; }
-        if (alpha === undefined) { alpha = 1; }
-        if (tint === undefined) { tint = 0xffffff; }
-
-        var textureManager = this.textureManager;
-
-        var topLeft = textureManager.parseFrame(GetFastValue(slices, 'topLeft', null));
-        var topBg = textureManager.parseFrame(GetFastValue(slices, 'topBackground', null));
-        var topRight = textureManager.parseFrame(GetFastValue(slices, 'topRight', null));
-        var leftBg = textureManager.parseFrame(GetFastValue(slices, 'left', null));
-        var rightBg = textureManager.parseFrame(GetFastValue(slices, 'right', null));
-        var background = textureManager.parseFrame(GetFastValue(slices, 'background', null));
-        var botLeft = textureManager.parseFrame(GetFastValue(slices, 'botLeft', null));
-        var botBg = textureManager.parseFrame(GetFastValue(slices, 'botBackground', null));
-        var botRight = textureManager.parseFrame(GetFastValue(slices, 'botRight', null));
-
-        var topLeftPos = { x: x, y: y };
-        var topRightPos = { x: x + width, y: y };
-        var topPos = { x: x, y: y, w: width };
-        var botLeftPos = { x: x, y: y + height };
-        var botRightPos = { x: x + width, y: y + height };
-        var botPos = { x: x, y: y + height, w: width };
-        var leftPos = { x: x, y: y, h: height };
-        var rightPos = { x: x + width, y: y, h: height };
-
-        if (topLeft)
-        {
-            topPos.x += topLeft.width;
-            topPos.w -= topLeft.width;
-            leftPos.y += topLeft.height;
-            leftPos.h -= topLeft.height;
-        }
-
-        if (topRight)
-        {
-            topRightPos.x -= topRight.width;
-            topPos.w -= topRight.width;
-            rightPos.y += topRight.height;
-            rightPos.h -= topRight.height;
-        }
-
-        if (botBg)
-        {
-            botPos.y -= botBg.height;
-        }
-
-        if (botLeft)
-        {
-            botLeftPos.y -= botLeft.height;
-            botPos.x += botLeft.width;
-            botPos.w -= botLeft.width;
-            leftPos.h -= botLeft.height;
-        }
-
-        if (botRight)
-        {
-            botRightPos.x -= botRight.width;
-            botRightPos.y -= botRight.height;
-            botPos.w -= botRight.width;
-            rightPos.h -= botRight.height;
-        }
-
-        if (rightBg)
-        {
-            rightPos.x -= rightBg.width;
-        }
-
-        // console.log('topLeftPos', topLeftPos);
-        // console.log('topRightPos', topRightPos);
-        // console.log('topPos', topPos);
-        // console.log('botLeftPos', botLeftPos);
-        // console.log('botRightPos', botRightPos);
-        // console.log('botPos', botPos);
-        // console.log('leftPos', leftPos);
-        // console.log('rightPos', rightPos);
-
-        var stamp = this.resetStamp(alpha, tint);
-
-        if (clear)
-        {
-            this.clear();
-        }
-
-        this.beginDraw();
-
-        //  None of these need cropping:
-
-        if (topLeft)
-        {
-            stamp.setFrame(topLeft);
-
-            this.drawGameObject(stamp, topLeftPos.x, topLeftPos.y);
-        }
-
-        if (topRight)
-        {
-            stamp.setFrame(topRight);
-
-            this.drawGameObject(stamp, topRightPos.x, topRightPos.y);
-        }
-
-        if (botLeft)
-        {
-            stamp.setFrame(botLeft);
-
-            this.drawGameObject(stamp, botLeftPos.x, botLeftPos.y);
-        }
-
-        if (botRight)
-        {
-            stamp.setFrame(botRight);
-
-            this.drawGameObject(stamp, botRightPos.x, botRightPos.y);
-        }
-
-        //  These all use crop if they don't fit perfectly
-
-        if (topBg)
-        {
-            this.repeat(topBg, null, topPos.x, topPos.y, topPos.w, topBg.height, alpha, tint, true);
-        }
-
-        if (leftBg)
-        {
-            this.repeat(leftBg, null, leftPos.x, leftPos.y, leftBg.width, leftPos.h, alpha, tint, true);
-        }
-
-        if (rightBg)
-        {
-            this.repeat(rightBg, null, rightPos.x, rightPos.y, rightBg.width, rightPos.h, alpha, tint, true);
-        }
-
-        if (botBg)
-        {
-            this.repeat(botBg, null, botPos.x, botPos.y, botPos.w, botBg.height, alpha, tint, true);
-        }
-
-        this.endDraw();
-
-        return this;
-    },
-
     /**
      * Use this method if you need to batch draw a large number of Game Objects to
      * this Render Texture in a single go, or on a frequent basis.
@@ -1834,16 +1684,7 @@ var RenderTexture = new Class({
      */
     snapshot: function (callback, type, encoderOptions)
     {
-        if (this.renderTarget)
-        {
-            this.renderer.snapshotFramebuffer(this.renderTarget.framebuffer, this.width, this.height, callback, false, 0, 0, this.width, this.height, type, encoderOptions);
-        }
-        else
-        {
-            this.renderer.snapshotCanvas(this.canvas, callback, false, 0, 0, this.width, this.height, type, encoderOptions);
-        }
-
-        return this;
+        return this.snapshotArea(0, 0, this.width, this.height, callback, type, encoderOptions);
     },
 
     /**
@@ -1868,16 +1709,7 @@ var RenderTexture = new Class({
      */
     snapshotPixel: function (x, y, callback)
     {
-        if (this.renderTarget)
-        {
-            this.renderer.snapshotFramebuffer(this.renderTarget.framebuffer, this.width, this.height, callback, true, x, y);
-        }
-        else
-        {
-            this.renderer.snapshotCanvas(this.canvas, callback, true, x, y);
-        }
-
-        return this;
+        return this.snapshotArea(x, y, 1, 1, callback);
     },
 
     /**
