@@ -9,6 +9,7 @@ var Camera = require('../cameras/2d/BaseCamera');
 var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var CONST = require('../const');
+var PIPELINES = require('../renderer/webgl/pipelines/const');
 var Frame = require('./Frame');
 var Image = require('../gameobjects/image/Image');
 var NOOP = require('../utils/NOOP');
@@ -32,30 +33,39 @@ var Utils = require('../renderer/webgl/Utils');
  * @param {number} [width=256] - The width of the Render Texture.
  * @param {number} [height=256] - The height of the Render Texture.
  */
-var RenderTexture = new Class({
+var DynamicTexture = new Class({
 
     Extends: Texture,
 
     initialize:
 
-    function RenderTexture (manager, key, width, height)
+    function DynamicTexture (manager, key, width, height)
     {
         if (width === undefined) { width = 256; }
         if (height === undefined) { height = 256; }
 
-        Texture.call(this, manager, key, CanvasPool.create2D(this, width, height), width, height);
-
-        this.add('__BASE', 0, 0, 0, width, height);
-
         /**
-         * A reference to the Texture Source of this Canvas.
+         * Internal data type string.
          *
-         * @name Phaser.Textures.CanvasTexture#_source
-         * @type {Phaser.Textures.TextureSource}
-         * @private
-         * @since 3.7.0
+         * @name Phaser.GameObjects.RenderTexture#type
+         * @type {string}
+         * @readonly
+         * @since 3.60.0
          */
-        this._source = this.frames['__BASE'].source;
+        this.type = 'DynamicTexture';
+
+        var renderer = manager.game.renderer;
+
+        var isCanvas = (renderer && renderer.type === CONST.CANVAS);
+
+        var source = [ this ];
+
+        if (isCanvas)
+        {
+            source = CanvasPool.create2D(this, width, height);
+        }
+
+        Texture.call(this, manager, key, source, width, height);
 
         /**
          * A reference to either the Canvas or WebGL Renderer that the Game instance is using.
@@ -64,7 +74,25 @@ var RenderTexture = new Class({
          * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
          * @since 3.2.0
          */
-        this.renderer = manager.game.renderer;
+        this.renderer = renderer;
+
+        /**
+         * A reference to the global System Scene.
+         *
+         * @name Phaser.GameObjects.RenderTexture#scene
+         * @type {Phaser.Scenes.Scene}
+         * @since 3.60.0
+         */
+        this.scene = manager.game.scene.systemScene;
+
+        /**
+         * A reference to the BASE Frame in this Texture.
+         *
+         * @name Phaser.GameObjects.RenderTexture#frame
+         * @type {Phaser.Textures.Frame}
+         * @since 3.60.0
+         */
+        this.frame = this.add('__BASE', 0, 0, 0, width, height);
 
         /**
          * Internal Image Game Object used as a Stamp within this Render Texture.
@@ -73,7 +101,7 @@ var RenderTexture = new Class({
          * @type {Phaser.GameObjects.Image}
          * @since 3.60.0
          */
-        // this.stamp = new Image(scene);
+        this.stamp = new Image(this.scene).setOrigin(0);
 
         /**
          * This flag is set to 'true' during `beginDraw` and reset to 'false` in `endDraw`,
@@ -87,13 +115,33 @@ var RenderTexture = new Class({
         this.isDrawing = false;
 
         /**
+         * The tint of the Render Texture when rendered.
+         *
+         * @name Phaser.GameObjects.RenderTexture#globalTint
+         * @type {number}
+         * @default 0xffffff
+         * @since 3.2.0
+         */
+        this.globalTint = 0xffffff;
+
+        /**
+         * The alpha of the Render Texture when rendered.
+         *
+         * @name Phaser.GameObjects.RenderTexture#globalAlpha
+         * @type {number}
+         * @default 1
+         * @since 3.2.0
+         */
+        this.globalAlpha = 1;
+
+        /**
          * A reference to the Rendering Context belonging to the Canvas Element this Render Texture is drawing to.
          *
          * @name Phaser.GameObjects.RenderTexture#canvas
          * @type {HTMLCanvasElement}
          * @since 3.2.0
          */
-        this.canvas = this._source.image;
+        this.canvas = (isCanvas) ? source : null;
 
         /**
          * The 2D Canvas Rendering Context.
@@ -103,7 +151,7 @@ var RenderTexture = new Class({
          * @type {CanvasRenderingContext2D}
          * @since 3.7.0
          */
-        this.context = this.canvas.getContext('2d');
+        this.context = (isCanvas) ? source.getContext('2d') : null;
 
         /**
          * Is this Render Texture dirty or not? If not it won't spend time clearing or filling itself.
@@ -113,16 +161,6 @@ var RenderTexture = new Class({
          * @since 3.12.0
          */
         this.dirty = false;
-
-        /**
-         * Internal saved texture flag.
-         *
-         * @name Phaser.GameObjects.RenderTexture#_saved
-         * @type {boolean}
-         * @private
-         * @since 3.12.0
-         */
-        this._saved = false;
 
         /**
          * The internal crop Rectangle, as used by the Stamp when it needs to crop itself.
@@ -146,10 +184,9 @@ var RenderTexture = new Class({
          *
          * @name Phaser.GameObjects.RenderTexture#isSpriteTexture
          * @type {boolean}
-         * @readonly
          * @since 3.60.0
          */
-        this.isSpriteTexture = false;
+        this.isSpriteTexture = true;
 
         /**
          * Internal erase mode flag.
@@ -170,7 +207,7 @@ var RenderTexture = new Class({
          * @type {Phaser.Cameras.Scene2D.BaseCamera}
          * @since 3.12.0
          */
-        this.camera = new Camera(0, 0, width, height);
+        this.camera = new Camera(0, 0, width, height).setScene(this.scene);
 
         /**
          * The Render Target that belongs to this Render Texture.
@@ -185,42 +222,112 @@ var RenderTexture = new Class({
          */
         this.renderTarget = null;
 
-        var renderer = this.renderer;
+        /**
+         *
+         *
+         * @name Phaser.GameObjects.RenderTexture#drawGameObject
+         * @type {function}
+         * @since 3.50.0
+         */
+        this.drawGameObject = NOOP;
 
-        if (!renderer)
+        if (isCanvas)
         {
-            this.drawGameObject = NOOP;
+            this.drawGameObject = this.batchGameObjectCanvas;
         }
-        else if (renderer.type === CONST.WEBGL)
+        else if (renderer)
         {
             this.drawGameObject = this.batchGameObjectWebGL;
 
             this.renderTarget = new RenderTarget(renderer, width, height, 1, 0, false);
-        }
-        else if (renderer.type === CONST.CANVAS)
-        {
-            this.drawGameObject = this.batchGameObjectCanvas;
+
+            this.pipeline = renderer.pipelines.get(PIPELINES.SINGLE_PIPELINE);
         }
 
-        // this.camera.setScene(scene);
-
-        this.stamp.setOrigin(0);
+        this.setSize(width, height);
     },
 
     /**
-     * Sets the size of this Game Object.
+     * Resizes the Render Texture to the new dimensions given.
+     *
+     * If Render Texture was created from specific frame, only the size of the frame will be changed. The size of the source
+     * texture will not change.
+     *
+     * If Render Texture was not created from specific frame, the following will happen:
+     *
+     * In WebGL it will destroy and then re-create the frame buffer being used by the Render Texture.
+     * In Canvas it will resize the underlying canvas element.
+     *
+     * Both approaches will erase everything currently drawn to the Render Texture.
+     *
+     * If the dimensions given are the same as those already being used, calling this method will do nothing.
      *
      * @method Phaser.GameObjects.RenderTexture#setSize
-     * @since 3.0.0
+     * @since 3.10.0
      *
-     * @param {number} width - The width of this Game Object.
-     * @param {number} height - The height of this Game Object.
+     * @param {number} width - The new width of the Render Texture.
+     * @param {number} [height=width] - The new height of the Render Texture. If not specified, will be set the same as the `width`.
      *
-     * @return {this} This Game Object instance.
+     * @return {this} This Render Texture.
      */
     setSize: function (width, height)
     {
-        return this.resize(width, height);
+        if (height === undefined) { height = width; }
+
+        var frame = this.frame;
+        var source = frame.source;
+
+        if (width !== this.width || height !== this.height)
+        {
+            if (this.canvas)
+            {
+                this.canvas.width = width;
+                this.canvas.height = height;
+            }
+
+            var renderTarget = this.renderTarget;
+
+            if (renderTarget)
+            {
+                renderTarget.resize(width, height);
+
+                frame.glTexture = renderTarget.texture;
+
+                source.isRenderTexture = true;
+                source.isGLTexture = true;
+                source.glTexture = renderTarget.texture;
+                source.glTexture.flipY = true;
+            }
+
+            this.camera.setSize(width, height);
+
+            source.width = width;
+            source.height = height;
+
+            frame.setSize(width, height);
+
+            this.width = width;
+            this.height = height;
+        }
+        else
+        {
+            //  Resize the frame
+            var baseFrame = this.getSourceImage();
+
+            if (frame.cutX + width > baseFrame.width)
+            {
+                width = baseFrame.width - frame.cutX;
+            }
+
+            if (frame.cutY + height > baseFrame.height)
+            {
+                height = baseFrame.height - frame.cutY;
+            }
+
+            frame.setSize(width, height, frame.cutX, frame.cutY);
+        }
+
+        return this;
     },
 
     /**
@@ -243,91 +350,6 @@ var RenderTexture = new Class({
     },
 
     /**
-     * Resizes the Render Texture to the new dimensions given.
-     *
-     * If Render Texture was created from specific frame, only the size of the frame will be changed. The size of the source
-     * texture will not change.
-     *
-     * If Render Texture was not created from specific frame, the following will happen:
-     *
-     * In WebGL it will destroy and then re-create the frame buffer being used by the Render Texture.
-     * In Canvas it will resize the underlying canvas element.
-     *
-     * Both approaches will erase everything currently drawn to the Render Texture.
-     *
-     * If the dimensions given are the same as those already being used, calling this method will do nothing.
-     *
-     * @method Phaser.GameObjects.RenderTexture#resize
-     * @since 3.10.0
-     *
-     * @param {number} width - The new width of the Render Texture.
-     * @param {number} [height=width] - The new height of the Render Texture. If not specified, will be set the same as the `width`.
-     *
-     * @return {this} This Render Texture.
-     */
-    resize: function (width, height)
-    {
-        if (height === undefined) { height = width; }
-
-        var frame = this.get();
-
-        if (width !== this.width || height !== this.height)
-        {
-            if (frame.name === '__BASE')
-            {
-                //  Resize the texture
-
-                this.canvas.width = width;
-                this.canvas.height = height;
-
-                var renderTarget = this.renderTarget;
-
-                if (renderTarget)
-                {
-                    renderTarget.resize(width, height);
-
-                    frame.glTexture = renderTarget.texture;
-
-                    frame.source.isRenderTexture = true;
-                    frame.source.isGLTexture = true;
-                    frame.source.glTexture = renderTarget.texture;
-                    frame.source.glTexture.flipY = true;
-                }
-
-                this.camera.setSize(width, height);
-
-                frame.source.width = width;
-                frame.source.height = height;
-
-                frame.setSize(width, height);
-
-                this.width = width;
-                this.height = height;
-            }
-        }
-        else
-        {
-            //  Resize the frame
-
-            var baseFrame = this.getSourceImage();
-
-            if (frame.cutX + width > baseFrame.width)
-            {
-                width = baseFrame.width - frame.cutX;
-            }
-
-            if (frame.cutY + height > baseFrame.height)
-            {
-                height = baseFrame.height - frame.cutY;
-            }
-
-            frame.setSize(width, height, frame.cutX, frame.cutY);
-        }
-
-        return this;
-    },
-
-    /**
      * Fills the Render Texture with the given color.
      *
      * @method Phaser.GameObjects.RenderTexture#fill
@@ -344,7 +366,7 @@ var RenderTexture = new Class({
      */
     fill: function (rgb, alpha, x, y, width, height)
     {
-        var frame = this.get();
+        var frame = this.frame;
         var camera = this.camera;
         var renderer = this.renderer;
 
@@ -366,9 +388,7 @@ var RenderTexture = new Class({
         {
             renderTarget.bind(true);
 
-            var pipeline = this.pipeline;
-
-            pipeline.manager.set(pipeline);
+            var pipeline = this.pipeline.manager.set(this.pipeline);
 
             var tw = renderTarget.width;
             var th = renderTarget.height;
@@ -416,19 +436,20 @@ var RenderTexture = new Class({
     {
         if (this.dirty)
         {
+            var ctx = this.context;
             var renderTarget = this.renderTarget;
+            var frame = this.frame;
 
             if (renderTarget)
             {
                 renderTarget.clear();
             }
-            else
+            else if (ctx)
             {
-                var ctx = this.context;
 
                 ctx.save();
                 ctx.setTransform(1, 0, 0, 1, 0, 0);
-                ctx.clearRect(this.frame.cutX, this.frame.cutY, this.frame.cutWidth, this.frame.cutHeight);
+                ctx.clearRect(frame.cutX, frame.cutY, frame.cutWidth, frame.cutHeight);
                 ctx.restore();
             }
 
@@ -480,8 +501,8 @@ var RenderTexture = new Class({
      * @since 3.16.0
      *
      * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, other Render Texture, Texture Frame or an array of any of these.
-     * @param {number} [x] - The x position to draw the Frame at, or the offset applied to the object.
-     * @param {number} [y] - The y position to draw the Frame at, or the offset applied to the object.
+     * @param {number} [x=0] - The x position to draw the Frame at, or the offset applied to the object.
+     * @param {number} [y=0] - The y position to draw the Frame at, or the offset applied to the object.
      *
      * @return {this} This Render Texture instance.
      */
@@ -548,8 +569,8 @@ var RenderTexture = new Class({
      * @since 3.2.0
      *
      * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, other Render Texture, Texture Frame or an array of any of these.
-     * @param {number} [x] - The x position to draw the Frame at, or the offset applied to the object.
-     * @param {number} [y] - The y position to draw the Frame at, or the offset applied to the object.
+     * @param {number} [x=0] - The x position to draw the Frame at, or the offset applied to the object.
+     * @param {number} [y=0] - The y position to draw the Frame at, or the offset applied to the object.
      * @param {number} [alpha] -  The alpha value. Only used for Texture Frames and if not specified defaults to the `globalAlpha` property. Game Objects use their own current alpha value.
      * @param {number} [tint] -  WebGL only. The tint color value. Only used for Texture Frames and if not specified defaults to the `globalTint` property. Game Objects use their own current tint value.
      *
@@ -688,7 +709,7 @@ var RenderTexture = new Class({
         }
         else
         {
-            frame = this.textureManager.getFrame(key, frame);
+            frame = this.manager.getFrame(key, frame);
         }
 
         if (!frame)
@@ -1062,7 +1083,7 @@ var RenderTexture = new Class({
             tint = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16);
         }
 
-        var textureFrame = this.textureManager.getFrame(key, frame);
+        var textureFrame = this.manager.getFrame(key, frame);
 
         if (textureFrame)
         {
@@ -1329,7 +1350,7 @@ var RenderTexture = new Class({
      */
     batchTextureFrameKey: function (key, frame, x, y, alpha, tint)
     {
-        var textureFrame = this.textureManager.getFrame(key, frame);
+        var textureFrame = this.manager.getFrame(key, frame);
 
         if (textureFrame)
         {
@@ -1489,25 +1510,22 @@ var RenderTexture = new Class({
      */
     preDestroy: function ()
     {
-        if (!this._saved)
+        CanvasPool.remove(this.canvas);
+
+        if (this.renderTarget)
         {
-            CanvasPool.remove(this.canvas);
-
-            if (this.renderTarget)
-            {
-                this.renderTarget.destroy();
-            }
-
-            this.texture.destroy();
-            this.camera.destroy();
-            this.stamp.destroy();
-
-            this.canvas = null;
-            this.context = null;
-            this.texture = null;
+            this.renderTarget.destroy();
         }
+
+        this.camera.destroy();
+        this.stamp.destroy();
+
+        this.canvas = null;
+        this.context = null;
+        this.renderer = null;
+        this.scene = null;
     }
 
 });
 
-module.exports = RenderTexture;
+module.exports = DynamicTexture;

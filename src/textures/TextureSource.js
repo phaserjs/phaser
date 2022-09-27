@@ -23,7 +23,7 @@ var ScaleModes = require('../renderer/ScaleModes');
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture this TextureSource belongs to.
- * @param {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|WebGLTexture)} source - The source image data.
+ * @param {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|WebGLTexture|Phaser.Types.Textures.CompressedTextureData|Phaser.Textures.DynamicTexture)} source - The source image data.
  * @param {number} [width] - Optional width of the source image. If not given it's derived from the source itself.
  * @param {number} [height] - Optional height of the source image. If not given it's derived from the source itself.
  * @param {boolean} [flipY=false] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
@@ -64,7 +64,7 @@ var TextureSource = new Class({
          * In Phaser 3.60 and above it can also be a Compressed Texture data object.
          *
          * @name Phaser.Textures.TextureSource#source
-         * @type {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|WebGLTexture|Phaser.Types.Textures.CompressedTextureData)}
+         * @type {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|WebGLTexture|Phaser.Types.Textures.CompressedTextureData|Phaser.Textures.DynamicTexture)}
          * @since 3.12.0
          */
         this.source = source;
@@ -157,7 +157,7 @@ var TextureSource = new Class({
          * @type {boolean}
          * @since 3.12.0
          */
-        this.isRenderTexture = (source.type === 'RenderTexture');
+        this.isRenderTexture = (source.type === 'RenderTexture' || source.type === 'DynamicTexture');
 
         /**
          * Is the source image a WebGLTexture?
@@ -248,7 +248,7 @@ var TextureSource = new Class({
                 }
                 else if (this.isRenderTexture)
                 {
-                    this.image = this.source.canvas;
+                    // this.image = this.source.canvas;
 
                     this.glTexture = renderer.createTextureFromSource(null, this.width, this.height, this.scaleMode);
                 }

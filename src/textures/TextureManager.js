@@ -9,6 +9,7 @@ var CanvasTexture = require('./CanvasTexture');
 var Class = require('../utils/Class');
 var Color = require('../display/color/Color');
 var CONST = require('../const');
+var DynamicTexture = require('./DynamicTexture');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var Frame = require('./Frame');
@@ -633,6 +634,23 @@ var TextureManager = new Class({
         else if (this.checkKey(key))
         {
             texture = new CanvasTexture(this, key, source, source.width, source.height);
+
+            this.list[key] = texture;
+
+            this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
+        }
+
+        return texture;
+    },
+
+    addDynamicTexture: function (key, width, height)
+    {
+        var texture = null;
+
+        if (this.checkKey(key))
+        {
+            texture = new DynamicTexture(this, key, width, height);
 
             this.list[key] = texture;
 
