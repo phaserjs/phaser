@@ -1464,6 +1464,34 @@ var TextureManager = new Class({
     },
 
     /**
+     * Resets the internal Stamp object, ready for drawing and returns it.
+     *
+     * @method Phaser.Textures.TextureManager#resetStamp
+     * @since 3.60.0
+     *
+     * @param {number} [alpha=1] - The alpha to use.
+     * @param {number} [tint=0xffffff] - WebGL only. The tint color to use.
+     *
+     * @return {Phaser.GameObjects.Image} A reference to the Stamp Game Object.
+     */
+    resetStamp: function (alpha, tint)
+    {
+        if (alpha === undefined) { alpha = 1; }
+        if (tint === undefined) { tint = 0xffffff; }
+
+        var stamp = this.stamp;
+
+        stamp.setCrop();
+        stamp.setPosition(0);
+        stamp.setAngle(0);
+        stamp.setScale(0);
+        stamp.setAlpha(alpha);
+        stamp.setTint(tint);
+
+        return stamp;
+    },
+
+    /**
      * Destroys the Texture Manager and all Textures stored within it.
      *
      * @method Phaser.Textures.TextureManager#destroy
