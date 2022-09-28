@@ -725,15 +725,21 @@ var TextureManager = new Class({
     },
 
     /**
-     * Adds a new Texture Atlas to this Texture Manager.
+     * Adds a Texture Atlas to this Texture Manager.
+     *
+     * In Phaser terminology, a Texture Atlas is a combination of an atlas image and a JSON data file,
+     * such as those exported by applications like Texture Packer.
+     *
      * It can accept either JSON Array or JSON Hash formats, as exported by Texture Packer and similar software.
+     *
+     * As of Phaser 3.60 you can use this method to add a atlas data to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addAtlas
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
-     * @param {object} data - The Texture Atlas data.
+     * @param {(HTMLImageElement|HTMLImageElement[]|Phaser.Textures.Texture)} source - The source Image element/s, or a Phaser Texture.
+     * @param {(object|object[])} data - The Texture Atlas data/s.
      * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
@@ -753,15 +759,22 @@ var TextureManager = new Class({
 
     /**
      * Adds a Texture Atlas to this Texture Manager.
+     *
+     * In Phaser terminology, a Texture Atlas is a combination of an atlas image and a JSON data file,
+     * such as those exported by applications like Texture Packer.
+     *
      * The frame data of the atlas must be stored in an Array within the JSON.
+     *
      * This is known as a JSON Array in software such as Texture Packer.
+     *
+     * As of Phaser 3.60 you can use this method to add a atlas data to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addAtlasJSONArray
      * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(HTMLImageElement|HTMLImageElement[])} source - The source Image element/s.
+     * @param {(HTMLImageElement|HTMLImageElement[]|Phaser.Textures.Texture)} source - The source Image element/s, or a Phaser Texture.
      * @param {(object|object[])} data - The Texture Atlas data/s.
      * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
@@ -771,10 +784,18 @@ var TextureManager = new Class({
     {
         var texture = null;
 
-        if (this.checkKey(key))
+        if (source instanceof Texture)
+        {
+            key = texture.key;
+            texture = source;
+        }
+        else if (this.checkKey(key))
         {
             texture = this.create(key, source);
+        }
 
+        if (texture)
+        {
             //  Multi-Atlas?
             if (Array.isArray(data))
             {
@@ -807,16 +828,23 @@ var TextureManager = new Class({
 
     /**
      * Adds a Texture Atlas to this Texture Manager.
+     *
+     * In Phaser terminology, a Texture Atlas is a combination of an atlas image and a JSON data file,
+     * such as those exported by applications like Texture Packer.
+     *
      * The frame data of the atlas must be stored in an Object within the JSON.
+     *
      * This is known as a JSON Hash in software such as Texture Packer.
+     *
+     * As of Phaser 3.60 you can use this method to add a atlas data to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addAtlasJSONHash
      * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
-     * @param {object} data - The Texture Atlas data.
+     * @param {(HTMLImageElement|HTMLImageElement[]|Phaser.Textures.Texture)} source - The source Image element/s, or a Phaser Texture.
+     * @param {(object|object[])} data - The Texture Atlas data/s.
      * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
@@ -825,10 +853,18 @@ var TextureManager = new Class({
     {
         var texture = null;
 
-        if (this.checkKey(key))
+        if (source instanceof Texture)
+        {
+            key = texture.key;
+            texture = source;
+        }
+        else if (this.checkKey(key))
         {
             texture = this.create(key, source);
+        }
 
+        if (texture)
+        {
             if (Array.isArray(data))
             {
                 for (var i = 0; i < data.length; i++)
@@ -854,15 +890,21 @@ var TextureManager = new Class({
     },
 
     /**
-     * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
-     * in the XML format.
+     * Adds a Texture Atlas to this Texture Manager.
+     *
+     * In Phaser terminology, a Texture Atlas is a combination of an atlas image and a data file,
+     * such as those exported by applications like Texture Packer.
+     *
+     * The frame data of the atlas must be stored in an XML file.
+     *
+     * As of Phaser 3.60 you can use this method to add a atlas data to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addAtlasXML
      * @fires Phaser.Textures.Events#ADD
      * @since 3.7.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
+     * @param {(HTMLImageElement|Phaser.Textures.Texture)} source - The source Image element, or a Phaser Texture.
      * @param {object} data - The Texture Atlas XML data.
      * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
@@ -872,10 +914,18 @@ var TextureManager = new Class({
     {
         var texture = null;
 
-        if (this.checkKey(key))
+        if (source instanceof Texture)
+        {
+            key = texture.key;
+            texture = source;
+        }
+        else if (this.checkKey(key))
         {
             texture = this.create(key, source);
+        }
 
+        if (texture)
+        {
             Parser.AtlasXML(texture, 0, data);
 
             if (dataSource)
@@ -892,7 +942,13 @@ var TextureManager = new Class({
 
     /**
      * Adds a Unity Texture Atlas to this Texture Manager.
-     * The data must be in the form of a Unity YAML file.
+     *
+     * In Phaser terminology, a Texture Atlas is a combination of an atlas image and a data file,
+     * such as those exported by applications like Texture Packer or Unity.
+     *
+     * The frame data of the atlas must be stored in a Unity YAML file.
+     *
+     * As of Phaser 3.60 you can use this method to add a atlas data to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addUnityAtlas
      * @fires Phaser.Textures.Events#ADD
@@ -909,10 +965,18 @@ var TextureManager = new Class({
     {
         var texture = null;
 
-        if (this.checkKey(key))
+        if (source instanceof Texture)
+        {
+            key = texture.key;
+            texture = source;
+        }
+        else if (this.checkKey(key))
         {
             texture = this.create(key, source);
+        }
 
+        if (texture)
+        {
             Parser.UnityYAML(texture, 0, data);
 
             if (dataSource)
