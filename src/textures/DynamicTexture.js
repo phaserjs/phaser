@@ -87,6 +87,8 @@ var DynamicTexture = new Class({
 
         Texture.call(this, manager, key, source, width, height);
 
+        this.add('__BASE', 0, 0, 0, width, height);
+
         /**
          * A reference to either the Canvas or WebGL Renderer that the Game instance is using.
          *
@@ -95,15 +97,6 @@ var DynamicTexture = new Class({
          * @since 3.2.0
          */
         this.renderer = renderer;
-
-        /**
-         * A reference to the BASE Frame in this Texture.
-         *
-         * @name Phaser.Textures.DynamicTexture#frame
-         * @type {Phaser.Textures.Frame}
-         * @since 3.60.0
-         */
-        this.frame = this.add('__BASE', 0, 0, 0, width, height);
 
         /**
          * This flag is set to 'true' during `beginDraw` and reset to 'false` in `endDraw`,
@@ -235,7 +228,7 @@ var DynamicTexture = new Class({
     {
         if (height === undefined) { height = width; }
 
-        var frame = this.frame;
+        var frame = this.get();
         var source = frame.source;
 
         if (width !== this.width || height !== this.height)
