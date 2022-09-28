@@ -16,7 +16,7 @@ var Frame = require('./Frame');
 var GameEvents = require('../core/events');
 var GenerateTexture = require('../create/GenerateTexture');
 var GetValue = require('../utils/object/GetValue');
-var Image = require('../gameobjects/image/Image');
+var ImageGameObject = require('../gameobjects/image/Image');
 var IsPlainObject = require('../utils/object/IsPlainObject');
 var Parser = require('./parsers');
 var Rectangle = require('../geom/rectangle/Rectangle');
@@ -141,7 +141,7 @@ var TextureManager = new Class({
          * @readonly
          * @since 3.60.0
          */
-        this.stamp = new Image(game.scene.systemScene).setOrigin(0);
+        this.stamp;
 
         /**
          * The crop Rectangle as used by the Stamp when it needs to crop itself.
@@ -195,6 +195,8 @@ var TextureManager = new Class({
             this.off(Events.ERROR);
 
             this.emit(Events.READY);
+
+            this.stamp = new ImageGameObject(this.game.scene.systemScene).setOrigin(0);
         }
     },
 
