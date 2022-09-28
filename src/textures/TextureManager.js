@@ -16,8 +16,10 @@ var Frame = require('./Frame');
 var GameEvents = require('../core/events');
 var GenerateTexture = require('../create/GenerateTexture');
 var GetValue = require('../utils/object/GetValue');
+var Image = require('../gameobjects/image/Image');
 var IsPlainObject = require('../utils/object/IsPlainObject');
 var Parser = require('./parsers');
+var Rectangle = require('../geom/rectangle/Rectangle');
 var Texture = require('./Texture');
 
 /**
@@ -126,6 +128,29 @@ var TextureManager = new Class({
          * @since 3.0.0
          */
         this._pending = 0;
+
+        /**
+         * An Image Game Object that belongs to this Texture Manager.
+         *
+         * Used as a drawing stamp within Dynamic Textures.
+         *
+         * This is not part of the display list and doesn't render.
+         *
+         * @name Phaser.Textures.TextureManager#stamp
+         * @type {Phaser.GameObjects.Image}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.stamp = new Image(game.scene.systemScene).setOrigin(0);
+
+        /**
+         * The crop Rectangle as used by the Stamp when it needs to crop itself.
+         *
+         * @name Phaser.Textures.TextureManager#stampCrop
+         * @type {Phaser.Geom.Rectangle}
+         * @since 3.60.0
+         */
+        this.stampCrop = new Rectangle();
 
         game.events.once(GameEvents.BOOT, this.boot, this);
     },
@@ -1387,7 +1412,10 @@ var TextureManager = new Class({
 
         this.list = {};
 
+        this.stamp.destroy();
+
         this.game = null;
+        this.stamp = null;
 
         CanvasPool.remove(this._tempCanvas);
     }
