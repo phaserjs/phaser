@@ -29,12 +29,16 @@ var Texture = require('./Texture');
 
 /**
  * @classdesc
- * Textures are managed by the global TextureManager. This is a singleton class that is
- * responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
+ * When Phaser boots it will create an instance of this Texture Manager class.
  *
- * Sprites and other Game Objects get the texture data they need from the TextureManager.
+ * It is a global manager that handles all textures in your game. You can access it from within
+ * a Scene via the `this.textures` property.
  *
- * Access it via `scene.textures`.
+ * Its role is as a manager for all textures that your game uses. It can create, update and remove
+ * textures globally, as well as parse texture data from external files, such as sprite sheets
+ * and texture atlases.
+ *
+ * Sprites and other texture-based Game Objects get their texture data directly from this class.
  *
  * @class TextureManager
  * @extends Phaser.Events.EventEmitter
@@ -55,7 +59,9 @@ var TextureManager = new Class({
         EventEmitter.call(this);
 
         /**
-         * The Game that this TextureManager belongs to.
+         * The Game that the Texture Manager belongs to.
+         *
+         * A game will only ever have one instance of a Texture Manager.
          *
          * @name Phaser.Textures.TextureManager#game
          * @type {Phaser.Game}
@@ -64,17 +70,24 @@ var TextureManager = new Class({
         this.game = game;
 
         /**
-         * The name of this manager.
+         * The internal name of this manager.
          *
          * @name Phaser.Textures.TextureManager#name
          * @type {string}
+         * @readonly
          * @since 3.0.0
          */
         this.name = 'TextureManager';
 
         /**
-         * An object that has all of textures that Texture Manager creates.
-         * Textures are assigned to keys so we can access to any texture that this object has directly by key value without iteration.
+         * This object contains all Textures that belong to this Texture Manager.
+         *
+         * Textures are identified by string-based keys, which are used as the property
+         * within this object. Therefore, you can access any texture directly from this
+         * object without any iteration.
+         *
+         * You should not typically modify this object directly, but instead use the
+         * methods provided by the Texture Manager to add and remove entries from it.
          *
          * @name Phaser.Textures.TextureManager#list
          * @type {object}
@@ -84,7 +97,7 @@ var TextureManager = new Class({
         this.list = {};
 
         /**
-         * The temporary canvas element to save an pixel data of an arbitrary texture in getPixel() and getPixelAlpha() method.
+         * A temporary canvas element. Used to save pixel data during calls to getPixel and getPixelAlpha methods.
          *
          * @name Phaser.Textures.TextureManager#_tempCanvas
          * @type {HTMLCanvasElement}
@@ -94,7 +107,7 @@ var TextureManager = new Class({
         this._tempCanvas = CanvasPool.create2D(this);
 
         /**
-         * The context of the temporary canvas element made to save an pixel data in getPixel() and getPixelAlpha() method.
+         * The context of the temporary canvas element.
          *
          * @name Phaser.Textures.TextureManager#_tempContext
          * @type {CanvasRenderingContext2D}
@@ -104,7 +117,7 @@ var TextureManager = new Class({
         this._tempContext = this._tempCanvas.getContext('2d', { willReadFrequently: true });
 
         /**
-         * An counting value used for emitting 'ready' event after all of managers in game is loaded.
+         * A counting value used for emitting the 'READY' event after all textures have loaded into this manager.
          *
          * @name Phaser.Textures.TextureManager#_pending
          * @type {number}
@@ -644,6 +657,31 @@ var TextureManager = new Class({
         return texture;
     },
 
+    /**
+     * Creates a Dynamic Texture instance and adds itself to this Texture Manager.
+     *
+     * A Dynamic Texture is a special texture that allows you to draw textures, frames and most kind of
+     * Game Objects directly to it.
+     *
+     * You can take many complex objects and draw them to this one texture, which can then be used as the
+     * base texture for other Game Objects, such as Sprites. Should you then update this texture, all
+     * Game Objects using it will instantly be updated as well, reflecting the changes immediately.
+     *
+     * It's a powerful way to generate dynamic textures at run-time that are WebGL friendly and don't invoke
+     * expensive GPU uploads on each change.
+     *
+     * See the methods available on the `DynamicTexture` class for more details.
+     *
+     * @method Phaser.Textures.TextureManager#addDynamicTexture
+     * @fires Phaser.Textures.Events#ADD
+     * @since 3.60.0
+     *
+     * @param {string} key - The string-based key of this Texture. Must be unique within the Texture Manager.
+     * @param {number} [width=256] - The width of this Dymamic Texture in pixels. Defaults to 256 x 256.
+     * @param {number} [height=256] - The height of this Dymamic Texture in pixels. Defaults to 256 x 256.
+     *
+     * @return {?Phaser.Textures.DynamicTexture} The Dynamic Texture that was created, or `null` if the key is already in use.
+     */
     addDynamicTexture: function (key, width, height)
     {
         var texture = null;
