@@ -11,15 +11,14 @@ var Class = require('../utils/Class');
 var CONST = require('../const');
 var PIPELINES = require('../renderer/webgl/pipelines/const');
 var Frame = require('./Frame');
-var Image = require('../gameobjects/image/Image');
-var Rectangle = require('../geom/rectangle/Rectangle');
 var RenderTarget = require('../renderer/webgl/RenderTarget');
 var Texture = require('./Texture');
 var Utils = require('../renderer/webgl/Utils');
 
 /**
  * @classdesc
- * A Dynamic Texture is a special texture that allows any number of Game Objects to be drawn to it.
+ * A Dynamic Texture is a special texture that allows you to draw textures, frames and most kind of
+ * Game Objects directly to it.
  *
  * You can take many complex objects and draw them to this one texture, which can then be used as the
  * base texture for other Game Objects, such as Sprites. Should you then update this texture, all
@@ -28,9 +27,18 @@ var Utils = require('../renderer/webgl/Utils');
  * It's a powerful way to generate dynamic textures at run-time that are WebGL friendly and don't invoke
  * expensive GPU uploads on each change.
  *
+ * ```js
+ * const t = this.textures.addDynamicTexture('player', 64, 128);
+ * // draw objects to t
+ * this.add.sprite(x, y, 'player');
+ * ```
+ *
+ * Because this is a standard Texture within Phaser, you can add frames to it, meaning you can use it
+ * to generate sprite sheets, texture atlases or tile sets.
+ *
  * Under WebGL, a FrameBuffer, which is what this Dynamic Texture uses internally, cannot be anti-aliased.
  * This means that when drawing objects such as Shapes or Graphics instances to this texture, they may appear
- * to be drawn with no aliasing around the edges. This is a technical limitation of WebGL. To get around it,
+ * to be drawn with no aliasing around the edges. This is a technical limitation of WebGL1. To get around it,
  * create your shape as a texture in an art package, then draw that to this texture.
  *
  * Based on the assumption that you will be using this Dynamic Texture as a source for Sprites, it will
@@ -89,15 +97,6 @@ var DynamicTexture = new Class({
         this.renderer = renderer;
 
         /**
-         * A reference to the global System Scene.
-         *
-         * @name Phaser.Textures.DynamicTexture#scene
-         * @type {Phaser.Scenes.Scene}
-         * @since 3.60.0
-         */
-        this.scene = manager.game.scene.systemScene;
-
-        /**
          * A reference to the BASE Frame in this Texture.
          *
          * @name Phaser.Textures.DynamicTexture#frame
@@ -107,17 +106,8 @@ var DynamicTexture = new Class({
         this.frame = this.add('__BASE', 0, 0, 0, width, height);
 
         /**
-         * Internal Image Game Object used as a Stamp within this Render Texture.
-         *
-         * @name Phaser.Textures.DynamicTexture#stamp
-         * @type {Phaser.GameObjects.Image}
-         * @since 3.60.0
-         */
-        this.stamp = new Image(this.scene).setOrigin(0);
-
-        /**
          * This flag is set to 'true' during `beginDraw` and reset to 'false` in `endDraw`,
-         * allowing you to determine if this Render Texture is batch drawing, or not.
+         * allowing you to determine if this Dynamic Texture is batch drawing, or not.
          *
          * @name Phaser.Textures.DynamicTexture#isDrawing
          * @type {boolean}
@@ -127,7 +117,7 @@ var DynamicTexture = new Class({
         this.isDrawing = false;
 
         /**
-         * A reference to the Rendering Context belonging to the Canvas Element this Render Texture is drawing to.
+         * A reference to the Rendering Context belonging to the Canvas Element this Dynamic Texture is drawing to.
          *
          * @name Phaser.Textures.DynamicTexture#canvas
          * @type {HTMLCanvasElement}
@@ -146,7 +136,7 @@ var DynamicTexture = new Class({
         this.context = (isCanvas) ? source.getContext('2d') : null;
 
         /**
-         * Is this Render Texture dirty or not? If not it won't spend time clearing or filling itself.
+         * Is this Dynamic Texture dirty or not? If not it won't spend time clearing or filling itself.
          *
          * @name Phaser.Textures.DynamicTexture#dirty
          * @type {boolean}
@@ -155,22 +145,14 @@ var DynamicTexture = new Class({
         this.dirty = false;
 
         /**
-         * The internal crop Rectangle, as used by the Stamp when it needs to crop itself.
+         * Is this Dynamic Texture being used as the base texture for a Sprite Game Object?
          *
-         * @name Phaser.Textures.DynamicTexture#_stampCrop
-         * @type {Phaser.Geom.Rectangle}
-         * @private
-         * @since 3.60.0
-         */
-        this._stampCrop = new Rectangle();
-
-        /**
-         * Is this Render Texture being used as the base texture for a Sprite Game Object?
+         * This is enabled by default, as we expect that will be the core use for Dymamic Textures.
          *
-         * To enable this, call `RenderTexture.setIsSpriteTexture(true)`.
+         * However, to disable it, call `RenderTexture.setIsSpriteTexture(false)`.
          *
-         * You should do this _before_ drawing to this RenderTexture, so that it correctly
-         * inverses the frames for WebGL rendering. Not doing so will result in inverted frames.
+         * You should do this _before_ drawing to this texture, so that it correctly
+         * inverses the frames for WebGL rendering. Not doing so will result in vertically flipped frames.
          *
          * This property is used in the `endDraw` method.
          *
@@ -191,18 +173,21 @@ var DynamicTexture = new Class({
         this._eraseMode = false;
 
         /**
-         * An internal Camera that can be used to move around the Render Texture.
-         * Control it just like you would any Scene Camera. The difference is that it only impacts the placement of what
-         * is drawn to the Render Texture. You can scroll, zoom and rotate this Camera.
+         * An internal Camera that can be used to move around this Dynamic Texture.
+         *
+         * Control it just like you would any Scene Camera. The difference is that it only impacts
+         * the placement of Game Objects that you then draw to this texture.
+         *
+         * You can scroll, zoom and rotate this Camera.
          *
          * @name Phaser.Textures.DynamicTexture#camera
          * @type {Phaser.Cameras.Scene2D.BaseCamera}
          * @since 3.12.0
          */
-        this.camera = new Camera(0, 0, width, height).setScene(this.scene);
+        this.camera = new Camera(0, 0, width, height).setScene(manager.game.scene.systemScene);
 
         /**
-         * The Render Target that belongs to this Render Texture.
+         * The Render Target that belongs to this Dynamic Texture.
          *
          * A Render Target encapsulates a framebuffer and texture for the WebGL Renderer.
          *
@@ -229,27 +214,22 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Resizes the Render Texture to the new dimensions given.
+     * Resizes this Dynamic Texture to the new dimensions given.
      *
-     * If Render Texture was created from specific frame, only the size of the frame will be changed. The size of the source
-     * texture will not change.
+     * In WebGL it will destroy and then re-create the frame buffer being used by this Dynamic Texture.
+     * In Canvas it will resize the underlying canvas DOM element.
      *
-     * If Render Texture was not created from specific frame, the following will happen:
-     *
-     * In WebGL it will destroy and then re-create the frame buffer being used by the Render Texture.
-     * In Canvas it will resize the underlying canvas element.
-     *
-     * Both approaches will erase everything currently drawn to the Render Texture.
+     * Both approaches will erase everything currently drawn to this texture.
      *
      * If the dimensions given are the same as those already being used, calling this method will do nothing.
      *
      * @method Phaser.Textures.DynamicTexture#setSize
      * @since 3.10.0
      *
-     * @param {number} width - The new width of the Render Texture.
-     * @param {number} [height=width] - The new height of the Render Texture. If not specified, will be set the same as the `width`.
+     * @param {number} width - The new width of this Dynamic Texture.
+     * @param {number} [height=width] - The new height of this Dynamic Texture. If not specified, will be set the same as the `width`.
      *
-     * @return {this} This Render Texture.
+     * @return {this} This Dynamic Texture.
      */
     setSize: function (width, height)
     {
@@ -331,19 +311,24 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Fills the Render Texture with the given color.
+     * Fills this Dynamic Texture with the given color.
+     *
+     * By default it will fill the entire texture, however you can set it to fill a specific
+     * rectangular area by using the x, y, width and height arguments.
+     *
+     * The color should be given in hex format, i.e. 0xff0000 for red, 0x00ff00 for green, etc.
      *
      * @method Phaser.Textures.DynamicTexture#fill
      * @since 3.2.0
      *
-     * @param {number} rgb - The color to fill the Render Texture with, such as 0xff0000 for red.
+     * @param {number} rgb - The color to fill this Dynamic Texture with, such as 0xff0000 for red.
      * @param {number} [alpha=1] - The alpha value used by the fill.
      * @param {number} [x=0] - The left coordinate of the fill rectangle.
      * @param {number} [y=0] - The top coordinate of the fill rectangle.
      * @param {number} [width=this.width] - The width of the fill rectangle.
      * @param {number} [height=this.height] - The height of the fill rectangle.
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     fill: function (rgb, alpha, x, y, width, height)
     {
@@ -399,12 +384,13 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Clears the Render Texture.
+     * Fully clears this Dynamic Texture, erasing everything from it and resetting it back to
+     * a blank, transparent, texture.
      *
      * @method Phaser.Textures.DynamicTexture#clear
      * @since 3.2.0
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     clear: function ()
     {
@@ -432,8 +418,8 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Draws the given object, or an array of objects, to this Render Texture using a blend mode of ERASE.
-     * This has the effect of erasing any filled pixels in the objects from this Render Texture.
+     * Draws the given object, or an array of objects, to this Dynamic Texture using a blend mode of ERASE.
+     * This has the effect of erasing any filled pixels present in the objects from this texture.
      *
      * It can accept any of the following:
      *
@@ -441,12 +427,12 @@ var DynamicTexture = new Class({
      * * Tilemap Layers.
      * * A Group. The contents of which will be iterated and drawn in turn.
      * * A Container. The contents of which will be iterated fully, and drawn in turn.
-     * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
-     * * Another Render Texture.
+     * * A Scene Display List. Pass in `Scene.children` to draw the whole list.
+     * * Another Dynamic Texture, or a Render Texture.
      * * A Texture Frame instance.
-     * * A string. This is used to look-up a texture from the Texture Manager.
+     * * A string. This is used to look-up the texture from the Texture Manager.
      *
-     * Note: You cannot erase a Render Texture from itself.
+     * Note: You cannot erase a Dynamic Texture from itself.
      *
      * If passing in a Group or Container it will only draw children that return `true`
      * when their `willRender()` method is called. I.e. a Container with 10 children,
@@ -469,14 +455,18 @@ var DynamicTexture = new Class({
      * try and pass them in an array in one single call, rather than making lots of
      * separate calls.
      *
+     * If you are not planning on using this Dynamic Texture as a base texture for Sprite
+     * Game Objects, then you should set `DynamicTexture.isSpriteTexture = false` before
+     * calling this method, otherwise you will get vertically inverted frames in WebGL.
+     *
      * @method Phaser.Textures.DynamicTexture#erase
      * @since 3.16.0
      *
-     * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, other Render Texture, Texture Frame or an array of any of these.
+     * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, Render Texture, Texture Frame, or an array of any of these.
      * @param {number} [x=0] - The x position to draw the Frame at, or the offset applied to the object.
      * @param {number} [y=0] - The y position to draw the Frame at, or the offset applied to the object.
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     erase: function (entries, x, y)
     {
@@ -490,7 +480,7 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Draws the given object, or an array of objects, to this Render Texture.
+     * Draws the given object, or an array of objects, to this Dynamic Texture.
      *
      * It can accept any of the following:
      *
@@ -498,15 +488,15 @@ var DynamicTexture = new Class({
      * * Tilemap Layers.
      * * A Group. The contents of which will be iterated and drawn in turn.
      * * A Container. The contents of which will be iterated fully, and drawn in turn.
-     * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
-     * * Another Render Texture.
+     * * A Scene Display List. Pass in `Scene.children` to draw the whole list.
+     * * Another Dynamic Texture, or a Render Texture.
      * * A Texture Frame instance.
-     * * A string. This is used to look-up a texture from the Texture Manager.
+     * * A string. This is used to look-up the texture from the Texture Manager.
      *
-     * Note 1: You cannot draw a Render Texture to itself.
+     * Note 1: You cannot draw a Dynamic Texture to itself.
      *
      * Note 2: For Game Objects that have Post FX Pipelines, the pipeline _cannot_ be
-     * used when drawn to this Render Texture.
+     * used when drawn to this texture.
      *
      * If passing in a Group or Container it will only draw children that return `true`
      * when their `willRender()` method is called. I.e. a Container with 10 children,
@@ -533,9 +523,9 @@ var DynamicTexture = new Class({
      * try and pass them in an array in one single call, rather than making lots of
      * separate calls.
      *
-     * If you are planning on using this Render Texture as a base texture for Sprite
-     * Game Objects, then you should set `RenderTexture.isSpriteTexture = true` before
-     * calling this method, otherwise you will get inverted frames in WebGL.
+     * If you are not planning on using this Dynamic Texture as a base texture for Sprite
+     * Game Objects, then you should set `DynamicTexture.isSpriteTexture = false` before
+     * calling this method, otherwise you will get vertically inverted frames in WebGL.
      *
      * @method Phaser.Textures.DynamicTexture#draw
      * @since 3.2.0
@@ -546,7 +536,7 @@ var DynamicTexture = new Class({
      * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture. Game Objects use their own alpha.
      * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. Game Objects use their own tint. WebGL only.
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     draw: function (entries, x, y, alpha, tint)
     {
@@ -575,9 +565,9 @@ var DynamicTexture = new Class({
      *
      * If you need to draw a Sprite to this Render Texture, use the `draw` method instead.
      *
-     * If you are planning on using this Render Texture as a base texture for Sprite
-     * Game Objects, then you should set `RenderTexture.isSpriteTexture = true` before
-     * calling this method, otherwise you will get inverted frames in WebGL.
+     * If you are not planning on using this Dynamic Texture as a base texture for Sprite
+     * Game Objects, then you should set `DynamicTexture.isSpriteTexture = false` before
+     * calling this method, otherwise you will get vertically inverted frames in WebGL.
      *
      * @method Phaser.Textures.DynamicTexture#drawFrame
      * @since 3.12.0
@@ -589,7 +579,7 @@ var DynamicTexture = new Class({
      * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture.
      * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. WebGL only.
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     drawFrame: function (key, frame, x, y, alpha, tint)
     {
@@ -601,41 +591,10 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Resets the internal Stamp object, ready for drawing.
-     *
-     * @method Phaser.Textures.DynamicTexture#resetStamp
-     * @since 3.60.0
-     *
-     * @param {number} [alpha=1] - The alpha to use.
-     * @param {number} [tint=0xffffff] - WebGL only. The tint color to use.
-     *
-     * @return {Phaser.GameObjects.Image} A reference to the Stamp Game Object.
-     */
-    resetStamp: function (alpha, tint)
-    {
-        if (alpha === undefined) { alpha = 1; }
-        if (tint === undefined) { tint = 0xffffff; }
-
-        var stamp = this.stamp;
-
-        stamp.setCrop();
-        stamp.setAlpha(alpha);
-        stamp.setTint(tint);
-
-        return stamp;
-    },
-
-    /**
-     * Takes the given Texture Frame and draws it to this Render Texture as a fill pattern,
+     * Takes the given Texture Frame and draws it to this Dynamic Texture as a fill pattern,
      * i.e. in a grid-layout based on the frame dimensions.
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
-     *
-     * ```javascript
-     * var rt = this.add.renderTexture(0, 0, 800, 600);
-     *
-     * rt.repeat(key, frame);
-     * ```
      *
      * You can optionally provide a position, width, height, alpha and tint value to apply to
      * the frames before they are drawn. The position controls the top-left where the repeating
@@ -644,11 +603,11 @@ var DynamicTexture = new Class({
      * The position can be negative if required, but the dimensions cannot.
      *
      * Calling this method will cause a batch flush by default. Use the `skipBatch` argument
-     * to disable this, if this call is part of a larger batch draw.
+     * to disable this if this call is part of a larger batch draw.
      *
-     * If you are planning on using this Render Texture as a base texture for Sprite
-     * Game Objects, then you should set `RenderTexture.isSpriteTexture = true` before
-     * calling this method, otherwise you will get inverted frames in WebGL.
+     * If you are not planning on using this Dynamic Texture as a base texture for Sprite
+     * Game Objects, then you should set `DynamicTexture.isSpriteTexture = false` before
+     * calling this method, otherwise you will get vertically inverted frames in WebGL.
      *
      * @method Phaser.Textures.DynamicTexture#repeat
      * @since 3.60.0
@@ -657,13 +616,13 @@ var DynamicTexture = new Class({
      * @param {(string|number)} [frame] - The name or index of the frame within the Texture. Set to `null` to skip this argument if not required.
      * @param {number} [x=0] - The x position to start drawing the frames from (can be negative to offset).
      * @param {number} [y=0] - The y position to start drawing the frames from (can be negative to offset).
-     * @param {number} [width=this.width] - The width of the area to repeat the frame within. Defaults to the width of this Render Texture.
-     * @param {number} [height=this.height] - The height of the area to repeat the frame within. Defaults to the height of this Render Texture.
+     * @param {number} [width=this.width] - The width of the area to repeat the frame within. Defaults to the width of this Dynamic Texture.
+     * @param {number} [height=this.height] - The height of the area to repeat the frame within. Defaults to the height of this Dynamic Texture.
      * @param {number} [alpha=1] - The alpha to use. Defaults to 1, no alpha.
      * @param {number} [tint=0xffffff] - WebGL only. The tint color to use. Leave as undefined, or 0xffffff to have no tint.
      * @param {boolean} [skipBatch=false] - Skip beginning and ending a batch with this call. Use if this is part of a bigger batched draw.
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     repeat: function (key, frame, x, y, width, height, alpha, tint, skipBatch)
     {
@@ -689,8 +648,11 @@ var DynamicTexture = new Class({
             return this;
         }
 
-        var stamp = this.resetStamp(alpha, tint);
+        var stamp = this.manager.stamp;
 
+        stamp.setCrop();
+        stamp.setAlpha(alpha);
+        stamp.setTint(tint);
         stamp.setFrame(frame);
 
         var frameWidth = frame.width;
@@ -735,7 +697,7 @@ var DynamicTexture = new Class({
         var dy = y;
 
         var useCrop = false;
-        var cropRect = this._stampCrop.setTo(0, 0, frameWidth, frameHeight);
+        var cropRect = this.manager.stampCrop.setTo(0, 0, frameWidth, frameHeight);
 
         if (!skipBatch)
         {
@@ -821,12 +783,14 @@ var DynamicTexture = new Class({
 
     /**
      * Use this method if you need to batch draw a large number of Game Objects to
-     * this Render Texture in a single go, or on a frequent basis.
+     * this Dynamic Texture in a single pass, or on a frequent basis. This is especially
+     * useful under WebGL, however, if your game is using Canvas only, it will not make
+     * any speed difference in that situation.
      *
-     * This method starts the beginning of a batched draw.
+     * This method starts the beginning of a batched draw, unless one is already open.
      *
-     * Batch drawing is faster than calling `draw`, but you must be very careful to manage the
-     * flow of code and remember to call `endDraw()` when you're finished.
+     * Batched drawing is faster than calling `draw` in loop, but you must be careful
+     * to manage the flow of code and remember to call `endDraw()` when you're finished.
      *
      * If you don't need to draw large numbers of objects it's much safer and easier
      * to use the `draw` method instead.
@@ -835,28 +799,28 @@ var DynamicTexture = new Class({
      *
      * ```javascript
      * // Call once:
-     * RenderTexture.beginDraw();
+     * DynamicTexture.beginDraw();
      *
      * // repeat n times:
-     * RenderTexture.batchDraw();
+     * DynamicTexture.batchDraw();
      * // or
-     * RenderTexture.batchDrawFrame();
+     * DynamicTexture.batchDrawFrame();
      *
      * // Call once:
-     * RenderTexture.endDraw();
+     * DynamicTexture.endDraw();
      * ```
      *
      * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Render Texture while the
-     * batch is still open.
+     * have started a batch. Also, be very careful not to destroy this Dynamic Texture while the
+     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
      *
-     * You can use the `RenderTexture.isDrawing` boolean property to tell if a batch is
+     * You can use the `DynamicTexture.isDrawing` boolean property to tell if a batch is
      * currently open, or not.
      *
      * @method Phaser.Textures.DynamicTexture#beginDraw
      * @since 3.50.0
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     beginDraw: function ()
     {
@@ -885,12 +849,12 @@ var DynamicTexture = new Class({
 
     /**
      * Use this method if you have already called `beginDraw` and need to batch
-     * draw a large number of objects to this Render Texture.
+     * draw a large number of objects to this Dynamic Texture.
      *
-     * This method batches the drawing of the given objects to this Render Texture,
-     * without causing a bind or batch flush.
+     * This method batches the drawing of the given objects to this texture,
+     * without causing a WebGL bind or batch flush for each one.
      *
-     * It is faster than calling `draw`, but you must be very careful to manage the
+     * It is faster than calling `draw`, but you must be careful to manage the
      * flow of code and remember to call `endDraw()`. If you don't need to draw large
      * numbers of objects it's much safer and easier to use the `draw` method instead.
      *
@@ -898,35 +862,36 @@ var DynamicTexture = new Class({
      *
      * ```javascript
      * // Call once:
-     * RenderTexture.beginDraw();
+     * DynamicTexture.beginDraw();
      *
      * // repeat n times:
-     * RenderTexture.batchDraw();
+     * DynamicTexture.batchDraw();
      * // or
-     * RenderTexture.batchDrawFrame();
+     * DynamicTexture.batchDrawFrame();
      *
      * // Call once:
-     * RenderTexture.endDraw();
+     * DynamicTexture.endDraw();
      * ```
      *
      * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Render Texture while the
-     * batch is still open, or call `beginDraw` again.
+     * have started a batch. Also, be very careful not to destroy this Dynamic Texture while the
+     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
      *
-     * Draws the given object, or an array of objects, to this Render Texture.
+     * You can use the `DynamicTexture.isDrawing` boolean property to tell if a batch is
+     * currently open, or not.
      *
-     * It can accept any of the following:
+     * This method can accept any of the following:
      *
      * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
      * * Tilemap Layers.
      * * A Group. The contents of which will be iterated and drawn in turn.
      * * A Container. The contents of which will be iterated fully, and drawn in turn.
      * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
-     * * Another Render Texture.
+     * * Another Dynamic Texture or Render Texture.
      * * A Texture Frame instance.
      * * A string. This is used to look-up a texture from the Texture Manager.
      *
-     * Note: You cannot draw a Render Texture to itself.
+     * Note: You cannot draw a Dynamic Texture to itself.
      *
      * If passing in a Group or Container it will only draw children that return `true`
      * when their `willRender()` method is called. I.e. a Container with 10 children,
@@ -950,13 +915,13 @@ var DynamicTexture = new Class({
      * @method Phaser.Textures.DynamicTexture#batchDraw
      * @since 3.50.0
      *
-     * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, other Render Texture, Texture Frame or an array of any of these.
+     * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, other Dynamic or Texture, Texture Frame or an array of any of these.
      * @param {number} [x=0] - The x position to draw the Frame at, or the offset applied to the object.
      * @param {number} [y=0] - The y position to draw the Frame at, or the offset applied to the object.
      * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture. Game Objects use their own alpha.
      * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. Game Objects use their own tint. WebGL only.
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     batchDraw: function (entries, x, y, alpha, tint)
     {
@@ -972,12 +937,12 @@ var DynamicTexture = new Class({
 
     /**
      * Use this method if you have already called `beginDraw` and need to batch
-     * draw a large number of texture frames to this Render Texture.
+     * draw a large number of texture frames to this Dynamic Texture.
      *
-     * This method batches the drawing of the given frames to this Render Texture,
-     * without causing a bind or batch flush.
+     * This method batches the drawing of the given frames to this Dynamic Texture,
+     * without causing a WebGL bind or batch flush for each one.
      *
-     * It is faster than calling `drawFrame`, but you must be very careful to manage the
+     * It is faster than calling `drawFrame`, but you must be careful to manage the
      * flow of code and remember to call `endDraw()`. If you don't need to draw large
      * numbers of frames it's much safer and easier to use the `drawFrame` method instead.
      *
@@ -985,37 +950,28 @@ var DynamicTexture = new Class({
      *
      * ```javascript
      * // Call once:
-     * RenderTexture.beginDraw();
+     * DynamicTexture.beginDraw();
      *
      * // repeat n times:
-     * RenderTexture.batchDraw();
+     * DynamicTexture.batchDraw();
      * // or
-     * RenderTexture.batchDrawFrame();
+     * DynamicTexture.batchDrawFrame();
      *
      * // Call once:
-     * RenderTexture.endDraw();
+     * DynamicTexture.endDraw();
      * ```
      *
      * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Render Texture while the
-     * batch is still open, or call `beginDraw` again.
+     * have started a batch. Also, be very careful not to destroy this Dynamic Texture while the
+     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
      *
-     * Draws the Texture Frame to the Render Texture at the given position.
+     * You can use the `DynamicTexture.isDrawing` boolean property to tell if a batch is
+     * currently open, or not.
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
      *
-     * ```javascript
-     * var rt = this.add.renderTexture(0, 0, 800, 600);
-     * rt.drawFrame(key, frame);
-     * ```
-     *
      * You can optionally provide a position, alpha and tint value to apply to the frame
      * before it is drawn.
-     *
-     * Calling this method will cause a batch flush, so if you've got a stack of things to draw
-     * in a tight loop, try using the `draw` method instead.
-     *
-     * If you need to draw a Sprite to this Render Texture, use the `draw` method instead.
      *
      * @method Phaser.Textures.DynamicTexture#batchDrawFrame
      * @since 3.50.0
@@ -1027,7 +983,7 @@ var DynamicTexture = new Class({
      * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture. Game Objects use their own alpha.
      * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. Game Objects use their own tint. WebGL only.
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     batchDrawFrame: function (key, frame, x, y, alpha, tint)
     {
@@ -1056,11 +1012,14 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Use this method to finish batch drawing to this Render Texture.
+     * Use this method to finish batch drawing to this Dynamic Texture.
+     *
+     * Doing so will stop the WebGL Renderer from capturing draws and then blit the
+     * framebuffer to the Render Target owned by this texture.
      *
      * Calling this method without first calling `beginDraw` will have no effect.
      *
-     * Batch drawing is faster than calling `draw`, but you must be very careful to manage the
+     * Batch drawing is faster than calling `draw`, but you must be careful to manage the
      * flow of code and remember to call `endDraw()` when you're finished.
      *
      * If you don't need to draw large numbers of objects it's much safer and easier
@@ -1070,22 +1029,22 @@ var DynamicTexture = new Class({
      *
      * ```javascript
      * // Call once:
-     * RenderTexture.beginDraw();
+     * DynamicTexture.beginDraw();
      *
      * // repeat n times:
-     * RenderTexture.batchDraw();
+     * DynamicTexture.batchDraw();
      * // or
-     * RenderTexture.batchDrawFrame();
+     * DynamicTexture.batchDrawFrame();
      *
      * // Call once:
-     * RenderTexture.endDraw();
+     * DynamicTexture.endDraw();
      * ```
      *
      * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Render Texture while the
-     * batch is still open.
+     * have started a batch. Also, be very careful not to destroy this Dynamic Texture while the
+     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
      *
-     * You can use the `RenderTexture.isDrawing` boolean property to tell if a batch is
+     * You can use the `DynamicTexture.isDrawing` boolean property to tell if a batch is
      * currently open, or not.
      *
      * @method Phaser.Textures.DynamicTexture#endDraw
@@ -1093,7 +1052,7 @@ var DynamicTexture = new Class({
      *
      * @param {boolean} [erase=false] - Draws all objects in this batch using a blend mode of ERASE. This has the effect of erasing any filled pixels in the objects being drawn.
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     endDraw: function (erase)
     {
@@ -1181,15 +1140,15 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Internal method that handles drawing a Phaser Group contents.
+     * Internal method that handles drawing the contents of a Phaser Group to this Dynamic Texture.
      *
      * @method Phaser.Textures.DynamicTexture#batchGroup
      * @private
      * @since 3.12.0
      *
      * @param {array} children - The array of Game Objects to draw.
-     * @param {number} [x=0] - The x position to offset the Game Object by.
-     * @param {number} [y=0] - The y position to offset the Game Object by.
+     * @param {number} [x=0] - The x position to offset the Game Objects by.
+     * @param {number} [y=0] - The y position to offset the Game Objects by.
      */
     batchGroup: function (children, x, y)
     {
@@ -1208,7 +1167,7 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Internal method that handles drawing a single Phaser Game Object to this Render Texture.
+     * Internal method that handles drawing a single Phaser Game Object to this Dynamic Texture.
      *
      * @method Phaser.Textures.DynamicTexture#batchGameObject
      * @private
@@ -1293,7 +1252,7 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Internal method that handles the drawing of a Texture Frame to this Render Texture.
+     * Internal method that handles the drawing of a Texture Frame to this Dynamic Texture.
      *
      * @method Phaser.Textures.DynamicTexture#batchTextureFrame
      * @private
@@ -1345,16 +1304,19 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Takes a snapshot of the given area of this Render Texture.
+     * Takes a snapshot of the given area of this Dynamic Texture.
      *
-     * The snapshot is taken immediately.
+     * The snapshot is taken immediately, but the results are returned via the given callback.
      *
-     * To capture the whole Render Texture see the `snapshot` method. To capture a specific pixel, see `snapshotPixel`.
+     * To capture the whole Dynamic Texture see the `snapshot` method.
+     * To capture just a specific pixel, see the `snapshotPixel` method.
      *
-     * Snapshots work by using the WebGL `readPixels` feature to grab every pixel from the frame buffer into an ArrayBufferView.
-     * It then parses this, copying the contents to a temporary Canvas and finally creating an Image object from it,
-     * which is the image returned to the callback provided. All in all, this is a computationally expensive and blocking process,
-     * which gets more expensive the larger the canvas size gets, so please be careful how you employ this in your game.
+     * Snapshots work by using the WebGL `readPixels` feature to grab every pixel from the frame buffer
+     * into an ArrayBufferView. It then parses this, copying the contents to a temporary Canvas and finally
+     * creating an Image object from it, which is the image returned to the callback provided.
+     *
+     * All in all, this is a computationally expensive and blocking process, which gets more expensive
+     * the larger the resolution this Dynamic Texture has, so please be careful how you employ this in your game.
      *
      * @method Phaser.Textures.DynamicTexture#snapshotArea
      * @since 3.19.0
@@ -1367,7 +1329,7 @@ var DynamicTexture = new Class({
      * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
      * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     snapshotArea: function (x, y, width, height, callback, type, encoderOptions)
     {
@@ -1384,16 +1346,19 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Takes a snapshot of the whole of this Render Texture.
+     * Takes a snapshot of the whole of this Dynamic Texture.
      *
-     * The snapshot is taken immediately.
+     * The snapshot is taken immediately, but the results are returned via the given callback.
      *
-     * To capture just a portion of the Render Texture see the `snapshotArea` method. To capture a specific pixel, see `snapshotPixel`.
+     * To capture a portion of this Dynamic Texture see the `snapshotArea` method.
+     * To capture just a specific pixel, see the `snapshotPixel` method.
      *
-     * Snapshots work by using the WebGL `readPixels` feature to grab every pixel from the frame buffer into an ArrayBufferView.
-     * It then parses this, copying the contents to a temporary Canvas and finally creating an Image object from it,
-     * which is the image returned to the callback provided. All in all, this is a computationally expensive and blocking process,
-     * which gets more expensive the larger the canvas size gets, so please be careful how you employ this in your game.
+     * Snapshots work by using the WebGL `readPixels` feature to grab every pixel from the frame buffer
+     * into an ArrayBufferView. It then parses this, copying the contents to a temporary Canvas and finally
+     * creating an Image object from it, which is the image returned to the callback provided.
+     *
+     * All in all, this is a computationally expensive and blocking process, which gets more expensive
+     * the larger the resolution this Dynamic Texture has, so please be careful how you employ this in your game.
      *
      * @method Phaser.Textures.DynamicTexture#snapshot
      * @since 3.19.0
@@ -1402,7 +1367,7 @@ var DynamicTexture = new Class({
      * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
      * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     snapshot: function (callback, type, encoderOptions)
     {
@@ -1410,15 +1375,16 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Takes a snapshot of the given pixel from this Render Texture.
+     * Takes a snapshot of the given pixel from this Dynamic Texture.
      *
-     * The snapshot is taken immediately.
+     * The snapshot is taken immediately, but the results are returned via the given callback.
      *
-     * To capture the whole Render Texture see the `snapshot` method. To capture a specific portion, see `snapshotArea`.
+     * To capture the whole Dynamic Texture see the `snapshot` method.
+     * To capture a portion of this Dynamic Texture see the `snapshotArea` method.
      *
-     * Unlike the other two snapshot methods, this one will send your callback a `Color` object containing the color data for
-     * the requested pixel. It doesn't need to create an internal Canvas or Image object, so is a lot faster to execute,
-     * using less memory, than the other snapshot methods.
+     * Unlike the two other snapshot methods, this one will send your callback a `Color` object
+     * containing the color data for the requested pixel. It doesn't need to create an internal
+     * Canvas or Image object, so is a lot faster to execute, using less memory than the other snapshot methods.
      *
      * @method Phaser.Textures.DynamicTexture#snapshotPixel
      * @since 3.19.0
@@ -1427,7 +1393,7 @@ var DynamicTexture = new Class({
      * @param {number} y - The y coordinate of the pixel to get.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot pixel data is extracted.
      *
-     * @return {this} This Render Texture instance.
+     * @return {this} This Dynamic Texture instance.
      */
     snapshotPixel: function (x, y, callback)
     {
