@@ -9,8 +9,8 @@ var Camera = require('../cameras/2d/BaseCamera');
 var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var CONST = require('../const');
-var PIPELINES = require('../renderer/webgl/pipelines/const');
 var Frame = require('./Frame');
+var PIPELINES = require('../renderer/webgl/pipelines/const');
 var RenderTarget = require('../renderer/webgl/RenderTarget');
 var Texture = require('./Texture');
 var Utils = require('../renderer/webgl/Utils');
@@ -410,6 +410,23 @@ var DynamicTexture = new Class({
         return this;
     },
 
+    stamp: function (key, frame, x, y, angle, scaleX, scaleY, alpha, tint)
+    {
+        if (angle === undefined) { angle = 0; }
+        if (scaleX === undefined) { scaleX = 1; }
+        if (scaleY === undefined) { scaleY = 1; }
+
+        var stamp = this.manager.resetStamp(alpha, tint);
+
+        stamp.setAngle(angle);
+        stamp.setScale(scaleX, scaleY);
+        stamp.setTexture(key, frame);
+
+        this.draw(stamp, x, y);
+
+        return this;
+    },
+
     /**
      * Draws the given object, or an array of objects, to this Dynamic Texture using a blend mode of ERASE.
      * This has the effect of erasing any filled pixels present in the objects from this texture.
@@ -641,11 +658,8 @@ var DynamicTexture = new Class({
             return this;
         }
 
-        var stamp = this.manager.stamp;
+        var stamp = this.manager.resetStamp(alpha, tint);
 
-        stamp.setCrop();
-        stamp.setAlpha(alpha);
-        stamp.setTint(tint);
         stamp.setFrame(frame);
 
         var frameWidth = frame.width;
