@@ -324,7 +324,16 @@ var MultiPipeline = new Class({
             flipY = -1;
         }
 
-        spriteMatrix.applyITRS(gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
+        var gx = gameObject.x;
+        var gy = gameObject.y;
+
+        if (camera.roundPixels)
+        {
+            gx = Math.floor(gx);
+            gy = Math.floor(gy);
+        }
+
+        spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
 
         camMatrix.copyFrom(camera.matrix);
 
@@ -334,8 +343,8 @@ var MultiPipeline = new Class({
             camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * gameObject.scrollFactorX, -camera.scrollY * gameObject.scrollFactorY);
 
             //  Undo the camera scroll
-            spriteMatrix.e = gameObject.x;
-            spriteMatrix.f = gameObject.y;
+            spriteMatrix.e = gx;
+            spriteMatrix.f = gy;
         }
         else
         {
@@ -346,7 +355,7 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight, camera.roundPixels);
+        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight, false);
 
         var getTint = Utils.getTintAppendFloatAlpha;
         var cameraAlpha = camera.alpha;
@@ -498,6 +507,12 @@ var MultiPipeline = new Class({
             y += srcHeight;
         }
 
+        if (camera.roundPixels)
+        {
+            srcX = Math.floor(srcX);
+            srcY = Math.floor(srcY);
+        }
+
         spriteMatrix.applyITRS(srcX, srcY, rotation, scaleX, scaleY);
 
         camMatrix.copyFrom(camera.matrix);
@@ -520,7 +535,7 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var quad = calcMatrix.setQuad(x, y, x + width, y + height, camera.roundPixels);
+        var quad = calcMatrix.setQuad(x, y, x + width, y + height, false);
 
         if (textureUnit === undefined)
         {
