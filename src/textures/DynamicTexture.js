@@ -10,6 +10,7 @@ var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var CONST = require('../const');
 var Frame = require('./Frame');
+var GetFastValue = require('../utils/object/GetFastValue');
 var PIPELINES = require('../renderer/webgl/pipelines/const');
 var RenderTarget = require('../renderer/webgl/RenderTarget');
 var Texture = require('./Texture');
@@ -410,17 +411,58 @@ var DynamicTexture = new Class({
         return this;
     },
 
-    stamp: function (key, frame, x, y, angle, scaleX, scaleY, alpha, tint)
+    /**
+     * Takes the given texture key and frame and then stamps it at the given
+     * x and y coordinates. You can use the optional 'config' argument to provide
+     * lots more options about how the stamp is applied, including the alpha,
+     * tint, angle, scale and origin.
+     *
+     * By default, the frame will stamp on the x/y coordinates based on its center.
+     *
+     * If you wish to stamp from the top-left, set the config `originX` and
+     * `originY` properties both to zero.
+     *
+     * @method Phaser.Textures.DynamicTexture#stamp
+     * @since 3.60.0
+     *
+     * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
+     * @param {(string|number)} [frame] - The name or index of the frame within the Texture. Set to `null` to skip this argument if not required.
+     * @param {number} [x=0] - The x position to draw the frame at.
+     * @param {number} [y=0] - The y position to draw the frame at.
+     * @param {Phaser.Types.Textures.StampConfig} [config] - The stamp configuration object, allowing you to set the alpha, tint, angle, scale and origin of the stamp.
+     *
+     * @return {this} This Dynamic Texture instance.
+     */
+    stamp: function (key, frame, x, y, config)
     {
-        if (angle === undefined) { angle = 0; }
-        if (scaleX === undefined) { scaleX = 1; }
-        if (scaleY === undefined) { scaleY = 1; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        var alpha = GetFastValue(config, 'alpha', 1);
+        var tint = GetFastValue(config, 'tint', 0xffffff);
+        var angle = GetFastValue(config, 'angle', 0);
+        var rotation = GetFastValue(config, 'rotation', 0);
+        var scaleX = GetFastValue(config, 'scaleX', 1);
+        var scaleY = GetFastValue(config, 'scaleY', 1);
+        var originX = GetFastValue(config, 'originX', 0.5);
+        var originY = GetFastValue(config, 'originY', 0.5);
 
         var stamp = this.manager.resetStamp(alpha, tint);
 
-        stamp.setAngle(angle);
+        stamp.setAngle(0);
+
+        if (angle !== 0)
+        {
+            stamp.setAngle(angle);
+        }
+        else if (rotation !== 0)
+        {
+            stamp.setRotation(rotation);
+        }
+
         stamp.setScale(scaleX, scaleY);
         stamp.setTexture(key, frame);
+        stamp.setOrigin(originX, originY);
 
         this.draw(stamp, x, y);
 
