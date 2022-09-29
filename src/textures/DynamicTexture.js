@@ -442,10 +442,13 @@ var DynamicTexture = new Class({
         var tint = GetFastValue(config, 'tint', 0xffffff);
         var angle = GetFastValue(config, 'angle', 0);
         var rotation = GetFastValue(config, 'rotation', 0);
-        var scaleX = GetFastValue(config, 'scaleX', 1);
-        var scaleY = GetFastValue(config, 'scaleY', 1);
+        var scale = GetFastValue(config, 'scale', 1);
+        var scaleX = GetFastValue(config, 'scaleX', scale);
+        var scaleY = GetFastValue(config, 'scaleY', scale);
         var originX = GetFastValue(config, 'originX', 0.5);
         var originY = GetFastValue(config, 'originY', 0.5);
+        var blendMode = GetFastValue(config, 'blendMode', 0);
+        var erase = GetFastValue(config, 'erase', false);
 
         var stamp = this.manager.resetStamp(alpha, tint);
 
@@ -463,8 +466,19 @@ var DynamicTexture = new Class({
         stamp.setScale(scaleX, scaleY);
         stamp.setTexture(key, frame);
         stamp.setOrigin(originX, originY);
+        stamp.setBlendMode(blendMode);
+
+        if (erase)
+        {
+            this._eraseMode = true;
+        }
 
         this.draw(stamp, x, y);
+
+        if (erase)
+        {
+            this._eraseMode = false;
+        }
 
         return this;
     },
@@ -703,6 +717,7 @@ var DynamicTexture = new Class({
         var stamp = this.manager.resetStamp(alpha, tint);
 
         stamp.setFrame(frame);
+        stamp.setOrigin(0);
 
         var frameWidth = frame.width;
         var frameHeight = frame.height;
