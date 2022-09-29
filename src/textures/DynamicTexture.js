@@ -1166,7 +1166,14 @@ var DynamicTexture = new Class({
      */
     batchList: function (children, x, y, alpha, tint)
     {
-        for (var i = 0; i < children.length; i++)
+        var len = children.length;
+
+        if (len === 0)
+        {
+            return;
+        }
+
+        for (var i = 0; i < len; i++)
         {
             var entry = children[i];
 
@@ -1253,6 +1260,8 @@ var DynamicTexture = new Class({
         var renderer = this.renderer;
         var eraseMode = this._eraseMode;
 
+        var mask = gameObject.mask;
+
         gameObject.setPosition(x, y);
 
         if (this.canvas)
@@ -1264,7 +1273,17 @@ var DynamicTexture = new Class({
                 gameObject.blendMode = BlendModes.ERASE;
             }
 
+            if (mask)
+            {
+                mask.preRenderCanvas(renderer, gameObject, camera);
+            }
+
             gameObject.renderCanvas(renderer, gameObject, camera, null);
+
+            if (mask)
+            {
+                mask.postRenderCanvas(renderer, gameObject, camera);
+            }
 
             if (eraseMode)
             {
@@ -1273,18 +1292,21 @@ var DynamicTexture = new Class({
         }
         else if (renderer)
         {
-            if (gameObject.renderDirect)
+            if (mask)
             {
-                gameObject.renderDirect(renderer, gameObject, camera);
+                mask.preRenderWebGL(renderer, gameObject, camera);
             }
-            else
-            {
-                if (!eraseMode)
-                {
-                    renderer.setBlendMode(gameObject.blendMode);
-                }
 
-                gameObject.renderWebGL(renderer, gameObject, camera);
+            if (!eraseMode)
+            {
+                renderer.setBlendMode(gameObject.blendMode);
+            }
+
+            gameObject.renderWebGL(renderer, gameObject, camera);
+
+            if (mask)
+            {
+                mask.postRenderWebGL(renderer, camera, this.renderTarget);
             }
         }
 

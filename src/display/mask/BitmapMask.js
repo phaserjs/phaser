@@ -264,10 +264,12 @@ var BitmapMask = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The WebGL Renderer to clean up.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [renderTarget] - Optional WebGL RenderTarget.
      */
-    postRenderWebGL: function (renderer, camera)
+    postRenderWebGL: function (renderer, camera, renderTarget)
     {
-        renderer.pipelines.BITMAPMASK_PIPELINE.endMask(this, camera);
+        renderer.pipelines.BITMAPMASK_PIPELINE.endMask(this, camera, renderTarget);
     },
 
     /**

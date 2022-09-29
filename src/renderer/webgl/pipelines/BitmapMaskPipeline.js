@@ -124,8 +124,10 @@ var BitmapMaskPipeline = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} mask - GameObject used as a mask.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [renderTarget] - Optional WebGL RenderTarget.
      */
-    endMask: function (mask, camera)
+    endMask: function (mask, camera, renderTarget)
     {
         var gl = this.gl;
         var renderer = this.renderer;
@@ -172,6 +174,11 @@ var BitmapMaskPipeline = new Class({
             //  Bind this pipeline and draw
             renderer.pipelines.set(this);
 
+            if (renderTarget)
+            {
+                this.set2f('uResolution', renderTarget.width, renderTarget.height);
+            }
+
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, mask.maskTexture);
 
@@ -182,6 +189,11 @@ var BitmapMaskPipeline = new Class({
 
             //  Finally, draw a triangle filling the whole screen
             gl.drawArrays(this.topology, 0, 3);
+
+            if (renderTarget)
+            {
+                this.set2f('uResolution', this.width, this.height);
+            }
 
             renderer.resetTextures();
         }
