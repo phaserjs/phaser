@@ -34,6 +34,7 @@ var BlendMode = {
      *
      * Under WebGL only the following Blend Modes are available:
      *
+     * * NORMAL
      * * ADD
      * * MULTIPLY
      * * SCREEN
@@ -49,7 +50,7 @@ var BlendMode = {
      * are used.
      *
      * @name Phaser.GameObjects.Components.BlendMode#blendMode
-     * @type {(Phaser.BlendModes|string)}
+     * @type {(Phaser.BlendModes|string|number)}
      * @since 3.0.0
      */
     blendMode: {
@@ -83,6 +84,7 @@ var BlendMode = {
      *
      * Under WebGL only the following Blend Modes are available:
      *
+     * * NORMAL
      * * ADD
      * * MULTIPLY
      * * SCREEN
@@ -100,7 +102,7 @@ var BlendMode = {
      * @method Phaser.GameObjects.Components.BlendMode#setBlendMode
      * @since 3.0.0
      *
-     * @param {(string|Phaser.BlendModes)} value - The BlendMode value. Either a string or a CONST.
+     * @param {(string|Phaser.BlendModes|number)} value - The BlendMode value. Either a string, a CONST or a number.
      *
      * @return {this} This Game Object instance.
      */
