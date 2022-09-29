@@ -486,7 +486,7 @@ var Tween = new Class({
             {
                 this.update(delta);
 
-            } while (this.totalProgress <= toPosition);
+            } while (this.totalProgress < toPosition);
 
             this.isSeeking = false;
         }
