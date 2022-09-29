@@ -521,31 +521,32 @@ var Camera = new Class({
         {
             var fx = (follow.x - this.followOffset.x);
             var fy = (follow.y - this.followOffset.y);
+            var lerp = this.lerp;
 
             if (deadzone)
             {
                 if (fx < deadzone.x)
                 {
-                    sx = Linear(sx, sx - (deadzone.x - fx), this.lerp.x);
+                    sx = Linear(sx, sx - (deadzone.x - fx), lerp.x);
                 }
                 else if (fx > deadzone.right)
                 {
-                    sx = Linear(sx, sx + (fx - deadzone.right), this.lerp.x);
+                    sx = Linear(sx, sx + (fx - deadzone.right), lerp.x);
                 }
 
                 if (fy < deadzone.y)
                 {
-                    sy = Linear(sy, sy - (deadzone.y - fy), this.lerp.y);
+                    sy = Linear(sy, sy - (deadzone.y - fy), lerp.y);
                 }
                 else if (fy > deadzone.bottom)
                 {
-                    sy = Linear(sy, sy + (fy - deadzone.bottom), this.lerp.y);
+                    sy = Linear(sy, sy + (fy - deadzone.bottom), lerp.y);
                 }
             }
             else
             {
-                sx = Linear(sx, fx - originX, this.lerp.x);
-                sy = Linear(sy, fy - originY, this.lerp.y);
+                sx = Linear(sx, fx - originX, lerp.x);
+                sy = Linear(sy, fy - originY, lerp.y);
             }
 
             emitFollowEvent = true;
