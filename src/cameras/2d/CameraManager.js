@@ -624,19 +624,7 @@ var CameraManager = new Class({
      */
     getVisibleChildren: function (children, camera)
     {
-        var visible = [];
-
-        for (var i = 0; i < children.length; i++)
-        {
-            var child = children[i];
-
-            if (child.willRender(camera))
-            {
-                visible.push(child);
-            }
-        }
-
-        return visible;
+        return children.filter(function (child) { return child.willRender(camera); });
     },
 
     /**
