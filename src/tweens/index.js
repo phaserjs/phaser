@@ -17,8 +17,10 @@ var Tweens = {
 
     TweenManager: require('./TweenManager'),
     Tween: require('./tween/Tween'),
-    TweenData: require('./tween/TweenData')
+    TweenData: require('./tween/TweenData'),
 
+    BaseTween: require('./tween/BaseTween'),
+    TweenChain: require('./tween/TweenChain')
 };
 
 module.exports = Tweens;
