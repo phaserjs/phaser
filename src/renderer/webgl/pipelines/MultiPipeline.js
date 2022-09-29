@@ -346,20 +346,7 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var xw = x + frameWidth;
-        var yh = y + frameHeight;
-
-        var roundPixels = camera.roundPixels;
-
-        var tx0 = calcMatrix.getXRound(x, y, roundPixels);
-        var tx1 = calcMatrix.getXRound(x, yh, roundPixels);
-        var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
-        var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
-
-        var ty0 = calcMatrix.getYRound(x, y, roundPixels);
-        var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
-        var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
-        var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
+        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight, camera.roundPixels);
 
         var getTint = Utils.getTintAppendFloatAlpha;
         var cameraAlpha = camera.alpha;
@@ -378,7 +365,7 @@ var MultiPipeline = new Class({
 
         this.manager.preBatch(gameObject);
 
-        this.batchQuad(gameObject, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, gameObject.tintFill, texture, unit);
+        this.batchQuad(gameObject, quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7], u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, gameObject.tintFill, texture, unit);
 
         this.manager.postBatch(gameObject);
     },
@@ -511,9 +498,6 @@ var MultiPipeline = new Class({
             y += srcHeight;
         }
 
-        var xw = x + width;
-        var yh = y + height;
-
         spriteMatrix.applyITRS(srcX, srcY, rotation, scaleX, scaleY);
 
         camMatrix.copyFrom(camera.matrix);
@@ -536,19 +520,7 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var roundPixels = camera.roundPixels;
-
-        var tx0 = calcMatrix.getXRound(x, y, roundPixels);
-        var ty0 = calcMatrix.getYRound(x, y, roundPixels);
-
-        var tx1 = calcMatrix.getXRound(x, yh, roundPixels);
-        var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
-
-        var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
-        var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
-
-        var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
-        var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
+        var quad = calcMatrix.setQuad(x, y, x + width, y + height, camera.roundPixels);
 
         if (textureUnit === undefined)
         {
@@ -560,7 +532,7 @@ var MultiPipeline = new Class({
             this.manager.preBatch(gameObject);
         }
 
-        this.batchQuad(gameObject, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
+        this.batchQuad(gameObject, quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7], u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
 
         if (gameObject)
         {
@@ -595,9 +567,6 @@ var MultiPipeline = new Class({
         var spriteMatrix = this._tempMatrix1.copyFrom(transformMatrix);
         var calcMatrix = this._tempMatrix2;
 
-        var xw = x + frame.width;
-        var yh = y + frame.height;
-
         if (parentTransformMatrix)
         {
             spriteMatrix.multiply(parentTransformMatrix, calcMatrix);
@@ -607,23 +576,13 @@ var MultiPipeline = new Class({
             calcMatrix = spriteMatrix;
         }
 
-        var tx0 = calcMatrix.getX(x, y);
-        var ty0 = calcMatrix.getY(x, y);
-
-        var tx1 = calcMatrix.getX(x, yh);
-        var ty1 = calcMatrix.getY(x, yh);
-
-        var tx2 = calcMatrix.getX(xw, yh);
-        var ty2 = calcMatrix.getY(xw, yh);
-
-        var tx3 = calcMatrix.getX(xw, y);
-        var ty3 = calcMatrix.getY(xw, y);
+        var quad = calcMatrix.setQuad(x, y, x + frame.width, y + frame.height, false);
 
         var unit = this.renderer.setTextureSource(frame.source);
 
         tint = Utils.getTintAppendFloatAlpha(tint, alpha);
 
-        this.batchQuad(null, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0, frame.glTexture, unit);
+        this.batchQuad(null, quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7], frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0, frame.glTexture, unit);
     },
 
     /**
@@ -653,24 +612,11 @@ var MultiPipeline = new Class({
             parentMatrix.multiply(currentMatrix, calcMatrix);
         }
 
-        var xw = x + width;
-        var yh = y + height;
-
-        var x0 = calcMatrix.getX(x, y);
-        var y0 = calcMatrix.getY(x, y);
-
-        var x1 = calcMatrix.getX(x, yh);
-        var y1 = calcMatrix.getY(x, yh);
-
-        var x2 = calcMatrix.getX(xw, yh);
-        var y2 = calcMatrix.getY(xw, yh);
-
-        var x3 = calcMatrix.getX(xw, y);
-        var y3 = calcMatrix.getY(xw, y);
+        var quad = calcMatrix.setQuad(x, y, x + width, y + height, false);
 
         var tint = this.fillTint;
 
-        this.batchQuad(null, x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint.TL, tint.TR, tint.BL, tint.BR, 2);
+        this.batchQuad(null, quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7], 0, 0, 1, 1, tint.TL, tint.TR, tint.BL, tint.BR, 2);
     },
 
     /**
