@@ -17,6 +17,7 @@ var Rectangle = require('../geom/rectangle/Rectangle');
 var Size = require('../structs/Size');
 var SnapFloor = require('../math/snap/SnapFloor');
 var Vector2 = require('../math/Vector2');
+var Camera = require('../cameras/2d/Camera');
 
 /**
  * @classdesc
@@ -1483,17 +1484,24 @@ var ScaleManager = new Class({
     },
 
     /**
-     * Get Rectange of visible area, this Rectange does NOT factor in camera scroll.
+     * Get Rectange of visible area.
      *
      * @method Phaser.Scale.ScaleManager#getViewPort
      * @since 3.60.0
      *
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera this viewport is respond upon.
      * @param {Phaser.Geom.Rectangle} [out] - The Rectangle of visible area.
      *
      * @return {Phaser.Geom.Rectangle} The Rectangle of visible area.
      */
-    getViewPort: function (out)
+    getViewPort: function (camera, out)
     {
+        if (!(camera instanceof Camera))
+        {
+            out = camera;
+            camera = undefined;
+        }
+
         if (out === undefined)
         {
             out = new Rectangle();
@@ -1529,6 +1537,14 @@ var ScaleManager = new Class({
         }
 
         out.setTo(x, y, width, height);
+
+        if (camera)
+        {
+            out.width /= camera.zoomX;
+            out.height /= camera.zoomY;
+            out.centerX = camera.centerX + camera.scrollX;
+            out.centerY = camera.centerY + camera.scrollY;
+        }
 
         return out;
     },
