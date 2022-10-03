@@ -1,6 +1,10 @@
 #define SHADER_NAME PHASER_MULTI_VS
 
+#ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
+#else
+precision mediump float;
+#endif
 
 uniform mat4 uProjectionMatrix;
 

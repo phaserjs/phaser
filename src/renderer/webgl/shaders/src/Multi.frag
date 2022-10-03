@@ -1,7 +1,11 @@
 #define SHADER_NAME PHASER_MULTI_V2_FS
 #define numTextures %count%
 
+#ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
+#else
+precision mediump float;
+#endif
 
 uniform sampler2D uMainSampler[%count%];
 
