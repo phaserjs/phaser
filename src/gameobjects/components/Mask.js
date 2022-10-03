@@ -106,7 +106,7 @@ var Mask = {
             renderable = this;
         }
 
-        return new BitmapMask(this.scene, renderable);
+        return new BitmapMask(renderable);
     },
 
     /**
