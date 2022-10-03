@@ -151,9 +151,7 @@ var StableSort = function (array, compare)
     if (compare === undefined) { compare = Compare; }
 
     // Short-circuit when there's nothing to sort.
-    var len = array.length;
-
-    if (len <= 1)
+    if (!array || array.length < 2)
     {
         return array;
     }
