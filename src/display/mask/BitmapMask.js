@@ -41,18 +41,22 @@ var Class = require('../../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.GameObject} maskObject - The Game Object that will be used as the mask. Must have a texture, such as a Sprite.
+ * @param {Phaser.Scene} scene - The Scene to which this mask is being added.
+ * @param {Phaser.GameObjects.GameObject} [maskObject] - The Game Object that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
+ * @param {number} [x] - If creating a Game Object, the horizontal position in the world.
+ * @param {number} [y] - If creating a Game Object, the vertical position in the world.
+ * @param {(string|Phaser.Textures.Texture)} [texture] - If creating a Game Object, the key, or instance of the Texture it will use to render with, as stored in the Texture Manager.
+ * @param {(string|number|Phaser.Textures.Frame)} [frame] - If creating a Game Object, an optional frame from the Texture this Game Object is rendering with.
  */
 var BitmapMask = new Class({
 
     initialize:
 
-    function BitmapMask (maskObject, deprecated)
+    function BitmapMask (scene, maskObject, x, y, texture, frame)
     {
-        if (deprecated)
+        if (!maskObject)
         {
-            //  Phaser < 3.60 compatibility - will be removed in the future
-            maskObject = deprecated;
+            maskObject = scene.sys.make.image({ x: x, y: y, key: texture, frame: frame, add: false });
         }
 
         /**
