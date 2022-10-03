@@ -506,6 +506,17 @@ var BaseCamera = new Class({
          * @since 3.52.0
          */
         this.renderList = [];
+
+        /**
+         * Is this Camera a Scene Camera? (which is the default), or a Camera
+         * belonging to a Texture?
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#isSceneCamera
+         * @type {boolean}
+         * @default true
+         * @since 3.60.0
+         */
+        this.isSceneCamera = true;
     },
 
     /**
@@ -1267,17 +1278,21 @@ var BaseCamera = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene the camera is bound to.
+     * @param {boolean} [isSceneCamera=true] - Is this Camera being used for a Scene (true) or a Texture? (false)
      *
      * @return {this} This Camera instance.
      */
-    setScene: function (scene)
+    setScene: function (scene, isSceneCamera)
     {
+        if (isSceneCamera === undefined) { isSceneCamera = true; }
+
         if (this.scene && this._customViewport)
         {
             this.sceneManager.customViewports--;
         }
 
         this.scene = scene;
+        this.isSceneCamera = isSceneCamera;
 
         var sys = scene.sys;
 
@@ -1533,6 +1548,22 @@ var BaseCamera = new Class({
     },
 
     /**
+     * Set if this Camera is being used as a Scene Camera, or a Texture
+     * Camera.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#setIsSceneCamera
+     * @since 3.60.0
+     *
+     * @param {boolean} value - Is this being used as a Scene Camera, or a Texture camera?
+     */
+    setIsSceneCamera: function (value)
+    {
+        this.isSceneCamera = value;
+
+        return this;
+    },
+
+    /**
      * Internal method called automatically when the viewport changes.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#updateSystem
@@ -1541,7 +1572,7 @@ var BaseCamera = new Class({
      */
     updateSystem: function ()
     {
-        if (!this.scaleManager)
+        if (!this.scaleManager || !this.isSceneCamera)
         {
             return;
         }
