@@ -1484,7 +1484,7 @@ var TextureManager = new Class({
         stamp.setCrop();
         stamp.setPosition(0);
         stamp.setAngle(0);
-        stamp.setScale(0);
+        stamp.setScale(1);
         stamp.setAlpha(alpha);
         stamp.setTint(tint);
 
