@@ -34,6 +34,14 @@ function Compare (a, b)
  */
 function Process (array, compare)
 {
+    // Short-circuit when there's nothing to sort.
+    var len = array.length;
+
+    if (len <= 1)
+    {
+        return array;
+    }
+
     // Rather than dividing input, simply iterate chunks of 1, 2, 4, 8, etc.
     // Chunks are the size of the left or right hand in merge sort.
     // Stop when the left-hand covers all of the array.
