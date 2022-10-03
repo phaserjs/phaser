@@ -126,6 +126,20 @@ The following are further updates within the Tween system:
 * The internal `Tween.calcDuration` method has been removed. This is now handled as part of the `initTweenData` call.
 * Fixed a bug where setting `repeat` and `hold` would cause the Tween to include one final hold before marking itself as complete. It now completes as soon as the final repeat concludes, not after an addition hold.
 
+### Bitmap Mask Updates
+
+These are breaking changes from previous versions of Phaser.
+
+* The `BitmapMask` constructor no longer requires a reference to the Scene. It now has just one single argument, which is the Game Object being used as the mask. If you previously used `new Phaser.Display.Masks.BitmapMask(scene, mask)` please update it to `new Phaser.Display.Masks.BitmapMask(mask)`. If, however, you used the Game Object `createBitmapMask` method then you don't need to change anything.
+* Previously, every Bitmap Mask would create two full renderer sized framebuffers and two corresponding WebGL textures for them. The Bitmap Mask would listen for resize events from the renderer and then re-create these framebuffers accordingly. However, as the Bitmap Mask pipeline would clear and re-render these framebuffers every single frame it made no sense to have them use such large amounts of GPU memory. As of 3.60, the WebGL Renderer creates and manages two framebuffers and textures which all Bitmap Masks now use. If you previously used multiple Bitmap Masks in your game this change will dramatically reduce memory consumption at no performance cost.
+* Due to the change in owndership of the framebuffers, the following properties have been removed from the BitmapMask class: `renderer`, `maskTexture`, `mainTexture`, `dirty`, `mainFramebuffer` and `maskFramebuffer`. The following methods have also been removed: `createMask` and `clearMask`.
+* The `WebGLRenderer` has 4 new properties: `maskTargetFramebuffer`, `maskSourceFramebuffer`, `maskTargetTexture` and `maskSourceTexture`. These are the new global locations of the mask framebuffers.
+* `WebGLRenderer.createBitmapMask` is a new method that internally creates the Bitmap Mask framebuffers.
+* `WebGLRenderer.clearBitmapMask` is a new method that internally clears the existing Bitmap Mask framebuffers, called as part of a resize event.
+* `WebGLRenderer.enableBitmapMask` is a new method that starts the process of using the mask target framebuffer for drawing. This is called by the `BitmapMaskPipeline`.
+* `WebGLRenderer.drawBitmapMask` is a new method that completes the process of rendering using the mask target framebuffer. This is called by the `BitmapMaskPipeline`.
+* The `BitmapMaskPipeline` now hands over most control of the framebuffers to the WebGLRenderer.
+
 ### TimeStep Updates
 
 * You can now enforce an FPS rate on your game by setting the `fps: { limit: 30 }` value in your game config. In this case, it will set an fps rate of 30. This forces Phaser to not run the game step more than 30 times per second (or whatever value you set) and works for both Request Animation Frame and SetTimeOut.
