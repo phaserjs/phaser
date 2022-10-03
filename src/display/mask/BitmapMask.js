@@ -5,8 +5,6 @@
  */
 
 var Class = require('../../utils/Class');
-var GameEvents = require('../../core/events');
-var RenderEvents = require('../../renderer/events');
 
 /**
  * @classdesc
@@ -43,87 +41,34 @@ var RenderEvents = require('../../renderer/events');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - The Scene which this Bitmap Mask will be used in.
- * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
+ * @param {Phaser.GameObjects.GameObject} maskObject - The Game Object that will be used as the mask. Must have a texture, such as a Sprite.
  */
 var BitmapMask = new Class({
 
     initialize:
 
-    function BitmapMask (scene, renderable)
+    function BitmapMask (maskObject, deprecated)
     {
-        var renderer = scene.sys.renderer;
+        if (deprecated)
+        {
+            //  Phaser < 3.60 compatibility - will be removed in the future
+            maskObject = deprecated;
+        }
 
         /**
-         * A reference to either the Canvas or WebGL Renderer that this Mask is using.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#renderer
-         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
-         * @since 3.11.0
-         */
-        this.renderer = renderer;
-
-        /**
-         * A renderable Game Object that uses a texture, such as a Sprite.
+         * The Game Object that is used as the mask. Must use a texture, such as a Sprite.
          *
          * @name Phaser.Display.Masks.BitmapMask#bitmapMask
          * @type {Phaser.GameObjects.GameObject}
          * @since 3.0.0
          */
-        this.bitmapMask = renderable;
-
-        /**
-         * The texture used for the masks framebuffer.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#maskTexture
-         * @type {WebGLTexture}
-         * @default null
-         * @since 3.0.0
-         */
-        this.maskTexture = null;
-
-        /**
-         * The texture used for the main framebuffer.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#mainTexture
-         * @type {WebGLTexture}
-         * @default null
-         * @since 3.0.0
-         */
-        this.mainTexture = null;
-
-        /**
-         * Whether the Bitmap Mask is dirty and needs to be updated.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#dirty
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.dirty = true;
-
-        /**
-         * The framebuffer to which a masked Game Object is rendered.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#mainFramebuffer
-         * @type {WebGLFramebuffer}
-         * @since 3.0.0
-         */
-        this.mainFramebuffer = null;
-
-        /**
-         * The framebuffer to which the Bitmap Mask's masking Game Object is rendered.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#maskFramebuffer
-         * @type {WebGLFramebuffer}
-         * @since 3.0.0
-         */
-        this.maskFramebuffer = null;
+        this.bitmapMask = maskObject;
 
         /**
          * Whether to invert the masks alpha.
          *
          * If `true`, the alpha of the masking pixel will be inverted before it's multiplied with the masked pixel.
+         *
          * Essentially, this means that a masked area will be visible only if the corresponding area in the mask is invisible.
          *
          * @name Phaser.Display.Masks.BitmapMask#invertAlpha
@@ -133,7 +78,7 @@ var BitmapMask = new Class({
         this.invertAlpha = false;
 
         /**
-         * Is this mask a stencil mask?
+         * Is this mask a stencil mask? This is false by default and should not be changed.
          *
          * @name Phaser.Display.Masks.BitmapMask#isStencil
          * @type {boolean}
@@ -141,101 +86,23 @@ var BitmapMask = new Class({
          * @since 3.17.0
          */
         this.isStencil = false;
-
-        /**
-         * The Scene which this Bitmap Mask will be used in.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#scene
-         * @type {Phaser.Scene}
-         * @since 3.60.0
-         */
-        this.scene = scene;
-
-        this.createMask();
-
-        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.createMask, this);
-
-        if (renderer)
-        {
-            renderer.on(RenderEvents.RESIZE, this.createMask, this);
-        }
     },
 
     /**
-     * Creates the WebGL Texture2D objects and Framebuffers required for this
-     * mask. If this mask has already been created, then `clearMask` is called first.
+     * Sets a new Game Object for this Bitmap Mask to use.
      *
-     * @method Phaser.Display.Masks.BitmapMask#createMask
-     * @since 3.50.0
-     */
-    createMask: function ()
-    {
-        var renderer = this.renderer;
-
-        if (!renderer || !renderer.gl)
-        {
-            return;
-        }
-
-        if (this.mainTexture)
-        {
-            this.clearMask();
-        }
-
-        var width = renderer.width;
-        var height = renderer.height;
-        var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
-        var gl = renderer.gl;
-        var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
-        var filter = gl.LINEAR;
-
-        this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-        this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-        this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
-        this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
-    },
-
-    /**
-     * Deletes the `mainTexture` and `maskTexture` WebGL Textures and deletes
-     * the `mainFramebuffer` and `maskFramebuffer` too, nulling all references.
+     * The Game Object must have a texture, such as a Sprite.
      *
-     * This is called when this mask is destroyed, or if you try to creat a new
-     * mask from this object when one is already set.
-     *
-     * @method Phaser.Display.Masks.BitmapMask#clearMask
-     * @since 3.50.0
-     */
-    clearMask: function ()
-    {
-        var renderer = this.renderer;
-
-        if (!renderer || !renderer.gl || !this.mainTexture)
-        {
-            return;
-        }
-
-        renderer.deleteTexture(this.mainTexture);
-        renderer.deleteTexture(this.maskTexture);
-        renderer.deleteFramebuffer(this.mainFramebuffer);
-        renderer.deleteFramebuffer(this.maskFramebuffer);
-
-        this.mainTexture = null;
-        this.maskTexture = null;
-        this.mainFramebuffer = null;
-        this.maskFramebuffer = null;
-    },
-
-    /**
-     * Sets a new masking Game Object for the Bitmap Mask.
+     * You can update the source Game Object being used as the mask as often as you like.
      *
      * @method Phaser.Display.Masks.BitmapMask#setBitmap
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
+     * @param {Phaser.GameObjects.GameObject} maskObject - The Game Object that will be used as the mask. Must have a texture, such as a Sprite.
      */
-    setBitmap: function (renderable)
+    setBitmap: function (maskObject)
     {
-        this.bitmapMask = renderable;
+        this.bitmapMask = maskObject;
     },
 
     /**
@@ -311,18 +178,7 @@ var BitmapMask = new Class({
      */
     destroy: function ()
     {
-        this.clearMask();
-
-        this.scene.sys.game.events.off(GameEvents.CONTEXT_RESTORED, this.createMask, this);
-
-        if (this.renderer)
-        {
-            this.renderer.off(RenderEvents.RESIZE, this.createMask, this);
-        }
-
         this.bitmapMask = null;
-        this.prevFramebuffer = null;
-        this.renderer = null;
     }
 
 });
