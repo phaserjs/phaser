@@ -91,7 +91,7 @@ var BitmapMaskPipeline = new Class({
      */
     beginMask: function (mask, maskedObject, camera)
     {
-        this.renderer.enableBitmapMask(mask, camera);
+        this.renderer.beginBitmapMask(mask, camera);
     },
 
     /**
