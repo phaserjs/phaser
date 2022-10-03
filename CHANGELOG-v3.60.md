@@ -128,15 +128,13 @@ The following are further updates within the Tween system:
 
 ### Bitmap Mask Updates
 
-These are breaking changes from previous versions of Phaser.
+There are breaking changes from previous versions of Phaser.
 
-* The `BitmapMask` constructor no longer requires a reference to the Scene. It now has just one single argument, which is the Game Object being used as the mask. If you previously used `new Phaser.Display.Masks.BitmapMask(scene, mask)` please update it to `new Phaser.Display.Masks.BitmapMask(mask)`. If, however, you used the Game Object `createBitmapMask` method then you don't need to change anything.
-* Previously, every Bitmap Mask would create two full renderer sized framebuffers and two corresponding WebGL textures for them. The Bitmap Mask would listen for resize events from the renderer and then re-create these framebuffers accordingly. However, as the Bitmap Mask pipeline would clear and re-render these framebuffers every single frame it made no sense to have them use such large amounts of GPU memory. As of 3.60, the WebGL Renderer creates and manages two framebuffers and textures which all Bitmap Masks now use. If you previously used multiple Bitmap Masks in your game this change will dramatically reduce memory consumption at no performance cost.
-* Due to the change in owndership of the framebuffers, the following properties have been removed from the BitmapMask class: `renderer`, `maskTexture`, `mainTexture`, `dirty`, `mainFramebuffer` and `maskFramebuffer`. The following methods have also been removed: `createMask` and `clearMask`.
-* The `WebGLRenderer` has 4 new properties: `maskTargetFramebuffer`, `maskSourceFramebuffer`, `maskTargetTexture` and `maskSourceTexture`. These are the new global locations of the mask framebuffers.
-* `WebGLRenderer.createBitmapMask` is a new method that internally creates the Bitmap Mask framebuffers.
-* `WebGLRenderer.clearBitmapMask` is a new method that internally clears the existing Bitmap Mask framebuffers, called as part of a resize event.
-* `WebGLRenderer.enableBitmapMask` is a new method that starts the process of using the mask target framebuffer for drawing. This is called by the `BitmapMaskPipeline`.
+* Previously, every unique Bitmap Mask would create two full renderer sized framebuffers and two corresponding WebGL textures for them. The Bitmap Mask would listen for resize events from the renderer and then re-create these framebuffers accordingly. However, as the Bitmap Mask pipeline would clear and re-render these framebuffers every single frame it made no sense to have them use such large amounts of GPU memory. As of 3.60, the WebGL Renderer creates and manages two RenderTargets which all Bitmap Masks now use. If you previously used multiple Bitmap Masks in your game this change will dramatically reduce memory consumption at no performance cost.
+* The `BitmapMask` constructor is now capable of creating an Image Game Object from the new optional arguments: `x, y, texture, frame` if no masked object is provided.
+* Due to the change in ownership of the framebuffers, the following properties have been removed from the BitmapMask class: `renderer`, `maskTexture`, `mainTexture`, `dirty`, `mainFramebuffer` and `maskFramebuffer`. The following methods have also been removed: `createMask` and `clearMask`.
+* The `WebGLRenderer` has 2 new properties: `maskSource` and `maskTarget`. These are the new global mask framebuffers.
+* `WebGLRenderer.beginBitmapMask` is a new method that starts the process of using the mask target framebuffer for drawing. This is called by the `BitmapMaskPipeline`.
 * `WebGLRenderer.drawBitmapMask` is a new method that completes the process of rendering using the mask target framebuffer. This is called by the `BitmapMaskPipeline`.
 * The `BitmapMaskPipeline` now hands over most control of the framebuffers to the WebGLRenderer.
 
