@@ -1487,6 +1487,42 @@ var DynamicTexture = new Class({
     },
 
     /**
+     * Renders this Dynamic Texture onto the Stamp Game Object as a BitmapMask.
+     *
+     * @method Phaser.Textures.DynamicTexture#renderWebGL
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+     * @param {Phaser.GameObjects.Image} src - The Game Object being rendered in this call.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+     */
+    renderWebGL: function (renderer, src, camera, parentMatrix)
+    {
+        var stamp = this.manager.resetStamp();
+
+        stamp.setTexture(this);
+        stamp.setOrigin(0);
+
+        stamp.renderWebGL(renderer, stamp, camera, parentMatrix);
+    },
+
+    /**
+     * This is a NOOP method. Bitmap Masks are not supported by the Canvas Renderer.
+     *
+     * @method Phaser.Textures.DynamicTexture#renderCanvas
+     * @since 3.60.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The Canvas Renderer which would be rendered to.
+     * @param {Phaser.GameObjects.GameObject} mask - The masked Game Object which would be rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
+     */
+    renderCanvas: function ()
+    {
+        // NOOP
+    },
+
+    /**
      * Internal destroy handler, called as part of the destroy process.
      *
      * @method Phaser.Textures.DynamicTexture#preDestroy
