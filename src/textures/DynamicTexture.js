@@ -178,7 +178,7 @@ var DynamicTexture = new Class({
          * @type {Phaser.Cameras.Scene2D.BaseCamera}
          * @since 3.12.0
          */
-        this.camera = new Camera(0, 0, width, height).setScene(manager.game.scene.systemScene);
+        this.camera = new Camera(0, 0, width, height).setScene(manager.game.scene.systemScene, false);
 
         /**
          * The Render Target that belongs to this Dynamic Texture.
