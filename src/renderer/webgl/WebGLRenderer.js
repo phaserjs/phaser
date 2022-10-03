@@ -671,17 +671,6 @@ var WebGLRenderer = new Class({
          */
         this.maskTarget = null;
 
-        /**
-         * A RenderTarget used by the BitmapMask Pipeline.
-         *
-         * This is a swap buffer for when you've got nested Bitmap Masks.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#maskSwap
-         * @type {Phaser.Renderer.WebGL.RenderTarget}
-         * @since 3.60.0
-         */
-        this.maskSwap = null;
-
         this.init(this.config);
     },
 
@@ -915,7 +904,6 @@ var WebGLRenderer = new Class({
 
         this.maskTarget = new RenderTarget(this, width, height, 1, 0, true, true);
         this.maskSource = new RenderTarget(this, width, height, 1, 0, true, true);
-        this.maskSwap = new RenderTarget(this, width, height, 1, 0, true, true);
 
         //  Set-up pipelines
 
@@ -2234,13 +2222,13 @@ var WebGLRenderer = new Class({
      * Binds necessary resources and renders the mask to a separated framebuffer.
      * The framebuffer for the masked object is also bound for further use.
      *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#enableBitmapMask
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#beginBitmapMask
      * @since 3.60.0
      *
      * @param {Phaser.Display.Masks.BitmapMask} mask - The BitmapMask instance that called beginMask.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera rendering the current mask.
      */
-    enableBitmapMask: function (bitmapMask, camera)
+    beginBitmapMask: function (bitmapMask, camera)
     {
         var gl = this.gl;
 
@@ -3219,7 +3207,6 @@ var WebGLRenderer = new Class({
 
         this.maskTarget.destroy();
         this.maskSource.destroy();
-        this.maskSwap.destroy();
 
         this.pipelines.destroy();
 
