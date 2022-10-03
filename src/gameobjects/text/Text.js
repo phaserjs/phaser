@@ -465,7 +465,7 @@
                          .replace(/[ \n]*$/gi, '');
  
                      // Insert new line for remainder
-                     lines.splice(i+1, 0, remainder + ' ')
+                     lines.splice(i+1, 0, remainder + ' ');
                      linesCount = lines.length;
  
                      break; // Processing on this line
@@ -1463,4 +1463,3 @@
  });
  
  module.exports = Text;
- 
