@@ -649,6 +649,52 @@ var WebGLRenderer = new Class({
          */
         this.projectionHeight = 0;
 
+        /**
+         * A Framebuffer used by the BitmapMask Pipeline.
+         *
+         * This framebuffer has the target (i.e. masked) Game Objects drawn
+         * to it.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#maskTargetFramebuffer
+         * @type {WebGLFramebuffer}
+         * @since 3.60.0
+         */
+        this.maskTargetFramebuffer = null;
+
+        /**
+         * A Framebuffer used by the BitmapMask Pipeline.
+         *
+         * This framebuffer has the source (i.e. the actual mask) Game Object
+         * drawn to it.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#maskSourceFramebuffer
+         * @type {WebGLFramebuffer}
+         * @since 3.60.0
+         */
+        this.maskSourceFramebuffer = null;
+
+        /**
+         * A WebGL Texture used by the BitmapMask Pipeline that pairs with the
+         * maskTargetFramebuffer.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#maskTargetTexture
+         * @type {WebGLTexture}
+         * @default null
+         * @since 3.60.0
+         */
+        this.maskTargetTexture = null;
+
+        /**
+         * A WebGL Texture used by the BitmapMask Pipeline that pairs with the
+         * maskSourceFramebuffer.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#maskSourceTexture
+         * @type {WebGLTexture}
+         * @default null
+         * @since 3.60.0
+         */
+        this.maskSourceTexture = null;
+
         this.init(this.config);
     },
 
@@ -987,6 +1033,8 @@ var WebGLRenderer = new Class({
 
         this.defaultScissor[2] = width;
         this.defaultScissor[3] = height;
+
+        this.createBitmapMask();
 
         this.emit(Events.RESIZE, width, height);
 
@@ -2191,6 +2239,159 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * Creates the WebGL Texture2D objects and Framebuffers required for this
+     * mask. If this mask has already been created, then `clearMask` is called first.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#createBitmapMask
+     * @since 3.60.0
+     */
+    createBitmapMask: function ()
+    {
+        if (this.maskSourceTexture)
+        {
+            this.clearBitmapMask();
+        }
+
+        var width = this.width;
+        var height = this.height;
+        var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
+        var gl = this.gl;
+        var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+        var filter = gl.LINEAR;
+
+        //  mainTexture
+        this.maskSourceTexture = this.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+
+        //  maskTexture
+        this.maskTargetTexture = this.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+
+        //  mainFramebuffer
+        this.maskTargetFramebuffer = this.createFramebuffer(width, height, this.maskTargetTexture, true);
+
+        //  maskFramebuffer
+        this.maskSourceFramebuffer = this.createFramebuffer(width, height, this.maskSourceTexture, true);
+    },
+
+    /**
+     * Deletes the `maskSourceTexture` and `maskTargetTexture` WebGL Textures and deletes
+     * the `maskTargetFramebuffer` and `maskSourceFramebuffer` too, nulling all references.
+     *
+     * This is called when this mask is destroyed, or if you try to creat a new
+     * mask from this object when one is already set.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#clearBitmapMask
+     * @since 3.60.0
+     */
+    clearBitmapMask: function ()
+    {
+        if (!this.gl || !this.maskSourceTexture)
+        {
+            return;
+        }
+
+        this.deleteTexture(this.maskSourceTexture);
+        this.deleteTexture(this.maskTargetTexture);
+        this.deleteFramebuffer(this.maskSourceFramebuffer);
+        this.deleteFramebuffer(this.maskTargetFramebuffer);
+
+        this.maskSourceTexture = null;
+        this.maskTargetTexture = null;
+        this.maskSourceFramebuffer = null;
+        this.maskTargetFramebuffer = null;
+    },
+
+    /**
+     * Binds necessary resources and renders the mask to a separated framebuffer.
+     * The framebuffer for the masked object is also bound for further use.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#enableBitmapMask
+     * @since 3.60.0
+     *
+     * @param {Phaser.Display.Masks.BitmapMask} mask - The BitmapMask instance that called beginMask.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera rendering the current mask.
+     */
+    enableBitmapMask: function (bitmapMask, camera)
+    {
+        var gl = this.gl;
+
+        if (gl)
+        {
+            this.flush();
+
+            this.pushFramebuffer(this.maskTargetFramebuffer);
+
+            gl.disable(gl.STENCIL_TEST);
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            if (this.currentCameraMask.mask !== bitmapMask)
+            {
+                this.currentMask.mask = bitmapMask;
+                this.currentMask.camera = camera;
+            }
+        }
+    },
+
+    /**
+     * Binds necessary resources and renders the mask to a separated framebuffer.
+     * The framebuffer for the masked object is also bound for further use.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#drawBitmapMask
+     * @since 3.60.0
+     *
+     * @param {Phaser.Display.Masks.BitmapMask} mask - The BitmapMask instance that called beginMask.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera rendering the current mask.
+     * @param {Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline} bitmapMaskPipeline - The BitmapMask Pipeline instance that is requesting the draw.
+     */
+    drawBitmapMask: function (bitmapMask, camera, bitmapMaskPipeline)
+    {
+        //  mask.mainFramebuffer should now contain all the Game Objects we want masked
+        this.flush();
+
+        //  Swap to the mask framebuffer (push, in case the bitmapMask GO has a post-pipeline)
+        this.pushFramebuffer(this.maskSourceFramebuffer);
+
+        var gl = this.gl;
+
+        //  Clear it and draw the Game Object that is acting as a mask to it
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        this.setBlendMode(0, true);
+
+        bitmapMask.renderWebGL(this, bitmapMask, camera);
+
+        this.flush();
+
+        //  Clear the mask framebuffer + main framebuffer
+        this.popFramebuffer();
+        this.popFramebuffer();
+
+        //  Is there a stencil further up the stack?
+        var prev = this.getCurrentStencilMask();
+
+        if (prev)
+        {
+            gl.enable(gl.STENCIL_TEST);
+
+            prev.mask.applyStencil(this, prev.camera, true);
+        }
+        else
+        {
+            this.currentMask.mask = null;
+        }
+
+        //  Bind this pipeline and draw
+        this.pipelines.set(bitmapMaskPipeline);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.maskTargetTexture);
+
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, this.maskSourceTexture);
+    },
+
+    /**
      * Creates a WebGLProgram instance based on the given vertex and fragment shader source.
      *
      * Then compiles, attaches and links the program before returning it.
@@ -3098,6 +3299,8 @@ var WebGLRenderer = new Class({
         {
             gl.deleteTexture(temp[i]);
         }
+
+        this.clearBitmapMask();
 
         this.pipelines.destroy();
 
