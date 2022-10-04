@@ -148,24 +148,6 @@ module.exports = {
             return '';
         }
 
-        /*
-        var src = 'vec4 getSampler (int index, vec2 uv) {';
-
-        for (var i = 0; i < maxTextures; i++)
-        {
-            if (i > 0 && i < maxTextures)
-            {
-                src += '\nelse ';
-            }
-
-            src += 'if (index == ' + i + ') { return texture2D(uMainSampler[' + i + '], uv); }';
-        }
-
-        src += '\nreturn vec4(0);\n}';
-
-        fragmentShaderSource = fragmentShaderSource.replace(/%getSampler%/gi, src);
-        */
-
         return fragmentShaderSource.replace(/%count%/gi, maxTextures.toString());
     }
 };
