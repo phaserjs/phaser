@@ -18,4 +18,6 @@
  * @property {number} [maxTextures=-1] - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
  * @property {string} [mipmapFilter='LINEAR'] - The mipmap magFilter to be used when creating WebGL textures.
  * @property {Phaser.Types.Core.PipelineConfig} [pipeline] - The WebGL Pipeline configuration object.
+ * @property {boolean} [autoMobilePipeline=true] - Automatically enable the Mobile Pipeline if iOS or Android detected?
+ * @property {string} [defaultPipeline='MultiPipeline'] - The WebGL Pipeline that Game Objects will use by default. Set to 'MultiPipeline' as standard.
  */

@@ -6,13 +6,14 @@
 
 var Class = require('../utils/Class');
 var CONST = require('../const');
+var DefaultPlugins = require('../plugins/DefaultPlugins');
 var Device = require('../device');
 var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
 var IsPlainObject = require('../utils/object/IsPlainObject');
-var PhaserMath = require('../math/');
 var NOOP = require('../utils/NOOP');
-var DefaultPlugins = require('../plugins/DefaultPlugins');
+var PhaserMath = require('../math/');
+var PIPELINE_CONST = require('../renderer/webgl/pipelines/const');
 var ValueToColor = require('../display/color/ValueToColor');
 
 /**
@@ -340,9 +341,14 @@ var Config = new Class({
         this.pipeline = GetValue(renderConfig, 'pipeline', null, config);
 
         /**
-         * @const {number} Phaser.Core.Config#autoMobilePipeline - Automatically enable the Mobile Pipeline if iOS or Android detected.
+         * @const {boolean} Phaser.Core.Config#autoMobilePipeline - Automatically enable the Mobile Pipeline if iOS or Android detected?
          */
         this.autoMobilePipeline = GetValue(renderConfig, 'autoMobilePipeline', true, config);
+
+        /**
+         * @const {string} Phaser.Core.Config#defaultPipeline - The WebGL Pipeline that Game Objects will use by default. Set to 'MultiPipeline' as standard. See also 'autoMobilePipeline'.
+         */
+        this.defaultPipeline = GetValue(renderConfig, 'defaultPipeline', PIPELINE_CONST.MULTI_PIPELINE, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#antialias - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
