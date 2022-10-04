@@ -1319,6 +1319,7 @@ var PipelineManager = new Class({
         this.classes = null;
         this.postPipelineClasses = null;
         this.pipelines = null;
+        this.default = null;
         this.current = null;
         this.previous = null;
     }
