@@ -1,6 +1,5 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @author       Felipe Alfonso <@bitnenfer>
  * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
@@ -15,19 +14,21 @@ var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
- * The Multi Pipeline is the core 2D texture rendering pipeline used by Phaser in WebGL.
+ * The Mobile Pipeline is the core 2D texture rendering pipeline used by Phaser in WebGL
+ * when the device running the game is detected to be a mobile.
+ *
+ * You can control the use of this pipeline by setting the Game Configuration
+ * property `autoMobilePipeline`. If set to `false` then all devices will use
+ * the Multi Tint Pipeline. You can also call the `PipelineManager.setDefaultPipeline`
+ * method at run-time, rather than boot-time, to modify the default Game Object
+ * pipeline.
+ *
  * Virtually all Game Objects use this pipeline by default, including Sprites, Graphics
  * and Tilemaps. It handles the batching of quads and tris, as well as methods for
  * drawing and batching geometry data.
  *
- * Prior to Phaser v3.50 this pipeline was called the `TextureTintPipeline`.
- *
- * In previous versions of Phaser only one single texture unit was supported at any one time.
- * The Multi Pipeline is an evolution of the old Texture Tint Pipeline, updated to support
- * multi-textures for increased performance.
- *
- * The fragment shader it uses can be found in `shaders/src/Multi.frag`.
- * The vertex shader it uses can be found in `shaders/src/Multi.vert`.
+ * The fragment shader it uses can be found in `shaders/src/Mobile.frag`.
+ * The vertex shader it uses can be found in `shaders/src/Mobile.vert`.
  *
  * The default shader attributes for this pipeline are:
  *
@@ -37,30 +38,19 @@ var WebGLPipeline = require('../WebGLPipeline');
  * `inTintEffect` (float, offset 20)
  * `inTint` (vec4, offset 24, normalized)
  *
+ * Note that `inTexId` isn't used in the shader, it's just kept to allow us
+ * to piggy-back on the Multi Tint Pipeline functions.
+ *
  * The default shader uniforms for this pipeline are:
  *
  * `uProjectionMatrix` (mat4)
- * `uMainSampler` (sampler2D array)
+ * `uMainSampler` (sampler2D)
  *
- * If you wish to create a custom pipeline extending from this one, you should use the string
- * declaration `%count%` in your fragment shader source, which is used to set the number of
- * `sampler2Ds` available. Also add `%getSampler%` so Phaser can inject the getSampler glsl function.
- * This function can be used to get the pixel vec4 from the texture:
- *
- * `vec4 texture = getSampler(int(outTexId), outTexCoord);`
- *
- * This pipeline will automatically inject the getSampler function for you, should the value exist
- * in your shader source. If you wish to handle this yourself, you can also use the
- * function `Utils.parseFragmentShaderMaxTextures`.
- *
- * If you wish to create a pipeline that works from a single texture, or that doesn't have
- * internal texture iteration, please see the `SinglePipeline` instead.
- *
- * @class MultiPipeline
- * @extends Phaser.Renderer.WebGL.WebGLPipeline
+ * @class MobilePipeline
+ * @extends Phaser.Renderer.WebGL.Pipelines.MultiPipeline
  * @memberof Phaser.Renderer.WebGL.Pipelines
  * @constructor
- * @since 3.50.0
+ * @since 3.60.0
  *
  * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineConfig} config - The configuration options for this pipeline.
  */
@@ -102,14 +92,13 @@ var MobilePipeline = new Class({
     },
 
     /**
-     * Called every time the pipeline is bound by the renderer.
-     * Sets the shader program, vertex buffer and other resources.
-     * Should only be called when changing pipeline.
+     * Called when the Game has fully booted and the Renderer has finished setting up.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#bind
-     * @since 3.50.0
+     * By this stage all Game level systems are now in place and you can perform any final
+     * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
      *
-     * @return {this} This WebGLPipeline instance.
+     * @method Phaser.Renderer.WebGL.Pipelines.MobilePipeline#boot
+     * @since 3.60.0
      */
     boot: function ()
     {
