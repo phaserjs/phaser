@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var CONST = require('./pipelines/const');
 var CustomMap = require('../../structs/Map');
+var Device = require('../../device/');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var RenderTarget = require('./RenderTarget');
 var SnapCeil = require('../../math/snap/SnapCeil');
@@ -113,6 +114,16 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.pipelines = new CustomMap();
+
+        /**
+         * The default Game Object pipeline.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#default
+         * @type {Phaser.Renderer.WebGL.WebGLPipeline}
+         * @default null
+         * @since 3.60.0
+         */
+        this.default = null;
 
         /**
          * Current pipeline in use by the WebGLRenderer.
@@ -300,9 +311,11 @@ var PipelineManager = new Class({
      * @method Phaser.Renderer.WebGL.PipelineManager#boot
      * @since 3.50.0
      *
-     * @param {Phaser.Types.Core.PipelineConfig} [pipelineConfig] - The pipeline configuration object as set in the Game Config.
+     * @param {Phaser.Types.Core.PipelineConfig} pipelineConfig - The pipeline configuration object as set in the Game Config.
+     * @param {string} defaultPipeline - The name of the default Game Object pipeline, as set in the Game Config
+     * @param {boolean} autoMobilePipeline - Automatically set the default pipeline to mobile if non-desktop detected?
      */
-    boot: function (pipelineConfig)
+    boot: function (pipelineConfig, defaultPipeline, autoMobilePipeline)
     {
         //  Create the default RenderTextures
         var renderer = this.renderer;
@@ -387,6 +400,14 @@ var PipelineManager = new Class({
                     this.add(pipelineName, instance);
                 }
             }
+        }
+
+        //  Finally, set the Default Game Object pipeline
+        this.default = this.get(defaultPipeline);
+
+        if (autoMobilePipeline && !Device.os.desktop)
+        {
+            this.default = this.MOBILE_PIPELINE;
         }
     },
 
