@@ -906,8 +906,9 @@ var WebGLRenderer = new Class({
         this.maskSource = new RenderTarget(this, width, height, 1, 0, true, true);
 
         //  Set-up pipelines
+        var config = game.config;
 
-        pipelineManager.boot(game.config.pipeline);
+        pipelineManager.boot(config.pipeline, config.defaultPipeline, config.autoMobilePipeline);
 
         //  Set-up default textures, fbo and scissor
 
