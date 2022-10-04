@@ -164,7 +164,7 @@ var StableSort = function (array, compare)
         return array;
     }
 
-    if (Device.browser.es2019)
+    if (Device.features.stableSort)
     {
         return array.sort(compare);
     }
