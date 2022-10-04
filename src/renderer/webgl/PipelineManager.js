@@ -14,6 +14,7 @@ var SnapCeil = require('../../math/snap/SnapCeil');
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
+var MobilePipeline = require('./pipelines/MobilePipeline');
 var MultiPipeline = require('./pipelines/MultiPipeline');
 var PointLightPipeline = require('./pipelines/PointLightPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
@@ -37,6 +38,7 @@ var UtilityPipeline = require('./pipelines/UtilityPipeline');
  * 5. The Single Pipeline. Responsible for rendering Game Objects that explicitly require one bound texture.
  * 6. The Bitmap Mask Pipeline. Responsible for Bitmap Mask rendering.
  * 7. The Utility Pipeline. Responsible for providing lots of handy texture manipulation functions.
+ * 8. The Mobile Pipeline. Responsible for rendering on mobile with single-bound textures.
  *
  * You can add your own custom pipeline via the `PipelineManager.add` method. Pipelines are
  * identified by unique string-based keys.
@@ -88,7 +90,8 @@ var PipelineManager = new Class({
             [ CONST.SINGLE_PIPELINE, SinglePipeline ],
             [ CONST.ROPE_PIPELINE, RopePipeline ],
             [ CONST.LIGHT_PIPELINE, LightPipeline ],
-            [ CONST.POINTLIGHT_PIPELINE, PointLightPipeline ]
+            [ CONST.POINTLIGHT_PIPELINE, PointLightPipeline ],
+            [ CONST.MOBILE_PIPELINE, MobilePipeline ]
         ]);
 
         /**
@@ -168,6 +171,19 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.UTILITY_PIPELINE = null;
+
+        /**
+         * A constant-style reference to the Mobile Pipeline Instance.
+         *
+         * This is the default Phaser 3 pipeline and is used by the WebGL Renderer to manage
+         * camera effects and more on mobile devices. This property is set during the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#MOBILE_PIPELINE
+         * @type {Phaser.Renderer.WebGL.Pipelines.MobilePipeline}
+         * @default null
+         * @since 3.60.0
+         */
+        this.MOBILE_PIPELINE = null;
 
         /**
          * A reference to the Full Frame 1 Render Target that belongs to the
@@ -348,6 +364,7 @@ var PipelineManager = new Class({
         //  Our const-like references
         this.MULTI_PIPELINE = this.get(CONST.MULTI_PIPELINE);
         this.BITMAPMASK_PIPELINE = this.get(CONST.BITMAPMASK_PIPELINE);
+        this.MOBILE_PIPELINE = this.get(CONST.MOBILE_PIPELINE);
 
         //  And now the ones in the config, if any
 

@@ -94,7 +94,17 @@ var PIPELINE_CONST = {
      * @const
      * @since 3.50.0
      */
-    UTILITY_PIPELINE: 'UtilityPipeline'
+    UTILITY_PIPELINE: 'UtilityPipeline',
+
+    /**
+     * The Mobile Texture Pipeline.
+     *
+     * @name Phaser.Renderer.WebGL.Pipelines.MOBILE_PIPELINE
+     * @type {string}
+     * @const
+     * @since 3.60.0
+     */
+    MOBILE_PIPELINE: 'MobilePipeline'
 
 };
 

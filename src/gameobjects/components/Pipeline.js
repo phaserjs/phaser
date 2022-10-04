@@ -92,7 +92,8 @@ var Pipeline = {
      */
     initPipeline: function (pipeline)
     {
-        if (pipeline === undefined) { pipeline = PIPELINE_CONST.MULTI_PIPELINE; }
+        // if (pipeline === undefined) { pipeline = PIPELINE_CONST.MULTI_PIPELINE; }
+        if (pipeline === undefined) { pipeline = PIPELINE_CONST.MOBILE_PIPELINE; }
 
         var renderer = this.scene.sys.renderer;
 
