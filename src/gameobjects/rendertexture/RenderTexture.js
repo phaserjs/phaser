@@ -32,13 +32,14 @@ var UUID = require('../../utils/string/UUID');
  *
  * **When should you use a Render Texture vs. a Dynamic Texture?**
  *
- * You should use a Dynamic Texture if the texture is going to be used by multiple Game Objects.
+ * You should use a Dynamic Texture if the texture is going to be used by multiple Game Objects,
+ * or you want to use it across multiple Scenes, because textures are globally stored.
  *
  * You should use a Dynamic Texture if the texture isn't going to be displayed in-game, but is
  * instead going to be used for something like a mask or shader.
  *
- * You should use a Render Texture if you need to display the texture in-game, as it provides
- * the convenience of wrapping an Image and texture together for you.
+ * You should use a Render Texture if you need to display the texture in-game on a single Game Object,
+ * as it provides the convenience of wrapping an Image and Dynamic Texture together for you.
  *
  * Under WebGL1, a FrameBuffer, which is what this Dynamic Texture uses internally, cannot be anti-aliased.
  * This means that when drawing objects such as Shapes or Graphics instances to this texture, they may appear
