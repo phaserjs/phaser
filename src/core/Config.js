@@ -178,14 +178,16 @@ var Config = new Class({
         this.autoFocus = GetValue(config, 'autoFocus', true);
 
         /**
-         * @const {(number|boolean)} Phaser.Core.Config#stableSort - `true` or `1` = Use the built-in StableSort (needed for older browsers), `false` or `0` = Rely on ES2019 Array.sort being stable (modern browsers only), or `-1` = Try and determine this automatically based on browser inspection (not guaranteed to work, errs on side of caution).
+         * @const {(number|boolean)} Phaser.Core.Config#stableSort - `false` or `0` = Use the built-in StableSort (needed for older browsers), `true` or `1` = Rely on ES2019 Array.sort being stable (modern browsers only), or `-1` = Try and determine this automatically based on browser inspection (not guaranteed to work, errs on side of caution).
          */
         this.stableSort = GetValue(config, 'stableSort', -1);
 
-        if (this.stableSort === -1 && Device.browser.es2019)
+        if (this.stableSort === -1)
         {
-            this.stableSort = 0;
+            this.stableSort = (Device.browser.es2019) ? 1 : 0;
         }
+
+        Device.features.stableSort = this.stableSort;
 
         //  DOM Element Container
 
@@ -336,6 +338,11 @@ var Config = new Class({
          * @const {Phaser.Types.Core.PipelineConfig} Phaser.Core.Config#pipeline - An object mapping WebGL names to WebGLPipeline classes. These should be class constructors, not instances.
          */
         this.pipeline = GetValue(renderConfig, 'pipeline', null, config);
+
+        /**
+         * @const {number} Phaser.Core.Config#autoMobilePipeline - Automatically enable the Mobile Pipeline if iOS or Android detected.
+         */
+        this.autoMobilePipeline = GetValue(renderConfig, 'autoMobilePipeline', true, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#antialias - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
