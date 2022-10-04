@@ -36,6 +36,17 @@ Compressed Textures are loaded using the new `this.load.texture` method, which t
 * `WebGLRenderer.getCompressedTextures` is a new method that will populate the `WebGLRenderer.compression` object and return its value. This is called automatically when the renderer boots.
 * `WebGLRenderer.getCompressedTextureName` is a new method that will return a compressed texture format GLenum based on the given format.
 
+### New Features - Mobile Pipeline
+
+* The Mobile Pipeline is a new pipeline that extends the Multi Tint pipeline, but uses customized shaders and a single-bound texture specifically for mobile GPUs. This should restore mobile performance back to the levels it was around v3.22, before Multi Tint improved it all for desktop at the expense of mobile.
+* `shaders/Mobile.vert` and `shaders/Mobile.frag` are the two shaders used for the Mobile Pipeline.
+* `PipelineManager#MOBILE_PIPELINE` is a new constant-style reference to the Mobile Pipeline instance.
+* `autoMobilePipeline` is a new Game Configuration boolean that toggles if the Mobile Pipeline should be automatically deployed, or not. By default it is enabled, but you can set it to `false` to force use of the Multi Tint pipeline (or if you need more advanced conditions to check when to enable it)
+* `defaultPipeline` is a new Game Configuration property that allows you to set the default Game Object Pipeline. This is set to Multi Tint as standard, but you can set it to your own pipeline from this value.
+* `PipelineManager.default` is a new propery that is used by most Game Objects to determine which pipeline they will init with.
+* `PipelineManager.setDefaultPipeline` is a new method that allows you to change the default Game Object pipeline. You could use this to allow for more fine-grained conditional control over when to use Multi or Mobile (or another pipeline)
+* The `PipelineManager.boot` method is now passed the default pipeline and auto mobile setting from the Game Config.
+
 ### New Features - Multi Tint Pipeline
 
 * If you have a customised Multi Tint Pipeline fragment shader that uses the `%forloop%` declaration, you should update it to follow the new format defined in `Multi.frag`. This new shader uses a function called `getSampler` instead. Please see the shader code and update your own shaders accordingly. You can also see the documentation for the MultiPipeline for details.
