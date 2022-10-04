@@ -37,7 +37,7 @@ var Utils = require('../renderer/webgl/Utils');
  * Because this is a standard Texture within Phaser, you can add frames to it, meaning you can use it
  * to generate sprite sheets, texture atlases or tile sets.
  *
- * Under WebGL, a FrameBuffer, which is what this Dynamic Texture uses internally, cannot be anti-aliased.
+ * Under WebGL1, a FrameBuffer, which is what this Dynamic Texture uses internally, cannot be anti-aliased.
  * This means that when drawing objects such as Shapes or Graphics instances to this texture, they may appear
  * to be drawn with no aliasing around the edges. This is a technical limitation of WebGL1. To get around it,
  * create your shape as a texture in an art package, then draw that to this texture.
