@@ -17,14 +17,15 @@ var CanvasPool = require('../display/canvas/CanvasPool');
  * @typedef {object} Phaser.Device.Features
  * @since 3.0.0
  *
- * @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
  * @property {boolean} canvas - Is canvas available?
+ * @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
  * @property {boolean} file - Is file available?
  * @property {boolean} fileSystem - Is fileSystem available?
  * @property {boolean} getUserMedia - Does the device support the getUserMedia API?
  * @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
  * @property {boolean} localStorage - Is localStorage available?
  * @property {boolean} pointerLock - Is Pointer Lock available?
+ * @property {boolean} stableSort - Is Array.sort stable?
  * @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
  * @property {boolean} vibration - Does the device support the Vibration API?
  * @property {boolean} webGL - Is webGL available?
@@ -40,6 +41,7 @@ var Features = {
     littleEndian: false,
     localStorage: false,
     pointerLock: false,
+    stableSort: false,
     support32bit: false,
     vibration: false,
     webGL: false,
@@ -111,7 +113,7 @@ function init ()
 
                 var canvas2D = CanvasPool.create2D(this);
 
-                var ctx2D = canvas2D.getContext('2d');
+                var ctx2D = canvas2D.getContext('2d', { willReadFrequently: true });
 
                 //  Can't be done on a webgl context
                 var image = ctx2D.createImageData(1, 1);
