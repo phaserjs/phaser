@@ -254,7 +254,7 @@ var PipelineManager = new Class({
         /**
          * The amount in which each target frame will increase.
          *
-         * Defaults to 64px but can be overridden in the config.
+         * Defaults to 32px but can be overridden in the config.
          *
          * @name Phaser.Renderer.WebGL.PipelineManager#frameInc
          * @type {number}
