@@ -412,6 +412,37 @@ var PipelineManager = new Class({
     },
 
     /**
+     * Sets the default pipeline being used by Game Objects.
+     *
+     * If no instance, or matching name, exists in this manager, it returns `undefined`.
+     *
+     * You can use this to override the default pipeline, for example by forcing
+     * the Mobile or Multi Tint Pipelines, which is especially useful for development
+     * testing.
+     *
+     * Make sure you call this method _before_ creating any Game Objects, as it will
+     * only impact Game Objects created after you call it.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#setDefaultPipeline
+     * @since 3.60.0
+     *
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline to get, or a pipeline instance to look-up.
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline instance that was set as default, or `undefined` if not found.
+     */
+    setDefaultPipeline: function (pipeline)
+    {
+        var instance = this.get(pipeline);
+
+        if (instance)
+        {
+            this.default = instance;
+        }
+
+        return instance;
+    },
+
+    /**
      * Adds a pipeline instance to this Pipeline Manager.
      *
      * The name of the instance must be unique within this manager.
