@@ -2313,32 +2313,38 @@ var WebGLRenderer = new Class({
     createProgram: function (vertexShader, fragmentShader)
     {
         var gl = this.gl;
+
         var program = gl.createProgram();
+
         var vs = gl.createShader(gl.VERTEX_SHADER);
         var fs = gl.createShader(gl.FRAGMENT_SHADER);
 
         gl.shaderSource(vs, vertexShader);
         gl.shaderSource(fs, fragmentShader);
+
         gl.compileShader(vs);
         gl.compileShader(fs);
 
+        var failed = 'Shader failed:\n';
+
         if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS))
         {
-            throw new Error('Vertex Shader failed:\n' + gl.getShaderInfoLog(vs));
+            throw new Error('Vertex ' + failed + gl.getShaderInfoLog(vs));
         }
 
         if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS))
         {
-            throw new Error('Fragment Shader failed:\n' + gl.getShaderInfoLog(fs));
+            throw new Error('Fragment ' + failed + gl.getShaderInfoLog(fs));
         }
 
         gl.attachShader(program, vs);
         gl.attachShader(program, fs);
+
         gl.linkProgram(program);
 
         if (!gl.getProgramParameter(program, gl.LINK_STATUS))
         {
-            throw new Error('Link Program failed:\n' + gl.getProgramInfoLog(program));
+            throw new Error('Link ' + failed + gl.getProgramInfoLog(program));
         }
 
         gl.useProgram(program);
