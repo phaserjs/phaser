@@ -198,11 +198,11 @@ var TweenData = new Class({
         //  calcDuration:
 
         //  Set t1 (duration + hold + yoyo)
-        var t1 = this.duration + this.hold;
+        var t1 = this.duration;
 
         if (this.yoyo)
         {
-            t1 += this.duration;
+            t1 += this.duration + this.hold;
         }
 
         //  Set t2 (repeatDelay + duration + hold + yoyo)
@@ -362,7 +362,7 @@ var TweenData = new Class({
 
                     target[key] = this.end;
 
-                    if (this.hold > 0 && this.repeatCounter > 0)
+                    if (this.hold > 0)
                     {
                         this.elapsed = this.hold;
 
