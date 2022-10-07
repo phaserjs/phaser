@@ -385,6 +385,131 @@ var WebGLPipeline = new Class({
          * @since 3.53.0
          */
         this.glReset = false;
+
+        this.batch = [];
+        this.currentBatch = null;
+        this.currentTexture = null;
+
+    },
+
+    createBatch: function (texture)
+    {
+        this.currentBatch = {
+            start: this.vertexCount,
+            count: 0,
+            texture: [ texture ],
+            unit: 0,
+            maxUnit: 0
+        };
+
+        this.currentUnit = 0;
+        this.currentTexture = texture;
+
+        this.batch.push(this.currentBatch);
+
+        return 0;
+    },
+
+    pushBatch: function (texture)
+    {
+        //  No current batch? Create one and return
+        if (!this.currentBatch || (this.forceZero && texture !== this.currentTexture))
+        {
+            return this.createBatch(texture);
+        }
+
+        //  Otherwise, check if the texture is in the current batch
+        if (texture === this.currentTexture)
+        {
+            return this.currentUnit;
+        }
+        else
+        {
+            var current = this.currentBatch;
+
+            var idx = current.texture.indexOf(texture);
+
+            if (idx === -1)
+            {
+                //  This is a brand new texture, not in the current batch
+
+                //  Have we exceed our limit?
+                if (current.texture.length === this.renderer.maxTextures)
+                {
+                    return this.createBatch(texture);
+                }
+                else
+                {
+                    //  We're good, push it in
+                    current.unit++;
+                    current.maxUnit++;
+                    current.texture.push(texture);
+
+                    this.currentUnit = current.unit;
+                    this.currentTexture = texture;
+
+                    return current.unit;
+                }
+            }
+            else
+            {
+                this.currentUnit = idx;
+                this.currentTexture = texture;
+
+                return idx;
+            }
+        }
+
+        /*
+        var unit = this.currentUnit;
+
+        if (texture !== this.currentTexture)
+        {
+            var newBatch = false;
+
+            if (this.forceZero || this.batch.length === 0 || this.currentUnit === this.renderer.maxTextures)
+            {
+                unit = 0;
+                newBatch = true;
+            }
+
+            if (newBatch)
+            {
+                this.currentBatch = {
+                    start: this.vertexCount,
+                    count: 0,
+                    texture: [ texture ],
+                    unit: 0,
+                    maxUnit: 0
+                };
+
+                this.currentUnit = 0;
+
+                this.batch.push(this.currentBatch);
+            }
+            else
+            {
+                var idx = this.currentBatch.texture.indexOf(texture);
+
+                if (idx === -1)
+                {
+                    this.currentUnit++;
+
+                    this.currentBatch.unit++;
+                    this.currentBatch.maxUnit++;
+                    this.currentBatch.texture.push(texture);
+                }
+                else
+                {
+                    unit = idx;
+                }
+            }
+
+            this.currentTexture = texture;
+        }
+
+        return unit;
+        */
     },
 
     /**
@@ -705,9 +830,11 @@ var WebGLPipeline = new Class({
     {
         if (frame === undefined) { frame = gameObject.frame; }
 
-        this.currentUnit = this.renderer.setTextureSource(frame.source);
+        return this.pushBatch(frame.source.glTexture);
 
-        return this.currentUnit;
+        // this.currentUnit = this.renderer.setTextureSource(frame.source);
+
+        // return this.currentUnit;
     },
 
     /**
@@ -1095,6 +1222,7 @@ var WebGLPipeline = new Class({
             var gl = this.gl;
             var vertexCount = this.vertexCount;
             var vertexSize = this.currentShader.vertexSize;
+            var topology = this.topology;
 
             if (this.active)
             {
@@ -1109,10 +1237,47 @@ var WebGLPipeline = new Class({
                     gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
                 }
 
-                gl.drawArrays(this.topology, 0, vertexCount);
+                var i;
+                var entry;
+                var batch = this.batch;
+
+                if (this.forceZero)
+                {
+                    //  Single Texture Pipeline
+                    gl.activeTexture(gl.TEXTURE0);
+
+                    for (i = 0; i < batch.length; i++)
+                    {
+                        entry = batch[i];
+
+                        gl.bindTexture(gl.TEXTURE_2D, entry.texture[0]);
+
+                        gl.drawArrays(topology, entry.start, entry.count);
+                    }
+                }
+                else
+                {
+                    for (i = 0; i < batch.length; i++)
+                    {
+                        entry = batch[i];
+
+                        for (var t = 0; t <= entry.maxUnit; t++)
+                        {
+                            gl.activeTexture(gl.TEXTURE0 + t);
+                            gl.bindTexture(gl.TEXTURE_2D, entry.texture[t]);
+                        }
+
+                        gl.drawArrays(topology, entry.start, entry.count);
+                    }
+                }
             }
 
             this.vertexCount = 0;
+
+            this.batch.length = 0;
+            this.currentBatch = null;
+            this.currentTexture = null;
+            this.currentUnit = 0;
 
             this.emit(Events.AFTER_FLUSH, this, isPostFlush);
 
@@ -1459,6 +1624,8 @@ var WebGLPipeline = new Class({
 
         this.vertexCount += 6;
 
+        this.currentBatch.count = (this.vertexCount - this.currentBatch.start);
+
         this.onBatch(gameObject);
 
         return hasFlushed;
@@ -1548,6 +1715,8 @@ var WebGLPipeline = new Class({
 
         this.vertexCount += 3;
 
+        this.currentBatch.count = (this.vertexCount - this.currentBatch.start);
+
         this.onBatch(gameObject);
 
         return hasFlushed;
@@ -1618,9 +1787,11 @@ var WebGLPipeline = new Class({
     {
         if (texture === undefined) { texture = this.renderer.whiteTexture.glTexture; }
 
-        this.currentUnit = this.renderer.setTexture2D(texture);
+        return this.pushBatch(texture);
 
-        return this.currentUnit;
+        // this.currentUnit = this.renderer.setTexture2D(texture);
+
+        // return this.currentUnit;
     },
 
     /**
