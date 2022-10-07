@@ -1199,8 +1199,6 @@ var PipelineManager = new Class({
 
             pipeline.rebind();
         }
-
-        renderer.resetTextures();
     },
 
     /**

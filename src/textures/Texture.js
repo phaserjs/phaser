@@ -518,13 +518,6 @@ var Texture = new Class({
 
         this.manager.removeKey(this.key);
 
-        var renderer = this.manager.game.renderer;
-
-        if (renderer && renderer.type === CONST.WEBGL)
-        {
-            renderer.resetTextures(true);
-        }
-
         this.manager = null;
     }
 

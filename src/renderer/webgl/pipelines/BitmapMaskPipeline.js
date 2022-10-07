@@ -133,8 +133,6 @@ var BitmapMaskPipeline = new Class({
             {
                 this.set2f('uResolution', this.width, this.height);
             }
-
-            renderer.resetTextures();
         }
     }
 

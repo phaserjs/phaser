@@ -695,8 +695,6 @@ var WebGLPipeline = new Class({
         {
             this.flush();
 
-            renderer.resetTextures();
-
             var wasBound = this.setVertexBuffer(vertexBuffer);
 
             if (wasBound && !setAttributes)

@@ -472,11 +472,7 @@ var PostFXPipeline = new Class({
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-        if (!target)
-        {
-            renderer.resetTextures();
-        }
-        else
+        if (target)
         {
             gl.bindTexture(gl.TEXTURE_2D, null);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
