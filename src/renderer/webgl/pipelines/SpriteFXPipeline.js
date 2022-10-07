@@ -497,7 +497,7 @@ var SpriteFXPipeline = new Class({
 
         var fsTarget = this.fsTarget;
 
-        renderer.setTextureZero(texture);
+        this.flush();
 
         gl.viewport(0, 0, renderer.width, renderer.height);
         gl.bindFramebuffer(gl.FRAMEBUFFER, fsTarget.framebuffer);
@@ -505,6 +505,8 @@ var SpriteFXPipeline = new Class({
 
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
+
+        this.setTexture2D(texture);
 
         this.batchVert(x0, y0, u0, v0, 0, tintEffect, tintTL);
         this.batchVert(x1, y1, u0, v1, 0, tintEffect, tintBL);
@@ -517,8 +519,6 @@ var SpriteFXPipeline = new Class({
         this.flush();
 
         this.flipProjectionMatrix(false);
-
-        renderer.clearTextureZero();
 
         //  Now we've got the sprite drawn to our screen-sized fbo, copy the rect we need to our target
 
@@ -819,8 +819,6 @@ var SpriteFXPipeline = new Class({
         this.batchVert(x3, y3, 1, 0, 0, 0, 0xffffff);
 
         this.flush();
-
-        renderer.resetTextures();
 
         //  No hanging references
         this.tempSprite = null;
