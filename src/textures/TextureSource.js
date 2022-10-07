@@ -189,28 +189,6 @@ var TextureSource = new Class({
         this.glTexture = null;
 
         /**
-         * The current texture unit index as assigned by the WebGL Renderer.
-         * Un-used in canvas. Should be treated as read-only.
-         *
-         * @name Phaser.Textures.TextureSource#glIndex
-         * @type {number}
-         * @default 0
-         * @since 3.50.0
-         */
-        this.glIndex = 0;
-
-        /**
-         * The counter value when this texture was last assigned an index by the WebGL Renderer.
-         * Un-used in canvas. Should be treated as read-only.
-         *
-         * @name Phaser.Textures.TextureSource#glIndexCounter
-         * @type {number}
-         * @default -1
-         * @since 3.50.0
-         */
-        this.glIndexCounter = -1;
-
-        /**
          * Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
          *
          * @name Phaser.Textures.TextureSource#flipY
