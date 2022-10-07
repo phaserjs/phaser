@@ -865,7 +865,7 @@ var WebGLRenderer = new Class({
         //  Reset to texture 1 (texture zero is reserved for framebuffers)
         this.currentActiveTexture = 1;
         this.startActiveTexture++;
-        gl.activeTexture(gl.TEXTURE1);
+        // gl.activeTexture(gl.TEXTURE1);
 
         this.pipelines = new PipelineManager(this);
 
@@ -1519,6 +1519,8 @@ var WebGLRenderer = new Class({
      */
     setTextureSource: function (textureSource)
     {
+        console.log('setTextureSource');
+
         if (this.pipelines.forceZero())
         {
             this.setTextureZero(textureSource.glTexture, true);
@@ -1708,6 +1710,8 @@ var WebGLRenderer = new Class({
      */
     resetTextures: function (all)
     {
+        return;
+
         if (all === undefined) { all = false; }
 
         if (this.isTextureClean)
@@ -1715,6 +1719,8 @@ var WebGLRenderer = new Class({
             //  No need to do this if the textures are already clean
             return;
         }
+
+        console.log('resetTextures');
 
         this.flush();
 
@@ -1766,6 +1772,8 @@ var WebGLRenderer = new Class({
      */
     setTexture2D: function (texture)
     {
+        console.log('setTexture2D');
+
         if (this.pipelines.forceZero())
         {
             this.setTextureZero(texture, true);
@@ -2260,6 +2268,8 @@ var WebGLRenderer = new Class({
      */
     drawBitmapMask: function (bitmapMask, camera, bitmapMaskPipeline)
     {
+        console.log('drawBitmapMask');
+
         //  mask.mainFramebuffer should now contain all the Game Objects we want masked
         this.flush();
 
