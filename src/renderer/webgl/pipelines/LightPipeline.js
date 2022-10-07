@@ -95,6 +95,15 @@ var LightPipeline = new Class({
         this.defaultNormalMap;
 
         /**
+         * The currently bound normal map texture at texture unit one, if any.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentNormalTexture;
+         * @type {?WebGLTexture}
+         * @since 3.60.0
+         */
+        this.currentNormalTexture;
+
+        /**
          * A boolean that is set automatically during `onRender` that determines
          * if the Scene LightManager is active, or not.
          *
@@ -256,16 +265,18 @@ var LightPipeline = new Class({
     {
         var renderer = this.renderer;
 
-        if (texture === undefined) { texture = renderer.tempTextures[0]; }
+        if (texture === undefined) { texture = renderer.whiteTexture; }
 
         var normalTexture = this.getNormalMap(gameObject);
 
-        if (renderer.isNewNormalMap(texture, normalTexture))
+        if (this.isNewNormalMap(texture, normalTexture))
         {
             this.flush();
 
-            renderer.setTextureZero(texture);
-            renderer.setNormalMap(normalTexture);
+
+
+            // renderer.setTextureZero(texture);
+            // renderer.setNormalMap(normalTexture);
         }
 
         var rotation = (gameObject) ? gameObject.rotation : 0;
@@ -302,8 +313,8 @@ var LightPipeline = new Class({
         {
             this.flush();
 
-            renderer.setTextureZero(texture);
-            renderer.setNormalMap(normalTexture);
+            // renderer.setTextureZero(texture);
+            // renderer.setNormalMap(normalTexture);
         }
 
         this.setNormalMapRotation(gameObject.rotation);
@@ -311,6 +322,66 @@ var LightPipeline = new Class({
         this.currentUnit = 0;
 
         return 0;
+    },
+
+    /**
+     * Checks to see if the given diffuse and normal map textures are already bound, or not.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#isNewNormalMap
+     * @since 3.50.0
+     *
+     * @param {WebGLTexture} texture - The WebGL diffuse texture.
+     * @param {WebGLTexture} normalMap - The WebGL normal map texture.
+     *
+     * @return {boolean} Returns `false` if this combination is already set, or `true` if it's a new combination.
+     */
+    isNewNormalMap: function (texture, normalMap)
+    {
+        return (this.currentTexture !== texture || this.currentNormalTexture !== normalMap);
+    },
+
+    /**
+     * Binds a texture directly to texture unit one then activates it.
+     * If the texture is already at unit one, it skips the bind.
+     * Make sure to call `clearNormalMap` after using this method.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setNormalMap
+     * @since 3.50.0
+     *
+     * @param {WebGLTexture} texture - The WebGL texture that needs to be bound.
+     */
+    setNormalMap: function (texture)
+    {
+        if (this.normalTexture !== texture)
+        {
+            var gl = this.gl;
+
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+
+            this.normalTexture = texture;
+
+            if (this.currentActiveTexture === 1)
+            {
+                this.currentActiveTexture = 2;
+            }
+        }
+    },
+
+    /**
+     * Clears the texture that was directly bound to texture unit one and
+     * increases the start active texture counter.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#clearNormalMap
+     * @since 3.50.0
+     */
+    clearNormalMap: function ()
+    {
+        this.normalTexture = null;
+        this.startActiveTexture++;
+        this.currentActiveTexture = 1;
+
+        this.textureFlush++;
     },
 
     /**
