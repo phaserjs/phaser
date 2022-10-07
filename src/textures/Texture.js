@@ -4,7 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('../const');
 var Class = require('../utils/Class');
 var Frame = require('./Frame');
 var TextureSource = require('./TextureSource');
