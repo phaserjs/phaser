@@ -71,7 +71,7 @@ var RenderTexture = new Class({
         if (width === undefined) { width = 32; }
         if (height === undefined) { height = 32; }
 
-        var key = new UUID();
+        var key = UUID();
 
         var dynamicTexture = new DynamicTexture(scene.sys.textures, key, width, height);
 
