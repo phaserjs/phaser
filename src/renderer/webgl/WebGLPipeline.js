@@ -1565,7 +1565,10 @@ var WebGLPipeline = new Class({
             this.flush();
 
             hasFlushed = true;
+        }
 
+        if (!this.currentBatch)
+        {
             unit = this.setTexture2D(texture);
         }
 
@@ -1680,7 +1683,10 @@ var WebGLPipeline = new Class({
             this.flush();
 
             hasFlushed = true;
+        }
 
+        if (!this.currentBatch)
+        {
             unit = this.setTexture2D(texture);
         }
 
