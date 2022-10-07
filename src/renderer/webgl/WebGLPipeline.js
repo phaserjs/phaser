@@ -1507,6 +1507,8 @@ var WebGLPipeline = new Class({
         vertexViewU32[++vertexOffset] = tint;
 
         this.vertexCount++;
+
+        this.currentBatch.count = (this.vertexCount - this.currentBatch.start);
     },
 
     /**
