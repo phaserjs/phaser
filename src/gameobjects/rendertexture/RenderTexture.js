@@ -79,6 +79,23 @@ var RenderTexture = new Class({
 
         this.type = 'RenderTexture';
 
+
+        /**
+         * An internal Camera that can be used to move around this Render Texture.
+         *
+         * Control it just like you would any Scene Camera. The difference is that it only impacts
+         * the placement of Game Objects that you then draw to this texture.
+         *
+         * You can scroll, zoom and rotate this Camera.
+         *
+         * This property is a reference to `RenderTexture.texture.camera`.
+         *
+         * @name Phaser.GameObjects.RenderTexture#camera
+         * @type {Phaser.Cameras.Scene2D.BaseCamera}
+         * @since 3.12.0
+         */
+        this.camera = this.texture.camera;
+
         /**
          * Internal saved texture flag.
          *
