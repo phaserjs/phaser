@@ -36,7 +36,37 @@ Compressed Textures are loaded using the new `this.load.texture` method, which t
 * `WebGLRenderer.getCompressedTextures` is a new method that will populate the `WebGLRenderer.compression` object and return its value. This is called automatically when the renderer boots.
 * `WebGLRenderer.getCompressedTextureName` is a new method that will return a compressed texture format GLenum based on the given format.
 
-### New Features - Mobile Pipeline
+### New Features - New and Updated WebGL Pipelines
+
+#### WebGL Renderer Updates
+
+Due to all of the changes with how WebGL texture batching works a lot of mostly internal methods and properties have been removed. This is the complete list:
+
+* The `WebGLRenderer.currentActiveTexture` property has been removed.
+* The `WebGLRenderer.startActiveTexture` property has been removed.
+* The `WebGLRenderer.tempTextures` property has been removed.
+* The `WebGLRenderer.textureZero` property has been removed.
+* The `WebGLRenderer.normalTexture` property has been removed.
+* The `WebGLRenderer.textueFlush` property has been removed.
+* The `WebGLRenderer.isTextureClean` property has been removed.
+* The `WebGLRenderer.setBlankTexture` method has been removed.
+* The `WebGLRenderer.setTextureSource` method has been removed.
+* The `WebGLRenderer.isNewNormalMap` method has been removed.
+* The `WebGLRenderer.setTextureZero` method has been removed.
+* The `WebGLRenderer.clearTextureZero` method has been removed.
+* The `WebGLRenderer.setNormalMap` method has been removed.
+* The `WebGLRenderer.clearNormalMap` method has been removed.
+* The `WebGLRenderer.unbindTextures` method has been removed.
+* The `WebGLRenderer.resetTextures` method has been removed.
+* The `WebGLRenderer.setTexture2D` method has been removed.
+* The `WebGLRenderer.pushFramebuffer` method has had the `resetTextures` argument removed.
+* The `WebGLRenderer.setFramebuffer` method has had the `resetTextures` argument removed.
+* The `WebGLRenderer.popFramebuffer` method has had the `resetTextures` argument removed.
+* The `WebGLRenderer.deleteTexture` method has had the `reset` argument removed.
+* The `Textures.TextureSource.glIndex` property has been removed.
+* The `Textures.TextureSource.glIndexCounter` property has been removed.
+
+#### Mobile Pipeline
 
 * The Mobile Pipeline is a new pipeline that extends the Multi Tint pipeline, but uses customized shaders and a single-bound texture specifically for mobile GPUs. This should restore mobile performance back to the levels it was around v3.22, before Multi Tint improved it all for desktop at the expense of mobile.
 * `shaders/Mobile.vert` and `shaders/Mobile.frag` are the two shaders used for the Mobile Pipeline.
@@ -47,7 +77,7 @@ Compressed Textures are loaded using the new `this.load.texture` method, which t
 * `PipelineManager.setDefaultPipeline` is a new method that allows you to change the default Game Object pipeline. You could use this to allow for more fine-grained conditional control over when to use Multi or Mobile (or another pipeline)
 * The `PipelineManager.boot` method is now passed the default pipeline and auto mobile setting from the Game Config.
 
-### New Features - Multi Tint Pipeline
+#### Multi Tint Pipeline
 
 * If you have a customised Multi Tint Pipeline fragment shader that uses the `%forloop%` declaration, you should update it to follow the new format defined in `Multi.frag`. This new shader uses a function called `getSampler` instead. Please see the shader code and update your own shaders accordingly. You can also see the documentation for the MultiPipeline for details.
 * The `Multi.frag` shader now uses a `highp` precision, or `mediump` if the device doesn't support it (thanks @arbassic)
@@ -56,7 +86,7 @@ Compressed Textures are loaded using the new `this.load.texture` method, which t
 * The internal WebGL Utils function `GenerateSrc` has been removed as it's no longer required internally.
 * Previously, the Multi Tint methods `batchSprite`, `batchTexture`, `batchTextureFrame` and `batchFillRect` would all make heavy use of the `TransformMatrix.getXRound` and `getYRound` methods, which in turn called `getX` and `getY` and applied optional rounding to them. This is all now handled by one single function (`setQuad`) with no branching, meaning rendering one single sprite has cut down 16 function calls and 48 getters to just 1 function.
 
-### Updated - Lights Pipeline
+#### Lights Pipeline
 
 * The Light Pipeline no longer creates up to `maxLights` copies of the Light shader on boot. Previously it would then pick which shader to use, based on the number of visible lights in the Scene. Now, the number of lights is passed to the shader and branches accordingly. This means rather than compiling _n_ shaders on boot, it now only ever needs to create one.
 * You can now have no lights in a Scene, but the Scene will still be impacted by the ambient light. Previously, you always needed at least 1 light to trigger ambient light (thanks jstnldrs)
@@ -64,9 +94,11 @@ Compressed Textures are loaded using the new `this.load.texture` method, which t
 * The `LightPipeline.LIGHT_COUNT` constant has been removed as it's not used internally.
 * The `LightPipeline` previous created a global level temporary vec2 for calculations. This is now part of the class as the new `tempVec2` property.
 
-### Removed - Graphics Pipeline
+#### Removed - Graphics Pipeline
 
 The WebGL Graphics Pipeline has been removed. This pipeline wasn't used in v3.55, as all Graphics rendering is handled by the MultiTint pipeline, for better batching support. No Phaser Game Objects use the Graphics pipeline any longer, so to save space it has been removed and is no longer installed by the Pipeline Manager.
+
+
 
 ### New Features - Matter Physics v0.18
 
