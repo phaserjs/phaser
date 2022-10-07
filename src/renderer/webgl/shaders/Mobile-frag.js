@@ -10,7 +10,6 @@ module.exports = [
     'uniform sampler2D uMainSampler;',
     '',
     'varying vec2 outTexCoord;',
-    'varying float outTexId;',
     'varying float outTintEffect;',
     'varying vec4 outTint;',
     '',
