@@ -32,6 +32,7 @@ var FilterMode = require('./const');
 var Textures = {
 
     CanvasTexture: require('./CanvasTexture'),
+    DynamicTexture: require('./DynamicTexture'),
     Events: require('./events'),
     FilterMode: FilterMode,
     Frame: require('./Frame'),
