@@ -951,6 +951,30 @@ var MultiPipeline = new Class({
             prev[3] = trY;
             prev[4] = 1;
         }
+    },
+
+    /**
+     * Destroys all shader instances, removes all object references and nulls all external references.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.MultiPipeline#destroy
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#DESTROY
+     * @since 3.60.0
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    destroy: function ()
+    {
+        this._tempMatrix1.destroy();
+        this._tempMatrix2.destroy();
+        this._tempMatrix3.destroy();
+
+        this._tempMatrix1 = null;
+        this._tempMatrix1 = null;
+        this._tempMatrix1 = null;
+
+        WebGLPipeline.prototype.destroy.call(this);
+
+        return this;
     }
 
 });
