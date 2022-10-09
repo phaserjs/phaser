@@ -118,7 +118,7 @@ var LightPipeline = new Class({
          * A persistent calculation vector used when processing the lights.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#tempVec2
-         * @type {Phaser.Math.Vec2}
+         * @type {Phaser.Math.Vector2}
          * @since 3.60.0
          */
         this.tempVec2 = new Vec2();

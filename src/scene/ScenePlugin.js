@@ -104,7 +104,7 @@ var ScenePlugin = new Class({
          * Transition elapsed timer.
          *
          * @name Phaser.Scenes.ScenePlugin#_target
-         * @type {?Phaser.Scenes.Scene}
+         * @type {?Phaser.Scene}
          * @private
          * @since 3.5.0
          */

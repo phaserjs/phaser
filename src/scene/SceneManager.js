@@ -149,7 +149,7 @@ var SceneManager = new Class({
          * being tied to one.
          *
          * @name Phaser.Scenes.SceneManager#systemScene
-         * @type {Phaser.Scenes.Scene}
+         * @type {Phaser.Scene}
          * @since 3.60.0
          */
         this.systemScene;
