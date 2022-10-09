@@ -115,12 +115,19 @@ var PointLightPipeline = new Class({
             this.flush();
         }
 
+        if (!this.currentBatch)
+        {
+            this.setTexture2D();
+        }
+
         this.batchLightVert(x0, y0, lightX, lightY, radius, attenuation, r, g, b, a);
         this.batchLightVert(x1, y1, lightX, lightY, radius, attenuation, r, g, b, a);
         this.batchLightVert(x2, y2, lightX, lightY, radius, attenuation, r, g, b, a);
         this.batchLightVert(x0, y0, lightX, lightY, radius, attenuation, r, g, b, a);
         this.batchLightVert(x2, y2, lightX, lightY, radius, attenuation, r, g, b, a);
         this.batchLightVert(x3, y3, lightX, lightY, radius, attenuation, r, g, b, a);
+
+        this.currentBatch.count = (this.vertexCount - this.currentBatch.start);
     },
 
     /**
