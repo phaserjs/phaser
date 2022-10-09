@@ -14,8 +14,6 @@ var Rectangle = require('../../../geom/rectangle/Rectangle');
 var RenderTarget = require('../RenderTarget');
 var SingleQuadFS = require('../shaders/Single-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
-var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
-var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**
@@ -34,6 +32,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  * Text
  * TileSprite
  * RenderTexture
+ * Shape
  *
  * // TODO - Explain about the fbos and functions
  *
@@ -47,35 +46,12 @@ var WebGLPipeline = require('../WebGLPipeline');
  */
 var SpriteFXPipeline = new Class({
 
-    Extends: WebGLPipeline,
+    Extends: MultiPipeline,
 
     initialize:
 
     function SpriteFXPipeline (config)
     {
-        config.attributes = GetFastValue(config, 'attributes', [
-            {
-                name: 'inPosition',
-                size: 2
-            },
-            {
-                name: 'inTexCoord',
-                size: 2
-            },
-            {
-                name: 'inTexId'
-            },
-            {
-                name: 'inTintEffect'
-            },
-            {
-                name: 'inTint',
-                size: 4,
-                type: WEBGL_CONST.UNSIGNED_BYTE,
-                normalized: true
-            }
-        ]);
-
         var fragShader = GetFastValue(config, 'fragShader', PostFXFS);
         var vertShader = GetFastValue(config, 'vertShader', SingleQuadVS);
         var drawShader = GetFastValue(config, 'drawShader', PostFXFS);
@@ -109,39 +85,9 @@ var SpriteFXPipeline = new Class({
 
         config.batchSize = 1;
 
-        WebGLPipeline.call(this, config);
+        MultiPipeline.call(this, config);
 
         this.isSpriteFX = true;
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#_tempMatrix1
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.60.0
-         */
-        this._tempMatrix1 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#_tempMatrix2
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.60.0
-         */
-        this._tempMatrix2 = new TransformMatrix();
-
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#_tempMatrix3
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.60.0
-         */
-        this._tempMatrix3 = new TransformMatrix();
 
         /**
          * A reference to the Draw Sprite Shader belonging to this Pipeline.
@@ -327,93 +273,6 @@ var SpriteFXPipeline = new Class({
     },
 
     /**
-     * Takes a Sprite Game Object, or any object that extends it, and renders it via this pipeline.
-     *
-     * this method is a proxy for the MultiPipeline method of the same name. The actual rendering
-     * is redirected through to the `batchQuad` method in this pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#batchSprite
-     * @since 3.60.0
-     *
-     * @param {(Phaser.GameObjects.Image|Phaser.GameObjects.Sprite)} gameObject - The texture based Game Object to add to the batch.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use for the rendering transform.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - The transform matrix of the parent container, if set.
-     */
-    batchSprite: function (gameObject, camera, parentTransformMatrix)
-    {
-        //  Proxy this call to the MultiPipeline
-        //  batchQuad will intercept the rendering
-        MultiPipeline.prototype.batchSprite.call(this, gameObject, camera, parentTransformMatrix);
-    },
-
-    /**
-     * Generic function for batching a textured quad using argument values instead of a Game Object.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#batchTexture
-     * @since 3.60.0
-     *
-     * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject.
-     * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad.
-     * @param {number} textureWidth - Real texture width.
-     * @param {number} textureHeight - Real texture height.
-     * @param {number} srcX - X coordinate of the quad.
-     * @param {number} srcY - Y coordinate of the quad.
-     * @param {number} srcWidth - Width of the quad.
-     * @param {number} srcHeight - Height of the quad.
-     * @param {number} scaleX - X component of scale.
-     * @param {number} scaleY - Y component of scale.
-     * @param {number} rotation - Rotation of the quad.
-     * @param {boolean} flipX - Indicates if the quad is horizontally flipped.
-     * @param {boolean} flipY - Indicates if the quad is vertically flipped.
-     * @param {number} scrollFactorX - By which factor is the quad affected by the camera horizontal scroll.
-     * @param {number} scrollFactorY - By which factor is the quad effected by the camera vertical scroll.
-     * @param {number} displayOriginX - Horizontal origin in pixels.
-     * @param {number} displayOriginY - Vertical origin in pixels.
-     * @param {number} frameX - X coordinate of the texture frame.
-     * @param {number} frameY - Y coordinate of the texture frame.
-     * @param {number} frameWidth - Width of the texture frame.
-     * @param {number} frameHeight - Height of the texture frame.
-     * @param {number} tintTL - Tint for top left.
-     * @param {number} tintTR - Tint for top right.
-     * @param {number} tintBL - Tint for bottom left.
-     * @param {number} tintBR - Tint for bottom right.
-     * @param {number} tintEffect - The tint effect.
-     * @param {number} uOffset - Horizontal offset on texture coordinate.
-     * @param {number} vOffset - Vertical offset on texture coordinate.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container.
-     * @param {boolean} [skipFlip=false] - Skip the renderTexture check.
-     * @param {number} [textureUnit] - Use the currently bound texture unit?
-     */
-    batchTexture: function (
-        gameObject,
-        texture,
-        textureWidth, textureHeight,
-        srcX, srcY,
-        srcWidth, srcHeight,
-        scaleX, scaleY,
-        rotation,
-        flipX, flipY,
-        scrollFactorX, scrollFactorY,
-        displayOriginX, displayOriginY,
-        frameX, frameY, frameWidth, frameHeight,
-        tintTL, tintTR, tintBL, tintBR, tintEffect,
-        uOffset, vOffset,
-        camera,
-        parentTransformMatrix,
-        skipFlip,
-        textureUnit)
-    {
-        //  Proxy this call to the MultiPipeline
-        //  batchQuad will intercept the rendering
-
-        //  Needed for Text & TileSprite - how about others?
-        // flipY = true;
-
-        MultiPipeline.prototype.batchTexture.call(this, gameObject, texture, textureWidth, textureHeight, srcX, srcY, srcWidth, srcHeight, scaleX, scaleY, rotation, flipX, flipY, scrollFactorX, scrollFactorY, displayOriginX, displayOriginY, frameX, frameY, frameWidth, frameHeight, tintTL, tintTR, tintBL, tintBR, tintEffect, uOffset, vOffset, camera, parentTransformMatrix, skipFlip, textureUnit);
-    },
-
-    /**
      * Adds the vertices data into the batch and flushes if full.
      *
      * Assumes 6 vertices in the following arrangement:
@@ -466,7 +325,7 @@ var SpriteFXPipeline = new Class({
 
         var bounds = this.spriteBounds.setTo(bx, by, bw, bh);
 
-        var padding = gameObject.fxPadding;
+        var padding = (gameObject) ? gameObject.fxPadding : 0;
         var width = bw + (padding * 2);
         var height = bh + (padding * 2);
         var maxDimension = Math.abs(Math.max(width, height));
@@ -491,9 +350,12 @@ var SpriteFXPipeline = new Class({
 
         this.flipProjectionMatrix(true);
 
-        this.onDrawSprite(gameObject, target);
+        if (gameObject)
+        {
+            this.onDrawSprite(gameObject, target);
 
-        gameObject.onFX(this);
+            gameObject.onFX(this);
+        }
 
         var fsTarget = this.fsTarget;
 
@@ -783,8 +645,7 @@ var SpriteFXPipeline = new Class({
             gl.viewport(0, 0, renderer.width, renderer.height);
         }
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+        this.setTexture2D(source.texture);
 
         var matrix = this._tempMatrix1.loadIdentity();
 
@@ -938,14 +799,6 @@ var SpriteFXPipeline = new Class({
     {
         this.gl.deleteBuffer(this.quadVertexBuffer);
 
-        this._tempMatrix1.destroy();
-        this._tempMatrix2.destroy();
-        this._tempMatrix3.destroy();
-
-        this._tempMatrix1 = null;
-        this._tempMatrix1 = null;
-        this._tempMatrix1 = null;
-
         this.drawSpriteShader = null;
         this.copyShader = null;
         this.gameShader = null;
@@ -957,7 +810,9 @@ var SpriteFXPipeline = new Class({
         this.fsTarget = null;
         this.tempSprite = null;
 
-        WebGLPipeline.prototype.destroy.call(this);
+        MultiPipeline.prototype.destroy.call(this);
+
+        return this;
     }
 
 });
