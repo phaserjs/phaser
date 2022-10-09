@@ -26,15 +26,9 @@ var tempMatrix = new TransformMatrix();
 var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
     var list = src.getRenderList();
-
-    if (list.length === 0)
-    {
-        return;
-    }
-
     var alpha = camera.alpha * src.alpha;
 
-    if (alpha === 0)
+    if (list.length === 0 || alpha === 0)
     {
         //  Nothing to see, so abort early
         return;
@@ -65,9 +59,9 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     renderer.pipelines.preBatch(src);
 
-    for (var index = 0; index < list.length; index++)
+    for (var i = 0; i < list.length; i++)
     {
-        var bob = list[index];
+        var bob = list[i];
         var frame = bob.frame;
         var bobAlpha = bob.alpha * alpha;
 
@@ -94,14 +88,7 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
             y += frame.height;
         }
 
-        var xw = x + width;
-        var yh = y + height;
-
-        var tx0 = calcMatrix.getX(x, y);
-        var ty0 = calcMatrix.getY(x, y);
-
-        var tx1 = calcMatrix.getX(xw, yh);
-        var ty1 = calcMatrix.getY(xw, yh);
+        var quad = calcMatrix.setQuad(x, y, x + width, y + height, roundPixels);
 
         var tint = Utils.getTintAppendFloatAlpha(bob.tint, bobAlpha);
 
@@ -113,17 +100,7 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
             prevTextureSourceIndex = frame.sourceIndex;
         }
 
-        if (roundPixels)
-        {
-            tx0 = Math.round(tx0);
-            ty0 = Math.round(ty0);
-
-            tx1 = Math.round(tx1);
-            ty1 = Math.round(ty1);
-        }
-
-        //  TL x/y, BL x/y, BR x/y, TR x/y
-        if (pipeline.batchQuad(src, tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, frame.glTexture, textureUnit))
+        if (pipeline.batchQuad(src, quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7], frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, frame.glTexture, textureUnit))
         {
             prevTextureSourceIndex = -1;
         }
