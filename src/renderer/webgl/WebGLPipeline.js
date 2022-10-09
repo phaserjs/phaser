@@ -389,7 +389,6 @@ var WebGLPipeline = new Class({
         this.batch = [];
         this.currentBatch = null;
         this.currentTexture = null;
-
     },
 
     createBatch: function (texture)
@@ -408,6 +407,18 @@ var WebGLPipeline = new Class({
         this.batch.push(this.currentBatch);
 
         return 0;
+    },
+
+    addTextureToBatch: function (texture)
+    {
+        var batch = this.currentBatch;
+
+        if (batch)
+        {
+            batch.texture.push(texture);
+            batch.unit++;
+            batch.maxUnit++;
+        }
     },
 
     pushBatch: function (texture)
@@ -829,10 +840,6 @@ var WebGLPipeline = new Class({
         if (frame === undefined) { frame = gameObject.frame; }
 
         return this.pushBatch(frame.source.glTexture);
-
-        // this.currentUnit = this.renderer.setTextureSource(frame.source);
-
-        // return this.currentUnit;
     },
 
     /**
@@ -1270,19 +1277,24 @@ var WebGLPipeline = new Class({
                 }
             }
 
-            this.vertexCount = 0;
-
-            this.batch.length = 0;
-            this.currentBatch = null;
-            this.currentTexture = null;
-            this.currentUnit = 0;
-
-            this.emit(Events.AFTER_FLUSH, this, isPostFlush);
-
-            this.onAfterFlush(isPostFlush);
+            this.resetBatch(isPostFlush);
         }
 
         return this;
+    },
+
+    resetBatch: function (isPostFlush)
+    {
+        this.vertexCount = 0;
+
+        this.batch.length = 0;
+        this.currentBatch = null;
+        this.currentTexture = null;
+        this.currentUnit = 0;
+
+        this.emit(Events.AFTER_FLUSH, this, isPostFlush);
+
+        this.onAfterFlush(isPostFlush);
     },
 
     /**
@@ -1751,7 +1763,7 @@ var WebGLPipeline = new Class({
      */
     drawFillRect: function (x, y, width, height, color, alpha, texture, flipUV)
     {
-        if (texture === undefined) { texture = this.renderer.whiteTexture.glTexture; }
+        if (texture === undefined) { texture = this.renderer.whiteTexture; }
         if (flipUV === undefined) { flipUV = true; }
 
         x = Math.floor(x);
@@ -1791,13 +1803,9 @@ var WebGLPipeline = new Class({
      */
     setTexture2D: function (texture)
     {
-        if (texture === undefined) { texture = this.renderer.whiteTexture.glTexture; }
+        if (texture === undefined) { texture = this.renderer.whiteTexture; }
 
         return this.pushBatch(texture);
-
-        // this.currentUnit = this.renderer.setTexture2D(texture);
-
-        // return this.currentUnit;
     },
 
     /**
