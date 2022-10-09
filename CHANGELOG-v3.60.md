@@ -66,6 +66,8 @@ Due to all of the changes with how WebGL texture batching works a lot of mostly 
 * The `Textures.TextureSource.glIndex` property has been removed.
 * The `Textures.TextureSource.glIndexCounter` property has been removed.
 
+Previously, `WebGLRenderer.whiteTexture` and `WebGLRenderer.blankTexture` had a data-type of `WebGLTexture` but they were actually `Phaser.Textures.Frame` instances. This has now been corrected and the two properties are now actually `WebGLTexture` instances, not Frames. If your code relies on this mistake being present, please adapt it.
+
 #### Mobile Pipeline
 
 * The Mobile Pipeline is a new pipeline that extends the Multi Tint pipeline, but uses customized shaders and a single-bound texture specifically for mobile GPUs. This should restore mobile performance back to the levels it was around v3.22, before Multi Tint improved it all for desktop at the expense of mobile.
