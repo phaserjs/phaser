@@ -6,6 +6,7 @@
  */
 
 var Class = require('../../../utils/Class');
+var Events = require('./events');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var LightShaderSourceFS = require('../shaders/Light-frag.js');
 var MultiPipeline = require('./MultiPipeline');
@@ -97,11 +98,11 @@ var LightPipeline = new Class({
         /**
          * The currently bound normal map texture at texture unit one, if any.
          *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentNormalTexture;
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentNormalMap;
          * @type {?WebGLTexture}
          * @since 3.60.0
          */
-        this.currentNormalTexture;
+        this.currentNormalMap;
 
         /**
          * A boolean that is set automatically during `onRender` that determines
@@ -267,23 +268,22 @@ var LightPipeline = new Class({
 
         if (texture === undefined) { texture = renderer.whiteTexture; }
 
-        var normalTexture = this.getNormalMap(gameObject);
+        var normalMap = this.getNormalMap(gameObject);
 
-        if (this.isNewNormalMap(texture, normalTexture))
+        if (this.isNewNormalMap(texture, normalMap))
         {
             this.flush();
 
+            this.createBatch(texture);
 
+            this.addTextureToBatch(normalMap);
 
-            // renderer.setTextureZero(texture);
-            // renderer.setNormalMap(normalTexture);
+            this.currentNormalMap = normalMap;
         }
 
         var rotation = (gameObject) ? gameObject.rotation : 0;
 
         this.setNormalMapRotation(rotation);
-
-        this.currentUnit = 0;
 
         return 0;
     },
@@ -305,23 +305,85 @@ var LightPipeline = new Class({
     {
         if (frame === undefined) { frame = gameObject.frame; }
 
-        var renderer = this.renderer;
         var texture = frame.glTexture;
-        var normalTexture = this.getNormalMap(gameObject);
+        var normalMap = this.getNormalMap(gameObject);
 
-        if (renderer.isNewNormalMap())
+        if (this.isNewNormalMap(texture, normalMap))
         {
             this.flush();
 
-            // renderer.setTextureZero(texture);
-            // renderer.setNormalMap(normalTexture);
+            this.createBatch(texture);
+
+            this.addTextureToBatch(normalMap);
+
+            this.currentNormalMap = normalMap;
         }
 
         this.setNormalMapRotation(gameObject.rotation);
 
-        this.currentUnit = 0;
-
         return 0;
+    },
+
+    /**
+     * Uploads the vertex data and emits a draw call for the current batch of vertices.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#BEFORE_FLUSH
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#AFTER_FLUSH
+     * @since 3.0.0
+     *
+     * @param {boolean} [isPostFlush=false] - Was this flush invoked as part of a post-process, or not?
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    flush: function (isPostFlush)
+    {
+        if (isPostFlush === undefined) { isPostFlush = false; }
+
+        if (this.vertexCount > 0)
+        {
+            this.emit(Events.BEFORE_FLUSH, this, isPostFlush);
+
+            this.onBeforeFlush(isPostFlush);
+
+            var gl = this.gl;
+            var vertexCount = this.vertexCount;
+            var vertexSize = this.currentShader.vertexSize;
+            var topology = this.topology;
+
+            if (this.active)
+            {
+                this.setVertexBuffer();
+
+                if (vertexCount === this.vertexCapacity)
+                {
+                    gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.DYNAMIC_DRAW);
+                }
+                else
+                {
+                    gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
+                }
+
+                var batch = this.batch;
+
+                for (var i = 0; i < batch.length; i++)
+                {
+                    var entry = batch[i];
+
+                    for (var t = 0; t <= entry.maxUnit; t++)
+                    {
+                        gl.activeTexture(gl.TEXTURE0 + t);
+                        gl.bindTexture(gl.TEXTURE_2D, entry.texture[t]);
+                    }
+
+                    gl.drawArrays(topology, entry.start, entry.count);
+                }
+            }
+
+            this.resetBatch(isPostFlush);
+        }
+
+        return this;
     },
 
     /**
@@ -337,51 +399,7 @@ var LightPipeline = new Class({
      */
     isNewNormalMap: function (texture, normalMap)
     {
-        return (this.currentTexture !== texture || this.currentNormalTexture !== normalMap);
-    },
-
-    /**
-     * Binds a texture directly to texture unit one then activates it.
-     * If the texture is already at unit one, it skips the bind.
-     * Make sure to call `clearNormalMap` after using this method.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#setNormalMap
-     * @since 3.50.0
-     *
-     * @param {WebGLTexture} texture - The WebGL texture that needs to be bound.
-     */
-    setNormalMap: function (texture)
-    {
-        if (this.normalTexture !== texture)
-        {
-            var gl = this.gl;
-
-            gl.activeTexture(gl.TEXTURE1);
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-
-            this.normalTexture = texture;
-
-            if (this.currentActiveTexture === 1)
-            {
-                this.currentActiveTexture = 2;
-            }
-        }
-    },
-
-    /**
-     * Clears the texture that was directly bound to texture unit one and
-     * increases the start active texture counter.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#clearNormalMap
-     * @since 3.50.0
-     */
-    clearNormalMap: function ()
-    {
-        this.normalTexture = null;
-        this.startActiveTexture++;
-        this.currentActiveTexture = 1;
-
-        this.textureFlush++;
+        return (this.currentTexture !== texture || this.currentNormalMap !== normalMap);
     },
 
     /**
@@ -397,38 +415,38 @@ var LightPipeline = new Class({
      */
     getNormalMap: function (gameObject)
     {
-        var normalTexture;
+        var normalMap;
 
         if (!gameObject)
         {
-            normalTexture = this.defaultNormalMap;
+            normalMap = this.defaultNormalMap;
         }
         else if (gameObject.displayTexture)
         {
-            normalTexture = gameObject.displayTexture.dataSource[gameObject.displayFrame.sourceIndex];
+            normalMap = gameObject.displayTexture.dataSource[gameObject.displayFrame.sourceIndex];
         }
         else if (gameObject.texture)
         {
-            normalTexture = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
+            normalMap = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
         }
         else if (gameObject.tileset)
         {
             if (Array.isArray(gameObject.tileset))
             {
-                normalTexture = gameObject.tileset[0].image.dataSource[0];
+                normalMap = gameObject.tileset[0].image.dataSource[0];
             }
             else
             {
-                normalTexture = gameObject.tileset.image.dataSource[0];
+                normalMap = gameObject.tileset.image.dataSource[0];
             }
         }
 
-        if (!normalTexture)
+        if (!normalMap)
         {
-            normalTexture = this.defaultNormalMap;
+            normalMap = this.defaultNormalMap;
         }
 
-        return normalTexture.glTexture;
+        return normalMap.glTexture;
     },
 
     /**
