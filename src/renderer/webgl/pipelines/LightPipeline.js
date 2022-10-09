@@ -6,7 +6,6 @@
  */
 
 var Class = require('../../../utils/Class');
-var Events = require('./events');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var LightShaderSourceFS = require('../shaders/Light-frag.js');
 var MultiPipeline = require('./MultiPipeline');
@@ -322,68 +321,6 @@ var LightPipeline = new Class({
         this.setNormalMapRotation(gameObject.rotation);
 
         return 0;
-    },
-
-    /**
-     * Uploads the vertex data and emits a draw call for the current batch of vertices.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
-     * @fires Phaser.Renderer.WebGL.Pipelines.Events#BEFORE_FLUSH
-     * @fires Phaser.Renderer.WebGL.Pipelines.Events#AFTER_FLUSH
-     * @since 3.0.0
-     *
-     * @param {boolean} [isPostFlush=false] - Was this flush invoked as part of a post-process, or not?
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    flush: function (isPostFlush)
-    {
-        if (isPostFlush === undefined) { isPostFlush = false; }
-
-        if (this.vertexCount > 0)
-        {
-            this.emit(Events.BEFORE_FLUSH, this, isPostFlush);
-
-            this.onBeforeFlush(isPostFlush);
-
-            var gl = this.gl;
-            var vertexCount = this.vertexCount;
-            var vertexSize = this.currentShader.vertexSize;
-            var topology = this.topology;
-
-            if (this.active)
-            {
-                this.setVertexBuffer();
-
-                if (vertexCount === this.vertexCapacity)
-                {
-                    gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.DYNAMIC_DRAW);
-                }
-                else
-                {
-                    gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
-                }
-
-                var batch = this.batch;
-
-                for (var i = 0; i < batch.length; i++)
-                {
-                    var entry = batch[i];
-
-                    for (var t = 0; t <= entry.maxUnit; t++)
-                    {
-                        gl.activeTexture(gl.TEXTURE0 + t);
-                        gl.bindTexture(gl.TEXTURE_2D, entry.texture[t]);
-                    }
-
-                    gl.drawArrays(topology, entry.start, entry.count);
-                }
-            }
-
-            this.resetBatch(isPostFlush);
-        }
-
-        return this;
     },
 
     /**
