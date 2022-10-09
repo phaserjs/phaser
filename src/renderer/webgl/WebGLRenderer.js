@@ -817,8 +817,8 @@ var WebGLRenderer = new Class({
 
         //  Set-up default textures, fbo and scissor
 
-        this.blankTexture = game.textures.getFrame('__DEFAULT');
-        this.whiteTexture = game.textures.getFrame('__WHITE');
+        this.blankTexture = game.textures.getFrame('__DEFAULT').glTexture;
+        this.whiteTexture = game.textures.getFrame('__WHITE').glTexture;
 
         var gl = this.gl;
 
