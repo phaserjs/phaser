@@ -234,17 +234,6 @@ var WebGLPipeline = new Class({
         this.active = true;
 
         /**
-         * Holds the most recently assigned texture unit.
-         *
-         * Treat this value as read-only.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#currentUnit
-         * @type {number}
-         * @since 3.50.0
-         */
-        this.currentUnit = 0;
-
-        /**
          * Some pipelines require the forced use of texture zero (like the light pipeline).
          *
          * This property should be set when that is the case.
@@ -386,141 +375,56 @@ var WebGLPipeline = new Class({
          */
         this.glReset = false;
 
+        /**
+         * The temporary Pipeline batch. This array contains the batch entries for
+         * the current frame, which is a package of textures and vertex offsets used
+         * for drawing. This package is built dynamically as the frame is built
+         * and cleared during the flush method.
+         *
+         * Treat this array and all of its contents as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#batch
+         * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineBatchEntry[]}
+         * @since 3.60.0
+         */
         this.batch = [];
+
+        /**
+         * The most recently created Pipeline batch entry.
+         *
+         * Reset to null as part of the flush method.
+         *
+         * Treat this value as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#currentBatch
+         * @type {?Phaser.Types.Renderer.WebGL.WebGLPipelineBatchEntry}
+         * @since 3.60.0
+         */
         this.currentBatch = null;
+
+        /**
+         * The most recently bound WebGLTexture, used as part of the batch process.
+         *
+         * Reset to null as part of the flush method.
+         *
+         * Treat this value as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#currentTexture
+         * @type {?WebGLTexture}
+         * @since 3.60.0
+         */
         this.currentTexture = null;
-    },
 
-    createBatch: function (texture)
-    {
-        this.currentBatch = {
-            start: this.vertexCount,
-            count: 0,
-            texture: [ texture ],
-            unit: 0,
-            maxUnit: 0
-        };
-
+        /**
+         * Holds the most recently assigned texture unit.
+         *
+         * Treat this value as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#currentUnit
+         * @type {number}
+         * @since 3.50.0
+         */
         this.currentUnit = 0;
-        this.currentTexture = texture;
-
-        this.batch.push(this.currentBatch);
-
-        return 0;
-    },
-
-    addTextureToBatch: function (texture)
-    {
-        var batch = this.currentBatch;
-
-        if (batch)
-        {
-            batch.texture.push(texture);
-            batch.unit++;
-            batch.maxUnit++;
-        }
-    },
-
-    pushBatch: function (texture)
-    {
-        //  No current batch? Create one and return
-        if (!this.currentBatch || (this.forceZero && texture !== this.currentTexture))
-        {
-            return this.createBatch(texture);
-        }
-
-        //  Otherwise, check if the texture is in the current batch
-        if (texture === this.currentTexture)
-        {
-            return this.currentUnit;
-        }
-        else
-        {
-            var current = this.currentBatch;
-
-            var idx = current.texture.indexOf(texture);
-
-            if (idx === -1)
-            {
-                //  This is a brand new texture, not in the current batch
-
-                //  Have we exceed our limit?
-                if (current.texture.length === this.renderer.maxTextures)
-                {
-                    return this.createBatch(texture);
-                }
-                else
-                {
-                    //  We're good, push it in
-                    current.unit++;
-                    current.maxUnit++;
-                    current.texture.push(texture);
-
-                    this.currentUnit = current.unit;
-                    this.currentTexture = texture;
-
-                    return current.unit;
-                }
-            }
-            else
-            {
-                this.currentUnit = idx;
-                this.currentTexture = texture;
-
-                return idx;
-            }
-        }
-
-        /*
-        var unit = this.currentUnit;
-
-        if (texture !== this.currentTexture)
-        {
-            var newBatch = false;
-
-            if (this.forceZero || this.batch.length === 0 || this.currentUnit === this.renderer.maxTextures)
-            {
-                unit = 0;
-                newBatch = true;
-            }
-
-            if (newBatch)
-            {
-                this.currentBatch = {
-                    start: this.vertexCount,
-                    count: 0,
-                    texture: [ texture ],
-                    unit: 0,
-                    maxUnit: 0
-                };
-
-                this.currentUnit = 0;
-
-                this.batch.push(this.currentBatch);
-            }
-            else
-            {
-                var idx = this.currentBatch.texture.indexOf(texture);
-
-                if (idx === -1)
-                {
-                    this.currentUnit++;
-
-                    this.currentBatch.unit++;
-                    this.currentBatch.maxUnit++;
-                    this.currentBatch.texture.push(texture);
-                }
-                else
-                {
-                    unit = idx;
-                }
-            }
-
-            this.currentTexture = texture;
-        }
-
-        return unit;
-        */
     },
 
     /**
@@ -821,6 +725,129 @@ var WebGLPipeline = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Creates a new WebGL Pipeline Batch Entry, sets the texture unit as zero
+     * and pushes the entry into the batch.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#createBatch
+     * @since 3.60.0
+     *
+     * @param {WebGLTexture} texture - The WebGLTexture assigned to this batch entry.
+     *
+     * @return {number} The texture unit that was bound.
+     */
+    createBatch: function (texture)
+    {
+        this.currentBatch = {
+            start: this.vertexCount,
+            count: 0,
+            texture: [ texture ],
+            unit: 0,
+            maxUnit: 0
+        };
+
+        this.currentUnit = 0;
+        this.currentTexture = texture;
+
+        this.batch.push(this.currentBatch);
+
+        return 0;
+    },
+
+    /**
+     * Adds the given texture to the current WebGL Pipeline Batch Entry and
+     * increases the batch entry unit and maxUnit values by 1.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#addTextureToBatch
+     * @since 3.60.0
+     *
+     * @param {WebGLTexture} texture - The WebGLTexture assigned to this batch entry.
+     */
+    addTextureToBatch: function (texture)
+    {
+        var batch = this.currentBatch;
+
+        if (batch)
+        {
+            batch.texture.push(texture);
+            batch.unit++;
+            batch.maxUnit++;
+        }
+    },
+
+    /**
+     * Takes the given WebGLTexture and determines what to do with it.
+     *
+     * If there is no current batch (i.e. after a flush) it will create a new
+     * batch from it.
+     *
+     * If the texture is already bound, it will return the current texture unit.
+     *
+     * If the texture already exists in the current batch, the unit gets reset
+     * to match it.
+     *
+     * If the texture cannot be found in the current batch, and it supports
+     * multiple textures, it's added into the batch and the unit indexes are
+     * advanced.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#pushBatch
+     * @since 3.60.0
+     *
+     * @param {WebGLTexture} texture - The WebGLTexture assigned to this batch entry.
+     *
+     * @return {number} The texture unit that was bound.
+     */
+    pushBatch: function (texture)
+    {
+        //  No current batch? Create one and return
+        if (!this.currentBatch || (this.forceZero && texture !== this.currentTexture))
+        {
+            return this.createBatch(texture);
+        }
+
+        //  Otherwise, check if the texture is in the current batch
+        if (texture === this.currentTexture)
+        {
+            return this.currentUnit;
+        }
+        else
+        {
+            var current = this.currentBatch;
+
+            var idx = current.texture.indexOf(texture);
+
+            if (idx === -1)
+            {
+                //  This is a brand new texture, not in the current batch
+
+                //  Have we exceed our limit?
+                if (current.texture.length === this.renderer.maxTextures)
+                {
+                    return this.createBatch(texture);
+                }
+                else
+                {
+                    //  We're good, push it in
+                    current.unit++;
+                    current.maxUnit++;
+                    current.texture.push(texture);
+
+                    this.currentUnit = current.unit;
+                    this.currentTexture = texture;
+
+                    return current.unit;
+                }
+            }
+            else
+            {
+                this.currentUnit = idx;
+                this.currentTexture = texture;
+
+                return idx;
+            }
+        }
     },
 
     /**
@@ -1277,24 +1304,19 @@ var WebGLPipeline = new Class({
                 }
             }
 
-            this.resetBatch(isPostFlush);
+            this.vertexCount = 0;
+
+            this.batch.length = 0;
+            this.currentBatch = null;
+            this.currentTexture = null;
+            this.currentUnit = 0;
+
+            this.emit(Events.AFTER_FLUSH, this, isPostFlush);
+
+            this.onAfterFlush(isPostFlush);
         }
 
         return this;
-    },
-
-    resetBatch: function (isPostFlush)
-    {
-        this.vertexCount = 0;
-
-        this.batch.length = 0;
-        this.currentBatch = null;
-        this.currentTexture = null;
-        this.currentUnit = 0;
-
-        this.emit(Events.AFTER_FLUSH, this, isPostFlush);
-
-        this.onAfterFlush(isPostFlush);
     },
 
     /**
