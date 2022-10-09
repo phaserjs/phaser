@@ -722,13 +722,16 @@ var TextureManager = new Class({
      *
      * See the methods available on the `DynamicTexture` class for more details.
      *
+     * Optionally, you can also pass a Dynamic Texture instance to this method to have
+     * it added to the Texture Manager.
+     *
      * @method Phaser.Textures.TextureManager#addDynamicTexture
      * @fires Phaser.Textures.Events#ADD
      * @since 3.60.0
      *
-     * @param {string} key - The string-based key of this Texture. Must be unique within the Texture Manager.
-     * @param {number} [width=256] - The width of this Dymamic Texture in pixels. Defaults to 256 x 256.
-     * @param {number} [height=256] - The height of this Dymamic Texture in pixels. Defaults to 256 x 256.
+     * @param {(string|Phaser.Textures.DynamicTexture)} key - The string-based key of this Texture. Must be unique within the Texture Manager. Or, a DynamicTexture instance.
+     * @param {number} [width=256] - The width of this Dynamic Texture in pixels. Defaults to 256 x 256. Ignored if an instance is passed as the key.
+     * @param {number} [height=256] - The height of this Dynamic Texture in pixels. Defaults to 256 x 256. Ignored if an instance is passed as the key.
      *
      * @return {?Phaser.Textures.DynamicTexture} The Dynamic Texture that was created, or `null` if the key is already in use.
      */
@@ -736,14 +739,26 @@ var TextureManager = new Class({
     {
         var texture = null;
 
-        if (this.checkKey(key))
+        if (typeof(key) === 'string' && !this.exists(key))
         {
             texture = new DynamicTexture(this, key, width, height);
+        }
+        else
+        {
+            texture = key;
+            key = texture.key;
+        }
 
+        if (this.checkKey(key))
+        {
             this.list[key] = texture;
 
             this.emit(Events.ADD, key, texture);
             this.emit(Events.ADD_KEY + key, texture);
+        }
+        else
+        {
+            texture = null;
         }
 
         return texture;

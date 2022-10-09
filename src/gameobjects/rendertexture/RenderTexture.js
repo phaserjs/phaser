@@ -7,7 +7,6 @@
 var Class = require('../../utils/Class');
 var DynamicTexture = require('../../textures/DynamicTexture');
 var Image = require('../image/Image');
-var UUID = require('../../utils/string/UUID');
 
 /**
  * @classdesc
@@ -71,9 +70,7 @@ var RenderTexture = new Class({
         if (width === undefined) { width = 32; }
         if (height === undefined) { height = 32; }
 
-        var key = UUID();
-
-        var dynamicTexture = new DynamicTexture(scene.sys.textures, key, width, height);
+        var dynamicTexture = new DynamicTexture(scene.sys.textures, '', width, height);
 
         Image.call(this, scene, x, y, dynamicTexture);
 
@@ -169,15 +166,20 @@ var RenderTexture = new Class({
      *
      * @param {string} key - The unique key to store the texture as within the global Texture Manager.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was saved.
+     * @return {Phaser.Textures.DynamicTexture} The Texture that was saved.
      */
     saveTexture: function (key)
     {
-        this.textureManager.renameTexture(this.texture.key, key);
+        var texture = this.texture;
 
-        this._saved = true;
+        texture.key = key;
 
-        return this.texture;
+        if (this.textureManager.addDynamicTexture(texture))
+        {
+            this._saved = true;
+        }
+
+        return texture;
     },
 
     /**
