@@ -417,10 +417,11 @@ var ArcadePhysics = new Class({
      * @method Phaser.Physics.Arcade.ArcadePhysics#closest
      * @since 3.0.0
      *
-     * @param {any} source - Any object with public `x` and `y` properties, such as a Game Object or Geometry object.
-     * @param {(Phaser.Physics.Arcade.Body[]|Phaser.Physics.Arcade.StaticBody[]|Phaser.GameObjects.GameObject[])} [targets] - The targets.
+     * @generic {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|Phaser.GameObjects.GameObject} Target
+     * @param {Phaser.Types.Math.Vector2Like} source - Any object with public `x` and `y` properties, such as a Game Object or Geometry object.
+     * @param {Target[]} [targets] - The targets.
      *
-     * @return {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|Phaser.GameObjects.GameObject)} The target closest to the given source point.
+     * @return {Target|null} The target closest to the given source point.
      */
     closest: function (source, targets)
     {
