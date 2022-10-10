@@ -594,10 +594,14 @@ var Tween = new Class({
         if (this.isLoopDelayed())
         {
             this.updateLoopCountdown(delta);
+
+            return false;
         }
         else if (this.isCompleteDelayed())
         {
             this.updateCompleteDelay(delta);
+
+            return false;
         }
         else if (!this.hasStarted && !this.isSeeking)
         {
