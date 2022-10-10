@@ -1063,8 +1063,6 @@ var DynamicTexture = new Class({
         {
             if (this.renderTarget)
             {
-                tint = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16);
-
                 this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, this.camera.matrix, null);
             }
             else
@@ -1363,8 +1361,6 @@ var DynamicTexture = new Class({
 
         if (renderTarget)
         {
-            tint = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16);
-
             this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, matrix, null);
         }
         else
