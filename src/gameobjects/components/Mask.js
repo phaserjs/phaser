@@ -89,7 +89,7 @@ var Mask = {
      *
      * If you do not provide a renderable object, and this Game Object has a texture,
      * it will use itself as the object. This means you can call this method to create
-     * a Bitmap Mask from any renderable Game Object.
+     * a Bitmap Mask from any renderable texture-based Game Object.
      *
      * @method Phaser.GameObjects.Components.Mask#createBitmapMask
      * @since 3.6.2

@@ -104,6 +104,7 @@ export class Parser {
                 case 'Phaser.Scale.Zoom':
                 case 'Phaser.Textures.FilterMode':
                 case 'Phaser.Tilemaps.Orientation':
+                case 'Phaser.Tweens.States':
                     // console.log('Forcing enum for ' + doclet.longname);
                     doclet.kind = 'member';
                     doclet.isEnum = true;

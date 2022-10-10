@@ -234,17 +234,6 @@ var WebGLPipeline = new Class({
         this.active = true;
 
         /**
-         * Holds the most recently assigned texture unit.
-         *
-         * Treat this value as read-only.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#currentUnit
-         * @type {number}
-         * @since 3.50.0
-         */
-        this.currentUnit = 0;
-
-        /**
          * Some pipelines require the forced use of texture zero (like the light pipeline).
          *
          * This property should be set when that is the case.
@@ -385,6 +374,57 @@ var WebGLPipeline = new Class({
          * @since 3.53.0
          */
         this.glReset = false;
+
+        /**
+         * The temporary Pipeline batch. This array contains the batch entries for
+         * the current frame, which is a package of textures and vertex offsets used
+         * for drawing. This package is built dynamically as the frame is built
+         * and cleared during the flush method.
+         *
+         * Treat this array and all of its contents as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#batch
+         * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineBatchEntry[]}
+         * @since 3.60.0
+         */
+        this.batch = [];
+
+        /**
+         * The most recently created Pipeline batch entry.
+         *
+         * Reset to null as part of the flush method.
+         *
+         * Treat this value as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#currentBatch
+         * @type {?Phaser.Types.Renderer.WebGL.WebGLPipelineBatchEntry}
+         * @since 3.60.0
+         */
+        this.currentBatch = null;
+
+        /**
+         * The most recently bound WebGLTexture, used as part of the batch process.
+         *
+         * Reset to null as part of the flush method.
+         *
+         * Treat this value as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#currentTexture
+         * @type {?WebGLTexture}
+         * @since 3.60.0
+         */
+        this.currentTexture = null;
+
+        /**
+         * Holds the most recently assigned texture unit.
+         *
+         * Treat this value as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#currentUnit
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.currentUnit = 0;
     },
 
     /**
@@ -570,8 +610,6 @@ var WebGLPipeline = new Class({
         {
             this.flush();
 
-            renderer.resetTextures();
-
             var wasBound = this.setVertexBuffer(vertexBuffer);
 
             if (wasBound && !setAttributes)
@@ -690,6 +728,129 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Creates a new WebGL Pipeline Batch Entry, sets the texture unit as zero
+     * and pushes the entry into the batch.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#createBatch
+     * @since 3.60.0
+     *
+     * @param {WebGLTexture} texture - The WebGLTexture assigned to this batch entry.
+     *
+     * @return {number} The texture unit that was bound.
+     */
+    createBatch: function (texture)
+    {
+        this.currentBatch = {
+            start: this.vertexCount,
+            count: 0,
+            texture: [ texture ],
+            unit: 0,
+            maxUnit: 0
+        };
+
+        this.currentUnit = 0;
+        this.currentTexture = texture;
+
+        this.batch.push(this.currentBatch);
+
+        return 0;
+    },
+
+    /**
+     * Adds the given texture to the current WebGL Pipeline Batch Entry and
+     * increases the batch entry unit and maxUnit values by 1.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#addTextureToBatch
+     * @since 3.60.0
+     *
+     * @param {WebGLTexture} texture - The WebGLTexture assigned to this batch entry.
+     */
+    addTextureToBatch: function (texture)
+    {
+        var batch = this.currentBatch;
+
+        if (batch)
+        {
+            batch.texture.push(texture);
+            batch.unit++;
+            batch.maxUnit++;
+        }
+    },
+
+    /**
+     * Takes the given WebGLTexture and determines what to do with it.
+     *
+     * If there is no current batch (i.e. after a flush) it will create a new
+     * batch from it.
+     *
+     * If the texture is already bound, it will return the current texture unit.
+     *
+     * If the texture already exists in the current batch, the unit gets reset
+     * to match it.
+     *
+     * If the texture cannot be found in the current batch, and it supports
+     * multiple textures, it's added into the batch and the unit indexes are
+     * advanced.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#pushBatch
+     * @since 3.60.0
+     *
+     * @param {WebGLTexture} texture - The WebGLTexture assigned to this batch entry.
+     *
+     * @return {number} The texture unit that was bound.
+     */
+    pushBatch: function (texture)
+    {
+        //  No current batch? Create one and return
+        if (!this.currentBatch || (this.forceZero && texture !== this.currentTexture))
+        {
+            return this.createBatch(texture);
+        }
+
+        //  Otherwise, check if the texture is in the current batch
+        if (texture === this.currentTexture)
+        {
+            return this.currentUnit;
+        }
+        else
+        {
+            var current = this.currentBatch;
+
+            var idx = current.texture.indexOf(texture);
+
+            if (idx === -1)
+            {
+                //  This is a brand new texture, not in the current batch
+
+                //  Have we exceed our limit?
+                if (current.texture.length === this.renderer.maxTextures)
+                {
+                    return this.createBatch(texture);
+                }
+                else
+                {
+                    //  We're good, push it in
+                    current.unit++;
+                    current.maxUnit++;
+                    current.texture.push(texture);
+
+                    this.currentUnit = current.unit;
+                    this.currentTexture = texture;
+
+                    return current.unit;
+                }
+            }
+            else
+            {
+                this.currentUnit = idx;
+                this.currentTexture = texture;
+
+                return idx;
+            }
+        }
+    },
+
+    /**
      * Custom pipelines can use this method in order to perform any required pre-batch tasks
      * for the given Game Object. It must return the texture unit the Game Object was assigned.
      *
@@ -705,9 +866,7 @@ var WebGLPipeline = new Class({
     {
         if (frame === undefined) { frame = gameObject.frame; }
 
-        this.currentUnit = this.renderer.setTextureSource(frame.source);
-
-        return this.currentUnit;
+        return this.pushBatch(frame.source.glTexture);
     },
 
     /**
@@ -1095,6 +1254,7 @@ var WebGLPipeline = new Class({
             var gl = this.gl;
             var vertexCount = this.vertexCount;
             var vertexSize = this.currentShader.vertexSize;
+            var topology = this.topology;
 
             if (this.active)
             {
@@ -1109,10 +1269,47 @@ var WebGLPipeline = new Class({
                     gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
                 }
 
-                gl.drawArrays(this.topology, 0, vertexCount);
+                var i;
+                var entry;
+                var batch = this.batch;
+
+                if (this.forceZero)
+                {
+                    //  Single Texture Pipeline
+                    gl.activeTexture(gl.TEXTURE0);
+
+                    for (i = 0; i < batch.length; i++)
+                    {
+                        entry = batch[i];
+
+                        gl.bindTexture(gl.TEXTURE_2D, entry.texture[0]);
+
+                        gl.drawArrays(topology, entry.start, entry.count);
+                    }
+                }
+                else
+                {
+                    for (i = 0; i < batch.length; i++)
+                    {
+                        entry = batch[i];
+
+                        for (var t = 0; t <= entry.maxUnit; t++)
+                        {
+                            gl.activeTexture(gl.TEXTURE0 + t);
+                            gl.bindTexture(gl.TEXTURE_2D, entry.texture[t]);
+                        }
+
+                        gl.drawArrays(topology, entry.start, entry.count);
+                    }
+                }
             }
 
             this.vertexCount = 0;
+
+            this.batch.length = 0;
+            this.currentBatch = null;
+            this.currentTexture = null;
+            this.currentUnit = 0;
 
             this.emit(Events.AFTER_FLUSH, this, isPostFlush);
 
@@ -1344,6 +1541,8 @@ var WebGLPipeline = new Class({
         vertexViewU32[++vertexOffset] = tint;
 
         this.vertexCount++;
+
+        this.currentBatch.count = (this.vertexCount - this.currentBatch.start);
     },
 
     /**
@@ -1400,16 +1599,69 @@ var WebGLPipeline = new Class({
             this.flush();
 
             hasFlushed = true;
+        }
 
+        if (!this.currentBatch)
+        {
             unit = this.setTexture2D(texture);
         }
 
-        this.batchVert(x0, y0, u0, v0, unit, tintEffect, tintTL);
-        this.batchVert(x1, y1, u0, v1, unit, tintEffect, tintBL);
-        this.batchVert(x2, y2, u1, v1, unit, tintEffect, tintBR);
-        this.batchVert(x0, y0, u0, v0, unit, tintEffect, tintTL);
-        this.batchVert(x2, y2, u1, v1, unit, tintEffect, tintBR);
-        this.batchVert(x3, y3, u1, v0, unit, tintEffect, tintTR);
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+
+        var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
+
+        vertexViewF32[++vertexOffset] = x0;
+        vertexViewF32[++vertexOffset] = y0;
+        vertexViewF32[++vertexOffset] = u0;
+        vertexViewF32[++vertexOffset] = v0;
+        vertexViewF32[++vertexOffset] = unit;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tintTL;
+
+        vertexViewF32[++vertexOffset] = x1;
+        vertexViewF32[++vertexOffset] = y1;
+        vertexViewF32[++vertexOffset] = u0;
+        vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = unit;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tintBL;
+
+        vertexViewF32[++vertexOffset] = x2;
+        vertexViewF32[++vertexOffset] = y2;
+        vertexViewF32[++vertexOffset] = u1;
+        vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = unit;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tintBR;
+
+        vertexViewF32[++vertexOffset] = x0;
+        vertexViewF32[++vertexOffset] = y0;
+        vertexViewF32[++vertexOffset] = u0;
+        vertexViewF32[++vertexOffset] = v0;
+        vertexViewF32[++vertexOffset] = unit;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tintTL;
+
+        vertexViewF32[++vertexOffset] = x2;
+        vertexViewF32[++vertexOffset] = y2;
+        vertexViewF32[++vertexOffset] = u1;
+        vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = unit;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tintBR;
+
+        vertexViewF32[++vertexOffset] = x3;
+        vertexViewF32[++vertexOffset] = y3;
+        vertexViewF32[++vertexOffset] = u1;
+        vertexViewF32[++vertexOffset] = v0;
+        vertexViewF32[++vertexOffset] = unit;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tintTR;
+
+        this.vertexCount += 6;
+
+        this.currentBatch.count = (this.vertexCount - this.currentBatch.start);
 
         this.onBatch(gameObject);
 
@@ -1465,13 +1717,45 @@ var WebGLPipeline = new Class({
             this.flush();
 
             hasFlushed = true;
+        }
 
+        if (!this.currentBatch)
+        {
             unit = this.setTexture2D(texture);
         }
 
-        this.batchVert(x0, y0, u0, v0, unit, tintEffect, tintTL);
-        this.batchVert(x1, y1, u0, v1, unit, tintEffect, tintTR);
-        this.batchVert(x2, y2, u1, v1, unit, tintEffect, tintBL);
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+
+        var vertexOffset = (this.vertexCount * this.currentShader.vertexComponentCount) - 1;
+
+        vertexViewF32[++vertexOffset] = x0;
+        vertexViewF32[++vertexOffset] = y0;
+        vertexViewF32[++vertexOffset] = u0;
+        vertexViewF32[++vertexOffset] = v0;
+        vertexViewF32[++vertexOffset] = unit;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tintTL;
+
+        vertexViewF32[++vertexOffset] = x1;
+        vertexViewF32[++vertexOffset] = y1;
+        vertexViewF32[++vertexOffset] = u0;
+        vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = unit;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tintTR;
+
+        vertexViewF32[++vertexOffset] = x2;
+        vertexViewF32[++vertexOffset] = y2;
+        vertexViewF32[++vertexOffset] = u1;
+        vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = unit;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tintBL;
+
+        this.vertexCount += 3;
+
+        this.currentBatch.count = (this.vertexCount - this.currentBatch.start);
 
         this.onBatch(gameObject);
 
@@ -1501,7 +1785,7 @@ var WebGLPipeline = new Class({
      */
     drawFillRect: function (x, y, width, height, color, alpha, texture, flipUV)
     {
-        if (texture === undefined) { texture = this.renderer.whiteTexture.glTexture; }
+        if (texture === undefined) { texture = this.renderer.whiteTexture; }
         if (flipUV === undefined) { flipUV = true; }
 
         x = Math.floor(x);
@@ -1541,11 +1825,9 @@ var WebGLPipeline = new Class({
      */
     setTexture2D: function (texture)
     {
-        if (texture === undefined) { texture = this.renderer.whiteTexture.glTexture; }
+        if (texture === undefined) { texture = this.renderer.whiteTexture; }
 
-        this.currentUnit = this.renderer.setTexture2D(texture);
-
-        return this.currentUnit;
+        return this.pushBatch(texture);
     },
 
     /**

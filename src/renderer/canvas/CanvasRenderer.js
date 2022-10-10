@@ -776,7 +776,16 @@ var CanvasRenderer = new Class({
             flipY = -1;
         }
 
-        spriteMatrix.applyITRS(sprite.x, sprite.y, sprite.rotation, sprite.scaleX * flipX, sprite.scaleY * flipY);
+        var gx = sprite.x;
+        var gy = sprite.y;
+
+        if (camera.roundPixels)
+        {
+            gx = Math.floor(gx);
+            gy = Math.floor(gy);
+        }
+
+        spriteMatrix.applyITRS(gx, gy, sprite.rotation, sprite.scaleX * flipX, sprite.scaleY * flipY);
 
         camMatrix.copyFrom(camera.matrix);
 
@@ -786,8 +795,8 @@ var CanvasRenderer = new Class({
             camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * sprite.scrollFactorX, -camera.scrollY * sprite.scrollFactorY);
 
             //  Undo the camera scroll
-            spriteMatrix.e = sprite.x;
-            spriteMatrix.f = sprite.y;
+            spriteMatrix.e = gx;
+            spriteMatrix.f = gy;
         }
         else
         {

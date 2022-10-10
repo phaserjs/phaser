@@ -4,7 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('../const');
 var Class = require('../utils/Class');
 var Frame = require('./Frame');
 var TextureSource = require('./TextureSource');
@@ -483,22 +482,33 @@ var Texture = new Class({
     destroy: function ()
     {
         var i;
+        var source = this.source;
+        var dataSource = this.dataSource;
 
-        for (i = 0; i < this.source.length; i++)
+        for (i = 0; i < source.length; i++)
         {
-            this.source[i].destroy();
+            if (source[i])
+            {
+                source[i].destroy();
+            }
         }
 
-        for (i = 0; i < this.dataSource.length; i++)
+        for (i = 0; i < dataSource.length; i++)
         {
-            this.dataSource[i].destroy();
+            if (dataSource[i])
+            {
+                dataSource[i].destroy();
+            }
         }
 
         for (var frameName in this.frames)
         {
             var frame = this.frames[frameName];
 
-            frame.destroy();
+            if (frame)
+            {
+                frame.destroy();
+            }
         }
 
         this.source = [];
@@ -506,13 +516,6 @@ var Texture = new Class({
         this.frames = {};
 
         this.manager.removeKey(this.key);
-
-        var renderer = this.manager.game.renderer;
-
-        if (renderer && renderer.type === CONST.WEBGL)
-        {
-            renderer.resetTextures(true);
-        }
 
         this.manager = null;
     }

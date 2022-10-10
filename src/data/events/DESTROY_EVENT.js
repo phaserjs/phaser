@@ -10,6 +10,7 @@
  * The Data Manager will listen for the destroy event from its parent, and then close itself down.
  *
  * @event Phaser.Data.Events#DESTROY
+ * @type {string}
  * @since 3.50.0
  */
 module.exports = 'destroy';

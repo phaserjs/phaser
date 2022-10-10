@@ -393,7 +393,7 @@ The following properties and methods are available in the new `WebGLShader` clas
 
 `RenderTarget` is a brand new class that encapsulates a WebGL framebuffer and the WebGL Texture that displays it. Instances of this class are typically created by, and belong to WebGL Pipelines, however other Game Objects and classes can take advantage of Render Targets as well.
 
-The following properties and methods are available in the new `RenderTexture` class:
+The following properties and methods are available in the new `RenderTarget` class:
 
 * The `RenderTarget.renderer` property is a reference to the WebGL Renderer.
 * The `RenderTarget.framebuffer` property is the WebGLFramebuffer belonging to the Render Target.

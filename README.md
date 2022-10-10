@@ -28,13 +28,15 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 7th June 2022
+> 20th September 2022
 
-We've been quietly but solidly working away on Phaser 3.60 for months now and are very close to release. Today I'm happy to say that 3.60 Beta 9 has been published and I would urge you to test it, if you can do so. It should be a safe drop-in replacement for Phaser 3.55, with very little need for changes to your code. However, it does bring a lot of new features and fixes to the table.
+We've been quietly but solidly working away on Phaser 3.60 for months now and are very close to release. Today I'm happy to say that 3.60 Beta 10 has been published and I would urge you to test it, if you can do so. There are a few breaking changes in this release, mostly to do with Tween Timelines, which have been removed and replaced with Tween Chains. If you don't use those, it should be a safe replacement for 3.55. As always, it brings a lot of new features and fixes to the table.
 
 Some of the new features include:
 
 **Sprite FX** - The ability to create and use SpriteFX Pipelines directly on Sprite Game Objects. These allow a really easy way to define per-Sprite shaders, including extra padding space, perfect for effects such as blur, distort, glow, outline, shadow and more.
+
+**New Tween System** - We've reworked the entire Tween system to make it both more efficient, more powerful and easier for you to extend. New in this version are perfectly sequential Tween Chains, the ability to tween Sprite textures, much better garbage-collection and auto-destruction of expired tweens and lots more.
 
 **Compressed Texture Support** - Phaser 3.60 contains support for Compressed Textures. It can parse both KTX and PVR containers and within those has support for the following formats: ETC, ETC1, ATC, ASTC, BPTC, RGTC, PVRTC, S3TC and S3TCSRB. Compressed Textures differ from normal textures in that their structure is optimized for fast GPU data reads and lower memory consumption. Popular tools that can create compressed textures include PVRTexTool, ASTC Encoder and Texture Packer.
 
@@ -44,10 +46,9 @@ There are also hundreds of updates and bug fixes across the entire codebase.
 
 As always, I have been careful to record all of these in their own [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.60.md). So it's easier for you to identify which change happened in the 3.60 version specifically.
 
-Beta 9 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases). You can also download it from npm:
-
+Beta 10 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases). You can also download it from npm:
 ```
-npm i phaser@3.60.0-beta.9
+npm i phaser@3.60.0-beta.10
 ```
 
 I have published new TypeScript defs files that align with this version. You can find them in the `types` folder of this repository.
@@ -89,6 +90,7 @@ You can also support us by using crypto currencies. The Phaser wallet addresses 
 
 Extra special thanks to the following companies whose support makes Phaser possible:
 
+* [Hathora](https://hathora.dev)
 * [Cerebral Fix](https://cerebralfix.com)
 * [MoPub](https://www.mopub.com/en)
 * [Facebook](https://www.facebook.com)
@@ -195,6 +197,8 @@ During our development of Phaser 3, we created hundreds of examples with the ful
 ### Hathora
 
 Hathora is a framework for creating online multiplayer games with a focus on providing the best developer experience possible. The framework handles aspects such as State Synchronization, persistence, and authentication so that you can focus on building your game. Once you’ve built your game, you can deploy it to Hathora Cloud with a single command, and it will push your game to servers all over the world, automatically scaling up or down based on the user load. Visit the [Hathora documentation](https://docs.hathora.dev/#/) to learn more.
+
+They have also published a [brand-new tutorial](https://docs.hathora.dev/#/buildkit/tutorial_top_down_shooter) on creating a multiplayer Phaser game. Please give it a read and check out their framework!
 
 ### Huge list of Phaser 3 Plugins
 

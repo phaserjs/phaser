@@ -19,6 +19,8 @@
  * @property {boolean} [yoyo=false] - Should the tween complete, then reverse the values incrementally to get back to the starting tween values? The reverse tweening will also take `duration` milliseconds to complete.
  * @property {boolean} [flipX=false] - Horizontally flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipX` property.
  * @property {boolean} [flipY=false] - Vertically flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipY` property.
+ * @property {boolean} [persist=false] - Retain the tween within the Tween Manager, even after playback completes?
+ * @property {function} [interpolation=null] - The interpolation function to use for array-based tween values.
  */
 
 var TWEEN_DEFAULTS = {
@@ -32,7 +34,9 @@ var TWEEN_DEFAULTS = {
     repeatDelay: 0,
     yoyo: false,
     flipX: false,
-    flipY: false
+    flipY: false,
+    persist: false,
+    interpolation: null
 };
 
 module.exports = TWEEN_DEFAULTS;

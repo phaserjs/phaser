@@ -500,8 +500,6 @@ var UtilityPipeline = new Class({
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-        this.renderer.resetTextures();
     },
 
     /**

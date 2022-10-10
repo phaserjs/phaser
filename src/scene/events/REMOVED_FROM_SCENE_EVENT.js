@@ -12,6 +12,7 @@
  * Listen for it from a Scene using `this.events.on('removedfromscene', listener)`.
  *
  * @event Phaser.Scenes.Events#REMOVED_FROM_SCENE
+ * @type {string}
  * @since 3.50.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was removed from the Scene.

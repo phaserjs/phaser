@@ -5,7 +5,6 @@
  */
 
 var DeepCopy = require('../../utils/object/DeepCopy');
-var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
 var SpliceOne = require('../../utils/array/SpliceOne');
 
 /**
@@ -86,14 +85,12 @@ var Pipeline = {
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline, or a pipeline instance to set.
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} [pipeline] - Either the string-based name of the pipeline, or a pipeline instance to set.
      *
      * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
      */
     initPipeline: function (pipeline)
     {
-        if (pipeline === undefined) { pipeline = PIPELINE_CONST.MULTI_PIPELINE; }
-
         var renderer = this.scene.sys.renderer;
 
         if (!renderer)
@@ -108,6 +105,11 @@ var Pipeline = {
 
         if (pipelines)
         {
+            if (pipeline === undefined)
+            {
+                pipeline = pipelines.default;
+            }
+
             var instance = pipelines.get(pipeline);
 
             if (instance)

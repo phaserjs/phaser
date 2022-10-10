@@ -21,7 +21,7 @@ var IsPlainObject = function (obj)
     // - Any object or value whose internal [[Class]] property is not "[object Object]"
     // - DOM nodes
     // - window
-    if (typeof(obj) !== 'object' || obj.nodeType || obj === obj.window)
+    if (!obj || typeof(obj) !== 'object' || obj.nodeType || obj === obj.window)
     {
         return false;
     }

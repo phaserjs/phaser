@@ -77,6 +77,7 @@ class Parser {
                 case 'Phaser.Scale.Zoom':
                 case 'Phaser.Textures.FilterMode':
                 case 'Phaser.Tilemaps.Orientation':
+                case 'Phaser.Tweens.States':
                     // console.log('Forcing enum for ' + doclet.longname);
                     doclet.kind = 'member';
                     doclet.isEnum = true;
@@ -321,7 +322,11 @@ class Parser {
         }
         else {
             if (doclet.type.names[0] == "function") {
-                type = dom.create.functionType(null, dom.type.void);
+                let returnType = dom.type.void;
+                if (doclet.returns) {
+                    returnType = this.parseType(doclet.returns[0]);
+                }
+                type = dom.create.functionType(null, returnType);
                 this.setParams(doclet, type);
             }
             else {
@@ -357,7 +362,7 @@ class Parser {
                         obj.jsDocComment += `\n@param ${paramDoc.name} ` + defaultVal;
                     continue;
                 }
-                let param = dom.create.parameter(paramDoc.name, this.parseType(paramDoc));
+                let param = dom.create.parameter(paramDoc.name, this.parseType(paramDoc, dom.type.undefined));
                 parameters.push(param);
                 if (optional && paramDoc.optional != true) {
                     console.log(`Warning: correcting to optional: parameter '${paramDoc.name}' for '${doclet.longname}' in ${doclet.meta.filename}@${doclet.meta.lineno}`);
@@ -374,7 +379,7 @@ class Parser {
         }
         obj.parameters = parameters;
     }
-    parseType(typeDoc) {
+    parseType(typeDoc, nullableType = dom.type.null) {
         if (!typeDoc || !typeDoc.type) {
             return dom.type.any;
         }
@@ -384,6 +389,9 @@ class Parser {
                 name = this.prepareTypeName(name);
                 let type = dom.create.namedTypeReference(this.processTypeName(name));
                 types.push(type);
+            }
+            if (typeDoc.nullable) {
+                types.push(nullableType);
             }
             if (types.length == 1)
                 return types[0];

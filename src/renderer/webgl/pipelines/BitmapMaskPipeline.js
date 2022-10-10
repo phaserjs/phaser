@@ -85,33 +85,13 @@ var BitmapMaskPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#beginMask
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} mask - GameObject used as mask.
+     * @param {Phaser.Display.Masks.BitmapMask} mask - The BitmapMask instance that called beginMask.
      * @param {Phaser.GameObjects.GameObject} maskedObject - GameObject masked by the mask GameObject.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera rendering the current mask.
      */
     beginMask: function (mask, maskedObject, camera)
     {
-        var gl = this.gl;
-
-        //  The renderable Game Object that is being used for the bitmap mask
-        if (mask.bitmapMask && gl)
-        {
-            var renderer = this.renderer;
-
-            renderer.flush();
-
-            renderer.pushFramebuffer(mask.mainFramebuffer);
-
-            gl.disable(gl.STENCIL_TEST);
-            gl.clearColor(0, 0, 0, 0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-
-            if (renderer.currentCameraMask.mask !== mask)
-            {
-                renderer.currentMask.mask = mask;
-                renderer.currentMask.camera = camera;
-            }
-        }
+        this.renderer.beginBitmapMask(mask, camera);
     },
 
     /**
@@ -123,9 +103,11 @@ var BitmapMaskPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#endMask
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} mask - GameObject used as a mask.
+     * @param {Phaser.Display.Masks.BitmapMask} mask - The BitmapMask instance that called endMask.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [renderTarget] - Optional WebGL RenderTarget.
      */
-    endMask: function (mask, camera)
+    endMask: function (mask, camera, renderTarget)
     {
         var gl = this.gl;
         var renderer = this.renderer;
@@ -135,55 +117,22 @@ var BitmapMaskPipeline = new Class({
 
         if (bitmapMask && gl)
         {
-            //  mask.mainFramebuffer should now contain all the Game Objects we want masked
-            renderer.flush();
+            renderer.drawBitmapMask(bitmapMask, camera, this);
 
-            //  Swap to the mask framebuffer (push, in case the bitmapMask GO has a post-pipeline)
-            renderer.pushFramebuffer(mask.maskFramebuffer);
-
-            //  Clear it and draw the Game Object that is acting as a mask to it
-            gl.clearColor(0, 0, 0, 0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-
-            renderer.setBlendMode(0, true);
-
-            bitmapMask.renderWebGL(renderer, bitmapMask, camera);
-
-            renderer.flush();
-
-            //  Clear the mask framebuffer + main framebuffer
-            renderer.popFramebuffer();
-            renderer.popFramebuffer();
-
-            //  Is there a stencil further up the stack?
-            var prev = renderer.getCurrentStencilMask();
-
-            if (prev)
+            if (renderTarget)
             {
-                gl.enable(gl.STENCIL_TEST);
-
-                prev.mask.applyStencil(renderer, prev.camera, true);
+                this.set2f('uResolution', renderTarget.width, renderTarget.height);
             }
-            else
-            {
-                renderer.currentMask.mask = null;
-            }
-
-            //  Bind this pipeline and draw
-            renderer.pipelines.set(this);
-
-            gl.activeTexture(gl.TEXTURE1);
-            gl.bindTexture(gl.TEXTURE_2D, mask.maskTexture);
-
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, mask.mainTexture);
 
             this.set1i('uInvertMaskAlpha', mask.invertAlpha);
 
             //  Finally, draw a triangle filling the whole screen
             gl.drawArrays(this.topology, 0, 3);
 
-            renderer.resetTextures();
+            if (renderTarget)
+            {
+                this.set2f('uResolution', this.width, this.height);
+            }
         }
     }
 

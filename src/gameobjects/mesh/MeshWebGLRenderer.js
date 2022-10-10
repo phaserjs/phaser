@@ -79,13 +79,21 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
         {
             pipeline.flush();
 
+            if (!pipeline.currentBatch)
+            {
+                textureUnit = pipeline.setGameObject(src);
+            }
+
             vertexOffset = 0;
         }
 
         vertexOffset = face.load(F32, U32, vertexOffset, textureUnit, tintEffect);
 
         totalFacesRendered++;
+
         pipeline.vertexCount += 3;
+
+        pipeline.currentBatch.count = (pipeline.vertexCount - pipeline.currentBatch.start);
 
         if (debugCallback)
         {

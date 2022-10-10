@@ -9,12 +9,17 @@ var CanvasTexture = require('./CanvasTexture');
 var Class = require('../utils/Class');
 var Color = require('../display/color/Color');
 var CONST = require('../const');
+var DynamicTexture = require('./DynamicTexture');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
+var Frame = require('./Frame');
 var GameEvents = require('../core/events');
 var GenerateTexture = require('../create/GenerateTexture');
 var GetValue = require('../utils/object/GetValue');
+var ImageGameObject = require('../gameobjects/image/Image');
+var IsPlainObject = require('../utils/object/IsPlainObject');
 var Parser = require('./parsers');
+var Rectangle = require('../geom/rectangle/Rectangle');
 var Texture = require('./Texture');
 
 /**
@@ -26,12 +31,16 @@ var Texture = require('./Texture');
 
 /**
  * @classdesc
- * Textures are managed by the global TextureManager. This is a singleton class that is
- * responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
+ * When Phaser boots it will create an instance of this Texture Manager class.
  *
- * Sprites and other Game Objects get the texture data they need from the TextureManager.
+ * It is a global manager that handles all textures in your game. You can access it from within
+ * a Scene via the `this.textures` property.
  *
- * Access it via `scene.textures`.
+ * Its role is as a manager for all textures that your game uses. It can create, update and remove
+ * textures globally, as well as parse texture data from external files, such as sprite sheets
+ * and texture atlases.
+ *
+ * Sprites and other texture-based Game Objects get their texture data directly from this class.
  *
  * @class TextureManager
  * @extends Phaser.Events.EventEmitter
@@ -52,7 +61,9 @@ var TextureManager = new Class({
         EventEmitter.call(this);
 
         /**
-         * The Game that this TextureManager belongs to.
+         * The Game that the Texture Manager belongs to.
+         *
+         * A game will only ever have one instance of a Texture Manager.
          *
          * @name Phaser.Textures.TextureManager#game
          * @type {Phaser.Game}
@@ -61,17 +72,24 @@ var TextureManager = new Class({
         this.game = game;
 
         /**
-         * The name of this manager.
+         * The internal name of this manager.
          *
          * @name Phaser.Textures.TextureManager#name
          * @type {string}
+         * @readonly
          * @since 3.0.0
          */
         this.name = 'TextureManager';
 
         /**
-         * An object that has all of textures that Texture Manager creates.
-         * Textures are assigned to keys so we can access to any texture that this object has directly by key value without iteration.
+         * This object contains all Textures that belong to this Texture Manager.
+         *
+         * Textures are identified by string-based keys, which are used as the property
+         * within this object. Therefore, you can access any texture directly from this
+         * object without any iteration.
+         *
+         * You should not typically modify this object directly, but instead use the
+         * methods provided by the Texture Manager to add and remove entries from it.
          *
          * @name Phaser.Textures.TextureManager#list
          * @type {object}
@@ -81,7 +99,8 @@ var TextureManager = new Class({
         this.list = {};
 
         /**
-         * The temporary canvas element to save an pixel data of an arbitrary texture in getPixel() and getPixelAlpha() method.
+         * The temporary canvas element used to save the pixel data of an arbitrary texture
+         * during the `TextureManager.getPixel` and `getPixelAlpha` methods.
          *
          * @name Phaser.Textures.TextureManager#_tempCanvas
          * @type {HTMLCanvasElement}
@@ -91,7 +110,7 @@ var TextureManager = new Class({
         this._tempCanvas = CanvasPool.create2D(this);
 
         /**
-         * The context of the temporary canvas element made to save an pixel data in getPixel() and getPixelAlpha() method.
+         * The 2d context of the `_tempCanvas` element.
          *
          * @name Phaser.Textures.TextureManager#_tempContext
          * @type {CanvasRenderingContext2D}
@@ -101,7 +120,8 @@ var TextureManager = new Class({
         this._tempContext = this._tempCanvas.getContext('2d', { willReadFrequently: true });
 
         /**
-         * An counting value used for emitting 'ready' event after all of managers in game is loaded.
+         * An internal tracking value used for emitting the 'READY' event after all of
+         * the managers in the game have booted.
          *
          * @name Phaser.Textures.TextureManager#_pending
          * @type {number}
@@ -110,6 +130,40 @@ var TextureManager = new Class({
          * @since 3.0.0
          */
         this._pending = 0;
+
+        /**
+         * An Image Game Object that belongs to this Texture Manager.
+         *
+         * Used as a drawing stamp within Dynamic Textures.
+         *
+         * This is not part of the display list and doesn't render.
+         *
+         * @name Phaser.Textures.TextureManager#stamp
+         * @type {Phaser.GameObjects.Image}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.stamp;
+
+        /**
+         * The crop Rectangle as used by the Stamp when it needs to crop itself.
+         *
+         * @name Phaser.Textures.TextureManager#stampCrop
+         * @type {Phaser.Geom.Rectangle}
+         * @since 3.60.0
+         */
+        this.stampCrop = new Rectangle();
+
+        /**
+         * If this flag is `true` then the Texture Manager will never emit any
+         * warnings to the console log that report missing textures.
+         *
+         * @name Phaser.Textures.TextureManager#silentWarnings
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
+         */
+        this.silentWarnings = false;
 
         game.events.once(GameEvents.BOOT, this.boot, this);
     },
@@ -154,6 +208,8 @@ var TextureManager = new Class({
             this.off(Events.ERROR);
 
             this.emit(Events.READY);
+
+            this.stamp = new ImageGameObject(this.game.scene.systemScene).setOrigin(0);
         }
     },
 
@@ -173,8 +229,11 @@ var TextureManager = new Class({
     {
         if (this.exists(key))
         {
-            // eslint-disable-next-line no-console
-            console.error('Texture key already in use: ' + key);
+            if (!this.silentWarnings)
+            {
+                // eslint-disable-next-line no-console
+                console.error('Texture key already in use: ' + key);
+            }
 
             return false;
         }
@@ -209,7 +268,11 @@ var TextureManager = new Class({
             }
             else
             {
-                console.warn('No texture found matching key: ' + key);
+                if (!this.silentWarnings)
+                {
+                    console.warn('No texture found matching key: ' + key);
+                }
+
                 return this;
             }
         }
@@ -220,6 +283,7 @@ var TextureManager = new Class({
             key.destroy();
 
             this.emit(Events.REMOVE, key.key);
+            this.emit(Events.REMOVE_KEY + key.key);
         }
 
         return this;
@@ -283,7 +347,7 @@ var TextureManager = new Class({
                 Parser.Image(texture, 0);
 
                 _this.emit(Events.ADD, key, texture);
-
+                _this.emit(Events.ADD_KEY + key, texture);
                 _this.emit(Events.LOAD, key, texture);
             };
 
@@ -323,7 +387,10 @@ var TextureManager = new Class({
 
         if (textureFrame && (textureFrame.source.isRenderTexture || textureFrame.source.isGLTexture))
         {
-            console.warn('Cannot getBase64 from WebGL Texture');
+            if (!this.silentWarnings)
+            {
+                console.warn('Cannot getBase64 from WebGL Texture');
+            }
         }
         else if (textureFrame)
         {
@@ -384,6 +451,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -424,6 +492,7 @@ var TextureManager = new Class({
             texture.add('__BASE', 0, 0, 0, width, height);
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -474,6 +543,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -503,6 +573,7 @@ var TextureManager = new Class({
             texture.add('__BASE', 0, 0, 0, renderTexture.width, renderTexture.height);
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -630,21 +701,85 @@ var TextureManager = new Class({
             this.list[key] = texture;
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
     },
 
     /**
-     * Adds a new Texture Atlas to this Texture Manager.
+     * Creates a Dynamic Texture instance and adds itself to this Texture Manager.
+     *
+     * A Dynamic Texture is a special texture that allows you to draw textures, frames and most kind of
+     * Game Objects directly to it.
+     *
+     * You can take many complex objects and draw them to this one texture, which can then be used as the
+     * base texture for other Game Objects, such as Sprites. Should you then update this texture, all
+     * Game Objects using it will instantly be updated as well, reflecting the changes immediately.
+     *
+     * It's a powerful way to generate dynamic textures at run-time that are WebGL friendly and don't invoke
+     * expensive GPU uploads on each change.
+     *
+     * See the methods available on the `DynamicTexture` class for more details.
+     *
+     * Optionally, you can also pass a Dynamic Texture instance to this method to have
+     * it added to the Texture Manager.
+     *
+     * @method Phaser.Textures.TextureManager#addDynamicTexture
+     * @fires Phaser.Textures.Events#ADD
+     * @since 3.60.0
+     *
+     * @param {(string|Phaser.Textures.DynamicTexture)} key - The string-based key of this Texture. Must be unique within the Texture Manager. Or, a DynamicTexture instance.
+     * @param {number} [width=256] - The width of this Dynamic Texture in pixels. Defaults to 256 x 256. Ignored if an instance is passed as the key.
+     * @param {number} [height=256] - The height of this Dynamic Texture in pixels. Defaults to 256 x 256. Ignored if an instance is passed as the key.
+     *
+     * @return {?Phaser.Textures.DynamicTexture} The Dynamic Texture that was created, or `null` if the key is already in use.
+     */
+    addDynamicTexture: function (key, width, height)
+    {
+        var texture = null;
+
+        if (typeof(key) === 'string' && !this.exists(key))
+        {
+            texture = new DynamicTexture(this, key, width, height);
+        }
+        else
+        {
+            texture = key;
+            key = texture.key;
+        }
+
+        if (this.checkKey(key))
+        {
+            this.list[key] = texture;
+
+            this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
+        }
+        else
+        {
+            texture = null;
+        }
+
+        return texture;
+    },
+
+    /**
+     * Adds a Texture Atlas to this Texture Manager.
+     *
+     * In Phaser terminology, a Texture Atlas is a combination of an atlas image and a JSON data file,
+     * such as those exported by applications like Texture Packer.
+     *
      * It can accept either JSON Array or JSON Hash formats, as exported by Texture Packer and similar software.
+     *
+     * As of Phaser 3.60 you can use this method to add a atlas data to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addAtlas
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
-     * @param {object} data - The Texture Atlas data.
+     * @param {(HTMLImageElement|HTMLImageElement[]|Phaser.Textures.Texture)} source - The source Image element/s, or a Phaser Texture.
+     * @param {(object|object[])} data - The Texture Atlas data/s.
      * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
@@ -664,15 +799,22 @@ var TextureManager = new Class({
 
     /**
      * Adds a Texture Atlas to this Texture Manager.
+     *
+     * In Phaser terminology, a Texture Atlas is a combination of an atlas image and a JSON data file,
+     * such as those exported by applications like Texture Packer.
+     *
      * The frame data of the atlas must be stored in an Array within the JSON.
+     *
      * This is known as a JSON Array in software such as Texture Packer.
+     *
+     * As of Phaser 3.60 you can use this method to add a atlas data to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addAtlasJSONArray
      * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(HTMLImageElement|HTMLImageElement[])} source - The source Image element/s.
+     * @param {(HTMLImageElement|HTMLImageElement[]|Phaser.Textures.Texture)} source - The source Image element/s, or a Phaser Texture.
      * @param {(object|object[])} data - The Texture Atlas data/s.
      * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
@@ -682,10 +824,18 @@ var TextureManager = new Class({
     {
         var texture = null;
 
-        if (this.checkKey(key))
+        if (source instanceof Texture)
+        {
+            key = texture.key;
+            texture = source;
+        }
+        else if (this.checkKey(key))
         {
             texture = this.create(key, source);
+        }
 
+        if (texture)
+        {
             //  Multi-Atlas?
             if (Array.isArray(data))
             {
@@ -710,6 +860,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -717,16 +868,23 @@ var TextureManager = new Class({
 
     /**
      * Adds a Texture Atlas to this Texture Manager.
+     *
+     * In Phaser terminology, a Texture Atlas is a combination of an atlas image and a JSON data file,
+     * such as those exported by applications like Texture Packer.
+     *
      * The frame data of the atlas must be stored in an Object within the JSON.
+     *
      * This is known as a JSON Hash in software such as Texture Packer.
+     *
+     * As of Phaser 3.60 you can use this method to add a atlas data to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addAtlasJSONHash
      * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
-     * @param {object} data - The Texture Atlas data.
+     * @param {(HTMLImageElement|HTMLImageElement[]|Phaser.Textures.Texture)} source - The source Image element/s, or a Phaser Texture.
+     * @param {(object|object[])} data - The Texture Atlas data/s.
      * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
@@ -735,10 +893,18 @@ var TextureManager = new Class({
     {
         var texture = null;
 
-        if (this.checkKey(key))
+        if (source instanceof Texture)
+        {
+            key = texture.key;
+            texture = source;
+        }
+        else if (this.checkKey(key))
         {
             texture = this.create(key, source);
+        }
 
+        if (texture)
+        {
             if (Array.isArray(data))
             {
                 for (var i = 0; i < data.length; i++)
@@ -757,21 +923,28 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
     },
 
     /**
-     * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
-     * in the XML format.
+     * Adds a Texture Atlas to this Texture Manager.
+     *
+     * In Phaser terminology, a Texture Atlas is a combination of an atlas image and a data file,
+     * such as those exported by applications like Texture Packer.
+     *
+     * The frame data of the atlas must be stored in an XML file.
+     *
+     * As of Phaser 3.60 you can use this method to add a atlas data to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addAtlasXML
      * @fires Phaser.Textures.Events#ADD
      * @since 3.7.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
+     * @param {(HTMLImageElement|Phaser.Textures.Texture)} source - The source Image element, or a Phaser Texture.
      * @param {object} data - The Texture Atlas XML data.
      * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
@@ -781,10 +954,18 @@ var TextureManager = new Class({
     {
         var texture = null;
 
-        if (this.checkKey(key))
+        if (source instanceof Texture)
+        {
+            key = texture.key;
+            texture = source;
+        }
+        else if (this.checkKey(key))
         {
             texture = this.create(key, source);
+        }
 
+        if (texture)
+        {
             Parser.AtlasXML(texture, 0, data);
 
             if (dataSource)
@@ -793,6 +974,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -800,7 +982,13 @@ var TextureManager = new Class({
 
     /**
      * Adds a Unity Texture Atlas to this Texture Manager.
-     * The data must be in the form of a Unity YAML file.
+     *
+     * In Phaser terminology, a Texture Atlas is a combination of an atlas image and a data file,
+     * such as those exported by applications like Texture Packer or Unity.
+     *
+     * The frame data of the atlas must be stored in a Unity YAML file.
+     *
+     * As of Phaser 3.60 you can use this method to add a atlas data to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addUnityAtlas
      * @fires Phaser.Textures.Events#ADD
@@ -817,10 +1005,18 @@ var TextureManager = new Class({
     {
         var texture = null;
 
-        if (this.checkKey(key))
+        if (source instanceof Texture)
+        {
+            key = texture.key;
+            texture = source;
+        }
+        else if (this.checkKey(key))
         {
             texture = this.create(key, source);
+        }
 
+        if (texture)
+        {
             Parser.UnityYAML(texture, 0, data);
 
             if (dataSource)
@@ -829,6 +1025,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -838,32 +1035,45 @@ var TextureManager = new Class({
      * Adds a Sprite Sheet to this Texture Manager.
      *
      * In Phaser terminology a Sprite Sheet is a texture containing different frames, but each frame is the exact
-     * same size and cannot be trimmed or rotated.
+     * same size and cannot be trimmed or rotated. This is different to a Texture Atlas, created by tools such as
+     * Texture Packer, and more akin with the fixed-frame exports you get from apps like Aseprite or old arcade
+     * games.
+     *
+     * As of Phaser 3.60 you can use this method to add a sprite sheet to an existing Phaser Texture.
      *
      * @method Phaser.Textures.TextureManager#addSpriteSheet
      * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
-     * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
+     * @param {string} key - The unique string-based key of the Texture. Give an empty string if you provide a Phaser Texture as the 2nd argument.
+     * @param {(HTMLImageElement|Phaser.Textures.Texture)} source - The source Image element, or a Phaser Texture.
      * @param {Phaser.Types.Textures.SpriteSheetConfig} config - The configuration object for this Sprite Sheet.
      *
-     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
+     * @return {?Phaser.Textures.Texture} The Texture that was created or updated, or `null` if the key is already in use.
      */
     addSpriteSheet: function (key, source, config)
     {
         var texture = null;
 
-        if (this.checkKey(key))
+        if (source instanceof Texture)
+        {
+            key = texture.key;
+            texture = source;
+        }
+        else if (this.checkKey(key))
         {
             texture = this.create(key, source);
+        }
 
+        if (texture)
+        {
             var width = texture.source[0].width;
             var height = texture.source[0].height;
 
             Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
         }
 
         return texture;
@@ -917,6 +1127,7 @@ var TextureManager = new Class({
             }
 
             this.emit(Events.ADD, key, texture);
+            this.emit(Events.ADD_KEY + key, texture);
 
             return texture;
         }
@@ -969,16 +1180,18 @@ var TextureManager = new Class({
      *
      * If the key is `undefined` it will return the `__DEFAULT` Texture.
      *
-     * If the key is an instance of a Texture, it will return the key directly.
+     * If the key is an instance of a Texture, it will return the instance.
      *
-     * Finally. if the key is given, but not found and not a Texture instance, it will return the `__MISSING` Texture.
+     * If the key is an instance of a Frame, it will return the frames parent Texture instance.
+     *
+     * Finally, if the key is given, but not found, and not a Texture or Frame instance, it will return the `__MISSING` Texture.
      *
      * @method Phaser.Textures.TextureManager#get
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Textures.Texture)} key - The unique string-based key of the Texture, or a Texture instance.
+     * @param {(string|Phaser.Textures.Texture|Phaser.Textures.Frame)} key - The unique string-based key of the Texture, or a Texture, or Frame instance.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {Phaser.Textures.Texture} The Texture matching the given key.
      */
     get: function (key)
     {
@@ -991,6 +1204,10 @@ var TextureManager = new Class({
         else if (key instanceof Texture)
         {
             return key;
+        }
+        else if (key instanceof Frame)
+        {
+            return key.texture;
         }
         else
         {
@@ -1037,8 +1254,54 @@ var TextureManager = new Class({
     },
 
     /**
+     * Parses the 'key' parameter and returns a Texture Frame instance.
+     *
+     * It can accept the following formats:
+     *
+     * 1) A string
+     * 2) An array where the elements are: [ key, [frame] ]
+     * 3) An object with the properties: { key, [frame] }
+     * 4) A Texture instance - which returns the default frame from the Texture
+     * 5) A Frame instance - returns itself
+     *
+     * @method Phaser.Textures.TextureManager#parseFrame
+     * @since 3.60.0
+     *
+     * @param {(string|array|object|Phaser.Textures.Texture|Phaser.Textures.Frame)} key - The key to be parsed.
+     *
+     * @return {Phaser.Textures.Frame} A Texture Frame object, if found, or undefined if not.
+     */
+    parseFrame: function (key)
+    {
+        if (!key)
+        {
+            return undefined;
+        }
+        else if (typeof key === 'string')
+        {
+            return this.getFrame(key);
+        }
+        else if (Array.isArray(key) && key.length === 2)
+        {
+            return this.getFrame(key[0], key[1]);
+        }
+        else if (IsPlainObject(key))
+        {
+            return this.getFrame(key.key, key.frame);
+        }
+        else if (key instanceof Texture)
+        {
+            return key.get();
+        }
+        else if (key instanceof Frame)
+        {
+            return key;
+        }
+    },
+
+    /**
      * Returns an array with all of the keys of all Textures in this Texture Manager.
-     * The output array will exclude the `__DEFAULT` and `__MISSING` keys.
+     * The output array will exclude the `__DEFAULT`, `__MISSING`, and `__WHITE` keys.
      *
      * @method Phaser.Textures.TextureManager#getTextureKeys
      * @since 3.0.0
@@ -1051,7 +1314,7 @@ var TextureManager = new Class({
 
         for (var key in this.list)
         {
-            if (key !== '__DEFAULT' && key !== '__MISSING')
+            if (key !== '__DEFAULT' && key !== '__MISSING' && key !== '__WHITE')
             {
                 output.push(key);
             }
@@ -1239,6 +1502,34 @@ var TextureManager = new Class({
     },
 
     /**
+     * Resets the internal Stamp object, ready for drawing and returns it.
+     *
+     * @method Phaser.Textures.TextureManager#resetStamp
+     * @since 3.60.0
+     *
+     * @param {number} [alpha=1] - The alpha to use.
+     * @param {number} [tint=0xffffff] - WebGL only. The tint color to use.
+     *
+     * @return {Phaser.GameObjects.Image} A reference to the Stamp Game Object.
+     */
+    resetStamp: function (alpha, tint)
+    {
+        if (alpha === undefined) { alpha = 1; }
+        if (tint === undefined) { tint = 0xffffff; }
+
+        var stamp = this.stamp;
+
+        stamp.setCrop();
+        stamp.setPosition(0);
+        stamp.setAngle(0);
+        stamp.setScale(1);
+        stamp.setAlpha(alpha);
+        stamp.setTint(tint);
+
+        return stamp;
+    },
+
+    /**
      * Destroys the Texture Manager and all Textures stored within it.
      *
      * @method Phaser.Textures.TextureManager#destroy
@@ -1253,7 +1544,10 @@ var TextureManager = new Class({
 
         this.list = {};
 
+        this.stamp.destroy();
+
         this.game = null;
+        this.stamp = null;
 
         CanvasPool.remove(this._tempCanvas);
     }

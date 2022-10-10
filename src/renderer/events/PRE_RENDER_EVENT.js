@@ -12,6 +12,7 @@
  * reset ready for the render.
  *
  * @event Phaser.Renderer.Events#PRE_RENDER
+ * @type {string}
  * @since 3.50.0
  */
 module.exports = 'prerender';

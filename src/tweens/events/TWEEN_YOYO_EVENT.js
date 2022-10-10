@@ -31,6 +31,7 @@
  * ```
  *
  * @event Phaser.Tweens.Events#TWEEN_YOYO
+ * @type {string}
  * @since 3.19.0
  *
  * @param {Phaser.Tweens.Tween} tween - A reference to the Tween instance that emitted the event.

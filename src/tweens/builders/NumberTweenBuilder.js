@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BaseTween = require('../tween/BaseTween');
 var Defaults = require('../tween/Defaults');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetBoolean = require('./GetBoolean');
@@ -11,8 +12,8 @@ var GetEaseFunction = require('./GetEaseFunction');
 var GetNewValue = require('./GetNewValue');
 var GetValue = require('../../utils/object/GetValue');
 var GetValueOp = require('./GetValueOp');
+var MergeRight = require('../../utils/object/MergeRight');
 var Tween = require('../tween/Tween');
-var TweenData = require('../tween/TweenData');
 
 /**
  * Creates a new Number Tween.
@@ -20,7 +21,7 @@ var TweenData = require('../tween/TweenData');
  * @function Phaser.Tweens.Builders.NumberTweenBuilder
  * @since 3.0.0
  *
- * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - The owner of the new Tween.
+ * @param {Phaser.Tweens.TweenManager} parent - The owner of the new Tween.
  * @param {Phaser.Types.Tweens.NumberTweenBuilderConfig} config - Configuration for the new Tween.
  * @param {Phaser.Types.Tweens.TweenConfigDefaults} defaults - Tween configuration defaults.
  *
@@ -28,9 +29,20 @@ var TweenData = require('../tween/TweenData');
  */
 var NumberTweenBuilder = function (parent, config, defaults)
 {
+    if (config instanceof Tween)
+    {
+        config.parent = parent;
+
+        return config;
+    }
+
     if (defaults === undefined)
     {
         defaults = Defaults;
+    }
+    else
+    {
+        defaults = MergeRight(Defaults, defaults);
     }
 
     //  var tween = this.tweens.addCounter({
@@ -48,56 +60,46 @@ var NumberTweenBuilder = function (parent, config, defaults)
 
     var targets = [ { value: from } ];
 
-    var delay = GetNewValue(config, 'delay', defaults.delay);
-    var duration = GetNewValue(config, 'duration', defaults.duration);
+    var delay = GetValue(config, 'delay', defaults.delay);
     var easeParams = GetValue(config, 'easeParams', defaults.easeParams);
-    var ease = GetEaseFunction(GetValue(config, 'ease', defaults.ease), easeParams);
-    var hold = GetNewValue(config, 'hold', defaults.hold);
-    var repeat = GetNewValue(config, 'repeat', defaults.repeat);
-    var repeatDelay = GetNewValue(config, 'repeatDelay', defaults.repeatDelay);
-    var yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
-
-    var data = [];
+    var ease = GetValue(config, 'ease', defaults.ease);
 
     var ops = GetValueOp('value', to);
 
-    var tweenData = TweenData(
-        targets[0],
+    var tween = new Tween(parent, targets);
+
+    //  TODO - Needs tidying up + easeParams being used, etc
+
+    var tweenData = tween.add(
         0,
         'value',
         ops.getEnd,
         ops.getStart,
         ops.getActive,
-        ease,
-        delay,
-        duration,
-        yoyo,
-        hold,
-        repeat,
-        repeatDelay,
+        GetEaseFunction(GetValue(config, 'ease', ease), GetValue(config, 'easeParams', easeParams)),
+        GetNewValue(config, 'delay', delay),
+        GetValue(config, 'duration', defaults.duration),
+        GetBoolean(config, 'yoyo', defaults.yoyo),
+        GetValue(config, 'hold', defaults.hold),
+        GetValue(config, 'repeat', defaults.repeat),
+        GetValue(config, 'repeatDelay', defaults.repeatDelay),
         false,
         false
     );
 
     tweenData.start = from;
     tweenData.current = from;
-    tweenData.to = to;
 
-    data.push(tweenData);
-
-    var tween = new Tween(parent, data, targets);
-
-    tween.offset = GetAdvancedValue(config, 'offset', null);
     tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
     tween.loop = Math.round(GetAdvancedValue(config, 'loop', 0));
     tween.loopDelay = Math.round(GetAdvancedValue(config, 'loopDelay', 0));
     tween.paused = GetBoolean(config, 'paused', false);
-    tween.useFrames = GetBoolean(config, 'useFrames', false);
+    tween.persist = GetBoolean(config, 'persist', false);
 
     //  Set the Callbacks
-    var scope = GetValue(config, 'callbackScope', tween);
+    tween.callbackScope = GetValue(config, 'callbackScope', tween);
 
-    var callbacks = Tween.TYPES;
+    var callbacks = BaseTween.TYPES;
 
     for (var i = 0; i < callbacks.length; i++)
     {
@@ -107,10 +109,9 @@ var NumberTweenBuilder = function (parent, config, defaults)
 
         if (callback)
         {
-            var callbackScope = GetValue(config, type + 'Scope', scope);
             var callbackParams = GetValue(config, type + 'Params', []);
 
-            tween.setCallback(type, callback, callbackParams, callbackScope);
+            tween.setCallback(type, callback, callbackParams);
         }
     }
 

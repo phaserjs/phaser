@@ -12,6 +12,7 @@
  * Listen to it from a Scene using: `this.matter.world.on('pause', listener)`.
  *
  * @event Phaser.Physics.Matter.Events#PAUSE
+ * @type {string}
  * @since 3.0.0
  */
 module.exports = 'pause';

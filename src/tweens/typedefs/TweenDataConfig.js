@@ -25,8 +25,6 @@
  * @property {number} [current=0] - The current propety value.
  * @property {number} [previous=0] - The previous property value.
  * @property {number} [end=0] - The property value at the end of the ease.
- * @property {number} [t1=0] - Time duration 1.
- * @property {number} [t2=0] - Time duration 2.
  * @property {Phaser.Types.Tweens.TweenDataGenConfig} [gen] - LoadValue generation functions.
- * @property {number} [state=0] - TWEEN_CONST.CREATED
+ * @property {Phaser.Tweens.StateType} [state=0] - TWEEN_CONST.CREATED
  */

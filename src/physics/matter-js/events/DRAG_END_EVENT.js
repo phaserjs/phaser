@@ -13,6 +13,7 @@
  * Listen to it from a Scene using: `this.matter.world.on('dragend', listener)`.
  *
  * @event Phaser.Physics.Matter.Events#DRAG_END
+ * @type {string}
  * @since 3.16.2
  *
  * @param {MatterJS.BodyType} body - The Body that has stopped being dragged. This is a Matter Body, not a Phaser Game Object.

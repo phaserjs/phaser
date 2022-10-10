@@ -46,23 +46,25 @@ var GetEaseFunction = function (ease, easeParams)
                 //  quad.out = Quad.easeOut
                 //  quad.inout = Quad.easeInOut
 
-                direction = ease.substr(ease.indexOf('.') + 1);
+                direction = ease.substring(ease.indexOf('.') + 1);
 
-                if (direction.toLowerCase() === 'in')
+                var directionLower = direction.toLowerCase();
+
+                if (directionLower === 'in')
                 {
                     direction = 'easeIn';
                 }
-                else if (direction.toLowerCase() === 'out')
+                else if (directionLower === 'out')
                 {
                     direction = 'easeOut';
                 }
-                else if (direction.toLowerCase() === 'inout')
+                else if (directionLower === 'inout')
                 {
                     direction = 'easeInOut';
                 }
             }
 
-            ease = UppercaseFirst(ease.substr(0, ease.indexOf('.') + 1) + direction);
+            ease = UppercaseFirst(ease.substring(0, ease.indexOf('.') + 1) + direction);
 
             if (EaseMap.hasOwnProperty(ease))
             {
@@ -74,10 +76,6 @@ var GetEaseFunction = function (ease, easeParams)
     {
         //  Custom function
         easeFunction = ease;
-    }
-    else if (Array.isArray(ease) && ease.length === 4)
-    {
-        //  Bezier function (TODO)
     }
 
     //  No custom ease parameters?

@@ -20,6 +20,7 @@
  * You can also create a generic 'global' listener. See [Keyboard.Events.ANY_KEY_DOWN]{@linkcode Phaser.Input.Keyboard.Events#event:ANY_KEY_DOWN} for details.
  *
  * @event Phaser.Input.Keyboard.Events#DOWN
+ * @type {string}
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.Key} key - The Key object that was pressed.

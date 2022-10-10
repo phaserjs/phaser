@@ -5,6 +5,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Device = require('../../device');
+
 /**
  * The comparator function.
  *
@@ -155,6 +157,17 @@ function RunPass (arr, comp, chk, result)
 var StableSort = function (array, compare)
 {
     if (compare === undefined) { compare = Compare; }
+
+    // Short-circuit when there's nothing to sort.
+    if (!array || array.length < 2)
+    {
+        return array;
+    }
+
+    if (Device.features.stableSort)
+    {
+        return array.sort(compare);
+    }
 
     var result = Process(array, compare);
 

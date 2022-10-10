@@ -618,25 +618,16 @@ var CameraManager = new Class({
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject[]} children - An array of Game Objects to be checked against the camera.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to filte the Game Objects against.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to filter the Game Objects against.
      *
      * @return {Phaser.GameObjects.GameObject[]} A filtered list of only Game Objects within the Scene that will render against the given Camera.
      */
     getVisibleChildren: function (children, camera)
     {
-        var visible = [];
-
-        for (var i = 0; i < children.length; i++)
+        return children.filter(function (child)
         {
-            var child = children[i];
-
-            if (child.willRender(camera))
-            {
-                visible.push(child);
-            }
-        }
-
-        return visible;
+            return child.willRender(camera);
+        });
     },
 
     /**

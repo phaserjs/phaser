@@ -23,6 +23,7 @@ var Line = require('../../geom/line/Line');
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
@@ -44,6 +45,7 @@ var Shape = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.GetBounds,
+        Components.FX,
         Components.Mask,
         Components.Origin,
         Components.Pipeline,

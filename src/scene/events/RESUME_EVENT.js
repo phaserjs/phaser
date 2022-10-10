@@ -13,6 +13,7 @@
  * Listen to it from a Scene using `this.events.on('resume', listener)`.
  *
  * @event Phaser.Scenes.Events#RESUME
+ * @type {string}
  * @since 3.0.0
  *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.

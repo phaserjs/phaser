@@ -104,7 +104,7 @@ var ScenePlugin = new Class({
          * Transition elapsed timer.
          *
          * @name Phaser.Scenes.ScenePlugin#_target
-         * @type {?Phaser.Scenes.Scene}
+         * @type {?Phaser.Scene}
          * @private
          * @since 3.5.0
          */
@@ -334,6 +334,15 @@ var ScenePlugin = new Class({
         else
         {
             this.manager.start(key, GetFastValue(config, 'data'));
+        }
+
+        var onStartCallback = GetFastValue(config, 'onStart', null);
+
+        var onStartScope = GetFastValue(config, 'onStartScope', this.scene);
+
+        if (onStartCallback)
+        {
+            onStartCallback.call(onStartScope, this.scene, target, duration);
         }
 
         this.systems.events.emit(Events.TRANSITION_OUT, target, duration);

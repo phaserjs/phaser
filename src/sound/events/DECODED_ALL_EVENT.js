@@ -21,6 +21,7 @@
  * ```
  *
  * @event Phaser.Sound.Events#DECODED_ALL
+ * @type {string}
  * @since 3.18.0
  */
 module.exports = 'decodedall';

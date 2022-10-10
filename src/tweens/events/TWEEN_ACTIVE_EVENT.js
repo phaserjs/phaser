@@ -30,6 +30,7 @@
  * meant for use with `tweens.create()` and/or `tweens.existing()`.
  *
  * @event Phaser.Tweens.Events#TWEEN_ACTIVE
+ * @type {string}
  * @since 3.19.0
  *
  * @param {Phaser.Tweens.Tween} tween - A reference to the Tween instance that emitted the event.

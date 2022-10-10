@@ -78,7 +78,7 @@ var StaggerBuilder = function (value, options)
 
     if (grid)
     {
-        //  Pre-calc the grid to save doing it for ever tweendata update
+        //  Pre-calc the grid to save doing it for every TweenData update
         var gridWidth = grid[0];
         var gridHeight = grid[1];
 

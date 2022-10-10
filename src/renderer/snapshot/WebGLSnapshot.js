@@ -45,7 +45,7 @@ var WebGLSnapshot = function (sourceContext, config)
 
         gl.readPixels(x, destY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
 
-        callback.call(null, new Color(pixel[0], pixel[1], pixel[2], pixel[3] / 255));
+        callback.call(null, new Color(pixel[0], pixel[1], pixel[2], pixel[3]));
     }
     else
     {

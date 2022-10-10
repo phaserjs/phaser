@@ -11,7 +11,6 @@ v.log('{bgYellow}{black} Available commands:                                    
 v.log('{white} npm run {green}build {cyan}   Build dev version of Phaser with Webpack');
 v.log('{white} npm run {green}watch {cyan}      Build dev & put Webpack in watch mode');
 v.log('{white} npm run {green}dist {cyan}               Build dist versions of Phaser');
-v.log('{white} npm run {green}dist3d {cyan}          Build dist versions of Phaser 3D');
 v.log('{white} npm run {green}lint {cyan}                  ESLint check Phaser source');
 v.log('{white} npm run {green}lintfix {cyan}       ESLint check and fix Phaser source');
 v.log('{white} npm run {green}sloc {cyan}       Get source code & comments line count');

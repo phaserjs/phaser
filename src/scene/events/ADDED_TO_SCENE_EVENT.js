@@ -12,6 +12,7 @@
  * Listen for it from a Scene using `this.events.on('addedtoscene', listener)`.
  *
  * @event Phaser.Scenes.Events#ADDED_TO_SCENE
+ * @type {string}
  * @since 3.50.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was added to the Scene.

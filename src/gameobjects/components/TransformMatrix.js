@@ -68,6 +68,15 @@ var TransformMatrix = new Class({
             scaleY: 1,
             rotation: 0
         };
+
+        /**
+         * The temporary quad value cache.
+         *
+         * @name Phaser.GameObjects.Components.TransformMatrix#quad
+         * @type {Float32Array}
+         * @since 3.60.0
+         */
+        this.quad = new Float32Array(8);
     },
 
     /**
@@ -459,14 +468,14 @@ var TransformMatrix = new Class({
         var sourceE = source[4];
         var sourceF = source[5];
 
-        var destinationMatrix = (out === undefined) ? this : out;
+        var destinationMatrix = (out === undefined) ? matrix : out.matrix;
 
-        destinationMatrix.a = (sourceA * localA) + (sourceB * localC);
-        destinationMatrix.b = (sourceA * localB) + (sourceB * localD);
-        destinationMatrix.c = (sourceC * localA) + (sourceD * localC);
-        destinationMatrix.d = (sourceC * localB) + (sourceD * localD);
-        destinationMatrix.e = (sourceE * localA) + (sourceF * localC) + localE;
-        destinationMatrix.f = (sourceE * localB) + (sourceF * localD) + localF;
+        destinationMatrix[0] = (sourceA * localA) + (sourceB * localC);
+        destinationMatrix[1] = (sourceA * localB) + (sourceB * localD);
+        destinationMatrix[2] = (sourceC * localA) + (sourceD * localC);
+        destinationMatrix[3] = (sourceC * localB) + (sourceD * localD);
+        destinationMatrix[4] = (sourceE * localA) + (sourceF * localC) + localE;
+        destinationMatrix[5] = (sourceE * localB) + (sourceF * localD) + localF;
 
         return destinationMatrix;
     },
@@ -897,6 +906,59 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Performs the 8 calculations required to create the vertices of
+     * a quad based on this matrix and the given x/y/xw/yh values.
+     *
+     * The result is stored in `TransformMatrix.quad`, which is returned
+     * from this method.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#setQuad
+     * @since 3.60.0
+     *
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     * @param {number} xw - The xw value.
+     * @param {number} yh - The yh value.
+     * @param {boolean} roundPixels - Pass the results via Math.round?
+     *
+     * @return {number} The calculated y value.
+     */
+    setQuad: function (x, y, xw, yh, roundPixels)
+    {
+        var quad = this.quad;
+        var matrix = this.matrix;
+
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+        var e = matrix[4];
+        var f = matrix[5];
+
+        quad[0] = x * a + y * c + e;
+        quad[1] = x * b + y * d + f;
+
+        quad[2] = x * a + yh * c + e;
+        quad[3] = x * b + yh * d + f;
+
+        quad[4] = xw * a + yh * c + e;
+        quad[5] = xw * b + yh * d + f;
+
+        quad[6] = xw * a + y * c + e;
+        quad[7] = xw * b + y * d + f;
+
+        if (roundPixels)
+        {
+            quad.forEach(function (value, index)
+            {
+                quad[index] = Math.round(value);
+            });
+        }
+
+        return quad;
+    },
+
+    /**
      * Returns the X component of this matrix multiplied by the given values.
      * This is the same as `x * a + y * c + e`.
      *
@@ -1006,6 +1068,7 @@ var TransformMatrix = new Class({
     destroy: function ()
     {
         this.matrix = null;
+        this.quad = null;
         this.decomposedMatrix = null;
     }
 

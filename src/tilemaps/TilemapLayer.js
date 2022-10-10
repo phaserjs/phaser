@@ -243,10 +243,50 @@ var TilemapLayer = new Class({
          */
         this.gidMap = [];
 
+        /**
+         * The horizontal origin of this Tilemap Layer.
+         *
+         * @name Phaser.Tilemaps.TilemapLayer#originX
+         * @type {number}
+         * @default 0
+         * @readOnly
+         * @since 3.0.0
+         */
+
+        /**
+         * The vertical origin of this Tilemap Layer.
+         *
+         * @name Phaser.Tilemaps.TilemapLayer#originY
+         * @type {number}
+         * @default 0
+         * @readOnly
+         * @since 3.0.0
+         */
+
+        /**
+         * The horizontal display origin of this Tilemap Layer.
+         *
+         * @name Phaser.Tilemaps.TilemapLayer#displayOriginX
+         * @type {number}
+         * @default 0
+         * @readOnly
+         * @since 3.0.0
+         */
+
+        /**
+         * The vertical display origin of this Tilemap Layer.
+         *
+         * @name Phaser.Tilemaps.TilemapLayer#displayOriginY
+         * @type {number}
+         * @default 0
+         * @readOnly
+         * @since 3.0.0
+         */
+
         this.setTilesets(tileset);
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
-        this.setOrigin();
+        this.setOrigin(0, 0);
         this.setSize(tilemap.tileWidth * this.layer.width, tilemap.tileHeight * this.layer.height);
 
         this.initPipeline();

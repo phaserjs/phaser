@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var CONST = require('./pipelines/const');
 var CustomMap = require('../../structs/Map');
+var Device = require('../../device/');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var RenderTarget = require('./RenderTarget');
 var SnapCeil = require('../../math/snap/SnapCeil');
@@ -14,6 +15,7 @@ var SnapCeil = require('../../math/snap/SnapCeil');
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
+var MobilePipeline = require('./pipelines/MobilePipeline');
 var MultiPipeline = require('./pipelines/MultiPipeline');
 var PointLightPipeline = require('./pipelines/PointLightPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
@@ -37,6 +39,7 @@ var UtilityPipeline = require('./pipelines/UtilityPipeline');
  * 5. The Single Pipeline. Responsible for rendering Game Objects that explicitly require one bound texture.
  * 6. The Bitmap Mask Pipeline. Responsible for Bitmap Mask rendering.
  * 7. The Utility Pipeline. Responsible for providing lots of handy texture manipulation functions.
+ * 8. The Mobile Pipeline. Responsible for rendering on mobile with single-bound textures.
  *
  * You can add your own custom pipeline via the `PipelineManager.add` method. Pipelines are
  * identified by unique string-based keys.
@@ -88,7 +91,8 @@ var PipelineManager = new Class({
             [ CONST.SINGLE_PIPELINE, SinglePipeline ],
             [ CONST.ROPE_PIPELINE, RopePipeline ],
             [ CONST.LIGHT_PIPELINE, LightPipeline ],
-            [ CONST.POINTLIGHT_PIPELINE, PointLightPipeline ]
+            [ CONST.POINTLIGHT_PIPELINE, PointLightPipeline ],
+            [ CONST.MOBILE_PIPELINE, MobilePipeline ]
         ]);
 
         /**
@@ -110,6 +114,16 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.pipelines = new CustomMap();
+
+        /**
+         * The default Game Object pipeline.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#default
+         * @type {Phaser.Renderer.WebGL.WebGLPipeline}
+         * @default null
+         * @since 3.60.0
+         */
+        this.default = null;
 
         /**
          * Current pipeline in use by the WebGLRenderer.
@@ -168,6 +182,19 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.UTILITY_PIPELINE = null;
+
+        /**
+         * A constant-style reference to the Mobile Pipeline Instance.
+         *
+         * This is the default Phaser 3 pipeline and is used by the WebGL Renderer to manage
+         * camera effects and more on mobile devices. This property is set during the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#MOBILE_PIPELINE
+         * @type {Phaser.Renderer.WebGL.Pipelines.MobilePipeline}
+         * @default null
+         * @since 3.60.0
+         */
+        this.MOBILE_PIPELINE = null;
 
         /**
          * A reference to the Full Frame 1 Render Target that belongs to the
@@ -254,7 +281,7 @@ var PipelineManager = new Class({
         /**
          * The amount in which each target frame will increase.
          *
-         * Defaults to 64px but can be overridden in the config.
+         * Defaults to 32px but can be overridden in the config.
          *
          * @name Phaser.Renderer.WebGL.PipelineManager#frameInc
          * @type {number}
@@ -284,9 +311,11 @@ var PipelineManager = new Class({
      * @method Phaser.Renderer.WebGL.PipelineManager#boot
      * @since 3.50.0
      *
-     * @param {Phaser.Types.Core.PipelineConfig} [pipelineConfig] - The pipeline configuration object as set in the Game Config.
+     * @param {Phaser.Types.Core.PipelineConfig} pipelineConfig - The pipeline configuration object as set in the Game Config.
+     * @param {string} defaultPipeline - The name of the default Game Object pipeline, as set in the Game Config
+     * @param {boolean} autoMobilePipeline - Automatically set the default pipeline to mobile if non-desktop detected?
      */
-    boot: function (pipelineConfig)
+    boot: function (pipelineConfig, defaultPipeline, autoMobilePipeline)
     {
         //  Create the default RenderTextures
         var renderer = this.renderer;
@@ -348,6 +377,7 @@ var PipelineManager = new Class({
         //  Our const-like references
         this.MULTI_PIPELINE = this.get(CONST.MULTI_PIPELINE);
         this.BITMAPMASK_PIPELINE = this.get(CONST.BITMAPMASK_PIPELINE);
+        this.MOBILE_PIPELINE = this.get(CONST.MOBILE_PIPELINE);
 
         //  And now the ones in the config, if any
 
@@ -371,6 +401,45 @@ var PipelineManager = new Class({
                 }
             }
         }
+
+        //  Finally, set the Default Game Object pipeline
+        this.default = this.get(defaultPipeline);
+
+        if (autoMobilePipeline && !Device.os.desktop)
+        {
+            this.default = this.MOBILE_PIPELINE;
+        }
+    },
+
+    /**
+     * Sets the default pipeline being used by Game Objects.
+     *
+     * If no instance, or matching name, exists in this manager, it returns `undefined`.
+     *
+     * You can use this to override the default pipeline, for example by forcing
+     * the Mobile or Multi Tint Pipelines, which is especially useful for development
+     * testing.
+     *
+     * Make sure you call this method _before_ creating any Game Objects, as it will
+     * only impact Game Objects created after you call it.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#setDefaultPipeline
+     * @since 3.60.0
+     *
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline to get, or a pipeline instance to look-up.
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline instance that was set as default, or `undefined` if not found.
+     */
+    setDefaultPipeline: function (pipeline)
+    {
+        var instance = this.get(pipeline);
+
+        if (instance)
+        {
+            this.default = instance;
+        }
+
+        return instance;
     },
 
     /**
@@ -1130,8 +1199,6 @@ var PipelineManager = new Class({
 
             pipeline.rebind();
         }
-
-        renderer.resetTextures();
     },
 
     /**
@@ -1250,6 +1317,7 @@ var PipelineManager = new Class({
         this.classes = null;
         this.postPipelineClasses = null;
         this.pipelines = null;
+        this.default = null;
         this.current = null;
         this.previous = null;
     }

@@ -142,6 +142,18 @@ var SceneManager = new Class({
          */
         this.customViewports = 0;
 
+        /**
+         * This system Scene is created during `bootQueue` and is a default
+         * empty Scene that lives outside of the Scene list, but can be used
+         * by plugins and managers that need access to a live Scene, without
+         * being tied to one.
+         *
+         * @name Phaser.Scenes.SceneManager#systemScene
+         * @type {Phaser.Scene}
+         * @since 3.60.0
+         */
+        this.systemScene;
+
         if (sceneConfig)
         {
             if (!Array.isArray(sceneConfig))
@@ -177,6 +189,9 @@ var SceneManager = new Class({
         {
             return;
         }
+
+        //  Create the system Scene
+        this.systemScene = this.createSceneFromInstance('__SYSTEM', new Scene());
 
         var i;
         var entry;
@@ -1643,6 +1658,8 @@ var SceneManager = new Class({
             sys.destroy();
         }
 
+        this.systemScene.sys.destroy();
+
         this.update = NOOP;
 
         this.scenes = [];
@@ -1652,6 +1669,7 @@ var SceneManager = new Class({
         this._queue = [];
 
         this.game = null;
+        this.systemScene = null;
     }
 
 });

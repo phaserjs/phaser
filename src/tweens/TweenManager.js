@@ -11,13 +11,14 @@ var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
 var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
 var StaggerBuilder = require('./builders/StaggerBuilder');
-var TimelineBuilder = require('./builders/TimelineBuilder');
-var TWEEN_CONST = require('./tween/const');
+var Tween = require('./tween/Tween');
 var TweenBuilder = require('./builders/TweenBuilder');
+var TweenChain = require('./tween/TweenChain');
+var TweenChainBuilder = require('./builders/TweenChainBuilder');
 
 /**
  * @classdesc
- * The Tween Manager is a default Scene Plugin which controls and updates Tweens and Timelines.
+ * The Tween Manager is a default Scene Plugin which controls and updates Tweens.
  *
  * @class TweenManager
  * @memberof Phaser.Tweens
@@ -90,13 +91,84 @@ var TweenManager = new Class({
         this.processing = false;
 
         /**
-         * An array of Tweens and Timelines which are actively being processed by the Tween Manager.
+         * An array of Tweens which are actively being processed by the Tween Manager.
          *
          * @name Phaser.Tweens.TweenManager#tweens
-         * @type {(Phaser.Tweens.Tween[]|Phaser.Tweens.Timeline[])}
+         * @type {Phaser.Tweens.Tween[]}
          * @since 3.60.0
          */
         this.tweens = [];
+
+        /**
+         * The time the Tween Manager was updated.
+         *
+         * @name Phaser.Tweens.TweenManager#time
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.time = 0;
+
+        /**
+         * The time the Tween Manager was started.
+         *
+         * @name Phaser.Tweens.TweenManager#startTime
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.startTime = 0;
+
+        /**
+         * The time the Tween Manager should next update.
+         *
+         * @name Phaser.Tweens.TweenManager#nextTime
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.nextTime = 0;
+
+        /**
+         * The time the Tween Manager previously updated.
+         *
+         * @name Phaser.Tweens.TweenManager#prevTime
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.prevTime = 0;
+
+        /**
+         * The maximum amount of time, in milliseconds, the browser can
+         * lag for, before lag smoothing is applied.
+         *
+         * See the `TweenManager.setLagSmooth` method for further details.
+         *
+         * @name Phaser.Tweens.TweenManager#maxLag
+         * @type {number}
+         * @default 500
+         * @since 3.60.0
+         */
+        this.maxLag = 500;
+
+        /**
+         * The amount of time, in milliseconds, that is used to set the
+         * delta when lag smoothing is applied.
+         *
+         * See the `TweenManager.setLagSmooth` method for further details.
+         *
+         * @name Phaser.Tweens.TweenManager#lagSkip
+         * @type {number}
+         * @default 33
+         * @since 3.60.0
+         */
+        this.lagSkip = 33;
+
+        /**
+         * An internal value that holds the fps rate.
+         *
+         * @name Phaser.Tweens.TweenManager#gap
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.gap = 1000 / 240;
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
@@ -133,45 +205,10 @@ var TweenManager = new Class({
 
         this.timeScale = 1;
         this.paused = false;
-    },
 
-    /**
-     * Create a Tween Timeline and return it, but do NOT add it to the active or pending Tween lists.
-     *
-     * @method Phaser.Tweens.TweenManager#createTimeline
-     * @since 3.0.0
-     *
-     * @param {Phaser.Types.Tweens.TimelineBuilderConfig} [config] - The configuration object for the Timeline and its Tweens.
-     *
-     * @return {Phaser.Tweens.Timeline} The created Timeline object.
-     */
-    createTimeline: function (config)
-    {
-        return TimelineBuilder(this, config);
-    },
-
-    /**
-     * Create a Tween Timeline and add it to the active Tween list.
-     *
-     * @method Phaser.Tweens.TweenManager#timeline
-     * @since 3.0.0
-     *
-     * @param {Phaser.Types.Tweens.TimelineBuilderConfig} [config] - The configuration object for the Timeline and its Tweens.
-     *
-     * @return {Phaser.Tweens.Timeline} The created Timeline object.
-     */
-    timeline: function (config)
-    {
-        var timeline = TimelineBuilder(this, config);
-
-        if (!timeline.paused)
-        {
-            this._add.push(timeline);
-
-            this._toProcess++;
-        }
-
-        return timeline;
+        this.startTime = Date.now();
+        this.prevTime = this.startTime;
+        this.nextTime = this.gap;
     },
 
     /**
@@ -182,39 +219,184 @@ var TweenManager = new Class({
      * In order to play this tween, you'll need to add it to a Tween Manager via
      * the `TweenManager.existing` method.
      *
+     * You can optionally pass an **array** of Tween Configuration objects to this method and it will create
+     * one Tween per entry in the array. If an array is given, an array of tweens is returned.
+     *
      * @method Phaser.Tweens.TweenManager#create
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The configuration object for the Tween.
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenBuilderConfig[]|object|object[]} config - A Tween Configuration object. Or an array of Tween Configuration objects.
      *
-     * @return {Phaser.Tweens.Tween} The created Tween object.
+     * @return {Phaser.Tweens.Tween|Phaser.Tweens.Tween[]} The created Tween, or an array of Tweens if an array of tween configs was provided.
      */
     create: function (config)
     {
-        return TweenBuilder(this, config);
+        if (!Array.isArray(config))
+        {
+            config = [ config ];
+        }
+
+        var result = [];
+
+        for (var i = 0; i < config.length; i++)
+        {
+            var tween = config[i];
+
+            if (tween instanceof Tween || tween instanceof TweenChain)
+            {
+                //  Allow them to send an array of mixed instances and configs
+                result.push(tween);
+            }
+            else if (Array.isArray(tween.tweens))
+            {
+                result.push(TweenChainBuilder(this, tween));
+            }
+            else
+            {
+                result.push(TweenBuilder(this, tween));
+            }
+        }
+
+        return (result.length === 1) ? result[0] : result;
     },
 
     /**
-     * Create a Tween and add it to this Tween Manager.
+     * Create a Tween and add it to this Tween Manager by passing a Tween Configuration object.
+     *
+     * Example, run from within a Scene:
+     *
+     * ```js
+     * const logo = this.add.image(100, 100, 'logo');
+     *
+     * this.tweens.add({
+     *   targets: logo,
+     *   x: 600,
+     *   ease: 'Power1',
+     *   duration: 2000
+     * });
+     * ```
+     *
+     * See the `TweenBuilderConfig` for all of the options you have available.
      *
      * Playback will start immediately unless the tween has been configured to be paused.
      *
      * Please note that a Tween will not manipulate any target property that begins with an underscore.
      *
+     * Tweens are designed to be 'fire-and-forget'. They automatically destroy themselves once playback
+     * is complete, to free-up memory and resources. If you wish to keep a tween after playback, i.e. to
+     * play it again at a later time, then you should set the `persist` property to `true` in the config.
+     * However, doing so means it's entirely up to _you_ to destroy the tween when you're finished with it,
+     * otherwise it will linger in memory forever.
+     *
+     * You can optionally pass an **array** of Tween Configuration objects to this method and it will create
+     * one Tween per entry in the array. If an array is given, an array of tweens is returned.
+     *
+     * If you wish to chain Tweens together for sequential playback, see the `TweenManager.chain` method.
+     *
      * @method Phaser.Tweens.TweenManager#add
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The configuration object for the Tween.
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenBuilderConfig[]|object|object[]} config - A Tween Configuration object. Or an array of Tween Configuration objects.
      *
-     * @return {Phaser.Tweens.Tween} The created Tween.
+     * @return {Phaser.Tweens.Tween|Phaser.Tweens.Tween[]} The created Tween, or an array of Tweens if an array of tween configs was provided.
      */
     add: function (config)
     {
-        var tween = TweenBuilder(this, config);
+        var tween;
+        var result = [];
+        var tweens = this.tweens;
 
-        this.tweens.push(tween.init());
+        if (!Array.isArray(config))
+        {
+            config = [ config ];
+        }
 
-        return tween;
+        for (var i = 0; i < config.length; i++)
+        {
+            tween = config[i];
+
+            if (tween instanceof Tween || tween instanceof TweenChain)
+            {
+                tweens.push(tween.init());
+            }
+            else
+            {
+                if (Array.isArray(tween.tweens))
+                {
+                    tween = TweenChainBuilder(this, tween);
+                }
+                else
+                {
+                    tween = TweenBuilder(this, tween);
+                }
+
+                tweens.push(tween.init());
+            }
+
+            result.push(tween);
+        }
+
+        return (result.length === 1) ? result[0] : result;
+    },
+
+    /**
+     * Create a sequence of Tweens, chained to one-another, and add them to this Tween Manager.
+     *
+     * The tweens are played in order, from start to finish. You can optionally set the chain
+     * to repeat as many times as you like. Once the chain has finished playing, or repeating if set,
+     * all tweens in the chain will be destroyed automatically. To override this, set the 'persists'
+     * argument to 'true'.
+     *
+     * Playback will start immediately unless the _first_ Tween has been configured to be paused.
+     *
+     * Please note that Tweens will not manipulate any target property that begins with an underscore.
+     *
+     * @method Phaser.Tweens.TweenManager#chain
+     * @since 3.60.0
+     *
+     * @param {Phaser.Types.Tweens.TweenChainBuilderConfig | Phaser.Types.Tweens.TweenChainBuilderConfig[]| object | object[]} tweens - A Tween Chain configuration object, or an array of them to create multiple chains at once.
+     *
+     * @return {(Phaser.Tweens.TweenChain|Phaser.Tweens.TweenChain[])} The Tween Chain instance, or an array of them if you passed in an array of configs.
+     */
+    chain: function (config)
+    {
+        if (!Array.isArray(config))
+        {
+            config = [ config ];
+        }
+
+        var chain;
+        var result = [];
+        var tweens = this.tweens;
+
+        for (var i = 0; i < config.length; i++)
+        {
+            chain = TweenChainBuilder(this, config[i]);
+
+            tweens.push(chain.init());
+
+            result.push(chain);
+        }
+
+        return (result.length === 1) ? result[0] : result;
+    },
+
+    /**
+     * Returns an array containing this Tween and all Tweens chained to it,
+     * in the order in which they will be played.
+     *
+     * If there are no chained Tweens an empty array is returned.
+     *
+     * @method Phaser.Tweens.TweenManager#getChainedTweens
+     * @since 3.60.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - The Tween to return the chain from.
+     *
+     * @return {Phaser.Tweens.Tween[]} An array of the chained tweens, or an empty array if there aren't any.
+     */
+    getChainedTweens: function (tween)
+    {
+        return tween.getChainedTweens();
     },
 
     /**
@@ -222,7 +404,7 @@ var TweenManager = new Class({
      *
      * Will return `true` as long as the Tween is being processed by this Tween Manager.
      *
-     * Will return `false` if not present, or has a state of `REMOVED`.
+     * Will return `false` if not present, or has a state of `REMOVED` or `DESTROYED`.
      *
      * @method Phaser.Tweens.TweenManager#has
      * @since 3.60.0
@@ -237,7 +419,7 @@ var TweenManager = new Class({
     },
 
     /**
-     * Add an existing tween to this Tween Manager.
+     * Add an existing Tween to this Tween Manager.
      *
      * Playback will start immediately unless the tween has been configured to be paused.
      *
@@ -328,41 +510,176 @@ var TweenManager = new Class({
     },
 
     /**
-     * Updates all Tweens and Timelines belonging to this Tween Manager.
+     * Set the limits that are used when a browser encounters lag, or delays that cause the elapsed
+     * time between two frames to exceed the expected amount. If this occurs, the Tween Manager will
+     * act as if the 'skip' amount of times has passed, in order to maintain strict tween sequencing.
      *
-     * This is skipped is `TweenManager.paused = true`.
+     * This is enabled by default with the values 500ms for the lag limit and 33ms for the skip.
+     *
+     * You should not set these to low values, as it won't give time for the browser to ever
+     * catch-up with itself and reclaim sync.
+     *
+     * Call this method with no arguments to disable smoothing.
+     *
+     * Call it with the arguments `500` and `33` to reset to the defaults.
+     *
+     * @method Phaser.Tweens.TweenManager#setLagSmooth
+     * @since 3.60.0
+     *
+     * @param {number} [limit=0] - If the browser exceeds this amount, in milliseconds, it will act as if the 'skip' amount has elapsed instead.
+     * @param {number} [skip=0] - The amount, in milliseconds, to use as the step delta should the browser lag beyond the 'limit'.
+     *
+     * @return {this} This Tween Manager instance.
+     */
+    setLagSmooth: function (limit, skip)
+    {
+        if (limit === undefined) { limit = 1 / 1e-8; }
+        if (skip === undefined) { skip = 0; }
+
+        this.maxLag = limit;
+        this.lagSkip = Math.min(skip, this.maxLag);
+
+        return this;
+    },
+
+    /**
+     * Limits the Tween system to run at a particular frame rate.
+     *
+     * You should not set this _above_ the frequency of the browser,
+     * but instead can use it to throttle the frame rate lower, should
+     * you need to in certain situations.
+     *
+     * @method Phaser.Tweens.TweenManager#setFps
+     * @since 3.60.0
+     *
+     * @param {number} [fps=240] - The frame rate to tick at.
+     *
+     * @return {this} This Tween Manager instance.
+     */
+    setFps: function (fps)
+    {
+        if (fps === undefined) { fps = 240; }
+
+        this.gap = 1000 / fps;
+        this.nextTime = this.time * 1000 + this.gap;
+
+        return this;
+    },
+
+    /**
+     * Internal method that calculates the delta value, along with the other timing values,
+     * and returns the new delta.
+     *
+     * You should not typically call this method directly.
+     *
+     * @method Phaser.Tweens.TweenManager#getDelta
+     * @since 3.60.0
+     *
+     * @param {boolean} [tick=false] - Is this a manual tick, or an automated tick?
+     *
+     * @return {number} The new delta value.
+     */
+    getDelta: function (tick)
+    {
+        var elapsed = Date.now() - this.prevTime;
+
+        if (elapsed > this.maxLag)
+        {
+            this.startTime += elapsed - this.lagSkip;
+        }
+
+        this.prevTime += elapsed;
+
+        var time = this.prevTime - this.startTime;
+        var overlap = time - this.nextTime;
+        var delta = time - this.time * 1000;
+
+        if (overlap > 0 || tick)
+        {
+            time /= 1000;
+            this.time = time;
+            this.nextTime += overlap + (overlap >= this.gap ? 4 : this.gap - overlap);
+        }
+        else
+        {
+            delta = 0;
+        }
+
+        return delta;
+    },
+
+    /**
+     * Manually advance the Tween system by one step.
+     *
+     * This will update all Tweens even if the Tween Manager is currently
+     * paused.
+     *
+     * @method Phaser.Tweens.TweenManager#tick
+     * @since 3.60.0
+     *
+     * @return {this} This Tween Manager instance.
+     */
+    tick: function ()
+    {
+        this.step(true);
+
+        return this;
+    },
+
+    /**
+     * Internal update handler.
+     *
+     * Calls `TweenManager.step` as long as the Tween Manager has not
+     * been paused.
      *
      * @method Phaser.Tweens.TweenManager#update
      * @since 3.0.0
-     *
-     * @param {number} timestamp - The current time in milliseconds.
-     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    update: function (timestamp, delta)
+    update: function ()
     {
-        if (this.paused)
+        if (!this.paused)
+        {
+            this.step(false);
+        }
+    },
+
+    /**
+     * Updates all Tweens belonging to this Tween Manager.
+     *
+     * Called automatically by `update` and `tick`.
+     *
+     * @method Phaser.Tweens.TweenManager#step
+     * @since 3.60.0
+     *
+     * @param {boolean} [tick=false] - Is this a manual tick, or an automated tick?
+     */
+    step: function (tick)
+    {
+        if (tick === undefined) { tick = false; }
+
+        var delta = this.getDelta(tick);
+
+        if (delta === 0)
         {
             return;
         }
 
         this.processing = true;
 
-        //  Scale the delta
-        delta *= this.timeScale;
-
         var i;
         var tween;
         var toDestroy = [];
         var list = this.tweens;
 
-        //  By not caching the length we can immediately update tweens added this frame
+        //  By not caching the length we can immediately update tweens added
+        //  this frame (such as chained tweens)
         for (i = 0; i < list.length; i++)
         {
             tween = list[i];
 
             //  If Tween.update returns 'true' then it means it has completed,
             //  so move it to the destroy list
-            if (tween.update(timestamp, delta))
+            if (tween.update(delta))
             {
                 toDestroy.push(tween);
             }
@@ -379,7 +696,7 @@ var TweenManager = new Class({
 
                 var idx = list.indexOf(tween);
 
-                if (idx > -1 && (tween.state === TWEEN_CONST.PENDING_REMOVE || tween.state === TWEEN_CONST.DESTROYED))
+                if (idx > -1 && (tween.isPendingRemove() || tween.isDestroyed()))
                 {
                     list.splice(idx, 1);
 
@@ -413,14 +730,14 @@ var TweenManager = new Class({
         if (this.processing)
         {
             //  Remove it on the next frame
-            tween.state = TWEEN_CONST.PENDING_REMOVE;
+            tween.setPendingRemoveState();
         }
         else
         {
             //  Remove it immediately
             ArrayRemove(this.tweens, tween);
 
-            tween.state = TWEEN_CONST.REMOVED;
+            tween.setRemovedState();
         }
 
         return this;
@@ -444,15 +761,15 @@ var TweenManager = new Class({
     {
         this.existing(tween);
 
-        tween.seek(0);
+        tween.seek();
 
-        tween.state = TWEEN_CONST.PLAYING;
+        tween.setActiveState();
 
         return this;
     },
 
     /**
-     * Checks if a Tween or Timeline is active and adds it to the Tween Manager at the start of the frame if it isn't.
+     * Checks if a Tween is active and adds it to the Tween Manager at the start of the frame if it isn't.
      *
      * @method Phaser.Tweens.TweenManager#makeActive
      * @since 3.0.0
@@ -465,7 +782,7 @@ var TweenManager = new Class({
     {
         this.existing(tween);
 
-        tween.state = TWEEN_CONST.PLAYING;
+        tween.setActiveState();
 
         return this;
     },
@@ -502,37 +819,66 @@ var TweenManager = new Class({
         return this;
     },
 
-    getTotal: function ()
-    {
-        var tweens = this.tweens;
-        var active = 0;
-
-        for (var i = 0; i < tweens.length; i++)
-        {
-            if (tweens[i].state === TWEEN_CONST.ACTIVE)
-            {
-                active++;
-            }
-        }
-
-        return { active: active, total: tweens.length };
-    },
-
     /**
-     * Returns an array containing references to of all Tweens and Timelines in this Tween Manager.
+     * Returns an array containing references to all Tweens in this Tween Manager.
      *
-     * @method Phaser.Tweens.TweenManager#getAllTweens
+     * It is safe to mutate the returned array. However, acting upon any of the Tweens
+     * within it, will adjust those stored in this Tween Manager, as they are passed
+     * by reference and not cloned.
+     *
+     * If you wish to get tweens for a specific target, see `getTweensOf`.
+     *
+     * @method Phaser.Tweens.TweenManager#getTweens
      * @since 3.0.0
      *
-     * @return {Phaser.Tweens.Tween[]} A new array containing references to all Tweens and Timelines.
+     * @return {Phaser.Tweens.Tween[]} A new array containing references to all Tweens.
      */
-    getAllTweens: function ()
+    getTweens: function ()
     {
         return this.tweens.slice();
     },
 
     /**
-     * Returns the scale of the time delta for all Tweens and Timelines owned by this Tween Manager.
+     * Returns an array of all Tweens in the Tween Manager which affect the given target, or array of targets.
+     *
+     * It's possible for this method to return tweens that are about to be removed from
+     * the Tween Manager. You should check the state of the returned tween before acting
+     * upon it.
+     *
+     * @method Phaser.Tweens.TweenManager#getTweensOf
+     * @since 3.0.0
+     *
+     * @param {object|array} target - The target to look for. Provide an array to look for multiple targets.
+     *
+     * @return {Phaser.Tweens.Tween[]} A new array containing all Tweens which affect the given target(s).
+     */
+    getTweensOf: function (target)
+    {
+        var output = [];
+        var list = this.tweens;
+
+        target = Flatten(target);
+
+        var targetLen = target.length;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            var tween = list[i];
+
+            for (var t = 0; t < targetLen; t++)
+            {
+                if (!tween.isDestroyed() && tween.hasTarget(target[t]))
+                {
+                    output.push(tween);
+                }
+            }
+        }
+
+        return output;
+    },
+
+    /**
+     * Returns the scale of the time delta for all Tweens owned by this Tween Manager.
      *
      * @method Phaser.Tweens.TweenManager#getGlobalTimeScale
      * @since 3.0.0
@@ -561,45 +907,6 @@ var TweenManager = new Class({
         this.timeScale = value;
 
         return this;
-    },
-
-    /**
-     * Returns an array of all Tweens or Timelines in the Tween Manager which affect the given target, or array of targets.
-     *
-     * It's possible for this method to return tweens that are about to be removed from
-     * the Tween Manager. You should check the state of the returned tween before acting
-     * upon it.
-     *
-     * @method Phaser.Tweens.TweenManager#getTweensOf
-     * @since 3.0.0
-     *
-     * @param {object|array} target - The target to look for. Provide an array to look for multiple targets.
-     *
-     * @return {Phaser.Tweens.Tween[]} A new array containing all Tweens and Timelines which affect the given target(s).
-     */
-    getTweensOf: function (target)
-    {
-        var output = [];
-        var list = this.tweens;
-
-        target = Flatten(target);
-
-        var targetLen = target.length;
-
-        for (var i = 0; i < list.length; i++)
-        {
-            var tween = list[i];
-
-            for (var t = 0; t < targetLen; t++)
-            {
-                if (tween.hasTarget(target[t]))
-                {
-                    output.push(tween);
-                }
-            }
-        }
-
-        return output;
     },
 
     /**
@@ -696,7 +1003,7 @@ var TweenManager = new Class({
     },
 
     /**
-     * Pauses this Tween Manager. No Tweens or Timelines will update while paused.
+     * Pauses this Tween Manager. No Tweens will update while paused.
      *
      * This includes tweens created after this method was called.
      *
@@ -719,7 +1026,7 @@ var TweenManager = new Class({
     /**
      * Resumes playback of this Tween Manager.
      *
-     * All active Tweens and Timelines will continue updating.
+     * All active Tweens will continue updating.
      *
      * See `TweenManager#pauseAll` to pause the playback.
      *

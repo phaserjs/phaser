@@ -4,6 +4,9 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Between = require('../../math/Between');
+var FloatBetween = require('../../math/FloatBetween');
+
 /**
  * @ignore
  */
@@ -50,7 +53,7 @@ function hasGetters (def)
  *
  * A function can be provided to allow greater control over the end value; it will receive the target
  * object being tweened, the name of the property being tweened, and the current value of the property
- * as its arguments.
+ * as its arguments and must return a value.
  *
  * If both the starting and the ending values need to be controlled, an object with `getStart` and `getEnd`
  * callbacks, which will receive the same arguments, can be provided instead. If an object with a `value`
@@ -91,53 +94,112 @@ var GetValueOp = function (key, propertyValue)
             return propertyValue;
         };
     }
+    else if (Array.isArray(propertyValue))
+    {
+        // props: {
+        //     x: [ 400, 300, 200 ],
+        //     y: [ 10, 500, 10 ]
+        // }
+
+        getStart = function ()
+        {
+            return propertyValue[0];
+        };
+
+        getEnd = function ()
+        {
+            return propertyValue[propertyValue.length - 1];
+        };
+    }
     else if (t === 'string')
     {
         // props: {
         //     x: '+=400',
         //     y: '-=300',
         //     z: '*=2',
-        //     w: '/=2'
+        //     w: '/=2',
+        //     p: 'random(10, 100)' - random float
+        //     p: 'int(10, 100)' - random int
         // }
 
-        var op = propertyValue[0];
-        var num = parseFloat(propertyValue.substr(2));
+        var op = propertyValue.toLowerCase();
+        var isRandom = (op.substring(0, 6) === 'random');
+        var isInt = (op.substring(0, 3) === 'int');
 
-        switch (op)
+        if (isRandom || isInt)
         {
-            case '+':
-                getEnd = function (target, key, value)
-                {
-                    return value + num;
-                };
-                break;
+            //  random(0.5, 3.45)
+            //  int(10, 100)
+            var brace1 = op.indexOf('(');
+            var brace2 = op.indexOf(')');
+            var comma = op.indexOf(',');
 
-            case '-':
-                getEnd = function (target, key, value)
-                {
-                    return value - num;
-                };
-                break;
+            if (brace1 && brace2 && comma)
+            {
+                var value1 = parseFloat(op.substring(brace1 + 1, comma));
+                var value2 = parseFloat(op.substring(comma + 1, brace2));
 
-            case '*':
-                getEnd = function (target, key, value)
+                if (isRandom)
                 {
-                    return value * num;
-                };
-                break;
+                    getEnd = function ()
+                    {
+                        return FloatBetween(value1, value2);
+                    };
+                }
+                else
+                {
+                    getEnd = function ()
+                    {
+                        return Between(value1, value2);
+                    };
+                }
+            }
+            else
+            {
+                throw new Error('invalid random() format');
+            }
+        }
+        else
+        {
+            op = op[0];
+            var num = parseFloat(propertyValue.substr(2));
 
-            case '/':
-                getEnd = function (target, key, value)
-                {
-                    return value / num;
-                };
-                break;
+            switch (op)
+            {
+                case '+':
+                    getEnd = function (target, key, value)
+                    {
+                        return value + num;
+                    };
+                    break;
 
-            default:
-                getEnd = function ()
-                {
-                    return parseFloat(propertyValue);
-                };
+                case '-':
+                    getEnd = function (target, key, value)
+                    {
+                        return value - num;
+                    };
+                    break;
+
+                case '*':
+                    getEnd = function (target, key, value)
+                    {
+                        return value * num;
+                    };
+                    break;
+
+                case '/':
+                    getEnd = function (target, key, value)
+                    {
+                        return value / num;
+                    };
+                    break;
+
+                default:
+                    getEnd = function ()
+                    {
+                        return parseFloat(propertyValue);
+                    };
+            }
         }
     }
     else if (t === 'function')
@@ -145,7 +207,7 @@ var GetValueOp = function (key, propertyValue)
         //  The same as setting just the getEnd function and no getStart
 
         // props: {
-        //     x: function (target, key, value, targetIndex, totalTargets, tween) { return value + 50); },
+        //     x: function (target, key, value, targetIndex, totalTargets, tween, tweenData) { return value + 50); },
         // }
 
         getEnd = propertyValue;
@@ -157,19 +219,19 @@ var GetValueOp = function (key, propertyValue)
             /*
             x: {
                 //  Called the moment Tween is active. The returned value sets the property on the target immediately.
-                getActive: function (target, key, value, targetIndex, totalTargets, tween)
+                getActive: function (target, key, value, targetIndex, totalTargets, tween, tweenData)
                 {
                     return value;
                 },
 
                 //  Called at the start of the Tween. The returned value sets what the property will be at the END of the Tween.
-                getEnd: function (target, key, value, targetIndex, totalTargets, tween)
+                getEnd: function (target, key, value, targetIndex, totalTargets, tween, tweenData)
                 {
                     return value;
                 },
 
                 //  Called at the end of the Tween. The returned value sets what the property will be at the START of the Tween.
-                getStart: function (target, key, value, targetIndex, totalTargets, tween)
+                getStart: function (target, key, value, targetIndex, totalTargets, tween, tweenData)
                 {
                     return value;
                 }

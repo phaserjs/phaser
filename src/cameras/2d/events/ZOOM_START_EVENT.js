@@ -6,12 +6,13 @@
 
 /**
  * The Camera Zoom Start Event.
- * 
+ *
  * This event is dispatched by a Camera instance when the Zoom Effect starts.
  *
  * @event Phaser.Cameras.Scene2D.Events#ZOOM_START
+ * @type {string}
  * @since 3.3.0
- * 
+ *
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
  * @param {Phaser.Cameras.Scene2D.Effects.Zoom} effect - A reference to the effect instance.
  * @param {number} duration - The duration of the effect.

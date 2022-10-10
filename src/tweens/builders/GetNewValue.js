@@ -15,7 +15,7 @@
  * @param {string} key - The property to get from the source.
  * @param {any} defaultValue - A default value to return should the source not have the property set.
  *
- * @return {function} A function which when called will return the property value from the source.
+ * @return {function} A function which, when called, will return the property value from the source.
  */
 var GetNewValue = function (source, key, defaultValue)
 {

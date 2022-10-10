@@ -12,9 +12,9 @@
  *
  * @param {object} source - The object to retrieve the value from.
  * @param {string} key - The key to look for in the `source` object.
- * @param {*} defaultValue - The default value to return if the `key` doesn't exist or if no `source` object is provided.
+ * @param {boolean} defaultValue - The default value to return if the `key` doesn't exist or if no `source` object is provided.
  *
- * @return {*} The retrieved value.
+ * @return {boolean} The retrieved value.
  */
 var GetBoolean = function (source, key, defaultValue)
 {

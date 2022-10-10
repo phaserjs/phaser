@@ -562,6 +562,22 @@ var Game = new Class({
     },
 
     /**
+     * This will pause the entire game and emit a `PAUSE` event.
+     *
+     * All of Phaser's internal systems will be paused and the game will not re-render.
+     *
+     * Note that it does not pause any Loader requests that are currently in-flight.
+     *
+     * @method Phaser.Game#pause
+     * @fires Phaser.Core.Events#PAUSE
+     * @since 3.60.0
+     */
+    pause: function ()
+    {
+        this.onHidden();
+    },
+
+    /**
      * Called automatically by the Visibility Handler.
      * This will resume the main loop and then emit a resume event.
      *
@@ -575,6 +591,20 @@ var Game = new Class({
         this.loop.resume();
 
         this.events.emit(Events.RESUME);
+    },
+
+    /**
+     * This will resume the entire game and emit a `RESUME` event.
+     *
+     * All of Phaser's internal systems will be resumed and the game will start rendering again.
+     *
+     * @method Phaser.Game#resume
+     * @fires Phaser.Core.Events#RESUME
+     * @since 3.60.0
+     */
+    resume: function ()
+    {
+        this.onVisible();
     },
 
     /**

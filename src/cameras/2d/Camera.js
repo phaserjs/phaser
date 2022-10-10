@@ -517,35 +517,49 @@ var Camera = new Class({
 
         var emitFollowEvent = false;
 
+        if (this.roundPixels)
+        {
+            originX = Math.floor(originX);
+            originY = Math.floor(originY);
+        }
+
         if (follow && !this.panEffect.isRunning)
         {
-            var fx = (follow.x - this.followOffset.x);
-            var fy = (follow.y - this.followOffset.y);
+            var lerp = this.lerp;
+
+            var fx = follow.x - this.followOffset.x;
+            var fy = follow.y - this.followOffset.y;
+
+            if (this.roundPixels)
+            {
+                fx = Math.floor(fx);
+                fy = Math.floor(fy);
+            }
 
             if (deadzone)
             {
                 if (fx < deadzone.x)
                 {
-                    sx = Linear(sx, sx - (deadzone.x - fx), this.lerp.x);
+                    sx = Linear(sx, sx - (deadzone.x - fx), lerp.x);
                 }
                 else if (fx > deadzone.right)
                 {
-                    sx = Linear(sx, sx + (fx - deadzone.right), this.lerp.x);
+                    sx = Linear(sx, sx + (fx - deadzone.right), lerp.x);
                 }
 
                 if (fy < deadzone.y)
                 {
-                    sy = Linear(sy, sy - (deadzone.y - fy), this.lerp.y);
+                    sy = Linear(sy, sy - (deadzone.y - fy), lerp.y);
                 }
                 else if (fy > deadzone.bottom)
                 {
-                    sy = Linear(sy, sy + (fy - deadzone.bottom), this.lerp.y);
+                    sy = Linear(sy, sy + (fy - deadzone.bottom), lerp.y);
                 }
             }
             else
             {
-                sx = Linear(sx, fx - originX, this.lerp.x);
-                sy = Linear(sy, fy - originY, this.lerp.y);
+                sx = Linear(sx, fx - originX, lerp.x);
+                sy = Linear(sy, fy - originY, lerp.y);
             }
 
             emitFollowEvent = true;
@@ -559,11 +573,8 @@ var Camera = new Class({
 
         if (this.roundPixels)
         {
-            originX = Math.round(originX);
-            originY = Math.round(originY);
-
-            sx = Math.round(sx);
-            sy = Math.round(sy);
+            sx = Math.floor(sx);
+            sy = Math.floor(sy);
         }
 
         //  Values are in pixels and not impacted by zooming the Camera
@@ -585,13 +596,13 @@ var Camera = new Class({
 
         if (this.roundPixels)
         {
-            vwx = Math.round(vwx);
-            vwy = Math.round(vwy);
+            vwx = Math.floor(vwx);
+            vwy = Math.floor(vwy);
         }
 
         this.worldView.setTo(vwx, vwy, displayWidth, displayHeight);
 
-        matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoom, zoom);
+        matrix.applyITRS(Math.floor(this.x + originX), Math.floor(this.y + originY), this.rotation, zoom, zoom);
         matrix.translate(-originX, -originY);
 
         this.shakeEffect.preRender();

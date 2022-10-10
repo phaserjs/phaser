@@ -19,6 +19,7 @@
  * Listen to it from a Scene using: `this.matter.world.on('sleepend', listener)`.
  *
  * @event Phaser.Physics.Matter.Events#SLEEP_END
+ * @type {string}
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Matter.Events.SleepEndEvent} event - The Sleep Event object.

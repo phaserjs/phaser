@@ -251,6 +251,8 @@ var PathFollower = {
 
         this.pathDelta.reset();
 
+        config.persist = true;
+
         this.pathTween = this.scene.sys.tweens.addCounter(config);
 
         //  The starting point of the path, relative to this follower

@@ -11,6 +11,7 @@
  * This hook is designed specifically for input plugins, but can also be listened to from user-land code.
  *
  * @event Phaser.Input.Events#PRE_UPDATE
+ * @type {string}
  * @since 3.0.0
  */
 module.exports = 'preupdate';

@@ -748,12 +748,12 @@ var Text = new Class({
     },
 
     /**
-     * Set the font size.
+     * Set the font size. Can be a string with a valid CSS unit, i.e. `16px`, or a number.
      *
      * @method Phaser.GameObjects.Text#setFontSize
      * @since 3.0.0
      *
-     * @param {number} size - The font size.
+     * @param {(string|number)} size - The font size.
      *
      * @return {this} This Text object.
      */

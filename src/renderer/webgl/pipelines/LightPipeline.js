@@ -12,9 +12,6 @@ var MultiPipeline = require('./MultiPipeline');
 var Vec2 = require('../../../math/Vector2');
 var WebGLPipeline = require('../WebGLPipeline');
 
-var LIGHT_COUNT = 10;
-var tempVec2 = new Vec2();
-
 /**
  * @classdesc
  * The Light Pipeline is an extension of the Multi Pipeline and uses a custom shader
@@ -67,21 +64,9 @@ var LightPipeline = new Class({
 
     function LightPipeline (config)
     {
-        LIGHT_COUNT = config.game.renderer.config.maxLights;
-
         var fragShader = GetFastValue(config, 'fragShader', LightShaderSourceFS);
 
-        var shaders = [];
-
-        for (var i = 1; i <= LIGHT_COUNT; i++)
-        {
-            shaders.push({
-                name: 'lights' + i,
-                fragShader: fragShader.replace('%LIGHT_COUNT%', i.toString())
-            });
-        }
-
-        config.shaders = shaders;
+        config.fragShader = fragShader.replace('%LIGHT_COUNT%', config.game.renderer.config.maxLights);
 
         MultiPipeline.call(this, config);
 
@@ -110,6 +95,15 @@ var LightPipeline = new Class({
         this.defaultNormalMap;
 
         /**
+         * The currently bound normal map texture at texture unit one, if any.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentNormalMap;
+         * @type {?WebGLTexture}
+         * @since 3.60.0
+         */
+        this.currentNormalMap;
+
+        /**
          * A boolean that is set automatically during `onRender` that determines
          * if the Scene LightManager is active, or not.
          *
@@ -119,6 +113,15 @@ var LightPipeline = new Class({
          * @since 3.53.0
          */
         this.lightsActive = true;
+
+        /**
+         * A persistent calculation vector used when processing the lights.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#tempVec2
+         * @type {Phaser.Math.Vector2}
+         * @since 3.60.0
+         */
+        this.tempVec2 = new Vec2();
     },
 
     /**
@@ -145,12 +148,6 @@ var LightPipeline = new Class({
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 127, 127, 255, 255 ]));
 
         this.defaultNormalMap = { glTexture: tempTexture };
-
-        //  Set the lights shaders
-        for (var i = 0; i < this.shaders.length; i++)
-        {
-            this['lightShader' + (i + 1)] = this.shaders[i];
-        }
     },
 
     /**
@@ -177,27 +174,22 @@ var LightPipeline = new Class({
         var lights = lightManager.getLights(camera);
         var lightsCount = lights.length;
 
-        if (lightsCount === 0)
-        {
-            return;
-        }
-
         //  Ok, we're good to go ...
 
         this.lightsActive = true;
-
-        this.setShader(this['lightShader' + lightsCount], true);
 
         var i;
         var renderer = this.renderer;
         var height = renderer.height;
         var cameraMatrix = camera.matrix;
+        var tempVec2 = this.tempVec2;
 
         this.set1i('uMainSampler', 0);
         this.set1i('uNormSampler', 1);
         this.set2f('uResolution', this.width / 2, this.height / 2);
         this.set4f('uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
         this.set3f('uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
+        this.set1i('uLightCount', lightsCount);
 
         for (i = 0; i < lightsCount; i++)
         {
@@ -273,23 +265,24 @@ var LightPipeline = new Class({
     {
         var renderer = this.renderer;
 
-        if (texture === undefined) { texture = renderer.tempTextures[0]; }
+        if (texture === undefined) { texture = renderer.whiteTexture; }
 
-        var normalTexture = this.getNormalMap(gameObject);
+        var normalMap = this.getNormalMap(gameObject);
 
-        if (renderer.isNewNormalMap(texture, normalTexture))
+        if (this.isNewNormalMap(texture, normalMap))
         {
             this.flush();
 
-            renderer.setTextureZero(texture);
-            renderer.setNormalMap(normalTexture);
+            this.createBatch(texture);
+
+            this.addTextureToBatch(normalMap);
+
+            this.currentNormalMap = normalMap;
         }
 
         var rotation = (gameObject) ? gameObject.rotation : 0;
 
         this.setNormalMapRotation(rotation);
-
-        this.currentUnit = 0;
 
         return 0;
     },
@@ -311,23 +304,39 @@ var LightPipeline = new Class({
     {
         if (frame === undefined) { frame = gameObject.frame; }
 
-        var renderer = this.renderer;
         var texture = frame.glTexture;
-        var normalTexture = this.getNormalMap(gameObject);
+        var normalMap = this.getNormalMap(gameObject);
 
-        if (renderer.isNewNormalMap())
+        if (this.isNewNormalMap(texture, normalMap))
         {
             this.flush();
 
-            renderer.setTextureZero(texture);
-            renderer.setNormalMap(normalTexture);
+            this.createBatch(texture);
+
+            this.addTextureToBatch(normalMap);
+
+            this.currentNormalMap = normalMap;
         }
 
         this.setNormalMapRotation(gameObject.rotation);
 
-        this.currentUnit = 0;
-
         return 0;
+    },
+
+    /**
+     * Checks to see if the given diffuse and normal map textures are already bound, or not.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#isNewNormalMap
+     * @since 3.50.0
+     *
+     * @param {WebGLTexture} texture - The WebGL diffuse texture.
+     * @param {WebGLTexture} normalMap - The WebGL normal map texture.
+     *
+     * @return {boolean} Returns `false` if this combination is already set, or `true` if it's a new combination.
+     */
+    isNewNormalMap: function (texture, normalMap)
+    {
+        return (this.currentTexture !== texture || this.currentNormalMap !== normalMap);
     },
 
     /**
@@ -343,38 +352,38 @@ var LightPipeline = new Class({
      */
     getNormalMap: function (gameObject)
     {
-        var normalTexture;
+        var normalMap;
 
         if (!gameObject)
         {
-            normalTexture = this.defaultNormalMap;
+            normalMap = this.defaultNormalMap;
         }
         else if (gameObject.displayTexture)
         {
-            normalTexture = gameObject.displayTexture.dataSource[gameObject.displayFrame.sourceIndex];
+            normalMap = gameObject.displayTexture.dataSource[gameObject.displayFrame.sourceIndex];
         }
         else if (gameObject.texture)
         {
-            normalTexture = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
+            normalMap = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
         }
         else if (gameObject.tileset)
         {
             if (Array.isArray(gameObject.tileset))
             {
-                normalTexture = gameObject.tileset[0].image.dataSource[0];
+                normalMap = gameObject.tileset[0].image.dataSource[0];
             }
             else
             {
-                normalTexture = gameObject.tileset.image.dataSource[0];
+                normalMap = gameObject.tileset.image.dataSource[0];
             }
         }
 
-        if (!normalTexture)
+        if (!normalMap)
         {
-            normalTexture = this.defaultNormalMap;
+            normalMap = this.defaultNormalMap;
         }
 
-        return normalTexture.glTexture;
+        return normalMap.glTexture;
     },
 
     /**
@@ -514,7 +523,5 @@ var LightPipeline = new Class({
     }
 
 });
-
-LightPipeline.LIGHT_COUNT = LIGHT_COUNT;
 
 module.exports = LightPipeline;

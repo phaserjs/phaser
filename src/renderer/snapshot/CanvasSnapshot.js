@@ -37,7 +37,7 @@ var CanvasSnapshot = function (canvas, config)
         var imageData = context.getImageData(x, y, 1, 1);
         var data = imageData.data;
 
-        callback.call(null, new Color(data[0], data[1], data[2], data[3] / 255));
+        callback.call(null, new Color(data[0], data[1], data[2], data[3]));
     }
     else if (x !== 0 || y !== 0 || width !== canvas.width || height !== canvas.height)
     {
