@@ -268,6 +268,8 @@ There are breaking changes from previous versions of Phaser.
 
 ### New Features
 
+* When using `Group.createMultiple` it will now skip the post-creations options if they are not set in the config object used, or a Game Object constructor. Previously, things like alpha, position, etc would be over-written by the defaults if they weren't given in the config, but now the method will check to see if they are set and only use them if they are. This is a breaking change, but makes it more efficient and flexible (thanks @samme)
+* When running a Scene transition there is a new optional callback `onStart`, which is passed the parameters `fromScene`, `toScene` and `duration` allowing you to consolidate transition logic into a single callback, rather than split across the start and end events (thanks @rexrainbow)
 * `TextureManager.silentWarnings` is a new boolean property that, when set, will prevent the Texture Manager from emiting any warnings or errors to the console in the case of missing texture keys or invalid texture access. The default is to display these warnings, this flag toggles that.
 * `TextureManager.parseFrame` is a new method that will return a Texture Frame instance from the given argument, which can be a string, array, object or Texture instance.
 * `GameConfig.stableSort` and `Device.features.stableSort` is a new property that will control if the internal depth sorting routine uses our own StableSort function, or the built-in browser `Array.sort`. Only modern browsers have a _stable_ `Array.sort` implementation, which Phaser requires. Older ones need to use our function instead. Set to 0 to use the legacy version, 1 to use the ES2019 version or -1 to have Phaser try and detect which is best for the browser (thanks @JernejHabjan)
@@ -405,6 +407,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Bug Fixes
 
+* The `Video.loadURL` method wouldn't load the video or emit the `VIDEO_CREATED` event unless `noAudio` was specified. A load event handler has been added to resolve this (thanks @samme)
 * If you create a repeating or looping `TimerEvent` with a `delay` of zero it will now throw a runtime error as it would lead to an infinite loop. Fix #6225 (thanks @JernejHabjan)
 * The `endFrame` and `startFrame` properties of the `SpriteSheet` parser wouldn't correctly apply themselves, the Texture would still end up with all of the frames. It will now start at the given `startFrame` so that is frame zero and end at `endFrame`, regardless how many other frames are in the sheet.
 * Destroying a `WebAudioSound` in the same game step as destroying the Game itself would cause an error when trying to disconnect already disconnected Web Audio nodes. `WebAudioSound` will now bail out of its destroy sequence if it's already pending removal.
@@ -500,4 +503,4 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@necrokot Golen @Pythux @samme @danfoster @eltociear @sylvainpolletvillard @hanzooo @etherealmachine @DeweyHur @twoco @austinlyon @Arcanorum OmniOwl @EsteFilipe @PhaserEditor2D @Fake @jonasrundberg @xmahle @arosemena @monteiz @VanaMartin @lolimay @201flaviosilva @orjandh @florestankorp @YeloPartyHat @hacheraw @kootoopas @joegaffey @rgk @ubershmekel @Nero0 @xuxucode @Smirnov48 @jerricko
+@necrokot Golen @Pythux @samme @danfoster @eltociear @sylvainpolletvillard @hanzooo @etherealmachine @DeweyHur @twoco @austinlyon @Arcanorum OmniOwl @EsteFilipe @PhaserEditor2D @Fake @jonasrundberg @xmahle @arosemena @monteiz @VanaMartin @lolimay @201flaviosilva @orjandh @florestankorp @YeloPartyHat @hacheraw @kootoopas @joegaffey @rgk @ubershmekel @Nero0 @xuxucode @Smirnov48 @jerricko @ef4 @michalfialadev
