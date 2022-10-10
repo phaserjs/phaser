@@ -197,6 +197,7 @@ Before Phaser 3.60 this was known as a Render Texture. Dynamic Textures have bee
 * The `snapshotPixel` function, used by the Canvas and WebGL Renderers and the RenderTexture would mistakenly divide the alpha value. These values now return correctly (thanks @samme)
 * `DynamicTexture.batchTextureFrame` will now skip the `drawImage` call in canvas if the frame width or height are zero. Fix #5951 (thanks @Hoshinokoe)
 * Using `DynamicTexture.fill` in CANVAS mode only would produce a nearly always black color due to float conversion (thanks @andymikulski)
+* Using `DynamicTexture.fill` in CANVAS mode only, after using the `erase` method, wouldn't reset the global composite operation correctly, resulting in fills. Fix #6124 (thanks @mateuszkmiecik)
 
 Due to the creation of the Dynamic Texture class, we have completely revamped the old Render Texture Game Object. This is now a combination of Dynamic Texture and an Image Game Object, that uses the Dynamic Texture to display itself with.
 
