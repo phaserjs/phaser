@@ -237,7 +237,7 @@ var Tween = new Class({
      */
     hasTarget: function (target)
     {
-        return (this.targets.indexOf(target) !== -1);
+        return (this.targets && this.targets.indexOf(target) !== -1);
     },
 
     /**

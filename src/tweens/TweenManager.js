@@ -867,7 +867,7 @@ var TweenManager = new Class({
 
             for (var t = 0; t < targetLen; t++)
             {
-                if (tween.hasTarget(target[t]))
+                if (!tween.isDestroyed() && tween.hasTarget(target[t]))
                 {
                     output.push(tween);
                 }
