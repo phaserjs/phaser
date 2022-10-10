@@ -7,7 +7,8 @@
  * @typedef {object} Phaser.Types.GameObjects.BitmapText.BitmapTextCharacter
  * @since 3.50.0
  *
- * @property {number} i - The index of this character within the BitmapText text string.
+ * @property {number} i - The index of this character within the BitmapText wrapped text string.
+ * @property {number} idx - The index of this character within the BitmapText text string.
  * @property {string} char - The character.
  * @property {number} code - The character code of the character.
  * @property {number} x - The x position of the character in the BitmapText.
