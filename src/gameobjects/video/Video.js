@@ -293,6 +293,7 @@ var Video = new Class({
          */
         this._callbacks = {
             play: this.playHandler.bind(this),
+            load: this.loadHandler.bind(this),
             error: this.loadErrorHandler.bind(this),
             end: this.completeHandler.bind(this),
             time: this.timeUpdateHandler.bind(this),
@@ -853,6 +854,7 @@ var Video = new Class({
         }
 
         video.addEventListener('error', this._callbacks.error, true);
+        video.addEventListener(loadEvent, this._callbacks.load, true);
 
         video.src = url;
 
@@ -910,6 +912,7 @@ var Video = new Class({
         video.setAttribute('preload', 'auto');
 
         video.addEventListener('error', this._callbacks.error, true);
+        video.addEventListener(loadEvent, this._callbacks.load, true);
 
         try
         {
@@ -985,6 +988,18 @@ var Video = new Class({
         this.emit(Events.VIDEO_PLAY, this);
 
         this.video.removeEventListener('playing', this._callbacks.play, true);
+    },
+
+    /**
+     * This internal method is called automatically when the video loads.
+     *
+     * @method Phaser.GameObjects.Video#loadHandler
+     * @private
+     * @since 3.60.0
+     */
+    loadHandler: function ()
+    {
+        this.updateTexture();
     },
 
     /**
