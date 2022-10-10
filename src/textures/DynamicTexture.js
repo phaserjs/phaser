@@ -366,6 +366,7 @@ var DynamicTexture = new Class({
 
             renderer.setContext(ctx);
 
+            ctx.globalCompositeOperation = 'source-over';
             ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
             ctx.fillRect(x, y, width, height);
 
