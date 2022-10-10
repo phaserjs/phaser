@@ -592,7 +592,6 @@ var MultiPipeline = new Class({
 
         var quad = calcMatrix.setQuad(x, y, x + frame.width, y + frame.height, false);
 
-        // var unit = this.renderer.setTextureSource(frame.source);
         var unit = this.setTexture2D(frame.source.glTexture);
 
         tint = Utils.getTintAppendFloatAlpha(tint, alpha);
