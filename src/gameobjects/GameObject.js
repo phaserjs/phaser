@@ -763,7 +763,7 @@ var GameObject = new Class({
     {
         var displayList = this.displayList || this.scene.sys.displayList;
 
-        if (displayList.exists(this))
+        if (displayList && displayList.exists(this))
         {
             displayList.remove(this, true);
 
