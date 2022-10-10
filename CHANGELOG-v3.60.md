@@ -36,7 +36,9 @@ Compressed Textures are loaded using the new `this.load.texture` method, which t
 * `WebGLRenderer.getCompressedTextures` is a new method that will populate the `WebGLRenderer.compression` object and return its value. This is called automatically when the renderer boots.
 * `WebGLRenderer.getCompressedTextureName` is a new method that will return a compressed texture format GLenum based on the given format.
 
-### New Features - New and Updated WebGL Pipelines
+### New Features - Vastly Improved Mobile Performance and WebGL Pipeline Changes
+
+
 
 #### WebGL Renderer Updates
 
@@ -99,8 +101,6 @@ Previously, `WebGLRenderer.whiteTexture` and `WebGLRenderer.blankTexture` had a 
 #### Removed - Graphics Pipeline
 
 The WebGL Graphics Pipeline has been removed. This pipeline wasn't used in v3.55, as all Graphics rendering is handled by the MultiTint pipeline, for better batching support. No Phaser Game Objects use the Graphics pipeline any longer, so to save space it has been removed and is no longer installed by the Pipeline Manager.
-
-
 
 ### New Features - Matter Physics v0.18
 
@@ -199,7 +199,7 @@ Before Phaser 3.60 this was known as a Render Texture. Dynamic Textures have bee
 * Using `DynamicTexture.fill` in CANVAS mode only would produce a nearly always black color due to float conversion (thanks @andymikulski)
 * Using `DynamicTexture.fill` in CANVAS mode only, after using the `erase` method, wouldn't reset the global composite operation correctly, resulting in fills. Fix #6124 (thanks @mateuszkmiecik)
 
-Due to the creation of the Dynamic Texture class, we have completely revamped the old Render Texture Game Object. This is now a combination of Dynamic Texture and an Image Game Object, that uses the Dynamic Texture to display itself with.
+Due to the creation of the Dynamic Texture class, we have completely revamped the old Render Texture Game Object. This is now a combination of a Dynamic Texture and an Image Game Object, that uses the Dynamic Texture to display itself with.
 
 In versions of Phaser before 3.60 a Render Texture was the only way you could create a texture like this, that had the ability to be drawn on. But in 3.60 we split the core functions out to the Dynamic Texture class as it made a lot more sense for them to reside in there. As a result, the Render Texture is now a light-weight shim that sits on-top of an Image Game Object and offers proxy methods to the features available from a Dynamic Texture.
 
@@ -241,8 +241,8 @@ You should use a Render Texture if you need to display the texture in-game on a 
 There are breaking changes from previous versions of Phaser.
 
 * Previously, every unique Bitmap Mask would create two full renderer sized framebuffers and two corresponding WebGL textures for them. The Bitmap Mask would listen for resize events from the renderer and then re-create these framebuffers accordingly. However, as the Bitmap Mask pipeline would clear and re-render these framebuffers every single frame it made no sense to have them use such large amounts of GPU memory. As of 3.60, the WebGL Renderer creates and manages two RenderTargets which all Bitmap Masks now use. If you previously used multiple Bitmap Masks in your game this change will dramatically reduce memory consumption at no performance cost.
-* The `BitmapMask` constructor is now capable of creating an Image Game Object from the new optional arguments: `x, y, texture, frame` if no masked object is provided.
-* The BitmapMask now registers itself with the Game Object Factory. This means you can do `this.add.bitmapMask()` from within a Scene, for easier creation.
+* The Bitmap Mask constructor is now capable of creating an Image Game Object from the new optional arguments: `x, y, texture, frame` if no masked object is provided.
+* The Bitmap Mask now registers itself with the Game Object Factory. This means you can do `this.add.bitmapMask()` from within a Scene, for easier creation.
 * Due to the change in ownership of the framebuffers, the following properties have been removed from the BitmapMask class: `renderer`, `maskTexture`, `mainTexture`, `dirty`, `mainFramebuffer` and `maskFramebuffer`. The following methods have also been removed: `createMask` and `clearMask`.
 * The `WebGLRenderer` has 2 new properties: `maskSource` and `maskTarget`. These are the new global mask framebuffers.
 * `WebGLRenderer.beginBitmapMask` is a new method that starts the process of using the mask target framebuffer for drawing. This is called by the `BitmapMaskPipeline`.
@@ -345,9 +345,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `GameObject.setFrame` method can now accept a `Frame` instance as its parameter, which will also automatically update the Texture the Game Object is using.
 * `Device.safariVersion` is now set to the version of Safari running, previously it was always undefined.
 * When you try to use a frame that is missing on the Texture, it will now give the key of the Texture in the console warning (thanks @samme)
-* The `Display.Masks.BitmapMask` `destroy` method will now remove the context-lost event handler.
 * The `hitArea` parameter of the `GameObjects.Zone.setDropZone` method is now optional and if not given it will try to create a hit area based on the size of the Zone Game Object (thanks @rexrainbow)
-* `BitmapMask.scene` is a new property that allows the Bitmap Mask to reference the Scene it was created in.
 * The `DOMElement.preUpdate` method has been removed. If you overrode this method, please now see `preRender` instead.
 * `DOMElement.preRender` is a new method that will check parent visibility and improve its behavior, responding to the parent even if the Scene is paused or the element is inactive. Dom Elements are also no longer added to the Scene Update List. Fix #5816 (thanks @prakol16 @samme)
 * Phaser 3 is now built with webpack 5 and all related packages have been updated.
@@ -500,8 +498,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 * When destroying the Arcade Physics World it will now destroy the debug Graphics object, had one been created. Previously, these would continue to stack-up should you restart the physics world (thanks @samme)
 * `Graphics.strokeRoundedRect` would incorrectly draw the rectangle if you passed in a radius greater than half of the smaller side. This is now clamped internally (thanks @temajm)
 
-### Examples, Documentation and TypeScript
+### Examples, Documentation, Beta Testing and TypeScript
 
-My thanks to the following for helping with the Phaser 3 Examples, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
+My thanks to the following for helping with the Phaser 3 Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
 @necrokot Golen @Pythux @samme @danfoster @eltociear @sylvainpolletvillard @hanzooo @etherealmachine @DeweyHur @twoco @austinlyon @Arcanorum OmniOwl @EsteFilipe @PhaserEditor2D @Fake @jonasrundberg @xmahle @arosemena @monteiz @VanaMartin @lolimay @201flaviosilva @orjandh @florestankorp @YeloPartyHat @hacheraw @kootoopas @joegaffey @rgk @ubershmekel @Nero0 @xuxucode @Smirnov48 @jerricko @ef4 @michalfialadev @darrylpizarro
