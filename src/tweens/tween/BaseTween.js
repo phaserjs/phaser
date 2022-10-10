@@ -527,7 +527,7 @@ var BaseTween = new Class({
      */
     stop: function ()
     {
-        if (!this.isRemoved() && !this.isPendingRemove())
+        if (!this.isRemoved() && !this.isPendingRemove() && !this.isDestroyed())
         {
             this.dispatchEvent(Events.TWEEN_STOP, 'onStop');
 
