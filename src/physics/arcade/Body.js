@@ -1495,7 +1495,12 @@ var Body = new Class({
         }
 
         this.updateCenter();
-        this.checkWorldBounds();
+
+        if (this.collideWorldBounds)
+        {
+            this.checkWorldBounds();
+        }
+
         this.resetFlags(true);
     },
 
@@ -1855,16 +1860,6 @@ var Body = new Class({
         {
             this.onWorldBounds = onWorldBounds;
         }
-
-        return this;
-    },
-
-    setValue: function (vec2, x, y)
-    {
-        if (x === undefined) { x = vec2.x; }
-        if (y === undefined) { y = vec2.y; }
-
-        vec2.set(x, y);
 
         return this;
     },
