@@ -134,6 +134,31 @@ var RenderTexture = new Class({
     },
 
     /**
+     * Resizes the Render Texture to the new dimensions given.
+     *
+     * In WebGL it will destroy and then re-create the frame buffer being used by the Render Texture.
+     * In Canvas it will resize the underlying canvas element.
+     *
+     * Both approaches will erase everything currently drawn to the Render Texture.
+     *
+     * If the dimensions given are the same as those already being used, calling this method will do nothing.
+     *
+     * @method Phaser.GameObjects.RenderTexture#resize
+     * @since 3.10.0
+     *
+     * @param {number} width - The new width of the Render Texture.
+     * @param {number} [height=width] - The new height of the Render Texture. If not specified, will be set the same as the `width`.
+     *
+     * @return {this} This Render Texture.
+     */
+    resize: function (width, height)
+    {
+        this.setSize(width, height);
+
+        return this;
+    },
+
+    /**
      * Stores a copy of this Render Texture in the Texture Manager using the given key.
      *
      * After doing this, any texture based Game Object, such as a Sprite, can use the contents of this
