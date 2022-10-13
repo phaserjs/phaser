@@ -857,7 +857,14 @@ var TweenManager = new Class({
         var output = [];
         var list = this.tweens;
 
-        target = Flatten(target);
+        if (!Array.isArray(target))
+        {
+            target = [ target ];
+        }
+        else
+        {
+            target = Flatten(target);
+        }
 
         var targetLen = target.length;
 
