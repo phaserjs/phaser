@@ -501,7 +501,7 @@ var TweenChain = new Class({
 
         if (handler)
         {
-            handler.func.apply(handler.scope, [ this ].concat(handler.params));
+            handler.func.apply(this.callbackScope, [ this ].concat(handler.params));
         }
     },
 

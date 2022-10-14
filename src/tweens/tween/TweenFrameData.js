@@ -363,7 +363,7 @@ var TweenFrameData = new Class({
 
             if (handler)
             {
-                handler.func.apply(handler.scope, [ tween, target, 'texture' ].concat(handler.params));
+                handler.func.apply(tween.callbackScope, [ tween, target, 'texture' ].concat(handler.params));
             }
         }
     },

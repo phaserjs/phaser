@@ -18,6 +18,7 @@ var Tweens = {
     TweenManager: require('./TweenManager'),
     Tween: require('./tween/Tween'),
     TweenData: require('./tween/TweenData'),
+    TweenFrameData: require('./tween/TweenFrameData'),
 
     BaseTween: require('./tween/BaseTween'),
     TweenChain: require('./tween/TweenChain')
