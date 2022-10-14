@@ -784,6 +784,8 @@ var InputPlugin = new Class({
         // If GameObject.input already cleared from higher class
         if (input)
         {
+            this.removeDebug(gameObject);
+
             input.gameObject = undefined;
             input.target = undefined;
             input.hitArea = undefined;
