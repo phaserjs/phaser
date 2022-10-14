@@ -480,7 +480,7 @@ var TweenData = new Class({
             var key = this.key;
 
             var current = this.current;
-            var previous = this.previoius;
+            var previous = this.previous;
 
             tween.emit(event, tween, key, target, current, previous);
 
