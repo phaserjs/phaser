@@ -76,7 +76,6 @@ var RenderTexture = new Class({
 
         this.type = 'RenderTexture';
 
-
         /**
          * An internal Camera that can be used to move around this Render Texture.
          *
@@ -209,7 +208,7 @@ var RenderTexture = new Class({
 
         texture.key = key;
 
-        if (this.textureManager.addDynamicTexture(texture))
+        if (texture.manager.addDynamicTexture(texture))
         {
             this._saved = true;
         }
