@@ -83,7 +83,7 @@ var CanvasTexture = new Class({
          * @type {CanvasRenderingContext2D}
          * @since 3.7.0
          */
-        this.context = this.canvas.getContext('2d');
+        this.context = this.canvas.getContext('2d', { willReadFrequently: true });
 
         /**
          * The width of the Canvas.
