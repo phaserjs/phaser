@@ -219,6 +219,7 @@ Render Texture breaking changes:
 * `dirty` is now available via `texture.dirty`.
 * `camera` is now available via `texture.camera`.
 * `renderTarget` is now available via `texture.renderTarget`.
+* `origin` is now (0.5, 0.5) by default instead of (0, 0).
 
 * The following `RenderTexture` methods have changed:
 
