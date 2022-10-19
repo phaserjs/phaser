@@ -214,7 +214,12 @@ var Set = new Class({
 
     /**
      * Passes each value in this Set to the given callback.
+     *
      * For when you absolutely know this Set won't be modified during the iteration.
+     *
+     * The callback must return a boolean. If it returns `false` then it will abort
+     * the Set iteration immediately. If it returns `true`, it will carry on
+     * iterating the next child in the Set.
      *
      * @method Phaser.Structs.Set#iterate
      * @since 3.0.0
