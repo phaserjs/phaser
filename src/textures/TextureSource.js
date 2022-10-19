@@ -214,38 +214,44 @@ var TextureSource = new Class({
 
         if (renderer)
         {
+            var source = this.source;
+
             if (renderer.gl)
             {
+                var image = this.image;
+                var flipY = this.flipY;
+                var width = this.width;
+                var height = this.height;
+                var scaleMode = this.scaleMode;
+
                 if (this.isCanvas)
                 {
-                    this.glTexture = renderer.createCanvasTexture(this.image, false, this.flipY);
+                    this.glTexture = renderer.createCanvasTexture(image, false, flipY);
                 }
                 else if (this.isVideo)
                 {
-                    this.glTexture = renderer.createVideoTexture(this.image, false, this.flipY);
+                    this.glTexture = renderer.createVideoTexture(image, false, flipY);
                 }
                 else if (this.isRenderTexture)
                 {
-                    // this.image = this.source.canvas;
-
-                    this.glTexture = renderer.createTextureFromSource(null, this.width, this.height, this.scaleMode);
+                    this.glTexture = renderer.createTextureFromSource(null, width, height, scaleMode);
                 }
                 else if (this.isGLTexture)
                 {
-                    this.glTexture = this.source;
+                    this.glTexture = source;
                 }
                 else if (this.compressionAlgorithm)
                 {
-                    this.glTexture = renderer.createTextureFromSource(this.source);
+                    this.glTexture = renderer.createTextureFromSource(source);
                 }
                 else
                 {
-                    this.glTexture = renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+                    this.glTexture = renderer.createTextureFromSource(image, width, height, scaleMode);
                 }
             }
             else if (this.isRenderTexture)
             {
-                this.image = this.source.canvas;
+                this.image = source.canvas;
             }
         }
 
