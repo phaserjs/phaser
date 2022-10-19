@@ -309,15 +309,18 @@ var TextureSource = new Class({
      */
     update: function ()
     {
-        var gl = this.renderer.gl;
+        var renderer = this.renderer;
+        var image = this.image;
+        var flipY = this.flipY;
+        var gl = renderer.gl;
 
         if (gl && this.isCanvas)
         {
-            this.glTexture = this.renderer.updateCanvasTexture(this.image, this.glTexture, this.flipY);
+            this.glTexture = renderer.updateCanvasTexture(image, this.glTexture, flipY);
         }
         else if (gl && this.isVideo)
         {
-            this.glTexture = this.renderer.updateVideoTexture(this.image, this.glTexture, this.flipY);
+            this.glTexture = renderer.updateVideoTexture(image, this.glTexture, flipY);
         }
     },
 
