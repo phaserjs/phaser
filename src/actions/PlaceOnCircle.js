@@ -6,7 +6,7 @@
 
 /**
  * Takes an array of Game Objects and positions them on evenly spaced points around the perimeter of a Circle.
- * 
+ *
  * If you wish to pass a `Phaser.GameObjects.Circle` Shape to this function, you should pass its `geom` property.
  *
  * @function Phaser.Actions.PlaceOnCircle
@@ -29,10 +29,14 @@ var PlaceOnCircle = function (items, circle, startAngle, endAngle)
     var angle = startAngle;
     var angleStep = (endAngle - startAngle) / items.length;
 
+    var cx = circle.x;
+    var cy = circle.y;
+    var radius = circle.radius;
+
     for (var i = 0; i < items.length; i++)
     {
-        items[i].x = circle.x + (circle.radius * Math.cos(angle));
-        items[i].y = circle.y + (circle.radius * Math.sin(angle));
+        items[i].x = cx + (radius * Math.cos(angle));
+        items[i].y = cy + (radius * Math.sin(angle));
 
         angle += angleStep;
     }
