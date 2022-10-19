@@ -102,6 +102,8 @@ var RopeWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     pipeline.vertexCount += vertexCount;
 
+    pipeline.currentBatch.count = (pipeline.vertexCount - pipeline.currentBatch.start);
+
     renderer.pipelines.postBatch(src);
 };
 
