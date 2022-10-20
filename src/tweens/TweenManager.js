@@ -43,13 +43,13 @@ var TweenManager = new Class({
         this.scene = scene;
 
         /**
-         * The Systems object of the Scene which owns this Tween Manager.
+         * The Scene Systems Event Emitter.
          *
-         * @name Phaser.Tweens.TweenManager#systems
-         * @type {Phaser.Scenes.Systems}
-         * @since 3.0.0
+         * @name Phaser.Tweens.TweenManager#events
+         * @type {Phaser.Events.EventEmitter}
+         * @since 3.60.0
          */
-        this.systems = scene.sys;
+        this.events = scene.sys.events;
 
         /**
          * The time scale of the Tween Manager.
@@ -170,8 +170,8 @@ var TweenManager = new Class({
          */
         this.gap = 1000 / 240;
 
-        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
-        scene.sys.events.on(SceneEvents.START, this.start, this);
+        this.events.once(SceneEvents.BOOT, this.boot, this);
+        this.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -184,7 +184,7 @@ var TweenManager = new Class({
      */
     boot: function ()
     {
-        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
+        this.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -198,17 +198,15 @@ var TweenManager = new Class({
      */
     start: function ()
     {
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.on(SceneEvents.UPDATE, this.update, this);
-        eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
-
         this.timeScale = 1;
         this.paused = false;
 
         this.startTime = Date.now();
         this.prevTime = this.startTime;
         this.nextTime = this.gap;
+
+        this.events.on(SceneEvents.UPDATE, this.update, this);
+        this.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -1065,10 +1063,8 @@ var TweenManager = new Class({
 
         this.tweens = [];
 
-        var eventEmitter = this.systems.events;
-
-        eventEmitter.off(SceneEvents.UPDATE, this.update, this);
-        eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
+        this.events.off(SceneEvents.UPDATE, this.update, this);
+        this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -1082,10 +1078,10 @@ var TweenManager = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off(SceneEvents.START, this.start, this);
+        this.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
-        this.systems = null;
+        this.events = null;
     }
 
 });
