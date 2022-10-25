@@ -4,8 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Point = require('../point/Point');
-
 //  This is based off an explanation and expanded math presented by Paul Bourke:
 //  See http:'local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
 
@@ -17,13 +15,12 @@ var Point = require('../point/Point');
  *
  * @param {Phaser.Geom.Line} line1 - The first Line to check.
  * @param {Phaser.Geom.Line} line2 - The second Line to check.
- * @param {Phaser.Geom.Point} [out] - A Point in which to optionally store the point of intersection.
+ * @param {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} [out] - An optional Point-like object in which to store the coordinates of intersection, if needed.
  *
  * @return {boolean} `true` if the two Lines intersect, and the `out` object will be populated, if given. Otherwise, `false`.
  */
 var LineToLine = function (line1, line2, out)
 {
-    if (out === undefined) { out = new Point(); }
 
     var x1 = line1.x1;
     var y1 = line1.y1;
@@ -58,8 +55,11 @@ var LineToLine = function (line1, line2, out)
 
     if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1)
     {
-        out.x = x1 + (uA * (x2 - x1));
-        out.y = y1 + (uA * (y2 - y1));
+        if (out)
+        {
+            out.x = x1 + (uA * (x2 - x1));
+            out.y = y1 + (uA * (y2 - y1));
+        }
 
         return true;
     }
