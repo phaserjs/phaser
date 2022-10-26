@@ -962,7 +962,7 @@ var TweenManager = new Class({
      */
     killAll: function ()
     {
-        var tweens = (this.processing) ? this.getAllTweens() : this.tweens;
+        var tweens = (this.processing) ? this.getTweens() : this.tweens;
 
         for (var i = 0; i < tweens.length; i++)
         {
