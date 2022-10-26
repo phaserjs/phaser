@@ -15,7 +15,7 @@
  *
  * @param {Phaser.Geom.Line} line1 - The first Line to check.
  * @param {Phaser.Geom.Line} line2 - The second Line to check.
- * @param {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} [out] - An optional Point-like object in which to store the coordinates of intersection, if needed.
+ * @param {Phaser.Types.Math.Vector2Like} [out] - An optional point-like object in which to store the coordinates of intersection, if needed.
  *
  * @return {boolean} `true` if the two Lines intersect, and the `out` object will be populated, if given. Otherwise, `false`.
  */
