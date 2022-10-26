@@ -657,8 +657,9 @@ var TweenManager = new Class({
 
         var delta = this.getDelta(tick);
 
-        if (delta === 0)
+        if (delta <= 0)
         {
+            //  If we've got a negative delta, skip this step
             return;
         }
 
