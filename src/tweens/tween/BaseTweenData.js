@@ -216,6 +216,34 @@ var BaseTweenData = new Class({
     },
 
     /**
+     * Returns a reference to the target object belonging to this TweenData.
+     *
+     * @method Phaser.Tweens.BaseTweenData#getTarget
+     * @since 3.60.0
+     *
+     * @return {object} The target object. Can be any JavaScript object, but is typically a Game Object.
+     */
+    getTarget: function ()
+    {
+        return this.tween.targets[this.targetIndex];
+    },
+
+    /**
+     * Sets this TweenData's target object property to be the given value.
+     *
+     * @method Phaser.Tweens.BaseTweenData#setTargetValue
+     * @since 3.60.0
+     *
+     * @param {number} [value] - The value to set on the target. If not given, sets it to the last `current` value.
+     */
+    setTargetValue: function (value)
+    {
+        if (value === undefined) { value = this.current; }
+
+        this.tween.targets[this.targetIndex][this.key] = value;
+    },
+
+    /**
      * Sets this TweenData state to CREATED.
      *
      * @method Phaser.Tweens.BaseTweenData#setCreatedState
