@@ -8,7 +8,9 @@
 var Wrap = require('../math/Wrap');
 
 /**
- * Wrap each item's coordinates within a rectangle's area.
+ * Iterates through the given array and makes sure that each objects x and y
+ * properties are wrapped to keep them contained within the given Rectangles
+ * area.
  *
  * @function Phaser.Actions.WrapInRectangle
  * @since 3.0.0
@@ -17,7 +19,7 @@ var Wrap = require('../math/Wrap');
  * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
- * @param {Phaser.Geom.Rectangle} rect - The rectangle.
+ * @param {Phaser.Geom.Rectangle} rect - The rectangle which the objects will be wrapped to remain within.
  * @param {number} [padding=0] - An amount added to each side of the rectangle during the operation.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
