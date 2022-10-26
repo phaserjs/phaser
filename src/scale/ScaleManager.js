@@ -383,12 +383,12 @@ var ScaleManager = new Class({
         /**
          * Internal object containing our defined event listeners.
          *
-         * @name Phaser.Scale.ScaleManager#listeners
+         * @name Phaser.Scale.ScaleManager#domlisteners
          * @type {object}
          * @private
          * @since 3.16.0
          */
-        this.listeners = {
+        this.domlisteners = {
 
             orientationChange: NOOP,
             windowResize: NOOP,
@@ -1404,7 +1404,7 @@ var ScaleManager = new Class({
     startListeners: function ()
     {
         var _this = this;
-        var listeners = this.listeners;
+        var listeners = this.domlisteners;
 
         listeners.orientationChange = function ()
         {
@@ -1589,7 +1589,7 @@ var ScaleManager = new Class({
      */
     stopListeners: function ()
     {
-        var listeners = this.listeners;
+        var listeners = this.domlisteners;
 
         window.removeEventListener('orientationchange', listeners.orientationChange, false);
         window.removeEventListener('resize', listeners.windowResize, false);
