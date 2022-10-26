@@ -230,7 +230,7 @@ var PathFollower = {
                 tweenData.elapsed = tweenData.duration * seek;
                 var v = tweenData.ease(tweenData.progress);
                 tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
-                tweenData.target[tweenData.key] = tweenData.current;
+                tweenData.setTargetValue();
             };
         }
 
