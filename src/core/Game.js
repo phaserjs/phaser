@@ -381,6 +381,11 @@ var Game = new Class({
         this.textures.once(TextureEvents.READY, this.texturesReady, this);
 
         this.events.emit(Events.BOOT);
+
+        if (typeof WEBGL_DEBUG && window)
+        {
+            window.PHASER_GAME = this;
+        }
     },
 
     /**
