@@ -248,6 +248,12 @@ var TextureSource = new Class({
                 {
                     this.glTexture = renderer.createTextureFromSource(image, width, height, scaleMode);
                 }
+
+                if (typeof WEBGL_DEBUG)
+                {
+                    // eslint-disable-next-line camelcase
+                    this.glTexture.__SPECTOR_Metadata = { textureKey: this.texture.key };
+                }
             }
             else if (this.isRenderTexture)
             {
