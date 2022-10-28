@@ -2935,6 +2935,25 @@ var InputPlugin = new Class({
     },
 
     /**
+     * Loops through all of the Input Manager Pointer instances and calls `reset` on them.
+     *
+     * Use this function if you find that input has been stole from Phaser via a 3rd
+     * party component, such as Vue, and you need to tell Phaser to reset the Pointer states.
+     *
+     * @method Phaser.Input.InputPlugin#resetPointers
+     * @since 3.60.0
+     */
+    resetPointers: function ()
+    {
+        var pointers = this.pointers;
+
+        for (var i = 0; i < pointers.length; i++)
+        {
+            pointers[i].reset();
+        }
+    },
+
+    /**
      * The Scene that owns this plugin is being destroyed.
      * We need to shutdown and then kill off all external references.
      *
