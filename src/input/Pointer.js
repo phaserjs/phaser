@@ -1198,6 +1198,51 @@ var Pointer = new Class({
     },
 
     /**
+     * Fully reset this Pointer back to its unitialized state.
+     *
+     * @method Phaser.Input.Pointer#reset
+     * @since 3.60.0
+     */
+    reset: function ()
+    {
+        this.event = null;
+        this.downElement = null;
+        this.upElement = null;
+
+        this.button = 0;
+        this.buttons = 0;
+
+        this.position.set(0, 0);
+        this.prevPosition.set(0, 0);
+        this.midPoint.set(-1, -1);
+        this.velocity.set(0, 0);
+        this.angle = 0;
+        this.distance = 0;
+        this.worldX = 0;
+        this.worldY = 0;
+        this.downX = 0;
+        this.downY = 0;
+        this.upX = 0;
+        this.upY = 0;
+        this.moveTime = 0;
+        this.upTime = 0;
+        this.downTime = 0;
+        this.primaryDown = false;
+        this.isDown = false;
+        this.wasTouch = false;
+        this.wasCanceled = false;
+        this.movementX = 0;
+        this.movementY = 0;
+        this.identifier = 0;
+        this.pointerId = null;
+        this.deltaX = 0;
+        this.deltaY = 0;
+        this.deltaZ = 0;
+
+        this.active = (this.id === 0) ? true : false;
+    },
+
+    /**
      * Destroys this Pointer instance and resets its external references.
      *
      * @method Phaser.Input.Pointer#destroy
