@@ -2945,7 +2945,7 @@ var InputPlugin = new Class({
      */
     resetPointers: function ()
     {
-        var pointers = this.pointers;
+        var pointers = this.manager.pointers;
 
         for (var i = 0; i < pointers.length; i++)
         {
