@@ -5,6 +5,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DEBUG = (typeof WEBGL_DEBUG);
+
 var ArrayRemove = require('../../utils/array/Remove');
 var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
@@ -21,6 +23,11 @@ var ScaleEvents = require('../../scale/events');
 var TextureEvents = require('../../textures/events');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
+
+if (DEBUG)
+{
+    var SPECTOR = require('phaser3spectorjs');
+}
 
 /**
  * @callback WebGLContextCallback
@@ -604,6 +611,19 @@ var WebGLRenderer = new Class({
          */
         this.maskTarget = null;
 
+        /**
+         * An instance of SpectorJS used for WebGL Debugging.
+         *
+         * Only available in the Phaser Debug build.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#spector
+         * @type {function}
+         * @since 3.60.0
+         */
+        this.spector = null;
+
+        this._debugCapture = false;
+
         this.init(this.config);
     },
 
@@ -623,6 +643,13 @@ var WebGLRenderer = new Class({
         var game = this.game;
         var canvas = this.canvas;
         var clearColor = config.backgroundColor;
+
+        if (DEBUG)
+        {
+            this.spector = new SPECTOR.Spector();
+
+            this.spector.onCapture.add(this.onCapture.bind(this));
+        }
 
         //  Did they provide their own context?
         if (game.config.context)
@@ -829,6 +856,71 @@ var WebGLRenderer = new Class({
         game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
         this.resize(width, height);
+    },
+
+    captureFrame: function (quickCapture, fullCapture)
+    {
+        if (quickCapture === undefined) { quickCapture = false; }
+        if (fullCapture === undefined) { fullCapture = false; }
+
+        if (DEBUG && this.spector && !this._debugCapture)
+        {
+            this.spector.captureCanvas(this.canvas, 0, quickCapture, fullCapture);
+
+            this._debugCapture = true;
+        }
+    },
+
+    captureNextFrame: function ()
+    {
+        if (DEBUG && this.spector && !this._debugCapture)
+        {
+            this._debugCapture = true;
+
+            this.spector.captureNextFrame(this.canvas);
+        }
+    },
+
+    getFps: function ()
+    {
+        if (DEBUG && this.spector)
+        {
+            return this.spector.getFps();
+        }
+    },
+
+    startCapture: function (commandCount, quickCapture, fullCapture)
+    {
+        if (commandCount === undefined) { commandCount = 0; }
+        if (quickCapture === undefined) { quickCapture = false; }
+        if (fullCapture === undefined) { fullCapture = false; }
+
+        if (DEBUG && this.spector && !this._debugCapture)
+        {
+            this.spector.startCapture(this.canvas, commandCount, quickCapture, fullCapture);
+
+            this._debugCapture = true;
+        }
+    },
+
+    stopCapture: function ()
+    {
+        if (DEBUG && this.spector && this._debugCapture)
+        {
+            this.spector.stopCapture();
+        }
+    },
+
+    onCapture: function (capture)
+    {
+        if (DEBUG)
+        {
+            var view = this.spector.getResultUI();
+
+            view.display(capture);
+
+            this._debugCapture = false;
+        }
     },
 
     /**
