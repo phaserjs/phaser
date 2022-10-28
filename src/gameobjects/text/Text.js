@@ -1323,6 +1323,12 @@ var Text = new Class({
             this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture, true);
 
             this.frame.glTexture = this.frame.source.glTexture;
+
+            if (typeof WEBGL_DEBUG)
+            {
+                // eslint-disable-next-line camelcase
+                this.frame.glTexture.__SPECTOR_Metadata = { textureKey: 'Text Game Object' };
+            }
         }
 
         this.dirty = true;
