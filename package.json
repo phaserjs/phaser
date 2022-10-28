@@ -74,6 +74,7 @@
     "jsdoc": "^3.6.11",
     "node-sloc": "^0.2.1",
     "path": "^0.12.7",
+    "phaser3spectorjs": "^0.0.8",
     "remove-files-webpack-plugin": "^1.5.0",
     "source-map": "^0.7.4",
     "terser-webpack-plugin": "^5.3.6",
