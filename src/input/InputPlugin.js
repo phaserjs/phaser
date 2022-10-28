@@ -2937,7 +2937,7 @@ var InputPlugin = new Class({
     /**
      * Loops through all of the Input Manager Pointer instances and calls `reset` on them.
      *
-     * Use this function if you find that input has been stole from Phaser via a 3rd
+     * Use this function if you find that input has been stolen from Phaser via a 3rd
      * party component, such as Vue, and you need to tell Phaser to reset the Pointer states.
      *
      * @method Phaser.Input.InputPlugin#resetPointers
