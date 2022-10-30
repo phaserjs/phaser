@@ -553,7 +553,7 @@ var Tween = new Class({
         this.totalElapsed = 0;
         this.totalProgress = 0;
 
-        this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
+        this.loopCounter = (this.loop === -1) ? Infinity : this.loop;
 
         if (!skipReset)
         {

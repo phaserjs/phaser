@@ -1161,7 +1161,7 @@ var Group = new Class({
     getTotalFree: function ()
     {
         var used = this.getTotalUsed();
-        var capacity = (this.maxSize === -1) ? 999999999999 : this.maxSize;
+        var capacity = (this.maxSize === -1) ? Infinity : this.maxSize;
 
         return (capacity - used);
     },

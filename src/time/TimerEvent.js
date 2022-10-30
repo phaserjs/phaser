@@ -186,7 +186,7 @@ var TimerEvent = new Class({
 
         this.elapsed = this.startAt;
         this.hasDispatched = false;
-        this.repeatCount = (this.repeat === -1 || this.loop) ? 999999999999 : this.repeat;
+        this.repeatCount = (this.repeat === -1 || this.loop) ? Infinity : this.repeat;
 
         if (this.delay === 0 && (this.repeat > 0 || this.loop))
         {

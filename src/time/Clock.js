@@ -183,7 +183,7 @@ var Clock = new Class({
 
             event.elapsed = event.startAt;
             event.hasDispatched = false;
-            event.repeatCount = (event.repeat === -1 || event.loop) ? 999999999999 : event.repeat;
+            event.repeatCount = (event.repeat === -1 || event.loop) ? Infinity : event.repeat;
         }
         else
         {

@@ -191,7 +191,7 @@ var TweenData = new Class({
 
         this.delay = this.getDelay(target, key, 0, targetIndex, totalTargets, tween);
 
-        this.repeatCounter = (this.repeat === -1) ? 999999999999 : this.repeat;
+        this.repeatCounter = (this.repeat === -1) ? Infinity : this.repeat;
 
         this.setPendingRenderState();
 
@@ -213,7 +213,7 @@ var TweenData = new Class({
 
         if (this.repeat === -1)
         {
-            this.totalDuration += (t2 * 999999999999);
+            this.totalDuration += (t2 * Infinity);
         }
         else if (this.repeat > 0)
         {
@@ -430,7 +430,7 @@ var TweenData = new Class({
         this.progress = 0;
         this.elapsed = 0;
 
-        this.repeatCounter = (this.repeat === -1) ? 999999999999 : this.repeat;
+        this.repeatCounter = (this.repeat === -1) ? Infinity : this.repeat;
 
         if (resetFromLoop)
         {

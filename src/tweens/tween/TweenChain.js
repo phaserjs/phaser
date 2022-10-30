@@ -65,7 +65,7 @@ var TweenChain = new Class({
      */
     init: function ()
     {
-        this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
+        this.loopCounter = (this.loop === -1) ? Infinity : this.loop;
 
         this.setCurrentTween(0);
 
