@@ -5,8 +5,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var DEBUG = (typeof WEBGL_DEBUG);
-
 var ArrayRemove = require('../../utils/array/Remove');
 var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
@@ -24,9 +22,12 @@ var TextureEvents = require('../../textures/events');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 
-if (DEBUG)
+var DEBUG = false;
+
+if (typeof WEBGL_DEBUG)
 {
     var SPECTOR = require('phaser3spectorjs');
+    DEBUG = true;
 }
 
 /**
