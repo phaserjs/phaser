@@ -803,7 +803,7 @@ var RenderTexture = new Class({
      */
     snapshotPixel: function (x, y, callback)
     {
-        return this.snapshotArea(x, y, 1, 1, callback);
+        return this.snapshotArea(x, y, 1, 1, callback, 'pixel');
     },
 
     /**
