@@ -339,6 +339,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `WebRenderer.snapshotFramebuffer` and by extension, the snapshot methods in Dynamic Textures and Render Textures, has been updated to ensure that the width and height never exceed the framebuffer dimensions, or it'll cause a runtime error. The method `snapshotArea` has had this limitation removed as a result, allowing you to snapshot areas that are larger than the Canvas. Fix #5707 (thanks @teng-z)
 * `Animation.stop` is always called when a new animation is loaded, regardless if the animation was playing or not and the `delayCounter` is reset to zero. This stops animations with delays preventing other animations from being started until the delay has expired. Fix #5680 (thanks @enderandpeter)
 * `ScaleManager.listeners` has been renamed to `domlisteners` to avoid conflicting with the EventEmitter listeners object. Fix #6260 (thanks @x-wk)
 * `Geom.Intersects.LineToLine` will no longer create an internal `Point` object, as it's not required internally (thanks @Trissolo)
