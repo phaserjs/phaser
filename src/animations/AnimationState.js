@@ -298,6 +298,21 @@ var AnimationState = new Class({
         this.yoyo = false;
 
         /**
+         * If the animation has a delay set, before playback will begin, this
+         * controls when the first frame is set on the Sprite. If this property
+         * is 'false' then the frame is set only after the delay has expired.
+         * This is the default behavior.
+         *
+         * If this property is 'true' then the first frame of this animation
+         * is set immediately, and then when the delay expires, playback starts.
+         *
+         * @name Phaser.Animations.AnimationState#showBeforeDelay
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.showBeforeDelay = false;
+
+        /**
          * Should the GameObject's `visible` property be set to `true` when the animation starts to play?
          *
          * This will happen _after_ any delay that may have been set.
@@ -551,10 +566,7 @@ var AnimationState = new Class({
      */
     load: function (key)
     {
-        if (this.isPlaying)
-        {
-            this.stop();
-        }
+        this.stop();
 
         var manager = this.animationManager;
         var animKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', null);
@@ -582,6 +594,7 @@ var AnimationState = new Class({
             this.repeat = GetFastValue(key, 'repeat', anim.repeat);
             this.repeatDelay = GetFastValue(key, 'repeatDelay', anim.repeatDelay);
             this.yoyo = GetFastValue(key, 'yoyo', anim.yoyo);
+            this.showBeforeDelay = GetFastValue(key, 'showBeforeDelay', anim.showBeforeDelay);
             this.showOnStart = GetFastValue(key, 'showOnStart', anim.showOnStart);
             this.hideOnComplete = GetFastValue(key, 'hideOnComplete', anim.hideOnComplete);
             this.skipMissedFrames = GetFastValue(key, 'skipMissedFrames', anim.skipMissedFrames);
@@ -983,6 +996,11 @@ var AnimationState = new Class({
         {
             this.handleStart();
         }
+        else if (this.showBeforeDelay)
+        {
+            //  We have a delay, but still need to set the frame
+            this.setCurrentFrame(this.currentFrame);
+        }
 
         return gameObject;
     },
@@ -1071,16 +1089,21 @@ var AnimationState = new Class({
     emitEvents: function (event, keyEvent)
     {
         var anim = this.currentAnim;
-        var frame = this.currentFrame;
-        var gameObject = this.parent;
 
-        var frameKey = frame.textureFrame;
-
-        gameObject.emit(event, anim, frame, gameObject, frameKey);
-
-        if (keyEvent)
+        if (anim)
         {
-            gameObject.emit(keyEvent + anim.key, anim, frame, gameObject, frameKey);
+            var frame = this.currentFrame;
+
+            var gameObject = this.parent;
+
+            var frameKey = frame.textureFrame;
+
+            gameObject.emit(event, anim, frame, gameObject, frameKey);
+
+            if (keyEvent)
+            {
+                gameObject.emit(keyEvent + anim.key, anim, frame, gameObject, frameKey);
+            }
         }
     },
 
@@ -1319,6 +1342,8 @@ var AnimationState = new Class({
         this._pendingStop = 0;
 
         this.isPlaying = false;
+
+        this.delayCounter = 0;
 
         if (this.currentAnim)
         {
