@@ -512,7 +512,7 @@ var AnimationState = new Class({
         {
             var anim = key[i];
 
-            if (this.nextAnim === null)
+            if (!this.nextAnim)
             {
                 this.nextAnim = anim;
             }
