@@ -165,6 +165,19 @@ var Animation = new Class({
         this.yoyo = GetValue(config, 'yoyo', false);
 
         /**
+         * If the animation has a delay set, before playback will begin, this
+         * controls when the first frame is set on the Sprite. If this property
+         * is 'false' then the frame is set only after the delay has expired.
+         * This is the default behavior.
+         *
+         * @name Phaser.Animations.Animation#showBeforeDelay
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
+         */
+        this.showBeforeDelay = GetValue(config, 'showBeforeDelay', false);
+
+        /**
          * Should the GameObject's `visible` property be set to `true` when the animation starts to play?
          *
          * @name Phaser.Animations.Animation#showOnStart
@@ -777,6 +790,7 @@ var Animation = new Class({
             repeat: this.repeat,
             repeatDelay: this.repeatDelay,
             yoyo: this.yoyo,
+            showBeforeDelay: this.showBeforeDelay,
             showOnStart: this.showOnStart,
             hideOnComplete: this.hideOnComplete
         };

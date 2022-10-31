@@ -12,6 +12,7 @@
  * @property {number} repeat - Number of times to repeat the animation (-1 for infinity)
  * @property {number} repeatDelay - Delay before the animation repeats. Value given in milliseconds.
  * @property {boolean} yoyo - Should the animation yoyo? (reverse back down to the start) before repeating?
+ * @property {boolean} showBeforeDelay - If this animation has a delay, should it show the first frame immediately (true), or only after the delay (false)
  * @property {boolean} showOnStart - Should sprite.visible = true when the animation starts to play?
  * @property {boolean} hideOnComplete - Should sprite.visible = false when the animation finishes?
  */
