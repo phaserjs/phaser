@@ -2490,8 +2490,8 @@ var WebGLRenderer = new Class({
         state.getPixel = false;
         state.x = x;
         state.y = y;
-        state.width = Math.min(width, this.gl.drawingBufferWidth);
-        state.height = Math.min(height, this.gl.drawingBufferHeight);
+        state.width = width;
+        state.height = height;
 
         return this;
     },
@@ -2561,6 +2561,12 @@ var WebGLRenderer = new Class({
         if (width === undefined) { width = bufferWidth; }
         if (height === undefined) { height = bufferHeight; }
 
+        if (type === 'pixel')
+        {
+            getPixel = true;
+            type = 'image/png';
+        }
+
         var currentFramebuffer = this.currentFramebuffer;
 
         this.snapshotArea(x, y, width, height, callback, type, encoderOptions);
@@ -2572,6 +2578,10 @@ var WebGLRenderer = new Class({
         state.isFramebuffer = true;
         state.bufferWidth = bufferWidth;
         state.bufferHeight = bufferHeight;
+
+        //  Ensure they're not trying to grab an area larger than the framebuffer
+        state.width = Math.min(state.width, bufferWidth);
+        state.height = Math.min(state.height, bufferHeight);
 
         this.setFramebuffer(framebuffer);
 
