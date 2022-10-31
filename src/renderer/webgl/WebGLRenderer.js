@@ -2470,8 +2470,8 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#snapshotArea
      * @since 3.16.0
      *
-     * @param {number} x - The x coordinate to grab from.
-     * @param {number} y - The y coordinate to grab from.
+     * @param {number} x - The x coordinate to grab from. This is based on the game viewport, not the world.
+     * @param {number} y - The y coordinate to grab from. This is based on the game viewport, not the world.
      * @param {number} width - The width of the area to grab.
      * @param {number} height - The height of the area to grab.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
@@ -2511,8 +2511,8 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#snapshotPixel
      * @since 3.16.0
      *
-     * @param {number} x - The x coordinate of the pixel to get.
-     * @param {number} y - The y coordinate of the pixel to get.
+     * @param {number} x - The x coordinate of the pixel to get. This is based on the game viewport, not the world.
+     * @param {number} y - The y coordinate of the pixel to get. This is based on the game viewport, not the world.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot pixel data is extracted.
      *
      * @return {this} This WebGL Renderer.
@@ -2544,8 +2544,8 @@ var WebGLRenderer = new Class({
      * @param {number} bufferHeight - The height of the framebuffer.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
      * @param {boolean} [getPixel=false] - Grab a single pixel as a Color object, or an area as an Image object?
-     * @param {number} [x=0] - The x coordinate to grab from.
-     * @param {number} [y=0] - The y coordinate to grab from.
+     * @param {number} [x=0] - The x coordinate to grab from. This is based on the framebuffer, not the world.
+     * @param {number} [y=0] - The y coordinate to grab from. This is based on the framebuffer, not the world.
      * @param {number} [width=bufferWidth] - The width of the area to grab.
      * @param {number} [height=bufferHeight] - The height of the area to grab.
      * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
@@ -2631,7 +2631,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createCanvasTexture
      * @since 3.20.0
      *
-     * @param {HTMLCanvasElement} srcCanvas - The Canvas to create the WebGL Texture from
+     * @param {HTMLCanvasElement} srcCanvas - The Canvas to create the WebGL Texture from.
      * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT` (such as for Text objects?)
      * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      *
