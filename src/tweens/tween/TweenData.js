@@ -5,6 +5,7 @@
  */
 
 var BaseTweenData = require('./BaseTweenData');
+var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var Events = require('../events');
 
@@ -214,6 +215,7 @@ var TweenData = new Class({
         if (this.repeat === -1)
         {
             this.totalDuration += (t2 * 999999999999);
+            tween.isInfinite = true;
         }
         else if (this.repeat > 0)
         {
@@ -347,8 +349,12 @@ var TweenData = new Class({
                 elapsed = duration;
                 complete = true;
             }
+            else if (elapsed < 0)
+            {
+                elapsed = 0;
+            }
 
-            var progress = elapsed / duration;
+            var progress = Clamp(elapsed / duration, 0, 1);
 
             this.elapsed = elapsed;
             this.progress = progress;
