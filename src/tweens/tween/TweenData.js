@@ -8,6 +8,7 @@ var BaseTweenData = require('./BaseTweenData');
 var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var Events = require('../events');
+var TWEEN_CONST = require('./const');
 
 /**
  * @classdesc
@@ -176,10 +177,20 @@ var TweenData = new Class({
      *
      * @method Phaser.Tweens.TweenData#init
      * @since 3.60.0
-     *
-     * @param {boolean} [isSeek=false] - Is the parent Tween currently seeking?
      */
-    init: function (isSeek)
+    init: function ()
+    {
+        this.reset();
+    },
+
+    /**
+     * Internal method that resets this Tween Data entirely,
+     * including the progress and elapsed values.
+     *
+     * @method Phaser.Tweens.TweenData#reset
+     * @since 3.60.0
+     */
+    reset: function ()
     {
         var tween = this.tween;
         var totalTargets = tween.totalTargets;
@@ -188,11 +199,23 @@ var TweenData = new Class({
         var target = tween.targets[targetIndex];
         var key = this.key;
 
+        if (!this.isPendingRender())
+        {
+            target[key] = this.start;
+        }
+
+        this.progress = 0;
+        this.elapsed = 0;
+        this.start = 0;
+        this.previous = 0;
+        this.current = 0;
+        this.end = 0;
+
         //  Function signature: target, key, value, index, total, tween
 
         this.delay = this.getDelay(target, key, 0, targetIndex, totalTargets, tween);
 
-        this.repeatCounter = (this.repeat === -1) ? 999999999999 : this.repeat;
+        this.repeatCounter = (this.repeat === -1) ? TWEEN_CONST.MAX : this.repeat;
 
         this.setPendingRenderState();
 
@@ -214,7 +237,7 @@ var TweenData = new Class({
 
         if (this.repeat === -1)
         {
-            this.totalDuration += (t2 * 999999999999);
+            this.totalDuration += (t2 * TWEEN_CONST.MAX);
             tween.isInfinite = true;
         }
         else if (this.repeat > 0)
@@ -233,18 +256,6 @@ var TweenData = new Class({
             tween.startDelay = this.delay;
         }
 
-        //  seek specific:
-        if (isSeek)
-        {
-            this.current = this.start;
-            this.progress = 0;
-            this.elapsed = 0;
-
-            this.setPlayingForwardState();
-
-            this.update(0);
-        }
-
         if (this.delay > 0)
         {
             this.elapsed = this.delay;
@@ -252,7 +263,7 @@ var TweenData = new Class({
             this.setDelayState();
         }
 
-        if (!isSeek && this.getActiveValue)
+        if (this.getActiveValue)
         {
             target[key] = this.getActiveValue(target, key, this.start);
         }
@@ -414,56 +425,6 @@ var TweenData = new Class({
 
         //  Return TRUE if this TweenData still playing, otherwise FALSE
         return !this.isComplete();
-    },
-
-    /**
-     * Internal method that resets this Tween Data, including the progress and elapsed values.
-     *
-     * @method Phaser.Tweens.TweenData#reset
-     * @since 3.60.0
-     *
-     * @param {boolean} resetFromLoop - Has this method been called as part of a loop?
-     */
-    reset: function (resetFromLoop)
-    {
-        var tween = this.tween;
-        var totalTargets = tween.totalTargets;
-
-        var targetIndex = this.targetIndex;
-        var target = tween.targets[targetIndex];
-        var key = this.key;
-
-        this.progress = 0;
-        this.elapsed = 0;
-
-        this.repeatCounter = (this.repeat === -1) ? 999999999999 : this.repeat;
-
-        if (resetFromLoop)
-        {
-            this.start = this.getStartValue(target, key, this.start, targetIndex, totalTargets, tween);
-
-            this.end = this.getEndValue(target, key, this.end, targetIndex, totalTargets, tween);
-
-            this.current = this.start;
-
-            this.setPlayingForwardState();
-        }
-        else
-        {
-            this.setPendingRenderState();
-        }
-
-        if (this.delay > 0)
-        {
-            this.elapsed = this.delay;
-
-            this.setDelayState();
-        }
-
-        if (this.getActiveValue)
-        {
-            target[key] = this.getActiveValue(target, key, this.start);
-        }
     },
 
     /**
