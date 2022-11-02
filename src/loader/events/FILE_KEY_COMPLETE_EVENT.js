@@ -23,7 +23,7 @@
  * Or, if you have loaded a texture `atlas` with a key of `Level1`:
  *
  * ```javascript
- * this.load.on('filecomplete-atlas-Level1', function (key, type, data) {
+ * this.load.on('filecomplete-atlasjson-Level1', function (key, type, data) {
  *     // Your handler code
  * });
  * ```
