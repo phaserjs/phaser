@@ -318,7 +318,7 @@ var Tween = new Class({
                 break;
 
             case TWEEN_CONST.DESTROYED:
-                console.warn('Cannot restart destroyed Tweens', this);
+                console.warn('Cannot restart destroyed Tween', this);
                 break;
 
             default:
@@ -441,7 +441,6 @@ var Tween = new Class({
      * @since 3.0.0
      *
      * @param {boolean} resetFromLoop - Has this method been called as part of a loop?
-     */
     resetTweenData: function (resetFromLoop)
     {
         var data = this.data;
@@ -452,6 +451,7 @@ var Tween = new Class({
             data[i].reset(resetFromLoop);
         }
     },
+     */
 
     /**
      * Seeks to a specific point in the Tween.
@@ -482,12 +482,17 @@ var Tween = new Class({
         if (toPosition === undefined) { toPosition = 0; }
         if (delta === undefined) { delta = 16.6; }
 
-        if (this.isDestroyed() || this.isInfinite)
+        if (this.isInfinite || this.isDestroyed())
         {
-            console.warn('Cannot seek Destroyed or Infinite Tween');
+            console.warn('Cannot seek destroyed or infinite Tween', this);
 
             return this;
         }
+
+        this.isSeeking = true;
+
+        //  Calls 'initTweenData' and 'setActiveState'
+        this.init();
 
         if (this.paused)
         {
@@ -496,22 +501,23 @@ var Tween = new Class({
 
         toPosition = Clamp(toPosition, 0, 1);
 
-        if (toPosition > this.totalProgress)
+        if (toPosition > 0)
         {
-            do
+            if (this.isInfinite)
             {
-                this.update(delta);
-
-            } while (this.totalProgress < toPosition);
-        }
-        else if (toPosition < this.totalProgress)
-        {
-            do
+                console.warn('Cannot seek infinite Tween', this);
+            }
+            else
             {
-                this.update(-delta);
+                do
+                {
+                    this.update(delta);
 
-            } while (this.totalProgress > toPosition);
+                } while (this.totalProgress < toPosition);
+            }
         }
+
+        this.isSeeking = false;
 
         return this;
     },
@@ -523,14 +529,10 @@ var Tween = new Class({
      *
      * @method Phaser.Tweens.Tween#initTweenData
      * @since 3.60.0
-     *
-     * @param {boolean} [isSeek=false] - Is this being called as part of a seek, or not?
      */
-    initTweenData: function (isSeek)
+    initTweenData: function ()
     {
-        if (isSeek === undefined) { isSeek = false; }
-
-        this.reset(true);
+        this.reset();
 
         //  These two values are set directly during TweenData.init:
         this.duration = 0;
@@ -540,7 +542,7 @@ var Tween = new Class({
 
         for (var i = 0; i < this.totalData; i++)
         {
-            data[i].init(isSeek);
+            data[i].reset();
         }
 
         //  Clamp duration to ensure we never divide by zero
@@ -570,26 +572,28 @@ var Tween = new Class({
      */
     reset: function (skipReset)
     {
+        if (skipReset === undefined) { skipReset = false; }
+
         this.elapsed = 0;
-        this.progress = 0;
         this.totalElapsed = 0;
+        this.progress = 0;
         this.totalProgress = 0;
         this.loopCounter = this.loop;
 
         if (this.loop === -1)
         {
             this.isInfinite = true;
-            this.loopCounter = 999999999999;
+            this.loopCounter = TWEEN_CONST.MAX;
         }
 
-        if (!skipReset)
-        {
-            this.resetTweenData(true);
+        // if (!skipReset)
+        // {
+        //     this.resetTweenData(true);
 
-            this.setActiveState();
+        //     this.setActiveState();
 
-            this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
-        }
+        //     this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
+        // }
     },
 
     /**
@@ -630,7 +634,6 @@ var Tween = new Class({
 
             return false;
         }
-        // else if (!this.hasStarted && !this.isSeeking)
         else if (!this.hasStarted)
         {
             this.startDelay -= delta;
