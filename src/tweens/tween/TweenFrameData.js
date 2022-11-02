@@ -5,8 +5,10 @@
  */
 
 var BaseTweenData = require('./BaseTweenData');
+var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var Events = require('../events');
+var TWEEN_CONST = require('./const');
 
 /**
  * @classdesc
@@ -119,7 +121,7 @@ var TweenFrameData = new Class({
 
         this.delay = this.getDelay(target, 'texture', 0, targetIndex, totalTargets, tween);
 
-        this.repeatCounter = (this.repeat === -1) ? 999999999999 : this.repeat;
+        this.repeatCounter = (this.repeat === -1) ? TWEEN_CONST.MAX : this.repeat;
 
         this.setPendingRenderState();
 
@@ -141,7 +143,7 @@ var TweenFrameData = new Class({
 
         if (this.repeat === -1)
         {
-            this.totalDuration += (t2 * 999999999999);
+            this.totalDuration += (t2 * TWEEN_CONST.MAX);
         }
         else if (this.repeat > 0)
         {
@@ -270,7 +272,7 @@ var TweenFrameData = new Class({
                 complete = true;
             }
 
-            var progress = elapsed / duration;
+            var progress = Clamp(elapsed / duration, 0, 1);
 
             this.elapsed = elapsed;
             this.progress = progress;
@@ -281,7 +283,7 @@ var TweenFrameData = new Class({
                 {
                     target.setTexture(this.endTexture, this.endFrame);
 
-                    if (this.hold > 0 && this.repeatCounter > 0)
+                    if (this.hold > 0)
                     {
                         this.elapsed = this.hold;
 
@@ -314,13 +316,12 @@ var TweenFrameData = new Class({
      * @since 3.60.0
      *
      * @param {boolean} resetFromLoop - Has this method been called as part of a loop?
-     */
     reset: function (resetFromLoop)
     {
         this.progress = 0;
         this.elapsed = 0;
 
-        this.repeatCounter = (this.repeat === -1) ? 999999999999 : this.repeat;
+        this.repeatCounter = (this.repeat === -1) ? TWEEN_CONST.MAX : this.repeat;
 
         if (resetFromLoop)
         {
@@ -338,6 +339,7 @@ var TweenFrameData = new Class({
             this.setDelayState();
         }
     },
+     */
 
     /**
      * Internal method that will emit a TweenData based Event on the
@@ -381,7 +383,11 @@ var TweenFrameData = new Class({
      */
     setStateFromEnd: function (diff)
     {
-        if (this.repeatCounter > 0)
+        if (this.yoyo)
+        {
+            this.onRepeat(diff, true, true);
+        }
+        else if (this.repeatCounter > 0)
         {
             this.onRepeat(diff, true);
         }
