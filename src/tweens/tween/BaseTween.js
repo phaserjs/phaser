@@ -275,11 +275,7 @@ var BaseTween = new Class({
      */
     init: function ()
     {
-        this.initTweenData();
-
-        this.setActiveState();
-
-        this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
+        this.reset(false);
 
         return this;
     },
