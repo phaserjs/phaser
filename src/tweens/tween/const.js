@@ -199,7 +199,20 @@ var TWEEN_CONST = {
      * @const
      * @since 3.60.0
      */
-    DESTROYED: 28
+    DESTROYED: 28,
+
+    /**
+     * A large integer value used for 'infinite' style countdowns.
+     *
+     * Similar use-case to Number.MAX_SAFE_INTEGER but we cannot use that because it's not
+     * supported on IE.
+     *
+     * @name Phaser.Tweens.States.MAX
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    MAX: 999999999999
 
 };
 
