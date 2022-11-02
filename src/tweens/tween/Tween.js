@@ -5,6 +5,7 @@
  */
 
 var BaseTween = require('./BaseTween');
+var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var Events = require('../events');
 var GameObjectCreator = require('../../gameobjects/GameObjectCreator');
@@ -70,6 +71,16 @@ var Tween = new Class({
          * @since 3.19.0
          */
         this.isSeeking = false;
+
+        /**
+         * Does this Tween loop infinitely?
+         *
+         * @name Phaser.Tweens.Tween#isInfinite
+         * @type {boolean}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.isInfinite = false;
 
         /**
          * Elapsed time in ms/frames of this run through of the Tween.
@@ -471,24 +482,35 @@ var Tween = new Class({
         if (toPosition === undefined) { toPosition = 0; }
         if (delta === undefined) { delta = 16.6; }
 
-        if (this.isRemoved() || this.isFinished())
+        if (this.isDestroyed() || this.isInfinite)
         {
-            this.makeActive();
+            console.warn('Cannot seek Destroyed or Infinite Tween');
+
+            return this;
         }
 
-        this.initTweenData(true);
-
-        if (toPosition > 0)
+        if (this.paused)
         {
-            this.isSeeking = true;
+            this.paused = false;
+        }
 
+        toPosition = Clamp(toPosition, 0, 1);
+
+        if (toPosition > this.totalProgress)
+        {
             do
             {
                 this.update(delta);
 
             } while (this.totalProgress < toPosition);
+        }
+        else if (toPosition < this.totalProgress)
+        {
+            do
+            {
+                this.update(-delta);
 
-            this.isSeeking = false;
+            } while (this.totalProgress > toPosition);
         }
 
         return this;
@@ -552,8 +574,13 @@ var Tween = new Class({
         this.progress = 0;
         this.totalElapsed = 0;
         this.totalProgress = 0;
+        this.loopCounter = this.loop;
 
-        this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
+        if (this.loop === -1)
+        {
+            this.isInfinite = true;
+            this.loopCounter = 999999999999;
+        }
 
         if (!skipReset)
         {
@@ -603,7 +630,8 @@ var Tween = new Class({
 
             return false;
         }
-        else if (!this.hasStarted && !this.isSeeking)
+        // else if (!this.hasStarted && !this.isSeeking)
+        else if (!this.hasStarted)
         {
             this.startDelay -= delta;
 
@@ -659,6 +687,16 @@ var Tween = new Class({
         }
 
         return remove;
+    },
+
+    forward: function (ms)
+    {
+        this.update(ms);
+    },
+
+    rewind: function (ms)
+    {
+        this.update(-ms);
     },
 
     /**
