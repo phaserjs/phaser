@@ -5,7 +5,6 @@
  */
 
 var BaseTween = require('./BaseTween');
-var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var Events = require('../events');
 var GameObjectCreator = require('../../gameobjects/GameObjectCreator');
@@ -350,7 +349,7 @@ var Tween = new Class({
             this.progress = 0;
             this.loopCounter--;
 
-            this.resetTweenData(true);
+            this.initTweenData();
 
             if (this.loopDelay > 0)
             {
@@ -435,87 +434,72 @@ var Tween = new Class({
     },
 
     /**
-     * Internal method that resets all of the Tween Data, including the progress and elapsed values.
-     *
-     * @method Phaser.Tweens.Tween#resetTweenData
-     * @since 3.0.0
-     *
-     * @param {boolean} resetFromLoop - Has this method been called as part of a loop?
-    resetTweenData: function (resetFromLoop)
-    {
-        var data = this.data;
-        var total = this.totalData;
-
-        for (var i = 0; i < total; i++)
-        {
-            data[i].reset(resetFromLoop);
-        }
-    },
-     */
-
-    /**
      * Seeks to a specific point in the Tween.
      *
-     * **Note:** Be careful when seeking a Tween that repeats or loops forever,
-     * or that has an unusually long total duration, as it's possible to hang the browser.
+     * The given amount is a value in milliseconds that represents how far into the Tween
+     * you wish to seek, based on the start of the Tween.
      *
-     * The given position is a value between 0 and 1 which represents how far through the Tween to seek to.
-     * A value of 0.5 would seek to half-way through the Tween, where-as a value of zero would seek to the start.
-     *
-     * Note that the seek takes the entire duration of the Tween into account, including delays, loops and repeats.
+     * Note that the seek amount takes the entire duration of the Tween into account, including delays, loops and repeats.
      * For example, a Tween that lasts for 2 seconds, but that loops 3 times, would have a total duration of 6 seconds,
-     * so seeking to 0.5 would seek to 3 seconds into the Tween, as that's half-way through its _entire_ duration.
+     * so seeking to 3000 ms would seek to the Tweens half-way point based on its _entire_ duration.
+     *
+     * Prior to Phaser 3.60 this value was given as a number between 0 and 1 and didn't
+     * work for Tweens have had an infinite repeat.
      *
      * Seeking works by resetting the Tween to its initial values and then iterating through the Tween at `delta`
-     * jumps per step. The longer the Tween, the longer this can take.
+     * jumps per step. The longer the Tween, the longer this can take. If you need more precision you can
+     * reduce the delta value. If you need a faster seek, you can increase it.
+     *
+     * When seeking a Tween will _not_ emit any of its events or callbacks unless
+     * the 3rd parameter is set to `true`.
+     *
+     * If this Tween is paused, seeking will not change this fact. It will advance the Tween
+     * and then re-pause it again.
      *
      * @method Phaser.Tweens.Tween#seek
      * @since 3.0.0
      *
-     * @param {number} [toPosition=0] - A value between 0 and 1 which represents the progress point to seek to.
+     * @param {number} [amount=0] - The number of milliseconds to seek into the Tween from the beginning.
      * @param {number} [delta=16.6] - The size of each step when seeking through the Tween. A higher value completes faster but at the cost of less precision.
+     * @param {boolean} [emit=false] - While seeking, should the Tween emit any of its events or callbacks? The default is 'false', i.e. to seek silently.
      *
      * @return {this} This Tween instance.
      */
-    seek: function (toPosition, delta)
+    seek: function (amount, delta, emit)
     {
-        if (toPosition === undefined) { toPosition = 0; }
+        if (amount === undefined) { amount = 0; }
         if (delta === undefined) { delta = 16.6; }
+        if (emit === undefined) { emit = false; }
 
-        if (this.isInfinite || this.isDestroyed())
+        if (this.isDestroyed())
         {
-            console.warn('Cannot seek destroyed or infinite Tween', this);
+            console.warn('Cannot seek destroyed Tween', this);
 
             return this;
         }
 
-        this.isSeeking = true;
+        if (!emit)
+        {
+            this.isSeeking = true;
+        }
 
         //  Calls 'initTweenData' and 'setActiveState'
         this.init();
 
-        if (this.paused)
+        var isPaused = this.paused;
+
+        this.paused = false;
+
+        if (amount > 0)
         {
-            this.paused = false;
+            do
+            {
+                this.update(delta);
+
+            } while (this.totalElapsed < amount);
         }
 
-        toPosition = Clamp(toPosition, 0, 1);
-
-        if (toPosition > 0)
-        {
-            if (this.isInfinite)
-            {
-                console.warn('Cannot seek infinite Tween', this);
-            }
-            else
-            {
-                do
-                {
-                    this.update(delta);
-
-                } while (this.totalProgress < toPosition);
-            }
-        }
+        this.paused = isPaused;
 
         this.isSeeking = false;
 
@@ -532,8 +516,6 @@ var Tween = new Class({
      */
     initTweenData: function ()
     {
-        this.reset();
-
         //  These two values are set directly during TweenData.init:
         this.duration = 0;
         this.startDelay = MATH_CONST.MAX_SAFE_INTEGER;
@@ -568,11 +550,11 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#reset
      * @since 3.60.0
      *
-     * @param {boolean} [skipReset=false] - Skip resetting the TweenData and Active State?
+     * @param {boolean} [skipInit=false] - Skip resetting the TweenData and Active State?
      */
-    reset: function (skipReset)
+    reset: function (skipInit)
     {
-        if (skipReset === undefined) { skipReset = false; }
+        if (skipInit === undefined) { skipInit = false; }
 
         this.elapsed = 0;
         this.totalElapsed = 0;
@@ -586,14 +568,14 @@ var Tween = new Class({
             this.loopCounter = TWEEN_CONST.MAX;
         }
 
-        // if (!skipReset)
-        // {
-        //     this.resetTweenData(true);
+        if (!skipInit)
+        {
+            this.initTweenData();
 
-        //     this.setActiveState();
+            this.setActiveState();
 
-        //     this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
-        // }
+            this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
+        }
     },
 
     /**
@@ -692,14 +674,50 @@ var Tween = new Class({
         return remove;
     },
 
+    /**
+     * Moves this Tween forward by the given amount of milliseconds.
+     *
+     * It will only advance through the current loop of the Tween. For example, if the
+     * Tween is set to repeat or yoyo, it can only fast forward through a single
+     * section of the sequence. Use `Tween.seek` for more complex playhead control.
+     *
+     * If the Tween is paused, calling this will have no effect.
+     *
+     * @method Phaser.Tweens.Tween#forward
+     * @since 3.60.0
+     *
+     * @param {number} ms - The number of milliseconds to advance this Tween by.
+     *
+     * @return {this} This Tween instance.
+     */
     forward: function (ms)
     {
         this.update(ms);
+
+        return this;
     },
 
+    /**
+     * Moves this Tween backward by the given amount of milliseconds.
+     *
+     * It will only rewind through the current loop of the Tween. For example, if the
+     * Tween is set to repeat or yoyo, it can only fast forward through a single
+     * section of the sequence. Use `Tween.seek` for more complex playhead control.
+     *
+     * If the Tween is paused, calling this will have no effect.
+     *
+     * @method Phaser.Tweens.Tween#rewind
+     * @since 3.60.0
+     *
+     * @param {number} ms - The number of milliseconds to rewind this Tween by.
+     *
+     * @return {this} This Tween instance.
+     */
     rewind: function (ms)
     {
         this.update(-ms);
+
+        return this;
     },
 
     /**
