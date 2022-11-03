@@ -107,7 +107,7 @@ var TweenFrameData = new Class({
          * @type {boolean}
          * @since 3.60.0
          */
-        this.yoyo = (repeat > 0) ? true : false;
+        this.yoyo = (repeat !== 0) ? true : false;
     },
 
     /**
