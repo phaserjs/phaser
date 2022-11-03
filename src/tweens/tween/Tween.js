@@ -29,7 +29,7 @@ var TweenFrameData = require('./TweenFrameData');
  * @since 3.0.0
  *
  * @param {Phaser.Tweens.TweenManager} parent - A reference to the Tween Manager that owns this Tween.
- * @param {array} targets - An array of targets to be tweened.
+ * @param {object[]} targets - An array of targets to be tweened.
  */
 var Tween = new Class({
 
@@ -44,6 +44,8 @@ var Tween = new Class({
         /**
          * An array of references to the target/s this Tween is operating on.
          *
+         * This array should not be manipulated outside of this Tween.
+         *
          * @name Phaser.Tweens.Tween#targets
          * @type {object[]}
          * @since 3.0.0
@@ -51,7 +53,11 @@ var Tween = new Class({
         this.targets = targets;
 
         /**
-         * Cached target total (not necessarily the same as the data total)
+         * Cached target total.
+         *
+         * Used internally and should be treated as read-only.
+         *
+         * This is not necessarily the same as the data total.
          *
          * @name Phaser.Tweens.Tween#totalTargets
          * @type {number}
@@ -106,6 +112,8 @@ var Tween = new Class({
         /**
          * Time in milliseconds for the whole Tween to play through once, excluding loop amounts and loop delays.
          *
+         * This value is set in the `Tween.initTweenData` method and is zero before that point.
+         *
          * @name Phaser.Tweens.Tween#duration
          * @type {number}
          * @default 0
@@ -126,6 +134,8 @@ var Tween = new Class({
         /**
          * Time in milliseconds it takes for the Tween to complete a full playthrough (including looping)
          *
+         * For an infinite Tween, this value is a very large integer.
+         *
          * @name Phaser.Tweens.Tween#totalDuration
          * @type {number}
          * @default 0
@@ -134,7 +144,9 @@ var Tween = new Class({
         this.totalDuration = 0;
 
         /**
-         * Value between 0 and 1. The amount through the entire Tween, including looping.
+         * The amount of progress that has been made through the entire Tween, including looping.
+         *
+         * A value between 0 and 1.
          *
          * @name Phaser.Tweens.Tween#totalProgress
          * @type {number}
@@ -142,16 +154,6 @@ var Tween = new Class({
          * @since 3.60.0
          */
         this.totalProgress = 0;
-
-        /**
-         * The delta used in the current update.
-         *
-         * @name Phaser.Tweens.Tween#delta
-         * @type {number}
-         * @default 0
-         * @since 3.60.0
-         */
-        this.delta = 0;
     },
 
     /**
@@ -293,8 +295,7 @@ var Tween = new Class({
     /**
      * Restarts the Tween from the beginning.
      *
-     * You can only restart a Tween that is currently playing. If the Tween has already been stopped, restarting
-     * it will throw an error.
+     * If the Tween has already finished and been destroyed, restarting it will throw an error.
      *
      * If you wish to restart the Tween from a specific point, use the `Tween.seek` method instead.
      *
@@ -422,9 +423,8 @@ var Tween = new Class({
             return this;
         }
 
-        if (this.isPendingRemove() || this.isPending())
+        if (this.isPendingRemove() || this.isFinished())
         {
-            //  This makes the tween active as well:
             this.seek();
         }
 
@@ -527,7 +527,7 @@ var Tween = new Class({
      */
     initTweenData: function ()
     {
-        //  These two values are set directly during TweenData.init:
+        //  These two values are updated directly during TweenData.reset:
         this.duration = 0;
         this.startDelay = MATH_CONST.MAX_SAFE_INTEGER;
 
@@ -541,13 +541,18 @@ var Tween = new Class({
         //  Clamp duration to ensure we never divide by zero
         this.duration = Math.max(this.duration, 0.01);
 
-        if (this.loopCounter > 0)
+        var duration = this.duration;
+        var completeDelay = this.completeDelay;
+        var loopCounter = this.loopCounter;
+        var loopDelay = this.loopDelay;
+
+        if (loopCounter > 0)
         {
-            this.totalDuration = this.duration + this.completeDelay + ((this.duration + this.loopDelay) * this.loopCounter);
+            this.totalDuration = duration + completeDelay + ((duration + loopDelay) * loopCounter);
         }
         else
         {
-            this.totalDuration = this.duration + this.completeDelay;
+            this.totalDuration = duration + completeDelay;
         }
     },
 
@@ -657,8 +662,6 @@ var Tween = new Class({
             }
         }
 
-        this.delta = delta;
-
         this.elapsed += delta;
         this.progress = Math.min(this.elapsed / this.duration, 1);
 
@@ -692,7 +695,7 @@ var Tween = new Class({
      * Tween is set to repeat or yoyo, it can only fast forward through a single
      * section of the sequence. Use `Tween.seek` for more complex playhead control.
      *
-     * If the Tween is paused, calling this will have no effect.
+     * If the Tween is paused or has already finished, calling this will have no effect.
      *
      * @method Phaser.Tweens.Tween#forward
      * @since 3.60.0
@@ -715,7 +718,7 @@ var Tween = new Class({
      * Tween is set to repeat or yoyo, it can only fast forward through a single
      * section of the sequence. Use `Tween.seek` for more complex playhead control.
      *
-     * If the Tween is paused, calling this will have no effect.
+     * If the Tween is paused or has already finished, calling this will have no effect.
      *
      * @method Phaser.Tweens.Tween#rewind
      * @since 3.60.0
