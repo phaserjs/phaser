@@ -496,8 +496,13 @@ var Tween = new Class({
             this.isSeeking = true;
         }
 
-        //  Calls 'initTweenData' and 'setActiveState'
-        this.init();
+        this.reset(true);
+
+        this.initTweenData(true);
+
+        this.setActiveState();
+
+        this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
 
         var isPaused = this.paused;
 
@@ -533,9 +538,13 @@ var Tween = new Class({
      *
      * @method Phaser.Tweens.Tween#initTweenData
      * @since 3.60.0
+     *
+     * @param {boolean} [isSeeking=false] - Is the Tween Data being reset as part of a seek?
      */
-    initTweenData: function ()
+    initTweenData: function (isSeeking)
     {
+        if (isSeeking === undefined) { isSeeking = false; }
+
         //  These two values are updated directly during TweenData.reset:
         this.duration = 0;
         this.startDelay = MATH_CONST.MAX_SAFE_INTEGER;
@@ -544,7 +553,7 @@ var Tween = new Class({
 
         for (var i = 0; i < this.totalData; i++)
         {
-            data[i].reset();
+            data[i].reset(isSeeking);
         }
 
         //  Clamp duration to ensure we never divide by zero
