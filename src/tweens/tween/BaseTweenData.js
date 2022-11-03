@@ -463,7 +463,7 @@ var BaseTweenData = new Class({
         }
         else if (this.repeatCounter > 0)
         {
-            this.onRepeat(diff, true);
+            this.onRepeat(diff, true, false);
         }
         else
         {
