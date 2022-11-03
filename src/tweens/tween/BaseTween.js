@@ -263,24 +263,6 @@ var BaseTween = new Class({
     },
 
     /**
-     * Prepares this Tween for playback.
-     *
-     * Called automatically by the TweenManager. Should not be called directly.
-     *
-     * @method Phaser.Tweens.BaseTween#init
-     * @fires Phaser.Tweens.Events#TWEEN_ACTIVE
-     * @since 3.60.0
-     *
-     * @return {this} This Tween instance.
-     */
-    init: function ()
-    {
-        this.reset(false);
-
-        return this;
-    },
-
-    /**
      * Sets the value of the time scale applied to this Tween. A value of 1 runs in real-time.
      * A value of 0.5 runs 50% slower, and so on.
      *

@@ -315,7 +315,7 @@ var TweenManager = new Class({
 
             if (tween instanceof Tween || tween instanceof TweenChain)
             {
-                tweens.push(tween.init());
+                tweens.push(tween.reset());
             }
             else
             {
@@ -328,7 +328,7 @@ var TweenManager = new Class({
                     tween = TweenBuilder(this, tween);
                 }
 
-                tweens.push(tween.init());
+                tweens.push(tween.reset());
             }
 
             result.push(tween);
@@ -432,7 +432,7 @@ var TweenManager = new Class({
     {
         if (!this.has(tween))
         {
-            this.tweens.push(tween.init());
+            this.tweens.push(tween.reset());
         }
 
         return this;
@@ -456,7 +456,7 @@ var TweenManager = new Class({
     {
         var tween = NumberTweenBuilder(this, config);
 
-        this.tweens.push(tween.init());
+        this.tweens.push(tween.reset());
 
         return tween;
     },
