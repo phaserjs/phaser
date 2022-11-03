@@ -225,18 +225,27 @@ var Tween = new Class({
     /**
      * Returns the current value of the specified Tween Data.
      *
+     * If this Tween has been destroyed, it will return `null`.
+     *
      * @method Phaser.Tweens.Tween#getValue
      * @since 3.0.0
      *
      * @param {number} [index=0] - The Tween Data to return the value from.
      *
-     * @return {number} The value of the requested Tween Data.
+     * @return {number} The value of the requested Tween Data, or `null` if this Tween has been destroyed.
      */
     getValue: function (index)
     {
         if (index === undefined) { index = 0; }
 
-        return this.data[index].current;
+        var value = null;
+
+        if (this.data)
+        {
+            value = this.data[index].current;
+        }
+
+        return value;
     },
 
     /**
