@@ -23,7 +23,7 @@ var Velocity = {
      *
      * @param {number} value - The angular velocity.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setAngularVelocity: function (value)
     {
@@ -40,7 +40,7 @@ var Velocity = {
      *
      * @param {number} x - The horizontal velocity value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setVelocityX: function (x)
     {
@@ -59,7 +59,7 @@ var Velocity = {
      *
      * @param {number} y - The vertical velocity value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setVelocityY: function (y)
     {
@@ -79,7 +79,7 @@ var Velocity = {
      * @param {number} x - The horizontal velocity value.
      * @param {number} [y=x] - The vertical velocity value, it can be either positive or negative. If not given, it will be the same as the `x` value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setVelocity: function (x, y)
     {

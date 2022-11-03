@@ -23,7 +23,7 @@ var Mass = {
      *
      * @param {number} value - The new mass of the body.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setMass: function (value)
     {
@@ -40,7 +40,7 @@ var Mass = {
      *
      * @param {number} value - The new density of the body.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setDensity: function (value)
     {

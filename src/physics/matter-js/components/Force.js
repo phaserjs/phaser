@@ -24,7 +24,7 @@ var Force = {
      *
      * @param {Phaser.Math.Vector2} force - A Vector that specifies the force to apply.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     applyForce: function (force)
     {
@@ -44,7 +44,7 @@ var Force = {
      * @param {Phaser.Math.Vector2} position - The position in which the force comes from.
      * @param {Phaser.Math.Vector2} force - A Vector that specifies the force to apply.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     applyForceFrom: function (position, force)
     {
@@ -63,7 +63,7 @@ var Force = {
      *
      * @param {number} speed - A speed value to be applied to a directional force.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     thrust: function (speed)
     {
@@ -86,7 +86,7 @@ var Force = {
      *
      * @param {number} speed - A speed value to be applied to a directional force.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     thrustLeft: function (speed)
     {
@@ -109,7 +109,7 @@ var Force = {
      *
      * @param {number} speed - A speed value to be applied to a directional force.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     thrustRight: function (speed)
     {
@@ -132,7 +132,7 @@ var Force = {
      *
      * @param {number} speed - A speed value to be applied to a directional force.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     thrustBack: function (speed)
     {

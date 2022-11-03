@@ -21,7 +21,7 @@ var Sensor = {
      *
      * @param {boolean} value - `true` to set the body as a sensor, or `false` to disable it.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setSensor: function (value)
     {

@@ -22,7 +22,7 @@ var Sleep = {
      * @method Phaser.Physics.Matter.Components.Sleep#setToSleep
      * @since 3.22.0
      *
-     * @return {this} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setToSleep: function ()
     {
@@ -37,7 +37,7 @@ var Sleep = {
      * @method Phaser.Physics.Matter.Components.Sleep#setAwake
      * @since 3.22.0
      *
-     * @return {this} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setAwake: function ()
     {
@@ -54,7 +54,7 @@ var Sleep = {
      *
      * @param {number} [value=60] - A `Number` that defines the number of updates in which this body must have near-zero velocity before it is set as sleeping.
      *
-     * @return {this} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setSleepThreshold: function (value)
     {
@@ -79,7 +79,7 @@ var Sleep = {
      * @param {boolean} start - `true` if you want the sleep start event to be emitted for this body.
      * @param {boolean} end - `true` if you want the sleep end event to be emitted for this body.
      *
-     * @return {this} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setSleepEvents: function (start, end)
     {
@@ -97,7 +97,7 @@ var Sleep = {
      *
      * @param {boolean} value - `true` to enable the sleep event, or `false` to disable it.
      *
-     * @return {this} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setSleepStartEvent: function (value)
     {
@@ -126,7 +126,7 @@ var Sleep = {
      *
      * @param {boolean} value - `true` to enable the sleep event, or `false` to disable it.
      *
-     * @return {this} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setSleepEndEvent: function (value)
     {

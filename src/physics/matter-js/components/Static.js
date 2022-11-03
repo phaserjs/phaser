@@ -22,7 +22,7 @@ var Static = {
      *
      * @param {boolean} value - `true` to set the body as being static, or `false` to make it dynamic.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setStatic: function (value)
     {

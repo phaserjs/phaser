@@ -22,7 +22,7 @@ var Friction = {
      * @param {number} [air] - If provided, the new air resistance of the Body. The higher the value, the faster the Body will slow as it moves through space. 0 means the body has no air resistance.
      * @param {number} [fstatic] - If provided, the new static friction of the Body. The higher the value (e.g. 10), the more force it will take to initially get the Body moving when it is nearly stationary. 0 means the body will never "stick" when it is nearly stationary.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setFriction: function (value, air, fstatic)
     {
@@ -51,7 +51,7 @@ var Friction = {
      *
      * @param {number} value - The new air resistance for the Body.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setFrictionAir: function (value)
     {
@@ -70,7 +70,7 @@ var Friction = {
      *
      * @param {number} value - The new static friction for the Body.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setFrictionStatic: function (value)
     {

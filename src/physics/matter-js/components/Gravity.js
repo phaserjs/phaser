@@ -20,7 +20,7 @@ var Gravity = {
      *
      * @param {boolean} value - Set to true to ignore the effect of world gravity, or false to not ignore it.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setIgnoreGravity: function (value)
     {

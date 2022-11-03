@@ -33,7 +33,7 @@ var SetBody = {
      * @param {number} height - Height of the rectangle.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setRectangle: function (width, height, options)
     {
@@ -52,7 +52,7 @@ var SetBody = {
      * @param {number} radius - The radius of the circle.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setCircle: function (radius, options)
     {
@@ -72,7 +72,7 @@ var SetBody = {
      * @param {number} sides - The number of sides the polygon will have.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setPolygon: function (radius, sides, options)
     {
@@ -93,7 +93,7 @@ var SetBody = {
      * @param {number} slope - The slope of the trapezoid. 0 creates a rectangle, while 1 creates a triangle. Positive values make the top side shorter, while negative values make the bottom side shorter.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setTrapezoid: function (width, height, slope, options)
     {
@@ -111,7 +111,7 @@ var SetBody = {
      * @param {MatterJS.BodyType} body - The Body this Game Object should use.
      * @param {boolean} [addToWorld=true] - Should the body be immediately added to the World?
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setExistingBody: function (body, addToWorld)
     {
@@ -184,7 +184,7 @@ var SetBody = {
      * @param {(string|Phaser.Types.Physics.Matter.MatterSetBodyConfig)} config - Either a string, such as `circle`, or a Matter Set Body Configuration object.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setBody: function (config, options)
     {

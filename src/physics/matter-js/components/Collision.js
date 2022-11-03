@@ -22,7 +22,7 @@ var Collision = {
      *
      * @param {number} value - Unique category bitfield.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setCollisionCategory: function (value)
     {
@@ -42,7 +42,7 @@ var Collision = {
      *
      * @param {number} value - Unique group index.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setCollisionGroup: function (value)
     {
@@ -61,7 +61,7 @@ var Collision = {
      *
      * @param {(number|number[])} categories - A unique category bitfield, or an array of them.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setCollidesWith: function (categories)
     {
@@ -95,7 +95,7 @@ var Collision = {
      *
      * @param {function} callback - The callback to invoke when this body starts colliding with another.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setOnCollide: function (callback)
     {
@@ -115,7 +115,7 @@ var Collision = {
      *
      * @param {function} callback - The callback to invoke when this body stops colliding with another.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setOnCollideEnd: function (callback)
     {
@@ -135,7 +135,7 @@ var Collision = {
      *
      * @param {function} callback - The callback to invoke for the duration of this body colliding with another.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setOnCollideActive: function (callback)
     {
@@ -156,7 +156,7 @@ var Collision = {
      * @param {(MatterJS.Body|MatterJS.Body[])} body - The body, or an array of bodies, to test for collisions with.
      * @param {function} callback - The callback to invoke when this body collides with the given body or bodies.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setOnCollideWith: function (body, callback)
     {

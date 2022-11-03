@@ -200,7 +200,7 @@ var Transform = {
      * @param {number} [x=0] - The horizontal position of the body.
      * @param {number} [y=x] - The vertical position of the body.
      *
-     * @return {this} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setPosition: function (x, y)
     {
@@ -223,7 +223,7 @@ var Transform = {
      *
      * @param {number} [radians=0] - The angle of the body, in radians.
      *
-     * @return {this} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setRotation: function (radians)
     {
@@ -243,7 +243,7 @@ var Transform = {
      * @method Phaser.Physics.Matter.Components.Transform#setFixedRotation
      * @since 3.0.0
      *
-     * @return {this} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setFixedRotation: function ()
     {
@@ -261,7 +261,7 @@ var Transform = {
      *
      * @param {number} [degrees=0] - The angle to set, in degrees.
      *
-     * @return {this} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setAngle: function (degrees)
     {
@@ -284,7 +284,7 @@ var Transform = {
      * @param {number} [y=x] - The vertical scale of this Game Object. If not set it will use the x value.
      * @param {Phaser.Math.Vector2} [point] - The point (Vector2) from which scaling will occur.
      *
-     * @return {this} This Game Object.
+     * @return {this} This Game Object instance.
      */
     setScale: function (x, y, point)
     {
