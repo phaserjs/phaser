@@ -185,6 +185,15 @@ var WebGLPipeline = new Class({
         this.vertexBuffer;
 
         /**
+         * The currently active WebGLBuffer.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#activeBuffer
+         * @type {WebGLBuffer}
+         * @since 3.60.0
+         */
+        this.activeBuffer;
+
+        /**
          * The primitive topology which the pipeline will use to submit draw calls.
          *
          * Defaults to GL_TRIANGLES if not otherwise set in the config.
@@ -425,6 +434,19 @@ var WebGLPipeline = new Class({
          * @since 3.50.0
          */
         this.currentUnit = 0;
+
+        /**
+         * The currently active WebGLTextures, used as part of the batch process.
+         *
+         * Reset to empty as part of the bind method.
+         *
+         * Treat this array as read-only.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#activeTextures
+         * @type {WebGLTexture[]}
+         * @since 3.60.0
+         */
+        this.activeTextures = [];
     },
 
     /**
@@ -1062,11 +1084,24 @@ var WebGLPipeline = new Class({
             return this.rebind(currentShader);
         }
 
-        var wasBound = this.setVertexBuffer();
+        var wasBound = false;
+
+        var gl = this.gl;
+
+        if (gl.getParameter(gl.ARRAY_BUFFER_BINDING) !== this.vertexBuffer)
+        {
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+
+            this.activeBuffer = this.vertexBuffer;
+
+            wasBound = true;
+        }
 
         currentShader.bind(wasBound);
 
         this.currentShader = currentShader;
+
+        this.activeTextures.length = 0;
 
         this.emit(Events.BIND, this, currentShader);
 
@@ -1133,11 +1168,13 @@ var WebGLPipeline = new Class({
     {
         if (buffer === undefined) { buffer = this.vertexBuffer; }
 
-        var gl = this.gl;
-
-        if (gl.getParameter(gl.ARRAY_BUFFER_BINDING) !== buffer)
+        if (buffer !== this.activeBuffer)
         {
-            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            var gl = this.gl;
+
+            this.gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+            this.activeBuffer = buffer;
 
             return true;
         }
@@ -1271,18 +1308,29 @@ var WebGLPipeline = new Class({
 
                 var i;
                 var entry;
+                var texture;
                 var batch = this.batch;
+                var activeTextures = this.activeTextures;
 
                 if (this.forceZero)
                 {
                     //  Single Texture Pipeline
-                    gl.activeTexture(gl.TEXTURE0);
+                    if (!activeTextures[0])
+                    {
+                        gl.activeTexture(gl.TEXTURE0);
+                    }
 
                     for (i = 0; i < batch.length; i++)
                     {
                         entry = batch[i];
+                        texture = entry.texture[0];
 
-                        gl.bindTexture(gl.TEXTURE_2D, entry.texture[0]);
+                        if (activeTextures[0] !== texture)
+                        {
+                            gl.bindTexture(gl.TEXTURE_2D, texture);
+
+                            activeTextures[0] = texture;
+                        }
 
                         gl.drawArrays(topology, entry.start, entry.count);
                     }
@@ -1295,8 +1343,15 @@ var WebGLPipeline = new Class({
 
                         for (var t = 0; t <= entry.maxUnit; t++)
                         {
-                            gl.activeTexture(gl.TEXTURE0 + t);
-                            gl.bindTexture(gl.TEXTURE_2D, entry.texture[t]);
+                            texture = entry.texture[t];
+
+                            if (activeTextures[t] !== texture)
+                            {
+                                gl.activeTexture(gl.TEXTURE0 + t);
+                                gl.bindTexture(gl.TEXTURE_2D, texture);
+
+                                activeTextures[t] = texture;
+                            }
                         }
 
                         gl.drawArrays(topology, entry.start, entry.count);
@@ -2499,6 +2554,7 @@ var WebGLPipeline = new Class({
         this.vertexBuffer = null;
         this.currentShader = null;
         this.currentRenderTarget = null;
+        this.activeTextures = null;
 
         return this;
     }
