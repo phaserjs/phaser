@@ -189,8 +189,10 @@ var TweenData = new Class({
      *
      * @method Phaser.Tweens.TweenData#reset
      * @since 3.60.0
+     *
+     * @param {boolean} [isSeeking=false] - Is the Tween Data being reset as part of a Tween seek?
      */
-    reset: function ()
+    reset: function (isSeeking)
     {
         var tween = this.tween;
         var totalTargets = tween.totalTargets;
@@ -199,7 +201,7 @@ var TweenData = new Class({
         var target = tween.targets[targetIndex];
         var key = this.key;
 
-        if (!this.isPendingRender())
+        if (isSeeking)
         {
             target[key] = this.start;
         }
