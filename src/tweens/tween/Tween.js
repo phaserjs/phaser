@@ -575,16 +575,20 @@ var Tween = new Class({
     },
 
     /**
-     * Resets this Tween ready for another play-through from the parent TweenChain.
+     * Resets this Tween ready for another play-through.
      *
-     * This is called automatically and should not typically be invoked directly.
+     * This is called automatically from the Tween Manager, or from the parent TweenChain,
+     * and should not typically be invoked directly.
      *
-     * If you wish to restart this Tween, see `Tween.restart` or `Tween.seek` instead.
+     * If you wish to restart this Tween, use the `Tween.restart` or `Tween.seek` methods instead.
      *
      * @method Phaser.Tweens.Tween#reset
+     * @fires Phaser.Tweens.Events#TWEEN_ACTIVE
      * @since 3.60.0
      *
      * @param {boolean} [skipInit=false] - Skip resetting the TweenData and Active State?
+     *
+     * @return {this} This Tween instance.
      */
     reset: function (skipInit)
     {
@@ -610,6 +614,8 @@ var Tween = new Class({
 
             this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
         }
+
+        return this;
     },
 
     /**
