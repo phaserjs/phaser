@@ -847,7 +847,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#getTweensOf
      * @since 3.0.0
      *
-     * @param {object|array} target - The target to look for. Provide an array to look for multiple targets.
+     * @param {(object|object[])} target - The target to look for. Provide an array to look for multiple targets.
      *
      * @return {Phaser.Tweens.Tween[]} A new array containing all Tweens which affect the given target(s).
      */
