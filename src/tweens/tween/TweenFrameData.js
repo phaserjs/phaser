@@ -8,12 +8,11 @@ var BaseTweenData = require('./BaseTweenData');
 var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var Events = require('../events');
-var TWEEN_CONST = require('./const');
 
 /**
  * @classdesc
  * The TweenFrameData is a class that contains a single target that will change the texture frame
- * and the conclusion of the tween.
+ * at the conclusion of the Tween.
  *
  * TweenFrameData instances are typically created by the TweenBuilder automatically, when it
  * detects the prescence of a 'texture' property as the key being tweened.
@@ -51,6 +50,18 @@ var TweenFrameData = new Class({
     function TweenFrameData (tween, targetIndex, texture, frame, delay, duration, hold, repeat, repeatDelay, flipX, flipY)
     {
         BaseTweenData.call(this, tween, targetIndex, delay, duration, false, hold, repeat, repeatDelay, flipX, flipY);
+
+        /**
+         * The property of the target to be tweened.
+         *
+         * Always 'texture' for a TweenFrameData object.
+         *
+         * @name Phaser.Tweens.TweenData#key
+         * @type {string}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.key = 'texture';
 
         /**
          * The texture to be set at the start of the tween.
@@ -100,66 +111,20 @@ var TweenFrameData = new Class({
     },
 
     /**
-     * Prepares this TweenData for playback.
+     * Internal method that resets this Tween Data entirely, including the progress and elapsed values.
      *
      * Called automatically by the parent Tween. Should not be called directly.
      *
-     * @method Phaser.Tweens.TweenFrameData#init
+     * @method Phaser.Tweens.TweenFrameData#reset
      * @since 3.60.0
      *
-     * @param {boolean} [isSeek=false] - Is the parent Tween currently seeking?
+     * @param {boolean} [isSeeking=false] - Is the Tween Data being reset as part of a Tween seek?
      */
-    init: function (isSeek)
+    reset: function (isSeeking)
     {
-        var tween = this.tween;
-        var totalTargets = tween.totalTargets;
+        BaseTweenData.prototype.reset.call(this);
 
-        var targetIndex = this.targetIndex;
-        var target = tween.targets[targetIndex];
-
-        //  Function signature: target, key, value, index, total, tween
-
-        this.delay = this.getDelay(target, 'texture', 0, targetIndex, totalTargets, tween);
-
-        this.repeatCounter = (this.repeat === -1) ? TWEEN_CONST.MAX : this.repeat;
-
-        this.setPendingRenderState();
-
-        //  calcDuration:
-
-        //  Set t1 (duration + hold + yoyo)
-        var t1 = this.duration + this.hold;
-
-        if (this.yoyo)
-        {
-            t1 += this.duration;
-        }
-
-        //  Set t2 (repeatDelay + duration + hold + yoyo)
-        var t2 = t1 + this.repeatDelay;
-
-        //  Total Duration
-        this.totalDuration = this.delay + t1;
-
-        if (this.repeat === -1)
-        {
-            this.totalDuration += (t2 * TWEEN_CONST.MAX);
-        }
-        else if (this.repeat > 0)
-        {
-            this.totalDuration += (t2 * this.repeat);
-        }
-
-        if (this.totalDuration > tween.duration)
-        {
-            //  Set the longest duration in the parent Tween
-            tween.duration = this.totalDuration;
-        }
-
-        if (this.delay < tween.startDelay)
-        {
-            tween.startDelay = this.delay;
-        }
+        var target = this.tween.targets[this.targetIndex];
 
         if (!this.startTexture)
         {
@@ -167,22 +132,9 @@ var TweenFrameData = new Class({
             this.startFrame = target.frame.name;
         }
 
-        //  seek specific:
-        if (isSeek)
+        if (isSeeking)
         {
-            this.progress = 0;
-            this.elapsed = 0;
-
-            this.setPlayingForwardState();
-
-            this.update(0);
-        }
-
-        if (this.delay > 0)
-        {
-            this.elapsed = this.delay;
-
-            this.setDelayState();
+            target.setTexture(this.startTexture, this.startFrame);
         }
     },
 
@@ -271,6 +223,10 @@ var TweenFrameData = new Class({
                 elapsed = duration;
                 complete = true;
             }
+            else if (elapsed < 0)
+            {
+                elapsed = 0;
+            }
 
             var progress = Clamp(elapsed / duration, 0, 1);
 
@@ -310,38 +266,6 @@ var TweenFrameData = new Class({
     },
 
     /**
-     * Internal method that resets this Tween Data, including the progress and elapsed values.
-     *
-     * @method Phaser.Tweens.TweenFrameData#reset
-     * @since 3.60.0
-     *
-     * @param {boolean} resetFromLoop - Has this method been called as part of a loop?
-    reset: function (resetFromLoop)
-    {
-        this.progress = 0;
-        this.elapsed = 0;
-
-        this.repeatCounter = (this.repeat === -1) ? TWEEN_CONST.MAX : this.repeat;
-
-        if (resetFromLoop)
-        {
-            this.setPlayingForwardState();
-        }
-        else
-        {
-            this.setPendingRenderState();
-        }
-
-        if (this.delay > 0)
-        {
-            this.elapsed = this.delay;
-
-            this.setDelayState();
-        }
-    },
-     */
-
-    /**
      * Internal method that will emit a TweenData based Event on the
      * parent Tween and also invoke the given callback, if provided.
      *
@@ -358,127 +282,33 @@ var TweenFrameData = new Class({
         if (!tween.isSeeking)
         {
             var target = tween.targets[this.targetIndex];
+            var key = this.key;
 
-            tween.emit(event, tween, 'texture', target);
+            tween.emit(event, tween, key, target);
 
             var handler = tween.callbacks[callback];
 
             if (handler)
             {
-                handler.func.apply(tween.callbackScope, [ tween, target, 'texture' ].concat(handler.params));
+                handler.func.apply(tween.callbackScope, [ tween, target, key ].concat(handler.params));
             }
         }
     },
 
     /**
-     * Internal method used as part of the playback process that checks if this
-     * TweenData should yoyo, repeat, or has completed.
+     * Immediately destroys this TweenData, nulling of all its references.
      *
-     * @method Phaser.Tweens.TweenFrameData#setStateFromEnd
-     * @fires Phaser.Tweens.Events#TWEEN_REPEAT
-     * @fires Phaser.Tweens.Events#TWEEN_YOYO
+     * @method Phaser.Tweens.TweenFrameData#destroy
      * @since 3.60.0
-     *
-     * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
      */
-    setStateFromEnd: function (diff)
+    destroy: function ()
     {
-        if (this.yoyo)
-        {
-            this.onRepeat(diff, true, true);
-        }
-        else if (this.repeatCounter > 0)
-        {
-            this.onRepeat(diff, true);
-        }
-        else
-        {
-            this.setCompleteState();
-        }
-    },
+        BaseTweenData.prototype.destroy.call(this);
 
-    /**
-     * Internal method used as part of the playback process that checks if this
-     * TweenData should repeat or has completed.
-     *
-     * @method Phaser.Tweens.TweenFrameData#setStateFromStart
-     * @fires Phaser.Tweens.Events#TWEEN_REPEAT
-     * @since 3.60.0
-     *
-     * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
-     */
-    setStateFromStart: function (diff)
-    {
-        if (this.repeatCounter > 0)
-        {
-            this.onRepeat(diff, false);
-        }
-        else
-        {
-            this.setCompleteState();
-        }
-    },
-
-    /**
-     * Internal method that handles repeating or yoyo'ing this TweenData.
-     *
-     * Called automatically by `setStateFromStart` and `setStateFromEnd`.
-     *
-     * @method Phaser.Tweens.TweenFrameData#onRepeat
-     * @fires Phaser.Tweens.Events#TWEEN_REPEAT
-     * @fires Phaser.Tweens.Events#TWEEN_YOYO
-     * @since 3.60.0
-     *
-     * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
-     * @param {boolean} [isYoyo=false] - Is this call a Yoyo check?
-     */
-    onRepeat: function (diff, isYoyo)
-    {
-        if (isYoyo === undefined) { isYoyo = false; }
-
-        var tween = this.tween;
-
-        var targetIndex = this.targetIndex;
-        var target = tween.targets[targetIndex];
-
-        //  Account for any extra time we got from the previous frame
-        this.elapsed = diff;
-        this.progress = diff / this.duration;
-
-        if (this.flipX)
-        {
-            target.toggleFlipX();
-        }
-
-        if (this.flipY)
-        {
-            target.toggleFlipY();
-        }
-
-        if (isYoyo)
-        {
-            this.setPlayingBackwardState();
-
-            this.dispatchEvent(Events.TWEEN_YOYO, 'onYoyo');
-
-            return;
-        }
-
-        this.repeatCounter--;
-
-        //  Delay?
-        if (this.repeatDelay > 0)
-        {
-            this.elapsed = this.repeatDelay - diff;
-
-            this.setRepeatState();
-        }
-        else
-        {
-            this.setPlayingForwardState();
-
-            this.dispatchEvent(Events.TWEEN_REPEAT, 'onRepeat');
-        }
+        this.startTexture = null;
+        this.endTexture = null;
+        this.startFrame = null;
+        this.endFrame = null;
     }
 
 });
