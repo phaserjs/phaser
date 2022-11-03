@@ -34,11 +34,11 @@ var TWEEN_CONST = require('./const');
  * @param {number} targetIndex - The target index within the Tween targets array.
  * @param {string} texture - The texture key to set at the end of this tween.
  * @param {(string|number)} frame - The texture frame to set at the end of this tween.
- * @param {function} delay - Function that returns the time in ms/frames before tween will start.
- * @param {number} duration - The duration of the tween in ms/frames.
- * @param {number} hold - Function that returns the time in ms/frames the tween will pause before repeating or returning to its starting value if yoyo is set to true.
+ * @param {function} delay - Function that returns the time in milliseconds before tween will start.
+ * @param {number} duration - The duration of the tween in milliseconds.
+ * @param {number} hold - Function that returns the time in milliseconds the tween will pause before repeating or returning to its starting value if yoyo is set to true.
  * @param {number} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
- * @param {number} repeatDelay - Function that returns the time in ms/frames before the repeat will start.
+ * @param {number} repeatDelay - Function that returns the time in milliseconds before the repeat will start.
  * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
  * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
  */

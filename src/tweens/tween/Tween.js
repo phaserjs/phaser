@@ -61,8 +61,10 @@ var Tween = new Class({
 
         /**
          * Is this Tween currently seeking?
+         *
          * This boolean is toggled in the `Tween.seek` method.
-         * When a tween is seeking it will not dispatch any events or callbacks.
+         *
+         * When a tween is seeking, by default it will not dispatch any events or callbacks.
          *
          * @name Phaser.Tweens.Tween#isSeeking
          * @type {boolean}
@@ -72,7 +74,7 @@ var Tween = new Class({
         this.isSeeking = false;
 
         /**
-         * Does this Tween loop infinitely?
+         * Does this Tween loop or repeat infinitely?
          *
          * @name Phaser.Tweens.Tween#isInfinite
          * @type {boolean}
@@ -82,7 +84,7 @@ var Tween = new Class({
         this.isInfinite = false;
 
         /**
-         * Elapsed time in ms/frames of this run through of the Tween.
+         * Elapsed time in milliseconds of this run through of the Tween.
          *
          * @name Phaser.Tweens.Tween#elapsed
          * @type {number}
@@ -92,7 +94,7 @@ var Tween = new Class({
         this.elapsed = 0;
 
         /**
-         * Total elapsed time in ms/frames of the entire Tween, including looping.
+         * Total elapsed time in milliseconds of the entire Tween, including looping.
          *
          * @name Phaser.Tweens.Tween#totalElapsed
          * @type {number}
@@ -102,7 +104,7 @@ var Tween = new Class({
         this.totalElapsed = 0;
 
         /**
-         * Time in ms/frames for the whole Tween to play through once, excluding loop amounts and loop delays.
+         * Time in milliseconds for the whole Tween to play through once, excluding loop amounts and loop delays.
          *
          * @name Phaser.Tweens.Tween#duration
          * @type {number}
@@ -122,7 +124,7 @@ var Tween = new Class({
         this.progress = 0;
 
         /**
-         * Time in ms/frames it takes for the Tween to complete a full playthrough (including looping)
+         * Time in milliseconds it takes for the Tween to complete a full playthrough (including looping)
          *
          * @name Phaser.Tweens.Tween#totalDuration
          * @type {number}
@@ -166,12 +168,12 @@ var Tween = new Class({
      * @param {Phaser.Types.Tweens.GetStartCallback} getStart - What the property will be at the START of the Tween.
      * @param {?Phaser.Types.Tweens.GetActiveCallback} getActive - If not null, is invoked _immediately_ as soon as the TweenData is running, and is set on the target property.
      * @param {function} ease - The ease function this tween uses.
-     * @param {function} delay - Function that returns the time in ms/frames before tween will start.
-     * @param {number} duration - The duration of the tween in ms/frames.
+     * @param {function} delay - Function that returns the time in milliseconds before tween will start.
+     * @param {number} duration - The duration of the tween in milliseconds.
      * @param {boolean} yoyo - Determines whether the tween should return back to its start value after hold has expired.
-     * @param {number} hold - Function that returns the time in ms/frames the tween will pause before repeating or returning to its starting value if yoyo is set to true.
+     * @param {number} hold - Function that returns the time in milliseconds the tween will pause before repeating or returning to its starting value if yoyo is set to true.
      * @param {number} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
-     * @param {number} repeatDelay - Function that returns the time in ms/frames before the repeat will start.
+     * @param {number} repeatDelay - Function that returns the time in milliseconds before the repeat will start.
      * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
      * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
      * @param {?function} interpolation - The interpolation function to be used for arrays of data. Defaults to 'null'.
@@ -199,11 +201,11 @@ var Tween = new Class({
      * @param {number} targetIndex - The target index within the Tween targets array.
      * @param {string} texture - The texture to set on the target at the end of the tween.
      * @param {string|number} frame - The texture frame to set on the target at the end of the tween.
-     * @param {function} delay - Function that returns the time in ms/frames before tween will start.
-     * @param {number} duration - The duration of the tween in ms/frames.
-     * @param {number} hold - Function that returns the time in ms/frames the tween will pause before repeating or returning to its starting value if yoyo is set to true.
+     * @param {function} delay - Function that returns the time in milliseconds before tween will start.
+     * @param {number} duration - The duration of the tween in milliseconds.
+     * @param {number} hold - Function that returns the time in milliseconds the tween will pause before repeating or returning to its starting value if yoyo is set to true.
      * @param {number} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
-     * @param {number} repeatDelay - Function that returns the time in ms/frames before the repeat will start.
+     * @param {number} repeatDelay - Function that returns the time in milliseconds before the repeat will start.
      * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
      * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
      *
@@ -444,17 +446,19 @@ var Tween = new Class({
      * so seeking to 3000 ms would seek to the Tweens half-way point based on its _entire_ duration.
      *
      * Prior to Phaser 3.60 this value was given as a number between 0 and 1 and didn't
-     * work for Tweens have had an infinite repeat.
+     * work for Tweens had an infinite repeat. This new method works for all Tweens.
      *
      * Seeking works by resetting the Tween to its initial values and then iterating through the Tween at `delta`
      * jumps per step. The longer the Tween, the longer this can take. If you need more precision you can
-     * reduce the delta value. If you need a faster seek, you can increase it.
+     * reduce the delta value. If you need a faster seek, you can increase it. When the Tween is
+     * reset it will refresh the starting and ending values. If these are coming from a dynamic function,
+     * or a random array, it will be called for each seek.
      *
-     * When seeking a Tween will _not_ emit any of its events or callbacks unless
+     * While seeking the Tween will _not_ emit any of its events or callbacks unless
      * the 3rd parameter is set to `true`.
      *
      * If this Tween is paused, seeking will not change this fact. It will advance the Tween
-     * and then re-pause it again.
+     * to the desired point and then pause it again.
      *
      * @method Phaser.Tweens.Tween#seek
      * @since 3.0.0
@@ -597,7 +601,7 @@ var Tween = new Class({
         {
             return true;
         }
-        else if (this.isFinished() || (this.paused && !this.isSeeking))
+        else if (this.paused || this.isFinished())
         {
             return false;
         }
