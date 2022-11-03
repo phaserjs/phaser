@@ -93,6 +93,14 @@ var TweenBuilder = function (parent, config, defaults)
                     texture = value.value[0];
                     frame = value.value[1];
                 }
+                else if (typeof value.value === 'string')
+                {
+                    texture = value.value;
+                }
+            }
+            else if (typeof value === 'string')
+            {
+                texture = value;
             }
 
             tween.addFrame(
