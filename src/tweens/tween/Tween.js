@@ -496,11 +496,18 @@ var Tween = new Class({
 
         if (amount > 0)
         {
-            do
+            var iterations = Math.floor(amount / delta);
+            var remainder = amount - (iterations * delta);
+
+            for (var i = 0; i < iterations; i++)
             {
                 this.update(delta);
+            }
 
-            } while (this.totalElapsed < amount);
+            if (remainder > 0)
+            {
+                this.update(remainder);
+            }
         }
 
         this.paused = isPaused;
