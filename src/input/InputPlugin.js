@@ -632,12 +632,12 @@ var InputPlugin = new Class({
                 //  Only the top-most one counts now, so safely ignore the rest
                 if (this._temp.length)
                 {
-                    this._temp.splice(1);
+                    this._temp.splice(0, this._temp.length - 1);
                 }
 
                 if (this._tempZones.length)
                 {
-                    this._tempZones.splice(1);
+                    this._tempZones.splice(0, this._tempZones.length - 1);
                 }
             }
 
@@ -701,12 +701,12 @@ var InputPlugin = new Class({
                 //  Only the top-most one counts now, so safely ignore the rest
                 if (this._temp.length)
                 {
-                    this._temp.splice(1);
+                    this._temp.splice(0, this._temp.length - 1);
                 }
 
                 if (this._tempZones.length)
                 {
-                    this._tempZones.splice(1);
+                    this._tempZones.splice(0, this._temp.length - 1);
                 }
             }
 
@@ -1226,7 +1226,7 @@ var InputPlugin = new Class({
 
             if (this.topOnly)
             {
-                draglist.splice(1);
+                draglist.splice(0, draglist.length - 1);
             }
         }
 
