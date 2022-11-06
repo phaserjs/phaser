@@ -361,7 +361,7 @@ var Tween = new Class({
             this.progress = 0;
             this.loopCounter--;
 
-            this.initTweenData();
+            this.initTweenData(true);
 
             if (this.loopDelay > 0)
             {
