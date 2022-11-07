@@ -292,7 +292,7 @@ var Pipeline = {
         {
             var instance = pipelines[i];
 
-            if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
+            if (typeof pipeline === 'string' ? (instance.name === pipeline) : (instance instanceof pipeline))
             {
                 results.push(instance);
             }
