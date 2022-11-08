@@ -264,17 +264,23 @@ var Tween = new Class({
     },
 
     /**
-     * Updates the 'end' value of the given property across all matching targets.
+     * Updates the 'end' value of the given property across all matching targets, as long
+     * as this Tween is currently playing (either forwards or backwards).
      *
-     * Calling this does not adjust the duration of the tween, or the current progress.
+     * Calling this does not adjust the duration of the Tween, or the current progress.
      *
-     * You can optionally tell it to set the 'start' value to be the current value (before the change).
+     * You can optionally tell it to set the 'start' value to be the current value.
+     *
+     * If this Tween is in any other state other than playing then calling this method has no effect.
+     *
+     * Additionally, if the Tween repeats, is reset, or is seeked, it will revert to the original
+     * starting and ending values.
      *
      * @method Phaser.Tweens.Tween#updateTo
      * @since 3.0.0
      *
-     * @param {string} key - The property to set the new value for.
-     * @param {*} value - The new value of the property.
+     * @param {string} key - The property to set the new value for. You cannot update the 'texture' property via this method.
+     * @param {number} value - The new value of the property.
      * @param {boolean} [startToCurrent=false] - Should this change set the start value to be the current value?
      *
      * @return {this} This Tween instance.
@@ -283,17 +289,20 @@ var Tween = new Class({
     {
         if (startToCurrent === undefined) { startToCurrent = false; }
 
-        for (var i = 0; i < this.totalData; i++)
+        if (key !== 'texture' && (this.isPlayingForward() || this.isPlayingBackward()))
         {
-            var tweenData = this.data[i];
-
-            if (tweenData.key === key)
+            for (var i = 0; i < this.totalData; i++)
             {
-                tweenData.end = value;
+                var tweenData = this.data[i];
 
-                if (startToCurrent)
+                if (tweenData.key === key)
                 {
-                    tweenData.start = tweenData.current;
+                    tweenData.end = value;
+
+                    if (startToCurrent)
+                    {
+                        tweenData.start = tweenData.current;
+                    }
                 }
             }
         }

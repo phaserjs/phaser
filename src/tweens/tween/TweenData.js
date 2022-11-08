@@ -115,7 +115,7 @@ var TweenData = new Class({
         this.ease = ease;
 
         /**
-         * The target's starting value, as returned by `getStartValue`.
+         * The targets starting value, as returned by `getStartValue`.
          *
          * @name Phaser.Tweens.TweenData#start
          * @type {number}
@@ -133,7 +133,7 @@ var TweenData = new Class({
         this.previous = 0;
 
         /**
-         * The target's current value, as recorded in the most recent step.
+         * The targets current value, as recorded in the most recent step.
          *
          * @name Phaser.Tweens.TweenData#current
          * @type {number}
@@ -142,7 +142,7 @@ var TweenData = new Class({
         this.current = 0;
 
         /**
-         * The target's ending value, as returned by `getEndValue`.
+         * The targets ending value, as returned by `getEndValue`.
          *
          * @name Phaser.Tweens.TweenData#end
          * @type {number}
