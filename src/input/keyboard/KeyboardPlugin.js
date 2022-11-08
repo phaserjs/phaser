@@ -237,7 +237,7 @@ var KeyboardPlugin = new Class({
      */
     isActive: function ()
     {
-        return (this.enabled && this.scene.sys.isActive());
+        return (this.enabled && this.scene.sys.canInput());
     },
 
     /**
