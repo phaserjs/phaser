@@ -338,6 +338,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* The `BitmapText` Game Object has two new read-only properties `displayWidth` and `displayHeight`. This allows the BitmapText to correctly use the `GetBounds` component.
+* The `BitmapText` Game Object now has the `GetBounds` component added to it, meaning you can now correctly get its dimensions as part of a Container. Fix #6237 (thanks @likwidgames)
 * `WebGLSnapshot` will now flip the pixels in the created Image element if the source was a framebuffer. This means grabbing a snapshot from a Dynamic or Render Texture will now correctly invert the pixels on the y axis for an Image. Grabbing from the game renderer will skip this.
 * `WebGLRenderer.snapshotFramebuffer` and by extension, the snapshot methods in Dynamic Textures and Render Textures, has been updated to ensure that the width and height never exceed the framebuffer dimensions, or it'll cause a runtime error. The method `snapshotArea` has had this limitation removed as a result, allowing you to snapshot areas that are larger than the Canvas. Fix #5707 (thanks @teng-z)
 * `Animation.stop` is always called when a new animation is loaded, regardless if the animation was playing or not and the `delayCounter` is reset to zero. This stops animations with delays preventing other animations from being started until the delay has expired. Fix #5680 (thanks @enderandpeter)
