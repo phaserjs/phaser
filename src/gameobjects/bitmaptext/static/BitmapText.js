@@ -46,6 +46,7 @@ var Render = require('./BitmapTextRender');
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
@@ -71,6 +72,7 @@ var BitmapText = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Depth,
+        Components.GetBounds,
         Components.Mask,
         Components.Origin,
         Components.Pipeline,
@@ -952,6 +954,8 @@ var BitmapText = new Class({
     /**
      * The width of this Bitmap Text.
      *
+     * This property is read-only.
+     *
      * @name Phaser.GameObjects.BitmapText#width
      * @type {number}
      * @readonly
@@ -969,7 +973,9 @@ var BitmapText = new Class({
     },
 
     /**
-     * The height of this bitmap text.
+     * The height of this Bitmap text.
+     *
+     * This property is read-only.
      *
      * @name Phaser.GameObjects.BitmapText#height
      * @type {number}
@@ -983,6 +989,48 @@ var BitmapText = new Class({
             this.getTextBounds(false);
 
             return this._bounds.global.height;
+        }
+
+    },
+
+    /**
+     * The displayed width of this Bitmap Text.
+     *
+     * This value takes into account the scale factor.
+     *
+     * This property is read-only.
+     *
+     * @name Phaser.GameObjects.BitmapText#displayWidth
+     * @type {number}
+     * @readonly
+     * @since 3.60.0
+     */
+    displayWidth: {
+
+        get: function ()
+        {
+            return this.width;
+        }
+
+    },
+
+    /**
+     * The displayed height of this Bitmap Text.
+     *
+     * This value takes into account the scale factor.
+     *
+     * This property is read-only.
+     *
+     * @name Phaser.GameObjects.BitmapText#displayHeight
+     * @type {number}
+     * @readonly
+     * @since 3.60.0
+     */
+    displayHeight: {
+
+        get: function ()
+        {
+            return this.height;
         }
 
     },
