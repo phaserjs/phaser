@@ -573,6 +573,21 @@ var Systems = new Class({
     },
 
     /**
+     * Can this Scene receive Input events?
+     *
+     * @method Phaser.Scenes.Systems#canInput
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Scene can receive Input events.
+     */
+    canInput: function ()
+    {
+        var status = this.settings.status;
+
+        return (status > CONST.PENDING && status <= CONST.RUNNING);
+    },
+
+    /**
      * Is this Scene sleeping?
      *
      * @method Phaser.Scenes.Systems#isSleeping
