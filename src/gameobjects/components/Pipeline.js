@@ -284,6 +284,8 @@ var Pipeline = {
      */
     getPostPipeline: function (pipeline)
     {
+        var isString = (typeof pipeline === 'string');
+
         var pipelines = this.postPipelines;
 
         var results = [];
@@ -292,7 +294,7 @@ var Pipeline = {
         {
             var instance = pipelines[i];
 
-            if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
+            if ((isString && instance.name === pipeline) || (!isString && instance instanceof pipeline))
             {
                 results.push(instance);
             }
