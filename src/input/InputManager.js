@@ -527,7 +527,7 @@ var InputManager = new Class({
      */
     updateInputPlugins: function (type, pointers)
     {
-        var scenes = this.game.scene.getScenes(true, true);
+        var scenes = this.game.scene.getScenes(false, true);
 
         this._tempSkip = false;
 
