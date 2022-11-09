@@ -59,7 +59,7 @@ var HSVToRGB = function (h, s, v, out)
     }
     else if (out.setTo)
     {
-        return out.setTo(r, g, b, out.alpha, false);
+        return out.setTo(r, g, b, out.alpha, true);
     }
     else
     {
