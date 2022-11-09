@@ -9,6 +9,7 @@ var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var LightShaderSourceFS = require('../shaders/Light-frag.js');
 var MultiPipeline = require('./MultiPipeline');
+var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var Vec2 = require('../../../math/Vector2');
 var WebGLPipeline = require('../WebGLPipeline');
 
@@ -122,6 +123,26 @@ var LightPipeline = new Class({
          * @since 3.60.0
          */
         this.tempVec2 = new Vec2();
+
+        /**
+         * A temporary Transform Matrix used for parent Container calculations without them needing their own local copy.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#_tempMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.60.0
+         */
+        this._tempMatrix = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix used for parent Container calculations without them needing their own local copy.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#_tempMatrix2
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.60.0
+         */
+        this._tempMatrix2 = new TransformMatrix();
     },
 
     /**
@@ -280,7 +301,18 @@ var LightPipeline = new Class({
             this.currentNormalMap = normalMap;
         }
 
-        var rotation = (gameObject) ? gameObject.rotation : 0;
+        var rotation = 0;
+
+        if (gameObject && gameObject.parentContainer)
+        {
+            var matrix = gameObject.getWorldTransformMatrix(this._tempMatrix, this._tempMatrix2);
+
+            rotation = matrix.rotationNormalized;
+        }
+        else if (gameObject)
+        {
+            rotation = gameObject.rotation;
+        }
 
         this.setNormalMapRotation(rotation);
 
@@ -318,7 +350,16 @@ var LightPipeline = new Class({
             this.currentNormalMap = normalMap;
         }
 
-        this.setNormalMapRotation(gameObject.rotation);
+        if (gameObject.parentContainer)
+        {
+            var matrix = gameObject.getWorldTransformMatrix(this._tempMatrix, this._tempMatrix2);
+
+            this.setNormalMapRotation(matrix.rotationNormalized);
+        }
+        else
+        {
+            this.setNormalMapRotation(gameObject.rotation);
+        }
 
         return 0;
     },
