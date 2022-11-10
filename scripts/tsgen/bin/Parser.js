@@ -124,6 +124,7 @@ class Parser {
             if (obj) {
                 if (container[doclet.longname]) {
                     console.log('Warning: ignoring duplicate doc name: ' + doclet.longname);
+                    console.log('Meta: ', doclet.meta);
                     docs.splice(i--, 1);
                     continue;
                 }
