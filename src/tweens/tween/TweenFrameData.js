@@ -56,7 +56,7 @@ var TweenFrameData = new Class({
          *
          * Always 'texture' for a TweenFrameData object.
          *
-         * @name Phaser.Tweens.TweenData#key
+         * @name Phaser.Tweens.TweenFrameData#key
          * @type {string}
          * @readonly
          * @since 3.60.0

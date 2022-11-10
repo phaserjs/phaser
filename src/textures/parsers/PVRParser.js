@@ -157,8 +157,6 @@ function ATC12x12Size (width, height)
 }
 
 /**
- * @ignore
- *
  * 0: COMPRESSED_RGB_PVRTC_2BPPV1_IMG
  * 1: COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
  * 2: COMPRESSED_RGB_PVRTC_4BPPV1_IMG
@@ -187,6 +185,10 @@ function ATC12x12Size (width, height)
  * 38: COMPRESSED_RGBA_ASTC_10x10_KHR
  * 39: COMPRESSED_RGBA_ASTC_12x10_KHR
  * 40: COMPRESSED_RGBA_ASTC_12x12_KHR
+ */
+
+/**
+ * @ignore
  */
 var FORMATS = {
     0: { sizeFunc: PVRTC2bppSize, glFormat: 0x8C01 },

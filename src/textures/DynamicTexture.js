@@ -122,7 +122,7 @@ var DynamicTexture = new Class({
         /**
          * The 2D Canvas Rendering Context.
          *
-         * @name Phaser.Textures.CanvasTexture#context
+         * @name Phaser.Textures.DynamicTexture#context
          * @readonly
          * @type {CanvasRenderingContext2D}
          * @since 3.7.0

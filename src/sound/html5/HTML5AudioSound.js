@@ -402,7 +402,7 @@ var HTML5AudioSound = new Class({
      * Method used internally by sound manager for pausing sound if
      * Phaser.Sound.HTML5AudioSoundManager#pauseOnBlur is set to true.
      *
-     * @method Phaser.Sound.HTML5AudioSoundManager#onBlur
+     * @method Phaser.Sound.HTML5AudioSound#onBlur
      * @since 3.0.0
      */
     onBlur: function ()
