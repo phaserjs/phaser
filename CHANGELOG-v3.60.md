@@ -184,7 +184,7 @@ Before Phaser 3.60 this was known as a Render Texture. Dynamic Textures have bee
 * `TextureManager.addDynamicTexture(key, width, height)` is a new method that will create a Dynamic Texture and store it in the Texture Manager, available globally for use by any Game Object.
 * Unlike the old Render Texture, Dynamic Texture extends the native `Phaser.Texture` class, meaning you can use it for any texture based object and also call all of the native Texture methods, such as the ability to add frames to it, use it as the backing source for a sprite sheet or atlas, and more.
 * Dynamic Textures no longer create both Render Targets _and_ Canvas objects, only the one that they require based on the renderer. This means Render Textures and Dynamic Textures now use 50% less memory under WebGL and don't create Canvas DOM elements.
-* You can now directly use a Dynamic Texture as a Bitmap Mask.
+* You can now directly use a Dynamic Texture as the source for a Bitmap Mask.
 * Game Objects that have a mask will now reflect this when drawn to a Dynamic Texture.
 * `DynamicTexture.isDrawing` is a new boolean that allows you to tell if a batch draw has been started and is in process.
 * `DynamicTexture.isSpriteTexture` is a new boolean that informs the texture if it is being used as a backing texture for Sprite Game Objects, or not. If it is (which is the default) then items drawn to the texture are automatically inversed. Doing this ensures that images drawn to the Render Texture are correctly inverted for rendering in WebGL. Not doing so can cause inverted frames. If you use this method, you must use it before drawing anything to the Render Texture. Fix #6057 #6017 (thanks @andymikulski @Grandnainconnu)
@@ -250,6 +250,7 @@ There are breaking changes from previous versions of Phaser.
 * `WebGLRenderer.beginBitmapMask` is a new method that starts the process of using the mask target framebuffer for drawing. This is called by the `BitmapMaskPipeline`.
 * `WebGLRenderer.drawBitmapMask` is a new method that completes the process of rendering using the mask target framebuffer. This is called by the `BitmapMaskPipeline`.
 * The `BitmapMaskPipeline` now hands over most control of the framebuffers to the WebGLRenderer.
+* The `GameObjects.Components.Mask.createBitmapMask` method can now accept the `x`, `y`, `texture` and `frame` parameters new to the BitmapMask constructor.
 
 ### TimeStep Updates
 
