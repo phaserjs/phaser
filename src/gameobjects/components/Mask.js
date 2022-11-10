@@ -79,7 +79,7 @@ var Mask = {
 
     /**
      * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
-     * including this one.
+     * including this one, or a Dynamic Texture.
      *
      * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
      *
@@ -94,19 +94,23 @@ var Mask = {
      * @method Phaser.GameObjects.Components.Mask#createBitmapMask
      * @since 3.6.2
      *
-     * @param {Phaser.GameObjects.GameObject} [renderable] - A renderable Game Object that uses a texture, such as a Sprite.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)} [maskObject] - The Game Object or Dynamic Texture that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
+     * @param {number} [x] - If creating a Game Object, the horizontal position in the world.
+     * @param {number} [y] - If creating a Game Object, the vertical position in the world.
+     * @param {(string|Phaser.Textures.Texture)} [texture] - If creating a Game Object, the key, or instance of the Texture it will use to render with, as stored in the Texture Manager.
+     * @param {(string|number|Phaser.Textures.Frame)} [frame] - If creating a Game Object, an optional frame from the Texture this Game Object is rendering with.
      *
      * @return {Phaser.Display.Masks.BitmapMask} This Bitmap Mask that was created.
      */
-    createBitmapMask: function (renderable)
+    createBitmapMask: function (maskObject, x, y, texture, frame)
     {
-        if (renderable === undefined && (this.texture || this.shader))
+        if (maskObject === undefined && (this.texture || this.shader))
         {
             // eslint-disable-next-line consistent-this
-            renderable = this;
+            maskObject = this;
         }
 
-        return new BitmapMask(this.scene, renderable);
+        return new BitmapMask(this.scene, maskObject, x, y, texture, frame);
     },
 
     /**
