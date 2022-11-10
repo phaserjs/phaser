@@ -13,7 +13,7 @@ var GameObjectFactory = require('../../gameobjects/GameObjectFactory');
  * Unlike the Geometry Mask, which is a clipping path, a Bitmap Mask behaves like an alpha mask,
  * not a clipping path. It is only available when using the WebGL Renderer.
  *
- * A Bitmap Mask can use any Game Object to determine the alpha of each pixel of the masked Game Object(s).
+ * A Bitmap Mask can use any Game Object or Dynamic Texture to determine the alpha of each pixel of the masked Game Object(s).
  * For any given point of a masked Game Object's texture, the pixel's alpha will be multiplied by the alpha
  * of the pixel at the same position in the Bitmap Mask's Game Object. The color of the pixel from the
  * Bitmap Mask doesn't matter.
@@ -43,7 +43,7 @@ var GameObjectFactory = require('../../gameobjects/GameObjectFactory');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene to which this mask is being added.
- * @param {Phaser.GameObjects.GameObject} [maskObject] - The Game Object that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
+ * @param {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)} [maskObject] - The Game Object or Dynamic Texture that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
  * @param {number} [x] - If creating a Game Object, the horizontal position in the world.
  * @param {number} [y] - If creating a Game Object, the vertical position in the world.
  * @param {(string|Phaser.Textures.Texture)} [texture] - If creating a Game Object, the key, or instance of the Texture it will use to render with, as stored in the Texture Manager.
@@ -64,7 +64,7 @@ var BitmapMask = new Class({
          * The Game Object that is used as the mask. Must use a texture, such as a Sprite.
          *
          * @name Phaser.Display.Masks.BitmapMask#bitmapMask
-         * @type {Phaser.GameObjects.GameObject}
+         * @type {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)}
          * @since 3.0.0
          */
         this.bitmapMask = maskObject;
@@ -94,16 +94,16 @@ var BitmapMask = new Class({
     },
 
     /**
-     * Sets a new Game Object for this Bitmap Mask to use.
+     * Sets a new Game Object or Dynamic Texture for this Bitmap Mask to use.
      *
-     * The Game Object must have a texture, such as a Sprite.
+     * If a Game Object it must have a texture, such as a Sprite.
      *
-     * You can update the source Game Object being used as the mask as often as you like.
+     * You can update the source of the mask as often as you like.
      *
      * @method Phaser.Display.Masks.BitmapMask#setBitmap
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} maskObject - The Game Object that will be used as the mask. Must have a texture, such as a Sprite.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)} maskObject - The Game Object or Dynamic Texture that will be used as the mask. If a Game Object, it must have a texture, such as a Sprite.
      */
     setBitmap: function (maskObject)
     {
@@ -193,7 +193,7 @@ var BitmapMask = new Class({
  * Unlike the Geometry Mask, which is a clipping path, a Bitmap Mask behaves like an alpha mask,
  * not a clipping path. It is only available when using the WebGL Renderer.
  *
- * A Bitmap Mask can use any Game Object to determine the alpha of each pixel of the masked Game Object(s).
+ * A Bitmap Mask can use any Game Object, or Dynamic Texture, to determine the alpha of each pixel of the masked Game Object(s).
  * For any given point of a masked Game Object's texture, the pixel's alpha will be multiplied by the alpha
  * of the pixel at the same position in the Bitmap Mask's Game Object. The color of the pixel from the
  * Bitmap Mask doesn't matter.
@@ -220,7 +220,7 @@ var BitmapMask = new Class({
  * @method Phaser.GameObjects.GameObjectFactory#bitmapMask
  * @since 3.60.0
  *
- * @param {Phaser.GameObjects.GameObject} [maskObject] - The Game Object that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
+ * @param {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)} [maskObject] - The Game Object or Texture that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
  * @param {number} [x] - If creating a Game Object, the horizontal position in the world.
  * @param {number} [y] - If creating a Game Object, the vertical position in the world.
  * @param {(string|Phaser.Textures.Texture)} [texture] - If creating a Game Object, the key, or instance of the Texture it will use to render with, as stored in the Texture Manager.
