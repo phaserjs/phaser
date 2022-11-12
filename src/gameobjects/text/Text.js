@@ -465,7 +465,7 @@ var Text = new Class({
                         .replace(/[ \n]*$/gi, '');
 
                     // Prepend remainder to next line
-                    lines[i + 1] = remainder + ' ' + (lines[i + 1] || '');
+                    lines.splice(i + 1, 0, remainder);
                     linesCount = lines.length;
 
                     break; // Processing on this line
