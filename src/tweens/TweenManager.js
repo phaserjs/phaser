@@ -286,32 +286,74 @@ var TweenManager = new Class({
      * However, doing so means it's entirely up to _you_ to destroy the tween when you're finished with it,
      * otherwise it will linger in memory forever.
      *
-     * You can optionally pass an **array** of Tween Configuration objects to this method and it will create
-     * one Tween per entry in the array. If an array is given, an array of tweens is returned.
-     *
      * If you wish to chain Tweens together for sequential playback, see the `TweenManager.chain` method.
      *
      * @method Phaser.Tweens.TweenManager#add
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenBuilderConfig[]|object|object[]} config - A Tween Configuration object. Or an array of Tween Configuration objects.
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - A Tween Configuration object.
      *
-     * @return {Phaser.Tweens.Tween|Phaser.Tweens.Tween[]} The created Tween, or an array of Tweens if an array of tween configs was provided.
+     * @return {Phaser.Tweens.Tween} The created Tween.
      */
     add: function (config)
+    {
+        var tween = config;
+        var tweens = this.tweens;
+
+        if (tween instanceof Tween || tween instanceof TweenChain)
+        {
+            tweens.push(tween.reset());
+        }
+        else
+        {
+            if (Array.isArray(tween.tweens))
+            {
+                tween = TweenChainBuilder(this, tween);
+            }
+            else
+            {
+                tween = TweenBuilder(this, tween);
+            }
+
+            tweens.push(tween.reset());
+        }
+
+        return tween;
+    },
+
+    /**
+     * Create multiple Tweens and add them all to this Tween Manager, by passing an array of Tween Configuration objects.
+     *
+     * See the `TweenBuilderConfig` for all of the options you have available.
+     *
+     * Playback will start immediately unless the tweens have been configured to be paused.
+     *
+     * Please note that a Tween will not manipulate any target property that begins with an underscore.
+     *
+     * Tweens are designed to be 'fire-and-forget'. They automatically destroy themselves once playback
+     * is complete, to free-up memory and resources. If you wish to keep a tween after playback, i.e. to
+     * play it again at a later time, then you should set the `persist` property to `true` in the config.
+     * However, doing so means it's entirely up to _you_ to destroy the tween when you're finished with it,
+     * otherwise it will linger in memory forever.
+     *
+     * If you wish to chain Tweens together for sequential playback, see the `TweenManager.chain` method.
+     *
+     * @method Phaser.Tweens.TweenManager#addMultiple
+     * @since 3.60.0
+     *
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig[]|object[]} configs - An array of Tween Configuration objects.
+     *
+     * @return {Phaser.Tweens.Tween[]} An array of created Tweens.
+     */
+    addMultiple: function (configs)
     {
         var tween;
         var result = [];
         var tweens = this.tweens;
 
-        if (!Array.isArray(config))
+        for (var i = 0; i < configs.length; i++)
         {
-            config = [ config ];
-        }
-
-        for (var i = 0; i < config.length; i++)
-        {
-            tween = config[i];
+            tween = configs[i];
 
             if (tween instanceof Tween || tween instanceof TweenChain)
             {
@@ -334,7 +376,7 @@ var TweenManager = new Class({
             result.push(tween);
         }
 
-        return (result.length === 1) ? result[0] : result;
+        return result;
     },
 
     /**
@@ -352,31 +394,17 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#chain
      * @since 3.60.0
      *
-     * @param {Phaser.Types.Tweens.TweenChainBuilderConfig | Phaser.Types.Tweens.TweenChainBuilderConfig[]| object | object[]} tweens - A Tween Chain configuration object, or an array of them to create multiple chains at once.
+     * @param {Phaser.Types.Tweens.TweenChainBuilderConfig|object} tweens - A Tween Chain configuration object.
      *
-     * @return {(Phaser.Tweens.TweenChain|Phaser.Tweens.TweenChain[])} The Tween Chain instance, or an array of them if you passed in an array of configs.
+     * @return {Phaser.Tweens.TweenChain} The Tween Chain instance.
      */
     chain: function (config)
     {
-        if (!Array.isArray(config))
-        {
-            config = [ config ];
-        }
+        var chain = TweenChainBuilder(this, config);
 
-        var chain;
-        var result = [];
-        var tweens = this.tweens;
+        this.tweens.push(chain.init());
 
-        for (var i = 0; i < config.length; i++)
-        {
-            chain = TweenChainBuilder(this, config[i]);
-
-            tweens.push(chain.init());
-
-            result.push(chain);
-        }
-
-        return (result.length === 1) ? result[0] : result;
+        return chain;
     },
 
     /**
