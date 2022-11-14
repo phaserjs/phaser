@@ -140,6 +140,17 @@ var Bob = new Class({
          * @since 3.0.0
          */
         this.flipY = false;
+
+        /**
+         * Private read-only property used to allow Bobs to have physics bodies.
+         *
+         * @name Phaser.GameObjects.Bob#hasTransformComponent
+         * @type {boolean}
+         * @private
+         * @readonly
+         * @since 3.60.0
+         */
+        this.hasTransformComponent = true;
     },
 
     /**
