@@ -1125,6 +1125,8 @@ var WebGLPipeline = new Class({
      */
     rebind: function (currentShader)
     {
+        this.activeBuffer = null;
+
         this.setVertexBuffer();
 
         var shaders = this.shaders;
@@ -1139,6 +1141,8 @@ var WebGLPipeline = new Class({
                 this.currentShader = shader;
             }
         }
+
+        this.activeTextures.length = 0;
 
         this.emit(Events.REBIND, this.currentShader);
 
