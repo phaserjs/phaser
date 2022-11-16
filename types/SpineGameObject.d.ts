@@ -98,7 +98,7 @@ declare class SpineGameObject extends Phaser.GameObjects.GameObject implements O
     setScale(x: number, y?: number): this;
     setScrollFactor(x: number, y?: number): this;
     setSize(width?: number, height?: number, offsetX?: number, offsetY?: number): SpineGameObject;
-    setSkeleton(atlasDataKey: string, skeletonJSON: object, animationName?: string, loop?: boolean): SpineGameObject;
+    setSkeleton(atlasDataKey: string, animationName?: string, loop?: boolean, skeletonJSON?: object): SpineGameObject;
     setSkeletonFromJSON(atlasDataKey: string, skeletonJSON: object, animationName?: string, loop?: boolean): SpineGameObject;
     setSkin(newSkin: spine.Skin): SpineGameObject;
     setSkinByName(skinName: string): SpineGameObject;
