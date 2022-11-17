@@ -83,6 +83,7 @@ Previously, `WebGLRenderer.whiteTexture` and `WebGLRenderer.blankTexture` had a 
 
 #### Multi Tint Pipeline
 
+* The `batchLine` method in the Multi Pipeline will now check to see if the dxdy len is zero, and if so, it will abort drawing the line. This fixes issues on older Android devices, such as the Samsung Galaxy S6 or Kindle 7, where it would draw erroneous lines leading up to the top-left of the canvas under WebGL when rendering a stroked rounded rectangle. Fix #5429 (thanks @fkoch-tgm @sreadixl)
 * The `Multi.frag` shader now uses a `highp` precision, or `mediump` if the device doesn't support it (thanks @arbassic)
 * The `WebGL.Utils.checkShaderMax` function will no longer use a massive if/else glsl shader check and will instead rely on the value given in `gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS)`.
 * The internal WebGL Utils function `GenerateSrc` has been removed as it's no longer required internally.
