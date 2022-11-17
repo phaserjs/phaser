@@ -7,7 +7,6 @@
 var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var GameEvents = require('../../core/events');
 var GameObject = require('../GameObject');
 var GetPowerOfTwo = require('../../math/pow2/GetPowerOfTwo');
 var Smoothing = require('../../display/canvas/Smoothing');
@@ -283,8 +282,6 @@ var TileSprite = new Class({
         this.setFrame(frameKey);
         this.setOriginFromFrame();
         this.initPipeline();
-
-        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     },
 
     /**
@@ -528,27 +525,6 @@ var TileSprite = new Class({
     },
 
     /**
-     * Internal context-restored handler.
-     *
-     * @method Phaser.GameObjects.TileSprite#onContextRestored
-     * @protected
-     * @since 3.60.0
-     */
-    onContextRestored: function (renderer)
-    {
-        if (!renderer)
-        {
-            return;
-        }
-
-        var gl = renderer.gl;
-
-        this.dirty = true;
-        this.fillPattern = null;
-        this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
-    },
-
-    /**
      * Internal destroy handler, called as part of the destroy process.
      *
      * @method Phaser.GameObjects.TileSprite#preDestroy
@@ -575,8 +551,6 @@ var TileSprite = new Class({
         this.texture.destroy();
 
         this.renderer = null;
-
-        this.scene.sys.game.events.off(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     },
 
     /**

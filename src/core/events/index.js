@@ -13,7 +13,6 @@ module.exports = {
     BLUR: require('./BLUR_EVENT'),
     BOOT: require('./BOOT_EVENT'),
     CONTEXT_LOST: require('./CONTEXT_LOST_EVENT'),
-    CONTEXT_RESTORED: require('./CONTEXT_RESTORED_EVENT'),
     DESTROY: require('./DESTROY_EVENT'),
     FOCUS: require('./FOCUS_EVENT'),
     HIDDEN: require('./HIDDEN_EVENT'),

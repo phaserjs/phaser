@@ -8,7 +8,6 @@ var AddToDOM = require('../../dom/AddToDOM');
 var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var GameEvents = require('../../core/events');
 var GameObject = require('../GameObject');
 var GetTextSize = require('./GetTextSize');
 var GetValue = require('../../utils/object/GetValue');
@@ -288,8 +287,6 @@ var Text = new Class({
         {
             this.setLineSpacing(style.lineSpacing);
         }
-
-        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     },
 
     /**
@@ -1410,18 +1407,6 @@ var Text = new Class({
     },
 
     /**
-     * Internal context-restored handler.
-     *
-     * @method Phaser.GameObjects.Text#onContextRestored
-     * @protected
-     * @since 3.60.0
-     */
-    onContextRestored: function ()
-    {
-        this.dirty = true;
-    },
-
-    /**
      * Internal destroy handler, called as part of the destroy process.
      *
      * @method Phaser.GameObjects.Text#preDestroy
@@ -1438,8 +1423,6 @@ var Text = new Class({
         CanvasPool.remove(this.canvas);
 
         this.texture.destroy();
-
-        this.scene.sys.game.events.off(GameEvents.CONTEXT_RESTORED, this.onContextRestored, this);
     }
 
     /**

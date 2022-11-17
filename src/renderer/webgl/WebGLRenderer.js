@@ -11,7 +11,6 @@ var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var EventEmitter = require('eventemitter3');
 var Events = require('../events');
-var GameEvents = require('../../core/events');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var Matrix4 = require('../../math/Matrix4');
 var NOOP = require('../../utils/NOOP');
@@ -677,22 +676,15 @@ var WebGLRenderer = new Class({
         {
             _this.contextLost = true;
 
-            _this.game.events.emit(GameEvents.CONTEXT_LOST, _this);
+            if (console)
+            {
+                console.warn('WebGL Context lost. Renderer disabled');
+            }
 
             event.preventDefault();
         };
 
-        this.contextRestoredHandler = function ()
-        {
-            _this.contextLost = false;
-
-            _this.init(_this.config);
-
-            _this.game.events.emit(GameEvents.CONTEXT_RESTORED, _this);
-        };
-
         canvas.addEventListener('webglcontextlost', this.contextLostHandler, false);
-        canvas.addEventListener('webglcontextrestored', this.contextRestoredHandler, false);
 
         //  Set it back into the Game, so developers can access it from there too
         game.context = gl;
@@ -2857,7 +2849,6 @@ var WebGLRenderer = new Class({
     destroy: function ()
     {
         this.canvas.removeEventListener('webglcontextlost', this.contextLostHandler, false);
-        this.canvas.removeEventListener('webglcontextrestored', this.contextRestoredHandler, false);
 
         this.maskTarget.destroy();
         this.maskSource.destroy();
