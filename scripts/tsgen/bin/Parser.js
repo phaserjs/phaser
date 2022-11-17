@@ -2,6 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Parser = void 0;
 const dom = require("dts-dom");
+/**
+ * Note that this Parser only works with jsdoc 3.6.6 output.
+ * Downgrading, or upgrading jsdoc will cause it to break.
+ */
 const regexEndLine = /^(.*)\r\n|\n|\r/gm;
 class Parser {
     constructor(docs) {
