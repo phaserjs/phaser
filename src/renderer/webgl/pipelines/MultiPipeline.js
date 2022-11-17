@@ -873,6 +873,13 @@ var MultiPipeline = new Class({
         var dy = by - ay;
 
         var len = Math.sqrt(dx * dx + dy * dy);
+
+        if (len === 0)
+        {
+            //  Because we cannot (and should not) divide by zero!
+            return;
+        }
+
         var al0 = aLineWidth * (by - ay) / len;
         var al1 = aLineWidth * (ax - bx) / len;
         var bl0 = bLineWidth * (by - ay) / len;
