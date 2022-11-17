@@ -1764,7 +1764,7 @@ var Tilemap = new Class({
         {
             layer = this.layers[index];
 
-            layer.destroy();
+            layer.tilemapLayer.destroy();
 
             SpliceOne(this.layers, index);
 
