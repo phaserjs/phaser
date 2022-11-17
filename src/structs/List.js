@@ -291,11 +291,10 @@ var List = new Class({
      * @method Phaser.Structs.List#getAll
      * @since 3.0.0
      *
-     * @genericUse {T} - [value]
      * @genericUse {T[]} - [$return]
      *
      * @param {string} [property] - An optional property to test against the value argument.
-     * @param {*} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
+     * @param {any} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
      * @param {number} [startIndex] - The first child index to start the search from.
      * @param {number} [endIndex] - The last child index to search up until.
      *
