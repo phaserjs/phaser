@@ -178,8 +178,14 @@ var MapData = new Class({
          */
         this.objects = GetFastValue(config, 'objects', []);
 
+        //  Because Tiled can sometimes create an empty object if you don't populate it, not an empty array
+        if (!Array.isArray(this.objects))
+        {
+            this.objects = [];
+        }
+
         /**
-          * An object of collision data. Must be created as physics object or will return undefined.
+         * An object of collision data. Must be created as physics object or will return undefined.
          *
          * @name Phaser.Tilemaps.MapData#collision
          * @type {object}

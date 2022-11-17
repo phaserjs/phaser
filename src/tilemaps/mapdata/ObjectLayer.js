@@ -109,6 +109,12 @@ var ObjectLayer = new Class({
          * @since 3.0.0
          */
         this.objects = GetFastValue(config, 'objects', []);
+
+        //  Because Tiled can sometimes create an empty object if you don't populate it, not an empty array
+        if (!Array.isArray(this.objects))
+        {
+            this.objects = [];
+        }
     }
 
 });
