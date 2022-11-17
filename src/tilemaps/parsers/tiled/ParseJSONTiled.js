@@ -7,6 +7,7 @@
 var AssignTileProperties = require('./AssignTileProperties');
 var BuildTilesetIndex = require('./BuildTilesetIndex');
 var CONST = require('../../const/ORIENTATION_CONST');
+var DeepCopy = require('../../../utils/object/DeepCopy');
 var Formats = require('../../Formats');
 var FromOrientationString = require('../FromOrientationString');
 var MapData = require('../../mapdata/MapData');
@@ -22,7 +23,7 @@ var ParseTilesets = require('./ParseTilesets');
  * @since 3.0.0
  *
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
- * @param {object} json - The Tiled JSON object.
+ * @param {object} source - The original Tiled JSON object. This is deep copied by this function.
  * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map
  * data are handled. If `true`, empty locations will get a value of `null`. If `false`, empty
  * location will get a Tile object with an index of -1. If you've a large sparsely populated map and
@@ -32,8 +33,10 @@ var ParseTilesets = require('./ParseTilesets');
  *
  * @return {?Phaser.Tilemaps.MapData} The created MapData object, or `null` if the data can't be parsed.
  */
-var ParseJSONTiled = function (name, json, insertNull)
+var ParseJSONTiled = function (name, source, insertNull)
 {
+    var json = DeepCopy(source);
+
     //  Map data will consist of: layers, objects, images, tilesets, sizes
     var mapData = new MapData({
         width: json.width,
