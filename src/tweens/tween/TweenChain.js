@@ -120,7 +120,7 @@ var TweenChain = new Class({
 
             tween.parent = this;
 
-            data.push(tween.init());
+            data.push(tween.reset());
         }
 
         this.totalData = data.length;
@@ -253,7 +253,7 @@ var TweenChain = new Class({
      */
     makeActive: function (tween)
     {
-        tween.init();
+        tween.reset();
 
         tween.setActiveState();
 
