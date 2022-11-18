@@ -282,6 +282,7 @@ var BaseSound = new Class({
 
     /**
      * Play this sound, or a marked section of it.
+     *
      * It always plays the sound from the start. If you want to start playback from a specific time
      * you can set 'seek' setting of the config object, provided to this call, to that value.
      *

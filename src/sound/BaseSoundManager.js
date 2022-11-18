@@ -245,7 +245,9 @@ var BaseSoundManager = new Class({
 
     /**
      * Adds a new sound to the sound manager and plays it.
+     *
      * The sound will be automatically removed (destroyed) once playback ends.
+     *
      * This lets you play a new sound on the fly without the need to keep a reference to it.
      *
      * @method Phaser.Sound.BaseSoundManager#play

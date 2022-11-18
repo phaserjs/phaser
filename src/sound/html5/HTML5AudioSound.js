@@ -92,8 +92,13 @@ var HTML5AudioSound = new Class({
 
     /**
      * Play this sound, or a marked section of it.
+     *
      * It always plays the sound from the start. If you want to start playback from a specific time
      * you can set 'seek' setting of the config object, provided to this call, to that value.
+     *
+     * If you want to play the same sound simultaneously, then you need to create another instance
+     * of it and play that Sound. For HTML5 Audio this also requires creating multiple audio instances
+     * when loading the audio files.
      *
      * @method Phaser.Sound.HTML5AudioSound#play
      * @fires Phaser.Sound.Events#PLAY

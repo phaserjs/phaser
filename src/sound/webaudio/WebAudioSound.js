@@ -203,6 +203,9 @@ var WebAudioSound = new Class({
      * It always plays the sound from the start. If you want to start playback from a specific time
      * you can set 'seek' setting of the config object, provided to this call, to that value.
      *
+     * If you want to play the same sound simultaneously, then you need to create another instance
+     * of it and play that Sound.
+     *
      * @method Phaser.Sound.WebAudioSound#play
      * @fires Phaser.Sound.Events#PLAY
      * @since 3.0.0
