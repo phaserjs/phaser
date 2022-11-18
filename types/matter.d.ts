@@ -2306,10 +2306,23 @@ declare namespace MatterJS {
          * Note that this method will ensure that the first part in `body.parts` will always be the `body`.
          * @method setParts
          * @param {body} body
-         * @param [body] parts
+         * @param {body[]} parts
          * @param {bool} [autoHull=true]
          */
         static setParts (body: BodyType, parts: BodyType[], autoHull?: boolean): void;
+
+        /**
+         * Set the centre of mass of the body.
+         * The `centre` is a vector in world-space unless `relative` is set, in which case it is a translation.
+         * The centre of mass is the point the body rotates about and can be used to simulate non-uniform density.
+         * This is equal to moving `body.position` but not the `body.vertices`.
+         * Invalid if the `centre` falls outside the body's convex hull.
+         * @method setCentre
+         * @param {body} body
+         * @param {vector} centre
+         * @param {bool} relative
+         */
+        static setCentre (body: BodyType, centre: Vector, relative: boolean): void;
 
         /**
          * Sets the position of the body instantly. Velocity, angle, force etc. are unchanged.
@@ -2488,6 +2501,19 @@ declare namespace MatterJS {
          * @param {bool} [autoHull=true]
          */
         setParts (body: BodyType, parts: BodyType[], autoHull?: boolean): void;
+
+        /**
+         * Set the centre of mass of the body.
+         * The `centre` is a vector in world-space unless `relative` is set, in which case it is a translation.
+         * The centre of mass is the point the body rotates about and can be used to simulate non-uniform density.
+         * This is equal to moving `body.position` but not the `body.vertices`.
+         * Invalid if the `centre` falls outside the body's convex hull.
+         * @method setCentre
+         * @param {body} body
+         * @param {vector} centre
+         * @param {bool} relative
+         */
+        setCentre (body: BodyType, centre: Vector, relative: boolean): void;
 
         /**
          * Sets the position of the body instantly. Velocity, angle, force etc. are unchanged.
