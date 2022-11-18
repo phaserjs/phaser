@@ -10,9 +10,9 @@
  * This event is dispatched by a Data Manager when an item in the data store is changed.
  *
  * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
- * the change of a specific data item from a Game Object you would use: `sprite.data.on('changedata-key', listener)`,
+ * the change of a specific data item from a Game Object you would use: `sprite.on('changedata-key', listener)`,
  * where `key` is the unique string key of the data item. For example, if you have a data item stored called `gold`
- * then you can listen for `sprite.data.on('changedata-gold')`.
+ * then you can listen for `sprite.on('changedata-gold')`.
  *
  * @event Phaser.Data.Events#CHANGE_DATA_KEY
  * @type {string}

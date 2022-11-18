@@ -10,7 +10,7 @@
  * This event is dispatched by a Data Manager when an item is removed from it.
  *
  * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
- * the removal of a data item on a Game Object you would use: `sprite.data.on('removedata', listener)`.
+ * the removal of a data item on a Game Object you would use: `sprite.on('removedata', listener)`.
  *
  * @event Phaser.Data.Events#REMOVE_DATA
  * @type {string}

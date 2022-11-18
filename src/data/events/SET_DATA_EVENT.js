@@ -10,7 +10,7 @@
  * This event is dispatched by a Data Manager when a new item is added to the data store.
  *
  * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
- * the addition of a new data item on a Game Object you would use: `sprite.data.on('setdata', listener)`.
+ * the addition of a new data item on a Game Object you would use: `sprite.on('setdata', listener)`.
  *
  * @event Phaser.Data.Events#SET_DATA
  * @type {string}

@@ -10,7 +10,7 @@
  * This event is dispatched by a Data Manager when an item in the data store is changed.
  *
  * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
- * a change data event from a Game Object you would use: `sprite.data.on('changedata', listener)`.
+ * a change data event from a Game Object you would use: `sprite.on('changedata', listener)`.
  *
  * This event is dispatched for all items that change in the Data Manager.
  * To listen for the change of a specific item, use the `CHANGE_DATA_KEY_EVENT` event.
