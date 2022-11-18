@@ -334,6 +334,9 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#setData
      * @since 3.0.0
      *
+     * @generic {any} T
+     * @genericUse {(string|T)} - [key]
+     *
      * @param {(string|object)} key - The key to set the value for. Or an object of key value pairs. If an object the `data` argument is ignored.
      * @param {*} [data] - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
@@ -364,6 +367,9 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#incData
      * @since 3.23.0
      *
+     * @generic {any} T
+     * @genericUse {(string|T)} - [key]
+     *
      * @param {(string|object)} key - The key to increase the value for.
      * @param {*} [data] - The value to increase for the given key.
      *
@@ -393,6 +399,9 @@ var GameObject = new Class({
      *
      * @method Phaser.GameObjects.GameObject#toggleData
      * @since 3.23.0
+     *
+     * @generic {any} T
+     * @genericUse {(string|T)} - [key]
      *
      * @param {(string|object)} key - The key to toggle the value for.
      *
