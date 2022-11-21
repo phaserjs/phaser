@@ -274,6 +274,7 @@ There are breaking changes from previous versions of Phaser.
 
 ### New Features
 
+* `BaseSoundManager.getAllPlaying` is a new method that will return all currently playing sounds in the Sound Manager.
 * `Animation.showBeforeDelay` is a new optional boolean property you can set when creating, or playing an animation. If the animation has a delay before playback starts this controls if it should still set the first frame immediately, or after the delay has expired (the default).
 * `InputPlugin.resetPointers` is a new method that will loop through all of the Input Manager Pointer instances and reset them all. This is useful if a 3rd party component, such as Vue, has stolen input from Phaser and you need to reset its input state again.
 * `Pointer.reset` is a new method that will reset a Pointer instance back to its 'factory' settings.
