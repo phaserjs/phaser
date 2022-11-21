@@ -427,6 +427,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Bug Fixes
 
+* The `InputPlugin.sortGameObjects` method was using the Camera Render List to determine the Game Object display list. This would exclude non-rendering objects, such as Game Objects with alpha set to zero, even if their Input `alwaysEnable` flag was set. This method now uses the Display List instead, which gives correct results for invisible 'always enabled' objects. Fix #5507 (thanks @EmilSV)
 * The `Tilemap.destroyLayer` method would throw an error "TypeError: layer.destroy is not a function". It now correctly destroys the TilemapLayer. Fix #6268 (thanks @samme)
 * `MapData` and `ObjectLayer` will now enforce that the `Tilemap.objects` property is always an array. Sometimes Tiled willl set it to be a blank object in the JSON data. This fix makes sure it is always an array. Fix #6139 (thanks @robbeman)
 * The `ParseJSONTiled` function will now run a `DeepCopy` on the source Tiled JSON, which prevents object mutation, fixing an issue where Tiled Object Layer names would be duplicated if used across multiple Tilemap instances. Fix #6212 (thanks @temajm @wahur666)
