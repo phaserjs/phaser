@@ -2670,7 +2670,7 @@ var InputPlugin = new Class({
             return gameObjects;
         }
 
-        var list = pointer.camera.renderList;
+        var list = this.displayList.list;
 
         return gameObjects.sort(function (childA, childB)
         {
