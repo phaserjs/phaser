@@ -253,6 +253,7 @@ There are breaking changes from previous versions of Phaser.
 * `WebGLRenderer.drawBitmapMask` is a new method that completes the process of rendering using the mask target framebuffer. This is called by the `BitmapMaskPipeline`.
 * The `BitmapMaskPipeline` now hands over most control of the framebuffers to the WebGLRenderer.
 * The `GameObjects.Components.Mask.createBitmapMask` method can now accept the `x`, `y`, `texture` and `frame` parameters new to the BitmapMask constructor.
+* Previously, calling `createBitmapMask` on a Shape Game Object would fail unless you passed the shape to the method. Now, it will correctly create a mask from the Shape without needing to pass it. Fix #5976 (thanks @samme)
 
 ### TimeStep Updates
 
