@@ -217,7 +217,7 @@ var RenderTarget = new Class({
             }
 
             this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter, true);
-            this.framebuffer = renderer.createFramebuffer(width, height, this.texture, false);
+            this.framebuffer = renderer.createFramebuffer(width, height, this.texture, true);
 
             this.width = width;
             this.height = height;
