@@ -432,6 +432,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Bug Fixes
 
+* When using RTL (right-to-left) `Text` Game Objects, the Text would vanish on iOS15+ if you changed the text or font style. The context RTL properties are now restored when the text is updated, fixing this issue. Fix #6121 (thanks @liorGameDev)
 * The `InputPlugin.sortGameObjects` method was using the Camera Render List to determine the Game Object display list. This would exclude non-rendering objects, such as Game Objects with alpha set to zero, even if their Input `alwaysEnable` flag was set. This method now uses the Display List instead, which gives correct results for invisible 'always enabled' objects. Fix #5507 (thanks @EmilSV)
 * The `Tilemap.destroyLayer` method would throw an error "TypeError: layer.destroy is not a function". It now correctly destroys the TilemapLayer. Fix #6268 (thanks @samme)
 * `MapData` and `ObjectLayer` will now enforce that the `Tilemap.objects` property is always an array. Sometimes Tiled willl set it to be a blank object in the JSON data. This fix makes sure it is always an array. Fix #6139 (thanks @robbeman)
