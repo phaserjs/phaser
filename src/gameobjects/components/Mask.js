@@ -94,6 +94,10 @@ var Mask = {
      * @method Phaser.GameObjects.Components.Mask#createBitmapMask
      * @since 3.6.2
      *
+     * @genericUse {Phaser.GameObjects.GameObject} G
+     * @genericUse {Phaser.Textures.DynamicTexture} T
+     * @generic {(G|T|null)} [maskObject]
+     *
      * @param {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)} [maskObject] - The Game Object or Dynamic Texture that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
      * @param {number} [x] - If creating a Game Object, the horizontal position in the world.
      * @param {number} [y] - If creating a Game Object, the vertical position in the world.
@@ -104,7 +108,7 @@ var Mask = {
      */
     createBitmapMask: function (maskObject, x, y, texture, frame)
     {
-        if (maskObject === undefined && (this.texture || this.shader || this instanceof Phaser.GameObjects.Shape))
+        if (maskObject === undefined && (this.texture || this.shader || this.geom))
         {
             // eslint-disable-next-line consistent-this
             maskObject = this;
@@ -127,13 +131,17 @@ var Mask = {
      * @method Phaser.GameObjects.Components.Mask#createGeometryMask
      * @since 3.6.2
      *
+     * @genericUse {Phaser.GameObjects.Graphics} G
+     * @genericUse {Phaser.GameObjects.Shape} S
+     * @generic {(G|S)} [graphics]
+     *
      * @param {Phaser.GameObjects.Graphics|Phaser.GameObjects.Shape} [graphics] - A Graphics Game Object, or any kind of Shape Game Object. The geometry within it will be used as the mask.
      *
      * @return {Phaser.Display.Masks.GeometryMask} This Geometry Mask that was created.
      */
     createGeometryMask: function (graphics)
     {
-        if (graphics === undefined && (this instanceof Phaser.GameObjects.Graphics || this instanceof Phaser.GameObjects.Shape))
+        if (graphics === undefined && (this.type === 'Graphics' || this.geom))
         {
             // eslint-disable-next-line consistent-this
             graphics = this;
