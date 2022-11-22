@@ -36,8 +36,8 @@
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [lifespan] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#lifespan} (emit only).
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [maxVelocityX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityX} (emit only).
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [maxVelocityY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityY} (emit only).
- * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [moveToX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToX} (emit only).
- * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [moveToY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToY} (emit only).
+ * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [moveToX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToX} (emit only). If set, overrides `angle` and `speed` properties.
+ * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [moveToY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToY} (emit only). If set, overrides `angle` and `speed` properties.
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [quantity] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity} (emit only).
  * @property {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} [rotate] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#rotate}.
  * @property {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} [scale] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setScale}.
