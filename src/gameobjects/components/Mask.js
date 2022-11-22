@@ -104,7 +104,7 @@ var Mask = {
      */
     createBitmapMask: function (maskObject, x, y, texture, frame)
     {
-        if (maskObject === undefined && (this.texture || this.shader))
+        if (maskObject === undefined && (this.texture || this.shader || this instanceof Phaser.GameObjects.Shape))
         {
             // eslint-disable-next-line consistent-this
             maskObject = this;
