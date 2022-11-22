@@ -1215,6 +1215,11 @@ var Text = new Class({
 
             //  Because resizing the canvas resets the context
             style.syncFont(canvas, context);
+
+            if (style.rtl)
+            {
+                context.direction = 'rtl';
+            }
         }
         else
         {
@@ -1232,8 +1237,6 @@ var Text = new Class({
         }
 
         style.syncStyle(canvas, context);
-
-        context.textBaseline = 'alphabetic';
 
         //  Apply padding
         context.translate(padding.left, padding.top);
@@ -1300,14 +1303,14 @@ var Text = new Class({
 
             if (style.strokeThickness)
             {
-                this.style.syncShadow(context, style.shadowStroke);
+                style.syncShadow(context, style.shadowStroke);
 
                 context.strokeText(lines[i], linePositionX, linePositionY);
             }
 
             if (style.color)
             {
-                this.style.syncShadow(context, style.shadowFill);
+                style.syncShadow(context, style.shadowFill);
 
                 context.fillText(lines[i], linePositionX, linePositionY);
             }
