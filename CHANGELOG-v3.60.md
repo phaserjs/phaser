@@ -70,6 +70,8 @@ Due to all of the changes with how WebGL texture batching works a lot of mostly 
 
 Previously, `WebGLRenderer.whiteTexture` and `WebGLRenderer.blankTexture` had a data-type of `WebGLTexture` but they were actually `Phaser.Textures.Frame` instances. This has now been corrected and the two properties are now actually `WebGLTexture` instances, not Frames. If your code relies on this mistake being present, please adapt it.
 
+* The `RenderTarget` class will now create a Framebuffer that includes a Depth Stencil Buffer attachment by default. Previously, it didn't. By attaching a stencil buffer it allows things like Geometry Masks to work in combination with Post FX and other Pipelines. Fix #5802 (thanks @mijinc0)
+
 #### Mobile Pipeline
 
 * The Mobile Pipeline is a new pipeline that extends the Multi Tint pipeline, but uses customized shaders and a single-bound texture specifically for mobile GPUs. This should restore mobile performance back to the levels it was around v3.22, before Multi Tint improved it all for desktop at the expense of mobile.
