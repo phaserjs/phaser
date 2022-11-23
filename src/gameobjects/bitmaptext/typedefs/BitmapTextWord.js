@@ -8,6 +8,6 @@
  * @property {number} y - The y position of the word in the BitmapText.
  * @property {number} w - The width of the word.
  * @property {number} h - The height of the word.
- * @property {number} i - The index of the word within the line.
+ * @property {number} i - The index of the word within the entire BitmapText.
  * @property {string} word - The word.
  */
