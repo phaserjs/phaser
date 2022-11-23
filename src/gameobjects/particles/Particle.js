@@ -307,6 +307,11 @@ var Particle = new Class({
         {
             this.x += emitter.x.onEmit(this, 'x');
         }
+        else if (emitter.x.steps > 0)
+        {
+            //  EmitterOp is stepped but x was forced (follower?) so use it
+            this.x += x + emitter.x.onEmit(this, 'x');
+        }
         else
         {
             this.x += x;
@@ -315,6 +320,11 @@ var Particle = new Class({
         if (y === undefined)
         {
             this.y += emitter.y.onEmit(this, 'y');
+        }
+        else if (emitter.y.steps > 0)
+        {
+            //  EmitterOp is stepped but y was forced (follower?) so use it
+            this.y += y + emitter.y.onEmit(this, 'y');
         }
         else
         {
