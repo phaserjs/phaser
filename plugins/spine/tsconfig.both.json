@@ -7,18 +7,18 @@
         "preserveConstEnums": true,
         "outFile": "src/runtimes/spine-both.js",
         "sourceMap": true,
-        "declaration": true
+        "declaration": true,
+        "target": "es6"
     },
     "include": [
-        "spine-runtimes/spine-ts/core/src/**/*",
-        "spine-runtimes/spine-ts/canvas/src/**/*",
-        "spine-runtimes/spine-ts/webgl/src/**/*"
+        "spine-runtimes/spine-ts/spine-core/src/**/*",
+        "spine-runtimes/spine-ts/spine-canvas/src/**/*",
+        "spine-runtimes/spine-ts/spine-webgl/src/**/*"
     ],
     "exclude": [
-        "spine-runtimes/spine-ts/build",
-        "spine-runtimes/spine-ts/player",
-        "spine-runtimes/spine-ts/threejs",
-        "spine-runtimes/spine-ts/webgl/src/Input.ts",
-        "spine-runtimes/spine-ts/webgl/src/LoadingScreen.ts"
+        "spine-runtimes/spine-ts/spine-player",
+        "spine-runtimes/spine-ts/spine-threejs",
+        "spine-runtimes/spine-ts/spine-webgl/src/Input.ts",
+        "spine-runtimes/spine-ts/spine-webgl/src/LoadingScreen.ts"
     ]
 }
