@@ -346,6 +346,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* Removed the `HexagonalWorldToTileY` function as it cannot work without an X coordinate. Use `HexagonalWorldToTileXY` instead.
 * Earcut has been updated to version 2.2.4. This release improves performance by 10-15% and fixes 2 rare race conditions that could leave to infinite loops. Earcut is used internally by Graphics and Shape game objects when triangulating polygons for complex shapes.
 * The `BaseSoundManager.getAll` method used to require a `key` parameter, to return Sounds matching the key. This is now optional and if not given, all Sound instances are returned.
 * The `WebAudioSoundManager` will now detect if the Audio Context enters a 'suspended' or 'interrupted' state as part of its update loop and if so it'll try to resume the context. This can happen if you change or disable the audio device, such as plugging in headphones with built-in audio drivers then disconnecting them, or swapping tabs on iOS. Fix #5353 (thanks @helloyoucan)
@@ -434,7 +435,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 ### Bug Fixes
 
 * Fixed the point conversion math in the `IsometricWorldToTileXY` function and added optional boolean property that allows the setting of the tile origin to the top or base. Fix #5781 (thanks @benjamin-wilson)
-* Calling `Tilemap.worldToTileX` or `worldToTileY` on a Isometric or Hexagonal Tilemap will now always return `null` instead of doing nothing, as you cannot convert to a tile index  using just one coordinate for these map types, you should use `worldToTileXY` instead.
+* Calling `Tilemap.worldToTileX` or `worldToTileY` on a Isometric or Hexagonal Tilemap will now always return `null` instead of doing nothing, as you cannot convert to a tile index using just one coordinate for these map types, you should use `worldToTileXY` instead.
 * The `Game.headlessStep` method will now reset `SceneManager.isProcessing` before `PRE_RENDER`. This fixes issues in HEADLESS mode where the Scene Manager wouldn't process additionally added Scenes created after the Game had started. Fix #5872 #5974 (thanks @micsun-al @samme)
 * If `Rope.setPoints` was called with the exact same number of points as before, it wouldn't set the `dirty` flag, meaning the vertices were not updated on the next render (thanks @stupot)
 * `Particle.fire` will now check to see if the parent Emitter is set to follow a Game Object and if so, and if the x/y EmitterOps are spread ops, then it'll space the particles out based on the follower coordinates, instead of clumping them all together. Fix #5847 (thanks @sreadixl)
