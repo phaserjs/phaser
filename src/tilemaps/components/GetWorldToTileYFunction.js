@@ -5,7 +5,6 @@
  */
 
 var CONST = require('../const/ORIENTATION_CONST');
-var HexagonalWorldToTileY = require('./HexagonalWorldToTileY');
 var NULL = require('../../utils/NULL');
 var StaggeredWorldToTileY = require('./StaggeredWorldToTileY');
 var WorldToTileY = require('./WorldToTileY');
@@ -25,10 +24,6 @@ var GetWorldToTileYFunction = function (orientation)
     if (orientation === CONST.ORTHOGONAL)
     {
         return WorldToTileY;
-    }
-    else if (orientation === CONST.HEXAGONAL)
-    {
-        return HexagonalWorldToTileY;
     }
     else if (orientation === CONST.STAGGERED)
     {
