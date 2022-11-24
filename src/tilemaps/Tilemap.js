@@ -2512,6 +2512,10 @@ var Tilemap = new Class({
      *
      * If no layer is specified, the maps current layer is used.
      *
+     * You cannot call this method for Isometric or Hexagonal tilemaps as they require
+     * both `worldX` and `worldY` values to determine the correct tile, instead you
+     * should use the `worldToTileXY` method.
+     *
      * @method Phaser.Tilemaps.Tilemap#worldToTileX
      * @since 3.0.0
      *
@@ -2536,6 +2540,10 @@ var Tilemap = new Class({
      * layers position, scale and scroll.
      *
      * If no layer is specified, the maps current layer is used.
+     *
+     * You cannot call this method for Isometric or Hexagonal tilemaps as they require
+     * both `worldX` and `worldY` values to determine the correct tile, instead you
+     * should use the `worldToTileXY` method.
      *
      * @method Phaser.Tilemaps.Tilemap#worldToTileY
      * @since 3.0.0

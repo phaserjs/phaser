@@ -1326,6 +1326,10 @@ var TilemapLayer = new Class({
      * Converts from world X coordinates (pixels) to tile X coordinates (tile units), factoring in the
      * layers position, scale and scroll.
      *
+     * You cannot call this method for Isometric or Hexagonal tilemaps as they require
+     * both `worldX` and `worldY` values to determine the correct tile, instead you
+     * should use the `worldToTileXY` method.
+     *
      * @method Phaser.Tilemaps.TilemapLayer#worldToTileX
      * @since 3.50.0
      *
@@ -1343,6 +1347,10 @@ var TilemapLayer = new Class({
     /**
      * Converts from world Y coordinates (pixels) to tile Y coordinates (tile units), factoring in the
      * layers position, scale and scroll.
+     *
+     * You cannot call this method for Isometric or Hexagonal tilemaps as they require
+     * both `worldX` and `worldY` values to determine the correct tile, instead you
+     * should use the `worldToTileXY` method.
      *
      * @method Phaser.Tilemaps.TilemapLayer#worldToTileY
      * @since 3.50.0
