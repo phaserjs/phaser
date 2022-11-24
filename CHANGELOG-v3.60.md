@@ -433,6 +433,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Bug Fixes
 
+* Fixed the point conversion math in the `IsometricWorldToTileXY` function and added optional boolean property that allows the setting of the tile origin to the top or base. Fix #5781 (thanks @benjamin-wilson)
 * The `Game.headlessStep` method will now reset `SceneManager.isProcessing` before `PRE_RENDER`. This fixes issues in HEADLESS mode where the Scene Manager wouldn't process additionally added Scenes created after the Game had started. Fix #5872 #5974 (thanks @micsun-al @samme)
 * If `Rope.setPoints` was called with the exact same number of points as before, it wouldn't set the `dirty` flag, meaning the vertices were not updated on the next render (thanks @stupot)
 * `Particle.fire` will now check to see if the parent Emitter is set to follow a Game Object and if so, and if the x/y EmitterOps are spread ops, then it'll space the particles out based on the follower coordinates, instead of clumping them all together. Fix #5847 (thanks @sreadixl)
