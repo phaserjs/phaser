@@ -11,6 +11,8 @@ var WorldToTileX = require('./WorldToTileX');
 /**
  * Gets the correct function to use to translate tiles, based on the map orientation.
  *
+ * Only orthogonal maps support this feature.
+ *
  * @function Phaser.Tilemaps.Components.GetWorldToTileXFunction
  * @since 3.50.0
  *

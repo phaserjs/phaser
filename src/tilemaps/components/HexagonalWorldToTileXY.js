@@ -50,12 +50,27 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
         tileWidth *= tilemapLayer.scaleX;
     }
 
+    //  pointy-topped odd-r layout from Tiled
+
     var len = layer.hexSideLength;
     var rowHeight = ((tileHeight - len) / 2 + len);
 
-    // similar to staggered, because Tiled uses the oddr representation.
-    var y = (snapToFloor) ? Math.floor((worldY / rowHeight)) : (worldY / rowHeight);
-    var x = (snapToFloor) ? Math.floor((worldX - (y % 2) * 0.5 * tileWidth) / tileWidth) : (worldX - (y % 2) * 0.5 * tileWidth) / tileWidth;
+    //  (68 - 32) = 36
+    //  36 / 2 = 18
+    //  18 + len (32) = 50
+    console.log('rowH', rowHeight, 'len', len);
+
+    var y = worldY / rowHeight;
+    var x = (worldX - (y % 2 === 1) * 0.5 * tileWidth) / tileWidth;
+
+    if (snapToFloor)
+    {
+        x = Math.floor(x);
+        y = Math.floor(y);
+    }
+
+    // var y = (snapToFloor) ? Math.floor((worldY / rowHeight)) : (worldY / rowHeight);
+    // var x = (snapToFloor) ? Math.floor((worldX - (y % 2) * 0.5 * tileWidth) / tileWidth) : (worldX - (y % 2) * 0.5 * tileWidth) / tileWidth;
 
     return point.set(x, y);
 };
