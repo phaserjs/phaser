@@ -4,6 +4,11 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var WorldToTileXY = require('./WorldToTileXY');
+var Vector2 = require('../../math/Vector2');
+
+var tempVec = new Vector2();
+
 /**
  * Converts from world Y coordinates (pixels) to tile Y coordinates (tile units), factoring in the
  * layer's position, scale and scroll.
@@ -20,23 +25,9 @@
  */
 var WorldToTileY = function (worldY, snapToFloor, camera, layer)
 {
-    if (snapToFloor === undefined) { snapToFloor = true; }
+    WorldToTileXY(0, worldY, snapToFloor, tempVec, camera, layer);
 
-    var tileHeight = layer.baseTileHeight;
-    var tilemapLayer = layer.tilemapLayer;
-
-    if (tilemapLayer)
-    {
-        if (!camera) { camera = tilemapLayer.scene.cameras.main; }
-
-        // Find the world position relative to the static or dynamic layer's top left origin,
-        // factoring in the camera's vertical scroll
-        worldY = worldY - (tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY));
-
-        tileHeight *= tilemapLayer.scaleY;
-    }
-
-    return (snapToFloor) ? Math.floor(worldY / tileHeight) : worldY / tileHeight;
+    return tempVec.y;
 };
 
 module.exports = WorldToTileY;
