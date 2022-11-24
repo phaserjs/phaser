@@ -5,7 +5,7 @@
  */
 
 var CONST = require('../const/ORIENTATION_CONST');
-var NOOP = require('../../utils/NOOP');
+var NULL = require('../../utils/NULL');
 var WorldToTileX = require('./WorldToTileX');
 
 /**
@@ -26,7 +26,7 @@ var GetWorldToTileXFunction = function (orientation)
     }
     else
     {
-        return NOOP;
+        return NULL;
     }
 };
 

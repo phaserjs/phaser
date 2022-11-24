@@ -6,7 +6,7 @@
 
 var CONST = require('../const/ORIENTATION_CONST');
 var HexagonalWorldToTileY = require('./HexagonalWorldToTileY');
-var NOOP = require('../../utils/NOOP');
+var NULL = require('../../utils/NULL');
 var StaggeredWorldToTileY = require('./StaggeredWorldToTileY');
 var WorldToTileY = require('./WorldToTileY');
 
@@ -36,7 +36,7 @@ var GetWorldToTileYFunction = function (orientation)
     }
     else
     {
-        return NOOP;
+        return NULL;
     }
 };
 
