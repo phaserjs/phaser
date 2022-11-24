@@ -9,6 +9,7 @@ var Components = require('../gameobjects/components');
 var GameObject = require('../gameobjects/GameObject');
 var TilemapComponents = require('./components');
 var TilemapLayerRender = require('./TilemapLayerRender');
+var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
@@ -242,6 +243,16 @@ var TilemapLayer = new Class({
          * @since 3.50.0
          */
         this.gidMap = [];
+
+        /**
+         * A temporary Vector2 used in the tile coordinate methods.
+         *
+         * @name Phaser.Tilemaps.TilemapLayer#tempVec
+         * @type {Phaser.Math.Vector2}
+         * @private
+         * @since 3.60.0
+         */
+        this.tempVec = new Vector2();
 
         /**
          * The horizontal origin of this Tilemap Layer.
@@ -675,6 +686,31 @@ var TilemapLayer = new Class({
     getTileAtWorldXY: function (worldX, worldY, nonNull, camera)
     {
         return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, this.layer);
+    },
+
+    /**
+     * Gets a tile at the given world coordinates from the given isometric layer.
+     *
+     * @method Phaser.Tilemaps.TilemapLayer#getIsoTileAtWorldXY
+     * @since 3.60.0
+     *
+     * @param {number} worldX - X position to get the tile from (given in pixels)
+     * @param {number} worldY - Y position to get the tile from (given in pixels)
+     * @param {boolean} [originTop=true] - Which is the active face of the isometric tile? The top (default, true), or the base? (false)
+     * @param {boolean} [nonNull=false] - If true, function won't return null for empty tiles, but a Tile object with an index of -1.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
+     *
+     * @return {Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
+     */
+    getIsoTileAtWorldXY: function (worldX, worldY, originTop, nonNull, camera)
+    {
+        if (originTop === undefined) { originTop = true; }
+
+        var point = this.tempVec;
+
+        TilemapComponents.IsometricWorldToTileXY(worldX, worldY, true, point, camera, this.layer, originTop);
+
+        return this.getTileAt(point.x, point.y, nonNull);
     },
 
     /**
