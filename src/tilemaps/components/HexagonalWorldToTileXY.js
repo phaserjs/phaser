@@ -192,13 +192,7 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
         console.log('HexRound', hr);
 
         var y = hr.r;
-        var x = 2 * hr.q + hr.r; // so close!
-
-        //  pointy-topped odd-r layout from Tiled
-        // var offset = roffset_from_cube(EVEN, h);
-
-        // offset.col = Math.floor(offset.col);
-        // offset.row = Math.floor(offset.row);
+        var x = (y % 2 === 0) ? (hr.r / 2) + hr.q : (hr.r / 2) + hr.q - 0.5;
 
         if (window.HEX_DEBUG)
         {
@@ -266,8 +260,8 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
     // var y = offset.col;
     */
 
-    var x = 0;
-    var y = 0;
+    // var x = 0;
+    // var y = 0;
 
     return point.set(x, y);
 };
