@@ -45,15 +45,19 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
         tileHeight *= tilemapLayer.scaleY;
     }
 
-    //  Hard-coded values for Pointy-Top Hexagons only
+    //  Hard-coded orientation values for Pointy-Top Hexagons only
     var b0 = 0.5773502691896257; // Math.sqrt(3) / 3
     var b1 = -0.3333333333333333; // -1 / 3
     var b2 = 0;
     var b3 = 0.6666666666666666; // 2 / 3
 
+    //  origin
     var tileWidthHalf = tileWidth / 2;
     var tileHeightHalf = tileHeight / 2;
 
+    //  size
+    //  x = b0 * tileWidth
+    //  y = tileHeightHalf
     var px = (worldX - tileWidthHalf) / (b0 * tileWidth);
     var py = (worldY - tileHeightHalf) / tileHeightHalf;
 
