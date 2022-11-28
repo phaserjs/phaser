@@ -30,30 +30,58 @@ var HexagonalTileToWorldXY = function (tileX, tileY, point, camera, layer)
     var tileHeight = layer.baseTileHeight;
     var tilemapLayer = layer.tilemapLayer;
 
-    var layerWorldX = 0;
-    var layerWorldY = 0;
+    var worldX = 0;
+    var worldY = 0;
 
     if (tilemapLayer)
     {
         if (!camera) { camera = tilemapLayer.scene.cameras.main; }
 
-        layerWorldX = tilemapLayer.x + camera.scrollX * (1 - tilemapLayer.scrollFactorX);
+        worldX = tilemapLayer.x + camera.scrollX * (1 - tilemapLayer.scrollFactorX);
+        worldY = tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY);
 
         tileWidth *= tilemapLayer.scaleX;
-
-        layerWorldY = (tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY));
-
         tileHeight *= tilemapLayer.scaleY;
     }
 
-    var len = layer.hexSideLength;
-    var rowHeight = ((tileHeight - len) / 2 + len);
+    //  Hard-coded orientation values for Pointy-Top Hexagons only
 
-    // similar to staggered, because Tiled uses the oddr representation.
-    var x = layerWorldX + tileX * tileWidth + tileY % 2 * (tileWidth / 2);
-    var y = layerWorldY + tileY * rowHeight;
+    //  origin
+    var tileWidthHalf = tileWidth / 2;
+    var tileHeightHalf = tileHeight / 2;
+
+    var x = worldX + (tileWidth * tileX) + tileWidth;
+    var y = worldY + ((1.5 * tileY) * tileHeightHalf) + tileHeightHalf;
+
+    if (tileY % 2 === 0)
+    {
+        x -= tileWidthHalf;
+    }
 
     return point.set(x, y);
 };
 
 module.exports = HexagonalTileToWorldXY;
+
+/**
+    //  size
+    //  x = b0 * tileWidth
+    //  y = tileHeightHalf
+
+    hexCornerOffset(corner) {
+        var M = this.orientation;
+        var size = this.size;
+        start_angle = 0.5
+        var angle = 2.0 * Math.PI * (M.start_angle - corner) / 6.0;
+        return new Point(size.x * Math.cos(angle), size.y * Math.sin(angle));
+    }
+    polygonCorners(h) {
+        var corners = [];
+        var center = this.hexToPixel(h);
+        for (var i = 0; i < 6; i++) {
+            var offset = this.hexCornerOffset(i);
+            corners.push(new Point(center.x + offset.x, center.y + offset.y));
+        }
+        return corners;
+    }
+ */
