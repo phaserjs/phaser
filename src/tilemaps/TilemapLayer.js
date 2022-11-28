@@ -1290,6 +1290,32 @@ var TilemapLayer = new Class({
     },
 
     /**
+     * Returns an array of Vector2s where each entry corresponds to the corner of the requested tile.
+     *
+     * The `tileX` and `tileY` parameters are in tile coordinates, not world coordinates.
+     *
+     * The corner coordinates are in world space, having factored in TilemapLayer scale, position
+     * and the camera, if given.
+     *
+     * The size of the array will vary based on the orientation of the map. For example an
+     * orthographic map will return an array of 4 vectors, where-as a hexagonal map will,
+     * of course, return an array of 6 corner vectors.
+     *
+     * @method Phaser.Tilemaps.Tilemap#getTileCorners
+     * @since 3.60.0
+     *
+     * @param {number} tileX - The x coordinate, in tiles, not pixels.
+     * @param {number} tileY - The y coordinate, in tiles, not pixels.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
+     *
+     * @return {?Phaser.Math.Vector2[]} Returns an array of Vector2s, or null if the layer given was invalid.
+     */
+    getTileCorners: function (tileX, tileY, camera)
+    {
+        return this.tilemap.getTileCorners(tileX, tileY, camera, this);
+    },
+
+    /**
      * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the
      * specified layer. Each tile will receive a new index. New indexes are drawn from the given
      * weightedIndexes array. An example weighted array:

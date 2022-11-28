@@ -296,7 +296,8 @@ var Tilemap = new Class({
             WorldToTileY: TilemapComponents.GetWorldToTileYFunction(orientation),
             TileToWorldXY: TilemapComponents.GetTileToWorldXYFunction(orientation),
             TileToWorldX: TilemapComponents.GetTileToWorldXFunction(orientation),
-            TileToWorldY: TilemapComponents.GetTileToWorldYFunction(orientation)
+            TileToWorldY: TilemapComponents.GetTileToWorldYFunction(orientation),
+            GetTileCorners: TilemapComponents.GetTileCornersFunction(orientation)
         };
     },
 
@@ -2464,6 +2465,39 @@ var Tilemap = new Class({
         if (layer === null) { return null; }
 
         return this._convert.TileToWorldXY(tileX, tileY, vec2, camera, layer);
+    },
+
+    /**
+     * Returns an array of Vector2s where each entry corresponds to the corner of the requested tile.
+     *
+     * The `tileX` and `tileY` parameters are in tile coordinates, not world coordinates.
+     *
+     * The corner coordinates are in world space, having factored in TilemapLayer scale, position
+     * and the camera, if given.
+     *
+     * The size of the array will vary based on the orientation of the map. For example an
+     * orthographic map will return an array of 4 vectors, where-as a hexagonal map will,
+     * of course, return an array of 6 corner vectors.
+     *
+     * If no layer is specified, the maps current layer is used.
+     *
+     * @method Phaser.Tilemaps.Tilemap#getTileCorners
+     * @since 3.60.0
+     *
+     * @param {number} tileX - The x coordinate, in tiles, not pixels.
+     * @param {number} tileY - The y coordinate, in tiles, not pixels.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
+     * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
+     *
+     * @return {?Phaser.Math.Vector2[]} Returns an array of Vector2s, or null if the layer given was invalid.
+     */
+    getTileCorners: function (tileX, tileY, camera, layer)
+    {
+        layer = this.getLayer(layer);
+
+        if (layer === null) { return null; }
+
+        return this._convert.GetTileCorners(tileX, tileY, camera, layer);
     },
 
     /**
