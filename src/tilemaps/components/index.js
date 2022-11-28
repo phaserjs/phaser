@@ -39,7 +39,6 @@ module.exports = {
     HexagonalCullBounds: require('./HexagonalCullBounds'),
     HexagonalCullTiles: require('./HexagonalCullTiles'),
     HexagonalTileToWorldXY: require('./HexagonalTileToWorldXY'),
-    HexagonalTileToWorldY: require('./HexagonalTileToWorldY'),
     HexagonalWorldToTileXY: require('./HexagonalWorldToTileXY'),
     IsInLayerBounds: require('./IsInLayerBounds'),
     IsometricCullTiles: require('./IsometricCullTiles'),
