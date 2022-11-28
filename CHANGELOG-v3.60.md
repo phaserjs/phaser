@@ -434,6 +434,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Bug Fixes
 
+* `Tilemap.copy` would error if you copied a block of tiles over itself, even partially, as it tried to copy already replaced tiles as part of the function. It will now copy correctly, regardless of source or destination areas. Fix #6188 (thanks @Arkyris)
+* `Tile.copy` will now use the `DeepCopy` function to copy the `Tile.properties` object, as otherwise it just gets copied by reference.
 * Recoded the point conversion math in the `HexagonalWorldToTileXY` function as it was incorrect. Now detects any dimension hexagon correctly. Fix #5608 (thanks @stonerich)
 * Fixed the point conversion math in the `IsometricWorldToTileXY` function and added optional boolean property that allows the setting of the tile origin to the top or base. Fix #5781 (thanks @benjamin-wilson)
 * Calling `Tilemap.worldToTileX` or `worldToTileY` on a Isometric or Hexagonal Tilemap will now always return `null` instead of doing nothing, as you cannot convert to a tile index using just one coordinate for these map types, you should use `worldToTileXY` instead.
