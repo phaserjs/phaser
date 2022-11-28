@@ -6,9 +6,7 @@
 
 var CONST = require('../const/ORIENTATION_CONST');
 var HexagonalGetTileCorners = require('./HexagonalGetTileCorners');
-// var IsometricWorldToTileXY = require('./IsometricWorldToTileXY');
 var NOOP = require('../../utils/NOOP');
-// var StaggeredWorldToTileXY = require('./StaggeredWorldToTileXY');
 var GetTileCorners = require('./GetTileCorners');
 
 /**
@@ -29,7 +27,6 @@ var GetTileCornersFunction = function (orientation)
     }
     else if (orientation === CONST.ISOMETRIC)
     {
-        // return IsometricWorldToTileXY;
         return NOOP;
     }
     else if (orientation === CONST.HEXAGONAL)
@@ -38,7 +35,6 @@ var GetTileCornersFunction = function (orientation)
     }
     else if (orientation === CONST.STAGGERED)
     {
-        // return StaggeredWorldToTileXY;
         return NOOP;
     }
     else
