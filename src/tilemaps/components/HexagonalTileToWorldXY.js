@@ -62,26 +62,3 @@ var HexagonalTileToWorldXY = function (tileX, tileY, point, camera, layer)
 };
 
 module.exports = HexagonalTileToWorldXY;
-
-/**
-    //  size
-    //  x = b0 * tileWidth
-    //  y = tileHeightHalf
-
-    hexCornerOffset(corner) {
-        var M = this.orientation;
-        var size = this.size;
-        start_angle = 0.5
-        var angle = 2.0 * Math.PI * (M.start_angle - corner) / 6.0;
-        return new Point(size.x * Math.cos(angle), size.y * Math.sin(angle));
-    }
-    polygonCorners(h) {
-        var corners = [];
-        var center = this.hexToPixel(h);
-        for (var i = 0; i < 6; i++) {
-            var offset = this.hexCornerOffset(i);
-            corners.push(new Point(center.x + offset.x, center.y + offset.y));
-        }
-        return corners;
-    }
- */
