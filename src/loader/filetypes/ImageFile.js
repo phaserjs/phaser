@@ -201,20 +201,33 @@ var ImageFile = new Class({
      */
     addToCache: function ()
     {
+        //  Check if we have a linked normal map
         var linkFile = this.linkFile;
 
-        if (linkFile && linkFile.state >= CONST.FILE_COMPLETE)
+        if (linkFile)
         {
-            if (this.type === 'image')
+            //  We do, but has it loaded?
+            if (linkFile.state >= CONST.FILE_COMPLETE)
             {
-                this.cache.addImage(this.key, this.data, linkFile.data);
+                //  Both files have loaded
+                if (this.type === 'normalMap')
+                {
+                    //  linkFile.data = Image
+                    //  this.data = Normal Map
+                    this.cache.addImage(this.key, linkFile.data, this.data);
+                }
+                else
+                {
+                    //  linkFile.data = Normal Map
+                    //  this.data = Image
+                    this.cache.addImage(this.key, this.data, linkFile.data);
+                }
             }
-            else
-            {
-                this.cache.addImage(linkFile.key, linkFile.data, this.data);
-            }
+
+            //  Nothing to do here, we'll use the linkFile `addToCache` call
+            //  to process this pair
         }
-        else if (!linkFile)
+        else
         {
             this.cache.addImage(this.key, this.data);
         }
