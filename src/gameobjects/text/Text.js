@@ -442,7 +442,7 @@ var Text = new Class({
                         // failure with a fatal error
                         if (!newWord.length)
                         {
-                            throw new Error('This text\'s wordWrapWidth setting is less than a single character!');
+                            throw new Error('wordWrapWidth < a single character');
                         }
 
                         // Replace current word in array with remainder
@@ -458,11 +458,11 @@ var Text = new Class({
                     var offset = (words[j].length) ? j : j + 1;
 
                     // Collapse rest of sentence and remove any trailing white space
-                    var remainder = words.slice(offset).join(' ')
-                        .replace(/[ \n]*$/gi, '');
+                    var remainder = words.slice(offset).join(' ').replace(/[ \n]*$/gi, '');
 
                     // Prepend remainder to next line
                     lines.splice(i + 1, 0, remainder);
+
                     linesCount = lines.length;
 
                     break; // Processing on this line
