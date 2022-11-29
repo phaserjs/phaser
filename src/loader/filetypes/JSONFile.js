@@ -69,9 +69,9 @@ var JSONFile = new Class({
 
         File.call(this, loader, fileConfig);
 
+        //  A JSON object has been provided (instead of a URL), so we'll use it directly as the File.data. No need to load it.
         if (IsPlainObject(url))
         {
-            //  Object provided instead of a URL, so no need to actually load it (populate data with value)
             if (dataKey)
             {
                 this.data = GetValue(url, dataKey);
