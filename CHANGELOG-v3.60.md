@@ -71,6 +71,7 @@ Due to all of the changes with how WebGL texture batching works a lot of mostly 
 Previously, `WebGLRenderer.whiteTexture` and `WebGLRenderer.blankTexture` had a data-type of `WebGLTexture` but they were actually `Phaser.Textures.Frame` instances. This has now been corrected and the two properties are now actually `WebGLTexture` instances, not Frames. If your code relies on this mistake being present, please adapt it.
 
 * The `RenderTarget` class will now create a Framebuffer that includes a Depth Stencil Buffer attachment by default. Previously, it didn't. By attaching a stencil buffer it allows things like Geometry Masks to work in combination with Post FX and other Pipelines. Fix #5802 (thanks @mijinc0)
+* When calling `PipelineManager.clear` and `rebind` it will now check if the vao extension is available, and if so, it'll bind a null vertex array. This helps clean-up from 3rd party libs that don't do this directly, such as ThreeJS.
 
 #### Mobile Pipeline
 
