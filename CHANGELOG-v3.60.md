@@ -347,6 +347,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* You can now optionally specify the `maxSpeed` value in the Arcade Physics Group config (thanks @samme)
+* You can now optionally specify the `useDamping` boolean in the Arcade Physics Group config (thanks @samme)
 * Removed the `HexagonalTileToWorldY` function as it cannot work without an X coordinate. Use `HexagonalTileToWorldXY` instead.
 * Removed the `HexagonalWorldToTileY` function as it cannot work without an X coordinate. Use `HexagonalWorldToTileXY` instead.
 * Earcut has been updated to version 2.2.4. This release improves performance by 10-15% and fixes 2 rare race conditions that could leave to infinite loops. Earcut is used internally by Graphics and Shape game objects when triangulating polygons for complex shapes.
