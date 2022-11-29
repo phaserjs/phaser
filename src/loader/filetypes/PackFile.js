@@ -61,6 +61,15 @@ var PackFile = new Class({
             this.data = JSON.parse(this.xhrLoader.responseText);
         }
 
+        if (this.data.hasOwnProperty('files') && this.config)
+        {
+            var newData = {};
+
+            newData[this.config] = this.data;
+
+            this.data = newData;
+        }
+
         //  Let's pass the pack file data over to the Loader ...
         this.loader.addPack(this.data, this.config);
 
@@ -188,7 +197,7 @@ var PackFile = new Class({
  *
  * @return {this} The Loader instance.
  */
-FileTypesManager.register('pack', function (key, url, packKey, xhrSettings)
+FileTypesManager.register('pack', function (key, url, dataKey, xhrSettings)
 {
     //  Supports an Object file definition in the key argument
     //  Or an array of objects in the key argument
@@ -203,7 +212,7 @@ FileTypesManager.register('pack', function (key, url, packKey, xhrSettings)
     }
     else
     {
-        this.addFile(new PackFile(this, key, url, xhrSettings, packKey));
+        this.addFile(new PackFile(this, key, url, xhrSettings, dataKey));
     }
 
     return this;
