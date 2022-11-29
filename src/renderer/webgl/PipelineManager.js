@@ -1186,6 +1186,13 @@ var PipelineManager = new Class({
 
         renderer.setBlendMode(0, true);
 
+        var vao = renderer.vaoExtension;
+
+        if (vao)
+        {
+            vao.bindVertexArrayOES(null);
+        }
+
         var entries = this.pipelines.entries;
 
         for (var key in entries)
@@ -1233,6 +1240,13 @@ var PipelineManager = new Class({
         renderer.currentProgram = null;
 
         renderer.setBlendMode(0, true);
+
+        var vao = renderer.vaoExtension;
+
+        if (vao)
+        {
+            vao.bindVertexArrayOES(null);
+        }
     },
 
     /**
