@@ -25,7 +25,7 @@ var Vector2 = require('../../math/Vector2');
  */
 var WorldToTileXY = function (worldX, worldY, snapToFloor, point, camera, layer)
 {
-    if (!snapToFloor) { snapToFloor = true; }
+    if (snapToFloor === undefined) { snapToFloor = true; }
     if (!point) { point = new Vector2(); }
 
     var tileWidth = layer.baseTileWidth;
