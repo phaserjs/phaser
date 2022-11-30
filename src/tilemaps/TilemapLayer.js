@@ -1301,7 +1301,7 @@ var TilemapLayer = new Class({
      * orthographic map will return an array of 4 vectors, where-as a hexagonal map will,
      * of course, return an array of 6 corner vectors.
      *
-     * @method Phaser.Tilemaps.Tilemap#getTileCorners
+     * @method Phaser.Tilemaps.TilemapLayer#getTileCorners
      * @since 3.60.0
      *
      * @param {number} tileX - The x coordinate, in tiles, not pixels.

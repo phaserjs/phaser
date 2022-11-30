@@ -94,9 +94,9 @@ var Mask = {
      * @method Phaser.GameObjects.Components.Mask#createBitmapMask
      * @since 3.6.2
      *
-     * @genericUse {Phaser.GameObjects.GameObject} G
-     * @genericUse {Phaser.Textures.DynamicTexture} T
-     * @generic {(G|T|null)} [maskObject]
+     * @generic {Phaser.GameObjects.GameObject} G
+     * @generic {Phaser.Textures.DynamicTexture} T
+     * @genericUse {(G|T|null)} [maskObject]
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)} [maskObject] - The Game Object or Dynamic Texture that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
      * @param {number} [x] - If creating a Game Object, the horizontal position in the world.
@@ -131,9 +131,9 @@ var Mask = {
      * @method Phaser.GameObjects.Components.Mask#createGeometryMask
      * @since 3.6.2
      *
-     * @genericUse {Phaser.GameObjects.Graphics} G
-     * @genericUse {Phaser.GameObjects.Shape} S
-     * @generic {(G|S)} [graphics]
+     * @generic {Phaser.GameObjects.Graphics} G
+     * @generic {Phaser.GameObjects.Shape} S
+     * @genericUse {(G|S)} [graphics]
      *
      * @param {Phaser.GameObjects.Graphics|Phaser.GameObjects.Shape} [graphics] - A Graphics Game Object, or any kind of Shape Game Object. The geometry within it will be used as the mask.
      *

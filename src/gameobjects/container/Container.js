@@ -74,9 +74,6 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
- * @genericUse {Phaser.GameObjects.GameObject} T
- * @generic {T[]} [children]
- *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
