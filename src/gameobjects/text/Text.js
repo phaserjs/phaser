@@ -563,7 +563,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#getWrappedText
      * @since 3.0.0
      *
-     * @param {string} text - The text for which the wrapping will be calculated. If unspecified, the Text objects current text will be used.
+     * @param {string} [text] - The text for which the wrapping will be calculated. If unspecified, the Text objects current text will be used.
      *
      * @return {string[]} An array of strings with the pieces of wrapped text.
      */
