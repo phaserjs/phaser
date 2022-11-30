@@ -439,6 +439,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Bug Fixes
 
+* Calling `setDisplayOrigin` on a `Video` Game Object would cause the origins to be set to `NaN` if the Video was created without an asset key. It will now give Videos a default size, preventing this error, which is reset once a video is loaded. Fix #5560 (thanks @mattjennings)
 * When `ImageFile` loads with a linked Normal Map and the map completes first, but the Image is still in a pending state, it would incorrectly add itself to the cache instead of waiting. It now checks this process more carefully. Fix #5886 (thanks @inmylo)
 * Using a `dataKey` to specify a part of a JSON file when using `load.pack` would fail as it wouldn't correctly assign the right part of the pack file to the Loader. You can now use this parameter properly. Fix #6001 (thanks @rexrainbow)
 * The `Text.advancedWordWrap` function would incorrectly merge the current and next lines when wrapping words with carriage-returns in. Fix #6187 (thanks @Ariorh1337 @robinheidrich)
