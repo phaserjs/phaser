@@ -280,6 +280,7 @@ var TileSprite = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setFrame(frameKey);
+        this.setDefaultOrigin();
         this.setOriginFromFrame();
         this.initPipeline();
     },

@@ -35,7 +35,7 @@ var Origin = {
      *
      * @name Phaser.GameObjects.Components.Origin#originX
      * @type {number}
-     * @default 0.5
+     * @default Phaser.Core.Config#defaultOriginX
      * @since 3.0.0
      */
     originX: 0.5,
@@ -48,7 +48,7 @@ var Origin = {
      *
      * @name Phaser.GameObjects.Components.Origin#originY
      * @type {number}
-     * @default 0.5
+     * @default Phaser.Core.Config#defaultOriginY
      * @since 3.0.0
      */
     originY: 0.5,
@@ -113,14 +113,18 @@ var Origin = {
      * @method Phaser.GameObjects.Components.Origin#setOrigin
      * @since 3.0.0
      *
-     * @param {number} [x=0.5] - The horizontal origin value.
+     * @param {number} [x] - The horizontal origin value.
      * @param {number} [y=x] - The vertical origin value. If not defined it will be set to the value of `x`.
      *
      * @return {this} This Game Object instance.
      */
     setOrigin: function (x, y)
     {
-        if (x === undefined) { x = 0.5; }
+        if (x === undefined) { 
+            var config = this?.scene?.game?.config;
+
+            x = config !== undefined ? config.defaultOriginX : 0.5; 
+        }
         if (y === undefined) { y = x; }
 
         this.originX = x;
@@ -188,6 +192,28 @@ var Origin = {
     {
         this._displayOriginX = this.originX * this.width;
         this._displayOriginY = this.originY * this.height;
+
+        return this;
+    },
+
+    /**
+     * Set the default origin values.
+     *
+     * @method Phaser.GameObjects.Components.Origin#initOrigin
+     * @since 3.60.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    setDefaultOrigin: function ()
+    {
+        var config = this?.scene?.game?.config;
+
+        if(config === undefined){
+            return this;
+        }
+
+        this.originX = config.defaultOriginX;
+        this.originY = config.defaultOriginY;
 
         return this;
     }

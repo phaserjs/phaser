@@ -304,6 +304,8 @@ var DOMElement = new Class({
         scene.sys.events.on(SCENE_EVENTS.SLEEP, this.handleSceneEvent, this);
         scene.sys.events.on(SCENE_EVENTS.WAKE, this.handleSceneEvent, this);
         scene.sys.events.on(SCENE_EVENTS.PRE_RENDER, this.preRender, this);
+
+        this.setDefaultOrigin();
     },
 
     /**

@@ -454,6 +454,16 @@ var Config = new Class({
          * @const {Phaser.Types.Core.BootCallback} Phaser.Core.Config#postBoot - A function to run at the end of the boot sequence. At this point, all the game systems have started and plugins have been loaded.
          */
         this.postBoot = GetValue(config, 'callbacks.postBoot', NOOP);
+		
+        /**
+         * @const {number} Phaser.Core.Config#defaultOriginX - The origin value along the X-axis in the game objects. The default value is 0.5 (That is, the center).
+         */
+		this.defaultOriginX = GetValue(config, 'defaultOriginX', 0.5);
+		
+        /**
+         * @const {number} Phaser.Core.Config#defaultOriginY - The origin value along the Y-axis in the game objects. The default value is 0.5 (That is, the center).
+         */
+		this.defaultOriginY = GetValue(config, 'defaultOriginY', 0.5);
 
         /**
          * @const {Phaser.Types.Core.PhysicsConfig} Phaser.Core.Config#physics - The Physics Configuration object.

@@ -106,7 +106,8 @@ var Light = new Class({
         this.cameraFilter = 0;
 
         this.setScrollFactor(1, 1);
-        this.setOrigin();
+        this.setDefaultOrigin();
+        this.setOrigin();  // TODO: Maybe this needs to be removed?
         this.setDisplayOrigin(radius);
     },
 

@@ -279,7 +279,8 @@ var BitmapText = new Class({
 
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
-        this.setOrigin(0, 0);
+        this.setDefaultOrigin();
+        this.setOrigin(0, 0); // TODO: Why does it have a value of 0.0 when the default value should be 0.5?
         this.initPipeline();
 
         this.setText(text);

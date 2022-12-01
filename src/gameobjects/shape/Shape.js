@@ -205,6 +205,7 @@ var Shape = new Class({
          */
         this.height = 0;
 
+        this.setDefaultOrigin();
         this.initPipeline();
     },
 

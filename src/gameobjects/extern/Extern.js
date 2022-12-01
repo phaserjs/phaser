@@ -75,6 +75,8 @@ var Extern = new Class({
     function Extern (scene)
     {
         GameObject.call(this, scene, 'Extern');
+
+        this.setDefaultOrigin();
     },
 
     //  Overrides Game Object method

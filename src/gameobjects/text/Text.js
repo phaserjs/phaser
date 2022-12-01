@@ -124,7 +124,8 @@ var Text = new Class({
         this.renderer = scene.sys.renderer;
 
         this.setPosition(x, y);
-        this.setOrigin(0, 0);
+        this.setDefaultOrigin();
+        this.setOrigin(0, 0); // TODO: Why does it have a value of 0.0 when the default value should be 0.5?
         this.initPipeline();
 
         /**

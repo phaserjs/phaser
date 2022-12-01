@@ -58,4 +58,6 @@
  * @property {Phaser.Scale.CenterType} [autoCenter=Phaser.Scale.Center.NO_CENTER] - Automatically center the canvas within the parent?
  * @property {number} [resizeInterval=500] - How many ms should elapse before checking if the browser size has changed?
  * @property {?(HTMLElement|string)} [fullscreenTarget] - The DOM element that will be sent into full screen mode, or its `id`. If undefined Phaser will create its own div and insert the canvas into it when entering fullscreen mode.
+ * @property {number} [defaultOriginX=0.5] - The origin value along the X-axis in the game objects. The default value is "0.5" (That is, the center).
+ * @property {number} [defaultOriginY=0.5] - The origin value along the Y-axis in the game objects. The default value is "0.5" (That is, the center).
  */

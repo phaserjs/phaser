@@ -348,7 +348,8 @@ var Shader = new Class({
 
         this.setPosition(x, y);
         this.setSize(width, height);
-        this.setOrigin(0.5, 0.5);
+        this.setDefaultOrigin();
+        this.setOrigin(0.5, 0.5); // TODO: Maybe this needs to be removed?
         this.setShader(key, textures, textureData);
     },
 

@@ -99,6 +99,7 @@ var Zone = new Class({
          */
         this.blendMode = BlendModes.NORMAL;
 
+        this.setDefaultOrigin();
         this.updateDisplayOrigin();
     },
 
