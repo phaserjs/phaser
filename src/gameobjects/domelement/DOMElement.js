@@ -26,9 +26,12 @@ var Vector4 = require('../../math/Vector4');
  * }
  * ```
  *
- * When this is added, Phaser will automatically create a DOM Container div that is positioned over the top
- * of the game canvas. This div is sized to match the canvas, and if the canvas size changes, as a result of
- * settings within the Scale Manager, the dom container is resized accordingly.
+ * You must also have a parent container for Phaser. This is specified by the `parent` property in the
+ * game config.
+ *
+ * When these two things are added, Phaser will automatically create a DOM Container div that is positioned
+ * over the top of the game canvas. This div is sized to match the canvas, and if the canvas size changes,
+ * as a result of settings within the Scale Manager, the dom container is resized accordingly.
  *
  * If you have not already done so, you have to provide a `parent` in the Game Configuration, or the DOM
  * Container will fail to be created.
