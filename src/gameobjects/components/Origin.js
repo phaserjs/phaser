@@ -208,12 +208,8 @@ var Origin = {
     {
         var config = this?.scene?.game?.config;
 
-        if(config === undefined){
-            return this;
-        }
-
-        this.originX = config.defaultOriginX;
-        this.originY = config.defaultOriginY;
+        this.originX = config !== undefined ? config.defaultOriginX : 0.5;
+        this.originY = config !== undefined ? config.defaultOriginY : 0.5;
 
         return this;
     }
