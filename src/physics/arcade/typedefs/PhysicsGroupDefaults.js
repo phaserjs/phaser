@@ -9,6 +9,7 @@
  * @property {boolean} setAllowDrag - As {@link Phaser.Physics.Arcade.Body#setAllowDrag}.
  * @property {boolean} setAllowGravity - As {@link Phaser.Physics.Arcade.Body#setAllowGravity}.
  * @property {boolean} setAllowRotation - As {@link Phaser.Physics.Arcade.Body#setAllowRotation}.
+ * @property {boolean} setDamping - As {@link Phaser.Physics.Arcade.Body#setDamping}.
  * @property {number} setBounceX - As {@link Phaser.Physics.Arcade.Body#setBounceX}.
  * @property {number} setBounceY - As {@link Phaser.Physics.Arcade.Body#setBounceY}.
  * @property {number} setDragX - As {@link Phaser.Physics.Arcade.Body#setDragX}.
@@ -18,6 +19,7 @@
  * @property {number} setGravityY - As {@link Phaser.Physics.Arcade.Body#setGravityY}.
  * @property {number} setFrictionX - As {@link Phaser.Physics.Arcade.Body#setFrictionX}.
  * @property {number} setFrictionY - As {@link Phaser.Physics.Arcade.Body#setFrictionY}.
+ * @property {number} setMaxSpeed - As {@link Phaser.Physics.Arcade.Body#setMaxSpeed}.
  * @property {number} setVelocityX - As {@link Phaser.Physics.Arcade.Body#setVelocityX}.
  * @property {number} setVelocityY - As {@link Phaser.Physics.Arcade.Body#setVelocityY}.
  * @property {number} setAngularVelocity - As {@link Phaser.Physics.Arcade.Body#setAngularVelocity}.

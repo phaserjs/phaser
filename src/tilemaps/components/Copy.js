@@ -4,12 +4,14 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var GetTilesWithin = require('./GetTilesWithin');
 var CalculateFacesWithin = require('./CalculateFacesWithin');
+var GetTilesWithin = require('./GetTilesWithin');
+var IsInLayerBounds = require('./IsInLayerBounds');
+var Tile = require('../Tile');
 
 /**
  * Copies the tiles in the source rectangular area to a new destination (all specified in tile
- * coordinates) within the layer. This copies all tile properties & recalculates collision
+ * coordinates) within the layer. This copies all tile properties and recalculates collision
  * information in the destination region.
  *
  * @function Phaser.Tilemaps.Components.Copy
@@ -28,24 +30,48 @@ var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, re
 {
     if (recalculateFaces === undefined) { recalculateFaces = true; }
 
-    if (srcTileX < 0) { srcTileX = 0; }
-    if (srcTileY < 0) { srcTileY = 0; }
-
+    //  Returns an array of Tile references
     var srcTiles = GetTilesWithin(srcTileX, srcTileY, width, height, null, layer);
+
+    //  Create a new array of fresh Tile objects
+    var copyTiles = [];
+
+    srcTiles.forEach(function (tile)
+    {
+        var newTile = new Tile(
+            tile.layer,
+            tile.index,
+            tile.x,
+            tile.y,
+            tile.width,
+            tile.height,
+            tile.baseWidth,
+            tile.baseHeight
+        );
+
+        newTile.copy(tile);
+
+        copyTiles.push(newTile);
+    });
 
     var offsetX = destTileX - srcTileX;
     var offsetY = destTileY - srcTileY;
 
-    for (var i = 0; i < srcTiles.length; i++)
+    for (var i = 0; i < copyTiles.length; i++)
     {
-        var tileX = srcTiles[i].x + offsetX;
-        var tileY = srcTiles[i].y + offsetY;
+        var copy = copyTiles[i];
+        var tileX = copy.x + offsetX;
+        var tileY = copy.y + offsetY;
 
-        if (tileX >= 0 && tileX < layer.width && tileY >= 0 && tileY < layer.height)
+        if (IsInLayerBounds(tileX, tileY, layer))
         {
             if (layer.data[tileY][tileX])
             {
-                layer.data[tileY][tileX].copy(srcTiles[i]);
+                copy.x = tileX;
+                copy.y = tileY;
+                copy.updatePixelXY();
+
+                layer.data[tileY][tileX] = copy;
             }
         }
     }
@@ -55,6 +81,9 @@ var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, re
         // Recalculate the faces within the destination area and neighboring tiles
         CalculateFacesWithin(destTileX - 1, destTileY - 1, width + 2, height + 2, layer);
     }
+
+    srcTiles.length = 0;
+    copyTiles.length = 0;
 };
 
 module.exports = Copy;

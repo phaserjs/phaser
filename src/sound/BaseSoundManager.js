@@ -214,10 +214,14 @@ var BaseSoundManager = new Class({
     },
 
     /**
-     * Gets the first sound in the manager matching the given key, if any.
+     * Gets the first sound in this Sound Manager that matches the given key.
+     * If none can be found it returns `null`.
      *
      * @method Phaser.Sound.BaseSoundManager#get
      * @since 3.23.0
+     *
+     * @generic {Phaser.Sound.BaseSound} T
+     * @genericUse {T} - [$return]
      *
      * @param {string} key - Sound asset key.
      *
@@ -229,18 +233,49 @@ var BaseSoundManager = new Class({
     },
 
     /**
-     * Gets any sounds in the manager matching the given key.
+     * Gets all sounds in this Sound Manager.
+     *
+     * You can optionally specify a key, in which case only Sound instances that match the given key
+     * will be returned.
      *
      * @method Phaser.Sound.BaseSoundManager#getAll
      * @since 3.23.0
      *
-     * @param {string} key - Sound asset key.
+     * @generic {Phaser.Sound.BaseSound} T
+     * @genericUse {T[]} - [$return]
+     *
+     * @param {string} [key] - Optional asset key. If given, only Sound instances with this key will be returned.
      *
      * @return {Phaser.Sound.BaseSound[]} - The sounds, or an empty array.
      */
     getAll: function (key)
     {
-        return GetAll(this.sounds, 'key', key);
+        if (key)
+        {
+            return GetAll(this.sounds, 'key', key);
+        }
+        else
+        {
+            return GetAll(this.sounds);
+        }
+    },
+
+    /**
+     * Returns all sounds from this Sound Manager that are currently
+     * playing. That is, Sound instances that have their `isPlaying`
+     * property set to `true`.
+     *
+     * @method Phaser.Sound.BaseSoundManager#getAllPlaying
+     * @since 3.60.0
+     *
+     * @generic {Phaser.Sound.BaseSound} T
+     * @genericUse {T[]} - [$return]
+     *
+     * @return {Phaser.Sound.BaseSound[]} - All currently playing sounds, or an empty array.
+     */
+    getAllPlaying: function ()
+    {
+        return GetAll(this.sounds, 'isPlaying', true);
     },
 
     /**

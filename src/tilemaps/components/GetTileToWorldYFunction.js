@@ -5,7 +5,6 @@
  */
 
 var CONST = require('../const/ORIENTATION_CONST');
-var HexagonalTileToWorldY = require('./HexagonalTileToWorldY');
 var NOOP = require('../../utils/NOOP');
 var StaggeredTileToWorldY = require('./StaggeredTileToWorldY');
 var TileToWorldY = require('./TileToWorldY');
@@ -25,10 +24,6 @@ var GetTileToWorldYFunction = function (orientation)
     if (orientation === CONST.ORTHOGONAL)
     {
         return TileToWorldY;
-    }
-    else if (orientation === CONST.HEXAGONAL)
-    {
-        return HexagonalTileToWorldY;
     }
     else if (orientation === CONST.STAGGERED)
     {

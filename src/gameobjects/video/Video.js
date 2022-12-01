@@ -381,6 +381,7 @@ var Video = new Class({
         this.removeVideoElementOnDestroy = false;
 
         this.setPosition(x, y);
+        this.setSize(256, 256);
         this.setDefaultOrigin();
         this.initPipeline();
 

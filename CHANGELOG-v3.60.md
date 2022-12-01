@@ -70,6 +70,9 @@ Due to all of the changes with how WebGL texture batching works a lot of mostly 
 
 Previously, `WebGLRenderer.whiteTexture` and `WebGLRenderer.blankTexture` had a data-type of `WebGLTexture` but they were actually `Phaser.Textures.Frame` instances. This has now been corrected and the two properties are now actually `WebGLTexture` instances, not Frames. If your code relies on this mistake being present, please adapt it.
 
+* The `RenderTarget` class will now create a Framebuffer that includes a Depth Stencil Buffer attachment by default. Previously, it didn't. By attaching a stencil buffer it allows things like Geometry Masks to work in combination with Post FX and other Pipelines. Fix #5802 (thanks @mijinc0)
+* When calling `PipelineManager.clear` and `rebind` it will now check if the vao extension is available, and if so, it'll bind a null vertex array. This helps clean-up from 3rd party libs that don't do this directly, such as ThreeJS.
+
 #### Mobile Pipeline
 
 * The Mobile Pipeline is a new pipeline that extends the Multi Tint pipeline, but uses customized shaders and a single-bound texture specifically for mobile GPUs. This should restore mobile performance back to the levels it was around v3.22, before Multi Tint improved it all for desktop at the expense of mobile.
@@ -253,6 +256,7 @@ There are breaking changes from previous versions of Phaser.
 * `WebGLRenderer.drawBitmapMask` is a new method that completes the process of rendering using the mask target framebuffer. This is called by the `BitmapMaskPipeline`.
 * The `BitmapMaskPipeline` now hands over most control of the framebuffers to the WebGLRenderer.
 * The `GameObjects.Components.Mask.createBitmapMask` method can now accept the `x`, `y`, `texture` and `frame` parameters new to the BitmapMask constructor.
+* Previously, calling `createBitmapMask` on a Shape Game Object would fail unless you passed the shape to the method. Now, it will correctly create a mask from the Shape without needing to pass it. Fix #5976 (thanks @samme)
 
 ### TimeStep Updates
 
@@ -274,6 +278,8 @@ There are breaking changes from previous versions of Phaser.
 
 ### New Features
 
+* The `Tilemap` and `TilemapLayer` classes have a new method `getTileCorners`. This method will return an array of Vector2s with each entry corresponding to the corners of the requested tile, in world space. This currently works for Orthographic and Hexagonal tilemaps.
+* `BaseSoundManager.getAllPlaying` is a new method that will return all currently playing sounds in the Sound Manager.
 * `Animation.showBeforeDelay` is a new optional boolean property you can set when creating, or playing an animation. If the animation has a delay before playback starts this controls if it should still set the first frame immediately, or after the delay has expired (the default).
 * `InputPlugin.resetPointers` is a new method that will loop through all of the Input Manager Pointer instances and reset them all. This is useful if a 3rd party component, such as Vue, has stolen input from Phaser and you need to reset its input state again.
 * `Pointer.reset` is a new method that will reset a Pointer instance back to its 'factory' settings.
@@ -342,6 +348,13 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* You can now optionally specify the `maxSpeed` value in the Arcade Physics Group config (thanks @samme)
+* You can now optionally specify the `useDamping` boolean in the Arcade Physics Group config (thanks @samme)
+* Removed the `HexagonalTileToWorldY` function as it cannot work without an X coordinate. Use `HexagonalTileToWorldXY` instead.
+* Removed the `HexagonalWorldToTileY` function as it cannot work without an X coordinate. Use `HexagonalWorldToTileXY` instead.
+* Earcut has been updated to version 2.2.4. This release improves performance by 10-15% and fixes 2 rare race conditions that could leave to infinite loops. Earcut is used internally by Graphics and Shape game objects when triangulating polygons for complex shapes.
+* The `BaseSoundManager.getAll` method used to require a `key` parameter, to return Sounds matching the key. This is now optional and if not given, all Sound instances are returned.
+* The `WebAudioSoundManager` will now detect if the Audio Context enters a 'suspended' or 'interrupted' state as part of its update loop and if so it'll try to resume the context. This can happen if you change or disable the audio device, such as plugging in headphones with built-in audio drivers then disconnecting them, or swapping tabs on iOS. Fix #5353 (thanks @helloyoucan)
 * The `CONTEXT_RESTORED` Game Event has been removed and the WebGL Renderer no longer listens for the `contextrestored` DOM event, or has a `contextRestoredHandler` method. This never actually worked properly, in any version of Phaser 3 - although the WebGLRenderer would be restored, none of the shaders, pipelines or textures were correctly re-created. If a context is now lost, Phaser will display an error in the console and all rendering will halt. It will no longer try to re-create the context, leading to masses of WebGL errors in the console. Instead, it will die gracefully and require a page reload.
 * The `Text` and `TileSprite` Game Objects no longer listen for the `CONTEXT_RESTORED` event and have had their `onContextRestored` methods removed.
 * `Scenes.Systems.canInput` is a new internal method that determines if a Scene can receive Input events, or not. This is now used by the `InputPlugin` instead of the previous `isActive` test. This allows a Scene to emit and handle input events even when it is running `init` or `preload`. Previously, it could only do this after `create` had finished running. Fix #6123 (thanks @yaasinhamidi)
@@ -426,6 +439,21 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Bug Fixes
 
+* Calling `setDisplayOrigin` on a `Video` Game Object would cause the origins to be set to `NaN` if the Video was created without an asset key. It will now give Videos a default size, preventing this error, which is reset once a video is loaded. Fix #5560 (thanks @mattjennings)
+* When `ImageFile` loads with a linked Normal Map and the map completes first, but the Image is still in a pending state, it would incorrectly add itself to the cache instead of waiting. It now checks this process more carefully. Fix #5886 (thanks @inmylo)
+* Using a `dataKey` to specify a part of a JSON file when using `load.pack` would fail as it wouldn't correctly assign the right part of the pack file to the Loader. You can now use this parameter properly. Fix #6001 (thanks @rexrainbow)
+* The `Text.advancedWordWrap` function would incorrectly merge the current and next lines when wrapping words with carriage-returns in. Fix #6187 (thanks @Ariorh1337 @robinheidrich)
+* Recoded the point conversion math in the `HexagonalTileToWorldXY` function as it was incorrect. Now returns world coordinates correctly.
+* `Tilemap.copy` would error if you copied a block of tiles over itself, even partially, as it tried to copy already replaced tiles as part of the function. It will now copy correctly, regardless of source or destination areas. Fix #6188 (thanks @Arkyris)
+* `Tile.copy` will now use the `DeepCopy` function to copy the `Tile.properties` object, as otherwise it just gets copied by reference.
+* Recoded the point conversion math in the `HexagonalWorldToTileXY` function as it was incorrect. Now detects any dimension hexagon correctly. Fix #5608 (thanks @stonerich)
+* Fixed the point conversion math in the `IsometricWorldToTileXY` function and added optional boolean property that allows the setting of the tile origin to the top or base. Fix #5781 (thanks @benjamin-wilson)
+* Calling `Tilemap.worldToTileX` or `worldToTileY` on a Isometric or Hexagonal Tilemap will now always return `null` instead of doing nothing, as you cannot convert to a tile index using just one coordinate for these map types, you should use `worldToTileXY` instead.
+* The `Game.headlessStep` method will now reset `SceneManager.isProcessing` before `PRE_RENDER`. This fixes issues in HEADLESS mode where the Scene Manager wouldn't process additionally added Scenes created after the Game had started. Fix #5872 #5974 (thanks @micsun-al @samme)
+* If `Rope.setPoints` was called with the exact same number of points as before, it wouldn't set the `dirty` flag, meaning the vertices were not updated on the next render (thanks @stupot)
+* `Particle.fire` will now check to see if the parent Emitter is set to follow a Game Object and if so, and if the x/y EmitterOps are spread ops, then it'll space the particles out based on the follower coordinates, instead of clumping them all together. Fix #5847 (thanks @sreadixl)
+* When using RTL (right-to-left) `Text` Game Objects, the Text would vanish on iOS15+ if you changed the text or font style. The context RTL properties are now restored when the text is updated, fixing this issue. Fix #6121 (thanks @liorGameDev)
+* The `InputPlugin.sortGameObjects` method was using the Camera Render List to determine the Game Object display list. This would exclude non-rendering objects, such as Game Objects with alpha set to zero, even if their Input `alwaysEnable` flag was set. This method now uses the Display List instead, which gives correct results for invisible 'always enabled' objects. Fix #5507 (thanks @EmilSV)
 * The `Tilemap.destroyLayer` method would throw an error "TypeError: layer.destroy is not a function". It now correctly destroys the TilemapLayer. Fix #6268 (thanks @samme)
 * `MapData` and `ObjectLayer` will now enforce that the `Tilemap.objects` property is always an array. Sometimes Tiled willl set it to be a blank object in the JSON data. This fix makes sure it is always an array. Fix #6139 (thanks @robbeman)
 * The `ParseJSONTiled` function will now run a `DeepCopy` on the source Tiled JSON, which prevents object mutation, fixing an issue where Tiled Object Layer names would be duplicated if used across multiple Tilemap instances. Fix #6212 (thanks @temajm @wahur666)
@@ -534,6 +562,7 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @Arcanorum
 @arosemena
 @austinlyon
+@chrisl8
 @christian-post
 @danfoster
 @darrylpizarro
@@ -575,5 +604,6 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @xmahle
 @xuxucode
 @YeloPartyHat
+FromChris
 Golen
 OmniOwl

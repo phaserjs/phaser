@@ -38,24 +38,54 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
         // Find the world position relative to the static or dynamic layer's top left origin,
         // factoring in the camera's vertical scroll
 
+        worldX = worldX - (tilemapLayer.x + camera.scrollX * (1 - tilemapLayer.scrollFactorX));
         worldY = worldY - (tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY));
 
-        tileHeight *= tilemapLayer.scaleY;
-
-        // Find the world position relative to the static or dynamic layer's top left origin,
-        // factoring in the camera's horizontal scroll
-
-        worldX = worldX - (tilemapLayer.x + camera.scrollX * (1 - tilemapLayer.scrollFactorX));
-
         tileWidth *= tilemapLayer.scaleX;
+        tileHeight *= tilemapLayer.scaleY;
     }
 
-    var len = layer.hexSideLength;
-    var rowHeight = ((tileHeight - len) / 2 + len);
+    //  Hard-coded orientation values for Pointy-Top Hexagons only
+    var b0 = 0.5773502691896257; // Math.sqrt(3) / 3
+    var b1 = -0.3333333333333333; // -1 / 3
+    var b2 = 0;
+    var b3 = 0.6666666666666666; // 2 / 3
 
-    // similar to staggered, because Tiled uses the oddr representation.
-    var y = (snapToFloor) ? Math.floor((worldY / rowHeight)) : (worldY / rowHeight);
-    var x = (snapToFloor) ? Math.floor((worldX - (y % 2) * 0.5 * tileWidth) / tileWidth) : (worldX - (y % 2) * 0.5 * tileWidth) / tileWidth;
+    //  origin
+    var tileWidthHalf = tileWidth / 2;
+    var tileHeightHalf = tileHeight / 2;
+
+    //  size
+    //  x = b0 * tileWidth
+    //  y = tileHeightHalf
+    var px = (worldX - tileWidthHalf) / (b0 * tileWidth);
+    var py = (worldY - tileHeightHalf) / tileHeightHalf;
+
+    var q = b0 * px + b1 * py;
+    var r = b2 * px + b3 * py;
+    var s = -q - r;
+
+    var qi = Math.round(q);
+    var ri = Math.round(r);
+    var si = Math.round(s);
+
+    var qDiff = Math.abs(qi - q);
+    var rDiff = Math.abs(ri - r);
+    var sDiff = Math.abs(si - s);
+
+    if (qDiff > rDiff && qDiff > sDiff)
+    {
+        qi = -ri - si;
+    }
+    else if (rDiff > sDiff)
+    {
+        ri = -qi - si;
+    }
+
+    var y = ri;
+
+    //  odd-r implementation:
+    var x = (y % 2 === 0) ? (ri / 2) + qi : (ri / 2) + qi - 0.5;
 
     return point.set(x, y);
 };

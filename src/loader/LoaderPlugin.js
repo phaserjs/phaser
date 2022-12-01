@@ -619,6 +619,7 @@ var LoaderPlugin = new Class({
         if (typeof(packKey) === 'string')
         {
             var subPack = GetValue(pack, packKey);
+
             if (subPack)
             {
                 pack = { packKey: subPack };

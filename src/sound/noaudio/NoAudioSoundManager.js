@@ -96,6 +96,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#get
      * @since 3.23.0
      *
+     * @generic {Phaser.Sound.BaseSound} T
+     * @genericUse {T} - [$return]
+     *
      * @param {string} key - Sound asset key.
      *
      * @return {?Phaser.Sound.BaseSound} - The sound, or null.
@@ -110,6 +113,9 @@ var NoAudioSoundManager = new Class({
      *
      * @method Phaser.Sound.NoAudioSoundManager#getAll
      * @since 3.23.0
+     *
+     * @generic {Phaser.Sound.BaseSound} T
+     * @genericUse {T[]} - [$return]
      *
      * @param {string} key - Sound asset key.
      *

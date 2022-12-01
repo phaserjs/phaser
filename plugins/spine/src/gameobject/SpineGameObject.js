@@ -80,6 +80,7 @@ var SpineGameObjectRender = require('./SpineGameObjectRender');
  * forgotten to set that flag when loading the Spine data. Please see the loader docs for more details.
  *
  * @class SpineGameObject
+ * @extends Phaser.GameObjects.GameObject
  * @constructor
  * @since 3.19.0
  *

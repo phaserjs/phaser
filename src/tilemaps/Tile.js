@@ -4,9 +4,10 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('./const/ORIENTATION_CONST');
 var Class = require('../utils/Class');
 var Components = require('../gameobjects/components');
+var CONST = require('./const/ORIENTATION_CONST');
+var DeepCopy = require('../utils/object/DeepCopy');
 var Rectangle = require('../geom/rectangle');
 
 /**
@@ -329,8 +330,8 @@ var Tile = new Class({
     },
 
     /**
-     * Copies the tile data & properties from the given tile to this tile. This copies everything
-     * except for position and interesting faces.
+     * Copies the tile data and properties from the given Tile to this Tile. This copies everything
+     * except for position and interesting face calculations.
      *
      * @method Phaser.Tilemaps.Tile#copy
      * @since 3.0.0
@@ -343,7 +344,7 @@ var Tile = new Class({
     {
         this.index = tile.index;
         this.alpha = tile.alpha;
-        this.properties = tile.properties;
+        this.properties = DeepCopy(tile.properties);
         this.visible = tile.visible;
         this.setFlip(tile.flipX, tile.flipY);
         this.tint = tile.tint;

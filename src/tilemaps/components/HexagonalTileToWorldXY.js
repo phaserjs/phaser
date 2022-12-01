@@ -30,28 +30,33 @@ var HexagonalTileToWorldXY = function (tileX, tileY, point, camera, layer)
     var tileHeight = layer.baseTileHeight;
     var tilemapLayer = layer.tilemapLayer;
 
-    var layerWorldX = 0;
-    var layerWorldY = 0;
+    var worldX = 0;
+    var worldY = 0;
 
     if (tilemapLayer)
     {
         if (!camera) { camera = tilemapLayer.scene.cameras.main; }
 
-        layerWorldX = tilemapLayer.x + camera.scrollX * (1 - tilemapLayer.scrollFactorX);
+        worldX = tilemapLayer.x + camera.scrollX * (1 - tilemapLayer.scrollFactorX);
+        worldY = tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY);
 
         tileWidth *= tilemapLayer.scaleX;
-
-        layerWorldY = (tilemapLayer.y + camera.scrollY * (1 - tilemapLayer.scrollFactorY));
-
         tileHeight *= tilemapLayer.scaleY;
     }
 
-    var len = layer.hexSideLength;
-    var rowHeight = ((tileHeight - len) / 2 + len);
+    //  Hard-coded orientation values for Pointy-Top Hexagons only
 
-    // similar to staggered, because Tiled uses the oddr representation.
-    var x = layerWorldX + tileX * tileWidth + tileY % 2 * (tileWidth / 2);
-    var y = layerWorldY + tileY * rowHeight;
+    //  origin
+    var tileWidthHalf = tileWidth / 2;
+    var tileHeightHalf = tileHeight / 2;
+
+    var x = worldX + (tileWidth * tileX) + tileWidth;
+    var y = worldY + ((1.5 * tileY) * tileHeightHalf) + tileHeightHalf;
+
+    if (tileY % 2 === 0)
+    {
+        x -= tileWidthHalf;
+    }
 
     return point.set(x, y);
 };

@@ -487,10 +487,10 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#pointToContainer
      * @since 3.4.0
      *
-     * @param {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} source - The Source Point to be transformed.
-     * @param {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} [output] - A destination object to store the transformed point in. If none given a Vector2 will be created and returned.
+     * @param {Phaser.Types.Math.Vector2Like} source - The Source Point to be transformed.
+     * @param {Phaser.Types.Math.Vector2Like} [output] - A destination object to store the transformed point in. If none given a Vector2 will be created and returned.
      *
-     * @return {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} The transformed point.
+     * @return {Phaser.Types.Math.Vector2Like} The transformed point.
      */
     pointToContainer: function (source, output)
     {
