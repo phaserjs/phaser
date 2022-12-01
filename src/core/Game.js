@@ -531,23 +531,28 @@ var Game = new Class({
 
         var eventEmitter = this.events;
 
-        //  Global Managers
+        //  Global Managers like Input and Sound update in the prestep
 
         eventEmitter.emit(Events.PRE_STEP, time, delta);
 
+        //  This is mostly meant for user-land code and plugins
+
         eventEmitter.emit(Events.STEP, time, delta);
 
-        //  Scenes
+        //  Update the Scene Manager and all active Scenes
 
         this.scene.update(time, delta);
+
+        //  Our final event before rendering starts
 
         eventEmitter.emit(Events.POST_STEP, time, delta);
 
         //  Render
+        this.scene.isProcessing = false;
 
-        eventEmitter.emit(Events.PRE_RENDER);
+        eventEmitter.emit(Events.PRE_RENDER, null, time, delta);
 
-        eventEmitter.emit(Events.POST_RENDER);
+        eventEmitter.emit(Events.POST_RENDER, null, time, delta);
     },
 
     /**

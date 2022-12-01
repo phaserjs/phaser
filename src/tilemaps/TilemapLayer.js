@@ -9,6 +9,7 @@ var Components = require('../gameobjects/components');
 var GameObject = require('../gameobjects/GameObject');
 var TilemapComponents = require('./components');
 var TilemapLayerRender = require('./TilemapLayerRender');
+var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
@@ -242,6 +243,16 @@ var TilemapLayer = new Class({
          * @since 3.50.0
          */
         this.gidMap = [];
+
+        /**
+         * A temporary Vector2 used in the tile coordinate methods.
+         *
+         * @name Phaser.Tilemaps.TilemapLayer#tempVec
+         * @type {Phaser.Math.Vector2}
+         * @private
+         * @since 3.60.0
+         */
+        this.tempVec = new Vector2();
 
         /**
          * The horizontal origin of this Tilemap Layer.
@@ -676,6 +687,31 @@ var TilemapLayer = new Class({
     getTileAtWorldXY: function (worldX, worldY, nonNull, camera)
     {
         return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, this.layer);
+    },
+
+    /**
+     * Gets a tile at the given world coordinates from the given isometric layer.
+     *
+     * @method Phaser.Tilemaps.TilemapLayer#getIsoTileAtWorldXY
+     * @since 3.60.0
+     *
+     * @param {number} worldX - X position to get the tile from (given in pixels)
+     * @param {number} worldY - Y position to get the tile from (given in pixels)
+     * @param {boolean} [originTop=true] - Which is the active face of the isometric tile? The top (default, true), or the base? (false)
+     * @param {boolean} [nonNull=false] - If true, function won't return null for empty tiles, but a Tile object with an index of -1.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
+     *
+     * @return {Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
+     */
+    getIsoTileAtWorldXY: function (worldX, worldY, originTop, nonNull, camera)
+    {
+        if (originTop === undefined) { originTop = true; }
+
+        var point = this.tempVec;
+
+        TilemapComponents.IsometricWorldToTileXY(worldX, worldY, true, point, camera, this.layer, originTop);
+
+        return this.getTileAt(point.x, point.y, nonNull);
     },
 
     /**
@@ -1255,6 +1291,32 @@ var TilemapLayer = new Class({
     },
 
     /**
+     * Returns an array of Vector2s where each entry corresponds to the corner of the requested tile.
+     *
+     * The `tileX` and `tileY` parameters are in tile coordinates, not world coordinates.
+     *
+     * The corner coordinates are in world space, having factored in TilemapLayer scale, position
+     * and the camera, if given.
+     *
+     * The size of the array will vary based on the orientation of the map. For example an
+     * orthographic map will return an array of 4 vectors, where-as a hexagonal map will,
+     * of course, return an array of 6 corner vectors.
+     *
+     * @method Phaser.Tilemaps.TilemapLayer#getTileCorners
+     * @since 3.60.0
+     *
+     * @param {number} tileX - The x coordinate, in tiles, not pixels.
+     * @param {number} tileY - The y coordinate, in tiles, not pixels.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
+     *
+     * @return {?Phaser.Math.Vector2[]} Returns an array of Vector2s, or null if the layer given was invalid.
+     */
+    getTileCorners: function (tileX, tileY, camera)
+    {
+        return this.tilemap.getTileCorners(tileX, tileY, camera, this);
+    },
+
+    /**
      * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the
      * specified layer. Each tile will receive a new index. New indexes are drawn from the given
      * weightedIndexes array. An example weighted array:
@@ -1291,6 +1353,10 @@ var TilemapLayer = new Class({
      * Converts from world X coordinates (pixels) to tile X coordinates (tile units), factoring in the
      * layers position, scale and scroll.
      *
+     * You cannot call this method for Isometric or Hexagonal tilemaps as they require
+     * both `worldX` and `worldY` values to determine the correct tile, instead you
+     * should use the `worldToTileXY` method.
+     *
      * @method Phaser.Tilemaps.TilemapLayer#worldToTileX
      * @since 3.50.0
      *
@@ -1308,6 +1374,10 @@ var TilemapLayer = new Class({
     /**
      * Converts from world Y coordinates (pixels) to tile Y coordinates (tile units), factoring in the
      * layers position, scale and scroll.
+     *
+     * You cannot call this method for Isometric or Hexagonal tilemaps as they require
+     * both `worldX` and `worldY` values to determine the correct tile, instead you
+     * should use the `worldToTileXY` method.
      *
      * @method Phaser.Tilemaps.TilemapLayer#worldToTileY
      * @since 3.50.0

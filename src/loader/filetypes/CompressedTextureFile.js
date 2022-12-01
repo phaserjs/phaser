@@ -505,21 +505,27 @@ FileTypesManager.register('texture', function (key, url, xhrSettings)
         }
         else if (entry.format === 'IMG')
         {
+            var file;
             var multifile;
+
             if (entry.multiAtlasURL)
             {
-                multifile = new MultiAtlasFile(this, key, entry.multiAtlasURL, entry.multiPath, entry.multiBaseURL, xhrSettings);
-                loader.addFile(multifile.files);
+                multifile = new MultiAtlasFile(loader, key, entry.multiAtlasURL, entry.multiPath, entry.multiBaseURL, xhrSettings);
+
+                file = multifile.files;
             }
             else if (entry.atlasURL)
             {
                 multifile = new AtlasJSONFile(loader, key, entry.textureURL, entry.atlasURL, xhrSettings);
-                loader.addFile(multifile.files);
+
+                file = multifile.files;
             }
             else
             {
-                loader.addFile(new ImageFile(loader, key, entry.textureURL, xhrSettings));
+                file = new ImageFile(loader, key, entry.textureURL, xhrSettings);
             }
+
+            loader.addFile(file);
         }
         else
         {

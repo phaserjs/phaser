@@ -848,6 +848,11 @@ var InputManager = new Class({
             return false;
         }
 
+        if (input.alwaysEnabled)
+        {
+            return true;
+        }
+
         var visible = true;
         var parent = gameObject.parentContainer;
 

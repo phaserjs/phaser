@@ -345,7 +345,7 @@ var WebAudioSoundManager = new Class({
     {
         var context = this.context;
 
-        if ((context.state === 'suspended' || context.state === 'interrupted') && !this.locked)
+        if (context && !this.locked && (context.state === 'suspended' || context.state === 'interrupted'))
         {
             context.resume();
         }
@@ -367,13 +367,8 @@ var WebAudioSoundManager = new Class({
     {
         BaseSoundManager.prototype.update.call(this, time, delta);
 
-        var context = this.context;
-
         //  Resume interrupted audio on iOS
-        if (context && context.state === 'interrupted')
-        {
-            context.resume();
-        }
+        this.onFocus();
     },
 
     /**

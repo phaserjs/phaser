@@ -519,7 +519,6 @@ var InputPlugin = new Class({
         }
 
         //  Clear the removal list
-        removeList.length = 0;
         this._pendingRemoval.length = 0;
 
         //  Move pendingInsertion to list (also clears pendingInsertion at the same time)
@@ -2671,7 +2670,7 @@ var InputPlugin = new Class({
             return gameObjects;
         }
 
-        var list = pointer.camera.renderList;
+        var list = this.displayList.list;
 
         return gameObjects.sort(function (childA, childB)
         {

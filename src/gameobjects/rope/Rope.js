@@ -731,6 +731,8 @@ var Rope = new Class({
             this.resizeArrays(total);
         }
 
+        this.dirty = true;
+
         this.points = points;
 
         this.updateUVs();

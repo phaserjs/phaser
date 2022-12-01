@@ -443,7 +443,7 @@ var Text = new Class({
                         // failure with a fatal error
                         if (!newWord.length)
                         {
-                            throw new Error('This text\'s wordWrapWidth setting is less than a single character!');
+                            throw new Error('wordWrapWidth < a single character');
                         }
 
                         // Replace current word in array with remainder
@@ -459,11 +459,11 @@ var Text = new Class({
                     var offset = (words[j].length) ? j : j + 1;
 
                     // Collapse rest of sentence and remove any trailing white space
-                    var remainder = words.slice(offset).join(' ')
-                        .replace(/[ \n]*$/gi, '');
+                    var remainder = words.slice(offset).join(' ').replace(/[ \n]*$/gi, '');
 
                     // Prepend remainder to next line
-                    lines[i + 1] = remainder + ' ' + (lines[i + 1] || '');
+                    lines.splice(i + 1, 0, remainder);
+
                     linesCount = lines.length;
 
                     break; // Processing on this line
@@ -564,7 +564,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#getWrappedText
      * @since 3.0.0
      *
-     * @param {string} text - The text for which the wrapping will be calculated. If unspecified, the Text objects current text will be used.
+     * @param {string} [text] - The text for which the wrapping will be calculated. If unspecified, the Text objects current text will be used.
      *
      * @return {string[]} An array of strings with the pieces of wrapped text.
      */
@@ -1216,6 +1216,11 @@ var Text = new Class({
 
             //  Because resizing the canvas resets the context
             style.syncFont(canvas, context);
+
+            if (style.rtl)
+            {
+                context.direction = 'rtl';
+            }
         }
         else
         {
@@ -1233,8 +1238,6 @@ var Text = new Class({
         }
 
         style.syncStyle(canvas, context);
-
-        context.textBaseline = 'alphabetic';
 
         //  Apply padding
         context.translate(padding.left, padding.top);
@@ -1301,14 +1304,14 @@ var Text = new Class({
 
             if (style.strokeThickness)
             {
-                this.style.syncShadow(context, style.shadowStroke);
+                style.syncShadow(context, style.shadowStroke);
 
                 context.strokeText(lines[i], linePositionX, linePositionY);
             }
 
             if (style.color)
             {
-                this.style.syncShadow(context, style.shadowFill);
+                style.syncShadow(context, style.shadowFill);
 
                 context.fillText(lines[i], linePositionX, linePositionY);
             }

@@ -10,6 +10,7 @@
  * @property {boolean} [allowDrag=true] - Sets {@link Phaser.Physics.Arcade.Body#allowDrag}.
  * @property {boolean} [allowGravity=true] - Sets {@link Phaser.Physics.Arcade.Body#allowGravity}.
  * @property {boolean} [allowRotation=true] - Sets {@link Phaser.Physics.Arcade.Body#allowRotation}.
+ * @property {boolean} [useDamping=false] - Sets {@link Phaser.Physics.Arcade.Body#useDamping useDamping}.
  * @property {number} [bounceX=0] - Sets {@link Phaser.Physics.Arcade.Body#bounce bounce.x}.
  * @property {number} [bounceY=0] - Sets {@link Phaser.Physics.Arcade.Body#bounce bounce.y}.
  * @property {number} [dragX=0] - Sets {@link Phaser.Physics.Arcade.Body#drag drag.x}.
@@ -19,6 +20,7 @@
  * @property {number} [gravityY=0] - Sets {@link Phaser.Physics.Arcade.Body#gravity gravity.y}.
  * @property {number} [frictionX=0] - Sets {@link Phaser.Physics.Arcade.Body#friction friction.x}.
  * @property {number} [frictionY=0] - Sets {@link Phaser.Physics.Arcade.Body#friction friction.y}.
+ * @property {number} [maxSpeed=-1] - Sets {@link Phaser.Physics.Arcade.Body#maxSpeed maxSpeed}.
  * @property {number} [maxVelocityX=10000] - Sets {@link Phaser.Physics.Arcade.Body#maxVelocity maxVelocity.x}.
  * @property {number} [maxVelocityY=10000] - Sets {@link Phaser.Physics.Arcade.Body#maxVelocity maxVelocity.y}.
  * @property {number} [velocityX=0] - Sets {@link Phaser.Physics.Arcade.Body#velocity velocity.x}.

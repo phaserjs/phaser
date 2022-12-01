@@ -55,6 +55,8 @@ var ParseJSONTiled = function (name, source, insertNull)
     if (mapData.orientation === CONST.HEXAGONAL)
     {
         mapData.hexSideLength = json.hexsidelength;
+        mapData.staggerAxis = json.staggeraxis;
+        mapData.staggerIndex = json.staggerindex;
     }
 
     mapData.layers = ParseTileLayers(json, insertNull);

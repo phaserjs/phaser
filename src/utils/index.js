@@ -14,6 +14,7 @@ module.exports = {
     Base64: require('./base64/'),
     Objects: require('./object/'),
     String: require('./string/'),
-    NOOP: require('./NOOP')
+    NOOP: require('./NOOP'),
+    NULL: require('./NULL')
 
 };
