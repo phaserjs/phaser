@@ -486,7 +486,18 @@ var Video = new Class({
 
         video.loop = loop;
 
+        return this.createPlayPromise();
+    },
+
+    createPlayPromise: function ()
+    {
+        var video = this.video;
         var callbacks = this._callbacks;
+
+        if (this.isPlaying())
+        {
+            // this.stop();
+        }
 
         var playPromise = video.play();
 
@@ -497,24 +508,50 @@ var Video = new Class({
         else
         {
             //  Old-school browsers with no Promises
-            video.addEventListener('playing', callbacks.play, true);
+            video.addEventListener('playing', callbacks.play);
 
             //  If video hasn't downloaded properly yet ...
             if (video.readyState < 2)
             {
                 this.retry = this.retryLimit;
 
+                if (this._retryID)
+                {
+                    window.clearTimeout(this._retryID);
+                }
+
                 this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
             }
         }
 
         //  Set these _after_ calling `play` or they don't fire (useful, thanks browsers)
-        video.addEventListener('ended', callbacks.end, true);
-        video.addEventListener('timeupdate', callbacks.time, true);
-        video.addEventListener('seeking', callbacks.seeking, true);
-        video.addEventListener('seeked', callbacks.seeked, true);
+        video.addEventListener('error', callbacks.error);
+        video.addEventListener('abort', callbacks.error);
+        video.addEventListener('stalled', callbacks.error);
+        video.addEventListener('suspend', callbacks.error);
+        video.addEventListener('waiting', callbacks.error);
+
+        video.addEventListener('ended', callbacks.end);
+        video.addEventListener('timeupdate', callbacks.time);
+        video.addEventListener('seeking', callbacks.seeking);
+        video.addEventListener('seeked', callbacks.seeked);
+
+        video.addEventListener('play', this.playHandler2.bind(this));
+        video.addEventListener('pause', this.pauseHandler.bind(this));
 
         return this;
+    },
+
+    playHandler2: function (event)
+    {
+        console.log('play', this._cacheKey);
+    },
+
+    pauseHandler: function (event)
+    {
+        console.log('paused', this._cacheKey);
+
+        // this.video.play();
     },
 
     /**
@@ -854,8 +891,8 @@ var Video = new Class({
             video.setAttribute('crossorigin', crossOrigin);
         }
 
-        video.addEventListener('error', this._callbacks.error, true);
-        video.addEventListener(loadEvent, this._callbacks.load, true);
+        video.addEventListener('error', this._callbacks.error);
+        video.addEventListener(loadEvent, this._callbacks.load);
 
         video.src = url;
 
@@ -964,6 +1001,8 @@ var Video = new Class({
      */
     playPromiseErrorHandler: function (error)
     {
+        console.log('pp error handler', error);
+
         this.scene.sys.input.once(InputEvents.POINTER_DOWN, this.unlockHandler, this);
 
         this.touchLocked = true;
@@ -1044,9 +1083,10 @@ var Video = new Class({
             this.video.currentTime = this._markerIn;
         }
 
-        this.video.play();
+        this.createPlayPromise();
 
-        this.emit(Events.VIDEO_PLAY, this);
+        // this.video.play();
+        // this.emit(Events.VIDEO_PLAY, this);
     },
 
     /**
@@ -1060,6 +1100,7 @@ var Video = new Class({
      */
     completeHandler: function ()
     {
+        console.log('ended');
         this.emit(Events.VIDEO_COMPLETE, this);
     },
 
@@ -1120,6 +1161,8 @@ var Video = new Class({
                     else
                     {
                         this.emit(Events.VIDEO_COMPLETE, this);
+
+                        console.log('prEUp stop');
 
                         this.stop();
                     }
@@ -1501,7 +1544,8 @@ var Video = new Class({
 
         if (this.video && !this._codePaused)
         {
-            this.video.play();
+            this.createPlayPromise();
+            // this.video.play();
         }
     },
 
@@ -1541,7 +1585,7 @@ var Video = new Class({
             {
                 if (video.paused && !this._systemPaused)
                 {
-                    video.play();
+                    this.createPlayPromise();
                 }
             }
         }
@@ -1767,7 +1811,7 @@ var Video = new Class({
 
             for (var callback in callbacks)
             {
-                video.removeEventListener(callback, callbacks[callback], true);
+                video.removeEventListener(callback, callbacks[callback]);
             }
 
             video.pause();
