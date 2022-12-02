@@ -84,7 +84,7 @@ var GenerateGridVerts = function (config)
     {
         texture = mesh.scene.sys.textures.get(texture);
     }
-    else
+    else if (!texture)
     {
         //  There's nothing more we can do without a texture
         return result;
