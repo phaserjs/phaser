@@ -128,10 +128,12 @@ if (typeof WEBGL_RENDERER)
 {
     GameObjects.Shader = require('./shader/Shader');
     GameObjects.Mesh = require('./mesh/Mesh');
+    GameObjects.NineSlice = require('./nineslice/NineSlice');
     GameObjects.PointLight = require('./pointlight/PointLight');
 
     GameObjects.Factories.Shader = require('./shader/ShaderFactory');
     GameObjects.Factories.Mesh = require('./mesh/MeshFactory');
+    GameObjects.Factories.NineSlice = require('./nineslice/NineSliceFactory');
     GameObjects.Factories.PointLight = require('./pointlight/PointLightFactory');
 
     GameObjects.Creators.Shader = require('./shader/ShaderCreator');

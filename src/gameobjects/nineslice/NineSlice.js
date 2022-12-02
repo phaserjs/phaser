@@ -6,33 +6,35 @@
 
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var RenderTexture = require('../rendertexture/RenderTexture');
+var GameObject = require('../GameObject');
+var Components = require('../components');
+var Face = require('../../geom/mesh/Face');
+var GenerateGridVerts = require('../../geom/mesh/GenerateGridVerts');
+var NineSliceRender = require('./NineSliceRender');
+var Matrix4 = require('../../math/Matrix4');
+var Vector3 = require('../../math/Vector3');
+var DegToRad = require('../../math/DegToRad');
 
 /**
  * @classdesc
  * TODO
  *
  * @class NineSlice
- * @extends Phaser.GameObjects.RenderTexture
+ * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.60.0
  *
- * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
- * @extends Phaser.GameObjects.Components.ComputedSize
- * @extends Phaser.GameObjects.Components.Crop
  * @extends Phaser.GameObjects.Components.Depth
- * @extends Phaser.GameObjects.Components.Flip
- * @extends Phaser.GameObjects.Components.FX
- * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScrollFactor
- * @extends Phaser.GameObjects.Components.Tint
+ * @extends Phaser.GameObjects.Components.Size
+ * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
+ * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
@@ -42,21 +44,126 @@ var RenderTexture = require('../rendertexture/RenderTexture');
  */
 var NineSlice = new Class({
 
-    Extends: RenderTexture,
+    Extends: GameObject,
+
+    Mixins: [
+        Components.AlphaSingle,
+        Components.BlendMode,
+        Components.Depth,
+        Components.Mask,
+        Components.Pipeline,
+        Components.Size,
+        Components.Texture,
+        Components.Transform,
+        Components.Visible,
+        Components.ScrollFactor,
+        NineSliceRender
+    ],
 
     initialize:
 
-    function NineSlice (scene, x, y, width, height, slices)
+    function NineSlice (scene, x, y, texture, frame)
     {
-        RenderTexture.call(this, scene, x, y, width, height);
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
 
-        this.type = 'NineSlice';
+        GameObject.call(this, scene, 'NineSlice');
 
-        this.create(slices);
+        this.setPosition(x, y);
+        this.setTexture(texture, frame);
+        this.setSize(128, 128);
+        // this.setSize(width, height);
+
+        this.dirtyCache = [];
+        this.dirtyCache[11] = false;
+
+        this.faces = [];
+        this.vertices = [];
+        this.tintFill = false;
+        this.hideCCW = false;
+        this.viewPosition = { z: 0 };
+
+        var result = GenerateGridVerts({
+            mesh: this,
+            // texture: scene.sys.textures.get(texture),
+            // width: 256,
+            // height: 256,
+            // posX: 3,
+            // posY: 3,
+            widthSegments: 3,
+            heightSegments: 1,
+            // isOrtho: true,
+            // tile: true
+        });
+
+        var renderer = scene.sys.renderer;
+
+        this.projectionMatrix = new Matrix4();
+
+        var width = renderer.width;
+        var height = renderer.height;
+        var fov = 45;
+        var near = 0.01;
+        var far = 1000;
+
+        // this.projectionMatrix.perspective(DegToRad(fov), width / height, near, far);
+
+        this.projectionMatrix.ortho(-1, 1, -1, 1, -1000, 1000);
+
+        var z = 1;
+
+        this.modelPosition = new Vector3();
+        this.modelScale = new Vector3(1, 1, 1);
+        this.modelRotation = new Vector3();
+
+        this.viewMatrix = new Matrix4();
+        this.viewMatrix.identity();
+        this.viewMatrix.translateXYZ(0, 0, z);
+        this.viewMatrix.invert();
+
+        this.transformMatrix = new Matrix4();
+
+        this.transformMatrix.setWorldMatrix(
+            this.modelRotation,
+            this.modelPosition,
+            this.modelScale,
+            this.viewMatrix,
+            this.projectionMatrix
+        );
+
+        var faces = result.faces;
+
+        for (var i = 0; i < faces.length; i++)
+        {
+            faces[i].transformCoordinatesLocal(this.transformMatrix, 128, 128, z);
+            // faces[i].transformCoordinatesLocal(this.transformMatrix, width, height, z);
+        }
+
+        console.log(result);
+
+        this.initPipeline();
+
+        //  3-slice + 9-slice
+
+        // this.create(slices);
 
         // this.setSizeToFrame();
     },
 
+
+    //  Overrides Game Object method
+    addedToScene: function ()
+    {
+        // this.scene.sys.updateList.add(this);
+    },
+
+    //  Overrides Game Object method
+    removedFromScene: function ()
+    {
+        // this.scene.sys.updateList.remove(this);
+    },
+
+    /*
     create: function (slices)
     {
         var x = 0;
@@ -202,6 +309,7 @@ var NineSlice = new Class({
 
         return this;
     }
+    */
 
 });
 
