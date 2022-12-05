@@ -14,6 +14,7 @@ var NineSliceRender = require('./NineSliceRender');
 var Matrix4 = require('../../math/Matrix4');
 var Vector3 = require('../../math/Vector3');
 var DegToRad = require('../../math/DegToRad');
+var Vertex = require('../../geom/mesh/Vertex');
 
 /**
  * @classdesc
@@ -71,83 +72,35 @@ var NineSlice = new Class({
 
         this.setPosition(x, y);
         this.setTexture(texture, frame);
-        this.setSize(128, 128);
-        // this.setSize(width, height);
+        this.setSize(600, 128);
 
-        this.dirtyCache = [];
-        this.dirtyCache[11] = false;
+        // this.setSizeToFrame();
 
         this.faces = [];
-        this.vertices = [];
         this.tintFill = false;
-        this.hideCCW = false;
-        this.viewPosition = { z: 0 };
+
+        /*
+        this.dirtyCache = [];
+        this.dirtyCache[11] = false;
+        this.vertices = [];
 
         var result = GenerateGridVerts({
             mesh: this,
-            // texture: scene.sys.textures.get(texture),
-            // width: 256,
-            // height: 256,
-            // posX: 3,
-            // posY: 3,
             widthSegments: 3,
-            heightSegments: 1,
-            // isOrtho: true,
-            // tile: true
+            heightSegments: 1
         });
+        */
 
-        var renderer = scene.sys.renderer;
+        this.create();
 
-        this.projectionMatrix = new Matrix4();
-
-        var width = renderer.width;
-        var height = renderer.height;
-        var fov = 45;
-        var near = 0.01;
-        var far = 1000;
-
-        // this.projectionMatrix.perspective(DegToRad(fov), width / height, near, far);
-
-        this.projectionMatrix.ortho(-1, 1, -1, 1, -1000, 1000);
-
-        var z = 1;
-
-        this.modelPosition = new Vector3();
-        this.modelScale = new Vector3(1, 1, 1);
-        this.modelRotation = new Vector3();
-
-        this.viewMatrix = new Matrix4();
-        this.viewMatrix.identity();
-        this.viewMatrix.translateXYZ(0, 0, z);
-        this.viewMatrix.invert();
-
-        this.transformMatrix = new Matrix4();
-
-        this.transformMatrix.setWorldMatrix(
-            this.modelRotation,
-            this.modelPosition,
-            this.modelScale,
-            this.viewMatrix,
-            this.projectionMatrix
-        );
-
-        var faces = result.faces;
-
-        for (var i = 0; i < faces.length; i++)
+        for (var i = 0; i < this.faces.length; i++)
         {
-            faces[i].transformCoordinatesLocal(this.transformMatrix, 128, 128, z);
-            // faces[i].transformCoordinatesLocal(this.transformMatrix, width, height, z);
+            this.faces[i].transformIdentity(this.width, this.height);
         }
 
-        console.log(result);
+        console.log(this);
 
         this.initPipeline();
-
-        //  3-slice + 9-slice
-
-        // this.create(slices);
-
-        // this.setSizeToFrame();
     },
 
 
@@ -161,6 +114,67 @@ var NineSlice = new Class({
     removedFromScene: function ()
     {
         // this.scene.sys.updateList.remove(this);
+    },
+
+    create: function ()
+    {
+        var faces = this.faces;
+
+        // var vertex1;
+        // var vertex2;
+        // var vertex3;
+
+        // var width = this.width;
+        // var height = this.height;
+
+        // var x;
+        // var y;
+        // var u;
+        // var v;
+
+        //  Odd Vertex:
+
+        //  1 ---. 3
+        //    | /
+        //  2 |/
+
+        //  Even Vertex:
+
+        //      /| 3
+        //     / |
+        //  1 .--- 1
+
+        //  Left Faces
+
+        var third = 1 / 3;
+        var vthird = third / 2;
+        var sixth = third * 2;
+
+        var vertex1 = new Vertex(-0.5, 0.5, 0, 0, 0);
+        var vertex2 = new Vertex(-0.5, -0.5, 0, 0, 1);
+        var vertex3 = new Vertex(-vthird, 0.5, 0, third, 0);
+
+        faces.push(new Face(vertex1, vertex2, vertex3));
+
+        var vertex4 = new Vertex(-0.5, -0.5, 0, 0, 1);
+        var vertex5 = new Vertex(-vthird, -0.5, 0, third, 1);
+        var vertex6 = new Vertex(-vthird, 0.5, 0, third, 0);
+
+        faces.push(new Face(vertex4, vertex5, vertex6));
+
+        //  Right Faces
+
+        var vertex7 = new Vertex(vthird, 0.5, 0, sixth, 0);
+        var vertex8 = new Vertex(vthird, -0.5, 0, sixth, 1);
+        var vertex9 = new Vertex(0.5, 0.5, 0, 1, 0);
+
+        faces.push(new Face(vertex7, vertex8, vertex9));
+
+        var vertex10 = new Vertex(vthird, -0.5, 0, sixth, 1);
+        var vertex11 = new Vertex(0.5, -0.5, 0, 1, 1);
+        var vertex12 = new Vertex(0.5, 0.5, 0, 1, 0);
+
+        faces.push(new Face(vertex10, vertex11, vertex12));
     },
 
     /*
