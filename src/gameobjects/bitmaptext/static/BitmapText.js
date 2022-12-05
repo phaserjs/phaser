@@ -400,7 +400,7 @@ var BitmapText = new Class({
      * Only has an effect if this Text object contains multiple lines of text.
      *
      *
-     * @name Phaser.GameObjects.Text#lineSpacing
+     * @name Phaser.GameObjects.BitmapText#lineSpacing
      * @type {number}
      * @since 3.60.0
      */
