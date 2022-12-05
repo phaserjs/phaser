@@ -72,7 +72,7 @@ var NineSlice = new Class({
 
         this.setPosition(x, y);
         this.setTexture(texture, frame);
-        this.setSize(600, 128);
+        this.setSize(600, 110);
 
         // this.setSizeToFrame();
 
@@ -146,31 +146,37 @@ var NineSlice = new Class({
 
         //  Left Faces
 
-        var third = 1 / 3;
-        var vthird = third / 2;
-        var sixth = third * 2;
+        // var third = 1 / 3;
+        // var vthird = third / 2;
+        // var sixth = third * 2;
+
+        //  Fixed test 50px width (from faked 600px test)
+        var third = 50 / this.width;
+        var vthird = 0.5 - third;
+        var uvthird = 50 / this.frame.width;
+        var uvsixth = 1 - uvthird;
 
         var vertex1 = new Vertex(-0.5, 0.5, 0, 0, 0);
         var vertex2 = new Vertex(-0.5, -0.5, 0, 0, 1);
-        var vertex3 = new Vertex(-vthird, 0.5, 0, third, 0);
+        var vertex3 = new Vertex(-vthird, 0.5, 0, uvthird, 0);
 
         faces.push(new Face(vertex1, vertex2, vertex3));
 
         var vertex4 = new Vertex(-0.5, -0.5, 0, 0, 1);
-        var vertex5 = new Vertex(-vthird, -0.5, 0, third, 1);
-        var vertex6 = new Vertex(-vthird, 0.5, 0, third, 0);
+        var vertex5 = new Vertex(-vthird, -0.5, 0, uvthird, 1);
+        var vertex6 = new Vertex(-vthird, 0.5, 0, uvthird, 0);
 
         faces.push(new Face(vertex4, vertex5, vertex6));
 
         //  Right Faces
 
-        var vertex7 = new Vertex(vthird, 0.5, 0, sixth, 0);
-        var vertex8 = new Vertex(vthird, -0.5, 0, sixth, 1);
+        var vertex7 = new Vertex(vthird, 0.5, 0, uvsixth, 0);
+        var vertex8 = new Vertex(vthird, -0.5, 0, uvsixth, 1);
         var vertex9 = new Vertex(0.5, 0.5, 0, 1, 0);
 
         faces.push(new Face(vertex7, vertex8, vertex9));
 
-        var vertex10 = new Vertex(vthird, -0.5, 0, sixth, 1);
+        var vertex10 = new Vertex(vthird, -0.5, 0, uvsixth, 1);
         var vertex11 = new Vertex(0.5, -0.5, 0, 1, 1);
         var vertex12 = new Vertex(0.5, 0.5, 0, 1, 0);
 
