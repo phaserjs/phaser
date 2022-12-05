@@ -63,18 +63,24 @@ var NineSlice = new Class({
 
     initialize:
 
-    function NineSlice (scene, x, y, texture, frame)
+    function NineSlice (scene, sliceConfig, x, y, texture, frame)
     {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
+        if (x === undefined) { x = GetFastValue(sliceConfig, 'x', 0); }
+        if (y === undefined) { y = GetFastValue(sliceConfig, 'y', 0); }
+        if (texture === undefined) { texture = GetFastValue(sliceConfig, 'texture'); }
+        if (frame === undefined) { frame = GetFastValue(sliceConfig, 'frame'); }
 
         GameObject.call(this, scene, 'NineSlice');
 
         this.setPosition(x, y);
         this.setTexture(texture, frame);
-        this.setSize(600, 110);
 
-        // this.setSizeToFrame();
+        var width = GetFastValue(sliceConfig, 'width', this.frame.width);
+        var height = GetFastValue(sliceConfig, 'height', this.frame.height);
+        var left = GetFastValue(sliceConfig, 'left', width / 3);
+        var right = GetFastValue(sliceConfig, 'right', width / 3);
+
+        this.setSize(width, height);
 
         this.faces = [];
         this.tintFill = false;
@@ -91,7 +97,7 @@ var NineSlice = new Class({
         });
         */
 
-        this.create();
+        this.create(left, right);
 
         for (var i = 0; i < this.faces.length; i++)
         {
@@ -116,44 +122,104 @@ var NineSlice = new Class({
         // this.scene.sys.updateList.remove(this);
     },
 
-    create: function ()
+    create: function (left, right)
     {
         var faces = this.faces;
 
-        // var vertex1;
-        // var vertex2;
-        // var vertex3;
+        var third = left / this.width;
+        var vthird = 0.5 - third;
+        var uvthird = left / this.frame.width;
+        var uvsixth = 1 - uvthird;
 
-        // var width = this.width;
-        // var height = this.height;
+        var third2 = right / this.width;
+        var vthird2 = 0.5 - third2;
+        var uvthird2 = right / this.frame.width;
+        var uvsixth2 = 1 - uvthird2;
 
-        // var x;
-        // var y;
-        // var u;
-        // var v;
+        var pos = [
+            //  face 1
+            -0.5, 0.5,
+            -0.5, -0.5,
+            -vthird, 0.5,
 
-        //  Odd Vertex:
+            //  face 2
+            -0.5, -0.5,
+            -vthird, -0.5,
+            -vthird, 0.5,
 
-        //  1 ---. 3
-        //    | /
-        //  2 |/
+            //  face 3
+            -vthird, 0.5,
+            -vthird, -0.5,
+            vthird, 0.5,
 
-        //  Even Vertex:
+            //  face 4
+            -vthird, -0.5,
+            vthird, -0.5,
+            vthird, 0.5,
 
-        //      /| 3
-        //     / |
-        //  1 .--- 1
+            //  face 5
+            vthird2, 0.5,
+            vthird2, -0.5,
+            0.5, 0.5,
+
+            //  face 6
+            vthird2, -0.5,
+            0.5, -0.5,
+            0.5, 0.5
+        ];
+
+        var uv = [
+            //  face 1
+            0, 0,
+            0, 1,
+            uvthird, 0,
+
+            //  face 2
+            0, 1,
+            uvthird, 1,
+            uvthird, 0,
+
+            //  face 3
+            uvthird, 0,
+            uvthird, 1,
+            uvsixth, 0,
+
+            //  face 4
+            uvthird, 1,
+            uvsixth, 1,
+            uvsixth, 0,
+
+            //  face 5
+            uvsixth2, 0,
+            uvsixth2, 1,
+            1, 0,
+
+            //  face 6
+            uvsixth2, 1,
+            1, 1,
+            1, 0
+        ];
+
+        var c = 0;
+
+        for (var i = 0; i < 6; i++)
+        {
+            var vertex1 = new Vertex(pos[c], pos[c + 1], 0, uv[c], uv[c + 1]);
+            var vertex2 = new Vertex(pos[c + 2], pos[c + 3], 0, uv[c + 2], uv[c + 3]);
+            var vertex3 = new Vertex(pos[c + 4], pos[c + 5], 0, uv[c + 4], uv[c + 5]);
+
+            faces.push(new Face(vertex1, vertex2, vertex3));
+
+            c += 6;
+        }
 
         //  Left Faces
 
-        // var third = 1 / 3;
-        // var vthird = third / 2;
-        // var sixth = third * 2;
-
         //  Fixed test 50px width (from faked 600px test)
-        var third = 50 / this.width;
+        /*
+        var third = left / this.width;
         var vthird = 0.5 - third;
-        var uvthird = 50 / this.frame.width;
+        var uvthird = left / this.frame.width;
         var uvsixth = 1 - uvthird;
 
         var vertex1 = new Vertex(-0.5, 0.5, 0, 0, 0);
@@ -168,19 +234,39 @@ var NineSlice = new Class({
 
         faces.push(new Face(vertex4, vertex5, vertex6));
 
+        //  Center Faces
+
+        var vertex13 = new Vertex(-vthird, 0.5, 0, uvthird, 0);
+        var vertex14 = new Vertex(-vthird, -0.5, 0, uvthird, 1);
+        var vertex15 = new Vertex(vthird, 0.5, 0, uvsixth, 0);
+
+        faces.push(new Face(vertex13, vertex14, vertex15));
+
+        var vertex16 = new Vertex(-vthird, -0.5, 0, uvthird, 1);
+        var vertex17 = new Vertex(vthird, -0.5, 0, uvsixth, 1);
+        var vertex18 = new Vertex(vthird, 0.5, 0, uvsixth, 0);
+
+        faces.push(new Face(vertex16, vertex17, vertex18));
+
         //  Right Faces
 
-        var vertex7 = new Vertex(vthird, 0.5, 0, uvsixth, 0);
-        var vertex8 = new Vertex(vthird, -0.5, 0, uvsixth, 1);
+        var third2 = right / this.width;
+        var vthird2 = 0.5 - third2;
+        var uvthird2 = right / this.frame.width;
+        var uvsixth2 = 1 - uvthird2;
+
+        var vertex7 = new Vertex(vthird2, 0.5, 0, uvsixth2, 0);
+        var vertex8 = new Vertex(vthird2, -0.5, 0, uvsixth2, 1);
         var vertex9 = new Vertex(0.5, 0.5, 0, 1, 0);
 
         faces.push(new Face(vertex7, vertex8, vertex9));
 
-        var vertex10 = new Vertex(vthird, -0.5, 0, uvsixth, 1);
+        var vertex10 = new Vertex(vthird2, -0.5, 0, uvsixth2, 1);
         var vertex11 = new Vertex(0.5, -0.5, 0, 1, 1);
         var vertex12 = new Vertex(0.5, 0.5, 0, 1, 0);
 
         faces.push(new Face(vertex10, vertex11, vertex12));
+        */
     },
 
     /*
