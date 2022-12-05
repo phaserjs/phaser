@@ -77,7 +77,7 @@ var Vertex = new Class({
         this.vz = 0;
 
         /**
-         * The projected x coordinate of this vertex.
+         * The normalized projected x coordinate of this vertex.
          *
          * @name Phaser.Geom.Mesh.Vertex#nx
          * @type {number}
@@ -86,7 +86,7 @@ var Vertex = new Class({
         this.nx = nx;
 
         /**
-         * The projected y coordinate of this vertex.
+         * The normalized projected y coordinate of this vertex.
          *
          * @name Phaser.Geom.Mesh.Vertex#ny
          * @type {number}
@@ -95,7 +95,7 @@ var Vertex = new Class({
         this.ny = ny;
 
         /**
-         * The projected z coordinate of this vertex.
+         * The normalized projected z coordinate of this vertex.
          *
          * @name Phaser.Geom.Mesh.Vertex#nz
          * @type {number}
@@ -221,6 +221,22 @@ var Vertex = new Class({
         {
             this.vz = -(tz / tw);
         }
+    },
+
+    /**
+     * Transforms this vertex by an identity matrix and dimensions, storing the results in `vx`, `vy` and `vz`.
+     *
+     * @method Phaser.Geom.Mesh.Vertex#transformIdentity
+     * @since 3.60.0
+     *
+     * @param {number} width - The width of the parent Mesh.
+     * @param {number} height - The height of the parent Mesh.
+     */
+    transformIdentity: function (width, height)
+    {
+        this.vx = this.x * width;
+        this.vy = -this.y * height;
+        this.vz = 0;
     },
 
     /**

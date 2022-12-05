@@ -308,6 +308,26 @@ var Face = new Class({
     },
 
     /**
+     * Transforms all Face vertices by an identity matrix, storing the results in their `vx`, `vy` and `vz` properties.
+     *
+     * @method Phaser.Geom.Mesh.Face#transformCoordinatesLocal
+     * @since 3.60.0
+     *
+     * @param {number} width - The width of the parent Mesh.
+     * @param {number} height - The height of the parent Mesh.
+     *
+     * @return {this} This Face instance.
+     */
+    transformIdentity: function (width, height)
+    {
+        this.vertex1.transformIdentity(width, height);
+        this.vertex2.transformIdentity(width, height);
+        this.vertex3.transformIdentity(width, height);
+
+        return this;
+    },
+
+    /**
      * Updates the bounds of this Face, based on the translated values of the vertices.
      *
      * Call this method prior to accessing the `Face.bounds` property.
@@ -368,9 +388,11 @@ var Face = new Class({
      */
     isInView: function (camera, hideCCW, z, alpha, a, b, c, d, e, f, roundPixels)
     {
-        var v1 = this.vertex1.update(a, b, c, d, e, f, roundPixels, alpha);
-        var v2 = this.vertex2.update(a, b, c, d, e, f, roundPixels, alpha);
-        var v3 = this.vertex3.update(a, b, c, d, e, f, roundPixels, alpha);
+        this.update(alpha, a, b, c, d, e, f, roundPixels);
+
+        var v1 = this.vertex1;
+        var v2 = this.vertex2;
+        var v3 = this.vertex3;
 
         //  Alpha check first
         if (v1.ta <= 0 && v2.ta <= 0 && v3.ta <= 0)
@@ -401,6 +423,31 @@ var Face = new Class({
         }
 
         return !(bounds.right < camera.x || bounds.bottom < camera.y || bounds.x > cr || bounds.y > cb);
+    },
+
+    /**
+     * Calls the `Vertex.update` method on each of the vertices. This populates them
+     * with the new translated values, updating their `tx`, `ty` and `ta` properties.
+     *
+     * @method Phaser.Geom.Mesh.Face#update
+     * @since 3.60.0
+     *
+     * @param {number} alpha - The alpha of the parent object.
+     * @param {number} a - The parent transform matrix data a component.
+     * @param {number} b - The parent transform matrix data b component.
+     * @param {number} c - The parent transform matrix data c component.
+     * @param {number} d - The parent transform matrix data d component.
+     * @param {number} e - The parent transform matrix data e component.
+     * @param {number} f - The parent transform matrix data f component.
+     * @param {boolean} roundPixels - Round the vertex position or not?
+     */
+    update: function (alpha, a, b, c, d, e, f, roundPixels)
+    {
+        this.vertex1.update(a, b, c, d, e, f, roundPixels, alpha);
+        this.vertex2.update(a, b, c, d, e, f, roundPixels, alpha);
+        this.vertex3.update(a, b, c, d, e, f, roundPixels, alpha);
+
+        return this;
     },
 
     /**
