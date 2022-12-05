@@ -154,7 +154,7 @@ var BitmapText = new Class({
         this._letterSpacing = 0;
 
         /**
-         * Adds / Removes spacing lines in a multiline BitmapText object.
+         * Adds / Removes line spacing in a multiline BitmapText object.
          *
          * Can be a negative or positive number.
          *
@@ -1114,6 +1114,7 @@ var BitmapText = new Class({
             text: this.text,
             fontSize: this.fontSize,
             letterSpacing: this.letterSpacing,
+            lineSpacing: this.lineSpacing,
             align: this.align
         };
 
