@@ -45,9 +45,6 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var tintEffect = src.tintFill;
 
-    var debugFaces = [];
-    var debugCallback = src.debugCallback;
-
     var a = calcMatrix.a;
     var b = calcMatrix.b;
     var c = calcMatrix.c;
@@ -55,9 +52,6 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var e = calcMatrix.e;
     var f = calcMatrix.f;
 
-    var z = src.viewPosition.z;
-
-    var hideCCW = src.hideCCW;
     var roundPixels = camera.roundPixels;
     var alpha = camera.alpha * src.alpha;
 
@@ -67,13 +61,7 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     for (var i = 0; i < totalFaces; i++)
     {
-        var face = faces[i];
-
-        //  If face has alpha <= 0, or hideCCW + clockwise, or isn't in camera view, then don't draw it
-        if (!face.isInView(camera, hideCCW, z, alpha, a, b, c, d, e, f, roundPixels))
-        {
-            continue;
-        }
+        var face = faces[i].update(alpha, a, b, c, d, e, f, roundPixels);
 
         if (pipeline.shouldFlush(3))
         {
@@ -94,19 +82,9 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
         pipeline.vertexCount += 3;
 
         pipeline.currentBatch.count = (pipeline.vertexCount - pipeline.currentBatch.start);
-
-        if (debugCallback)
-        {
-            debugFaces.push(face);
-        }
     }
 
     src.totalFrame += totalFacesRendered;
-
-    if (debugCallback)
-    {
-        debugCallback.call(src, src, debugFaces);
-    }
 
     renderer.pipelines.postBatch(src);
 };
