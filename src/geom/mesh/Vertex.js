@@ -231,12 +231,16 @@ var Vertex = new Class({
      *
      * @param {number} width - The width of the parent Mesh.
      * @param {number} height - The height of the parent Mesh.
+     *
+     * @return {this} This Vertex.
      */
     transformIdentity: function (width, height)
     {
         this.vx = this.x * width;
         this.vy = -this.y * height;
         this.vz = 0;
+
+        return this;
     },
 
     /**
