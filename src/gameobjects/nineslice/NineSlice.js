@@ -106,8 +106,14 @@ var NineSlice = new Class({
 
         this._width = 0;
         this._height = 0;
+
         this.vertices = [];
         this.tintFill = false;
+
+        for (var i = 0; i < 54; i++)
+        {
+            this.vertices.push(new Vertex());
+        }
 
         this.setPosition(x, y);
         this.setTexture(texture, frame);
@@ -129,34 +135,8 @@ var NineSlice = new Class({
         // size of the bottom horizontal bar (D)
         this.bottomHeight = GetFastValue(sliceConfig, 'bottom', 0);
 
-        //  Vertices 0 - 5
-        this.createTopLeft();
-
-        //  Vertices 6 - 11
-        this.createTopMiddle();
-
-        //  Vertices 12 - 17
-        this.createTopRight();
-
-        //  Vertices 18 - 23
-        this.createMidLeft();
-
-        //  Vertices 24 - 29
-        this.createMiddle();
-
-        //  Vertices 30 - 35
-        this.createMidRight();
-
-        //  Vertices 36 - 41
-        this.createBotLeft();
-
-        //  Vertices 42 - 47
-        this.createBotMiddle();
-
-        //  Vertices 48 - 53
-        this.createBotRight();
-
-        console.log(this);
+        this.updateVertices();
+        this.updateUVs();
 
         this.initPipeline();
     },
@@ -183,7 +163,111 @@ var NineSlice = new Class({
         return (this.vertices.length === 54);
     },
 
-    createTopLeft: function ()
+    updateUVs: function ()
+    {
+        var left = this.leftWidth;
+        var right = this.rightWidth;
+        var top = this.topHeight;
+        var bot = this.bottomHeight;
+
+        var width = this.frame.width;
+        var height = this.frame.height;
+
+        //  Top Left
+        this.updateQuadUVs(0, 0, 0, left / width, top / height);
+
+        //  Top Center
+        this.updateQuadUVs(6, left / width, 0, 1 - (right / width), top / height);
+
+        //  Top Right
+        this.updateQuadUVs(12, 1 - (right / width), 0, 1, top / height);
+
+        //  Center Left
+        this.updateQuadUVs(18, 0, top / height, left / width, 1 - (bot / height));
+
+        //  Center
+        this.updateQuadUVs(24, left / width, top / height, 1 - right / width, 1 - (bot / height));
+
+        //  Center Right
+        this.updateQuadUVs(30, 1 - right / width, top / height, 1, 1 - (bot / height));
+
+        //  Bottom Left
+        this.updateQuadUVs(36, 0, 1 - bot / height, left / width, 1);
+
+        //  Bottom Center
+        this.updateQuadUVs(42, left / width, 1 - bot / height, 1 - right / width, 1);
+
+        //  Bottom Right
+        this.updateQuadUVs(48, 1 - right / width, 1 - bot / height, 1, 1);
+    },
+
+    updateVertices: function ()
+    {
+        var left = this.leftWidth;
+        var right = this.rightWidth;
+        var top = this.topHeight;
+        var bot = this.bottomHeight;
+
+        var width = this.width;
+        var height = this.height;
+
+        //  Top Left - Index 0 - 5
+        this.updateQuad(0, -0.5, 0.5, -0.5 + (left / width), 0.5 - (top / height));
+
+        //  Top Center - Index 6 - 11
+        this.updateQuad(6, -0.5 + (left / width), 0.5, 0.5 - (right / width), 0.5 - (top / height));
+
+        //  Top Right - Index 12 - 17
+        this.updateQuad(12, 0.5 - (right / width), 0.5, 0.5, 0.5 - (top / height));
+
+        //  Center Left - Index 18 - 23
+        this.updateQuad(18, -0.5, 0.5 - (top / height), -0.5 + (left / width), -0.5 + (bot / height));
+
+        //  Center - Index 24 - 29
+        this.updateQuad(24, -0.5 + (left / width), 0.5 - (top / height), 0.5 - (right / width), -0.5 + (bot / height));
+
+        //  Center Right - Index 30 - 35
+        this.updateQuad(30, 0.5 - (right / width), 0.5 - (top / height), 0.5, -0.5 + (bot / height));
+
+        //  Bottom Left - Index 36 - 41
+        this.updateQuad(36, -0.5, -0.5 + (bot / height), -0.5 + (left / width), -0.5);
+
+        //  Bottom Center - Index 42 - 47
+        this.updateQuad(42, -0.5 + (left / width), -0.5 + (bot / height), 0.5 - (right / width), -0.5);
+
+        //  Bottom Right - Index 48 - 53
+        this.updateQuad(48, 0.5 - (right / width), -0.5 + (bot / height), 0.5, -0.5);
+    },
+
+    updateQuad: function (offset, x1, y1, x2, y2)
+    {
+        var width = this.width;
+        var height = this.height;
+
+        var verts = this.vertices;
+
+        verts[offset + 0].set(x1, y1, 0).transformIdentity(width, height);
+        verts[offset + 1].set(x1, y2, 0).transformIdentity(width, height);
+        verts[offset + 2].set(x2, y1, 0).transformIdentity(width, height);
+        verts[offset + 3].set(x1, y2, 0).transformIdentity(width, height);
+        verts[offset + 4].set(x2, y2, 0).transformIdentity(width, height);
+        verts[offset + 5].set(x2, y1, 0).transformIdentity(width, height);
+    },
+
+    updateQuadUVs: function (offset, u1, v1, u2, v2)
+    {
+        var verts = this.vertices;
+
+        verts[offset + 0].setUVs(u1, v1);
+        verts[offset + 1].setUVs(u1, v2);
+        verts[offset + 2].setUVs(u2, v1);
+        verts[offset + 3].setUVs(u1, v2);
+        verts[offset + 4].setUVs(u2, v2);
+        verts[offset + 5].setUVs(u2, v1);
+    },
+
+    /*
+    setTopLeft: function ()
     {
         var x1 = -0.5;
         var y1 = 0.5;
@@ -200,24 +284,7 @@ var NineSlice = new Class({
         this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
     },
 
-    createTopRight: function ()
-    {
-        var x1 = 0.5 - (this.rightWidth / this.width);
-        var y1 = 0.5;
-        var x2 = 0.5;
-        var y2 = 0.5 - (this.topHeight / this.height);
-
-        var u1 = 1 - (this.rightWidth / this.frame.width);
-        var v1 = 0;
-        var u2 = 1;
-        var v2 = this.topHeight / this.frame.height;
-
-        var alpha = (this.rightWidth > 0);
-
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
-    },
-
-    createTopMiddle: function ()
+    setTopMiddle: function ()
     {
         var x1 = -0.5 + (this.leftWidth / this.width);
         var y1 = 0.5;
@@ -234,7 +301,24 @@ var NineSlice = new Class({
         this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
     },
 
-    createMidLeft: function ()
+    setTopRight: function ()
+    {
+        var x1 = 0.5 - (this.rightWidth / this.width);
+        var y1 = 0.5;
+        var x2 = 0.5;
+        var y2 = 0.5 - (this.topHeight / this.height);
+
+        var u1 = 1 - (this.rightWidth / this.frame.width);
+        var v1 = 0;
+        var u2 = 1;
+        var v2 = this.topHeight / this.frame.height;
+
+        var alpha = (this.rightWidth > 0);
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
+    },
+
+    setMidLeft: function ()
     {
         var x1 = -0.5;
         var y1 = 0.5 - (this.topHeight / this.height);
@@ -251,7 +335,7 @@ var NineSlice = new Class({
         this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
     },
 
-    createMiddle: function ()
+    setMiddle: function ()
     {
         var x1 = -0.5 + (this.leftWidth / this.width);
         var y1 = 0.5 - (this.topHeight / this.height);
@@ -268,7 +352,7 @@ var NineSlice = new Class({
         this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
     },
 
-    createMidRight: function ()
+    setMidRight: function ()
     {
         var x1 = 0.5 - (this.rightWidth / this.width);
         var y1 = 0.5 - (this.topHeight / this.height);
@@ -285,7 +369,7 @@ var NineSlice = new Class({
         this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
     },
 
-    createBotLeft: function ()
+    setBotLeft: function ()
     {
         var x1 = -0.5;
         var y1 = -0.5 + (this.bottomHeight / this.height);
@@ -302,7 +386,7 @@ var NineSlice = new Class({
         this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
     },
 
-    createBotMiddle: function ()
+    setBotMiddle: function ()
     {
         var x1 = -0.5 + (this.leftWidth / this.width);
         var y1 = -0.5 + (this.bottomHeight / this.height);
@@ -319,7 +403,7 @@ var NineSlice = new Class({
         this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
     },
 
-    createBotRight: function ()
+    setBotRight: function ()
     {
         var x1 = 0.5 - (this.rightWidth / this.width);
         var y1 = -0.5 + (this.bottomHeight / this.height);
@@ -338,21 +422,22 @@ var NineSlice = new Class({
 
     addQuad: function (x1, y1, x2, y2, u1, v1, u2, v2, alpha)
     {
-        var width = this.width;
-        var height = this.height;
         var vertices = this.vertices;
 
         vertices.push(
-            new Vertex(x1, y1, 0, u1, v1, 0xffffff, alpha).transformIdentity(width, height),
-            new Vertex(x1, y2, 0, u1, v2, 0xffffff, alpha).transformIdentity(width, height),
-            new Vertex(x2, y1, 0, u2, v1, 0xffffff, alpha).transformIdentity(width, height),
-            new Vertex(x1, y2, 0, u1, v2, 0xffffff, alpha).transformIdentity(width, height),
-            new Vertex(x2, y2, 0, u2, v2, 0xffffff, alpha).transformIdentity(width, height),
-            new Vertex(x2, y1, 0, u2, v1, 0xffffff, alpha).transformIdentity(width, height)
+            new Vertex(x1, y1, 0, u1, v1, 0xffffff, alpha),
+            new Vertex(x1, y2, 0, u1, v2, 0xffffff, alpha),
+            new Vertex(x2, y1, 0, u2, v1, 0xffffff, alpha),
+            new Vertex(x1, y2, 0, u1, v2, 0xffffff, alpha),
+            new Vertex(x2, y2, 0, u2, v2, 0xffffff, alpha),
+            new Vertex(x2, y1, 0, u2, v1, 0xffffff, alpha)
         );
+    },
+    */
 
-        // console.log('x1', x1, 'y1', y1, 'x2', x2, 'y2', y2, 'u1', u1, 'v1', v1, 'u2', u2, 'v2', v2);
-        // console.log(vertices);
+    updateSlices: function ()
+    {
+        this.updateVertices();
     },
 
     /**
@@ -376,7 +461,7 @@ var NineSlice = new Class({
         {
             this._width = value;
 
-            // this.updateSlices();
+            this.updateSlices();
         }
 
     },
@@ -402,7 +487,7 @@ var NineSlice = new Class({
         {
             this._height = value;
 
-            // this.updateSlices();
+            this.updateSlices();
         }
 
     },
