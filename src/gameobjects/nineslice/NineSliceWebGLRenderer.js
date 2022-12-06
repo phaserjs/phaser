@@ -61,6 +61,11 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
     {
         var vert = verts[i].update(a, b, c, d, e, f, roundPixels, alpha);
 
+        if (vert.alpha === 0)
+        {
+            continue;
+        }
+
         if (pipeline.shouldFlush(1))
         {
             pipeline.flush();
