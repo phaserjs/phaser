@@ -15,6 +15,7 @@ var Matrix4 = require('../../math/Matrix4');
 var Vector3 = require('../../math/Vector3');
 var DegToRad = require('../../math/DegToRad');
 var Vertex = require('../../geom/mesh/Vertex');
+var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * @classdesc
@@ -133,6 +134,7 @@ var NineSlice = new Class({
         // this.setSize(width, height);
 
         this.faces = [];
+        this.vertices = [];
         this.tintFill = false;
 
         /*
@@ -140,10 +142,10 @@ var NineSlice = new Class({
         this.dirtyCache[11] = false;
         this.vertices = [];
 
-        var result = GenerateGridVerts({
+        GenerateGridVerts({
             mesh: this,
             widthSegments: 3,
-            heightSegments: 1
+            heightSegments: 3
         });
 
         for (var i = 0; i < this.faces.length; i++)
@@ -156,7 +158,7 @@ var NineSlice = new Class({
 
         if (left && right && !top && !bottom)
         {
-            this.create3Slice(left, right);
+            // this.create3Slice(left, right);
         }
 
         console.log(this);
@@ -287,9 +289,40 @@ var NineSlice = new Class({
         }
     },
 
-    updateSlices: function ()
+
+
+    createArea1: function ()
     {
-        this.create3Slice(this.sizes.left, this.sizes.right);
+    },
+
+    update3Slice: function ()
+    {
+        // this.create3Slice(this.sizes.left, this.sizes.right);
+
+
+    },
+
+    /**
+     * Loads the data from this Vertex into the given Typed Arrays.
+     *
+     * @method Phaser.Geom.Mesh.Face#load
+     * @since 3.50.0
+     *
+     * @param {Float32Array} F32 - A Float32 Array to insert the position, UV and unit data in to.
+     * @param {Uint32Array} U32 - A Uint32 Array to insert the color and alpha data in to.
+     * @param {number} offset - The index of the array to insert this Vertex to.
+     * @param {number} textureUnit - The texture unit currently in use.
+     * @param {number} tintEffect - The tint effect to use.
+     *
+     * @return {number} The new vertex index array offset.
+     */
+    load: function (F32, U32, offset, textureUnit, tintEffect)
+    {
+        // offset = this.vertex1.load(F32, U32, offset, textureUnit, tintEffect);
+        // offset = this.vertex2.load(F32, U32, offset, textureUnit, tintEffect);
+        // offset = this.vertex3.load(F32, U32, offset, textureUnit, tintEffect);
+
+        return offset;
     },
 
     /**

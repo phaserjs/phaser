@@ -55,8 +55,6 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var roundPixels = camera.roundPixels;
     var alpha = camera.alpha * src.alpha;
 
-    var totalFacesRendered = 0;
-
     renderer.pipelines.preBatch(src);
 
     for (var i = 0; i < totalFaces; i++)
@@ -77,14 +75,10 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
         vertexOffset = face.load(F32, U32, vertexOffset, textureUnit, tintEffect);
 
-        totalFacesRendered++;
-
         pipeline.vertexCount += 3;
 
         pipeline.currentBatch.count = (pipeline.vertexCount - pipeline.currentBatch.start);
     }
-
-    src.totalFrame += totalFacesRendered;
 
     renderer.pipelines.postBatch(src);
 };
