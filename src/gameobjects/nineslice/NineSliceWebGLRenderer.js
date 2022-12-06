@@ -22,10 +22,10 @@ var GetCalcMatrix = require('../GetCalcMatrix');
  */
 var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
 {
-    var faces = src.faces;
-    var totalFaces = faces.length;
+    var verts = src.vertices;
+    var totalVerts = verts.length;
 
-    if (totalFaces === 0)
+    if (totalVerts === 0)
     {
         return;
     }
@@ -57,11 +57,11 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     renderer.pipelines.preBatch(src);
 
-    for (var i = 0; i < totalFaces; i++)
+    for (var i = 0; i < totalVerts; i++)
     {
-        var face = faces[i].update(alpha, a, b, c, d, e, f, roundPixels);
+        var vert = verts[i].update(a, b, c, d, e, f, roundPixels, alpha);
 
-        if (pipeline.shouldFlush(3))
+        if (pipeline.shouldFlush(1))
         {
             pipeline.flush();
 
@@ -73,9 +73,9 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
             vertexOffset = 0;
         }
 
-        vertexOffset = face.load(F32, U32, vertexOffset, textureUnit, tintEffect);
+        vertexOffset = vert.load(F32, U32, vertexOffset, textureUnit, tintEffect);
 
-        pipeline.vertexCount += 3;
+        pipeline.vertexCount++;
 
         pipeline.currentBatch.count = (pipeline.vertexCount - pipeline.currentBatch.start);
     }
