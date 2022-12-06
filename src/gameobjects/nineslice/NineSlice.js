@@ -8,14 +8,8 @@ var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GameObject = require('../GameObject');
 var Components = require('../components');
-var Face = require('../../geom/mesh/Face');
-var GenerateGridVerts = require('../../geom/mesh/GenerateGridVerts');
 var NineSliceRender = require('./NineSliceRender');
-var Matrix4 = require('../../math/Matrix4');
-var Vector3 = require('../../math/Vector3');
-var DegToRad = require('../../math/DegToRad');
 var Vertex = require('../../geom/mesh/Vertex');
-var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * @classdesc
@@ -110,56 +104,37 @@ var NineSlice = new Class({
 
         GameObject.call(this, scene, 'NineSlice');
 
+        this._width = 0;
+        this._height = 0;
+
         this.setPosition(x, y);
         this.setTexture(texture, frame);
 
         var width = GetFastValue(sliceConfig, 'width', this.frame.width);
         var height = GetFastValue(sliceConfig, 'height', this.frame.height);
 
-        var left = GetFastValue(sliceConfig, 'left', width / 3);
-        var right = GetFastValue(sliceConfig, 'right', null);
-        var top = GetFastValue(sliceConfig, 'top', null);
-        var bottom = GetFastValue(sliceConfig, 'bottom', null);
+        // size of the left vertical bar (A)
+        this.leftWidth = GetFastValue(sliceConfig, 'left', width / 3);
 
-        this._width = width;
-        this._height = height;
+        // size of the right vertical bar (B)
+        this.rightWidth = GetFastValue(sliceConfig, 'right', width / 3);
 
-        this.sizes = {
-            left: left,
-            right: right,
-            top: top,
-            bottom: bottom
-        };
+        // size of the top horizontal bar (C)
+        this.topHeight = GetFastValue(sliceConfig, 'top', height);
 
-        // this.setSize(width, height);
+        // size of the bottom horizontal bar (D)
+        this.bottomHeight = GetFastValue(sliceConfig, 'bottom', null);
 
-        this.faces = [];
+        this.setSize(width, height);
+
         this.vertices = [];
         this.tintFill = false;
 
-        /*
-        this.dirtyCache = [];
-        this.dirtyCache[11] = false;
-        this.vertices = [];
+        // this.create3Slice(this.leftWidth, this.rightWidth);
 
-        GenerateGridVerts({
-            mesh: this,
-            widthSegments: 3,
-            heightSegments: 3
-        });
-
-        for (var i = 0; i < this.faces.length; i++)
-        {
-            this.faces[i].transformIdentity(this.width, this.height);
-        }
-        */
-
-        //  Todo - 2 slice, 9 slice, variable slice
-
-        if (left && right && !top && !bottom)
-        {
-            // this.create3Slice(left, right);
-        }
+        this.createTopLeft();
+        this.createTopMiddle();
+        this.createTopRight();
 
         console.log(this);
 
@@ -180,149 +155,76 @@ var NineSlice = new Class({
 
     is3Slice: function ()
     {
-        return (this.faces.length === 6);
+        return (this.vertices.length < 54);
     },
 
     is9Slice: function ()
     {
-        return (this.faces.length === 12);
+        return (this.vertices.length === 54);
     },
 
-    create3Slice: function (leftWidth, rightWidth)
+    createTopLeft: function ()
     {
-        var faces = this.faces;
+        var x1 = -0.5;
+        var y1 = 0.5;
+        var x2 = -0.5 + (this.leftWidth / this.width);
+        var y2 = 0.5 - (this.topHeight / this.height);
 
-        //  In case there is already data in there
-        faces.length = 0;
+        var u1 = 0;
+        var v1 = 0;
+        var u2 = this.leftWidth / this.frame.width;
+        var v2 = this.topHeight / this.frame.height;
 
-        //  The display dimensions
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2);
+    },
+
+    createTopRight: function ()
+    {
+        var x1 = 0.5 - (this.rightWidth / this.width);
+        var y1 = 0.5;
+        var x2 = 0.5;
+        var y2 = 0.5 - (this.topHeight / this.height);
+
+        var u1 = 1 - (this.rightWidth / this.frame.width);
+        var v1 = 0;
+        var u2 = 1;
+        var v2 = this.topHeight / this.frame.height;
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2);
+    },
+
+    createTopMiddle: function ()
+    {
+        var x1 = -0.5 + (this.leftWidth / this.width);
+        var y1 = 0.5;
+        var x2 = 0.5 - (this.rightWidth / this.width);
+        var y2 = 0.5 - (this.topHeight / this.height);
+
+        var u1 = this.leftWidth / this.frame.width;
+        var v1 = 0;
+        var u2 = 1 - (this.rightWidth / this.frame.width);
+        var v2 = this.topHeight / this.frame.height;
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2);
+    },
+
+    addQuad: function (x1, y1, x2, y2, u1, v1, u2, v2)
+    {
         var width = this.width;
         var height = this.height;
+        var vertices = this.vertices;
 
-        var left = 0.5 - (leftWidth / width);
-        var uvLeftA = leftWidth / this.frame.width;
-        var uvLeftB = 1 - uvLeftA;
+        vertices.push(
+            new Vertex(x1, y1, 0, u1, v1).transformIdentity(width, height),
+            new Vertex(x1, y2, 0, u1, v2).transformIdentity(width, height),
+            new Vertex(x2, y1, 0, u2, v1).transformIdentity(width, height),
+            new Vertex(x1, y2, 0, u1, v2).transformIdentity(width, height),
+            new Vertex(x2, y2, 0, u2, v2).transformIdentity(width, height),
+            new Vertex(x2, y1, 0, u2, v1).transformIdentity(width, height)
+        );
 
-        var right = 0.5 - (rightWidth / width);
-        var uvRightA = rightWidth / this.frame.width;
-        var uvRightB = 1 - uvRightA;
-
-        var pos = [
-            //  face 1 - left
-            -0.5, 0.5,
-            -0.5, -0.5,
-            -left, 0.5,
-
-            //  face 2 - left
-            -0.5, -0.5,
-            -left, -0.5,
-            -left, 0.5,
-
-            //  face 3 - middle
-            -left, 0.5,
-            -left, -0.5,
-            left, 0.5,
-
-            //  face 4 - middle
-            -left, -0.5,
-            left, -0.5,
-            left, 0.5,
-
-            //  face 5 - right
-            right, 0.5,
-            right, -0.5,
-            0.5, 0.5,
-
-            //  face 6 - right
-            right, -0.5,
-            0.5, -0.5,
-            0.5, 0.5
-        ];
-
-        var uv = [
-            //  face 1 - left
-            0, 0,
-            0, 1,
-            uvLeftA, 0,
-
-            //  face 2 - left
-            0, 1,
-            uvLeftA, 1,
-            uvLeftA, 0,
-
-            //  face 3 - middle
-            uvLeftA, 0,
-            uvLeftA, 1,
-            uvLeftB, 0,
-
-            //  face 4 - middle
-            uvLeftA, 1,
-            uvLeftB, 1,
-            uvLeftB, 0,
-
-            //  face 5 - right
-            uvRightB, 0,
-            uvRightB, 1,
-            1, 0,
-
-            //  face 6 - right
-            uvRightB, 1,
-            1, 1,
-            1, 0
-        ];
-
-        var c = 0;
-
-        for (var i = 0; i < 6; i++)
-        {
-            var vertex1 = new Vertex(pos[c], pos[c + 1], 0, uv[c], uv[c + 1]);
-            var vertex2 = new Vertex(pos[c + 2], pos[c + 3], 0, uv[c + 2], uv[c + 3]);
-            var vertex3 = new Vertex(pos[c + 4], pos[c + 5], 0, uv[c + 4], uv[c + 5]);
-
-            var face = new Face(vertex1, vertex2, vertex3);
-
-            face.transformIdentity(width, height);
-
-            faces.push(face);
-
-            c += 6;
-        }
-    },
-
-
-
-    createArea1: function ()
-    {
-    },
-
-    update3Slice: function ()
-    {
-        // this.create3Slice(this.sizes.left, this.sizes.right);
-
-
-    },
-
-    /**
-     * Loads the data from this Vertex into the given Typed Arrays.
-     *
-     * @method Phaser.Geom.Mesh.Face#load
-     * @since 3.50.0
-     *
-     * @param {Float32Array} F32 - A Float32 Array to insert the position, UV and unit data in to.
-     * @param {Uint32Array} U32 - A Uint32 Array to insert the color and alpha data in to.
-     * @param {number} offset - The index of the array to insert this Vertex to.
-     * @param {number} textureUnit - The texture unit currently in use.
-     * @param {number} tintEffect - The tint effect to use.
-     *
-     * @return {number} The new vertex index array offset.
-     */
-    load: function (F32, U32, offset, textureUnit, tintEffect)
-    {
-        // offset = this.vertex1.load(F32, U32, offset, textureUnit, tintEffect);
-        // offset = this.vertex2.load(F32, U32, offset, textureUnit, tintEffect);
-        // offset = this.vertex3.load(F32, U32, offset, textureUnit, tintEffect);
-
-        return offset;
+        // console.log('x1', x1, 'y1', y1, 'x2', x2, 'y2', y2, 'u1', u1, 'v1', v1, 'u2', u2, 'v2', v2);
+        // console.log(vertices);
     },
 
     /**
@@ -346,7 +248,7 @@ var NineSlice = new Class({
         {
             this._width = value;
 
-            this.updateSlices();
+            // this.updateSlices();
         }
 
     },
@@ -372,7 +274,7 @@ var NineSlice = new Class({
         {
             this._height = value;
 
-            this.updateSlices();
+            // this.updateSlices();
         }
 
     },
