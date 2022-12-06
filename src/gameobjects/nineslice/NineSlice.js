@@ -114,23 +114,21 @@ var NineSlice = new Class({
         var height = GetFastValue(sliceConfig, 'height', this.frame.height);
 
         // size of the left vertical bar (A)
-        this.leftWidth = GetFastValue(sliceConfig, 'left', width / 3);
+        this.leftWidth = GetFastValue(sliceConfig, 'left', 0);
 
         // size of the right vertical bar (B)
-        this.rightWidth = GetFastValue(sliceConfig, 'right', width / 3);
+        this.rightWidth = GetFastValue(sliceConfig, 'right', 0);
 
         // size of the top horizontal bar (C)
-        this.topHeight = GetFastValue(sliceConfig, 'top', height);
+        this.topHeight = GetFastValue(sliceConfig, 'top', 0);
 
         // size of the bottom horizontal bar (D)
-        this.bottomHeight = GetFastValue(sliceConfig, 'bottom', null);
+        this.bottomHeight = GetFastValue(sliceConfig, 'bottom', 0);
 
         this.setSize(width, height);
 
         this.vertices = [];
         this.tintFill = false;
-
-        // this.create3Slice(this.leftWidth, this.rightWidth);
 
         this.createTopLeft();
         this.createTopMiddle();
@@ -175,7 +173,9 @@ var NineSlice = new Class({
         var u2 = this.leftWidth / this.frame.width;
         var v2 = this.topHeight / this.frame.height;
 
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2);
+        var alpha = (this.leftWidth > 0);
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
     },
 
     createTopRight: function ()
@@ -190,7 +190,9 @@ var NineSlice = new Class({
         var u2 = 1;
         var v2 = this.topHeight / this.frame.height;
 
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2);
+        var alpha = (this.rightWidth > 0);
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
     },
 
     createTopMiddle: function ()
@@ -205,22 +207,24 @@ var NineSlice = new Class({
         var u2 = 1 - (this.rightWidth / this.frame.width);
         var v2 = this.topHeight / this.frame.height;
 
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2);
+        var alpha = (this.leftWidth > 0 || this.rightWidth > 0);
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
     },
 
-    addQuad: function (x1, y1, x2, y2, u1, v1, u2, v2)
+    addQuad: function (x1, y1, x2, y2, u1, v1, u2, v2, alpha)
     {
         var width = this.width;
         var height = this.height;
         var vertices = this.vertices;
 
         vertices.push(
-            new Vertex(x1, y1, 0, u1, v1).transformIdentity(width, height),
-            new Vertex(x1, y2, 0, u1, v2).transformIdentity(width, height),
-            new Vertex(x2, y1, 0, u2, v1).transformIdentity(width, height),
-            new Vertex(x1, y2, 0, u1, v2).transformIdentity(width, height),
-            new Vertex(x2, y2, 0, u2, v2).transformIdentity(width, height),
-            new Vertex(x2, y1, 0, u2, v1).transformIdentity(width, height)
+            new Vertex(x1, y1, 0, u1, v1, 0xffffff, alpha).transformIdentity(width, height),
+            new Vertex(x1, y2, 0, u1, v2, 0xffffff, alpha).transformIdentity(width, height),
+            new Vertex(x2, y1, 0, u2, v1, 0xffffff, alpha).transformIdentity(width, height),
+            new Vertex(x1, y2, 0, u1, v2, 0xffffff, alpha).transformIdentity(width, height),
+            new Vertex(x2, y2, 0, u2, v2, 0xffffff, alpha).transformIdentity(width, height),
+            new Vertex(x2, y1, 0, u2, v1, 0xffffff, alpha).transformIdentity(width, height)
         );
 
         // console.log('x1', x1, 'y1', y1, 'x2', x2, 'y2', y2, 'u1', u1, 'v1', v1, 'u2', u2, 'v2', v2);
