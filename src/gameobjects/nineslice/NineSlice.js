@@ -106,12 +106,16 @@ var NineSlice = new Class({
 
         this._width = 0;
         this._height = 0;
+        this.vertices = [];
+        this.tintFill = false;
 
         this.setPosition(x, y);
         this.setTexture(texture, frame);
 
         var width = GetFastValue(sliceConfig, 'width', this.frame.width);
         var height = GetFastValue(sliceConfig, 'height', this.frame.height);
+
+        this.setSize(width, height);
 
         // size of the left vertical bar (A)
         this.leftWidth = GetFastValue(sliceConfig, 'left', 0);
@@ -125,14 +129,32 @@ var NineSlice = new Class({
         // size of the bottom horizontal bar (D)
         this.bottomHeight = GetFastValue(sliceConfig, 'bottom', 0);
 
-        this.setSize(width, height);
-
-        this.vertices = [];
-        this.tintFill = false;
-
+        //  Vertices 0 - 5
         this.createTopLeft();
+
+        //  Vertices 6 - 11
         this.createTopMiddle();
+
+        //  Vertices 12 - 17
         this.createTopRight();
+
+        //  Vertices 18 - 23
+        this.createMidLeft();
+
+        //  Vertices 24 - 29
+        this.createMiddle();
+
+        //  Vertices 30 - 35
+        this.createMidRight();
+
+        //  Vertices 36 - 41
+        this.createBotLeft();
+
+        //  Vertices 42 - 47
+        this.createBotMiddle();
+
+        //  Vertices 48 - 53
+        this.createBotRight();
 
         console.log(this);
 
@@ -208,6 +230,108 @@ var NineSlice = new Class({
         var v2 = this.topHeight / this.frame.height;
 
         var alpha = (this.leftWidth > 0 || this.rightWidth > 0);
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
+    },
+
+    createMidLeft: function ()
+    {
+        var x1 = -0.5;
+        var y1 = 0.5 - (this.topHeight / this.height);
+        var x2 = -0.5 + (this.leftWidth / this.width);
+        var y2 = -0.5 + (this.bottomHeight / this.height);
+
+        var u1 = 0;
+        var v1 = this.topHeight / this.frame.height;
+        var u2 = this.leftWidth / this.frame.width;
+        var v2 = 1 - (this.bottomHeight / this.frame.height);
+
+        var alpha = (this.leftWidth > 0);
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
+    },
+
+    createMiddle: function ()
+    {
+        var x1 = -0.5 + (this.leftWidth / this.width);
+        var y1 = 0.5 - (this.topHeight / this.height);
+        var x2 = 0.5 - (this.rightWidth / this.width);
+        var y2 = -0.5 + (this.bottomHeight / this.height);
+
+        var u1 = this.leftWidth / this.frame.width;
+        var v1 = this.topHeight / this.frame.height;
+        var u2 = 1 - this.rightWidth / this.frame.width;
+        var v2 = 1 - (this.bottomHeight / this.frame.height);
+
+        var alpha = (this.leftWidth > 0);
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
+    },
+
+    createMidRight: function ()
+    {
+        var x1 = 0.5 - (this.rightWidth / this.width);
+        var y1 = 0.5 - (this.topHeight / this.height);
+        var x2 = 0.5;
+        var y2 = -0.5 + (this.bottomHeight / this.height);
+
+        var u1 = 1 - this.rightWidth / this.frame.width;
+        var v1 = this.topHeight / this.frame.height;
+        var u2 = 1;
+        var v2 = 1 - (this.bottomHeight / this.frame.height);
+
+        var alpha = (this.leftWidth > 0);
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
+    },
+
+    createBotLeft: function ()
+    {
+        var x1 = -0.5;
+        var y1 = -0.5 + (this.bottomHeight / this.height);
+        var x2 = -0.5 + (this.leftWidth / this.width);
+        var y2 = -0.5;
+
+        var u1 = 0;
+        var v1 = 1 - this.bottomHeight / this.frame.height;
+        var u2 = this.leftWidth / this.frame.width;
+        var v2 = 1;
+
+        var alpha = (this.leftWidth > 0);
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
+    },
+
+    createBotMiddle: function ()
+    {
+        var x1 = -0.5 + (this.leftWidth / this.width);
+        var y1 = -0.5 + (this.bottomHeight / this.height);
+        var x2 = 0.5 - (this.rightWidth / this.width);
+        var y2 = -0.5;
+
+        var u1 = this.leftWidth / this.frame.width;
+        var v1 = 1 - this.bottomHeight / this.frame.height;
+        var u2 = 1 - this.rightWidth / this.frame.width;
+        var v2 = 1;
+
+        var alpha = (this.leftWidth > 0);
+
+        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
+    },
+
+    createBotRight: function ()
+    {
+        var x1 = 0.5 - (this.rightWidth / this.width);
+        var y1 = -0.5 + (this.bottomHeight / this.height);
+        var x2 = 0.5;
+        var y2 = -0.5;
+
+        var u1 = 1 - this.rightWidth / this.frame.width;
+        var v1 = 1 - this.bottomHeight / this.frame.height;
+        var u2 = 1;
+        var v2 = 1;
+
+        var alpha = (this.leftWidth > 0);
 
         this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
     },
