@@ -141,18 +141,6 @@ var NineSlice = new Class({
         this.initPipeline();
     },
 
-    //  Overrides Game Object method
-    addedToScene: function ()
-    {
-        // this.scene.sys.updateList.add(this);
-    },
-
-    //  Overrides Game Object method
-    removedFromScene: function ()
-    {
-        // this.scene.sys.updateList.remove(this);
-    },
-
     is3Slice: function ()
     {
         return (this.vertices.length < 54);
@@ -266,180 +254,6 @@ var NineSlice = new Class({
         verts[offset + 5].setUVs(u2, v1);
     },
 
-    /*
-    setTopLeft: function ()
-    {
-        var x1 = -0.5;
-        var y1 = 0.5;
-        var x2 = -0.5 + (this.leftWidth / this.width);
-        var y2 = 0.5 - (this.topHeight / this.height);
-
-        var u1 = 0;
-        var v1 = 0;
-        var u2 = this.leftWidth / this.frame.width;
-        var v2 = this.topHeight / this.frame.height;
-
-        var alpha = (this.leftWidth > 0);
-
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
-    },
-
-    setTopMiddle: function ()
-    {
-        var x1 = -0.5 + (this.leftWidth / this.width);
-        var y1 = 0.5;
-        var x2 = 0.5 - (this.rightWidth / this.width);
-        var y2 = 0.5 - (this.topHeight / this.height);
-
-        var u1 = this.leftWidth / this.frame.width;
-        var v1 = 0;
-        var u2 = 1 - (this.rightWidth / this.frame.width);
-        var v2 = this.topHeight / this.frame.height;
-
-        var alpha = (this.leftWidth > 0 || this.rightWidth > 0);
-
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
-    },
-
-    setTopRight: function ()
-    {
-        var x1 = 0.5 - (this.rightWidth / this.width);
-        var y1 = 0.5;
-        var x2 = 0.5;
-        var y2 = 0.5 - (this.topHeight / this.height);
-
-        var u1 = 1 - (this.rightWidth / this.frame.width);
-        var v1 = 0;
-        var u2 = 1;
-        var v2 = this.topHeight / this.frame.height;
-
-        var alpha = (this.rightWidth > 0);
-
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
-    },
-
-    setMidLeft: function ()
-    {
-        var x1 = -0.5;
-        var y1 = 0.5 - (this.topHeight / this.height);
-        var x2 = -0.5 + (this.leftWidth / this.width);
-        var y2 = -0.5 + (this.bottomHeight / this.height);
-
-        var u1 = 0;
-        var v1 = this.topHeight / this.frame.height;
-        var u2 = this.leftWidth / this.frame.width;
-        var v2 = 1 - (this.bottomHeight / this.frame.height);
-
-        var alpha = (this.leftWidth > 0);
-
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
-    },
-
-    setMiddle: function ()
-    {
-        var x1 = -0.5 + (this.leftWidth / this.width);
-        var y1 = 0.5 - (this.topHeight / this.height);
-        var x2 = 0.5 - (this.rightWidth / this.width);
-        var y2 = -0.5 + (this.bottomHeight / this.height);
-
-        var u1 = this.leftWidth / this.frame.width;
-        var v1 = this.topHeight / this.frame.height;
-        var u2 = 1 - this.rightWidth / this.frame.width;
-        var v2 = 1 - (this.bottomHeight / this.frame.height);
-
-        var alpha = (this.leftWidth > 0);
-
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
-    },
-
-    setMidRight: function ()
-    {
-        var x1 = 0.5 - (this.rightWidth / this.width);
-        var y1 = 0.5 - (this.topHeight / this.height);
-        var x2 = 0.5;
-        var y2 = -0.5 + (this.bottomHeight / this.height);
-
-        var u1 = 1 - this.rightWidth / this.frame.width;
-        var v1 = this.topHeight / this.frame.height;
-        var u2 = 1;
-        var v2 = 1 - (this.bottomHeight / this.frame.height);
-
-        var alpha = (this.leftWidth > 0);
-
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
-    },
-
-    setBotLeft: function ()
-    {
-        var x1 = -0.5;
-        var y1 = -0.5 + (this.bottomHeight / this.height);
-        var x2 = -0.5 + (this.leftWidth / this.width);
-        var y2 = -0.5;
-
-        var u1 = 0;
-        var v1 = 1 - this.bottomHeight / this.frame.height;
-        var u2 = this.leftWidth / this.frame.width;
-        var v2 = 1;
-
-        var alpha = (this.leftWidth > 0);
-
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
-    },
-
-    setBotMiddle: function ()
-    {
-        var x1 = -0.5 + (this.leftWidth / this.width);
-        var y1 = -0.5 + (this.bottomHeight / this.height);
-        var x2 = 0.5 - (this.rightWidth / this.width);
-        var y2 = -0.5;
-
-        var u1 = this.leftWidth / this.frame.width;
-        var v1 = 1 - this.bottomHeight / this.frame.height;
-        var u2 = 1 - this.rightWidth / this.frame.width;
-        var v2 = 1;
-
-        var alpha = (this.leftWidth > 0);
-
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
-    },
-
-    setBotRight: function ()
-    {
-        var x1 = 0.5 - (this.rightWidth / this.width);
-        var y1 = -0.5 + (this.bottomHeight / this.height);
-        var x2 = 0.5;
-        var y2 = -0.5;
-
-        var u1 = 1 - this.rightWidth / this.frame.width;
-        var v1 = 1 - this.bottomHeight / this.frame.height;
-        var u2 = 1;
-        var v2 = 1;
-
-        var alpha = (this.leftWidth > 0);
-
-        this.addQuad(x1, y1, x2, y2, u1, v1, u2, v2, alpha);
-    },
-
-    addQuad: function (x1, y1, x2, y2, u1, v1, u2, v2, alpha)
-    {
-        var vertices = this.vertices;
-
-        vertices.push(
-            new Vertex(x1, y1, 0, u1, v1, 0xffffff, alpha),
-            new Vertex(x1, y2, 0, u1, v2, 0xffffff, alpha),
-            new Vertex(x2, y1, 0, u2, v1, 0xffffff, alpha),
-            new Vertex(x1, y2, 0, u1, v2, 0xffffff, alpha),
-            new Vertex(x2, y2, 0, u2, v2, 0xffffff, alpha),
-            new Vertex(x2, y1, 0, u2, v1, 0xffffff, alpha)
-        );
-    },
-    */
-
-    updateSlices: function ()
-    {
-        this.updateVertices();
-    },
-
     /**
      * The displayed width of this Game Object.
      *
@@ -461,7 +275,7 @@ var NineSlice = new Class({
         {
             this._width = value;
 
-            this.updateSlices();
+            this.updateVertices();
         }
 
     },
@@ -487,7 +301,7 @@ var NineSlice = new Class({
         {
             this._height = value;
 
-            this.updateSlices();
+            this.updateVertices();
         }
 
     },
@@ -499,9 +313,9 @@ var NineSlice = new Class({
      *
      * Setting this value will adjust the Game Object's scale property.
      *
-     * @name Phaser.GameObjects.Components.ComputedSize#displayWidth
+     * @name Phaser.GameObjects.NineSlice#displayWidth
      * @type {number}
-     * @since 3.0.0
+     * @since 3.60.0
      */
     displayWidth: {
 
@@ -524,9 +338,9 @@ var NineSlice = new Class({
      *
      * Setting this value will adjust the Game Object's scale property.
      *
-     * @name Phaser.GameObjects.Components.ComputedSize#displayHeight
+     * @name Phaser.GameObjects.NineSlice#displayHeight
      * @type {number}
-     * @since 3.0.0
+     * @since 3.60.0
      */
     displayHeight: {
 
@@ -553,8 +367,8 @@ var NineSlice = new Class({
      * If you have enabled this Game Object for input, changing the size will _not_ change the
      * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
      *
-     * @method Phaser.GameObjects.Components.ComputedSize#setSize
-     * @since 3.4.0
+     * @method Phaser.GameObjects.NineSlice#setSize
+     * @since 3.60.0
      *
      * @param {number} width - The width of this Game Object.
      * @param {number} height - The height of this Game Object.
@@ -574,8 +388,8 @@ var NineSlice = new Class({
      *
      * Calling this will adjust the scale.
      *
-     * @method Phaser.GameObjects.Components.ComputedSize#setDisplaySize
-     * @since 3.4.0
+     * @method Phaser.GameObjects.NineSlice#setDisplaySize
+     * @since 3.60.0
      *
      * @param {number} width - The width of this Game Object.
      * @param {number} height - The height of this Game Object.
