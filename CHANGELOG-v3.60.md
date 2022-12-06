@@ -348,6 +348,10 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `Face.transformIdentity` is a new method that will translate all of its vertices based on an identity matrix.
+* `Face.update` is a new method that updates each of the Face vertices. This is now called internally by `Face.isInView`.
+* `Vertex.transformIdentity` is a new method that will translate the Vertex based on an identity matrix.
+* The `Vertex.update` method now returns `this` to allow it to be chained.
 * You can now optionally specify the `maxSpeed` value in the Arcade Physics Group config (thanks @samme)
 * You can now optionally specify the `useDamping` boolean in the Arcade Physics Group config (thanks @samme)
 * Removed the `HexagonalTileToWorldY` function as it cannot work without an X coordinate. Use `HexagonalTileToWorldXY` instead.
