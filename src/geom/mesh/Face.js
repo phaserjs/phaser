@@ -308,26 +308,6 @@ var Face = new Class({
     },
 
     /**
-     * Transforms all Face vertices by an identity matrix, storing the results in their `vx`, `vy` and `vz` properties.
-     *
-     * @method Phaser.Geom.Mesh.Face#transformCoordinatesLocal
-     * @since 3.60.0
-     *
-     * @param {number} width - The width of the parent Mesh.
-     * @param {number} height - The height of the parent Mesh.
-     *
-     * @return {this} This Face instance.
-     */
-    transformIdentity: function (width, height)
-    {
-        this.vertex1.transformIdentity(width, height);
-        this.vertex2.transformIdentity(width, height);
-        this.vertex3.transformIdentity(width, height);
-
-        return this;
-    },
-
-    /**
      * Updates the bounds of this Face, based on the translated values of the vertices.
      *
      * Call this method prior to accessing the `Face.bounds` property.
