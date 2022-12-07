@@ -913,6 +913,20 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Returns the number of vertices that can be added to the current batch before
+     * it will trigger a flush to happen.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#vertexAvailable
+     * @since 3.60.0
+     *
+     * @return {number} The number of vertices that can still be added to the current batch before it will flush.
+     */
+    vertexAvailable: function ()
+    {
+        return this.vertexCapacity - this.vertexCount;
+    },
+
+    /**
      * Resizes the properties used to describe the viewport.
      *
      * This method is called automatically by the renderer during its resize handler.
