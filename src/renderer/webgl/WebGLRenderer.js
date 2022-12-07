@@ -2085,7 +2085,20 @@ var WebGLRenderer = new Class({
     {
         if (framebuffer)
         {
-            this.gl.deleteFramebuffer(framebuffer);
+            var gl = this.gl;
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+
+            var renderBuffer = gl.getParameter(gl.RENDERBUFFER_BINDING);
+
+            if (renderBuffer)
+            {
+                gl.deleteRenderbuffer(renderBuffer);
+            }
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+            gl.deleteFramebuffer(framebuffer);
 
             ArrayRemove(this.fboStack, framebuffer);
 
