@@ -278,6 +278,7 @@ There are breaking changes from previous versions of Phaser.
 
 ### New Features
 
+* `WebGLPipeline.vertexAvailable` is a new method that returns the number of vertices that can be added to the current batch before it will trigger a flush.
 * The `Tilemap` and `TilemapLayer` classes have a new method `getTileCorners`. This method will return an array of Vector2s with each entry corresponding to the corners of the requested tile, in world space. This currently works for Orthographic and Hexagonal tilemaps.
 * `BaseSoundManager.getAllPlaying` is a new method that will return all currently playing sounds in the Sound Manager.
 * `Animation.showBeforeDelay` is a new optional boolean property you can set when creating, or playing an animation. If the animation has a delay before playback starts this controls if it should still set the first frame immediately, or after the delay has expired (the default).
@@ -348,9 +349,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
-* `Face.transformIdentity` is a new method that will translate all of its vertices based on an identity matrix.
 * `Face.update` is a new method that updates each of the Face vertices. This is now called internally by `Face.isInView`.
-* `Vertex.transformIdentity` is a new method that will translate the Vertex based on an identity matrix.
+* `Vertex.resize` is a new method that will set the position and then translate the Vertex based on an identity matrix.
 * The `Vertex.update` method now returns `this` to allow it to be chained.
 * You can now optionally specify the `maxSpeed` value in the Arcade Physics Group config (thanks @samme)
 * You can now optionally specify the `useDamping` boolean in the Arcade Physics Group config (thanks @samme)
