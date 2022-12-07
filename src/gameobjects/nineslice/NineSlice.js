@@ -5,7 +5,6 @@
  */
 
 var Class = require('../../utils/Class');
-var GetFastValue = require('../../utils/object/GetFastValue');
 var GameObject = require('../GameObject');
 var Components = require('../components');
 var NineSliceRender = require('./NineSliceRender');
@@ -63,18 +62,27 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.FX
+ * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
+ * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
- * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|number)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {number} [width=256] - The width of the NineSlice Game Object in pixels. This is the width you want it displayed as, in game.
+ * @param {number} [height=256] - The height of the NineSlice Game Object in pixels. This is the height you want it displayed as, in game.
+ * @param {number} [leftWidth=0] - The size of the left vertical column (A). Set to zero to disable this column.
+ * @param {number} [rightWidth=0] - The size of the right vertical column (B). Set to zero to disable this column.
+ * @param {number} [topHeight=0] - The size of the top horiztonal row (C). Set to zero to disable this row.
+ * @param {number} [bottomHeight=0] - The size of the bottom horiztonal row (D). Set to zero to disable this row.
  */
 var NineSlice = new Class({
 
@@ -84,31 +92,35 @@ var NineSlice = new Class({
         Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
+        Components.FX,
+        Components.GetBounds,
         Components.Mask,
+        Components.Origin,
         Components.Pipeline,
+        Components.ScrollFactor,
         Components.Texture,
         Components.Transform,
         Components.Visible,
-        Components.ScrollFactor,
         NineSliceRender
     ],
 
     initialize:
 
-    function NineSlice (scene, sliceConfig, x, y, texture, frame)
+    function NineSlice (scene, x, y, texture, frame, width, height, leftWidth, rightWidth, topHeight, bottomHeight)
     {
-        if (x === undefined) { x = GetFastValue(sliceConfig, 'x', 0); }
-        if (y === undefined) { y = GetFastValue(sliceConfig, 'y', 0); }
-        if (texture === undefined) { texture = GetFastValue(sliceConfig, 'texture'); }
-        if (frame === undefined) { frame = GetFastValue(sliceConfig, 'frame'); }
+        if (width === undefined) { width = 256; }
+        if (height === undefined) { height = 256; }
+        if (leftWidth === undefined) { leftWidth = 0; }
+        if (rightWidth === undefined) { rightWidth = 0; }
+        if (topHeight === undefined) { topHeight = 0; }
+        if (bottomHeight === undefined) { bottomHeight = 0; }
 
         GameObject.call(this, scene, 'NineSlice');
 
-        this._width = 0;
-        this._height = 0;
+        this._width = width;
+        this._height = height;
 
         this.vertices = [];
-        this.tintFill = false;
 
         for (var i = 0; i < 54; i++)
         {
@@ -118,22 +130,42 @@ var NineSlice = new Class({
         this.setPosition(x, y);
         this.setTexture(texture, frame);
 
-        var width = GetFastValue(sliceConfig, 'width', this.frame.width);
-        var height = GetFastValue(sliceConfig, 'height', this.frame.height);
-
-        this.setSize(width, height);
-
         // size of the left vertical bar (A)
-        this.leftWidth = GetFastValue(sliceConfig, 'left', 0);
+        this.leftWidth = leftWidth;
 
         // size of the right vertical bar (B)
-        this.rightWidth = GetFastValue(sliceConfig, 'right', 0);
+        this.rightWidth = rightWidth;
 
         // size of the top horizontal bar (C)
-        this.topHeight = GetFastValue(sliceConfig, 'top', 0);
+        this.topHeight = topHeight;
 
         // size of the bottom horizontal bar (D)
-        this.bottomHeight = GetFastValue(sliceConfig, 'bottom', 0);
+        this.bottomHeight = bottomHeight;
+
+        /**
+         * The tint value being applied to the top-left vertice of the Game Object.
+         * This value is interpolated from the corner to the center of the Game Object.
+         * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
+         *
+         * @name Phaser.GameObjects.Components.Tint#tint
+         * @type {number}
+         * @default 0xffffff
+         * @since 3.60.0
+         */
+        this.tint = 0xffffff;
+
+        /**
+         * The tint fill mode.
+         *
+         * `false` = An additive tint (the default), where vertices colors are blended with the texture.
+         * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
+         *
+         * @name Phaser.GameObjects.Components.Tint#tintFill
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
+         */
+        this.tintFill = false;
 
         this.updateVertices();
         this.updateUVs();
@@ -234,12 +266,12 @@ var NineSlice = new Class({
 
         var verts = this.vertices;
 
-        verts[offset + 0].set(x1, y1, 0).transformIdentity(width, height);
-        verts[offset + 1].set(x1, y2, 0).transformIdentity(width, height);
-        verts[offset + 2].set(x2, y1, 0).transformIdentity(width, height);
-        verts[offset + 3].set(x1, y2, 0).transformIdentity(width, height);
-        verts[offset + 4].set(x2, y2, 0).transformIdentity(width, height);
-        verts[offset + 5].set(x2, y1, 0).transformIdentity(width, height);
+        verts[offset + 0].resize(x1, y1, width, height);
+        verts[offset + 1].resize(x1, y2, width, height);
+        verts[offset + 2].resize(x2, y1, width, height);
+        verts[offset + 3].resize(x1, y2, width, height);
+        verts[offset + 4].resize(x2, y2, width, height);
+        verts[offset + 5].resize(x2, y1, width, height);
     },
 
     updateQuadUVs: function (offset, u1, v1, u2, v2)
@@ -252,6 +284,109 @@ var NineSlice = new Class({
         verts[offset + 3].setUVs(u1, v2);
         verts[offset + 4].setUVs(u2, v2);
         verts[offset + 5].setUVs(u2, v1);
+    },
+
+    /**
+     * Clears all tint values associated with this Game Object.
+     *
+     * Immediately sets the color values back to 0xffffff and the tint type to 'additive',
+     * which results in no visible change to the texture.
+     *
+     * @method Phaser.GameObjects.Components.Tint#clearTint
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearTint: function ()
+    {
+        this.setTint(0xffffff);
+
+        return this;
+    },
+
+    /**
+     * Sets an additive tint on this Game Object.
+     *
+     * The tint works by taking the pixel color values from the Game Objects texture, and then
+     * multiplying it by the color value of the tint.
+     *
+     * To modify the tint color once set, either call this method again with new values or use the
+     * `tint` property.
+     *
+     * To remove a tint call `clearTint`, or call this method with no parameters.
+     *
+     * To swap this from being an additive tint to a fill based tint set the property `tintFill` to `true`.
+     *
+     * @method Phaser.GameObjects.Components.Tint#setTint
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @param {number} [color=0xffffff] - The tint being applied to the entire Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTint: function (color)
+    {
+        if (color === undefined) { color = 0xffffff; }
+
+        this.tint = color;
+
+        this.tintFill = false;
+
+        return this;
+    },
+
+    /**
+     * Sets a fill-based tint on this Game Object.
+     *
+     * Unlike an additive tint, a fill-tint literally replaces the pixel colors from the texture
+     * with those in the tint. You can use this for effects such as making a player flash 'white'
+     * if hit by something. The whole Game Object will be rendered in the given color.
+     *
+     * To modify the tint color once set, either call this method again with new values or use the
+     * `tint` property.
+     *
+     * To remove a tint call `clearTint`, or call this method with no parameters.
+     *
+     * To swap this from being a fill-tint to an additive tint set the property `tintFill` to `false`.
+     *
+     * @method Phaser.GameObjects.Components.Tint#setTintFill
+     * @webglOnly
+     * @since 3.11.0
+     *
+     * @param {number} [color=0xffffff] - The tint being applied to the entire Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTintFill: function (color)
+    {
+        this.setTint(color);
+
+        this.tintFill = true;
+
+        return this;
+    },
+
+    /**
+     * Does this Game Object have a tint applied?
+     *
+     * It checks to see if the tint property is set to a value other than 0xffffff.
+     * This indicates that a Game Object is tinted.
+     *
+     * @name Phaser.GameObjects.Components.Tint#isTinted
+     * @type {boolean}
+     * @webglOnly
+     * @readonly
+     * @since 3.11.0
+     */
+    isTinted: {
+
+        get: function ()
+        {
+            return (this.tint !== 0xffffff);
+        }
+
     },
 
     /**
