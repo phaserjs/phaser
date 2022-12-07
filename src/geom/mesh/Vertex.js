@@ -224,18 +224,24 @@ var Vertex = new Class({
     },
 
     /**
-     * Transforms this vertex by an identity matrix and dimensions, storing the results in `vx`, `vy` and `vz`.
+     * Resizes this Vertex by setting the x and y coordinates, then transforms this vertex
+     * by an identity matrix and dimensions, storing the results in `vx`, `vy` and `vz`.
      *
-     * @method Phaser.Geom.Mesh.Vertex#transformIdentity
+     * @method Phaser.Geom.Mesh.Vertex#resize
      * @since 3.60.0
      *
+     * @param {number} x - The x position of the vertex.
+     * @param {number} y - The y position of the vertex.
      * @param {number} width - The width of the parent Mesh.
      * @param {number} height - The height of the parent Mesh.
      *
      * @return {this} This Vertex.
      */
-    transformIdentity: function (width, height)
+    resize: function (x, y, width, height)
     {
+        this.x = x;
+        this.y = y;
+
         this.vx = this.x * width;
         this.vy = -this.y * height;
         this.vz = 0;
