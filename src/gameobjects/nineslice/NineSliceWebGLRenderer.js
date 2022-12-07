@@ -35,6 +35,18 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var pipeline = renderer.pipelines.set(src.pipeline, src);
 
+    // var test = {
+    //     x: src.x,
+    //     y: src.y,
+    //     rotation: src.rotation,
+    //     scaleX: src.scaleX,
+    //     scaleY: src.scaleY,
+    //     scrollFactorX: src.scrollFactorX,
+    //     scrollFactorY: src.scrollFactorY
+    // };
+
+    // var calcMatrix = GetCalcMatrix(test, camera, parentMatrix).calc;
+
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
     var textureUnit = pipeline.setGameObject(src);
@@ -44,10 +56,15 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var vertexOffset = (pipeline.vertexCount * pipeline.currentShader.vertexComponentCount) - 1;
 
+    var dx = src._displayOriginX;
+    var dy = src._displayOriginY;
+
     var a = calcMatrix.a;
     var b = calcMatrix.b;
     var c = calcMatrix.c;
     var d = calcMatrix.d;
+    // var e = -dx + calcMatrix.e;
+    // var f = -dy + calcMatrix.f;
     var e = calcMatrix.e;
     var f = calcMatrix.f;
 
