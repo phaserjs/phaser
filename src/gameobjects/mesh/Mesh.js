@@ -1052,7 +1052,7 @@ var Mesh = new Class({
     },
 
     /**
-     * Handles the pre-destroy step for the Mesh, which removes the Animation component and typed arrays.
+     * Handles the pre-destroy step for the Mesh, which removes the vertices and debug callbacks.
      *
      * @method Phaser.GameObjects.Mesh#preDestroy
      * @private
