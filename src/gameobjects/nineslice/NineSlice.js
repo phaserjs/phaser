@@ -285,6 +285,15 @@ var NineSlice = new Class({
         this.setPosition(x, y);
         this.setTexture(texture, frame);
 
+        if (this.is3Slice)
+        {
+            height = this.frame.height;
+
+            this._height = height;
+            this.topHeight = height;
+            this.bottomHeight = height;
+        }
+
         this.updateVertices();
         this.updateUVs();
 
@@ -587,6 +596,9 @@ var NineSlice = new Class({
      * Setting this value will adjust the way in which this Nine Slice
      * object scales vertically, if configured to do so.
      *
+     * If this is a 3-slice object, you can only stretch it horizontally
+     * and changing the height will be ignored.
+     *
      * @name Phaser.GameObjects.NiceSlice#height
      * @type {number}
      * @since 3.60.0
@@ -600,9 +612,12 @@ var NineSlice = new Class({
 
         set: function (value)
         {
-            this._height = value;
+            if (!this.is3Slice)
+            {
+                this._height = value;
 
-            this.updateVertices();
+                this.updateVertices();
+            }
         }
 
     },
@@ -664,6 +679,9 @@ var NineSlice = new Class({
      * and vertically depending on the dimensions given to this method, in accordance with
      * how it has been configured for the various corner sizes.
      *
+     * If this is a 3-slice object, you can only stretch it horizontally
+     * and changing the height will be ignored.
+     *
      * If you have enabled this Game Object for input, changing the size will also change the
      * size of the hit area.
      *
@@ -678,14 +696,22 @@ var NineSlice = new Class({
     setSize: function (width, height)
     {
         this.width = width;
-        this.height = height;
+
+        if (!this.is3Slice)
+        {
+            this.height = height;
+        }
 
         var input = this.input;
 
         if (input && !input.customHitArea)
         {
             input.hitArea.width = width;
-            input.hitArea.height = height;
+
+            if (!this.is3Slice)
+            {
+                input.hitArea.height = height;
+            }
         }
 
         return this;
