@@ -234,10 +234,12 @@ var Vertex = new Class({
      * @param {number} y - The y position of the vertex.
      * @param {number} width - The width of the parent Mesh.
      * @param {number} height - The height of the parent Mesh.
+     * @param {number} originX - The originX of the parent Mesh.
+     * @param {number} originY - The originY of the parent Mesh.
      *
      * @return {this} This Vertex.
      */
-    resize: function (x, y, width, height)
+    resize: function (x, y, width, height, originX, originY)
     {
         this.x = x;
         this.y = y;
@@ -245,6 +247,24 @@ var Vertex = new Class({
         this.vx = this.x * width;
         this.vy = -this.y * height;
         this.vz = 0;
+
+        if (originX < 0.5)
+        {
+            this.vx += width * (0.5 - originX);
+        }
+        else if (originX > 0.5)
+        {
+            this.vx -= width * (originX - 0.5);
+        }
+
+        if (originY < 0.5)
+        {
+            this.vy += height * (0.5 - originY);
+        }
+        else if (originY > 0.5)
+        {
+            this.vy -= height * (originY - 0.5);
+        }
 
         return this;
     },
