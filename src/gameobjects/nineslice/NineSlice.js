@@ -65,7 +65,6 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
@@ -119,6 +118,9 @@ var NineSlice = new Class({
 
         this._width = width;
         this._height = height;
+
+        this._originX = 0.5;
+        this._originY = 0.5;
 
         this.vertices = [];
 
@@ -263,15 +265,17 @@ var NineSlice = new Class({
     {
         var width = this.width;
         var height = this.height;
+        var originX = this.originX;
+        var originY = this.originY;
 
         var verts = this.vertices;
 
-        verts[offset + 0].resize(x1, y1, width, height);
-        verts[offset + 1].resize(x1, y2, width, height);
-        verts[offset + 2].resize(x2, y1, width, height);
-        verts[offset + 3].resize(x1, y2, width, height);
-        verts[offset + 4].resize(x2, y2, width, height);
-        verts[offset + 5].resize(x2, y1, width, height);
+        verts[offset + 0].resize(x1, y1, width, height, originX, originY);
+        verts[offset + 1].resize(x1, y2, width, height, originX, originY);
+        verts[offset + 2].resize(x2, y1, width, height, originX, originY);
+        verts[offset + 3].resize(x1, y2, width, height, originX, originY);
+        verts[offset + 4].resize(x2, y2, width, height, originX, originY);
+        verts[offset + 5].resize(x2, y1, width, height, originX, originY);
     },
 
     updateQuadUVs: function (offset, u1, v1, u2, v2)
@@ -537,6 +541,87 @@ var NineSlice = new Class({
         this.displayHeight = height;
 
         return this;
+    },
+
+    /**
+     * The horizontal origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the left of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Origin#originX
+     * @type {number}
+     * @since 3.60.0
+     */
+    originX: {
+
+        get: function ()
+        {
+            return this._originX;
+        },
+
+        set: function (value)
+        {
+            this._originX = value;
+            this.updateVertices();
+        }
+
+    },
+
+    /**
+     * The vertical origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the top of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Origin#originY
+     * @type {number}
+     * @since 3.60.0
+     */
+    originY: {
+
+        get: function ()
+        {
+            return this._originY;
+        },
+
+        set: function (value)
+        {
+            this._originY = value;
+            this.updateVertices();
+        }
+
+    },
+
+    /**
+     * Sets the origin of this Game Object.
+     *
+     * The values are given in the range 0 to 1.
+     *
+     * @method Phaser.GameObjects.Components.Origin#setOrigin
+     * @since 3.60.0
+     *
+     * @param {number} [x=0.5] - The horizontal origin value.
+     * @param {number} [y=x] - The vertical origin value. If not defined it will be set to the value of `x`.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setOrigin: function (x, y)
+    {
+        if (x === undefined) { x = 0.5; }
+        if (y === undefined) { y = x; }
+
+        this._originX = x;
+        this._originY = y;
+
+        this.updateVertices();
+
+        return this.updateDisplayOrigin();
+    },
+
+    preDestroy: function ()
+    {
+        this.vertices = [];
     }
 
 });

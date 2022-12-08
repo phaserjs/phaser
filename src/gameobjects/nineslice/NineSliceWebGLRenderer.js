@@ -35,19 +35,7 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var pipeline = renderer.pipelines.set(src.pipeline, src);
 
-    // var test = {
-    //     x: src.x,
-    //     y: src.y,
-    //     rotation: src.rotation,
-    //     scaleX: src.scaleX,
-    //     scaleY: src.scaleY,
-    //     scrollFactorX: src.scrollFactorX,
-    //     scrollFactorY: src.scrollFactorY
-    // };
-
-    // var calcMatrix = GetCalcMatrix(test, camera, parentMatrix).calc;
-
-    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, false).calc;
 
     var textureUnit = pipeline.setGameObject(src);
 
@@ -55,18 +43,6 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var U32 = pipeline.vertexViewU32;
 
     var vertexOffset = (pipeline.vertexCount * pipeline.currentShader.vertexComponentCount) - 1;
-
-    var dx = src._displayOriginX;
-    var dy = src._displayOriginY;
-
-    var a = calcMatrix.a;
-    var b = calcMatrix.b;
-    var c = calcMatrix.c;
-    var d = calcMatrix.d;
-    // var e = -dx + calcMatrix.e;
-    // var f = -dy + calcMatrix.f;
-    var e = calcMatrix.e;
-    var f = calcMatrix.f;
 
     var roundPixels = camera.roundPixels;
 
@@ -86,7 +62,7 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     for (var i = 0; i < totalVerts; i++)
     {
-        var vert = verts[i].update(a, b, c, d, e, f, roundPixels, alpha);
+        var vert = verts[i];
 
         if (i === flushCount)
         {
@@ -100,8 +76,8 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
             vertexOffset = 0;
         }
 
-        F32[++vertexOffset] = vert.tx;
-        F32[++vertexOffset] = vert.ty;
+        F32[++vertexOffset] = calcMatrix.getXRound(vert.vx, vert.vy, roundPixels);
+        F32[++vertexOffset] = calcMatrix.getYRound(vert.vx, vert.vy, roundPixels);
         F32[++vertexOffset] = vert.u;
         F32[++vertexOffset] = vert.v;
         F32[++vertexOffset] = textureUnit;
