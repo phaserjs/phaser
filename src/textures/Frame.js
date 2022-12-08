@@ -352,7 +352,7 @@ var Frame = new Class({
      * @param {number} [x=0] - The x coordinate of the top-left of this Frame.
      * @param {number} [y=0] - The y coordinate of the top-left of this Frame.
      *
-     * @return {Phaser.Textures.Frame} This Frame object.
+     * @return {this} This Frame object.
      */
     setSize: function (width, height, x, y)
     {
@@ -414,7 +414,7 @@ var Frame = new Class({
      * @param {number} destWidth - The destination width of the trimmed frame for display.
      * @param {number} destHeight - The destination height of the trimmed frame for display.
      *
-     * @return {Phaser.Textures.Frame} This Frame object.
+     * @return {this} This Frame object.
      */
     setTrim: function (actualWidth, actualHeight, destX, destY, destWidth, destHeight)
     {
@@ -626,7 +626,7 @@ var Frame = new Class({
      * @param {number} u1 - UV u1 value.
      * @param {number} v1 - UV v1 value.
      *
-     * @return {Phaser.Textures.Frame} This Frame object.
+     * @return {this} This Frame object.
      */
     setUVs: function (width, height, u0, v0, u1, v1)
     {
@@ -654,7 +654,7 @@ var Frame = new Class({
      * @method Phaser.Textures.Frame#updateUVs
      * @since 3.0.0
      *
-     * @return {Phaser.Textures.Frame} This Frame object.
+     * @return {this} This Frame object.
      */
     updateUVs: function ()
     {
@@ -690,7 +690,7 @@ var Frame = new Class({
      * @method Phaser.Textures.Frame#updateUVsInverted
      * @since 3.0.0
      *
-     * @return {Phaser.Textures.Frame} This Frame object.
+     * @return {this} This Frame object.
      */
     updateUVsInverted: function ()
     {
