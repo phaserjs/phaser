@@ -212,8 +212,8 @@ var NineSlice = new Class({
          *
          * Each quad is represented by 6 Vertex instances.
          *
-         * This array will contain 18 elements for a 3-slice object
-         * and 54 for a nine-slice object.
+         * This array will contain 18 elements for a 3 slice object
+         * and 54 for a nine slice object.
          *
          * You should never modify this array once it has been populated.
          *
@@ -250,6 +250,9 @@ var NineSlice = new Class({
          *
          * You should treat this property as read-only.
          *
+         * If this is a 3 slice object this property will be set to the
+         * height of the texture being used.
+         *
          * @name Phaser.GameObjects.NineSlice#topHeight
          * @type {number}
          * @since 3.60.0
@@ -260,6 +263,8 @@ var NineSlice = new Class({
          * The size of the bottom horizontal bar (D).
          *
          * You should treat this property as read-only.
+         *
+         * If this is a 3 slice object this property will be set to zero.
          *
          * @name Phaser.GameObjects.NineSlice#bottomHeight
          * @type {number}
@@ -319,7 +324,7 @@ var NineSlice = new Class({
 
             this._height = height;
             this.topHeight = height;
-            this.bottomHeight = height;
+            this.bottomHeight = 0;
         }
 
         this.updateVertices();
