@@ -18,7 +18,7 @@ var Vertex = require('../../geom/mesh/Vertex');
  * parameters to this class.
  *
  * This is extremely useful for UI and button like elements, where you need
- * them to expand to accomodate the content without distorting the texture.
+ * them to expand to accommodate the content without distorting the texture.
  *
  * The texture you provide for this Game Object should be based on the
  * following layout structure:
