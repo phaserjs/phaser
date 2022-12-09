@@ -301,6 +301,12 @@ You should use a Dynamic Texture if the texture isn't going to be displayed in-g
 
 You should use a Render Texture if you need to display the texture in-game on a single Game Object, as it provides the convenience of wrapping an Image and Dynamic Texture together for you.
 
+### Input System Updates
+
+There are breaking changes from previous versions of Phaser.
+
+* The `InteractiveObject.alwaysEnabled` property has been removed. It is no longer checked within the `InputPlugin` and setting it will have no effect. This property has not worked correctly since version 3.52 when the new render list was implemented. Upon further investigation we decided to remove the property entirely, rather than shoe-horn it into the render list. If you need to create a non-rendering Interactive area, use the Zone Game Object instead.
+
 ### Bitmap Mask Updates
 
 There are breaking changes from previous versions of Phaser.
@@ -517,7 +523,6 @@ The following are API-breaking, in that a new optional parameter has been insert
 * If `Rope.setPoints` was called with the exact same number of points as before, it wouldn't set the `dirty` flag, meaning the vertices were not updated on the next render (thanks @stupot)
 * `Particle.fire` will now check to see if the parent Emitter is set to follow a Game Object and if so, and if the x/y EmitterOps are spread ops, then it'll space the particles out based on the follower coordinates, instead of clumping them all together. Fix #5847 (thanks @sreadixl)
 * When using RTL (right-to-left) `Text` Game Objects, the Text would vanish on iOS15+ if you changed the text or font style. The context RTL properties are now restored when the text is updated, fixing this issue. Fix #6121 (thanks @liorGameDev)
-* The `InputPlugin.sortGameObjects` method was using the Camera Render List to determine the Game Object display list. This would exclude non-rendering objects, such as Game Objects with alpha set to zero, even if their Input `alwaysEnable` flag was set. This method now uses the Display List instead, which gives correct results for invisible 'always enabled' objects. Fix #5507 (thanks @EmilSV)
 * The `Tilemap.destroyLayer` method would throw an error "TypeError: layer.destroy is not a function". It now correctly destroys the TilemapLayer. Fix #6268 (thanks @samme)
 * `MapData` and `ObjectLayer` will now enforce that the `Tilemap.objects` property is always an array. Sometimes Tiled willl set it to be a blank object in the JSON data. This fix makes sure it is always an array. Fix #6139 (thanks @robbeman)
 * The `ParseJSONTiled` function will now run a `DeepCopy` on the source Tiled JSON, which prevents object mutation, fixing an issue where Tiled Object Layer names would be duplicated if used across multiple Tilemap instances. Fix #6212 (thanks @temajm @wahur666)
@@ -569,7 +574,6 @@ The following are API-breaking, in that a new optional parameter has been insert
 * The `BitmapMask` shader has been recoded so it now works correctly if you mask a Game Object that has alpha set on it, or in its texture. Previously it would alpha the Game Object against black (thanks stever1388)
 * When the Pointer moves out of the canvas and is released it would trigger `Uncaught TypeError: Cannot read properties of undefined (reading 'renderList')` if multiple children existed in the pointer-out array. Fix #5867 #5699 (thanks @rexrainbow @lyger)
 * If the Input Target in the game config was a string, it wouldn't be correctly parsed by the Touch Manager.
-* The `InputPlugin.sortGameObjects` will now assign a value of 0 to any game object not in the render list, but still viable for input, such as an invisible object with `alwaysEnabled` set to true. This fixes an issue where non-render list objects would be skipped. Fix #5507 (thanks @EmilSV)
 * The `GameObject.willRender` method will now factor in the parent `displayList`, if it has one, to the end result. This fixes issues like that where an invisible Layer will still process input events. Fix #5883 (thanks @rexrainbow)
 * `InputPlugin.disable` will now also reset the drag state of the Game Object as well as remove it from all of the internal temporary arrays. This fixes issues where if you disabled a Game Object for input during an input event it would still remain in the temporary internal arrays. This method now also returns the Input Plugin, to match `enable`. Fix #5828 (thank @natureofcode @thewaver)
 * The `GetBounds` component has been removed from the Point Light Game Object. Fix #5934 (thanks @x-wk @samme)
