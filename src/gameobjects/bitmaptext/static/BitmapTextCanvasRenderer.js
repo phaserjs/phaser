@@ -41,6 +41,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, camera, parentMatrix)
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
     var letterSpacing = src._letterSpacing;
+    var lineSpacing = src._lineSpacing;
 
     var xAdvance = 0;
     var yAdvance = 0;
@@ -113,7 +114,8 @@ var BitmapTextCanvasRenderer = function (renderer, src, camera, parentMatrix)
             }
 
             xAdvance = 0;
-            yAdvance += lineHeight;
+            yAdvance += lineHeight + lineSpacing;
+
             lastGlyph = null;
 
             continue;

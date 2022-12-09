@@ -73,6 +73,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
     var letterSpacing = src.letterSpacing;
+    var lineSpacing = src.lineSpacing;
 
     var xAdvance = 0;
     var yAdvance = 0;
@@ -128,7 +129,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
                 }
 
                 xAdvance = 0;
-                yAdvance += lineHeight;
+                yAdvance += lineHeight + lineSpacing;
                 lastGlyph = null;
 
                 continue;
@@ -291,7 +292,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             }
 
             xAdvance = 0;
-            yAdvance += lineHeight;
+            yAdvance += lineHeight + lineSpacing;
             lastGlyph = null;
 
             lineWidths[currentLine] = currentLineWidth;

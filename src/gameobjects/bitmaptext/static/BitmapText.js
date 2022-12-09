@@ -154,6 +154,18 @@ var BitmapText = new Class({
         this._letterSpacing = 0;
 
         /**
+         * Adds / Removes line spacing in a multiline BitmapText object.
+         *
+         * Can be a negative or positive number.
+         *
+         * @name Phaser.GameObjects.BitmapText#_lineSpacing
+         * @type {number}
+         * @private
+         * @since 3.60.0
+         */
+        this._lineSpacing = 0;
+
+        /**
          * Controls the alignment of each line of text in this BitmapText object.
          * Only has any effect when this BitmapText contains multiple lines of text, split with carriage-returns.
          * Has no effect with single-lines of text.
@@ -375,6 +387,28 @@ var BitmapText = new Class({
         if (spacing === undefined) { spacing = 0; }
 
         this._letterSpacing = spacing;
+
+        this._dirty = true;
+
+        return this;
+    },
+
+
+    /**
+     * The line spacing value.
+     * This value is added to the font height to calculate the overall line height.
+     * Only has an effect if this Text object contains multiple lines of text.
+     *
+     *
+     * @name Phaser.GameObjects.BitmapText#setLineSpacing
+     * @type {number}
+     * @since 3.60.0
+     */
+    setLineSpacing: function (spacing)
+    {
+        if (spacing === undefined) { spacing = 0; }
+
+        this._lineSpacing = spacing;
 
         this._dirty = true;
 
@@ -923,6 +957,32 @@ var BitmapText = new Class({
     },
 
     /**
+     * Adds / Removes spacing between lines.
+     *
+     * Can be a negative or positive number.
+     *
+     * You can also use the method `setLineSpacing` if you want a chainable way to change the line spacing.
+     *
+     * @name Phaser.GameObjects.BitmapText#lineSpacing
+     * @type {number}
+     * @since 3.60.0
+     */
+    lineSpacing: {
+
+        set: function (value)
+        {
+            this._lineSpacing = value;
+            this._dirty = true;
+        },
+
+        get: function ()
+        {
+            return this._lineSpacing;
+        }
+
+    },
+
+    /**
      * The maximum display width of this BitmapText in pixels.
      *
      * If BitmapText.text is longer than maxWidth then the lines will be automatically wrapped
@@ -1054,6 +1114,7 @@ var BitmapText = new Class({
             text: this.text,
             fontSize: this.fontSize,
             letterSpacing: this.letterSpacing,
+            lineSpacing: this.lineSpacing,
             align: this.align
         };
 
