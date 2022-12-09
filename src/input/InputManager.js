@@ -843,14 +843,9 @@ var InputManager = new Class({
     {
         var input = gameObject.input;
 
-        if (!input || !input.enabled || (!input.alwaysEnabled && !gameObject.willRender(camera)))
+        if (!input || !input.enabled || !gameObject.willRender(camera))
         {
             return false;
-        }
-
-        if (input.alwaysEnabled)
-        {
-            return true;
         }
 
         var visible = true;
