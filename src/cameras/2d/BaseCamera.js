@@ -1757,8 +1757,11 @@ var BaseCamera = new Class({
 
         set: function (value)
         {
-            this._scrollX = value;
-            this.dirty = true;
+            if (value !== this._scrollX)
+            {
+                this._scrollX = value;
+                this.dirty = true;
+            }
         }
 
     },
@@ -1787,8 +1790,11 @@ var BaseCamera = new Class({
 
         set: function (value)
         {
-            this._scrollY = value;
-            this.dirty = true;
+            if (value !== this._scrollY)
+            {
+                this._scrollY = value;
+                this.dirty = true;
+            }
         }
 
     },
