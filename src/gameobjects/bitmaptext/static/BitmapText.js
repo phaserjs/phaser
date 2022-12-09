@@ -393,24 +393,26 @@ var BitmapText = new Class({
         return this;
     },
 
-
     /**
-     * The line spacing value.
-     * This value is added to the font height to calculate the overall line height.
-     * Only has an effect if this Text object contains multiple lines of text.
+     * Sets the line spacing value. This value is added to the font height to
+     * calculate the overall line height.
      *
+     * Spacing can be a negative or positive number.
      *
-     * @name Phaser.GameObjects.BitmapText#setLineSpacing
-     * @type {number}
+     * Only has an effect if this BitmapText object contains multiple lines of text.
+     *
+     * @method Phaser.GameObjects.BitmapText#setLineSpacing
      * @since 3.60.0
+     *
+     * @param {number} [spacing=0] - The amount of space to add between each line in multi-line text.
+     *
+     * @return {this} This BitmapText Object.
      */
     setLineSpacing: function (spacing)
     {
         if (spacing === undefined) { spacing = 0; }
 
-        this._lineSpacing = spacing;
-
-        this._dirty = true;
+        this.lineSpacing = spacing;
 
         return this;
     },
