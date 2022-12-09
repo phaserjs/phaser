@@ -414,6 +414,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `Camera.scrollX` and `scrollY` will now only set the `Camera.dirty` flag to `true` if the new value given to them is different from their current value. This allows you to use this property in your own culling functions. Fix #6088 (thanks @Waclaw-I)
 * `Face.update` is a new method that updates each of the Face vertices. This is now called internally by `Face.isInView`.
 * `Vertex.resize` is a new method that will set the position and then translate the Vertex based on an identity matrix.
 * The `Vertex.update` method now returns `this` to allow it to be chained.
