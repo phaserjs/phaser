@@ -62,7 +62,7 @@ var Vertex = require('../../geom/mesh/Vertex');
  *     areas 1 and 3 will remain unscaled
  *     area 2 will be stretched horizontally
  *
- * The above configuration concept is adapted from the Pixi NiceSlicePlane.
+ * The above configuration concept is adapted from the Pixi NineSlicePlane.
  *
  * To specify a 3 slice object instead of a 9 slice you should only
  * provide the `leftWidth` and `rightWidth` parameters. To create a 9 slice
@@ -607,7 +607,7 @@ var NineSlice = new Class({
      * `leftWidth` + `rightWidth`. If you need to display this object
      * at a smaller size, you can also scale it.
      *
-     * @name Phaser.GameObjects.NiceSlice#width
+     * @name Phaser.GameObjects.NineSlice#width
      * @type {number}
      * @since 3.60.0
      */
@@ -640,7 +640,7 @@ var NineSlice = new Class({
      * If this is a 3-slice object, you can only stretch it horizontally
      * and changing the height will be ignored.
      *
-     * @name Phaser.GameObjects.NiceSlice#height
+     * @name Phaser.GameObjects.NineSlice#height
      * @type {number}
      * @since 3.60.0
      */

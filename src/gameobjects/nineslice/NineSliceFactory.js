@@ -58,7 +58,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  *     areas 1 and 3 will remain unscaled
  *     area 2 will be stretched horizontally
  *
- * The above configuration concept is adapted from the Pixi NiceSlicePlane.
+ * The above configuration concept is adapted from the Pixi NineSlicePlane.
  *
  * To specify a 3 slice object instead of a 9 slice you should only
  * provide the `leftWidth` and `rightWidth` parameters. To create a 9 slice
