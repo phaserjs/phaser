@@ -594,7 +594,7 @@ var CameraManager = new Class({
         var scene = this.scene;
         var cameras = this.cameras;
 
-        for (var i = 0; i < this.cameras.length; i++)
+        for (var i = 0; i < cameras.length; i++)
         {
             var camera = cameras[i];
 
