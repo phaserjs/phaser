@@ -301,8 +301,6 @@ var SceneManager = new Class({
             //  Clear the pending lists
             this._start.length = 0;
             this._pending.length = 0;
-
-            return;
         }
 
         for (i = 0; i < this._queue.length; i++)
