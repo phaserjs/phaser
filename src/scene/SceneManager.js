@@ -573,6 +573,11 @@ var SceneManager = new Class({
             {
                 sys.step(time, delta);
             }
+
+            if (sys.scenePlugin._target)
+            {
+                sys.scenePlugin.step(time, delta);
+            }
         }
     },
 

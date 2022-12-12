@@ -350,8 +350,6 @@ var ScenePlugin = new Class({
 
         this.systems.events.emit(Events.TRANSITION_OUT, target, duration);
 
-        this.systems.events.on(Events.UPDATE, this.step, this);
-
         return true;
     },
 
@@ -417,9 +415,6 @@ var ScenePlugin = new Class({
     {
         var targetSys = this._target.sys;
         var targetSettings = this._target.sys.settings;
-
-        //  Stop the step
-        this.systems.events.off(Events.UPDATE, this.step, this);
 
         //  Notify target scene
         targetSys.events.emit(Events.TRANSITION_COMPLETE, this.scene);
@@ -1092,7 +1087,6 @@ var ScenePlugin = new Class({
         var eventEmitter = this.systems.events;
 
         eventEmitter.off(Events.SHUTDOWN, this.shutdown, this);
-        eventEmitter.off(Events.POST_UPDATE, this.step, this);
         eventEmitter.off(Events.TRANSITION_OUT);
     },
 
