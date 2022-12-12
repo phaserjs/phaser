@@ -510,6 +510,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Bug Fixes
 
+* An inactive Scene is no longer updated after a Scene transition completes. Previously, it will still update the Scene one final time. This fix also prevents the `POST_UPDATE` event from firing after the transition is over. Fix #5550 (thanks @mijinc0 @samme)
 * Although not recommended, when adding a `Layer` Game Object to another `Layer` Game Object, it will no longer error because it cannot find the `removeFromDisplayList` function. Fix #5595 (thanks @tringcooler)
 * The `Actions.Spread` method will now place the final item correctly and abort early if the array only contains 1 or 0 items (thanks @EmilSV)
 * Calling `setDisplayOrigin` on a `Video` Game Object would cause the origins to be set to `NaN` if the Video was created without an asset key. It will now give Videos a default size, preventing this error, which is reset once a video is loaded. Fix #5560 (thanks @mattjennings)
