@@ -414,6 +414,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* The `SceneManager.processQueue` method will no longer `return` if a new Scene was added, after starting it. This allows any other queued operations to still be run in the same frame, rather than being delayed until the next game frame. Fix #5359 (thanks @telinc1)
 * `Camera.scrollX` and `scrollY` will now only set the `Camera.dirty` flag to `true` if the new value given to them is different from their current value. This allows you to use this property in your own culling functions. Fix #6088 (thanks @Waclaw-I)
 * `Face.update` is a new method that updates each of the Face vertices. This is now called internally by `Face.isInView`.
 * `Vertex.resize` is a new method that will set the position and then translate the Vertex based on an identity matrix.
@@ -509,6 +510,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Bug Fixes
 
+* Although not recommended, when adding a `Layer` Game Object to another `Layer` Game Object, it will no longer error because it cannot find the `removeFromDisplayList` function. Fix #5595 (thanks @tringcooler)
 * The `Actions.Spread` method will now place the final item correctly and abort early if the array only contains 1 or 0 items (thanks @EmilSV)
 * Calling `setDisplayOrigin` on a `Video` Game Object would cause the origins to be set to `NaN` if the Video was created without an asset key. It will now give Videos a default size, preventing this error, which is reset once a video is loaded. Fix #5560 (thanks @mattjennings)
 * When `ImageFile` loads with a linked Normal Map and the map completes first, but the Image is still in a pending state, it would incorrectly add itself to the cache instead of waiting. It now checks this process more carefully. Fix #5886 (thanks @inmylo)
