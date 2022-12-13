@@ -1395,6 +1395,7 @@ var World = new Class({
             {
                 //  We got a satisfactory result from the separateCircle method
                 result = true;
+                runSeparation = false;
             }
             else
             {
@@ -1589,28 +1590,6 @@ var World = new Class({
 
         if (twoCircles)
         {
-            if (!body1Immovable && !body2Immovable)
-            {
-                overlapX *= 0.5;
-                overlapY *= 0.5;
-            }
-
-            if (!body1Immovable || body1.pushable || deadlock)
-            {
-                body1.x -= overlapX;
-                body1.y -= overlapY;
-
-                body1.updateCenter();
-            }
-
-            if (!body2Immovable || body2.pushable || deadlock)
-            {
-                body2.x += overlapX;
-                body2.y += overlapY;
-
-                body2.updateCenter();
-            }
-
             var dx = body1Center.x - body2Center.x;
             var dy = body1Center.y - body2Center.y;
             var d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
@@ -1623,20 +1602,49 @@ var World = new Class({
                 p *= 2;
             }
 
+            console.log('circ vel', body1Velocity, body2Velocity, 'p', p, 'nxy', nx, ny);
+
             if (!body1Immovable)
             {
                 body1Velocity.x = (body1Velocity.x - p / body1.mass * nx);
                 body1Velocity.y = (body1Velocity.y - p / body1.mass * ny);
+                body1Velocity.multiply(body1.bounce);
+
+                console.log('body1', body1Velocity, 'y', body1.y);
             }
 
             if (!body2Immovable)
             {
                 body2Velocity.x = (body2Velocity.x + p / body2.mass * nx);
                 body2Velocity.y = (body2Velocity.y + p / body2.mass * ny);
+                body2Velocity.multiply(body2.bounce);
+
+                console.log('body2', body2Velocity, 'y', body2.y);
             }
 
-            body1Velocity.multiply(body1.bounce);
-            body2Velocity.multiply(body2.bounce);
+            if (!body1Immovable && !body2Immovable)
+            {
+                overlapX *= 0.5;
+                overlapY *= 0.5;
+            }
+
+            if (!body1Immovable)
+            {
+                body1.x -= overlapX;
+                body1.y -= overlapY;
+
+                body1.updateCenter();
+
+                console.log('body1 sep', body1.y);
+            }
+
+            if (!body2Immovable)
+            {
+                body2.x += overlapX;
+                body2.y += overlapY;
+
+                body2.updateCenter();
+            }
 
             results.result = true;
         }
