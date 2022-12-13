@@ -21,12 +21,13 @@ var ProcessY = require('./ProcessY');
  * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
  * @param {boolean} overlapOnly - If `true`, the bodies will only have their overlap data set and no separation will take place.
  * @param {number} bias - A value to add to the delta value during overlap checking. Used to prevent sprite tunneling.
+ * @param {number} [overlap] - If given then this value will be used as the overlap and no check will be run.
  *
  * @return {boolean} `true` if the two bodies overlap vertically, otherwise `false`.
  */
-var SeparateY = function (body1, body2, overlapOnly, bias)
+var SeparateY = function (body1, body2, overlapOnly, bias, overlap)
 {
-    var overlap = GetOverlapY(body1, body2, overlapOnly, bias);
+    if (overlap === undefined) { overlap = GetOverlapY(body1, body2, overlapOnly, bias); }
 
     var body1Immovable = body1.immovable;
     var body2Immovable = body2.immovable;
