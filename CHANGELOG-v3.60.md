@@ -510,6 +510,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Bug Fixes
 
+* Several paths have been fixed in the `phaser-core.js` entry point (thanks @pavle-goloskokovic)
 * When a Game Object had Input Debug Enabled the debug image would be incorrectly offset if the Game Object was attached to was scaled and the hit area shape was smaller, or offset, from the Game Object. Fix #4905 #6317 (thanks @PavelMishin @justinlueders)
 * An inactive Scene is no longer updated after a Scene transition completes. Previously, it will still update the Scene one final time. This fix also prevents the `POST_UPDATE` event from firing after the transition is over. Fix #5550 (thanks @mijinc0 @samme)
 * Although not recommended, when adding a `Layer` Game Object to another `Layer` Game Object, it will no longer error because it cannot find the `removeFromDisplayList` function. Fix #5595 (thanks @tringcooler)
@@ -630,6 +631,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 My thanks to the following for helping with the Phaser 3 Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
+@0day-oni
 @201flaviosilva
 @AlbertMontagutCasero
 @Arcanorum
