@@ -37,20 +37,20 @@ var Phaser = {
         Image: require('./gameobjects/image/Image'),
         Layer: require('./gameobjects/layer/Layer'),
         Sprite: require('./gameobjects/sprite/Sprite'),
-        Text: require('./gameobjects/text/static/Text'),
+        Text: require('./gameobjects/text/Text'),
         Factories: {
             Graphics: require('./gameobjects/graphics/GraphicsFactory'),
             Image: require('./gameobjects/image/ImageFactory'),
             Layer: require('./gameobjects/layer/LayerFactory'),
             Sprite: require('./gameobjects/sprite/SpriteFactory'),
-            Text: require('./gameobjects/text/static/TextFactory')
+            Text: require('./gameobjects/text/TextFactory')
         },
         Creators: {
             Graphics: require('./gameobjects/graphics/GraphicsCreator'),
             Image: require('./gameobjects/image/ImageCreator'),
             Layer: require('./gameobjects/layer/LayerCreator'),
             Sprite: require('./gameobjects/sprite/SpriteCreator'),
-            Text: require('./gameobjects/text/static/TextCreator')
+            Text: require('./gameobjects/text/TextCreator')
         }
     },
     Input: require('./input'),
@@ -98,7 +98,7 @@ var Phaser = {
     Tweens: require('./tweens')
 };
 
-//   Merge in the consts//  Merge in the optional plugins and WebGL only features
+//  Merge in the optional plugins and WebGL only features
 
 if (typeof FEATURE_SOUND)
 {
