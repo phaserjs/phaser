@@ -11,6 +11,7 @@ var Class = require('../../utils/Class');
 var Collider = require('./Collider');
 var CONST = require('./const');
 var DistanceBetween = require('../../math/distance/DistanceBetween');
+var DistanceBetweenPoints = require('../../math/distance/DistanceBetweenPoints');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var FuzzyEqual = require('../../math/fuzzy/Equal');
@@ -1388,24 +1389,18 @@ var World = new Class({
         //  Circle vs. Circle, or Circle vs. Rect
         if (body1.isCircle || body2.isCircle)
         {
-            //  If both bodies are pushable we can let sepCircle handle it
-            var resultsOnly = (!body1.pushable && !body2.pushable);
-
-            resultsOnly = false;
-
-            var circleResults = this.separateCircle(body1, body2, overlapOnly, resultsOnly);
+            var circleResults = this.separateCircle(body1, body2, overlapOnly);
 
             if (circleResults.result)
             {
                 //  We got a satisfactory result from the separateCircle method
                 result = true;
-                runSeparation = (body1.isCircle !== body2.isCircle);
             }
             else
             {
                 //  Further processing required
-                // overlapX = circleResults.x;
-                // overlapY = circleResults.y;
+                overlapX = circleResults.x;
+                overlapY = circleResults.y;
                 runSeparation = true;
             }
         }
@@ -1476,13 +1471,12 @@ var World = new Class({
      * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to be separated.
      * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to be separated.
      * @param {boolean} [overlapOnly] - If this a collide or overlap check?
-     * @param {number} [bias] - A small value added to the calculations.
      *
      * @return {boolean} True if separation occurred, otherwise false.
      */
-    separateCircle: function (body1, body2, overlapOnly, resultsOnly)
+    separateCircle: function (body1, body2, overlapOnly)
     {
-        //  Set the bounding box overlap values into the bodies themselves (hence we don't use the return values here)
+        //  Set the AABB overlap, blocked and touching values into the bodies (we don't use the return values here)
         GetOverlapX(body1, body2, false, 0);
         GetOverlapY(body1, body2, false, 0);
 
@@ -1500,8 +1494,6 @@ var World = new Class({
 
         if (body1IsCircle !== body2IsCircle)
         {
-            // We define the behavior of bodies in a collision circle and rectangle
-            // If a collision occurs in the corner points of the rectangle, the bodies behave like circles
             twoCircles = false;
 
             var circleX = body1Center.x;
@@ -1548,11 +1540,13 @@ var World = new Class({
                 }
             }
 
+            //  If a collision occurs in the corner points of the rectangle
+            //  then the bodies behave like circles
             overlap *= -1;
         }
         else
         {
-            overlap = (body1.halfWidth + body2.halfWidth) - DistanceBetween(body1Center.x, body1Center.y, body2Center.x, body2Center.y);
+            overlap = (body1.halfWidth + body2.halfWidth) - DistanceBetweenPoints(body1Center, body2Center);
         }
 
         body1.overlapR = overlap;
@@ -1566,28 +1560,57 @@ var World = new Class({
 
         var results = { overlap: overlap, result: false, x: overlapX, y: overlapY };
 
-        // if (resultsOnly || (overlap === 0 && !twoCircles))
-        // {
-        //     //  Let separate treat this as rect vs. rect
-        //     return results;
-        // }
-
-        if (overlapOnly)
+        //  We know the AABBs already intersect before we enter this method
+        if (overlapOnly && (!twoCircles || (twoCircles && overlap !== 0)))
         {
-            //  We know they already intersect and now by how much
+            //  Now we know the rect vs circle overlaps, or two circles do
             results.result = true;
+
             return results;
         }
 
-        //  Can't separate two immovable bodies, or a body with its own custom separation logic
-        if ((body1Immovable && body2Immovable) || body1.customSeparateX || body2.customSeparateX)
+        //  Can't separate (in this method):
+        //  Two immovable bodies
+        //  A body with its own custom separation logic
+        //  A circle vs. a rect with a face-on collision
+        if ((!twoCircles && overlap === 0) || (body1Immovable && body2Immovable) || body1.customSeparateX || body2.customSeparateX)
         {
             //  Let SeparateX / SeparateY handle this
+            results.x = undefined;
+            results.y = undefined;
+
             return results;
         }
 
-        if (!resultsOnly)
+        //  If we get this far we either have circle vs. circle
+        //  or circle vs. rect with corner collision
+
+        var deadlock = (!body1.pushable && !body2.pushable);
+
+        if (twoCircles)
         {
+            if (!body1Immovable && !body2Immovable)
+            {
+                overlapX *= 0.5;
+                overlapY *= 0.5;
+            }
+
+            if (!body1Immovable || body1.pushable || deadlock)
+            {
+                body1.x -= overlapX;
+                body1.y -= overlapY;
+
+                body1.updateCenter();
+            }
+
+            if (!body2Immovable || body2.pushable || deadlock)
+            {
+                body2.x += overlapX;
+                body2.y += overlapY;
+
+                body2.updateCenter();
+            }
+
             var dx = body1Center.x - body2Center.x;
             var dy = body1Center.y - body2Center.y;
             var d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
@@ -1600,13 +1623,13 @@ var World = new Class({
                 p *= 2;
             }
 
-            if (!body1Immovable && body1.pushable)
+            if (!body1Immovable)
             {
                 body1Velocity.x = (body1Velocity.x - p / body1.mass * nx);
                 body1Velocity.y = (body1Velocity.y - p / body1.mass * ny);
             }
 
-            if (!body2Immovable && body2.pushable)
+            if (!body2Immovable)
             {
                 body2Velocity.x = (body2Velocity.x + p / body2.mass * nx);
                 body2Velocity.y = (body2Velocity.y + p / body2.mass * ny);
@@ -1614,33 +1637,34 @@ var World = new Class({
 
             body1Velocity.multiply(body1.bounce);
             body2Velocity.multiply(body2.bounce);
+
+            results.result = true;
         }
-
-        var deadlock = (!body1.pushable && !body2.pushable);
-
-        if (!body1Immovable && !body2Immovable)
+        else
         {
-            overlapX *= 0.5;
-            overlapY *= 0.5;
+            //  Circle vs. Rect
+            //  We'll only move the circle (if we can) and let
+            //  the runSeparation handle the rectangle
+
+            if (!body1Immovable || body1.pushable || deadlock)
+            {
+                body1.x -= overlapX;
+                body1.y -= overlapY;
+
+                body1.updateCenter();
+            }
+            else if (!body2Immovable || body2.pushable || deadlock)
+            {
+                body2.x += overlapX;
+                body2.y += overlapY;
+
+                body2.updateCenter();
+            }
+
+            //  Let SeparateX / SeparateY handle this further
+            results.x = undefined;
+            results.y = undefined;
         }
-
-        if (!body1Immovable && (body1.pushable || deadlock))
-        {
-            body1.x -= overlapX;
-            body1.y -= overlapY;
-
-            body1.updateCenter();
-        }
-
-        if (!body2Immovable && (body2.pushable || deadlock))
-        {
-            body2.x += overlapX;
-            body2.y += overlapY;
-
-            body2.updateCenter();
-        }
-
-        results.result = true;
 
         return results;
     },
@@ -1678,7 +1702,7 @@ var World = new Class({
             if (body2.isCircle)
             {
                 //  Circle vs. Circle
-                return DistanceBetween(body1.center.x, body1.center.y, body2.center.x, body2.center.y) <= (body1.halfWidth + body2.halfWidth);
+                return DistanceBetweenPoints(body1.center, body2.center) <= (body1.halfWidth + body2.halfWidth);
             }
             else
             {
