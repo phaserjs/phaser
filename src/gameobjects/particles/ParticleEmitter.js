@@ -2090,6 +2090,12 @@ var ParticleEmitter = new Class({
     depthSortCallback: function (a, b)
     {
         return a.y - b.y;
+    },
+
+    destroy: function ()
+    {
+        //  TODO
+        //  Particles, animations, etc
     }
 
 });

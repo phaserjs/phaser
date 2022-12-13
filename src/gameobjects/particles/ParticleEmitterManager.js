@@ -494,6 +494,20 @@ var ParticleEmitterManager = new Class({
      */
     setBlendMode: function ()
     {
+    },
+
+    preDestroy: function ()
+    {
+        var emitters = this.emitters.list;
+
+        for (var i = 0; i < emitters.length; i++)
+        {
+            emitters[i].destroy();
+        }
+
+        //  TODO
+        //  Wells, references, etc
+
     }
 
 });
