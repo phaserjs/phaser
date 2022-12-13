@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
 
@@ -35,6 +36,16 @@ var Particle = new Class({
          * @since 3.0.0
          */
         this.emitter = emitter;
+
+        /**
+         * The texture used to render this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#texture
+         * @type {Phaser.Textures.Texture}
+         * @default null
+         * @since 3.60.0
+         */
+        this.texture = null;
 
         /**
          * The texture frame used to render this Particle.
@@ -250,6 +261,29 @@ var Particle = new Class({
             scaleX: { min: 1, max: 1 },
             scaleY: { min: 1, max: 1 }
         };
+
+        this.isCropped = false;
+        this._originComponent = false;
+        this.scene = emitter.manager.scene;
+
+        /**
+         * The Animation State component of this Sprite.
+         *
+         * This component provides features to apply animations to this Sprite.
+         * It is responsible for playing, loading, queuing animations for later playback,
+         * mixing between animations and setting the current animation frame to this Sprite.
+         *
+         * @name Phaser.GameObjects.Sprite#anims
+         * @type {Phaser.Animations.AnimationState}
+         * @since 3.0.0
+         */
+        this.anims = new AnimationState(this);
+    },
+
+    //  Event Emitter Proxy
+    emit: function (event, a1, a2, a3, a4, a5)
+    {
+        this.emitter.manager.emit(event, a1, a2, a3, a4, a5);
     },
 
     /**
@@ -291,11 +325,14 @@ var Particle = new Class({
         var emitter = this.emitter;
 
         this.frame = emitter.getFrame();
+        this.texture = this.frame.texture;
 
         if (!this.frame)
         {
             throw new Error('Particle has no texture frame');
         }
+
+        // this.anims.play('ruby');
 
         if (emitter.emitZone)
         {
@@ -508,6 +545,8 @@ var Particle = new Class({
             return false;
         }
 
+        this.anims.update(0, delta);
+
         var emitter = this.emitter;
 
         //  How far along in life is this particle? (t = 0 to 1)
@@ -546,6 +585,11 @@ var Particle = new Class({
         this.lifeCurrent -= delta;
 
         return (this.lifeCurrent <= 0);
+    },
+
+    setSizeToFrame: function ()
+    {
+        //  NOOP
     }
 
 });
