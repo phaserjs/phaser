@@ -22,6 +22,67 @@ var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
 
 /**
+ * Names of simple configuration properties.
+ *
+ * @ignore
+ */
+var configFastMap = [
+    'active',
+    'blendMode',
+    'collideBottom',
+    'collideLeft',
+    'collideRight',
+    'collideTop',
+    'deathCallback',
+    'deathCallbackScope',
+    'emitCallback',
+    'emitCallbackScope',
+    'follow',
+    'frequency',
+    'gravityX',
+    'gravityY',
+    'maxParticles',
+    'maxAliveParticles',
+    'name',
+    'on',
+    'particleBringToTop',
+    'particleClass',
+    'radial',
+    'timeScale',
+    'trackVisible',
+    'visible'
+];
+
+/**
+ * Names of complex configuration properties.
+ *
+ * @ignore
+ */
+var configOpMap = [
+    'accelerationX',
+    'accelerationY',
+    'angle',
+    'alpha',
+    'bounce',
+    'delay',
+    'lifespan',
+    'maxVelocityX',
+    'maxVelocityY',
+    'moveToX',
+    'moveToY',
+    'quantity',
+    'rotate',
+    'scaleX',
+    'scaleY',
+    'speedX',
+    'speedY',
+    'tint',
+    'x',
+    'y'
+];
+
+
+/**
  * @classdesc
  * A particle emitter represents a single particle stream.
  * It controls a pool of {@link Phaser.GameObjects.Particles.Particle Particles} and is controlled by a {@link Phaser.GameObjects.Particles.ParticleEmitterManager Particle Emitter Manager}.
@@ -87,70 +148,6 @@ var ParticleEmitter = new Class({
          * @since 3.0.0
          */
         this.defaultFrame = manager.defaultFrame;
-
-        /**
-         * Names of simple configuration properties.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#configFastMap
-         * @type {object}
-         * @since 3.0.0
-         */
-        this.configFastMap = [
-            'active',
-            'blendMode',
-            'collideBottom',
-            'collideLeft',
-            'collideRight',
-            'collideTop',
-            'deathCallback',
-            'deathCallbackScope',
-            'emitCallback',
-            'emitCallbackScope',
-            'follow',
-            'frequency',
-            'gravityX',
-            'gravityY',
-            'maxParticles',
-            'maxAliveParticles',
-            'name',
-            'on',
-            'particleBringToTop',
-            'particleClass',
-            'radial',
-            'timeScale',
-            'trackVisible',
-            'visible'
-        ];
-
-        /**
-         * Names of complex configuration properties.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#configOpMap
-         * @type {object}
-         * @since 3.0.0
-         */
-        this.configOpMap = [
-            'accelerationX',
-            'accelerationY',
-            'angle',
-            'alpha',
-            'bounce',
-            'delay',
-            'lifespan',
-            'maxVelocityX',
-            'maxVelocityY',
-            'moveToX',
-            'moveToY',
-            'quantity',
-            'rotate',
-            'scaleX',
-            'scaleY',
-            'speedX',
-            'speedY',
-            'tint',
-            'x',
-            'y'
-        ];
 
         /**
          * The name of this Particle Emitter.
@@ -732,6 +729,79 @@ var ParticleEmitter = new Class({
         this.frameQuantity = 1;
 
         /**
+         * The animations assigned to particles.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#anims
+         * @type {string[]}
+         * @since 3.60.0
+         */
+        this.anims = [];
+
+        /**
+         * The default animation assigned to particles.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#defaultAnim
+         * @type {string}
+         * @since 3.60.0
+         */
+        this.defaultAnim = null;
+
+        /**
+         * The current animation, as an index of {@link Phaser.GameObjects.Particles.ParticleEmitter#anims}.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#currentAnim
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         * @see Phaser.GameObjects.Particles.ParticleEmitter#setAnim
+         */
+        this.currentAnim = 0;
+
+        /**
+         * Whether animations {@link Phaser.GameObjects.Particles.ParticleEmitter#anims} are selected at random.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#randomAnim
+         * @type {boolean}
+         * @default true
+         * @since 3.60.0
+         * @see Phaser.GameObjects.Particles.ParticleEmitter#setAnim
+         */
+        this.randomAnim = true;
+
+        /**
+         * The number of consecutive particles that receive a single animation (per frame cycle).
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#animQuantity
+         * @type {number}
+         * @default 1
+         * @since 3.60.0
+         * @see Phaser.GameObjects.Particles.ParticleEmitter#setAnim
+         */
+        this.animQuantity = 1;
+
+        /**
+         * Counts up to {@link Phaser.GameObjects.Particles.ParticleEmitter#animQuantity}.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#_animCounter
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.60.0
+         */
+        this._animCounter = 0;
+
+        /**
+         * Cached amount of animations in the `ParticleEmitter.anims` array.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#_animLength
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.60.0
+         */
+        this._animLength = 0;
+
+        /**
          * Inactive particles.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#dead
@@ -773,6 +843,17 @@ var ParticleEmitter = new Class({
          */
         this._frameCounter = 0;
 
+        /**
+         * Cached amount of frames in the `ParticleEmitter.frames` array.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#_frameLength
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.0.0
+         */
+        this._frameLength = 0;
+
         if (config)
         {
             this.fromJSON(config);
@@ -801,9 +882,9 @@ var ParticleEmitter = new Class({
         var i = 0;
         var key = '';
 
-        for (i = 0; i < this.configFastMap.length; i++)
+        for (i = 0; i < configFastMap.length; i++)
         {
-            key = this.configFastMap[i];
+            key = configFastMap[i];
 
             if (HasValue(config, key))
             {
@@ -811,9 +892,9 @@ var ParticleEmitter = new Class({
             }
         }
 
-        for (i = 0; i < this.configOpMap.length; i++)
+        for (i = 0; i < configOpMap.length; i++)
         {
-            key = this.configOpMap[i];
+            key = configOpMap[i];
 
             if (HasValue(config, key))
             {
@@ -879,6 +960,10 @@ var ParticleEmitter = new Class({
         {
             this.setFrame(config.frame);
         }
+        else if (HasValue(config, 'anim'))
+        {
+            this.setAnim(config.anim);
+        }
 
         if (HasValue(config, 'reserve'))
         {
@@ -905,16 +990,16 @@ var ParticleEmitter = new Class({
         var i = 0;
         var key = '';
 
-        for (i = 0; i < this.configFastMap.length; i++)
+        for (i = 0; i < configFastMap.length; i++)
         {
-            key = this.configFastMap[i];
+            key = configFastMap[i];
 
             output[key] = this[key];
         }
 
-        for (i = 0; i < this.configOpMap.length; i++)
+        for (i = 0; i < configOpMap.length; i++)
         {
-            key = this.configOpMap[i];
+            key = configOpMap[i];
 
             if (this[key])
             {
@@ -1006,7 +1091,7 @@ var ParticleEmitter = new Class({
 
             this._frameCounter++;
 
-            if (this._frameCounter === this.frameQuantity)
+            if (this._frameCounter >= this.frameQuantity)
             {
                 this._frameCounter = 0;
                 this.currentFrame = Wrap(this.currentFrame + 1, 0, this._frameLength);
@@ -1016,14 +1101,14 @@ var ParticleEmitter = new Class({
         }
     },
 
-    // frame: 0
-    // frame: 'red'
-    // frame: [ 0, 1, 2, 3 ]
-    // frame: [ 'red', 'green', 'blue', 'pink', 'white' ]
-    // frame: { frames: [ 'red', 'green', 'blue', 'pink', 'white' ], [cycle: bool], [quantity: int] }
-
     /**
-     * Sets a pattern for assigning texture frames to emitted particles.
+     * Sets a pattern for assigning texture frames to emitted particles. The `frames` configuration can be any of:
+     *
+     * frame: 0
+     * frame: 'red'
+     * frame: [ 0, 1, 2, 3 ]
+     * frame: [ 'red', 'green', 'blue', 'pink', 'white' ]
+     * frame: { frames: [ 'red', 'green', 'blue', 'pink', 'white' ], [cycle: bool], [quantity: int] }
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setFrame
      * @since 3.0.0
@@ -1042,7 +1127,6 @@ var ParticleEmitter = new Class({
         this.randomFrame = pickRandom;
         this.frameQuantity = quantity;
         this.currentFrame = 0;
-        this._frameCounter = 0;
 
         var t = typeof (frames);
 
@@ -1074,6 +1158,106 @@ var ParticleEmitter = new Class({
         {
             this.frameQuantity = 1;
             this.randomFrame = false;
+        }
+
+        return this;
+    },
+
+    /**
+     * Chooses an animation from {@link Phaser.GameObjects.Particles.ParticleEmitter#anims}, if populated.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#getAnim
+     * @since 3.60.0
+     *
+     * @return {string} The animation to play, or `null` if there aren't any.
+     */
+    getAnim: function ()
+    {
+        var anims = this.anims;
+
+        if (anims.length === 0)
+        {
+            return null;
+        }
+        else if (anims.length === 1)
+        {
+            return this.defaultAnim;
+        }
+        else if (this.randomAnim)
+        {
+            return GetRandom(anims);
+        }
+        else
+        {
+            var anim = anims[this.currentAnim];
+
+            this._animCounter++;
+
+            if (this._animCounter >= this.animQuantity)
+            {
+                this._animCounter = 0;
+                this.currentAnim = Wrap(this.currentAnim + 1, 0, this._animLength);
+            }
+
+            return anim;
+        }
+    },
+
+    /**
+     * Sets a pattern for assigning animations to emitted particles. The `anims` configuration can be any of:
+     *
+     * anim: 'red'
+     * anim: [ 'red', 'green', 'blue', 'pink', 'white' ]
+     * anim: { anims: [ 'red', 'green', 'blue', 'pink', 'white' ], [cycle: bool], [quantity: int] }
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setAnim
+     * @since 3.60.0
+     *
+     * @param {(array|string|Phaser.Types.GameObjects.Particles.ParticleEmitterFrameConfig)} anims - One or more animations, or a configuration object.
+     * @param {boolean} [pickRandom=true] - Whether animations should be assigned at random from `anims`.
+     * @param {number} [quantity=1] - The number of consecutive particles that will receive each animation.
+     *
+     * @return {this} This Particle Emitter.
+     */
+    setAnim: function (anims, pickRandom, quantity)
+    {
+        if (pickRandom === undefined) { pickRandom = true; }
+        if (quantity === undefined) { quantity = 1; }
+
+        this.randomAnim = pickRandom;
+        this.animQuantity = quantity;
+        this.currentAnim = 0;
+
+        var t = typeof (anims);
+
+        if (Array.isArray(anims) || t === 'string')
+        {
+            this.manager.setEmitterAnims(anims, this);
+        }
+        else if (t === 'object')
+        {
+            var animConfig = anims;
+
+            anims = GetFastValue(animConfig, 'anims', null);
+
+            if (anims)
+            {
+                this.manager.setEmitterAnims(anims, this);
+            }
+
+            var isCycle = GetFastValue(animConfig, 'cycle', false);
+
+            this.randomAnim = (isCycle) ? false : true;
+
+            this.animQuantity = GetFastValue(animConfig, 'quantity', quantity);
+        }
+
+        this._animLength = this.anims.length;
+
+        if (this._animLength === 1)
+        {
+            this.animQuantity = 1;
+            this.randomAnim = false;
         }
 
         return this;
@@ -2092,10 +2276,42 @@ var ParticleEmitter = new Class({
         return a.y - b.y;
     },
 
+    /**
+     * Destroys this Particle Emitter and all Particles it owns.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#destroy
+     * @since 3.60.0
+     */
     destroy: function ()
     {
-        //  TODO
-        //  Particles, animations, etc
+        this.manager = null;
+        this.texture = null;
+        this.frames = null;
+        this.anims = null;
+        this.defaultFrame = null;
+        this.emitCallback = null;
+        this.emitCallbackScope = null;
+        this.deathCallback = null;
+        this.deathCallbackScope = null;
+        this.emitZone = null;
+        this.deathZone = null;
+        this.bounds = null;
+        this.follow = null;
+
+        var i;
+
+        for (i = 0; i < this.particles.length; i++)
+        {
+            this.particles[i].destroy();
+        }
+
+        for (i = 0; i < this.dead.length; i++)
+        {
+            this.dead[i].destroy();
+        }
+
+        this.particles = [];
+        this.dead = [];
     }
 
 });
