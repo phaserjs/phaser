@@ -921,7 +921,7 @@ var TransformMatrix = new Class({
      * @param {number} yh - The yh value.
      * @param {boolean} roundPixels - Pass the results via Math.round?
      *
-     * @return {number} The calculated y value.
+     * @return {Float32Array} The quad Float32Array.
      */
     setQuad: function (x, y, xw, yh, roundPixels)
     {
