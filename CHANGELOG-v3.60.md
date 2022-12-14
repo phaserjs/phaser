@@ -94,9 +94,78 @@ Compressed Textures are loaded using the new `this.load.texture` method, which t
 * `WebGLRenderer.getCompressedTextures` is a new method that will populate the `WebGLRenderer.compression` object and return its value. This is called automatically when the renderer boots.
 * `WebGLRenderer.getCompressedTextureName` is a new method that will return a compressed texture format GLenum based on the given format.
 
+### Particle System Updates
+
+The Particle system has been given an overhaul to make it cleaner, more memory efficient and also introduces a great new feature: animated particles. The Particle class now has an instance of the `Animation State component within it. This allows a particle to play an animation when it is emitted, simply by defining it in the emitter config.
+
+This will make each particle the 'Prism' animation:
+
+```js
+const emitter = particles.createEmitter({
+    anim: 'prism'
+    ...
+});
+```
+
+You can also allow it to select a random animation by providing an array:
+
+```js
+const emitter = particles.createEmitter({
+    anim: [ 'prism', 'square', 'ruby', 'square' ]
+    ...
+});
+```
+
+You've also the ability to cycle through the animations in order, so each new particle gets the next animation in the array:
+
+```js
+const emitter = particles.createEmitter({
+    anim: { anims: [ 'prism', 'square', 'ruby', 'square' ], cycle: true }
+    ...
+});
+```
+
+Or even set a quantity. For example, this will emit 10 'prism' particles, then 10 'ruby' particles and then repeat:
+
+```js
+const emitter = particles.createEmitter({
+    anim: { anims: [ 'prism', 'ruby' ], cycle: true, quantity: 10 }
+    ...
+});
+```
+
+The Animations must have already been created in the Global Animation Manager and must use the same texture as the one bound to the Particle Emitter. Aside from this, you can still control them in the same way as any other particle - scaling, tinting, rotation, alpha, lifespan, etc.
+
+* The WebGL Renderer will now use the new `setQuad` feature of the Transform Matrix. This vastly reduces the amount of math and function calls per particle, from 8 down to 1, increasing performance.
+* Particles with a scaleX or scaleY value of zero will no longer be rendered.
+* `ParticleEmitterManager.preDestroy` is a new method that will now clean-up all Emitters and Gravity Wells that it created  and clear some internal arerays.
+* `ParticleEmitter.destroy` is a new method that will destroy all Particles that the Emitter owns and clean-up all external references.
+* `Particle.destroy` is a new method that will clean up all external references and destroy the Animation State controller.
+* The `ParticleEmitter._frameLength` property is now specified on the class, rather than added dynamically at run-time, helping preserve class shape.
+* The `ParticleEmitterManager.defaultFrame` property is now specified on the class, rather than added dynamically at run-time, helping preserve class shape.
+* The `ParticleEmitterManager.preUpdate` method no longer runs if the manager is paused.
+* Calling `ParticleEmitter.setFrame` no longer resets the internal `_frameCounter` value to zero. Instead, the counter comparison has been hardened to `>=` instead of `===` to allow this value to change mid-emission and never reach the total.
+* The `ParticleEmitter.configFastMap` property has been moved to a local var within the `ParticlEmitter` JS file. It didn't need to be a property on the class itself, reducing the overall size of the class and saving memory.
+* The `ParticleEmitter.configOpMap` property has been moved to a local var within the `ParticlEmitter` JS file. It didn't need to be a property on the class itself, reducing the overall size of the class and saving memory.
+* `Particle.scene` is a new property that references the Scene the Particle Emitter belongs to.
+* `Particle.anims` is a new property that is an instance of the `AnimationState` component.
+* `Particle.emit` is a new proxy method that passes all Animation related events through to the Particle Emitter Manager to emit, as Particles cannot emit events directly.
+* `Particle.isCropped` is a new read-only property. Do not modify.
+* `Particle.setSizeToFrame` is a new internal NOOP method. Do not call.
+* `ParticleEmitter.anims` is a new property that contains the Animation keys that can be assigned to Particles.
+* `ParticleEmitter.defaultAnim` is a new property that contains default animation to play when one isn't specified directly.
+* `ParticleEmitter.currentAnim` is a new property that contains the index of the current animation, as tracked in cycle playback.
+* `ParticleEmitter.random` is a new boolean property that controls if the animations are selected randomly, or in a cycle.
+* `ParticleEmitter.animQuantity` is a new property that controls the number of consecutive particles that are emitted with the current animation.
+* `ParticleEmitter._animCounter` and `_animLength` are new internal private properties used for animation handling.
+* `ParticleEmitter.getAnim` is a new method, called by Particles when they are emitted, that will return the animation to use, if any.
+* `ParticleEmitter.setAnim` is a new method, called with the Emitter Manager, that sets the animation data into the Emitter.
+* `ParticleEmitterManager.animNames` is a new property that contains the names of all animations playable based on the Emitters texture. This is populated in the `setFrame` method.
+* `ParticleEmitterManager.setEmitterAnims` is a new method that is called by child Emitters in order to set the animation data they need.
+
 ### New Features - Vastly Improved Mobile Performance and WebGL Pipeline Changes
 
-
+TODO
 
 #### WebGL Renderer Updates
 
@@ -342,6 +411,7 @@ There are breaking changes from previous versions of Phaser.
 
 ### New Features
 
+* `AnimationManager.getAnimsFromTexture` is a new method that will return all global Animations, as stored in the Animation Manager, that have at least one frame using the given Texture. This will not include animations created directly on local Sprites.
 * `BitmapText.setLineSpacing` is a new method that allows you to set the vertical spacing between lines in multi-line BitmapText Game Objects. It works in the same was as spacing for Text objects and the spacing value can be positive or negative. See also `BitmapText.lineSpacing` for the property rather than the method.
 * `WebGLPipeline.vertexAvailable` is a new method that returns the number of vertices that can be added to the current batch before it will trigger a flush.
 * The `Tilemap` and `TilemapLayer` classes have a new method `getTileCorners`. This method will return an array of Vector2s with each entry corresponding to the corners of the requested tile, in world space. This currently works for Orthographic and Hexagonal tilemaps.
