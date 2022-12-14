@@ -81,7 +81,6 @@ var configOpMap = [
     'y'
 ];
 
-
 /**
  * @classdesc
  * A particle emitter represents a single particle stream.
@@ -180,7 +179,7 @@ var ParticleEmitter = new Class({
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setPosition
          */
-        this.x = new EmitterOp(config, 'x', 0, true);
+        this._x = new EmitterOp(config, 'x', 0, true);
 
         /**
          * The y-coordinate of the particle origin (where particles will be emitted).
@@ -191,7 +190,7 @@ var ParticleEmitter = new Class({
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setPosition
          */
-        this.y = new EmitterOp(config, 'y', 0, true);
+        this._y = new EmitterOp(config, 'y', 0, true);
 
         /**
          * A radial emitter will emit particles in all directions between angle min and max,
@@ -898,7 +897,14 @@ var ParticleEmitter = new Class({
 
             if (HasValue(config, key))
             {
-                this[key].loadConfig(config);
+                if (this['_' + key])
+                {
+                    this['_' + key].loadConfig(config);
+                }
+                else
+                {
+                    this[key].loadConfig(config);
+                }
             }
         }
 
@@ -1296,8 +1302,8 @@ var ParticleEmitter = new Class({
      */
     setPosition: function (x, y)
     {
-        this.x.onChange(x);
-        this.y.onChange(y);
+        this._x.onChange(x);
+        this._y.onChange(y);
 
         return this;
     },
@@ -2274,6 +2280,48 @@ var ParticleEmitter = new Class({
     depthSortCallback: function (a, b)
     {
         return a.y - b.y;
+    },
+
+    /**
+     *
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#x
+     * @type {number}
+     * @since 3.0.0
+     */
+    x: {
+
+        get: function ()
+        {
+            return this._x.propertyValue;
+        },
+
+        set: function (value)
+        {
+            this._x.onChange(value);
+        }
+
+    },
+
+    /**
+     *
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#y
+     * @type {number}
+     * @since 3.0.0
+     */
+    y: {
+
+        get: function ()
+        {
+            return this._y.propertyValue;
+        },
+
+        set: function (value)
+        {
+            this._y.onChange(value);
+        }
+
     },
 
     /**

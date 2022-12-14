@@ -386,12 +386,12 @@ var Particle = new Class({
 
         if (x === undefined)
         {
-            this.x += emitter.x.onEmit(this, 'x');
+            this.x += emitter._x.onEmit(this, 'x');
         }
         else if (emitter.x.steps > 0)
         {
             //  EmitterOp is stepped but x was forced (follower?) so use it
-            this.x += x + emitter.x.onEmit(this, 'x');
+            this.x += x + emitter._x.onEmit(this, 'x');
         }
         else
         {
@@ -400,12 +400,12 @@ var Particle = new Class({
 
         if (y === undefined)
         {
-            this.y += emitter.y.onEmit(this, 'y');
+            this.y += emitter._y.onEmit(this, 'y');
         }
         else if (emitter.y.steps > 0)
         {
             //  EmitterOp is stepped but y was forced (follower?) so use it
-            this.y += y + emitter.y.onEmit(this, 'y');
+            this.y += y + emitter._y.onEmit(this, 'y');
         }
         else
         {
