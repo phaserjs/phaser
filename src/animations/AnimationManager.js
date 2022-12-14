@@ -791,6 +791,46 @@ var AnimationManager = new Class({
     },
 
     /**
+     * Returns an array of all Animation keys that are using the given
+     * Texture. Only Animations that have at least one AnimationFrame
+     * entry using this texture will be included in the result.
+     *
+     * @method Phaser.Animations.AnimationManager#getAnimsFromTexture
+     * @since 3.60.0
+     *
+     * @param {(string|Phaser.Textures.Texture|Phaser.Textures.Frame)} key - The unique string-based key of the Texture, or a Texture, or Frame instance.
+     *
+     * @return {string[]} An array of Animation keys that feature the given Texture.
+     */
+    getAnimsFromTexture: function (key)
+    {
+        var texture = this.textureManager.get(key);
+
+        var match = texture.key;
+        var anims = this.anims.getArray();
+
+        var out = [];
+
+        for (var i = 0; i < anims.length; i++)
+        {
+            var anim = anims[i];
+            var frames = anim.frames;
+
+            for (var c = 0; c < frames.length; c++)
+            {
+                if (frames[c].textureKey === match)
+                {
+                    out.push(anim.key);
+
+                    break;
+                }
+            }
+        }
+
+        return out;
+    },
+
+    /**
      * Pause all animations.
      *
      * @method Phaser.Animations.AnimationManager#pauseAll
