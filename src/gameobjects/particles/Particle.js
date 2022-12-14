@@ -262,28 +262,65 @@ var Particle = new Class({
             scaleY: { min: 1, max: 1 }
         };
 
+        /**
+         * Interal private value.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#isCropped
+         * @type {boolean}
+         * @private
+         * @readonly
+         * @since 3.60.0
+         */
         this.isCropped = false;
-        this._originComponent = false;
+
+        /**
+         * A reference to the Scene to which this Game Object belongs.
+         *
+         * Game Objects can only belong to one Scene.
+         *
+         * You should consider this property as being read-only. You cannot move a
+         * Game Object to another Scene by simply changing it.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#scene
+         * @type {Phaser.Scene}
+         * @since 3.60.0
+         */
         this.scene = emitter.manager.scene;
 
         /**
-         * The Animation State component of this Sprite.
+         * The Animation State component of this Particle.
          *
-         * This component provides features to apply animations to this Sprite.
+         * This component provides features to apply animations to this Particle.
          * It is responsible for playing, loading, queuing animations for later playback,
-         * mixing between animations and setting the current animation frame to this Sprite.
+         * mixing between animations and setting the current animation frame to this Particle.
          *
-         * @name Phaser.GameObjects.Sprite#anims
+         * @name Phaser.GameObjects.Particles.Particle#anims
          * @type {Phaser.Animations.AnimationState}
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.anims = new AnimationState(this);
     },
 
-    //  Event Emitter Proxy
+    /**
+     * The Event Emitter proxy.
+     *
+     * Passes on all parameters to the `ParticleEmitterManager` to emit directly.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#emit
+     * @since 3.60.0
+     *
+     * @param {(string|Symbol)} event - The event name.
+     * @param {any} [a1] - Optional argument 1.
+     * @param {any} [a2] - Optional argument 2.
+     * @param {any} [a3] - Optional argument 3.
+     * @param {any} [a4] - Optional argument 4.
+     * @param {any} [a5] - Optional argument 5.
+     *
+     * @return {boolean} `true` if the event had listeners, else `false`.
+     */
     emit: function (event, a1, a2, a3, a4, a5)
     {
-        this.emitter.manager.emit(event, a1, a2, a3, a4, a5);
+        return this.emitter.manager.emit(event, a1, a2, a3, a4, a5);
     },
 
     /**
@@ -324,15 +361,22 @@ var Particle = new Class({
     {
         var emitter = this.emitter;
 
-        this.frame = emitter.getFrame();
-        this.texture = this.frame.texture;
+        var anim = emitter.getAnim();
+
+        if (anim)
+        {
+            this.anims.play(anim);
+        }
+        else
+        {
+            this.frame = emitter.getFrame();
+            this.texture = this.frame.texture;
+        }
 
         if (!this.frame)
         {
             throw new Error('Particle has no texture frame');
         }
-
-        // this.anims.play('ruby');
 
         if (emitter.emitZone)
         {
@@ -587,9 +631,32 @@ var Particle = new Class({
         return (this.lifeCurrent <= 0);
     },
 
+    /**
+     * This is a NOOP method and does nothing when called.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#setSizeToFrame
+     * @since 3.60.0
+     */
     setSizeToFrame: function ()
     {
         //  NOOP
+    },
+
+    /**
+     * Destroys this Particle.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#destroy
+     * @since 3.60.0
+     */
+    destroy: function ()
+    {
+        this.anims.destroy();
+
+        this.anims = null;
+        this.emitter = null;
+        this.texture = null;
+        this.frame = null;
+        this.scene = null;
     }
 
 });
