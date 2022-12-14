@@ -97,7 +97,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
             var alpha = particle.alpha * camera.alpha;
 
-            if (alpha <= 0)
+            if (alpha <= 0 || particle.scaleX === 0 || particle.scaleY === 0)
             {
                 continue;
             }
@@ -119,24 +119,12 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
             var x = -frame.halfWidth;
             var y = -frame.halfHeight;
-            var xw = x + frame.width;
-            var yh = y + frame.height;
 
-            var tx0 = calcMatrix.getXRound(x, y, roundPixels);
-            var ty0 = calcMatrix.getYRound(x, y, roundPixels);
-
-            var tx1 = calcMatrix.getXRound(x, yh, roundPixels);
-            var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
-
-            var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
-            var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
-
-            var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
-            var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
+            var quad = calcMatrix.setQuad(x, y, x + frame.width, y + frame.height, roundPixels);
 
             var tint = getTint(particle.tint, alpha);
 
-            pipeline.batchQuad(emitter, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, texture, textureUnit);
+            pipeline.batchQuad(emitter, quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7], frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, texture, textureUnit);
         }
 
         if (emitter.mask)
