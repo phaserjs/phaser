@@ -77,7 +77,7 @@ var ParticleEmitterManager = new Class({
         this.timeScale = 1;
 
         /**
-         * The texture used to render this Emitter Manager's particles.
+         * The texture used by all Particle Emitters, and by extension all Particles, that this Emitter Manager creates.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#texture
          * @type {Phaser.Textures.Texture}
@@ -87,7 +87,7 @@ var ParticleEmitterManager = new Class({
         this.texture = null;
 
         /**
-         * The texture frame used to render this Emitter Manager's particles.
+         * The texture frame used by all Particle Emitters, and by extension all Particles, that this Emitter Manager creates.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#frame
          * @type {Phaser.Textures.Frame}
@@ -97,7 +97,7 @@ var ParticleEmitterManager = new Class({
         this.frame = null;
 
         /**
-         * Names of this Emitter Manager's texture frames.
+         * The names of all of Texture Frames this Particle Emitter Manager uses.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#frameNames
          * @type {string[]}
@@ -112,9 +112,25 @@ var ParticleEmitterManager = new Class({
             frame = null;
         }
 
+        /**
+         * The names of all of animations this Particle Emitter Manager uses.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitterManager#animNames
+         * @type {string[]}
+         * @since 3.60.0
+         */
+        this.animNames = [];
+
         this.setTexture(texture, frame);
 
-        this.initPipeline();
+        /**
+         * The default texture frame used by all Particle Emitters.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitterManager#defaultFrame
+         * @type {Phaser.Textures.Frame}
+         * @since 3.0.0
+         */
+        this.defaultFrame = this.frame;
 
         /**
          * A list of Emitters being managed by this Emitter Manager.
@@ -147,6 +163,8 @@ var ParticleEmitterManager = new Class({
                 this.createEmitter(emitters[i]);
             }
         }
+
+        this.initPipeline();
     },
 
     //  Overrides Game Object method
@@ -212,6 +230,13 @@ var ParticleEmitterManager = new Class({
 
         this.defaultFrame = this.frame;
 
+        this.animNames = this.scene.sys.anims.getAnimsFromTexture(this.texture);
+
+        if (this.animNames.length > 0)
+        {
+            this.defaultAnim = this.animNames[0];
+        }
+
         return this;
     },
 
@@ -260,6 +285,50 @@ var ParticleEmitterManager = new Class({
             console.warn('No texture frames were set');
 
             emitter.defaultFrame = this.defaultFrame;
+        }
+
+        return this;
+    },
+
+    /**
+     * Assigns texture frames to an emitter.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#setEmitterAnims
+     * @since 3.60.0
+     *
+     * @param {(Phaser.Textures.Frame|Phaser.Textures.Frame[])} anims - The animations.
+     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The particle emitter to modify.
+     *
+     * @return {this} This Emitter Manager.
+     */
+    setEmitterAnims: function (anims, emitter)
+    {
+        if (!Array.isArray(anims))
+        {
+            anims = [ anims ];
+        }
+
+        var out = emitter.anims;
+
+        out.length = 0;
+
+        for (var i = 0; i < anims.length; i++)
+        {
+            var anim = anims[i];
+
+            if (this.animNames.indexOf(anim) !== -1)
+            {
+                out.push(anim);
+            }
+            else
+            {
+                console.warn('Emitter has no animation "%s"', anim);
+            }
+        }
+
+        if (out.length > 0)
+        {
+            emitter.defaultAnim = out[0];
         }
 
         return this;
@@ -444,18 +513,21 @@ var ParticleEmitterManager = new Class({
      */
     preUpdate: function (time, delta)
     {
-        //  Scale the delta
-        delta *= this.timeScale;
-
-        var emitters = this.emitters.list;
-
-        for (var i = 0; i < emitters.length; i++)
+        if (this.active)
         {
-            var emitter = emitters[i];
+            //  Scale the delta
+            delta *= this.timeScale;
 
-            if (emitter.active)
+            var emitters = this.emitters.list;
+
+            for (var i = 0; i < emitters.length; i++)
             {
-                emitter.preUpdate(time, delta);
+                var emitter = emitters[i];
+
+                if (emitter.active)
+                {
+                    emitter.preUpdate(time, delta);
+                }
             }
         }
     },
@@ -496,18 +568,32 @@ var ParticleEmitterManager = new Class({
     {
     },
 
+    /**
+     * Handles the pre-destroy step for the Particle Emitter Manager, which destroys all emitters and gravity wells.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#preDestroy
+     * @private
+     * @since 3.60.0
+     */
     preDestroy: function ()
     {
+        var i;
         var emitters = this.emitters.list;
+        var wells = this.wells.list;
 
-        for (var i = 0; i < emitters.length; i++)
+        for (i = 0; i < emitters.length; i++)
         {
             emitters[i].destroy();
         }
 
-        //  TODO
-        //  Wells, references, etc
+        for (i = 0; i < wells.length; i++)
+        {
+            wells[i].destroy();
+        }
 
+        this.frameNames = [];
+        this.defaultAnim = null;
+        this.defaultFrame = null;
     }
 
 });
