@@ -248,7 +248,7 @@ var EmitterOp = new Class({
 
         var method = this.getMethod();
 
-        if (method !== this.method)
+        if (method !== this.method || method === 3)
         {
             this.setMethods(method);
         }
