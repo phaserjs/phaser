@@ -162,6 +162,71 @@ The Animations must have already been created in the Global Animation Manager an
 * `ParticleEmitter.setAnim` is a new method, called with the Emitter Manager, that sets the animation data into the Emitter.
 * `ParticleEmitterManager.animNames` is a new property that contains the names of all animations playable based on the Emitters texture. This is populated in the `setFrame` method.
 * `ParticleEmitterManager.setEmitterAnims` is a new method that is called by child Emitters in order to set the animation data they need.
+* The `Particles.EmitterOp.toJSON` method will now JSON stringify the property value before returning it.
+* `Particles.EmitterOp.method` is a new property that holds the current operation method being used. This is a read-only numeric value.
+* `Particles.EmitterOp.active` is a new boolean property that defines if the operator is alive, or not. This is now used by the Emitter instead of nulling Emitter properties, helping maintain class shape.
+* `Particles.EmitterOp.getMethod` is a new internal method that returns the operation function being used as a numeric value. This is then cached in the `method` property.
+* The `Particles.EmitterOp.setMethods` method has been updated so it now has a non-optional 'method' parameter. It has also been rewritten to be much more efficient, now being just a single simple select/case block.
+* The `Particles.EmitterOp.onChange` method will now use the cached 'method' property to avoid running through the `setMethods` function if not required, allowing each Particle EmitterOp to skip a huge chunk of code.
+
+Particle System Breaking Changes:
+
+All of the following properties have been replaced on the `ParticleEmitter` class. Previously they were `EmitterOp` instances. They are now public getter / setters, so calling, for example, `emitter.x` will now return a numeric value - whereas before it would return the `EmitterOp` instance. This gives developers a lot more freedom when using Particle Emitters. Before v3.60 it was impossible to do this, for example:
+
+```js
+this.tweens.add({
+    targets: emitter,
+    x: 400
+});
+```
+
+I.e. you couldn't tween an emitters position by directly accessing its x and y properties. However, now that all EmitterOps are getters, you're free to do this, allowing you to be much more creative and giving a nice quality-of-life improvement.
+
+If, however, your code used to access EmitterOps, you'll need to change it as follows:
+
+```js
+//  Phaser 3.55
+emitter.x.onChange(value)
+//  Phaser 3.60
+emitter.x = value
+
+//  Phaser 3.55
+let x = emitter.x.propertyValue
+//  Phaser 3.60
+let x = emitter.x
+
+//  Phaser 3.55
+emitter.x.onEmit()
+emitter.x.onUpdate()
+//  Phaser 3.60
+emitter.ops.x.onEmit()
+emitter.ops.x.onUpdate()
+```
+
+All of following EmitterOp functions can now be found in the new `ParticleEmitter.ops` property and have been replaced with getters:
+
+* accelerationX
+* accelerationY
+* angle
+* alpha
+* bounce
+* delay
+* lifespan
+* maxVelocityX
+* maxVelocityY
+* moveToX
+* moveToY
+* quantity
+* rotate
+* scaleX
+* scaleY
+* speedX
+* speedY
+* tint
+* x
+* y
+
+We've also vastly improved the documentation around the Particle classes.
 
 ### New Features - Vastly Improved Mobile Performance and WebGL Pipeline Changes
 
