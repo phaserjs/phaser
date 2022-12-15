@@ -12,9 +12,14 @@ var Wrap = require('../../math/Wrap');
 
 /**
  * @classdesc
- * A Particle Emitter property.
+ * This class is responsible for taking control over a single property
+ * in the Particle class and managing its emission and updating functions.
  *
- * Facilitates changing Particle properties as they are emitted and throughout their lifetime.
+ * Particles properties such as `x`, `y`, `scaleX`, `lifespan` and others all use
+ * EmitterOp instances to manage them, as they can be given in a variety of
+ * formats: from simple values, to functions, to dynamic callbacks.
+ *
+ * See the `ParticleEmitter` class for more details on emitter op configuration.
  *
  * @class EmitterOp
  * @memberof Phaser.GameObjects.Particles
@@ -23,7 +28,7 @@ var Wrap = require('../../math/Wrap');
  *
  * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} config - Settings for the Particle Emitter that owns this property.
  * @param {string} key - The name of the property.
- * @param {number} defaultValue - The default value of the property.
+ * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} defaultValue - The default value of the property.
  * @param {boolean} [emitOnly=false] - Whether the property can only be modified when a Particle is emitted.
  */
 var EmitterOp = new Class({
@@ -32,10 +37,7 @@ var EmitterOp = new Class({
 
     function EmitterOp (config, key, defaultValue, emitOnly)
     {
-        if (emitOnly === undefined)
-        {
-            emitOnly = false;
-        }
+        if (emitOnly === undefined) { emitOnly = false; }
 
         /**
          * The name of this property.
@@ -47,10 +49,13 @@ var EmitterOp = new Class({
         this.propertyKey = key;
 
         /**
-         * The value of this property.
+         * The current value of this property.
+         *
+         * This can be a simple value, an array, a function or an onEmit
+         * configuration object.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#propertyValue
-         * @type {number}
+         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
          * @since 3.0.0
          */
         this.propertyValue = defaultValue;
@@ -58,8 +63,11 @@ var EmitterOp = new Class({
         /**
          * The default value of this property.
          *
+         * This can be a simple value, an array, a function or an onEmit
+         * configuration object.
+         *
          * @name Phaser.GameObjects.Particles.EmitterOp#defaultValue
-         * @type {number}
+         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
          * @since 3.0.0
          */
         this.defaultValue = defaultValue;
@@ -147,6 +155,27 @@ var EmitterOp = new Class({
          */
         this.onUpdate = this.defaultUpdate;
 
+        /**
+         * Set to `false` to disable this EmitterOp.
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#active
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.active = true;
+
+        /**
+         * The onEmit method type of this EmitterOp.
+         *
+         * Set as part of `setMethod` and cached here to avoid
+         * re-setting when only the value changes.
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#method
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.method = 0;
+
         this.loadConfig(config);
     },
 
@@ -179,7 +208,9 @@ var EmitterOp = new Class({
             this.defaultValue
         );
 
-        this.setMethods();
+        var method = this.getMethod();
+
+        this.setMethods(method);
 
         if (this.emitOnly)
         {
@@ -198,7 +229,7 @@ var EmitterOp = new Class({
      */
     toJSON: function ()
     {
-        return this.propertyValue;
+        return JSON.stringify(this.propertyValue);
     },
 
     /**
@@ -207,7 +238,7 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#onChange
      * @since 3.0.0
      *
-     * @param {number} value - The value of the property.
+     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} value - The value of the property.
      *
      * @return {this} This Emitter Op object.
      */
@@ -215,170 +246,170 @@ var EmitterOp = new Class({
     {
         this.propertyValue = value;
 
-        return this.setMethods();
+        var method = this.getMethod();
+
+        if (method !== this.method)
+        {
+            this.setMethods(method);
+        }
+
+        return this;
     },
 
     /**
-     * Update the {@link Phaser.GameObjects.Particles.EmitterOp#onEmit} and
-     * {@link Phaser.GameObjects.Particles.EmitterOp#onUpdate} callbacks based on the type of the current
-     * {@link Phaser.GameObjects.Particles.EmitterOp#propertyValue}.
+     * Checks the type of `EmitterOp.propertyValue` to determine which
+     * method is required in order to return values from this op function.
      *
-     * @method Phaser.GameObjects.Particles.EmitterOp#setMethods
-     * @since 3.0.0
+     * @method Phaser.GameObjects.Particles.EmitterOp#getMethod
+     * @since 3.60.0
      *
-     * @return {this} This Emitter Op object.
+     * @return {number} A number between 0 and 8 which should be passed to `setMethods`.
      */
-    setMethods: function ()
+    getMethod: function ()
     {
         var value = this.propertyValue;
-
-        var t = typeof value;
-
-        //  Reset them in case they're not changed below
-        this.onEmit = this.defaultEmit;
-        this.onUpdate = this.defaultUpdate;
 
         //  `moveToX` and `moveToY` are null by default
         if (value === null)
         {
-            return;
+            return 0;
         }
+
+        var t = typeof value;
 
         if (t === 'number')
         {
-            //  Explicit static value:
-            //  x: 400
-
-            this.onEmit = this.staticValueEmit;
-            this.onUpdate = this.staticValueUpdate; // How?
+            return 1;
         }
         else if (Array.isArray(value))
         {
-            //  Picks a random element from the array:
-            //  x: [ 100, 200, 300, 400 ]
-
-            this.onEmit = this.randomStaticValueEmit;
+            return 2;
         }
         else if (t === 'function')
         {
-            //  The same as setting just the onUpdate function and no onEmit (unless this op is an emitOnly one)
-            //  Custom callback, must return a value:
-
-            /*
-            x: function (particle, key, t, value)
-               {
-                   return value + 50;
-               }
-            */
-
-            if (this.emitOnly)
+            return 3;
+        }
+        else if (t === 'object')
+        {
+            if (this.hasBoth(value, 'start', 'end'))
             {
-                this.onEmit = value;
+                if (this.has(value, 'steps'))
+                {
+                    return 4;
+                }
+                else
+                {
+                    return 5;
+                }
             }
-            else
+            else if (this.hasBoth(value, 'min', 'max'))
             {
-                this.onUpdate = value;
+                return 6;
+            }
+            else if (this.has(value, 'random'))
+            {
+                return 7;
+            }
+            else if (this.hasEither(value, 'onEmit', 'onUpdate'))
+            {
+                return 8;
             }
         }
-        else if (t === 'object' && this.hasBoth(value, 'start', 'end'))
+
+        return 0;
+    },
+
+    /**
+     * Update the {@link Phaser.GameObjects.Particles.EmitterOp#onEmit} and
+     * {@link Phaser.GameObjects.Particles.EmitterOp#onUpdate} callbacks based on the method returned
+     * from `getMethod`. The method is stored in the `EmitterOp.method` property
+     * and is a number between 0 and 8 inclusively.
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#setMethods
+     * @since 3.0.0
+     *
+     * @param {number} method - The operation method to use. A value between 0 and 8 (inclusively) as returned from `getMethod`.
+     *
+     * @return {this} This Emitter Op object.
+     */
+    setMethods: function (method)
+    {
+        var value = this.propertyValue;
+
+        var onEmit;
+        var onUpdate;
+
+        switch (method)
         {
-            this.start = value.start;
-            this.end = value.end;
+            case 1:
+                onEmit = this.staticValueEmit;
+                onUpdate = this.staticValueUpdate;
+                break;
 
-            //  x: { start: 100, end: 400, random: true } (random optional) = eases between start and end
+            case 2:
+                onEmit = this.randomStaticValueEmit;
+                break;
 
-            var isRandom = this.has(value, 'random');
+            case 3:
+                if (this.emitOnly)
+                {
+                    onEmit = value;
+                }
+                else
+                {
+                    onUpdate = value;
+                }
+                break;
 
-            if (isRandom)
-            {
-                this.onEmit = this.randomRangedValueEmit;
-            }
-
-            if (this.has(value, 'steps'))
-            {
-                //  A stepped (per emit) range
-
-                //  x: { start: 100, end: 400, steps: 64 }
-
-                //  Increments a value stored in the emitter
-
+            case 4:
+                this.start = value.start;
+                this.end = value.end;
                 this.steps = value.steps;
                 this.counter = this.start;
+                onEmit = this.steppedEmit;
+                break;
 
-                this.onEmit = this.steppedEmit;
-            }
-            else
-            {
-                //  An eased range (defaults to Linear if not specified)
-
-                //  x: { start: 100, end: 400, [ ease: 'Linear' ] }
-
+            case 5:
+                this.start = value.start;
+                this.end = value.end;
                 var easeType = this.has(value, 'ease') ? value.ease : 'Linear';
-
                 this.ease = GetEaseFunction(easeType, value.easeParams);
+                onEmit = this.has(value, 'random') ? this.randomRangedValueEmit : this.easedValueEmit;
+                onUpdate = this.easeValueUpdate;
+                break;
 
-                if (!isRandom)
+            case 6:
+                this.start = value.min;
+                this.end = value.max;
+                onEmit = this.randomRangedValueEmit;
+                break;
+
+            case 7:
+                var rnd = value.random;
+
+                if (Array.isArray(rnd))
                 {
-                    this.onEmit = this.easedValueEmit;
+                    this.start = rnd[0];
+                    this.end = rnd[1];
                 }
 
-                this.onUpdate = this.easeValueUpdate;
-            }
-        }
-        else if (t === 'object' && this.hasBoth(value, 'min', 'max'))
-        {
-            //  { min: 100, max: 400 } = pick a random number between min and max
+                onEmit = this.randomRangedValueEmit;
+                break;
 
-            this.start = value.min;
-            this.end = value.max;
-            this.onEmit = this.randomRangedValueEmit;
-        }
-        else if (t === 'object' && this.has(value, 'random'))
-        {
-            //  { random: [ 100, 400 ] } = pick a random number between the two elements of the array
+            case 8:
+                onEmit = (this.has(value, 'onEmit')) ? value.onEmit : this.defaultEmit;
+                onUpdate = (this.has(value, 'onUpdate')) ? value.onUpdate : this.defaultUpdate;
+                break;
 
-            var rnd = value.random;
-
-            if (Array.isArray(rnd))
-            {
-                this.start = rnd[0];
-                this.end = rnd[1];
-            }
-
-            this.onEmit = this.randomRangedValueEmit;
-        }
-        else if (t === 'object' && this.hasEither(value, 'onEmit', 'onUpdate'))
-        {
-            //  Custom onEmit and onUpdate callbacks
-
-            /*
-            x: {
-                //  Called at the start of the particles life, when it is being created
-                onEmit: function (particle, key, t, value)
-                {
-                    return value;
-                },
-
-                //  Called during the particles life on each update
-                onUpdate: function (particle, key, t, value)
-                {
-                    return value;
-                }
-            }
-            */
-
-            if (this.has(value, 'onEmit'))
-            {
-                this.onEmit = value.onEmit;
-            }
-
-            if (this.has(value, 'onUpdate'))
-            {
-                this.onUpdate = value.onUpdate;
-            }
+            default:
+                onEmit = this.defaultEmit;
+                onUpdate = this.defaultUpdate;
         }
 
-        return this;
+        this.onEmit = onEmit;
+        this.onUpdate = onUpdate;
+
+        this.method = method;
     },
 
     /**
