@@ -94,6 +94,27 @@ var EmitterOp = new Class({
         this.counter = 0;
 
         /**
+         * When the step counter reaches it's maximum, should it then
+         * yoyo back to the start again, or flip over to it?
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#yoyo
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
+         */
+        this.yoyo = false;
+
+        /**
+         * The counter direction. 0 for up and 1 for down.
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#direction
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.direction = 0;
+
+        /**
          * The start value for this property to ease between.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#start
@@ -279,14 +300,17 @@ var EmitterOp = new Class({
 
         if (t === 'number')
         {
+            //  Number
             return 1;
         }
         else if (Array.isArray(value))
         {
+            //  Random Array
             return 2;
         }
         else if (t === 'function')
         {
+            //  Custom Callback
             return 3;
         }
         else if (t === 'object')
@@ -295,23 +319,28 @@ var EmitterOp = new Class({
             {
                 if (this.has(value, 'steps'))
                 {
+                    //  Stepped start/end
                     return 4;
                 }
                 else
                 {
+                    //  Eased start/end
                     return 5;
                 }
             }
             else if (this.hasBoth(value, 'min', 'max'))
             {
+                //  min/max
                 return 6;
             }
             else if (this.has(value, 'random'))
             {
+                //  Random object
                 return 7;
             }
             else if (this.hasEither(value, 'onEmit', 'onUpdate'))
             {
+                //  Custom onEmit onUpdate
                 return 8;
             }
         }
@@ -341,49 +370,50 @@ var EmitterOp = new Class({
 
         switch (method)
         {
+            //  Number
             case 1:
                 onEmit = this.staticValueEmit;
-                onUpdate = this.staticValueUpdate;
                 break;
 
+            //  Random Array
             case 2:
                 onEmit = this.randomStaticValueEmit;
                 break;
 
+            //  Custom Callback (onEmit only)
             case 3:
-                if (this.emitOnly)
-                {
-                    onEmit = value;
-                }
-                else
-                {
-                    onUpdate = value;
-                }
+                onEmit = value;
                 break;
 
+            //  Stepped start/end
             case 4:
                 this.start = value.start;
                 this.end = value.end;
                 this.steps = value.steps;
                 this.counter = this.start;
+                this.yoyo = this.has(value, 'yoyo') ? value.yoyo : false;
+                this.direction = 0;
                 onEmit = this.steppedEmit;
                 break;
 
+            //  Eased start/end
             case 5:
                 this.start = value.start;
                 this.end = value.end;
                 var easeType = this.has(value, 'ease') ? value.ease : 'Linear';
                 this.ease = GetEaseFunction(easeType, value.easeParams);
-                onEmit = this.has(value, 'random') ? this.randomRangedValueEmit : this.easedValueEmit;
+                onEmit = (this.has(value, 'random') && value.random) ? this.randomRangedValueEmit : this.easedValueEmit;
                 onUpdate = this.easeValueUpdate;
                 break;
 
+            //  min/max
             case 6:
                 this.start = value.min;
                 this.end = value.max;
                 onEmit = this.randomRangedValueEmit;
                 break;
 
+            //  Random object
             case 7:
                 var rnd = value.random;
 
@@ -396,6 +426,7 @@ var EmitterOp = new Class({
                 onEmit = this.randomRangedValueEmit;
                 break;
 
+            //  Custom onEmit onUpdate
             case 8:
                 onEmit = (this.has(value, 'onEmit')) ? value.onEmit : this.defaultEmit;
                 onUpdate = (this.has(value, 'onUpdate')) ? value.onUpdate : this.defaultUpdate;
@@ -483,7 +514,7 @@ var EmitterOp = new Class({
      *
      * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
      * @param {string} key - The name of the property.
-     * @param {number} t - The T value (between 0 and 1)
+     * @param {number} t - The current normalized lifetime of the particle, between 0 (birth) and 1 (death).
      * @param {number} value - The current value of the property.
      *
      * @return {number} The new value of the property.
@@ -553,6 +584,7 @@ var EmitterOp = new Class({
         if (particle && particle.data[key])
         {
             particle.data[key].min = value;
+            particle.data[key].max = this.end;
         }
 
         return value;
@@ -572,9 +604,49 @@ var EmitterOp = new Class({
     {
         var current = this.counter;
 
-        var next = this.counter + (this.end - this.start) / this.steps;
+        var next = current;
 
-        this.counter = Wrap(next, this.start, this.end);
+        var step = (this.end - this.start) / this.steps;
+
+        if (this.yoyo)
+        {
+            var over;
+
+            if (this.direction === 0)
+            {
+                //  Add step to the current value
+                next += step;
+
+                if (next >= this.end)
+                {
+                    over = next - this.end;
+
+                    next = this.end - over;
+
+                    this.direction = 1;
+                }
+            }
+            else
+            {
+                //  Down
+                next -= step;
+
+                if (next <= this.start)
+                {
+                    over = this.start - next;
+
+                    next = this.start + over;
+
+                    this.direction = 0;
+                }
+            }
+
+            this.counter = next;
+        }
+        else
+        {
+            this.counter = Wrap(next + step, this.start, this.end);
+        }
 
         return current;
     },
@@ -615,7 +687,7 @@ var EmitterOp = new Class({
      *
      * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
      * @param {string} key - The name of the property.
-     * @param {number} t - The T value (between 0 and 1)
+     * @param {number} t - The current normalized lifetime of the particle, between 0 (birth) and 1 (death).
      *
      * @return {number} The new value of the property.
      */
