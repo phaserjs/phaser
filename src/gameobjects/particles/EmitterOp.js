@@ -336,8 +336,8 @@ var EmitterOp = new Class({
     {
         var value = this.propertyValue;
 
-        var onEmit;
-        var onUpdate;
+        var onEmit = this.defaultEmit;
+        var onUpdate = this.defaultUpdate;
 
         switch (method)
         {
@@ -400,10 +400,6 @@ var EmitterOp = new Class({
                 onEmit = (this.has(value, 'onEmit')) ? value.onEmit : this.defaultEmit;
                 onUpdate = (this.has(value, 'onUpdate')) ? value.onUpdate : this.defaultUpdate;
                 break;
-
-            default:
-                onEmit = this.defaultEmit;
-                onUpdate = this.defaultUpdate;
         }
 
         this.onEmit = onEmit;

@@ -259,7 +259,13 @@ var Particle = new Class({
             alpha: { min: 1, max: 1 },
             rotate: { min: 0, max: 0 },
             scaleX: { min: 1, max: 1 },
-            scaleY: { min: 1, max: 1 }
+            scaleY: { min: 1, max: 1 },
+            x: { min: 0, max: 0 },
+            y: { min: 0, max: 0 },
+            accelerationX: { min: 0, max: 0 },
+            accelerationY: { min: 0, max: 0 },
+            maxVelocityX: { min: 0, max: 0 },
+            maxVelocityY: { min: 0, max: 0 }
         };
 
         /**
@@ -477,16 +483,18 @@ var Particle = new Class({
      * @param {number} step - The delta value divided by 1000.
      * @param {array} processors - Particle processors (gravity wells).
      */
-    computeVelocity: function (emitter, delta, step, processors)
+    computeVelocity: function (emitter, delta, step, processors, t)
     {
+        var ops = emitter.ops;
+
         var vx = this.velocityX;
         var vy = this.velocityY;
 
-        var ax = this.accelerationX;
-        var ay = this.accelerationY;
+        var ax = ops.accelerationX.onUpdate(this, 'accelerationX', t, this.accelerationX);
+        var ay = ops.accelerationY.onUpdate(this, 'accelerationY', t, this.accelerationY);
 
-        var mx = this.maxVelocityX;
-        var my = this.maxVelocityY;
+        var mx = ops.maxVelocityX.onUpdate(this, 'maxVelocityX', t, this.maxVelocityX);
+        var my = ops.maxVelocityY.onUpdate(this, 'maxVelocityY', t, this.maxVelocityY);
 
         vx += (emitter.gravityX * step);
         vy += (emitter.gravityY * step);
@@ -600,10 +608,13 @@ var Particle = new Class({
 
         this.lifeT = t;
 
-        this.computeVelocity(emitter, delta, step, processors);
+        this.computeVelocity(emitter, delta, step, processors, t);
 
-        this.x += this.velocityX * step;
-        this.y += this.velocityY * step;
+        this.x = ops.x.onUpdate(this, 'x', t, this.x + this.velocityX * step);
+        this.y = ops.y.onUpdate(this, 'y', t, this.y + this.velocityY * step);
+
+        // this.x += this.velocityX * step;
+        // this.y += this.velocityY * step;
 
         if (emitter.bounds)
         {

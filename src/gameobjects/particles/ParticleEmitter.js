@@ -299,12 +299,12 @@ var ParticleEmitter = new Class({
         this.particleClass = Particle;
 
         this.ops = {
-            x: new EmitterOp(config, 'x', 0, true),
-            y: new EmitterOp(config, 'y', 0, true),
-            accelerationX: new EmitterOp(config, 'accelerationX', 0, true),
-            accelerationY: new EmitterOp(config, 'accelerationY', 0, true),
-            maxVelocityX: new EmitterOp(config, 'maxVelocityX', 10000, true),
-            maxVelocityY: new EmitterOp(config, 'maxVelocityY', 10000, true),
+            x: new EmitterOp(config, 'x', 0),
+            y: new EmitterOp(config, 'y', 0),
+            accelerationX: new EmitterOp(config, 'accelerationX', 0),
+            accelerationY: new EmitterOp(config, 'accelerationY', 0),
+            maxVelocityX: new EmitterOp(config, 'maxVelocityX', 10000),
+            maxVelocityY: new EmitterOp(config, 'maxVelocityY', 10000),
             speedX: new EmitterOp(config, 'speedX', 0, true),
             speedY: new EmitterOp(config, 'speedY', 0, true),
             moveToX: new EmitterOp(config, 'moveToX', null, true),
