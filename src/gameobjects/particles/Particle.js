@@ -265,7 +265,10 @@ var Particle = new Class({
             accelerationX: { min: 0, max: 0 },
             accelerationY: { min: 0, max: 0 },
             maxVelocityX: { min: 0, max: 0 },
-            maxVelocityY: { min: 0, max: 0 }
+            maxVelocityY: { min: 0, max: 0 },
+            moveToX: { min: 0, max: 0 },
+            moveToY: { min: 0, max: 0 },
+            bounce: { min: 0, max: 0 }
         };
 
         /**
@@ -436,7 +439,7 @@ var Particle = new Class({
         else if (emitter.moveTo)
         {
             var mx = ops.moveToX.onEmit(this, 'moveToX');
-            var my = (ops.moveToY.active) ? ops.moveToY.onEmit(this, 'moveToY') : mx;
+            var my = ops.moveToY.onEmit(this, 'moveToY');
             var lifeS = this.life / 1000;
 
             this.velocityX = (mx - this.x) / lifeS;
@@ -608,13 +611,23 @@ var Particle = new Class({
 
         this.lifeT = t;
 
+        this.x = ops.x.onUpdate(this, 'x', t, this.x);
+        this.y = ops.y.onUpdate(this, 'y', t, this.y);
+
+        if (emitter.moveTo)
+        {
+            var mx = ops.moveToX.onUpdate(this, 'moveToX', t, emitter.moveToX);
+            var my = ops.moveToY.onUpdate(this, 'moveToY', t, emitter.moveToY);
+            var lifeS = this.lifeCurrent / 1000;
+
+            this.velocityX = (mx - this.x) / lifeS;
+            this.velocityY = (my - this.y) / lifeS;
+        }
+
         this.computeVelocity(emitter, delta, step, processors, t);
 
-        this.x = ops.x.onUpdate(this, 'x', t, this.x + this.velocityX * step);
-        this.y = ops.y.onUpdate(this, 'y', t, this.y + this.velocityY * step);
-
-        // this.x += this.velocityX * step;
-        // this.y += this.velocityY * step;
+        this.x += this.velocityX * step;
+        this.y += this.velocityY * step;
 
         if (emitter.bounds)
         {
@@ -638,6 +651,8 @@ var Particle = new Class({
         this.alpha = ops.alpha.onUpdate(this, 'alpha', t, this.alpha);
 
         this.tint = ops.tint.onUpdate(this, 'tint', t, this.tint);
+
+        this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
 
         this.lifeCurrent -= delta;
 
