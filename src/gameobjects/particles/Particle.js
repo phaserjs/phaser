@@ -360,6 +360,7 @@ var Particle = new Class({
     fire: function (x, y)
     {
         var emitter = this.emitter;
+        var ops = emitter.ops;
 
         var anim = emitter.getAnim();
 
@@ -386,12 +387,12 @@ var Particle = new Class({
 
         if (x === undefined)
         {
-            this.x += emitter._x.onEmit(this, 'x');
+            this.x += ops.x.onEmit(this, 'x');
         }
-        else if (emitter.x.steps > 0)
+        else if (ops.x.steps > 0)
         {
             //  EmitterOp is stepped but x was forced (follower?) so use it
-            this.x += x + emitter._x.onEmit(this, 'x');
+            this.x += x + ops.x.onEmit(this, 'x');
         }
         else
         {
@@ -400,36 +401,36 @@ var Particle = new Class({
 
         if (y === undefined)
         {
-            this.y += emitter._y.onEmit(this, 'y');
+            this.y += ops.y.onEmit(this, 'y');
         }
-        else if (emitter.y.steps > 0)
+        else if (ops.y.steps > 0)
         {
             //  EmitterOp is stepped but y was forced (follower?) so use it
-            this.y += y + emitter._y.onEmit(this, 'y');
+            this.y += y + ops.y.onEmit(this, 'y');
         }
         else
         {
             this.y += y;
         }
 
-        this.life = emitter.lifespan.onEmit(this, 'lifespan');
+        this.life = ops.lifespan.onEmit(this, 'lifespan');
         this.lifeCurrent = this.life;
         this.lifeT = 0;
 
-        var sx = emitter.speedX.onEmit(this, 'speedX');
-        var sy = (emitter.speedY) ? emitter.speedY.onEmit(this, 'speedY') : sx;
+        var sx = ops.speedX.onEmit(this, 'speedX');
+        var sy = (ops.speedY.active) ? ops.speedY.onEmit(this, 'speedY') : sx;
 
         if (emitter.radial)
         {
-            var rad = DegToRad(emitter.angle.onEmit(this, 'angle'));
+            var rad = DegToRad(ops.angle.onEmit(this, 'angle'));
 
             this.velocityX = Math.cos(rad) * Math.abs(sx);
             this.velocityY = Math.sin(rad) * Math.abs(sy);
         }
         else if (emitter.moveTo)
         {
-            var mx = emitter.moveToX.onEmit(this, 'moveToX');
-            var my = (emitter.moveToY) ? emitter.moveToY.onEmit(this, 'moveToY') : mx;
+            var mx = ops.moveToX.onEmit(this, 'moveToX');
+            var my = (ops.moveToY.active) ? ops.moveToY.onEmit(this, 'moveToY') : mx;
             var lifeS = this.life / 1000;
 
             this.velocityX = (mx - this.x) / lifeS;
@@ -443,26 +444,26 @@ var Particle = new Class({
 
         if (emitter.acceleration)
         {
-            this.accelerationX = emitter.accelerationX.onEmit(this, 'accelerationX');
-            this.accelerationY = emitter.accelerationY.onEmit(this, 'accelerationY');
+            this.accelerationX = ops.accelerationX.onEmit(this, 'accelerationX');
+            this.accelerationY = ops.accelerationY.onEmit(this, 'accelerationY');
         }
 
-        this.maxVelocityX = emitter.maxVelocityX.onEmit(this, 'maxVelocityX');
-        this.maxVelocityY = emitter.maxVelocityY.onEmit(this, 'maxVelocityY');
+        this.maxVelocityX = ops.maxVelocityX.onEmit(this, 'maxVelocityX');
+        this.maxVelocityY = ops.maxVelocityY.onEmit(this, 'maxVelocityY');
 
-        this.delayCurrent = emitter.delay.onEmit(this, 'delay');
+        this.delayCurrent = ops.delay.onEmit(this, 'delay');
 
-        this.scaleX = emitter.scaleX.onEmit(this, 'scaleX');
-        this.scaleY = emitter.scaleY.onEmit(this, 'scaleY');
+        this.scaleX = ops.scaleX.onEmit(this, 'scaleX');
+        this.scaleY = ops.scaleY.onEmit(this, 'scaleY');
 
-        this.angle = emitter.rotate.onEmit(this, 'rotate');
+        this.angle = ops.rotate.onEmit(this, 'rotate');
         this.rotation = DegToRad(this.angle);
 
-        this.bounce = emitter.bounce.onEmit(this, 'bounce');
+        this.bounce = ops.bounce.onEmit(this, 'bounce');
 
-        this.alpha = emitter.alpha.onEmit(this, 'alpha');
+        this.alpha = ops.alpha.onEmit(this, 'alpha');
 
-        this.tint = emitter.tint.onEmit(this, 'tint');
+        this.tint = ops.tint.onEmit(this, 'tint');
     },
 
     /**
@@ -592,6 +593,7 @@ var Particle = new Class({
         this.anims.update(0, delta);
 
         var emitter = this.emitter;
+        var ops = emitter.ops;
 
         //  How far along in life is this particle? (t = 0 to 1)
         var t = 1 - (this.lifeCurrent / this.life);
@@ -616,15 +618,15 @@ var Particle = new Class({
             return true;
         }
 
-        this.scaleX = emitter.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
-        this.scaleY = emitter.scaleY.onUpdate(this, 'scaleY', t, this.scaleY);
+        this.scaleX = ops.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
+        this.scaleY = ops.scaleY.onUpdate(this, 'scaleY', t, this.scaleY);
 
-        this.angle = emitter.rotate.onUpdate(this, 'rotate', t, this.angle);
+        this.angle = ops.rotate.onUpdate(this, 'rotate', t, this.angle);
         this.rotation = DegToRad(this.angle);
 
-        this.alpha = emitter.alpha.onUpdate(this, 'alpha', t, this.alpha);
+        this.alpha = ops.alpha.onUpdate(this, 'alpha', t, this.alpha);
 
-        this.tint = emitter.tint.onUpdate(this, 'tint', t, this.tint);
+        this.tint = ops.tint.onUpdate(this, 'tint', t, this.tint);
 
         this.lifeCurrent -= delta;
 
