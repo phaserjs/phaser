@@ -89,7 +89,7 @@ var configOpMap = [
  * Lots of emitter properties can be specified in a variety of formats, giving you lots
  * of control over the values they return. Here are the different variations:
  *
- * An explicit static value:
+ * ## An explicit static value:
  *
  * ```js
  * x: 400
@@ -97,7 +97,7 @@ var configOpMap = [
  *
  * The x value will always be 400 when the particle is spawned.
  *
- * A random value:
+ * ## A random value:
  *
  * ```js
  * x: [ 100, 200, 300, 400 ]
@@ -105,7 +105,7 @@ var configOpMap = [
  *
  * The x value will be one of the 4 elements in the given array, picked at random on emission.
  *
- * A custom callback:
+ * ## A custom callback:
  *
  * ```js
  * x: (particle, key, t, value) => {
@@ -113,9 +113,11 @@ var configOpMap = [
  * }
  * ```
  *
- * The x value is the result of calling this function.
+ * The x value is the result of calling this function. This is only used when the
+ * particle is emitted, so it provides it's initial starting value. It is not used
+ * when the particle is updated (see the onUpdate callback for that)
  *
- * A start / end object:
+ * ## A start / end object:
  *
  * This allows you to control the change in value between the given start and
  * end parameters over the course of the particles lifetime:
@@ -132,7 +134,7 @@ var configOpMap = [
  * scale: { start: 0, end: 1, ease: 'bounce.out' }
  * ```
  *
- * A start / end random object:
+ * ## A start / end random object:
  *
  * The start and end object can have an optional `random` parameter.
  * This forces it to pick a random value between the two values and use
@@ -147,13 +149,13 @@ var configOpMap = [
  * scale to the end value over its lifetime. You can combine the above
  * with the `ease` parameter as well to control the value easing.
  *
- * A start / end stepped object:
+ * ## A stepped emitter object:
  *
- * By adding the `steps` parameter to the object you can control the
- * placement of the values across the range:
+ * The `steps` parameter allows you to control the placement of sequential
+ * particles across the start-end range:
  *
  * ```js
- * x: { start: 0, end: 576, steps: 32 }
+ * x: { steps: 32, start: 0, end: 576 }
  * ```
  *
  * Here we have a range of 576 (start to end). This is divided into 32 steps.
@@ -161,9 +163,25 @@ var configOpMap = [
  * The first particle will emit at the x position of 0. The next will emit
  * at the next 'step' along, which would be 18. The following particle will emit
  * at the next step, which is 36, and so on. Because the range of 576 has been
- * divided by 32.
+ * divided by 32, creating 18 pixels steps. When a particle reaches the 'end'
+ * value the next one will start from the beginning again.
  *
- * A min / max object:
+ * ## A stepped emitter object with yoyo:
+ *
+ * You can add the optional `yoyo` property to a stepped object:
+ *
+ * ```js
+ * x: { steps: 32, start: 0, end: 576, yoyo: true }
+ * ```
+ *
+ * As with the stepped emitter, particles are emitted in sequence, from 'start'
+ * to 'end' in step sized jumps. Normally, when a stepped emitter reaches the
+ * end it snaps around to the start value again. However, if you provide the 'yoyo'
+ * parameter then when it reaches the end it will reverse direction and start
+ * emitting back down to 'start' again. Depending on the effect you require this
+ * can often look better.
+ *
+ * ## A min / max object:
  *
  * This allows you to pick a random value between the min and max properties:
  *
@@ -182,7 +200,7 @@ var configOpMap = [
  * The above does exactly the same as it takes the first element in the 'random'
  * array as the 'min' value and the 2nd element as the 'max' value.
  *
- * Custom onEmit and onUpdate callbacks:
+ * ## Custom onEmit and onUpdate callbacks:
  *
  * If the above won't give you the effect you're after, you can provide your own
  * callbacks that will be used when the particle is both emitted and updated:
@@ -307,9 +325,9 @@ var ParticleEmitter = new Class({
             maxVelocityY: new EmitterOp(config, 'maxVelocityY', 10000),
             speedX: new EmitterOp(config, 'speedX', 0, true),
             speedY: new EmitterOp(config, 'speedY', 0, true),
-            moveToX: new EmitterOp(config, 'moveToX', null, true),
-            moveToY: new EmitterOp(config, 'moveToY', null, true),
-            bounce: new EmitterOp(config, 'bounce', 0, true),
+            moveToX: new EmitterOp(config, 'moveToX', 0),
+            moveToY: new EmitterOp(config, 'moveToY', 0),
+            bounce: new EmitterOp(config, 'bounce', 0),
             scaleX: new EmitterOp(config, 'scaleX', 1),
             scaleY: new EmitterOp(config, 'scaleY', 1),
             tint: new EmitterOp(config, 'tint', 0xffffff),
