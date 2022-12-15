@@ -86,6 +86,134 @@ var configOpMap = [
  * A particle emitter represents a single particle stream.
  * It controls a pool of {@link Phaser.GameObjects.Particles.Particle Particles} and is controlled by a {@link Phaser.GameObjects.Particles.ParticleEmitterManager Particle Emitter Manager}.
  *
+ * Lots of emitter properties can be specified in a variety of formats, giving you lots
+ * of control over the values they return. Here are the different variations:
+ *
+ * An explicit static value:
+ *
+ * ```js
+ * x: 400
+ * ```
+ *
+ * The x value will always be 400 when the particle is spawned.
+ *
+ * A random value:
+ *
+ * ```js
+ * x: [ 100, 200, 300, 400 ]
+ * ```
+ *
+ * The x value will be one of the 4 elements in the given array, picked at random on emission.
+ *
+ * A custom callback:
+ *
+ * ```js
+ * x: (particle, key, t, value) => {
+ *   return value + 50;
+ * }
+ * ```
+ *
+ * The x value is the result of calling this function.
+ *
+ * A start / end object:
+ *
+ * This allows you to control the change in value between the given start and
+ * end parameters over the course of the particles lifetime:
+ *
+ * ```js
+ * scale: { start: 0, end: 1 }
+ * ```
+ *
+ * The particle scale will start at 0 when emitted and ease to a scale of 1
+ * over the course of its lifetime. You can also specify the ease function
+ * used for this change (the default is Linear):
+ *
+ * ```js
+ * scale: { start: 0, end: 1, ease: 'bounce.out' }
+ * ```
+ *
+ * A start / end random object:
+ *
+ * The start and end object can have an optional `random` parameter.
+ * This forces it to pick a random value between the two values and use
+ * this as the starting value, then easing to the 'end' parameter over
+ * its lifetime.
+ *
+ * ```js
+ * scale: { start: 4, end: 0.5, random: true }
+ * ```
+ *
+ * The particle will start with a random scale between 0.5 and 4 and then
+ * scale to the end value over its lifetime. You can combine the above
+ * with the `ease` parameter as well to control the value easing.
+ *
+ * A start / end stepped object:
+ *
+ * By adding the `steps` parameter to the object you can control the
+ * placement of the values across the range:
+ *
+ * ```js
+ * x: { start: 0, end: 576, steps: 32 }
+ * ```
+ *
+ * Here we have a range of 576 (start to end). This is divided into 32 steps.
+ *
+ * The first particle will emit at the x position of 0. The next will emit
+ * at the next 'step' along, which would be 18. The following particle will emit
+ * at the next step, which is 36, and so on. Because the range of 576 has been
+ * divided by 32.
+ *
+ * A min / max object:
+ *
+ * This allows you to pick a random value between the min and max properties:
+ *
+ * ```js
+ * x: { min: 100, max: 700 }
+ * ```
+ *
+ * The x value will be a random float between min and max.
+ *
+ * You can also provide this as a random object:
+ *
+ * ```js
+ * x: { random: [ 100, 700 ] }
+ * ```
+ *
+ * The above does exactly the same as it takes the first element in the 'random'
+ * array as the 'min' value and the 2nd element as the 'max' value.
+ *
+ * Custom onEmit and onUpdate callbacks:
+ *
+ * If the above won't give you the effect you're after, you can provide your own
+ * callbacks that will be used when the particle is both emitted and updated:
+ *
+ * ```js
+ * x: {
+ *   onEmit: (particle, key, t, value) => {
+ *     return value;
+ *   },
+ *   onUpdate: (particle, key, t, value) => {
+ *     return value;
+ *   }
+ * }
+ * ```
+ *
+ * You can provide either one or both functions. The `onEmit` is called at the
+ * start of the particles life and defines the value of the property on birth.
+ *
+ * The `onUpdate` function is called every time the Particle Emitter updates
+ * until the particle dies. Both must return a value.
+ *
+ * The properties are:
+ *
+ * particle - A reference to the Particle instance.
+ * key - The string based key of the property, i.e. 'x' or 'lifespan'.
+ * t - The current normalized lifetime of the particle, between 0 (birth) and 1 (death).
+ * value - The current property value. At a minimum you should return this.
+ *
+ * By using the above configuration options you have an unlimited about of
+ * control over how your particles behave.
+ *
  * @class ParticleEmitter
  * @memberof Phaser.GameObjects.Particles
  * @constructor
@@ -170,27 +298,28 @@ var ParticleEmitter = new Class({
          */
         this.particleClass = Particle;
 
-        /**
-         * The x-coordinate of the particle origin (where particles will be emitted).
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#x
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0
-         * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setPosition
-         */
-        this._x = new EmitterOp(config, 'x', 0, true);
-
-        /**
-         * The y-coordinate of the particle origin (where particles will be emitted).
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#y
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0
-         * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setPosition
-         */
-        this._y = new EmitterOp(config, 'y', 0, true);
+        this.ops = {
+            x: new EmitterOp(config, 'x', 0, true),
+            y: new EmitterOp(config, 'y', 0, true),
+            accelerationX: new EmitterOp(config, 'accelerationX', 0, true),
+            accelerationY: new EmitterOp(config, 'accelerationY', 0, true),
+            maxVelocityX: new EmitterOp(config, 'maxVelocityX', 10000, true),
+            maxVelocityY: new EmitterOp(config, 'maxVelocityY', 10000, true),
+            speedX: new EmitterOp(config, 'speedX', 0, true),
+            speedY: new EmitterOp(config, 'speedY', 0, true),
+            moveToX: new EmitterOp(config, 'moveToX', null, true),
+            moveToY: new EmitterOp(config, 'moveToY', null, true),
+            bounce: new EmitterOp(config, 'bounce', 0, true),
+            scaleX: new EmitterOp(config, 'scaleX', 1),
+            scaleY: new EmitterOp(config, 'scaleY', 1),
+            tint: new EmitterOp(config, 'tint', 0xffffff),
+            alpha: new EmitterOp(config, 'alpha', 1),
+            lifespan: new EmitterOp(config, 'lifespan', 1000, true),
+            angle: new EmitterOp(config, 'angle', { min: 0, max: 360 }, true),
+            rotate: new EmitterOp(config, 'rotate', 0),
+            quantity: new EmitterOp(config, 'quantity', 1, true),
+            delay: new EmitterOp(config, 'delay', 0, true)
+        };
 
         /**
          * A radial emitter will emit particles in all directions between angle min and max,
@@ -238,68 +367,6 @@ var ParticleEmitter = new Class({
         this.acceleration = false;
 
         /**
-         * Horizontal acceleration applied to emitted particles, in pixels per second squared.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#accelerationX
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.accelerationX = new EmitterOp(config, 'accelerationX', 0, true);
-
-        /**
-         * Vertical acceleration applied to emitted particles, in pixels per second squared.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#accelerationY
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.accelerationY = new EmitterOp(config, 'accelerationY', 0, true);
-
-        /**
-         * The maximum horizontal velocity of emitted particles, in pixels per second squared.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityX
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 10000
-         * @since 3.0.0
-         */
-        this.maxVelocityX = new EmitterOp(config, 'maxVelocityX', 10000, true);
-
-        /**
-         * The maximum vertical velocity of emitted particles, in pixels per second squared.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityY
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 10000
-         * @since 3.0.0
-         */
-        this.maxVelocityY = new EmitterOp(config, 'maxVelocityY', 10000, true);
-
-        /**
-         * The initial horizontal speed of emitted particles, in pixels per second.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#speedX
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0
-         * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setSpeedX
-         */
-        this.speedX = new EmitterOp(config, 'speedX', 0, true);
-
-        /**
-         * The initial vertical speed of emitted particles, in pixels per second.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#speedY
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0
-         * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setSpeedY
-         */
-        this.speedY = new EmitterOp(config, 'speedY', 0, true);
-
-        /**
          * Whether moveToX and moveToY are set. Set automatically during configuration.
          *
          * When true the particles move toward the moveToX and moveToY coordinates and arrive at the end of their life.
@@ -311,113 +378,6 @@ var ParticleEmitter = new Class({
          * @since 3.0.0
          */
         this.moveTo = false;
-
-        /**
-         * The x-coordinate emitted particles move toward, when {@link Phaser.GameObjects.Particles.ParticleEmitter#moveTo} is true.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#moveToX
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.moveToX = new EmitterOp(config, 'moveToX', null, true);
-
-        /**
-         * The y-coordinate emitted particles move toward, when {@link Phaser.GameObjects.Particles.ParticleEmitter#moveTo} is true.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#moveToY
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.moveToY = new EmitterOp(config, 'moveToY', null, true);
-
-        /**
-         * Whether particles will rebound when they meet the emitter bounds.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#bounce
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.bounce = new EmitterOp(config, 'bounce', 0, true);
-
-        /**
-         * The horizontal scale of emitted particles.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#scaleX
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 1
-         * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setScale
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setScaleX
-         */
-        this.scaleX = new EmitterOp(config, 'scaleX', 1);
-
-        /**
-         * The vertical scale of emitted particles.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#scaleY
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 1
-         * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setScale
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setScaleY
-         */
-        this.scaleY = new EmitterOp(config, 'scaleY', 1);
-
-        /**
-         * Color tint applied to emitted particles. Value must not include the alpha channel.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#tint
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0xffffff
-         * @since 3.0.0
-         */
-        this.tint = new EmitterOp(config, 'tint', 0xffffff);
-
-        /**
-         * The alpha (transparency) of emitted particles.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#alpha
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 1
-         * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setAlpha
-         */
-        this.alpha = new EmitterOp(config, 'alpha', 1);
-
-        /**
-         * The lifespan of emitted particles, in ms.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#lifespan
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 1000
-         * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setLifespan
-         */
-        this.lifespan = new EmitterOp(config, 'lifespan', 1000, true);
-
-        /**
-         * The angle of the initial velocity of emitted particles, in degrees.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#angle
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default { min: 0, max: 360 }
-         * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setAngle
-         */
-        this.angle = new EmitterOp(config, 'angle', { min: 0, max: 360 }, true);
-
-        /**
-         * The rotation of emitted particles, in degrees.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#rotate
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.rotate = new EmitterOp(config, 'rotate', 0);
 
         /**
          * A function to call when a particle is emitted.
@@ -482,28 +442,6 @@ var ParticleEmitter = new Class({
          * @since 3.60.0
          */
         this.maxAliveParticles = 0;
-
-        /**
-         * How many particles are emitted each time particles are emitted (one explosion or one flow cycle).
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#quantity
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 1
-         * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setFrequency
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setQuantity
-         */
-        this.quantity = new EmitterOp(config, 'quantity', 1, true);
-
-        /**
-         * How many ms to wait after emission before the particles start updating.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#delay
-         * @type {Phaser.GameObjects.Particles.EmitterOp}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.delay = new EmitterOp(config, 'delay', 0, true);
 
         /**
          * For a flow emitter, the time interval (>= 0) between particle flow cycles in ms.
@@ -891,33 +829,28 @@ var ParticleEmitter = new Class({
             }
         }
 
+        var ops = this.ops;
+
         for (i = 0; i < configOpMap.length; i++)
         {
             key = configOpMap[i];
 
             if (HasValue(config, key))
             {
-                if (this['_' + key])
-                {
-                    this['_' + key].loadConfig(config);
-                }
-                else
-                {
-                    this[key].loadConfig(config);
-                }
+                ops[key].loadConfig(config);
             }
         }
 
-        this.acceleration = (this.accelerationX.propertyValue !== 0 || this.accelerationY.propertyValue !== 0);
+        this.acceleration = (this.accelerationX !== 0 || this.accelerationY !== 0);
 
-        this.moveTo = (this.moveToX.propertyValue !== null && this.moveToY.propertyValue !== null);
+        this.moveTo = (this.moveToX !== null && this.moveToY !== null);
 
         //  Special 'speed' override
 
         if (HasValue(config, 'speed'))
         {
-            this.speedX.loadConfig(config, 'speed');
-            this.speedY = null;
+            ops.speedX.loadConfig(config, 'speed');
+            ops.speedY.active = false;
         }
 
         //  If you specify speedX, speedY or moveTo then it changes the emitter from radial to a point emitter
@@ -930,8 +863,8 @@ var ParticleEmitter = new Class({
 
         if (HasValue(config, 'scale'))
         {
-            this.scaleX.loadConfig(config, 'scale');
-            this.scaleY.loadConfig(config, 'scale');
+            ops.scaleX.loadConfig(config, 'scale');
+            ops.scaleY.loadConfig(config, 'scale');
         }
 
         if (HasValue(config, 'callbackScope'))
@@ -1003,28 +936,30 @@ var ParticleEmitter = new Class({
             output[key] = this[key];
         }
 
+        var ops = this.ops;
+
         for (i = 0; i < configOpMap.length; i++)
         {
             key = configOpMap[i];
 
-            if (this[key])
+            if (ops[key])
             {
-                output[key] = this[key].toJSON();
+                output[key] = ops[key].toJSON();
             }
         }
 
         //  special handlers
-        if (!this.speedY)
+        if (!ops.speedY.active)
         {
             delete output.speedX;
-            output.speed = this.speedX.toJSON();
+            output.speed = ops.speedX.toJSON();
         }
 
         if (this.scaleX === this.scaleY)
         {
             delete output.scaleX;
             delete output.scaleY;
-            output.scale = this.scaleX.toJSON();
+            output.scale = ops.scaleX.toJSON();
         }
 
         return output;
@@ -1302,8 +1237,8 @@ var ParticleEmitter = new Class({
      */
     setPosition: function (x, y)
     {
-        this._x.onChange(x);
-        this._y.onChange(y);
+        this.ops.x.onChange(x);
+        this.ops.y.onChange(y);
 
         return this;
     },
@@ -1360,7 +1295,7 @@ var ParticleEmitter = new Class({
      */
     setSpeedX: function (value)
     {
-        this.speedX.onChange(value);
+        this.ops.speedX.onChange(value);
 
         //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
         this.radial = false;
@@ -1381,13 +1316,10 @@ var ParticleEmitter = new Class({
      */
     setSpeedY: function (value)
     {
-        if (this.speedY)
-        {
-            this.speedY.onChange(value);
+        this.ops.speedY.onChange(value);
 
-            //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
-            this.radial = false;
-        }
+        //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
+        this.radial = false;
 
         return this;
     },
@@ -1405,8 +1337,8 @@ var ParticleEmitter = new Class({
      */
     setSpeed: function (value)
     {
-        this.speedX.onChange(value);
-        this.speedY = null;
+        this.ops.speedX.onChange(value);
+        this.ops.speedY.active = false;
 
         //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
         this.radial = true;
@@ -1426,7 +1358,7 @@ var ParticleEmitter = new Class({
      */
     setScaleX: function (value)
     {
-        this.scaleX.onChange(value);
+        this.ops.scaleX.onChange(value);
 
         return this;
     },
@@ -1443,7 +1375,7 @@ var ParticleEmitter = new Class({
      */
     setScaleY: function (value)
     {
-        this.scaleY.onChange(value);
+        this.ops.scaleY.onChange(value);
 
         return this;
     },
@@ -1460,8 +1392,8 @@ var ParticleEmitter = new Class({
      */
     setScale: function (value)
     {
-        this.scaleX.onChange(value);
-        this.scaleY.onChange(value);
+        this.ops.scaleX.onChange(value);
+        this.ops.scaleY.onChange(value);
 
         return this;
     },
@@ -1531,7 +1463,7 @@ var ParticleEmitter = new Class({
      */
     setAlpha: function (value)
     {
-        this.alpha.onChange(value);
+        this.ops.alpha.onChange(value);
 
         return this;
     },
@@ -1541,6 +1473,7 @@ var ParticleEmitter = new Class({
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setTint
      * @since 3.22.0
+     * @webglOnly
      *
      * @param {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} value - A value between 0 and 0xffffff.
      *
@@ -1548,7 +1481,7 @@ var ParticleEmitter = new Class({
      */
     setTint: function (value)
     {
-        this.tint.onChange(value);
+        this.ops.tint.onChange(value);
 
         return this;
     },
@@ -1565,7 +1498,7 @@ var ParticleEmitter = new Class({
      */
     setEmitterAngle: function (value)
     {
-        this.angle.onChange(value);
+        this.ops.angle.onChange(value);
 
         return this;
     },
@@ -2131,7 +2064,7 @@ var ParticleEmitter = new Class({
 
         if (count === undefined)
         {
-            count = this.quantity.onEmit();
+            count = this.ops.quantity.staticValueEmit();
         }
 
         var dead = this.dead;
@@ -2283,43 +2216,513 @@ var ParticleEmitter = new Class({
     },
 
     /**
+     * The x coordinate the particles are emitted from.
      *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
      *
      * @name Phaser.GameObjects.Particles.ParticleEmitter#x
-     * @type {number}
-     * @since 3.0.0
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     * @see Phaser.GameObjects.Particles.ParticleEmitter#setPosition
      */
     x: {
 
         get: function ()
         {
-            return this._x.propertyValue;
+            return this.ops.x.staticValueEmit();
         },
 
         set: function (value)
         {
-            this._x.onChange(value);
+            this.ops.x.onChange(value);
         }
 
     },
 
     /**
+     * The y coordinate the particles are emitted from.
      *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
      *
      * @name Phaser.GameObjects.Particles.ParticleEmitter#y
-     * @type {number}
-     * @since 3.0.0
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     * @see Phaser.GameObjects.Particles.ParticleEmitter#setPosition
      */
     y: {
 
         get: function ()
         {
-            return this._y.propertyValue;
+            return this.ops.y.staticValueEmit();
         },
 
         set: function (value)
         {
-            this._y.onChange(value);
+            this.ops.y.onChange(value);
+        }
+
+    },
+
+    /**
+     * The horizontal acceleration applied to emitted particles, in pixels per second squared.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#accelerationX
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    accelerationX: {
+
+        get: function ()
+        {
+            return this.ops.accelerationX.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.accelerationX.onChange(value);
+        }
+
+    },
+
+    /**
+     * The vertical acceleration applied to emitted particles, in pixels per second squared.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#accelerationY
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    accelerationY: {
+
+        get: function ()
+        {
+            return this.ops.accelerationY.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.accelerationY.onChange(value);
+        }
+
+    },
+
+    /**
+     * The maximum horizontal velocity emitted particles can reach, in pixels per second squared.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityX
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     * @default 10000
+     */
+    maxVelocityX: {
+
+        get: function ()
+        {
+            return this.ops.maxVelocityX.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.maxVelocityX.onChange(value);
+        }
+
+    },
+
+    /**
+     * The maximum vertical velocity emitted particles can reach, in pixels per second squared.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityY
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     * @default 10000
+     */
+    maxVelocityY: {
+
+        get: function ()
+        {
+            return this.ops.maxVelocityY.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.maxVelocityY.onChange(value);
+        }
+
+    },
+
+    /**
+     * The initial horizontal speed of emitted particles, in pixels per second.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#speedX
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    speedX: {
+
+        get: function ()
+        {
+            return this.ops.speedX.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.speedX.onChange(value);
+        }
+
+    },
+
+    /**
+     * The initial vertical speed of emitted particles, in pixels per second.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#speedY
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    speedY: {
+
+        get: function ()
+        {
+            return this.ops.speedY.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.speedY.onChange(value);
+        }
+
+    },
+
+    /**
+     * The x coordinate emitted particles move toward, when {@link Phaser.GameObjects.Particles.ParticleEmitter#moveTo} is true.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#moveToX
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    moveToX: {
+
+        get: function ()
+        {
+            return this.ops.moveToX.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.moveToX.onChange(value);
+        }
+
+    },
+
+    /**
+     * The y coordinate emitted particles move toward, when {@link Phaser.GameObjects.Particles.ParticleEmitter#moveTo} is true.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#moveToY
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    moveToY: {
+
+        get: function ()
+        {
+            return this.ops.moveToY.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.moveToY.onChange(value);
+        }
+
+    },
+
+    /**
+     * The amount of velocity particles will use when rebounding off the
+     * emitter bounds, if set. A value of 0 means no bounce. A value of 1
+     * means a full rebound.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#bounce
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    bounce: {
+
+        get: function ()
+        {
+            return this.ops.bounce.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.bounce.onChange(value);
+        }
+
+    },
+
+    /**
+     * The horizontal scale of emitted particles.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#scaleX
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    scaleX: {
+
+        get: function ()
+        {
+            return this.ops.scaleX.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.scaleX.onChange(value);
+        }
+
+    },
+
+    /**
+     * The vertical scale of emitted particles.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#scaleY
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    scaleY: {
+
+        get: function ()
+        {
+            return this.ops.scaleY.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.scaleY.onChange(value);
+        }
+
+    },
+
+    /**
+     * A color tint value that is applied to the texture of the emitter
+     * particle. The value should be given in hex format, i.e. 0xff0000
+     * for a red tint and should not include the alpha channel.
+     *
+     * Tints are additive, meaning a tint value of white (0xffffff) will
+     * effectively reset the tint to nothing.
+     *
+     * This is a WebGL only feature.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#tint
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    tint: {
+
+        get: function ()
+        {
+            return this.ops.tint.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.tint.onChange(value);
+        }
+
+    },
+
+    /**
+     * The alpha value of the emitted particles. This is a value
+     * between 0 and 1. Particles with alpha zero are invisible
+     * and are therefore not rendered, but are still processed
+     * by the Emitter.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#alpha
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    alpha: {
+
+        get: function ()
+        {
+            return this.ops.alpha.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.alpha.onChange(value);
+        }
+
+    },
+
+    /**
+     * The lifespan of the emitted particles. This value is given
+     * in milliseconds and defaults to 1000ms (1 second). When a
+     * particle reaches this amount it is killed.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#lifespan
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    lifespan: {
+
+        get: function ()
+        {
+            return this.ops.lifespan.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.lifespan.onChange(value);
+        }
+
+    },
+
+    /**
+     * The angle in which the particles are emitted. The values are
+     * given in degrees. This allows you to control the direction
+     * of the emitter. If you wish instead to change the rotation
+     * of the particles themselves, see the `rotate` property.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#angle
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    angle: {
+
+        get: function ()
+        {
+            return this.ops.angle.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.angle.onChange(value);
+        }
+
+    },
+
+    /**
+     * The rotation (or angle) of the particles when they are
+     * emitted. The value is given in degrees and uses a right-handed
+     * coordinate system, where 0 degrees points to the right, 90 degrees
+     * points down and -90 degrees points up.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#rotate
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    rotate: {
+
+        get: function ()
+        {
+            return this.ops.rotate.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.rotate.onChange(value);
+        }
+
+    },
+
+    /**
+     * The number of particles that are emitted each time an emission
+     * occurs, i.e. from one 'explosion' or each frame in a 'flow' cycle.
+     *
+     * The default is 1.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#quantity
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @see Phaser.GameObjects.Particles.ParticleEmitter#setFrequency
+     * @see Phaser.GameObjects.Particles.ParticleEmitter#setQuantity
+     * @since 3.60.0
+     */
+    quantity: {
+
+        get: function ()
+        {
+            return this.ops.quantity.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.quantity.onChange(value);
+        }
+
+    },
+
+    /**
+     * The number of milliseconds to wait after emission before
+     * the particles strat updating. This allows you to emit particles
+     * that appear 'static' or still on-screen and then, after this value,
+     * begin to move.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#delay
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    delay: {
+
+        get: function ()
+        {
+            return this.ops.delay.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.delay.onChange(value);
         }
 
     },
@@ -2345,6 +2748,7 @@ var ParticleEmitter = new Class({
         this.deathZone = null;
         this.bounds = null;
         this.follow = null;
+        this.ops = null;
 
         var i;
 
