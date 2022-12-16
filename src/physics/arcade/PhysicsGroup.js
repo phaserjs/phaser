@@ -103,9 +103,10 @@ var PhysicsGroup = new Class({
          * This should be either `Phaser.Physics.Arcade.Image`, `Phaser.Physics.Arcade.Sprite`, or a class extending one of those.
          *
          * @name Phaser.Physics.Arcade.Group#classType
-         * @type {Phaser.Types.GameObjects.Group.GroupClassTypeConstructor}
+         * @type {function}
          * @default ArcadeSprite
          * @since 3.0.0
+         * @see Phaser.Types.GameObjects.Group.GroupClassTypeConstructor
          */
         config.classType = GetFastValue(config, 'classType', ArcadeSprite);
 
