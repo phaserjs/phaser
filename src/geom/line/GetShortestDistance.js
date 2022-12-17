@@ -11,12 +11,10 @@
  * @function Phaser.Geom.Line.GetShortestDistance
  * @since 3.16.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
- *
  * @param {Phaser.Geom.Line} line - The line to get the distance from.
- * @param {(Phaser.Geom.Point|object)} point - The point to get the shortest distance to.
+ * @param {Phaser.Types.Math.Vector2Like} point - The point to get the shortest distance to.
  *
- * @return {number} The shortest distance from the line to the point.
+ * @return {(boolean|number)} The shortest distance from the line to the point, or `false`.
  */
 var GetShortestDistance = function (line, point)
 {
