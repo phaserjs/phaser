@@ -2387,6 +2387,31 @@ var ParticleEmitter = new Class({
      * Accessing this property should typically return a number.
      * However, it can be set to any valid EmitterOp onEmit type.
      *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#speed
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    speed: {
+
+        get: function ()
+        {
+            return this.ops.speedX.staticValueEmit();
+        },
+
+        set: function (value)
+        {
+            this.ops.speedX.onChange(value);
+            this.ops.speedY.onChange(value);
+        }
+
+    },
+
+    /**
+     * The initial horizontal speed of emitted particles, in pixels per second.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
      * @name Phaser.GameObjects.Particles.ParticleEmitter#speedX
      * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
      * @since 3.60.0
