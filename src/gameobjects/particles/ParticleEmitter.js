@@ -316,6 +316,18 @@ var ParticleEmitter = new Class({
          */
         this.particleClass = Particle;
 
+        /**
+         * An internal object holding all of the EmitterOp instances.
+         *
+         * These are populated as part of the Emmitter configuration parsing.
+         *
+         * You typically do not access them directly, but instead use the
+         * provided getters and setters on this class, such as `ParticleEmitter.speedX` etc.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#ops
+         * @type {Phaser.Types.GameObjects.Particles.ParticleEmitterOps}
+         * @since 3.60.0
+         */
         this.ops = {
             x: new EmitterOp(config, 'x', 0),
             y: new EmitterOp(config, 'y', 0),
