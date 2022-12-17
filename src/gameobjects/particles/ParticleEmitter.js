@@ -861,7 +861,7 @@ var ParticleEmitter = new Class({
 
         this.acceleration = (this.accelerationX !== 0 || this.accelerationY !== 0);
 
-        this.moveTo = (this.moveToX !== null && this.moveToY !== null);
+        this.moveTo = (this.moveToX !== 0 && this.moveToY !== 0);
 
         //  Special 'speed' override
 
