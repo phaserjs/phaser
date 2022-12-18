@@ -255,7 +255,7 @@ var Particle = new Class({
          * @since 3.0.0
          */
         this.data = {
-            tint: { min: 0xffffff, max: 0xffffff, current: 0xffffff },
+            tint: { min: 0xffffff, max: 0xffffff },
             alpha: { min: 1, max: 1 },
             rotate: { min: 0, max: 0 },
             scaleX: { min: 1, max: 1 },
