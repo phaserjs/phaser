@@ -19,7 +19,7 @@ var CanvasPool = require('../../display/canvas/CanvasPool');
 var MeasureText = function (textStyle)
 {
     var canvas = CanvasPool.create(this);
-    var context = canvas.getContext('2d');
+    var context = canvas.getContext('2d', { willReadFrequently: true });
 
     textStyle.syncFont(canvas, context);
 
@@ -64,6 +64,7 @@ var MeasureText = function (textStyle)
     };
 
     var imagedata = context.getImageData(0, 0, width, height);
+
     if (!imagedata)
     {
         output.ascent = baseline;
