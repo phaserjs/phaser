@@ -476,6 +476,7 @@ There are breaking changes from previous versions of Phaser.
 
 ### New Features
 
+* The `Graphics.strokeRoundedRect` and `fillRoundedRect` methods can now accept negative values for the corner radius settings, in which case a concave corner is drawn instead (thanks @rexrainbow)
 * `AnimationManager.getAnimsFromTexture` is a new method that will return all global Animations, as stored in the Animation Manager, that have at least one frame using the given Texture. This will not include animations created directly on local Sprites.
 * `BitmapText.setLineSpacing` is a new method that allows you to set the vertical spacing between lines in multi-line BitmapText Game Objects. It works in the same was as spacing for Text objects and the spacing value can be positive or negative. See also `BitmapText.lineSpacing` for the property rather than the method.
 * `WebGLPipeline.vertexAvailable` is a new method that returns the number of vertices that can be added to the current batch before it will trigger a flush.
