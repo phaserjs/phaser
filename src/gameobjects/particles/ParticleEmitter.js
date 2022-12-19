@@ -310,9 +310,10 @@ var ParticleEmitter = new Class({
          * The Particle Class which will be emitted by this Emitter.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#particleClass
-         * @type {Phaser.Types.GameObjects.Particles.ParticleClassConstructor}
+         * @type {function}
          * @default Phaser.GameObjects.Particles.Particle
          * @since 3.0.0
+         * @see Phaser.Types.GameObjects.Particles.ParticleClassConstructor
          */
         this.particleClass = Particle;
 

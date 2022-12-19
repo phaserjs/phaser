@@ -6,7 +6,7 @@
  * @property {number} [gid] - An Object GID to convert.
  * @property {string} [name] - An Object Name to convert.
  * @property {string} [type] - An Object Type to convert.
- * @property {Phaser.Types.Tilemaps.CreateFromObjectsClassTypeConstructor} [classType] - A custom class type to convert the objects in to. The default is {@link Phaser.GameObjects.Sprite}. A custom class should resemble Sprite or Image.
+ * @property {function} [classType] - A custom class type to convert the objects in to. The default is {@link Phaser.GameObjects.Sprite}. A custom class should resemble Sprite or Image; see {@link Phaser.Types.Tilemaps.CreateFromObjectsClassTypeConstructor}.
  * @property {boolean} [ignoreTileset] - By default, gid-based objects copy properties and respect the type of the tile at that gid and treat the object as an override. If this is true, they don't, and use only the fields set on the object itself.
  * @property {Phaser.Scene} [scene] - A Scene reference, passed to the Game Objects constructors.
  * @property {Phaser.GameObjects.Container} [container] - Optional Container to which the Game Objects are added.
