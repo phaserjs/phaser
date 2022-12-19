@@ -233,10 +233,17 @@ var EmitterOp = new Class({
 
         this.setMethods(method);
 
+        console.log('loadconfig', this.propertyKey, this.emitOnly);
+
         if (this.emitOnly)
         {
             //  Reset it back again
             this.onUpdate = this.defaultUpdate;
+        }
+
+        if (this.propertyKey === 'tint')
+        {
+            this.onUpdate = this.staticValueUpdate;
         }
     },
 
