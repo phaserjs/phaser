@@ -652,7 +652,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {(Phaser.Types.GameObjects.Graphics.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
+     * @param {(Phaser.Types.GameObjects.Graphics.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radius for corners.
      *
      * @return {this} This Game Object.
      */
@@ -673,16 +673,62 @@ var Graphics = new Class({
             br = GetFastValue(radius, 'br', 20);
         }
 
+        var convexTL = (tl >= 0);
+        var convexTR = (tr >= 0);
+        var convexBL = (bl >= 0);
+        var convexBR = (br >= 0);
+
+        tl = Math.abs(tl);
+        tr = Math.abs(tr);
+        bl = Math.abs(bl);
+        br = Math.abs(br);
+
         this.beginPath();
         this.moveTo(x + tl, y);
         this.lineTo(x + width - tr, y);
-        this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+
+        if (convexTR)
+        {
+            this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+        }
+        else
+        {
+            this.arc(x + width, y, tr, Math.PI, MATH_CONST.TAU, true);
+        }
+
         this.lineTo(x + width, y + height - br);
-        this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+
+        if (convexBR)
+        {
+            this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+        }
+        else
+        {
+            this.arc(x + width, y + height, br, -MATH_CONST.TAU, Math.PI, true);
+        }
+
         this.lineTo(x + bl, y + height);
-        this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+
+        if (convexBL)
+        {
+            this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+        }
+        else
+        {
+            this.arc(x, y + height, bl, 0, -MATH_CONST.TAU, true);
+        }
+
         this.lineTo(x, y + tl);
-        this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
+
+        if (convexTL)
+        {
+            this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
+        }
+        else
+        {
+            this.arc(x, y, tl, MATH_CONST.TAU, 0, true);
+        }
+
         this.fillPath();
 
         return this;
@@ -721,25 +767,66 @@ var Graphics = new Class({
             br = GetFastValue(radius, 'br', 20);
         }
         
-        tl = Math.min(tl, maxRadius);
-        tr = Math.min(tr, maxRadius);
-        bl = Math.min(bl, maxRadius);
-        br = Math.min(br, maxRadius);
+        var convexTL = (tl >= 0);
+        var convexTR = (tr >= 0);
+        var convexBL = (bl >= 0);
+        var convexBR = (br >= 0);
+
+        tl = Math.min(Math.abs(tl), maxRadius);
+        tr = Math.min(Math.abs(tr), maxRadius);
+        bl = Math.min(Math.abs(bl), maxRadius);
+        br = Math.min(Math.abs(br), maxRadius);
         
         this.beginPath();
         this.moveTo(x + tl, y);
         this.lineTo(x + width - tr, y);
         this.moveTo(x + width - tr, y);
-        this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+        
+        if (convexTR)
+        {
+            this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+        }
+        else
+        {
+            this.arc(x + width, y, tr, Math.PI, MATH_CONST.TAU, true);
+        }
+                
         this.lineTo(x + width, y + height - br);
         this.moveTo(x + width, y + height - br);
-        this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+
+        if (convexBR)
+        {
+            this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+        }
+        else
+        {
+            this.arc(x + width, y + height, br, -MATH_CONST.TAU, Math.PI, true);
+        }
+        
         this.lineTo(x + bl, y + height);
         this.moveTo(x + bl, y + height);
-        this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+
+        if (convexBL)
+        {
+            this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+        }
+        else
+        {
+            this.arc(x, y + height, bl, 0, -MATH_CONST.TAU, true);
+        }
+
         this.lineTo(x, y + tl);
         this.moveTo(x, y + tl);
-        this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
+
+        if (convexTL)
+        {
+            this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
+        }
+        else
+        {
+            this.arc(x, y, tl, MATH_CONST.TAU, 0, true);
+        }
+
         this.strokePath();
 
         return this;
