@@ -650,7 +650,7 @@ var Particle = new Class({
 
         this.alpha = ops.alpha.onUpdate(this, 'alpha', t, this.alpha);
 
-        // this.tint = ops.tint.onUpdate(this, 'tint', t, this.tint);
+        this.tint = ops.tint.onUpdate(this, 'tint', t, this.tint);
 
         this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
 

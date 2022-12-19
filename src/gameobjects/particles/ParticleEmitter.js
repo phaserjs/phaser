@@ -2594,10 +2594,6 @@ var ParticleEmitter = new Class({
      * particle. The value should be given in hex format, i.e. 0xff0000
      * for a red tint, and should not include the alpha channel.
      *
-     * Changing this property changes the tint that particles have when
-     * they are emitted. It does not change their tint during their lifetime.
-     * For that, see the `ParticleEmitter.color` property instead.
-     *
      * Tints are additive, meaning a tint value of white (0xffffff) will
      * effectively reset the tint to nothing.
      *
