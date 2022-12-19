@@ -443,7 +443,7 @@ var TilemapLayer = new Class({
      * @since 3.50.0
      *
      * @param {(number|array)} indexes - The tile index, or array of indexes, to create Sprites from.
-     * @param {(number|array)} replacements - The tile index, or array of indexes, to change a converted
+     * @param {?(number|array)} replacements - The tile index, or array of indexes, to change a converted
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
      * one-to-one mapping with the indexes array.
      * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} [spriteConfig] - The config object to pass into the Sprite creator (i.e.

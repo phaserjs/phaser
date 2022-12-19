@@ -17,7 +17,7 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  * @since 3.0.0
  *
  * @param {(number|number[])} indexes - The tile index, or array of indexes, to create Sprites from.
- * @param {(number|number[])} replacements - The tile index, or array of indexes, to change a converted tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a one-to-one mapping with the indexes array.
+ * @param {?(number|number[])} replacements - The tile index, or array of indexes, to change a converted tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a one-to-one mapping with the indexes array.
  * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
  * @param {Phaser.Scene} scene - The Scene to create the Sprites within.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when determining the world XY
