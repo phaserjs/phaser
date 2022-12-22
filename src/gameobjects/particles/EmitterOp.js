@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var FloatBetween = require('../../math/FloatBetween');
 var GetEaseFunction = require('../../tweens/builders/GetEaseFunction');
+var GetInterpolationFunction = require('../../tweens/builders/GetInterpolationFunction');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Wrap = require('../../math/Wrap');
 
@@ -117,8 +118,10 @@ var EmitterOp = new Class({
         /**
          * The start value for this property to ease between.
          *
+         * If an interpolation this holds a reference to the number data array.
+         *
          * @name Phaser.GameObjects.Particles.EmitterOp#start
-         * @type {number}
+         * @type {number|number[]}
          * @default 0
          * @since 3.0.0
          */
@@ -135,13 +138,22 @@ var EmitterOp = new Class({
         this.end = 0;
 
         /**
-         * The easing function to use for updating this property.
+         * The easing function to use for updating this property, if any.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#ease
          * @type {?function}
          * @since 3.0.0
          */
-        this.ease;
+        this.ease = null;
+
+        /**
+         * The interpolation function to use for updating this property, if any.
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#interpolation
+         * @type {?function}
+         * @since 3.60.0
+         */
+        this.interpolation = null;
 
         /**
          * Whether this property can only be modified when a Particle is emitted.
@@ -284,7 +296,7 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#getMethod
      * @since 3.60.0
      *
-     * @return {number} A number between 0 and 8 which should be passed to `setMethods`.
+     * @return {number} A number between 0 and 9 which should be passed to `setMethods`.
      */
     getMethod: function ()
     {
@@ -343,6 +355,11 @@ var EmitterOp = new Class({
                 //  Custom onEmit onUpdate
                 return 8;
             }
+            else if (this.has(value, 'interpolation'))
+            {
+                //  Interpolation
+                return 9;
+            }
         }
 
         return 0;
@@ -352,12 +369,12 @@ var EmitterOp = new Class({
      * Update the {@link Phaser.GameObjects.Particles.EmitterOp#onEmit} and
      * {@link Phaser.GameObjects.Particles.EmitterOp#onUpdate} callbacks based on the method returned
      * from `getMethod`. The method is stored in the `EmitterOp.method` property
-     * and is a number between 0 and 8 inclusively.
+     * and is a number between 0 and 9 inclusively.
      *
      * @method Phaser.GameObjects.Particles.EmitterOp#setMethods
      * @since 3.0.0
      *
-     * @param {number} method - The operation method to use. A value between 0 and 8 (inclusively) as returned from `getMethod`.
+     * @param {number} method - The operation method to use. A value between 0 and 9 (inclusively) as returned from `getMethod`.
      *
      * @return {this} This Emitter Op object.
      */
@@ -430,6 +447,16 @@ var EmitterOp = new Class({
             case 8:
                 onEmit = (this.has(value, 'onEmit')) ? value.onEmit : this.defaultEmit;
                 onUpdate = (this.has(value, 'onUpdate')) ? value.onUpdate : this.defaultUpdate;
+                break;
+
+            //  Interpolation
+            case 9:
+                this.start = value.values;
+                var easeTypeI = this.has(value, 'ease') ? value.ease : 'Linear';
+                this.ease = GetEaseFunction(easeTypeI, value.easeParams);
+                this.interpolation = GetInterpolationFunction(value.interpolation);
+                onEmit = this.easedValueEmit;
+                onUpdate = this.easeValueUpdate;
                 break;
         }
 
@@ -695,7 +722,16 @@ var EmitterOp = new Class({
     {
         var data = particle.data[key];
 
-        return (data.max - data.min) * this.ease(t) + data.min;
+        var v = this.ease(t);
+
+        if (this.interpolation)
+        {
+            return this.interpolation(this.start, v);
+        }
+        else
+        {
+            return (data.max - data.min) * v + data.min;
+        }
     }
 });
 
