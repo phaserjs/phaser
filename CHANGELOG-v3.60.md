@@ -141,6 +141,7 @@ The Animations must have already been created in the Global Animation Manager an
 #### New Features - Fast Forward Particle Time
 
 * You can now 'fast forward' a Particle Emitter. This can be done via either the emitter config, using the new `advance` property, or by calling the new `ParticleEmitter.fastForward` method. If, for example, you have an emitter that takes a few seconds to 'warm up' and get all the particles into position, this allows you to 'fast forward' the emitter to a given point in time. The value is given in ms. All standard emitter events and callbacks are still handled, but no rendering takes place during the fast-forward until it has completed.
+* The `ParticleEmitter.start` method has a new optional parameter `advance` that allows you to fast-forward the given amount of ms before the emitter starts flowing.
 
 #### New Features - Particle Interpolation
 
@@ -154,6 +155,29 @@ const emitter = particles.createEmitter({
 ```
 
 This will interpolate the `x` property of each particle through the data set given, using a catmull rom interpolation function. You can also use `linear` or `bezier` functions. Interpolation can be combined with an `ease` type, which controls the progression through the time value. The related `EmitterOpInterpolationConfig` types have also been added.
+
+#### New Features - Particle Emitter Duration
+
+* The Particle Emitter config has a new optional parameter `duration`:
+
+```js
+const emitter = particles.createEmitter({
+    speed: 24,
+    lifespan: 1500,
+    duration: 500
+});
+```
+
+This parameter is used for 'flow' emitters only and controls how many milliseconds the emitter will run for before automatically turning itself off.
+
+* The `ParticleEmitter.stop` method has a new optional parameter `kill`. If set it will kill all alive particles immediately, rather than leaving them to die after their lifespan expires.
+
+#### New Features - Particle Emitter Events
+
+* The Particle Emitter will now fires new events. Please note that these events are emitted by the Particle Emitter Manager, not the Emitter itself (as the Emitter does not have an EventEmitter component and cannot have one). The events are:
+* The `Particles.Events.START` event is fired whenever the Emitter begins emission of particles in flow mode. A reference to the `ParticlEmitter` is included as the only parameter.
+* The `Particles.Events.EXPLODE` event is fired whenever the Emitter explodes a bunch of particles via the `explode` method. A reference to the `ParticlEmitter` a a reference to the most recently fired `Particle` instance are the two parameters.
+* The `Particles.Events.COMPLETE` event is fired whenever the Emitter finishes emission of particles in flow mode. This happens either when you call the `stop` method, or when an Emitter hits its duration limit. A reference to the `ParticlEmitter` is included as the only parameter.
 
 #### Particle System EmitterOp Breaking Changes and Updates:
 
