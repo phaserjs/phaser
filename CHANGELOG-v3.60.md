@@ -94,7 +94,9 @@ Compressed Textures are loaded using the new `this.load.texture` method, which t
 * `WebGLRenderer.getCompressedTextures` is a new method that will populate the `WebGLRenderer.compression` object and return its value. This is called automatically when the renderer boots.
 * `WebGLRenderer.getCompressedTextureName` is a new method that will return a compressed texture format GLenum based on the given format.
 
-### Particle System Updates
+### Particle System Updates and New Features
+
+#### New Features - Animated Particles
 
 The Particle system has been given an overhaul to make it cleaner, more memory efficient and also introduces a great new feature: animated particles. The Particle class now has an instance of the `Animation State component within it. This allows a particle to play an animation when it is emitted, simply by defining it in the emitter config.
 
@@ -136,7 +138,24 @@ const emitter = particles.createEmitter({
 
 The Animations must have already been created in the Global Animation Manager and must use the same texture as the one bound to the Particle Emitter. Aside from this, you can still control them in the same way as any other particle - scaling, tinting, rotation, alpha, lifespan, etc.
 
-Particle System EmotterOp Breaking Changes and Updates:
+#### New Features - Fast Forward Particle Time
+
+* You can now 'fast forward' a Particle Emitter. This can be done via either the emitter config, using the new `advance` property, or by calling the new `ParticleEmitter.fastForward` method. If, for example, you have an emitter that takes a few seconds to 'warm up' and get all the particles into position, this allows you to 'fast forward' the emitter to a given point in time. The value is given in ms. All standard emitter events and callbacks are still handled, but no rendering takes place during the fast-forward until it has completed.
+
+#### New Features - Particle Interpolation
+
+* It's now possible to create a new Interpolation EmitterOp. You do this by providing an array of values to interpolate between, along with the function name:
+
+```js
+const emitter = particles.createEmitter({
+    x: { values: [ 50, 500, 200, 800 ], interpolation: 'catmull' }
+    ...
+});
+```
+
+This will interpolate the `x` property of each particle through the data set given, using a catmull rom interpolation function. You can also use `linear` or `bezier` functions. Interpolation can be combined with an `ease` type, which controls the progression through the time value. The related `EmitterOpInterpolationConfig` types have also been added.
+
+#### Particle System EmitterOp Breaking Changes and Updates:
 
 All of the following properties have been replaced on the `ParticleEmitter` class. Previously they were `EmitterOp` instances. They are now public getter / setters, so calling, for example, `emitter.x` will now return a numeric value - whereas before it would return the `EmitterOp` instance. This gives developers a lot more freedom when using Particle Emitters. Before v3.60 it was impossible to do this, for example:
 
@@ -195,10 +214,6 @@ All of following EmitterOp functions can now be found in the new `ParticleEmitte
 
 Which means you can now directly access, modify and tween any of the above emitter properties at run-time while the emitter is active.
 
-We've also vastly improved the documentation around the Particle classes.
-
-* You can now 'fast forward' a Particle Emitter. This can be done via either the emitter config, using the new `advance` property, or by calling the new `ParticleEmitter.fastForward` method. If, for example, you have an emitter that takes a few seconds to 'warm up' and get all the particles into position, this allows you to 'fast forward' the emitter to a given point in time. The value is given in ms. All standard emitter events and callbacks are still handled, but no rendering takes place during the fast-forward until it has completed.
-
 #### Further Particle System Updates:
 
 * The WebGL Renderer will now use the new `setQuad` feature of the Transform Matrix. This vastly reduces the amount of math and function calls per particle, from 8 down to 1, increasing performance.
@@ -233,6 +248,7 @@ We've also vastly improved the documentation around the Particle classes.
 * `Particles.EmitterOp.getMethod` is a new internal method that returns the operation function being used as a numeric value. This is then cached in the `method` property.
 * The `Particles.EmitterOp.setMethods` method has been updated so it now has a non-optional 'method' parameter. It has also been rewritten to be much more efficient, now being just a single simple select/case block.
 * The `Particles.EmitterOp.onChange` method will now use the cached 'method' property to avoid running through the `setMethods` function if not required, allowing each Particle EmitterOp to skip a huge chunk of code.
+* We've also greatly improved the documentation around the Particle classes.
 
 ### New Features - Vastly Improved Mobile Performance and WebGL Pipeline Changes
 
