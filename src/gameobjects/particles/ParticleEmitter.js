@@ -28,6 +28,7 @@ var Wrap = require('../../math/Wrap');
  */
 var configFastMap = [
     'active',
+    'advance',
     'blendMode',
     'collideBottom',
     'collideLeft',
@@ -940,6 +941,11 @@ var ParticleEmitter = new Class({
             this.reserve(config.reserve);
         }
 
+        if (HasValue(config, 'advance'))
+        {
+            this.fastForward(config.advance);
+        }
+
         return this;
     },
 
@@ -1845,7 +1851,7 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Deactivates every particle in this emitter.
+     * Deactivates every particle in this emitter immediately.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#killAll
      * @since 3.0.0
@@ -2135,6 +2141,44 @@ var ParticleEmitter = new Class({
         }
 
         return particle;
+    },
+
+    /**
+     * Fast forwards this Particle Emitter and all of its particles.
+     *
+     * Works by running the Emitter `preUpdate` handler in a loop until the `time`
+     * has been reached at `delta` steps per loop.
+     *
+     * All callbacks and emitter related events that would normally be fired
+     * will still be invoked.
+     *
+     * You can make an emitter 'fast forward' via the emitter config using the
+     * `advance` property. Set this value to the number of ms you wish the
+     * emitter to be fast-forwarded by. Or, call this method post-creation.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#fastForward
+     * @since 3.60.0
+     *
+     * @param {number} time - The number of ms to advance the Particle Emitter by.
+     * @param {number} [delta] - The amount of delta to use for each step. Defaults to 1000 / 60.
+     */
+    fastForward: function (time, delta)
+    {
+        if (delta === undefined) { delta = 1000 / 60; }
+
+        var total = 0;
+        var isOn = this.on;
+
+        this.on = true;
+
+        while (total < Math.abs(time))
+        {
+            this.preUpdate(0, delta);
+
+            total += delta;
+        }
+
+        this.on = isOn;
     },
 
     /**
