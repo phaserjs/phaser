@@ -10,6 +10,7 @@ var Components = require('../components');
 var DeathZone = require('./zones/DeathZone');
 var EdgeZone = require('./zones/EdgeZone');
 var EmitterOp = require('./EmitterOp');
+var Events = require('./events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetRandom = require('../../utils/array/GetRandom');
 var HasAny = require('../../utils/object/HasAny');
@@ -36,6 +37,7 @@ var configFastMap = [
     'collideTop',
     'deathCallback',
     'deathCallbackScope',
+    'duration',
     'emitCallback',
     'emitCallbackScope',
     'follow',
@@ -149,6 +151,25 @@ var configOpMap = [
  * The particle will start with a random scale between 0.5 and 4 and then
  * scale to the end value over its lifetime. You can combine the above
  * with the `ease` parameter as well to control the value easing.
+ *
+ * ## An interpolation object:
+ *
+ * You can provide an array of values which will be used for interpolation
+ * during the particles lifetime. You can also define the interpolation
+ * function to be used. There are three provided: `linear` (the default),
+ * `bezier` and `catmull`, or you can provide your own function.
+ *
+ * ```js
+ * x: { values: [ 50, 500, 200, 800 ], interpolation: 'catmull' }
+ * ```
+ *
+ * The particle scale will interpolate from 50 when emitted to 800 via the other
+ * points over the course of its lifetime. You can also specify an ease function
+ * used to control the rate of change through the values (the default is Linear):
+ *
+ * ```js
+ * x: { values: [ 50, 500, 200, 800 ], interpolation: 'catmull', ease: 'bounce.out }
+ * ```
  *
  * ## A stepped emitter object:
  *
@@ -474,6 +495,24 @@ var ParticleEmitter = new Class({
          * @since 3.60.0
          */
         this.maxAliveParticles = 0;
+
+        /**
+         * The number of ms this emitter will emit particles for when in flow mode,
+         * before stopping and killing all active particles. A value of 0 (the default)
+         * means there is no duration.
+         *
+         * Each time you call `ParticleEmitter.start` it will reset the duration counter.
+         *
+         * When the duration expires an event is emitted.
+         *
+         * This property should be set via the Emitter config and not modified directly.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#duration
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.duration = 0;
 
         /**
          * For a flow emitter, the time interval (>= 0) between particle flow cycles in ms.
@@ -823,6 +862,27 @@ var ParticleEmitter = new Class({
          */
         this._frameLength = 0;
 
+        /**
+         * The time remaining until the duration limit is reached.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#_elapsed
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.60.0
+         */
+        this._elapsed = 0;
+
+        /**
+         * An internal property used to tell when the emitter is in fast-forwarc mode.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#skipping
+         * @type {boolean}
+         * @default true
+         * @since 3.60.0
+         */
+        this.skipping = false;
+
         if (config)
         {
             this.fromJSON(config);
@@ -944,6 +1004,11 @@ var ParticleEmitter = new Class({
         if (HasValue(config, 'advance'))
         {
             this.fastForward(config.advance);
+        }
+
+        if (this.on)
+        {
+            this.manager.emit(Events.START, this);
         }
 
         return this;
@@ -1929,31 +1994,68 @@ var ParticleEmitter = new Class({
      * If this emitter is in explode mode (frequency = -1), nothing will happen.
      * Use {@link Phaser.GameObjects.Particles.ParticleEmitter#explode} or {@link Phaser.GameObjects.Particles.ParticleEmitter#flow} instead.
      *
+     * Calling this method will emit the `START` event.
+     *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#start
+     * @fires Phaser.GameObjects.Particles.Events#START
      * @since 3.0.0
+     *
+     * @param {number} [advance=0] - Advance this number of ms in time through the emitter.
      *
      * @return {this} This Particle Emitter.
      */
-    start: function ()
+    start: function (advance)
     {
-        this.on = true;
+        if (advance === undefined) { advance = 0; }
 
-        this._counter = 0;
+        if (!this.on)
+        {
+            if (advance > 0)
+            {
+                this.fastForward(advance);
+            }
+
+            this.on = true;
+
+            this._counter = 0;
+            this._elapsed = 0;
+
+            this.manager.emit(Events.START, this);
+        }
 
         return this;
     },
 
     /**
-     * Turns {@link Phaser.GameObjects.Particles.ParticleEmitter#on off} the emitter.
+     * Turns {@link Phaser.GameObjects.Particles.ParticleEmitter#on off} the emitter and
+     * stops it from emitting further particles. Currently alive particles will remain
+     * active until they naturally expire unless you set the `kill` parameter to `true`.
+     *
+     * Calling this method will emit the `COMPLETE` event.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#stop
+     * @fires Phaser.GameObjects.Particles.Events#COMPLETE
      * @since 3.11.0
+     *
+     * @param {boolean} [kill=false] - Kill all particles immediately (true), or leave them to die after their lifespan expires? (false, the default)
      *
      * @return {this} This Particle Emitter.
      */
-    stop: function ()
+    stop: function (kill)
     {
-        this.on = false;
+        if (kill === undefined) { kill = false; }
+
+        if (this.on)
+        {
+            this.on = false;
+
+            if (kill)
+            {
+                this.killAll();
+            }
+
+            this.manager.emit(Events.COMPLETE, this);
+        }
 
         return this;
     },
@@ -2024,6 +2126,7 @@ var ParticleEmitter = new Class({
      * To resume a flow at the current frequency and quantity, use {@link Phaser.GameObjects.Particles.ParticleEmitter#start} instead.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#flow
+     * @fires Phaser.GameObjects.Particles.Events#START
      * @since 3.0.0
      *
      * @param {number} frequency - The time interval (>= 0) of each flow cycle, in ms.
@@ -2034,6 +2137,8 @@ var ParticleEmitter = new Class({
     flow: function (frequency, count)
     {
         if (count === undefined) { count = 1; }
+
+        this.on = false;
 
         this.frequency = frequency;
 
@@ -2046,6 +2151,7 @@ var ParticleEmitter = new Class({
      * Puts the emitter in explode mode (frequency = -1), stopping any current particle flow, and emits several particles all at once.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#explode
+     * @fires Phaser.GameObjects.Particles.Events#EXPLODE
      * @since 3.0.0
      *
      * @param {number} [count=this.quantity] - The number of Particles to emit.
@@ -2058,7 +2164,11 @@ var ParticleEmitter = new Class({
     {
         this.frequency = -1;
 
-        return this.emitParticle(count, x, y);
+        var particle = this.emitParticle(count, x, y);
+
+        this.manager.emit(Events.EXPLODE, this, particle);
+
+        return particle;
     },
 
     /**
@@ -2169,9 +2279,8 @@ var ParticleEmitter = new Class({
         if (delta === undefined) { delta = 1000 / 60; }
 
         var total = 0;
-        var isOn = this.on;
 
-        this.on = true;
+        this.skipping = true;
 
         while (total < Math.abs(time))
         {
@@ -2180,7 +2289,7 @@ var ParticleEmitter = new Class({
             total += delta;
         }
 
-        this.on = isOn;
+        this.skipping = false;
 
         return this;
     },
@@ -2255,7 +2364,7 @@ var ParticleEmitter = new Class({
             }
         }
 
-        if (!this.on)
+        if (!this.on && !this.skipping)
         {
             return;
         }
@@ -2274,6 +2383,17 @@ var ParticleEmitter = new Class({
 
                 //  counter = frequency - remained from previous delta
                 this._counter += this.frequency;
+            }
+        }
+
+        //  Duration set?
+        if (!this.skipping && this.duration > 0)
+        {
+            this._elapsed += delta;
+
+            if (this._elapsed >= this.duration)
+            {
+                this.stop();
             }
         }
     },
