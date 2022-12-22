@@ -174,6 +174,25 @@ This parameter is used for 'flow' emitters only and controls how many millisecon
 * The `ParticleEmitter.start` method has a new optional parameter `duration`, which allows you to set the emitter duration when you call this method. If you do this, it will override any value set in the emitter configuration.
 * The `ParticleEmitter.stop` method has a new optional parameter `kill`. If set it will kill all alive particles immediately, rather than leaving them to die after their lifespan expires.
 
+#### New Features - Stop After a set number of Particles
+
+* The Particle Emitter config has a new optional `stopAfter` property. This, combined with the `frequency` property allows you to control exactly how many particles are emitted before the emitter then stops:
+
+```js
+const emitter = particles.createEmitter({
+    x: { start: 400, end: 0 },
+    y: { start: 300, end: 0 },
+    lifespan: 3000,
+    frequency: 250,
+    stopAfter: 6,
+    quantity: 1
+});
+```
+
+In the above code the emitter will launch 1 particle (set by the `quantity` property) every 250 ms (set by the `frequency` property) and move it to xy 0x0. Once it has fired 6 particles (the `stopAfter` property) the emitter will stop and emit the `COMPLETE` event.
+
+* The `stopAfter` counter is reset each time you call the `start` (or `flow`) methods.
+
 #### New Features - Particle Emitter Events
 
 * The Particle Emitter will now fires new events. Please note that these events are emitted by the Particle Emitter Manager, not the Emitter itself (as the Emitter does not have an EventEmitter component and cannot have one). Therefore, listen for the events as follows:
@@ -259,8 +278,16 @@ All of following EmitterOp functions can now be found in the new `ParticleEmitte
 
 Which means you can now directly access, modify and tween any of the above emitter properties at run-time while the emitter is active.
 
-#### Further Particle System Updates:
+Another potentially breaking change is the removal of two internal private counters. These should never have been used directly anyway, but they are:
 
+* `ParticleEmitter._counter` - Now available via `ParticleEmitter.counters[0]`
+* `ParticleEmitter._frameCounter` - Now available via `ParticleEmitter.counters[1]`
+
+#### Further Particle System Updates and Fixes:
+
+* Setting `frequency` wasn't working correctly in earlier versions. It should allow you to specify a time, in ms, between which each 'quantity' of particles is emitted. However, the `preUpdate` loop was calculating the value incorrectly. It will now count down the right amount of time before emiting another batch of particles.
+* Calling `ParticleEmitter.start` wouldn't reset the `_frameCounter` value internally, meaning the new emission didn't restart from the first texture frame again.
+* `ParticleEmitter.counters` is a new Float32Array property that is used to hold all of the various internal counters required for emitter operation. Both the previous `_counter` and `_frameCounter` properties have been merged into this array, along with new ones required for new features.
 * The WebGL Renderer will now use the new `setQuad` feature of the Transform Matrix. This vastly reduces the amount of math and function calls per particle, from 8 down to 1, increasing performance.
 * Particles with a scaleX or scaleY value of zero will no longer be rendered.
 * `ParticleEmitterManager.preDestroy` is a new method that will now clean-up all Emitters and Gravity Wells that it created  and clear some internal arerays.
