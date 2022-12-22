@@ -2161,6 +2161,8 @@ var ParticleEmitter = new Class({
      *
      * @param {number} time - The number of ms to advance the Particle Emitter by.
      * @param {number} [delta] - The amount of delta to use for each step. Defaults to 1000 / 60.
+     *
+     * @return {this} This Particle Emitter.
      */
     fastForward: function (time, delta)
     {
@@ -2179,6 +2181,8 @@ var ParticleEmitter = new Class({
         }
 
         this.on = isOn;
+
+        return this;
     },
 
     /**
