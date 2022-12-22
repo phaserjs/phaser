@@ -51,6 +51,7 @@ var configFastMap = [
     'particleBringToTop',
     'particleClass',
     'radial',
+    'stopAfter',
     'timeScale',
     'trackVisible',
     'visible'
@@ -473,7 +474,10 @@ var ParticleEmitter = new Class({
         this.deathCallbackScope = null;
 
         /**
-         * Set to hard limit the amount of particle objects this emitter is allowed to create.
+         * Set to hard limit the amount of particle objects this emitter is allowed to create
+         * in total. This is the number of `Particle` instances it can create, not the number
+         * of 'alive' particles.
+         *
          * 0 means unlimited.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#maxParticles
@@ -484,7 +488,7 @@ var ParticleEmitter = new Class({
         this.maxParticles = 0;
 
         /**
-         * The maximum number of alive (and rendering) particles this emitter will update.
+         * The maximum number of alive and rendering particles this emitter will update.
          * When this limit is reached, a particle needs to die before another can be emitted.
          *
          * 0 means no limits.
@@ -497,15 +501,32 @@ var ParticleEmitter = new Class({
         this.maxAliveParticles = 0;
 
         /**
-         * The number of ms this emitter will emit particles for when in flow mode,
-         * before stopping and killing all active particles. A value of 0 (the default)
-         * means there is no duration.
+         * If set, either via the Emitter config, or by directly setting this property,
+         * the Particle Emitter will stop emitting any more particles once this total
+         * has been reached. It will then enter a 'stopped' state, firing the `COMPLETE`
+         * event.
+         *
+         * Use this if you wish to launch an exact number of particles and then stop
+         * your emitter afterwards.
+         *
+         * The counter is reset each time the `start` method is called.
+         *
+         * 0 means the emitter will not stop based on total emitted particles.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#stopAfter
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.stopAfter = 0;
+
+        /**
+         * The number of milliseconds this emitter will emit particles for when in flow mode,
+         * before it stops emission. A value of 0 (the default) means there is no duration.
          *
          * Each time you call `ParticleEmitter.start` it will reset the duration counter.
          *
-         * When the duration expires an event is emitted.
-         *
-         * This property should be set via the Emitter config and not modified directly.
+         * When the duration expires the `COMPLETE` event is emitted.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#duration
          * @type {number}
@@ -788,29 +809,7 @@ var ParticleEmitter = new Class({
         this.animQuantity = 1;
 
         /**
-         * Counts up to {@link Phaser.GameObjects.Particles.ParticleEmitter#animQuantity}.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#_animCounter
-         * @type {number}
-         * @private
-         * @default 0
-         * @since 3.60.0
-         */
-        this._animCounter = 0;
-
-        /**
-         * Cached amount of animations in the `ParticleEmitter.anims` array.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#_animLength
-         * @type {number}
-         * @private
-         * @default 0
-         * @since 3.60.0
-         */
-        this._animLength = 0;
-
-        /**
-         * Inactive particles.
+         * An array containing all currently inactive Particle instances.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#dead
          * @type {Phaser.GameObjects.Particles.Particle[]}
@@ -820,7 +819,7 @@ var ParticleEmitter = new Class({
         this.dead = [];
 
         /**
-         * Active particles
+         * An array containing all currently live and rendering Particle instances.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#alive
          * @type {Phaser.GameObjects.Particles.Particle[]}
@@ -830,26 +829,20 @@ var ParticleEmitter = new Class({
         this.alive = [];
 
         /**
-         * The time until the next flow cycle.
+         * Internal array that holds counter data:
          *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#_counter
-         * @type {number}
-         * @private
-         * @default 0
-         * @since 3.0.0
-         */
-        this._counter = 0;
-
-        /**
-         * Counts up to {@link Phaser.GameObjects.Particles.ParticleEmitter#frameQuantity}.
+         * 0 - _counter - The time until next flow cycle.
+         * 1 - _frameCounter - Counts up to {@link Phaser.GameObjects.Particles.ParticleEmitter#frameQuantity}.
+         * 2 - _animCounter (counts up to animQuantity)
+         * 3 - _elapsed - The ttime remaining until the `duration` limit is reached.
+         * 4 - _stopCounter - The number of particles remaining until `stopAfter` limit is reached.
          *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#_frameCounter
-         * @type {number}
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#counters
+         * @type {Float32Array}
          * @private
-         * @default 0
-         * @since 3.0.0
+         * @since 3.60.0
          */
-        this._frameCounter = 0;
+        this.counters = new Float32Array(5);
 
         /**
          * Cached amount of frames in the `ParticleEmitter.frames` array.
@@ -863,15 +856,15 @@ var ParticleEmitter = new Class({
         this._frameLength = 0;
 
         /**
-         * The time remaining until the duration limit is reached.
+         * Cached amount of animations in the `ParticleEmitter.anims` array.
          *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#_elapsed
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#_animLength
          * @type {number}
          * @private
          * @default 0
          * @since 3.60.0
          */
-        this._elapsed = 0;
+        this._animLength = 0;
 
         /**
          * An internal property used to tell when the emitter is in fast-forwarc mode.
@@ -1006,6 +999,8 @@ var ParticleEmitter = new Class({
             this.fastForward(config.advance);
         }
 
+        this.counters.set([ this.frequency, 0, 0, 0, 0 ]);
+
         if (this.on)
         {
             this.manager.emit(Events.START, this);
@@ -1132,11 +1127,12 @@ var ParticleEmitter = new Class({
         {
             var frame = this.frames[this.currentFrame];
 
-            this._frameCounter++;
+            //  frameCounter
+            this.counters[1]++;
 
-            if (this._frameCounter >= this.frameQuantity)
+            if (this.counters[1] >= this.frameQuantity)
             {
-                this._frameCounter = 0;
+                this.counters[1] = 0;
                 this.currentFrame = Wrap(this.currentFrame + 1, 0, this._frameLength);
             }
 
@@ -1234,11 +1230,11 @@ var ParticleEmitter = new Class({
         {
             var anim = anims[this.currentAnim];
 
-            this._animCounter++;
+            this.counters[2]++;
 
-            if (this._animCounter >= this.animQuantity)
+            if (this.counters[2] >= this.animQuantity)
             {
-                this._animCounter = 0;
+                this.counters[2] = 0;
                 this.currentAnim = Wrap(this.currentAnim + 1, 0, this._animLength);
             }
 
@@ -1672,7 +1668,7 @@ var ParticleEmitter = new Class({
     {
         this.frequency = frequency;
 
-        this._counter = 0;
+        this.counters[0] = (frequency > 0) ? frequency : 0;
 
         if (quantity)
         {
@@ -1774,6 +1770,9 @@ var ParticleEmitter = new Class({
     /**
      * Creates inactive particles and adds them to this emitter's pool.
      *
+     * If `ParticleEmitter.maxParticles` is set it will limit the
+     * value passed to this method to make sure it's not exceeded.
+     *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#reserve
      * @since 3.0.0
      *
@@ -1784,6 +1783,16 @@ var ParticleEmitter = new Class({
     reserve: function (particleCount)
     {
         var dead = this.dead;
+
+        if (this.maxParticles > 0)
+        {
+            var total = this.getParticleCount();
+
+            if (total + particleCount > this.maxParticles)
+            {
+                particleCount = this.maxParticles - (total + particleCount);
+            }
+        }
 
         for (var i = 0; i < particleCount; i++)
         {
@@ -2018,8 +2027,7 @@ var ParticleEmitter = new Class({
 
             this.on = true;
 
-            this._counter = 0;
-            this._elapsed = 0;
+            this.counters.set([ this.frequency, 0, 0, 0, 0 ]);
 
             if (duration !== undefined)
             {
@@ -2137,10 +2145,11 @@ var ParticleEmitter = new Class({
      *
      * @param {number} frequency - The time interval (>= 0) of each flow cycle, in ms.
      * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [count=1] - The number of particles to emit at each flow cycle.
+     * @param {number} [stopAfter] - Stop this emitter from firing any more particles once this value is reached. Set to zero for unlimited. Setting this parameter will override any stopAfter value already set in the Emitter configuration object.
      *
      * @return {this} This Particle Emitter.
      */
-    flow: function (frequency, count)
+    flow: function (frequency, count, stopAfter)
     {
         if (count === undefined) { count = 1; }
 
@@ -2149,6 +2158,11 @@ var ParticleEmitter = new Class({
         this.frequency = frequency;
 
         this.quantity.onChange(count);
+
+        if (stopAfter !== undefined)
+        {
+            this.stopAfter = stopAfter;
+        }
 
         return this.start();
     },
@@ -2217,10 +2231,12 @@ var ParticleEmitter = new Class({
 
         if (count === undefined)
         {
-            count = this.ops.quantity.staticValueEmit();
+            count = this.quantity;
         }
 
         var dead = this.dead;
+        var counters = this.counters;
+        var stopAfter = this.stopAfter;
 
         var followX = (this.follow) ? this.follow.x + this.followOffset.x : x;
         var followY = (this.follow) ? this.follow.y + this.followOffset.y : y;
@@ -2248,6 +2264,16 @@ var ParticleEmitter = new Class({
             if (this.emitCallback)
             {
                 this.emitCallback.call(this.emitCallbackScope, particle, this);
+            }
+
+            if (stopAfter > 0)
+            {
+                counters[4]++;
+
+                if (counters[4] >= stopAfter)
+                {
+                    break;
+                }
             }
 
             if (this.atLimit())
@@ -2375,29 +2401,42 @@ var ParticleEmitter = new Class({
             return;
         }
 
+        var counters = this.counters;
+
         if (this.frequency === 0)
         {
             this.emitParticle();
         }
         else if (this.frequency > 0)
         {
-            this._counter -= delta;
+            //  counter
+            counters[0] -= delta;
 
-            while (this._counter <= 0)
+            if (counters[0] <= 0)
             {
+                //  Emits the 'quantity' number of particles
                 this.emitParticle();
 
-                //  counter = frequency - remained from previous delta
-                this._counter += this.frequency;
+                //  counter = frequency - remainder from previous delta
+                counters[0] += this.frequency;
             }
         }
 
-        //  Duration set?
-        if (!this.skipping && this.duration > 0)
+        //  Duration or stopAfter set?
+        if (!this.skipping)
         {
-            this._elapsed += delta;
+            if (this.duration > 0)
+            {
+                //  elapsed
+                counters[3] += delta;
 
-            if (this._elapsed >= this.duration)
+                if (counters[3] >= this.duration)
+                {
+                    this.stop();
+                }
+            }
+
+            if (this.stopAfter > 0 && counters[4] >= this.stopAfter)
             {
                 this.stop();
             }
@@ -2979,6 +3018,7 @@ var ParticleEmitter = new Class({
         this.bounds = null;
         this.follow = null;
         this.ops = null;
+        this.counters = null;
 
         var i;
 

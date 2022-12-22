@@ -59,4 +59,5 @@
  * @property {number} [reserve] - Creates specified number of inactive particles and adds them to this emitter's pool. {@link Phaser.GameObjects.Particles.ParticleEmitter#reserve}
  * @property {number} [advance] - If you wish to 'fast forward' the emitter in time, set this value to a number representing the amount of ms the emitter should advance.
  * @property {number} [duration] - Limit the emitter to emit particles for a maximum of `duration` ms. Default to zero, meaning 'forever'.
+ * @property {number} [stopAfter] - Limit the emitter to emit this exact number of particles and then stop. Default to zero, meaning no limit.
  */
