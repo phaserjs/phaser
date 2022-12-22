@@ -174,7 +174,26 @@ This parameter is used for 'flow' emitters only and controls how many millisecon
 
 #### New Features - Particle Emitter Events
 
-* The Particle Emitter will now fires new events. Please note that these events are emitted by the Particle Emitter Manager, not the Emitter itself (as the Emitter does not have an EventEmitter component and cannot have one). The events are:
+* The Particle Emitter will now fires new events. Please note that these events are emitted by the Particle Emitter Manager, not the Emitter itself (as the Emitter does not have an EventEmitter component and cannot have one). Therefore, listen for the events as follows:
+
+```js
+const emitterManager = this.add.particles('flare');
+
+//  Create your emitters
+
+emitterManager.on('emitterstart', (emitter) => {
+    //  emission start
+});
+
+emitterManager.on('emitterexplode', (emitter, particle) => {
+    //  emission start
+});
+
+emitterManager.on('emittercomplete', (emitter) => {
+    //  emission over
+});
+```
+
 * The `Particles.Events.START` event is fired whenever the Emitter begins emission of particles in flow mode. A reference to the `ParticlEmitter` is included as the only parameter.
 * The `Particles.Events.EXPLODE` event is fired whenever the Emitter explodes a bunch of particles via the `explode` method. A reference to the `ParticlEmitter` a a reference to the most recently fired `Particle` instance are the two parameters.
 * The `Particles.Events.COMPLETE` event is fired whenever the Emitter finishes emission of particles in flow mode. This happens either when you call the `stop` method, or when an Emitter hits its duration limit. A reference to the `ParticlEmitter` is included as the only parameter.
