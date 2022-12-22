@@ -136,40 +136,7 @@ const emitter = particles.createEmitter({
 
 The Animations must have already been created in the Global Animation Manager and must use the same texture as the one bound to the Particle Emitter. Aside from this, you can still control them in the same way as any other particle - scaling, tinting, rotation, alpha, lifespan, etc.
 
-* The WebGL Renderer will now use the new `setQuad` feature of the Transform Matrix. This vastly reduces the amount of math and function calls per particle, from 8 down to 1, increasing performance.
-* Particles with a scaleX or scaleY value of zero will no longer be rendered.
-* `ParticleEmitterManager.preDestroy` is a new method that will now clean-up all Emitters and Gravity Wells that it created  and clear some internal arerays.
-* `ParticleEmitter.destroy` is a new method that will destroy all Particles that the Emitter owns and clean-up all external references.
-* `Particle.destroy` is a new method that will clean up all external references and destroy the Animation State controller.
-* The `ParticleEmitter._frameLength` property is now specified on the class, rather than added dynamically at run-time, helping preserve class shape.
-* The `ParticleEmitterManager.defaultFrame` property is now specified on the class, rather than added dynamically at run-time, helping preserve class shape.
-* The `ParticleEmitterManager.preUpdate` method no longer runs if the manager is paused.
-* Calling `ParticleEmitter.setFrame` no longer resets the internal `_frameCounter` value to zero. Instead, the counter comparison has been hardened to `>=` instead of `===` to allow this value to change mid-emission and never reach the total.
-* The `ParticleEmitter.configFastMap` property has been moved to a local var within the `ParticlEmitter` JS file. It didn't need to be a property on the class itself, reducing the overall size of the class and saving memory.
-* The `ParticleEmitter.configOpMap` property has been moved to a local var within the `ParticlEmitter` JS file. It didn't need to be a property on the class itself, reducing the overall size of the class and saving memory.
-* `Particle.scene` is a new property that references the Scene the Particle Emitter belongs to.
-* `Particle.anims` is a new property that is an instance of the `AnimationState` component.
-* `Particle.emit` is a new proxy method that passes all Animation related events through to the Particle Emitter Manager to emit, as Particles cannot emit events directly.
-* `Particle.isCropped` is a new read-only property. Do not modify.
-* `Particle.setSizeToFrame` is a new internal NOOP method. Do not call.
-* `ParticleEmitter.anims` is a new property that contains the Animation keys that can be assigned to Particles.
-* `ParticleEmitter.defaultAnim` is a new property that contains default animation to play when one isn't specified directly.
-* `ParticleEmitter.currentAnim` is a new property that contains the index of the current animation, as tracked in cycle playback.
-* `ParticleEmitter.random` is a new boolean property that controls if the animations are selected randomly, or in a cycle.
-* `ParticleEmitter.animQuantity` is a new property that controls the number of consecutive particles that are emitted with the current animation.
-* `ParticleEmitter._animCounter` and `_animLength` are new internal private properties used for animation handling.
-* `ParticleEmitter.getAnim` is a new method, called by Particles when they are emitted, that will return the animation to use, if any.
-* `ParticleEmitter.setAnim` is a new method, called with the Emitter Manager, that sets the animation data into the Emitter.
-* `ParticleEmitterManager.animNames` is a new property that contains the names of all animations playable based on the Emitters texture. This is populated in the `setFrame` method.
-* `ParticleEmitterManager.setEmitterAnims` is a new method that is called by child Emitters in order to set the animation data they need.
-* The `Particles.EmitterOp.toJSON` method will now JSON stringify the property value before returning it.
-* `Particles.EmitterOp.method` is a new property that holds the current operation method being used. This is a read-only numeric value.
-* `Particles.EmitterOp.active` is a new boolean property that defines if the operator is alive, or not. This is now used by the Emitter instead of nulling Emitter properties, helping maintain class shape.
-* `Particles.EmitterOp.getMethod` is a new internal method that returns the operation function being used as a numeric value. This is then cached in the `method` property.
-* The `Particles.EmitterOp.setMethods` method has been updated so it now has a non-optional 'method' parameter. It has also been rewritten to be much more efficient, now being just a single simple select/case block.
-* The `Particles.EmitterOp.onChange` method will now use the cached 'method' property to avoid running through the `setMethods` function if not required, allowing each Particle EmitterOp to skip a huge chunk of code.
-
-Particle System Breaking Changes:
+Particle System EmotterOp Breaking Changes and Updates:
 
 All of the following properties have been replaced on the `ParticleEmitter` class. Previously they were `EmitterOp` instances. They are now public getter / setters, so calling, for example, `emitter.x` will now return a numeric value - whereas before it would return the `EmitterOp` instance. This gives developers a lot more freedom when using Particle Emitters. Before v3.60 it was impossible to do this, for example:
 
@@ -226,7 +193,46 @@ All of following EmitterOp functions can now be found in the new `ParticleEmitte
 * x
 * y
 
+Which means you can now directly access, modify and tween any of the above emitter properties at run-time while the emitter is active.
+
 We've also vastly improved the documentation around the Particle classes.
+
+* You can now 'fast forward' a Particle Emitter. This can be done via either the emitter config, using the new `advance` property, or by calling the new `ParticleEmitter.fastForward` method. If, for example, you have an emitter that takes a few seconds to 'warm up' and get all the particles into position, this allows you to 'fast forward' the emitter to a given point in time. The value is given in ms. All standard emitter events and callbacks are still handled, but no rendering takes place during the fast-forward until it has completed.
+
+#### Further Particle System Updates:
+
+* The WebGL Renderer will now use the new `setQuad` feature of the Transform Matrix. This vastly reduces the amount of math and function calls per particle, from 8 down to 1, increasing performance.
+* Particles with a scaleX or scaleY value of zero will no longer be rendered.
+* `ParticleEmitterManager.preDestroy` is a new method that will now clean-up all Emitters and Gravity Wells that it created  and clear some internal arerays.
+* `ParticleEmitter.destroy` is a new method that will destroy all Particles that the Emitter owns and clean-up all external references.
+* `Particle.destroy` is a new method that will clean up all external references and destroy the Animation State controller.
+* The `ParticleEmitter._frameLength` property is now specified on the class, rather than added dynamically at run-time, helping preserve class shape.
+* The `ParticleEmitterManager.defaultFrame` property is now specified on the class, rather than added dynamically at run-time, helping preserve class shape.
+* The `ParticleEmitterManager.preUpdate` method no longer runs if the manager is paused.
+* Calling `ParticleEmitter.setFrame` no longer resets the internal `_frameCounter` value to zero. Instead, the counter comparison has been hardened to `>=` instead of `===` to allow this value to change mid-emission and never reach the total.
+* The `ParticleEmitter.configFastMap` property has been moved to a local var within the `ParticlEmitter` JS file. It didn't need to be a property on the class itself, reducing the overall size of the class and saving memory.
+* The `ParticleEmitter.configOpMap` property has been moved to a local var within the `ParticlEmitter` JS file. It didn't need to be a property on the class itself, reducing the overall size of the class and saving memory.
+* `Particle.scene` is a new property that references the Scene the Particle Emitter belongs to.
+* `Particle.anims` is a new property that is an instance of the `AnimationState` component.
+* `Particle.emit` is a new proxy method that passes all Animation related events through to the Particle Emitter Manager to emit, as Particles cannot emit events directly.
+* `Particle.isCropped` is a new read-only property. Do not modify.
+* `Particle.setSizeToFrame` is a new internal NOOP method. Do not call.
+* `ParticleEmitter.anims` is a new property that contains the Animation keys that can be assigned to Particles.
+* `ParticleEmitter.defaultAnim` is a new property that contains default animation to play when one isn't specified directly.
+* `ParticleEmitter.currentAnim` is a new property that contains the index of the current animation, as tracked in cycle playback.
+* `ParticleEmitter.random` is a new boolean property that controls if the animations are selected randomly, or in a cycle.
+* `ParticleEmitter.animQuantity` is a new property that controls the number of consecutive particles that are emitted with the current animation.
+* `ParticleEmitter._animCounter` and `_animLength` are new internal private properties used for animation handling.
+* `ParticleEmitter.getAnim` is a new method, called by Particles when they are emitted, that will return the animation to use, if any.
+* `ParticleEmitter.setAnim` is a new method, called with the Emitter Manager, that sets the animation data into the Emitter.
+* `ParticleEmitterManager.animNames` is a new property that contains the names of all animations playable based on the Emitters texture. This is populated in the `setFrame` method.
+* `ParticleEmitterManager.setEmitterAnims` is a new method that is called by child Emitters in order to set the animation data they need.
+* The `Particles.EmitterOp.toJSON` method will now JSON stringify the property value before returning it.
+* `Particles.EmitterOp.method` is a new property that holds the current operation method being used. This is a read-only numeric value.
+* `Particles.EmitterOp.active` is a new boolean property that defines if the operator is alive, or not. This is now used by the Emitter instead of nulling Emitter properties, helping maintain class shape.
+* `Particles.EmitterOp.getMethod` is a new internal method that returns the operation function being used as a numeric value. This is then cached in the `method` property.
+* The `Particles.EmitterOp.setMethods` method has been updated so it now has a non-optional 'method' parameter. It has also been rewritten to be much more efficient, now being just a single simple select/case block.
+* The `Particles.EmitterOp.onChange` method will now use the cached 'method' property to avoid running through the `setMethods` function if not required, allowing each Particle EmitterOp to skip a huge chunk of code.
 
 ### New Features - Vastly Improved Mobile Performance and WebGL Pipeline Changes
 
