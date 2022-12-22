@@ -45,13 +45,15 @@ var GetLineToLine = function (line1, line2, isRay, out)
 
     var denom = (dx1 * dy2 - dy1 * dx2);
 
+    //  Add co-linear check
+
     //  Make sure there is not a division by zero - this also indicates that the lines are parallel.
     //  If numA and numB were both equal to zero the lines would be on top of each other (coincidental).
     //  This check is not done because it is not necessary for this implementation (the parallel check accounts for this).
 
     if (denom === 0)
     {
-        return false;
+        return null;
     }
 
     var t;
