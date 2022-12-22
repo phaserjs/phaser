@@ -170,6 +170,8 @@ const emitter = particles.createEmitter({
 
 This parameter is used for 'flow' emitters only and controls how many milliseconds the emitter will run for before automatically turning itself off.
 
+* `ParticleEmitter.duration` is a new property that contains the duration that the Emitter will emit particles for in flow mode.
+* The `ParticleEmitter.start` method has a new optional parameter `duration`, which allows you to set the emitter duration when you call this method. If you do this, it will override any value set in the emitter configuration.
 * The `ParticleEmitter.stop` method has a new optional parameter `kill`. If set it will kill all alive particles immediately, rather than leaving them to die after their lifespan expires.
 
 #### New Features - Particle Emitter Events
