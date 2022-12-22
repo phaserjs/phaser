@@ -2001,10 +2001,11 @@ var ParticleEmitter = new Class({
      * @since 3.0.0
      *
      * @param {number} [advance=0] - Advance this number of ms in time through the emitter.
+     * @param {number} [duration=0] - Limit this emitter to only emit particles for the given number of ms. Setting this parameter will override any duration already set in the Emitter configuration object.
      *
      * @return {this} This Particle Emitter.
      */
-    start: function (advance)
+    start: function (advance, duration)
     {
         if (advance === undefined) { advance = 0; }
 
@@ -2019,6 +2020,11 @@ var ParticleEmitter = new Class({
 
             this._counter = 0;
             this._elapsed = 0;
+
+            if (duration !== undefined)
+            {
+                this.duration = Math.abs(duration);
+            }
 
             this.manager.emit(Events.START, this);
         }
