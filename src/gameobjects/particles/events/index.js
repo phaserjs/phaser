@@ -10,8 +10,9 @@
 
 module.exports = {
 
-    START: require('./START_EVENT'),
     COMPLETE: require('./COMPLETE_EVENT'),
-    EXPLODE: require('./EXPLODE_EVENT')
+    EXPLODE: require('./EXPLODE_EVENT'),
+    START: require('./START_EVENT'),
+    STOP: require('./STOP_EVENT')
 
 };

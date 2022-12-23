@@ -502,14 +502,17 @@ var ParticleEmitter = new Class({
 
         /**
          * If set, either via the Emitter config, or by directly setting this property,
-         * the Particle Emitter will stop emitting any more particles once this total
-         * has been reached. It will then enter a 'stopped' state, firing the `COMPLETE`
-         * event.
+         * the Particle Emitter will stop emitting particles once this total has been
+         * reached. It will then enter a 'stopped' state, firing the `STOP`
+         * event. Note that entering a stopped state doesn't mean all the particles
+         * have finished, just that it's not emitting any further ones.
+         *
+         * To know when the final particle expires, listen for the COMPLETE event.
          *
          * Use this if you wish to launch an exact number of particles and then stop
          * your emitter afterwards.
          *
-         * The counter is reset each time the `start` method is called.
+         * The counter is reset each time the `ParticleEmitter.start` method is called.
          *
          * 0 means the emitter will not stop based on total emitted particles.
          *
@@ -524,9 +527,15 @@ var ParticleEmitter = new Class({
          * The number of milliseconds this emitter will emit particles for when in flow mode,
          * before it stops emission. A value of 0 (the default) means there is no duration.
          *
-         * Each time you call `ParticleEmitter.start` it will reset the duration counter.
+         * When the duration expires the `STOP` event is emitted. Note that entering a
+         * stopped state doesn't mean all the particles have finished, just that it's
+         * not emitting any further ones.
          *
-         * When the duration expires the `COMPLETE` event is emitted.
+         * To know when the final particle expires, listen for the COMPLETE event.
+         *
+         * The counter is reset each time the `ParticleEmitter.start` method is called.
+         *
+         * 0 means the emitter will not stop based on duration.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#duration
          * @type {number}
@@ -836,13 +845,14 @@ var ParticleEmitter = new Class({
          * 2 - _animCounter (counts up to animQuantity)
          * 3 - _elapsed - The ttime remaining until the `duration` limit is reached.
          * 4 - _stopCounter - The number of particles remaining until `stopAfter` limit is reached.
+         * 5 - _completeFlag - Has the COMPLETE event been emitted?
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#counters
          * @type {Float32Array}
          * @private
          * @since 3.60.0
          */
-        this.counters = new Float32Array(5);
+        this.counters = new Float32Array(6);
 
         /**
          * Cached amount of frames in the `ParticleEmitter.frames` array.
@@ -999,7 +1009,7 @@ var ParticleEmitter = new Class({
             this.fastForward(config.advance);
         }
 
-        this.counters.set([ this.frequency, 0, 0, 0, 0 ]);
+        this.counters.set([ this.frequency, 0, 0, 0, 0, (this.on) ? 1 : 0 ]);
 
         if (this.on)
         {
@@ -2027,7 +2037,7 @@ var ParticleEmitter = new Class({
 
             this.on = true;
 
-            this.counters.set([ this.frequency, 0, 0, 0, 0 ]);
+            this.counters.set([ this.frequency, 0, 0, 0, 0, 1 ]);
 
             if (duration !== undefined)
             {
@@ -2045,10 +2055,11 @@ var ParticleEmitter = new Class({
      * stops it from emitting further particles. Currently alive particles will remain
      * active until they naturally expire unless you set the `kill` parameter to `true`.
      *
-     * Calling this method will emit the `COMPLETE` event.
+     * Calling this method will emit the `STOP` event. When the final particle has
+     * expired the `COMPLETE` event will be emitted.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#stop
-     * @fires Phaser.GameObjects.Particles.Events#COMPLETE
+     * @fires Phaser.GameObjects.Particles.Events#STOP
      * @since 3.11.0
      *
      * @param {boolean} [kill=false] - Kill all particles immediately (true), or leave them to die after their lifespan expires? (false, the default)
@@ -2068,7 +2079,7 @@ var ParticleEmitter = new Class({
                 this.killAll();
             }
 
-            this.manager.emit(Events.COMPLETE, this);
+            this.manager.emit(Events.STOP, this);
         }
 
         return this;
@@ -2145,7 +2156,7 @@ var ParticleEmitter = new Class({
      *
      * @param {number} frequency - The time interval (>= 0) of each flow cycle, in ms.
      * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [count=1] - The number of particles to emit at each flow cycle.
-     * @param {number} [stopAfter] - Stop this emitter from firing any more particles once this value is reached. Set to zero for unlimited. Setting this parameter will override any stopAfter value already set in the Emitter configuration object.
+     * @param {number} [stopAfter] - Stop this emitter from firing any more particles once this value is reached. Set to zero for unlimited. Setting this parameter will override any `stopAfter` value already set in the Emitter configuration object.
      *
      * @return {this} This Particle Emitter.
      */
@@ -2184,6 +2195,8 @@ var ParticleEmitter = new Class({
     {
         this.frequency = -1;
 
+        this.counters.set([ -1, 0, 0, 0, 0, 1 ]);
+
         var particle = this.emitParticle(count, x, y);
 
         this.manager.emit(Events.EXPLODE, this, particle);
@@ -2192,7 +2205,8 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Emits particles at a given position (or the emitter's current position).
+     * Emits particles at the given position. If no position is given, it will
+     * emit from this Emitters current location.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#emitParticleAt
      * @since 3.0.0
@@ -2330,6 +2344,7 @@ var ParticleEmitter = new Class({
      * Updates this emitter and its particles.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#preUpdate
+     * @fires Phaser.GameObjects.Particles.Events#COMPLETE
      * @since 3.0.0
      *
      * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
@@ -2396,12 +2411,20 @@ var ParticleEmitter = new Class({
             }
         }
 
+        var counters = this.counters;
+
         if (!this.on && !this.skipping)
         {
+            if (counters[5] === 1 && particles.length === 0)
+            {
+                //  completeFlag
+                counters[5] = 0;
+
+                this.manager.emit(Events.COMPLETE, this);
+            }
+
             return;
         }
-
-        var counters = this.counters;
 
         if (this.frequency === 0)
         {

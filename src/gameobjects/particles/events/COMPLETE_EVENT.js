@@ -7,7 +7,9 @@
 /**
  * The Particle Emitter Complete Event.
  *
- * This event is dispatched when a Particle Emitter, that has a flow duration set, finishes.
+ * This event is dispatched when the final particle, emitted from a Particle Emitter that
+ * has been stopped, dies. Upon receipt of this event you know that no particles are
+ * still rendering at this point in time.
  *
  * Listen for it on an emitter instance using `ParticleEmitter.on('emittercomplete', listener)`.
  *
