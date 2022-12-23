@@ -363,8 +363,8 @@ var Particle = new Class({
      * @method Phaser.GameObjects.Particles.Particle#fire
      * @since 3.0.0
      *
-     * @param {number} x - The x coordinate to launch this Particle from.
-     * @param {number} y - The y coordinate to launch this Particle from.
+     * @param {number} [x] - The x coordinate to launch this Particle from.
+     * @param {number} [y] - The y coordinate to launch this Particle from.
      */
     fire: function (x, y)
     {
