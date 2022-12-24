@@ -1337,7 +1337,7 @@ var World = new Class({
 
         body.velocity.set(velocityX, velocityY);
 
-        if (maxSpeed > -1 && speed > maxSpeed)
+        if (maxSpeed > -1 && body.velocity.length() > maxSpeed)
         {
             body.velocity.normalize().scale(maxSpeed);
             speed = maxSpeed;
