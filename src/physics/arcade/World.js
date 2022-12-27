@@ -1699,10 +1699,10 @@ var World = new Class({
         {
             //  Rect vs. Rect
             return !(
-                body1.right <= body2.position.x ||
-                body1.bottom <= body2.position.y ||
-                body1.position.x >= body2.right ||
-                body1.position.y >= body2.bottom
+                body1.right <= body2.left ||
+                body1.bottom <= body2.top ||
+                body1.left >= body2.right ||
+                body1.top >= body2.bottom
             );
         }
         else if (body1.isCircle)
@@ -2268,8 +2268,8 @@ var World = new Class({
             return false;
         }
 
-        var x = body.position.x;
-        var y = body.position.y;
+        var x = body.x;
+        var y = body.y;
         var w = body.width;
         var h = body.height;
 
