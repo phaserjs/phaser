@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Add = require('../../utils/array/Add');
 var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
@@ -18,6 +19,7 @@ var HasValue = require('../../utils/object/HasValue');
 var Particle = require('./Particle');
 var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
+var Remove = require('../../utils/array/Remove');
 var StableSort = require('../../utils/array/StableSort');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
@@ -593,29 +595,39 @@ var ParticleEmitter = new Class({
         this.timeScale = 1;
 
         /**
-         * An object describing a shape to emit particles from.
+         * An array containing Particle Emission Zones. These can be either EdgeZones or RandomZones.
          *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#emitZone
-         * @type {?Phaser.GameObjects.Particles.Zones.EdgeZone|Phaser.GameObjects.Particles.Zones.RandomZone}
-         * @default null
-         * @since 3.0.0
+         * Particles are emitted from a randomly selected zone from this array.
+         *
+         * Prior to Phaser v3.60 an Emitter could only have one single Emission Zone.
+         * In 3.60 they can now have an array of Emission Zones.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#emitZones
+         * @type {Phaser.GameObjects.Particles.Zones.EdgeZone[]|Phaser.GameObjects.Particles.Zones.RandomZone[]}
+         * @since 3.60.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone
          */
-        this.emitZone = null;
+        this.emitZones = [];
 
         /**
-         * An object describing a shape that deactivates particles when they interact with it.
+         * An array containing Particle Death Zone objects. A particle is immediately killed as soon as its x/y coordinates
+         * intersect with any of the configured Death Zones.
          *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#deathZone
-         * @type {?Phaser.GameObjects.Particles.Zones.DeathZone}
-         * @default null
-         * @since 3.0.0
+         * Prior to Phaser v3.60 an Emitter could only have one single Death Zone.
+         * In 3.60 they can now have an array of Death Zones.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#deathZones
+         * @type {Phaser.GameObjects.Particles.Zones.DeathZone[]}
+         * @since 3.60.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setDeathZone
          */
-        this.deathZone = null;
+        this.deathZones = [];
 
         /**
-         * A rectangular boundary constraining particle movement.
+         * A rectangular boundary constraining particle movement. Use the Emitter properties `collideLeft`,
+         * `collideRight`, `collideTop` and `collideBottom` to control if a particle will rebound off
+         * the sides of this boundary, or not. This happens when the particles x/y coordinate hits
+         * the boundary.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#bounds
          * @type {?Phaser.Geom.Rectangle}
@@ -1742,37 +1754,128 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Sets or removes the {@link Phaser.GameObjects.Particles.ParticleEmitter#deathZone}.
+     * Adds a new Particle Death Zone to this Emitter.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setDeathZone
-     * @since 3.0.0
+     * A particle is immediately killed as soon as its x/y coordinates intersect
+     * with any of the configured Death Zones.
      *
-     * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterDeathZoneConfig} [zoneConfig] - An object describing the zone, or `undefined` to remove any current death zone.
+     * A Death Zone can only exist once within this Emitter.
      *
-     * @return {this} This Particle Emitter.
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#addDeathZone
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Particles.Zones.DeathZone|Phaser.Types.GameObjects.Particles.ParticleEmitterDeathZoneConfig} zone - A Death Zone configuration object, or a Death Zone instance.
+     *
+     * @return {Phaser.GameObjects.Particles.Zones.DeathZone} The Death Zone that was added to this Emitter.
      */
-    setDeathZone: function (zoneConfig)
+    addDeathZone: function (zone)
     {
-        if (zoneConfig === undefined)
+        //  Where source = Geom like Circle or Rect that supports a 'contains' function
+        //  deathZone: { type: 'onEnter', source: X }
+        //  deathZone: { type: 'onLeave', source: X }
+
+        if (zone instanceof DeathZone)
         {
-            this.deathZone = null;
+            Add(this.deathZones, zone);
         }
         else
         {
-            //  Where source = Geom like Circle or Rect that supports a 'contains' function
-            //  deathZone: { type: 'onEnter', source: X }
-            //  deathZone: { type: 'onLeave', source: X }
-
-            var type = GetFastValue(zoneConfig, 'type', 'onEnter');
-            var source = GetFastValue(zoneConfig, 'source', null);
+            var type = GetFastValue(zone, 'type', 'onEnter');
+            var source = GetFastValue(zone, 'source', null);
 
             if (source && typeof source.contains === 'function')
             {
                 var killOnEnter = (type === 'onEnter') ? true : false;
 
-                this.deathZone = new DeathZone(source, killOnEnter);
+                zone = new DeathZone(source, killOnEnter);
+
+                Add(this.deathZones, zone);
             }
         }
+
+        return zone;
+    },
+
+    /**
+     * Removes the given Particle Death Zone from this Emitter.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#removeDeathZone
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Particles.Zones.DeathZone} zone - The Death Zone that should be removed from this Emitter.
+     *
+     * @return {this} This Particle Emitter.
+     */
+    removeDeathZone: function (zone)
+    {
+        Remove(this.deathZones, zone);
+
+        return this;
+    },
+
+    /**
+     * Adds a new Particle Emission Zone to this Emitter.
+     *
+     * An Emission Zone can only exist once within this Emitter.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#addEmitZone
+     * @since 3.60.0
+     *
+     * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig|Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig|Phaser.GameObjects.Particles.Zones.EdgeZone|Phaser.GameObjects.Particles.Zones.RandomZone} zone - An Emission Zone configuration object, or a RandomZone or EdgeZone instance.
+     *
+     * @return {Phaser.GameObjects.Particles.Zones.EdgeZone|Phaser.GameObjects.Particles.Zones.RandomZone} The Emission Zone that was added to this Emitter.
+     */
+    addEmitZone: function (zone)
+    {
+        if (zone instanceof RandomZone || zone instanceof EdgeZone)
+        {
+            Add(this.emitZones, zone);
+        }
+        else
+        {
+            //  Where source = Geom like Circle, or a Path or Curve
+            //  emitZone: { type: 'random', source: X }
+            //  emitZone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false], [seamless=true] }
+
+            var type = GetFastValue(zone, 'type', 'random');
+            var source = GetFastValue(zone, 'source', null);
+
+            if (type === 'random')
+            {
+                zone = new RandomZone(source);
+            }
+            else if (type === 'edge')
+            {
+                var quantity = GetFastValue(zone, 'quantity', 1);
+                var stepRate = GetFastValue(zone, 'stepRate', 0);
+                var yoyo = GetFastValue(zone, 'yoyo', false);
+                var seamless = GetFastValue(zone, 'seamless', true);
+
+                zone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
+            }
+
+            if (zone)
+            {
+                Add(this.emitZones, zone);
+            }
+        }
+
+        return zone;
+    },
+
+    /**
+     * Removes the given Particle Emission Zone from this Emitter.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#removeEmitZone
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Particles.Zones.EdgeZone|Phaser.GameObjects.Particles.Zones.RandomZone} zone - The Emission Zone that should be removed from this Emitter.
+     *
+     * @return {this} This Particle Emitter.
+     */
+    removeEmitZone: function (zone)
+    {
+        Remove(this.emitZones, zone);
 
         return this;
     },
@@ -3036,8 +3139,8 @@ var ParticleEmitter = new Class({
         this.emitCallbackScope = null;
         this.deathCallback = null;
         this.deathCallbackScope = null;
-        this.emitZone = null;
-        this.deathZone = null;
+        this.emitZones = null;
+        this.deathZones = null;
         this.bounds = null;
         this.follow = null;
         this.ops = null;
