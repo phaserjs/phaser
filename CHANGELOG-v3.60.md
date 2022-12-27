@@ -649,6 +649,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* The `Device.Browser` checks for Opera and Edge have been updated to use the more modern user agent strings those browsers now use. This breaks compatibility with really old versions of those browsers but fixes it for modern ones (which is more important) (thanks @
+ArtemSiz)
 * The `SceneManager.processQueue` method will no longer `return` if a new Scene was added, after starting it. This allows any other queued operations to still be run in the same frame, rather than being delayed until the next game frame. Fix #5359 (thanks @telinc1)
 * `Camera.scrollX` and `scrollY` will now only set the `Camera.dirty` flag to `true` if the new value given to them is different from their current value. This allows you to use this property in your own culling functions. Fix #6088 (thanks @Waclaw-I)
 * `Face.update` is a new method that updates each of the Face vertices. This is now called internally by `Face.isInView`.
