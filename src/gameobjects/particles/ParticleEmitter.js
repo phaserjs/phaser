@@ -858,13 +858,14 @@ var ParticleEmitter = new Class({
          * 3 - _elapsed - The ttime remaining until the `duration` limit is reached.
          * 4 - _stopCounter - The number of particles remaining until `stopAfter` limit is reached.
          * 5 - _completeFlag - Has the COMPLETE event been emitted?
+         * 6 - _emitIndex - The emit zone index counter.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#counters
          * @type {Float32Array}
          * @private
          * @since 3.60.0
          */
-        this.counters = new Float32Array(6);
+        this.counters = new Float32Array(7);
 
         /**
          * Cached amount of frames in the `ParticleEmitter.frames` array.
@@ -984,12 +985,12 @@ var ParticleEmitter = new Class({
 
         if (HasValue(config, 'emitZone'))
         {
-            this.setEmitZone(config.emitZone);
+            this.addEmitZone(config.emitZone);
         }
 
         if (HasValue(config, 'deathZone'))
         {
-            this.setDeathZone(config.deathZone);
+            this.addDeathZone(config.deathZone);
         }
 
         if (HasValue(config, 'bounds'))
@@ -1021,7 +1022,7 @@ var ParticleEmitter = new Class({
             this.fastForward(config.advance);
         }
 
-        this.counters.set([ this.frequency, 0, 0, 0, 0, (this.on) ? 1 : 0 ]);
+        this.counters.set([ this.frequency, 0, 0, 0, 0, (this.on) ? 1 : 0, 0 ]);
 
         if (this.on)
         {
@@ -1701,54 +1702,21 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Sets or removes the {@link Phaser.GameObjects.Particles.ParticleEmitter#emitZone}.
+     * Adds a new Particle Death Zone to this Particle Emitter.
      *
-     * An {@link Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig EdgeZone} places particles on its edges. Its {@link Phaser.Types.GameObjects.Particles.EdgeZoneSource source} can be a Curve, Path, Circle, Ellipse, Line, Polygon, Rectangle, or Triangle; or any object with a suitable {@link Phaser.Types.GameObjects.Particles.EdgeZoneSourceCallback getPoints} method.
+     * This method is an alias for `ParticleEmitter#addDeathZone` and is retained for
+     * backward API compatibility only.
      *
-     * A {@link Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig RandomZone} places randomly within its interior. Its {@link RandomZoneSource source} can be a Circle, Ellipse, Line, Polygon, Rectangle, or Triangle; or any object with a suitable {@link Phaser.Types.GameObjects.Particles.RandomZoneSourceCallback getRandomPoint} method.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setDeathZone
      * @since 3.0.0
      *
-     * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig|Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig} [zoneConfig] - An object describing the zone, or `undefined` to remove any current emit zone.
+     * @param {Phaser.GameObjects.Particles.Zones.DeathZone|Phaser.Types.GameObjects.Particles.ParticleEmitterDeathZoneConfig} zone - A Death Zone configuration object, or a Death Zone instance.
      *
      * @return {this} This Particle Emitter.
      */
-    setEmitZone: function (zoneConfig)
+    setDeathZone: function (zoneConfig)
     {
-        if (zoneConfig === undefined)
-        {
-            this.emitZone = null;
-        }
-        else
-        {
-            //  Where source = Geom like Circle, or a Path or Curve
-            //  emitZone: { type: 'random', source: X }
-            //  emitZone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false], [seamless=true] }
-
-            var type = GetFastValue(zoneConfig, 'type', 'random');
-            var source = GetFastValue(zoneConfig, 'source', null);
-
-            switch (type)
-            {
-                case 'random':
-
-                    this.emitZone = new RandomZone(source);
-
-                    break;
-
-                case 'edge':
-
-                    var quantity = GetFastValue(zoneConfig, 'quantity', 1);
-                    var stepRate = GetFastValue(zoneConfig, 'stepRate', 0);
-                    var yoyo = GetFastValue(zoneConfig, 'yoyo', false);
-                    var seamless = GetFastValue(zoneConfig, 'seamless', true);
-
-                    this.emitZone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
-
-                    break;
-            }
-        }
+        this.addDeathZone(zoneConfig);
 
         return this;
     },
@@ -1759,37 +1727,56 @@ var ParticleEmitter = new Class({
      * A particle is immediately killed as soon as its x/y coordinates intersect
      * with any of the configured Death Zones.
      *
+     * The `source` can be a Geometry Shape, such as a Circle, Rectangle or Triangle.
+     * Any valid object from the `Phaser.Geometry` namespace is allowed, as long as
+     * it supports a `contains` function. You can set the `type` to be either `onEnter`
+     * or `onLeave`.
+     *
      * A Death Zone can only exist once within this Emitter.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#addDeathZone
      * @since 3.60.0
      *
-     * @param {Phaser.GameObjects.Particles.Zones.DeathZone|Phaser.Types.GameObjects.Particles.ParticleEmitterDeathZoneConfig} zone - A Death Zone configuration object, or a Death Zone instance.
+     * @param {Phaser.Types.GameObjects.Particles.DeathZoneObject|Phaser.Types.GameObjects.Particles.DeathZoneObject[]} config - A Death Zone configuration object, a Death Zone instance, a valid Geometry object or an array of them.
      *
      * @return {Phaser.GameObjects.Particles.Zones.DeathZone} The Death Zone that was added to this Emitter.
      */
-    addDeathZone: function (zone)
+    addDeathZone: function (config)
     {
-        //  Where source = Geom like Circle or Rect that supports a 'contains' function
-        //  deathZone: { type: 'onEnter', source: X }
-        //  deathZone: { type: 'onLeave', source: X }
-
-        if (zone instanceof DeathZone)
+        if (!Array.isArray(config))
         {
-            Add(this.deathZones, zone);
+            config = [ config ];
         }
-        else
+
+        var zone;
+
+        for (var i = 0; i < config.length; i++)
         {
-            var type = GetFastValue(zone, 'type', 'onEnter');
-            var source = GetFastValue(zone, 'source', null);
+            zone = config[i];
 
-            if (source && typeof source.contains === 'function')
+            if (zone instanceof DeathZone)
             {
-                var killOnEnter = (type === 'onEnter') ? true : false;
-
-                zone = new DeathZone(source, killOnEnter);
+                Add(this.deathZones, zone);
+            }
+            else if (typeof zone.contains === 'function')
+            {
+                zone = new DeathZone(zone, true);
 
                 Add(this.deathZones, zone);
+            }
+            else
+            {
+                var type = GetFastValue(zone, 'type', 'onEnter');
+                var source = GetFastValue(zone, 'source', null);
+
+                if (source && typeof source.contains === 'function')
+                {
+                    var killOnEnter = (type === 'onEnter') ? true : false;
+
+                    zone = new DeathZone(source, killOnEnter);
+
+                    Add(this.deathZones, zone);
+                }
             }
         }
 
@@ -1816,47 +1803,66 @@ var ParticleEmitter = new Class({
     /**
      * Adds a new Particle Emission Zone to this Emitter.
      *
+     * An {@link Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig EdgeZone} places particles on its edges.
+     * Its {@link Phaser.Types.GameObjects.Particles.EdgeZoneSource source} can be a Curve, Path, Circle, Ellipse, Line, Polygon, Rectangle, or Triangle;
+     * or any object with a suitable {@link Phaser.Types.GameObjects.Particles.EdgeZoneSourceCallback getPoints} method.
+     *
+     * A {@link Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig RandomZone} places the particles randomly within its interior.
+     * Its {@link RandomZoneSource source} can be a Circle, Ellipse, Line, Polygon, Rectangle, or Triangle; or any object with a suitable {@link Phaser.Types.GameObjects.Particles.RandomZoneSourceCallback getRandomPoint} method.
+     *
      * An Emission Zone can only exist once within this Emitter.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#addEmitZone
      * @since 3.60.0
      *
-     * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig|Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig|Phaser.GameObjects.Particles.Zones.EdgeZone|Phaser.GameObjects.Particles.Zones.RandomZone} zone - An Emission Zone configuration object, or a RandomZone or EdgeZone instance.
+     * @param {Phaser.Types.GameObjects.Particles.EmitZoneObject|Phaser.Types.GameObjects.Particles.EmitZoneObject[]} zone - An Emission Zone configuration object, a RandomZone or EdgeZone instance, or an array of them.
      *
      * @return {Phaser.GameObjects.Particles.Zones.EdgeZone|Phaser.GameObjects.Particles.Zones.RandomZone} The Emission Zone that was added to this Emitter.
      */
-    addEmitZone: function (zone)
+    addEmitZone: function (config)
     {
-        if (zone instanceof RandomZone || zone instanceof EdgeZone)
+        if (!Array.isArray(config))
         {
-            Add(this.emitZones, zone);
+            config = [ config ];
         }
-        else
+
+        var zone;
+
+        for (var i = 0; i < config.length; i++)
         {
-            //  Where source = Geom like Circle, or a Path or Curve
-            //  emitZone: { type: 'random', source: X }
-            //  emitZone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false], [seamless=true] }
+            zone = config[i];
 
-            var type = GetFastValue(zone, 'type', 'random');
-            var source = GetFastValue(zone, 'source', null);
-
-            if (type === 'random')
-            {
-                zone = new RandomZone(source);
-            }
-            else if (type === 'edge')
-            {
-                var quantity = GetFastValue(zone, 'quantity', 1);
-                var stepRate = GetFastValue(zone, 'stepRate', 0);
-                var yoyo = GetFastValue(zone, 'yoyo', false);
-                var seamless = GetFastValue(zone, 'seamless', true);
-
-                zone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
-            }
-
-            if (zone)
+            if (zone instanceof RandomZone || zone instanceof EdgeZone)
             {
                 Add(this.emitZones, zone);
+            }
+            else
+            {
+                //  Where source = Geom like Circle, or a Path or Curve
+                //  emitZone: { type: 'random', source: X }
+                //  emitZone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false], [seamless=true] }
+
+                var type = GetFastValue(zone, 'type', 'random');
+                var source = GetFastValue(zone, 'source', null);
+
+                if (type === 'random')
+                {
+                    zone = new RandomZone(source);
+                }
+                else if (type === 'edge')
+                {
+                    var quantity = GetFastValue(zone, 'quantity', 1);
+                    var stepRate = GetFastValue(zone, 'stepRate', 0);
+                    var yoyo = GetFastValue(zone, 'yoyo', false);
+                    var seamless = GetFastValue(zone, 'seamless', true);
+
+                    zone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
+                }
+
+                if (zone)
+                {
+                    Add(this.emitZones, zone);
+                }
             }
         }
 
@@ -1876,6 +1882,94 @@ var ParticleEmitter = new Class({
     removeEmitZone: function (zone)
     {
         Remove(this.emitZones, zone);
+
+        return this;
+    },
+
+    /**
+     * Takes the given particle and sets its x/y coordinates to match the next available
+     * emission zone, if any have been configured. This method is called automatically
+     * as part of the `Particle.fire` process.
+     *
+     * The Emit Zones are iterated in sequence. Once a zone has had a particle emitted
+     * from it, then the next zone is used and so on, in a loop.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#getEmitZone
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Particles.Particle} particle - The particle to set the emission zone for.
+     */
+    getEmitZone: function (particle)
+    {
+        var zones = this.emitZones;
+        var len = zones.length;
+
+        if (len === 0)
+        {
+            return;
+        }
+        else if (len === 1)
+        {
+            return zones[0].getPoint(particle);
+        }
+        else
+        {
+            var counters = this.counters;
+
+            counters[6]++;
+
+            if (counters[6] === len)
+            {
+                counters[6] = 0;
+            }
+
+            zones[counters[6]].getPoint(particle);
+        }
+    },
+
+    /**
+     * Takes the given particle and checks to see if any of the configured Death Zones
+     * will kill it and returns the result. This method is called automatically as part
+     * of the `Particle.update` process.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#getDeathZone
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Particles.Particle} particle - The particle to test against the Death Zones.
+     *
+     * @return {boolean} `true` if the particle should be killed, otherwise `false`.
+     */
+    getDeathZone: function (particle)
+    {
+        var zones = this.deathZones;
+
+        for (var i = 0; i < zones.length; i++)
+        {
+            if (zones[i].willKill(particle))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    /**
+     * Adds a new Emission Zone to this Particle Emitter.
+     *
+     * This method is an alias for `ParticleEmitter#addEmitZone` and is retained for
+     * backward API compatibility only.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone
+     * @since 3.0.0
+     *
+     * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig|Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig|Phaser.GameObjects.Particles.Zones.EdgeZone|Phaser.GameObjects.Particles.Zones.RandomZone} zone - An Emission Zone configuration object, or a RandomZone or EdgeZone instance.
+     *
+     * @return {this} This Particle Emitter.
+     */
+    setEmitZone: function (zoneConfig)
+    {
+        this.addEmitZone(zoneConfig);
 
         return this;
     },
@@ -2140,7 +2234,7 @@ var ParticleEmitter = new Class({
 
             this.on = true;
 
-            this.counters.set([ this.frequency, 0, 0, 0, 0, 1 ]);
+            this.counters.set([ this.frequency, 0, 0, 0, 0, 1, 0 ]);
 
             if (duration !== undefined)
             {
@@ -2298,7 +2392,7 @@ var ParticleEmitter = new Class({
     {
         this.frequency = -1;
 
-        this.counters.set([ -1, 0, 0, 0, 0, 1 ]);
+        this.counters.set([ -1, 0, 0, 0, 0, 1, 0 ]);
 
         var particle = this.emitParticle(count, x, y);
 
