@@ -388,11 +388,8 @@ var Particle = new Class({
             throw new Error('Particle has no texture frame');
         }
 
-        if (emitter.emitZone)
-        {
-            //  Updates particle.x and particle.y during this call
-            emitter.emitZone.getPoint(this);
-        }
+        //  Updates particle.x and particle.y during this call
+        emitter.getEmitZone(this);
 
         if (x === undefined)
         {
@@ -634,7 +631,7 @@ var Particle = new Class({
             this.checkBounds(emitter);
         }
 
-        if (emitter.deathZone && emitter.deathZone.willKill(this))
+        if (emitter.getDeathZone(this))
         {
             this.lifeCurrent = 0;
 
