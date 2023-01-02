@@ -12,7 +12,7 @@
  * been configured to stop after a set time via the `duration` property, or after a
  * set number of particles via the `stopAfter` property.
  *
- * Listen for it on an emitter instance using `ParticleEmitter.on('emitterstop', listener)`.
+ * Listen for it on a Particle Emitter Manager instance using `ParticleEmitterManager.on('stop', listener)`.
  *
  * Note that just because the emitter has stopped, that doesn't mean there aren't still
  * particles alive and rendering. It just means the emitter has stopped emitting particles.
@@ -25,4 +25,4 @@
  *
  * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - A reference to the Particle Emitter that just completed.
  */
-module.exports = 'emitterstop';
+module.exports = 'stop';

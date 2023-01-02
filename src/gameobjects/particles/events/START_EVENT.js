@@ -9,7 +9,7 @@
  *
  * This event is dispatched when a Particle Emitter starts emission of particles.
  *
- * Listen for it on an emitter instance using `ParticleEmitter.on('emitterstart', listener)`.
+ * Listen for it on a Particle Emitter Manager instance using `ParticleEmitterManager.on('start', listener)`.
  *
  * @event Phaser.GameObjects.Particles.Events#START
  * @type {string}
@@ -17,4 +17,4 @@
  *
  * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - A reference to the Particle Emitter that just completed.
  */
-module.exports = 'emitterstart';
+module.exports = 'start';

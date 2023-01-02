@@ -11,7 +11,7 @@
  * has been stopped, dies. Upon receipt of this event you know that no particles are
  * still rendering at this point in time.
  *
- * Listen for it on an emitter instance using `ParticleEmitter.on('emittercomplete', listener)`.
+ * Listen for it on a Particle Emitter Manager instance using `ParticleEmitterManager.on('complete', listener)`.
  *
  * @event Phaser.GameObjects.Particles.Events#COMPLETE
  * @type {string}
@@ -19,4 +19,4 @@
  *
  * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - A reference to the Particle Emitter that just completed.
  */
-module.exports = 'emittercomplete';
+module.exports = 'complete';

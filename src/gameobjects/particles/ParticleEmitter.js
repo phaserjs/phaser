@@ -1960,6 +1960,7 @@ var ParticleEmitter = new Class({
      * of the `Particle.update` process.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#getDeathZone
+     * @fires Phaser.GameObjects.Particles.Events#DEATH_ZONE
      * @since 3.60.0
      *
      * @param {Phaser.GameObjects.Particles.Particle} particle - The particle to test against the Death Zones.
@@ -1974,6 +1975,8 @@ var ParticleEmitter = new Class({
         {
             if (zones[i].willKill(particle))
             {
+                this.manager.emit(Events.DEATH_ZONE, this, particle, zones[i]);
+
                 return true;
             }
         }
