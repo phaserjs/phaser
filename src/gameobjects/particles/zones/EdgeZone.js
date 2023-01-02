@@ -20,7 +20,7 @@ var Class = require('../../../utils/Class');
  * @param {number} stepRate - The distance between each particle. When set, `quantity` is implied and should be set to 0.
  * @param {boolean} [yoyo=false] - Whether particles are placed from start to end and then end to start.
  * @param {boolean} [seamless=true] - Whether one endpoint will be removed if it's identical to the other.
- * @param {number} [total=1] - The total number of particles this zone will emit before passing over to the next emission zone in the Emitter.
+ * @param {number} [total=-1] - The total number of particles this zone will emit before passing over to the next emission zone in the Emitter. -1 means it will never pass over and you must use `setEmitZone` to change it.
  */
 var EdgeZone = new Class({
 
@@ -30,7 +30,7 @@ var EdgeZone = new Class({
     {
         if (yoyo === undefined) { yoyo = false; }
         if (seamless === undefined) { seamless = true; }
-        if (total === undefined) { total = 1; }
+        if (total === undefined) { total = -1; }
 
         /**
          * An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
@@ -124,8 +124,14 @@ var EdgeZone = new Class({
         /**
          * The total number of particles this zone will emit before the Emitter
          * transfers control over to the next zone in its emission zone list.
-         * By default this is 1, meaning the zones rotate in order, but it can
-         * be set to any positive value.
+         *
+         * By default this is -1, meaning it will never pass over from this
+         * zone to another one. You can call the `ParticleEmitter.setEmitZone`
+         * method to change it, or set this value to something else via the
+         * config, or directly at runtime.
+         *
+         * A value of 1 would mean the zones rotate in order, but it can
+         * be set to any integer value.
          *
          * @name Phaser.GameObjects.Particles.Zones.EdgeZone#total
          * @type {number}
