@@ -22,14 +22,16 @@ var Render = require('./ParticleManagerRender');
  * @constructor
  * @since 3.0.0
  *
+ * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Emitter Manager belongs.
- * @param {string} texture - The key of the Texture this Emitter Manager will use to render particles, as stored in the Texture Manager.
+ * @param {string} [texture] - The key of the Texture this Emitter Manager will use to render particles, as stored in the Texture Manager.
  * @param {(string|number)} [frame] - An optional frame from the Texture this Emitter Manager will use to render particles.
  * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig|Phaser.Types.GameObjects.Particles.ParticleEmitterConfig[]} [emitters] - Configuration settings for one or more emitters to create.
  */
@@ -38,7 +40,9 @@ var ParticleEmitterManager = new Class({
     Extends: GameObject,
 
     Mixins: [
+        Components.AlphaSingle,
         Components.Depth,
+        Components.FX,
         Components.Mask,
         Components.Pipeline,
         Components.Transform,
@@ -530,18 +534,6 @@ var ParticleEmitterManager = new Class({
                 }
             }
         }
-    },
-
-    /**
-     * A NOOP method so you can pass an EmitterManager to a Container.
-     * Calling this method will do nothing. It is intentionally empty.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#setAlpha
-     * @private
-     * @since 3.10.0
-     */
-    setAlpha: function ()
-    {
     },
 
     /**

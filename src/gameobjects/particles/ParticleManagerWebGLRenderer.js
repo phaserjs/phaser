@@ -59,8 +59,8 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
     var roundPixels = camera.roundPixels;
     var texture = emitterManager.defaultFrame.glTexture;
     var getTint = Utils.getTintAppendFloatAlpha;
-
-    var textureUnit = pipeline.setGameObject(emitterManager, emitterManager.defaultFrame);
+    var camerAlpha = camera.alpha;
+    var managerAlpha = emitterManager.alpha;
 
     renderer.pipelines.preBatch(emitterManager);
 
@@ -74,6 +74,8 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
         {
             continue;
         }
+
+        var textureUnit = pipeline.setGameObject(emitter, emitter.defaultFrame);
 
         camera.addToRenderList(emitter);
 
@@ -95,7 +97,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
         {
             var particle = particles[i];
 
-            var alpha = particle.alpha * camera.alpha;
+            var alpha = particle.alpha * managerAlpha * camerAlpha;
 
             if (alpha <= 0 || particle.scaleX === 0 || particle.scaleY === 0)
             {
