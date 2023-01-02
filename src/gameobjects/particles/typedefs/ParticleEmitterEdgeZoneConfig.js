@@ -8,4 +8,5 @@
  * @property {number} [stepRate] - The distance between each particle. When set, `quantity` is implied and should be set to 0.
  * @property {boolean} [yoyo=false] - Whether particles are placed from start to end and then end to start.
  * @property {boolean} [seamless=true] - Whether one endpoint will be removed if it's identical to the other.
+ * @property {number} [total=1] - The total number of particles this zone will emit before passing over to the next emission zone in the Emitter.
  */

@@ -20,15 +20,17 @@ var Class = require('../../../utils/Class');
  * @param {number} stepRate - The distance between each particle. When set, `quantity` is implied and should be set to 0.
  * @param {boolean} [yoyo=false] - Whether particles are placed from start to end and then end to start.
  * @param {boolean} [seamless=true] - Whether one endpoint will be removed if it's identical to the other.
+ * @param {number} [total=1] - The total number of particles this zone will emit before passing over to the next emission zone in the Emitter.
  */
 var EdgeZone = new Class({
 
     initialize:
 
-    function EdgeZone (source, quantity, stepRate, yoyo, seamless)
+    function EdgeZone (source, quantity, stepRate, yoyo, seamless, total)
     {
         if (yoyo === undefined) { yoyo = false; }
         if (seamless === undefined) { seamless = true; }
+        if (total === undefined) { total = 1; }
 
         /**
          * An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
@@ -118,6 +120,18 @@ var EdgeZone = new Class({
          * @since 3.0.0
          */
         this._direction = 0;
+
+        /**
+         * The total number of particles this zone will emit before the Emitter
+         * transfers control over to the next zone in its emission zone list.
+         * By default this is 1, meaning the zones rotate in order, but it can
+         * be set to any positive value.
+         *
+         * @name Phaser.GameObjects.Particles.Zones.EdgeZone#total
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.total = total;
 
         this.updateSource();
     },

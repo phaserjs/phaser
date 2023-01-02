@@ -42,6 +42,18 @@ var RandomZone = new Class({
          * @since 3.0.0
          */
         this._tempVec = new Vector2();
+
+        /**
+         * The total number of particles this zone will emit before the Emitter
+         * transfers control over to the next zone in its emission zone list.
+         * By default this is 1, meaning the zones rotate in order, but it can
+         * be set to any positive value.
+         *
+         * @name Phaser.GameObjects.Particles.Zones.RandomZone#total
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.total = 1;
     },
 
     /**
