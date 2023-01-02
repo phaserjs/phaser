@@ -5,11 +5,13 @@
  */
 
 var Between = require('../../math/Between');
+var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var FloatBetween = require('../../math/FloatBetween');
 var GetEaseFunction = require('../../tweens/builders/GetEaseFunction');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetInterpolationFunction = require('../../tweens/builders/GetInterpolationFunction');
+var SnapTo = require('../../math/snap/SnapTo');
 var Wrap = require('../../math/Wrap');
 
 /**
@@ -28,7 +30,6 @@ var Wrap = require('../../math/Wrap');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} config - Settings for the Particle Emitter that owns this property.
  * @param {string} key - The name of the property.
  * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} defaultValue - The default value of the property.
  * @param {boolean} [emitOnly=false] - Whether the property can only be modified when a Particle is emitted.
@@ -37,7 +38,7 @@ var EmitterOp = new Class({
 
     initialize:
 
-    function EmitterOp (config, key, defaultValue, emitOnly)
+    function EmitterOp (key, defaultValue, emitOnly)
     {
         if (emitOnly === undefined) { emitOnly = false; }
 
@@ -129,6 +130,16 @@ var EmitterOp = new Class({
         this.start = 0;
 
         /**
+         * The most recently calculated value. Updated every time an
+         * emission or update method is called. Treat as read-only.
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#current
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.current = 0;
+
+        /**
          * The end value for this property to ease between.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#end
@@ -209,8 +220,6 @@ var EmitterOp = new Class({
          * @since 3.60.0
          */
         this.method = 0;
-
-        this.loadConfig(config);
     },
 
     /**
@@ -242,9 +251,9 @@ var EmitterOp = new Class({
             this.defaultValue
         );
 
-        var method = this.getMethod();
+        this.method = this.getMethod();
 
-        this.setMethods(method);
+        this.setMethods();
 
         if (this.emitOnly)
         {
@@ -272,20 +281,52 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#onChange
      * @since 3.0.0
      *
-     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} value - The value of the property.
+     * @param {number} value - The new numeric value of this property.
      *
      * @return {this} This Emitter Op object.
      */
     onChange: function (value)
     {
-        this.propertyValue = value;
+        var current;
 
-        var method = this.getMethod();
-
-        if (method !== this.method || method === 3)
+        switch (this.method)
         {
-            this.setMethods(method);
+            //  Number
+            case 1:
+                current = value;
+                break;
+
+            //  Random Array
+            case 2:
+                if (this.propertyValue.indexOf(value) >= 0)
+                {
+                    current = value;
+                }
+                break;
+
+            //  Stepped start/end
+            case 4:
+                var step = (this.end - this.start) / this.steps;
+                current = SnapTo(value, step);
+                this.counter = current;
+                break;
+
+            //  Eased start/end
+            //  min/max (random float or int)
+            //  Random object (random integer)
+            case 5:
+            case 6:
+            case 7:
+                current = Clamp(value, this.start, this.end);
+                break;
+
+            //  Interpolation
+            case 9:
+                current = this.start[0];
+                break;
         }
+
+        this.current = current;
 
         return this;
     },
@@ -375,18 +416,17 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#setMethods
      * @since 3.0.0
      *
-     * @param {number} method - The operation method to use. A value between 0 and 9 (inclusively) as returned from `getMethod`.
-     *
      * @return {this} This Emitter Op object.
      */
-    setMethods: function (method)
+    setMethods: function ()
     {
         var value = this.propertyValue;
+        var current = value;
 
         var onEmit = this.defaultEmit;
         var onUpdate = this.defaultUpdate;
 
-        switch (method)
+        switch (this.method)
         {
             //  Number
             case 1:
@@ -396,6 +436,7 @@ var EmitterOp = new Class({
             //  Random Array
             case 2:
                 onEmit = this.randomStaticValueEmit;
+                current = value[0];
                 break;
 
             //  Custom Callback (onEmit only)
@@ -412,6 +453,7 @@ var EmitterOp = new Class({
                 this.yoyo = this.has(value, 'yoyo') ? value.yoyo : false;
                 this.direction = 0;
                 onEmit = this.steppedEmit;
+                current = this.start;
                 break;
 
             //  Eased start/end
@@ -422,6 +464,7 @@ var EmitterOp = new Class({
                 this.ease = GetEaseFunction(easeType, value.easeParams);
                 onEmit = (this.has(value, 'random') && value.random) ? this.randomRangedValueEmit : this.easedValueEmit;
                 onUpdate = this.easeValueUpdate;
+                current = this.start;
                 break;
 
             //  min/max (random float or int)
@@ -429,6 +472,7 @@ var EmitterOp = new Class({
                 this.start = value.min;
                 this.end = value.max;
                 onEmit = (this.has(value, 'int') && value.int) ? this.randomRangedIntEmit : this.randomRangedValueEmit;
+                current = this.start;
                 break;
 
             //  Random object (random integer)
@@ -442,6 +486,7 @@ var EmitterOp = new Class({
                 }
 
                 onEmit = this.randomRangedIntEmit;
+                current = this.start;
                 break;
 
             //  Custom onEmit onUpdate
@@ -458,13 +503,13 @@ var EmitterOp = new Class({
                 this.interpolation = GetInterpolationFunction(value.interpolation);
                 onEmit = this.easedValueEmit;
                 onUpdate = this.easeValueUpdate;
+                current = this.start[0];
                 break;
         }
 
         this.onEmit = onEmit;
         this.onUpdate = onUpdate;
-
-        this.method = method;
+        this.current = current;
     },
 
     /**
@@ -562,7 +607,7 @@ var EmitterOp = new Class({
      */
     staticValueEmit: function ()
     {
-        return this.propertyValue;
+        return this.current;
     },
 
     /**
@@ -575,7 +620,7 @@ var EmitterOp = new Class({
      */
     staticValueUpdate: function ()
     {
-        return this.propertyValue;
+        return this.current;
     },
 
     /**
@@ -590,7 +635,9 @@ var EmitterOp = new Class({
     {
         var randomIndex = Math.floor(Math.random() * this.propertyValue.length);
 
-        return this.propertyValue[randomIndex];
+        this.current = this.propertyValue[randomIndex];
+
+        return this.current;
     },
 
     /**
@@ -614,6 +661,8 @@ var EmitterOp = new Class({
             particle.data[key].min = value;
             particle.data[key].max = this.end;
         }
+
+        this.current = value;
 
         return value;
     },
@@ -639,6 +688,8 @@ var EmitterOp = new Class({
             particle.data[key].min = value;
             particle.data[key].max = this.end;
         }
+
+        this.current = value;
 
         return value;
     },
@@ -701,6 +752,8 @@ var EmitterOp = new Class({
             this.counter = Wrap(next + step, this.start, this.end);
         }
 
+        this.current = current;
+
         return current;
     },
 
@@ -727,6 +780,8 @@ var EmitterOp = new Class({
             data.max = this.end;
         }
 
+        this.current = this.start;
+
         return this.start;
     },
 
@@ -748,16 +803,21 @@ var EmitterOp = new Class({
     {
         var data = particle.data[key];
 
+        var current;
         var v = this.ease(t);
 
         if (this.interpolation)
         {
-            return this.interpolation(this.start, v);
+            current = this.interpolation(this.start, v);
         }
         else
         {
-            return (data.max - data.min) * v + data.min;
+            current = (data.max - data.min) * v + data.min;
         }
+
+        this.current = current;
+
+        return current;
     }
 });
 
