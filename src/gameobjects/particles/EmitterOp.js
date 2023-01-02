@@ -4,11 +4,12 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Between = require('../../math/Between');
 var Class = require('../../utils/Class');
 var FloatBetween = require('../../math/FloatBetween');
 var GetEaseFunction = require('../../tweens/builders/GetEaseFunction');
-var GetInterpolationFunction = require('../../tweens/builders/GetInterpolationFunction');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var GetInterpolationFunction = require('../../tweens/builders/GetInterpolationFunction');
 var Wrap = require('../../math/Wrap');
 
 /**
@@ -423,14 +424,14 @@ var EmitterOp = new Class({
                 onUpdate = this.easeValueUpdate;
                 break;
 
-            //  min/max
+            //  min/max (random float or int)
             case 6:
                 this.start = value.min;
                 this.end = value.max;
-                onEmit = this.randomRangedValueEmit;
+                onEmit = (this.has(value, 'int') && value.int) ? this.randomRangedIntEmit : this.randomRangedValueEmit;
                 break;
 
-            //  Random object
+            //  Random object (random integer)
             case 7:
                 var rnd = value.random;
 
@@ -440,7 +441,7 @@ var EmitterOp = new Class({
                     this.end = rnd[1];
                 }
 
-                onEmit = this.randomRangedValueEmit;
+                onEmit = this.randomRangedIntEmit;
                 break;
 
             //  Custom onEmit onUpdate
@@ -607,6 +608,31 @@ var EmitterOp = new Class({
     randomRangedValueEmit: function (particle, key)
     {
         var value = FloatBetween(this.start, this.end);
+
+        if (particle && particle.data[key])
+        {
+            particle.data[key].min = value;
+            particle.data[key].max = this.end;
+        }
+
+        return value;
+    },
+
+    /**
+     * An `onEmit` callback that returns a value between the {@link Phaser.GameObjects.Particles.EmitterOp#start} and
+     * {@link Phaser.GameObjects.Particles.EmitterOp#end} range.
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#randomRangedIntEmit
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
+     * @param {string} key - The key of the property.
+     *
+     * @return {number} The new value of the property.
+     */
+    randomRangedIntEmit: function (particle, key)
+    {
+        var value = Between(this.start, this.end);
 
         if (particle && particle.data[key])
         {

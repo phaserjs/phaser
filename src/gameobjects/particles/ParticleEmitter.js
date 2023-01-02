@@ -208,22 +208,32 @@ var configOpMap = [
  *
  * ## A min / max object:
  *
- * This allows you to pick a random value between the min and max properties:
+ * This allows you to pick a random float value between the min and max properties:
  *
  * ```js
  * x: { min: 100, max: 700 }
  * ```
  *
  * The x value will be a random float between min and max.
+ * 
+ * You can force it select an integer by setting the 'int' flag:
+ * 
+ * ```js
+ * x: { min: 100, max: 700, int: true }
+ * ```
+ * 
+ * Or, you could use the 'random' array approach (see below)
+ * 
+ * ## A random object:
  *
- * You can also provide this as a random object:
+ * This allows you to pick a random integer value between the first and second array elements:
  *
  * ```js
  * x: { random: [ 100, 700 ] }
  * ```
  *
- * The above does exactly the same as it takes the first element in the 'random'
- * array as the 'min' value and the 2nd element as the 'max' value.
+ * The x value will be a random integer between 100 and 700 as it takes the first
+ * element in the 'random' array as the 'min' value and the 2nd element as the 'max' value.
  *
  * ## Custom onEmit and onUpdate callbacks:
  *
@@ -3154,6 +3164,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
+            console.log('a', this.ops.angle.staticValueEmit());
             return this.ops.angle.staticValueEmit();
         },
 
@@ -3210,6 +3221,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
+            console.log('q', this.ops.quantity.staticValueEmit());
             return this.ops.quantity.staticValueEmit();
         },
 
