@@ -224,6 +224,49 @@ emitterManager.on('emittercomplete', (emitter) => {
 * The `Particles.Events.STOP` event is fired whenever the Emitter finishes emission of particles in flow mode. This happens either when you call the `stop` method, or when an Emitter hits its duration  or stopAfter limit. A reference to the `ParticleEmitter` is included as the only parameter.
 * The `Particles.Events.COMPLETE` event is fired when the final alive particle expires.
 
+#### New Features - Multiple Emit Zones (Breaking Change)
+
+* In v3.60 a Particle Emitter can now have multiple emission zones. Previously, an Emitter could have only a single emission zone. The zones can be created either via the Emitter Config by passing an array of zone objects, or via the new `ParticleEmitter.addEmitZone` method:
+
+```js
+const circle = new Phaser.Geom.Circle(0, 0, 160);
+
+const emitter = particles.createEmitter({
+    x: 400,
+    y: 300,
+});
+
+emitter.addEmitZone({ type: 'edge', source: circle, quantity: 64 });
+```
+
+* When an Emitter has more than one emission zone, the Particles will cycle through the zones in sequence. For example, an Emitter with 3 zones would emit its first particle from zone 1, the second from zone 2, the third from zone 3, the fourth from zone 1, etc.
+* You can control how many particles are emitted from a single zone via the new `total` property. `EdgeZone.total` and `RandomZone.total` are new properties that control the total number of particles the zone will emit, before passing control over to the next zone in the list, if any. The default is 1.
+* Because an Emitter now supports multiple Emit Zones, the method `setEmitZone` now performs a different task than before. It's now an alias for `addEmitZone`. This means if you call it multiple times, it will add multiple zones to the emitter, where-as before it would just replace the zone each time.
+* `ParticleEmitter#removeEmitZone` is a new method that allows you to remove an Emit Zone from an Emitter without needing to modify the internal zones array.
+* `ParticleEmitter.getEmitZone` is a new method that Particles call when they are 'fired' in order to set their starting position, if any.
+* The property `ParticleEmitter.emitZone` has been removed. It has been replaced with the new `ParticleEmitter.emitZones` array-based property.
+
+#### New Features - Multiple Death Zones (Breaking Change)
+
+* In v3.60 a Particle Emitter can now have multiple death zones. Previously, an Emitter could have only a single death zone. The zones can be created either via the Emitter Config by passing an array of zone objects, or via the new `ParticleEmitter.addDeathZone` method:
+
+```js
+const circle = new Phaser.Geom.Circle(0, 0, 160);
+
+const emitter = particles.createEmitter({
+    x: 400,
+    y: 300,
+});
+
+emitter.addDeathZone({ type: 'onEnter', source: circle });
+```
+
+* When an Emitter has more than one Death Zone, the Particles will check themselves against all of the Death Zones, to see if any of them kills them.
+* Because an Emitter now supports multiple Emit Zones, the method `setEmitZone` now performs a different task than before. It's now an alias for `addEmitZone`. This means if you call it multiple times, it will add multiple zones to the emitter, where-as before it would just replace the zone each time.
+* `ParticleEmitter#removeDeathZone` is a new method that allows you to remove a Death Zone from an Emitter without needing to modify the internal zones array.
+* `ParticleEmitter.getDeathZone` is a new method that Particles call when they are updated in order to check if they intersect with any of the Death Zones.
+* The property `ParticleEmitter.deathZone` has been removed. It has been replaced with the new `ParticleEmitter.deathZones` array-based property.
+
 #### Particle System EmitterOp Breaking Changes and Updates:
 
 All of the following properties have been replaced on the `ParticleEmitter` class. Previously they were `EmitterOp` instances. They are now public getter / setters, so calling, for example, `emitter.x` will now return a numeric value - whereas before it would return the `EmitterOp` instance. This gives developers a lot more freedom when using Particle Emitters. Before v3.60 it was impossible to do this, for example:
