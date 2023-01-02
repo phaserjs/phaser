@@ -855,17 +855,18 @@ var ParticleEmitter = new Class({
          * 0 - _counter - The time until next flow cycle.
          * 1 - _frameCounter - Counts up to {@link Phaser.GameObjects.Particles.ParticleEmitter#frameQuantity}.
          * 2 - _animCounter (counts up to animQuantity)
-         * 3 - _elapsed - The ttime remaining until the `duration` limit is reached.
+         * 3 - _elapsed - The time remaining until the `duration` limit is reached.
          * 4 - _stopCounter - The number of particles remaining until `stopAfter` limit is reached.
          * 5 - _completeFlag - Has the COMPLETE event been emitted?
          * 6 - _emitIndex - The emit zone index counter.
+         * 7 - _zoneTotal - The emit zone total counter.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#counters
          * @type {Float32Array}
          * @private
          * @since 3.60.0
          */
-        this.counters = new Float32Array(7);
+        this.counters = new Float32Array(8);
 
         /**
          * Cached amount of frames in the `ParticleEmitter.frames` array.
@@ -1022,7 +1023,7 @@ var ParticleEmitter = new Class({
             this.fastForward(config.advance);
         }
 
-        this.counters.set([ this.frequency, 0, 0, 0, 0, (this.on) ? 1 : 0, 0 ]);
+        this.resetCounters(this.frequency, this.on);
 
         if (this.on)
         {
@@ -1083,6 +1084,31 @@ var ParticleEmitter = new Class({
         }
 
         return output;
+    },
+
+    /**
+     * Resets the internal counter trackers.
+     *
+     * You shouldn't ever need to call this directly.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#resetCounters
+     * @since 3.60.0
+     *
+     * @param {number} frequency - The frequency counter.
+     * @param {boolean} on - Set the complete flag.
+     */
+    resetCounters: function (frequency, on)
+    {
+        var counters = this.counters;
+
+        counters.fill(0);
+
+        counters[0] = frequency;
+
+        if (on)
+        {
+            counters[5] = 1;
+        }
     },
 
     /**
@@ -1150,12 +1176,11 @@ var ParticleEmitter = new Class({
         {
             var frame = this.frames[this.currentFrame];
 
-            //  frameCounter
-            this.counters[1]++;
+            this.frameCounter++;
 
-            if (this.counters[1] >= this.frameQuantity)
+            if (this.frameCounter >= this.frameQuantity)
             {
-                this.counters[1] = 0;
+                this.frameCounter = 0;
                 this.currentFrame = Wrap(this.currentFrame + 1, 0, this._frameLength);
             }
 
@@ -1253,11 +1278,11 @@ var ParticleEmitter = new Class({
         {
             var anim = anims[this.currentAnim];
 
-            this.counters[2]++;
+            this.animCounter++;
 
-            if (this.counters[2] >= this.animQuantity)
+            if (this.animCounter >= this.animQuantity)
             {
-                this.counters[2] = 0;
+                this.animCounter = 0;
                 this.currentAnim = Wrap(this.currentAnim + 1, 0, this._animLength);
             }
 
@@ -1691,7 +1716,7 @@ var ParticleEmitter = new Class({
     {
         this.frequency = frequency;
 
-        this.counters[0] = (frequency > 0) ? frequency : 0;
+        this.flowCounter = (frequency > 0) ? frequency : 0;
 
         if (quantity)
         {
@@ -1705,7 +1730,8 @@ var ParticleEmitter = new Class({
      * Adds a new Particle Death Zone to this Particle Emitter.
      *
      * This method is an alias for `ParticleEmitter#addDeathZone` and is retained for
-     * backward API compatibility only.
+     * backward API compatibility only. Please note that calling this method multiple
+     * times will add multiple death zones to this Emitter.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setDeathZone
      * @since 3.0.0
@@ -1840,7 +1866,7 @@ var ParticleEmitter = new Class({
             {
                 //  Where source = Geom like Circle, or a Path or Curve
                 //  emitZone: { type: 'random', source: X }
-                //  emitZone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false], [seamless=true] }
+                //  emitZone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false], [seamless=true], [total=1] }
 
                 var type = GetFastValue(zone, 'type', 'random');
                 var source = GetFastValue(zone, 'source', null);
@@ -1855,8 +1881,9 @@ var ParticleEmitter = new Class({
                     var stepRate = GetFastValue(zone, 'stepRate', 0);
                     var yoyo = GetFastValue(zone, 'yoyo', false);
                     var seamless = GetFastValue(zone, 'seamless', true);
+                    var total = GetFastValue(zone, 'total', 1);
 
-                    zone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
+                    zone = new EdgeZone(source, quantity, stepRate, yoyo, seamless, total);
                 }
 
                 if (zone)
@@ -1883,6 +1910,8 @@ var ParticleEmitter = new Class({
     {
         Remove(this.emitZones, zone);
 
+        this.zoneIndex = 0;
+
         return this;
     },
 
@@ -1908,22 +1937,20 @@ var ParticleEmitter = new Class({
         {
             return;
         }
-        else if (len === 1)
-        {
-            return zones[0].getPoint(particle);
-        }
         else
         {
-            var counters = this.counters;
+            var zone = zones[this.zoneIndex];
 
-            counters[6]++;
+            zone.getPoint(particle);
 
-            if (counters[6] === len)
+            this.zoneTotal++;
+
+            if (this.zoneTotal >= zone.total)
             {
-                counters[6] = 0;
-            }
+                this.zoneTotal = 0;
 
-            zones[counters[6]].getPoint(particle);
+                this.zoneIndex = Wrap(this.zoneIndex + 1, 0, len);
+            }
         }
     },
 
@@ -1958,7 +1985,8 @@ var ParticleEmitter = new Class({
      * Adds a new Emission Zone to this Particle Emitter.
      *
      * This method is an alias for `ParticleEmitter#addEmitZone` and is retained for
-     * backward API compatibility only.
+     * backward API compatibility only. Please note that calling this method multiple
+     * times will add multiple emit zones to this Emitter.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone
      * @since 3.0.0
@@ -2234,7 +2262,7 @@ var ParticleEmitter = new Class({
 
             this.on = true;
 
-            this.counters.set([ this.frequency, 0, 0, 0, 0, 1, 0 ]);
+            this.resetCounters(this.frequency, true);
 
             if (duration !== undefined)
             {
@@ -2392,7 +2420,7 @@ var ParticleEmitter = new Class({
     {
         this.frequency = -1;
 
-        this.counters.set([ -1, 0, 0, 0, 0, 1, 0 ]);
+        this.resetCounters(-1, true);
 
         var particle = this.emitParticle(count, x, y);
 
@@ -2630,15 +2658,15 @@ var ParticleEmitter = new Class({
         else if (this.frequency > 0)
         {
             //  counter
-            counters[0] -= delta;
+            this.flowCounter -= delta;
 
-            if (counters[0] <= 0)
+            if (this.flowCounter <= 0)
             {
                 //  Emits the 'quantity' number of particles
                 this.emitParticle();
 
                 //  counter = frequency - remainder from previous delta
-                counters[0] += this.frequency;
+                this.flowCounter += this.frequency;
             }
         }
 
@@ -3212,6 +3240,111 @@ var ParticleEmitter = new Class({
         set: function (value)
         {
             this.ops.delay.onChange(value);
+        }
+
+    },
+
+    /**
+     * The internal flow counter.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#flowCounter
+     * @type {number}
+     * @since 3.60.0
+     */
+    flowCounter: {
+
+        get: function ()
+        {
+            return this.counters[0];
+        },
+
+        set: function (value)
+        {
+            this.counters[0] = value;
+        }
+
+    },
+
+    /**
+     * The internal frame counter.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#frameCounter
+     * @type {number}
+     * @since 3.60.0
+     */
+    frameCounter: {
+
+        get: function ()
+        {
+            return this.counters[1];
+        },
+
+        set: function (value)
+        {
+            this.counters[1] = value;
+        }
+
+    },
+
+    /**
+     * The internal anim counter.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#animCounter
+     * @type {number}
+     * @since 3.60.0
+     */
+    animCounter: {
+
+        get: function ()
+        {
+            return this.counters[2];
+        },
+
+        set: function (value)
+        {
+            this.counters[2] = value;
+        }
+
+    },
+
+    /**
+     * The internal zone counter.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#zoneIndex
+     * @type {number}
+     * @since 3.60.0
+     */
+    zoneIndex: {
+
+        get: function ()
+        {
+            return this.counters[6];
+        },
+
+        set: function (value)
+        {
+            this.counters[6] = value;
+        }
+
+    },
+
+    /**
+     * The current emission zone index.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#zoneTotal
+     * @type {number}
+     * @since 3.60.0
+     */
+    zoneTotal: {
+
+        get: function ()
+        {
+            return this.counters[7];
+        },
+
+        set: function (value)
+        {
+            this.counters[7] = value;
         }
 
     },
