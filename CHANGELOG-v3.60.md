@@ -338,6 +338,7 @@ Another potentially breaking change is the removal of two internal private count
 
 #### Further Particle System Updates and Fixes:
 
+* The `ParticleEmitterManager` class now has the `AlphaSingle` Component. This allows you to call `setAlpha` on the Manager instance itself and have it impact all particles being rendered by its emitters, allowing you to now 'fade in/out' a whole Particle Manager, rather than just a single Emitter.
 * Setting `frequency` wasn't working correctly in earlier versions. It should allow you to specify a time, in ms, between which each 'quantity' of particles is emitted. However, the `preUpdate` loop was calculating the value incorrectly. It will now count down the right amount of time before emiting another batch of particles.
 * Calling `ParticleEmitter.start` wouldn't reset the `_frameCounter` value internally, meaning the new emission didn't restart from the first texture frame again.
 * `ParticleEmitter.counters` is a new Float32Array property that is used to hold all of the various internal counters required for emitter operation. Both the previous `_counter` and `_frameCounter` properties have been merged into this array, along with new ones required for new features.
