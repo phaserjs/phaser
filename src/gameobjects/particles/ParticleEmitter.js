@@ -345,7 +345,7 @@ var ParticleEmitter = new Class({
         /**
          * An internal object holding all of the EmitterOp instances.
          *
-         * These are populated as part of the Emmitter configuration parsing.
+         * These are populated as part of the Emitter configuration parsing.
          *
          * You typically do not access them directly, but instead use the
          * provided getters and setters on this class, such as `ParticleEmitter.speedX` etc.
