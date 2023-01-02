@@ -215,15 +215,15 @@ var configOpMap = [
  * ```
  *
  * The x value will be a random float between min and max.
- * 
+ *
  * You can force it select an integer by setting the 'int' flag:
- * 
+ *
  * ```js
  * x: { min: 100, max: 700, int: true }
  * ```
- * 
+ *
  * Or, you could use the 'random' array approach (see below)
- * 
+ *
  * ## A random object:
  *
  * This allows you to pick a random integer value between the first and second array elements:
@@ -365,26 +365,26 @@ var ParticleEmitter = new Class({
          * @since 3.60.0
          */
         this.ops = {
-            x: new EmitterOp(config, 'x', 0),
-            y: new EmitterOp(config, 'y', 0),
-            accelerationX: new EmitterOp(config, 'accelerationX', 0),
-            accelerationY: new EmitterOp(config, 'accelerationY', 0),
-            maxVelocityX: new EmitterOp(config, 'maxVelocityX', 10000),
-            maxVelocityY: new EmitterOp(config, 'maxVelocityY', 10000),
-            speedX: new EmitterOp(config, 'speedX', 0, true),
-            speedY: new EmitterOp(config, 'speedY', 0, true),
-            moveToX: new EmitterOp(config, 'moveToX', 0),
-            moveToY: new EmitterOp(config, 'moveToY', 0),
-            bounce: new EmitterOp(config, 'bounce', 0),
-            scaleX: new EmitterOp(config, 'scaleX', 1),
-            scaleY: new EmitterOp(config, 'scaleY', 1),
-            tint: new EmitterOp(config, 'tint', 0xffffff),
-            alpha: new EmitterOp(config, 'alpha', 1),
-            lifespan: new EmitterOp(config, 'lifespan', 1000, true),
-            angle: new EmitterOp(config, 'angle', { min: 0, max: 360 }, true),
-            rotate: new EmitterOp(config, 'rotate', 0),
-            quantity: new EmitterOp(config, 'quantity', 1, true),
-            delay: new EmitterOp(config, 'delay', 0, true)
+            x: new EmitterOp('x', 0),
+            y: new EmitterOp('y', 0),
+            accelerationX: new EmitterOp('accelerationX', 0),
+            accelerationY: new EmitterOp('accelerationY', 0),
+            maxVelocityX: new EmitterOp('maxVelocityX', 10000),
+            maxVelocityY: new EmitterOp('maxVelocityY', 10000),
+            speedX: new EmitterOp('speedX', 0, true),
+            speedY: new EmitterOp('speedY', 0, true),
+            moveToX: new EmitterOp('moveToX', 0),
+            moveToY: new EmitterOp('moveToY', 0),
+            bounce: new EmitterOp('bounce', 0),
+            scaleX: new EmitterOp('scaleX', 1),
+            scaleY: new EmitterOp('scaleY', 1),
+            tint: new EmitterOp('tint', 0xffffff),
+            alpha: new EmitterOp('alpha', 1),
+            lifespan: new EmitterOp('lifespan', 1000, true),
+            angle: new EmitterOp('angle', { min: 0, max: 360 }, true),
+            rotate: new EmitterOp('rotate', 0),
+            quantity: new EmitterOp('quantity', 1, true),
+            delay: new EmitterOp('delay', 0, true)
         };
 
         /**
@@ -910,10 +910,7 @@ var ParticleEmitter = new Class({
          */
         this.skipping = false;
 
-        if (config)
-        {
-            this.fromJSON(config);
-        }
+        this.fromJSON(config);
     },
 
     /**
@@ -954,10 +951,7 @@ var ParticleEmitter = new Class({
         {
             key = configOpMap[i];
 
-            if (HasValue(config, key))
-            {
-                ops[key].loadConfig(config);
-            }
+            ops[key].loadConfig(config);
         }
 
         this.acceleration = (this.accelerationX !== 0 || this.accelerationY !== 0);
@@ -1705,7 +1699,7 @@ var ParticleEmitter = new Class({
      */
     setQuantity: function (quantity)
     {
-        this.quantity.onChange(quantity);
+        this.quantity = quantity;
 
         return this;
     },
@@ -1730,7 +1724,7 @@ var ParticleEmitter = new Class({
 
         if (quantity)
         {
-            this.quantity.onChange(quantity);
+            this.quantity = quantity;
         }
 
         return this;
@@ -1891,7 +1885,7 @@ var ParticleEmitter = new Class({
                     var stepRate = GetFastValue(zone, 'stepRate', 0);
                     var yoyo = GetFastValue(zone, 'yoyo', false);
                     var seamless = GetFastValue(zone, 'seamless', true);
-                    var total = GetFastValue(zone, 'total', 1);
+                    var total = GetFastValue(zone, 'total', -1);
 
                     zone = new EdgeZone(source, quantity, stepRate, yoyo, seamless, total);
                 }
@@ -1953,13 +1947,16 @@ var ParticleEmitter = new Class({
 
             zone.getPoint(particle);
 
-            this.zoneTotal++;
-
-            if (this.zoneTotal >= zone.total)
+            if (zone.total > -1)
             {
-                this.zoneTotal = 0;
+                this.zoneTotal++;
 
-                this.zoneIndex = Wrap(this.zoneIndex + 1, 0, len);
+                if (this.zoneTotal >= zone.total)
+                {
+                    this.zoneTotal = 0;
+
+                    this.zoneIndex = Wrap(this.zoneIndex + 1, 0, len);
+                }
             }
         }
     },
@@ -1995,22 +1992,41 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Adds a new Emission Zone to this Particle Emitter.
+     * Changes the currently active Emission Zone. The zones should have already
+     * been added to this Emitter either via the emitter config, or the
+     * `addEmitZone` method.
      *
-     * This method is an alias for `ParticleEmitter#addEmitZone` and is retained for
-     * backward API compatibility only. Please note that calling this method multiple
-     * times will add multiple emit zones to this Emitter.
+     * Call this method by passing either a numeric zone index value, or
+     * the zone instance itself.
+     *
+     * Prior to v3.60 an Emitter could only have a single Emit Zone and this
+     * method was how you set it. From 3.60 and up it now performs a different
+     * function and swaps between all available active zones.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone
      * @since 3.0.0
      *
-     * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig|Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig|Phaser.GameObjects.Particles.Zones.EdgeZone|Phaser.GameObjects.Particles.Zones.RandomZone} zone - An Emission Zone configuration object, or a RandomZone or EdgeZone instance.
+     * @param {number|Phaser.GameObjects.Particles.Zones.EdgeZone|Phaser.GameObjects.Particles.Zones.RandomZone} zone - The Emit Zone to set as the active zone.
      *
      * @return {this} This Particle Emitter.
      */
-    setEmitZone: function (zoneConfig)
+    setEmitZone: function (zone)
     {
-        this.addEmitZone(zoneConfig);
+        var index;
+
+        if (isFinite(zone))
+        {
+            index = zone;
+        }
+        else
+        {
+            index = this.emitZones.indexOf(zone);
+        }
+
+        if (index >= 0)
+        {
+            this.zoneIndex = index;
+        }
 
         return this;
     },
@@ -2405,8 +2421,7 @@ var ParticleEmitter = new Class({
         this.on = false;
 
         this.frequency = frequency;
-
-        this.quantity.onChange(count);
+        this.quantity = count;
 
         if (stopAfter !== undefined)
         {
@@ -2483,7 +2498,7 @@ var ParticleEmitter = new Class({
 
         if (count === undefined)
         {
-            count = this.quantity;
+            count = this.ops.quantity.onEmit();
         }
 
         var dead = this.dead;
@@ -2735,7 +2750,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.x.staticValueEmit();
+            return this.ops.x.current;
         },
 
         set: function (value)
@@ -2760,7 +2775,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.y.staticValueEmit();
+            return this.ops.y.current;
         },
 
         set: function (value)
@@ -2784,7 +2799,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.accelerationX.staticValueEmit();
+            return this.ops.accelerationX.current;
         },
 
         set: function (value)
@@ -2808,7 +2823,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.accelerationY.staticValueEmit();
+            return this.ops.accelerationY.current;
         },
 
         set: function (value)
@@ -2833,7 +2848,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.maxVelocityX.staticValueEmit();
+            return this.ops.maxVelocityX.current;
         },
 
         set: function (value)
@@ -2858,7 +2873,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.maxVelocityY.staticValueEmit();
+            return this.ops.maxVelocityY.current;
         },
 
         set: function (value)
@@ -2882,7 +2897,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.speedX.staticValueEmit();
+            return this.ops.speedX.current;
         },
 
         set: function (value)
@@ -2907,7 +2922,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.speedX.staticValueEmit();
+            return this.ops.speedX.current;
         },
 
         set: function (value)
@@ -2931,7 +2946,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.speedY.staticValueEmit();
+            return this.ops.speedY.current;
         },
 
         set: function (value)
@@ -2955,7 +2970,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.moveToX.staticValueEmit();
+            return this.ops.moveToX.current;
         },
 
         set: function (value)
@@ -2979,7 +2994,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.moveToY.staticValueEmit();
+            return this.ops.moveToY.current;
         },
 
         set: function (value)
@@ -3005,7 +3020,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.bounce.staticValueEmit();
+            return this.ops.bounce.current;
         },
 
         set: function (value)
@@ -3029,7 +3044,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.scaleX.staticValueEmit();
+            return this.ops.scaleX.current;
         },
 
         set: function (value)
@@ -3053,7 +3068,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.scaleY.staticValueEmit();
+            return this.ops.scaleY.current;
         },
 
         set: function (value)
@@ -3084,7 +3099,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.tint.staticValueEmit();
+            return this.ops.tint.current;
         },
 
         set: function (value)
@@ -3111,7 +3126,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.alpha.staticValueEmit();
+            return this.ops.alpha.current;
         },
 
         set: function (value)
@@ -3137,7 +3152,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.lifespan.staticValueEmit();
+            return this.ops.lifespan.current;
         },
 
         set: function (value)
@@ -3164,8 +3179,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            console.log('a', this.ops.angle.staticValueEmit());
-            return this.ops.angle.staticValueEmit();
+            return this.ops.angle.current;
         },
 
         set: function (value)
@@ -3192,7 +3206,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.rotate.staticValueEmit();
+            return this.ops.rotate.current;
         },
 
         set: function (value)
@@ -3221,8 +3235,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            console.log('q', this.ops.quantity.staticValueEmit());
-            return this.ops.quantity.staticValueEmit();
+            return this.ops.quantity.current;
         },
 
         set: function (value)
@@ -3249,7 +3262,7 @@ var ParticleEmitter = new Class({
 
         get: function ()
         {
-            return this.ops.delay.staticValueEmit();
+            return this.ops.delay.current;
         },
 
         set: function (value)
