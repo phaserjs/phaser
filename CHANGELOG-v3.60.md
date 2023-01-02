@@ -202,25 +202,30 @@ const emitterManager = this.add.particles('flare');
 
 //  Create your emitters
 
-emitterManager.on('emitterstart', (emitter) => {
+emitterManager.on('start', (emitter) => {
     //  emission started
 });
 
-emitterManager.on('emitterexplode', (emitter, particle) => {
+emitterManager.on('explode', (emitter, particle) => {
     //  emitter 'explode' called
 });
 
-emitterManager.on('emitterstop', (emitter) => {
+emitterManager.on('deathzone', (emitter, particle, deathzone) => {
+    //  emitter 'death zone' called
+});
+
+emitterManager.on('stop', (emitter) => {
     //  emission has stopped
 });
 
-emitterManager.on('emittercomplete', (emitter) => {
+emitterManager.on('complete', (emitter) => {
     //  all particles fully dead
 });
 ```
 
 * The `Particles.Events.START` event is fired whenever the Emitter begins emission of particles in flow mode. A reference to the `ParticleEmitter` is included as the only parameter.
 * The `Particles.Events.EXPLODE` event is fired whenever the Emitter explodes a bunch of particles via the `explode` method. A reference to the `ParticleEmitter` and a reference to the most recently fired `Particle` instance are the two parameters.
+* The `Particles.Events.DEATH_ZONE` event is fired whenever a Particle is killed by a Death Zone. A reference to the `ParticleEmitter`, the killed `Particle` and the `DeathZone` that caused it are the 3 parameters.
 * The `Particles.Events.STOP` event is fired whenever the Emitter finishes emission of particles in flow mode. This happens either when you call the `stop` method, or when an Emitter hits its duration  or stopAfter limit. A reference to the `ParticleEmitter` is included as the only parameter.
 * The `Particles.Events.COMPLETE` event is fired when the final alive particle expires.
 
