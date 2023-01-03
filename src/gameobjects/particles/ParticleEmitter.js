@@ -2376,7 +2376,10 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Removes the emitter from its manager and the scene.
+     * Removes this Emitter from its Emitter Manager.
+     *
+     * Doing so does not destroy this Emitter. It's up to you to call the
+     * `destroy` method when you're ready to free-up the resources it's using.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#remove
      * @since 3.22.0
