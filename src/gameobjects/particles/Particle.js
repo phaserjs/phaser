@@ -346,15 +346,23 @@ var Particle = new Class({
     },
 
     /**
-     * Resets the position of this particle back to zero.
+     * Sets the position of this particle to the given x/y coordinates.
      *
-     * @method Phaser.GameObjects.Particles.Particle#resetPosition
-     * @since 3.16.0
+     * If the parameters are left undefined, it resets the particle back to 0x0.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#setPosition
+     * @since 3.60.0
+     *
+     * @param {number} [x=0] - The x coordinate to set this Particle to.
+     * @param {number} [y=0] - The y coordinate to set this Particle to.
      */
-    resetPosition: function ()
+    setPosition: function (x, y)
     {
-        this.x = 0;
-        this.y = 0;
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        this.x = x;
+        this.y = y;
     },
 
     /**
