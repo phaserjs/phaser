@@ -2660,7 +2660,7 @@ var ParticleEmitter = new Class({
                     deathCallback.call(deathCallbackScope, entry.particle);
                 }
 
-                entry.particle.resetPosition();
+                entry.particle.setPosition();
             }
         }
 
