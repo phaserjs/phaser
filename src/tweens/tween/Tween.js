@@ -289,13 +289,13 @@ var Tween = new Class({
     {
         if (startToCurrent === undefined) { startToCurrent = false; }
 
-        if (key !== 'texture' && (this.isPlayingForward() || this.isPlayingBackward()))
+        if (key !== 'texture')
         {
             for (var i = 0; i < this.totalData; i++)
             {
                 var tweenData = this.data[i];
 
-                if (tweenData.key === key)
+                if (tweenData.key === key && (tweenData.isPlayingForward() || tweenData.isPlayingBackward()))
                 {
                     tweenData.end = value;
 
