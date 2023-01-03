@@ -21,6 +21,7 @@ var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Remove = require('../../utils/array/Remove');
 var StableSort = require('../../utils/array/StableSort');
+var TransformMatrix = require('../components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
 
@@ -909,6 +910,9 @@ var ParticleEmitter = new Class({
          * @since 3.60.0
          */
         this.skipping = false;
+
+        this.tempMatrix1 = new TransformMatrix();
+        this.tempMatrix2 = new TransformMatrix();
 
         this.fromJSON(config);
     },
@@ -2733,6 +2737,38 @@ var ParticleEmitter = new Class({
     depthSortCallback: function (a, b)
     {
         return a.y - b.y;
+    },
+
+    /**
+     * Gets the world transform matrix for this Particle Emitter, factoring in any parents.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#getWorldTransformMatrix
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A temporary matrix to hold parent values during the calculations.
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
+     */
+    getWorldTransformMatrix: function (tempMatrix, parentMatrix)
+    {
+        if (tempMatrix === undefined) { tempMatrix = this.tempMatrix1; }
+        if (parentMatrix === undefined) { parentMatrix = this.tempMatrix2; }
+
+        var parent = this.manager;
+
+        tempMatrix.applyITRS(this.x, this.y, 0, 1, 1);
+
+        while (parent)
+        {
+            parentMatrix.applyITRS(parent.x, parent.y, parent._rotation, parent._scaleX, parent._scaleY);
+
+            parentMatrix.multiply(tempMatrix, tempMatrix);
+
+            parent = parent.parentContainer;
+        }
+
+        return tempMatrix;
     },
 
     /**
