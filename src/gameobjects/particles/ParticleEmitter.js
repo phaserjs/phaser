@@ -3398,10 +3398,18 @@ var ParticleEmitter = new Class({
         this.deathZones = null;
         this.bounds = null;
         this.follow = null;
-        this.ops = null;
         this.counters = null;
 
         var i;
+
+        var ops = this.ops;
+
+        for (i = 0; i < configOpMap.length; i++)
+        {
+            var key = configOpMap[i];
+
+            ops[key].destroy();
+        }
 
         for (i = 0; i < this.particles.length; i++)
         {
@@ -3413,6 +3421,7 @@ var ParticleEmitter = new Class({
             this.dead[i].destroy();
         }
 
+        this.ops = null;
         this.particles = [];
         this.dead = [];
     }
