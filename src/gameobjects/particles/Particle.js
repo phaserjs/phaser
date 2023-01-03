@@ -679,7 +679,12 @@ var Particle = new Class({
         }
 
         this.scaleX = ops.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
-        this.scaleY = ops.scaleY.onUpdate(this, 'scaleY', t, this.scaleY);
+        this.scaleY = this.scaleX;
+
+        if (ops.scaleY.active)
+        {
+            this.scaleY = ops.scaleY.onUpdate(this, 'scaleY', t, this.scaleY);
+        }
 
         this.angle = ops.rotate.onUpdate(this, 'rotate', t, this.angle);
         this.rotation = DegToRad(this.angle);
