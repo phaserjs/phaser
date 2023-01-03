@@ -359,6 +359,18 @@ var Particle = new Class({
     },
 
     /**
+     * Kills this particle. This sets the `lifeCurrent` value to 0, which forces
+     * the Particle to be removed the next time its parent Emitter runs an update.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#kill
+     * @since 3.60.0
+     */
+    kill: function ()
+    {
+        this.lifeCurrent = 0;
+    },
+
+    /**
      * Sets the position of this particle to the given x/y coordinates.
      *
      * If the parameters are left undefined, it resets the particle back to 0x0.
@@ -481,7 +493,7 @@ var Particle = new Class({
         this.delayCurrent = ops.delay.onEmit(this, 'delay');
 
         this.scaleX = ops.scaleX.onEmit(this, 'scaleX');
-        this.scaleY = ops.scaleY.onEmit(this, 'scaleY');
+        this.scaleY = (ops.scaleY.active) ? ops.scaleY.onEmit(this, 'scaleY') : this.scaleX;
 
         this.angle = ops.rotate.onEmit(this, 'rotate');
         this.rotation = DegToRad(this.angle);
@@ -617,6 +629,12 @@ var Particle = new Class({
             this.delayCurrent -= delta;
 
             return false;
+        }
+
+        if (this.lifeCurrent === 0)
+        {
+            //  Particle is dead via `Particle.kill` method.
+            return true;
         }
 
         this.anims.update(0, delta);
