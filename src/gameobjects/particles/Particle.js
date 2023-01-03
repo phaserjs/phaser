@@ -8,6 +8,8 @@ var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
 var Rectangle = require('../../geom/rectangle/Rectangle');
+var RotateAround = require('../../math/RotateAround');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
@@ -311,10 +313,11 @@ var Particle = new Class({
         this.anims = new AnimationState(this);
 
         /**
-         * Internal transform values of this Particle.
+         * A rectangle that holds the bounds of this Particle after a call to
+         * the `Particle.getBounds` method has been made.
          *
-         * @name Phaser.GameObjects.Particles.Particle#transform
-         * @type {object}
+         * @name Phaser.GameObjects.Particles.Particle#bounds
+         * @type {Phaser.Geom.Rectangle}
          * @since 3.60.0
          */
         this.bounds = new Rectangle();
@@ -686,23 +689,55 @@ var Particle = new Class({
     },
 
     /**
-     * TODO
+     * Gets the bounds of this particle as a Geometry Rectangle, factoring in any
+     * transforms of the parent emitter and anything else above it in the display list.
      *
-     * @method Phaser.Physics.Arcade.Body#getBounds
+     * Once calculated the bounds can be accessed via the `Particle.bounds` property.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#getBounds
      * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [matrix] - Optional transform matrix to apply to this particle.
+     *
+     * @return {Phaser.Geom.Rectangle} A Rectangle containing the transformed bounds of this particle.
      */
-    getBounds: function ()
+    getBounds: function (matrix)
     {
-        var matrix = this.emitter.getWorldTransformMatrix();
+        if (matrix === undefined) { matrix = this.emitter.getWorldTransformMatrix(); }
 
         var sx = Math.abs(matrix.scaleX) * this.scaleX;
         var sy = Math.abs(matrix.scaleY) * this.scaleY;
 
+        var x = this.x;
+        var y = this.y;
+        var rotation = this.rotation;
+        var width = (this.frame.width * sx) / 2;
+        var height = (this.frame.height * sy) / 2;
+
         var bounds = this.bounds;
 
-        bounds.setSize(this.frame.sourceWidth * sx, this.frame.sourceHeight * sy);
-        bounds.centerX = matrix.tx + this.x;
-        bounds.centerY = matrix.ty + this.y;
+        var topLeft = new Vector2(x - width, y - height);
+        var topRight = new Vector2(x + width, y - height);
+        var bottomLeft = new Vector2(x - width, y + height);
+        var bottomRight = new Vector2(x + width, y + height);
+
+        if (rotation !== 0)
+        {
+            RotateAround(topLeft, x, y, rotation);
+            RotateAround(topRight, x, y, rotation);
+            RotateAround(bottomLeft, x, y, rotation);
+            RotateAround(bottomRight, x, y, rotation);
+        }
+
+        matrix.transformPoint(topLeft.x, topLeft.y, topLeft);
+        matrix.transformPoint(topRight.x, topRight.y, topRight);
+        matrix.transformPoint(bottomLeft.x, bottomLeft.y, bottomLeft);
+        matrix.transformPoint(bottomRight.x, bottomRight.y, bottomRight);
+
+        bounds.x = Math.min(topLeft.x, topRight.x, bottomLeft.x, bottomRight.x);
+        bounds.y = Math.min(topLeft.y, topRight.y, bottomLeft.y, bottomRight.y);
+        bounds.width = Math.max(topLeft.x, topRight.x, bottomLeft.x, bottomRight.x) - bounds.x;
+        bounds.height = Math.max(topLeft.y, topRight.y, bottomLeft.y, bottomRight.y) - bounds.y;
 
         return bounds;
     },
