@@ -514,7 +514,8 @@ var Particle = new Class({
      * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Emitter that is updating this Particle.
      * @param {number} delta - The delta time in ms.
      * @param {number} step - The delta value divided by 1000.
-     * @param {array} processors - Particle processors (gravity wells).
+     * @param {Phaser.GameObjects.Particles.ParticleProcessor[]} processors - An array of all active Particle Processors.
+     * @param {number} t - The current normalized lifetime of the particle, between 0 (birth) and 1 (death).
      */
     computeVelocity: function (emitter, delta, step, processors, t)
     {
@@ -566,7 +567,7 @@ var Particle = new Class({
         //  Apply any additional processors
         for (var i = 0; i < processors.length; i++)
         {
-            processors[i].update(this, delta, step);
+            processors[i].update(this, delta, step, t);
         }
     },
 
@@ -618,23 +619,23 @@ var Particle = new Class({
      *
      * @param {number} delta - The delta time in ms.
      * @param {number} step - The delta value divided by 1000.
-     * @param {array} processors - An optional array of update processors.
+     * @param {Phaser.GameObjects.Particles.ParticleProcessor[]} processors - An array of all active Particle Processors.
      *
      * @return {boolean} Returns `true` if this Particle has now expired and should be removed, otherwise `false` if still active.
      */
     update: function (delta, step, processors)
     {
+        if (this.lifeCurrent === 0)
+        {
+            //  Particle is dead via `Particle.kill` method.
+            return true;
+        }
+
         if (this.delayCurrent > 0)
         {
             this.delayCurrent -= delta;
 
             return false;
-        }
-
-        if (this.lifeCurrent === 0)
-        {
-            //  Particle is dead via `Particle.kill` method.
-            return true;
         }
 
         this.anims.update(0, delta);
