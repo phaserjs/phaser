@@ -4,8 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-// Centers this Rectangle so that the center coordinates match the given x and y values.
-
 /**
  * Moves the top-left corner of a Rectangle so that its center is at the given coordinates.
  *
