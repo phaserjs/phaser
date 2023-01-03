@@ -87,6 +87,7 @@ var ParticleProcessor = new Class({
      * @param {Phaser.GameObjects.Particles.Particle} particle - The Particle to update.
      * @param {number} delta - The delta time in ms.
      * @param {number} step - The delta value divided by 1000.
+     * @param {number} t - The current normalized lifetime of the particle, between 0 (birth) and 1 (death).
      */
     update: function ()
     {
