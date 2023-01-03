@@ -281,6 +281,16 @@ emitter.addDeathZone({ type: 'onEnter', source: circle });
 * `ParticleEmitter.tempMatrix1` is a new private property that holds a TransformMatrix used for calculations.
 * `ParticleEmitter.tempMatrix2` is a new private property that holds a TransformMatrix used for calculations.
 
+#### New Features - Particle Processors
+
+* `ParticleProcessor` is a new base class that you can use to create your own Particle Processors, which are special processors capable of manipulating the path of Particles based on your own logic or math. It provides the structure required to handle the processing of particles and should be used as a base for your own classes.
+* `GravityWell` now extends the new `ParticleProcessor` class.
+* `ParticleEmitterManager.addParticleProcessor` is a new method that allows you to add a Particle Processor instance to the Emitter Manager. The old `createGravityWell` method now uses this.
+* `ParticleEmitterManager.removeParticleProcessor` is a new method that will remove a Particle Processor from an Emitter Manager.
+* `ParticleEmitterManager.processors` is a new List property that contains all of the Particle Processors belonging to the Emitter Manager.
+* The `ParticleEmitterManager.wells` property has been removed. You should now use the new `processors` property instead, they are functionally identical.
+* `ParticleProcessor.update` is the method that handles all of the particle manipulation. It now has a new 4th parameter `t` that is the normalized lifespan of the Particle being processed.
+
 #### Particle System EmitterOp Breaking Changes and Updates:
 
 All of the following properties have been replaced on the `ParticleEmitter` class. Previously they were `EmitterOp` instances. They are now public getter / setters, so calling, for example, `emitter.x` will now return a numeric value - whereas before it would return the `EmitterOp` instance. This gives developers a lot more freedom when using Particle Emitters. Before v3.60 it was impossible to do this, for example:
