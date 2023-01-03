@@ -19,6 +19,7 @@ var HasValue = require('../../utils/object/HasValue');
 var Particle = require('./Particle');
 var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
+var RectangleToRectangle = require('../../geom/intersects/RectangleToRectangle');
 var Remove = require('../../utils/array/Remove');
 var StableSort = require('../../utils/array/StableSort');
 var TransformMatrix = require('../components/TransformMatrix');
@@ -2229,10 +2230,10 @@ var ParticleEmitter = new Class({
         var alive = this.alive;
         var length = alive.length;
 
-        for (var index = 0; index < length; ++index)
+        for (var i = 0; i < length; i++)
         {
             //  Sends the Particle and the Emitter
-            callback.call(context, alive[index], this);
+            callback.call(context, alive[i], this);
         }
 
         return this;
@@ -2254,10 +2255,10 @@ var ParticleEmitter = new Class({
         var dead = this.dead;
         var length = dead.length;
 
-        for (var index = 0; index < length; ++index)
+        for (var i = 0; i < length; i++)
         {
             //  Sends the Particle and the Emitter
-            callback.call(context, dead[index], this);
+            callback.call(context, dead[i], this);
         }
 
         return this;
@@ -2757,7 +2758,7 @@ var ParticleEmitter = new Class({
 
         var parent = this.manager;
 
-        tempMatrix.applyITRS(this.x, this.y, 0, 1, 1);
+        tempMatrix.applyITRS(0, 0, 0, 1, 1);
 
         while (parent)
         {
@@ -2769,6 +2770,42 @@ var ParticleEmitter = new Class({
         }
 
         return tempMatrix;
+    },
+
+    /**
+     * Takes either a Rectangle Geometry object or an Arcade Physics Body and tests
+     * to see if it intersects with any currently alive Particle in this Emitter.
+     *
+     * Overlapping particles are returned in an array, where you can perform further
+     * processing on them. If nothing overlaps then the array will be empty.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#overlap
+     * @since 3.60.0
+     *
+     * @param {(Phaser.Geom.Rectangle|Phaser.Physics.Arcade.Body)} target - A Rectangle or Arcade Physics Body to check for intersection against all alive particles.
+     *
+     * @return {Phaser.GameObjects.Particles.Particle[]} An array of Particles that overlap with the given target.
+     */
+    overlap: function (target)
+    {
+        var matrix = this.getWorldTransformMatrix();
+
+        var alive = this.alive;
+        var length = alive.length;
+
+        var output = [];
+
+        for (var i = 0; i < length; i++)
+        {
+            var particle = alive[i];
+
+            if (RectangleToRectangle(target, particle.getBounds(matrix)))
+            {
+                output.push(particle);
+            }
+        }
+
+        return output;
     },
 
     /**
