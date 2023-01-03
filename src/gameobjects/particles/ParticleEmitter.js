@@ -982,7 +982,7 @@ var ParticleEmitter = new Class({
         if (HasValue(config, 'scale'))
         {
             ops.scaleX.loadConfig(config, 'scale');
-            ops.scaleY.loadConfig(config, 'scale');
+            ops.scaleY.active = false;
         }
 
         if (HasValue(config, 'callbackScope'))
@@ -2215,7 +2215,8 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Calls a function for each active particle in this emitter.
+     * Calls a function for each active particle in this emitter. The function is
+     * sent two parameters: a reference to the Particle instance and to this Emitter.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#forEachAlive
      * @since 3.0.0
