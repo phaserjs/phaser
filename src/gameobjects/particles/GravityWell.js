@@ -6,16 +6,20 @@
 
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var ParticleProcessor = require('./ParticleProcessor');
 
 /**
  * @classdesc
- * The GravityWell action applies a force on the particle to draw it towards, or repel it from, a single point.
+ * The Gravity Well Particle Processor applies a force on the particles to draw
+ * them towards, or repel them from, a single point.
  *
- * The force applied is inversely proportional to the square of the distance from the particle to the point, in accordance with Newton's law of gravity.
+ * The force applied is inversely proportional to the square of the distance
+ * from the particle to the point, in accordance with Newton's law of gravity.
  *
  * This simulates the effect of gravity over large distances (as between planets, for example).
  *
  * @class GravityWell
+ * @extends Phaser.GameObjects.Particles.ParticleProcessor
  * @memberof Phaser.GameObjects.Particles
  * @constructor
  * @since 3.0.0
@@ -28,9 +32,11 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  */
 var GravityWell = new Class({
 
+    Extends: ParticleProcessor,
+
     initialize:
 
-    function GravityWell (x, y, power, epsilon, gravity)
+    function GravityWell (manager, x, y, power, epsilon, gravity)
     {
         if (typeof x === 'object')
         {
@@ -51,33 +57,7 @@ var GravityWell = new Class({
             if (gravity === undefined) { gravity = 50; }
         }
 
-        /**
-         * The x coordinate of the Gravity Well, in world space.
-         *
-         * @name Phaser.GameObjects.Particles.GravityWell#x
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.x = x;
-
-        /**
-         * The y coordinate of the Gravity Well, in world space.
-         *
-         * @name Phaser.GameObjects.Particles.GravityWell#y
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.y = y;
-
-        /**
-         * The active state of the Gravity Well. An inactive Gravity Well will not influence any particles.
-         *
-         * @name Phaser.GameObjects.Particles.GravityWell#active
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.active = true;
+        ParticleProcessor.call(this, manager, x, y, true);
 
         /**
          * Internal gravity value.
