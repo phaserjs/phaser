@@ -36,7 +36,7 @@ var GravityWell = new Class({
 
     initialize:
 
-    function GravityWell (manager, x, y, power, epsilon, gravity)
+    function GravityWell (x, y, power, epsilon, gravity)
     {
         if (typeof x === 'object')
         {
@@ -57,7 +57,7 @@ var GravityWell = new Class({
             if (gravity === undefined) { gravity = 50; }
         }
 
-        ParticleProcessor.call(this, manager, x, y, true);
+        ParticleProcessor.call(this, x, y, true);
 
         /**
          * Internal gravity value.

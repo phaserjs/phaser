@@ -20,7 +20,6 @@ var Class = require('../../utils/Class');
  * @constructor
  * @since 3.60.0
  *
- * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} manager - A reference to the Particle Emitter Manager that owns this Processor.
  * @param {number} [x=0] - The x coordinate of the Particle Processor, in world space.
  * @param {number} [y=0] - The y coordinate of the Particle Processor, in world space.
  * @param {boolean} [active=true] - The active state of this Particle Processor.
@@ -29,7 +28,7 @@ var ParticleProcessor = new Class({
 
     initialize:
 
-    function ParticleProcessor (manager, x, y, active)
+    function ParticleProcessor (x, y, active)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -37,13 +36,14 @@ var ParticleProcessor = new Class({
 
         /**
          * A reference to the Particle Emitter Manager that owns this
-         * Processor.
+         * Processor. This is set automatically when the Processor is
+         * added to an Emitter Manager, and nulled when removed or destroyed.
          *
          * @name Phaser.GameObjects.Particles.ParticleProcessor#manager
          * @type {Phaser.GameObjects.Particles.ParticleEmitterManager}
          * @since 3.60.0
          */
-        this.manager = manager;
+        this.manager;
 
         /**
          * The x coordinate of the Particle Processor, in world space.

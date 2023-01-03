@@ -388,6 +388,9 @@ var ParticleEmitterManager = new Class({
     /**
      * Adds a Particle Processor, such as a Gravity Well, to this Emitter Manager.
      *
+     * It will start processing particles from the next update as long as its `active`
+     * property is set.
+     *
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#addParticleProcessor
      * @since 3.60.0
      *
@@ -397,13 +400,28 @@ var ParticleEmitterManager = new Class({
      */
     addParticleProcessor: function (processor)
     {
-        return this.processors.add(processor);
+        if (!this.processors.exists(processor))
+        {
+            if (processor.manager)
+            {
+                processor.manager.removeParticleProcessor(processor);
+            }
+
+            this.processors.add(processor);
+
+            processor.manager = this;
+        }
+
+        return processor;
     },
 
     /**
      * Removes a Particle Processor from this Emitter Manager.
      *
      * The Processor must belong to this Manager.
+     *
+     * It is not destroyed when removed, allowing you to move it to another Emitter Manager,
+     * so if you no longer require it you should call its `destroy` method directly.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#removeParticleProcessor
      * @since 3.60.0
@@ -414,7 +432,14 @@ var ParticleEmitterManager = new Class({
      */
     removeParticleProcessor: function (processor)
     {
-        return this.processors.remove(processor, true);
+        if (this.processors.exists(processor))
+        {
+            this.processors.remove(processor, true);
+
+            processor.manager = null;
+        }
+
+        return processor;
     },
 
     /**
@@ -429,7 +454,7 @@ var ParticleEmitterManager = new Class({
      */
     createGravityWell: function (config)
     {
-        return this.addParticleProcessor(new GravityWell(this, config));
+        return this.addParticleProcessor(new GravityWell(config));
     },
 
     /**
