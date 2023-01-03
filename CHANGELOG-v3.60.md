@@ -272,6 +272,15 @@ emitter.addDeathZone({ type: 'onEnter', source: circle });
 * `ParticleEmitter.getDeathZone` is a new method that Particles call when they are updated in order to check if they intersect with any of the Death Zones.
 * The property `ParticleEmitter.deathZone` has been removed. It has been replaced with the new `ParticleEmitter.deathZones` array-based property.
 
+#### New Features - Particle Bounds and Overlap
+
+* Particles now have the ability to calculate their bounding box, based on their position, scale, rotation, texture frame and the transform of their parent. You can call the new `Particle.getBounds` method to return the bounds, which also gets stored in the new `Particle.bounds` Rectangle property.
+* `ParticleEmitter.overlap` is a new method that will run a rectangle intersection test against the given target and all alive particles, returning those that overlap in an array. The target can be a Rectangle Geometry object or an Arcade Physics Body.
+* `Particle.kill` is a new method that will set the life of the particle to zero, forcing it to be immediately killed on the next Particle Emitter update.
+* `ParticleEmitter.getWorldTransformMatrix` is a new method that allows a Particle Emitter to calculate its world transform, factoring in any parents.
+* `ParticleEmitter.tempMatrix1` is a new private property that holds a TransformMatrix used for calculations.
+* `ParticleEmitter.tempMatrix2` is a new private property that holds a TransformMatrix used for calculations.
+
 #### Particle System EmitterOp Breaking Changes and Updates:
 
 All of the following properties have been replaced on the `ParticleEmitter` class. Previously they were `EmitterOp` instances. They are now public getter / setters, so calling, for example, `emitter.x` will now return a numeric value - whereas before it would return the `EmitterOp` instance. This gives developers a lot more freedom when using Particle Emitters. Before v3.60 it was impossible to do this, for example:
