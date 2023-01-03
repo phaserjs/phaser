@@ -7,6 +7,7 @@
 var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
+var Rectangle = require('../../geom/rectangle/Rectangle');
 
 /**
  * @classdesc
@@ -308,6 +309,15 @@ var Particle = new Class({
          * @since 3.60.0
          */
         this.anims = new AnimationState(this);
+
+        /**
+         * Internal transform values of this Particle.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#transform
+         * @type {object}
+         * @since 3.60.0
+         */
+        this.bounds = new Rectangle();
     },
 
     /**
@@ -673,6 +683,28 @@ var Particle = new Class({
     setSizeToFrame: function ()
     {
         //  NOOP
+    },
+
+    /**
+     * TODO
+     *
+     * @method Phaser.Physics.Arcade.Body#getBounds
+     * @since 3.60.0
+     */
+    getBounds: function ()
+    {
+        var matrix = this.emitter.getWorldTransformMatrix();
+
+        var sx = Math.abs(matrix.scaleX) * this.scaleX;
+        var sy = Math.abs(matrix.scaleY) * this.scaleY;
+
+        var bounds = this.bounds;
+
+        bounds.setSize(this.frame.sourceWidth * sx, this.frame.sourceHeight * sy);
+        bounds.centerX = matrix.tx + this.x;
+        bounds.centerY = matrix.ty + this.y;
+
+        return bounds;
     },
 
     /**
