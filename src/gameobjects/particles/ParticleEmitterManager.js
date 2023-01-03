@@ -146,13 +146,13 @@ var ParticleEmitterManager = new Class({
         this.emitters = new List(this);
 
         /**
-         * A list of Gravity Wells being managed by this Emitter Manager.
+         * A list of Particle Processors being managed by this Emitter Manager.
          *
-         * @name Phaser.GameObjects.Particles.ParticleEmitterManager#wells
-         * @type {Phaser.Structs.List.<Phaser.GameObjects.Particles.GravityWell>}
+         * @name Phaser.GameObjects.Particles.ParticleEmitterManager#processors
+         * @type {Phaser.Structs.List.<Phaser.GameObjects.Particles.ParticleProcessor>}
          * @since 3.0.0
          */
-        this.wells = new List(this);
+        this.processors = new List(this);
 
         if (emitters)
         {
@@ -369,14 +369,16 @@ var ParticleEmitterManager = new Class({
     },
 
     /**
-     * Removes a Particle Emitter from this Emitter Manager, if the Emitter belongs to this Manager.
+     * Removes a Particle Emitter from this Emitter Manager.
+     *
+     * The Emitter must belong to this Manager.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#removeEmitter
      * @since 3.22.0
      *
-     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter
+     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Particle Emitter to remove from this Emitter Manager.
      *
-     * @return {?Phaser.GameObjects.Particles.ParticleEmitter} The Particle Emitter if it was removed or null if it was not.
+     * @return {?Phaser.GameObjects.Particles.ParticleEmitter} The Particle Emitter that was removed, or null if it could not be found.
      */
     removeEmitter: function (emitter)
     {
@@ -384,18 +386,35 @@ var ParticleEmitterManager = new Class({
     },
 
     /**
-     * Adds an existing Gravity Well object to this Emitter Manager.
+     * Adds a Particle Processor, such as a Gravity Well, to this Emitter Manager.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#addGravityWell
-     * @since 3.0.0
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#addParticleProcessor
+     * @since 3.60.0
      *
-     * @param {Phaser.GameObjects.Particles.GravityWell} well - The Gravity Well to add to this Emitter Manager.
+     * @param {Phaser.GameObjects.Particles.ParticleProcessor} processor - The Particle Processor to add to this Emitter Manager.
      *
-     * @return {Phaser.GameObjects.Particles.GravityWell} The Gravity Well that was added to this Emitter Manager.
+     * @return {Phaser.GameObjects.Particles.ParticleProcessor} The Particle Processor that was added to this Emitter Manager.
      */
-    addGravityWell: function (well)
+    addParticleProcessor: function (processor)
     {
-        return this.wells.add(well);
+        return this.processors.add(processor);
+    },
+
+    /**
+     * Removes a Particle Processor from this Emitter Manager.
+     *
+     * The Processor must belong to this Manager.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#removeParticleProcessor
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Particles.ParticleProcessor} processor - The Particle Processor to remove from this Emitter Manager.
+     *
+     * @return {?Phaser.GameObjects.Particles.ParticleProcessor} The Particle Processor that was removed, or null if it could not be found.
+     */
+    removeParticleProcessor: function (processor)
+    {
+        return this.processors.remove(processor, true);
     },
 
     /**
@@ -410,7 +429,7 @@ var ParticleEmitterManager = new Class({
      */
     createGravityWell: function (config)
     {
-        return this.addGravityWell(new GravityWell(this, config));
+        return this.addParticleProcessor(new GravityWell(this, config));
     },
 
     /**
@@ -494,16 +513,16 @@ var ParticleEmitterManager = new Class({
     },
 
     /**
-     * Gets all active particle processors (gravity wells).
+     * Gets all active Particle Processors.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#getProcessors
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Particles.GravityWell[]} - The active gravity wells.
+     * @return {Phaser.GameObjects.Particles.ParticleProcessor[]} - An array of active Particle Processors.
      */
     getProcessors: function ()
     {
-        return this.wells.getAll('active', true);
+        return this.processors.getAll('active', true);
     },
 
     /**
@@ -561,7 +580,7 @@ var ParticleEmitterManager = new Class({
     },
 
     /**
-     * Handles the pre-destroy step for the Particle Emitter Manager, which destroys all emitters and gravity wells.
+     * Handles the pre-destroy step for the Particle Emitter Manager, which destroys all emitters and processors.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#preDestroy
      * @private
@@ -571,16 +590,16 @@ var ParticleEmitterManager = new Class({
     {
         var i;
         var emitters = this.emitters.list;
-        var wells = this.wells.list;
+        var processors = this.processors.list;
 
         for (i = 0; i < emitters.length; i++)
         {
             emitters[i].destroy();
         }
 
-        for (i = 0; i < wells.length; i++)
+        for (i = 0; i < processors.length; i++)
         {
-            wells[i].destroy();
+            processors[i].destroy();
         }
 
         this.frameNames = [];
