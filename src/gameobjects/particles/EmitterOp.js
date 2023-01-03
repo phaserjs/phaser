@@ -220,6 +220,28 @@ var EmitterOp = new Class({
          * @since 3.60.0
          */
         this.method = 0;
+
+        /**
+         * The callback to run for Particles when they are emitted from the Particle Emitter.
+         * This is set during `setMethods` and used by `proxyEmit`.
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#_onEmit
+         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback}
+         * @private
+         * @since 3.60.0
+         */
+        this._onEmit;
+
+        /**
+         * The callback to run for Particles when they are updated.
+         * This is set during `setMethods` and used by `proxyUpdate`.
+         *
+         * @name Phaser.GameObjects.Particles.EmitterOp#_onUpdate
+         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback}
+         * @private
+         * @since 3.60.0
+         */
+        this._onUpdate;
     },
 
     /**
@@ -292,7 +314,11 @@ var EmitterOp = new Class({
         switch (this.method)
         {
             //  Number
+            //  Custom Callback (onEmit only)
+            //  Custom onEmit and/or onUpdate callbacks
             case 1:
+            case 3:
+            case 8:
                 current = value;
                 break;
 
@@ -441,7 +467,8 @@ var EmitterOp = new Class({
 
             //  Custom Callback (onEmit only)
             case 3:
-                onEmit = value;
+                this._onEmit = value;
+                onEmit = this.proxyEmit;
                 break;
 
             //  Stepped start/end
@@ -489,10 +516,12 @@ var EmitterOp = new Class({
                 current = this.start;
                 break;
 
-            //  Custom onEmit onUpdate
+            //  Custom onEmit and/or onUpdate callbacks
             case 8:
-                onEmit = (this.has(value, 'onEmit')) ? value.onEmit : this.defaultEmit;
-                onUpdate = (this.has(value, 'onUpdate')) ? value.onUpdate : this.defaultUpdate;
+                this._onEmit = (this.has(value, 'onEmit')) ? value.onEmit : this.defaultEmit;
+                this._onUpdate = (this.has(value, 'onUpdate')) ? value.onUpdate : this.defaultUpdate;
+                onEmit = this.proxyEmit;
+                onUpdate = this.proxyUpdate;
                 break;
 
             //  Interpolation
@@ -595,6 +624,53 @@ var EmitterOp = new Class({
     defaultUpdate: function (particle, key, t, value)
     {
         return value;
+    },
+
+    /**
+     * The returned value sets what the property will be at the START of the particles life, on emit.
+     *
+     * This method is only used when you have provided a custom emit callback.
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#proxyEmit
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
+     * @param {string} key - The name of the property.
+     * @param {number} [value] - The current value of the property.
+     *
+     * @return {number} The new value of the property.
+     */
+    proxyEmit: function (particle, key, value)
+    {
+        var result = this._onEmit(particle, key, value);
+
+        this.current = result;
+
+        return result;
+    },
+
+    /**
+     * The returned value updates the property for the duration of the particles life.
+     *
+     * This method is only used when you have provided a custom update callback.
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#proxyUpdate
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
+     * @param {string} key - The name of the property.
+     * @param {number} t - The current normalized lifetime of the particle, between 0 (birth) and 1 (death).
+     * @param {number} value - The current value of the property.
+     *
+     * @return {number} The new value of the property.
+     */
+    proxyUpdate: function (particle, key, t, value)
+    {
+        var result = this._onUpdate(particle, key, t, value);
+
+        this.current = result;
+
+        return result;
     },
 
     /**
@@ -818,6 +894,25 @@ var EmitterOp = new Class({
         this.current = current;
 
         return current;
+    },
+
+    /**
+     * Destroys this EmitterOp instance and all of its references.
+     *
+     * Called automatically when the ParticleEmitter that owns this
+     * EmitterOp is destroyed.
+     *
+     * @method Phaser.GameObjects.Particles.EmitterOp#destroy
+     * @since 3.60.0
+     */
+    destroy: function ()
+    {
+        this.propertyValue = null;
+        this.defaultValue = null;
+        this.ease = null;
+        this.interpolation = null;
+        this._onEmit = null;
+        this._onUpdate = null;
     }
 });
 
