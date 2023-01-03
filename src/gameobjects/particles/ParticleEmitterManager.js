@@ -410,7 +410,7 @@ var ParticleEmitterManager = new Class({
      */
     createGravityWell: function (config)
     {
-        return this.addGravityWell(new GravityWell(config));
+        return this.addGravityWell(new GravityWell(this, config));
     },
 
     /**
