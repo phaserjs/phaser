@@ -912,7 +912,22 @@ var ParticleEmitter = new Class({
          */
         this.skipping = false;
 
+        /**
+         * An internal Transform Matrix used for bounds calculations.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#tempMatrix1
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.60.0
+         */
         this.tempMatrix1 = new TransformMatrix();
+
+        /**
+         * An internal Transform Matrix used for bounds calculations.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#tempMatrix2
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.60.0
+         */
         this.tempMatrix2 = new TransformMatrix();
 
         this.fromJSON(config);
@@ -3501,6 +3516,8 @@ var ParticleEmitter = new Class({
         this.ops = null;
         this.particles = [];
         this.dead = [];
+        this.tempMatrix1.destroy();
+        this.tempMatrix2.destroy();
     }
 
 });
