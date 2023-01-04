@@ -930,6 +930,31 @@ var ParticleEmitter = new Class({
          */
         this.tempMatrix2 = new TransformMatrix();
 
+        /**
+         * Optionally sort the particles before they render based on this
+         * property. The property must exist on the `Particle` class, such
+         * as `y`, `lifeT`, `scaleX`, etc.
+         *
+         * When set this overrides the `particleBringToTop` setting.
+         *
+         * To reset this and disable sorting, so this property to an empty string.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#sortProperty
+         * @type {string}
+         * @since 3.60.0
+         */
+        this.sortProperty = '';
+
+        /**
+         * When `sortProperty` is defined this controls the sorting order,
+         * either ascending or descending. Toggle to control the visual effect.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#sortOrderAsc
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.sortOrderAsc = true;
+
         this.fromJSON(config);
     },
 
@@ -2418,9 +2443,34 @@ var ParticleEmitter = new Class({
      */
     depthSort: function ()
     {
-        StableSort(this.alive, this.depthSortCallback);
+        StableSort(this.alive, this.depthSortCallback.bind(this));
 
         return this;
+    },
+
+    /**
+     * Calculates the difference of two particles, for sorting them by depth.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#depthSortCallback
+     * @since 3.0.0
+     *
+     * @param {object} a - The first particle.
+     * @param {object} b - The second particle.
+     *
+     * @return {number} The difference of a and b's y coordinates.
+     */
+    depthSortCallback: function (a, b)
+    {
+        var key = this.sortProperty;
+
+        if (this.sortOrderAsc)
+        {
+            return a[key] - b[key];
+        }
+        else
+        {
+            return b[key] - a[key];
+        }
     },
 
     /**
@@ -2741,22 +2791,6 @@ var ParticleEmitter = new Class({
                 this.stop();
             }
         }
-    },
-
-    /**
-     * Calculates the difference of two particles, for sorting them by depth.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#depthSortCallback
-     * @since 3.0.0
-     *
-     * @param {object} a - The first particle.
-     * @param {object} b - The second particle.
-     *
-     * @return {number} The difference of a and b's y coordinates.
-     */
-    depthSortCallback: function (a, b)
-    {
-        return a.y - b.y;
     },
 
     /**

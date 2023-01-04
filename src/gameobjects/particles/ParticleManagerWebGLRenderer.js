@@ -67,6 +67,12 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
     for (var e = 0; e < emittersLength; e++)
     {
         var emitter = emitters[e];
+
+        if (emitter.sortProperty !== '')
+        {
+            emitter.depthSort();
+        }
+
         var particles = emitter.alive;
         var particleCount = particles.length;
 
