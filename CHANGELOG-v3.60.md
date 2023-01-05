@@ -721,6 +721,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* The `GenerateVerts` function no longer errors if the verts and uvs arrays are not the same size and `containsZ` is true (thanks cedarcantab)
 * The `Device.Browser` checks for Opera and Edge have been updated to use the more modern user agent strings those browsers now use. This breaks compatibility with really old versions of those browsers but fixes it for modern ones (which is more important) (thanks @
 ArtemSiz)
 * The `SceneManager.processQueue` method will no longer `return` if a new Scene was added, after starting it. This allows any other queued operations to still be run in the same frame, rather than being delayed until the next game frame. Fix #5359 (thanks @telinc1)
