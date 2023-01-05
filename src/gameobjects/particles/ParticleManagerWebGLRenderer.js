@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var RectangleToRectangle = require('../../geom/intersects/RectangleToRectangle');
 var TransformMatrix = require('../components/TransformMatrix');
 var Utils = require('../../renderer/webgl/Utils');
 
@@ -70,8 +71,9 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
 
         var particles = emitter.alive;
         var particleCount = particles.length;
+        var viewBounds = emitter.viewBounds;
 
-        if (!emitter.visible || particleCount === 0)
+        if (!emitter.visible || particleCount === 0 || (viewBounds && !RectangleToRectangle(viewBounds, camera.worldView)))
         {
             continue;
         }

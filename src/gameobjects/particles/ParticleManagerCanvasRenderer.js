@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var RectangleToRectangle = require('../../geom/intersects/RectangleToRectangle');
 var TransformMatrix = require('../components/TransformMatrix');
 
 var tempMatrix1 = new TransformMatrix();
@@ -61,8 +62,9 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
         var emitter = emitters[e];
         var particles = emitter.alive;
         var particleCount = particles.length;
+        var viewBounds = emitter.viewBounds;
 
-        if (!emitter.visible || particleCount === 0)
+        if (!emitter.visible || particleCount === 0 || (viewBounds && !RectangleToRectangle(viewBounds, camera.worldView)))
         {
             continue;
         }

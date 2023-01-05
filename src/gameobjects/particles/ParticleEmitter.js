@@ -16,6 +16,9 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var GetRandom = require('../../utils/array/GetRandom');
 var HasAny = require('../../utils/object/HasAny');
 var HasValue = require('../../utils/object/HasValue');
+var Inflate = require('../../geom/rectangle/Inflate');
+var MATH_CONST = require('../../math/const');
+var MergeRect = require('../../geom/rectangle/MergeRect');
 var Particle = require('./Particle');
 var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
@@ -639,6 +642,30 @@ var ParticleEmitter = new Class({
         this.deathZones = [];
 
         /**
+         * An optional Rectangle object that is used during rendering to cull Particles from
+         * display. For example, if your particles are limited to only move within a 300x300
+         * sized area from their origin, then you can set this Rectangle to those dimensions.
+         *
+         * The renderer will check to see if the `viewBounds` Rectangle intersects with the
+         * Camera bounds during the render step and if not it will skip rendering the Emitter
+         * entirely.
+         *
+         * This allows you to create many emitters in a Scene without the cost of
+         * rendering if the contents aren't visible.
+         *
+         * Note that the Emitter will not perform any checks to see if the Particles themselves
+         * are outside of these bounds, or not. It will simply check the bounds against the
+         * camera.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#viewBounds
+         * @type {?Phaser.Geom.Rectangle}
+         * @default null
+         * @since 3.60.0
+         * @see Phaser.GameObjects.Particles.ParticleEmitter#setViewBounds
+         */
+        this.viewBounds = null;
+
+        /**
          * A rectangular boundary constraining particle movement. Use the Emitter properties `collideLeft`,
          * `collideRight`, `collideTop` and `collideBottom` to control if a particle will rebound off
          * the sides of this boundary, or not. This happens when the particles x/y coordinate hits
@@ -963,7 +990,7 @@ var ParticleEmitter = new Class({
          * has been set. Set this via the `setSortCallback` method.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#sortCallback
-         * @type {?function}
+         * @type {?Phaser.Types.GameObjects.Particles.ParticleSortCallback}
          * @since 3.60.0
          */
         this.sortCallback = null;
@@ -2497,7 +2524,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setSortCallback
      * @since 3.60.0
      *
-     * @param {function} [callback] - The callback to invoke when the particles are sorted. Leave undefined to reset to the default.
+     * @param {Phaser.Types.GameObjects.Particles.ParticleSortCallback} [callback] - The callback to invoke when the particles are sorted. Leave undefined to reset to the default.
      *
      * @return {this} This Particle Emitter.
      */
@@ -2940,6 +2967,86 @@ var ParticleEmitter = new Class({
             {
                 output.push(particle);
             }
+        }
+
+        return output;
+    },
+
+    /**
+     * Returns a bounds Rectangle calculated from the bounds of all currently
+     * _active_ Particles in this Emitter. If this Emitter has only just been
+     * created and not yet rendered, then calling this method will return a Rectangle
+     * with a max safe integer for dimensions. Use the `advance` parameter to
+     * avoid this.
+     *
+     * Typically it takes a few seconds for a flow Emitter to 'warm up'. You can
+     * use the `advance` and `delta` parameters to force the Emitter to
+     * 'fast forward' in time to try and allow the bounds to be more accurate,
+     * as it will calculate the bounds based on the particle bounds across all
+     * timesteps, giving a better result.
+     *
+     * You can also use the `padding` parameter to increase the size of the
+     * bounds. Emitters with a lot of randomness in terms of direction or lifespan
+     * can often return a bounds smaller than their possible maximum. By using
+     * the `padding` (and `advance` if needed) you can help limit this.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#getBounds
+     * @since 3.60.0
+     *
+     * @param {number} [padding] - The amount of padding, in pixels, to add to the bounds Rectangle.
+     * @param {number} [advance] - The number of ms to advance the Particle Emitter by. Defaults to 0, i.e. not used.
+     * @param {number} [delta] - The amount of delta to use for each step. Defaults to 1000 / 60.
+     * @param {Phaser.Geom.Rectangle} [output] - The Rectangle to store the results in. If not given a new one will be created.
+     *
+     * @return {Phaser.Geom.Rectangle} A Rectangle containing the calculated bounds of this Emitter.
+     */
+    getBounds: function (padding, advance, delta, output)
+    {
+        if (padding === undefined) { padding = 0; }
+        if (advance === undefined) { advance = 0; }
+        if (delta === undefined) { delta = 1000 / 60; }
+        if (output === undefined) { output = new Rectangle(); }
+
+        var matrix = this.getWorldTransformMatrix();
+
+        var i;
+        var alive = this.alive;
+
+        var int = MATH_CONST.MAX_SAFE_INTEGER;
+
+        output.setTo(int, int, -int, -int);
+
+        if (advance > 0)
+        {
+            var total = 0;
+
+            this.skipping = true;
+
+            while (total < Math.abs(advance))
+            {
+                this.preUpdate(0, delta);
+
+                for (i = 0; i < alive.length; i++)
+                {
+                    MergeRect(output, alive[i].getBounds(matrix));
+                }
+
+                total += delta;
+            }
+
+            this.skipping = false;
+        }
+        else
+        {
+            for (i = 0; i < alive.length; i++)
+            {
+                MergeRect(output, alive[i].getBounds(matrix));
+            }
+        }
+
+        if (padding > 0)
+        {
+            Inflate(output, padding, padding);
         }
 
         return output;
