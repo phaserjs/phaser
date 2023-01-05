@@ -12,8 +12,9 @@ var Events = require('./events');
 var GameEvents = require('../core/events');
 var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
-var Pad = require('../utils/string/Pad');
+var MATH_CONST = require('../math/const');
 var NumberArray = require('../utils/array/NumberArray');
+var Pad = require('../utils/string/Pad');
 
 /**
  * @classdesc
@@ -442,7 +443,7 @@ var AnimationManager = new Class({
 
                         if (frame)
                         {
-                            var frameDuration = GetFastValue(frame, 'duration', Number.MAX_SAFE_INTEGER);
+                            var frameDuration = GetFastValue(frame, 'duration', MATH_CONST.MAX_SAFE_INTEGER);
                             animFrames.push({ key: key, frame: frameKey, duration: frameDuration });
                             totalDuration += frameDuration;
                         }
