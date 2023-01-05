@@ -6,7 +6,6 @@
 
 var Point = require('../point/Point');
 
-
 /**
  * Returns the size of the Rectangle, expressed as a Point object.
  * With the value of the `width` as the `x` property and the `height` as the `y` property.

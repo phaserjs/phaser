@@ -7,16 +7,18 @@
 var Rectangle = require('./Rectangle');
 var MATH_CONST = require('../../math/const');
 
-//  points is an array of Point-like objects,
-//  either 2 dimensional arrays, or objects with public x/y properties:
-//  var points = [
-//      [100, 200],
-//      [200, 400],
-//      { x: 30, y: 60 }
-//  ]
-
 /**
  * Constructs new Rectangle or repositions and resizes an existing Rectangle so that all of the given points are on or within its bounds.
+ *
+ * The `points` parameter is an array of Point-like objects:
+ *
+ * ```js
+ * const points = [
+ *     [100, 200],
+ *     [200, 400],
+ *     { x: 30, y: 60 }
+ * ]
+ * ```
  *
  * @function Phaser.Geom.Rectangle.FromPoints
  * @since 3.0.0

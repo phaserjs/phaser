@@ -6,7 +6,6 @@
 
 var CenterOn = require('./CenterOn');
 
-
 /**
  * Increases the size of a Rectangle by a specified amount.
  *

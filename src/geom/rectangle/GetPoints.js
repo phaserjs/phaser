@@ -7,9 +7,6 @@
 var GetPoint = require('./GetPoint');
 var Perimeter = require('./Perimeter');
 
-//  Return an array of points from the perimeter of the rectangle
-//  each spaced out based on the quantity or step required
-
 /**
  * Return an array of points from the perimeter of the rectangle, each spaced out based on the quantity or step required.
  *

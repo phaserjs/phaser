@@ -4,8 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-// Scales the width and height of this Rectangle by the given amounts.
-
 /**
  * Scales the width and height of this Rectangle by the given amounts.
  *
