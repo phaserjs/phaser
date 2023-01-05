@@ -71,7 +71,7 @@ var GenerateVerts = function (vertices, uvs, indicies, containsZ, normals, color
     if (colors === undefined) { colors = 0xffffff; }
     if (alphas === undefined) { alphas = 1; }
 
-    if (vertices.length !== uvs.length)
+    if (vertices.length !== uvs.length && !containsZ)
     {
         console.warn('GenerateVerts: vertices and uvs count not equal');
         return;
