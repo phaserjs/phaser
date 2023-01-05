@@ -48,13 +48,16 @@ var configFastMap = [
     'frequency',
     'gravityX',
     'gravityY',
-    'maxParticles',
     'maxAliveParticles',
+    'maxParticles',
     'name',
     'on',
     'particleBringToTop',
     'particleClass',
     'radial',
+    'sortCallback',
+    'sortOrderAsc',
+    'sortProperty',
     'stopAfter',
     'timeScale',
     'trackVisible',
@@ -69,8 +72,8 @@ var configFastMap = [
 var configOpMap = [
     'accelerationX',
     'accelerationY',
-    'angle',
     'alpha',
+    'angle',
     'bounce',
     'delay',
     'lifespan',
@@ -954,6 +957,16 @@ var ParticleEmitter = new Class({
          * @since 3.60.0
          */
         this.sortOrderAsc = true;
+
+        /**
+         * The callback used to sort the particles. Only used if `sortProperty`
+         * has been set. Set this via the `setSortCallback` method.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#sortCallback
+         * @type {?function}
+         * @since 3.60.0
+         */
+        this.sortCallback = null;
 
         this.fromJSON(config);
     },
@@ -2434,6 +2447,77 @@ var ParticleEmitter = new Class({
     },
 
     /**
+     * Set the property by which active particles are sorted prior to be rendered.
+     *
+     * It allows you to control the rendering order of the particles.
+     *
+     * This can be any valid property of the `Particle` class, such as `y`, `alpha`
+     * or `lifeT`.
+     *
+     * The 'alive' particles array is sorted in place each game frame. Setting a
+     * sort property will override the `particleBringToTop` setting.
+     *
+     * If you wish to use your own sorting function, see `setSortCallback` instead.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setSortProperty
+     * @since 3.60.0
+     *
+     * @param {string} [property] - The property on the `Particle` class to sort by.
+     * @param {boolean} [ascending=true] - Should the particles be sorted in ascending or descending order?
+     *
+     * @return {this} This Particle Emitter.
+     */
+    setSortProperty: function (property, ascending)
+    {
+        if (property === undefined) { property = ''; }
+        if (ascending === undefined) { ascending = this.true; }
+
+        this.sortProperty = property;
+        this.sortOrderAsc = ascending;
+        this.sortCallback = this.depthSortCallback;
+
+        return this;
+    },
+
+    /**
+     * Sets a callback to be used to sort the particles before rendering each frame.
+     *
+     * This allows you to define your own logic and behavior in the callback.
+     *
+     * The callback will be sent two parameters: the two Particles being compared,
+     * and must adhere to the criteria of the `compareFn` in `Array.sort`:
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#description
+     *
+     * Call this method with no parameters to reset the sort callback.
+     *
+     * Setting your own callback will override both the `particleBringToTop` and
+     * `sortProperty` settings of this Emitter.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setSortCallback
+     * @since 3.60.0
+     *
+     * @param {function} [callback] - The callback to invoke when the particles are sorted. Leave undefined to reset to the default.
+     *
+     * @return {this} This Particle Emitter.
+     */
+    setSortCallback: function (callback)
+    {
+        if (this.sortProperty !== '')
+        {
+            callback = this.depthSortCallback;
+        }
+        else
+        {
+            callback = null;
+        }
+
+        this.sortCallback = callback;
+
+        return this;
+    },
+
+    /**
      * Sorts active particles with {@link Phaser.GameObjects.Particles.ParticleEmitter#depthSortCallback}.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#depthSort
@@ -2443,7 +2527,7 @@ var ParticleEmitter = new Class({
      */
     depthSort: function ()
     {
-        StableSort(this.alive, this.depthSortCallback.bind(this));
+        StableSort(this.alive, this._sortCallback.bind(this));
 
         return this;
     },
