@@ -4,12 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-//  Merges source rectangle into target rectangle and returns target
-//  Neither rect should have negative widths or heights
-
 /**
- * Merges the source rectangle into the target rectangle and returns the target.
- * Neither rectangle should have a negative width or height.
+ * Merges the source rectangle into the target rectangle and returns the target rectangle.
  *
  * @function Phaser.Geom.Rectangle.MergeRect
  * @since 3.0.0
