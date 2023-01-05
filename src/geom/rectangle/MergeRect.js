@@ -19,17 +19,33 @@
  */
 var MergeRect = function (target, source)
 {
-    var minX = Math.min(target.x, source.x);
-    var maxX = Math.max(target.right, source.right);
+    // var minX = Math.min(target.x, source.x);
+    // var minY = Math.min(target.y, source.y);
 
-    target.x = minX;
-    target.width = maxX - minX;
+    // target.x = minX;
+    // target.y = minY;
 
-    var minY = Math.min(target.y, source.y);
-    var maxY = Math.max(target.bottom, source.bottom);
+    var x = Math.min(target.x, source.x);
+    var y = Math.min(target.y, source.y);
 
-    target.y = minY;
-    target.height = maxY - minY;
+    var r = Math.max(target.right, source.right);
+    var b = Math.max(target.bottom, source.bottom);
+
+    var w = Math.abs(r - x);
+    var h = Math.abs(b - y);
+
+    target.setTo(x, y, w, h);
+
+    // var maxX = Math.max(target.right, source.right);
+
+    // target.x = minX;
+    // target.width = Math.abs(maxX - minX);
+
+    // var minY = Math.min(target.y, source.y);
+    // var maxY = Math.max(target.bottom, source.bottom);
+
+    // target.y = minY;
+    // target.height = Math.abs(maxY - minY);
 
     return target;
 };

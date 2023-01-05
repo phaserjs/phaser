@@ -3028,7 +3028,11 @@ var ParticleEmitter = new Class({
 
                 for (i = 0; i < alive.length; i++)
                 {
-                    MergeRect(output, alive[i].getBounds(matrix));
+                    var bounds = alive[i].getBounds(matrix);
+
+                    console.log(bounds);
+
+                    MergeRect(output, bounds);
                 }
 
                 total += delta;
@@ -3048,6 +3052,8 @@ var ParticleEmitter = new Class({
         {
             Inflate(output, padding, padding);
         }
+
+        console.log(output.x, output.y, output.width, output.height);
 
         return output;
     },
