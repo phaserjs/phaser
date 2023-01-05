@@ -68,17 +68,17 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, camera, p
     {
         var emitter = emitters[e];
 
-        if (emitter.sortProperty !== '')
-        {
-            emitter.depthSort();
-        }
-
         var particles = emitter.alive;
         var particleCount = particles.length;
 
         if (!emitter.visible || particleCount === 0)
         {
             continue;
+        }
+
+        if (emitter.sortCallback)
+        {
+            emitter.depthSort();
         }
 
         var textureUnit = pipeline.setGameObject(emitter, emitter.defaultFrame);

@@ -67,6 +67,11 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, camera, 
             continue;
         }
 
+        if (emitter.sortCallback)
+        {
+            emitter.depthSort();
+        }
+
         camera.addToRenderList(emitter);
 
         var scrollFactorX = emitter.scrollFactorX;
