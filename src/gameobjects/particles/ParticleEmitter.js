@@ -1751,7 +1751,7 @@ var ParticleEmitter = new Class({
      */
     setAngle: function (value)
     {
-        this.angle.onChange(value);
+        this.ops.angle.onChange(value);
 
         return this;
     },
@@ -1768,7 +1768,7 @@ var ParticleEmitter = new Class({
      */
     setLifespan: function (value)
     {
-        this.lifespan.onChange(value);
+        this.ops.lifespan.onChange(value);
 
         return this;
     },
@@ -1785,7 +1785,7 @@ var ParticleEmitter = new Class({
      */
     setQuantity: function (quantity)
     {
-        this.quantity = quantity;
+        this.ops.quantity.onChange(quantity);
 
         return this;
     },
@@ -3587,7 +3587,7 @@ var ParticleEmitter = new Class({
 
     /**
      * The number of milliseconds to wait after emission before
-     * the particles strat updating. This allows you to emit particles
+     * the particles start updating. This allows you to emit particles
      * that appear 'static' or still on-screen and then, after this value,
      * begin to move.
      *
