@@ -994,7 +994,7 @@ var ParticleEmitter = new Class({
          * @type {?Phaser.Types.GameObjects.Particles.ParticleSortCallback}
          * @since 3.60.0
          */
-        this.sortCallback = null;
+        this.sortCallback = this.depthSortCallback;
 
         this.fromJSON(config);
     },
@@ -2555,7 +2555,7 @@ var ParticleEmitter = new Class({
      */
     depthSort: function ()
     {
-        StableSort(this.alive, this._sortCallback.bind(this));
+        StableSort(this.alive, this.sortCallback.bind(this));
 
         return this;
     },
