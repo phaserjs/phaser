@@ -8,6 +8,7 @@ var Add = require('../../utils/array/Add');
 var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var CopyFrom = require('../../geom/rectangle/CopyFrom');
 var DeathZone = require('./zones/DeathZone');
 var EdgeZone = require('./zones/EdgeZone');
 var EmitterOp = require('./EmitterOp');
@@ -17,7 +18,6 @@ var GetRandom = require('../../utils/array/GetRandom');
 var HasAny = require('../../utils/object/HasAny');
 var HasValue = require('../../utils/object/HasValue');
 var Inflate = require('../../geom/rectangle/Inflate');
-var MATH_CONST = require('../../math/const');
 var MergeRect = require('../../geom/rectangle/MergeRect');
 var Particle = require('./Particle');
 var RandomZone = require('./zones/RandomZone');
@@ -655,7 +655,8 @@ var ParticleEmitter = new Class({
          *
          * Note that the Emitter will not perform any checks to see if the Particles themselves
          * are outside of these bounds, or not. It will simply check the bounds against the
-         * camera.
+         * camera. Use the `getBounds` method with the `advance` parameter to help define
+         * the location and placement of the view bounds.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#viewBounds
          * @type {?Phaser.Geom.Rectangle}
@@ -3010,11 +3011,11 @@ var ParticleEmitter = new Class({
         var matrix = this.getWorldTransformMatrix();
 
         var i;
+        var bounds;
         var alive = this.alive;
+        var setFirst = false;
 
-        var int = MATH_CONST.MAX_SAFE_INTEGER;
-
-        output.setTo(int, int, -int, -int);
+        output.setTo(0, 0, 0, 0);
 
         if (advance > 0)
         {
@@ -3028,11 +3029,18 @@ var ParticleEmitter = new Class({
 
                 for (i = 0; i < alive.length; i++)
                 {
-                    var bounds = alive[i].getBounds(matrix);
+                    bounds = alive[i].getBounds(matrix);
 
-                    console.log(bounds);
+                    if (!setFirst)
+                    {
+                        setFirst = true;
 
-                    MergeRect(output, bounds);
+                        CopyFrom(bounds, output);
+                    }
+                    else
+                    {
+                        MergeRect(output, bounds);
+                    }
                 }
 
                 total += delta;
@@ -3044,7 +3052,18 @@ var ParticleEmitter = new Class({
         {
             for (i = 0; i < alive.length; i++)
             {
-                MergeRect(output, alive[i].getBounds(matrix));
+                bounds = alive[i].getBounds(matrix);
+
+                if (!setFirst)
+                {
+                    setFirst = true;
+
+                    CopyFrom(bounds, output);
+                }
+                else
+                {
+                    MergeRect(output, bounds);
+                }
             }
         }
 
@@ -3052,8 +3071,6 @@ var ParticleEmitter = new Class({
         {
             Inflate(output, padding, padding);
         }
-
-        console.log(output.x, output.y, output.width, output.height);
 
         return output;
     },
