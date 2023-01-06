@@ -723,6 +723,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* The `Game.registry`, which is a `DataManager` instance that can be used as a global store of game wide data will now use its own Event Emitter, instead of the Game's Event Emitter. This means it's perfectly safe for you to now use the Registry to emit and listen for your own custom events without conflicting with events the Phaser Game instance emits.
 * The `GenerateVerts` function has a new optional parameter `flipUV` which, if set, will flip the UV texture coordinates (thanks cedarcantab)
 * The `GenerateVerts` function no longer errors if the verts and uvs arrays are not the same size and `containsZ` is true (thanks cedarcantab)
 * The `Device.Browser` checks for Opera and Edge have been updated to use the more modern user agent strings those browsers now use. This breaks compatibility with really old versions of those browsers but fixes it for modern ones (which is more important) (thanks @
