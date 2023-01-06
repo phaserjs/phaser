@@ -187,13 +187,15 @@ var Game = new Class({
         this.cache = new CacheManager(this);
 
         /**
-         * An instance of the Data Manager
+         * An instance of the Data Manager. This is a global manager, available from any Scene
+         * and allows you to share and exchange your own game-level data or events without having
+         * to use an internal event system.
          *
          * @name Phaser.Game#registry
          * @type {Phaser.Data.DataManager}
          * @since 3.0.0
          */
-        this.registry = new DataManager(this);
+        this.registry = new DataManager(this, new EventEmitter());
 
         /**
          * An instance of the Input Manager.
