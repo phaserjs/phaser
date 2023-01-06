@@ -62,14 +62,16 @@ var Vertex = require('./Vertex');
  * @param {number[]} [normals] - Optional vertex normals array. If you don't have one, pass `null` or an empty array.
  * @param {number|number[]} [colors=0xffffff] - An array of colors, one per vertex, or a single color value applied to all vertices.
  * @param {number|number[]} [alphas=1] - An array of alpha values, one per vertex, or a single alpha value applied to all vertices.
+ * @param {boolean} [flipUV=false] - Flip the UV coordinates?
  *
  * @return {Phaser.Types.Geom.Mesh.GenerateVertsResult} The parsed Face and Vertex objects.
  */
-var GenerateVerts = function (vertices, uvs, indicies, containsZ, normals, colors, alphas)
+var GenerateVerts = function (vertices, uvs, indicies, containsZ, normals, colors, alphas, flipUV)
 {
     if (containsZ === undefined) { containsZ = false; }
     if (colors === undefined) { colors = 0xffffff; }
     if (alphas === undefined) { alphas = 1; }
+    if (flipUV === undefined) { flipUV = false; }
 
     if (vertices.length !== uvs.length && !containsZ)
     {
@@ -117,6 +119,11 @@ var GenerateVerts = function (vertices, uvs, indicies, containsZ, normals, color
 
             u = uvs[index2];
             v = uvs[index2 + 1];
+
+            if (flipUV)
+            {
+                v = 1 - v;
+            }
 
             color = (isColorArray) ? colors[index1] : colors;
             alpha = (isAlphaArray) ? alphas[index1] : alphas;

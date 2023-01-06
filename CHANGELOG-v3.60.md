@@ -723,6 +723,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* The `GenerateVerts` function has a new optional parameter `flipUV` which, if set, will flip the UV texture coordinates (thanks cedarcantab)
 * The `GenerateVerts` function no longer errors if the verts and uvs arrays are not the same size and `containsZ` is true (thanks cedarcantab)
 * The `Device.Browser` checks for Opera and Edge have been updated to use the more modern user agent strings those browsers now use. This breaks compatibility with really old versions of those browsers but fixes it for modern ones (which is more important) (thanks @
 ArtemSiz)
