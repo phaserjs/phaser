@@ -49,7 +49,8 @@ module.exports = {
 
     resolve: {
         alias: {
-            'Spine': './runtimes/spine-webgl.js'
+            'SpineCanvas': './runtimes/spine-webgl.js',
+            'SpineWebgl': './runtimes/spine-webgl.js'
         },
     },
 

@@ -29,7 +29,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: require.resolve('./src/runtimes/spine-both.js'),
+                test: require.resolve('./src/runtimes/spine-canvas.js'),
                 loader: 'imports-loader',
                 options: {
                     type: 'commonjs',
@@ -37,7 +37,23 @@ module.exports = {
                 }
             },
             {
-                test: require.resolve('./src/runtimes/spine-both.js'),
+                test: require.resolve('./src/runtimes/spine-canvas.js'),
+                loader: 'exports-loader',
+                options: {
+                    type: 'commonjs',
+                    exports: 'single spine'
+                }
+            },
+            {
+                test: require.resolve('./src/runtimes/spine-webgl.js'),
+                loader: 'imports-loader',
+                options: {
+                    type: 'commonjs',
+                    wrapper: 'window'
+                }
+            },
+            {
+                test: require.resolve('./src/runtimes/spine-webgl.js'),
                 loader: 'exports-loader',
                 options: {
                     type: 'commonjs',
@@ -49,7 +65,8 @@ module.exports = {
 
     resolve: {
         alias: {
-            'Spine': './runtimes/spine-both.js'
+            'SpineCanvas': './runtimes/spine-canvas.js',
+            'SpineWebgl': './runtimes/spine-webgl.js'
         }
     },
 

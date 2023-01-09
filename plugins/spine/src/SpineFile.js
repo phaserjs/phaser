@@ -142,7 +142,7 @@ var SpineFile = new Class({
                 var content = file.data.split('\n');
 
                 //  Extract the textures
-                var textures = [];
+                var textures = [ content[0] ];
 
                 for (var t = 0; t < content.length; t++)
                 {
