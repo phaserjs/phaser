@@ -31,7 +31,7 @@
     "plugin.spine.dist": "webpack --config plugins/spine/webpack.auto.dist.config.js",
     "plugin.spine.watch": "webpack --config plugins/spine/webpack.auto.config.js --watch --display-modules",
     "plugin.spine.dev": "webpack --config plugins/spine/webpack.auto.config.js",
-    "plugin.spine.runtimes": "cd plugins/spine && tsc -p tsconfig.both.json && tsc -p tsconfig.canvas.json && tsc -p tsconfig.webgl.json",
+    "plugin.spine.runtimes": "cd plugins/spine/spine-runtimes/spine-ts && npm run build:canvas && npm run build:webgl && cp spine-canvas/dist/iife/* ../../src/runtimes && cp spine-webgl/dist/iife/* ../../src/runtimes",
     "plugin.spine.canvas.dist": "webpack --config plugins/spine/webpack.canvas.dist.config.js",
     "plugin.spine.canvas.watch": "webpack --config plugins/spine/webpack.canvas.config.js --watch --display-modules",
     "plugin.spine.canvas.dev": "webpack --config plugins/spine/webpack.canvas.config.js",
