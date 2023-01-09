@@ -5522,7 +5522,12 @@ var File = new Class({
      */
     onLoad: function (xhr, event)
     {
-        var localFileOk = ((xhr.responseURL && xhr.responseURL.indexOf('file://') === 0 && event.target.status === 0));
+        // On iOS, Capacitor often runs on a capacitor:// protocol, meaning local files are served from capacitor:// rather than file://
+        // See: https://github.com/photonstorm/phaser/issues/5685
+
+        var isLocalFile = xhr.responseURL && (xhr.responseURL.indexOf('file://') === 0 || xhr.responseURL.indexOf('capacitor://') === 0);
+
+        var localFileOk = (isLocalFile && event.target.status === 0);
 
         var success = !(event.target && event.target.status !== 200) || localFileOk;
 
@@ -6918,12 +6923,12 @@ module.exports = CheckMatrix;
  */
 
 var Class = __webpack_require__(0);
-var Contains = __webpack_require__(299);
+var Contains = __webpack_require__(301);
 var GetPoint = __webpack_require__(61);
-var GetPoints = __webpack_require__(300);
+var GetPoints = __webpack_require__(302);
 var GEOM_CONST = __webpack_require__(26);
-var Line = __webpack_require__(301);
-var Random = __webpack_require__(306);
+var Line = __webpack_require__(303);
+var Random = __webpack_require__(308);
 
 /**
  * @classdesc
@@ -11963,8 +11968,10 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#destroy
      * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.0.0
+     *
+     * @param {boolean} [fromScene=false] - `True` if this Game Object is being destroyed by the Scene, `false` if not.
      */
-    destroy: function ()
+    destroy: function (fromScene)
     {
         //  This Game Object has already been destroyed
         if (!this.scene || this.ignoreDestroy)
@@ -11972,12 +11979,14 @@ var GameObject = new Class({
             return;
         }
 
+        if (fromScene === undefined) { fromScene = false; }
+
         if (this.preDestroy)
         {
             this.preDestroy.call(this);
         }
 
-        this.emit(Events.DESTROY, this);
+        this.emit(Events.DESTROY, this, fromScene);
 
         this.removeAllListeners();
 
@@ -18476,11 +18485,9 @@ var ToXY = function (index, width, height, out)
         {
             x = index;
         }
-
-        out.set(x, y);
     }
 
-    return out;
+    return out.set(x, y);
 };
 
 module.exports = ToXY;
@@ -19422,7 +19429,7 @@ module.exports = BasePlugin;
  *
  * This event is dispatched when a Game Object is added to a Scene.
  *
- * Listen for it from a Scene using `this.scene.events.on('addedtoscene', listener)`.
+ * Listen for it from a Scene using `this.events.on('addedtoscene', listener)`.
  *
  * @event Phaser.Scenes.Events#ADDED_TO_SCENE
  * @since 3.50.0
@@ -19445,14 +19452,14 @@ module.exports = 'addedtoscene';
 
 /**
  * The Scene Systems Boot Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems boot process. Primarily used by Scene Plugins.
- * 
- * Listen to it from a Scene using `this.scene.events.on('boot', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('boot', listener)`.
+ *
  * @event Phaser.Scenes.Events#BOOT
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  */
 module.exports = 'boot';
@@ -19470,18 +19477,18 @@ module.exports = 'boot';
 
 /**
  * The Scene Create Event.
- * 
+ *
  * This event is dispatched by a Scene after it has been created by the Scene Manager.
- * 
+ *
  * If a Scene has a `create` method then this event is emitted _after_ that has run.
- * 
+ *
  * If there is a transition, this event will be fired after the `TRANSITION_START` event.
- * 
- * Listen to it from a Scene using `this.scene.events.on('create', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('create', listener)`.
+ *
  * @event Phaser.Scenes.Events#CREATE
  * @since 3.17.0
- * 
+ *
  * @param {Phaser.Scene} scene - A reference to the Scene that emitted this event.
  */
 module.exports = 'create';
@@ -19499,16 +19506,16 @@ module.exports = 'create';
 
 /**
  * The Scene Systems Destroy Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems destroy process.
- * 
- * Listen to it from a Scene using `this.scene.events.on('destroy', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('destroy', listener)`.
+ *
  * You should destroy any resources that may be in use by your Scene in this event handler.
- * 
+ *
  * @event Phaser.Scenes.Events#DESTROY
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  */
 module.exports = 'destroy';
@@ -19526,15 +19533,15 @@ module.exports = 'destroy';
 
 /**
  * The Scene Systems Pause Event.
- * 
+ *
  * This event is dispatched by a Scene when it is paused, either directly via the `pause` method, or as an
  * action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('pause', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('pause', listener)`.
+ *
  * @event Phaser.Scenes.Events#PAUSE
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was paused.
  */
@@ -19553,11 +19560,11 @@ module.exports = 'pause';
 
 /**
  * The Scene Systems Post Update Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
@@ -19565,13 +19572,13 @@ module.exports = 'pause';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('postupdate', listener)`.
- * 
+ * Listen to it from a Scene using `this.events.on('postupdate', listener)`.
+ *
  * A Scene will only run its step if it is active.
- * 
+ *
  * @event Phaser.Scenes.Events#POST_UPDATE
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
  * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -19603,9 +19610,10 @@ module.exports = 'postupdate';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to this event from a Scene using `this.scene.events.on('prerender', listener)`.
+ * Listen to this event from a Scene using `this.events.on('prerender', listener)`.
  *
  * A Scene will only render if it is visible.
+ *
  * This event is dispatched after the Scene Display List is sorted and before the Scene is rendered.
  *
  * @event Phaser.Scenes.Events#PRE_RENDER
@@ -19628,11 +19636,11 @@ module.exports = 'prerender';
 
 /**
  * The Scene Systems Pre Update Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
@@ -19640,13 +19648,13 @@ module.exports = 'prerender';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('preupdate', listener)`.
- * 
+ * Listen to it from a Scene using `this.events.on('preupdate', listener)`.
+ *
  * A Scene will only run its step if it is active.
- * 
+ *
  * @event Phaser.Scenes.Events#PRE_UPDATE
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
  * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -19666,16 +19674,16 @@ module.exports = 'preupdate';
 
 /**
  * The Scene Systems Ready Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems start process.
  * By this point in the process the Scene is now fully active and rendering.
  * This event is meant for your game code to use, as all plugins have responded to the earlier 'start' event.
- * 
- * Listen to it from a Scene using `this.scene.events.on('ready', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('ready', listener)`.
+ *
  * @event Phaser.Scenes.Events#READY
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was started.
  */
@@ -19697,7 +19705,7 @@ module.exports = 'ready';
  *
  * This event is dispatched when a Game Object is removed from a Scene.
  *
- * Listen for it from a Scene using `this.scene.events.on('removedfromscene', listener)`.
+ * Listen for it from a Scene using `this.events.on('removedfromscene', listener)`.
  *
  * @event Phaser.Scenes.Events#REMOVED_FROM_SCENE
  * @since 3.50.0
@@ -19720,11 +19728,11 @@ module.exports = 'removedfromscene';
 
 /**
  * The Scene Systems Render Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
@@ -19732,14 +19740,15 @@ module.exports = 'removedfromscene';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('render', listener)`.
+ * Listen to it from a Scene using `this.events.on('render', listener)`.
  *
  * A Scene will only render if it is visible.
+ *
  * By the time this event is dispatched, the Scene will have already been rendered.
- * 
+ *
  * @event Phaser.Scenes.Events#RENDER
  * @since 3.0.0
- * 
+ *
  * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer that rendered the Scene.
  */
 module.exports = 'render';
@@ -19757,15 +19766,15 @@ module.exports = 'render';
 
 /**
  * The Scene Systems Resume Event.
- * 
+ *
  * This event is dispatched by a Scene when it is resumed from a paused state, either directly via the `resume` method,
  * or as an action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('resume', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('resume', listener)`.
+ *
  * @event Phaser.Scenes.Events#RESUME
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was resumed.
  */
@@ -19784,18 +19793,18 @@ module.exports = 'resume';
 
 /**
  * The Scene Systems Shutdown Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems shutdown process.
- * 
- * Listen to it from a Scene using `this.scene.events.on('shutdown', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('shutdown', listener)`.
+ *
  * You should free-up any resources that may be in use by your Scene in this event handler, on the understanding
  * that the Scene may, at any time, become active again. A shutdown Scene is not 'destroyed', it's simply not
  * currently active. Use the [DESTROY]{@linkcode Phaser.Scenes.Events#event:DESTROY} event to completely clear resources.
- * 
+ *
  * @event Phaser.Scenes.Events#SHUTDOWN
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was shutdown.
  */
@@ -19814,15 +19823,15 @@ module.exports = 'shutdown';
 
 /**
  * The Scene Systems Sleep Event.
- * 
+ *
  * This event is dispatched by a Scene when it is sent to sleep, either directly via the `sleep` method,
  * or as an action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('sleep', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('sleep', listener)`.
+ *
  * @event Phaser.Scenes.Events#SLEEP
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was sent to sleep.
  */
@@ -19841,14 +19850,14 @@ module.exports = 'sleep';
 
 /**
  * The Scene Systems Start Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems start process. Primarily used by Scene Plugins.
- * 
- * Listen to it from a Scene using `this.scene.events.on('start', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('start', listener)`.
+ *
  * @event Phaser.Scenes.Events#START
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  */
 module.exports = 'start';
@@ -19866,25 +19875,25 @@ module.exports = 'start';
 
 /**
  * The Scene Transition Complete Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition.
- * 
+ *
  * It happens when the transition process has completed. This occurs when the duration timer equals or exceeds the duration
  * of the transition.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitioncomplete', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitioncomplete', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_COMPLETE
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} scene -The Scene on which the transitioned completed.
  */
 module.exports = 'transitioncomplete';
@@ -19902,25 +19911,25 @@ module.exports = 'transitioncomplete';
 
 /**
  * The Scene Transition Init Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition.
- * 
+ *
  * It happens immediately after the `Scene.init` method is called. If the Scene does not have an `init` method,
  * this event is not dispatched.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitioninit', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitioninit', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_INIT
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -19939,22 +19948,22 @@ module.exports = 'transitioninit';
 
 /**
  * The Scene Transition Out Event.
- * 
+ *
  * This event is dispatched by a Scene when it initiates a transition to another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitionout', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitionout', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_OUT
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} target - A reference to the Scene that is being transitioned to.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -19973,28 +19982,28 @@ module.exports = 'transitionout';
 
 /**
  * The Scene Transition Start Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition, only if that Scene was not asleep.
- * 
+ *
  * It happens immediately after the `Scene.create` method is called. If the Scene does not have a `create` method,
  * this event is dispatched anyway.
- * 
+ *
  * If the Target Scene was sleeping then the [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} event is
  * dispatched instead of this event.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitionstart', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitionstart', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_START
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -20013,23 +20022,23 @@ module.exports = 'transitionstart';
 
 /**
  * The Scene Transition Wake Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition, only if that Scene was asleep before
  * the transition began. If the Scene was not asleep the [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} event is dispatched instead.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitionwake', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitionwake', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_WAKE
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -20048,11 +20057,11 @@ module.exports = 'transitionwake';
 
 /**
  * The Scene Systems Update Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
@@ -20060,13 +20069,13 @@ module.exports = 'transitionwake';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('update', listener)`.
- * 
+ * Listen to it from a Scene using `this.events.on('update', listener)`.
+ *
  * A Scene will only run its step if it is active.
- * 
+ *
  * @event Phaser.Scenes.Events#UPDATE
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
  * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -20086,15 +20095,15 @@ module.exports = 'update';
 
 /**
  * The Scene Systems Wake Event.
- * 
+ *
  * This event is dispatched by a Scene when it is woken from sleep, either directly via the `wake` method,
  * or as an action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('wake', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('wake', listener)`.
+ *
  * @event Phaser.Scenes.Events#WAKE
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was woken up.
  */
@@ -35446,15 +35455,16 @@ module.exports = 'addedtoscene';
 
 /**
  * The Game Object Destroy Event.
- * 
+ *
  * This event is dispatched when a Game Object instance is being destroyed.
- * 
+ *
  * Listen for it on a Game Object instance using `GameObject.on('destroy', listener)`.
  *
  * @event Phaser.GameObjects.Events#DESTROY
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object which is being destroyed.
+ * @param {boolean} fromScene - `True` if this Game Object is being destroyed by the Scene, `false` if not.
  */
 module.exports = 'destroy';
 
@@ -36353,7 +36363,7 @@ module.exports = SpineGameObjectCanvasRenderer;
 
 var Class = __webpack_require__(0);
 var Container = __webpack_require__(255);
-var SpineContainerRender = __webpack_require__(347);
+var SpineContainerRender = __webpack_require__(349);
 
 /**
  * @classdesc
@@ -36457,12 +36467,12 @@ module.exports = SpineContainer;
 var ArrayUtils = __webpack_require__(256);
 var BlendModes = __webpack_require__(17);
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(293);
+var Components = __webpack_require__(295);
 var Events = __webpack_require__(55);
 var GameObject = __webpack_require__(53);
 var Rectangle = __webpack_require__(25);
-var Render = __webpack_require__(343);
-var Union = __webpack_require__(346);
+var Render = __webpack_require__(345);
+var Union = __webpack_require__(348);
 var Vector2 = __webpack_require__(2);
 
 /**
@@ -37233,6 +37243,46 @@ var Container = new Class({
     },
 
     /**
+     * Moves a Game Object above another one within this Container.
+     *
+     * These 2 Game Objects must already be children of this Container.
+     *
+     * @method Phaser.GameObjects.Container#moveAbove
+     * @since 3.55.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The Game Object to move above base Game Object.
+     * @param {Phaser.GameObjects.GameObject} child2 - The base Game Object.
+     *
+     * @return {this} This Container instance.
+     */
+    moveAbove: function (child1, child2)
+    {
+        ArrayUtils.MoveAbove(this.list, child1, child2);
+
+        return this;
+    },
+
+    /**
+     * Moves a Game Object below another one within this Container.
+     *
+     * These 2 Game Objects must already be children of this Container.
+     *
+     * @method Phaser.GameObjects.Container#moveBelow
+     * @since 3.55.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The Game Object to move below base Game Object.
+     * @param {Phaser.GameObjects.GameObject} child2 - The base Game Object.
+     *
+     * @return {this} This Container instance.
+     */
+    moveBelow: function (child1, child2)
+    {
+        ArrayUtils.MoveBelow(this.list, child1, child2);
+
+        return this;
+    },
+
+    /**
      * Removes the given Game Object, or array of Game Objects, from this Container.
      *
      * The Game Objects must already be children of this Container.
@@ -37828,25 +37878,27 @@ module.exports = {
     MoveDown: __webpack_require__(276),
     MoveTo: __webpack_require__(277),
     MoveUp: __webpack_require__(278),
-    NumberArray: __webpack_require__(279),
-    NumberArrayStep: __webpack_require__(280),
-    QuickSelect: __webpack_require__(281),
-    Range: __webpack_require__(282),
-    Remove: __webpack_require__(283),
-    RemoveAt: __webpack_require__(284),
-    RemoveBetween: __webpack_require__(285),
-    RemoveRandomElement: __webpack_require__(286),
-    Replace: __webpack_require__(287),
+    MoveAbove: __webpack_require__(279),
+    MoveBelow: __webpack_require__(280),
+    NumberArray: __webpack_require__(281),
+    NumberArrayStep: __webpack_require__(282),
+    QuickSelect: __webpack_require__(283),
+    Range: __webpack_require__(284),
+    Remove: __webpack_require__(285),
+    RemoveAt: __webpack_require__(286),
+    RemoveBetween: __webpack_require__(287),
+    RemoveRandomElement: __webpack_require__(288),
+    Replace: __webpack_require__(289),
     RotateLeft: __webpack_require__(58),
     RotateRight: __webpack_require__(59),
     SafeRange: __webpack_require__(5),
-    SendToBack: __webpack_require__(288),
-    SetAll: __webpack_require__(289),
+    SendToBack: __webpack_require__(290),
+    SetAll: __webpack_require__(291),
     Shuffle: __webpack_require__(60),
-    SortByDigits: __webpack_require__(290),
+    SortByDigits: __webpack_require__(292),
     SpliceOne: __webpack_require__(12),
-    StableSort: __webpack_require__(291),
-    Swap: __webpack_require__(292)
+    StableSort: __webpack_require__(293),
+    Swap: __webpack_require__(294)
 
 };
 
@@ -39190,6 +39242,134 @@ module.exports = MoveUp;
  */
 
 /**
+ * Moves the given array element above another one in the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveAbove
+ * @since 3.55.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item1 - The element to move above base element.
+ * @param {*} item2 - The base element.
+ * 
+ *
+ * @return {array} The input array.
+ */
+var MoveAbove = function (array, item1, item2)
+{
+    if (item1 === item2)
+    {
+        return array;
+    }
+
+    var currentIndex = array.indexOf(item1);
+    var baseIndex = array.indexOf(item2);
+
+    if (currentIndex < 0 || baseIndex < 0)
+    {
+        throw new Error('Supplied items must be elements of the same array');
+    }
+
+    if (currentIndex > baseIndex)
+    {
+        // item1 is already above item2
+        return array;
+    }
+
+    //  Remove
+    array.splice(currentIndex, 1);
+
+    //  Add in new location
+    if (baseIndex === array.length - 1)
+    {
+        array.push(item1);
+    }
+    else
+    {
+        array.splice(baseIndex, 0, item1);
+    }
+
+    return array;
+};
+
+module.exports = MoveAbove;
+
+
+/***/ }),
+/* 280 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given array element below another one in the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveBelow
+ * @since 3.55.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item1 - The element to move below base element.
+ * @param {*} item2 - The base element.
+ * 
+ *
+ * @return {array} The input array.
+ */
+var MoveBelow = function (array, item1, item2)
+{
+    if (item1 === item2)
+    {
+        return array;
+    }
+
+    var currentIndex = array.indexOf(item1);
+    var baseIndex = array.indexOf(item2);
+
+    if (currentIndex < 0 || baseIndex < 0)
+    {
+        throw new Error('Supplied items must be elements of the same array');
+    }
+
+    if (currentIndex < baseIndex)
+    {
+        // item1 is already below item2
+        return array;
+    }
+
+    //  Remove
+    array.splice(currentIndex, 1);
+
+    //  Add in new location
+    if (baseIndex === 0)
+    {
+        array.unshift(item1);
+    }
+    else
+    {
+        array.splice(baseIndex, 0, item1);
+    }
+
+    return array;
+};
+
+module.exports = MoveBelow;
+
+
+/***/ }),
+/* 281 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
  * Create an array representing the range of numbers (usually integers), between, and inclusive of,
  * the given `start` and `end` arguments. For example:
  *
@@ -39273,7 +39453,7 @@ module.exports = NumberArray;
 
 
 /***/ }),
-/* 280 */
+/* 282 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39350,7 +39530,7 @@ module.exports = NumberArrayStep;
 
 
 /***/ }),
-/* 281 */
+/* 283 */
 /***/ (function(module, exports) {
 
 /**
@@ -39472,7 +39652,7 @@ module.exports = QuickSelect;
 
 
 /***/ }),
-/* 282 */
+/* 284 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39610,7 +39790,7 @@ module.exports = Range;
 
 
 /***/ }),
-/* 283 */
+/* 285 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39699,7 +39879,7 @@ module.exports = Remove;
 
 
 /***/ }),
-/* 284 */
+/* 286 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39750,7 +39930,7 @@ module.exports = RemoveAt;
 
 
 /***/ }),
-/* 285 */
+/* 287 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39813,7 +39993,7 @@ module.exports = RemoveBetween;
 
 
 /***/ }),
-/* 286 */
+/* 288 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39851,7 +40031,7 @@ module.exports = RemoveRandomElement;
 
 
 /***/ }),
-/* 287 */
+/* 289 */
 /***/ (function(module, exports) {
 
 /**
@@ -39895,7 +40075,7 @@ module.exports = Replace;
 
 
 /***/ }),
-/* 288 */
+/* 290 */
 /***/ (function(module, exports) {
 
 /**
@@ -39933,7 +40113,7 @@ module.exports = SendToBack;
 
 
 /***/ }),
-/* 289 */
+/* 291 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39988,7 +40168,7 @@ module.exports = SetAll;
 
 
 /***/ }),
-/* 290 */
+/* 292 */
 /***/ (function(module, exports) {
 
 /**
@@ -40026,7 +40206,7 @@ module.exports = SortByDigits;
 
 
 /***/ }),
-/* 291 */
+/* 293 */
 /***/ (function(module, exports) {
 
 /**
@@ -40202,7 +40382,7 @@ module.exports = StableSort;
 
 
 /***/ }),
-/* 292 */
+/* 294 */
 /***/ (function(module, exports) {
 
 /**
@@ -40229,7 +40409,7 @@ var Swap = function (array, item1, item2)
 {
     if (item1 === item2)
     {
-        return;
+        return array;
     }
 
     var index1 = array.indexOf(item1);
@@ -40250,7 +40430,7 @@ module.exports = Swap;
 
 
 /***/ }),
-/* 293 */
+/* 295 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40265,23 +40445,23 @@ module.exports = Swap;
 
 module.exports = {
 
-    Alpha: __webpack_require__(294),
-    AlphaSingle: __webpack_require__(295),
-    BlendMode: __webpack_require__(296),
+    Alpha: __webpack_require__(296),
+    AlphaSingle: __webpack_require__(297),
+    BlendMode: __webpack_require__(298),
     ComputedSize: __webpack_require__(47),
-    Crop: __webpack_require__(297),
+    Crop: __webpack_require__(299),
     Depth: __webpack_require__(48),
     Flip: __webpack_require__(49),
-    GetBounds: __webpack_require__(298),
-    Mask: __webpack_require__(307),
-    Origin: __webpack_require__(332),
-    PathFollower: __webpack_require__(333),
-    Pipeline: __webpack_require__(336),
+    GetBounds: __webpack_require__(300),
+    Mask: __webpack_require__(309),
+    Origin: __webpack_require__(334),
+    PathFollower: __webpack_require__(335),
+    Pipeline: __webpack_require__(338),
     ScrollFactor: __webpack_require__(50),
-    Size: __webpack_require__(339),
-    Texture: __webpack_require__(340),
-    TextureCrop: __webpack_require__(341),
-    Tint: __webpack_require__(342),
+    Size: __webpack_require__(341),
+    Texture: __webpack_require__(342),
+    TextureCrop: __webpack_require__(343),
+    Tint: __webpack_require__(344),
     ToJSON: __webpack_require__(54),
     Transform: __webpack_require__(51),
     TransformMatrix: __webpack_require__(23),
@@ -40291,7 +40471,7 @@ module.exports = {
 
 
 /***/ }),
-/* 294 */
+/* 296 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40586,7 +40766,7 @@ module.exports = Alpha;
 
 
 /***/ }),
-/* 295 */
+/* 297 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40696,7 +40876,7 @@ module.exports = AlphaSingle;
 
 
 /***/ }),
-/* 296 */
+/* 298 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40818,7 +40998,7 @@ module.exports = BlendMode;
 
 
 /***/ }),
-/* 297 */
+/* 299 */
 /***/ (function(module, exports) {
 
 /**
@@ -40943,7 +41123,7 @@ module.exports = Crop;
 
 
 /***/ }),
-/* 298 */
+/* 300 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41302,7 +41482,7 @@ module.exports = GetBounds;
 
 
 /***/ }),
-/* 299 */
+/* 301 */
 /***/ (function(module, exports) {
 
 /**
@@ -41337,7 +41517,7 @@ module.exports = Contains;
 
 
 /***/ }),
-/* 300 */
+/* 302 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41391,7 +41571,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 301 */
+/* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41401,10 +41581,10 @@ module.exports = GetPoints;
  */
 
 var Class = __webpack_require__(0);
-var GetPoint = __webpack_require__(302);
-var GetPoints = __webpack_require__(303);
+var GetPoint = __webpack_require__(304);
+var GetPoints = __webpack_require__(305);
 var GEOM_CONST = __webpack_require__(26);
-var Random = __webpack_require__(305);
+var Random = __webpack_require__(307);
 var Vector2 = __webpack_require__(2);
 
 /**
@@ -41728,7 +41908,7 @@ module.exports = Line;
 
 
 /***/ }),
-/* 302 */
+/* 304 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41767,7 +41947,7 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 303 */
+/* 305 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41776,7 +41956,7 @@ module.exports = GetPoint;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Length = __webpack_require__(304);
+var Length = __webpack_require__(306);
 var Point = __webpack_require__(13);
 
 /**
@@ -41832,7 +42012,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 304 */
+/* 306 */
 /***/ (function(module, exports) {
 
 /**
@@ -41860,7 +42040,7 @@ module.exports = Length;
 
 
 /***/ }),
-/* 305 */
+/* 307 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41900,7 +42080,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 306 */
+/* 308 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41938,7 +42118,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 307 */
+/* 309 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41947,8 +42127,8 @@ module.exports = Random;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BitmapMask = __webpack_require__(308);
-var GeometryMask = __webpack_require__(331);
+var BitmapMask = __webpack_require__(310);
+var GeometryMask = __webpack_require__(333);
 
 /**
  * Provides methods used for getting and setting the mask of a Game Object.
@@ -42087,7 +42267,7 @@ module.exports = Mask;
 
 
 /***/ }),
-/* 308 */
+/* 310 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42097,8 +42277,8 @@ module.exports = Mask;
  */
 
 var Class = __webpack_require__(0);
-var GameEvents = __webpack_require__(309);
-var RenderEvents = __webpack_require__(326);
+var GameEvents = __webpack_require__(311);
+var RenderEvents = __webpack_require__(328);
 
 /**
  * @classdesc
@@ -42410,7 +42590,7 @@ module.exports = BitmapMask;
 
 
 /***/ }),
-/* 309 */
+/* 311 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42425,28 +42605,28 @@ module.exports = BitmapMask;
 
 module.exports = {
 
-    BLUR: __webpack_require__(310),
-    BOOT: __webpack_require__(311),
-    CONTEXT_LOST: __webpack_require__(312),
-    CONTEXT_RESTORED: __webpack_require__(313),
-    DESTROY: __webpack_require__(314),
-    FOCUS: __webpack_require__(315),
-    HIDDEN: __webpack_require__(316),
-    PAUSE: __webpack_require__(317),
-    POST_RENDER: __webpack_require__(318),
-    POST_STEP: __webpack_require__(319),
-    PRE_RENDER: __webpack_require__(320),
-    PRE_STEP: __webpack_require__(321),
-    READY: __webpack_require__(322),
-    RESUME: __webpack_require__(323),
-    STEP: __webpack_require__(324),
-    VISIBLE: __webpack_require__(325)
+    BLUR: __webpack_require__(312),
+    BOOT: __webpack_require__(313),
+    CONTEXT_LOST: __webpack_require__(314),
+    CONTEXT_RESTORED: __webpack_require__(315),
+    DESTROY: __webpack_require__(316),
+    FOCUS: __webpack_require__(317),
+    HIDDEN: __webpack_require__(318),
+    PAUSE: __webpack_require__(319),
+    POST_RENDER: __webpack_require__(320),
+    POST_STEP: __webpack_require__(321),
+    PRE_RENDER: __webpack_require__(322),
+    PRE_STEP: __webpack_require__(323),
+    READY: __webpack_require__(324),
+    RESUME: __webpack_require__(325),
+    STEP: __webpack_require__(326),
+    VISIBLE: __webpack_require__(327)
 
 };
 
 
 /***/ }),
-/* 310 */
+/* 312 */
 /***/ (function(module, exports) {
 
 /**
@@ -42469,7 +42649,7 @@ module.exports = 'blur';
 
 
 /***/ }),
-/* 311 */
+/* 313 */
 /***/ (function(module, exports) {
 
 /**
@@ -42491,7 +42671,7 @@ module.exports = 'boot';
 
 
 /***/ }),
-/* 312 */
+/* 314 */
 /***/ (function(module, exports) {
 
 /**
@@ -42514,7 +42694,7 @@ module.exports = 'contextlost';
 
 
 /***/ }),
-/* 313 */
+/* 315 */
 /***/ (function(module, exports) {
 
 /**
@@ -42537,7 +42717,7 @@ module.exports = 'contextrestored';
 
 
 /***/ }),
-/* 314 */
+/* 316 */
 /***/ (function(module, exports) {
 
 /**
@@ -42560,7 +42740,7 @@ module.exports = 'destroy';
 
 
 /***/ }),
-/* 315 */
+/* 317 */
 /***/ (function(module, exports) {
 
 /**
@@ -42582,7 +42762,7 @@ module.exports = 'focus';
 
 
 /***/ }),
-/* 316 */
+/* 318 */
 /***/ (function(module, exports) {
 
 /**
@@ -42608,7 +42788,7 @@ module.exports = 'hidden';
 
 
 /***/ }),
-/* 317 */
+/* 319 */
 /***/ (function(module, exports) {
 
 /**
@@ -42629,7 +42809,7 @@ module.exports = 'pause';
 
 
 /***/ }),
-/* 318 */
+/* 320 */
 /***/ (function(module, exports) {
 
 /**
@@ -42655,7 +42835,7 @@ module.exports = 'postrender';
 
 
 /***/ }),
-/* 319 */
+/* 321 */
 /***/ (function(module, exports) {
 
 /**
@@ -42680,7 +42860,7 @@ module.exports = 'poststep';
 
 
 /***/ }),
-/* 320 */
+/* 322 */
 /***/ (function(module, exports) {
 
 /**
@@ -42705,7 +42885,7 @@ module.exports = 'prerender';
 
 
 /***/ }),
-/* 321 */
+/* 323 */
 /***/ (function(module, exports) {
 
 /**
@@ -42730,7 +42910,7 @@ module.exports = 'prestep';
 
 
 /***/ }),
-/* 322 */
+/* 324 */
 /***/ (function(module, exports) {
 
 /**
@@ -42752,7 +42932,7 @@ module.exports = 'ready';
 
 
 /***/ }),
-/* 323 */
+/* 325 */
 /***/ (function(module, exports) {
 
 /**
@@ -42773,7 +42953,7 @@ module.exports = 'resume';
 
 
 /***/ }),
-/* 324 */
+/* 326 */
 /***/ (function(module, exports) {
 
 /**
@@ -42798,7 +42978,7 @@ module.exports = 'step';
 
 
 /***/ }),
-/* 325 */
+/* 327 */
 /***/ (function(module, exports) {
 
 /**
@@ -42822,7 +43002,7 @@ module.exports = 'visible';
 
 
 /***/ }),
-/* 326 */
+/* 328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42837,16 +43017,16 @@ module.exports = 'visible';
 
 module.exports = {
 
-    POST_RENDER: __webpack_require__(327),
-    PRE_RENDER: __webpack_require__(328),
-    RENDER: __webpack_require__(329),
-    RESIZE: __webpack_require__(330)
+    POST_RENDER: __webpack_require__(329),
+    PRE_RENDER: __webpack_require__(330),
+    RENDER: __webpack_require__(331),
+    RESIZE: __webpack_require__(332)
 
 };
 
 
 /***/ }),
-/* 327 */
+/* 329 */
 /***/ (function(module, exports) {
 
 /**
@@ -42868,7 +43048,7 @@ module.exports = 'postrender';
 
 
 /***/ }),
-/* 328 */
+/* 330 */
 /***/ (function(module, exports) {
 
 /**
@@ -42891,7 +43071,7 @@ module.exports = 'prerender';
 
 
 /***/ }),
-/* 329 */
+/* 331 */
 /***/ (function(module, exports) {
 
 /**
@@ -42917,7 +43097,7 @@ module.exports = 'render';
 
 
 /***/ }),
-/* 330 */
+/* 332 */
 /***/ (function(module, exports) {
 
 /**
@@ -42942,7 +43122,7 @@ module.exports = 'resize';
 
 
 /***/ }),
-/* 331 */
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43262,7 +43442,7 @@ module.exports = GeometryMask;
 
 
 /***/ }),
-/* 332 */
+/* 334 */
 /***/ (function(module, exports) {
 
 /**
@@ -43465,7 +43645,7 @@ module.exports = Origin;
 
 
 /***/ }),
-/* 333 */
+/* 335 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43475,9 +43655,9 @@ module.exports = Origin;
  */
 
 var DegToRad = __webpack_require__(19);
-var GetBoolean = __webpack_require__(334);
+var GetBoolean = __webpack_require__(336);
 var GetValue = __webpack_require__(10);
-var TWEEN_CONST = __webpack_require__(335);
+var TWEEN_CONST = __webpack_require__(337);
 var Vector2 = __webpack_require__(2);
 
 /**
@@ -43892,7 +44072,7 @@ module.exports = PathFollower;
 
 
 /***/ }),
-/* 334 */
+/* 336 */
 /***/ (function(module, exports) {
 
 /**
@@ -43933,7 +44113,7 @@ module.exports = GetBoolean;
 
 
 /***/ }),
-/* 335 */
+/* 337 */
 /***/ (function(module, exports) {
 
 /**
@@ -44105,7 +44285,7 @@ module.exports = TWEEN_CONST;
 
 
 /***/ }),
-/* 336 */
+/* 338 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44114,8 +44294,8 @@ module.exports = TWEEN_CONST;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var DeepCopy = __webpack_require__(337);
-var PIPELINE_CONST = __webpack_require__(338);
+var DeepCopy = __webpack_require__(339);
+var PIPELINE_CONST = __webpack_require__(340);
 var SpliceOne = __webpack_require__(12);
 
 /**
@@ -44170,7 +44350,7 @@ var Pipeline = {
      * If you modify this array directly, be sure to set the
      * `hasPostPipeline` property accordingly.
      *
-     * @name Phaser.GameObjects.Components.Pipeline#postPipeline
+     * @name Phaser.GameObjects.Components.Pipeline#postPipelines
      * @type {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[]}
      * @webglOnly
      * @since 3.50.0
@@ -44528,7 +44708,7 @@ module.exports = Pipeline;
 
 
 /***/ }),
-/* 337 */
+/* 339 */
 /***/ (function(module, exports) {
 
 /**
@@ -44577,7 +44757,7 @@ module.exports = DeepCopy;
 
 
 /***/ }),
-/* 338 */
+/* 340 */
 /***/ (function(module, exports) {
 
 /**
@@ -44683,7 +44863,7 @@ module.exports = PIPELINE_CONST;
 
 
 /***/ }),
-/* 339 */
+/* 341 */
 /***/ (function(module, exports) {
 
 /**
@@ -44870,7 +45050,7 @@ module.exports = Size;
 
 
 /***/ }),
-/* 340 */
+/* 342 */
 /***/ (function(module, exports) {
 
 /**
@@ -45000,7 +45180,7 @@ module.exports = Texture;
 
 
 /***/ }),
-/* 341 */
+/* 343 */
 /***/ (function(module, exports) {
 
 /**
@@ -45208,7 +45388,7 @@ module.exports = TextureCrop;
 
 
 /***/ }),
-/* 342 */
+/* 344 */
 /***/ (function(module, exports) {
 
 /**
@@ -45445,7 +45625,7 @@ module.exports = Tint;
 
 
 /***/ }),
-/* 343 */
+/* 345 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -45460,12 +45640,12 @@ var renderCanvas = __webpack_require__(1);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(344);
+    renderWebGL = __webpack_require__(346);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(345);
+    renderCanvas = __webpack_require__(347);
 }
 
 module.exports = {
@@ -45477,7 +45657,7 @@ module.exports = {
 
 
 /***/ }),
-/* 344 */
+/* 346 */
 /***/ (function(module, exports) {
 
 /**
@@ -45503,6 +45683,8 @@ module.exports = {
  */
 var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix)
 {
+    camera.addToRenderList(container);
+
     var children = container.list;
     var childCount = children.length;
 
@@ -45510,8 +45692,6 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
     {
         return;
     }
-
-    camera.addToRenderList(container);
 
     var transformMatrix = container.localTransform;
 
@@ -45629,7 +45809,7 @@ module.exports = ContainerWebGLRenderer;
 
 
 /***/ }),
-/* 345 */
+/* 347 */
 /***/ (function(module, exports) {
 
 /**
@@ -45655,14 +45835,14 @@ module.exports = ContainerWebGLRenderer;
  */
 var ContainerCanvasRenderer = function (renderer, container, camera, parentMatrix)
 {
+    camera.addToRenderList(container);
+
     var children = container.list;
 
     if (children.length === 0)
     {
         return;
     }
-
-    camera.addToRenderList(container);
 
     var transformMatrix = container.localTransform;
 
@@ -45737,7 +45917,7 @@ module.exports = ContainerCanvasRenderer;
 
 
 /***/ }),
-/* 346 */
+/* 348 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -45779,7 +45959,7 @@ module.exports = Union;
 
 
 /***/ }),
-/* 347 */
+/* 349 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -45793,12 +45973,12 @@ var renderCanvas = __webpack_require__(1);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(348);
+    renderWebGL = __webpack_require__(350);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(349);
+    renderCanvas = __webpack_require__(351);
 }
 
 module.exports = {
@@ -45810,7 +45990,7 @@ module.exports = {
 
 
 /***/ }),
-/* 348 */
+/* 350 */
 /***/ (function(module, exports) {
 
 /**
@@ -45936,7 +46116,7 @@ module.exports = SpineContainerWebGLRenderer;
 
 
 /***/ }),
-/* 349 */
+/* 351 */
 /***/ (function(module, exports) {
 
 /**

@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"target": "ES6",
         "moduleResolution": "node",
 		"module": "none",
 		"noImplicitAny": true,
@@ -10,14 +11,14 @@
 		"declaration": true
 	},
 	"include": [
-		"spine-runtimes/spine-ts/core/src/**/*",
-		"spine-runtimes/spine-ts/canvas/src/**/*"
+		"spine-runtimes/spine-ts/spine-core/src/**/*",
+		"spine-runtimes/spine-ts/spine-canvas/src/**/*"
 	],
 	"exclude": [
-		"spine-runtimes/spine-ts/webgl",
-		"spine-runtimes/spine-ts/widget",
-		"spine-runtimes/spine-ts/threejs",
-		"spine-runtimes/spine-ts/build",
-        "spine-runtimes/spine-ts/player"
+		"spine-runtimes/spine-ts/spine-webgl",
+		"spine-runtimes/spine-ts/spine-widget",
+		"spine-runtimes/spine-ts/spine-threejs",
+		// "spine-runtimes/spine-ts/build",
+        "spine-runtimes/spine-ts/spine-player"
 	]
 }

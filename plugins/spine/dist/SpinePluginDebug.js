@@ -88,9 +88,9 @@ window["SpinePlugin"] =
 /******/ ({
 
 /***/ "../../../node_modules/eventemitter3/index.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/node_modules/eventemitter3/index.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/node_modules/eventemitter3/index.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -436,9 +436,9 @@ if (true) {
 /***/ }),
 
 /***/ "../../../src/core/events/BLUR_EVENT.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/BLUR_EVENT.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/BLUR_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -464,9 +464,9 @@ module.exports = 'blur';
 /***/ }),
 
 /***/ "../../../src/core/events/BOOT_EVENT.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/BOOT_EVENT.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/BOOT_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -491,9 +491,9 @@ module.exports = 'boot';
 /***/ }),
 
 /***/ "../../../src/core/events/CONTEXT_LOST_EVENT.js":
-/*!*********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/CONTEXT_LOST_EVENT.js ***!
-  \*********************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/CONTEXT_LOST_EVENT.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -519,9 +519,9 @@ module.exports = 'contextlost';
 /***/ }),
 
 /***/ "../../../src/core/events/CONTEXT_RESTORED_EVENT.js":
-/*!*************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/CONTEXT_RESTORED_EVENT.js ***!
-  \*************************************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/CONTEXT_RESTORED_EVENT.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -547,9 +547,9 @@ module.exports = 'contextrestored';
 /***/ }),
 
 /***/ "../../../src/core/events/DESTROY_EVENT.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/DESTROY_EVENT.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/DESTROY_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -575,9 +575,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/core/events/FOCUS_EVENT.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/FOCUS_EVENT.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/FOCUS_EVENT.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -602,9 +602,9 @@ module.exports = 'focus';
 /***/ }),
 
 /***/ "../../../src/core/events/HIDDEN_EVENT.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/HIDDEN_EVENT.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/HIDDEN_EVENT.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -633,9 +633,9 @@ module.exports = 'hidden';
 /***/ }),
 
 /***/ "../../../src/core/events/PAUSE_EVENT.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/PAUSE_EVENT.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/PAUSE_EVENT.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -659,9 +659,9 @@ module.exports = 'pause';
 /***/ }),
 
 /***/ "../../../src/core/events/POST_RENDER_EVENT.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/POST_RENDER_EVENT.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/POST_RENDER_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -690,9 +690,9 @@ module.exports = 'postrender';
 /***/ }),
 
 /***/ "../../../src/core/events/POST_STEP_EVENT.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/POST_STEP_EVENT.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/POST_STEP_EVENT.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -720,9 +720,9 @@ module.exports = 'poststep';
 /***/ }),
 
 /***/ "../../../src/core/events/PRE_RENDER_EVENT.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/PRE_RENDER_EVENT.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/PRE_RENDER_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -750,9 +750,9 @@ module.exports = 'prerender';
 /***/ }),
 
 /***/ "../../../src/core/events/PRE_STEP_EVENT.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/PRE_STEP_EVENT.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/PRE_STEP_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -780,9 +780,9 @@ module.exports = 'prestep';
 /***/ }),
 
 /***/ "../../../src/core/events/READY_EVENT.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/READY_EVENT.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/READY_EVENT.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -807,9 +807,9 @@ module.exports = 'ready';
 /***/ }),
 
 /***/ "../../../src/core/events/RESUME_EVENT.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/RESUME_EVENT.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/RESUME_EVENT.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -833,9 +833,9 @@ module.exports = 'resume';
 /***/ }),
 
 /***/ "../../../src/core/events/STEP_EVENT.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/STEP_EVENT.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/STEP_EVENT.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -863,9 +863,9 @@ module.exports = 'step';
 /***/ }),
 
 /***/ "../../../src/core/events/VISIBLE_EVENT.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/VISIBLE_EVENT.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/VISIBLE_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -892,9 +892,9 @@ module.exports = 'visible';
 /***/ }),
 
 /***/ "../../../src/core/events/index.js":
-/*!********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/core/events/index.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/core/events/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -933,9 +933,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/data/DataManager.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/data/DataManager.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/DataManager.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1645,9 +1645,9 @@ module.exports = DataManager;
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_EVENT.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1682,9 +1682,9 @@ module.exports = 'changedata';
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_KEY_EVENT.js":
-/*!************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
-  \************************************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1717,9 +1717,9 @@ module.exports = 'changedata-';
 /***/ }),
 
 /***/ "../../../src/data/events/DESTROY_EVENT.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/DESTROY_EVENT.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/DESTROY_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1743,9 +1743,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/data/events/REMOVE_DATA_EVENT.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1776,9 +1776,9 @@ module.exports = 'removedata';
 /***/ }),
 
 /***/ "../../../src/data/events/SET_DATA_EVENT.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/SET_DATA_EVENT.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/SET_DATA_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1809,9 +1809,9 @@ module.exports = 'setdata';
 /***/ }),
 
 /***/ "../../../src/data/events/index.js":
-/*!********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/data/events/index.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1839,9 +1839,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/display/mask/BitmapMask.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/display/mask/BitmapMask.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/display/mask/BitmapMask.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2167,9 +2167,9 @@ module.exports = BitmapMask;
 /***/ }),
 
 /***/ "../../../src/display/mask/GeometryMask.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/display/mask/GeometryMask.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/display/mask/GeometryMask.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2492,9 +2492,9 @@ module.exports = GeometryMask;
 /***/ }),
 
 /***/ "../../../src/gameobjects/BuildGameObject.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/BuildGameObject.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/BuildGameObject.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2625,9 +2625,9 @@ module.exports = BuildGameObject;
 /***/ }),
 
 /***/ "../../../src/gameobjects/GameObject.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/GameObject.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/GameObject.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3454,8 +3454,10 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#destroy
      * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.0.0
+     *
+     * @param {boolean} [fromScene=false] - `True` if this Game Object is being destroyed by the Scene, `false` if not.
      */
-    destroy: function ()
+    destroy: function (fromScene)
     {
         //  This Game Object has already been destroyed
         if (!this.scene || this.ignoreDestroy)
@@ -3463,12 +3465,14 @@ var GameObject = new Class({
             return;
         }
 
+        if (fromScene === undefined) { fromScene = false; }
+
         if (this.preDestroy)
         {
             this.preDestroy.call(this);
         }
 
-        this.emit(Events.DESTROY, this);
+        this.emit(Events.DESTROY, this, fromScene);
 
         this.removeAllListeners();
 
@@ -3525,9 +3529,9 @@ module.exports = GameObject;
 /***/ }),
 
 /***/ "../../../src/gameobjects/GetCalcMatrix.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/GetCalcMatrix.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/GetCalcMatrix.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3601,9 +3605,9 @@ module.exports = GetCalcMatrix;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Alpha.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Alpha.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Alpha.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3901,9 +3905,9 @@ module.exports = Alpha;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/AlphaSingle.js":
-/*!*************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/AlphaSingle.js ***!
-  \*************************************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/AlphaSingle.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4016,9 +4020,9 @@ module.exports = AlphaSingle;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/BlendMode.js":
-/*!***********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/BlendMode.js ***!
-  \***********************************************************************************/
+/*!****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/BlendMode.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4143,9 +4147,9 @@ module.exports = BlendMode;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ComputedSize.js":
-/*!**************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ComputedSize.js ***!
-  \**************************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/ComputedSize.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4297,9 +4301,9 @@ module.exports = ComputedSize;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Crop.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Crop.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Crop.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4427,9 +4431,9 @@ module.exports = Crop;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Depth.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Depth.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Depth.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4529,9 +4533,9 @@ module.exports = Depth;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Flip.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Flip.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Flip.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4698,9 +4702,9 @@ module.exports = Flip;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/GetBounds.js":
-/*!***********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/GetBounds.js ***!
-  \***********************************************************************************/
+/*!****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/GetBounds.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5062,9 +5066,9 @@ module.exports = GetBounds;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Mask.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Mask.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Mask.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5216,9 +5220,9 @@ module.exports = Mask;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Origin.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Origin.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Origin.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5424,9 +5428,9 @@ module.exports = Origin;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/PathFollower.js":
-/*!**************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/PathFollower.js ***!
-  \**************************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/PathFollower.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5856,9 +5860,9 @@ module.exports = PathFollower;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Pipeline.js":
-/*!**********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Pipeline.js ***!
-  \**********************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Pipeline.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5924,7 +5928,7 @@ var Pipeline = {
      * If you modify this array directly, be sure to set the
      * `hasPostPipeline` property accordingly.
      *
-     * @name Phaser.GameObjects.Components.Pipeline#postPipeline
+     * @name Phaser.GameObjects.Components.Pipeline#postPipelines
      * @type {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[]}
      * @webglOnly
      * @since 3.50.0
@@ -6284,9 +6288,9 @@ module.exports = Pipeline;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ScrollFactor.js":
-/*!**************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ScrollFactor.js ***!
-  \**************************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/ScrollFactor.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6396,9 +6400,9 @@ module.exports = ScrollFactor;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Size.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Size.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Size.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6588,9 +6592,9 @@ module.exports = Size;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Texture.js":
-/*!*********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Texture.js ***!
-  \*********************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Texture.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6723,9 +6727,9 @@ module.exports = Texture;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TextureCrop.js":
-/*!*************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/TextureCrop.js ***!
-  \*************************************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/TextureCrop.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6936,9 +6940,9 @@ module.exports = TextureCrop;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Tint.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Tint.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Tint.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7178,9 +7182,9 @@ module.exports = Tint;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ToJSON.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ToJSON.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/ToJSON.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -7244,9 +7248,9 @@ module.exports = ToJSON;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Transform.js":
-/*!***********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Transform.js ***!
-  \***********************************************************************************/
+/*!****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Transform.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7860,9 +7864,9 @@ module.exports = Transform;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TransformMatrix.js":
-/*!*****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/TransformMatrix.js ***!
-  \*****************************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/TransformMatrix.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8885,9 +8889,9 @@ module.exports = TransformMatrix;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Visible.js":
-/*!*********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Visible.js ***!
-  \*********************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Visible.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8979,9 +8983,9 @@ module.exports = Visible;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/index.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/index.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/index.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9025,9 +9029,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/Container.js":
-/*!**********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/Container.js ***!
-  \**********************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/container/Container.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9817,6 +9821,46 @@ var Container = new Class({
     },
 
     /**
+     * Moves a Game Object above another one within this Container.
+     *
+     * These 2 Game Objects must already be children of this Container.
+     *
+     * @method Phaser.GameObjects.Container#moveAbove
+     * @since 3.55.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The Game Object to move above base Game Object.
+     * @param {Phaser.GameObjects.GameObject} child2 - The base Game Object.
+     *
+     * @return {this} This Container instance.
+     */
+    moveAbove: function (child1, child2)
+    {
+        ArrayUtils.MoveAbove(this.list, child1, child2);
+
+        return this;
+    },
+
+    /**
+     * Moves a Game Object below another one within this Container.
+     *
+     * These 2 Game Objects must already be children of this Container.
+     *
+     * @method Phaser.GameObjects.Container#moveBelow
+     * @since 3.55.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The Game Object to move below base Game Object.
+     * @param {Phaser.GameObjects.GameObject} child2 - The base Game Object.
+     *
+     * @return {this} This Container instance.
+     */
+    moveBelow: function (child1, child2)
+    {
+        ArrayUtils.MoveBelow(this.list, child1, child2);
+
+        return this;
+    },
+
+    /**
      * Removes the given Game Object, or array of Game Objects, from this Container.
      *
      * The Game Objects must already be children of this Container.
@@ -10384,9 +10428,9 @@ module.exports = Container;
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/ContainerCanvasRenderer.js":
-/*!************************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/ContainerCanvasRenderer.js ***!
-  \************************************************************************************************/
+/*!*****************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/container/ContainerCanvasRenderer.js ***!
+  \*****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10413,14 +10457,14 @@ module.exports = Container;
  */
 var ContainerCanvasRenderer = function (renderer, container, camera, parentMatrix)
 {
+    camera.addToRenderList(container);
+
     var children = container.list;
 
     if (children.length === 0)
     {
         return;
     }
-
-    camera.addToRenderList(container);
 
     var transformMatrix = container.localTransform;
 
@@ -10497,9 +10541,9 @@ module.exports = ContainerCanvasRenderer;
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/ContainerRender.js":
-/*!****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/ContainerRender.js ***!
-  \****************************************************************************************/
+/*!*********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/container/ContainerRender.js ***!
+  \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10534,9 +10578,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/ContainerWebGLRenderer.js":
-/*!***********************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/container/ContainerWebGLRenderer.js ***!
-  \***********************************************************************************************/
+/*!****************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/container/ContainerWebGLRenderer.js ***!
+  \****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10563,6 +10607,8 @@ module.exports = {
  */
 var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix)
 {
+    camera.addToRenderList(container);
+
     var children = container.list;
     var childCount = children.length;
 
@@ -10570,8 +10616,6 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
     {
         return;
     }
-
-    camera.addToRenderList(container);
 
     var transformMatrix = container.localTransform;
 
@@ -10691,9 +10735,9 @@ module.exports = ContainerWebGLRenderer;
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/ADDED_TO_SCENE_EVENT.js":
-/*!******************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/ADDED_TO_SCENE_EVENT.js ***!
-  \******************************************************************************************/
+/*!***********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/ADDED_TO_SCENE_EVENT.js ***!
+  \***********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10722,9 +10766,9 @@ module.exports = 'addedtoscene';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/DESTROY_EVENT.js":
-/*!***********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
-  \***********************************************************************************/
+/*!****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10736,15 +10780,16 @@ module.exports = 'addedtoscene';
 
 /**
  * The Game Object Destroy Event.
- * 
+ *
  * This event is dispatched when a Game Object instance is being destroyed.
- * 
+ *
  * Listen for it on a Game Object instance using `GameObject.on('destroy', listener)`.
  *
  * @event Phaser.GameObjects.Events#DESTROY
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object which is being destroyed.
+ * @param {boolean} fromScene - `True` if this Game Object is being destroyed by the Scene, `false` if not.
  */
 module.exports = 'destroy';
 
@@ -10752,9 +10797,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js":
-/*!**********************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js ***!
-  \**********************************************************************************************/
+/*!***************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js ***!
+  \***************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10783,9 +10828,9 @@ module.exports = 'removedfromscene';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_COMPLETE_EVENT.js":
-/*!******************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_COMPLETE_EVENT.js ***!
-  \******************************************************************************************/
+/*!***********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_COMPLETE_EVENT.js ***!
+  \***********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10820,9 +10865,9 @@ module.exports = 'complete';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_CREATED_EVENT.js":
-/*!*****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_CREATED_EVENT.js ***!
-  \*****************************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_CREATED_EVENT.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10854,9 +10899,9 @@ module.exports = 'created';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_ERROR_EVENT.js":
-/*!***************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_ERROR_EVENT.js ***!
-  \***************************************************************************************/
+/*!********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_ERROR_EVENT.js ***!
+  \********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10885,9 +10930,9 @@ module.exports = 'error';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_LOOP_EVENT.js":
-/*!**************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_LOOP_EVENT.js ***!
-  \**************************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_LOOP_EVENT.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10922,9 +10967,9 @@ module.exports = 'loop';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_PLAY_EVENT.js":
-/*!**************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_PLAY_EVENT.js ***!
-  \**************************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_PLAY_EVENT.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10955,9 +11000,9 @@ module.exports = 'play';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_SEEKED_EVENT.js":
-/*!****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_SEEKED_EVENT.js ***!
-  \****************************************************************************************/
+/*!*********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_SEEKED_EVENT.js ***!
+  \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10985,9 +11030,9 @@ module.exports = 'seeked';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_SEEKING_EVENT.js":
-/*!*****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_SEEKING_EVENT.js ***!
-  \*****************************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_SEEKING_EVENT.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11016,9 +11061,9 @@ module.exports = 'seeking';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_STOP_EVENT.js":
-/*!**************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_STOP_EVENT.js ***!
-  \**************************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_STOP_EVENT.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11047,9 +11092,9 @@ module.exports = 'stop';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js":
-/*!*****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js ***!
-  \*****************************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11078,9 +11123,9 @@ module.exports = 'timeout';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js":
-/*!******************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js ***!
-  \******************************************************************************************/
+/*!***********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js ***!
+  \***********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11109,9 +11154,9 @@ module.exports = 'unlocked';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/index.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/events/index.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11147,9 +11192,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/geom/const.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/const.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/const.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11232,9 +11277,9 @@ module.exports = GEOM_CONST;
 /***/ }),
 
 /***/ "../../../src/geom/line/GetPoint.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/GetPoint.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/line/GetPoint.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11276,9 +11321,9 @@ module.exports = GetPoint;
 /***/ }),
 
 /***/ "../../../src/geom/line/GetPoints.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/GetPoints.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/line/GetPoints.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11346,9 +11391,9 @@ module.exports = GetPoints;
 /***/ }),
 
 /***/ "../../../src/geom/line/Length.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/Length.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/line/Length.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11379,9 +11424,9 @@ module.exports = Length;
 /***/ }),
 
 /***/ "../../../src/geom/line/Line.js":
-/*!*****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/Line.js ***!
-  \*****************************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/line/Line.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11721,9 +11766,9 @@ module.exports = Line;
 /***/ }),
 
 /***/ "../../../src/geom/line/Random.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/line/Random.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/line/Random.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11766,9 +11811,9 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/geom/point/Point.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/point/Point.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/point/Point.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11864,9 +11909,9 @@ module.exports = Point;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Contains.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Contains.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/Contains.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11904,9 +11949,9 @@ module.exports = Contains;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/GetPoint.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/GetPoint.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/GetPoint.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11990,9 +12035,9 @@ module.exports = GetPoint;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/GetPoints.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/GetPoints.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/GetPoints.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12049,9 +12094,9 @@ module.exports = GetPoints;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Perimeter.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Perimeter.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/Perimeter.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -12082,9 +12127,9 @@ module.exports = Perimeter;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Random.js":
-/*!************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Random.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/Random.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12125,9 +12170,9 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Rectangle.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Rectangle.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/Rectangle.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12641,9 +12686,9 @@ module.exports = Rectangle;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Union.js":
-/*!***********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/geom/rectangle/Union.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/Union.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12688,9 +12733,9 @@ module.exports = Union;
 /***/ }),
 
 /***/ "../../../src/loader/File.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/File.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/File.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13006,7 +13051,12 @@ var File = new Class({
      */
     onLoad: function (xhr, event)
     {
-        var localFileOk = ((xhr.responseURL && xhr.responseURL.indexOf('file://') === 0 && event.target.status === 0));
+        // On iOS, Capacitor often runs on a capacitor:// protocol, meaning local files are served from capacitor:// rather than file://
+        // See: https://github.com/photonstorm/phaser/issues/5685
+
+        var isLocalFile = xhr.responseURL && (xhr.responseURL.indexOf('file://') === 0 || xhr.responseURL.indexOf('capacitor://') === 0);
+
+        var localFileOk = (isLocalFile && event.target.status === 0);
 
         var success = !(event.target && event.target.status !== 200) || localFileOk;
 
@@ -13243,9 +13293,9 @@ module.exports = File;
 /***/ }),
 
 /***/ "../../../src/loader/FileTypesManager.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/FileTypesManager.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/FileTypesManager.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13317,9 +13367,9 @@ module.exports = FileTypesManager;
 /***/ }),
 
 /***/ "../../../src/loader/GetURL.js":
-/*!****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/GetURL.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/GetURL.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13363,9 +13413,9 @@ module.exports = GetURL;
 /***/ }),
 
 /***/ "../../../src/loader/MergeXHRSettings.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MergeXHRSettings.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/MergeXHRSettings.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13416,9 +13466,9 @@ module.exports = MergeXHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/MultiFile.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MultiFile.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/MultiFile.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13666,9 +13716,9 @@ module.exports = MultiFile;
 /***/ }),
 
 /***/ "../../../src/loader/XHRLoader.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRLoader.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/XHRLoader.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -13752,9 +13802,9 @@ module.exports = XHRLoader;
 /***/ }),
 
 /***/ "../../../src/loader/XHRSettings.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRSettings.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/XHRSettings.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13827,9 +13877,9 @@ module.exports = XHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/const.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/const.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/const.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -13984,9 +14034,9 @@ module.exports = FILE_CONST;
 /***/ }),
 
 /***/ "../../../src/loader/events/ADD_EVENT.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/ADD_EVENT.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/ADD_EVENT.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14019,9 +14069,9 @@ module.exports = 'addfile';
 /***/ }),
 
 /***/ "../../../src/loader/events/COMPLETE_EVENT.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/COMPLETE_EVENT.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/COMPLETE_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14052,9 +14102,9 @@ module.exports = 'complete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_COMPLETE_EVENT.js":
-/*!************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
-  \************************************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14086,9 +14136,9 @@ module.exports = 'filecomplete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_KEY_COMPLETE_EVENT.js":
-/*!****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
-  \****************************************************************************************/
+/*!*********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
+  \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14145,9 +14195,9 @@ module.exports = 'filecomplete-';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_ERROR_EVENT.js":
-/*!**************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
-  \**************************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14175,9 +14225,9 @@ module.exports = 'loaderror';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_EVENT.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14206,9 +14256,9 @@ module.exports = 'load';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_PROGRESS_EVENT.js":
-/*!************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
-  \************************************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14238,9 +14288,9 @@ module.exports = 'fileprogress';
 /***/ }),
 
 /***/ "../../../src/loader/events/POST_PROCESS_EVENT.js":
-/*!***********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
-  \***********************************************************************************/
+/*!****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14272,9 +14322,9 @@ module.exports = 'postprocess';
 /***/ }),
 
 /***/ "../../../src/loader/events/PROGRESS_EVENT.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/PROGRESS_EVENT.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/PROGRESS_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14302,9 +14352,9 @@ module.exports = 'progress';
 /***/ }),
 
 /***/ "../../../src/loader/events/START_EVENT.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/START_EVENT.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/START_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -14334,9 +14384,9 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/loader/events/index.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/events/index.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/index.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14369,9 +14419,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/ImageFile.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/ImageFile.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/filetypes/ImageFile.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14648,9 +14698,9 @@ module.exports = ImageFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/JSONFile.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/JSONFile.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/filetypes/JSONFile.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14894,9 +14944,9 @@ module.exports = JSONFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/TextFile.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/TextFile.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/filetypes/TextFile.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15078,9 +15128,9 @@ module.exports = TextFile;
 /***/ }),
 
 /***/ "../../../src/math/Average.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Average.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Average.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15118,9 +15168,9 @@ module.exports = Average;
 /***/ }),
 
 /***/ "../../../src/math/Bernstein.js":
-/*!*****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Bernstein.js ***!
-  \*****************************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Bernstein.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15154,9 +15204,9 @@ module.exports = Bernstein;
 /***/ }),
 
 /***/ "../../../src/math/Between.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Between.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Between.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15188,9 +15238,9 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/CatmullRom.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/CatmullRom.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/CatmullRom.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15230,9 +15280,9 @@ module.exports = CatmullRom;
 /***/ }),
 
 /***/ "../../../src/math/CeilTo.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/CeilTo.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/CeilTo.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15272,9 +15322,9 @@ module.exports = CeilTo;
 /***/ }),
 
 /***/ "../../../src/math/Clamp.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Clamp.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Clamp.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15307,9 +15357,9 @@ module.exports = Clamp;
 /***/ }),
 
 /***/ "../../../src/math/DegToRad.js":
-/*!****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/DegToRad.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/DegToRad.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15342,9 +15392,9 @@ module.exports = DegToRad;
 /***/ }),
 
 /***/ "../../../src/math/Difference.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Difference.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Difference.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15376,9 +15426,9 @@ module.exports = Difference;
 /***/ }),
 
 /***/ "../../../src/math/Euler.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Euler.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Euler.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15664,9 +15714,9 @@ module.exports = Euler;
 /***/ }),
 
 /***/ "../../../src/math/Factorial.js":
-/*!*****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Factorial.js ***!
-  \*****************************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Factorial.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15709,9 +15759,9 @@ module.exports = Factorial;
 /***/ }),
 
 /***/ "../../../src/math/FloatBetween.js":
-/*!********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/FloatBetween.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/FloatBetween.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15743,9 +15793,9 @@ module.exports = FloatBetween;
 /***/ }),
 
 /***/ "../../../src/math/FloorTo.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/FloorTo.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/FloorTo.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15785,9 +15835,9 @@ module.exports = FloorTo;
 /***/ }),
 
 /***/ "../../../src/math/FromPercent.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/FromPercent.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/FromPercent.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15824,9 +15874,9 @@ module.exports = FromPercent;
 /***/ }),
 
 /***/ "../../../src/math/GetSpeed.js":
-/*!****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/GetSpeed.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/GetSpeed.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15862,9 +15912,9 @@ module.exports = GetSpeed;
 /***/ }),
 
 /***/ "../../../src/math/IsEven.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/IsEven.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/IsEven.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15898,9 +15948,9 @@ module.exports = IsEven;
 /***/ }),
 
 /***/ "../../../src/math/IsEvenStrict.js":
-/*!********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/IsEvenStrict.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/IsEvenStrict.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15932,9 +15982,9 @@ module.exports = IsEvenStrict;
 /***/ }),
 
 /***/ "../../../src/math/Linear.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Linear.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Linear.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15967,9 +16017,9 @@ module.exports = Linear;
 /***/ }),
 
 /***/ "../../../src/math/Matrix3.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Matrix3.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Matrix3.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16565,9 +16615,9 @@ module.exports = Matrix3;
 /***/ }),
 
 /***/ "../../../src/math/Matrix4.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Matrix4.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Matrix4.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18363,9 +18413,9 @@ module.exports = Matrix4;
 /***/ }),
 
 /***/ "../../../src/math/MaxAdd.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/MaxAdd.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/MaxAdd.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18398,9 +18448,9 @@ module.exports = MaxAdd;
 /***/ }),
 
 /***/ "../../../src/math/Median.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Median.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Median.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18444,9 +18494,9 @@ module.exports = Median;
 /***/ }),
 
 /***/ "../../../src/math/MinSub.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/MinSub.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/MinSub.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18479,9 +18529,9 @@ module.exports = MinSub;
 /***/ }),
 
 /***/ "../../../src/math/Percent.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Percent.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Percent.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -18543,9 +18593,9 @@ module.exports = Percent;
 /***/ }),
 
 /***/ "../../../src/math/Quaternion.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Quaternion.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Quaternion.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19597,9 +19647,9 @@ module.exports = Quaternion;
 /***/ }),
 
 /***/ "../../../src/math/RadToDeg.js":
-/*!****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/RadToDeg.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RadToDeg.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19632,9 +19682,9 @@ module.exports = RadToDeg;
 /***/ }),
 
 /***/ "../../../src/math/RandomXY.js":
-/*!****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXY.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RandomXY.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19677,9 +19727,9 @@ module.exports = RandomXY;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZ.js":
-/*!*****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXYZ.js ***!
-  \*****************************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RandomXYZ.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19721,9 +19771,9 @@ module.exports = RandomXYZ;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZW.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/RandomXYZW.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RandomXYZW.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19762,9 +19812,9 @@ module.exports = RandomXYZW;
 /***/ }),
 
 /***/ "../../../src/math/Rotate.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Rotate.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Rotate.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19802,9 +19852,9 @@ module.exports = Rotate;
 /***/ }),
 
 /***/ "../../../src/math/RotateAround.js":
-/*!********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateAround.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RotateAround.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19851,9 +19901,9 @@ module.exports = RotateAround;
 /***/ }),
 
 /***/ "../../../src/math/RotateAroundDistance.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateAroundDistance.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RotateAroundDistance.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19897,9 +19947,9 @@ module.exports = RotateAroundDistance;
 /***/ }),
 
 /***/ "../../../src/math/RotateTo.js":
-/*!****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateTo.js ***!
-  \****************************************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RotateTo.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19939,9 +19989,9 @@ module.exports = RotateTo;
 /***/ }),
 
 /***/ "../../../src/math/RotateVec3.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/RotateVec3.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RotateVec3.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19992,9 +20042,9 @@ module.exports = RotateVec3;
 /***/ }),
 
 /***/ "../../../src/math/RoundAwayFromZero.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/RoundAwayFromZero.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RoundAwayFromZero.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -20026,9 +20076,9 @@ module.exports = RoundAwayFromZero;
 /***/ }),
 
 /***/ "../../../src/math/RoundTo.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/RoundTo.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RoundTo.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -20083,9 +20133,9 @@ module.exports = RoundTo;
 /***/ }),
 
 /***/ "../../../src/math/SinCosTableGenerator.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/SinCosTableGenerator.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/SinCosTableGenerator.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -20141,9 +20191,9 @@ module.exports = SinCosTableGenerator;
 /***/ }),
 
 /***/ "../../../src/math/SmoothStep.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/SmoothStep.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/SmoothStep.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -20193,9 +20243,9 @@ module.exports = SmoothStep;
 /***/ }),
 
 /***/ "../../../src/math/SmootherStep.js":
-/*!********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/SmootherStep.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/SmootherStep.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -20237,9 +20287,9 @@ module.exports = SmootherStep;
 /***/ }),
 
 /***/ "../../../src/math/ToXY.js":
-/*!************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/ToXY.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/ToXY.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20287,11 +20337,9 @@ var ToXY = function (index, width, height, out)
         {
             x = index;
         }
-
-        out.set(x, y);
     }
 
-    return out;
+    return out.set(x, y);
 };
 
 module.exports = ToXY;
@@ -20300,9 +20348,9 @@ module.exports = ToXY;
 /***/ }),
 
 /***/ "../../../src/math/TransformXY.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/TransformXY.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/TransformXY.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20360,9 +20408,9 @@ module.exports = TransformXY;
 /***/ }),
 
 /***/ "../../../src/math/Vector2.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector2.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Vector2.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21141,9 +21189,9 @@ module.exports = Vector2;
 /***/ }),
 
 /***/ "../../../src/math/Vector3.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector3.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Vector3.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22192,9 +22240,9 @@ module.exports = Vector3;
 /***/ }),
 
 /***/ "../../../src/math/Vector4.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector4.js ***!
-  \***************************************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Vector4.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22738,9 +22786,9 @@ module.exports = Vector4;
 /***/ }),
 
 /***/ "../../../src/math/Within.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Within.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Within.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22773,9 +22821,9 @@ module.exports = Within;
 /***/ }),
 
 /***/ "../../../src/math/Wrap.js":
-/*!************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Wrap.js ***!
-  \************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Wrap.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22810,9 +22858,9 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/Between.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Between.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/Between.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22846,9 +22894,9 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPoints.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenPoints.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/BetweenPoints.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22882,9 +22930,9 @@ module.exports = BetweenPoints;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPointsY.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenPointsY.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/BetweenPointsY.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22919,9 +22967,9 @@ module.exports = BetweenPointsY;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenY.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/BetweenY.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/BetweenY.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -22958,9 +23006,9 @@ module.exports = BetweenY;
 /***/ }),
 
 /***/ "../../../src/math/angle/CounterClockwise.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/CounterClockwise.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/CounterClockwise.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23008,9 +23056,9 @@ module.exports = CounterClockwise;
 /***/ }),
 
 /***/ "../../../src/math/angle/Normalize.js":
-/*!***********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Normalize.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/Normalize.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23050,9 +23098,9 @@ module.exports = Normalize;
 /***/ }),
 
 /***/ "../../../src/math/angle/Random.js":
-/*!********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Random.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/Random.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23084,9 +23132,9 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/math/angle/RandomDegrees.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/RandomDegrees.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/RandomDegrees.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23118,9 +23166,9 @@ module.exports = RandomDegrees;
 /***/ }),
 
 /***/ "../../../src/math/angle/Reverse.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Reverse.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/Reverse.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23153,9 +23201,9 @@ module.exports = Reverse;
 /***/ }),
 
 /***/ "../../../src/math/angle/RotateTo.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/RotateTo.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/RotateTo.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23225,9 +23273,9 @@ module.exports = RotateTo;
 /***/ }),
 
 /***/ "../../../src/math/angle/ShortestBetween.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/ShortestBetween.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/ShortestBetween.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23277,9 +23325,9 @@ module.exports = ShortestBetween;
 /***/ }),
 
 /***/ "../../../src/math/angle/Wrap.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Wrap.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/Wrap.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23314,9 +23362,9 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/WrapDegrees.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/WrapDegrees.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/WrapDegrees.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23351,9 +23399,9 @@ module.exports = WrapDegrees;
 /***/ }),
 
 /***/ "../../../src/math/angle/index.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/index.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/index.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23389,9 +23437,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/const.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/const.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/const.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23486,9 +23534,9 @@ module.exports = MATH_CONST;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetween.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceBetween.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceBetween.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23525,9 +23573,9 @@ module.exports = DistanceBetween;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetweenPoints.js":
-/*!**************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceBetweenPoints.js ***!
-  \**************************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceBetweenPoints.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23562,9 +23610,9 @@ module.exports = DistanceBetweenPoints;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetweenPointsSquared.js":
-/*!*********************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceBetweenPointsSquared.js ***!
-  \*********************************************************************************************/
+/*!**************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceBetweenPointsSquared.js ***!
+  \**************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23599,9 +23647,9 @@ module.exports = DistanceBetweenPointsSquared;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceChebyshev.js":
-/*!**********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceChebyshev.js ***!
-  \**********************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceChebyshev.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23638,9 +23686,9 @@ module.exports = ChebyshevDistance;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistancePower.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistancePower.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistancePower.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23677,9 +23725,9 @@ module.exports = DistancePower;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceSnake.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceSnake.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceSnake.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23716,9 +23764,9 @@ module.exports = SnakeDistance;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceSquared.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/DistanceSquared.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceSquared.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23755,9 +23803,9 @@ module.exports = DistanceSquared;
 /***/ }),
 
 /***/ "../../../src/math/distance/index.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/distance/index.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/index.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23787,9 +23835,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/back/In.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/In.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/back/In.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23823,9 +23871,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/InOut.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/InOut.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/back/InOut.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23868,9 +23916,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/Out.js":
-/*!***********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/Out.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/back/Out.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23904,9 +23952,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/index.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/back/index.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/back/index.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23932,9 +23980,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/In.js":
-/*!************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/In.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/bounce/In.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -23982,9 +24030,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/InOut.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/InOut.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/bounce/InOut.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24051,9 +24099,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/Out.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/Out.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/bounce/Out.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24099,9 +24147,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/index.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/bounce/index.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/bounce/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24127,9 +24175,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/In.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/In.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/circular/In.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24160,9 +24208,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/InOut.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/InOut.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/circular/InOut.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24200,9 +24248,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/Out.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/Out.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/circular/Out.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24233,9 +24281,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/index.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/circular/index.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/circular/index.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24261,9 +24309,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/In.js":
-/*!***********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/In.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/cubic/In.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24294,9 +24342,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/InOut.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/InOut.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/cubic/InOut.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24334,9 +24382,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/Out.js":
-/*!************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/Out.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/cubic/Out.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24367,9 +24415,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/index.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/cubic/index.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/cubic/index.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24395,9 +24443,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/In.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/In.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/elastic/In.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24455,9 +24503,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/InOut.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/InOut.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/elastic/InOut.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24522,9 +24570,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/Out.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/Out.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/elastic/Out.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24582,9 +24630,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/index.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/elastic/index.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/elastic/index.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24610,9 +24658,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/In.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/In.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/expo/In.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24643,9 +24691,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/InOut.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/InOut.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/expo/InOut.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24683,9 +24731,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/Out.js":
-/*!***********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/Out.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/expo/Out.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24716,9 +24764,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/index.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/expo/index.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/expo/index.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24744,9 +24792,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/index.js":
-/*!********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/index.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24781,9 +24829,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/Linear.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/linear/Linear.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/linear/Linear.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24814,9 +24862,9 @@ module.exports = Linear;
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/index.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/linear/index.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/linear/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24832,9 +24880,9 @@ module.exports = __webpack_require__(/*! ./Linear */ "../../../src/math/easing/l
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/In.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/In.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quadratic/In.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24865,9 +24913,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/InOut.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/InOut.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quadratic/InOut.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24905,9 +24953,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/Out.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/Out.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quadratic/Out.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24938,9 +24986,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/index.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quadratic/index.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quadratic/index.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24966,9 +25014,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/In.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/In.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quartic/In.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -24999,9 +25047,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/InOut.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/InOut.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quartic/InOut.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25039,9 +25087,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/Out.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/Out.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quartic/Out.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25072,9 +25120,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/index.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quartic/index.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quartic/index.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25100,9 +25148,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/In.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/In.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quintic/In.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25133,9 +25181,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/InOut.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/InOut.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quintic/InOut.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25173,9 +25221,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/Out.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/Out.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quintic/Out.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25206,9 +25254,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/index.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/quintic/index.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quintic/index.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25234,9 +25282,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/In.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/In.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/sine/In.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25278,9 +25326,9 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/InOut.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/InOut.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/sine/InOut.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25322,9 +25370,9 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/Out.js":
-/*!***********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/Out.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/sine/Out.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25366,9 +25414,9 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/index.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/sine/index.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/sine/index.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25394,9 +25442,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/Stepped.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/stepped/Stepped.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/stepped/Stepped.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25441,9 +25489,9 @@ module.exports = Stepped;
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/index.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/easing/stepped/index.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/stepped/index.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25463,9 +25511,9 @@ module.exports = __webpack_require__(/*! ./Stepped */ "../../../src/math/easing/
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Ceil.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Ceil.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/Ceil.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25499,9 +25547,9 @@ module.exports = Ceil;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Equal.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Equal.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/Equal.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25538,9 +25586,9 @@ module.exports = Equal;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Floor.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/Floor.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/Floor.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25574,9 +25622,9 @@ module.exports = Floor;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/GreaterThan.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/GreaterThan.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/GreaterThan.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25613,9 +25661,9 @@ module.exports = GreaterThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/LessThan.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/LessThan.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/LessThan.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25652,9 +25700,9 @@ module.exports = LessThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/index.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/fuzzy/index.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/index.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25682,9 +25730,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/index.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/index.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/index.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25778,9 +25826,9 @@ module.exports = PhaserMath;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/BezierInterpolation.js":
-/*!*****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/BezierInterpolation.js ***!
-  \*****************************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/BezierInterpolation.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25822,9 +25870,9 @@ module.exports = BezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CatmullRomInterpolation.js":
-/*!*********************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
-  \*********************************************************************************************/
+/*!**************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
+  \**************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25884,9 +25932,9 @@ module.exports = CatmullRomInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CubicBezierInterpolation.js":
-/*!**********************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
-  \**********************************************************************************************/
+/*!***************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
+  \***************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -25959,9 +26007,9 @@ module.exports = CubicBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/LinearInterpolation.js":
-/*!*****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/LinearInterpolation.js ***!
-  \*****************************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/LinearInterpolation.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26011,9 +26059,9 @@ module.exports = LinearInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/QuadraticBezierInterpolation.js":
-/*!**************************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
-  \**************************************************************************************************/
+/*!*******************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
+  \*******************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26075,9 +26123,9 @@ module.exports = QuadraticBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmoothStepInterpolation.js":
-/*!*********************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
-  \*********************************************************************************************/
+/*!**************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
+  \**************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26113,9 +26161,9 @@ module.exports = SmoothStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmootherStepInterpolation.js":
-/*!***********************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
-  \***********************************************************************************************/
+/*!****************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
+  \****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26151,9 +26199,9 @@ module.exports = SmootherStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/index.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/interpolation/index.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26183,9 +26231,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/pow2/GetPowerOfTwo.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/GetPowerOfTwo.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/pow2/GetPowerOfTwo.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26218,9 +26266,9 @@ module.exports = GetPowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsSizePowerOfTwo.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26253,9 +26301,9 @@ module.exports = IsSizePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsValuePowerOfTwo.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26286,9 +26334,9 @@ module.exports = IsValuePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/index.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/pow2/index.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/pow2/index.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26314,9 +26362,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/random-data-generator/RandomDataGenerator.js":
-/*!*************************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
-  \*************************************************************************************************/
+/*!******************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
+  \******************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -26829,9 +26877,9 @@ module.exports = RandomDataGenerator;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapCeil.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapCeil.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/snap/SnapCeil.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26878,9 +26926,9 @@ module.exports = SnapCeil;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapFloor.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapFloor.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/snap/SnapFloor.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26927,9 +26975,9 @@ module.exports = SnapFloor;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapTo.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/SnapTo.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/snap/SnapTo.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -26975,9 +27023,9 @@ module.exports = SnapTo;
 /***/ }),
 
 /***/ "../../../src/math/snap/index.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/snap/index.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/snap/index.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -27003,9 +27051,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/plugins/BasePlugin.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/BasePlugin.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/plugins/BasePlugin.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -27138,9 +27186,9 @@ module.exports = BasePlugin;
 /***/ }),
 
 /***/ "../../../src/plugins/ScenePlugin.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/ScenePlugin.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/plugins/ScenePlugin.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -27285,9 +27333,9 @@ module.exports = ScenePlugin;
 /***/ }),
 
 /***/ "../../../src/renderer/BlendModes.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/BlendModes.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/renderer/BlendModes.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27629,9 +27677,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/renderer/events/POST_RENDER_EVENT.js":
-/*!************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/events/POST_RENDER_EVENT.js ***!
-  \************************************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/renderer/events/POST_RENDER_EVENT.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27656,9 +27704,9 @@ module.exports = 'postrender';
 /***/ }),
 
 /***/ "../../../src/renderer/events/PRE_RENDER_EVENT.js":
-/*!***********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/events/PRE_RENDER_EVENT.js ***!
-  \***********************************************************************************/
+/*!****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/renderer/events/PRE_RENDER_EVENT.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27684,9 +27732,9 @@ module.exports = 'prerender';
 /***/ }),
 
 /***/ "../../../src/renderer/events/RENDER_EVENT.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/events/RENDER_EVENT.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/renderer/events/RENDER_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27715,9 +27763,9 @@ module.exports = 'render';
 /***/ }),
 
 /***/ "../../../src/renderer/events/RESIZE_EVENT.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/events/RESIZE_EVENT.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/renderer/events/RESIZE_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27745,9 +27793,9 @@ module.exports = 'resize';
 /***/ }),
 
 /***/ "../../../src/renderer/events/index.js":
-/*!************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/events/index.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/renderer/events/index.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -27774,9 +27822,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/renderer/webgl/pipelines/const.js":
-/*!*********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/webgl/pipelines/const.js ***!
-  \*********************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/renderer/webgl/pipelines/const.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27885,9 +27933,9 @@ module.exports = PIPELINE_CONST;
 /***/ }),
 
 /***/ "../../../src/scale/events/RESIZE_EVENT.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scale/events/RESIZE_EVENT.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scale/events/RESIZE_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27920,9 +27968,9 @@ module.exports = 'resize';
 /***/ }),
 
 /***/ "../../../src/scene/events/ADDED_TO_SCENE_EVENT.js":
-/*!************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/ADDED_TO_SCENE_EVENT.js ***!
-  \************************************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/ADDED_TO_SCENE_EVENT.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27937,7 +27985,7 @@ module.exports = 'resize';
  *
  * This event is dispatched when a Game Object is added to a Scene.
  *
- * Listen for it from a Scene using `this.scene.events.on('addedtoscene', listener)`.
+ * Listen for it from a Scene using `this.events.on('addedtoscene', listener)`.
  *
  * @event Phaser.Scenes.Events#ADDED_TO_SCENE
  * @since 3.50.0
@@ -27951,9 +27999,9 @@ module.exports = 'addedtoscene';
 /***/ }),
 
 /***/ "../../../src/scene/events/BOOT_EVENT.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/BOOT_EVENT.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/BOOT_EVENT.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27965,14 +28013,14 @@ module.exports = 'addedtoscene';
 
 /**
  * The Scene Systems Boot Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems boot process. Primarily used by Scene Plugins.
- * 
- * Listen to it from a Scene using `this.scene.events.on('boot', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('boot', listener)`.
+ *
  * @event Phaser.Scenes.Events#BOOT
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  */
 module.exports = 'boot';
@@ -27981,9 +28029,9 @@ module.exports = 'boot';
 /***/ }),
 
 /***/ "../../../src/scene/events/CREATE_EVENT.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/CREATE_EVENT.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/CREATE_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27995,18 +28043,18 @@ module.exports = 'boot';
 
 /**
  * The Scene Create Event.
- * 
+ *
  * This event is dispatched by a Scene after it has been created by the Scene Manager.
- * 
+ *
  * If a Scene has a `create` method then this event is emitted _after_ that has run.
- * 
+ *
  * If there is a transition, this event will be fired after the `TRANSITION_START` event.
- * 
- * Listen to it from a Scene using `this.scene.events.on('create', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('create', listener)`.
+ *
  * @event Phaser.Scenes.Events#CREATE
  * @since 3.17.0
- * 
+ *
  * @param {Phaser.Scene} scene - A reference to the Scene that emitted this event.
  */
 module.exports = 'create';
@@ -28015,9 +28063,9 @@ module.exports = 'create';
 /***/ }),
 
 /***/ "../../../src/scene/events/DESTROY_EVENT.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/DESTROY_EVENT.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/DESTROY_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28029,16 +28077,16 @@ module.exports = 'create';
 
 /**
  * The Scene Systems Destroy Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems destroy process.
- * 
- * Listen to it from a Scene using `this.scene.events.on('destroy', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('destroy', listener)`.
+ *
  * You should destroy any resources that may be in use by your Scene in this event handler.
- * 
+ *
  * @event Phaser.Scenes.Events#DESTROY
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  */
 module.exports = 'destroy';
@@ -28047,9 +28095,9 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/scene/events/PAUSE_EVENT.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/PAUSE_EVENT.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/PAUSE_EVENT.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28061,15 +28109,15 @@ module.exports = 'destroy';
 
 /**
  * The Scene Systems Pause Event.
- * 
+ *
  * This event is dispatched by a Scene when it is paused, either directly via the `pause` method, or as an
  * action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('pause', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('pause', listener)`.
+ *
  * @event Phaser.Scenes.Events#PAUSE
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was paused.
  */
@@ -28079,9 +28127,9 @@ module.exports = 'pause';
 /***/ }),
 
 /***/ "../../../src/scene/events/POST_UPDATE_EVENT.js":
-/*!*********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
-  \*********************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28093,11 +28141,11 @@ module.exports = 'pause';
 
 /**
  * The Scene Systems Post Update Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
@@ -28105,13 +28153,13 @@ module.exports = 'pause';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('postupdate', listener)`.
- * 
+ * Listen to it from a Scene using `this.events.on('postupdate', listener)`.
+ *
  * A Scene will only run its step if it is active.
- * 
+ *
  * @event Phaser.Scenes.Events#POST_UPDATE
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
  * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -28122,9 +28170,9 @@ module.exports = 'postupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/PRE_RENDER_EVENT.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/PRE_RENDER_EVENT.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/PRE_RENDER_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28148,9 +28196,10 @@ module.exports = 'postupdate';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to this event from a Scene using `this.scene.events.on('prerender', listener)`.
+ * Listen to this event from a Scene using `this.events.on('prerender', listener)`.
  *
  * A Scene will only render if it is visible.
+ *
  * This event is dispatched after the Scene Display List is sorted and before the Scene is rendered.
  *
  * @event Phaser.Scenes.Events#PRE_RENDER
@@ -28164,9 +28213,9 @@ module.exports = 'prerender';
 /***/ }),
 
 /***/ "../../../src/scene/events/PRE_UPDATE_EVENT.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28178,11 +28227,11 @@ module.exports = 'prerender';
 
 /**
  * The Scene Systems Pre Update Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
@@ -28190,13 +28239,13 @@ module.exports = 'prerender';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('preupdate', listener)`.
- * 
+ * Listen to it from a Scene using `this.events.on('preupdate', listener)`.
+ *
  * A Scene will only run its step if it is active.
- * 
+ *
  * @event Phaser.Scenes.Events#PRE_UPDATE
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
  * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -28207,9 +28256,9 @@ module.exports = 'preupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/READY_EVENT.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/READY_EVENT.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/READY_EVENT.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28221,16 +28270,16 @@ module.exports = 'preupdate';
 
 /**
  * The Scene Systems Ready Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems start process.
  * By this point in the process the Scene is now fully active and rendering.
  * This event is meant for your game code to use, as all plugins have responded to the earlier 'start' event.
- * 
- * Listen to it from a Scene using `this.scene.events.on('ready', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('ready', listener)`.
+ *
  * @event Phaser.Scenes.Events#READY
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was started.
  */
@@ -28240,9 +28289,9 @@ module.exports = 'ready';
 /***/ }),
 
 /***/ "../../../src/scene/events/REMOVED_FROM_SCENE_EVENT.js":
-/*!****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/REMOVED_FROM_SCENE_EVENT.js ***!
-  \****************************************************************************************/
+/*!*********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/REMOVED_FROM_SCENE_EVENT.js ***!
+  \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28257,7 +28306,7 @@ module.exports = 'ready';
  *
  * This event is dispatched when a Game Object is removed from a Scene.
  *
- * Listen for it from a Scene using `this.scene.events.on('removedfromscene', listener)`.
+ * Listen for it from a Scene using `this.events.on('removedfromscene', listener)`.
  *
  * @event Phaser.Scenes.Events#REMOVED_FROM_SCENE
  * @since 3.50.0
@@ -28271,9 +28320,9 @@ module.exports = 'removedfromscene';
 /***/ }),
 
 /***/ "../../../src/scene/events/RENDER_EVENT.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/RENDER_EVENT.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/RENDER_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28285,11 +28334,11 @@ module.exports = 'removedfromscene';
 
 /**
  * The Scene Systems Render Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
@@ -28297,14 +28346,15 @@ module.exports = 'removedfromscene';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('render', listener)`.
+ * Listen to it from a Scene using `this.events.on('render', listener)`.
  *
  * A Scene will only render if it is visible.
+ *
  * By the time this event is dispatched, the Scene will have already been rendered.
- * 
+ *
  * @event Phaser.Scenes.Events#RENDER
  * @since 3.0.0
- * 
+ *
  * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer that rendered the Scene.
  */
 module.exports = 'render';
@@ -28313,9 +28363,9 @@ module.exports = 'render';
 /***/ }),
 
 /***/ "../../../src/scene/events/RESUME_EVENT.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/RESUME_EVENT.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/RESUME_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28327,15 +28377,15 @@ module.exports = 'render';
 
 /**
  * The Scene Systems Resume Event.
- * 
+ *
  * This event is dispatched by a Scene when it is resumed from a paused state, either directly via the `resume` method,
  * or as an action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('resume', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('resume', listener)`.
+ *
  * @event Phaser.Scenes.Events#RESUME
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was resumed.
  */
@@ -28345,9 +28395,9 @@ module.exports = 'resume';
 /***/ }),
 
 /***/ "../../../src/scene/events/SHUTDOWN_EVENT.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28359,18 +28409,18 @@ module.exports = 'resume';
 
 /**
  * The Scene Systems Shutdown Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems shutdown process.
- * 
- * Listen to it from a Scene using `this.scene.events.on('shutdown', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('shutdown', listener)`.
+ *
  * You should free-up any resources that may be in use by your Scene in this event handler, on the understanding
  * that the Scene may, at any time, become active again. A shutdown Scene is not 'destroyed', it's simply not
  * currently active. Use the [DESTROY]{@linkcode Phaser.Scenes.Events#event:DESTROY} event to completely clear resources.
- * 
+ *
  * @event Phaser.Scenes.Events#SHUTDOWN
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was shutdown.
  */
@@ -28380,9 +28430,9 @@ module.exports = 'shutdown';
 /***/ }),
 
 /***/ "../../../src/scene/events/SLEEP_EVENT.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/SLEEP_EVENT.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/SLEEP_EVENT.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28394,15 +28444,15 @@ module.exports = 'shutdown';
 
 /**
  * The Scene Systems Sleep Event.
- * 
+ *
  * This event is dispatched by a Scene when it is sent to sleep, either directly via the `sleep` method,
  * or as an action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('sleep', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('sleep', listener)`.
+ *
  * @event Phaser.Scenes.Events#SLEEP
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was sent to sleep.
  */
@@ -28412,9 +28462,9 @@ module.exports = 'sleep';
 /***/ }),
 
 /***/ "../../../src/scene/events/START_EVENT.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/START_EVENT.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/START_EVENT.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28426,14 +28476,14 @@ module.exports = 'sleep';
 
 /**
  * The Scene Systems Start Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems start process. Primarily used by Scene Plugins.
- * 
- * Listen to it from a Scene using `this.scene.events.on('start', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('start', listener)`.
+ *
  * @event Phaser.Scenes.Events#START
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  */
 module.exports = 'start';
@@ -28442,9 +28492,9 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_COMPLETE_EVENT.js":
-/*!*****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
-  \*****************************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28456,25 +28506,25 @@ module.exports = 'start';
 
 /**
  * The Scene Transition Complete Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition.
- * 
+ *
  * It happens when the transition process has completed. This occurs when the duration timer equals or exceeds the duration
  * of the transition.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitioncomplete', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitioncomplete', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_COMPLETE
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} scene -The Scene on which the transitioned completed.
  */
 module.exports = 'transitioncomplete';
@@ -28483,9 +28533,9 @@ module.exports = 'transitioncomplete';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_INIT_EVENT.js":
-/*!*************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
-  \*************************************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28497,25 +28547,25 @@ module.exports = 'transitioncomplete';
 
 /**
  * The Scene Transition Init Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition.
- * 
+ *
  * It happens immediately after the `Scene.init` method is called. If the Scene does not have an `init` method,
  * this event is not dispatched.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitioninit', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitioninit', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_INIT
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -28525,9 +28575,9 @@ module.exports = 'transitioninit';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_OUT_EVENT.js":
-/*!************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
-  \************************************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28539,22 +28589,22 @@ module.exports = 'transitioninit';
 
 /**
  * The Scene Transition Out Event.
- * 
+ *
  * This event is dispatched by a Scene when it initiates a transition to another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitionout', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitionout', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_OUT
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} target - A reference to the Scene that is being transitioned to.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -28564,9 +28614,9 @@ module.exports = 'transitionout';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_START_EVENT.js":
-/*!**************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
-  \**************************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28578,28 +28628,28 @@ module.exports = 'transitionout';
 
 /**
  * The Scene Transition Start Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition, only if that Scene was not asleep.
- * 
+ *
  * It happens immediately after the `Scene.create` method is called. If the Scene does not have a `create` method,
  * this event is dispatched anyway.
- * 
+ *
  * If the Target Scene was sleeping then the [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} event is
  * dispatched instead of this event.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitionstart', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitionstart', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_START
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -28609,9 +28659,9 @@ module.exports = 'transitionstart';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_WAKE_EVENT.js":
-/*!*************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
-  \*************************************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28623,23 +28673,23 @@ module.exports = 'transitionstart';
 
 /**
  * The Scene Transition Wake Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition, only if that Scene was asleep before
  * the transition began. If the Scene was not asleep the [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} event is dispatched instead.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitionwake', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitionwake', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_WAKE
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -28649,9 +28699,9 @@ module.exports = 'transitionwake';
 /***/ }),
 
 /***/ "../../../src/scene/events/UPDATE_EVENT.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/UPDATE_EVENT.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/UPDATE_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28663,11 +28713,11 @@ module.exports = 'transitionwake';
 
 /**
  * The Scene Systems Update Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
@@ -28675,13 +28725,13 @@ module.exports = 'transitionwake';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('update', listener)`.
- * 
+ * Listen to it from a Scene using `this.events.on('update', listener)`.
+ *
  * A Scene will only run its step if it is active.
- * 
+ *
  * @event Phaser.Scenes.Events#UPDATE
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
  * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -28692,9 +28742,9 @@ module.exports = 'update';
 /***/ }),
 
 /***/ "../../../src/scene/events/WAKE_EVENT.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/WAKE_EVENT.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/WAKE_EVENT.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28706,15 +28756,15 @@ module.exports = 'update';
 
 /**
  * The Scene Systems Wake Event.
- * 
+ *
  * This event is dispatched by a Scene when it is woken from sleep, either directly via the `wake` method,
  * or as an action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('wake', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('wake', listener)`.
+ *
  * @event Phaser.Scenes.Events#WAKE
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was woken up.
  */
@@ -28724,9 +28774,9 @@ module.exports = 'wake';
 /***/ }),
 
 /***/ "../../../src/scene/events/index.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/scene/events/index.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/index.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28771,9 +28821,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/tweens/builders/GetBoolean.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/tweens/builders/GetBoolean.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/tweens/builders/GetBoolean.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28817,9 +28867,9 @@ module.exports = GetBoolean;
 /***/ }),
 
 /***/ "../../../src/tweens/tween/const.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/tweens/tween/const.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/tweens/tween/const.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -28994,9 +29044,9 @@ module.exports = TWEEN_CONST;
 /***/ }),
 
 /***/ "../../../src/utils/Class.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/Class.js ***!
-  \**************************************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/Class.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29255,9 +29305,9 @@ module.exports = Class;
 /***/ }),
 
 /***/ "../../../src/utils/NOOP.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/NOOP.js ***!
-  \*************************************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/NOOP.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29287,9 +29337,9 @@ module.exports = NOOP;
 /***/ }),
 
 /***/ "../../../src/utils/array/Add.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Add.js ***!
-  \******************************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Add.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29409,9 +29459,9 @@ module.exports = Add;
 /***/ }),
 
 /***/ "../../../src/utils/array/AddAt.js":
-/*!********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/AddAt.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/AddAt.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29536,9 +29586,9 @@ module.exports = AddAt;
 /***/ }),
 
 /***/ "../../../src/utils/array/BringToTop.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/BringToTop.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/BringToTop.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29579,9 +29629,9 @@ module.exports = BringToTop;
 /***/ }),
 
 /***/ "../../../src/utils/array/CountAllMatching.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/CountAllMatching.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/CountAllMatching.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29636,9 +29686,9 @@ module.exports = CountAllMatching;
 /***/ }),
 
 /***/ "../../../src/utils/array/Each.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Each.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Each.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29687,9 +29737,9 @@ module.exports = Each;
 /***/ }),
 
 /***/ "../../../src/utils/array/EachInRange.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/EachInRange.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/EachInRange.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29748,9 +29798,9 @@ module.exports = EachInRange;
 /***/ }),
 
 /***/ "../../../src/utils/array/FindClosestInSorted.js":
-/*!**********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/FindClosestInSorted.js ***!
-  \**********************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/FindClosestInSorted.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -29837,9 +29887,9 @@ module.exports = FindClosestInSorted;
 /***/ }),
 
 /***/ "../../../src/utils/array/GetAll.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/GetAll.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/GetAll.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29904,9 +29954,9 @@ module.exports = GetAll;
 /***/ }),
 
 /***/ "../../../src/utils/array/GetFirst.js":
-/*!***********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/GetFirst.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/GetFirst.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29968,9 +30018,9 @@ module.exports = GetFirst;
 /***/ }),
 
 /***/ "../../../src/utils/array/GetRandom.js":
-/*!************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/GetRandom.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/GetRandom.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30007,10 +30057,148 @@ module.exports = GetRandom;
 
 /***/ }),
 
+/***/ "../../../src/utils/array/MoveAbove.js":
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/MoveAbove.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given array element above another one in the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveAbove
+ * @since 3.55.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item1 - The element to move above base element.
+ * @param {*} item2 - The base element.
+ * 
+ *
+ * @return {array} The input array.
+ */
+var MoveAbove = function (array, item1, item2)
+{
+    if (item1 === item2)
+    {
+        return array;
+    }
+
+    var currentIndex = array.indexOf(item1);
+    var baseIndex = array.indexOf(item2);
+
+    if (currentIndex < 0 || baseIndex < 0)
+    {
+        throw new Error('Supplied items must be elements of the same array');
+    }
+
+    if (currentIndex > baseIndex)
+    {
+        // item1 is already above item2
+        return array;
+    }
+
+    //  Remove
+    array.splice(currentIndex, 1);
+
+    //  Add in new location
+    if (baseIndex === array.length - 1)
+    {
+        array.push(item1);
+    }
+    else
+    {
+        array.splice(baseIndex, 0, item1);
+    }
+
+    return array;
+};
+
+module.exports = MoveAbove;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/MoveBelow.js":
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/MoveBelow.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given array element below another one in the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveBelow
+ * @since 3.55.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item1 - The element to move below base element.
+ * @param {*} item2 - The base element.
+ * 
+ *
+ * @return {array} The input array.
+ */
+var MoveBelow = function (array, item1, item2)
+{
+    if (item1 === item2)
+    {
+        return array;
+    }
+
+    var currentIndex = array.indexOf(item1);
+    var baseIndex = array.indexOf(item2);
+
+    if (currentIndex < 0 || baseIndex < 0)
+    {
+        throw new Error('Supplied items must be elements of the same array');
+    }
+
+    if (currentIndex < baseIndex)
+    {
+        // item1 is already below item2
+        return array;
+    }
+
+    //  Remove
+    array.splice(currentIndex, 1);
+
+    //  Add in new location
+    if (baseIndex === 0)
+    {
+        array.unshift(item1);
+    }
+    else
+    {
+        array.splice(baseIndex, 0, item1);
+    }
+
+    return array;
+};
+
+module.exports = MoveBelow;
+
+
+/***/ }),
+
 /***/ "../../../src/utils/array/MoveDown.js":
-/*!***********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/MoveDown.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/MoveDown.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30055,9 +30243,9 @@ module.exports = MoveDown;
 /***/ }),
 
 /***/ "../../../src/utils/array/MoveTo.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/MoveTo.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/MoveTo.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30107,9 +30295,9 @@ module.exports = MoveTo;
 /***/ }),
 
 /***/ "../../../src/utils/array/MoveUp.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/MoveUp.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/MoveUp.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30154,9 +30342,9 @@ module.exports = MoveUp;
 /***/ }),
 
 /***/ "../../../src/utils/array/NumberArray.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/NumberArray.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/NumberArray.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30252,9 +30440,9 @@ module.exports = NumberArray;
 /***/ }),
 
 /***/ "../../../src/utils/array/NumberArrayStep.js":
-/*!******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/NumberArrayStep.js ***!
-  \******************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/NumberArrayStep.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30334,9 +30522,9 @@ module.exports = NumberArrayStep;
 /***/ }),
 
 /***/ "../../../src/utils/array/QuickSelect.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/QuickSelect.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/QuickSelect.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30461,9 +30649,9 @@ module.exports = QuickSelect;
 /***/ }),
 
 /***/ "../../../src/utils/array/Range.js":
-/*!********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Range.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Range.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30604,9 +30792,9 @@ module.exports = Range;
 /***/ }),
 
 /***/ "../../../src/utils/array/Remove.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Remove.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Remove.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30698,9 +30886,9 @@ module.exports = Remove;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveAt.js":
-/*!***********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RemoveAt.js ***!
-  \***********************************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/RemoveAt.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30754,9 +30942,9 @@ module.exports = RemoveAt;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveBetween.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RemoveBetween.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/RemoveBetween.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30822,9 +31010,9 @@ module.exports = RemoveBetween;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveRandomElement.js":
-/*!**********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RemoveRandomElement.js ***!
-  \**********************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/RemoveRandomElement.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30865,9 +31053,9 @@ module.exports = RemoveRandomElement;
 /***/ }),
 
 /***/ "../../../src/utils/array/Replace.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Replace.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Replace.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30914,9 +31102,9 @@ module.exports = Replace;
 /***/ }),
 
 /***/ "../../../src/utils/array/RotateLeft.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RotateLeft.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/RotateLeft.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -30959,9 +31147,9 @@ module.exports = RotateLeft;
 /***/ }),
 
 /***/ "../../../src/utils/array/RotateRight.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/RotateRight.js ***!
-  \**************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/RotateRight.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31004,9 +31192,9 @@ module.exports = RotateRight;
 /***/ }),
 
 /***/ "../../../src/utils/array/SafeRange.js":
-/*!************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SafeRange.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/SafeRange.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31058,9 +31246,9 @@ module.exports = SafeRange;
 /***/ }),
 
 /***/ "../../../src/utils/array/SendToBack.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SendToBack.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/SendToBack.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31101,9 +31289,9 @@ module.exports = SendToBack;
 /***/ }),
 
 /***/ "../../../src/utils/array/SetAll.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SetAll.js ***!
-  \*********************************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/SetAll.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31161,9 +31349,9 @@ module.exports = SetAll;
 /***/ }),
 
 /***/ "../../../src/utils/array/Shuffle.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Shuffle.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Shuffle.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31207,9 +31395,9 @@ module.exports = Shuffle;
 /***/ }),
 
 /***/ "../../../src/utils/array/SortByDigits.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SortByDigits.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/SortByDigits.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31250,9 +31438,9 @@ module.exports = SortByDigits;
 /***/ }),
 
 /***/ "../../../src/utils/array/SpliceOne.js":
-/*!************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/SpliceOne.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/SpliceOne.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31301,9 +31489,9 @@ module.exports = SpliceOne;
 /***/ }),
 
 /***/ "../../../src/utils/array/StableSort.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/StableSort.js ***!
-  \*************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/StableSort.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31482,9 +31670,9 @@ module.exports = StableSort;
 /***/ }),
 
 /***/ "../../../src/utils/array/Swap.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/Swap.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Swap.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31512,7 +31700,7 @@ var Swap = function (array, item1, item2)
 {
     if (item1 === item2)
     {
-        return;
+        return array;
     }
 
     var index1 = array.indexOf(item1);
@@ -31535,9 +31723,9 @@ module.exports = Swap;
 /***/ }),
 
 /***/ "../../../src/utils/array/index.js":
-/*!********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/index.js ***!
-  \********************************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31568,6 +31756,8 @@ module.exports = {
     MoveDown: __webpack_require__(/*! ./MoveDown */ "../../../src/utils/array/MoveDown.js"),
     MoveTo: __webpack_require__(/*! ./MoveTo */ "../../../src/utils/array/MoveTo.js"),
     MoveUp: __webpack_require__(/*! ./MoveUp */ "../../../src/utils/array/MoveUp.js"),
+    MoveAbove: __webpack_require__(/*! ./MoveAbove */ "../../../src/utils/array/MoveAbove.js"),
+    MoveBelow: __webpack_require__(/*! ./MoveBelow */ "../../../src/utils/array/MoveBelow.js"),
     NumberArray: __webpack_require__(/*! ./NumberArray */ "../../../src/utils/array/NumberArray.js"),
     NumberArrayStep: __webpack_require__(/*! ./NumberArrayStep */ "../../../src/utils/array/NumberArrayStep.js"),
     QuickSelect: __webpack_require__(/*! ./QuickSelect */ "../../../src/utils/array/QuickSelect.js"),
@@ -31594,9 +31784,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/CheckMatrix.js":
-/*!*********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/CheckMatrix.js ***!
-  \*********************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/CheckMatrix.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31661,9 +31851,9 @@ module.exports = CheckMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/MatrixToString.js":
-/*!************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/MatrixToString.js ***!
-  \************************************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/MatrixToString.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31761,9 +31951,9 @@ module.exports = MatrixToString;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/ReverseColumns.js":
-/*!************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/ReverseColumns.js ***!
-  \************************************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/ReverseColumns.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31811,9 +32001,9 @@ module.exports = ReverseColumns;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/ReverseRows.js":
-/*!*********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/ReverseRows.js ***!
-  \*********************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/ReverseRows.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -31866,9 +32056,9 @@ module.exports = ReverseRows;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/Rotate180.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/Rotate180.js ***!
-  \*******************************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/Rotate180.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31918,9 +32108,9 @@ module.exports = Rotate180;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateLeft.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/RotateLeft.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/RotateLeft.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31970,9 +32160,9 @@ module.exports = RotateLeft;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateMatrix.js":
-/*!**********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/RotateMatrix.js ***!
-  \**********************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/RotateMatrix.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32061,9 +32251,9 @@ module.exports = RotateMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateRight.js":
-/*!*********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/RotateRight.js ***!
-  \*********************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/RotateRight.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32113,9 +32303,9 @@ module.exports = RotateRight;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/TranslateMatrix.js":
-/*!*************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/TranslateMatrix.js ***!
-  \*************************************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/TranslateMatrix.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32207,9 +32397,9 @@ module.exports = TranslateMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/TransposeMatrix.js":
-/*!*************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/TransposeMatrix.js ***!
-  \*************************************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/TransposeMatrix.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -32274,9 +32464,9 @@ module.exports = TransposeMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/index.js":
-/*!***************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/array/matrix/index.js ***!
-  \***************************************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32309,9 +32499,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/utils/object/DeepCopy.js":
-/*!************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/DeepCopy.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/DeepCopy.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -32363,9 +32553,9 @@ module.exports = DeepCopy;
 /***/ }),
 
 /***/ "../../../src/utils/object/Extend.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/Extend.js ***!
-  \**********************************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/Extend.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32469,9 +32659,9 @@ module.exports = Extend;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetAdvancedValue.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetAdvancedValue.js ***!
-  \********************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/GetAdvancedValue.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32561,9 +32751,9 @@ module.exports = GetAdvancedValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetFastValue.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetFastValue.js ***!
-  \****************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/GetFastValue.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -32609,9 +32799,9 @@ module.exports = GetFastValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetValue.js":
-/*!************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetValue.js ***!
-  \************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/GetValue.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -32685,9 +32875,9 @@ module.exports = GetValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/IsPlainObject.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/IsPlainObject.js ***!
-  \*****************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/IsPlainObject.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -32746,9 +32936,9 @@ module.exports = IsPlainObject;
 /***/ }),
 
 /***/ "../../../src/utils/string/Pad.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/string/Pad.js ***!
-  \*******************************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/string/Pad.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
