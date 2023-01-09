@@ -6,6 +6,7 @@
 
 var GameObjectFactory = require('../GameObjectFactory');
 var ParticleEmitterManager = require('./ParticleEmitterManager');
+var ParticleEmitter2 = require('./ParticleEmitter2');
 
 /**
  * Creates a new Particle Emitter Manager Game Object and adds it to the Scene.
@@ -24,4 +25,9 @@ var ParticleEmitterManager = require('./ParticleEmitterManager');
 GameObjectFactory.register('particles', function (key, frame, emitters)
 {
     return this.displayList.add(new ParticleEmitterManager(this.scene, key, frame, emitters));
+});
+
+GameObjectFactory.register('particles2', function (key, config)
+{
+    return this.displayList.add(new ParticleEmitter2(this.scene, key, config));
 });

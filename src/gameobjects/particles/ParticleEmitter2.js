@@ -5,7 +5,6 @@
  */
 
 var Add = require('../../utils/array/Add');
-var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var CopyFrom = require('../../geom/rectangle/CopyFrom');
@@ -20,7 +19,7 @@ var HasAny = require('../../utils/object/HasAny');
 var HasValue = require('../../utils/object/HasValue');
 var Inflate = require('../../geom/rectangle/Inflate');
 var MergeRect = require('../../geom/rectangle/MergeRect');
-var Particle = require('./Particle');
+var Particle2 = require('./Particle2');
 var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleToRectangle = require('../../geom/intersects/RectangleToRectangle');
@@ -30,6 +29,7 @@ var StableSort = require('../../utils/array/StableSort');
 var TransformMatrix = require('../components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
+var List = require('../../structs/List');
 
 /**
  * Names of simple configuration properties.
@@ -56,7 +56,7 @@ var configFastMap = [
     'maxAliveParticles',
     'maxParticles',
     'name',
-    'on',
+    'emitting',
     'particleBringToTop',
     'particleClass',
     'radial',
@@ -316,7 +316,7 @@ var ParticleEmitter2 = new Class({
 
     initialize:
 
-    function ParticleEmitter2 (scene, config)
+    function ParticleEmitter2 (scene, texture, config)
     {
         GameObject.call(this, scene, 'ParticleEmitter');
 
@@ -329,7 +329,7 @@ var ParticleEmitter2 = new Class({
          * @since 3.0.0
          * @see Phaser.Types.GameObjects.Particles.ParticleClassConstructor
          */
-        this.particleClass = Particle;
+        this.particleClass = Particle2;
 
         /**
          * An internal object holding all of the EmitterOp instances.
@@ -933,7 +933,45 @@ var ParticleEmitter2 = new Class({
          */
         this.sortCallback = this.depthSortCallback;
 
+        /**
+         * A list of Particle Processors being managed by this Emitter Manager.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitterManager#processors
+         * @type {Phaser.Structs.List.<Phaser.GameObjects.Particles.ParticleProcessor>}
+         * @since 3.0.0
+         */
+        this.processors = new List(this);
+
+        this.setTexture(texture);
+
+        this.initPipeline();
+
         this.fromJSON(config);
+    },
+
+    //  Overrides Game Object method
+    addedToScene: function ()
+    {
+        this.scene.sys.updateList.add(this);
+    },
+
+    //  Overrides Game Object method
+    removedFromScene: function ()
+    {
+        this.scene.sys.updateList.remove(this);
+    },
+
+    /**
+     * Gets all active Particle Processors.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#getProcessors
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Particles.ParticleProcessor[]} - An array of active Particle Processors.
+     */
+    getProcessors: function ()
+    {
+        return this.processors.getAll('active', true);
     },
 
     /**
@@ -1054,7 +1092,7 @@ var ParticleEmitter2 = new Class({
 
         if (this.emitting)
         {
-            this.manager.emit(Events.START, this);
+            this.emit(Events.START, this);
         }
 
         return this;
@@ -1191,6 +1229,9 @@ var ParticleEmitter2 = new Class({
      */
     getFrame: function ()
     {
+        return this.frame;
+
+        /*
         if (this.frames.length === 1)
         {
             return this.defaultFrame;
@@ -1213,6 +1254,7 @@ var ParticleEmitter2 = new Class({
 
             return frame;
         }
+        */
     },
 
     /**
@@ -1232,7 +1274,6 @@ var ParticleEmitter2 = new Class({
      * @param {number} [quantity=1] - The number of consecutive particles that will receive each frame.
      *
      * @return {this} This Particle Emitter.
-     */
     setFrame: function (frames, pickRandom, quantity)
     {
         if (pickRandom === undefined) { pickRandom = true; }
@@ -1276,6 +1317,7 @@ var ParticleEmitter2 = new Class({
 
         return this;
     },
+     */
 
     /**
      * Chooses an animation from {@link Phaser.GameObjects.Particles.ParticleEmitter#anims}, if populated.
@@ -1950,7 +1992,7 @@ var ParticleEmitter2 = new Class({
         {
             if (zones[i].willKill(particle))
             {
-                this.manager.emit(Events.DEATH_ZONE, this, particle, zones[i]);
+                this.emit(Events.DEATH_ZONE, this, particle, zones[i]);
 
                 return true;
             }
@@ -2267,7 +2309,7 @@ var ParticleEmitter2 = new Class({
                 this.duration = Math.abs(duration);
             }
 
-            this.manager.emit(Events.START, this);
+            this.emit(Events.START, this);
         }
 
         return this;
@@ -2302,7 +2344,7 @@ var ParticleEmitter2 = new Class({
                 this.killAll();
             }
 
-            this.manager.emit(Events.STOP, this);
+            this.emit(Events.STOP, this);
         }
 
         return this;
@@ -2348,13 +2390,13 @@ var ParticleEmitter2 = new Class({
      * @since 3.22.0
      *
      * @return {this} This Particle Emitter.
-     */
     remove: function ()
     {
         this.manager.removeEmitter(this);
 
         return this;
     },
+     */
 
     /**
      * Set the property by which active particles are sorted prior to be rendered.
@@ -2520,7 +2562,7 @@ var ParticleEmitter2 = new Class({
 
         var particle = this.emitParticle(count, x, y);
 
-        this.manager.emit(Events.EXPLODE, this, particle);
+        this.emit(Events.EXPLODE, this, particle);
 
         return particle;
     },
@@ -2684,7 +2726,7 @@ var ParticleEmitter2 = new Class({
         }
 
         //  Any particle processors?
-        var processors = this.manager.getProcessors();
+        var processors = this.getProcessors();
 
         var particles = this.alive;
         var dead = this.dead;
@@ -2741,7 +2783,7 @@ var ParticleEmitter2 = new Class({
                 //  completeFlag
                 counters[5] = 0;
 
-                this.manager.emit(Events.COMPLETE, this);
+                this.emit(Events.COMPLETE, this);
             }
 
             return;
@@ -2797,7 +2839,6 @@ var ParticleEmitter2 = new Class({
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A temporary matrix to hold parent values during the calculations.
      *
      * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
-     */
     getWorldTransformMatrix: function (tempMatrix, parentMatrix)
     {
         if (tempMatrix === undefined) { tempMatrix = this.tempMatrix1; }
@@ -2818,6 +2859,7 @@ var ParticleEmitter2 = new Class({
 
         return tempMatrix;
     },
+     */
 
     /**
      * Takes either a Rectangle Geometry object or an Arcade Physics Body and tests
@@ -3602,14 +3644,13 @@ var ParticleEmitter2 = new Class({
     /**
      * Destroys this Particle Emitter and all Particles it owns.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#destroy
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#preDestroy
      * @since 3.60.0
      */
-    destroy: function ()
+    preDestroy: function ()
     {
-        this.manager = null;
-        this.texture = null;
-        this.frames = null;
+        // this.texture = null;
+        // this.frames = null;
         this.anims = null;
         this.defaultFrame = null;
         this.emitCallback = null;
