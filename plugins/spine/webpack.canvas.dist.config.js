@@ -1,7 +1,7 @@
 'use strict';
 
 const webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin')
 const exec = require('child_process').exec;
 const RemovePlugin = require('remove-files-webpack-plugin');
 
@@ -47,26 +47,28 @@ module.exports = {
 
     resolve: {
         alias: {
-            'Spine': './runtimes/spine-canvas.js'
+            'SpineCanvas': './runtimes/spine-canvas.js',
+            'SpineWebgl': './runtimes/spine-canvas.js'
         }
     },
 
     optimization: {
         minimizer: [
-            new UglifyJSPlugin({
+            new TerserWebpackPlugin({
                 include: /\.min\.js$/,
                 parallel: true,
-                sourceMap: false,
-                uglifyOptions: {
+                extractComments: false,
+                terserOptions: {
+                    format: {
+                        comments: false,
+                    },
                     compress: true,
                     ie8: false,
                     ecma: 5,
-                    output: {comments: false},
-                    warnings: false
+                    warnings: false,
                 },
-                warningsFilter: () => false
-            })
-        ]
+            }),
+        ],
     },
 
     plugins: [

@@ -1,7 +1,7 @@
 'use strict';
 
 const webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin')
 const exec = require('child_process').exec;
 const RemovePlugin = require('remove-files-webpack-plugin');
 
@@ -27,7 +27,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: require.resolve('./src/runtimes/spine-both.js'),
+                test: require.resolve('./src/runtimes/spine-canvas.js'),
                 loader: 'imports-loader',
                 options: {
                     type: 'commonjs',
@@ -35,7 +35,23 @@ module.exports = {
                 }
             },
             {
-                test: require.resolve('./src/runtimes/spine-both.js'),
+                test: require.resolve('./src/runtimes/spine-canvas.js'),
+                loader: 'exports-loader',
+                options: {
+                    type: 'commonjs',
+                    exports: 'single spine'
+                }
+            },
+            {
+                test: require.resolve('./src/runtimes/spine-webgl.js'),
+                loader: 'imports-loader',
+                options: {
+                    type: 'commonjs',
+                    wrapper: 'window'
+                }
+            },
+            {
+                test: require.resolve('./src/runtimes/spine-webgl.js'),
                 loader: 'exports-loader',
                 options: {
                     type: 'commonjs',
@@ -47,26 +63,28 @@ module.exports = {
 
     resolve: {
         alias: {
-            'Spine': './runtimes/spine-both.js'
+            'SpineCanvas': './runtimes/spine-canvas.js',
+            'SpineWebgl': './runtimes/spine-webgl.js'
         },
     },
 
     optimization: {
         minimizer: [
-            new UglifyJSPlugin({
+            new TerserWebpackPlugin({
                 include: /\.min\.js$/,
                 parallel: true,
-                sourceMap: false,
-                uglifyOptions: {
+                extractComments: false,
+                terserOptions: {
+                    format: {
+                        comments: false,
+                    },
                     compress: true,
                     ie8: false,
                     ecma: 5,
-                    output: {comments: false},
-                    warnings: false
+                    warnings: false,
                 },
-                warningsFilter: () => false
-            })
-        ]
+            }),
+        ],
     },
 
     plugins: [
