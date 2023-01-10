@@ -7,10 +7,10 @@
 var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var ParticleEmitterManager = require('./ParticleEmitterManager');
+var ParticleEmitter = require('./ParticleEmitter');
 
 /**
- * Creates a new Particle Emitter Manager Game Object and returns it.
+ * Creates a new Particle Emitter Game Object and returns it.
  *
  * Note: This method will only be available if the Particles Game Object has been built into Phaser.
  *
@@ -20,7 +20,7 @@ var ParticleEmitterManager = require('./ParticleEmitterManager');
  * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterManagerConfig} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
- * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} The Game Object that was created.
+ * @return {Phaser.GameObjects.Particles.ParticleEmitter} The Game Object that was created.
  */
 GameObjectCreator.register('particles', function (config, addToScene)
 {
@@ -31,7 +31,7 @@ GameObjectCreator.register('particles', function (config, addToScene)
     var emitters = GetFastValue(config, 'emitters', null);
 
     //  frame is optional and can contain the emitters array or object if skipped
-    var manager = new ParticleEmitterManager(this.scene, key, frame, emitters);
+    var manager = new ParticleEmitter(this.scene, key, frame, emitters);
 
     if (addToScene !== undefined)
     {

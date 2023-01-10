@@ -27,7 +27,7 @@ var Particle = new Class({
 
     initialize:
 
-    function Particle (emitter)
+    function Particle2 (emitter)
     {
         /**
          * The Emitter to which this Particle belongs.
@@ -297,7 +297,7 @@ var Particle = new Class({
          * @type {Phaser.Scene}
          * @since 3.60.0
          */
-        this.scene = emitter.manager.scene;
+        this.scene = emitter.scene;
 
         /**
          * The Animation State component of this Particle.
@@ -342,7 +342,7 @@ var Particle = new Class({
      */
     emit: function (event, a1, a2, a3, a4, a5)
     {
-        return this.emitter.manager.emit(event, a1, a2, a3, a4, a5);
+        return this.emitter.emit(event, a1, a2, a3, a4, a5);
     },
 
     /**

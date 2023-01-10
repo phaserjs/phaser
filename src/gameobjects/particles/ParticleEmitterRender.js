@@ -15,7 +15,7 @@ if (typeof WEBGL_RENDERER)
 
 if (typeof CANVAS_RENDERER)
 {
-    // renderCanvas = require('./ParticleManagerCanvasRenderer');
+    renderCanvas = require('./ParticleEmitterCanvasRenderer');
 }
 
 module.exports = {
