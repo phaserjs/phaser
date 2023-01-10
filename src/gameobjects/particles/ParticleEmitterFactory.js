@@ -10,8 +10,11 @@ var ParticleEmitter = require('./ParticleEmitter');
 /**
  * Creates a new Particle Emitter Game Object and adds it to the Scene.
  *
- * If you wish to configure the Emitter after creating it, see the
- * `ParticleEmitter.setConfig` method.
+ * If you wish to configure the Emitter after creating it, use the `ParticleEmitter.setConfig` method.
+ *
+ * Prior to Phaser v3.60 this function would create a `ParticleEmitterManager`. These were removed
+ * in v3.60 and replaced with creating a `ParticleEmitter` instance directly. Please see the
+ * updated function parameters and class documentation for more details.
  *
  * Note: This method will only be available if the Particles Game Object has been built into Phaser.
  *
@@ -27,5 +30,10 @@ var ParticleEmitter = require('./ParticleEmitter');
  */
 GameObjectFactory.register('particles', function (x, y, texture, config)
 {
+    if (x !== undefined && typeof x === 'string')
+    {
+        console.warn('ParticleEmitterManager was removed in Phaser 3.60. See documentation for details');
+    }
+
     return this.displayList.add(new ParticleEmitter(this.scene, x, y, texture, config));
 });
