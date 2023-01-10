@@ -318,7 +318,7 @@ var ParticleEmitter = new Class({
 
     initialize:
 
-    function ParticleEmitter (scene, texture, config)
+    function ParticleEmitter (scene, x, y, texture, config)
     {
         GameObject.call(this, scene, 'ParticleEmitter');
 
@@ -924,11 +924,15 @@ var ParticleEmitter = new Class({
          */
         this.processors = new List(this);
 
-        this.setTexture(texture);
-
         this.initPipeline();
 
-        this.fromJSON(config);
+        this.setPosition(x, y);
+        this.setTexture(texture);
+
+        if (config)
+        {
+            this.setConfig(config);
+        }
     },
 
     //  Overrides Game Object method
@@ -959,14 +963,14 @@ var ParticleEmitter = new Class({
     /**
      * Merges configuration settings into the emitter's current settings.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#fromJSON
-     * @since 3.0.0
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setConfig
+     * @since 3.60.0
      *
      * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} config - Settings for this emitter.
      *
      * @return {this} This Particle Emitter.
      */
-    fromJSON: function (config)
+    setConfig: function (config)
     {
         if (!config)
         {

@@ -22,13 +22,9 @@ var Sprite = require('./Sprite');
  *
  * @return {Phaser.GameObjects.Sprite} The Game Object that was created.
  */
-GameObjectFactory.register('sprite', function (x, y, key, frame)
+GameObjectFactory.register('sprite', function (x, y, texture, frame)
 {
-    var sprite = new Sprite(this.scene, x, y, key, frame);
-
-    this.displayList.add(sprite);
-
-    return sprite;
+    return this.displayList.add(new Sprite(this.scene, x, y, texture, frame));
 });
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.

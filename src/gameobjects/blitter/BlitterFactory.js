@@ -17,14 +17,14 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * @param {number} x - The x position of the Game Object.
  * @param {number} y - The y position of the Game Object.
- * @param {string} key - The key of the Texture the Blitter object will use.
+ * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|number)} [frame] - The default Frame children of the Blitter will use.
  *
  * @return {Phaser.GameObjects.Blitter} The Game Object that was created.
  */
-GameObjectFactory.register('blitter', function (x, y, key, frame)
+GameObjectFactory.register('blitter', function (x, y, texture, frame)
 {
-    return this.displayList.add(new Blitter(this.scene, x, y, key, frame));
+    return this.displayList.add(new Blitter(this.scene, x, y, texture, frame));
 });
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
