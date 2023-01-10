@@ -346,26 +346,26 @@ var ParticleEmitter = new Class({
          * @since 3.60.0
          */
         this.ops = {
-            x: new EmitterOp('x', 0),
-            y: new EmitterOp('y', 0),
             accelerationX: new EmitterOp('accelerationX', 0),
             accelerationY: new EmitterOp('accelerationY', 0),
+            alpha: new EmitterOp('alpha', 1),
+            angle: new EmitterOp('angle', { min: 0, max: 360 }, true),
+            bounce: new EmitterOp('bounce', 0),
+            delay: new EmitterOp('delay', 0, true),
+            lifespan: new EmitterOp('lifespan', 1000, true),
             maxVelocityX: new EmitterOp('maxVelocityX', 10000),
             maxVelocityY: new EmitterOp('maxVelocityY', 10000),
-            speedX: new EmitterOp('speedX', 0, true),
-            speedY: new EmitterOp('speedY', 0, true),
             moveToX: new EmitterOp('moveToX', 0),
             moveToY: new EmitterOp('moveToY', 0),
-            bounce: new EmitterOp('bounce', 0),
+            quantity: new EmitterOp('quantity', 1, true),
+            rotate: new EmitterOp('rotate', 0),
             scaleX: new EmitterOp('scaleX', 1),
             scaleY: new EmitterOp('scaleY', 1),
+            speedX: new EmitterOp('speedX', 0, true),
+            speedY: new EmitterOp('speedY', 0, true),
             tint: new EmitterOp('tint', 0xffffff),
-            alpha: new EmitterOp('alpha', 1),
-            lifespan: new EmitterOp('lifespan', 1000, true),
-            angle: new EmitterOp('angle', { min: 0, max: 360 }, true),
-            rotate: new EmitterOp('rotate', 0),
-            quantity: new EmitterOp('quantity', 1, true),
-            delay: new EmitterOp('delay', 0, true)
+            x: new EmitterOp('x', 0),
+            y: new EmitterOp('y', 0)
         };
 
         /**
@@ -1053,6 +1053,11 @@ var ParticleEmitter = new Class({
         if (HasValue(config, 'followOffset'))
         {
             this.followOffset.setFromObject(GetFastValue(config, 'followOffset', 0));
+        }
+
+        if (HasValue(config, 'texture'))
+        {
+            this.setTexture(config.texture);
         }
 
         if (HasValue(config, 'frame'))
