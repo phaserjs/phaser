@@ -15,21 +15,22 @@ var Events = require('./events');
 var GameObject = require('../GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetRandom = require('../../utils/array/GetRandom');
+var GravityWell = require('./GravityWell');
 var HasAny = require('../../utils/object/HasAny');
 var HasValue = require('../../utils/object/HasValue');
 var Inflate = require('../../geom/rectangle/Inflate');
+var List = require('../../structs/List');
 var MergeRect = require('../../geom/rectangle/MergeRect');
 var Particle2 = require('./Particle2');
 var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleToRectangle = require('../../geom/intersects/RectangleToRectangle');
-var Render = require('./ParticleEmitterRender');
 var Remove = require('../../utils/array/Remove');
+var Render = require('./ParticleEmitterRender');
 var StableSort = require('../../utils/array/StableSort');
 var TransformMatrix = require('../components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
-var List = require('../../structs/List');
 
 /**
  * Names of simple configuration properties.
@@ -99,10 +100,11 @@ var configOpMap = [
 
 /**
  * @classdesc
- * A particle emitter represents a single particle stream.
+ * A Particle Emitter is a special kind of Game Object that manages a single stream of Particles.
+ *
  * It controls a pool of {@link Phaser.GameObjects.Particles.Particle Particles} and is controlled by a {@link Phaser.GameObjects.Particles.ParticleEmitterManager Particle Emitter Manager}.
  *
- * Lots of emitter properties can be specified in a variety of formats, giving you lots
+ * Lots of emitter properties can be specified in a variety of formats, giving you plenty
  * of control over the values they return. Here are the different variations:
  *
  * ## An explicit static value:
@@ -726,15 +728,13 @@ var ParticleEmitter2 = new Class({
         this.trackVisible = false;
 
         /**
-         * The current texture frame, as an index of {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
+         * The texture frames assigned to particles.
          *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#currentFrame
-         * @type {number}
-         * @default 0
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#frames
+         * @type {Phaser.Textures.Frame[]}
          * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setFrame
          */
-        this.currentFrame = 0;
+        this.frames = [];
 
         /**
          * Whether texture {@link Phaser.GameObjects.Particles.ParticleEmitter#frames} are selected at random.
@@ -766,26 +766,6 @@ var ParticleEmitter2 = new Class({
          * @since 3.60.0
          */
         this.anims = [];
-
-        /**
-         * The default animation assigned to particles.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#defaultAnim
-         * @type {string}
-         * @since 3.60.0
-         */
-        this.defaultAnim = null;
-
-        /**
-         * The current animation, as an index of {@link Phaser.GameObjects.Particles.ParticleEmitter#anims}.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#currentAnim
-         * @type {number}
-         * @default 0
-         * @since 3.60.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setAnim
-         */
-        this.currentAnim = 0;
 
         /**
          * Whether animations {@link Phaser.GameObjects.Particles.ParticleEmitter#anims} are selected at random.
@@ -840,13 +820,15 @@ var ParticleEmitter2 = new Class({
          * 5 - _completeFlag - Has the COMPLETE event been emitted?
          * 6 - _emitIndex - The emit zone index counter.
          * 7 - _zoneTotal - The emit zone total counter.
+         * 8 - currentFrame - The current texture frame, as an index of {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
+         * 9 - currentAnim - The current animation, as an index of {@link Phaser.GameObjects.Particles.ParticleEmitter#anims}.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#counters
          * @type {Float32Array}
          * @private
          * @since 3.60.0
          */
-        this.counters = new Float32Array(8);
+        this.counters = new Float32Array(10);
 
         /**
          * Cached amount of frames in the `ParticleEmitter.frames` array.
@@ -1071,7 +1053,7 @@ var ParticleEmitter2 = new Class({
 
         if (HasValue(config, 'frame'))
         {
-            this.setFrame(config.frame);
+            this.setEmitterFrame(config.frame);
         }
         else if (HasValue(config, 'anim'))
         {
@@ -1229,32 +1211,33 @@ var ParticleEmitter2 = new Class({
      */
     getFrame: function ()
     {
-        return this.frame;
+        var frames = this.frames;
+        var current;
 
-        /*
-        if (this.frames.length === 1)
+        if (frames.length === 1)
         {
-            return this.defaultFrame;
+            current = frames[0];
         }
         else if (this.randomFrame)
         {
-            return GetRandom(this.frames);
+            current = GetRandom(frames);
         }
         else
         {
-            var frame = this.frames[this.currentFrame];
+            var counters = this.counters;
+
+            current = frames[counters[8]];
 
             this.frameCounter++;
 
             if (this.frameCounter >= this.frameQuantity)
             {
                 this.frameCounter = 0;
-                this.currentFrame = Wrap(this.currentFrame + 1, 0, this._frameLength);
+                counters[8] = Wrap(counters[8] + 1, 0, this._frameLength);
             }
-
-            return frame;
         }
-        */
+
+        return this.texture.get(current);
     },
 
     /**
@@ -1266,7 +1249,7 @@ var ParticleEmitter2 = new Class({
      * frame: [ 'red', 'green', 'blue', 'pink', 'white' ]
      * frame: { frames: [ 'red', 'green', 'blue', 'pink', 'white' ], [cycle: bool], [quantity: int] }
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setFrame
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setEmitterFrame
      * @since 3.0.0
      *
      * @param {(array|string|number|Phaser.Types.GameObjects.Particles.ParticleEmitterFrameConfig)} frames - One or more texture frames, or a configuration object.
@@ -1274,20 +1257,29 @@ var ParticleEmitter2 = new Class({
      * @param {number} [quantity=1] - The number of consecutive particles that will receive each frame.
      *
      * @return {this} This Particle Emitter.
-    setFrame: function (frames, pickRandom, quantity)
+     */
+    setEmitterFrame: function (frames, pickRandom, quantity)
     {
         if (pickRandom === undefined) { pickRandom = true; }
         if (quantity === undefined) { quantity = 1; }
 
         this.randomFrame = pickRandom;
         this.frameQuantity = quantity;
-        this.currentFrame = 0;
+
+        //  currentFrame
+        this.counters[8] = 0;
 
         var t = typeof (frames);
 
-        if (Array.isArray(frames) || t === 'string' || t === 'number')
+        this.frames.length = 0;
+
+        if (Array.isArray(frames))
         {
-            this.manager.setEmitterFrames(frames, this);
+            this.frames = this.frames.concat(frames);
+        }
+        else if (t === 'string' || t === 'number')
+        {
+            this.frames.push(frames);
         }
         else if (t === 'object')
         {
@@ -1297,7 +1289,7 @@ var ParticleEmitter2 = new Class({
 
             if (frames)
             {
-                this.manager.setEmitterFrames(frames, this);
+                this.frames = this.frames.concat(frames);
             }
 
             var isCycle = GetFastValue(frameConfig, 'cycle', false);
@@ -1317,7 +1309,6 @@ var ParticleEmitter2 = new Class({
 
         return this;
     },
-     */
 
     /**
      * Chooses an animation from {@link Phaser.GameObjects.Particles.ParticleEmitter#anims}, if populated.
@@ -1337,7 +1328,7 @@ var ParticleEmitter2 = new Class({
         }
         else if (anims.length === 1)
         {
-            return this.defaultAnim;
+            return anims[0];
         }
         else if (this.randomAnim)
         {
@@ -1345,14 +1336,16 @@ var ParticleEmitter2 = new Class({
         }
         else
         {
-            var anim = anims[this.currentAnim];
+            var counters = this.counters;
+
+            var anim = anims[counters[9]];
 
             this.animCounter++;
 
             if (this.animCounter >= this.animQuantity)
             {
                 this.animCounter = 0;
-                this.currentAnim = Wrap(this.currentAnim + 1, 0, this._animLength);
+                counters[9] = Wrap(counters[9] + 1, 0, this._animLength);
             }
 
             return anim;
@@ -1382,13 +1375,21 @@ var ParticleEmitter2 = new Class({
 
         this.randomAnim = pickRandom;
         this.animQuantity = quantity;
-        this.currentAnim = 0;
+
+        //  currentAnim
+        this.counters[9] = 0;
 
         var t = typeof (anims);
 
-        if (Array.isArray(anims) || t === 'string')
+        this.anims.length = 0;
+
+        if (Array.isArray(anims))
         {
-            this.manager.setEmitterAnims(anims, this);
+            this.anims = this.anims.concat(anims);
+        }
+        else if (t === 'string')
+        {
+            this.anims.push(anims);
         }
         else if (t === 'object')
         {
@@ -1398,7 +1399,7 @@ var ParticleEmitter2 = new Class({
 
             if (anims)
             {
-                this.manager.setEmitterAnims(anims, this);
+                this.anims = this.anims.concat(anims);
             }
 
             var isCycle = GetFastValue(animConfig, 'cycle', false);
@@ -2042,6 +2043,78 @@ var ParticleEmitter2 = new Class({
     },
 
     /**
+     * Adds a Particle Processor, such as a Gravity Well, to this Emitter Manager.
+     *
+     * It will start processing particles from the next update as long as its `active`
+     * property is set.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#addParticleProcessor
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Particles.ParticleProcessor} processor - The Particle Processor to add to this Emitter Manager.
+     *
+     * @return {Phaser.GameObjects.Particles.ParticleProcessor} The Particle Processor that was added to this Emitter Manager.
+     */
+    addParticleProcessor: function (processor)
+    {
+        if (!this.processors.exists(processor))
+        {
+            if (processor.emitter)
+            {
+                processor.emitter.removeParticleProcessor(processor);
+            }
+
+            this.processors.add(processor);
+
+            processor.emitter = this;
+        }
+
+        return processor;
+    },
+
+    /**
+     * Removes a Particle Processor from this Emitter Manager.
+     *
+     * The Processor must belong to this Manager.
+     *
+     * It is not destroyed when removed, allowing you to move it to another Emitter Manager,
+     * so if you no longer require it you should call its `destroy` method directly.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#removeParticleProcessor
+     * @since 3.60.0
+     *
+     * @param {Phaser.GameObjects.Particles.ParticleProcessor} processor - The Particle Processor to remove from this Emitter Manager.
+     *
+     * @return {?Phaser.GameObjects.Particles.ParticleProcessor} The Particle Processor that was removed, or null if it could not be found.
+     */
+    removeParticleProcessor: function (processor)
+    {
+        if (this.processors.exists(processor))
+        {
+            this.processors.remove(processor, true);
+
+            processor.emitter = null;
+        }
+
+        return processor;
+    },
+
+    /**
+     * Creates a new Gravity Well, adds it to this Emitter Manager and returns a reference to it.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#createGravityWell
+     * @since 3.0.0
+     *
+     * @param {Phaser.Types.GameObjects.Particles.GravityWellConfig} config - Configuration settings for the Gravity Well to create.
+     *
+     * @return {Phaser.GameObjects.Particles.GravityWell} The Gravity Well that was created.
+     */
+    createGravityWell: function (config)
+    {
+        return this.addParticleProcessor(new GravityWell(config));
+    },
+
+    /**
      * Creates inactive particles and adds them to this emitter's pool.
      *
      * If `ParticleEmitter.maxParticles` is set it will limit the
@@ -2201,6 +2274,8 @@ var ParticleEmitter2 = new Class({
     /**
      * Deactivates every particle in this emitter immediately.
      *
+     * This particles are killed but do not emit an event or callback.
+     *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#killAll
      * @since 3.0.0
      *
@@ -2227,7 +2302,7 @@ var ParticleEmitter2 = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterCallback} callback - The function.
-     * @param {*} context - The function's calling context.
+     * @param {*} context - The functions calling context.
      *
      * @return {this} This Particle Emitter.
      */
@@ -2252,7 +2327,7 @@ var ParticleEmitter2 = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterCallback} callback - The function.
-     * @param {*} context - The function's calling context.
+     * @param {*} context - The functions calling context.
      *
      * @return {this} This Particle Emitter.
      */
@@ -2263,7 +2338,6 @@ var ParticleEmitter2 = new Class({
 
         for (var i = 0; i < length; i++)
         {
-            //  Sends the Particle and the Emitter
             callback.call(context, dead[i], this);
         }
 
@@ -2379,24 +2453,6 @@ var ParticleEmitter2 = new Class({
 
         return this;
     },
-
-    /**
-     * Removes this Emitter from its Emitter Manager.
-     *
-     * Doing so does not destroy this Emitter. It's up to you to call the
-     * `destroy` method when you're ready to free-up the resources it's using.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#remove
-     * @since 3.22.0
-     *
-     * @return {this} This Particle Emitter.
-    remove: function ()
-    {
-        this.manager.removeEmitter(this);
-
-        return this;
-    },
-     */
 
     /**
      * Set the property by which active particles are sorted prior to be rendered.
@@ -2586,7 +2642,7 @@ var ParticleEmitter2 = new Class({
     },
 
     /**
-     * Emits particles at a given position (or the emitter's current position).
+     * Emits particles at a given position (or the emitters current position).
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#emitParticle
      * @since 3.0.0
@@ -3002,15 +3058,16 @@ var ParticleEmitter2 = new Class({
     /**
      * The x coordinate the particles are emitted from.
      *
+     * This is relative to the Emitters x coordinate and that of any parent.
+     *
      * Accessing this property should typically return a number.
      * However, it can be set to any valid EmitterOp onEmit type.
      *
-     * @name Phaser.GameObjects.Particles.ParticleEmitter#x
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#particleX
      * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
      * @since 3.60.0
-     * @see Phaser.GameObjects.Particles.ParticleEmitter#setPosition
      */
-    emitX: {
+    particleX: {
 
         get: function ()
         {
@@ -3027,15 +3084,16 @@ var ParticleEmitter2 = new Class({
     /**
      * The y coordinate the particles are emitted from.
      *
+     * This is relative to the Emitters x coordinate and that of any parent.
+     *
      * Accessing this property should typically return a number.
      * However, it can be set to any valid EmitterOp onEmit type.
      *
-     * @name Phaser.GameObjects.Particles.ParticleEmitter#y
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#particleY
      * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
      * @since 3.60.0
-     * @see Phaser.GameObjects.Particles.ParticleEmitter#setPosition
      */
-    emitY: {
+    particleY: {
 
         get: function ()
         {
@@ -3148,7 +3206,12 @@ var ParticleEmitter2 = new Class({
     },
 
     /**
-     * The initial horizontal speed of emitted particles, in pixels per second.
+     * The initial speed of emitted particles, in pixels per second.
+     *
+     * If using this as a getter it will return the `speedX` value.
+     *
+     * If using it as a setter it will update both `speedX` and `speedY` to the
+     * given value.
      *
      * Accessing this property should typically return a number.
      * However, it can be set to any valid EmitterOp onEmit type.
@@ -3297,14 +3360,16 @@ var ParticleEmitter2 = new Class({
     /**
      * The horizontal scale of emitted particles.
      *
+     * This is relative to the Emitters scale and that of any parent.
+     *
      * Accessing this property should typically return a number.
      * However, it can be set to any valid EmitterOp onEmit type.
      *
-     * @name Phaser.GameObjects.Particles.ParticleEmitter#scaleX
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#particleScaleX
      * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
      * @since 3.60.0
      */
-    emitScaleX: {
+    particleScaleX: {
 
         get: function ()
         {
@@ -3321,14 +3386,16 @@ var ParticleEmitter2 = new Class({
     /**
      * The vertical scale of emitted particles.
      *
+     * This is relative to the Emitters scale and that of any parent.
+     *
      * Accessing this property should typically return a number.
      * However, it can be set to any valid EmitterOp onEmit type.
      *
-     * @name Phaser.GameObjects.Particles.ParticleEmitter#scaleY
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#particleScaleY
      * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
      * @since 3.60.0
      */
-    emitScaleY: {
+    particleScaleY: {
 
         get: function ()
         {
@@ -3355,11 +3422,11 @@ var ParticleEmitter2 = new Class({
      * Accessing this property should typically return a number.
      * However, it can be set to any valid EmitterOp onEmit type.
      *
-     * @name Phaser.GameObjects.Particles.ParticleEmitter#tint
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#particleTint
      * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
      * @since 3.60.0
      */
-    tint: {
+    particleTint: {
 
         get: function ()
         {
@@ -3382,11 +3449,11 @@ var ParticleEmitter2 = new Class({
      * Accessing this property should typically return a number.
      * However, it can be set to any valid EmitterOp onEmit type.
      *
-     * @name Phaser.GameObjects.Particles.ParticleEmitter#alpha
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#particleAlpha
      * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
      * @since 3.60.0
      */
-    emitAlpha: {
+    particleAlpha: {
 
         get: function ()
         {
@@ -3427,19 +3494,19 @@ var ParticleEmitter2 = new Class({
     },
 
     /**
-     * The angle in which the particles are emitted. The values are
+     * The angle at which the particles are emitted. The values are
      * given in degrees. This allows you to control the direction
      * of the emitter. If you wish instead to change the rotation
-     * of the particles themselves, see the `rotate` property.
+     * of the particles themselves, see the `particleRotate` property.
      *
      * Accessing this property should typically return a number.
      * However, it can be set to any valid EmitterOp onEmit type.
      *
-     * @name Phaser.GameObjects.Particles.ParticleEmitter#angle
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#particleAngle
      * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
      * @since 3.60.0
      */
-    emitAngle: {
+    particleAngle: {
 
         get: function ()
         {
@@ -3454,19 +3521,19 @@ var ParticleEmitter2 = new Class({
     },
 
     /**
-     * The rotation (or angle) of the particles when they are
-     * emitted. The value is given in degrees and uses a right-handed
+     * The rotation (or angle) of each particle when it is emitted.
+     * The value is given in degrees and uses a right-handed
      * coordinate system, where 0 degrees points to the right, 90 degrees
      * points down and -90 degrees points up.
      *
      * Accessing this property should typically return a number.
      * However, it can be set to any valid EmitterOp onEmit type.
      *
-     * @name Phaser.GameObjects.Particles.ParticleEmitter#rotate
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#particleRotate
      * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
      * @since 3.60.0
      */
-    emitRotate: {
+    particleRotate: {
 
         get: function ()
         {
@@ -3511,7 +3578,7 @@ var ParticleEmitter2 = new Class({
 
     /**
      * The number of milliseconds to wait after emission before
-     * the particles strat updating. This allows you to emit particles
+     * the particles start updating. This allows you to emit particles
      * that appear 'static' or still on-screen and then, after this value,
      * begin to move.
      *
@@ -3649,10 +3716,9 @@ var ParticleEmitter2 = new Class({
      */
     preDestroy: function ()
     {
-        // this.texture = null;
-        // this.frames = null;
+        this.texture = null;
+        this.frames = null;
         this.anims = null;
-        this.defaultFrame = null;
         this.emitCallback = null;
         this.emitCallbackScope = null;
         this.deathCallback = null;
@@ -3674,9 +3740,9 @@ var ParticleEmitter2 = new Class({
             ops[key].destroy();
         }
 
-        for (i = 0; i < this.particles.length; i++)
+        for (i = 0; i < this.alive.length; i++)
         {
-            this.particles[i].destroy();
+            this.alive[i].destroy();
         }
 
         for (i = 0; i < this.dead.length; i++)
@@ -3685,7 +3751,7 @@ var ParticleEmitter2 = new Class({
         }
 
         this.ops = null;
-        this.particles = [];
+        this.alive = [];
         this.dead = [];
         this.tempMatrix1.destroy();
         this.tempMatrix2.destroy();

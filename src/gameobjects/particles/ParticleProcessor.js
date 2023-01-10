@@ -35,15 +35,15 @@ var ParticleProcessor = new Class({
         if (active === undefined) { active = true; }
 
         /**
-         * A reference to the Particle Emitter Manager that owns this
-         * Processor. This is set automatically when the Processor is
-         * added to an Emitter Manager, and nulled when removed or destroyed.
+         * A reference to the Particle Emitter that owns this Processor.
+         * This is set automatically when the Processor is added to an Emitter
+         * and nulled when removed or destroyed.
          *
          * @name Phaser.GameObjects.Particles.ParticleProcessor#manager
-         * @type {Phaser.GameObjects.Particles.ParticleEmitterManager}
+         * @type {Phaser.GameObjects.Particles.ParticleEmitter}
          * @since 3.60.0
          */
-        this.manager;
+        this.emitter;
 
         /**
          * The x coordinate of the Particle Processor, in world space.
@@ -96,15 +96,14 @@ var ParticleProcessor = new Class({
     /**
      * Destroys this Particle Processor by removing all external references.
      *
-     * This is called automatically when the owning Particle Emitter Manager
-     * is destroyed.
+     * This is called automatically when the owning Particle Emitter is destroyed.
      *
      * @method Phaser.GameObjects.Particles.ParticleProcessor#destroy
      * @since 3.60.0
      */
     destroy: function ()
     {
-        this.manager = null;
+        this.emitter = null;
     }
 
 });
