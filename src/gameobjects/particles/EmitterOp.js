@@ -539,6 +539,8 @@ var EmitterOp = new Class({
         this.onEmit = onEmit;
         this.onUpdate = onUpdate;
         this.current = current;
+
+        return this;
     },
 
     /**
