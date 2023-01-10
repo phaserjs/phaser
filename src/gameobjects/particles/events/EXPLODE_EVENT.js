@@ -9,7 +9,7 @@
  *
  * This event is dispatched when a Particle Emitter explodes a set of particles.
  *
- * Listen for it on a Particle Emitter Manager instance using `ParticleEmitterManager.on('explode', listener)`.
+ * Listen for it on a Particle Emitter instance using `ParticleEmitter.on('explode', listener)`.
  *
  * @event Phaser.GameObjects.Particles.Events#EXPLODE
  * @type {string}

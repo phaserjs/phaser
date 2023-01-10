@@ -11,7 +11,7 @@
  * has been stopped, dies. Upon receipt of this event you know that no particles are
  * still rendering at this point in time.
  *
- * Listen for it on a Particle Emitter Manager instance using `ParticleEmitterManager.on('complete', listener)`.
+ * Listen for it on a Particle Emitter instance using `ParticleEmitter.on('complete', listener)`.
  *
  * @event Phaser.GameObjects.Particles.Events#COMPLETE
  * @type {string}

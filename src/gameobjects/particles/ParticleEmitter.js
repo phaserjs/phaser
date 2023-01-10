@@ -100,12 +100,12 @@ var configOpMap = [
 
 /**
  * @classdesc
- * A Particle Emitter is a special kind of Game Object that manages a single stream of Particles.
+ * A Particle Emitter is a special kind of Game Object that controls a pool of {@link Phaser.GameObjects.Particles.Particle Particles}.
  *
- * It controls a pool of {@link Phaser.GameObjects.Particles.Particle Particles} and is controlled by a {@link Phaser.GameObjects.Particles.ParticleEmitterManager Particle Emitter Manager}.
- *
- * Lots of emitter properties can be specified in a variety of formats, giving you plenty
- * of control over the values they return. Here are the different variations:
+ * Particle Emitters are created via a configuration object. The properties of this object
+ * can be specified in a variety of formats, given you plenty of scope over the values they
+ * return, leading to complex visual effects. Here are the different forms of configuration
+ * value you can give:
  *
  * ## An explicit static value:
  *
@@ -916,11 +916,11 @@ var ParticleEmitter = new Class({
         this.sortCallback = this.depthSortCallback;
 
         /**
-         * A list of Particle Processors being managed by this Emitter Manager.
+         * A list of Particle Processors being managed by this Emitter.
          *
-         * @name Phaser.GameObjects.Particles.ParticleEmitterManager#processors
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#processors
          * @type {Phaser.Structs.List.<Phaser.GameObjects.Particles.ParticleProcessor>}
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.processors = new List(this);
 
@@ -946,8 +946,8 @@ var ParticleEmitter = new Class({
     /**
      * Gets all active Particle Processors.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#getProcessors
-     * @since 3.0.0
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#getProcessors
+     * @since 3.60.0
      *
      * @return {Phaser.GameObjects.Particles.ParticleProcessor[]} - An array of active Particle Processors.
      */
@@ -2043,12 +2043,12 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Adds a Particle Processor, such as a Gravity Well, to this Emitter Manager.
+     * Adds a Particle Processor, such as a Gravity Well, to this Emitter.
      *
      * It will start processing particles from the next update as long as its `active`
      * property is set.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#addParticleProcessor
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#addParticleProcessor
      * @since 3.60.0
      *
      * @param {Phaser.GameObjects.Particles.ParticleProcessor} processor - The Particle Processor to add to this Emitter Manager.
@@ -2073,14 +2073,14 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Removes a Particle Processor from this Emitter Manager.
+     * Removes a Particle Processor from this Emitter.
      *
-     * The Processor must belong to this Manager.
+     * The Processor must belong to this Emitter to be removed.
      *
      * It is not destroyed when removed, allowing you to move it to another Emitter Manager,
      * so if you no longer require it you should call its `destroy` method directly.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#removeParticleProcessor
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#removeParticleProcessor
      * @since 3.60.0
      *
      * @param {Phaser.GameObjects.Particles.ParticleProcessor} processor - The Particle Processor to remove from this Emitter Manager.
@@ -2100,10 +2100,10 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Creates a new Gravity Well, adds it to this Emitter Manager and returns a reference to it.
+     * Creates a new Gravity Well, adds it to this Emitter and returns a reference to it.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#createGravityWell
-     * @since 3.0.0
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#createGravityWell
+     * @since 3.60.0
      *
      * @param {Phaser.Types.GameObjects.Particles.GravityWellConfig} config - Configuration settings for the Gravity Well to create.
      *

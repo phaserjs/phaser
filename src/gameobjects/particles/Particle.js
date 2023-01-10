@@ -13,8 +13,10 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
- * A Particle is a simple Game Object controlled by a Particle Emitter and Manager, and rendered by the Manager.
- * It uses its own lightweight physics system, and can interact only with its Emitter's bounds and zones.
+ * A Particle is a simple object owned and controlled by a Particle Emitter.
+ *
+ * It encapsulates all of the properties required to move and update according
+ * to the Emitters operations.
  *
  * @class Particle
  * @memberof Phaser.GameObjects.Particles
@@ -27,12 +29,12 @@ var Particle = new Class({
 
     initialize:
 
-    function Particle2 (emitter)
+    function Particle (emitter)
     {
         /**
          * The Emitter to which this Particle belongs.
          *
-         * A Particle can only belong to a single Emitter and is created, updated and destroyed via it.
+         * A Particle can only belong to a single Emitter and is created, updated and destroyed by it.
          *
          * @name Phaser.GameObjects.Particles.Particle#emitter
          * @type {Phaser.GameObjects.Particles.ParticleEmitter}
@@ -41,7 +43,7 @@ var Particle = new Class({
         this.emitter = emitter;
 
         /**
-         * The texture used to render this Particle.
+         * The texture used by this Particle when it renders.
          *
          * @name Phaser.GameObjects.Particles.Particle#texture
          * @type {Phaser.Textures.Texture}
@@ -51,7 +53,7 @@ var Particle = new Class({
         this.texture = null;
 
         /**
-         * The texture frame used to render this Particle.
+         * The texture frame used by this Particle when it renders.
          *
          * @name Phaser.GameObjects.Particles.Particle#frame
          * @type {Phaser.Textures.Frame}
@@ -326,7 +328,7 @@ var Particle = new Class({
     /**
      * The Event Emitter proxy.
      *
-     * Passes on all parameters to the `ParticleEmitterManager` to emit directly.
+     * Passes on all parameters to the `ParticleEmitter` to emit directly.
      *
      * @method Phaser.GameObjects.Particles.Particle#emit
      * @since 3.60.0

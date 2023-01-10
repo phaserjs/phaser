@@ -9,7 +9,7 @@
  *
  * This event is dispatched when a Death Zone kills a Particle instance.
  *
- * Listen for it on a Particle Emitter Manager instance using `ParticleEmitterManager.on('deathzone', listener)`.
+ * Listen for it on a Particle Emitter instance using `ParticleEmitter.on('deathzone', listener)`.
  *
  * If you wish to know when the final particle is killed, see the `COMPLETE` event.
  *
