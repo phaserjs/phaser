@@ -27181,35 +27181,31 @@ var SpinePlugin = new Class({
         var gl = this.gl;
         var i;
         var atlasPage;
+        var realTextureKey;
+
+        if (this.isWebGL)
+        {
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+        }
+
+        for (i = 0; i < atlas.pages.length; i ++)
+        {
+            atlasPage = atlas.pages[i];
+            realTextureKey = atlasData.prefix ? atlasData.prefix + atlasPage.name : atlasPage.name;
+            if (this.isWebGL)
+            {
+                atlasPage.setTexture(new this.runtime.GLTexture(gl, this.textures.get(realTextureKey).getSourceImage(), false));
+            }
+            else
+            {
+                atlasPage.setTexture(new this.runtime.CanvasTexture(this.textures.get(realTextureKey).getSourceImage()));
+            }
+        }
+
         var spineTextureKey = atlasData.prefix ? atlasData.prefix + atlasKey : atlasKey;
 
         if (!this.spineTextures.has(spineTextureKey))
         {
-            var realTextureKey;
-
-            if (this.isWebGL)
-            {
-                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-                for (i = 0; i < atlas.pages.length; i ++)
-                {
-                    atlasPage = atlas.pages[i];
-
-                    realTextureKey = atlasData.prefix ? atlasData.prefix + atlasPage.name : atlasPage.name;
-                    atlasPage.setTexture(new this.runtime.GLTexture(gl, this.textures.get(realTextureKey).getSourceImage(), false));
-                }
-            }
-            else
-            {
-                for (i = 0; i < atlas.pages.length; i ++)
-                {
-                    atlasPage = atlas.pages[i];
-
-                    realTextureKey = atlasData.prefix ? atlasData.prefix + atlasPage.name : atlasPage.name;
-                    atlasPage.setTexture(new this.runtime.CanvasTexture(this.textures.get(realTextureKey).getSourceImage()));
-
-                }
-            }
-
             this.spineTextures.add(spineTextureKey, atlas);
         }
 
