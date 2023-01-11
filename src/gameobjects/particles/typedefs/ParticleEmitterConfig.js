@@ -46,7 +46,8 @@
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [speed] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setSpeed} (emit only).
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [speedX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedX} (emit only).
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [speedY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedY} (emit only).
- * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} [tint] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#tint}.
+ * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType} [tint] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleTint}.
+ * @property {number[]} [color] - An array of color values that the Particles interpolate through during theif life. If set, overrides any `tint` property.
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [x] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleX}.
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [y] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleY}.
  * @property {Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig|Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig} [emitZone] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
@@ -64,4 +65,5 @@
  * @property {Phaser.Types.GameObjects.Particles.ParticleSortCallback} [sortCallback] - A custom callback that sorts particles prior to rendering. Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#sortCallback}.
  * @property {boolean} [sortOrderAsc] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#sortOrderAsc}.
  * @property {string} [sortProperty] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#sortProperty}.
+ * @property {boolean} [tintFill] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#tintFill}.
  */

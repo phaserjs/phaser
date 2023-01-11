@@ -7,6 +7,7 @@
  * @param {Phaser.GameObjects.Particles.EmitterOp} alpha - The alpha EmitterOp instance. This is an onEmit and onUpdate operator.
  * @param {Phaser.GameObjects.Particles.EmitterOp} angle - The angle EmitterOp instance. This is an onEmit operator only.
  * @param {Phaser.GameObjects.Particles.EmitterOp} bounce - The bounce EmitterOp instance. This is an onEmit and onUpdate operator.
+ * @param {Phaser.GameObjects.Particles.EmitterColorOp} color - The color EmitterColorOp instance. This is an onEmit and onUpdate operator.
  * @param {Phaser.GameObjects.Particles.EmitterOp} delay - The delay EmitterOp instance. This is an onEmit operator only.
  * @param {Phaser.GameObjects.Particles.EmitterOp} lifespan - The lifespan EmitterOp instance. This is an onEmit operator only.
  * @param {Phaser.GameObjects.Particles.EmitterOp} maxVelocityX - The maxVelocityX EmitterOp instance. This is an onEmit and onUpdate operator.

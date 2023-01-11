@@ -13,23 +13,17 @@ var IntegerToRGB = require('../../display/color/IntegerToRGB');
 
 /**
  * @classdesc
- * This class is responsible for taking control over a single property
+ * This class is responsible for taking control over the color property
  * in the Particle class and managing its emission and updating functions.
- *
- * Particles properties such as `x`, `y`, `scaleX`, `lifespan` and others all use
- * EmitterOp instances to manage them, as they can be given in a variety of
- * formats: from simple values, to functions, to dynamic callbacks.
  *
  * See the `ParticleEmitter` class for more details on emitter op configuration.
  *
  * @class EmitterColorOp
  * @memberof Phaser.GameObjects.Particles
  * @constructor
- * @since 3.0.0
+ * @since 3.60.0
  *
  * @param {string} key - The name of the property.
- * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} defaultValue - The default value of the property.
- * @param {boolean} [emitOnly=false] - Whether the property can only be modified when a Particle is emitted.
  */
 var EmitterColorOp = new Class({
 
@@ -48,7 +42,7 @@ var EmitterColorOp = new Class({
          *
          * Populated during the `setMethods` method.
          *
-         * @name Phaser.GameObjects.Particles.EmitterOp#r
+         * @name Phaser.GameObjects.Particles.EmitterColorOp#r
          * @type {number[]}
          * @since 3.60.0
          */
@@ -59,7 +53,7 @@ var EmitterColorOp = new Class({
          *
          * Populated during the `setMethods` method.
          *
-         * @name Phaser.GameObjects.Particles.EmitterOp#g
+         * @name Phaser.GameObjects.Particles.EmitterColorOp#g
          * @type {number[]}
          * @since 3.60.0
          */
@@ -70,7 +64,7 @@ var EmitterColorOp = new Class({
          *
          * Populated during the `setMethods` method.
          *
-         * @name Phaser.GameObjects.Particles.EmitterOp#b
+         * @name Phaser.GameObjects.Particles.EmitterColorOp#b
          * @type {number[]}
          * @since 3.60.0
          */
@@ -81,7 +75,7 @@ var EmitterColorOp = new Class({
      * Checks the type of `EmitterOp.propertyValue` to determine which
      * method is required in order to return values from this op function.
      *
-     * @method Phaser.GameObjects.Particles.EmitterOp#getMethod
+     * @method Phaser.GameObjects.Particles.EmitterColorOp#getMethod
      * @since 3.60.0
      *
      * @return {number} A number between 0 and 9 which should be passed to `setMethods`.
@@ -94,7 +88,7 @@ var EmitterColorOp = new Class({
     /**
      * A NOOP for EmitterColorOp
      *
-     * @method Phaser.GameObjects.Particles.EmitterOp#setMethods
+     * @method Phaser.GameObjects.Particles.EmitterColorOp#setMethods
      * @since 3.60.0
      *
      * @return {this} This Emitter Op object.
@@ -139,15 +133,15 @@ var EmitterColorOp = new Class({
     /**
      * An `onEmit` callback for an eased property.
      *
-     * It prepares the particle for easing by {@link Phaser.GameObjects.Particles.EmitterOp#easeValueUpdate}.
+     * It prepares the particle for easing by {@link Phaser.GameObjects.Particles.EmitterColorOp#easeValueUpdate}.
      *
-     * @method Phaser.GameObjects.Particles.EmitterOp#easedValueEmit
-     * @since 3.0.0
+     * @method Phaser.GameObjects.Particles.EmitterColorOp#easedValueEmit
+     * @since 3.60.0
      *
      * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
      * @param {string} key - The name of the property.
      *
-     * @return {number} {@link Phaser.GameObjects.Particles.EmitterOp#start}, as the new value of the property.
+     * @return {number} {@link Phaser.GameObjects.Particles.EmitterColorOp#start}, as the new value of the property.
      */
     easedValueEmit: function ()
     {
@@ -158,11 +152,11 @@ var EmitterColorOp = new Class({
 
     /**
      * An `onUpdate` callback that returns an eased value between the
-     * {@link Phaser.GameObjects.Particles.EmitterOp#start} and {@link Phaser.GameObjects.Particles.EmitterOp#end}
+     * {@link Phaser.GameObjects.Particles.EmitterColorOp#start} and {@link Phaser.GameObjects.Particles.EmitterColorOp#end}
      * range.
      *
-     * @method Phaser.GameObjects.Particles.EmitterOp#easeValueUpdate
-     * @since 3.0.0
+     * @method Phaser.GameObjects.Particles.EmitterColorOp#easeValueUpdate
+     * @since 3.60.0
      *
      * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
      * @param {string} key - The name of the property.

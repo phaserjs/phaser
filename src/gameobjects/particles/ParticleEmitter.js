@@ -2416,7 +2416,7 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Turns {@link Phaser.GameObjects.Particles.ParticleEmitter#on off} the emitter and
+     * Turns {@link Phaser.GameObjects.Particles.ParticleEmitter#emitting off} the emitter and
      * stops it from emitting further particles. Currently alive particles will remain
      * active until they naturally expire unless you set the `kill` parameter to `true`.
      *
@@ -3443,6 +3443,14 @@ var ParticleEmitter = new Class({
      * Tints are additive, meaning a tint value of white (0xffffff) will
      * effectively reset the tint to nothing.
      *
+     * Modify the `ParticleEmitter.tintFill` property to change between
+     * an additive and replacement tint mode.
+     *
+     * When you define the color via the Emitter config you should give
+     * it as an array of color values. The Particle will then interpolate
+     * through these colors over the course of its lifespan. Setting this
+     * will override any `tint` value that may also be given.
+     *
      * This is a WebGL only feature.
      *
      * Accessing this property should typically return a number.
@@ -3473,6 +3481,11 @@ var ParticleEmitter = new Class({
      *
      * Tints are additive, meaning a tint value of white (0xffffff) will
      * effectively reset the tint to nothing.
+     *
+     * Modify the `ParticleEmitter.tintFill` property to change between
+     * an additive and replacement tint mode.
+     *
+     * The `tint` value will be overriden if a `color` array is provided.
      *
      * This is a WebGL only feature.
      *
