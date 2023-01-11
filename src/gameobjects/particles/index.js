@@ -10,6 +10,7 @@
 
 module.exports = {
 
+    EmitterColorOp: require('./EmitterColorOp'),
     EmitterOp: require('./EmitterOp'),
     Events: require('./events'),
     GravityWell: require('./GravityWell'),
