@@ -170,7 +170,7 @@ var DynamicTexture = new Class({
          * An internal Camera that can be used to move around this Dynamic Texture.
          *
          * Control it just like you would any Scene Camera. The difference is that it only impacts
-         * the placement of Game Objects that you then draw to this texture.
+         * the placement of **Game Objects** (not textures) that you then draw to this texture.
          *
          * You can scroll, zoom and rotate this Camera.
          *
