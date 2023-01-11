@@ -37,6 +37,8 @@ var EmitterColorOp = new Class({
 
         this.active = false;
 
+        this.easeName = 'Linear';
+
         /**
          * An array containing the red color values.
          *
@@ -86,7 +88,7 @@ var EmitterColorOp = new Class({
     },
 
     /**
-     * A NOOP for EmitterColorOp
+     * Sets the EmitterColorOp method values, if in use.
      *
      * @method Phaser.GameObjects.Particles.EmitterColorOp#setMethods
      * @since 3.60.0
@@ -128,6 +130,23 @@ var EmitterColorOp = new Class({
         this.onEmit = onEmit;
         this.onUpdate = onUpdate;
         this.current = current;
+
+        return this;
+    },
+
+    /**
+     * Sets the Ease function to use for Color interpolation.
+     *
+     * @method Phaser.GameObjects.Particles.EmitterColorOp#setEase
+     * @since 3.60.0
+     *
+     * @param {string} ease - The string-based name of the Ease function to use.
+     */
+    setEase: function (value)
+    {
+        this.easeName = value;
+
+        this.ease = GetEaseFunction(value);
     },
 
     /**
