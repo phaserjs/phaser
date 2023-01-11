@@ -46,6 +46,7 @@ var configFastMap = [
     'collideLeft',
     'collideRight',
     'collideTop',
+    'colorEase',
     'deathCallback',
     'deathCallbackScope',
     'duration',
@@ -994,20 +995,8 @@ var ParticleEmitter = new Class({
             return this;
         }
 
-        //  Only update properties from their current state if they exist in the given config
-
         var i = 0;
         var key = '';
-
-        for (i = 0; i < configFastMap.length; i++)
-        {
-            key = configFastMap[i];
-
-            if (HasValue(config, key))
-            {
-                this[key] = GetFastValue(config, key);
-            }
-        }
 
         var ops = this.ops;
 
@@ -1016,6 +1005,17 @@ var ParticleEmitter = new Class({
             key = configOpMap[i];
 
             ops[key].loadConfig(config);
+        }
+
+        for (i = 0; i < configFastMap.length; i++)
+        {
+            key = configFastMap[i];
+
+            //  Only update properties from their current state if they exist in the given config
+            if (HasValue(config, key))
+            {
+                this[key] = GetFastValue(config, key);
+            }
         }
 
         this.acceleration = (this.accelerationX !== 0 || this.accelerationY !== 0);
@@ -3470,6 +3470,32 @@ var ParticleEmitter = new Class({
         set: function (value)
         {
             this.ops.color.onChange(value);
+        }
+
+    },
+
+    /**
+     * Controls the easing function used when you have created an
+     * Emitter that uses the `color` property to interpolate the
+     * tint of Particles over their lifetime.
+     *
+     * Setting this has no effect if you haven't also applied a
+     * `particleColor` to this Emitter.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#colorEase
+     * @type {string}
+     * @since 3.60.0
+     */
+    colorEase: {
+
+        get: function ()
+        {
+            return this.ops.color.easeName;
+        },
+
+        set: function (value)
+        {
+            this.ops.color.setEase(value);
         }
 
     },
