@@ -14,15 +14,16 @@ var Enable = {
 
     /**
      * Enables this Game Object's Body.
+     * If you reset the Body you must also pass `x` and `y`.
      *
      * @method Phaser.Physics.Arcade.Components.Enable#enableBody
      * @since 3.0.0
      *
-     * @param {boolean} reset - Also reset the Body and place it at (x, y).
-     * @param {number} x - The horizontal position to place the Game Object and Body.
-     * @param {number} y - The horizontal position to place the Game Object and Body.
-     * @param {boolean} enableGameObject - Also activate this Game Object.
-     * @param {boolean} showGameObject - Also show this Game Object.
+     * @param {boolean} [reset] - Also reset the Body and place the Game Object at (x, y).
+     * @param {number} [x] - The horizontal position to place the Game Object, if `reset` is true.
+     * @param {number} [y] - The horizontal position to place the Game Object, if `reset` is true.
+     * @param {boolean} [enableGameObject] - Also set this Game Object's `active` to true.
+     * @param {boolean} [showGameObject] - Also set this Game Object's `visible` to true.
      *
      * @return {this} This Game Object.
      *
@@ -61,8 +62,8 @@ var Enable = {
      * @method Phaser.Physics.Arcade.Components.Enable#disableBody
      * @since 3.0.0
      *
-     * @param {boolean} [disableGameObject=false] - Also deactivate this Game Object.
-     * @param {boolean} [hideGameObject=false] - Also hide this Game Object.
+     * @param {boolean} [disableGameObject=false] - Also set this Game Object's `active` to false.
+     * @param {boolean} [hideGameObject=false] - Also set this Game Object's `visible` to false.
      *
      * @return {this} This Game Object.
      *
