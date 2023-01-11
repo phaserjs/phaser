@@ -11,6 +11,7 @@ var CopyFrom = require('../../geom/rectangle/CopyFrom');
 var DeathZone = require('./zones/DeathZone');
 var EdgeZone = require('./zones/EdgeZone');
 var EmitterOp = require('./EmitterOp');
+var EmitterColorOp = require('./EmitterColorOp');
 var Events = require('./events');
 var GameObject = require('../GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
@@ -65,6 +66,7 @@ var configFastMap = [
     'sortOrderAsc',
     'sortProperty',
     'stopAfter',
+    'tintFill',
     'timeScale',
     'trackVisible',
     'visible'
@@ -81,6 +83,7 @@ var configOpMap = [
     'alpha',
     'angle',
     'bounce',
+    'color',
     'delay',
     'lifespan',
     'maxVelocityX',
@@ -351,6 +354,7 @@ var ParticleEmitter = new Class({
             alpha: new EmitterOp('alpha', 1),
             angle: new EmitterOp('angle', { min: 0, max: 360 }, true),
             bounce: new EmitterOp('bounce', 0),
+            color: new EmitterColorOp('color'),
             delay: new EmitterOp('delay', 0, true),
             lifespan: new EmitterOp('lifespan', 1000, true),
             maxVelocityX: new EmitterOp('maxVelocityX', 10000),
@@ -923,6 +927,19 @@ var ParticleEmitter = new Class({
          * @since 3.60.0
          */
         this.processors = new List(this);
+
+        /**
+         * The tint fill mode used by the Particles in this Emitter.
+         *
+         * `false` = An additive tint (the default), where vertices colors are blended with the texture.
+         * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#tintFill
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
+         */
+        this.tintFill = false;
 
         this.initPipeline();
 
@@ -3414,6 +3431,37 @@ var ParticleEmitter = new Class({
         set: function (value)
         {
             this.ops.scaleY.onChange(value);
+        }
+
+    },
+
+    /**
+     * A color tint value that is applied to the texture of the emitted
+     * particle. The value should be given in hex format, i.e. 0xff0000
+     * for a red tint, and should not include the alpha channel.
+     *
+     * Tints are additive, meaning a tint value of white (0xffffff) will
+     * effectively reset the tint to nothing.
+     *
+     * This is a WebGL only feature.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#particleColor
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    particleColor: {
+
+        get: function ()
+        {
+            return this.ops.color.current;
+        },
+
+        set: function (value)
+        {
+            this.ops.color.onChange(value);
         }
 
     },

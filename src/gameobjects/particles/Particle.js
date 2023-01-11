@@ -504,7 +504,14 @@ var Particle = new Class({
 
         this.alpha = ops.alpha.onEmit(this, 'alpha');
 
-        this.tint = ops.tint.onEmit(this, 'tint');
+        if (ops.color.active)
+        {
+            this.tint = ops.color.onEmit(this, 'tint');
+        }
+        else
+        {
+            this.tint = ops.tint.onEmit(this, 'tint');
+        }
     },
 
     /**
@@ -694,7 +701,14 @@ var Particle = new Class({
 
         this.alpha = ops.alpha.onUpdate(this, 'alpha', t, this.alpha);
 
-        this.tint = ops.tint.onUpdate(this, 'tint', t, this.tint);
+        if (ops.color.active)
+        {
+            this.tint = ops.color.onUpdate(this, 'color', t, this.tint);
+        }
+        else
+        {
+            this.tint = ops.tint.onUpdate(this, 'tint', t, this.tint);
+        }
 
         this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
 

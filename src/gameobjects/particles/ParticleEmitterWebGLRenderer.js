@@ -87,7 +87,7 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
         renderer.pipelines.set(emitter.pipeline);
     }
 
-    var tintEffect = 0;
+    var tintEffect = emitter.tintFill;
 
     for (var i = 0; i < particleCount; i++)
     {
