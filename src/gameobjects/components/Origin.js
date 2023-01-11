@@ -32,9 +32,11 @@ var Origin = {
      * The origin maps the relationship between the size and position of the Game Object.
      * The default value is 0.5, meaning all Game Objects are positioned based on their center.
      * Setting the value to 0 means the position now relates to the left of the Game Object.
+     * Set this value with `setOrigin()`.
      *
      * @name Phaser.GameObjects.Components.Origin#originX
      * @type {number}
+     * @readonly
      * @default 0.5
      * @since 3.0.0
      */
@@ -45,9 +47,11 @@ var Origin = {
      * The origin maps the relationship between the size and position of the Game Object.
      * The default value is 0.5, meaning all Game Objects are positioned based on their center.
      * Setting the value to 0 means the position now relates to the top of the Game Object.
+     * Set this value with `setOrigin()`.
      *
      * @name Phaser.GameObjects.Components.Origin#originY
      * @type {number}
+     * @readonly
      * @default 0.5
      * @since 3.0.0
      */
