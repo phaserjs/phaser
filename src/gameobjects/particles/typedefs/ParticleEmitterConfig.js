@@ -20,7 +20,7 @@
  * @property {number} [maxParticles] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxParticles}.
  * @property {number} [maxAliveParticles] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxAliveParticles}.
  * @property {string} [name] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#name}.
- * @property {boolean} [on] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitting}.
+ * @property {boolean} [emitting] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitting}.
  * @property {boolean} [particleBringToTop] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleBringToTop}.
  * @property {function} [particleClass] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleClass}.
  * @property {boolean} [radial] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#radial}.
