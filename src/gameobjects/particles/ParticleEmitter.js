@@ -817,14 +817,14 @@ var ParticleEmitter = new Class({
         /**
          * Internal array that holds counter data:
          *
-         * 0 - _counter - The time until next flow cycle.
-         * 1 - _frameCounter - Counts up to {@link Phaser.GameObjects.Particles.ParticleEmitter#frameQuantity}.
-         * 2 - _animCounter (counts up to animQuantity)
-         * 3 - _elapsed - The time remaining until the `duration` limit is reached.
-         * 4 - _stopCounter - The number of particles remaining until `stopAfter` limit is reached.
-         * 5 - _completeFlag - Has the COMPLETE event been emitted?
-         * 6 - _emitIndex - The emit zone index counter.
-         * 7 - _zoneTotal - The emit zone total counter.
+         * 0 - flowCounter - The time until next flow cycle.
+         * 1 - frameCounter - Counts up to {@link Phaser.GameObjects.Particles.ParticleEmitter#frameQuantity}.
+         * 2 - animCounter - Counts up to animQuantity.
+         * 3 - elapsed - The time remaining until the `duration` limit is reached.
+         * 4 - stopCounter - The number of particles remaining until `stopAfter` limit is reached.
+         * 5 - completeFlag - Has the COMPLETE event been emitted?
+         * 6 - zoneIndex - The emit zone index counter.
+         * 7 - zoneTotal - The emit zone total counter.
          * 8 - currentFrame - The current texture frame, as an index of {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
          * 9 - currentAnim - The current animation, as an index of {@link Phaser.GameObjects.Particles.ParticleEmitter#anims}.
          *
@@ -1250,16 +1250,14 @@ var ParticleEmitter = new Class({
         }
         else
         {
-            var counters = this.counters;
-
-            current = frames[counters[8]];
+            current = frames[this.currentFrame];
 
             this.frameCounter++;
 
             if (this.frameCounter >= this.frameQuantity)
             {
                 this.frameCounter = 0;
-                counters[8] = Wrap(counters[8] + 1, 0, this._frameLength);
+                this.currentFrame = Wrap(this.currentFrame + 1, 0, this._frameLength);
             }
         }
 
@@ -1292,8 +1290,7 @@ var ParticleEmitter = new Class({
         this.randomFrame = pickRandom;
         this.frameQuantity = quantity;
 
-        //  currentFrame
-        this.counters[8] = 0;
+        this.currentFrame = 0;
 
         var t = typeof (frames);
 
@@ -1362,16 +1359,14 @@ var ParticleEmitter = new Class({
         }
         else
         {
-            var counters = this.counters;
-
-            var anim = anims[counters[9]];
+            var anim = anims[this.currentAnim];
 
             this.animCounter++;
 
             if (this.animCounter >= this.animQuantity)
             {
                 this.animCounter = 0;
-                counters[9] = Wrap(counters[9] + 1, 0, this._animLength);
+                this.currentAnim = Wrap(this.currentAnim + 1, 0, this._animLength);
             }
 
             return anim;
@@ -1402,8 +1397,7 @@ var ParticleEmitter = new Class({
         this.randomAnim = pickRandom;
         this.animQuantity = quantity;
 
-        //  currentAnim
-        this.counters[9] = 0;
+        this.currentAnim = 0;
 
         var t = typeof (anims);
 
@@ -2694,7 +2688,6 @@ var ParticleEmitter = new Class({
         }
 
         var dead = this.dead;
-        var counters = this.counters;
         var stopAfter = this.stopAfter;
 
         var followX = (this.follow) ? this.follow.x + this.followOffset.x : x;
@@ -2727,9 +2720,9 @@ var ParticleEmitter = new Class({
 
             if (stopAfter > 0)
             {
-                counters[4]++;
+                this.stopCounter++;
 
-                if (counters[4] >= stopAfter)
+                if (this.stopCounter >= stopAfter)
                 {
                     break;
                 }
@@ -2856,14 +2849,11 @@ var ParticleEmitter = new Class({
             }
         }
 
-        var counters = this.counters;
-
         if (!this.emitting && !this.skipping)
         {
-            if (counters[5] === 1 && particles.length === 0)
+            if (this.completeFlag === 1 && particles.length === 0)
             {
-                //  completeFlag
-                counters[5] = 0;
+                this.completeFlag = 0;
 
                 this.emit(Events.COMPLETE, this);
             }
@@ -2877,10 +2867,9 @@ var ParticleEmitter = new Class({
         }
         else if (this.frequency > 0)
         {
-            //  counter
             this.flowCounter -= delta;
 
-            if (this.flowCounter <= 0)
+            while (this.flowCounter <= 0)
             {
                 //  Emits the 'quantity' number of particles
                 this.emitParticle();
@@ -2896,52 +2885,20 @@ var ParticleEmitter = new Class({
             if (this.duration > 0)
             {
                 //  elapsed
-                counters[3] += delta;
+                this.elapsed += delta;
 
-                if (counters[3] >= this.duration)
+                if (this.elapsed >= this.duration)
                 {
                     this.stop();
                 }
             }
 
-            if (this.stopAfter > 0 && counters[4] >= this.stopAfter)
+            if (this.stopAfter > 0 && this.stopCounter >= this.stopAfter)
             {
                 this.stop();
             }
         }
     },
-
-    /**
-     * Gets the world transform matrix for this Particle Emitter, factoring in any parents.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#getWorldTransformMatrix
-     * @since 3.60.0
-     *
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A temporary matrix to hold parent values during the calculations.
-     *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
-    getWorldTransformMatrix: function (tempMatrix, parentMatrix)
-    {
-        if (tempMatrix === undefined) { tempMatrix = this.tempMatrix1; }
-        if (parentMatrix === undefined) { parentMatrix = this.tempMatrix2; }
-
-        var parent = this.manager;
-
-        tempMatrix.applyITRS(0, 0, 0, 1, 1);
-
-        while (parent)
-        {
-            parentMatrix.applyITRS(parent.x, parent.y, parent._rotation, parent._scaleX, parent._scaleY);
-
-            parentMatrix.multiply(tempMatrix, tempMatrix);
-
-            parent = parent.parentContainer;
-        }
-
-        return tempMatrix;
-    },
-     */
 
     /**
      * Takes either a Rectangle Geometry object or an Arcade Physics Body and tests
@@ -3702,6 +3659,8 @@ var ParticleEmitter = new Class({
     /**
      * The internal flow counter.
      *
+     * Treat this property as read-only.
+     *
      * @name Phaser.GameObjects.Particles.ParticleEmitter#flowCounter
      * @type {number}
      * @since 3.60.0
@@ -3723,6 +3682,8 @@ var ParticleEmitter = new Class({
     /**
      * The internal frame counter.
      *
+     * Treat this property as read-only.
+     *
      * @name Phaser.GameObjects.Particles.ParticleEmitter#frameCounter
      * @type {number}
      * @since 3.60.0
@@ -3742,7 +3703,9 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * The internal anim counter.
+     * The internal animation counter.
+     *
+     * Treat this property as read-only.
      *
      * @name Phaser.GameObjects.Particles.ParticleEmitter#animCounter
      * @type {number}
@@ -3763,7 +3726,78 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * The internal zone counter.
+     * The internal elasped counter.
+     *
+     * Treat this property as read-only.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#elapsed
+     * @type {number}
+     * @since 3.60.0
+     */
+    elapsed: {
+
+        get: function ()
+        {
+            return this.counters[3];
+        },
+
+        set: function (value)
+        {
+            this.counters[3] = value;
+        }
+
+    },
+
+    /**
+     * The internal stop counter.
+     *
+     * Treat this property as read-only.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#stopCounter
+     * @type {number}
+     * @since 3.60.0
+     */
+    stopCounter: {
+
+        get: function ()
+        {
+            return this.counters[4];
+        },
+
+        set: function (value)
+        {
+            this.counters[4] = value;
+        }
+
+    },
+
+    /**
+     * The internal complete flag.
+     *
+     * Treat this property as read-only.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#completeFlag
+     * @type {boolean}
+     * @since 3.60.0
+     */
+    completeFlag: {
+
+        get: function ()
+        {
+            return this.counters[5];
+        },
+
+        set: function (value)
+        {
+            this.counters[5] = value;
+        }
+
+    },
+
+    /**
+     * The internal zone index.
+     *
+     * Treat this property as read-only.
      *
      * @name Phaser.GameObjects.Particles.ParticleEmitter#zoneIndex
      * @type {number}
@@ -3784,7 +3818,9 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * The current emission zone index.
+     * The internal zone total.
+     *
+     * Treat this property as read-only.
      *
      * @name Phaser.GameObjects.Particles.ParticleEmitter#zoneTotal
      * @type {number}
@@ -3800,6 +3836,52 @@ var ParticleEmitter = new Class({
         set: function (value)
         {
             this.counters[7] = value;
+        }
+
+    },
+
+    /**
+     * The current frame index.
+     *
+     * Treat this property as read-only.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#currentFrame
+     * @type {number}
+     * @since 3.60.0
+     */
+    currentFrame: {
+
+        get: function ()
+        {
+            return this.counters[8];
+        },
+
+        set: function (value)
+        {
+            this.counters[8] = value;
+        }
+
+    },
+
+    /**
+     * The current animation index.
+     *
+     * Treat this property as read-only.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#currentAnim
+     * @type {number}
+     * @since 3.60.0
+     */
+    currentAnim: {
+
+        get: function ()
+        {
+            return this.counters[9];
+        },
+
+        set: function (value)
+        {
+            this.counters[9] = value;
         }
 
     },
