@@ -868,22 +868,13 @@ var ParticleEmitter = new Class({
         this.skipping = false;
 
         /**
-         * An internal Transform Matrix used for bounds calculations.
+         * An internal Transform Matrix used to cache this emitters world matrix.
          *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#tempMatrix1
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#worldMatrix
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.60.0
          */
-        this.tempMatrix1 = new TransformMatrix();
-
-        /**
-         * An internal Transform Matrix used for bounds calculations.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#tempMatrix2
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.60.0
-         */
-        this.tempMatrix2 = new TransformMatrix();
+        this.worldMatrix = new TransformMatrix();
 
         /**
          * Optionally sort the particles before they render based on this
@@ -2011,7 +2002,9 @@ var ParticleEmitter = new Class({
 
         for (var i = 0; i < zones.length; i++)
         {
-            if (zones[i].willKill(particle))
+            var bounds = particle.getBounds(this.worldMatrix);
+
+            if (zones[i].willKill(bounds.centerX, bounds.centerY))
             {
                 this.emit(Events.DEATH_ZONE, this, particle, zones[i]);
 
@@ -2702,20 +2695,25 @@ var ParticleEmitter = new Class({
                 particle = new this.particleClass(this);
             }
 
-            particle.fire(followX, followY);
-
-            if (this.particleBringToTop)
+            if (particle.fire(followX, followY))
             {
-                this.alive.push(particle);
+                if (this.particleBringToTop)
+                {
+                    this.alive.push(particle);
+                }
+                else
+                {
+                    this.alive.unshift(particle);
+                }
+
+                if (this.emitCallback)
+                {
+                    this.emitCallback.call(this.emitCallbackScope, particle, this);
+                }
             }
             else
             {
-                this.alive.unshift(particle);
-            }
-
-            if (this.emitCallback)
-            {
-                this.emitCallback.call(this.emitCallbackScope, particle, this);
+                this.dead.push(particle);
             }
 
             if (stopAfter > 0)
@@ -2798,6 +2796,11 @@ var ParticleEmitter = new Class({
         if (this.trackVisible)
         {
             this.visible = this.follow.visible;
+        }
+
+        if (this.deathZones.length > 0)
+        {
+            this.worldMatrix = this.getWorldTransformMatrix();
         }
 
         //  Any particle processors?
@@ -3931,8 +3934,7 @@ var ParticleEmitter = new Class({
         this.ops = null;
         this.alive = [];
         this.dead = [];
-        this.tempMatrix1.destroy();
-        this.tempMatrix2.destroy();
+        this.worldMatrix.destroy();
     }
 
 });
