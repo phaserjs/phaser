@@ -37208,35 +37208,33 @@ var SpinePlugin = new Class({
             return null;
         }
 
-        var gl = this.gl;
-        var i;
-        var atlasPage;
-        var realTextureKey;
-
-        if (this.isWebGL)
+        if (!this.spineTextures.has(atlasKey))
         {
-            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-        }
+            var gl = this.gl;
+            var i;
+            var atlasPage;
+            var realTextureKey;
 
-        for (i = 0; i < atlas.pages.length; i ++)
-        {
-            atlasPage = atlas.pages[i];
-            realTextureKey = atlasData.prefix ? atlasData.prefix + atlasPage.name : atlasPage.name;
             if (this.isWebGL)
             {
-                atlasPage.setTexture(new this.runtime.GLTexture(gl, this.textures.get(realTextureKey).getSourceImage(), false));
+                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
             }
-            else
+
+            for (i = 0; i < atlas.pages.length; i ++)
             {
-                atlasPage.setTexture(new this.runtime.CanvasTexture(this.textures.get(realTextureKey).getSourceImage()));
+                atlasPage = atlas.pages[i];
+                realTextureKey = atlasData.prefix ? atlasData.prefix + atlasPage.name : atlasPage.name;
+                if (this.isWebGL)
+                {
+                    atlasPage.setTexture(new this.runtime.GLTexture(gl, this.textures.get(realTextureKey).getSourceImage(), false));
+                }
+                else
+                {
+                    atlasPage.setTexture(new this.runtime.CanvasTexture(this.textures.get(realTextureKey).getSourceImage()));
+                }
             }
-        }
-
-        var spineTextureKey = atlasData.prefix ? atlasData.prefix + atlasKey : atlasKey;
-
-        if (!this.spineTextures.has(spineTextureKey))
-        {
-            this.spineTextures.add(spineTextureKey, atlas);
+        
+            this.spineTextures.add(atlasKey, atlas);
         }
 
         var preMultipliedAlpha = atlasData.preMultipliedAlpha;

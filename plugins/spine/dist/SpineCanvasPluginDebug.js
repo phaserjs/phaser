@@ -88,9 +88,9 @@ window["SpinePlugin"] =
 /******/ ({
 
 /***/ "../../../node_modules/eventemitter3/index.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/node_modules/eventemitter3/index.js ***!
-  \**************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/node_modules/eventemitter3/index.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -435,513 +435,360 @@ if (true) {
 
 /***/ }),
 
-/***/ "../../../src/core/events/BLUR_EVENT.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/BLUR_EVENT.js ***!
-  \********************************************************/
+/***/ "../../../node_modules/process/browser.js":
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/node_modules/process/browser.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
+// shim for using process in browser
+var process = module.exports = {};
 
-/**
- * The Game Blur Event.
- * 
- * This event is dispatched by the Game Visibility Handler when the window in which the Game instance is embedded
- * enters a blurred state. The blur event is raised when the window loses focus. This can happen if a user swaps
- * tab, or if they simply remove focus from the browser to another app.
- *
- * @event Phaser.Core.Events#BLUR
- * @since 3.0.0
- */
-module.exports = 'blur';
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
 
 
 /***/ }),
 
-/***/ "../../../src/core/events/BOOT_EVENT.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/BOOT_EVENT.js ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Boot Event.
- * 
- * This event is dispatched when the Phaser Game instance has finished booting, but before it is ready to start running.
- * The global systems use this event to know when to set themselves up, dispatching their own `ready` events as required.
- *
- * @event Phaser.Core.Events#BOOT
- * @since 3.0.0
- */
-module.exports = 'boot';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/CONTEXT_LOST_EVENT.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/CONTEXT_LOST_EVENT.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Context Lost Event.
- * 
- * This event is dispatched by the Game if the WebGL Renderer it is using encounters a WebGL Context Lost event from the browser.
- * 
- * The partner event is `CONTEXT_RESTORED`.
- *
- * @event Phaser.Core.Events#CONTEXT_LOST
- * @since 3.19.0
- */
-module.exports = 'contextlost';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/CONTEXT_RESTORED_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/CONTEXT_RESTORED_EVENT.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Context Restored Event.
- * 
- * This event is dispatched by the Game if the WebGL Renderer it is using encounters a WebGL Context Restored event from the browser.
- * 
- * The partner event is `CONTEXT_LOST`.
- *
- * @event Phaser.Core.Events#CONTEXT_RESTORED
- * @since 3.19.0
- */
-module.exports = 'contextrestored';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/DESTROY_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/DESTROY_EVENT.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Destroy Event.
- * 
- * This event is dispatched when the game instance has been told to destroy itself.
- * Lots of internal systems listen to this event in order to clear themselves out.
- * Custom plugins and game code should also do the same.
- *
- * @event Phaser.Core.Events#DESTROY
- * @since 3.0.0
- */
-module.exports = 'destroy';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/FOCUS_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/FOCUS_EVENT.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Focus Event.
- * 
- * This event is dispatched by the Game Visibility Handler when the window in which the Game instance is embedded
- * enters a focused state. The focus event is raised when the window re-gains focus, having previously lost it.
- *
- * @event Phaser.Core.Events#FOCUS
- * @since 3.0.0
- */
-module.exports = 'focus';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/HIDDEN_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/HIDDEN_EVENT.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Hidden Event.
- * 
- * This event is dispatched by the Game Visibility Handler when the document in which the Game instance is embedded
- * enters a hidden state. Only browsers that support the Visibility API will cause this event to be emitted.
- * 
- * In most modern browsers, when the document enters a hidden state, the Request Animation Frame and setTimeout, which
- * control the main game loop, will automatically pause. There is no way to stop this from happening. It is something
- * your game should account for in its own code, should the pause be an issue (i.e. for multiplayer games)
- *
- * @event Phaser.Core.Events#HIDDEN
- * @since 3.0.0
- */
-module.exports = 'hidden';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/PAUSE_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/PAUSE_EVENT.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Pause Event.
- * 
- * This event is dispatched when the Game loop enters a paused state, usually as a result of the Visibility Handler.
- *
- * @event Phaser.Core.Events#PAUSE
- * @since 3.0.0
- */
-module.exports = 'pause';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/POST_RENDER_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/POST_RENDER_EVENT.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Post-Render Event.
- * 
- * This event is dispatched right at the end of the render process.
- * 
- * Every Scene will have rendered and been drawn to the canvas by the time this event is fired.
- * Use it for any last minute post-processing before the next game step begins.
- *
- * @event Phaser.Core.Events#POST_RENDER
- * @since 3.0.0
- * 
- * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - A reference to the current renderer being used by the Game instance.
- */
-module.exports = 'postrender';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/POST_STEP_EVENT.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/POST_STEP_EVENT.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Post-Step Event.
- * 
- * This event is dispatched after the Scene Manager has updated.
- * Hook into it from plugins or systems that need to do things before the render starts.
- *
- * @event Phaser.Core.Events#POST_STEP
- * @since 3.0.0
- * 
- * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
- * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
- */
-module.exports = 'poststep';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/PRE_RENDER_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/PRE_RENDER_EVENT.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Pre-Render Event.
- * 
- * This event is dispatched immediately before any of the Scenes have started to render.
- * 
- * The renderer will already have been initialized this frame, clearing itself and preparing to receive the Scenes for rendering, but it won't have actually drawn anything yet.
- *
- * @event Phaser.Core.Events#PRE_RENDER
- * @since 3.0.0
- * 
- * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - A reference to the current renderer being used by the Game instance.
- */
-module.exports = 'prerender';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/PRE_STEP_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/PRE_STEP_EVENT.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Pre-Step Event.
- * 
- * This event is dispatched before the main Game Step starts. By this point in the game cycle none of the Scene updates have yet happened.
- * Hook into it from plugins or systems that need to update before the Scene Manager does.
- *
- * @event Phaser.Core.Events#PRE_STEP
- * @since 3.0.0
- * 
- * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
- * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
- */
-module.exports = 'prestep';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/READY_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/READY_EVENT.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Ready Event.
- * 
- * This event is dispatched when the Phaser Game instance has finished booting, the Texture Manager is fully ready,
- * and all local systems are now able to start.
- *
- * @event Phaser.Core.Events#READY
- * @since 3.0.0
- */
-module.exports = 'ready';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/RESUME_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/RESUME_EVENT.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Resume Event.
- * 
- * This event is dispatched when the game loop leaves a paused state and resumes running.
- *
- * @event Phaser.Core.Events#RESUME
- * @since 3.0.0
- */
-module.exports = 'resume';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/STEP_EVENT.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/STEP_EVENT.js ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Step Event.
- * 
- * This event is dispatched after the Game Pre-Step and before the Scene Manager steps.
- * Hook into it from plugins or systems that need to update before the Scene Manager does, but after the core Systems have.
- *
- * @event Phaser.Core.Events#STEP
- * @since 3.0.0
- * 
- * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
- * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
- */
-module.exports = 'step';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/VISIBLE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/VISIBLE_EVENT.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Game Visible Event.
- * 
- * This event is dispatched by the Game Visibility Handler when the document in which the Game instance is embedded
- * enters a visible state, previously having been hidden.
- * 
- * Only browsers that support the Visibility API will cause this event to be emitted.
- *
- * @event Phaser.Core.Events#VISIBLE
- * @since 3.0.0
- */
-module.exports = 'visible';
-
-
-/***/ }),
-
-/***/ "../../../src/core/events/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/core/events/index.js ***!
-  \***************************************************/
+/***/ "../../../src/const.js":
+/*!*************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/const.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * @namespace Phaser.Core.Events
+ * Global constants.
+ *
+ * @ignore
  */
 
-module.exports = {
+var CONST = {
 
-    BLUR: __webpack_require__(/*! ./BLUR_EVENT */ "../../../src/core/events/BLUR_EVENT.js"),
-    BOOT: __webpack_require__(/*! ./BOOT_EVENT */ "../../../src/core/events/BOOT_EVENT.js"),
-    CONTEXT_LOST: __webpack_require__(/*! ./CONTEXT_LOST_EVENT */ "../../../src/core/events/CONTEXT_LOST_EVENT.js"),
-    CONTEXT_RESTORED: __webpack_require__(/*! ./CONTEXT_RESTORED_EVENT */ "../../../src/core/events/CONTEXT_RESTORED_EVENT.js"),
-    DESTROY: __webpack_require__(/*! ./DESTROY_EVENT */ "../../../src/core/events/DESTROY_EVENT.js"),
-    FOCUS: __webpack_require__(/*! ./FOCUS_EVENT */ "../../../src/core/events/FOCUS_EVENT.js"),
-    HIDDEN: __webpack_require__(/*! ./HIDDEN_EVENT */ "../../../src/core/events/HIDDEN_EVENT.js"),
-    PAUSE: __webpack_require__(/*! ./PAUSE_EVENT */ "../../../src/core/events/PAUSE_EVENT.js"),
-    POST_RENDER: __webpack_require__(/*! ./POST_RENDER_EVENT */ "../../../src/core/events/POST_RENDER_EVENT.js"),
-    POST_STEP: __webpack_require__(/*! ./POST_STEP_EVENT */ "../../../src/core/events/POST_STEP_EVENT.js"),
-    PRE_RENDER: __webpack_require__(/*! ./PRE_RENDER_EVENT */ "../../../src/core/events/PRE_RENDER_EVENT.js"),
-    PRE_STEP: __webpack_require__(/*! ./PRE_STEP_EVENT */ "../../../src/core/events/PRE_STEP_EVENT.js"),
-    READY: __webpack_require__(/*! ./READY_EVENT */ "../../../src/core/events/READY_EVENT.js"),
-    RESUME: __webpack_require__(/*! ./RESUME_EVENT */ "../../../src/core/events/RESUME_EVENT.js"),
-    STEP: __webpack_require__(/*! ./STEP_EVENT */ "../../../src/core/events/STEP_EVENT.js"),
-    VISIBLE: __webpack_require__(/*! ./VISIBLE_EVENT */ "../../../src/core/events/VISIBLE_EVENT.js")
+    /**
+     * Phaser Release Version
+     *
+     * @name Phaser.VERSION
+     * @const
+     * @type {string}
+     * @since 3.0.0
+     */
+    VERSION: '3.60.0-beta.18',
+
+    BlendModes: __webpack_require__(/*! ./renderer/BlendModes */ "../../../src/renderer/BlendModes.js"),
+
+    ScaleModes: __webpack_require__(/*! ./renderer/ScaleModes */ "../../../src/renderer/ScaleModes.js"),
+
+    /**
+     * This setting will auto-detect if the browser is capable of suppporting WebGL.
+     * If it is, it will use the WebGL Renderer. If not, it will fall back to the Canvas Renderer.
+     *
+     * @name Phaser.AUTO
+     * @const
+     * @type {number}
+     * @since 3.0.0
+     */
+    AUTO: 0,
+
+    /**
+     * Forces Phaser to only use the Canvas Renderer, regardless if the browser supports
+     * WebGL or not.
+     *
+     * @name Phaser.CANVAS
+     * @const
+     * @type {number}
+     * @since 3.0.0
+     */
+    CANVAS: 1,
+
+    /**
+     * Forces Phaser to use the WebGL Renderer. If the browser does not support it, there is
+     * no fallback to Canvas with this setting, so you should trap it and display a suitable
+     * message to the user.
+     *
+     * @name Phaser.WEBGL
+     * @const
+     * @type {number}
+     * @since 3.0.0
+     */
+    WEBGL: 2,
+
+    /**
+     * A Headless Renderer doesn't create either a Canvas or WebGL Renderer. However, it still
+     * absolutely relies on the DOM being present and available. This mode is meant for unit testing,
+     * not for running Phaser on the server, which is something you really shouldn't do.
+     *
+     * @name Phaser.HEADLESS
+     * @const
+     * @type {number}
+     * @since 3.0.0
+     */
+    HEADLESS: 3,
+
+    /**
+     * In Phaser the value -1 means 'forever' in lots of cases, this const allows you to use it instead
+     * to help you remember what the value is doing in your code.
+     *
+     * @name Phaser.FOREVER
+     * @const
+     * @type {number}
+     * @since 3.0.0
+     */
+    FOREVER: -1,
+
+    /**
+     * Direction constant.
+     *
+     * @name Phaser.NONE
+     * @const
+     * @type {number}
+     * @since 3.0.0
+     */
+    NONE: 4,
+
+    /**
+     * Direction constant.
+     *
+     * @name Phaser.UP
+     * @const
+     * @type {number}
+     * @since 3.0.0
+     */
+    UP: 5,
+
+    /**
+     * Direction constant.
+     *
+     * @name Phaser.DOWN
+     * @const
+     * @type {number}
+     * @since 3.0.0
+     */
+    DOWN: 6,
+
+    /**
+     * Direction constant.
+     *
+     * @name Phaser.LEFT
+     * @const
+     * @type {number}
+     * @since 3.0.0
+     */
+    LEFT: 7,
+
+    /**
+     * Direction constant.
+     *
+     * @name Phaser.RIGHT
+     * @const
+     * @type {number}
+     * @since 3.0.0
+     */
+    RIGHT: 8
 
 };
+
+module.exports = CONST;
 
 
 /***/ }),
 
 /***/ "../../../src/data/DataManager.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/DataManager.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/DataManager.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1193,6 +1040,9 @@ var DataManager = new Class({
      * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.0.0
      *
+     * @generic {any} T
+     * @genericUse {(string|T)} - [key]
+     *
      * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
      * @param {*} data - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
@@ -1230,6 +1080,9 @@ var DataManager = new Class({
      * @fires Phaser.Data.Events#CHANGE_DATA
      * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.23.0
+     *
+     * @generic {any} T
+     * @genericUse {(string|T)} - [key]
      *
      * @param {(string|object)} key - The key to increase the value for.
      * @param {*} [data] - The value to increase for the given key.
@@ -1269,6 +1122,9 @@ var DataManager = new Class({
      * @fires Phaser.Data.Events#CHANGE_DATA
      * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.23.0
+     *
+     * @generic {any} T
+     * @genericUse {(string|T)} - [key]
      *
      * @param {(string|object)} key - The key to toggle the value for.
      *
@@ -1645,32 +1501,33 @@ module.exports = DataManager;
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
-  \***************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/CHANGE_DATA_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Change Data Event.
- * 
+ *
  * This event is dispatched by a Data Manager when an item in the data store is changed.
- * 
+ *
  * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
- * a change data event from a Game Object you would use: `sprite.data.on('changedata', listener)`.
- * 
+ * a change data event from a Game Object you would use: `sprite.on('changedata', listener)`.
+ *
  * This event is dispatched for all items that change in the Data Manager.
  * To listen for the change of a specific item, use the `CHANGE_DATA_KEY_EVENT` event.
  *
  * @event Phaser.Data.Events#CHANGE_DATA
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {any} parent - A reference to the object that the Data Manager responsible for this event belongs to.
  * @param {string} key - The unique key of the data item within the Data Manager.
  * @param {any} value - The new value of the item in the Data Manager.
@@ -1682,31 +1539,32 @@ module.exports = 'changedata';
 /***/ }),
 
 /***/ "../../../src/data/events/CHANGE_DATA_KEY_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
-  \*******************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/CHANGE_DATA_KEY_EVENT.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Change Data Key Event.
- * 
+ *
  * This event is dispatched by a Data Manager when an item in the data store is changed.
- * 
+ *
  * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
- * the change of a specific data item from a Game Object you would use: `sprite.data.on('changedata-key', listener)`,
+ * the change of a specific data item from a Game Object you would use: `sprite.on('changedata-key', listener)`,
  * where `key` is the unique string key of the data item. For example, if you have a data item stored called `gold`
- * then you can listen for `sprite.data.on('changedata-gold')`.
+ * then you can listen for `sprite.on('changedata-gold')`.
  *
  * @event Phaser.Data.Events#CHANGE_DATA_KEY
+ * @type {string}
  * @since 3.16.1
- * 
+ *
  * @param {any} parent - A reference to the object that owns the instance of the Data Manager responsible for this event.
  * @param {any} value - The item that was updated in the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
  * @param {any} previousValue - The previous item that was updated in the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
@@ -1717,15 +1575,15 @@ module.exports = 'changedata-';
 /***/ }),
 
 /***/ "../../../src/data/events/DESTROY_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/DESTROY_EVENT.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/DESTROY_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1735,6 +1593,7 @@ module.exports = 'changedata-';
  * The Data Manager will listen for the destroy event from its parent, and then close itself down.
  *
  * @event Phaser.Data.Events#DESTROY
+ * @type {string}
  * @since 3.50.0
  */
 module.exports = 'destroy';
@@ -1743,29 +1602,30 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/data/events/REMOVE_DATA_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
-  \***************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/REMOVE_DATA_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Remove Data Event.
- * 
+ *
  * This event is dispatched by a Data Manager when an item is removed from it.
- * 
+ *
  * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
- * the removal of a data item on a Game Object you would use: `sprite.data.on('removedata', listener)`.
+ * the removal of a data item on a Game Object you would use: `sprite.on('removedata', listener)`.
  *
  * @event Phaser.Data.Events#REMOVE_DATA
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {any} parent - A reference to the object that owns the instance of the Data Manager responsible for this event.
  * @param {string} key - The unique key of the data item within the Data Manager.
  * @param {any} data - The item that was removed from the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
@@ -1776,29 +1636,30 @@ module.exports = 'removedata';
 /***/ }),
 
 /***/ "../../../src/data/events/SET_DATA_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/SET_DATA_EVENT.js ***!
-  \************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/SET_DATA_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Set Data Event.
- * 
+ *
  * This event is dispatched by a Data Manager when a new item is added to the data store.
- * 
+ *
  * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
- * the addition of a new data item on a Game Object you would use: `sprite.data.on('setdata', listener)`.
+ * the addition of a new data item on a Game Object you would use: `sprite.on('setdata', listener)`.
  *
  * @event Phaser.Data.Events#SET_DATA
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {any} parent - A reference to the object that owns the instance of the Data Manager responsible for this event.
  * @param {string} key - The unique key of the data item within the Data Manager.
  * @param {any} data - The item that was added to the Data Manager. This can be of any data type, i.e. a string, boolean, number, object or instance.
@@ -1809,15 +1670,15 @@ module.exports = 'setdata';
 /***/ }),
 
 /***/ "../../../src/data/events/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/data/events/index.js ***!
-  \***************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/data/events/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -1838,22 +1699,1557 @@ module.exports = {
 
 /***/ }),
 
-/***/ "../../../src/display/mask/BitmapMask.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/display/mask/BitmapMask.js ***!
-  \*********************************************************/
+/***/ "../../../src/device/Audio.js":
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/device/Audio.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Browser = __webpack_require__(/*! ./Browser */ "../../../src/device/Browser.js");
+
+/**
+ * Determines the audio playback capabilities of the device running this Phaser Game instance.
+ * These values are read-only and populated during the boot sequence of the game.
+ * They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device.audio` from within any Scene.
+ *
+ * @typedef {object} Phaser.Device.Audio
+ * @since 3.0.0
+ *
+ * @property {boolean} audioData - Can this device play HTML Audio tags?
+ * @property {boolean} dolby - Can this device play EC-3 Dolby Digital Plus files?
+ * @property {boolean} m4a - Can this device can play m4a files.
+ * @property {boolean} aac - Can this device can play aac files.
+ * @property {boolean} flac - Can this device can play flac files.
+ * @property {boolean} mp3 - Can this device play mp3 files?
+ * @property {boolean} ogg - Can this device play ogg files?
+ * @property {boolean} opus - Can this device play opus files?
+ * @property {boolean} wav - Can this device play wav files?
+ * @property {boolean} webAudio - Does this device have the Web Audio API?
+ * @property {boolean} webm - Can this device play webm files?
+ */
+var Audio = {
+
+    flac: false,
+    aac: false,
+    audioData: false,
+    dolby: false,
+    m4a: false,
+    mp3: false,
+    ogg: false,
+    opus: false,
+    wav: false,
+    webAudio: false,
+    webm: false
+
+};
+
+function init ()
+{
+    if (typeof importScripts === 'function')
+    {
+        return Audio;
+    }
+
+    Audio.audioData = !!(window['Audio']);
+
+    Audio.webAudio = !!(window['AudioContext'] || window['webkitAudioContext']);
+
+    var audioElement = document.createElement('audio');
+    var result = !!audioElement.canPlayType;
+
+    try
+    {
+        if (result)
+        {
+            var CanPlay = function (type1, type2)
+            {
+                var canPlayType1 = audioElement.canPlayType('audio/' + type1).replace(/^no$/, '');
+
+                if (type2)
+                {
+                    return Boolean(canPlayType1 || audioElement.canPlayType('audio/' + type2).replace(/^no$/, ''));
+                }
+                else
+                {
+                    return Boolean(canPlayType1);
+                }
+            };
+
+            //  wav Mimetypes accepted:
+            //  developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
+
+            Audio.ogg = CanPlay('ogg; codecs="vorbis"');
+            Audio.opus = CanPlay('ogg; codecs="opus"', 'opus');
+            Audio.mp3 = CanPlay('mpeg');
+            Audio.wav = CanPlay('wav');
+            Audio.m4a = CanPlay('x-m4a');
+            Audio.aac = CanPlay('aac');
+            Audio.flac = CanPlay('flac', 'x-flac');
+            Audio.webm = CanPlay('webm; codecs="vorbis"');
+
+            if (audioElement.canPlayType('audio/mp4; codecs="ec-3"') !== '')
+            {
+                if (Browser.edge)
+                {
+                    Audio.dolby = true;
+                }
+                else if (Browser.safari && Browser.safariVersion >= 9)
+                {
+                    if ((/Mac OS X (\d+)_(\d+)/).test(navigator.userAgent))
+                    {
+                        var major = parseInt(RegExp.$1, 10);
+                        var minor = parseInt(RegExp.$2, 10);
+
+                        if ((major === 10 && minor >= 11) || major > 10)
+                        {
+                            Audio.dolby = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    catch (e)
+    {
+        //  Nothing to do here
+    }
+
+    return Audio;
+}
+
+module.exports = init();
+
+
+/***/ }),
+
+/***/ "../../../src/device/Browser.js":
+/*!**********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/device/Browser.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var OS = __webpack_require__(/*! ./OS */ "../../../src/device/OS.js");
+
+/**
+ * Determines the browser type and version running this Phaser Game instance.
+ * These values are read-only and populated during the boot sequence of the game.
+ * They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device.browser` from within any Scene.
+ *
+ * @typedef {object} Phaser.Device.Browser
+ * @since 3.0.0
+ *
+ * @property {boolean} chrome - Set to true if running in Chrome.
+ * @property {boolean} edge - Set to true if running in Microsoft Edge browser.
+ * @property {boolean} firefox - Set to true if running in Firefox.
+ * @property {boolean} ie - Set to true if running in Internet Explorer 11 or less (not Edge).
+ * @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
+ * @property {boolean} opera - Set to true if running in Opera.
+ * @property {boolean} safari - Set to true if running in Safari.
+ * @property {boolean} silk - Set to true if running in the Silk browser (as used on the Amazon Kindle)
+ * @property {boolean} trident - Set to true if running a Trident version of Internet Explorer (IE11+)
+ * @property {number} chromeVersion - If running in Chrome this will contain the major version number.
+ * @property {number} firefoxVersion - If running in Firefox this will contain the major version number.
+ * @property {number} ieVersion - If running in Internet Explorer this will contain the major version number. Beyond IE10 you should use Browser.trident and Browser.tridentVersion.
+ * @property {number} safariVersion - If running in Safari this will contain the major version number.
+ * @property {number} tridentVersion - If running in Internet Explorer 11 this will contain the major version number. See {@link http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx}
+ */
+var Browser = {
+
+    chrome: false,
+    chromeVersion: 0,
+    edge: false,
+    firefox: false,
+    firefoxVersion: 0,
+    ie: false,
+    ieVersion: 0,
+    mobileSafari: false,
+    opera: false,
+    safari: false,
+    safariVersion: 0,
+    silk: false,
+    trident: false,
+    tridentVersion: 0,
+    es2019: false
+
+};
+
+function init ()
+{
+    var ua = navigator.userAgent;
+
+    if ((/Edg\/\d+/).test(ua))
+    {
+        Browser.edge = true;
+        Browser.es2019 = true;
+    }
+    else if ((/OPR/).test(ua)) {
+        Browser.opera = true;
+        Browser.es2019 = true;
+    }
+    else if ((/Chrome\/(\d+)/).test(ua) && !OS.windowsPhone)
+    {
+        Browser.chrome = true;
+        Browser.chromeVersion = parseInt(RegExp.$1, 10);
+        Browser.es2019 = (Browser.chromeVersion > 69);
+    }
+    else if ((/Firefox\D+(\d+)/).test(ua))
+    {
+        Browser.firefox = true;
+        Browser.firefoxVersion = parseInt(RegExp.$1, 10);
+        Browser.es2019 = (Browser.firefoxVersion > 10);
+    }
+    else if ((/AppleWebKit/).test(ua) && OS.iOS)
+    {
+        Browser.mobileSafari = true;
+    }
+    else if ((/MSIE (\d+\.\d+);/).test(ua))
+    {
+        Browser.ie = true;
+        Browser.ieVersion = parseInt(RegExp.$1, 10);
+    }
+    else if ((/Version\/(\d+\.\d+) Safari/).test(ua) && !OS.windowsPhone)
+    {
+        Browser.safari = true;
+        Browser.safariVersion = parseInt(RegExp.$1, 10);
+        Browser.es2019 = (Browser.safariVersion > 10);
+    }
+    else if ((/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/).test(ua))
+    {
+        Browser.ie = true;
+        Browser.trident = true;
+        Browser.tridentVersion = parseInt(RegExp.$1, 10);
+        Browser.ieVersion = parseInt(RegExp.$3, 10);
+    }
+
+    //  Silk gets its own if clause because its ua also contains 'Safari'
+    if ((/Silk/).test(ua))
+    {
+        Browser.silk = true;
+    }
+
+    return Browser;
+}
+
+module.exports = init();
+
+
+/***/ }),
+
+/***/ "../../../src/device/CanvasFeatures.js":
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/device/CanvasFeatures.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var CanvasPool = __webpack_require__(/*! ../display/canvas/CanvasPool */ "../../../src/display/canvas/CanvasPool.js");
+
+/**
+ * Determines the canvas features of the browser running this Phaser Game instance.
+ * These values are read-only and populated during the boot sequence of the game.
+ * They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device.canvasFeatures` from within any Scene.
+ *
+ * @typedef {object} Phaser.Device.CanvasFeatures
+ * @since 3.0.0
+ *
+ * @property {boolean} supportInverseAlpha - Set to true if the browser supports inversed alpha.
+ * @property {boolean} supportNewBlendModes - Set to true if the browser supports new canvas blend modes.
+ */
+var CanvasFeatures = {
+
+    supportInverseAlpha: false,
+    supportNewBlendModes: false
+
+};
+
+function checkBlendMode ()
+{
+    var pngHead = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABAQMAAADD8p2OAAAAA1BMVEX/';
+    var pngEnd = 'AAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==';
+
+    var magenta = new Image();
+
+    magenta.onload = function ()
+    {
+        var yellow = new Image();
+
+        yellow.onload = function ()
+        {
+            var canvas = CanvasPool.create2D(yellow, 6);
+            var context = canvas.getContext('2d', { willReadFrequently: true });
+
+            context.globalCompositeOperation = 'multiply';
+
+            context.drawImage(magenta, 0, 0);
+            context.drawImage(yellow, 2, 0);
+
+            if (!context.getImageData(2, 0, 1, 1))
+            {
+                return false;
+            }
+
+            var data = context.getImageData(2, 0, 1, 1).data;
+
+            CanvasPool.remove(yellow);
+
+            CanvasFeatures.supportNewBlendModes = (data[0] === 255 && data[1] === 0 && data[2] === 0);
+        };
+
+        yellow.src = pngHead + '/wCKxvRF' + pngEnd;
+    };
+
+    magenta.src = pngHead + 'AP804Oa6' + pngEnd;
+
+    return false;
+}
+
+function checkInverseAlpha ()
+{
+    var canvas = CanvasPool.create2D(this, 2);
+    var context = canvas.getContext('2d', { willReadFrequently: true });
+
+    context.fillStyle = 'rgba(10, 20, 30, 0.5)';
+
+    //  Draw a single pixel
+    context.fillRect(0, 0, 1, 1);
+
+    //  Get the color values
+    var s1 = context.getImageData(0, 0, 1, 1);
+
+    if (s1 === null)
+    {
+        return false;
+    }
+
+    //  Plot them to x2
+    context.putImageData(s1, 1, 0);
+
+    //  Get those values
+    var s2 = context.getImageData(1, 0, 1, 1);
+
+    var result = (s2.data[0] === s1.data[0] && s2.data[1] === s1.data[1] && s2.data[2] === s1.data[2] && s2.data[3] === s1.data[3]);
+
+    CanvasPool.remove(this);
+
+    //  Compare and return
+    return result;
+}
+
+function init ()
+{
+    if (typeof importScripts !== 'function' && document !== undefined)
+    {
+        CanvasFeatures.supportNewBlendModes = checkBlendMode();
+        CanvasFeatures.supportInverseAlpha = checkInverseAlpha();
+    }
+
+    return CanvasFeatures;
+}
+
+module.exports = init();
+
+
+/***/ }),
+
+/***/ "../../../src/device/Features.js":
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/device/Features.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var OS = __webpack_require__(/*! ./OS */ "../../../src/device/OS.js");
+var Browser = __webpack_require__(/*! ./Browser */ "../../../src/device/Browser.js");
+var CanvasPool = __webpack_require__(/*! ../display/canvas/CanvasPool */ "../../../src/display/canvas/CanvasPool.js");
+
+/**
+ * Determines the features of the browser running this Phaser Game instance.
+ * These values are read-only and populated during the boot sequence of the game.
+ * They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device.features` from within any Scene.
+ *
+ * @typedef {object} Phaser.Device.Features
+ * @since 3.0.0
+ *
+ * @property {boolean} canvas - Is canvas available?
+ * @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
+ * @property {boolean} file - Is file available?
+ * @property {boolean} fileSystem - Is fileSystem available?
+ * @property {boolean} getUserMedia - Does the device support the getUserMedia API?
+ * @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
+ * @property {boolean} localStorage - Is localStorage available?
+ * @property {boolean} pointerLock - Is Pointer Lock available?
+ * @property {boolean} stableSort - Is Array.sort stable?
+ * @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
+ * @property {boolean} vibration - Does the device support the Vibration API?
+ * @property {boolean} webGL - Is webGL available?
+ * @property {boolean} worker - Is worker available?
+ */
+var Features = {
+
+    canvas: false,
+    canvasBitBltShift: null,
+    file: false,
+    fileSystem: false,
+    getUserMedia: true,
+    littleEndian: false,
+    localStorage: false,
+    pointerLock: false,
+    stableSort: false,
+    support32bit: false,
+    vibration: false,
+    webGL: false,
+    worker: false
+
+};
+
+// Check Little or Big Endian system.
+// @author Matt DesLauriers (@mattdesl)
+function checkIsLittleEndian ()
+{
+    var a = new ArrayBuffer(4);
+    var b = new Uint8Array(a);
+    var c = new Uint32Array(a);
+
+    b[0] = 0xa1;
+    b[1] = 0xb2;
+    b[2] = 0xc3;
+    b[3] = 0xd4;
+
+    if (c[0] === 0xd4c3b2a1)
+    {
+        return true;
+    }
+
+    if (c[0] === 0xa1b2c3d4)
+    {
+        return false;
+    }
+    else
+    {
+        //  Could not determine endianness
+        return null;
+    }
+}
+
+function init ()
+{
+    if (typeof importScripts === 'function')
+    {
+        return Features;
+    }
+
+    Features.canvas = !!window['CanvasRenderingContext2D'];
+
+    try
+    {
+        Features.localStorage = !!localStorage.getItem;
+    }
+    catch (error)
+    {
+        Features.localStorage = false;
+    }
+
+    Features.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
+    Features.fileSystem = !!window['requestFileSystem'];
+
+    var isUint8 = false;
+
+    var testWebGL = function ()
+    {
+        if (window['WebGLRenderingContext'])
+        {
+            try
+            {
+                var canvas = CanvasPool.createWebGL(this);
+
+                var ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+                var canvas2D = CanvasPool.create2D(this);
+
+                var ctx2D = canvas2D.getContext('2d', { willReadFrequently: true });
+
+                //  Can't be done on a webgl context
+                var image = ctx2D.createImageData(1, 1);
+
+                //  Test to see if ImageData uses CanvasPixelArray or Uint8ClampedArray.
+                //  @author Matt DesLauriers (@mattdesl)
+                isUint8 = image.data instanceof Uint8ClampedArray;
+
+                CanvasPool.remove(canvas);
+                CanvasPool.remove(canvas2D);
+
+                return !!ctx;
+            }
+            catch (e)
+            {
+                return false;
+            }
+        }
+
+        return false;
+    };
+
+    Features.webGL = testWebGL();
+
+    Features.worker = !!window['Worker'];
+
+    Features.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+
+    window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+
+    Features.getUserMedia = Features.getUserMedia && !!navigator.getUserMedia && !!window.URL;
+
+    // Older versions of firefox (< 21) apparently claim support but user media does not actually work
+    if (Browser.firefox && Browser.firefoxVersion < 21)
+    {
+        Features.getUserMedia = false;
+    }
+
+    // Excludes iOS versions as they generally wrap UIWebView (eg. Safari WebKit) and it
+    // is safer to not try and use the fast copy-over method.
+    if (!OS.iOS && (Browser.ie || Browser.firefox || Browser.chrome))
+    {
+        Features.canvasBitBltShift = true;
+    }
+
+    // Known not to work
+    if (Browser.safari || Browser.mobileSafari)
+    {
+        Features.canvasBitBltShift = false;
+    }
+
+    navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+
+    if (navigator.vibrate)
+    {
+        Features.vibration = true;
+    }
+
+    if (typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint32Array !== 'undefined')
+    {
+        Features.littleEndian = checkIsLittleEndian();
+    }
+
+    Features.support32bit = (
+        typeof ArrayBuffer !== 'undefined' &&
+        typeof Uint8ClampedArray !== 'undefined' &&
+        typeof Int32Array !== 'undefined' &&
+        Features.littleEndian !== null &&
+        isUint8
+    );
+
+    return Features;
+}
+
+module.exports = init();
+
+
+/***/ }),
+
+/***/ "../../../src/device/Fullscreen.js":
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/device/Fullscreen.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Determines the full screen support of the browser running this Phaser Game instance.
+ * These values are read-only and populated during the boot sequence of the game.
+ * They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device.fullscreen` from within any Scene.
+ *
+ * @typedef {object} Phaser.Device.Fullscreen
+ * @since 3.0.0
+ *
+ * @property {boolean} available - Does the browser support the Full Screen API?
+ * @property {boolean} keyboard - Does the browser support access to the Keyboard during Full Screen mode?
+ * @property {string} cancel - If the browser supports the Full Screen API this holds the call you need to use to cancel it.
+ * @property {string} request - If the browser supports the Full Screen API this holds the call you need to use to activate it.
+ */
+var Fullscreen = {
+
+    available: false,
+    cancel: '',
+    keyboard: false,
+    request: ''
+
+};
+
+/**
+* Checks for support of the Full Screen API.
+*
+* @ignore
+*/
+function init ()
+{
+    if (typeof importScripts === 'function')
+    {
+        return Fullscreen;
+    }
+
+    var i;
+
+    var suffix1 = 'Fullscreen';
+    var suffix2 = 'FullScreen';
+
+    var fs = [
+        'request' + suffix1,
+        'request' + suffix2,
+        'webkitRequest' + suffix1,
+        'webkitRequest' + suffix2,
+        'msRequest' + suffix1,
+        'msRequest' + suffix2,
+        'mozRequest' + suffix2,
+        'mozRequest' + suffix1
+    ];
+
+    for (i = 0; i < fs.length; i++)
+    {
+        if (document.documentElement[fs[i]])
+        {
+            Fullscreen.available = true;
+            Fullscreen.request = fs[i];
+            break;
+        }
+    }
+
+    var cfs = [
+        'cancel' + suffix2,
+        'exit' + suffix1,
+        'webkitCancel' + suffix2,
+        'webkitExit' + suffix1,
+        'msCancel' + suffix2,
+        'msExit' + suffix1,
+        'mozCancel' + suffix2,
+        'mozExit' + suffix1
+    ];
+
+    if (Fullscreen.available)
+    {
+        for (i = 0; i < cfs.length; i++)
+        {
+            if (document[cfs[i]])
+            {
+                Fullscreen.cancel = cfs[i];
+                break;
+            }
+        }
+    }
+
+    //  Keyboard Input?
+    //  Safari 5.1 says it supports fullscreen keyboard, but is lying.
+    if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT'] && !(/ Version\/5\.1(?:\.\d+)? Safari\//).test(navigator.userAgent))
+    {
+        Fullscreen.keyboard = true;
+    }
+
+    Object.defineProperty(Fullscreen, 'active', { get: function () { return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement); } });
+
+    return Fullscreen;
+}
+
+module.exports = init();
+
+
+/***/ }),
+
+/***/ "../../../src/device/Input.js":
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/device/Input.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Browser = __webpack_require__(/*! ./Browser */ "../../../src/device/Browser.js");
+
+/**
+ * Determines the input support of the browser running this Phaser Game instance.
+ * These values are read-only and populated during the boot sequence of the game.
+ * They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device.input` from within any Scene.
+ *
+ * @typedef {object} Phaser.Device.Input
+ * @since 3.0.0
+ *
+ * @property {?string} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
+ * @property {boolean} gamepads - Is navigator.getGamepads available?
+ * @property {boolean} mspointer - Is mspointer available?
+ * @property {boolean} touch - Is touch available?
+ */
+var Input = {
+
+    gamepads: false,
+    mspointer: false,
+    touch: false,
+    wheelEvent: null
+
+};
+
+function init ()
+{
+    if (typeof importScripts === 'function')
+    {
+        return Input;
+    }
+
+    if ('ontouchstart' in document.documentElement || (navigator.maxTouchPoints && navigator.maxTouchPoints >= 1))
+    {
+        Input.touch = true;
+    }
+
+    if (navigator.msPointerEnabled || navigator.pointerEnabled)
+    {
+        Input.mspointer = true;
+    }
+
+    if (navigator.getGamepads)
+    {
+        Input.gamepads = true;
+    }
+
+    // See https://developer.mozilla.org/en-US/docs/Web/Events/wheel
+    if ('onwheel' in window || (Browser.ie && 'WheelEvent' in window))
+    {
+        // DOM3 Wheel Event: FF 17+, IE 9+, Chrome 31+, Safari 7+
+        Input.wheelEvent = 'wheel';
+    }
+    else if ('onmousewheel' in window)
+    {
+        // Non-FF legacy: IE 6-9, Chrome 1-31, Safari 5-7.
+        Input.wheelEvent = 'mousewheel';
+    }
+    else if (Browser.firefox && 'MouseScrollEvent' in window)
+    {
+        // FF prior to 17. This should probably be scrubbed.
+        Input.wheelEvent = 'DOMMouseScroll';
+    }
+
+    return Input;
+}
+
+module.exports = init();
+
+
+/***/ }),
+
+/***/ "../../../src/device/OS.js":
+/*!*****************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/device/OS.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Determines the operating system of the device running this Phaser Game instance.
+ * These values are read-only and populated during the boot sequence of the game.
+ * They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device.os` from within any Scene.
+ *
+ * @typedef {object} Phaser.Device.OS
+ * @since 3.0.0
+ *
+ * @property {boolean} android - Is running on android?
+ * @property {boolean} chromeOS - Is running on chromeOS?
+ * @property {boolean} cordova - Is the game running under Apache Cordova?
+ * @property {boolean} crosswalk - Is the game running under the Intel Crosswalk XDK?
+ * @property {boolean} desktop - Is running on a desktop?
+ * @property {boolean} ejecta - Is the game running under Ejecta?
+ * @property {boolean} electron - Is the game running under GitHub Electron?
+ * @property {boolean} iOS - Is running on iOS?
+ * @property {boolean} iPad - Is running on iPad?
+ * @property {boolean} iPhone - Is running on iPhone?
+ * @property {boolean} kindle - Is running on an Amazon Kindle?
+ * @property {boolean} linux - Is running on linux?
+ * @property {boolean} macOS - Is running on macOS?
+ * @property {boolean} node - Is the game running under Node.js?
+ * @property {boolean} nodeWebkit - Is the game running under Node-Webkit?
+ * @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
+ * @property {boolean} windows - Is running on windows?
+ * @property {boolean} windowsPhone - Is running on a Windows Phone?
+ * @property {number} iOSVersion - If running in iOS this will contain the major version number.
+ * @property {number} pixelRatio - PixelRatio of the host device?
+ */
+var OS = {
+
+    android: false,
+    chromeOS: false,
+    cordova: false,
+    crosswalk: false,
+    desktop: false,
+    ejecta: false,
+    electron: false,
+    iOS: false,
+    iOSVersion: 0,
+    iPad: false,
+    iPhone: false,
+    kindle: false,
+    linux: false,
+    macOS: false,
+    node: false,
+    nodeWebkit: false,
+    pixelRatio: 1,
+    webApp: false,
+    windows: false,
+    windowsPhone: false
+
+};
+
+function init ()
+{
+    if (typeof importScripts === 'function')
+    {
+        return OS;
+    }
+
+    var ua = navigator.userAgent;
+
+    if ((/Windows/).test(ua))
+    {
+        OS.windows = true;
+    }
+    else if ((/Mac OS/).test(ua) && !((/like Mac OS/).test(ua)))
+    {
+        //  Because iOS 13 identifies as Mac OS:
+        if (navigator.maxTouchPoints && navigator.maxTouchPoints > 2)
+        {
+            OS.iOS = true;
+            OS.iPad = true;
+
+            (navigator.appVersion).match(/Version\/(\d+)/);
+
+            OS.iOSVersion = parseInt(RegExp.$1, 10);
+        }
+        else
+        {
+            OS.macOS = true;
+        }
+    }
+    else if ((/Android/).test(ua))
+    {
+        OS.android = true;
+    }
+    else if ((/Linux/).test(ua))
+    {
+        OS.linux = true;
+    }
+    else if ((/iP[ao]d|iPhone/i).test(ua))
+    {
+        OS.iOS = true;
+
+        (navigator.appVersion).match(/OS (\d+)/);
+
+        OS.iOSVersion = parseInt(RegExp.$1, 10);
+
+        OS.iPhone = ua.toLowerCase().indexOf('iphone') !== -1;
+        OS.iPad = ua.toLowerCase().indexOf('ipad') !== -1;
+    }
+    else if ((/Kindle/).test(ua) || (/\bKF[A-Z][A-Z]+/).test(ua) || (/Silk.*Mobile Safari/).test(ua))
+    {
+        OS.kindle = true;
+
+        // This will NOT detect early generations of Kindle Fire, I think there is no reliable way...
+        // E.g. "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us; Silk/1.1.0-80) AppleWebKit/533.16 (KHTML, like Gecko) Version/5.0 Safari/533.16 Silk-Accelerated=true"
+    }
+    else if ((/CrOS/).test(ua))
+    {
+        OS.chromeOS = true;
+    }
+
+    if ((/Windows Phone/i).test(ua) || (/IEMobile/i).test(ua))
+    {
+        OS.android = false;
+        OS.iOS = false;
+        OS.macOS = false;
+        OS.windows = true;
+        OS.windowsPhone = true;
+    }
+
+    var silk = (/Silk/).test(ua);
+
+    if (OS.windows || OS.macOS || (OS.linux && !silk) || OS.chromeOS)
+    {
+        OS.desktop = true;
+    }
+
+    //  Windows Phone / Table reset
+    if (OS.windowsPhone || (((/Windows NT/i).test(ua)) && ((/Touch/i).test(ua))))
+    {
+        OS.desktop = false;
+    }
+
+    //  WebApp mode in iOS
+    if (navigator.standalone)
+    {
+        OS.webApp = true;
+    }
+
+    if (typeof importScripts !== 'function')
+    {
+        if (window.cordova !== undefined)
+        {
+            OS.cordova = true;
+        }
+
+        if (window.ejecta !== undefined)
+        {
+            OS.ejecta = true;
+        }
+    }
+
+    if (typeof process !== 'undefined' && process.versions && process.versions.node)
+    {
+        OS.node = true;
+    }
+
+    if (OS.node && typeof process.versions === 'object')
+    {
+        OS.nodeWebkit = !!process.versions['node-webkit'];
+
+        OS.electron = !!process.versions.electron;
+    }
+
+    if ((/Crosswalk/).test(ua))
+    {
+        OS.crosswalk = true;
+    }
+
+    OS.pixelRatio = window['devicePixelRatio'] || 1;
+
+    return OS;
+}
+
+module.exports = init();
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "../../../node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "../../../src/device/Video.js":
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/device/Video.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Determines the video support of the browser running this Phaser Game instance.
+ * These values are read-only and populated during the boot sequence of the game.
+ * They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device.video` from within any Scene.
+ *
+ * In Phaser 3.20 the properties were renamed to drop the 'Video' suffix.
+ *
+ * @typedef {object} Phaser.Device.Video
+ * @since 3.0.0
+ *
+ * @property {boolean} h264 - Can this device play h264 mp4 video files?
+ * @property {boolean} hls - Can this device play hls video files?
+ * @property {boolean} mp4 - Can this device play h264 mp4 video files?
+ * @property {boolean} m4v - Can this device play m4v (typically mp4) video files?
+ * @property {boolean} ogg - Can this device play ogg video files?
+ * @property {boolean} vp9 - Can this device play vp9 video files?
+ * @property {boolean} webm - Can this device play webm video files?
+ */
+var Video = {
+
+    h264: false,
+    hls: false,
+    mp4: false,
+    m4v: false,
+    ogg: false,
+    vp9: false,
+    webm: false
+
+};
+
+function init ()
+{
+    if (typeof importScripts === 'function')
+    {
+        return Video;
+    }
+
+    var videoElement = document.createElement('video');
+    var result = !!videoElement.canPlayType;
+    var no = /^no$/;
+
+    try
+    {
+        if (result)
+        {
+            if (videoElement.canPlayType('video/ogg; codecs="theora"').replace(no, ''))
+            {
+                Video.ogg = true;
+            }
+
+            if (videoElement.canPlayType('video/mp4; codecs="avc1.42E01E"').replace(no, ''))
+            {
+                // Without QuickTime, this value will be `undefined`. github.com/Modernizr/Modernizr/issues/546
+                Video.h264 = true;
+                Video.mp4 = true;
+            }
+
+            if (videoElement.canPlayType('video/x-m4v').replace(no, ''))
+            {
+                Video.m4v = true;
+            }
+
+            if (videoElement.canPlayType('video/webm; codecs="vp8, vorbis"').replace(no, ''))
+            {
+                Video.webm = true;
+            }
+
+            if (videoElement.canPlayType('video/webm; codecs="vp9"').replace(no, ''))
+            {
+                Video.vp9 = true;
+            }
+
+            if (videoElement.canPlayType('application/x-mpegURL; codecs="avc1.42E01E"').replace(no, ''))
+            {
+                Video.hls = true;
+            }
+        }
+    }
+    catch (e)
+    {
+        //  Nothing to do
+    }
+
+    return Video;
+}
+
+module.exports = init();
+
+
+/***/ }),
+
+/***/ "../../../src/device/index.js":
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/device/index.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  This singleton is instantiated as soon as Phaser loads,
+//  before a Phaser.Game instance has even been created.
+//  Which means all instances of Phaser Games can share it,
+//  without having to re-poll the device all over again
+
+/**
+ * @namespace Phaser.Device
+ * @since 3.0.0
+ */
+
+/**
+ * @typedef {object} Phaser.DeviceConf
+ *
+ * @property {Phaser.Device.OS} os - The OS Device functions.
+ * @property {Phaser.Device.Browser} browser - The Browser Device functions.
+ * @property {Phaser.Device.Features} features - The Features Device functions.
+ * @property {Phaser.Device.Input} input - The Input Device functions.
+ * @property {Phaser.Device.Audio} audio - The Audio Device functions.
+ * @property {Phaser.Device.Video} video - The Video Device functions.
+ * @property {Phaser.Device.Fullscreen} fullscreen - The Fullscreen Device functions.
+ * @property {Phaser.Device.CanvasFeatures} canvasFeatures - The Canvas Device functions.
+ */
+
+module.exports = {
+
+    os: __webpack_require__(/*! ./OS */ "../../../src/device/OS.js"),
+    browser: __webpack_require__(/*! ./Browser */ "../../../src/device/Browser.js"),
+    features: __webpack_require__(/*! ./Features */ "../../../src/device/Features.js"),
+    input: __webpack_require__(/*! ./Input */ "../../../src/device/Input.js"),
+    audio: __webpack_require__(/*! ./Audio */ "../../../src/device/Audio.js"),
+    video: __webpack_require__(/*! ./Video */ "../../../src/device/Video.js"),
+    fullscreen: __webpack_require__(/*! ./Fullscreen */ "../../../src/device/Fullscreen.js"),
+    canvasFeatures: __webpack_require__(/*! ./CanvasFeatures */ "../../../src/device/CanvasFeatures.js")
+
+};
+
+
+/***/ }),
+
+/***/ "../../../src/display/canvas/CanvasPool.js":
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/display/canvas/CanvasPool.js ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var CONST = __webpack_require__(/*! ../../const */ "../../../src/const.js");
+var Smoothing = __webpack_require__(/*! ./Smoothing */ "../../../src/display/canvas/Smoothing.js");
+
+// The pool into which the canvas elements are placed.
+var pool = [];
+
+//  Automatically apply smoothing(false) to created Canvas elements
+var _disableContextSmoothing = false;
+
+/**
+ * The CanvasPool is a global static object, that allows Phaser to recycle and pool 2D Context Canvas DOM elements.
+ * It does not pool WebGL Contexts, because once the context options are set they cannot be modified again,
+ * which is useless for some of the Phaser pipelines / renderer.
+ *
+ * This singleton is instantiated as soon as Phaser loads, before a Phaser.Game instance has even been created.
+ * Which means all instances of Phaser Games on the same page can share the one single pool.
+ *
+ * @namespace Phaser.Display.Canvas.CanvasPool
+ * @since 3.0.0
+ */
+var CanvasPool = function ()
+{
+    /**
+     * Creates a new Canvas DOM element, or pulls one from the pool if free.
+     *
+     * @function Phaser.Display.Canvas.CanvasPool.create
+     * @since 3.0.0
+     *
+     * @param {*} parent - The parent of the Canvas object.
+     * @param {number} [width=1] - The width of the Canvas.
+     * @param {number} [height=1] - The height of the Canvas.
+     * @param {number} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
+     * @param {boolean} [selfParent=false] - Use the generated Canvas element as the parent?
+     *
+     * @return {HTMLCanvasElement} The canvas element that was created or pulled from the pool
+     */
+    var create = function (parent, width, height, canvasType, selfParent)
+    {
+        if (width === undefined) { width = 1; }
+        if (height === undefined) { height = 1; }
+        if (canvasType === undefined) { canvasType = CONST.CANVAS; }
+        if (selfParent === undefined) { selfParent = false; }
+
+        var canvas;
+        var container = first(canvasType);
+
+        if (container === null)
+        {
+            container = {
+                parent: parent,
+                canvas: document.createElement('canvas'),
+                type: canvasType
+            };
+
+            if (canvasType === CONST.CANVAS)
+            {
+                pool.push(container);
+            }
+
+            canvas = container.canvas;
+        }
+        else
+        {
+            container.parent = parent;
+
+            canvas = container.canvas;
+        }
+
+        if (selfParent)
+        {
+            container.parent = canvas;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        if (_disableContextSmoothing && canvasType === CONST.CANVAS)
+        {
+            Smoothing.disable(canvas.getContext('2d'));
+        }
+
+        return canvas;
+    };
+
+    /**
+     * Creates a new Canvas DOM element, or pulls one from the pool if free.
+     *
+     * @function Phaser.Display.Canvas.CanvasPool.create2D
+     * @since 3.0.0
+     *
+     * @param {*} parent - The parent of the Canvas object.
+     * @param {number} [width=1] - The width of the Canvas.
+     * @param {number} [height=1] - The height of the Canvas.
+     *
+     * @return {HTMLCanvasElement} The created canvas.
+     */
+    var create2D = function (parent, width, height)
+    {
+        return create(parent, width, height, CONST.CANVAS);
+    };
+
+    /**
+     * Creates a new Canvas DOM element, or pulls one from the pool if free.
+     *
+     * @function Phaser.Display.Canvas.CanvasPool.createWebGL
+     * @since 3.0.0
+     *
+     * @param {*} parent - The parent of the Canvas object.
+     * @param {number} [width=1] - The width of the Canvas.
+     * @param {number} [height=1] - The height of the Canvas.
+     *
+     * @return {HTMLCanvasElement} The created WebGL canvas.
+     */
+    var createWebGL = function (parent, width, height)
+    {
+        return create(parent, width, height, CONST.WEBGL);
+    };
+
+    /**
+     * Gets the first free canvas index from the pool.
+     *
+     * @function Phaser.Display.Canvas.CanvasPool.first
+     * @since 3.0.0
+     *
+     * @param {number} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
+     *
+     * @return {HTMLCanvasElement} The first free canvas, or `null` if a WebGL canvas was requested or if the pool doesn't have free canvases.
+     */
+    var first = function (canvasType)
+    {
+        if (canvasType === undefined) { canvasType = CONST.CANVAS; }
+
+        if (canvasType === CONST.WEBGL)
+        {
+            return null;
+        }
+
+        for (var i = 0; i < pool.length; i++)
+        {
+            var container = pool[i];
+
+            if (!container.parent && container.type === canvasType)
+            {
+                return container;
+            }
+        }
+
+        return null;
+    };
+
+    /**
+     * Looks up a canvas based on its parent, and if found puts it back in the pool, freeing it up for re-use.
+     * The canvas has its width and height set to 1, and its parent attribute nulled.
+     *
+     * @function Phaser.Display.Canvas.CanvasPool.remove
+     * @since 3.0.0
+     *
+     * @param {*} parent - The canvas or the parent of the canvas to free.
+     */
+    var remove = function (parent)
+    {
+        //  Check to see if the parent is a canvas object
+        var isCanvas = parent instanceof HTMLCanvasElement;
+
+        pool.forEach(function (container)
+        {
+            if ((isCanvas && container.canvas === parent) || (!isCanvas && container.parent === parent))
+            {
+                container.parent = null;
+                container.canvas.width = 1;
+                container.canvas.height = 1;
+            }
+        });
+    };
+
+    /**
+     * Gets the total number of used canvas elements in the pool.
+     *
+     * @function Phaser.Display.Canvas.CanvasPool.total
+     * @since 3.0.0
+     *
+     * @return {number} The number of used canvases.
+     */
+    var total = function ()
+    {
+        var c = 0;
+
+        pool.forEach(function (container)
+        {
+            if (container.parent)
+            {
+                c++;
+            }
+        });
+
+        return c;
+    };
+
+    /**
+     * Gets the total number of free canvas elements in the pool.
+     *
+     * @function Phaser.Display.Canvas.CanvasPool.free
+     * @since 3.0.0
+     *
+     * @return {number} The number of free canvases.
+     */
+    var free = function ()
+    {
+        return pool.length - total();
+    };
+
+    /**
+     * Disable context smoothing on any new Canvas element created.
+     *
+     * @function Phaser.Display.Canvas.CanvasPool.disableSmoothing
+     * @since 3.0.0
+     */
+    var disableSmoothing = function ()
+    {
+        _disableContextSmoothing = true;
+    };
+
+    /**
+     * Enable context smoothing on any new Canvas element created.
+     *
+     * @function Phaser.Display.Canvas.CanvasPool.enableSmoothing
+     * @since 3.0.0
+     */
+    var enableSmoothing = function ()
+    {
+        _disableContextSmoothing = false;
+    };
+
+    return {
+        create2D: create2D,
+        create: create,
+        createWebGL: createWebGL,
+        disableSmoothing: disableSmoothing,
+        enableSmoothing: enableSmoothing,
+        first: first,
+        free: free,
+        pool: pool,
+        remove: remove,
+        total: total
+    };
+};
+
+//  If we export the called function here, it'll only be invoked once (not every time it's required).
+module.exports = CanvasPool();
+
+
+/***/ }),
+
+/***/ "../../../src/display/canvas/Smoothing.js":
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/display/canvas/Smoothing.js ***!
+  \********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  Browser specific prefix, so not going to change between contexts, only between browsers
+var prefix = '';
+
+/**
+ * @namespace Phaser.Display.Canvas.Smoothing
+ * @since 3.0.0
+ */
+var Smoothing = function ()
+{
+    /**
+     * Gets the Smoothing Enabled vendor prefix being used on the given context, or null if not set.
+     *
+     * @function Phaser.Display.Canvas.Smoothing.getPrefix
+     * @since 3.0.0
+     *
+     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - The canvas context to check.
+     *
+     * @return {string} The name of the property on the context which controls image smoothing (either `imageSmoothingEnabled` or a vendor-prefixed version thereof), or `null` if not supported.
+     */
+    var getPrefix = function (context)
+    {
+        var vendors = [ 'i', 'webkitI', 'msI', 'mozI', 'oI' ];
+
+        for (var i = 0; i < vendors.length; i++)
+        {
+            var s = vendors[i] + 'mageSmoothingEnabled';
+
+            if (s in context)
+            {
+                return s;
+            }
+        }
+
+        return null;
+    };
+
+    /**
+     * Sets the Image Smoothing property on the given context. Set to false to disable image smoothing.
+     * By default browsers have image smoothing enabled, which isn't always what you visually want, especially
+     * when using pixel art in a game. Note that this sets the property on the context itself, so that any image
+     * drawn to the context will be affected. This sets the property across all current browsers but support is
+     * patchy on earlier browsers, especially on mobile.
+     *
+     * @function Phaser.Display.Canvas.Smoothing.enable
+     * @since 3.0.0
+     *
+     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - The context on which to enable smoothing.
+     *
+     * @return {(CanvasRenderingContext2D|WebGLRenderingContext)} The provided context.
+     */
+    var enable = function (context)
+    {
+        if (prefix === '')
+        {
+            prefix = getPrefix(context);
+        }
+
+        if (prefix)
+        {
+            context[prefix] = true;
+        }
+
+        return context;
+    };
+
+    /**
+     * Sets the Image Smoothing property on the given context. Set to false to disable image smoothing.
+     * By default browsers have image smoothing enabled, which isn't always what you visually want, especially
+     * when using pixel art in a game. Note that this sets the property on the context itself, so that any image
+     * drawn to the context will be affected. This sets the property across all current browsers but support is
+     * patchy on earlier browsers, especially on mobile.
+     *
+     * @function Phaser.Display.Canvas.Smoothing.disable
+     * @since 3.0.0
+     *
+     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - The context on which to disable smoothing.
+     *
+     * @return {(CanvasRenderingContext2D|WebGLRenderingContext)} The provided context.
+     */
+    var disable = function (context)
+    {
+        if (prefix === '')
+        {
+            prefix = getPrefix(context);
+        }
+
+        if (prefix)
+        {
+            context[prefix] = false;
+        }
+
+        return context;
+    };
+
+    /**
+     * Returns `true` if the given context has image smoothing enabled, otherwise returns `false`.
+     * Returns null if no smoothing prefix is available.
+     *
+     * @function Phaser.Display.Canvas.Smoothing.isEnabled
+     * @since 3.0.0
+     *
+     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - The context to check.
+     *
+     * @return {?boolean} `true` if smoothing is enabled on the context, otherwise `false`. `null` if not supported.
+     */
+    var isEnabled = function (context)
+    {
+        return (prefix !== null) ? context[prefix] : null;
+    };
+
+    return {
+        disable: disable,
+        enable: enable,
+        getPrefix: getPrefix,
+        isEnabled: isEnabled
+    };
+
+};
+
+module.exports = Smoothing();
+
+
+/***/ }),
+
+/***/ "../../../src/display/mask/BitmapMask.js":
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/display/mask/BitmapMask.js ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Class.js");
-var GameEvents = __webpack_require__(/*! ../../core/events */ "../../../src/core/events/index.js");
-var RenderEvents = __webpack_require__(/*! ../../renderer/events */ "../../../src/renderer/events/index.js");
+var GameObjectFactory = __webpack_require__(/*! ../../gameobjects/GameObjectFactory */ "../../../src/gameobjects/GameObjectFactory.js");
 
 /**
  * @classdesc
@@ -1861,7 +3257,7 @@ var RenderEvents = __webpack_require__(/*! ../../renderer/events */ "../../../sr
  * Unlike the Geometry Mask, which is a clipping path, a Bitmap Mask behaves like an alpha mask,
  * not a clipping path. It is only available when using the WebGL Renderer.
  *
- * A Bitmap Mask can use any Game Object to determine the alpha of each pixel of the masked Game Object(s).
+ * A Bitmap Mask can use any Game Object or Dynamic Texture to determine the alpha of each pixel of the masked Game Object(s).
  * For any given point of a masked Game Object's texture, the pixel's alpha will be multiplied by the alpha
  * of the pixel at the same position in the Bitmap Mask's Game Object. The color of the pixel from the
  * Bitmap Mask doesn't matter.
@@ -1890,87 +3286,38 @@ var RenderEvents = __webpack_require__(/*! ../../renderer/events */ "../../../sr
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - The Scene which this Bitmap Mask will be used in.
- * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
+ * @param {Phaser.Scene} scene - The Scene to which this mask is being added.
+ * @param {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)} [maskObject] - The Game Object or Dynamic Texture that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
+ * @param {number} [x] - If creating a Game Object, the horizontal position in the world.
+ * @param {number} [y] - If creating a Game Object, the vertical position in the world.
+ * @param {(string|Phaser.Textures.Texture)} [texture] - If creating a Game Object, the key, or instance of the Texture it will use to render with, as stored in the Texture Manager.
+ * @param {(string|number|Phaser.Textures.Frame)} [frame] - If creating a Game Object, an optional frame from the Texture this Game Object is rendering with.
  */
 var BitmapMask = new Class({
 
     initialize:
 
-    function BitmapMask (scene, renderable)
+    function BitmapMask (scene, maskObject, x, y, texture, frame)
     {
-        var renderer = scene.sys.renderer;
+        if (!maskObject)
+        {
+            maskObject = scene.sys.make.image({ x: x, y: y, key: texture, frame: frame, add: false });
+        }
 
         /**
-         * A reference to either the Canvas or WebGL Renderer that this Mask is using.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#renderer
-         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
-         * @since 3.11.0
-         */
-        this.renderer = renderer;
-
-        /**
-         * A renderable Game Object that uses a texture, such as a Sprite.
+         * The Game Object that is used as the mask. Must use a texture, such as a Sprite.
          *
          * @name Phaser.Display.Masks.BitmapMask#bitmapMask
-         * @type {Phaser.GameObjects.GameObject}
+         * @type {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)}
          * @since 3.0.0
          */
-        this.bitmapMask = renderable;
-
-        /**
-         * The texture used for the masks framebuffer.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#maskTexture
-         * @type {WebGLTexture}
-         * @default null
-         * @since 3.0.0
-         */
-        this.maskTexture = null;
-
-        /**
-         * The texture used for the main framebuffer.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#mainTexture
-         * @type {WebGLTexture}
-         * @default null
-         * @since 3.0.0
-         */
-        this.mainTexture = null;
-
-        /**
-         * Whether the Bitmap Mask is dirty and needs to be updated.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#dirty
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.dirty = true;
-
-        /**
-         * The framebuffer to which a masked Game Object is rendered.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#mainFramebuffer
-         * @type {WebGLFramebuffer}
-         * @since 3.0.0
-         */
-        this.mainFramebuffer = null;
-
-        /**
-         * The framebuffer to which the Bitmap Mask's masking Game Object is rendered.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#maskFramebuffer
-         * @type {WebGLFramebuffer}
-         * @since 3.0.0
-         */
-        this.maskFramebuffer = null;
+        this.bitmapMask = maskObject;
 
         /**
          * Whether to invert the masks alpha.
          *
          * If `true`, the alpha of the masking pixel will be inverted before it's multiplied with the masked pixel.
+         *
          * Essentially, this means that a masked area will be visible only if the corresponding area in the mask is invisible.
          *
          * @name Phaser.Display.Masks.BitmapMask#invertAlpha
@@ -1980,7 +3327,7 @@ var BitmapMask = new Class({
         this.invertAlpha = false;
 
         /**
-         * Is this mask a stencil mask?
+         * Is this mask a stencil mask? This is false by default and should not be changed.
          *
          * @name Phaser.Display.Masks.BitmapMask#isStencil
          * @type {boolean}
@@ -1988,92 +3335,23 @@ var BitmapMask = new Class({
          * @since 3.17.0
          */
         this.isStencil = false;
-
-        this.createMask();
-
-        scene.sys.game.events.on(GameEvents.CONTEXT_RESTORED, this.createMask, this);
-
-        if (renderer)
-        {
-            renderer.on(RenderEvents.RESIZE, this.createMask, this);
-        }
     },
 
     /**
-     * Creates the WebGL Texture2D objects and Framebuffers required for this
-     * mask. If this mask has already been created, then `clearMask` is called first.
+     * Sets a new Game Object or Dynamic Texture for this Bitmap Mask to use.
      *
-     * @method Phaser.Display.Masks.BitmapMask#createMask
-     * @since 3.50.0
-     */
-    createMask: function ()
-    {
-        var renderer = this.renderer;
-
-        if (!renderer || !renderer.gl)
-        {
-            return;
-        }
-
-        if (this.mainTexture)
-        {
-            this.clearMask();
-        }
-
-        var width = renderer.width;
-        var height = renderer.height;
-        var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
-        var gl = renderer.gl;
-        var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
-        var filter = gl.LINEAR;
-
-        this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-        this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-        this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
-        this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
-    },
-
-    /**
-     * Deletes the `mainTexture` and `maskTexture` WebGL Textures and deletes
-     * the `mainFramebuffer` and `maskFramebuffer` too, nulling all references.
+     * If a Game Object it must have a texture, such as a Sprite.
      *
-     * This is called when this mask is destroyed, or if you try to creat a new
-     * mask from this object when one is already set.
-     *
-     * @method Phaser.Display.Masks.BitmapMask#clearMask
-     * @since 3.50.0
-     */
-    clearMask: function ()
-    {
-        var renderer = this.renderer;
-
-        if (!renderer || !renderer.gl || !this.mainTexture)
-        {
-            return;
-        }
-
-        renderer.deleteTexture(this.mainTexture);
-        renderer.deleteTexture(this.maskTexture);
-        renderer.deleteFramebuffer(this.mainFramebuffer);
-        renderer.deleteFramebuffer(this.maskFramebuffer);
-
-        this.mainTexture = null;
-        this.maskTexture = null;
-        this.mainFramebuffer = null;
-        this.maskFramebuffer = null;
-    },
-
-    /**
-     * Sets a new masking Game Object for the Bitmap Mask.
+     * You can update the source of the mask as often as you like.
      *
      * @method Phaser.Display.Masks.BitmapMask#setBitmap
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)} maskObject - The Game Object or Dynamic Texture that will be used as the mask. If a Game Object, it must have a texture, such as a Sprite.
      */
-    setBitmap: function (renderable)
+    setBitmap: function (maskObject)
     {
-        this.bitmapMask = renderable;
+        this.bitmapMask = maskObject;
     },
 
     /**
@@ -2102,10 +3380,12 @@ var BitmapMask = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The WebGL Renderer to clean up.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} [renderTarget] - Optional WebGL RenderTarget.
      */
-    postRenderWebGL: function (renderer, camera)
+    postRenderWebGL: function (renderer, camera, renderTarget)
     {
-        renderer.pipelines.BITMAPMASK_PIPELINE.endMask(this, camera);
+        renderer.pipelines.BITMAPMASK_PIPELINE.endMask(this, camera, renderTarget);
     },
 
     /**
@@ -2147,18 +3427,54 @@ var BitmapMask = new Class({
      */
     destroy: function ()
     {
-        this.clearMask();
-
-        if (this.renderer)
-        {
-            this.renderer.off(RenderEvents.RESIZE, this.createMask, this);
-        }
-        
         this.bitmapMask = null;
-        this.prevFramebuffer = null;
-        this.renderer = null;
     }
 
+});
+
+/**
+ * A Bitmap Mask combines the alpha (opacity) of a masked pixel with the alpha of another pixel.
+ * Unlike the Geometry Mask, which is a clipping path, a Bitmap Mask behaves like an alpha mask,
+ * not a clipping path. It is only available when using the WebGL Renderer.
+ *
+ * A Bitmap Mask can use any Game Object, or Dynamic Texture, to determine the alpha of each pixel of the masked Game Object(s).
+ * For any given point of a masked Game Object's texture, the pixel's alpha will be multiplied by the alpha
+ * of the pixel at the same position in the Bitmap Mask's Game Object. The color of the pixel from the
+ * Bitmap Mask doesn't matter.
+ *
+ * For example, if a pure blue pixel with an alpha of 0.95 is masked with a pure red pixel with an
+ * alpha of 0.5, the resulting pixel will be pure blue with an alpha of 0.475. Naturally, this means
+ * that a pixel in the mask with an alpha of 0 will hide the corresponding pixel in all masked Game Objects
+ *  A pixel with an alpha of 1 in the masked Game Object will receive the same alpha as the
+ * corresponding pixel in the mask.
+ *
+ * Note: You cannot combine Bitmap Masks and Blend Modes on the same Game Object. You can, however,
+ * combine Geometry Masks and Blend Modes together.
+ *
+ * The Bitmap Mask's location matches the location of its Game Object, not the location of the
+ * masked objects. Moving or transforming the underlying Game Object will change the mask
+ * (and affect the visibility of any masked objects), whereas moving or transforming a masked object
+ * will not affect the mask.
+ *
+ * The Bitmap Mask will not render its Game Object by itself. If the Game Object is not in a
+ * Scene's display list, it will only be used for the mask and its full texture will not be directly
+ * visible. Adding the underlying Game Object to a Scene will not cause any problems - it will
+ * render as a normal Game Object and will also serve as a mask.
+ *
+ * @method Phaser.GameObjects.GameObjectFactory#bitmapMask
+ * @since 3.60.0
+ *
+ * @param {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)} [maskObject] - The Game Object or Texture that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
+ * @param {number} [x] - If creating a Game Object, the horizontal position in the world.
+ * @param {number} [y] - If creating a Game Object, the vertical position in the world.
+ * @param {(string|Phaser.Textures.Texture)} [texture] - If creating a Game Object, the key, or instance of the Texture it will use to render with, as stored in the Texture Manager.
+ * @param {(string|number|Phaser.Textures.Frame)} [frame] - If creating a Game Object, an optional frame from the Texture this Game Object is rendering with.
+ *
+ * @return {Phaser.Display.Masks.BitmapMask} The Bitmap Mask that was created.
+ */
+GameObjectFactory.register('bitmapMask', function (maskObject, x, y, key, frame)
+{
+    return new BitmapMask(this.scene, maskObject, x, y, key, frame);
 });
 
 module.exports = BitmapMask;
@@ -2167,15 +3483,15 @@ module.exports = BitmapMask;
 /***/ }),
 
 /***/ "../../../src/display/mask/GeometryMask.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/display/mask/GeometryMask.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/display/mask/GeometryMask.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2492,15 +3808,15 @@ module.exports = GeometryMask;
 /***/ }),
 
 /***/ "../../../src/gameobjects/BuildGameObject.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/BuildGameObject.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/BuildGameObject.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2625,15 +3941,15 @@ module.exports = BuildGameObject;
 /***/ }),
 
 /***/ "../../../src/gameobjects/GameObject.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/GameObject.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/GameObject.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -2967,6 +4283,9 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#setData
      * @since 3.0.0
      *
+     * @generic {any} T
+     * @genericUse {(string|T)} - [key]
+     *
      * @param {(string|object)} key - The key to set the value for. Or an object of key value pairs. If an object the `data` argument is ignored.
      * @param {*} [data] - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
@@ -2997,6 +4316,9 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#incData
      * @since 3.23.0
      *
+     * @generic {any} T
+     * @genericUse {(string|T)} - [key]
+     *
      * @param {(string|object)} key - The key to increase the value for.
      * @param {*} [data] - The value to increase for the given key.
      *
@@ -3026,6 +4348,9 @@ var GameObject = new Class({
      *
      * @method Phaser.GameObjects.GameObject#toggleData
      * @since 3.23.0
+     *
+     * @generic {any} T
+     * @genericUse {(string|T)} - [key]
      *
      * @param {(string|object)} key - The key to toggle the value for.
      *
@@ -3137,10 +4462,7 @@ var GameObject = new Class({
      */
     disableInteractive: function ()
     {
-        if (this.input)
-        {
-            this.input.enabled = false;
-        }
+        this.scene.sys.input.disable(this);
 
         return this;
     },
@@ -3247,7 +4569,9 @@ var GameObject = new Class({
      */
     willRender: function (camera)
     {
-        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
+        var listWillRender = (this.displayList && this.displayList.active) ? this.displayList.willRender(camera) : true;
+
+        return !(!listWillRender || GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
     },
 
     /**
@@ -3397,7 +4721,7 @@ var GameObject = new Class({
     {
         var displayList = this.displayList || this.scene.sys.displayList;
 
-        if (displayList.exists(this))
+        if (displayList && displayList.exists(this))
         {
             displayList.remove(this, true);
 
@@ -3454,8 +4778,10 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#destroy
      * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.0.0
+     *
+     * @param {boolean} [fromScene=false] - `True` if this Game Object is being destroyed by the Scene, `false` if not.
      */
-    destroy: function ()
+    destroy: function (fromScene)
     {
         //  This Game Object has already been destroyed
         if (!this.scene || this.ignoreDestroy)
@@ -3463,12 +4789,14 @@ var GameObject = new Class({
             return;
         }
 
+        if (fromScene === undefined) { fromScene = false; }
+
         if (this.preDestroy)
         {
             this.preDestroy.call(this);
         }
 
-        this.emit(Events.DESTROY, this);
+        this.emit(Events.DESTROY, this, fromScene);
 
         this.removeAllListeners();
 
@@ -3524,16 +4852,254 @@ module.exports = GameObject;
 
 /***/ }),
 
-/***/ "../../../src/gameobjects/components/Alpha.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Alpha.js ***!
-  \**************************************************************/
+/***/ "../../../src/gameobjects/GameObjectFactory.js":
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/GameObjectFactory.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var PluginCache = __webpack_require__(/*! ../plugins/PluginCache */ "../../../src/plugins/PluginCache.js");
+var SceneEvents = __webpack_require__(/*! ../scene/events */ "../../../src/scene/events/index.js");
+
+/**
+ * @classdesc
+ * The Game Object Factory is a Scene plugin that allows you to quickly create many common
+ * types of Game Objects and have them automatically registered with the Scene.
+ *
+ * Game Objects directly register themselves with the Factory and inject their own creation
+ * methods into the class.
+ *
+ * @class GameObjectFactory
+ * @memberof Phaser.GameObjects
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object Factory belongs.
+ */
+var GameObjectFactory = new Class({
+
+    initialize:
+
+    function GameObjectFactory (scene)
+    {
+        /**
+         * The Scene to which this Game Object Factory belongs.
+         *
+         * @name Phaser.GameObjects.GameObjectFactory#scene
+         * @type {Phaser.Scene}
+         * @protected
+         * @since 3.0.0
+         */
+        this.scene = scene;
+
+        /**
+         * A reference to the Scene.Systems.
+         *
+         * @name Phaser.GameObjects.GameObjectFactory#systems
+         * @type {Phaser.Scenes.Systems}
+         * @protected
+         * @since 3.0.0
+         */
+        this.systems = scene.sys;
+
+        /**
+         * A reference to the Scene Event Emitter.
+         *
+         * @name Phaser.GameObjects.GameObjectFactory#events
+         * @type {Phaser.Events.EventEmitter}
+         * @protected
+         * @since 3.50.0
+         */
+        this.events = scene.sys.events;
+
+        /**
+         * A reference to the Scene Display List.
+         *
+         * @name Phaser.GameObjects.GameObjectFactory#displayList
+         * @type {Phaser.GameObjects.DisplayList}
+         * @protected
+         * @since 3.0.0
+         */
+        this.displayList;
+
+        /**
+         * A reference to the Scene Update List.
+         *
+         * @name Phaser.GameObjects.GameObjectFactory#updateList
+         * @type {Phaser.GameObjects.UpdateList}
+         * @protected
+         * @since 3.0.0
+         */
+        this.updateList;
+
+        this.events.once(SceneEvents.BOOT, this.boot, this);
+        this.events.on(SceneEvents.START, this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.GameObjects.GameObjectFactory#boot
+     * @private
+     * @since 3.5.1
+     */
+    boot: function ()
+    {
+        this.displayList = this.systems.displayList;
+        this.updateList = this.systems.updateList;
+
+        this.events.once(SceneEvents.DESTROY, this.destroy, this);
+    },
+
+    /**
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.GameObjects.GameObjectFactory#start
+     * @private
+     * @since 3.5.0
+     */
+    start: function ()
+    {
+        this.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
+    },
+
+    /**
+     * Adds an existing Game Object to this Scene.
+     *
+     * If the Game Object renders, it will be added to the Display List.
+     * If it has a `preUpdate` method, it will be added to the Update List.
+     *
+     * @method Phaser.GameObjects.GameObjectFactory#existing
+     * @since 3.0.0
+     *
+     * @generic {(Phaser.GameObjects.GameObject|Phaser.GameObjects.Group|Phaser.GameObjects.Layer)} G - [child,$return]
+     *
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.Group|Phaser.GameObjects.Layer)} child - The child to be added to this Scene.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that was added.
+     */
+    existing: function (child)
+    {
+        if (child.renderCanvas || child.renderWebGL)
+        {
+            this.displayList.add(child);
+        }
+
+        //  For when custom objects have overridden `preUpdate` but don't hook into the ADDED_TO_SCENE event:
+        //  Adding to the list multiple times is safe, as it won't add duplicates into the list anyway.
+        if (child.preUpdate)
+        {
+            this.updateList.add(child);
+        }
+
+        return child;
+    },
+
+    /**
+     * The Scene that owns this plugin is shutting down.
+     * We need to kill and reset all internal properties as well as stop listening to Scene events.
+     *
+     * @method Phaser.GameObjects.GameObjectFactory#shutdown
+     * @private
+     * @since 3.0.0
+     */
+    shutdown: function ()
+    {
+        this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
+    },
+
+    /**
+     * The Scene that owns this plugin is being destroyed.
+     * We need to shutdown and then kill off all external references.
+     *
+     * @method Phaser.GameObjects.GameObjectFactory#destroy
+     * @private
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.shutdown();
+
+        this.events.off(SceneEvents.START, this.start, this);
+
+        this.scene = null;
+        this.systems = null;
+        this.events = null;
+
+        this.displayList = null;
+        this.updateList = null;
+    }
+
+});
+
+/**
+ * Static method called directly by the Game Object factory functions.
+ * With this method you can register a custom GameObject factory in the GameObjectFactory,
+ * providing a name (`factoryType`) and the constructor (`factoryFunction`) in order
+ * to be called when you call to Phaser.Scene.add[ factoryType ] method.
+ *
+ * @method Phaser.GameObjects.GameObjectFactory.register
+ * @static
+ * @since 3.0.0
+ *
+ * @param {string} factoryType - The key of the factory that you will use to call to Phaser.Scene.add[ factoryType ] method.
+ * @param {function} factoryFunction - The constructor function to be called when you invoke to the Phaser.Scene.add method.
+ */
+GameObjectFactory.register = function (factoryType, factoryFunction)
+{
+    if (!GameObjectFactory.prototype.hasOwnProperty(factoryType))
+    {
+        GameObjectFactory.prototype[factoryType] = factoryFunction;
+    }
+};
+
+/**
+ * Static method called directly by the Game Object factory functions.
+ * With this method you can remove a custom GameObject factory registered in the GameObjectFactory,
+ * providing a its `factoryType`.
+ *
+ * @method Phaser.GameObjects.GameObjectFactory.remove
+ * @static
+ * @since 3.0.0
+ *
+ * @param {string} factoryType - The key of the factory that you want to remove from the GameObjectFactory.
+ */
+GameObjectFactory.remove = function (factoryType)
+{
+    if (GameObjectFactory.prototype.hasOwnProperty(factoryType))
+    {
+        delete GameObjectFactory.prototype[factoryType];
+    }
+};
+
+PluginCache.register('GameObjectFactory', GameObjectFactory, 'add');
+
+module.exports = GameObjectFactory;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/Alpha.js":
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Alpha.js ***!
+  \************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3825,15 +5391,15 @@ module.exports = Alpha;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/AlphaSingle.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/AlphaSingle.js ***!
-  \********************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/AlphaSingle.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3940,15 +5506,15 @@ module.exports = AlphaSingle;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/BlendMode.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/BlendMode.js ***!
-  \******************************************************************/
+/*!****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/BlendMode.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -3966,7 +5532,7 @@ var BlendMode = {
 
     /**
      * Private internal value. Holds the current blend mode.
-     * 
+     *
      * @name Phaser.GameObjects.Components.BlendMode#_blendMode
      * @type {number}
      * @private
@@ -3982,6 +5548,7 @@ var BlendMode = {
      *
      * Under WebGL only the following Blend Modes are available:
      *
+     * * NORMAL
      * * ADD
      * * MULTIPLY
      * * SCREEN
@@ -3997,7 +5564,7 @@ var BlendMode = {
      * are used.
      *
      * @name Phaser.GameObjects.Components.BlendMode#blendMode
-     * @type {(Phaser.BlendModes|string)}
+     * @type {(Phaser.BlendModes|string|number)}
      * @since 3.0.0
      */
     blendMode: {
@@ -4031,6 +5598,7 @@ var BlendMode = {
      *
      * Under WebGL only the following Blend Modes are available:
      *
+     * * NORMAL
      * * ADD
      * * MULTIPLY
      * * SCREEN
@@ -4048,7 +5616,7 @@ var BlendMode = {
      * @method Phaser.GameObjects.Components.BlendMode#setBlendMode
      * @since 3.0.0
      *
-     * @param {(string|Phaser.BlendModes)} value - The BlendMode value. Either a string or a CONST.
+     * @param {(string|Phaser.BlendModes|number)} value - The BlendMode value. Either a string, a CONST or a number.
      *
      * @return {this} This Game Object instance.
      */
@@ -4067,22 +5635,22 @@ module.exports = BlendMode;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ComputedSize.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ComputedSize.js ***!
-  \*********************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/ComputedSize.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Provides methods used for calculating and setting the size of a non-Frame based Game Object.
  * Should be applied as a mixin and not used directly.
- * 
+ *
  * @namespace Phaser.GameObjects.Components.ComputedSize
  * @since 3.0.0
  */
@@ -4091,11 +5659,11 @@ var ComputedSize = {
 
     /**
      * The native (un-scaled) width of this Game Object.
-     * 
+     *
      * Changing this value will not change the size that the Game Object is rendered in-game.
      * For that you need to either set the scale of the Game Object (`setScale`) or use
      * the `displayWidth` property.
-     * 
+     *
      * @name Phaser.GameObjects.Components.ComputedSize#width
      * @type {number}
      * @since 3.0.0
@@ -4104,11 +5672,11 @@ var ComputedSize = {
 
     /**
      * The native (un-scaled) height of this Game Object.
-     * 
+     *
      * Changing this value will not change the size that the Game Object is rendered in-game.
      * For that you need to either set the scale of the Game Object (`setScale`) or use
      * the `displayHeight` property.
-     * 
+     *
      * @name Phaser.GameObjects.Components.ComputedSize#height
      * @type {number}
      * @since 3.0.0
@@ -4117,11 +5685,11 @@ var ComputedSize = {
 
     /**
      * The displayed width of this Game Object.
-     * 
+     *
      * This value takes into account the scale factor.
-     * 
+     *
      * Setting this value will adjust the Game Object's scale property.
-     * 
+     *
      * @name Phaser.GameObjects.Components.ComputedSize#displayWidth
      * @type {number}
      * @since 3.0.0
@@ -4142,11 +5710,11 @@ var ComputedSize = {
 
     /**
      * The displayed height of this Game Object.
-     * 
+     *
      * This value takes into account the scale factor.
-     * 
+     *
      * Setting this value will adjust the Game Object's scale property.
-     * 
+     *
      * @name Phaser.GameObjects.Components.ComputedSize#displayHeight
      * @type {number}
      * @since 3.0.0
@@ -4167,21 +5735,21 @@ var ComputedSize = {
 
     /**
      * Sets the internal size of this Game Object, as used for frame or physics body creation.
-     * 
+     *
      * This will not change the size that the Game Object is rendered in-game.
      * For that you need to either set the scale of the Game Object (`setScale`) or call the
      * `setDisplaySize` method, which is the same thing as changing the scale but allows you
      * to do so by giving pixel values.
-     * 
+     *
      * If you have enabled this Game Object for input, changing the size will _not_ change the
      * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
-     * 
+     *
      * @method Phaser.GameObjects.Components.ComputedSize#setSize
      * @since 3.4.0
      *
      * @param {number} width - The width of this Game Object.
      * @param {number} height - The height of this Game Object.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setSize: function (width, height)
@@ -4194,15 +5762,15 @@ var ComputedSize = {
 
     /**
      * Sets the display size of this Game Object.
-     * 
+     *
      * Calling this will adjust the scale.
-     * 
+     *
      * @method Phaser.GameObjects.Components.ComputedSize#setDisplaySize
      * @since 3.4.0
      *
      * @param {number} width - The width of this Game Object.
      * @param {number} height - The height of this Game Object.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setDisplaySize: function (width, height)
@@ -4221,15 +5789,15 @@ module.exports = ComputedSize;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Crop.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Crop.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Crop.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4273,24 +5841,24 @@ var Crop = {
 
     /**
      * Applies a crop to a texture based Game Object, such as a Sprite or Image.
-     * 
+     *
      * The crop is a rectangle that limits the area of the texture frame that is visible during rendering.
-     * 
+     *
      * Cropping a Game Object does not change its size, dimensions, physics body or hit area, it just
      * changes what is shown when rendered.
-     * 
+     *
      * The crop coordinates are relative to the texture frame, not the Game Object, meaning 0 x 0 is the top-left.
-     * 
+     *
      * Therefore, if you had a Game Object that had an 800x600 sized texture, and you wanted to show only the left
      * half of it, you could call `setCrop(0, 0, 400, 600)`.
-     * 
+     *
      * It is also scaled to match the Game Object scale automatically. Therefore a crop rect of 100x50 would crop
      * an area of 200x100 when applied to a Game Object that had a scale factor of 2.
-     * 
+     *
      * You can either pass in numeric values directly, or you can provide a single Rectangle object as the first argument.
-     * 
+     *
      * Call this method with no arguments at all to reset the crop, or toggle the property `isCropped` to `false`.
-     * 
+     *
      * You should do this if the crop rectangle becomes the same size as the frame itself, as it will allow
      * the renderer to skip several internal calculations.
      *
@@ -4335,7 +5903,7 @@ var Crop = {
      * @method Phaser.GameObjects.Components.Crop#resetCropObject
      * @private
      * @since 3.12.0
-     * 
+     *
      * @return {object} The crop object.
      */
     resetCropObject: function ()
@@ -4351,15 +5919,15 @@ module.exports = Crop;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Depth.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Depth.js ***!
-  \**************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Depth.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4385,7 +5953,7 @@ var Depth = {
     _depth: 0,
 
     /**
-     * The depth of this Game Object within the Scene.
+     * The depth of this Game Object within the Scene. Ensure this value is only ever set to a number data-type.
      *
      * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
      * of Game Objects, without actually moving their position in the display list.
@@ -4432,7 +6000,7 @@ var Depth = {
      * @method Phaser.GameObjects.Components.Depth#setDepth
      * @since 3.0.0
      *
-     * @param {number} value - The depth of this Game Object.
+     * @param {number} value - The depth of this Game Object. Ensure this value is only ever a number data-type.
      *
      * @return {this} This Game Object instance.
      */
@@ -4452,23 +6020,130 @@ module.exports = Depth;
 
 /***/ }),
 
-/***/ "../../../src/gameobjects/components/Flip.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Flip.js ***!
-  \*************************************************************/
+/***/ "../../../src/gameobjects/components/FX.js":
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/FX.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Provides methods used for setting the FX values of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @namespace Phaser.GameObjects.Components.FX
+ * @webglOnly
+ * @since 3.60.0
+ */
+
+var FX = {
+
+    /**
+     * The amount of extra padding to be applied to this Game Object
+     * when it is being rendered by a SpriteFX Pipeline.
+     *
+     * Lots of FX require additional spacing added to the texture the
+     * Game Object uses, for example a glow or shadow effect, and this
+     * method allows you to control how much extra padding is included
+     * in addition to the texture size.
+     *
+     * @name Phaser.GameObjects.Components.FX#fxPadding
+     * @type {number}
+     * @default 0
+     * @since 3.60.0
+     */
+    fxPadding: 0,
+
+    /**
+     * Sets the amount of extra padding to be applied to this Game Object
+     * when it is being rendered by a SpriteFX Pipeline.
+     *
+     * Lots of FX require additional spacing added to the texture the
+     * Game Object uses, for example a glow or shadow effect, and this
+     * method allows you to control how much extra padding is included
+     * in addition to the texture size.
+     *
+     * @method Phaser.GameObjects.Components.FX#setFXPadding
+     * @webglOnly
+     * @since 3.60.0
+     *
+     * @param {number} [padding=0] - The amount of padding to add to the texture.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setFXPadding: function (padding)
+    {
+        if (padding === undefined) { padding = 0; }
+
+        this.fxPadding = padding;
+
+        return this;
+    },
+
+    /**
+     * This callback is invoked when this Game Object is copied by a SpriteFX Pipeline.
+     *
+     * This happens when the pipeline uses its `copySprite` method.
+     *
+     * It's invoked prior to the copy, allowing you to set shader uniforms, etc on the pipeline.
+     *
+     * @method Phaser.GameObjects.Components.FX#onFXCopy
+     * @webglOnly
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline} pipeline - The SpriteFX Pipeline that invoked this callback.
+     */
+    onFXCopy: function ()
+    {
+    },
+
+    /**
+     * This callback is invoked when this Game Object is rendered by a SpriteFX Pipeline.
+     *
+     * This happens when the pipeline uses its `drawSprite` method.
+     *
+     * It's invoked prior to the draw, allowing you to set shader uniforms, etc on the pipeline.
+     *
+     * @method Phaser.GameObjects.Components.FX#onFX
+     * @webglOnly
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline} pipeline - The SpriteFX Pipeline that invoked this callback.
+     */
+    onFX: function ()
+    {
+    }
+
+};
+
+module.exports = FX;
+
+
+/***/ }),
+
+/***/ "../../../src/gameobjects/components/Flip.js":
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Flip.js ***!
+  \***********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Provides methods used for visually flipping a Game Object.
  * Should be applied as a mixin and not used directly.
- * 
+ *
  * @namespace Phaser.GameObjects.Components.Flip
  * @since 3.0.0
  */
@@ -4477,11 +6152,11 @@ var Flip = {
 
     /**
      * The horizontally flipped state of the Game Object.
-     * 
+     *
      * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
      * Flipping always takes place from the middle of the texture and does not impact the scale value.
      * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Flip#flipX
      * @type {boolean}
      * @default false
@@ -4491,11 +6166,11 @@ var Flip = {
 
     /**
      * The vertically flipped state of the Game Object.
-     * 
+     *
      * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
      * Flipping always takes place from the middle of the texture and does not impact the scale value.
      * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Flip#flipY
      * @type {boolean}
      * @default false
@@ -4505,14 +6180,14 @@ var Flip = {
 
     /**
      * Toggles the horizontal flipped state of this Game Object.
-     * 
+     *
      * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
      * Flipping always takes place from the middle of the texture and does not impact the scale value.
      * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Flip#toggleFlipX
      * @since 3.0.0
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     toggleFlipX: function ()
@@ -4524,10 +6199,10 @@ var Flip = {
 
     /**
      * Toggles the vertical flipped state of this Game Object.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Flip#toggleFlipY
      * @since 3.0.0
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     toggleFlipY: function ()
@@ -4539,16 +6214,16 @@ var Flip = {
 
     /**
      * Sets the horizontal flipped state of this Game Object.
-     * 
+     *
      * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
      * Flipping always takes place from the middle of the texture and does not impact the scale value.
      * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Flip#setFlipX
      * @since 3.0.0
      *
      * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setFlipX: function (value)
@@ -4560,12 +6235,12 @@ var Flip = {
 
     /**
      * Sets the vertical flipped state of this Game Object.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Flip#setFlipY
      * @since 3.0.0
      *
      * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setFlipY: function (value)
@@ -4577,17 +6252,17 @@ var Flip = {
 
     /**
      * Sets the horizontal and vertical flipped state of this Game Object.
-     * 
+     *
      * A Game Object that is flipped will render inversed on the flipped axis.
      * Flipping always takes place from the middle of the texture and does not impact the scale value.
      * If this Game Object has a physics body, it will not change the body. This is a rendering toggle only.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Flip#setFlip
      * @since 3.0.0
      *
      * @param {boolean} x - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
      * @param {boolean} y - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setFlip: function (x, y)
@@ -4600,7 +6275,7 @@ var Flip = {
 
     /**
      * Resets the horizontal and vertical flipped state of this Game Object back to their default un-flipped state.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Flip#resetFlip
      * @since 3.0.0
      *
@@ -4622,15 +6297,15 @@ module.exports = Flip;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/GetBounds.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/GetBounds.js ***!
-  \******************************************************************/
+/*!****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/GetBounds.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -4917,7 +6592,7 @@ var GetBounds = {
 
         var TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy;
 
-        // Instead of doing a check if parent container is 
+        // Instead of doing a check if parent container is
         // defined per corner we only do it once.
         if (this.parentContainer)
         {
@@ -4986,15 +6661,15 @@ module.exports = GetBounds;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Mask.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Mask.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Mask.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5073,7 +6748,7 @@ var Mask = {
 
     /**
      * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
-     * including this one.
+     * including this one, or a Dynamic Texture.
      *
      * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
      *
@@ -5083,24 +6758,32 @@ var Mask = {
      *
      * If you do not provide a renderable object, and this Game Object has a texture,
      * it will use itself as the object. This means you can call this method to create
-     * a Bitmap Mask from any renderable Game Object.
+     * a Bitmap Mask from any renderable texture-based Game Object.
      *
      * @method Phaser.GameObjects.Components.Mask#createBitmapMask
      * @since 3.6.2
      *
-     * @param {Phaser.GameObjects.GameObject} [renderable] - A renderable Game Object that uses a texture, such as a Sprite.
+     * @generic {Phaser.GameObjects.GameObject} G
+     * @generic {Phaser.Textures.DynamicTexture} T
+     * @genericUse {(G|T|null)} [maskObject]
+     *
+     * @param {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)} [maskObject] - The Game Object or Dynamic Texture that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
+     * @param {number} [x] - If creating a Game Object, the horizontal position in the world.
+     * @param {number} [y] - If creating a Game Object, the vertical position in the world.
+     * @param {(string|Phaser.Textures.Texture)} [texture] - If creating a Game Object, the key, or instance of the Texture it will use to render with, as stored in the Texture Manager.
+     * @param {(string|number|Phaser.Textures.Frame)} [frame] - If creating a Game Object, an optional frame from the Texture this Game Object is rendering with.
      *
      * @return {Phaser.Display.Masks.BitmapMask} This Bitmap Mask that was created.
      */
-    createBitmapMask: function (renderable)
+    createBitmapMask: function (maskObject, x, y, texture, frame)
     {
-        if (renderable === undefined && (this.texture || this.shader))
+        if (maskObject === undefined && (this.texture || this.shader || this.geom))
         {
             // eslint-disable-next-line consistent-this
-            renderable = this;
+            maskObject = this;
         }
 
-        return new BitmapMask(this.scene, renderable);
+        return new BitmapMask(this.scene, maskObject, x, y, texture, frame);
     },
 
     /**
@@ -5117,13 +6800,17 @@ var Mask = {
      * @method Phaser.GameObjects.Components.Mask#createGeometryMask
      * @since 3.6.2
      *
-     * @param {Phaser.GameObjects.Graphics} [graphics] - A Graphics Game Object. The geometry within it will be used as the mask.
+     * @generic {Phaser.GameObjects.Graphics} G
+     * @generic {Phaser.GameObjects.Shape} S
+     * @genericUse {(G|S)} [graphics]
+     *
+     * @param {Phaser.GameObjects.Graphics|Phaser.GameObjects.Shape} [graphics] - A Graphics Game Object, or any kind of Shape Game Object. The geometry within it will be used as the mask.
      *
      * @return {Phaser.Display.Masks.GeometryMask} This Geometry Mask that was created.
      */
     createGeometryMask: function (graphics)
     {
-        if (graphics === undefined && this.type === 'Graphics')
+        if (graphics === undefined && (this.type === 'Graphics' || this.geom))
         {
             // eslint-disable-next-line consistent-this
             graphics = this;
@@ -5140,15 +6827,15 @@ module.exports = Mask;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Origin.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Origin.js ***!
-  \***************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Origin.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5348,15 +7035,15 @@ module.exports = Origin;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/PathFollower.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/PathFollower.js ***!
-  \*********************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/PathFollower.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -5586,7 +7273,7 @@ var PathFollower = {
                 tweenData.elapsed = tweenData.duration * seek;
                 var v = tweenData.ease(tweenData.progress);
                 tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
-                tweenData.target[tweenData.key] = tweenData.current;
+                tweenData.setTargetValue();
             };
         }
 
@@ -5606,6 +7293,8 @@ var PathFollower = {
         }
 
         this.pathDelta.reset();
+
+        config.persist = true;
 
         this.pathTween = this.scene.sys.tweens.addCounter(config);
 
@@ -5723,7 +7412,7 @@ var PathFollower = {
 
             if (tweenData.state === TWEEN_CONST.COMPLETE)
             {
-                this.path.getPoint(1, pathVector);
+                this.path.getPoint(tweenData.end, pathVector);
 
                 pathDelta.add(pathVector);
                 pathVector.add(this.pathOffset);
@@ -5780,20 +7469,19 @@ module.exports = PathFollower;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Pipeline.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Pipeline.js ***!
-  \*****************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Pipeline.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var DeepCopy = __webpack_require__(/*! ../../utils/object/DeepCopy */ "../../../src/utils/object/DeepCopy.js");
-var PIPELINE_CONST = __webpack_require__(/*! ../../renderer/webgl/pipelines/const */ "../../../src/renderer/webgl/pipelines/const.js");
 var SpliceOne = __webpack_require__(/*! ../../utils/array/SpliceOne */ "../../../src/utils/array/SpliceOne.js");
 
 /**
@@ -5848,7 +7536,7 @@ var Pipeline = {
      * If you modify this array directly, be sure to set the
      * `hasPostPipeline` property accordingly.
      *
-     * @name Phaser.GameObjects.Components.Pipeline#postPipeline
+     * @name Phaser.GameObjects.Components.Pipeline#postPipelines
      * @type {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[]}
      * @webglOnly
      * @since 3.50.0
@@ -5874,14 +7562,12 @@ var Pipeline = {
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline, or a pipeline instance to set.
+     * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} [pipeline] - Either the string-based name of the pipeline, or a pipeline instance to set.
      *
      * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
      */
     initPipeline: function (pipeline)
     {
-        if (pipeline === undefined) { pipeline = PIPELINE_CONST.MULTI_PIPELINE; }
-
         var renderer = this.scene.sys.renderer;
 
         if (!renderer)
@@ -5896,6 +7582,11 @@ var Pipeline = {
 
         if (pipelines)
         {
+            if (pipeline === undefined)
+            {
+                pipeline = pipelines.default;
+            }
+
             var instance = pipelines.get(pipeline);
 
             if (instance)
@@ -5970,7 +7661,7 @@ var Pipeline = {
      * If you call this method multiple times, the new pipelines will be appended to any existing
      * post pipelines already set. Use the `resetPostPipeline` method to clear them first, if required.
      *
-     * You can optionally also sets the `pipelineData` property, if the parameter is given.
+     * You can optionally also set the `pipelineData` property, if the parameter is given.
      *
      * Both the pipeline and post pipelines share the pipeline data object together.
      *
@@ -6070,6 +7761,8 @@ var Pipeline = {
      */
     getPostPipeline: function (pipeline)
     {
+        var isString = (typeof pipeline === 'string');
+
         var pipelines = this.postPipelines;
 
         var results = [];
@@ -6078,7 +7771,7 @@ var Pipeline = {
         {
             var instance = pipelines[i];
 
-            if ((typeof pipeline === 'string' && instance.name === pipeline) || instance instanceof pipeline)
+            if ((isString && instance.name === pipeline) || (!isString && instance instanceof pipeline))
             {
                 results.push(instance);
             }
@@ -6208,15 +7901,15 @@ module.exports = Pipeline;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ScrollFactor.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ScrollFactor.js ***!
-  \*********************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/ScrollFactor.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -6240,7 +7933,7 @@ var ScrollFactor = {
      * A value of 1 means it will move exactly in sync with a camera.
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
-     * 
+     *
      * Please be aware that scroll factor values other than 1 are not taken in to consideration when
      * calculating physics collisions. Bodies always collide based on their world position, but changing
      * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
@@ -6264,7 +7957,7 @@ var ScrollFactor = {
      * A value of 1 means it will move exactly in sync with a camera.
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
-     * 
+     *
      * Please be aware that scroll factor values other than 1 are not taken in to consideration when
      * calculating physics collisions. Bodies always collide based on their world position, but changing
      * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
@@ -6288,7 +7981,7 @@ var ScrollFactor = {
      * A value of 1 means it will move exactly in sync with a camera.
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
-     * 
+     *
      * Please be aware that scroll factor values other than 1 are not taken in to consideration when
      * calculating physics collisions. Bodies always collide based on their world position, but changing
      * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
@@ -6320,21 +8013,21 @@ module.exports = ScrollFactor;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Size.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Size.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Size.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Provides methods used for getting and setting the size of a Game Object.
- * 
+ *
  * @namespace Phaser.GameObjects.Components.Size
  * @since 3.0.0
  */
@@ -6343,7 +8036,7 @@ var Size = {
 
     /**
      * A property indicating that a Game Object has this component.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Size#_sizeComponent
      * @type {boolean}
      * @private
@@ -6354,11 +8047,11 @@ var Size = {
 
     /**
      * The native (un-scaled) width of this Game Object.
-     * 
+     *
      * Changing this value will not change the size that the Game Object is rendered in-game.
      * For that you need to either set the scale of the Game Object (`setScale`) or use
      * the `displayWidth` property.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Size#width
      * @type {number}
      * @since 3.0.0
@@ -6367,11 +8060,11 @@ var Size = {
 
     /**
      * The native (un-scaled) height of this Game Object.
-     * 
+     *
      * Changing this value will not change the size that the Game Object is rendered in-game.
      * For that you need to either set the scale of the Game Object (`setScale`) or use
      * the `displayHeight` property.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Size#height
      * @type {number}
      * @since 3.0.0
@@ -6380,11 +8073,11 @@ var Size = {
 
     /**
      * The displayed width of this Game Object.
-     * 
+     *
      * This value takes into account the scale factor.
-     * 
+     *
      * Setting this value will adjust the Game Object's scale property.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Size#displayWidth
      * @type {number}
      * @since 3.0.0
@@ -6405,11 +8098,11 @@ var Size = {
 
     /**
      * The displayed height of this Game Object.
-     * 
+     *
      * This value takes into account the scale factor.
-     * 
+     *
      * Setting this value will adjust the Game Object's scale property.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Size#displayHeight
      * @type {number}
      * @since 3.0.0
@@ -6430,20 +8123,20 @@ var Size = {
 
     /**
      * Sets the size of this Game Object to be that of the given Frame.
-     * 
+     *
      * This will not change the size that the Game Object is rendered in-game.
      * For that you need to either set the scale of the Game Object (`setScale`) or call the
      * `setDisplaySize` method, which is the same thing as changing the scale but allows you
      * to do so by giving pixel values.
-     * 
+     *
      * If you have enabled this Game Object for input, changing the size will _not_ change the
      * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Size#setSizeToFrame
      * @since 3.0.0
      *
      * @param {Phaser.Textures.Frame} frame - The frame to base the size of this Game Object on.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setSizeToFrame: function (frame)
@@ -6453,26 +8146,34 @@ var Size = {
         this.width = frame.realWidth;
         this.height = frame.realHeight;
 
+        var input = this.input;
+    
+        if (input && !input.customHitArea)
+        {
+            input.hitArea.width = this.width;
+            input.hitArea.height = this.height;
+        }
+
         return this;
     },
 
     /**
      * Sets the internal size of this Game Object, as used for frame or physics body creation.
-     * 
+     *
      * This will not change the size that the Game Object is rendered in-game.
      * For that you need to either set the scale of the Game Object (`setScale`) or call the
      * `setDisplaySize` method, which is the same thing as changing the scale but allows you
      * to do so by giving pixel values.
-     * 
+     *
      * If you have enabled this Game Object for input, changing the size will _not_ change the
      * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Size#setSize
      * @since 3.0.0
      *
      * @param {number} width - The width of this Game Object.
      * @param {number} height - The height of this Game Object.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setSize: function (width, height)
@@ -6485,15 +8186,15 @@ var Size = {
 
     /**
      * Sets the display size of this Game Object.
-     * 
+     *
      * Calling this will adjust the scale.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Size#setDisplaySize
      * @since 3.0.0
      *
      * @param {number} width - The width of this Game Object.
      * @param {number} height - The height of this Game Object.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setDisplaySize: function (width, height)
@@ -6512,17 +8213,19 @@ module.exports = Size;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Texture.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Texture.js ***!
-  \****************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Texture.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
+
+var Frame = __webpack_require__(/*! ../../textures/Frame */ "../../../src/textures/Frame.js");
 
 //  bitmask flag for GameObject.renderMask
 var _FLAG = 8; // 1000
@@ -6587,17 +8290,19 @@ var Texture = {
     /**
      * Sets the frame this Game Object will use to render with.
      *
-     * The Frame has to belong to the current Texture being used.
+     * If you pass a string or index then the Frame has to belong to the current Texture being used
+     * by this Game Object.
      *
-     * It can be either a string or an index.
+     * If you pass a Frame instance, then the Texture being used by this Game Object will also be updated.
      *
      * Calling `setFrame` will modify the `width` and `height` properties of your Game Object.
+     *
      * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
      *
      * @method Phaser.GameObjects.Components.Texture#setFrame
      * @since 3.0.0
      *
-     * @param {(string|number)} frame - The name or index of the frame within the Texture.
+     * @param {(string|number|Phaser.Textures.Frame)} frame - The name or index of the frame within the Texture, or a Frame instance.
      * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
      * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
      *
@@ -6608,7 +8313,16 @@ var Texture = {
         if (updateSize === undefined) { updateSize = true; }
         if (updateOrigin === undefined) { updateOrigin = true; }
 
-        this.frame = this.texture.get(frame);
+        if (frame instanceof Frame)
+        {
+            this.texture = this.scene.sys.textures.get(frame.texture.key);
+
+            this.frame = frame;
+        }
+        else
+        {
+            this.frame = this.texture.get(frame);
+        }
 
         if (!this.frame.cutWidth || !this.frame.cutHeight)
         {
@@ -6647,17 +8361,19 @@ module.exports = Texture;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TextureCrop.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/TextureCrop.js ***!
-  \********************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/TextureCrop.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
+
+var Frame = __webpack_require__(/*! ../../textures/Frame */ "../../../src/textures/Frame.js");
 
 //  bitmask flag for GameObject.renderMask
 var _FLAG = 8; // 1000
@@ -6781,17 +8497,19 @@ var TextureCrop = {
     /**
      * Sets the frame this Game Object will use to render with.
      *
-     * The Frame has to belong to the current Texture being used.
+     * If you pass a string or index then the Frame has to belong to the current Texture being used
+     * by this Game Object.
      *
-     * It can be either a string or an index.
+     * If you pass a Frame instance, then the Texture being used by this Game Object will also be updated.
      *
      * Calling `setFrame` will modify the `width` and `height` properties of your Game Object.
+     *
      * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
      *
      * @method Phaser.GameObjects.Components.TextureCrop#setFrame
      * @since 3.0.0
      *
-     * @param {(string|number)} frame - The name or index of the frame within the Texture.
+     * @param {(string|number|Phaser.Textures.Frame)} frame - The name or index of the frame within the Texture, or a Frame instance.
      * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
      * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
      *
@@ -6802,7 +8520,16 @@ var TextureCrop = {
         if (updateSize === undefined) { updateSize = true; }
         if (updateOrigin === undefined) { updateOrigin = true; }
 
-        this.frame = this.texture.get(frame);
+        if (frame instanceof Frame)
+        {
+            this.texture = this.scene.sys.textures.get(frame.texture.key);
+
+            this.frame = frame;
+        }
+        else
+        {
+            this.frame = this.texture.get(frame);
+        }
 
         if (!this.frame.cutWidth || !this.frame.cutHeight)
         {
@@ -6860,15 +8587,15 @@ module.exports = TextureCrop;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Tint.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Tint.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Tint.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7102,15 +8829,15 @@ module.exports = Tint;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ToJSON.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/ToJSON.js ***!
-  \***************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/ToJSON.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7168,15 +8895,15 @@ module.exports = ToJSON;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Transform.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Transform.js ***!
-  \******************************************************************/
+/*!****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Transform.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7198,6 +8925,17 @@ var _FLAG = 4; // 0100
  */
 
 var Transform = {
+
+    /**
+     * A property indicating that a Game Object has this component.
+     *
+     * @name Phaser.GameObjects.Components.Transform#hasTransformComponent
+     * @type {boolean}
+     * @readonly
+     * @default true
+     * @since 3.60.0
+     */
+    hasTransformComponent: true,
 
     /**
      * Private internal value. Holds the horizontal scale value.
@@ -7784,15 +9522,15 @@ module.exports = Transform;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TransformMatrix.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/TransformMatrix.js ***!
-  \************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/TransformMatrix.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -7860,6 +9598,15 @@ var TransformMatrix = new Class({
             scaleY: 1,
             rotation: 0
         };
+
+        /**
+         * The temporary quad value cache.
+         *
+         * @name Phaser.GameObjects.Components.TransformMatrix#quad
+         * @type {Float32Array}
+         * @since 3.60.0
+         */
+        this.quad = new Float32Array(8);
     },
 
     /**
@@ -8251,14 +9998,14 @@ var TransformMatrix = new Class({
         var sourceE = source[4];
         var sourceF = source[5];
 
-        var destinationMatrix = (out === undefined) ? this : out;
+        var destinationMatrix = (out === undefined) ? matrix : out.matrix;
 
-        destinationMatrix.a = (sourceA * localA) + (sourceB * localC);
-        destinationMatrix.b = (sourceA * localB) + (sourceB * localD);
-        destinationMatrix.c = (sourceC * localA) + (sourceD * localC);
-        destinationMatrix.d = (sourceC * localB) + (sourceD * localD);
-        destinationMatrix.e = (sourceE * localA) + (sourceF * localC) + localE;
-        destinationMatrix.f = (sourceE * localB) + (sourceF * localD) + localF;
+        destinationMatrix[0] = (sourceA * localA) + (sourceB * localC);
+        destinationMatrix[1] = (sourceA * localB) + (sourceB * localD);
+        destinationMatrix[2] = (sourceC * localA) + (sourceD * localC);
+        destinationMatrix[3] = (sourceC * localB) + (sourceD * localD);
+        destinationMatrix[4] = (sourceE * localA) + (sourceF * localC) + localE;
+        destinationMatrix[5] = (sourceE * localB) + (sourceF * localD) + localF;
 
         return destinationMatrix;
     },
@@ -8347,16 +10094,16 @@ var TransformMatrix = new Class({
     },
 
     /**
-     * Transform a point using this Matrix.
+     * Transform a point in to the local space of this Matrix.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#transformPoint
      * @since 3.0.0
      *
      * @param {number} x - The x coordinate of the point to transform.
      * @param {number} y - The y coordinate of the point to transform.
-     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - The Point object to store the transformed coordinates.
+     * @param {Phaser.Types.Math.Vector2Like} [point] - Optional Point object to store the transformed coordinates in.
      *
-     * @return {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} The Point containing the transformed coordinates.
+     * @return {Phaser.Types.Math.Vector2Like} The Point containing the transformed coordinates.
      */
     transformPoint: function (x, y, point)
     {
@@ -8689,6 +10436,61 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Performs the 8 calculations required to create the vertices of
+     * a quad based on this matrix and the given x/y/xw/yh values.
+     *
+     * The result is stored in `TransformMatrix.quad`, which is returned
+     * from this method.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#setQuad
+     * @since 3.60.0
+     *
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     * @param {number} xw - The xw value.
+     * @param {number} yh - The yh value.
+     * @param {boolean} roundPixels - Pass the results via Math.round?
+     * @param {Float32Array} [quad] - Optional Float32Array to store the results in. Otherwises uses the local quad array.
+     *
+     * @return {Float32Array} The quad Float32Array.
+     */
+    setQuad: function (x, y, xw, yh, roundPixels, quad)
+    {
+        if (quad === undefined) { quad = this.quad; }
+
+        var matrix = this.matrix;
+
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+        var e = matrix[4];
+        var f = matrix[5];
+
+        quad[0] = x * a + y * c + e;
+        quad[1] = x * b + y * d + f;
+
+        quad[2] = x * a + yh * c + e;
+        quad[3] = x * b + yh * d + f;
+
+        quad[4] = xw * a + yh * c + e;
+        quad[5] = xw * b + yh * d + f;
+
+        quad[6] = xw * a + y * c + e;
+        quad[7] = xw * b + y * d + f;
+
+        if (roundPixels)
+        {
+            quad.forEach(function (value, index)
+            {
+                quad[index] = Math.round(value);
+            });
+        }
+
+        return quad;
+    },
+
+    /**
      * Returns the X component of this matrix multiplied by the given values.
      * This is the same as `x * a + y * c + e`.
      *
@@ -8798,6 +10600,7 @@ var TransformMatrix = new Class({
     destroy: function ()
     {
         this.matrix = null;
+        this.quad = null;
         this.decomposedMatrix = null;
     }
 
@@ -8809,15 +10612,15 @@ module.exports = TransformMatrix;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Visible.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/Visible.js ***!
-  \****************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/Visible.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8827,7 +10630,7 @@ var _FLAG = 1; // 0001
 /**
  * Provides methods used for setting the visibility of a Game Object.
  * Should be applied as a mixin and not used directly.
- * 
+ *
  * @namespace Phaser.GameObjects.Components.Visible
  * @since 3.0.0
  */
@@ -8836,7 +10639,7 @@ var Visible = {
 
     /**
      * Private internal value. Holds the visible value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Visible#_visible
      * @type {boolean}
      * @private
@@ -8847,9 +10650,9 @@ var Visible = {
 
     /**
      * The visible state of the Game Object.
-     * 
+     *
      * An invisible Game Object will skip rendering, but will still process update logic.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Visible#visible
      * @type {boolean}
      * @since 3.0.0
@@ -8879,14 +10682,14 @@ var Visible = {
 
     /**
      * Sets the visibility of this Game Object.
-     * 
+     *
      * An invisible Game Object will skip rendering, but will still process update logic.
      *
      * @method Phaser.GameObjects.Components.Visible#setVisible
      * @since 3.0.0
      *
      * @param {boolean} value - The visible state of the Game Object.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setVisible: function (value)
@@ -8903,15 +10706,15 @@ module.exports = Visible;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/index.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/components/index.js ***!
-  \**************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/components/index.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8928,6 +10731,7 @@ module.exports = {
     Crop: __webpack_require__(/*! ./Crop */ "../../../src/gameobjects/components/Crop.js"),
     Depth: __webpack_require__(/*! ./Depth */ "../../../src/gameobjects/components/Depth.js"),
     Flip: __webpack_require__(/*! ./Flip */ "../../../src/gameobjects/components/Flip.js"),
+    FX: __webpack_require__(/*! ./FX */ "../../../src/gameobjects/components/FX.js"),
     GetBounds: __webpack_require__(/*! ./GetBounds */ "../../../src/gameobjects/components/GetBounds.js"),
     Mask: __webpack_require__(/*! ./Mask */ "../../../src/gameobjects/components/Mask.js"),
     Origin: __webpack_require__(/*! ./Origin */ "../../../src/gameobjects/components/Origin.js"),
@@ -8949,16 +10753,16 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/Container.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/container/Container.js ***!
-  \*****************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/container/Container.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8983,7 +10787,7 @@ var Vector2 = __webpack_require__(/*! ../../math/Vector2 */ "../../../src/math/V
  *
  * The position of the Game Object automatically becomes relative to the position of the Container.
  *
- * The origin of a Container is 0x0 (in local space) and that cannot be changed. The children you add to the
+ * The transform point of a Container is 0x0 (in local space) and that cannot be changed. The children you add to the
  * Container should be positioned with this value in mind. I.e. you should treat 0x0 as being the center of
  * the Container, and position children positively and negative around it as required.
  *
@@ -9401,18 +11205,16 @@ var Container = new Class({
 
         if (this.exclusive)
         {
-            gameObject.removeFromDisplayList();
-
             if (gameObject.parentContainer)
             {
                 gameObject.parentContainer.remove(gameObject);
             }
 
-            var displayList = this.displayList || this.scene.sys.displayList;
-
-            gameObject.addToDisplayList(displayList);
-
             gameObject.parentContainer = this;
+
+            gameObject.removeFromDisplayList();
+
+            gameObject.addedToScene();
         }
     },
 
@@ -9427,13 +11229,13 @@ var Container = new Class({
      */
     removeHandler: function (gameObject)
     {
-        gameObject.off(Events.DESTROY, this.remove);
+        gameObject.off(Events.DESTROY, this.remove, this);
 
         if (this.exclusive)
         {
-            gameObject.removeFromDisplayList();
-
             gameObject.parentContainer = null;
+
+            gameObject.removedFromScene();
 
             gameObject.addToDisplayList();
         }
@@ -9446,10 +11248,10 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#pointToContainer
      * @since 3.4.0
      *
-     * @param {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} source - The Source Point to be transformed.
-     * @param {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} [output] - A destination object to store the transformed point in. If none given a Vector2 will be created and returned.
+     * @param {Phaser.Types.Math.Vector2Like} source - The Source Point to be transformed.
+     * @param {Phaser.Types.Math.Vector2Like} [output] - A destination object to store the transformed point in. If none given a Vector2 will be created and returned.
      *
-     * @return {(object|Phaser.Geom.Point|Phaser.Math.Vector2)} The transformed point.
+     * @return {Phaser.Types.Math.Vector2Like} The transformed point.
      */
     pointToContainer: function (source, output)
     {
@@ -9461,7 +11263,8 @@ var Container = new Class({
         }
         else
         {
-            output = new Vector2(source.x, source.y);
+            output.x = source.x;
+            output.y = source.y;
         }
 
         var tempMatrix = this.tempTransformMatrix;
@@ -9499,6 +11302,9 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#add
      * @since 3.4.0
      *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {(T|T[])} - [child]
+     *
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to add to the Container.
      *
      * @return {this} This Container instance.
@@ -9520,6 +11326,9 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#addAt
      * @since 3.4.0
      *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {(T|T[])} - [child]
+     *
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to add to the Container.
      * @param {number} [index=0] - The position to insert the Game Object/s at.
      *
@@ -9538,6 +11347,9 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#getAt
      * @since 3.4.0
      *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [$return]
+     *
      * @param {number} index - The position to get the Game Object from.
      *
      * @return {?Phaser.GameObjects.GameObject} The Game Object at the specified index, or `null` if none found.
@@ -9552,6 +11364,9 @@ var Container = new Class({
      *
      * @method Phaser.GameObjects.Container#getIndex
      * @since 3.4.0
+     *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [child]
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to search for in this Container.
      *
@@ -9601,6 +11416,9 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#getByName
      * @since 3.4.0
      *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [$return]
+     *
      * @param {string} name - The name to search for.
      *
      * @return {?Phaser.GameObjects.GameObject} The first child with a matching name, or `null` if none were found.
@@ -9615,6 +11433,9 @@ var Container = new Class({
      *
      * @method Phaser.GameObjects.Container#getRandom
      * @since 3.4.0
+     *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [$return]
      *
      * @param {number} [startIndex=0] - An optional start index.
      * @param {number} [length] - An optional length, the total number of elements (from the startIndex) to choose from.
@@ -9638,6 +11459,9 @@ var Container = new Class({
      *
      * @method Phaser.GameObjects.Container#getFirst
      * @since 3.4.0
+     *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [$return]
      *
      * @param {string} property - The property to test on each Game Object in the Container.
      * @param {*} value - The value to test the property against. Must pass a strict (`===`) comparison check.
@@ -9668,6 +11492,9 @@ var Container = new Class({
      *
      * @method Phaser.GameObjects.Container#getAll
      * @since 3.4.0
+     *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T[]} - [$return]
      *
      * @param {string} [property] - The property to test on each Game Object in the Container.
      * @param {any} [value] - If property is set then the `property` must strictly equal this value to be included in the results.
@@ -9711,6 +11538,9 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#swap
      * @since 3.4.0
      *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [child1,child2]
+     *
      * @param {Phaser.GameObjects.GameObject} child1 - The first Game Object to swap.
      * @param {Phaser.GameObjects.GameObject} child2 - The second Game Object to swap.
      *
@@ -9734,6 +11564,9 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#moveTo
      * @since 3.4.0
      *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [child]
+     *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to move.
      * @param {number} index - The new position of the Game Object in this Container.
      *
@@ -9747,6 +11580,52 @@ var Container = new Class({
     },
 
     /**
+     * Moves a Game Object above another one within this Container.
+     *
+     * These 2 Game Objects must already be children of this Container.
+     *
+     * @method Phaser.GameObjects.Container#moveAbove
+     * @since 3.55.0
+     *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [child1,child2]
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The Game Object to move above base Game Object.
+     * @param {Phaser.GameObjects.GameObject} child2 - The base Game Object.
+     *
+     * @return {this} This Container instance.
+     */
+    moveAbove: function (child1, child2)
+    {
+        ArrayUtils.MoveAbove(this.list, child1, child2);
+
+        return this;
+    },
+
+    /**
+     * Moves a Game Object below another one within this Container.
+     *
+     * These 2 Game Objects must already be children of this Container.
+     *
+     * @method Phaser.GameObjects.Container#moveBelow
+     * @since 3.55.0
+     *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [child1,child2]
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The Game Object to move below base Game Object.
+     * @param {Phaser.GameObjects.GameObject} child2 - The base Game Object.
+     *
+     * @return {this} This Container instance.
+     */
+    moveBelow: function (child1, child2)
+    {
+        ArrayUtils.MoveBelow(this.list, child1, child2);
+
+        return this;
+    },
+
+    /**
      * Removes the given Game Object, or array of Game Objects, from this Container.
      *
      * The Game Objects must already be children of this Container.
@@ -9755,6 +11634,9 @@ var Container = new Class({
      *
      * @method Phaser.GameObjects.Container#remove
      * @since 3.4.0
+     *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {(T|T[])} - [child]
      *
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to be removed from the Container.
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each child successfully removed from this Container.
@@ -9849,14 +11731,25 @@ var Container = new Class({
      */
     removeAll: function (destroyChild)
     {
-        var removed = ArrayUtils.RemoveBetween(this.list, 0, this.list.length, this.removeHandler, this);
+        var list = this.list;
 
         if (destroyChild)
         {
-            for (var i = 0; i < removed.length; i++)
+            for (var i = 0; i < list.length; i++)
             {
-                removed[i].destroy();
+                if (list[i] && list[i].scene)
+                {
+                    list[i].off(Events.DESTROY, this.remove, this);
+
+                    list[i].destroy();
+                }
             }
+
+            this.list = [];
+        }
+        else
+        {
+            ArrayUtils.RemoveBetween(list, 0, list.length, this.removeHandler, this);
         }
 
         return this;
@@ -9868,6 +11761,9 @@ var Container = new Class({
      *
      * @method Phaser.GameObjects.Container#bringToTop
      * @since 3.4.0
+     *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [child]
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to bring to the top of the Container.
      *
@@ -9887,6 +11783,9 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#sendToBack
      * @since 3.4.0
      *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [child]
+     *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to send to the bottom of the Container.
      *
      * @return {this} This Container instance.
@@ -9904,6 +11803,9 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#moveUp
      * @since 3.4.0
      *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [child]
+     *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to be moved in the Container.
      *
      * @return {this} This Container instance.
@@ -9920,6 +11822,9 @@ var Container = new Class({
      *
      * @method Phaser.GameObjects.Container#moveDown
      * @since 3.4.0
+     *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [child]
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to be moved in the Container.
      *
@@ -9969,6 +11874,9 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#replace
      * @since 3.4.0
      *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [oldChild,newChild]
+     *
      * @param {Phaser.GameObjects.GameObject} oldChild - The Game Object in this Container that will be replaced.
      * @param {Phaser.GameObjects.GameObject} newChild - The Game Object to be added to this Container.
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on the Game Object if successfully removed from this Container.
@@ -10000,6 +11908,9 @@ var Container = new Class({
      *
      * @method Phaser.GameObjects.Container#exists
      * @since 3.4.0
+     *
+     * @generic {Phaser.GameObjects.GameObject} T
+     * @genericUse {T} - [child]
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to check for within this Container.
      *
@@ -10314,16 +12225,16 @@ module.exports = Container;
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/ContainerCanvasRenderer.js":
-/*!*******************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/container/ContainerCanvasRenderer.js ***!
-  \*******************************************************************************/
+/*!*****************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/container/ContainerCanvasRenderer.js ***!
+  \*****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10343,14 +12254,14 @@ module.exports = Container;
  */
 var ContainerCanvasRenderer = function (renderer, container, camera, parentMatrix)
 {
+    camera.addToRenderList(container);
+
     var children = container.list;
 
     if (children.length === 0)
     {
         return;
     }
-
-    camera.addToRenderList(container);
 
     var transformMatrix = container.localTransform;
 
@@ -10427,21 +12338,22 @@ module.exports = ContainerCanvasRenderer;
 /***/ }),
 
 /***/ "../../../src/gameobjects/container/ContainerRender.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/container/ContainerRender.js ***!
-  \***********************************************************************/
+/*!*********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/container/ContainerRender.js ***!
+  \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var renderWebGL = __webpack_require__(/*! ../../utils/NOOP */ "../../../src/utils/NOOP.js");
-var renderCanvas = __webpack_require__(/*! ../../utils/NOOP */ "../../../src/utils/NOOP.js");
+var NOOP = __webpack_require__(/*! ../../utils/NOOP */ "../../../src/utils/NOOP.js");
+var renderWebGL = NOOP;
+var renderCanvas = NOOP;
 
 if (false)
 {}
@@ -10462,15 +12374,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/ADDED_TO_SCENE_EVENT.js":
-/*!*************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/ADDED_TO_SCENE_EVENT.js ***!
-  \*************************************************************************/
+/*!***********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/ADDED_TO_SCENE_EVENT.js ***!
+  \***********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10482,6 +12394,7 @@ module.exports = {
  * Listen for it on a Game Object instance using `GameObject.on('addedtoscene', listener)`.
  *
  * @event Phaser.GameObjects.Events#ADDED_TO_SCENE
+ * @type {string}
  * @since 3.50.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was added to the Scene.
@@ -10493,29 +12406,31 @@ module.exports = 'addedtoscene';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/DESTROY_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
-  \******************************************************************/
+/*!****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/DESTROY_EVENT.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Game Object Destroy Event.
- * 
+ *
  * This event is dispatched when a Game Object instance is being destroyed.
- * 
+ *
  * Listen for it on a Game Object instance using `GameObject.on('destroy', listener)`.
  *
  * @event Phaser.GameObjects.Events#DESTROY
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object which is being destroyed.
+ * @param {boolean} fromScene - `True` if this Game Object is being destroyed by the Scene, `false` if not.
  */
 module.exports = 'destroy';
 
@@ -10523,15 +12438,15 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js":
-/*!*****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js ***!
-  \*****************************************************************************/
+/*!***************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/REMOVED_FROM_SCENE_EVENT.js ***!
+  \***************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10543,6 +12458,7 @@ module.exports = 'destroy';
  * Listen for it on a Game Object instance using `GameObject.on('removedfromscene', listener)`.
  *
  * @event Phaser.GameObjects.Events#REMOVED_FROM_SCENE
+ * @type {string}
  * @since 3.50.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was removed from the Scene.
@@ -10554,35 +12470,36 @@ module.exports = 'removedfromscene';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_COMPLETE_EVENT.js":
-/*!*************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_COMPLETE_EVENT.js ***!
-  \*************************************************************************/
+/*!***********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_COMPLETE_EVENT.js ***!
+  \***********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Video Game Object Complete Event.
- * 
+ *
  * This event is dispatched when a Video finishes playback by reaching the end of its duration. It
  * is also dispatched if a video marker sequence is being played and reaches the end.
- * 
+ *
  * Note that not all videos can fire this event. Live streams, for example, have no fixed duration,
  * so never technically 'complete'.
- * 
+ *
  * If a video is stopped from playback, via the `Video.stop` method, it will emit the
  * `VIDEO_STOP` event instead of this one.
- * 
+ *
  * Listen for it from a Video Game Object instance using `Video.on('complete', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_COMPLETE
+ * @type {string}
  * @since 3.20.0
- * 
+ *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which completed playback.
  */
 module.exports = 'complete';
@@ -10591,30 +12508,31 @@ module.exports = 'complete';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_CREATED_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_CREATED_EVENT.js ***!
-  \************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_CREATED_EVENT.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Video Game Object Created Event.
- * 
+ *
  * This event is dispatched when the texture for a Video has been created. This happens
  * when enough of the video source has been loaded that the browser is able to render a
  * frame from it.
- * 
+ *
  * Listen for it from a Video Game Object instance using `Video.on('created', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_CREATED
+ * @type {string}
  * @since 3.20.0
- * 
+ *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which raised the event.
  * @param {number} width - The width of the video.
  * @param {number} height - The height of the video.
@@ -10625,28 +12543,29 @@ module.exports = 'created';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_ERROR_EVENT.js":
-/*!**********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_ERROR_EVENT.js ***!
-  \**********************************************************************/
+/*!********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_ERROR_EVENT.js ***!
+  \********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Video Game Object Error Event.
- * 
+ *
  * This event is dispatched when a Video tries to play a source that does not exist, or is the wrong file type.
- * 
+ *
  * Listen for it from a Video Game Object instance using `Video.on('error', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_ERROR
+ * @type {string}
  * @since 3.20.0
- * 
+ *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which threw the error.
  * @param {Event} event - The native DOM event the browser raised during playback.
  */
@@ -10656,35 +12575,36 @@ module.exports = 'error';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_LOOP_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_LOOP_EVENT.js ***!
-  \*********************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_LOOP_EVENT.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Video Game Object Loop Event.
- * 
+ *
  * This event is dispatched when a Video that is currently playing has looped. This only
  * happens if the `loop` parameter was specified, or the `setLoop` method was called,
  * and if the video has a fixed duration. Video streams, for example, cannot loop, as
  * they have no duration.
- * 
+ *
  * Looping is based on the result of the Video `timeupdate` event. This event is not
  * frame-accurate, due to the way browsers work, so please do not rely on this loop
  * event to be time or frame precise.
- * 
+ *
  * Listen for it from a Video Game Object instance using `Video.on('loop', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_LOOP
+ * @type {string}
  * @since 3.20.0
- * 
+ *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which has looped.
  */
 module.exports = 'loop';
@@ -10693,31 +12613,32 @@ module.exports = 'loop';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_PLAY_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_PLAY_EVENT.js ***!
-  \*********************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_PLAY_EVENT.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Video Game Object Play Event.
- * 
+ *
  * This event is dispatched when a Video begins playback. For videos that do not require
  * interaction unlocking, this is usually as soon as the `Video.play` method is called.
  * However, for videos that require unlocking, it is fired once playback begins after
  * they've been unlocked.
- * 
+ *
  * Listen for it from a Video Game Object instance using `Video.on('play', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_PLAY
+ * @type {string}
  * @since 3.20.0
- * 
+ *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which started playback.
  */
 module.exports = 'play';
@@ -10726,28 +12647,29 @@ module.exports = 'play';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_SEEKED_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_SEEKED_EVENT.js ***!
-  \***********************************************************************/
+/*!*********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_SEEKED_EVENT.js ***!
+  \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Video Game Object Seeked Event.
- * 
+ *
  * This event is dispatched when a Video completes seeking to a new point in its timeline.
- * 
+ *
  * Listen for it from a Video Game Object instance using `Video.on('seeked', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_SEEKED
+ * @type {string}
  * @since 3.20.0
- * 
+ *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which completed seeking.
  */
 module.exports = 'seeked';
@@ -10756,29 +12678,30 @@ module.exports = 'seeked';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_SEEKING_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_SEEKING_EVENT.js ***!
-  \************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_SEEKING_EVENT.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Video Game Object Seeking Event.
- * 
+ *
  * This event is dispatched when a Video _begins_ seeking to a new point in its timeline.
  * When the seek is complete, it will dispatch the `VIDEO_SEEKED` event to conclude.
- * 
+ *
  * Listen for it from a Video Game Object instance using `Video.on('seeking', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_SEEKING
+ * @type {string}
  * @since 3.20.0
- * 
+ *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which started seeking.
  */
 module.exports = 'seeking';
@@ -10787,29 +12710,30 @@ module.exports = 'seeking';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_STOP_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_STOP_EVENT.js ***!
-  \*********************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_STOP_EVENT.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Video Game Object Stopped Event.
- * 
+ *
  * This event is dispatched when a Video is stopped from playback via a call to the `Video.stop` method,
  * either directly via game code, or indirectly as the result of changing a video source or destroying it.
- * 
+ *
  * Listen for it from a Video Game Object instance using `Video.on('stop', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_STOP
+ * @type {string}
  * @since 3.20.0
- * 
+ *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which stopped playback.
  */
 module.exports = 'stop';
@@ -10818,29 +12742,30 @@ module.exports = 'stop';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js ***!
-  \************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_TIMEOUT_EVENT.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Video Game Object Timeout Event.
- * 
+ *
  * This event is dispatched when a Video has exhausted its allocated time while trying to connect to a video
  * source to start playback.
- * 
+ *
  * Listen for it from a Video Game Object instance using `Video.on('timeout', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_TIMEOUT
+ * @type {string}
  * @since 3.20.0
- * 
+ *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which timed out.
  */
 module.exports = 'timeout';
@@ -10849,29 +12774,30 @@ module.exports = 'timeout';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js":
-/*!*************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js ***!
-  \*************************************************************************/
+/*!***********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/VIDEO_UNLOCKED_EVENT.js ***!
+  \***********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Video Game Object Unlocked Event.
- * 
+ *
  * This event is dispatched when a Video that was prevented from playback due to the browsers
  * Media Engagement Interaction policy, is unlocked by a user gesture.
- * 
+ *
  * Listen for it from a Video Game Object instance using `Video.on('unlocked', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_UNLOCKED
+ * @type {string}
  * @since 3.20.0
- * 
+ *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which raised the event.
  */
 module.exports = 'unlocked';
@@ -10880,15 +12806,15 @@ module.exports = 'unlocked';
 /***/ }),
 
 /***/ "../../../src/gameobjects/events/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/gameobjects/events/index.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/gameobjects/events/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10918,15 +12844,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/geom/const.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/const.js ***!
-  \********************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/const.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10934,7 +12860,7 @@ var GEOM_CONST = {
 
     /**
      * A Circle Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.CIRCLE
      * @type {number}
      * @since 3.19.0
@@ -10943,7 +12869,7 @@ var GEOM_CONST = {
 
     /**
      * An Ellipse Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.ELLIPSE
      * @type {number}
      * @since 3.19.0
@@ -10952,7 +12878,7 @@ var GEOM_CONST = {
 
     /**
      * A Line Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.LINE
      * @type {number}
      * @since 3.19.0
@@ -10961,7 +12887,7 @@ var GEOM_CONST = {
 
     /**
      * A Point Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.POINT
      * @type {number}
      * @since 3.19.0
@@ -10970,7 +12896,7 @@ var GEOM_CONST = {
 
     /**
      * A Polygon Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.POLYGON
      * @type {number}
      * @since 3.19.0
@@ -10979,7 +12905,7 @@ var GEOM_CONST = {
 
     /**
      * A Rectangle Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.RECTANGLE
      * @type {number}
      * @since 3.19.0
@@ -10988,7 +12914,7 @@ var GEOM_CONST = {
 
     /**
      * A Triangle Geometry object type.
-     * 
+     *
      * @name Phaser.Geom.TRIANGLE
      * @type {number}
      * @since 3.19.0
@@ -11003,15 +12929,15 @@ module.exports = GEOM_CONST;
 /***/ }),
 
 /***/ "../../../src/geom/line/GetPoint.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/GetPoint.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/line/GetPoint.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11047,15 +12973,15 @@ module.exports = GetPoint;
 /***/ }),
 
 /***/ "../../../src/geom/line/GetPoints.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/GetPoints.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/line/GetPoints.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11117,15 +13043,15 @@ module.exports = GetPoints;
 /***/ }),
 
 /***/ "../../../src/geom/line/Length.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/Length.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/line/Length.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11150,15 +13076,15 @@ module.exports = Length;
 /***/ }),
 
 /***/ "../../../src/geom/line/Line.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/Line.js ***!
-  \************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/line/Line.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11492,15 +13418,15 @@ module.exports = Line;
 /***/ }),
 
 /***/ "../../../src/geom/line/Random.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/line/Random.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/line/Random.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11537,15 +13463,15 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/geom/point/Point.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/point/Point.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/point/Point.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11635,15 +13561,15 @@ module.exports = Point;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Contains.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Contains.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/Contains.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11675,15 +13601,15 @@ module.exports = Contains;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/GetPoint.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/GetPoint.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/GetPoint.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11692,9 +13618,9 @@ var Point = __webpack_require__(/*! ../point/Point */ "../../../src/geom/point/P
 
 /**
  * Calculates the coordinates of a point at a certain `position` on the Rectangle's perimeter.
- * 
+ *
  * The `position` is a fraction between 0 and 1 which defines how far into the perimeter the point is.
- * 
+ *
  * A value of 0 or 1 returns the point at the top left corner of the rectangle, while a value of 0.5 returns the point at the bottom right corner of the rectangle. Values between 0 and 0.5 are on the top or the right side and values between 0.5 and 1 are on the bottom or the left side.
  *
  * @function Phaser.Geom.Rectangle.GetPoint
@@ -11761,23 +13687,20 @@ module.exports = GetPoint;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/GetPoints.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/GetPoints.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/GetPoints.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var GetPoint = __webpack_require__(/*! ./GetPoint */ "../../../src/geom/rectangle/GetPoint.js");
 var Perimeter = __webpack_require__(/*! ./Perimeter */ "../../../src/geom/rectangle/Perimeter.js");
-
-//  Return an array of points from the perimeter of the rectangle
-//  each spaced out based on the quantity or step required
 
 /**
  * Return an array of points from the perimeter of the rectangle, each spaced out based on the quantity or step required.
@@ -11820,15 +13743,15 @@ module.exports = GetPoints;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Perimeter.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Perimeter.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/Perimeter.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11853,15 +13776,15 @@ module.exports = Perimeter;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Random.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Random.js ***!
-  \*******************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/Random.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11896,15 +13819,15 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Rectangle.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Rectangle.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/Rectangle.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12011,9 +13934,9 @@ var Rectangle = new Class({
 
     /**
      * Calculates the coordinates of a point at a certain `position` on the Rectangle's perimeter.
-     * 
+     *
      * The `position` is a fraction between 0 and 1 which defines how far into the perimeter the point is.
-     * 
+     *
      * A value of 0 or 1 returns the point at the top left corner of the rectangle, while a value of 0.5 returns the point at the bottom right corner of the rectangle. Values between 0 and 0.5 are on the top or the right side and values between 0.5 and 1 are on the bottom or the left side.
      *
      * @method Phaser.Geom.Rectangle#getPoint
@@ -12412,15 +14335,15 @@ module.exports = Rectangle;
 /***/ }),
 
 /***/ "../../../src/geom/rectangle/Union.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/geom/rectangle/Union.js ***!
-  \******************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/geom/rectangle/Union.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12459,15 +14382,15 @@ module.exports = Union;
 /***/ }),
 
 /***/ "../../../src/loader/File.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/File.js ***!
-  \*********************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/File.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12526,6 +14449,11 @@ var File = new Class({
          */
         this.type = GetFastValue(fileConfig, 'type', false);
 
+        if (!this.type)
+        {
+            throw new Error('Invalid File type: ' + this.type);
+        }
+
         /**
          * Unique cache key (unique within its file type)
          *
@@ -12542,9 +14470,9 @@ var File = new Class({
             this.key = loader.prefix + loadKey;
         }
 
-        if (!this.type || !this.key)
+        if (!this.key)
         {
-            throw new Error('Invalid Loader.' + this.type + ' key');
+            throw new Error('Invalid File key: ' + this.key);
         }
 
         var url = GetFastValue(fileConfig, 'url');
@@ -12553,7 +14481,7 @@ var File = new Class({
         {
             url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
         }
-        else if (typeof url === 'string' && !url.match(/^(?:blob:|data:|http:\/\/|https:\/\/|\/\/)/))
+        else if (typeof url === 'string' && !url.match(/^(?:blob:|data:|capacitor:\/\/|http:\/\/|https:\/\/|\/\/)/))
         {
             url = loader.path + url;
         }
@@ -12777,7 +14705,12 @@ var File = new Class({
      */
     onLoad: function (xhr, event)
     {
-        var localFileOk = ((xhr.responseURL && xhr.responseURL.indexOf('file://') === 0 && event.target.status === 0));
+        var isLocalFile = xhr.responseURL && this.loader.localSchemes.some(function (scheme)
+        {
+            return xhr.responseURL.indexOf(scheme) === 0;
+        });
+
+        var localFileOk = (isLocalFile && event.target.status === 0);
 
         var success = !(event.target && event.target.status !== 200) || localFileOk;
 
@@ -12874,6 +14807,9 @@ var File = new Class({
      */
     onProcessError: function ()
     {
+        // eslint-disable-next-line no-console
+        console.error('Failed to process file: %s "%s"', this.type, this.key);
+
         this.state = CONST.FILE_ERRORED;
 
         if (this.multiFile)
@@ -12908,12 +14844,10 @@ var File = new Class({
      */
     addToCache: function ()
     {
-        if (this.cache)
+        if (this.cache && this.data)
         {
             this.cache.add(this.key, this.data);
         }
-
-        this.pendingDestroy();
     },
 
     /**
@@ -12927,6 +14861,11 @@ var File = new Class({
      */
     pendingDestroy: function (data)
     {
+        if (this.state === CONST.FILE_PENDING_DESTROY)
+        {
+            return;
+        }
+
         if (data === undefined) { data = this.data; }
 
         var key = this.key;
@@ -12936,6 +14875,8 @@ var File = new Class({
         this.loader.emit(Events.FILE_KEY_COMPLETE + type + '-' + key, key, type, data);
 
         this.loader.flagForRemoval(this);
+
+        this.state = CONST.FILE_PENDING_DESTROY;
     },
 
     /**
@@ -13014,15 +14955,15 @@ module.exports = File;
 /***/ }),
 
 /***/ "../../../src/loader/FileTypesManager.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/FileTypesManager.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/FileTypesManager.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13036,13 +14977,13 @@ var FileTypesManager = {
 
     /**
      * Static method called when a LoaderPlugin is created.
-     * 
+     *
      * Loops through the local types object and injects all of them as
      * properties into the LoaderPlugin instance.
      *
      * @method Phaser.Loader.FileTypesManager.install
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.Loader.LoaderPlugin} loader - The LoaderPlugin to install the types into.
      */
     install: function (loader)
@@ -13055,12 +14996,12 @@ var FileTypesManager = {
 
     /**
      * Static method called directly by the File Types.
-     * 
+     *
      * The key is a reference to the function used to load the files via the Loader, i.e. `image`.
      *
      * @method Phaser.Loader.FileTypesManager.register
      * @since 3.0.0
-     * 
+     *
      * @param {string} key - The key that will be used as the method name in the LoaderPlugin.
      * @param {function} factoryFunction - The function that will be called when LoaderPlugin.key is invoked.
      */
@@ -13088,15 +15029,15 @@ module.exports = FileTypesManager;
 /***/ }),
 
 /***/ "../../../src/loader/GetURL.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/GetURL.js ***!
-  \***********************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/GetURL.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13118,7 +15059,7 @@ var GetURL = function (file, baseURL)
         return false;
     }
 
-    if (file.url.match(/^(?:blob:|data:|http:\/\/|https:\/\/|\/\/)/))
+    if (file.url.match(/^(?:blob:|data:|capacitor:\/\/|http:\/\/|https:\/\/|\/\/)/))
     {
         return file.url;
     }
@@ -13134,15 +15075,15 @@ module.exports = GetURL;
 /***/ }),
 
 /***/ "../../../src/loader/MergeXHRSettings.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/MergeXHRSettings.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/MergeXHRSettings.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13187,19 +15128,21 @@ module.exports = MergeXHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/MultiFile.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/MultiFile.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/MultiFile.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var CONST = __webpack_require__(/*! ./const */ "../../../src/loader/const.js");
+var Events = __webpack_require__(/*! ./events */ "../../../src/loader/events/index.js");
 
 /**
  * @classdesc
@@ -13280,6 +15223,15 @@ var MultiFile = new Class({
          * @since 3.7.0
          */
         this.files = finalFiles;
+
+        /**
+         * The current state of the file. One of the FILE_CONST values.
+         *
+         * @name Phaser.Loader.MultiFile#state
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.state = CONST.FILE_PENDING;
 
         /**
          * The completion status of this MultiFile.
@@ -13426,7 +15378,57 @@ var MultiFile = new Class({
         if (index !== -1)
         {
             this.failed++;
+
+            // eslint-disable-next-line no-console
+            console.error('File failed: %s "%s" (via %s "%s")', this.type, this.key, file.type, file.key);
         }
+    },
+
+    /**
+     * Called once all children of this multi file have been added to their caches and is now
+     * ready for deletion from the Loader.
+     *
+     * It will emit a `filecomplete` event from the LoaderPlugin.
+     *
+     * @method Phaser.Loader.MultiFile#pendingDestroy
+     * @fires Phaser.Loader.Events#FILE_COMPLETE
+     * @fires Phaser.Loader.Events#FILE_KEY_COMPLETE
+     * @since 3.60.0
+     */
+    pendingDestroy: function ()
+    {
+        if (this.state === CONST.FILE_PENDING_DESTROY)
+        {
+            return;
+        }
+
+        var key = this.key;
+        var type = this.type;
+
+        this.loader.emit(Events.FILE_COMPLETE, key, type);
+        this.loader.emit(Events.FILE_KEY_COMPLETE + type + '-' + key, key, type);
+
+        this.loader.flagForRemoval(this);
+
+        for (var i = 0; i < this.files.length; i++)
+        {
+            this.files[i].pendingDestroy();
+        }
+
+        this.state = CONST.FILE_PENDING_DESTROY;
+    },
+
+    /**
+     * Destroy this Multi File and any references it holds.
+     *
+     * @method Phaser.Loader.MultiFile#destroy
+     * @since 3.60.0
+     */
+    destroy: function ()
+    {
+        this.loader = null;
+        this.files = null;
+        this.config = null;
     }
 
 });
@@ -13437,15 +15439,15 @@ module.exports = MultiFile;
 /***/ }),
 
 /***/ "../../../src/loader/XHRLoader.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/XHRLoader.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/XHRLoader.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13523,15 +15525,15 @@ module.exports = XHRLoader;
 /***/ }),
 
 /***/ "../../../src/loader/XHRSettings.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/XHRSettings.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/XHRSettings.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13598,15 +15600,15 @@ module.exports = XHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/const.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/const.js ***!
-  \**********************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/const.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13614,7 +15616,7 @@ var FILE_CONST = {
 
     /**
      * The Loader is idle.
-     * 
+     *
      * @name Phaser.Loader.LOADER_IDLE
      * @type {number}
      * @since 3.0.0
@@ -13623,7 +15625,7 @@ var FILE_CONST = {
 
     /**
      * The Loader is actively loading.
-     * 
+     *
      * @name Phaser.Loader.LOADER_LOADING
      * @type {number}
      * @since 3.0.0
@@ -13632,7 +15634,7 @@ var FILE_CONST = {
 
     /**
      * The Loader is processing files is has loaded.
-     * 
+     *
      * @name Phaser.Loader.LOADER_PROCESSING
      * @type {number}
      * @since 3.0.0
@@ -13641,7 +15643,7 @@ var FILE_CONST = {
 
     /**
      * The Loader has completed loading and processing.
-     * 
+     *
      * @name Phaser.Loader.LOADER_COMPLETE
      * @type {number}
      * @since 3.0.0
@@ -13650,7 +15652,7 @@ var FILE_CONST = {
 
     /**
      * The Loader is shutting down.
-     * 
+     *
      * @name Phaser.Loader.LOADER_SHUTDOWN
      * @type {number}
      * @since 3.0.0
@@ -13659,7 +15661,7 @@ var FILE_CONST = {
 
     /**
      * The Loader has been destroyed.
-     * 
+     *
      * @name Phaser.Loader.LOADER_DESTROYED
      * @type {number}
      * @since 3.0.0
@@ -13667,8 +15669,8 @@ var FILE_CONST = {
     LOADER_DESTROYED: 5,
 
     /**
-     * File is in the load queue but not yet started
-     * 
+     * File is in the load queue but not yet started.
+     *
      * @name Phaser.Loader.FILE_PENDING
      * @type {number}
      * @since 3.0.0
@@ -13677,7 +15679,7 @@ var FILE_CONST = {
 
     /**
      * File has been started to load by the loader (onLoad called)
-     * 
+     *
      * @name Phaser.Loader.FILE_LOADING
      * @type {number}
      * @since 3.0.0
@@ -13685,8 +15687,8 @@ var FILE_CONST = {
     FILE_LOADING: 11,
 
     /**
-     * File has loaded successfully, awaiting processing    
-     * 
+     * File has loaded successfully, awaiting processing.
+     *
      * @name Phaser.Loader.FILE_LOADED
      * @type {number}
      * @since 3.0.0
@@ -13694,8 +15696,8 @@ var FILE_CONST = {
     FILE_LOADED: 12,
 
     /**
-     * File failed to load
-     * 
+     * File failed to load.
+     *
      * @name Phaser.Loader.FILE_FAILED
      * @type {number}
      * @since 3.0.0
@@ -13704,7 +15706,7 @@ var FILE_CONST = {
 
     /**
      * File is being processed (onProcess callback)
-     * 
+     *
      * @name Phaser.Loader.FILE_PROCESSING
      * @type {number}
      * @since 3.0.0
@@ -13713,7 +15715,7 @@ var FILE_CONST = {
 
     /**
      * The File has errored somehow during processing.
-     * 
+     *
      * @name Phaser.Loader.FILE_ERRORED
      * @type {number}
      * @since 3.0.0
@@ -13722,7 +15724,7 @@ var FILE_CONST = {
 
     /**
      * File has finished processing.
-     * 
+     *
      * @name Phaser.Loader.FILE_COMPLETE
      * @type {number}
      * @since 3.0.0
@@ -13730,8 +15732,8 @@ var FILE_CONST = {
     FILE_COMPLETE: 17,
 
     /**
-     * File has been destroyed
-     * 
+     * File has been destroyed.
+     *
      * @name Phaser.Loader.FILE_DESTROYED
      * @type {number}
      * @since 3.0.0
@@ -13739,13 +15741,22 @@ var FILE_CONST = {
     FILE_DESTROYED: 18,
 
     /**
-     * File was populated from local data and doesn't need an HTTP request
-     * 
+     * File was populated from local data and doesn't need an HTTP request.
+     *
      * @name Phaser.Loader.FILE_POPULATED
      * @type {number}
      * @since 3.0.0
      */
-    FILE_POPULATED: 19
+    FILE_POPULATED: 19,
+
+    /**
+     * File is pending being destroyed.
+     *
+     * @name Phaser.Loader.FILE_PENDING_DESTROY
+     * @type {number}
+     * @since 3.60.0
+     */
+    FILE_PENDING_DESTROY: 20
 
 };
 
@@ -13755,30 +15766,31 @@ module.exports = FILE_CONST;
 /***/ }),
 
 /***/ "../../../src/loader/events/ADD_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/ADD_EVENT.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/ADD_EVENT.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Loader Plugin Add File Event.
- * 
+ *
  * This event is dispatched when a new file is successfully added to the Loader and placed into the load queue.
- * 
+ *
  * Listen to it from a Scene using: `this.load.on('addfile', listener)`.
- * 
+ *
  * If you add lots of files to a Loader from a `preload` method, it will dispatch this event for each one of them.
  *
  * @event Phaser.Loader.Events#ADD
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {string} key - The unique key of the file that was added to the Loader.
  * @param {string} type - The [file type]{@link Phaser.Loader.File#type} string of the file that was added to the Loader, i.e. `image`.
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
@@ -13790,29 +15802,30 @@ module.exports = 'addfile';
 /***/ }),
 
 /***/ "../../../src/loader/events/COMPLETE_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/COMPLETE_EVENT.js ***!
-  \**************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/COMPLETE_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Loader Plugin Complete Event.
- * 
+ *
  * This event is dispatched when the Loader has fully processed everything in the load queue.
  * By this point every loaded file will now be in its associated cache and ready for use.
- * 
+ *
  * Listen to it from a Scene using: `this.load.on('complete', listener)`.
  *
  * @event Phaser.Loader.Events#COMPLETE
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
  * @param {number} totalComplete - The total number of files that successfully loaded.
  * @param {number} totalFailed - The total number of files that failed to load.
@@ -13823,33 +15836,36 @@ module.exports = 'complete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_COMPLETE_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
-  \*******************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/FILE_COMPLETE_EVENT.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The File Load Complete Event.
- * 
- * This event is dispatched by the Loader Plugin when any file in the queue finishes loading.
- * 
+ *
+ * This event is dispatched by the Loader Plugin when _any_ file in the queue finishes loading.
+ *
  * Listen to it from a Scene using: `this.load.on('filecomplete', listener)`.
- * 
+ *
+ * Make sure you remove this listener when you have finished, or it will continue to fire if the Scene reloads.
+ *
  * You can also listen for the completion of a specific file. See the [FILE_KEY_COMPLETE]{@linkcode Phaser.Loader.Events#event:FILE_KEY_COMPLETE} event.
  *
  * @event Phaser.Loader.Events#FILE_COMPLETE
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {string} key - The key of the file that just loaded and finished processing.
  * @param {string} type - The [file type]{@link Phaser.Loader.File#type} of the file that just loaded, i.e. `image`.
- * @param {any} data - The raw data the file contained.
+ * @param {any} [data] - The raw data the file contained. If the file was a multi-file, like an atlas or bitmap font, this parameter will be undefined.
  */
 module.exports = 'filecomplete';
 
@@ -13857,25 +15873,25 @@ module.exports = 'filecomplete';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_KEY_COMPLETE_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
-  \***********************************************************************/
+/*!*********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/FILE_KEY_COMPLETE_EVENT.js ***!
+  \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The File Load Complete Event.
- * 
+ *
  * This event is dispatched by the Loader Plugin when any file in the queue finishes loading.
- * 
+ *
  * It uses a special dynamic event name constructed from the key and type of the file.
- * 
+ *
  * For example, if you have loaded an `image` with a key of `monster`, you can listen for it
  * using the following:
  *
@@ -13886,29 +15902,32 @@ module.exports = 'filecomplete';
  * ```
  *
  * Or, if you have loaded a texture `atlas` with a key of `Level1`:
- * 
+ *
  * ```javascript
- * this.load.on('filecomplete-atlas-Level1', function (key, type, data) {
+ * this.load.on('filecomplete-atlasjson-Level1', function (key, type, data) {
  *     // Your handler code
  * });
  * ```
- * 
+ *
  * Or, if you have loaded a sprite sheet with a key of `Explosion` and a prefix of `GAMEOVER`:
- * 
+ *
  * ```javascript
  * this.load.on('filecomplete-spritesheet-GAMEOVERExplosion', function (key, type, data) {
  *     // Your handler code
  * });
  * ```
- * 
+ *
+ * Make sure you remove your listeners when you have finished, or they will continue to fire if the Scene reloads.
+ *
  * You can also listen for the generic completion of files. See the [FILE_COMPLETE]{@linkcode Phaser.Loader.Events#event:FILE_COMPLETE} event.
  *
  * @event Phaser.Loader.Events#FILE_KEY_COMPLETE
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {string} key - The key of the file that just loaded and finished processing.
  * @param {string} type - The [file type]{@link Phaser.Loader.File#type} of the file that just loaded, i.e. `image`.
- * @param {any} data - The raw data the file contained.
+ * @param {any} [data] - The raw data the file contained. If the file was a multi-file, like an atlas or bitmap font, this parameter will be undefined.
  */
 module.exports = 'filecomplete-';
 
@@ -13916,28 +15935,29 @@ module.exports = 'filecomplete-';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_ERROR_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
-  \*********************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/FILE_LOAD_ERROR_EVENT.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The File Load Error Event.
- * 
+ *
  * This event is dispatched by the Loader Plugin when a file fails to load.
- * 
+ *
  * Listen to it from a Scene using: `this.load.on('loaderror', listener)`.
  *
  * @event Phaser.Loader.Events#FILE_LOAD_ERROR
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Loader.File} file - A reference to the File which errored during load.
  */
 module.exports = 'loaderror';
@@ -13946,29 +15966,30 @@ module.exports = 'loaderror';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_LOAD_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
-  \***************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/FILE_LOAD_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The File Load Event.
- * 
+ *
  * This event is dispatched by the Loader Plugin when a file finishes loading,
  * but _before_ it is processed and added to the internal Phaser caches.
- * 
+ *
  * Listen to it from a Scene using: `this.load.on('load', listener)`.
  *
  * @event Phaser.Loader.Events#FILE_LOAD
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Loader.File} file - A reference to the File which just finished loading.
  */
 module.exports = 'load';
@@ -13977,29 +15998,30 @@ module.exports = 'load';
 /***/ }),
 
 /***/ "../../../src/loader/events/FILE_PROGRESS_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
-  \*******************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/FILE_PROGRESS_EVENT.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The File Load Progress Event.
- * 
+ *
  * This event is dispatched by the Loader Plugin during the load of a file, if the browser receives a DOM ProgressEvent and
  * the `lengthComputable` event property is true. Depending on the size of the file and browser in use, this may, or may not happen.
- * 
+ *
  * Listen to it from a Scene using: `this.load.on('fileprogress', listener)`.
  *
  * @event Phaser.Loader.Events#FILE_PROGRESS
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Loader.File} file - A reference to the File which errored during load.
  * @param {number} percentComplete - A value between 0 and 1 indicating how 'complete' this file is.
  */
@@ -14009,32 +16031,33 @@ module.exports = 'fileprogress';
 /***/ }),
 
 /***/ "../../../src/loader/events/POST_PROCESS_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
-  \******************************************************************/
+/*!****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/POST_PROCESS_EVENT.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Loader Plugin Post Process Event.
- * 
+ *
  * This event is dispatched by the Loader Plugin when the Loader has finished loading everything in the load queue.
  * It is dispatched before the internal lists are cleared and each File is destroyed.
- * 
+ *
  * Use this hook to perform any last minute processing of files that can only happen once the
  * Loader has completed, but prior to it emitting the `complete` event.
- * 
+ *
  * Listen to it from a Scene using: `this.load.on('postprocess', listener)`.
  *
  * @event Phaser.Loader.Events#POST_PROCESS
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
  */
 module.exports = 'postprocess';
@@ -14043,28 +16066,29 @@ module.exports = 'postprocess';
 /***/ }),
 
 /***/ "../../../src/loader/events/PROGRESS_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/PROGRESS_EVENT.js ***!
-  \**************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/PROGRESS_EVENT.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Loader Plugin Progress Event.
- * 
+ *
  * This event is dispatched when the Loader updates its load progress, typically as a result of a file having completed loading.
- * 
+ *
  * Listen to it from a Scene using: `this.load.on('progress', listener)`.
  *
  * @event Phaser.Loader.Events#PROGRESS
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {number} progress - The current progress of the load. A value between 0 and 1.
  */
 module.exports = 'progress';
@@ -14073,30 +16097,31 @@ module.exports = 'progress';
 /***/ }),
 
 /***/ "../../../src/loader/events/START_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/START_EVENT.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/START_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Loader Plugin Start Event.
- * 
+ *
  * This event is dispatched when the Loader starts running. At this point load progress is zero.
- * 
+ *
  * This event is dispatched even if there aren't any files in the load queue.
- * 
+ *
  * Listen to it from a Scene using: `this.load.on('start', listener)`.
  *
  * @event Phaser.Loader.Events#START
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
  */
 module.exports = 'start';
@@ -14105,15 +16130,15 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/loader/events/index.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/events/index.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/events/index.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14140,15 +16165,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/ImageFile.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/ImageFile.js ***!
-  \************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/filetypes/ImageFile.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14158,6 +16183,7 @@ var File = __webpack_require__(/*! ../File */ "../../../src/loader/File.js");
 var FileTypesManager = __webpack_require__(/*! ../FileTypesManager */ "../../../src/loader/FileTypesManager.js");
 var GetFastValue = __webpack_require__(/*! ../../utils/object/GetFastValue */ "../../../src/utils/object/GetFastValue.js");
 var IsPlainObject = __webpack_require__(/*! ../../utils/object/IsPlainObject */ "../../../src/utils/object/IsPlainObject.js");
+var GetURL = __webpack_require__(/*! ../GetURL */ "../../../src/loader/GetURL.js");
 
 /**
  * @classdesc
@@ -14232,6 +16258,14 @@ var ImageFile = new Class({
 
             loader.addFile(normalMap);
         }
+
+        this.useImageElementLoad = loader.imageLoadType === 'HTMLImageElement';
+
+        if (this.useImageElementLoad)
+        {
+            this.load = this.loadImage;
+            this.onProcess = this.onProcessImage;
+        }
     },
 
     /**
@@ -14269,6 +16303,70 @@ var ImageFile = new Class({
     },
 
     /**
+     * Handles image load processing.
+     *
+     * @method Phaser.Loader.FileTypes.ImageFile#onProcessImage
+     * @private
+     * @since 3.60.0
+     */
+    onProcessImage: function ()
+    {
+        var result = this.state;
+
+        this.state = CONST.FILE_PROCESSING;
+
+        if (result === CONST.FILE_LOADED)
+        {
+            this.onProcessComplete();
+        }
+        else
+        {
+            this.onProcessError();
+        }
+    },
+
+    /**
+     * Loads the image using either XHR or an Image tag.
+     *
+     * @method Phaser.Loader.FileTypes.ImageFile#loadImage
+     * @private
+     * @since 3.60.0
+     */
+    loadImage: function ()
+    {
+        this.state = CONST.FILE_LOADING;
+
+        this.src = GetURL(this, this.loader.baseURL);
+
+        if (this.src.indexOf('data:') === 0)
+        {
+            console.warn('Local data URIs are not supported: ' + this.key);
+        }
+        else
+        {
+            this.data = new Image();
+
+            this.data.crossOrigin = this.crossOrigin;
+
+            var _this = this;
+
+            this.data.onload = function ()
+            {
+                _this.state = CONST.FILE_LOADED;
+
+                _this.loader.nextFile(_this, true);
+            };
+
+            this.data.onerror = function ()
+            {
+                _this.loader.nextFile(_this, false);
+            };
+
+            this.data.src = this.src;
+        }
+    },
+
+    /**
      * Adds this file to its target cache upon successful loading and processing.
      *
      * @method Phaser.Loader.FileTypes.ImageFile#addToCache
@@ -14276,29 +16374,35 @@ var ImageFile = new Class({
      */
     addToCache: function ()
     {
-        var texture;
+        //  Check if we have a linked normal map
         var linkFile = this.linkFile;
 
-        if (linkFile && linkFile.state === CONST.FILE_COMPLETE)
+        if (linkFile)
         {
-            if (this.type === 'image')
+            //  We do, but has it loaded?
+            if (linkFile.state >= CONST.FILE_COMPLETE)
             {
-                texture = this.cache.addImage(this.key, this.data, linkFile.data);
-            }
-            else
-            {
-                texture = this.cache.addImage(linkFile.key, linkFile.data, this.data);
+                //  Both files have loaded
+                if (this.type === 'normalMap')
+                {
+                    //  linkFile.data = Image
+                    //  this.data = Normal Map
+                    this.cache.addImage(this.key, linkFile.data, this.data);
+                }
+                else
+                {
+                    //  linkFile.data = Normal Map
+                    //  this.data = Image
+                    this.cache.addImage(this.key, this.data, linkFile.data);
+                }
             }
 
-            this.pendingDestroy(texture);
-
-            linkFile.pendingDestroy(texture);
+            //  Nothing to do here, we'll use the linkFile `addToCache` call
+            //  to process this pair
         }
-        else if (!linkFile)
+        else
         {
-            texture = this.cache.addImage(this.key, this.data);
-
-            this.pendingDestroy(texture);
+            this.cache.addImage(this.key, this.data);
         }
     }
 
@@ -14382,6 +16486,10 @@ var ImageFile = new Class({
  * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
  * Normal maps are a WebGL only feature.
  *
+ * In Phaser 3.60 a new property was added that allows you to control how images are loaded. By default, images are loaded via XHR as Blobs.
+ * However, you can set `loader.imageLoadType: "HTMLImageElement"` in the Game Configuration and instead, the Loader will load all images
+ * via the Image tag instead.
+ *
  * Note: The ability to load this type of file will only be available if the Image File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
@@ -14419,15 +16527,15 @@ module.exports = ImageFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/JSONFile.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/JSONFile.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/filetypes/JSONFile.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14496,9 +16604,9 @@ var JSONFile = new Class({
 
         File.call(this, loader, fileConfig);
 
+        //  A JSON object has been provided (instead of a URL), so we'll use it directly as the File.data. No need to load it.
         if (IsPlainObject(url))
         {
-            //  Object provided instead of a URL, so no need to actually load it (populate data with value)
             if (dataKey)
             {
                 this.data = GetValue(url, dataKey);
@@ -14531,8 +16639,6 @@ var JSONFile = new Class({
             }
             catch (e)
             {
-                console.warn('Invalid JSON: ' + this.key);
-
                 this.onProcessError();
 
                 throw e;
@@ -14665,15 +16771,15 @@ module.exports = JSONFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/TextFile.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/loader/filetypes/TextFile.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/loader/filetypes/TextFile.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14849,15 +16955,15 @@ module.exports = TextFile;
 /***/ }),
 
 /***/ "../../../src/math/Average.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Average.js ***!
-  \**********************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Average.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14889,15 +16995,15 @@ module.exports = Average;
 /***/ }),
 
 /***/ "../../../src/math/Bernstein.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Bernstein.js ***!
-  \************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Bernstein.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14925,15 +17031,15 @@ module.exports = Bernstein;
 /***/ }),
 
 /***/ "../../../src/math/Between.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Between.js ***!
-  \**********************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Between.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14959,15 +17065,15 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/CatmullRom.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/CatmullRom.js ***!
-  \*************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/CatmullRom.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15001,15 +17107,15 @@ module.exports = CatmullRom;
 /***/ }),
 
 /***/ "../../../src/math/CeilTo.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/CeilTo.js ***!
-  \*********************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/CeilTo.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15043,15 +17149,15 @@ module.exports = CeilTo;
 /***/ }),
 
 /***/ "../../../src/math/Clamp.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Clamp.js ***!
-  \********************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Clamp.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15078,15 +17184,15 @@ module.exports = Clamp;
 /***/ }),
 
 /***/ "../../../src/math/DegToRad.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/DegToRad.js ***!
-  \***********************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/DegToRad.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15113,15 +17219,15 @@ module.exports = DegToRad;
 /***/ }),
 
 /***/ "../../../src/math/Difference.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Difference.js ***!
-  \*************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Difference.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15147,15 +17253,15 @@ module.exports = Difference;
 /***/ }),
 
 /***/ "../../../src/math/Euler.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Euler.js ***!
-  \********************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Euler.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15435,15 +17541,15 @@ module.exports = Euler;
 /***/ }),
 
 /***/ "../../../src/math/Factorial.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Factorial.js ***!
-  \************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Factorial.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15480,15 +17586,15 @@ module.exports = Factorial;
 /***/ }),
 
 /***/ "../../../src/math/FloatBetween.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FloatBetween.js ***!
-  \***************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/FloatBetween.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15514,15 +17620,15 @@ module.exports = FloatBetween;
 /***/ }),
 
 /***/ "../../../src/math/FloorTo.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FloorTo.js ***!
-  \**********************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/FloorTo.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15556,15 +17662,15 @@ module.exports = FloorTo;
 /***/ }),
 
 /***/ "../../../src/math/FromPercent.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/FromPercent.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/FromPercent.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15595,15 +17701,15 @@ module.exports = FromPercent;
 /***/ }),
 
 /***/ "../../../src/math/GetSpeed.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/GetSpeed.js ***!
-  \***********************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/GetSpeed.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15633,15 +17739,15 @@ module.exports = GetSpeed;
 /***/ }),
 
 /***/ "../../../src/math/IsEven.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/IsEven.js ***!
-  \*********************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/IsEven.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15669,15 +17775,15 @@ module.exports = IsEven;
 /***/ }),
 
 /***/ "../../../src/math/IsEvenStrict.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/IsEvenStrict.js ***!
-  \***************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/IsEvenStrict.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15703,15 +17809,15 @@ module.exports = IsEvenStrict;
 /***/ }),
 
 /***/ "../../../src/math/Linear.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Linear.js ***!
-  \*********************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Linear.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15737,16 +17843,55 @@ module.exports = Linear;
 
 /***/ }),
 
+/***/ "../../../src/math/LinearXY.js":
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/LinearXY.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Greg McLean <GregDevProjects>
+ * @copyright    2021 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Interpolates two given Vectors and returns a new Vector between them.
+ *
+ * Does not modify either of the passed Vectors.
+ *
+ * @function Phaser.Math.LinearXY
+ * @since 3.60.0
+ *
+ * @param {Phaser.Math.Vector2} vector1 - Starting vector
+ * @param {Phaser.Math.Vector2} vector2 - Ending vector
+ * @param {number} [t=0] - The percentage between vector1 and vector2 to return, represented as a number between 0 and 1.
+ *
+ * @return {Phaser.Math.Vector2} The step t% of the way between vector1 and vector2.
+ */
+var LinearXY = function (vector1, vector2, t)
+{
+    if (t === undefined) { t = 0; }
+
+    return vector1.clone().lerp(vector2, t);
+};
+
+module.exports = LinearXY;
+
+
+/***/ }),
+
 /***/ "../../../src/math/Matrix3.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Matrix3.js ***!
-  \**********************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Matrix3.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16336,15 +18481,15 @@ module.exports = Matrix3;
 /***/ }),
 
 /***/ "../../../src/math/Matrix4.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Matrix4.js ***!
-  \**********************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Matrix4.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18134,15 +20279,15 @@ module.exports = Matrix4;
 /***/ }),
 
 /***/ "../../../src/math/MaxAdd.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/MaxAdd.js ***!
-  \*********************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/MaxAdd.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18168,16 +20313,62 @@ module.exports = MaxAdd;
 
 /***/ }),
 
+/***/ "../../../src/math/Median.js":
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Median.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Vladislav Forsh <vlad@robowhale.com>
+ * @copyright    2021 RoboWhale
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Calculate the median of the given values. The values are sorted and the middle value is returned.
+ * In case of an even number of values, the average of the two middle values is returned.
+ *
+ * @function Phaser.Math.Median
+ * @since 3.54.0
+ *
+ * @param {number[]} values - The values to average.
+ *
+ * @return {number} The median value.
+ */
+var Median = function (values)
+{
+    var valuesNum = values.length;
+    if (valuesNum === 0)
+    {
+        return 0;
+    }
+
+    values.sort(function (a, b) { return a - b; });
+
+    var halfIndex = Math.floor(valuesNum / 2);
+
+    return valuesNum % 2 === 0
+        ? (values[halfIndex] + values[halfIndex - 1]) / 2
+        : values[halfIndex];
+};
+
+module.exports = Median;
+
+
+/***/ }),
+
 /***/ "../../../src/math/MinSub.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/MinSub.js ***!
-  \*********************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/MinSub.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18204,15 +20395,15 @@ module.exports = MinSub;
 /***/ }),
 
 /***/ "../../../src/math/Percent.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Percent.js ***!
-  \**********************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Percent.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18268,15 +20459,15 @@ module.exports = Percent;
 /***/ }),
 
 /***/ "../../../src/math/Quaternion.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Quaternion.js ***!
-  \*************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Quaternion.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19322,15 +21513,15 @@ module.exports = Quaternion;
 /***/ }),
 
 /***/ "../../../src/math/RadToDeg.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RadToDeg.js ***!
-  \***********************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RadToDeg.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19357,15 +21548,15 @@ module.exports = RadToDeg;
 /***/ }),
 
 /***/ "../../../src/math/RandomXY.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXY.js ***!
-  \***********************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RandomXY.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19402,15 +21593,15 @@ module.exports = RandomXY;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZ.js":
-/*!************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXYZ.js ***!
-  \************************************************/
+/*!**********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RandomXYZ.js ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19446,15 +21637,15 @@ module.exports = RandomXYZ;
 /***/ }),
 
 /***/ "../../../src/math/RandomXYZW.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RandomXYZW.js ***!
-  \*************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RandomXYZW.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19487,15 +21678,15 @@ module.exports = RandomXYZW;
 /***/ }),
 
 /***/ "../../../src/math/Rotate.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Rotate.js ***!
-  \*********************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Rotate.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19527,15 +21718,15 @@ module.exports = Rotate;
 /***/ }),
 
 /***/ "../../../src/math/RotateAround.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateAround.js ***!
-  \***************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RotateAround.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19576,15 +21767,15 @@ module.exports = RotateAround;
 /***/ }),
 
 /***/ "../../../src/math/RotateAroundDistance.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateAroundDistance.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RotateAroundDistance.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19622,15 +21813,15 @@ module.exports = RotateAroundDistance;
 /***/ }),
 
 /***/ "../../../src/math/RotateTo.js":
-/*!***********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateTo.js ***!
-  \***********************************************/
+/*!*********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RotateTo.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       samme
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19664,15 +21855,15 @@ module.exports = RotateTo;
 /***/ }),
 
 /***/ "../../../src/math/RotateVec3.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RotateVec3.js ***!
-  \*************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RotateVec3.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19717,15 +21908,15 @@ module.exports = RotateVec3;
 /***/ }),
 
 /***/ "../../../src/math/RoundAwayFromZero.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RoundAwayFromZero.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RoundAwayFromZero.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19751,31 +21942,31 @@ module.exports = RoundAwayFromZero;
 /***/ }),
 
 /***/ "../../../src/math/RoundTo.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/RoundTo.js ***!
-  \**********************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/RoundTo.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Round a value to the given precision.
- * 
+ *
  * For example:
- * 
+ *
  * ```javascript
  * RoundTo(123.456, 0) = 123
  * RoundTo(123.456, 1) = 120
  * RoundTo(123.456, 2) = 100
  * ```
- * 
+ *
  * To round the decimal, i.e. to round to precision, pass in a negative `place`:
- * 
+ *
  * ```javascript
  * RoundTo(123.456789, 0) = 123
  * RoundTo(123.456789, -1) = 123.5
@@ -19808,15 +21999,15 @@ module.exports = RoundTo;
 /***/ }),
 
 /***/ "../../../src/math/SinCosTableGenerator.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SinCosTableGenerator.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/SinCosTableGenerator.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19866,15 +22057,15 @@ module.exports = SinCosTableGenerator;
 /***/ }),
 
 /***/ "../../../src/math/SmoothStep.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SmoothStep.js ***!
-  \*************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/SmoothStep.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19918,15 +22109,15 @@ module.exports = SmoothStep;
 /***/ }),
 
 /***/ "../../../src/math/SmootherStep.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/SmootherStep.js ***!
-  \***************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/SmootherStep.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19962,15 +22153,15 @@ module.exports = SmootherStep;
 /***/ }),
 
 /***/ "../../../src/math/ToXY.js":
-/*!*******************************************!*\
-  !*** D:/wamp/www/phaser/src/math/ToXY.js ***!
-  \*******************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/ToXY.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19978,9 +22169,9 @@ var Vector2 = __webpack_require__(/*! ./Vector2 */ "../../../src/math/Vector2.js
 
 /**
  * Returns a Vector2 containing the x and y position of the given index in a `width` x `height` sized grid.
- * 
+ *
  * For example, in a 6 x 4 grid, index 16 would equal x: 4 y: 2.
- * 
+ *
  * If the given index is out of range an empty Vector2 is returned.
  *
  * @function Phaser.Math.ToXY
@@ -20012,11 +22203,9 @@ var ToXY = function (index, width, height, out)
         {
             x = index;
         }
-
-        out.set(x, y);
     }
 
-    return out;
+    return out.set(x, y);
 };
 
 module.exports = ToXY;
@@ -20025,15 +22214,15 @@ module.exports = ToXY;
 /***/ }),
 
 /***/ "../../../src/math/TransformXY.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/TransformXY.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/TransformXY.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20085,15 +22274,15 @@ module.exports = TransformXY;
 /***/ }),
 
 /***/ "../../../src/math/Vector2.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector2.js ***!
-  \**********************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Vector2.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20114,8 +22303,8 @@ var FuzzyEqual = __webpack_require__(/*! ../math/fuzzy/Equal */ "../../../src/ma
  * @constructor
  * @since 3.0.0
  *
- * @param {number|Phaser.Types.Math.Vector2Like} [x] - The x component, or an object with `x` and `y` properties.
- * @param {number} [y] - The y component.
+ * @param {number|Phaser.Types.Math.Vector2Like} [x=0] - The x component, or an object with `x` and `y` properties.
+ * @param {number} [y=x] - The y component.
  */
 var Vector2 = new Class({
 
@@ -20176,7 +22365,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#copy
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to copy the components from.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to copy the components from.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -20272,7 +22461,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#equals
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} v - The vector to compare with this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} v - The vector to compare with this Vector.
      *
      * @return {boolean} Whether the given Vector is equal to this Vector.
      */
@@ -20287,7 +22476,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#fuzzyEquals
      * @since 3.23.0
      *
-     * @param {Phaser.Math.Vector2} v - The vector to compare with this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} v - The vector to compare with this Vector.
      * @param {number} [epsilon=0.0001] - The tolerance value.
      *
      * @return {boolean} Whether both absolute differences of the x and y components are smaller than `epsilon`.
@@ -20340,7 +22529,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#add
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to add to this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to add to this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -20358,7 +22547,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#subtract
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to subtract from this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to subtract from this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -20378,7 +22567,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#multiply
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to multiply this Vector by.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to multiply this Vector by.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -20424,7 +22613,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#divide
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to divide this Vector by.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to divide this Vector by.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -20458,7 +22647,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#distance
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to calculate the distance to.
      *
      * @return {number} The distance from this Vector to the given Vector.
      */
@@ -20476,7 +22665,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#distanceSq
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to calculate the distance to.
      *
      * @return {number} The distance from this Vector to the given Vector, squared.
      */
@@ -20604,7 +22793,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#dot
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector2 to dot product with this Vector2.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to dot product with this Vector2.
      *
      * @return {number} The dot product of this Vector and the given Vector.
      */
@@ -20619,7 +22808,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#cross
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector2 to cross with this Vector2.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to cross with this Vector2.
      *
      * @return {number} The cross product of this Vector and the given Vector.
      */
@@ -20636,7 +22825,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#lerp
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - The Vector2 to interpolate towards.
+     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to interpolate towards.
      * @param {number} [t=0] - The interpolation percentage, between 0 and 1.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
@@ -20784,6 +22973,23 @@ var Vector2 = new Class({
         var sin = Math.sin(delta);
 
         return this.set(cos * this.x - sin * this.y, sin * this.x + cos * this.y);
+    },
+
+    /**
+     * Project this Vector onto another.
+     *
+     * @method Phaser.Math.Vector2#project
+     * @since 3.60.0
+     *
+     * @param {Phaser.Math.Vector2} src - The vector to project onto.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    project: function (src)
+    {
+        var scalar = this.dot(src) / src.dot(src);
+
+        return this.copy(src).scale(scalar);
     }
 
 });
@@ -20866,15 +23072,15 @@ module.exports = Vector2;
 /***/ }),
 
 /***/ "../../../src/math/Vector3.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector3.js ***!
-  \**********************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Vector3.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -21917,15 +24123,15 @@ module.exports = Vector3;
 /***/ }),
 
 /***/ "../../../src/math/Vector4.js":
-/*!**********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Vector4.js ***!
-  \**********************************************/
+/*!********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Vector4.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22463,15 +24669,15 @@ module.exports = Vector4;
 /***/ }),
 
 /***/ "../../../src/math/Within.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Within.js ***!
-  \*********************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Within.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22498,20 +24704,20 @@ module.exports = Within;
 /***/ }),
 
 /***/ "../../../src/math/Wrap.js":
-/*!*******************************************!*\
-  !*** D:/wamp/www/phaser/src/math/Wrap.js ***!
-  \*******************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/Wrap.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Wrap the given `value` between `min` and `max.
+ * Wrap the given `value` between `min` and `max`.
  *
  * @function Phaser.Math.Wrap
  * @since 3.0.0
@@ -22535,15 +24741,15 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/Between.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Between.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/Between.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22571,15 +24777,15 @@ module.exports = Between;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPoints.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenPoints.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/BetweenPoints.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22607,15 +24813,15 @@ module.exports = BetweenPoints;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenPointsY.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenPointsY.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/BetweenPointsY.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22644,15 +24850,15 @@ module.exports = BetweenPointsY;
 /***/ }),
 
 /***/ "../../../src/math/angle/BetweenY.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/BetweenY.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/BetweenY.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22683,15 +24889,15 @@ module.exports = BetweenY;
 /***/ }),
 
 /***/ "../../../src/math/angle/CounterClockwise.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/CounterClockwise.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/CounterClockwise.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22733,15 +24939,15 @@ module.exports = CounterClockwise;
 /***/ }),
 
 /***/ "../../../src/math/angle/Normalize.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Normalize.js ***!
-  \******************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/Normalize.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22775,16 +24981,16 @@ module.exports = Normalize;
 /***/ }),
 
 /***/ "../../../src/math/angle/Random.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Random.js ***!
-  \***************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/Random.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       @samme
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22809,16 +25015,16 @@ module.exports = Random;
 /***/ }),
 
 /***/ "../../../src/math/angle/RandomDegrees.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/RandomDegrees.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/RandomDegrees.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       @samme
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22843,15 +25049,15 @@ module.exports = RandomDegrees;
 /***/ }),
 
 /***/ "../../../src/math/angle/Reverse.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Reverse.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/Reverse.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22878,15 +25084,15 @@ module.exports = Reverse;
 /***/ }),
 
 /***/ "../../../src/math/angle/RotateTo.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/RotateTo.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/RotateTo.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22950,15 +25156,15 @@ module.exports = RotateTo;
 /***/ }),
 
 /***/ "../../../src/math/angle/ShortestBetween.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/ShortestBetween.js ***!
-  \************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/ShortestBetween.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23002,15 +25208,15 @@ module.exports = ShortestBetween;
 /***/ }),
 
 /***/ "../../../src/math/angle/Wrap.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/Wrap.js ***!
-  \*************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/Wrap.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23039,15 +25245,15 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/WrapDegrees.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/WrapDegrees.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/WrapDegrees.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23076,15 +25282,15 @@ module.exports = WrapDegrees;
 /***/ }),
 
 /***/ "../../../src/math/angle/index.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/angle/index.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/angle/index.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23114,15 +25320,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/const.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/const.js ***!
-  \********************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/const.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23130,7 +25336,7 @@ var MATH_CONST = {
 
     /**
      * The value of PI * 2.
-     * 
+     *
      * @name Phaser.Math.PI2
      * @type {number}
      * @since 3.0.0
@@ -23139,7 +25345,7 @@ var MATH_CONST = {
 
     /**
      * The value of PI * 0.5.
-     * 
+     *
      * @name Phaser.Math.TAU
      * @type {number}
      * @since 3.0.0
@@ -23148,7 +25354,7 @@ var MATH_CONST = {
 
     /**
      * An epsilon value (1.0e-6)
-     * 
+     *
      * @name Phaser.Math.EPSILON
      * @type {number}
      * @since 3.0.0
@@ -23157,7 +25363,7 @@ var MATH_CONST = {
 
     /**
      * For converting degrees to radians (PI / 180)
-     * 
+     *
      * @name Phaser.Math.DEG_TO_RAD
      * @type {number}
      * @since 3.0.0
@@ -23166,7 +25372,7 @@ var MATH_CONST = {
 
     /**
      * For converting radians to degrees (180 / PI)
-     * 
+     *
      * @name Phaser.Math.RAD_TO_DEG
      * @type {number}
      * @since 3.0.0
@@ -23176,7 +25382,7 @@ var MATH_CONST = {
     /**
      * An instance of the Random Number Generator.
      * This is not set until the Game boots.
-     * 
+     *
      * @name Phaser.Math.RND
      * @type {Phaser.Math.RandomDataGenerator}
      * @since 3.0.0
@@ -23186,7 +25392,7 @@ var MATH_CONST = {
     /**
      * The minimum safe integer this browser supports.
      * We use a const for backward compatibility with Internet Explorer.
-     * 
+     *
      * @name Phaser.Math.MIN_SAFE_INTEGER
      * @type {number}
      * @since 3.21.0
@@ -23196,7 +25402,7 @@ var MATH_CONST = {
     /**
      * The maximum safe integer this browser supports.
      * We use a const for backward compatibility with Internet Explorer.
-     * 
+     *
      * @name Phaser.Math.MAX_SAFE_INTEGER
      * @type {number}
      * @since 3.21.0
@@ -23211,15 +25417,15 @@ module.exports = MATH_CONST;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetween.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetween.js ***!
-  \***************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceBetween.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23250,15 +25456,15 @@ module.exports = DistanceBetween;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetweenPoints.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetweenPoints.js ***!
-  \*********************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceBetweenPoints.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       samme
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23287,15 +25493,15 @@ module.exports = DistanceBetweenPoints;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceBetweenPointsSquared.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceBetweenPointsSquared.js ***!
-  \****************************************************************************/
+/*!**************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceBetweenPointsSquared.js ***!
+  \**************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       samme
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23324,15 +25530,15 @@ module.exports = DistanceBetweenPointsSquared;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceChebyshev.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceChebyshev.js ***!
-  \*****************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceChebyshev.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       samme
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23363,15 +25569,15 @@ module.exports = ChebyshevDistance;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistancePower.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistancePower.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistancePower.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23402,15 +25608,15 @@ module.exports = DistancePower;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceSnake.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceSnake.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceSnake.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       samme
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23441,15 +25647,15 @@ module.exports = SnakeDistance;
 /***/ }),
 
 /***/ "../../../src/math/distance/DistanceSquared.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/DistanceSquared.js ***!
-  \***************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/DistanceSquared.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23480,15 +25686,15 @@ module.exports = DistanceSquared;
 /***/ }),
 
 /***/ "../../../src/math/distance/index.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/distance/index.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/distance/index.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23512,15 +25718,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/back/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/In.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/back/In.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23548,15 +25754,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/InOut.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/back/InOut.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23593,15 +25799,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/Out.js ***!
-  \******************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/back/Out.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23629,15 +25835,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/back/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/back/index.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/back/index.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23657,15 +25863,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/In.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/In.js ***!
-  \*******************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/bounce/In.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23707,15 +25913,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/InOut.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/InOut.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/bounce/InOut.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23776,15 +25982,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/Out.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/Out.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/bounce/Out.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23824,15 +26030,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/bounce/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/bounce/index.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/bounce/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23852,15 +26058,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/In.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/In.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/circular/In.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23885,15 +26091,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/InOut.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/InOut.js ***!
-  \************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/circular/InOut.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23925,15 +26131,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/Out.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/Out.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/circular/Out.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23958,15 +26164,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/circular/index.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/circular/index.js ***!
-  \************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/circular/index.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23986,15 +26192,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/In.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/In.js ***!
-  \******************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/cubic/In.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24019,15 +26225,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/InOut.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/InOut.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/cubic/InOut.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24059,15 +26265,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/Out.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/Out.js ***!
-  \*******************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/cubic/Out.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24092,15 +26298,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/cubic/index.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/cubic/index.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/cubic/index.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24120,15 +26326,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/In.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/elastic/In.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24180,15 +26386,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/InOut.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/elastic/InOut.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24247,15 +26453,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/Out.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/elastic/Out.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24307,15 +26513,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/elastic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/elastic/index.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/elastic/index.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24335,15 +26541,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/In.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/expo/In.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24368,15 +26574,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/InOut.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/expo/InOut.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24408,15 +26614,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/Out.js ***!
-  \******************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/expo/Out.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24441,15 +26647,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/expo/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/expo/index.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/expo/index.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24469,15 +26675,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/index.js ***!
-  \***************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24506,15 +26712,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/Linear.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/linear/Linear.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/linear/Linear.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24539,15 +26745,15 @@ module.exports = Linear;
 /***/ }),
 
 /***/ "../../../src/math/easing/linear/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/linear/index.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/linear/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24557,15 +26763,15 @@ module.exports = __webpack_require__(/*! ./Linear */ "../../../src/math/easing/l
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/In.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/In.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quadratic/In.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24590,15 +26796,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/InOut.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/InOut.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quadratic/InOut.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24630,15 +26836,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/Out.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/Out.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quadratic/Out.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24663,15 +26869,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quadratic/index.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quadratic/index.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quadratic/index.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24691,15 +26897,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/In.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quartic/In.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24724,15 +26930,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/InOut.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quartic/InOut.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24764,15 +26970,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/Out.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quartic/Out.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24797,15 +27003,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quartic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quartic/index.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quartic/index.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24825,15 +27031,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/In.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/In.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quintic/In.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24858,15 +27064,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/InOut.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/InOut.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quintic/InOut.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24898,15 +27104,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/Out.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/Out.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quintic/Out.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24931,15 +27137,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/quintic/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/quintic/index.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/quintic/index.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24959,15 +27165,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/In.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/In.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/sine/In.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25003,15 +27209,15 @@ module.exports = In;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/InOut.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/InOut.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/sine/InOut.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25047,15 +27253,15 @@ module.exports = InOut;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/Out.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/Out.js ***!
-  \******************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/sine/Out.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25091,15 +27297,15 @@ module.exports = Out;
 /***/ }),
 
 /***/ "../../../src/math/easing/sine/index.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/sine/index.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/sine/index.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25119,15 +27325,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/Stepped.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/stepped/Stepped.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/stepped/Stepped.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25166,15 +27372,15 @@ module.exports = Stepped;
 /***/ }),
 
 /***/ "../../../src/math/easing/stepped/index.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/easing/stepped/index.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/easing/stepped/index.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25188,15 +27394,15 @@ module.exports = __webpack_require__(/*! ./Stepped */ "../../../src/math/easing/
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Ceil.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Ceil.js ***!
-  \*************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/Ceil.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25224,15 +27430,15 @@ module.exports = Ceil;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Equal.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Equal.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/Equal.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25263,15 +27469,15 @@ module.exports = Equal;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/Floor.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/Floor.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/Floor.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25299,15 +27505,15 @@ module.exports = Floor;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/GreaterThan.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/GreaterThan.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/GreaterThan.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25338,15 +27544,15 @@ module.exports = GreaterThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/LessThan.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/LessThan.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/LessThan.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25377,15 +27583,15 @@ module.exports = LessThan;
 /***/ }),
 
 /***/ "../../../src/math/fuzzy/index.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/fuzzy/index.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/fuzzy/index.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25407,15 +27613,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/index.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/math/index.js ***!
-  \********************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/index.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25458,7 +27664,9 @@ var PhaserMath = {
     IsEven: __webpack_require__(/*! ./IsEven */ "../../../src/math/IsEven.js"),
     IsEvenStrict: __webpack_require__(/*! ./IsEvenStrict */ "../../../src/math/IsEvenStrict.js"),
     Linear: __webpack_require__(/*! ./Linear */ "../../../src/math/Linear.js"),
+    LinearXY: __webpack_require__(/*! ./LinearXY */ "../../../src/math/LinearXY.js"),
     MaxAdd: __webpack_require__(/*! ./MaxAdd */ "../../../src/math/MaxAdd.js"),
+    Median: __webpack_require__(/*! ./Median */ "../../../src/math/Median.js"),
     MinSub: __webpack_require__(/*! ./MinSub */ "../../../src/math/MinSub.js"),
     Percent: __webpack_require__(/*! ./Percent */ "../../../src/math/Percent.js"),
     RadToDeg: __webpack_require__(/*! ./RadToDeg */ "../../../src/math/RadToDeg.js"),
@@ -25502,15 +27710,15 @@ module.exports = PhaserMath;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/BezierInterpolation.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/BezierInterpolation.js ***!
-  \************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/BezierInterpolation.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25546,15 +27754,15 @@ module.exports = BezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CatmullRomInterpolation.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
-  \****************************************************************************/
+/*!**************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/CatmullRomInterpolation.js ***!
+  \**************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25608,15 +27816,15 @@ module.exports = CatmullRomInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/CubicBezierInterpolation.js":
-/*!*****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
-  \*****************************************************************************/
+/*!***************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/CubicBezierInterpolation.js ***!
+  \***************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25683,15 +27891,15 @@ module.exports = CubicBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/LinearInterpolation.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/LinearInterpolation.js ***!
-  \************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/LinearInterpolation.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25735,15 +27943,15 @@ module.exports = LinearInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/QuadraticBezierInterpolation.js":
-/*!*********************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
-  \*********************************************************************************/
+/*!*******************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/QuadraticBezierInterpolation.js ***!
+  \*******************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25799,15 +28007,15 @@ module.exports = QuadraticBezierInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmoothStepInterpolation.js":
-/*!****************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
-  \****************************************************************************/
+/*!**************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/SmoothStepInterpolation.js ***!
+  \**************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25837,15 +28045,15 @@ module.exports = SmoothStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/SmootherStepInterpolation.js":
-/*!******************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
-  \******************************************************************************/
+/*!****************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/SmootherStepInterpolation.js ***!
+  \****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25875,15 +28083,15 @@ module.exports = SmootherStepInterpolation;
 /***/ }),
 
 /***/ "../../../src/math/interpolation/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/interpolation/index.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/interpolation/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25907,15 +28115,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/pow2/GetPowerOfTwo.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/GetPowerOfTwo.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/pow2/GetPowerOfTwo.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25942,15 +28150,15 @@ module.exports = GetPowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsSizePowerOfTwo.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
-  \************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/pow2/IsSizePowerOfTwo.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25977,15 +28185,15 @@ module.exports = IsSizePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/IsValuePowerOfTwo.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/pow2/IsValuePowerOfTwo.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26010,15 +28218,15 @@ module.exports = IsValuePowerOfTwo;
 /***/ }),
 
 /***/ "../../../src/math/pow2/index.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/pow2/index.js ***!
-  \*************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/pow2/index.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26038,15 +28246,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/math/random-data-generator/RandomDataGenerator.js":
-/*!********************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
-  \********************************************************************************/
+/*!******************************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/random-data-generator/RandomDataGenerator.js ***!
+  \******************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26055,13 +28263,13 @@ var Class = __webpack_require__(/*! ../../utils/Class */ "../../../src/utils/Cla
 /**
  * @classdesc
  * A seeded Random Data Generator.
- * 
+ *
  * Access via `Phaser.Math.RND` which is an instance of this class pre-defined
  * by Phaser. Or, create your own instance to use as you require.
- * 
+ *
  * The `Math.RND` generator is seeded by the Game Config property value `seed`.
  * If no such config property exists, a random number is used.
- * 
+ *
  * If you create your own instance of this class you should provide a seed for it.
  * If no seed is given it will use a 'random' one based on Date.now.
  *
@@ -26393,7 +28601,7 @@ var RandomDataGenerator = new Class({
      *
      * @method Phaser.Math.RandomDataGenerator#pick
      * @since 3.0.0
-     * 
+     *
      * @generic T
      * @genericUse {T[]} - [array]
      * @genericUse {T} - [$return]
@@ -26553,15 +28761,15 @@ module.exports = RandomDataGenerator;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapCeil.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapCeil.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/snap/SnapCeil.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26602,15 +28810,15 @@ module.exports = SnapCeil;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapFloor.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapFloor.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/snap/SnapFloor.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26651,15 +28859,15 @@ module.exports = SnapFloor;
 /***/ }),
 
 /***/ "../../../src/math/snap/SnapTo.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/SnapTo.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/snap/SnapTo.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26699,15 +28907,15 @@ module.exports = SnapTo;
 /***/ }),
 
 /***/ "../../../src/math/snap/index.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/math/snap/index.js ***!
-  \*************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/math/snap/index.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26727,15 +28935,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/plugins/BasePlugin.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/plugins/BasePlugin.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/plugins/BasePlugin.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2020 Photon Storm Ltd.
+* @copyright    2013-2023 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
@@ -26861,16 +29069,230 @@ module.exports = BasePlugin;
 
 /***/ }),
 
+/***/ "../../../src/plugins/PluginCache.js":
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/plugins/PluginCache.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+//  Contains the plugins that Phaser uses globally and locally.
+//  These are the source objects, not instantiated.
+var corePlugins = {};
+
+//  Contains the plugins that the dev has loaded into their game
+//  These are the source objects, not instantiated.
+var customPlugins = {};
+
+var PluginCache = {};
+
+/**
+ * @namespace Phaser.Plugins.PluginCache
+ */
+
+/**
+ * Static method called directly by the Core internal Plugins.
+ * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
+ * Plugin is the object to instantiate to create the plugin
+ * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
+ *
+ * @method Phaser.Plugins.PluginCache.register
+ * @since 3.8.0
+ *
+ * @param {string} key - A reference used to get this plugin from the plugin cache.
+ * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
+ * @param {string} mapping - If this plugin is to be injected into the Scene Systems, this is the property key map used.
+ * @param {boolean} [custom=false] - Core Scene plugin or a Custom Scene plugin?
+ */
+PluginCache.register = function (key, plugin, mapping, custom)
+{
+    if (custom === undefined) { custom = false; }
+
+    corePlugins[key] = { plugin: plugin, mapping: mapping, custom: custom };
+};
+
+/**
+ * Stores a custom plugin in the global plugin cache.
+ * The key must be unique, within the scope of the cache.
+ *
+ * @method Phaser.Plugins.PluginCache.registerCustom
+ * @since 3.8.0
+ *
+ * @param {string} key - A reference used to get this plugin from the plugin cache.
+ * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
+ * @param {string} mapping - If this plugin is to be injected into the Scene Systems, this is the property key map used.
+ * @param {?any} data - A value to be passed to the plugin's `init` method.
+ */
+PluginCache.registerCustom = function (key, plugin, mapping, data)
+{
+    customPlugins[key] = { plugin: plugin, mapping: mapping, data: data };
+};
+
+/**
+ * Checks if the given key is already being used in the core plugin cache.
+ *
+ * @method Phaser.Plugins.PluginCache.hasCore
+ * @since 3.8.0
+ *
+ * @param {string} key - The key to check for.
+ *
+ * @return {boolean} `true` if the key is already in use in the core cache, otherwise `false`.
+ */
+PluginCache.hasCore = function (key)
+{
+    return corePlugins.hasOwnProperty(key);
+};
+
+/**
+ * Checks if the given key is already being used in the custom plugin cache.
+ *
+ * @method Phaser.Plugins.PluginCache.hasCustom
+ * @since 3.8.0
+ *
+ * @param {string} key - The key to check for.
+ *
+ * @return {boolean} `true` if the key is already in use in the custom cache, otherwise `false`.
+ */
+PluginCache.hasCustom = function (key)
+{
+    return customPlugins.hasOwnProperty(key);
+};
+
+/**
+ * Returns the core plugin object from the cache based on the given key.
+ *
+ * @method Phaser.Plugins.PluginCache.getCore
+ * @since 3.8.0
+ *
+ * @param {string} key - The key of the core plugin to get.
+ *
+ * @return {Phaser.Types.Plugins.CorePluginContainer} The core plugin object.
+ */
+PluginCache.getCore = function (key)
+{
+    return corePlugins[key];
+};
+
+/**
+ * Returns the custom plugin object from the cache based on the given key.
+ *
+ * @method Phaser.Plugins.PluginCache.getCustom
+ * @since 3.8.0
+ *
+ * @param {string} key - The key of the custom plugin to get.
+ *
+ * @return {Phaser.Types.Plugins.CustomPluginContainer} The custom plugin object.
+ */
+PluginCache.getCustom = function (key)
+{
+    return customPlugins[key];
+};
+
+/**
+ * Returns an object from the custom cache based on the given key that can be instantiated.
+ *
+ * @method Phaser.Plugins.PluginCache.getCustomClass
+ * @since 3.8.0
+ *
+ * @param {string} key - The key of the custom plugin to get.
+ *
+ * @return {function} The custom plugin object.
+ */
+PluginCache.getCustomClass = function (key)
+{
+    return (customPlugins.hasOwnProperty(key)) ? customPlugins[key].plugin : null;
+};
+
+/**
+ * Removes a core plugin based on the given key.
+ *
+ * @method Phaser.Plugins.PluginCache.remove
+ * @since 3.8.0
+ *
+ * @param {string} key - The key of the core plugin to remove.
+ */
+PluginCache.remove = function (key)
+{
+    if (corePlugins.hasOwnProperty(key))
+    {
+        delete corePlugins[key];
+    }
+};
+
+/**
+ * Removes a custom plugin based on the given key.
+ *
+ * @method Phaser.Plugins.PluginCache.removeCustom
+ * @since 3.8.0
+ *
+ * @param {string} key - The key of the custom plugin to remove.
+ */
+PluginCache.removeCustom = function (key)
+{
+    if (customPlugins.hasOwnProperty(key))
+    {
+        delete customPlugins[key];
+    }
+};
+
+/**
+ * Removes all Core Plugins.
+ *
+ * This includes all of the internal system plugins that Phaser needs, like the Input Plugin and Loader Plugin.
+ * So be sure you only call this if you do not wish to run Phaser again.
+ *
+ * @method Phaser.Plugins.PluginCache.destroyCorePlugins
+ * @since 3.12.0
+ */
+PluginCache.destroyCorePlugins = function ()
+{
+    for (var key in corePlugins)
+    {
+        if (corePlugins.hasOwnProperty(key))
+        {
+            delete corePlugins[key];
+        }
+    }
+};
+
+/**
+ * Removes all Custom Plugins.
+ *
+ * @method Phaser.Plugins.PluginCache.destroyCustomPlugins
+ * @since 3.12.0
+ */
+PluginCache.destroyCustomPlugins = function ()
+{
+    for (var key in customPlugins)
+    {
+        if (customPlugins.hasOwnProperty(key))
+        {
+            delete customPlugins[key];
+        }
+    }
+};
+
+module.exports = PluginCache;
+
+
+/***/ }),
+
 /***/ "../../../src/plugins/ScenePlugin.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/plugins/ScenePlugin.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/plugins/ScenePlugin.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2020 Photon Storm Ltd.
+* @copyright    2013-2023 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
@@ -26892,6 +29314,7 @@ var SceneEvents = __webpack_require__(/*! ../scene/events */ "../../../src/scene
  *
  * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
  * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Plugin Manager.
+ * @param {string} pluginKey - The key under which this plugin has been installed into the Scene Systems.
  */
 var ScenePlugin = new Class({
 
@@ -26899,7 +29322,7 @@ var ScenePlugin = new Class({
 
     initialize:
 
-    function ScenePlugin (scene, pluginManager)
+    function ScenePlugin (scene, pluginManager, pluginKey)
     {
         BasePlugin.call(this, pluginManager);
 
@@ -26928,6 +29351,19 @@ var ScenePlugin = new Class({
          * @since 3.8.0
          */
         this.systems = scene.sys;
+
+        /**
+         * The key under which this plugin was installed into the Scene Systems.
+         *
+         * This property is only set when the plugin is instantiated and added to the Scene, not before.
+         * You can use it during the `boot` method.
+         *
+         * @name Phaser.Plugins.ScenePlugin#pluginKey
+         * @type {string}
+         * @readonly
+         * @since 3.54.0
+         */
+        this.pluginKey = pluginKey;
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
     },
@@ -26973,7 +29409,7 @@ var ScenePlugin = new Class({
 
     /**
      * Game instance has been destroyed.
-     * 
+     *
      * You must release everything in here, all references, all objects, free it all up.
      *
      * @method Phaser.Plugins.ScenePlugin#destroy
@@ -26995,21 +29431,21 @@ module.exports = ScenePlugin;
 /***/ }),
 
 /***/ "../../../src/renderer/BlendModes.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/BlendModes.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/renderer/BlendModes.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Phaser Blend Modes.
- * 
+ *
  * @namespace Phaser.BlendModes
  * @since 3.0.0
  */
@@ -27018,7 +29454,7 @@ module.exports = {
 
     /**
      * Skips the Blend Mode check in the renderer.
-     * 
+     *
      * @name Phaser.BlendModes.SKIP_CHECK
      * @type {number}
      * @const
@@ -27029,7 +29465,7 @@ module.exports = {
     /**
      * Normal blend mode. For Canvas and WebGL.
      * This is the default setting and draws new shapes on top of the existing canvas content.
-     * 
+     *
      * @name Phaser.BlendModes.NORMAL
      * @type {number}
      * @const
@@ -27040,7 +29476,7 @@ module.exports = {
     /**
      * Add blend mode. For Canvas and WebGL.
      * Where both shapes overlap the color is determined by adding color values.
-     * 
+     *
      * @name Phaser.BlendModes.ADD
      * @type {number}
      * @const
@@ -27051,7 +29487,7 @@ module.exports = {
     /**
      * Multiply blend mode. For Canvas and WebGL.
      * The pixels are of the top layer are multiplied with the corresponding pixel of the bottom layer. A darker picture is the result.
-     * 
+     *
      * @name Phaser.BlendModes.MULTIPLY
      * @type {number}
      * @const
@@ -27062,7 +29498,7 @@ module.exports = {
     /**
      * Screen blend mode. For Canvas and WebGL.
      * The pixels are inverted, multiplied, and inverted again. A lighter picture is the result (opposite of multiply)
-     * 
+     *
      * @name Phaser.BlendModes.SCREEN
      * @type {number}
      * @const
@@ -27073,7 +29509,7 @@ module.exports = {
     /**
      * Overlay blend mode. For Canvas only.
      * A combination of multiply and screen. Dark parts on the base layer become darker, and light parts become lighter.
-     * 
+     *
      * @name Phaser.BlendModes.OVERLAY
      * @type {number}
      * @const
@@ -27084,7 +29520,7 @@ module.exports = {
     /**
      * Darken blend mode. For Canvas only.
      * Retains the darkest pixels of both layers.
-     * 
+     *
      * @name Phaser.BlendModes.DARKEN
      * @type {number}
      * @const
@@ -27095,7 +29531,7 @@ module.exports = {
     /**
      * Lighten blend mode. For Canvas only.
      * Retains the lightest pixels of both layers.
-     * 
+     *
      * @name Phaser.BlendModes.LIGHTEN
      * @type {number}
      * @const
@@ -27106,7 +29542,7 @@ module.exports = {
     /**
      * Color Dodge blend mode. For Canvas only.
      * Divides the bottom layer by the inverted top layer.
-     * 
+     *
      * @name Phaser.BlendModes.COLOR_DODGE
      * @type {number}
      * @const
@@ -27117,7 +29553,7 @@ module.exports = {
     /**
      * Color Burn blend mode. For Canvas only.
      * Divides the inverted bottom layer by the top layer, and then inverts the result.
-     * 
+     *
      * @name Phaser.BlendModes.COLOR_BURN
      * @type {number}
      * @const
@@ -27128,7 +29564,7 @@ module.exports = {
     /**
      * Hard Light blend mode. For Canvas only.
      * A combination of multiply and screen like overlay, but with top and bottom layer swapped.
-     * 
+     *
      * @name Phaser.BlendModes.HARD_LIGHT
      * @type {number}
      * @const
@@ -27139,7 +29575,7 @@ module.exports = {
     /**
      * Soft Light blend mode. For Canvas only.
      * A softer version of hard-light. Pure black or white does not result in pure black or white.
-     * 
+     *
      * @name Phaser.BlendModes.SOFT_LIGHT
      * @type {number}
      * @const
@@ -27150,7 +29586,7 @@ module.exports = {
     /**
      * Difference blend mode. For Canvas only.
      * Subtracts the bottom layer from the top layer or the other way round to always get a positive value.
-     * 
+     *
      * @name Phaser.BlendModes.DIFFERENCE
      * @type {number}
      * @const
@@ -27161,7 +29597,7 @@ module.exports = {
     /**
      * Exclusion blend mode. For Canvas only.
      * Like difference, but with lower contrast.
-     * 
+     *
      * @name Phaser.BlendModes.EXCLUSION
      * @type {number}
      * @const
@@ -27172,7 +29608,7 @@ module.exports = {
     /**
      * Hue blend mode. For Canvas only.
      * Preserves the luma and chroma of the bottom layer, while adopting the hue of the top layer.
-     * 
+     *
      * @name Phaser.BlendModes.HUE
      * @type {number}
      * @const
@@ -27183,7 +29619,7 @@ module.exports = {
     /**
      * Saturation blend mode. For Canvas only.
      * Preserves the luma and hue of the bottom layer, while adopting the chroma of the top layer.
-     * 
+     *
      * @name Phaser.BlendModes.SATURATION
      * @type {number}
      * @const
@@ -27194,7 +29630,7 @@ module.exports = {
     /**
      * Color blend mode. For Canvas only.
      * Preserves the luma of the bottom layer, while adopting the hue and chroma of the top layer.
-     * 
+     *
      * @name Phaser.BlendModes.COLOR
      * @type {number}
      * @const
@@ -27205,7 +29641,7 @@ module.exports = {
     /**
      * Luminosity blend mode. For Canvas only.
      * Preserves the hue and chroma of the bottom layer, while adopting the luma of the top layer.
-     * 
+     *
      * @name Phaser.BlendModes.LUMINOSITY
      * @type {number}
      * @const
@@ -27215,7 +29651,7 @@ module.exports = {
 
     /**
      * Alpha erase blend mode. For Canvas and WebGL.
-     * 
+     *
      * @name Phaser.BlendModes.ERASE
      * @type {number}
      * @const
@@ -27226,7 +29662,7 @@ module.exports = {
     /**
      * Source-in blend mode. For Canvas only.
      * The new shape is drawn only where both the new shape and the destination canvas overlap. Everything else is made transparent.
-     * 
+     *
      * @name Phaser.BlendModes.SOURCE_IN
      * @type {number}
      * @const
@@ -27237,7 +29673,7 @@ module.exports = {
     /**
      * Source-out blend mode. For Canvas only.
      * The new shape is drawn where it doesn't overlap the existing canvas content.
-     * 
+     *
      * @name Phaser.BlendModes.SOURCE_OUT
      * @type {number}
      * @const
@@ -27248,7 +29684,7 @@ module.exports = {
     /**
      * Source-out blend mode. For Canvas only.
      * The new shape is only drawn where it overlaps the existing canvas content.
-     * 
+     *
      * @name Phaser.BlendModes.SOURCE_ATOP
      * @type {number}
      * @const
@@ -27259,7 +29695,7 @@ module.exports = {
     /**
      * Destination-over blend mode. For Canvas only.
      * New shapes are drawn behind the existing canvas content.
-     * 
+     *
      * @name Phaser.BlendModes.DESTINATION_OVER
      * @type {number}
      * @const
@@ -27270,7 +29706,7 @@ module.exports = {
     /**
      * Destination-in blend mode. For Canvas only.
      * The existing canvas content is kept where both the new shape and existing canvas content overlap. Everything else is made transparent.
-     * 
+     *
      * @name Phaser.BlendModes.DESTINATION_IN
      * @type {number}
      * @const
@@ -27281,7 +29717,7 @@ module.exports = {
     /**
      * Destination-out blend mode. For Canvas only.
      * The existing content is kept where it doesn't overlap the new shape.
-     * 
+     *
      * @name Phaser.BlendModes.DESTINATION_OUT
      * @type {number}
      * @const
@@ -27292,7 +29728,7 @@ module.exports = {
     /**
      * Destination-out blend mode. For Canvas only.
      * The existing canvas is only kept where it overlaps the new shape. The new shape is drawn behind the canvas content.
-     * 
+     *
      * @name Phaser.BlendModes.DESTINATION_ATOP
      * @type {number}
      * @const
@@ -27303,7 +29739,7 @@ module.exports = {
     /**
      * Lighten blend mode. For Canvas only.
      * Where both shapes overlap the color is determined by adding color values.
-     * 
+     *
      * @name Phaser.BlendModes.LIGHTER
      * @type {number}
      * @const
@@ -27314,7 +29750,7 @@ module.exports = {
     /**
      * Copy blend mode. For Canvas only.
      * Only the new shape is shown.
-     * 
+     *
      * @name Phaser.BlendModes.COPY
      * @type {number}
      * @const
@@ -27325,7 +29761,7 @@ module.exports = {
     /**
      * Xor blend mode. For Canvas only.
      * Shapes are made transparent where both overlap and drawn normal everywhere else.
-     * 
+     *
      * @name Phaser.BlendModes.XOR
      * @type {number}
      * @const
@@ -27338,272 +29774,75 @@ module.exports = {
 
 /***/ }),
 
-/***/ "../../../src/renderer/events/POST_RENDER_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/events/POST_RENDER_EVENT.js ***!
-  \*******************************************************************/
+/***/ "../../../src/renderer/ScaleModes.js":
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/renderer/ScaleModes.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * The Post-Render Event.
+ * Phaser Scale Modes.
  *
- * This event is dispatched by the Renderer when all rendering, for all cameras in all Scenes,
- * has completed, but before any pending snap shots have been taken.
- *
- * @event Phaser.Renderer.Events#POST_RENDER
- * @since 3.50.0
- */
-module.exports = 'postrender';
-
-
-/***/ }),
-
-/***/ "../../../src/renderer/events/PRE_RENDER_EVENT.js":
-/*!******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/events/PRE_RENDER_EVENT.js ***!
-  \******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ * @namespace Phaser.ScaleModes
+ * @since 3.0.0
  */
 
-/**
- * The Pre-Render Event.
- *
- * This event is dispatched by the Phaser Renderer. This happens right at the start of the render
- * process, after the context has been cleared, the scissors enabled (WebGL only) and everything has been
- * reset ready for the render.
- *
- * @event Phaser.Renderer.Events#PRE_RENDER
- * @since 3.50.0
- */
-module.exports = 'prerender';
+var ScaleModes = {
 
+    /**
+     * Default Scale Mode (Linear).
+     *
+     * @name Phaser.ScaleModes.DEFAULT
+     * @type {number}
+     * @readonly
+     * @since 3.0.0
+     */
+    DEFAULT: 0,
 
-/***/ }),
+    /**
+     * Linear Scale Mode.
+     *
+     * @name Phaser.ScaleModes.LINEAR
+     * @type {number}
+     * @readonly
+     * @since 3.0.0
+     */
+    LINEAR: 0,
 
-/***/ "../../../src/renderer/events/RENDER_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/events/RENDER_EVENT.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Render Event.
- *
- * This event is dispatched by the Phaser Renderer for every camera in every Scene.
- *
- * It is dispatched before any of the children in the Scene have been rendered.
- *
- * @event Phaser.Renderer.Events#RENDER
- * @since 3.50.0
- *
- * @param {Phaser.Scene} scene - The Scene being rendered.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera being rendered.
- */
-module.exports = 'render';
-
-
-/***/ }),
-
-/***/ "../../../src/renderer/events/RESIZE_EVENT.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/events/RESIZE_EVENT.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * The Renderer Resize Event.
- *
- * This event is dispatched by the Phaser Renderer when it is resized, usually as a result
- * of the Scale Manager resizing.
- *
- * @event Phaser.Renderer.Events#RESIZE
- * @since 3.50.0
- *
- * @param {number} width - The new width of the renderer.
- * @param {number} height - The new height of the renderer.
- */
-module.exports = 'resize';
-
-
-/***/ }),
-
-/***/ "../../../src/renderer/events/index.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/events/index.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-/**
- * @namespace Phaser.Renderer.Events
- */
-
-module.exports = {
-
-    POST_RENDER: __webpack_require__(/*! ./POST_RENDER_EVENT */ "../../../src/renderer/events/POST_RENDER_EVENT.js"),
-    PRE_RENDER: __webpack_require__(/*! ./PRE_RENDER_EVENT */ "../../../src/renderer/events/PRE_RENDER_EVENT.js"),
-    RENDER: __webpack_require__(/*! ./RENDER_EVENT */ "../../../src/renderer/events/RENDER_EVENT.js"),
-    RESIZE: __webpack_require__(/*! ./RESIZE_EVENT */ "../../../src/renderer/events/RESIZE_EVENT.js")
+    /**
+     * Nearest Scale Mode.
+     *
+     * @name Phaser.ScaleModes.NEAREST
+     * @type {number}
+     * @readonly
+     * @since 3.0.0
+     */
+    NEAREST: 1
 
 };
 
-
-/***/ }),
-
-/***/ "../../../src/renderer/webgl/pipelines/const.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/webgl/pipelines/const.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
- * @license      {@link https://opensource.org/licenses/MIT|MIT License}
- */
-
-var PIPELINE_CONST = {
-
-    /**
-     * The Bitmap Mask Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.BITMAPMASK_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.50.0
-     */
-    BITMAPMASK_PIPELINE: 'BitmapMaskPipeline',
-
-    /**
-     * The Light 2D Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.LIGHT_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.50.0
-     */
-    LIGHT_PIPELINE: 'Light2D',
-
-    /**
-     * The Point Light Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.POINTLIGHT_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.50.0
-     */
-    POINTLIGHT_PIPELINE: 'PointLightPipeline',
-
-    /**
-     * The Single Texture Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.SINGLE_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.50.0
-     */
-    SINGLE_PIPELINE: 'SinglePipeline',
-
-    /**
-     * The Multi Texture Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.MULTI_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.50.0
-     */
-    MULTI_PIPELINE: 'MultiPipeline',
-
-    /**
-     * The Rope Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.ROPE_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.50.0
-     */
-    ROPE_PIPELINE: 'RopePipeline',
-
-    /**
-     * The Graphics and Shapes Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.GRAPHICS_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.50.0
-     */
-    GRAPHICS_PIPELINE: 'GraphicsPipeline',
-
-    /**
-     * The Post FX Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.POSTFX_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.50.0
-     */
-    POSTFX_PIPELINE: 'PostFXPipeline',
-
-    /**
-     * The Utility Pipeline.
-     *
-     * @name Phaser.Renderer.WebGL.Pipelines.UTILITY_PIPELINE
-     * @type {string}
-     * @const
-     * @since 3.50.0
-     */
-    UTILITY_PIPELINE: 'UtilityPipeline'
-};
-
-module.exports = PIPELINE_CONST;
+module.exports = ScaleModes;
 
 
 /***/ }),
 
 /***/ "../../../src/scale/events/RESIZE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scale/events/RESIZE_EVENT.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scale/events/RESIZE_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -27616,6 +29855,7 @@ module.exports = PIPELINE_CONST;
  * scaling your own game content.
  *
  * @event Phaser.Scale.Events#RESIZE
+ * @type {string}
  * @since 3.16.1
  *
  * @param {Phaser.Structs.Size} gameSize - A reference to the Game Size component. This is the un-scaled size of your game canvas.
@@ -27630,15 +29870,15 @@ module.exports = 'resize';
 /***/ }),
 
 /***/ "../../../src/scene/events/ADDED_TO_SCENE_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/ADDED_TO_SCENE_EVENT.js ***!
-  \*******************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/ADDED_TO_SCENE_EVENT.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -27647,9 +29887,10 @@ module.exports = 'resize';
  *
  * This event is dispatched when a Game Object is added to a Scene.
  *
- * Listen for it from a Scene using `this.scene.events.on('addedtoscene', listener)`.
+ * Listen for it from a Scene using `this.events.on('addedtoscene', listener)`.
  *
  * @event Phaser.Scenes.Events#ADDED_TO_SCENE
+ * @type {string}
  * @since 3.50.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was added to the Scene.
@@ -27661,28 +29902,29 @@ module.exports = 'addedtoscene';
 /***/ }),
 
 /***/ "../../../src/scene/events/BOOT_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/BOOT_EVENT.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/BOOT_EVENT.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Boot Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems boot process. Primarily used by Scene Plugins.
- * 
- * Listen to it from a Scene using `this.scene.events.on('boot', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('boot', listener)`.
+ *
  * @event Phaser.Scenes.Events#BOOT
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  */
 module.exports = 'boot';
@@ -27691,32 +29933,33 @@ module.exports = 'boot';
 /***/ }),
 
 /***/ "../../../src/scene/events/CREATE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/CREATE_EVENT.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/CREATE_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Create Event.
- * 
+ *
  * This event is dispatched by a Scene after it has been created by the Scene Manager.
- * 
+ *
  * If a Scene has a `create` method then this event is emitted _after_ that has run.
- * 
+ *
  * If there is a transition, this event will be fired after the `TRANSITION_START` event.
- * 
- * Listen to it from a Scene using `this.scene.events.on('create', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('create', listener)`.
+ *
  * @event Phaser.Scenes.Events#CREATE
+ * @type {string}
  * @since 3.17.0
- * 
+ *
  * @param {Phaser.Scene} scene - A reference to the Scene that emitted this event.
  */
 module.exports = 'create';
@@ -27725,30 +29968,31 @@ module.exports = 'create';
 /***/ }),
 
 /***/ "../../../src/scene/events/DESTROY_EVENT.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/DESTROY_EVENT.js ***!
-  \************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/DESTROY_EVENT.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Destroy Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems destroy process.
- * 
- * Listen to it from a Scene using `this.scene.events.on('destroy', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('destroy', listener)`.
+ *
  * You should destroy any resources that may be in use by your Scene in this event handler.
- * 
+ *
  * @event Phaser.Scenes.Events#DESTROY
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  */
 module.exports = 'destroy';
@@ -27757,29 +30001,30 @@ module.exports = 'destroy';
 /***/ }),
 
 /***/ "../../../src/scene/events/PAUSE_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/PAUSE_EVENT.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/PAUSE_EVENT.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Pause Event.
- * 
+ *
  * This event is dispatched by a Scene when it is paused, either directly via the `pause` method, or as an
  * action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('pause', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('pause', listener)`.
+ *
  * @event Phaser.Scenes.Events#PAUSE
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was paused.
  */
@@ -27789,25 +30034,25 @@ module.exports = 'pause';
 /***/ }),
 
 /***/ "../../../src/scene/events/POST_UPDATE_EVENT.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
-  \****************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/POST_UPDATE_EVENT.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Post Update Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
@@ -27815,13 +30060,14 @@ module.exports = 'pause';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('postupdate', listener)`.
- * 
+ * Listen to it from a Scene using `this.events.on('postupdate', listener)`.
+ *
  * A Scene will only run its step if it is active.
- * 
+ *
  * @event Phaser.Scenes.Events#POST_UPDATE
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
  * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -27832,9 +30078,9 @@ module.exports = 'postupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/PRE_RENDER_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/PRE_RENDER_EVENT.js ***!
-  \***************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/PRE_RENDER_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -27858,12 +30104,14 @@ module.exports = 'postupdate';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to this event from a Scene using `this.scene.events.on('prerender', listener)`.
+ * Listen to this event from a Scene using `this.events.on('prerender', listener)`.
  *
  * A Scene will only render if it is visible.
+ *
  * This event is dispatched after the Scene Display List is sorted and before the Scene is rendered.
  *
  * @event Phaser.Scenes.Events#PRE_RENDER
+ * @type {string}
  * @since 3.53.0
  *
  * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer that rendered the Scene.
@@ -27874,25 +30122,25 @@ module.exports = 'prerender';
 /***/ }),
 
 /***/ "../../../src/scene/events/PRE_UPDATE_EVENT.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
-  \***************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/PRE_UPDATE_EVENT.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Pre Update Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
@@ -27900,13 +30148,14 @@ module.exports = 'prerender';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('preupdate', listener)`.
- * 
+ * Listen to it from a Scene using `this.events.on('preupdate', listener)`.
+ *
  * A Scene will only run its step if it is active.
- * 
+ *
  * @event Phaser.Scenes.Events#PRE_UPDATE
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
  * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -27917,30 +30166,31 @@ module.exports = 'preupdate';
 /***/ }),
 
 /***/ "../../../src/scene/events/READY_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/READY_EVENT.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/READY_EVENT.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Ready Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems start process.
  * By this point in the process the Scene is now fully active and rendering.
  * This event is meant for your game code to use, as all plugins have responded to the earlier 'start' event.
- * 
- * Listen to it from a Scene using `this.scene.events.on('ready', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('ready', listener)`.
+ *
  * @event Phaser.Scenes.Events#READY
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was started.
  */
@@ -27950,15 +30200,15 @@ module.exports = 'ready';
 /***/ }),
 
 /***/ "../../../src/scene/events/REMOVED_FROM_SCENE_EVENT.js":
-/*!***********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/REMOVED_FROM_SCENE_EVENT.js ***!
-  \***********************************************************************/
+/*!*********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/REMOVED_FROM_SCENE_EVENT.js ***!
+  \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -27967,9 +30217,10 @@ module.exports = 'ready';
  *
  * This event is dispatched when a Game Object is removed from a Scene.
  *
- * Listen for it from a Scene using `this.scene.events.on('removedfromscene', listener)`.
+ * Listen for it from a Scene using `this.events.on('removedfromscene', listener)`.
  *
  * @event Phaser.Scenes.Events#REMOVED_FROM_SCENE
+ * @type {string}
  * @since 3.50.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was removed from the Scene.
@@ -27981,25 +30232,25 @@ module.exports = 'removedfromscene';
 /***/ }),
 
 /***/ "../../../src/scene/events/RENDER_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/RENDER_EVENT.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/RENDER_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Render Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
  * 3. The `Scene.update` method is called, if it exists
@@ -28007,14 +30258,16 @@ module.exports = 'removedfromscene';
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('render', listener)`.
+ * Listen to it from a Scene using `this.events.on('render', listener)`.
  *
  * A Scene will only render if it is visible.
+ *
  * By the time this event is dispatched, the Scene will have already been rendered.
- * 
+ *
  * @event Phaser.Scenes.Events#RENDER
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer that rendered the Scene.
  */
 module.exports = 'render';
@@ -28023,29 +30276,30 @@ module.exports = 'render';
 /***/ }),
 
 /***/ "../../../src/scene/events/RESUME_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/RESUME_EVENT.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/RESUME_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Resume Event.
- * 
+ *
  * This event is dispatched by a Scene when it is resumed from a paused state, either directly via the `resume` method,
  * or as an action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('resume', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('resume', listener)`.
+ *
  * @event Phaser.Scenes.Events#RESUME
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was resumed.
  */
@@ -28055,32 +30309,33 @@ module.exports = 'resume';
 /***/ }),
 
 /***/ "../../../src/scene/events/SHUTDOWN_EVENT.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/SHUTDOWN_EVENT.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Shutdown Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems shutdown process.
- * 
- * Listen to it from a Scene using `this.scene.events.on('shutdown', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('shutdown', listener)`.
+ *
  * You should free-up any resources that may be in use by your Scene in this event handler, on the understanding
  * that the Scene may, at any time, become active again. A shutdown Scene is not 'destroyed', it's simply not
  * currently active. Use the [DESTROY]{@linkcode Phaser.Scenes.Events#event:DESTROY} event to completely clear resources.
- * 
+ *
  * @event Phaser.Scenes.Events#SHUTDOWN
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was shutdown.
  */
@@ -28090,29 +30345,30 @@ module.exports = 'shutdown';
 /***/ }),
 
 /***/ "../../../src/scene/events/SLEEP_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/SLEEP_EVENT.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/SLEEP_EVENT.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Sleep Event.
- * 
+ *
  * This event is dispatched by a Scene when it is sent to sleep, either directly via the `sleep` method,
  * or as an action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('sleep', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('sleep', listener)`.
+ *
  * @event Phaser.Scenes.Events#SLEEP
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was sent to sleep.
  */
@@ -28122,28 +30378,29 @@ module.exports = 'sleep';
 /***/ }),
 
 /***/ "../../../src/scene/events/START_EVENT.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/START_EVENT.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/START_EVENT.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Start Event.
- * 
+ *
  * This event is dispatched by a Scene during the Scene Systems start process. Primarily used by Scene Plugins.
- * 
- * Listen to it from a Scene using `this.scene.events.on('start', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('start', listener)`.
+ *
  * @event Phaser.Scenes.Events#START
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  */
 module.exports = 'start';
@@ -28152,39 +30409,40 @@ module.exports = 'start';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_COMPLETE_EVENT.js":
-/*!************************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
-  \************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/TRANSITION_COMPLETE_EVENT.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Transition Complete Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition.
- * 
+ *
  * It happens when the transition process has completed. This occurs when the duration timer equals or exceeds the duration
  * of the transition.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitioncomplete', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitioncomplete', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_COMPLETE
+ * @type {string}
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} scene -The Scene on which the transitioned completed.
  */
 module.exports = 'transitioncomplete';
@@ -28193,39 +30451,40 @@ module.exports = 'transitioncomplete';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_INIT_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
-  \********************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/TRANSITION_INIT_EVENT.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Transition Init Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition.
- * 
+ *
  * It happens immediately after the `Scene.init` method is called. If the Scene does not have an `init` method,
  * this event is not dispatched.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitioninit', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitioninit', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_INIT
+ * @type {string}
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -28235,36 +30494,37 @@ module.exports = 'transitioninit';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_OUT_EVENT.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
-  \*******************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/TRANSITION_OUT_EVENT.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Transition Out Event.
- * 
+ *
  * This event is dispatched by a Scene when it initiates a transition to another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitionout', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitionout', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_OUT
+ * @type {string}
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} target - A reference to the Scene that is being transitioned to.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -28274,42 +30534,43 @@ module.exports = 'transitionout';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_START_EVENT.js":
-/*!*********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
-  \*********************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/TRANSITION_START_EVENT.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Transition Start Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition, only if that Scene was not asleep.
- * 
+ *
  * It happens immediately after the `Scene.create` method is called. If the Scene does not have a `create` method,
  * this event is dispatched anyway.
- * 
+ *
  * If the Target Scene was sleeping then the [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} event is
  * dispatched instead of this event.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitionstart', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitionstart', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_START
+ * @type {string}
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -28319,37 +30580,38 @@ module.exports = 'transitionstart';
 /***/ }),
 
 /***/ "../../../src/scene/events/TRANSITION_WAKE_EVENT.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
-  \********************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/TRANSITION_WAKE_EVENT.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Transition Wake Event.
- * 
+ *
  * This event is dispatched by the Target Scene of a transition, only if that Scene was asleep before
  * the transition began. If the Scene was not asleep the [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} event is dispatched instead.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitionwake', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('transitionwake', listener)`.
+ *
  * The Scene Transition event flow is as follows:
- * 
+ *
  * 1. [TRANSITION_OUT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_OUT} - the Scene that started the transition will emit this event.
  * 2. [TRANSITION_INIT]{@linkcode Phaser.Scenes.Events#event:TRANSITION_INIT} - the Target Scene will emit this event if it has an `init` method.
  * 3. [TRANSITION_START]{@linkcode Phaser.Scenes.Events#event:TRANSITION_START} - the Target Scene will emit this event after its `create` method is called, OR ...
  * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
- * 
+ *
  * @event Phaser.Scenes.Events#TRANSITION_WAKE
+ * @type {string}
  * @since 3.5.0
- * 
+ *
  * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
  * @param {number} duration - The duration of the transition in ms.
  */
@@ -28359,39 +30621,40 @@ module.exports = 'transitionwake';
 /***/ }),
 
 /***/ "../../../src/scene/events/UPDATE_EVENT.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/UPDATE_EVENT.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/UPDATE_EVENT.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Update Event.
- * 
+ *
  * This event is dispatched by a Scene during the main game loop step.
- * 
+ *
  * The event flow for a single step of a Scene is as follows:
- * 
+ *
  * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
  * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
- * 3. The `Scene.update` method is called, if it exists
+ * 3. The `Scene.update` method is called, if it exists and the Scene is in a Running state, otherwise this is skipped.
  * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
  * 5. [PRE_RENDER]{@linkcode Phaser.Scenes.Events#event:PRE_RENDER}
  * 6. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  *
- * Listen to it from a Scene using `this.scene.events.on('update', listener)`.
- * 
+ * Listen to it from a Scene using `this.events.on('update', listener)`.
+ *
  * A Scene will only run its step if it is active.
- * 
+ *
  * @event Phaser.Scenes.Events#UPDATE
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
  * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -28402,29 +30665,30 @@ module.exports = 'update';
 /***/ }),
 
 /***/ "../../../src/scene/events/WAKE_EVENT.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/WAKE_EVENT.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/WAKE_EVENT.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * The Scene Systems Wake Event.
- * 
+ *
  * This event is dispatched by a Scene when it is woken from sleep, either directly via the `wake` method,
  * or as an action from another Scene.
- * 
- * Listen to it from a Scene using `this.scene.events.on('wake', listener)`.
- * 
+ *
+ * Listen to it from a Scene using `this.events.on('wake', listener)`.
+ *
  * @event Phaser.Scenes.Events#WAKE
+ * @type {string}
  * @since 3.0.0
- * 
+ *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was woken up.
  */
@@ -28434,15 +30698,15 @@ module.exports = 'wake';
 /***/ }),
 
 /***/ "../../../src/scene/events/index.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/scene/events/index.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/scene/events/index.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -28480,16 +30744,878 @@ module.exports = {
 
 /***/ }),
 
+/***/ "../../../src/textures/Frame.js":
+/*!**********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/textures/Frame.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+var Clamp = __webpack_require__(/*! ../math/Clamp */ "../../../src/math/Clamp.js");
+var Extend = __webpack_require__(/*! ../utils/object/Extend */ "../../../src/utils/object/Extend.js");
+
+/**
+ * @classdesc
+ * A Frame is a section of a Texture.
+ *
+ * @class Frame
+ * @memberof Phaser.Textures
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Textures.Texture} texture - The Texture this Frame is a part of.
+ * @param {(number|string)} name - The name of this Frame. The name is unique within the Texture.
+ * @param {number} sourceIndex - The index of the TextureSource that this Frame is a part of.
+ * @param {number} x - The x coordinate of the top-left of this Frame.
+ * @param {number} y - The y coordinate of the top-left of this Frame.
+ * @param {number} width - The width of this Frame.
+ * @param {number} height - The height of this Frame.
+ */
+var Frame = new Class({
+
+    initialize:
+
+    function Frame (texture, name, sourceIndex, x, y, width, height)
+    {
+        /**
+         * The Texture this Frame is a part of.
+         *
+         * @name Phaser.Textures.Frame#texture
+         * @type {Phaser.Textures.Texture}
+         * @since 3.0.0
+         */
+        this.texture = texture;
+
+        /**
+         * The name of this Frame.
+         * The name is unique within the Texture.
+         *
+         * @name Phaser.Textures.Frame#name
+         * @type {string}
+         * @since 3.0.0
+         */
+        this.name = name;
+
+        /**
+         * The TextureSource this Frame is part of.
+         *
+         * @name Phaser.Textures.Frame#source
+         * @type {Phaser.Textures.TextureSource}
+         * @since 3.0.0
+         */
+        this.source = texture.source[sourceIndex];
+
+        /**
+         * The index of the TextureSource in the Texture sources array.
+         *
+         * @name Phaser.Textures.Frame#sourceIndex
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.sourceIndex = sourceIndex;
+
+        /**
+         * A reference to the Texture Source WebGL Texture that this Frame is using.
+         *
+         * @name Phaser.Textures.Frame#glTexture
+         * @type {?WebGLTexture}
+         * @default null
+         * @since 3.11.0
+         */
+        this.glTexture = this.source.glTexture;
+
+        /**
+         * X position within the source image to cut from.
+         *
+         * @name Phaser.Textures.Frame#cutX
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.cutX;
+
+        /**
+         * Y position within the source image to cut from.
+         *
+         * @name Phaser.Textures.Frame#cutY
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.cutY;
+
+        /**
+         * The width of the area in the source image to cut.
+         *
+         * @name Phaser.Textures.Frame#cutWidth
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.cutWidth;
+
+        /**
+         * The height of the area in the source image to cut.
+         *
+         * @name Phaser.Textures.Frame#cutHeight
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.cutHeight;
+
+        /**
+         * The X rendering offset of this Frame, taking trim into account.
+         *
+         * @name Phaser.Textures.Frame#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.x = 0;
+
+        /**
+         * The Y rendering offset of this Frame, taking trim into account.
+         *
+         * @name Phaser.Textures.Frame#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.y = 0;
+
+        /**
+         * The rendering width of this Frame, taking trim into account.
+         *
+         * @name Phaser.Textures.Frame#width
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.width;
+
+        /**
+         * The rendering height of this Frame, taking trim into account.
+         *
+         * @name Phaser.Textures.Frame#height
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.height;
+
+        /**
+         * Half the width, floored.
+         * Precalculated for the renderer.
+         *
+         * @name Phaser.Textures.Frame#halfWidth
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.halfWidth;
+
+        /**
+         * Half the height, floored.
+         * Precalculated for the renderer.
+         *
+         * @name Phaser.Textures.Frame#halfHeight
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.halfHeight;
+
+        /**
+         * The x center of this frame, floored.
+         *
+         * @name Phaser.Textures.Frame#centerX
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.centerX;
+
+        /**
+         * The y center of this frame, floored.
+         *
+         * @name Phaser.Textures.Frame#centerY
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.centerY;
+
+        /**
+         * The horizontal pivot point of this Frame.
+         *
+         * @name Phaser.Textures.Frame#pivotX
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.pivotX = 0;
+
+        /**
+         * The vertical pivot point of this Frame.
+         *
+         * @name Phaser.Textures.Frame#pivotY
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.pivotY = 0;
+
+        /**
+         * Does this Frame have a custom pivot point?
+         *
+         * @name Phaser.Textures.Frame#customPivot
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.customPivot = false;
+
+        /**
+         * **CURRENTLY UNSUPPORTED**
+         *
+         * Is this frame is rotated or not in the Texture?
+         * Rotation allows you to use rotated frames in texture atlas packing.
+         * It has nothing to do with Sprite rotation.
+         *
+         * @name Phaser.Textures.Frame#rotated
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.rotated = false;
+
+        /**
+         * Over-rides the Renderer setting.
+         * -1 = use Renderer Setting
+         * 0 = No rounding
+         * 1 = Round
+         *
+         * @name Phaser.Textures.Frame#autoRound
+         * @type {number}
+         * @default -1
+         * @since 3.0.0
+         */
+        this.autoRound = -1;
+
+        /**
+         * Any Frame specific custom data can be stored here.
+         *
+         * @name Phaser.Textures.Frame#customData
+         * @type {object}
+         * @since 3.0.0
+         */
+        this.customData = {};
+
+        /**
+         * WebGL UV u0 value.
+         *
+         * @name Phaser.Textures.Frame#u0
+         * @type {number}
+         * @default 0
+         * @since 3.11.0
+         */
+        this.u0 = 0;
+
+        /**
+         * WebGL UV v0 value.
+         *
+         * @name Phaser.Textures.Frame#v0
+         * @type {number}
+         * @default 0
+         * @since 3.11.0
+         */
+        this.v0 = 0;
+
+        /**
+         * WebGL UV u1 value.
+         *
+         * @name Phaser.Textures.Frame#u1
+         * @type {number}
+         * @default 0
+         * @since 3.11.0
+         */
+        this.u1 = 0;
+
+        /**
+         * WebGL UV v1 value.
+         *
+         * @name Phaser.Textures.Frame#v1
+         * @type {number}
+         * @default 0
+         * @since 3.11.0
+         */
+        this.v1 = 0;
+
+        /**
+         * The un-modified source frame, trim and UV data.
+         *
+         * @name Phaser.Textures.Frame#data
+         * @type {object}
+         * @private
+         * @since 3.0.0
+         */
+        this.data = {
+            cut: {
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0,
+                r: 0,
+                b: 0
+            },
+            trim: false,
+            sourceSize: {
+                w: 0,
+                h: 0
+            },
+            spriteSourceSize: {
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0,
+                r: 0,
+                b: 0
+            },
+            radius: 0,
+            drawImage: {
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0
+            }
+        };
+
+        this.setSize(width, height, x, y);
+    },
+
+    /**
+     * Sets the width, height, x and y of this Frame.
+     *
+     * This is called automatically by the constructor
+     * and should rarely be changed on-the-fly.
+     *
+     * @method Phaser.Textures.Frame#setSize
+     * @since 3.7.0
+     *
+     * @param {number} width - The width of the frame before being trimmed.
+     * @param {number} height - The height of the frame before being trimmed.
+     * @param {number} [x=0] - The x coordinate of the top-left of this Frame.
+     * @param {number} [y=0] - The y coordinate of the top-left of this Frame.
+     *
+     * @return {this} This Frame object.
+     */
+    setSize: function (width, height, x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        this.cutX = x;
+        this.cutY = y;
+        this.cutWidth = width;
+        this.cutHeight = height;
+
+        this.width = width;
+        this.height = height;
+
+        this.halfWidth = Math.floor(width * 0.5);
+        this.halfHeight = Math.floor(height * 0.5);
+
+        this.centerX = Math.floor(width / 2);
+        this.centerY = Math.floor(height / 2);
+
+        var data = this.data;
+        var cut = data.cut;
+
+        cut.x = x;
+        cut.y = y;
+        cut.w = width;
+        cut.h = height;
+        cut.r = x + width;
+        cut.b = y + height;
+
+        data.sourceSize.w = width;
+        data.sourceSize.h = height;
+
+        data.spriteSourceSize.w = width;
+        data.spriteSourceSize.h = height;
+
+        data.radius = 0.5 * Math.sqrt(width * width + height * height);
+
+        var drawImage = data.drawImage;
+
+        drawImage.x = x;
+        drawImage.y = y;
+        drawImage.width = width;
+        drawImage.height = height;
+
+        return this.updateUVs();
+    },
+
+    /**
+     * If the frame was trimmed when added to the Texture Atlas, this records the trim and source data.
+     *
+     * @method Phaser.Textures.Frame#setTrim
+     * @since 3.0.0
+     *
+     * @param {number} actualWidth - The width of the frame before being trimmed.
+     * @param {number} actualHeight - The height of the frame before being trimmed.
+     * @param {number} destX - The destination X position of the trimmed frame for display.
+     * @param {number} destY - The destination Y position of the trimmed frame for display.
+     * @param {number} destWidth - The destination width of the trimmed frame for display.
+     * @param {number} destHeight - The destination height of the trimmed frame for display.
+     *
+     * @return {this} This Frame object.
+     */
+    setTrim: function (actualWidth, actualHeight, destX, destY, destWidth, destHeight)
+    {
+        var data = this.data;
+        var ss = data.spriteSourceSize;
+
+        //  Store actual values
+
+        data.trim = true;
+
+        data.sourceSize.w = actualWidth;
+        data.sourceSize.h = actualHeight;
+
+        ss.x = destX;
+        ss.y = destY;
+        ss.w = destWidth;
+        ss.h = destHeight;
+        ss.r = destX + destWidth;
+        ss.b = destY + destHeight;
+
+        //  Adjust properties
+        this.x = destX;
+        this.y = destY;
+
+        this.width = destWidth;
+        this.height = destHeight;
+
+        this.halfWidth = destWidth * 0.5;
+        this.halfHeight = destHeight * 0.5;
+
+        this.centerX = Math.floor(destWidth / 2);
+        this.centerY = Math.floor(destHeight / 2);
+
+        return this.updateUVs();
+    },
+
+    /**
+     * Takes a crop data object and, based on the rectangular region given, calculates the
+     * required UV coordinates in order to crop this Frame for WebGL and Canvas rendering.
+     *
+     * This is called directly by the Game Object Texture Components `setCrop` method.
+     * Please use that method to crop a Game Object.
+     *
+     * @method Phaser.Textures.Frame#setCropUVs
+     * @since 3.11.0
+     *
+     * @param {object} crop - The crop data object. This is the `GameObject._crop` property.
+     * @param {number} x - The x coordinate to start the crop from. Cannot be negative or exceed the Frame width.
+     * @param {number} y - The y coordinate to start the crop from. Cannot be negative or exceed the Frame height.
+     * @param {number} width - The width of the crop rectangle. Cannot exceed the Frame width.
+     * @param {number} height - The height of the crop rectangle. Cannot exceed the Frame height.
+     * @param {boolean} flipX - Does the parent Game Object have flipX set?
+     * @param {boolean} flipY - Does the parent Game Object have flipY set?
+     *
+     * @return {object} The updated crop data object.
+     */
+    setCropUVs: function (crop, x, y, width, height, flipX, flipY)
+    {
+        //  Clamp the input values
+
+        var cx = this.cutX;
+        var cy = this.cutY;
+        var cw = this.cutWidth;
+        var ch = this.cutHeight;
+        var rw = this.realWidth;
+        var rh = this.realHeight;
+
+        x = Clamp(x, 0, rw);
+        y = Clamp(y, 0, rh);
+
+        width = Clamp(width, 0, rw - x);
+        height = Clamp(height, 0, rh - y);
+
+        var ox = cx + x;
+        var oy = cy + y;
+        var ow = width;
+        var oh = height;
+
+        var data = this.data;
+
+        if (data.trim)
+        {
+            var ss = data.spriteSourceSize;
+
+            //  Need to check for intersection between the cut area and the crop area
+            //  If there is none, we set UV to be empty, otherwise set it to be the intersection area
+
+            width = Clamp(width, 0, cw - x);
+            height = Clamp(height, 0, ch - y);
+
+            var cropRight = x + width;
+            var cropBottom = y + height;
+
+            var intersects = !(ss.r < x || ss.b < y || ss.x > cropRight || ss.y > cropBottom);
+
+            if (intersects)
+            {
+                var ix = Math.max(ss.x, x);
+                var iy = Math.max(ss.y, y);
+                var iw = Math.min(ss.r, cropRight) - ix;
+                var ih = Math.min(ss.b, cropBottom) - iy;
+
+                ow = iw;
+                oh = ih;
+
+                if (flipX)
+                {
+                    ox = cx + (cw - (ix - ss.x) - iw);
+                }
+                else
+                {
+                    ox = cx + (ix - ss.x);
+                }
+
+                if (flipY)
+                {
+                    oy = cy + (ch - (iy - ss.y) - ih);
+                }
+                else
+                {
+                    oy = cy + (iy - ss.y);
+                }
+
+                x = ix;
+                y = iy;
+
+                width = iw;
+                height = ih;
+            }
+            else
+            {
+                ox = 0;
+                oy = 0;
+                ow = 0;
+                oh = 0;
+            }
+        }
+        else
+        {
+            if (flipX)
+            {
+                ox = cx + (cw - x - width);
+            }
+
+            if (flipY)
+            {
+                oy = cy + (ch - y - height);
+            }
+        }
+
+        var tw = this.source.width;
+        var th = this.source.height;
+
+        //  Map the given coordinates into UV space, clamping to the 0-1 range.
+
+        crop.u0 = Math.max(0, ox / tw);
+        crop.v0 = Math.max(0, oy / th);
+        crop.u1 = Math.min(1, (ox + ow) / tw);
+        crop.v1 = Math.min(1, (oy + oh) / th);
+
+        crop.x = x;
+        crop.y = y;
+
+        crop.cx = ox;
+        crop.cy = oy;
+        crop.cw = ow;
+        crop.ch = oh;
+
+        crop.width = width;
+        crop.height = height;
+
+        crop.flipX = flipX;
+        crop.flipY = flipY;
+
+        return crop;
+    },
+
+    /**
+     * Takes a crop data object and recalculates the UVs based on the dimensions inside the crop object.
+     * Called automatically by `setFrame`.
+     *
+     * @method Phaser.Textures.Frame#updateCropUVs
+     * @since 3.11.0
+     *
+     * @param {object} crop - The crop data object. This is the `GameObject._crop` property.
+     * @param {boolean} flipX - Does the parent Game Object have flipX set?
+     * @param {boolean} flipY - Does the parent Game Object have flipY set?
+     *
+     * @return {object} The updated crop data object.
+     */
+    updateCropUVs: function (crop, flipX, flipY)
+    {
+        return this.setCropUVs(crop, crop.x, crop.y, crop.width, crop.height, flipX, flipY);
+    },
+
+    /**
+     * Directly sets the canvas and WebGL UV data for this frame.
+     *
+     * Use this if you need to override the values that are generated automatically
+     * when the Frame is created.
+     *
+     * @method Phaser.Textures.Frame#setUVs
+     * @since 3.50.0
+     *
+     * @param {number} width - Width of this frame for the Canvas data.
+     * @param {number} height - Height of this frame for the Canvas data.
+     * @param {number} u0 - UV u0 value.
+     * @param {number} v0 - UV v0 value.
+     * @param {number} u1 - UV u1 value.
+     * @param {number} v1 - UV v1 value.
+     *
+     * @return {this} This Frame object.
+     */
+    setUVs: function (width, height, u0, v0, u1, v1)
+    {
+        //  Canvas data
+
+        var cd = this.data.drawImage;
+
+        cd.width = width;
+        cd.height = height;
+
+        //  WebGL data
+
+        this.u0 = u0;
+        this.v0 = v0;
+
+        this.u1 = u1;
+        this.v1 = v1;
+
+        return this;
+    },
+
+    /**
+     * Updates the internal WebGL UV cache and the drawImage cache.
+     *
+     * @method Phaser.Textures.Frame#updateUVs
+     * @since 3.0.0
+     *
+     * @return {this} This Frame object.
+     */
+    updateUVs: function ()
+    {
+        var cx = this.cutX;
+        var cy = this.cutY;
+        var cw = this.cutWidth;
+        var ch = this.cutHeight;
+
+        //  Canvas data
+
+        var cd = this.data.drawImage;
+
+        cd.width = cw;
+        cd.height = ch;
+
+        //  WebGL data
+
+        var tw = this.source.width;
+        var th = this.source.height;
+
+        this.u0 = cx / tw;
+        this.v0 = cy / th;
+
+        this.u1 = (cx + cw) / tw;
+        this.v1 = (cy + ch) / th;
+
+        return this;
+    },
+
+    /**
+     * Updates the internal WebGL UV cache.
+     *
+     * @method Phaser.Textures.Frame#updateUVsInverted
+     * @since 3.0.0
+     *
+     * @return {this} This Frame object.
+     */
+    updateUVsInverted: function ()
+    {
+        var tw = this.source.width;
+        var th = this.source.height;
+
+        this.u0 = (this.cutX + this.cutHeight) / tw;
+        this.v0 = this.cutY / th;
+
+        this.u1 = this.cutX / tw;
+        this.v1 = (this.cutY + this.cutWidth) / th;
+
+        return this;
+    },
+
+    /**
+     * Clones this Frame into a new Frame object.
+     *
+     * @method Phaser.Textures.Frame#clone
+     * @since 3.0.0
+     *
+     * @return {Phaser.Textures.Frame} A clone of this Frame.
+     */
+    clone: function ()
+    {
+        var clone = new Frame(this.texture, this.name, this.sourceIndex);
+
+        clone.cutX = this.cutX;
+        clone.cutY = this.cutY;
+        clone.cutWidth = this.cutWidth;
+        clone.cutHeight = this.cutHeight;
+
+        clone.x = this.x;
+        clone.y = this.y;
+
+        clone.width = this.width;
+        clone.height = this.height;
+
+        clone.halfWidth = this.halfWidth;
+        clone.halfHeight = this.halfHeight;
+
+        clone.centerX = this.centerX;
+        clone.centerY = this.centerY;
+
+        clone.rotated = this.rotated;
+
+        clone.data = Extend(true, clone.data, this.data);
+
+        clone.updateUVs();
+
+        return clone;
+    },
+
+    /**
+     * Destroys this Frame by nulling its reference to the parent Texture and and data objects.
+     *
+     * @method Phaser.Textures.Frame#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.source = null;
+        this.texture = null;
+        this.glTexture = null;
+        this.customData = null;
+        this.data = null;
+    },
+
+    /**
+     * The width of the Frame in its un-trimmed, un-padded state, as prepared in the art package,
+     * before being packed.
+     *
+     * @name Phaser.Textures.Frame#realWidth
+     * @type {number}
+     * @readonly
+     * @since 3.0.0
+     */
+    realWidth: {
+
+        get: function ()
+        {
+            return this.data.sourceSize.w;
+        }
+
+    },
+
+    /**
+     * The height of the Frame in its un-trimmed, un-padded state, as prepared in the art package,
+     * before being packed.
+     *
+     * @name Phaser.Textures.Frame#realHeight
+     * @type {number}
+     * @readonly
+     * @since 3.0.0
+     */
+    realHeight: {
+
+        get: function ()
+        {
+            return this.data.sourceSize.h;
+        }
+
+    },
+
+    /**
+     * The radius of the Frame (derived from sqrt(w * w + h * h) / 2)
+     *
+     * @name Phaser.Textures.Frame#radius
+     * @type {number}
+     * @readonly
+     * @since 3.0.0
+     */
+    radius: {
+
+        get: function ()
+        {
+            return this.data.radius;
+        }
+
+    },
+
+    /**
+     * Is the Frame trimmed or not?
+     *
+     * @name Phaser.Textures.Frame#trimmed
+     * @type {boolean}
+     * @readonly
+     * @since 3.0.0
+     */
+    trimmed: {
+
+        get: function ()
+        {
+            return this.data.trim;
+        }
+
+    },
+
+    /**
+     * The Canvas drawImage data object.
+     *
+     * @name Phaser.Textures.Frame#canvasData
+     * @type {object}
+     * @readonly
+     * @since 3.0.0
+     */
+    canvasData: {
+
+        get: function ()
+        {
+            return this.data.drawImage;
+        }
+
+    }
+
+});
+
+module.exports = Frame;
+
+
+/***/ }),
+
 /***/ "../../../src/tweens/builders/GetBoolean.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/tweens/builders/GetBoolean.js ***!
-  \************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/tweens/builders/GetBoolean.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -28501,9 +31627,9 @@ module.exports = {
  *
  * @param {object} source - The object to retrieve the value from.
  * @param {string} key - The key to look for in the `source` object.
- * @param {*} defaultValue - The default value to return if the `key` doesn't exist or if no `source` object is provided.
+ * @param {boolean} defaultValue - The default value to return if the `key` doesn't exist or if no `source` object is provided.
  *
- * @return {*} The retrieved value.
+ * @return {boolean} The retrieved value.
  */
 var GetBoolean = function (source, key, defaultValue)
 {
@@ -28527,106 +31653,116 @@ module.exports = GetBoolean;
 /***/ }),
 
 /***/ "../../../src/tweens/tween/const.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/tweens/tween/const.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/tweens/tween/const.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Phaser Tween States.
+ *
+ * @namespace Phaser.Tweens.States
+ * @memberof Phaser.Tweens
+ * @since 3.60.0
+ */
+
+/**
+ * Phaser Tween state constants.
+ *
+ * @typedef {Phaser.Tweens.States} Phaser.Tweens.StateType
+ * @memberof Phaser.Tweens
+ * @since 3.60.0
  */
 
 var TWEEN_CONST = {
 
     /**
      * TweenData state.
-     * 
-     * @name Phaser.Tweens.CREATED
+     *
+     * @name Phaser.Tweens.States.CREATED
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     CREATED: 0,
 
-    /**
-     * TweenData state.
-     * 
-     * @name Phaser.Tweens.INIT
-     * @type {number}
-     * @since 3.0.0
-     */
-    INIT: 1,
+    //  1 used to be INIT prior to 3.60
 
     /**
      * TweenData state.
-     * 
-     * @name Phaser.Tweens.DELAY
+     *
+     * @name Phaser.Tweens.States.DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     DELAY: 2,
 
-    /**
-     * TweenData state.
-     * 
-     * @name Phaser.Tweens.OFFSET_DELAY
-     * @type {number}
-     * @since 3.0.0
-     */
-    OFFSET_DELAY: 3,
+    //  3 used to be OFFSET_DELAY prior to 3.60
 
     /**
      * TweenData state.
-     * 
-     * @name Phaser.Tweens.PENDING_RENDER
+     *
+     * @name Phaser.Tweens.States.PENDING_RENDER
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     PENDING_RENDER: 4,
 
     /**
      * TweenData state.
-     * 
-     * @name Phaser.Tweens.PLAYING_FORWARD
+     *
+     * @name Phaser.Tweens.States.PLAYING_FORWARD
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     PLAYING_FORWARD: 5,
 
     /**
      * TweenData state.
-     * 
-     * @name Phaser.Tweens.PLAYING_BACKWARD
+     *
+     * @name Phaser.Tweens.States.PLAYING_BACKWARD
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     PLAYING_BACKWARD: 6,
 
     /**
      * TweenData state.
-     * 
-     * @name Phaser.Tweens.HOLD_DELAY
+     *
+     * @name Phaser.Tweens.States.HOLD_DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     HOLD_DELAY: 7,
 
     /**
      * TweenData state.
-     * 
-     * @name Phaser.Tweens.REPEAT_DELAY
+     *
+     * @name Phaser.Tweens.States.REPEAT_DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     REPEAT_DELAY: 8,
 
     /**
      * TweenData state.
-     * 
-     * @name Phaser.Tweens.COMPLETE
+     *
+     * @name Phaser.Tweens.States.COMPLETE
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     COMPLETE: 9,
@@ -28634,67 +31770,110 @@ var TWEEN_CONST = {
     //  Tween specific (starts from 20 to cleanly allow extra TweenData consts in the future)
 
     /**
-     * Tween state.
-     * 
-     * @name Phaser.Tweens.PENDING_ADD
+     * Tween state. The Tween has been created but has not yet been added to the Tween Manager.
+     *
+     * @name Phaser.Tweens.States.PENDING
      * @type {number}
+     * @const
      * @since 3.0.0
      */
-    PENDING_ADD: 20,
+    PENDING: 20,
 
     /**
-     * Tween state.
-     * 
-     * @name Phaser.Tweens.PAUSED
+     * Tween state. The Tween is active within the Tween Manager. This means it is either playing,
+     * or was playing and is currently paused, but in both cases it's still being processed by
+     * the Tween Manager, so is considered 'active'.
+     *
+     * @name Phaser.Tweens.States.ACTIVE
      * @type {number}
+     * @const
      * @since 3.0.0
      */
-    PAUSED: 21,
+    ACTIVE: 21,
 
     /**
-     * Tween state.
-     * 
-     * @name Phaser.Tweens.LOOP_DELAY
+     * Tween state. The Tween is waiting for a loop countdown to elapse.
+     *
+     * @name Phaser.Tweens.States.LOOP_DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     LOOP_DELAY: 22,
 
     /**
-     * Tween state.
-     * 
-     * @name Phaser.Tweens.ACTIVE
+     * Tween state. The Tween is waiting for a complete delay to elapse.
+     *
+     * @name Phaser.Tweens.States.COMPLETE_DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
-    ACTIVE: 23,
+    COMPLETE_DELAY: 23,
 
     /**
-     * Tween state.
-     * 
-     * @name Phaser.Tweens.COMPLETE_DELAY
+     * Tween state. The Tween is waiting for a starting delay to elapse.
+     *
+     * @name Phaser.Tweens.States.START_DELAY
      * @type {number}
+     * @const
      * @since 3.0.0
      */
-    COMPLETE_DELAY: 24,
+    START_DELAY: 24,
 
     /**
-     * Tween state.
-     * 
-     * @name Phaser.Tweens.PENDING_REMOVE
+     * Tween state. The Tween has finished playback and is waiting to be removed from the Tween Manager.
+     *
+     * @name Phaser.Tweens.States.PENDING_REMOVE
      * @type {number}
+     * @const
      * @since 3.0.0
      */
     PENDING_REMOVE: 25,
 
     /**
-     * Tween state.
-     * 
-     * @name Phaser.Tweens.REMOVED
+     * Tween state. The Tween has been removed from the Tween Manager.
+     *
+     * @name Phaser.Tweens.States.REMOVED
      * @type {number}
+     * @const
      * @since 3.0.0
      */
-    REMOVED: 26
+    REMOVED: 26,
+
+    /**
+     * Tween state. The Tween has finished playback but was flagged as 'persistent' during creation,
+     * so will not be automatically removed by the Tween Manager.
+     *
+     * @name Phaser.Tweens.States.FINISHED
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    FINISHED: 27,
+
+    /**
+     * Tween state. The Tween has been destroyed and can no longer be played by a Tween Manager.
+     *
+     * @name Phaser.Tweens.States.DESTROYED
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    DESTROYED: 28,
+
+    /**
+     * A large integer value used for 'infinite' style countdowns.
+     *
+     * Similar use-case to Number.MAX_SAFE_INTEGER but we cannot use that because it's not
+     * supported on IE.
+     *
+     * @name Phaser.Tweens.States.MAX
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    MAX: 999999999999
 
 };
 
@@ -28704,15 +31883,15 @@ module.exports = TWEEN_CONST;
 /***/ }),
 
 /***/ "../../../src/utils/Class.js":
-/*!*********************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/Class.js ***!
-  \*********************************************/
+/*!*******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/Class.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -28965,15 +32144,15 @@ module.exports = Class;
 /***/ }),
 
 /***/ "../../../src/utils/NOOP.js":
-/*!********************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/NOOP.js ***!
-  \********************************************/
+/*!******************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/NOOP.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -28997,15 +32176,15 @@ module.exports = NOOP;
 /***/ }),
 
 /***/ "../../../src/utils/array/Add.js":
-/*!*************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Add.js ***!
-  \*************************************************/
+/*!***********************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Add.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29119,30 +32298,30 @@ module.exports = Add;
 /***/ }),
 
 /***/ "../../../src/utils/array/AddAt.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/AddAt.js ***!
-  \***************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/AddAt.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Adds the given item, or array of items, to the array starting at the index specified.
- * 
+ *
  * Each item must be unique within the array.
- * 
+ *
  * Existing elements in the array are shifted up.
- * 
+ *
  * The array is modified in-place and returned.
- * 
+ *
  * You can optionally specify a limit to the maximum size of the array. If the quantity of items being
  * added will take the array length over this limit, it will stop adding once the limit is reached.
- * 
+ *
  * You can optionally specify a callback to be invoked for each item successfully added to the array.
  *
  * @function Phaser.Utils.Array.AddAt
@@ -29246,15 +32425,15 @@ module.exports = AddAt;
 /***/ }),
 
 /***/ "../../../src/utils/array/BringToTop.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/BringToTop.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/BringToTop.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29289,15 +32468,15 @@ module.exports = BringToTop;
 /***/ }),
 
 /***/ "../../../src/utils/array/CountAllMatching.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/CountAllMatching.js ***!
-  \**************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/CountAllMatching.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29346,15 +32525,15 @@ module.exports = CountAllMatching;
 /***/ }),
 
 /***/ "../../../src/utils/array/Each.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Each.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Each.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29397,15 +32576,15 @@ module.exports = Each;
 /***/ }),
 
 /***/ "../../../src/utils/array/EachInRange.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/EachInRange.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/EachInRange.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29458,15 +32637,15 @@ module.exports = EachInRange;
 /***/ }),
 
 /***/ "../../../src/utils/array/FindClosestInSorted.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/FindClosestInSorted.js ***!
-  \*****************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/FindClosestInSorted.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29546,16 +32725,64 @@ module.exports = FindClosestInSorted;
 
 /***/ }),
 
+/***/ "../../../src/utils/array/Flatten.js":
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Flatten.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Takes an array and flattens it, returning a shallow-copy flattened array.
+ *
+ * @function Phaser.Utils.Array.Flatten
+ * @since 3.60.0
+ *
+ * @param {array} array - The array to flatten.
+ * @param {array} [output] - An array to hold the results in.
+ *
+ * @return {array} The flattened output array.
+ */
+var Flatten = function (array, output)
+{
+    if (output === undefined) { output = []; }
+
+    for (var i = 0; i < array.length; i++)
+    {
+        if (Array.isArray(array[i]))
+        {
+            Flatten(array[i], output);
+        }
+        else
+        {
+            output.push(array[i]);
+        }
+    }
+
+    return output;
+};
+
+module.exports = Flatten;
+
+
+/***/ }),
+
 /***/ "../../../src/utils/array/GetAll.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/GetAll.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/GetAll.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29614,15 +32841,15 @@ module.exports = GetAll;
 /***/ }),
 
 /***/ "../../../src/utils/array/GetFirst.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/GetFirst.js ***!
-  \******************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/GetFirst.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29678,15 +32905,15 @@ module.exports = GetFirst;
 /***/ }),
 
 /***/ "../../../src/utils/array/GetRandom.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/GetRandom.js ***!
-  \*******************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/GetRandom.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29717,16 +32944,154 @@ module.exports = GetRandom;
 
 /***/ }),
 
-/***/ "../../../src/utils/array/MoveDown.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/MoveDown.js ***!
-  \******************************************************/
+/***/ "../../../src/utils/array/MoveAbove.js":
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/MoveAbove.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given array element above another one in the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveAbove
+ * @since 3.55.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item1 - The element to move above base element.
+ * @param {*} item2 - The base element.
+ *
+ *
+ * @return {array} The input array.
+ */
+var MoveAbove = function (array, item1, item2)
+{
+    if (item1 === item2)
+    {
+        return array;
+    }
+
+    var currentIndex = array.indexOf(item1);
+    var baseIndex = array.indexOf(item2);
+
+    if (currentIndex < 0 || baseIndex < 0)
+    {
+        throw new Error('Supplied items must be elements of the same array');
+    }
+
+    if (currentIndex > baseIndex)
+    {
+        // item1 is already above item2
+        return array;
+    }
+
+    //  Remove
+    array.splice(currentIndex, 1);
+
+    //  Add in new location
+    if (baseIndex === array.length - 1)
+    {
+        array.push(item1);
+    }
+    else
+    {
+        array.splice(baseIndex, 0, item1);
+    }
+
+    return array;
+};
+
+module.exports = MoveAbove;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/MoveBelow.js":
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/MoveBelow.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * Moves the given array element below another one in the array.
+ * The array is modified in-place.
+ *
+ * @function Phaser.Utils.Array.MoveBelow
+ * @since 3.55.0
+ *
+ * @param {array} array - The input array.
+ * @param {*} item1 - The element to move below base element.
+ * @param {*} item2 - The base element.
+ *
+ *
+ * @return {array} The input array.
+ */
+var MoveBelow = function (array, item1, item2)
+{
+    if (item1 === item2)
+    {
+        return array;
+    }
+
+    var currentIndex = array.indexOf(item1);
+    var baseIndex = array.indexOf(item2);
+
+    if (currentIndex < 0 || baseIndex < 0)
+    {
+        throw new Error('Supplied items must be elements of the same array');
+    }
+
+    if (currentIndex < baseIndex)
+    {
+        // item1 is already below item2
+        return array;
+    }
+
+    //  Remove
+    array.splice(currentIndex, 1);
+
+    //  Add in new location
+    if (baseIndex === 0)
+    {
+        array.unshift(item1);
+    }
+    else
+    {
+        array.splice(baseIndex, 0, item1);
+    }
+
+    return array;
+};
+
+module.exports = MoveBelow;
+
+
+/***/ }),
+
+/***/ "../../../src/utils/array/MoveDown.js":
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/MoveDown.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29765,15 +33130,15 @@ module.exports = MoveDown;
 /***/ }),
 
 /***/ "../../../src/utils/array/MoveTo.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/MoveTo.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/MoveTo.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29817,15 +33182,15 @@ module.exports = MoveTo;
 /***/ }),
 
 /***/ "../../../src/utils/array/MoveUp.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/MoveUp.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/MoveUp.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29864,15 +33229,15 @@ module.exports = MoveUp;
 /***/ }),
 
 /***/ "../../../src/utils/array/NumberArray.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/NumberArray.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/NumberArray.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29962,15 +33327,15 @@ module.exports = NumberArray;
 /***/ }),
 
 /***/ "../../../src/utils/array/NumberArrayStep.js":
-/*!*************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/NumberArrayStep.js ***!
-  \*************************************************************/
+/*!***********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/NumberArrayStep.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29984,7 +33349,7 @@ var RoundAwayFromZero = __webpack_require__(/*! ../../math/RoundAwayFromZero */ 
  *
  * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
  * for forward compatibility make sure to pass in actual numbers.
- * 
+ *
  * @example
  * NumberArrayStep(4);
  * // => [0, 1, 2, 3]
@@ -30044,15 +33409,15 @@ module.exports = NumberArrayStep;
 /***/ }),
 
 /***/ "../../../src/utils/array/QuickSelect.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/QuickSelect.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/QuickSelect.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30171,15 +33536,15 @@ module.exports = QuickSelect;
 /***/ }),
 
 /***/ "../../../src/utils/array/Range.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Range.js ***!
-  \***************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Range.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30209,29 +33574,29 @@ var BuildChunk = function (a, b, qty)
  *
  * Range ([a,b,c], [1,2,3]) =
  * a1, a2, a3, b1, b2, b3, c1, c2, c3
- * 
+ *
  * Range ([a,b], [1,2,3], qty = 3) =
  * a1, a1, a1, a2, a2, a2, a3, a3, a3, b1, b1, b1, b2, b2, b2, b3, b3, b3
- * 
+ *
  * Range ([a,b,c], [1,2,3], repeat x1) =
  * a1, a2, a3, b1, b2, b3, c1, c2, c3, a1, a2, a3, b1, b2, b3, c1, c2, c3
- * 
+ *
  * Range ([a,b], [1,2], repeat -1 = endless, max = 14) =
  * Maybe if max is set then repeat goes to -1 automatically?
  * a1, a2, b1, b2, a1, a2, b1, b2, a1, a2, b1, b2, a1, a2 (capped at 14 elements)
- * 
+ *
  * Range ([a], [1,2,3,4,5], random = true) =
  * a4, a1, a5, a2, a3
- * 
+ *
  * Range ([a, b], [1,2,3], random = true) =
  * b3, a2, a1, b1, a3, b2
- * 
+ *
  * Range ([a, b, c], [1,2,3], randomB = true) =
  * a3, a1, a2, b2, b3, b1, c1, c3, c2
- * 
+ *
  * Range ([a], [1,2,3,4,5], yoyo = true) =
  * a1, a2, a3, a4, a5, a5, a4, a3, a2, a1
- * 
+ *
  * Range ([a, b], [1,2,3], yoyo = true) =
  * a1, a2, a3, b1, b2, b3, b3, b2, b1, a3, a2, a1
  *
@@ -30314,15 +33679,15 @@ module.exports = Range;
 /***/ }),
 
 /***/ "../../../src/utils/array/Remove.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Remove.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Remove.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30408,15 +33773,15 @@ module.exports = Remove;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveAt.js":
-/*!******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RemoveAt.js ***!
-  \******************************************************/
+/*!****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/RemoveAt.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30424,9 +33789,9 @@ var SpliceOne = __webpack_require__(/*! ./SpliceOne */ "../../../src/utils/array
 
 /**
  * Removes the item from the given position in the array.
- * 
+ *
  * The array is modified in-place.
- * 
+ *
  * You can optionally specify a callback to be invoked for the item if it is successfully removed from the array.
  *
  * @function Phaser.Utils.Array.RemoveAt
@@ -30464,15 +33829,15 @@ module.exports = RemoveAt;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveBetween.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RemoveBetween.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/RemoveBetween.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30480,9 +33845,9 @@ var SafeRange = __webpack_require__(/*! ./SafeRange */ "../../../src/utils/array
 
 /**
  * Removes the item within the given range in the array.
- * 
+ *
  * The array is modified in-place.
- * 
+ *
  * You can optionally specify a callback to be invoked for the item/s successfully removed from the array.
  *
  * @function Phaser.Utils.Array.RemoveBetween
@@ -30532,15 +33897,15 @@ module.exports = RemoveBetween;
 /***/ }),
 
 /***/ "../../../src/utils/array/RemoveRandomElement.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RemoveRandomElement.js ***!
-  \*****************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/RemoveRandomElement.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30575,15 +33940,15 @@ module.exports = RemoveRandomElement;
 /***/ }),
 
 /***/ "../../../src/utils/array/Replace.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Replace.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Replace.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30624,15 +33989,15 @@ module.exports = Replace;
 /***/ }),
 
 /***/ "../../../src/utils/array/RotateLeft.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RotateLeft.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/RotateLeft.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30669,15 +34034,15 @@ module.exports = RotateLeft;
 /***/ }),
 
 /***/ "../../../src/utils/array/RotateRight.js":
-/*!*********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/RotateRight.js ***!
-  \*********************************************************/
+/*!*******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/RotateRight.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30714,21 +34079,21 @@ module.exports = RotateRight;
 /***/ }),
 
 /***/ "../../../src/utils/array/SafeRange.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SafeRange.js ***!
-  \*******************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/SafeRange.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Tests if the start and end indexes are a safe range for the given array.
- * 
+ *
  * @function Phaser.Utils.Array.SafeRange
  * @since 3.4.0
  *
@@ -30746,8 +34111,7 @@ var SafeRange = function (array, startIndex, endIndex, throwError)
     if (startIndex < 0 ||
         startIndex > len ||
         startIndex >= endIndex ||
-        endIndex > len ||
-        startIndex + endIndex > len)
+        endIndex > len)
     {
         if (throwError)
         {
@@ -30768,15 +34132,15 @@ module.exports = SafeRange;
 /***/ }),
 
 /***/ "../../../src/utils/array/SendToBack.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SendToBack.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/SendToBack.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30811,15 +34175,15 @@ module.exports = SendToBack;
 /***/ }),
 
 /***/ "../../../src/utils/array/SetAll.js":
-/*!****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SetAll.js ***!
-  \****************************************************/
+/*!**************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/SetAll.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30871,15 +34235,15 @@ module.exports = SetAll;
 /***/ }),
 
 /***/ "../../../src/utils/array/Shuffle.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Shuffle.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Shuffle.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30917,15 +34281,15 @@ module.exports = Shuffle;
 /***/ }),
 
 /***/ "../../../src/utils/array/SortByDigits.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SortByDigits.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/SortByDigits.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -30960,15 +34324,15 @@ module.exports = SortByDigits;
 /***/ }),
 
 /***/ "../../../src/utils/array/SpliceOne.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/SpliceOne.js ***!
-  \*******************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/SpliceOne.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31011,18 +34375,20 @@ module.exports = SpliceOne;
 /***/ }),
 
 /***/ "../../../src/utils/array/StableSort.js":
-/*!********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/StableSort.js ***!
-  \********************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/StableSort.js ***!
+  \******************************************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Angry Bytes (and contributors)
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
+
+var Device = __webpack_require__(/*! ../../device */ "../../../src/device/index.js");
 
 /**
  * The comparator function.
@@ -31175,6 +34541,17 @@ var StableSort = function (array, compare)
 {
     if (compare === undefined) { compare = Compare; }
 
+    // Short-circuit when there's nothing to sort.
+    if (!array || array.length < 2)
+    {
+        return array;
+    }
+
+    if (Device.features.stableSort)
+    {
+        return array.sort(compare);
+    }
+
     var result = Process(array, compare);
 
     // This simply copies back if the result isn't in the original array, which happens on an odd number of passes.
@@ -31192,15 +34569,15 @@ module.exports = StableSort;
 /***/ }),
 
 /***/ "../../../src/utils/array/Swap.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/Swap.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/Swap.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31222,7 +34599,7 @@ var Swap = function (array, item1, item2)
 {
     if (item1 === item2)
     {
-        return;
+        return array;
     }
 
     var index1 = array.indexOf(item1);
@@ -31245,15 +34622,15 @@ module.exports = Swap;
 /***/ }),
 
 /***/ "../../../src/utils/array/index.js":
-/*!***************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/index.js ***!
-  \***************************************************/
+/*!*************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/index.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31272,12 +34649,15 @@ module.exports = {
     Each: __webpack_require__(/*! ./Each */ "../../../src/utils/array/Each.js"),
     EachInRange: __webpack_require__(/*! ./EachInRange */ "../../../src/utils/array/EachInRange.js"),
     FindClosestInSorted: __webpack_require__(/*! ./FindClosestInSorted */ "../../../src/utils/array/FindClosestInSorted.js"),
+    Flatten: __webpack_require__(/*! ./Flatten */ "../../../src/utils/array/Flatten.js"),
     GetAll: __webpack_require__(/*! ./GetAll */ "../../../src/utils/array/GetAll.js"),
     GetFirst: __webpack_require__(/*! ./GetFirst */ "../../../src/utils/array/GetFirst.js"),
     GetRandom: __webpack_require__(/*! ./GetRandom */ "../../../src/utils/array/GetRandom.js"),
     MoveDown: __webpack_require__(/*! ./MoveDown */ "../../../src/utils/array/MoveDown.js"),
     MoveTo: __webpack_require__(/*! ./MoveTo */ "../../../src/utils/array/MoveTo.js"),
     MoveUp: __webpack_require__(/*! ./MoveUp */ "../../../src/utils/array/MoveUp.js"),
+    MoveAbove: __webpack_require__(/*! ./MoveAbove */ "../../../src/utils/array/MoveAbove.js"),
+    MoveBelow: __webpack_require__(/*! ./MoveBelow */ "../../../src/utils/array/MoveBelow.js"),
     NumberArray: __webpack_require__(/*! ./NumberArray */ "../../../src/utils/array/NumberArray.js"),
     NumberArrayStep: __webpack_require__(/*! ./NumberArrayStep */ "../../../src/utils/array/NumberArrayStep.js"),
     QuickSelect: __webpack_require__(/*! ./QuickSelect */ "../../../src/utils/array/QuickSelect.js"),
@@ -31304,15 +34684,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/CheckMatrix.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/CheckMatrix.js ***!
-  \****************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/CheckMatrix.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31320,7 +34700,7 @@ module.exports = {
  * Checks if an array can be used as a matrix.
  *
  * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
- * have the same length. There must be at least two rows. This is an example matrix:
+ * have the same length. This is an example matrix:
  *
  * ```
  * [
@@ -31345,7 +34725,7 @@ module.exports = {
  */
 var CheckMatrix = function (matrix)
 {
-    if (!Array.isArray(matrix) || matrix.length < 2 || !Array.isArray(matrix[0]))
+    if (!Array.isArray(matrix) || !Array.isArray(matrix[0]))
     {
         return false;
     }
@@ -31371,15 +34751,15 @@ module.exports = CheckMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/MatrixToString.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/MatrixToString.js ***!
-  \*******************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/MatrixToString.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31471,15 +34851,15 @@ module.exports = MatrixToString;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/ReverseColumns.js":
-/*!*******************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/ReverseColumns.js ***!
-  \*******************************************************************/
+/*!*****************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/ReverseColumns.js ***!
+  \*****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31521,15 +34901,15 @@ module.exports = ReverseColumns;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/ReverseRows.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/ReverseRows.js ***!
-  \****************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/ReverseRows.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31576,15 +34956,15 @@ module.exports = ReverseRows;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/Rotate180.js":
-/*!**************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/Rotate180.js ***!
-  \**************************************************************/
+/*!************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/Rotate180.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31628,15 +35008,15 @@ module.exports = Rotate180;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateLeft.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/RotateLeft.js ***!
-  \***************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/RotateLeft.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31680,15 +35060,15 @@ module.exports = RotateLeft;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateMatrix.js":
-/*!*****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/RotateMatrix.js ***!
-  \*****************************************************************/
+/*!***************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/RotateMatrix.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31771,15 +35151,15 @@ module.exports = RotateMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/RotateRight.js":
-/*!****************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/RotateRight.js ***!
-  \****************************************************************/
+/*!**************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/RotateRight.js ***!
+  \**************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31823,15 +35203,15 @@ module.exports = RotateRight;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/TranslateMatrix.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/TranslateMatrix.js ***!
-  \********************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/TranslateMatrix.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31917,15 +35297,15 @@ module.exports = TranslateMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/TransposeMatrix.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/TransposeMatrix.js ***!
-  \********************************************************************/
+/*!******************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/TransposeMatrix.js ***!
+  \******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31984,15 +35364,15 @@ module.exports = TransposeMatrix;
 /***/ }),
 
 /***/ "../../../src/utils/array/matrix/index.js":
-/*!**********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/array/matrix/index.js ***!
-  \**********************************************************/
+/*!********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/array/matrix/index.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -32019,15 +35399,15 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/utils/object/DeepCopy.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/DeepCopy.js ***!
-  \*******************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/DeepCopy.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -32073,15 +35453,15 @@ module.exports = DeepCopy;
 /***/ }),
 
 /***/ "../../../src/utils/object/Extend.js":
-/*!*****************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/Extend.js ***!
-  \*****************************************************/
+/*!***************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/Extend.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -32179,15 +35559,15 @@ module.exports = Extend;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetAdvancedValue.js":
-/*!***************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetAdvancedValue.js ***!
-  \***************************************************************/
+/*!*************************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/GetAdvancedValue.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -32198,7 +35578,7 @@ var GetValue = __webpack_require__(/*! ./GetValue */ "../../../src/utils/object/
  * Retrieves a value from an object. Allows for more advanced selection options, including:
  *
  * Allowed types:
- * 
+ *
  * Implicit
  * {
  *     x: 4
@@ -32223,7 +35603,7 @@ var GetValue = __webpack_require__(/*! ./GetValue */ "../../../src/utils/object/
  * {
  *     x: { randFloat: [min, max] }
  * }
- * 
+ *
  *
  * @function Phaser.Utils.Objects.GetAdvancedValue
  * @since 3.0.0
@@ -32271,15 +35651,15 @@ module.exports = GetAdvancedValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetFastValue.js":
-/*!***********************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetFastValue.js ***!
-  \***********************************************************/
+/*!*********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/GetFastValue.js ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -32319,69 +35699,116 @@ module.exports = GetFastValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetValue.js":
-/*!*******************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/GetValue.js ***!
-  \*******************************************************/
+/*!*****************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/GetValue.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-//  Source object
-//  The key as a string, or an array of keys, i.e. 'banner', or 'banner.hideBanner'
-//  The default value to use if the key doesn't exist
-
 /**
- * Retrieves a value from an object.
+ * Retrieves a value from an object, or an alternative object, falling to a back-up default value if not found.
+ *
+ * The key is a string, which can be split based on the use of the period character.
+ *
+ * For example:
+ *
+ * ```javascript
+ * const source = {
+ *   lives: 3,
+ *   render: {
+ *     screen: {
+ *       width: 1024
+ *     }
+ *   }
+ * }
+ *
+ * const lives = GetValue(source, 'lives', 1);
+ * const width = GetValue(source, 'render.screen.width', 800);
+ * const height = GetValue(source, 'render.screen.height', 600);
+ * ```
+ *
+ * In the code above, `lives` will be 3 because it's defined at the top level of `source`.
+ * The `width` value will be 1024 because it can be found inside the `render.screen` object.
+ * The `height` value will be 600, the default value, because it is missing from the `render.screen` object.
  *
  * @function Phaser.Utils.Objects.GetValue
  * @since 3.0.0
  *
- * @param {object} source - The object to retrieve the value from.
+ * @param {object} source - The primary object to try to retrieve the value from. If not found in here, `altSource` is checked.
  * @param {string} key - The name of the property to retrieve from the object. If a property is nested, the names of its preceding properties should be separated by a dot (`.`) - `banner.hideBanner` would return the value of the `hideBanner` property from the object stored in the `banner` property of the `source` object.
  * @param {*} defaultValue - The value to return if the `key` isn't found in the `source` object.
+ * @param {object} [altSource] - An alternative object to retrieve the value from. If the property exists in `source` then `altSource` will not be used.
  *
  * @return {*} The value of the requested key.
  */
-var GetValue = function (source, key, defaultValue)
+var GetValue = function (source, key, defaultValue, altSource)
 {
-    if (!source || typeof source === 'number')
+    if ((!source && !altSource) || typeof source === 'number')
     {
         return defaultValue;
     }
-    else if (source.hasOwnProperty(key))
+    else if (source && source.hasOwnProperty(key))
     {
         return source[key];
+    }
+    else if (altSource && altSource.hasOwnProperty(key))
+    {
+        return altSource[key];
     }
     else if (key.indexOf('.') !== -1)
     {
         var keys = key.split('.');
-        var parent = source;
-        var value = defaultValue;
+        var parentA = source;
+        var parentB = altSource;
+        var valueA = defaultValue;
+        var valueB = defaultValue;
+        var valueAFound = true;
+        var valueBFound = true;
 
         //  Use for loop here so we can break early
         for (var i = 0; i < keys.length; i++)
         {
-            if (parent.hasOwnProperty(keys[i]))
+            if (parentA && parentA.hasOwnProperty(keys[i]))
             {
-                //  Yes it has a key property, let's carry on down
-                value = parent[keys[i]];
-
-                parent = parent[keys[i]];
+                //  Yes parentA has a key property, let's carry on down
+                valueA = parentA[keys[i]];
+                parentA = parentA[keys[i]];
             }
             else
             {
-                //  Can't go any further, so reset to default
-                value = defaultValue;
-                break;
+                valueAFound = false;
+            }
+
+            if (parentB && parentB.hasOwnProperty(keys[i]))
+            {
+                //  Yes parentB has a key property, let's carry on down
+                valueB = parentB[keys[i]];
+                parentB = parentB[keys[i]];
+            }
+            else
+            {
+                valueBFound = false;
             }
         }
 
-        return value;
+        if (valueAFound)
+        {
+            return valueA;
+        }
+        else if (valueBFound)
+        {
+            return valueB;
+        }
+        else
+        {
+            return defaultValue;
+        }
     }
     else
     {
@@ -32395,15 +35822,15 @@ module.exports = GetValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/IsPlainObject.js":
-/*!************************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/object/IsPlainObject.js ***!
-  \************************************************************/
+/*!**********************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/object/IsPlainObject.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -32424,7 +35851,7 @@ var IsPlainObject = function (obj)
     // - Any object or value whose internal [[Class]] property is not "[object Object]"
     // - DOM nodes
     // - window
-    if (typeof(obj) !== 'object' || obj.nodeType || obj === obj.window)
+    if (!obj || typeof(obj) !== 'object' || obj.nodeType || obj === obj.window)
     {
         return false;
     }
@@ -32456,15 +35883,15 @@ module.exports = IsPlainObject;
 /***/ }),
 
 /***/ "../../../src/utils/string/Pad.js":
-/*!**************************************************!*\
-  !*** D:/wamp/www/phaser/src/utils/string/Pad.js ***!
-  \**************************************************/
+/*!************************************************************************************!*\
+  !*** /Users/justintien/workspace/github/justintien/phaser/src/utils/string/Pad.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -32477,13 +35904,13 @@ module.exports = IsPlainObject;
  * This would return: `bob---` as it has padded it out to 6 characters, using the `-` on the right.
  *
  * You can also use it to pad numbers (they are always returned as strings):
- * 
+ *
  * `pad(512, 6, '0', 1)`
  *
  * Would return: `000512` with the string padded to the left.
  *
  * If you don't specify a direction it'll pad to both sides:
- * 
+ *
  * `pad('c64', 7, '*')`
  *
  * Would return: `**c64**`
@@ -32495,7 +35922,7 @@ module.exports = IsPlainObject;
  * @param {number} [len=0] - The number of characters to be added.
  * @param {string} [pad=" "] - The string to pad it out with (defaults to a space).
  * @param {number} [dir=3] - The direction dir = 1 (left), 2 (right), 3 (both).
- * 
+ *
  * @return {string} The padded string.
  */
 var Pad = function (str, len, pad, dir)
@@ -32545,7 +35972,7 @@ module.exports = Pad;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -32810,7 +36237,7 @@ module.exports = SpineFile;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -32824,9 +36251,6 @@ var SpineFile = __webpack_require__(/*! ./SpineFile */ "./SpineFile.js");
 var SpineGameObject = __webpack_require__(/*! ./gameobject/SpineGameObject */ "./gameobject/SpineGameObject.js");
 var SpineContainer = __webpack_require__(/*! ./container/SpineContainer */ "./container/SpineContainer.js");
 var NOOP = __webpack_require__(/*! ../../../src/utils/NOOP */ "../../../src/utils/NOOP.js");
-
-//  Plugin specific instance of the Spine Scene Renderer
-var sceneRenderer;
 
 /**
  * @classdesc
@@ -32880,6 +36304,17 @@ var sceneRenderer;
  * Phaser Loader. However, doing so will not add it to the current Scene. It will be available from any
  * subsequent Scenes.
  *
+ * ## A note about inlined data:
+ *
+ * If you need to load Spine assets from inline / base64 encoded data, then you should not use the Loader
+ * at all. Instead, call the functions directly as required:
+ *
+ * scene.cache.json.add
+ * scene.cache.custom.spine.add
+ * scene.textures.addBase64
+ *
+ * ## Using the plugin
+ *
  * Assuming a default environment you access it from within a Scene by using the `this.spine` reference.
  *
  * When this plugin is installed into a Scene it will add a Loader File Type, allowing you to load
@@ -32931,6 +36366,7 @@ var sceneRenderer;
  *
  * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
  * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Phaser Plugin Manager.
+ * @param {string} pluginKey - The key under which this plugin has been installed into the Scene Systems.
  */
 var SpinePlugin = new Class({
 
@@ -32938,9 +36374,9 @@ var SpinePlugin = new Class({
 
     initialize:
 
-    function SpinePlugin (scene, pluginManager)
+    function SpinePlugin (scene, pluginManager, pluginKey)
     {
-        ScenePlugin.call(this, scene, pluginManager);
+        ScenePlugin.call(this, scene, pluginManager, pluginKey);
 
         var game = pluginManager.game;
 
@@ -33120,11 +36556,10 @@ var SpinePlugin = new Class({
             };
         }
 
-        var _this = this;
-
         var add = function (x, y, key, animationName, loop)
         {
-            var spineGO = new SpineGameObject(this.scene, _this, x, y, key, animationName, loop);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var spineGO = new SpineGameObject(this.scene, spinePlugin, x, y, key, animationName, loop);
 
             this.displayList.add(spineGO);
             this.updateList.add(spineGO);
@@ -33140,7 +36575,8 @@ var SpinePlugin = new Class({
             var animationName = GetValue(config, 'animationName', null);
             var loop = GetValue(config, 'loop', false);
 
-            var spineGO = new SpineGameObject(this.scene, _this, 0, 0, key, animationName, loop);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var spineGO = new SpineGameObject(this.scene, spinePlugin, 0, 0, key, animationName, loop);
 
             if (addToScene !== undefined)
             {
@@ -33170,7 +36606,8 @@ var SpinePlugin = new Class({
 
         var addContainer = function (x, y, children)
         {
-            var spineGO = new SpineContainer(this.scene, _this, x, y, children);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var spineGO = new SpineContainer(this.scene, spinePlugin, x, y, children);
 
             this.displayList.add(spineGO);
 
@@ -33185,7 +36622,8 @@ var SpinePlugin = new Class({
             var y = GetValue(config, 'y', 0);
             var children = GetValue(config, 'children', null);
 
-            var container = new SpineContainer(this.scene, _this, x, y, children);
+            var spinePlugin = this.scene.sys[pluginKey];
+            var container = new SpineContainer(this.scene, spinePlugin, x, y, children);
 
             if (addToScene !== undefined)
             {
@@ -33270,14 +36708,18 @@ var SpinePlugin = new Class({
             }
         };
 
+        var sceneRenderer = this.renderer.spineSceneRenderer;
+
         if (!sceneRenderer)
         {
             sceneRenderer = new Spine.webgl.SceneRenderer(this.renderer.canvas, this.gl, true);
             sceneRenderer.batcher.setBlendMode = setBlendMode;
             sceneRenderer.shapes.setBlendMode = setBlendMode;
+
+            this.renderer.spineSceneRenderer = sceneRenderer;
         }
 
-        //  All share the same instance
+        //  All scene share the same instance
         this.sceneRenderer = sceneRenderer;
         this.skeletonRenderer = sceneRenderer.skeletonRenderer;
         this.skeletonDebugRenderer = sceneRenderer.skeletonDebugRenderer;
@@ -33448,12 +36890,14 @@ var SpinePlugin = new Class({
      * @param {boolean} [preMultipliedAlpha=false] - Do the texture files include pre-multiplied alpha or not?
      * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the Spine json file. Used in replacement of the Loaders default XHR Settings.
      * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the Spine atlas file. Used in replacement of the Loaders default XHR Settings.
-     *
+     * @param {object} [settings] - An external Settings configuration object { prefix: '' }
+     * 
      * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
      */
-    spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
+    spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings, settings)
     {
         var multifile;
+        settings = settings || {};
 
         if (Array.isArray(key))
         {
@@ -33461,12 +36905,18 @@ var SpinePlugin = new Class({
             {
                 multifile = new SpineFile(this, key[i]);
 
+                // Support prefix key
+                multifile.prefix = multifile.prefix || settings.prefix || '';
+
                 this.addFile(multifile.files);
             }
         }
         else
         {
             multifile = new SpineFile(this, key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings);
+
+            // Support prefix key
+            multifile.prefix = multifile.prefix || settings.prefix || '';
 
             this.addFile(multifile.files);
         }
@@ -33943,12 +37393,14 @@ var SpinePlugin = new Class({
 
         this.pluginManager = null;
 
+        var sceneRenderer = this.renderer.spineSceneRenderer;
+
         if (sceneRenderer)
         {
             sceneRenderer.dispose();
-            sceneRenderer = null;
         }
 
+        this.renderer.spineSceneRenderer = null;
         this.sceneRenderer = null;
     }
 
@@ -34037,7 +37489,7 @@ module.exports = SpinePlugin;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -34144,7 +37596,7 @@ module.exports = SpineContainer;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -34256,7 +37708,7 @@ module.exports = SpineContainerCanvasRenderer;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -34290,7 +37742,7 @@ module.exports = {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -34314,7 +37766,7 @@ module.exports = 'complete';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -34338,7 +37790,7 @@ module.exports = 'dispose';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -34362,7 +37814,7 @@ module.exports = 'end';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -34386,7 +37838,7 @@ module.exports = 'event';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -34410,7 +37862,7 @@ module.exports = 'interrupted';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -34434,7 +37886,7 @@ module.exports = 'start';
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -34465,7 +37917,7 @@ module.exports = {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -34531,9 +37983,10 @@ var SpineGameObjectRender = __webpack_require__(/*! ./SpineGameObjectRender */ "
  * ```
  *
  * It's possible to enable Spine Game Objects for input, but you should be aware that it will use
- * the bounds of the skeletons current pose to create the hit area from. Sometimes this is ok, but
- * often not. Make use of the `InputPlugin.enableDebug` method to view the input shape being created.
- * If it's not suitable, provide your own shape to the `setInteractive` method.
+ * the bounds of the skeletons current pose to create the hit area from. Ensure that your setup
+ * post in the Spine Editor does _not_ have everything turned off, or the runtimes will be unable
+ * to get an accurate bounds. You can make use of the `InputPlugin.enableDebug` method to view the
+ * input shape being created. If it's not suitable, provide your own shape to the `setInteractive` method.
  *
  * Due to the way Spine handles scaling, it's not recommended to enable a Spine Game Object for
  * physics directly. Instead, you should look at creating a proxy body and syncing the Spine Game
@@ -34544,6 +37997,7 @@ var SpineGameObjectRender = __webpack_require__(/*! ./SpineGameObjectRender */ "
  * forgotten to set that flag when loading the Spine data. Please see the loader docs for more details.
  *
  * @class SpineGameObject
+ * @extends Phaser.GameObjects.GameObject
  * @constructor
  * @since 3.19.0
  *
@@ -34977,9 +38431,9 @@ var SpineGameObject = new Class({
      * @since 3.19.0
      *
      * @param {string} atlasDataKey - The key of the Spine data to use for this Skeleton.
-     * @param {object} skeletonJSON - The JSON data for the Skeleton.
      * @param {string} [animationName] - Optional name of the animation to set on the Skeleton.
      * @param {boolean} [loop=false] - Should the animation, if set, loop or not?
+     * @param {object} [skeletonJSON] - The JSON data for the Skeleton.
      *
      * @return {this} This Game Object.
      */
@@ -36085,7 +39539,7 @@ module.exports = SpineGameObject;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -36212,7 +39666,7 @@ module.exports = SpineGameObjectCanvasRenderer;
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2020 Photon Storm Ltd.
+ * @copyright    2022 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -36257,6 +39711,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -36947,7 +40403,7 @@ var spine;
                 .setAttachment(attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
         };
         AttachmentTimeline.prototype.setAttachment = function (skeleton, slot, attachmentName) {
-            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName);
+            slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
         };
         return AttachmentTimeline;
     }());
@@ -37747,7 +41203,7 @@ var spine;
                 var slot = slots[i];
                 if (slot.attachmentState == setupState) {
                     var attachmentName = slot.data.attachmentName;
-                    slot.attachment = (attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
+                    slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
                 }
             }
             this.unkeyedState += 2;
@@ -37860,7 +41316,7 @@ var spine;
                 slot.attachmentState = this.unkeyedState + AnimationState.SETUP;
         };
         AnimationState.prototype.setAttachment = function (skeleton, slot, attachmentName, attachments) {
-            slot.attachment = attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName);
+            slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
             if (attachments)
                 slot.attachmentState = this.unkeyedState + AnimationState.CURRENT;
         };
@@ -38490,9 +41946,9 @@ var spine;
                 _this.toLoad--;
                 _this.loaded++;
             }, function (state, responseText) {
-                _this.errors[path] = "Couldn't load binary " + path + ": status " + status + ", " + responseText;
+                _this.errors[path] = "Couldn't load binary ".concat(path, ": status ").concat(status, ", ").concat(responseText);
                 if (error)
-                    error(path, "Couldn't load binary " + path + ": status " + status + ", " + responseText);
+                    error(path, "Couldn't load binary ".concat(path, ": status ").concat(status, ", ").concat(responseText));
                 _this.toLoad--;
                 _this.loaded++;
             });
@@ -38510,9 +41966,9 @@ var spine;
                 _this.toLoad--;
                 _this.loaded++;
             }, function (state, responseText) {
-                _this.errors[path] = "Couldn't load text " + path + ": status " + status + ", " + responseText;
+                _this.errors[path] = "Couldn't load text ".concat(path, ": status ").concat(status, ", ").concat(responseText);
                 if (error)
-                    error(path, "Couldn't load text " + path + ": status " + status + ", " + responseText);
+                    error(path, "Couldn't load text ".concat(path, ": status ").concat(status, ", ").concat(responseText));
                 _this.toLoad--;
                 _this.loaded++;
             });
@@ -38535,11 +41991,11 @@ var spine;
                     success(path, img);
             };
             img.onerror = function (ev) {
-                _this.errors[path] = "Couldn't load image " + path;
+                _this.errors[path] = "Couldn't load image ".concat(path);
                 _this.toLoad--;
                 _this.loaded++;
                 if (error)
-                    error(path, "Couldn't load image " + path);
+                    error(path, "Couldn't load image ".concat(path));
             };
             if (this.rawDataUris[path])
                 path = this.rawDataUris[path];
@@ -38566,9 +42022,9 @@ var spine;
                 }
                 catch (e) {
                     var ex = e;
-                    _this.errors[path] = "Couldn't load texture atlas " + path + ": " + ex.message;
+                    _this.errors[path] = "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message);
                     if (error)
-                        error(path, "Couldn't load texture atlas " + path + ": " + ex.message);
+                        error(path, "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message));
                     _this.toLoad--;
                     _this.loaded++;
                     return;
@@ -38591,17 +42047,17 @@ var spine;
                                 }
                                 catch (e) {
                                     var ex = e;
-                                    _this.errors[path] = "Couldn't load texture atlas " + path + ": " + ex.message;
+                                    _this.errors[path] = "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message);
                                     if (error)
-                                        error(path, "Couldn't load texture atlas " + path + ": " + ex.message);
+                                        error(path, "Couldn't load texture atlas ".concat(path, ": ").concat(ex.message));
                                     _this.toLoad--;
                                     _this.loaded++;
                                 }
                             }
                             else {
-                                _this.errors[path] = "Couldn't load texture atlas page " + imagePath + "} of atlas " + path;
+                                _this.errors[path] = "Couldn't load texture atlas page ".concat(imagePath, "} of atlas ").concat(path);
                                 if (error)
-                                    error(path, "Couldn't load texture atlas page " + imagePath + " of atlas " + path);
+                                    error(path, "Couldn't load texture atlas page ".concat(imagePath, " of atlas ").concat(path));
                                 _this.toLoad--;
                                 _this.loaded++;
                             }
@@ -38610,9 +42066,9 @@ var spine;
                         pageLoadError = true;
                         pagesLoaded.count++;
                         if (pagesLoaded.count == atlasPages.length) {
-                            _this.errors[path] = "Couldn't load texture atlas page " + imagePath + "} of atlas " + path;
+                            _this.errors[path] = "Couldn't load texture atlas page ".concat(imagePath, "} of atlas ").concat(path);
                             if (error)
-                                error(path, "Couldn't load texture atlas page " + imagePath + " of atlas " + path);
+                                error(path, "Couldn't load texture atlas page ".concat(imagePath, " of atlas ").concat(path));
                             _this.toLoad--;
                             _this.loaded++;
                         }
@@ -38623,9 +42079,9 @@ var spine;
                     _loop_1(atlasPage);
                 }
             }, function (state, responseText) {
-                _this.errors[path] = "Couldn't load texture atlas " + path + ": status " + status + ", " + responseText;
+                _this.errors[path] = "Couldn't load texture atlas ".concat(path, ": status ").concat(status, ", ").concat(responseText);
                 if (error)
-                    error(path, "Couldn't load texture atlas " + path + ": status " + status + ", " + responseText);
+                    error(path, "Couldn't load texture atlas ".concat(path, ": status ").concat(status, ", ").concat(responseText));
                 _this.toLoad--;
                 _this.loaded++;
             });
@@ -39791,7 +43247,7 @@ var spine;
                         _this.rawAssets[path] = request.responseText;
                     }
                     else {
-                        _this.errors[path] = "Couldn't load text " + path + ": status " + request.status + ", " + request.responseText;
+                        _this.errors[path] = "Couldn't load text ".concat(path, ": status ").concat(request.status, ", ").concat(request.responseText);
                     }
                 }
             };
@@ -39811,7 +43267,7 @@ var spine;
                         _this.rawAssets[path] = JSON.parse(request.responseText);
                     }
                     else {
-                        _this.errors[path] = "Couldn't load text " + path + ": status " + request.status + ", " + request.responseText;
+                        _this.errors[path] = "Couldn't load text ".concat(path, ": status ").concat(request.status, ", ").concat(request.responseText);
                     }
                 }
             };
@@ -39848,7 +43304,7 @@ var spine;
                     _this.rawAssets[path] = img_1;
                 };
                 img_1.onerror = function (ev) {
-                    _this.errors[path] = "Couldn't load image " + path;
+                    _this.errors[path] = "Couldn't load image ".concat(path);
                 };
                 img_1.src = path;
             }
@@ -42502,7 +45958,7 @@ var spine;
                 return spine.BlendMode.Multiply;
             if (str == "screen")
                 return spine.BlendMode.Screen;
-            throw new Error("Unknown blend mode: " + str);
+            throw new Error("Unknown blend mode: ".concat(str));
         };
         SkeletonJson.positionModeFromString = function (str) {
             str = str.toLowerCase();
@@ -42510,7 +45966,7 @@ var spine;
                 return spine.PositionMode.Fixed;
             if (str == "percent")
                 return spine.PositionMode.Percent;
-            throw new Error("Unknown position mode: " + str);
+            throw new Error("Unknown position mode: ".concat(str));
         };
         SkeletonJson.spacingModeFromString = function (str) {
             str = str.toLowerCase();
@@ -42520,7 +45976,7 @@ var spine;
                 return spine.SpacingMode.Fixed;
             if (str == "percent")
                 return spine.SpacingMode.Percent;
-            throw new Error("Unknown position mode: " + str);
+            throw new Error("Unknown position mode: ".concat(str));
         };
         SkeletonJson.rotateModeFromString = function (str) {
             str = str.toLowerCase();
@@ -42530,7 +45986,7 @@ var spine;
                 return spine.RotateMode.Chain;
             if (str == "chainscale")
                 return spine.RotateMode.ChainScale;
-            throw new Error("Unknown rotate mode: " + str);
+            throw new Error("Unknown rotate mode: ".concat(str));
         };
         SkeletonJson.transformModeFromString = function (str) {
             str = str.toLowerCase();
@@ -42544,7 +46000,7 @@ var spine;
                 return spine.TransformMode.NoScale;
             if (str == "noscaleorreflection")
                 return spine.TransformMode.NoScaleOrReflection;
-            throw new Error("Unknown transform mode: " + str);
+            throw new Error("Unknown transform mode: ".concat(str));
         };
         return SkeletonJson;
     }());
@@ -42809,7 +46265,7 @@ var spine;
                 case "mipmaplinearnearest": return TextureFilter.MipMapLinearNearest;
                 case "mipmapnearestlinear": return TextureFilter.MipMapNearestLinear;
                 case "mipmaplinearlinear": return TextureFilter.MipMapLinearLinear;
-                default: throw new Error("Unknown texture filter " + text);
+                default: throw new Error("Unknown texture filter ".concat(text));
             }
         };
         Texture.wrapFromString = function (text) {
@@ -42817,7 +46273,7 @@ var spine;
                 case "mirroredtepeat": return TextureWrap.MirroredRepeat;
                 case "clamptoedge": return TextureWrap.ClampToEdge;
                 case "repeat": return TextureWrap.Repeat;
-                default: throw new Error("Unknown texture wrap " + text);
+                default: throw new Error("Unknown texture wrap ".concat(text));
             }
         };
         return Texture;
@@ -44551,9 +48007,7 @@ var spine;
                     }
                     ctx.scale(1, -1);
                     ctx.translate(-w / 2, -h / 2);
-                    if (color.r != 1 || color.g != 1 || color.b != 1 || color.a != 1) {
-                        ctx.globalAlpha = color.a;
-                    }
+                    ctx.globalAlpha = color.a;
                     ctx.drawImage(image, region.x, region.y, w, h, 0, 0, w, h);
                     if (this.debugRendering)
                         ctx.strokeRect(0, 0, w, h);
@@ -44599,9 +48053,7 @@ var spine;
                         var color = this.tempColor;
                         color.set(skeletonColor.r * slotColor.r * attachmentColor.r, skeletonColor.g * slotColor.g * attachmentColor.g, skeletonColor.b * slotColor.b * attachmentColor.b, alpha);
                         var ctx = this.ctx;
-                        if (color.r != 1 || color.g != 1 || color.b != 1 || color.a != 1) {
-                            ctx.globalAlpha = color.a;
-                        }
+                        ctx.globalAlpha = color.a;
                         for (var j = 0; j < triangles.length; j += 3) {
                             var t1 = triangles[j] * 8, t2 = triangles[j + 1] * 8, t3 = triangles[j + 2] * 8;
                             var x0 = vertices[t1], y0 = vertices[t1 + 1], u0 = vertices[t1 + 6], v0 = vertices[t1 + 7];

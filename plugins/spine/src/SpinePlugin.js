@@ -653,12 +653,14 @@ var SpinePlugin = new Class({
      * @param {boolean} [preMultipliedAlpha=false] - Do the texture files include pre-multiplied alpha or not?
      * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the Spine json file. Used in replacement of the Loaders default XHR Settings.
      * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the Spine atlas file. Used in replacement of the Loaders default XHR Settings.
-     *
+     * @param {object} [settings] - An external Settings configuration object { prefix: '' }
+     * 
      * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
      */
-    spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings)
+    spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings, settings)
     {
         var multifile;
+        settings = settings || {};
 
         if (Array.isArray(key))
         {
@@ -666,12 +668,18 @@ var SpinePlugin = new Class({
             {
                 multifile = new SpineFile(this, key[i]);
 
+                // Support prefix key
+                multifile.prefix = multifile.prefix || settings.prefix || '';
+
                 this.addFile(multifile.files);
             }
         }
         else
         {
             multifile = new SpineFile(this, key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings);
+
+            // Support prefix key
+            multifile.prefix = multifile.prefix || settings.prefix || '';
 
             this.addFile(multifile.files);
         }
