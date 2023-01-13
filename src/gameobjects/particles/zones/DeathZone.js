@@ -56,13 +56,14 @@ var DeathZone = new Class({
      * @method Phaser.GameObjects.Particles.Zones.DeathZone#willKill
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Particles.Particle} particle - The Particle to be checked against this zone.
+     * @param {number} x - The x coordinate of the Particle to be checked against this zone.
+     * @param {number} y - The y coordinate of the Particle to be checked against this zone.
      *
      * @return {boolean} Return `true` if the Particle is to be killed, otherwise return `false`.
      */
-    willKill: function (particle)
+    willKill: function (x, y)
     {
-        var withinZone = this.source.contains(particle.x, particle.y);
+        var withinZone = this.source.contains(x, y);
 
         return (withinZone && this.killOnEnter || !withinZone && !this.killOnEnter);
     }
