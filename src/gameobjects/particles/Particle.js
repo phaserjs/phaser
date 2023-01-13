@@ -400,6 +400,8 @@ var Particle = new Class({
      *
      * @param {number} [x] - The x coordinate to launch this Particle from.
      * @param {number} [y] - The y coordinate to launch this Particle from.
+     *
+     * @return {boolean} `true` if the Particle is alive, or `false` if it was spawned inside a DeathZone.
      */
     fire: function (x, y)
     {
@@ -458,6 +460,23 @@ var Particle = new Class({
         this.lifeCurrent = this.life;
         this.lifeT = 0;
 
+        this.delayCurrent = ops.delay.onEmit(this, 'delay');
+
+        this.scaleX = ops.scaleX.onEmit(this, 'scaleX');
+        this.scaleY = (ops.scaleY.active) ? ops.scaleY.onEmit(this, 'scaleY') : this.scaleX;
+
+        this.angle = ops.rotate.onEmit(this, 'rotate');
+
+        this.rotation = DegToRad(this.angle);
+
+        //  Check we didn't spawn in the middle of a DeathZone
+        if (this.delayCurrent === 0 && emitter.getDeathZone(this))
+        {
+            this.lifeCurrent = 0;
+
+            return false;
+        }
+
         var sx = ops.speedX.onEmit(this, 'speedX');
         var sy = (ops.speedY.active) ? ops.speedY.onEmit(this, 'speedY') : sx;
 
@@ -492,14 +511,6 @@ var Particle = new Class({
         this.maxVelocityX = ops.maxVelocityX.onEmit(this, 'maxVelocityX');
         this.maxVelocityY = ops.maxVelocityY.onEmit(this, 'maxVelocityY');
 
-        this.delayCurrent = ops.delay.onEmit(this, 'delay');
-
-        this.scaleX = ops.scaleX.onEmit(this, 'scaleX');
-        this.scaleY = (ops.scaleY.active) ? ops.scaleY.onEmit(this, 'scaleY') : this.scaleX;
-
-        this.angle = ops.rotate.onEmit(this, 'rotate');
-        this.rotation = DegToRad(this.angle);
-
         this.bounce = ops.bounce.onEmit(this, 'bounce');
 
         this.alpha = ops.alpha.onEmit(this, 'alpha');
@@ -512,6 +523,8 @@ var Particle = new Class({
         {
             this.tint = ops.tint.onEmit(this, 'tint');
         }
+
+        return true;
     },
 
     /**
@@ -677,15 +690,9 @@ var Particle = new Class({
 
         if (emitter.bounds)
         {
+            this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
+
             this.checkBounds(emitter);
-        }
-
-        if (emitter.getDeathZone(this))
-        {
-            this.lifeCurrent = 0;
-
-            //  No need to go any further, particle has been killed
-            return true;
         }
 
         this.scaleX = ops.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
@@ -697,7 +704,16 @@ var Particle = new Class({
         }
 
         this.angle = ops.rotate.onUpdate(this, 'rotate', t, this.angle);
+
         this.rotation = DegToRad(this.angle);
+
+        if (emitter.getDeathZone(this))
+        {
+            this.lifeCurrent = 0;
+
+            //  No need to go any further, particle has been killed
+            return true;
+        }
 
         this.alpha = ops.alpha.onUpdate(this, 'alpha', t, this.alpha);
 
@@ -709,8 +725,6 @@ var Particle = new Class({
         {
             this.tint = ops.tint.onUpdate(this, 'tint', t, this.tint);
         }
-
-        this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
 
         this.lifeCurrent -= delta;
 
