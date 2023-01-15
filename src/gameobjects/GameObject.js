@@ -732,7 +732,7 @@ var GameObject = new Class({
      * every game frame. This method is passed two parameters: `delta` and `time`.
      *
      * If you wish to run your own logic within `preUpdate` then you should always call
-     * `preUpdate.super(delta, time)` within it, or it may fail to process required operations,
+     * `super.preUpdate(delta, time)` within it, or it may fail to process required operations,
      * such as Sprite animations.
      *
      * @method Phaser.GameObjects.GameObject#addToUpdateList

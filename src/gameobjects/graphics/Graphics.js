@@ -141,9 +141,11 @@ var Graphics = new Class({
 
         /**
          * The default fill color for shapes rendered by this Graphics object.
+         * Set this value with `setDefaultStyles()`.
          *
          * @name Phaser.GameObjects.Graphics#defaultFillColor
          * @type {number}
+         * @readonly
          * @default -1
          * @since 3.0.0
          */
@@ -151,9 +153,11 @@ var Graphics = new Class({
 
         /**
          * The default fill alpha for shapes rendered by this Graphics object.
+         * Set this value with `setDefaultStyles()`.
          *
          * @name Phaser.GameObjects.Graphics#defaultFillAlpha
          * @type {number}
+         * @readonly
          * @default 1
          * @since 3.0.0
          */
@@ -161,9 +165,11 @@ var Graphics = new Class({
 
         /**
          * The default stroke width for shapes rendered by this Graphics object.
+         * Set this value with `setDefaultStyles()`.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeWidth
          * @type {number}
+         * @readonly
          * @default 1
          * @since 3.0.0
          */
@@ -171,9 +177,11 @@ var Graphics = new Class({
 
         /**
          * The default stroke color for shapes rendered by this Graphics object.
+         * Set this value with `setDefaultStyles()`.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeColor
          * @type {number}
+         * @readonly
          * @default -1
          * @since 3.0.0
          */
@@ -181,9 +189,11 @@ var Graphics = new Class({
 
         /**
          * The default stroke alpha for shapes rendered by this Graphics object.
+         * Set this value with `setDefaultStyles()`.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeAlpha
          * @type {number}
+         * @readonly
          * @default 1
          * @since 3.0.0
          */
