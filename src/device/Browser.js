@@ -59,7 +59,8 @@ function init ()
         Browser.edge = true;
         Browser.es2019 = true;
     }
-    else if ((/OPR/).test(ua)) {
+    else if ((/OPR/).test(ua))
+    {
         Browser.opera = true;
         Browser.es2019 = true;
     }
