@@ -7,6 +7,7 @@
 var Add = require('../../utils/array/Add');
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var ComponentsToJSON = require('./components/ToJSON');
 var CopyFrom = require('../../geom/rectangle/CopyFrom');
 var DeathZone = require('./zones/DeathZone');
 var EdgeZone = require('./zones/EdgeZone');
@@ -559,10 +560,12 @@ var ParticleEmitter = new Class({
 
         /**
          * Controls if the emitter is currently emitting a particle flow (when frequency >= 0).
+         *
          * Already alive particles will continue to update until they expire.
+         *
          * Controlled by {@link Phaser.GameObjects.Particles.ParticleEmitter#start} and {@link Phaser.GameObjects.Particles.ParticleEmitter#stop}.
          *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#on
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#emitting
          * @type {boolean}
          * @default true
          * @since 3.0.0
@@ -571,7 +574,10 @@ var ParticleEmitter = new Class({
 
         /**
          * Newly emitted particles are added to the top of the particle list, i.e. rendered above those already alive.
+         *
          * Set to false to send them to the back.
+         *
+         * Also see the `sortOrder` property for more complex particle sorting.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#particleBringToTop
          * @type {boolean}
@@ -1103,13 +1109,11 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#toJSON
      * @since 3.0.0
      *
-     * @param {object} [output] - An object to copy output into.
-     *
-     * @return {object} - The output object.
+     * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Game Object.
      */
-    toJSON: function (output)
+    toJSON: function ()
     {
-        if (output === undefined) { output = {}; }
+        var output = ComponentsToJSON(this);
 
         var i = 0;
         var key = '';
@@ -1455,8 +1459,10 @@ var ParticleEmitter = new Class({
      *
      * To remove the boundary, set {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds} to null.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setBounds
-     * @since 3.0.0
+     * Particles will rebound off the edges of the boundary.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setParticleBounds
+     * @since 3.60.0
      *
      * @param {(number|Phaser.Types.GameObjects.Particles.ParticleEmitterBounds|Phaser.Types.GameObjects.Particles.ParticleEmitterBoundsAlt)} x - The x-coordinate of the left edge of the boundary, or an object representing a rectangle.
      * @param {number} y - The y-coordinate of the top edge of the boundary.
@@ -1465,7 +1471,7 @@ var ParticleEmitter = new Class({
      *
      * @return {this} This Particle Emitter.
      */
-    setBounds: function (x, y, width, height)
+    setParticleBounds: function (x, y, width, height)
     {
         if (typeof x === 'object')
         {
@@ -1490,62 +1496,32 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Sets the initial horizontal speed of emitted particles.
-     * Changes the emitter to point mode.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setSpeedX
-     * @since 3.0.0
-     *
-     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} value - The speed, in pixels per second.
-     *
-     * @return {this} This Particle Emitter.
-     */
-    setSpeedX: function (value)
-    {
-        this.ops.speedX.onChange(value);
-
-        //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
-        this.radial = false;
-
-        return this;
-    },
-
-    /**
-     * Sets the initial vertical speed of emitted particles.
-     * Changes the emitter to point mode.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setSpeedY
-     * @since 3.0.0
-     *
-     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} value - The speed, in pixels per second.
-     *
-     * @return {this} This Particle Emitter.
-     */
-    setSpeedY: function (value)
-    {
-        this.ops.speedY.onChange(value);
-
-        //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
-        this.radial = false;
-
-        return this;
-    },
-
-    /**
      * Sets the initial radial speed of emitted particles.
+     *
      * Changes the emitter to radial mode.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setSpeed
-     * @since 3.0.0
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setParticleSpeed
+     * @since 3.60.0
      *
-     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} value - The speed, in pixels per second.
+     * @param {number} x - The horizontal scale of the emitted Particles.
+     * @param {number} [y=x] - The vertical scale of emitted Particles. If not set it will use the `x` value.
      *
      * @return {this} This Particle Emitter.
      */
-    setSpeed: function (value)
+    setParticleSpeed: function (x, y)
     {
-        this.ops.speedX.onChange(value);
-        this.ops.speedY.active = false;
+        if (y === undefined) { y = x; }
+
+        this.ops.speedX.onChange(x);
+
+        if (x === y)
+        {
+            this.ops.speedY.active = false;
+        }
+        else
+        {
+            this.ops.speedY.onChange(y);
+        }
 
         //  If you specify speedX and Y then it changes the emitter from radial to a point emitter
         this.radial = true;
@@ -1554,69 +1530,25 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Sets the horizontal scale of emitted particles.
+     * Sets the vertical and horizontal scale of the emitted particles.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setScaleX
-     * @since 3.0.0
+     * You can also set the scale of the entire emitter via `setScale`.
      *
-     * @param {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} value - The scale, relative to 1.
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setParticleScale
+     * @since 3.60.0
      *
-     * @return {this} This Particle Emitter.
-     */
-    setScaleX: function (value)
-    {
-        this.ops.scaleX.onChange(value);
-
-        return this;
-    },
-
-    /**
-     * Sets the vertical scale of emitted particles.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setScaleY
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} value - The scale, relative to 1.
+     * @param {number} [x=1] - The horizontal scale of the emitted Particles.
+     * @param {number} [y=x] - The vertical scale of emitted Particles. If not set it will use the `x` value.
      *
      * @return {this} This Particle Emitter.
      */
-    setScaleY: function (value)
+    setParticleScale: function (x, y)
     {
-        this.ops.scaleY.onChange(value);
+        if (x === undefined) { x = 1; }
+        if (y === undefined) { y = x; }
 
-        return this;
-    },
-
-    /**
-     * Sets the horizontal gravity applied to emitted particles.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setGravityX
-     * @since 3.0.0
-     *
-     * @param {number} value - Acceleration due to gravity, in pixels per second squared.
-     *
-     * @return {this} This Particle Emitter.
-     */
-    setGravityX: function (value)
-    {
-        this.gravityX = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the vertical gravity applied to emitted particles.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setGravityY
-     * @since 3.0.0
-     *
-     * @param {number} value - Acceleration due to gravity, in pixels per second squared.
-     *
-     * @return {this} This Particle Emitter.
-     */
-    setGravityY: function (value)
-    {
-        this.gravityY = value;
+        this.ops.scaleX.onChange(x);
+        this.ops.scaleY.onChange(y);
 
         return this;
     },
@@ -1624,15 +1556,15 @@ var ParticleEmitter = new Class({
     /**
      * Sets the gravity applied to emitted particles.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setGravity
-     * @since 3.0.0
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setParticleGravity
+     * @since 3.60.0
      *
-     * @param {number} x - Horizontal acceleration due to gravity, in pixels per second squared.
-     * @param {number} y - Vertical acceleration due to gravity, in pixels per second squared.
+     * @param {number} x - Horizontal acceleration due to gravity, in pixels per second squared. Set to zero for no gravity.
+     * @param {number} y - Vertical acceleration due to gravity, in pixels per second squared. Set to zero for no gravity.
      *
      * @return {this} This Particle Emitter.
      */
-    setGravity: function (x, y)
+    setParticleGravity: function (x, y)
     {
         this.gravityX = x;
         this.gravityY = y;
@@ -1641,16 +1573,18 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Sets the opacity of emitted particles.
+     * Sets the opacity (alpha) of emitted particles.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setAlpha
-     * @since 3.0.0
+     * You can also set the alpha of the entire emitter via `setAlpha`.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setParticleAlpha
+     * @since 3.60.0
      *
      * @param {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} value - A value between 0 (transparent) and 1 (opaque).
      *
      * @return {this} This Particle Emitter.
      */
-    setAlpha: function (value)
+    setParticleAlpha: function (value)
     {
         this.ops.alpha.onChange(value);
 
@@ -1660,15 +1594,17 @@ var ParticleEmitter = new Class({
     /**
      * Sets the color tint of emitted particles.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setTint
-     * @since 3.22.0
+     * This is a WebGL only feature.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setParticleTint
+     * @since 3.60.0
      * @webglOnly
      *
      * @param {(Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType)} value - A value between 0 and 0xffffff.
      *
      * @return {this} This Particle Emitter.
      */
-    setTint: function (value)
+    setParticleTint: function (value)
     {
         this.ops.tint.onChange(value);
 
@@ -1678,10 +1614,12 @@ var ParticleEmitter = new Class({
     /**
      * Sets the angle of a {@link Phaser.GameObjects.Particles.ParticleEmitter#radial} particle stream.
      *
+     * The value is given in degrees using Phaser's right-handed coordinate system.
+     *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setEmitterAngle
      * @since 3.0.0
      *
-     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} value - The angle of the initial velocity of emitted particles.
+     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} value - The angle of the initial velocity of emitted particles, in degrees.
      *
      * @return {this} This Particle Emitter.
      */
@@ -1693,16 +1631,16 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Sets the lifespan of newly emitted particles.
+     * Sets the lifespan of newly emitted particles in milliseconds.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setLifespan
-     * @since 3.0.0
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#setParticleLifespan
+     * @since 3.60.0
      *
-     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} value - The particle lifespan, in ms.
+     * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} value - The lifespan of a particle, in ms.
      *
      * @return {this} This Particle Emitter.
      */
-    setLifespan: function (value)
+    setParticleLifespan: function (value)
     {
         this.lifespan.onChange(value);
 
@@ -1753,27 +1691,6 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Adds a new Particle Death Zone to this Particle Emitter.
-     *
-     * This method is an alias for `ParticleEmitter#addDeathZone` and is retained for
-     * backward API compatibility only. Please note that calling this method multiple
-     * times will add multiple death zones to this Emitter.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setDeathZone
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Particles.Zones.DeathZone|Phaser.Types.GameObjects.Particles.ParticleEmitterDeathZoneConfig} zone - A Death Zone configuration object, or a Death Zone instance.
-     *
-     * @return {this} This Particle Emitter.
-     */
-    setDeathZone: function (zoneConfig)
-    {
-        this.addDeathZone(zoneConfig);
-
-        return this;
-    },
-
-    /**
      * Adds a new Particle Death Zone to this Emitter.
      *
      * A particle is immediately killed as soon as its x/y coordinates intersect
@@ -1784,7 +1701,8 @@ var ParticleEmitter = new Class({
      * it supports a `contains` function. You can set the `type` to be either `onEnter`
      * or `onLeave`.
      *
-     * A Death Zone can only exist once within this Emitter.
+     * A single Death Zone instance can only exist once within this Emitter, but can belong
+     * to multiple Emitters.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#addDeathZone
      * @since 3.60.0
@@ -2136,11 +2054,11 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#reserve
      * @since 3.0.0
      *
-     * @param {number} particleCount - The number of particles to create.
+     * @param {number} count - The number of particles to create.
      *
      * @return {this} This Particle Emitter.
      */
-    reserve: function (particleCount)
+    reserve: function (count)
     {
         var dead = this.dead;
 
@@ -2148,13 +2066,13 @@ var ParticleEmitter = new Class({
         {
             var total = this.getParticleCount();
 
-            if (total + particleCount > this.maxParticles)
+            if (total + count > this.maxParticles)
             {
-                particleCount = this.maxParticles - (total + particleCount);
+                count = this.maxParticles - (total + count);
             }
         }
 
-        for (var i = 0; i < particleCount; i++)
+        for (var i = 0; i < count; i++)
         {
             dead.push(new this.particleClass(this));
         }
