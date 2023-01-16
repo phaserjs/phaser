@@ -94,16 +94,68 @@ Compressed Textures are loaded using the new `this.load.texture` method, which t
 * `WebGLRenderer.getCompressedTextures` is a new method that will populate the `WebGLRenderer.compression` object and return its value. This is called automatically when the renderer boots.
 * `WebGLRenderer.getCompressedTextureName` is a new method that will return a compressed texture format GLenum based on the given format.
 
-### Particle System Updates and New Features
+### New Features - Updated Particle System
 
-#### New Features - Animated Particles
+The Particle system has been mostly rewritten to give it a much needed overhaul. This makes the API cleaner, the Game Objects a lot more memory efficient and also introduces several great new features. In order to do this, we had to make some breaking changes. The largest being the way in which particles are now created.
 
-The Particle system has been given an overhaul to make it cleaner, more memory efficient and also introduces a great new feature: animated particles. The Particle class now has an instance of the `Animation State component within it. This allows a particle to play an animation when it is emitted, simply by defining it in the emitter config.
+Previously when you used the `this.add.particles` command it would create a `ParticleEmitterManager` instance. You would then use this to create an Emitter, which would actually emit the particles. While this worked and did allow a Manager to control multiple emitters we found that in discussion developers seldom used this feature and it was common for a Manager to own just one single Emitter.
 
-This will make each particle the 'Prism' animation:
+In order to streamline memory and the display list we have removed the `ParticleEmitterManager` entirely. When you call `this.add.particles` you're now creating a `ParticleEmitter` instance, which is being added directly to the display list and can be manipulated just like any other Game Object, i.e. scaled, rotated, positioned, added to a Container, etc. It now extends the `GameObject` base class, meaning it's also an event emitter, which allowed us to create some handy new events for particles.
+
+So, to create an emitter, you now give it an xy coordinate, a texture and an emitter configuration object (you can also set this later, but most commonly you'd do it on creation). I.e.:
 
 ```js
-const emitter = particles.createEmitter({
+const emitter = this.add.particles(100, 300, 'flares', {
+    frame: 'red',
+    angle: { min: -30, max: 30 },
+    speed: 150
+});
+```
+
+This will create a 'red flare' emitter at 100 x 300.
+
+Prior to 3.60 it would have looked like:
+
+```js
+const manager = this.add.particles('flares');
+
+const emitter = manager.createEmitter({
+    x: 100,
+    y: 300,
+    frame: 'red',
+    angle: { min: -30, max: 30 },
+    speed: 150
+});
+```
+
+The change is quite subtle but makes a big difference internally.
+
+The biggest real change is with the particle x/y coordinates. It's important to understand that if you define x/y coordinates within the emitter configuration, they will be relative to those given in the `add.particles` call:
+
+```js
+const emitter = this.add.particles(100, 300, 'flares', {
+    x: 100,
+    y: 100,
+    frame: 'red',
+    angle: { min: -30, max: 30 },
+    speed: 150
+});
+```
+
+In the above example the particles will emit from 200 x 400 in world space, because the emitter is at 100 x 300 and the particles emit from an offset of 100 x 100.
+
+By making this change it now means you're able to do things like tween the x/y coordinates of the emitter (something you couldn't do before), or add a single emitter to a Container.
+
+Other new features include:
+
+#### Animated Particles
+
+The Particle class now has an instance of the `Animation State` component within it. This allows a particle to play an animation when it is emitted, simply by defining it in the emitter config.
+
+For example, this will make each particle play the 'Prism' animation on emission:
+
+```js
+const emitter = this.add.particles(400, 300, 'gems', {
     anim: 'prism'
     ...
 });
@@ -112,7 +164,7 @@ const emitter = particles.createEmitter({
 You can also allow it to select a random animation by providing an array:
 
 ```js
-const emitter = particles.createEmitter({
+const emitter = this.add.particles(400, 300, 'gems', {
     anim: [ 'prism', 'square', 'ruby', 'square' ]
     ...
 });
@@ -121,7 +173,7 @@ const emitter = particles.createEmitter({
 You've also the ability to cycle through the animations in order, so each new particle gets the next animation in the array:
 
 ```js
-const emitter = particles.createEmitter({
+const emitter = this.add.particles(400, 300, 'gems', {
     anim: { anims: [ 'prism', 'square', 'ruby', 'square' ], cycle: true }
     ...
 });
@@ -130,7 +182,7 @@ const emitter = particles.createEmitter({
 Or even set a quantity. For example, this will emit 10 'prism' particles, then 10 'ruby' particles and then repeat:
 
 ```js
-const emitter = particles.createEmitter({
+const emitter = this.add.particles(400, 300, 'gems', {
     anim: { anims: [ 'prism', 'ruby' ], cycle: true, quantity: 10 }
     ...
 });
@@ -138,12 +190,12 @@ const emitter = particles.createEmitter({
 
 The Animations must have already been created in the Global Animation Manager and must use the same texture as the one bound to the Particle Emitter. Aside from this, you can still control them in the same way as any other particle - scaling, tinting, rotation, alpha, lifespan, etc.
 
-#### New Features - Fast Forward Particle Time
+#### Fast Forward Particle Time
 
 * You can now 'fast forward' a Particle Emitter. This can be done via either the emitter config, using the new `advance` property, or by calling the new `ParticleEmitter.fastForward` method. If, for example, you have an emitter that takes a few seconds to 'warm up' and get all the particles into position, this allows you to 'fast forward' the emitter to a given point in time. The value is given in ms. All standard emitter events and callbacks are still handled, but no rendering takes place during the fast-forward until it has completed.
 * The `ParticleEmitter.start` method has a new optional parameter `advance` that allows you to fast-forward the given amount of ms before the emitter starts flowing.
 
-#### New Features - Particle Interpolation
+#### Particle Interpolation
 
 * It's now possible to create a new Interpolation EmitterOp. You do this by providing an array of values to interpolate between, along with the function name:
 
@@ -156,7 +208,7 @@ const emitter = particles.createEmitter({
 
 This will interpolate the `x` property of each particle through the data set given, using a catmull rom interpolation function. You can also use `linear` or `bezier` functions. Interpolation can be combined with an `ease` type, which controls the progression through the time value. The related `EmitterOpInterpolationConfig` types have also been added.
 
-#### New Features - Particle Emitter Duration
+#### Particle Emitter Duration
 
 * The Particle Emitter config has a new optional parameter `duration`:
 
@@ -174,7 +226,7 @@ This parameter is used for 'flow' emitters only and controls how many millisecon
 * The `ParticleEmitter.start` method has a new optional parameter `duration`, which allows you to set the emitter duration when you call this method. If you do this, it will override any value set in the emitter configuration.
 * The `ParticleEmitter.stop` method has a new optional parameter `kill`. If set it will kill all alive particles immediately, rather than leaving them to die after their lifespan expires.
 
-#### New Features - Stop After a set number of Particles
+#### Stop After a set number of Particles
 
 * The Particle Emitter config has a new optional `stopAfter` property. This, combined with the `frequency` property allows you to control exactly how many particles are emitted before the emitter then stops:
 
@@ -193,32 +245,30 @@ In the above code the emitter will launch 1 particle (set by the `quantity` prop
 
 * The `stopAfter` counter is reset each time you call the `start` or `flow` methods.
 
-#### New Features - Particle Emitter Events
+#### Particle Emitter Events
 
-* The Particle Emitter will now fires new events. Please note that these events are emitted by the Particle Emitter Manager, not the Emitter itself (as the Emitter does not have an EventEmitter component and cannot have one). Therefore, listen for the events as follows:
+* The Particle Emitter will now fire 5 new events. Listen for the events as follows:
 
 ```js
-const emitterManager = this.add.particles('flare');
+const emitter = this.add.particles(0, 0, 'flares');
 
-//  Create your emitters
-
-emitterManager.on('start', (emitter) => {
+emitter.on('start', (emitter) => {
     //  emission started
 });
 
-emitterManager.on('explode', (emitter, particle) => {
+emitter.on('explode', (emitter, particle) => {
     //  emitter 'explode' called
 });
 
-emitterManager.on('deathzone', (emitter, particle, deathzone) => {
+emitter.on('deathzone', (emitter, particle, deathzone) => {
     //  emitter 'death zone' called
 });
 
-emitterManager.on('stop', (emitter) => {
+emitter.on('stop', (emitter) => {
     //  emission has stopped
 });
 
-emitterManager.on('complete', (emitter) => {
+emitter.on('complete', (emitter) => {
     //  all particles fully dead
 });
 ```
@@ -229,39 +279,33 @@ emitterManager.on('complete', (emitter) => {
 * The `Particles.Events.STOP` event is fired whenever the Emitter finishes emission of particles in flow mode. This happens either when you call the `stop` method, or when an Emitter hits its duration  or stopAfter limit. A reference to the `ParticleEmitter` is included as the only parameter.
 * The `Particles.Events.COMPLETE` event is fired when the final alive particle expires.
 
-#### New Features - Multiple Emit Zones (Breaking Change)
+#### Multiple Emit Zones
 
 * In v3.60 a Particle Emitter can now have multiple emission zones. Previously, an Emitter could have only a single emission zone. The zones can be created either via the Emitter Config by passing an array of zone objects, or via the new `ParticleEmitter.addEmitZone` method:
 
 ```js
 const circle = new Phaser.Geom.Circle(0, 0, 160);
 
-const emitter = particles.createEmitter({
-    x: 400,
-    y: 300,
-});
+const emitter = this.add.particles(400, 300, 'metal');
 
 emitter.addEmitZone({ type: 'edge', source: circle, quantity: 64 });
 ```
 
 * When an Emitter has more than one emission zone, the Particles will cycle through the zones in sequence. For example, an Emitter with 3 zones would emit its first particle from zone 1, the second from zone 2, the third from zone 3, the fourth from zone 1, etc.
-* You can control how many particles are emitted from a single zone via the new `total` property. `EdgeZone.total` and `RandomZone.total` are new properties that control the total number of particles the zone will emit, before passing control over to the next zone in the list, if any. The default is 1.
+* You can control how many particles are emitted from a single zone via the new `total` property. `EdgeZone.total` and `RandomZone.total` are new properties that control the total number of particles the zone will emit, before passing control over to the next zone in the list, if any. The default is -1.
 * Because an Emitter now supports multiple Emit Zones, the method `setEmitZone` now performs a different task than before. It's now an alias for `addEmitZone`. This means if you call it multiple times, it will add multiple zones to the emitter, where-as before it would just replace the zone each time.
 * `ParticleEmitter#removeEmitZone` is a new method that allows you to remove an Emit Zone from an Emitter without needing to modify the internal zones array.
 * `ParticleEmitter.getEmitZone` is a new method that Particles call when they are 'fired' in order to set their starting position, if any.
 * The property `ParticleEmitter.emitZone` has been removed. It has been replaced with the new `ParticleEmitter.emitZones` array-based property.
 
-#### New Features - Multiple Death Zones (Breaking Change)
+#### Multiple Death Zones
 
 * In v3.60 a Particle Emitter can now have multiple death zones. Previously, an Emitter could have only a single death zone. The zones can be created either via the Emitter Config by passing an array of zone objects, or via the new `ParticleEmitter.addDeathZone` method:
 
 ```js
 const circle = new Phaser.Geom.Circle(0, 0, 160);
 
-const emitter = particles.createEmitter({
-    x: 400,
-    y: 300,
-});
+const emitter = this.add.particles(400, 300, 'metal');
 
 emitter.addDeathZone({ type: 'onEnter', source: circle });
 ```
@@ -272,7 +316,53 @@ emitter.addDeathZone({ type: 'onEnter', source: circle });
 * `ParticleEmitter.getDeathZone` is a new method that Particles call when they are updated in order to check if they intersect with any of the Death Zones.
 * The property `ParticleEmitter.deathZone` has been removed. It has been replaced with the new `ParticleEmitter.deathZones` array-based property.
 
-#### New Features - Particle Bounds, Renderer Culling and Overlap
+#### Particle Colors
+
+* You can now specify a new `color` property in the Emitter configuration. This takes the form of an array of hex color values that the particles will linearly interpolate between during theif lifetime. This allows you to now change the color of a particle from birth to death, which gives you far more control over your emitter visuals than ever before. You'd use it as follows:
+
+```js
+const flame = this.add.particles(150, 550, 'flares',
+{
+    frame: 'white',
+    color: [ 0xfacc22, 0xf89800, 0xf83600, 0x9f0404 ],
+    colorEase: 'quad.out',
+    lifespan: 2400,
+    angle: { min: -100, max: -80 },
+    scale: { start: 0.70, end: 0, ease: 'sine.out' },
+    speed: 100,
+    advance: 2000,
+    blendMode: 'ADD'
+});
+```
+
+Here you can see the array of 4 colors it will interpolate through.
+
+* The new `colorEase` configuration property allows you to define the ease used to calculate the route through the interpolation. This can be set to any valid ease string, such as `sine.out` or `quad.in`, etc. If left undefined it will use `linear` as default.
+* `EmitterColorOp` is a brand new Emitter Op class that specifically controls the handling of color values, it extends `EmitterOp` and uses the same methods but configured for faster color interpolation.
+* If you define `color` in your config it will override any Emitter tint values you may have set. In short, use `color` if you wish to adjust the color of the particles during their lifespan and use `tint` if you wish to modify either the entire emitter at once, or the color of the particles on birth only.
+* `ParticleEmitter.particleColor` is a new property that allows you to get and set the particle color op value.
+* `ParticleEmitter.colorEase` is a new property that allows you to get and set the ease function used by the color op.
+
+#### Particle Sort Order
+
+* You now have much more control over the sorting order of particles in an Emitter. You can set the new `ParticleEmitter.sortProperty` and `sortOrderAsc` properties to set how (and if) particles should be sorted prior to rendering. For example, setting `sortProperty` to `y` would mean that the particles will be sorted based on their y value prior to rendering. The sort order controls the order in which the particles are rendered. For example:
+
+```js
+const emitter = this.add.particles(100, 300, 'blocks', {
+    frame: 'redmonster',
+    lifespan: 5000,
+    angle: { min: -30, max: 30 },
+    speed: 150,
+    frequency: 200
+});
+
+emitter.setSortProperty('y', true);
+```
+
+* The new `ParticleEmitter.setSortProperty` method allows you to modify the sort property and order at run-time.
+* The new `ParticleEmitter.setSortCallback` method allows you to set a callback that will be invoked in order to sort the particles, rather than using the built-in one. This gives you complete freedom over the logic applied to particle render sorting.
+
+#### Particle Bounds, Renderer Culling and Overlap
 
 * Particles now have the ability to calculate their bounding box, based on their position, scale, rotation, texture frame and the transform of their parent. You can call the new `Particle.getBounds` method to return the bounds, which also gets stored in the new `Particle.bounds` Rectangle property.
 * `ParticleEmitter.getBounds` is a new method that will return the bounds of the Emitter based on all currently active particles. Optional parameters allow you to pad out the bounds and/or advance time in the particle flow, to allow for a more accurate overall bounds generation.
@@ -280,31 +370,30 @@ emitter.addDeathZone({ type: 'onEnter', source: circle });
 * `ParticleEmitter.overlap` is a new method that will run a rectangle intersection test against the given target and all alive particles, returning those that overlap in an array. The target can be a Rectangle Geometry object or an Arcade Physics Body.
 * `Particle.kill` is a new method that will set the life of the particle to zero, forcing it to be immediately killed on the next Particle Emitter update.
 * `ParticleEmitter.getWorldTransformMatrix` is a new method that allows a Particle Emitter to calculate its world transform, factoring in any parents.
-* `ParticleEmitter.tempMatrix1` is a new private property that holds a TransformMatrix used for calculations.
-* `ParticleEmitter.tempMatrix2` is a new private property that holds a TransformMatrix used for calculations.
+* `ParticleEmitter.worldMatrix` is a new property that holds a TransformMatrix used for bounds calculations.
 
-#### New Features - Particle Processors
+#### Particle Processors
 
 * `ParticleProcessor` is a new base class that you can use to create your own Particle Processors, which are special processors capable of manipulating the path of Particles based on your own logic or math. It provides the structure required to handle the processing of particles and should be used as a base for your own classes.
 * `GravityWell` now extends the new `ParticleProcessor` class.
-* `ParticleEmitterManager.addParticleProcessor` is a new method that allows you to add a Particle Processor instance to the Emitter Manager. The old `createGravityWell` method now uses this.
-* `ParticleEmitterManager.removeParticleProcessor` is a new method that will remove a Particle Processor from an Emitter Manager.
-* `ParticleEmitterManager.processors` is a new List property that contains all of the Particle Processors belonging to the Emitter Manager.
-* The `ParticleEmitterManager.wells` property has been removed. You should now use the new `processors` property instead, they are functionally identical.
+* `ParticleEmitter.addParticleProcessor` is a new method that allows you to add a Particle Processor instance to the Emitter. The old `createGravityWell` method now uses this.
+* `ParticleEmitter.removeParticleProcessor` is a new method that will remove a Particle Processor from an Emitter.
+* `ParticleEmitter.processors` is a new List property that contains all of the Particle Processors belonging to the Emitter.
+* The `ParticleEmitter.wells` property has been removed. You should now use the new `processors` property instead, they are functionally identical.
 * `ParticleProcessor.update` is the method that handles all of the particle manipulation. It now has a new 4th parameter `t` that is the normalized lifespan of the Particle being processed.
 
 #### Particle System EmitterOp Breaking Changes and Updates:
 
-All of the following properties have been replaced on the `ParticleEmitter` class. Previously they were `EmitterOp` instances. They are now public getter / setters, so calling, for example, `emitter.x` will now return a numeric value - whereas before it would return the `EmitterOp` instance. This gives developers a lot more freedom when using Particle Emitters. Before v3.60 it was impossible to do this, for example:
+All of the following properties have been replaced on the `ParticleEmitter` class. Previously they were `EmitterOp` instances. They are now public getter / setters, so calling, for example, `emitter.particleX` will now return a numeric value - whereas before it would return the `EmitterOp` instance. This gives developers a lot more freedom when using Particle Emitters. Before v3.60 it was impossible to do this, for example:
 
 ```js
 this.tweens.add({
     targets: emitter,
-    x: 400
+    particleX: 400
 });
 ```
 
-I.e. you couldn't tween an emitters position by directly accessing its x and y properties. However, now that all EmitterOps are getters, you're free to do this, allowing you to be much more creative and giving a nice quality-of-life improvement.
+I.e. you couldn't tween an emitters particle spawn position by directly accessing its x and y properties. However, now that all EmitterOps are getters, you're free to do this, allowing you to be much more creative and giving a nice quality-of-life improvement.
 
 If, however, your code used to access EmitterOps, you'll need to change it as follows:
 
@@ -312,12 +401,12 @@ If, however, your code used to access EmitterOps, you'll need to change it as fo
 //  Phaser 3.55
 emitter.x.onChange(value)
 //  Phaser 3.60
-emitter.x = value
+emitter.particleX = value
 
 //  Phaser 3.55
 let x = emitter.x.propertyValue
 //  Phaser 3.60
-let x = emitter.x
+let x = emitter.particleX
 
 //  Phaser 3.55
 emitter.x.onEmit()
@@ -331,9 +420,10 @@ All of following EmitterOp functions can now be found in the new `ParticleEmitte
 
 * accelerationX
 * accelerationY
-* angle
 * alpha
+* angle
 * bounce
+* color
 * delay
 * lifespan
 * maxVelocityX
@@ -354,8 +444,8 @@ Which means you can now directly access, modify and tween any of the above emitt
 
 Another potentially breaking change is the removal of two internal private counters. These should never have been used directly anyway, but they are:
 
-* `ParticleEmitter._counter` - Now available via `ParticleEmitter.counters[0]`
-* `ParticleEmitter._frameCounter` - Now available via `ParticleEmitter.counters[1]`
+* `ParticleEmitter._counter` - Now available via `ParticleEmitter.flowCounter`
+* `ParticleEmitter._frameCounter` - Now available via `ParticleEmitter.frameCounter`
 * `EmitterOp._onEmit` is a new private reference to the emit callback function, if specified in the emitter configuration. It is called by the new `EmitterOp.proxyEmit` method, to ensure that the Emitter `current` property remains current.
 * `EmitterOp._onUpdate` is a new private reference to the update callback function, if specified in the emitter configuration. It is called by the new `EmitterOp.proxyUpdate` method, to ensure that the Emitter `current` property remains current.
 * `EmitterOp.destroy` is a new method that nulls all references. This is called automatically when a `ParticleEmitter` is itself destroyed.
@@ -363,18 +453,16 @@ Another potentially breaking change is the removal of two internal private count
 #### Further Particle System Updates and Fixes:
 
 * The `Particle.resetPosition` method has been renamed to `setPosition` and it now takes optional x/y parameters. If not given, it performs the same task as `resetPosition` did in earlier versions.
-* The `ParticleEmitterManager` class now has the `AlphaSingle` Component. This allows you to call `setAlpha` on the Manager instance itself and have it impact all particles being rendered by its emitters, allowing you to now 'fade in/out' a whole Particle Manager, rather than just a single Emitter.
+* The `ParticleEmitter` class now has the `AlphaSingle` Component. This allows you to call `setAlpha` on the Emitter instance itself and have it impact all particles being rendered by it, allowing you to now 'fade in/out' a whole Emitter.
 * Setting `frequency` wasn't working correctly in earlier versions. It should allow you to specify a time, in ms, between which each 'quantity' of particles is emitted. However, the `preUpdate` loop was calculating the value incorrectly. It will now count down the right amount of time before emiting another batch of particles.
 * Calling `ParticleEmitter.start` wouldn't reset the `_frameCounter` value internally, meaning the new emission didn't restart from the first texture frame again.
 * `ParticleEmitter.counters` is a new Float32Array property that is used to hold all of the various internal counters required for emitter operation. Both the previous `_counter` and `_frameCounter` properties have been merged into this array, along with new ones required for new features.
 * The WebGL Renderer will now use the new `setQuad` feature of the Transform Matrix. This vastly reduces the amount of math and function calls per particle, from 8 down to 1, increasing performance.
 * Particles with a scaleX or scaleY value of zero will no longer be rendered.
-* `ParticleEmitterManager.preDestroy` is a new method that will now clean-up all Emitters and Gravity Wells that it created  and clear some internal arerays.
-* `ParticleEmitter.destroy` is a new method that will destroy all Particles that the Emitter owns and clean-up all external references.
+* `ParticleEmitter.preDestroy` is a new method that will now clean-up all resources and internal arrays and destroy all Particles that the Emitter owns and clean-up all external references.
 * `Particle.destroy` is a new method that will clean up all external references and destroy the Animation State controller.
 * The `ParticleEmitter._frameLength` property is now specified on the class, rather than added dynamically at run-time, helping preserve class shape.
-* The `ParticleEmitterManager.defaultFrame` property is now specified on the class, rather than added dynamically at run-time, helping preserve class shape.
-* The `ParticleEmitterManager.preUpdate` method no longer runs if the manager is paused.
+* The `ParticleEmitter.defaultFrame` property has been removed as it's not required.
 * Calling `ParticleEmitter.setFrame` no longer resets the internal `_frameCounter` value to zero. Instead, the counter comparison has been hardened to `>=` instead of `===` to allow this value to change mid-emission and never reach the total.
 * The `ParticleEmitter.configFastMap` property has been moved to a local var within the `ParticleEmitter` JS file. It didn't need to be a property on the class itself, reducing the overall size of the class and saving memory.
 * The `ParticleEmitter.configOpMap` property has been moved to a local var within the `ParticleEmitter` JS file. It didn't need to be a property on the class itself, reducing the overall size of the class and saving memory.
@@ -384,15 +472,12 @@ Another potentially breaking change is the removal of two internal private count
 * `Particle.isCropped` is a new read-only property. Do not modify.
 * `Particle.setSizeToFrame` is a new internal NOOP method. Do not call.
 * `ParticleEmitter.anims` is a new property that contains the Animation keys that can be assigned to Particles.
-* `ParticleEmitter.defaultAnim` is a new property that contains default animation to play when one isn't specified directly.
 * `ParticleEmitter.currentAnim` is a new property that contains the index of the current animation, as tracked in cycle playback.
-* `ParticleEmitter.random` is a new boolean property that controls if the animations are selected randomly, or in a cycle.
+* `ParticleEmitter.randomAnim` is a new boolean property that controls if the animations are selected randomly, or in a cycle.
 * `ParticleEmitter.animQuantity` is a new property that controls the number of consecutive particles that are emitted with the current animation.
-* `ParticleEmitter._animCounter` and `_animLength` are new internal private properties used for animation handling.
+* `ParticleEmitter.counters` is a new internal Float32Array that holds all the counters the Emitter uses.
 * `ParticleEmitter.getAnim` is a new method, called by Particles when they are emitted, that will return the animation to use, if any.
 * `ParticleEmitter.setAnim` is a new method, called with the Emitter Manager, that sets the animation data into the Emitter.
-* `ParticleEmitterManager.animNames` is a new property that contains the names of all animations playable based on the Emitters texture. This is populated in the `setFrame` method.
-* `ParticleEmitterManager.setEmitterAnims` is a new method that is called by child Emitters in order to set the animation data they need.
 * The `Particles.EmitterOp.toJSON` method will now JSON stringify the property value before returning it.
 * `Particles.EmitterOp.method` is a new property that holds the current operation method being used. This is a read-only numeric value.
 * `Particles.EmitterOp.active` is a new boolean property that defines if the operator is alive, or not. This is now used by the Emitter instead of nulling Emitter properties, helping maintain class shape.
@@ -400,6 +485,26 @@ Another potentially breaking change is the removal of two internal private count
 * The `Particles.EmitterOp.setMethods` method has been updated so it now has a non-optional 'method' parameter. It has also been rewritten to be much more efficient, now being just a single simple select/case block.
 * The `Particles.EmitterOp.onChange` method will now use the cached 'method' property to avoid running through the `setMethods` function if not required, allowing each Particle EmitterOp to skip a huge chunk of code.
 * We've also greatly improved the documentation around the Particle classes.
+* `ParticleEmitter.setConfig` is a new method that allows you to set the configuration of the Emitter. Previously this was known as `fromJSON`.
+* The `ParticleEmitter.setPosition` method no longer changes the position of the particle emission point, but of the Emitter itself.
+* The `ParticleEmitter.setBounds` method has been renamed to `setParticleBounds`.
+* The `ParticleEmitter.setSpeed` method has been renamed to `setParticleSpeed`.
+* The `ParticleEmitter.setScale` method has been renamed to `setParticleScale` as `setScale` will now set the scale of the whole Emitter.
+* The `ParticleEmitter.setScaleX` and `setScaleY` methods have been removed. Please use `setParticleScale`.
+* The `ParticleEmitter.setGravity` method has been renamed to `setParticleGravity`.
+* The `ParticleEmitter.setGravityX` and `setGravityY` methods have been removed. Please use `setParticleGravity`.
+* The `ParticleEmitter.setAlpha` method has been renamed to `setParticleAlpha` as `setAlpha` will now set the alpha of the whole Emitter.
+* The `ParticleEmitter.setTint` method has been renamed to `setParticleTint`.
+* The `ParticleEmitter.setLifespan` method has been renamed to `setParticleLifespan`.
+* The `ParticleEmitter.on` property has been renamed to `emitting` to avoid conflicts with the Event Emitter.
+* The `ParticleEmitter.x` property has been renamed to `particleX` and is a new EmitterOp capable of being tweened.
+* The `ParticleEmitter.y` property has been renamed to `particleY` and is a new EmitterOp capable of being tweened.
+* The `ParticleEmitter.scaleX` property has been renamed to `particleScaleX` and is a new EmitterOp capable of being tweened.
+* The `ParticleEmitter.scaleY` property has been renamed to `particleScaleY` and is a new EmitterOp capable of being tweened.
+* The `ParticleEmitter.tint` property has been renamed to `particleTint` and is a new EmitterOp capable of being tweened.
+* The `ParticleEmitter.alpha` property has been renamed to `particleAlpha` and is a new EmitterOp capable of being tweened.
+* The `ParticleEmitter.angle` property has been renamed to `particleAngle` and is a new EmitterOp capable of being tweened.
+* The `ParticleEmitter.rotate` property has been renamed to `particleRotate` and is a new EmitterOp capable of being tweened.
 
 ### New Features - Vastly Improved Mobile Performance and WebGL Pipeline Changes
 
