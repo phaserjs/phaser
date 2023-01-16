@@ -386,7 +386,7 @@ var Transform = {
      * @method Phaser.GameObjects.Components.Transform#setScale
      * @since 3.0.0
      *
-     * @param {number} x - The horizontal scale of this Game Object.
+     * @param {number} [x=1] - The horizontal scale of this Game Object.
      * @param {number} [y=x] - The vertical scale of this Game Object. If not set it will use the `x` value.
      *
      * @return {this} This Game Object instance.
