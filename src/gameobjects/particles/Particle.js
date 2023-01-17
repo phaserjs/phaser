@@ -83,6 +83,17 @@ var Particle = new Class({
         this.y = 0;
 
         /**
+         * The coordinates of this Particle in world space.
+         *
+         * Updated as part of `computeVelocity`.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#worldPosition
+         * @type {Phaser.Math.Vector2}
+         * @since 3.60.0
+         */
+        this.worldPosition = new Vector2();
+
+        /**
          * The x velocity of this Particle.
          *
          * @name Phaser.GameObjects.Particles.Particle#velocityX
@@ -602,6 +613,8 @@ var Particle = new Class({
         //  Integrate back in to the position
         this.x += vx * step;
         this.y += vy * step;
+
+        emitter.worldMatrix.transformPoint(this.x, this.y, this.worldPosition);
 
         //  Apply any additional processors (these can update velocity and/or position)
         for (var i = 0; i < processors.length; i++)
