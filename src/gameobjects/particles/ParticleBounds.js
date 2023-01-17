@@ -10,8 +10,18 @@ var Rectangle = require('../../geom/rectangle/Rectangle');
 
 /**
  * @classdesc
- * The Particle Bounds Processor allows particles to rebound off the sides of
- * an invisible Rectangle boundary.
+ * The Particle Bounds Processor.
+ *
+ * Defines a rectangular region, in world space, within which particle movement
+ * is restrained.
+ *
+ * Use the properties `collideLeft`, `collideRight`, `collideTop` and
+ * `collideBottom` to control if a particle will rebound off the sides
+ * of this boundary, or not.
+ *
+ * This happens when the particles worldPosition x/y coordinate hits the boundary.
+ *
+ * The strength of the rebound is determined by the `Particle.bounce` property.
  *
  * @class ParticleBounds
  * @extends Phaser.GameObjects.Particles.ParticleProcessor
