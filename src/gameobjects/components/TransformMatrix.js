@@ -786,7 +786,7 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#decomposeMatrix
      * @since 3.0.0
      *
-     * @return {object} The decomposed Matrix.
+     * @return {Phaser.Types.GameObjects.DecomposeMatrixResults} The decomposed Matrix.
      */
     decomposeMatrix: function ()
     {
