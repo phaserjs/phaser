@@ -33,6 +33,7 @@ var StableSort = require('../../utils/array/StableSort');
 var TransformMatrix = require('../components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
+var ParticleBounds = require('./ParticleBounds');
 
 /**
  * Names of simple configuration properties.
@@ -43,10 +44,6 @@ var configFastMap = [
     'active',
     'advance',
     'blendMode',
-    'collideBottom',
-    'collideLeft',
-    'collideRight',
-    'collideTop',
     'colorEase',
     'deathCallback',
     'deathCallbackScope',
@@ -682,60 +679,6 @@ var ParticleEmitter = new Class({
         this.viewBounds = null;
 
         /**
-         * A rectangular boundary constraining particle movement. Use the Emitter properties `collideLeft`,
-         * `collideRight`, `collideTop` and `collideBottom` to control if a particle will rebound off
-         * the sides of this boundary, or not. This happens when the particles x/y coordinate hits
-         * the boundary.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#bounds
-         * @type {?Phaser.Geom.Rectangle}
-         * @default null
-         * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setBounds
-         */
-        this.bounds = null;
-
-        /**
-         * Whether particles interact with the left edge of the emitter {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds}.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#collideLeft
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.collideLeft = true;
-
-        /**
-         * Whether particles interact with the right edge of the emitter {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds}.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#collideRight
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.collideRight = true;
-
-        /**
-         * Whether particles interact with the top edge of the emitter {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds}.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#collideTop
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.collideTop = true;
-
-        /**
-         * Whether particles interact with the bottom edge of the emitter {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds}.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#collideBottom
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.collideBottom = true;
-
-        /**
          * A Game Object whose position is used as the particle origin.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#follow
@@ -1092,7 +1035,12 @@ var ParticleEmitter = new Class({
 
         if (HasValue(config, 'bounds'))
         {
-            this.setBounds(config.bounds);
+            var bounds = this.addParticleBounds(config.bounds);
+
+            bounds.collideLeft = GetFastValue(config, 'collideLeft', true);
+            bounds.collideRight = GetFastValue(config, 'collideRight', true);
+            bounds.collideTop = GetFastValue(config, 'collideTop', true);
+            bounds.collideBottom = GetFastValue(config, 'collideBottom', true);
         }
 
         if (HasValue(config, 'followOffset'))
@@ -1486,23 +1434,42 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Sets or modifies a rectangular boundary constraining the particles.
+     * Creates a Particle Bounds processor and adds it to this Emitter.
      *
-     * To remove the boundary, set {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds} to null.
+     * This processor will check to see if any of the active Particles hit
+     * the defined boundary, as specified by a Rectangle shape in world-space.
      *
-     * Particles will rebound off the edges of the boundary.
+     * If so, they are 'rebounded' back again by having their velocity adjusted.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#setParticleBounds
+     * The strength of the rebound is controlled by the `Particle.bounce`
+     * property.
+     *
+     * You should be careful to ensure that you emit particles within a bounds,
+     * if set, otherwise it will lead to unpredictable visual results as the
+     * particles are hastily repositioned.
+     *
+     * The Particle Bounds processor is returned from this method. If you wish
+     * to modify the area you can directly change its `bounds` property, along
+     * with the `collideLeft` etc values.
+     *
+     * To disable the bounds you can either set its `active` property to `false`,
+     * or if you no longer require it, call `ParticleEmitter.removeParticleProcessor`.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#addParticleBounds
      * @since 3.60.0
      *
      * @param {(number|Phaser.Types.GameObjects.Particles.ParticleEmitterBounds|Phaser.Types.GameObjects.Particles.ParticleEmitterBoundsAlt)} x - The x-coordinate of the left edge of the boundary, or an object representing a rectangle.
-     * @param {number} y - The y-coordinate of the top edge of the boundary.
-     * @param {number} width - The width of the boundary.
-     * @param {number} height - The height of the boundary.
+     * @param {number} [y] - The y-coordinate of the top edge of the boundary.
+     * @param {number} [width] - The width of the boundary.
+     * @param {number} [height] - The height of the boundary.
+     * @param {boolean} [collideLeft=true] - Whether particles interact with the left edge of the bounds.
+     * @param {boolean} [collideRight=true] - Whether particles interact with the right edge of the bounds.
+     * @param {boolean} [collideTop=true] - Whether particles interact with the top edge of the bounds.
+     * @param {boolean} [collideBottom=true] - Whether particles interact with the bottom edge of the bounds.
      *
-     * @return {this} This Particle Emitter.
+     * @return {Phaser.GameObjects.Particles.ParticleBounds} The Particle Bounds processor.
      */
-    setParticleBounds: function (x, y, width, height)
+    addParticleBounds: function (x, y, width, height, collideLeft, collideRight, collideTop, collideBottom)
     {
         if (typeof x === 'object')
         {
@@ -1514,16 +1481,7 @@ var ParticleEmitter = new Class({
             height = (HasValue(obj, 'h')) ? obj.h : obj.height;
         }
 
-        if (this.bounds)
-        {
-            this.bounds.setTo(x, y, width, height);
-        }
-        else
-        {
-            this.bounds = new Rectangle(x, y, width, height);
-        }
-
-        return this;
+        return this.addParticleProcessor(new ParticleBounds(x, y, width, height, collideLeft, collideRight, collideTop, collideBottom));
     },
 
     /**
@@ -1951,11 +1909,12 @@ var ParticleEmitter = new Class({
 
         for (var i = 0; i < zones.length; i++)
         {
-            var bounds = particle.getBounds(this.worldMatrix);
+            var zone = zones[i];
+            var pos = particle.worldPosition;
 
-            if (zones[i].willKill(bounds.centerX, bounds.centerY))
+            if (zone.willKill(pos.x, pos.y))
             {
-                this.emit(Events.DEATH_ZONE, this, particle, zones[i]);
+                this.emit(Events.DEATH_ZONE, this, particle, zone);
 
                 return true;
             }
@@ -2747,10 +2706,7 @@ var ParticleEmitter = new Class({
             this.visible = this.follow.visible;
         }
 
-        if (this.deathZones.length > 0)
-        {
-            this.worldMatrix = this.getWorldTransformMatrix();
-        }
+        this.getWorldTransformMatrix(this.worldMatrix);
 
         //  Any particle processors?
         var processors = this.getProcessors();
