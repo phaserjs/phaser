@@ -33,6 +33,7 @@
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [angle] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleAngle} (emit only).
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType} [bounce] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#bounce}.
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [delay] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#delay} (emit only).
+ * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [hold] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#hold} (emit only).
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [lifespan] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#lifespan} (emit only).
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType} [maxVelocityX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityX}.
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType} [maxVelocityY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityY}.

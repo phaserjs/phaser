@@ -87,6 +87,7 @@ var configOpMap = [
     'bounce',
     'color',
     'delay',
+    'hold',
     'lifespan',
     'maxVelocityX',
     'maxVelocityY',
@@ -358,6 +359,7 @@ var ParticleEmitter = new Class({
             bounce: new EmitterOp('bounce', 0),
             color: new EmitterColorOp('color'),
             delay: new EmitterOp('delay', 0, true),
+            hold: new EmitterOp('hold', 0, true),
             lifespan: new EmitterOp('lifespan', 1000, true),
             maxVelocityX: new EmitterOp('maxVelocityX', 10000),
             maxVelocityY: new EmitterOp('maxVelocityY', 10000),
@@ -3573,6 +3575,36 @@ var ParticleEmitter = new Class({
         set: function (value)
         {
             this.ops.delay.onChange(value);
+        }
+
+    },
+
+    /**
+     * The number of milliseconds to wait after a particle has finished
+     * its life before it will be removed. This allows you to 'hold' a
+     * particle on the screen once it has reached its final state
+     * before it then vanishes.
+     *
+     * Note that all particle updates will cease, including changing
+     * alpha, scale, movement or animation.
+     *
+     * Accessing this property should typically return a number.
+     * However, it can be set to any valid EmitterOp onEmit type.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#hold
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @since 3.60.0
+     */
+    hold: {
+
+        get: function ()
+        {
+            return this.ops.hold.current;
+        },
+
+        set: function (value)
+        {
+            this.ops.hold.onChange(value);
         }
 
     },

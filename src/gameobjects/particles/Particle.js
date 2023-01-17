@@ -243,6 +243,16 @@ var Particle = new Class({
         this.delayCurrent = 0;
 
         /**
+         * The hold applied to this Particle before it expires, in ms.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#holdCurrent
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.holdCurrent = 0;
+
+        /**
          * The normalized lifespan T value, where 0 is the start and 1 is the end.
          *
          * @name Phaser.GameObjects.Particles.Particle#lifeT
@@ -461,6 +471,7 @@ var Particle = new Class({
         this.lifeT = 0;
 
         this.delayCurrent = ops.delay.onEmit(this, 'delay');
+        this.holdCurrent = ops.hold.onEmit(this, 'hold');
 
         this.scaleX = ops.scaleX.onEmit(this, 'scaleX');
         this.scaleY = (ops.scaleY.active) ? ops.scaleY.onEmit(this, 'scaleY') : this.scaleX;
@@ -647,10 +658,19 @@ var Particle = new Class({
      */
     update: function (delta, step, processors)
     {
-        if (this.lifeCurrent === 0)
+        if (this.lifeCurrent <= 0)
         {
-            //  Particle is dead via `Particle.kill` method.
-            return true;
+            //  Particle is dead via `Particle.kill` method, or being held
+            if (this.holdCurrent > 0)
+            {
+                this.holdCurrent -= delta;
+
+                return (this.holdCurrent <= 0);
+            }
+            else
+            {
+                return true;
+            }
         }
 
         if (this.delayCurrent > 0)
@@ -728,7 +748,7 @@ var Particle = new Class({
 
         this.lifeCurrent -= delta;
 
-        return (this.lifeCurrent <= 0);
+        return (this.lifeCurrent <= 0 && this.holdCurrent <= 0);
     },
 
     /**
