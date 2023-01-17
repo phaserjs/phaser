@@ -563,6 +563,8 @@ var Particle = new Class({
         var mx = ops.maxVelocityX.onUpdate(this, 'maxVelocityX', t, this.maxVelocityX);
         var my = ops.maxVelocityY.onUpdate(this, 'maxVelocityY', t, this.maxVelocityY);
 
+        this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
+
         vx += (emitter.gravityX * step);
         vy += (emitter.gravityY * step);
 
@@ -597,10 +599,19 @@ var Particle = new Class({
         this.velocityX = vx;
         this.velocityY = vy;
 
-        //  Apply any additional processors
+        //  Integrate back in to the position
+        this.x += vx * step;
+        this.y += vy * step;
+
+        //  Apply any additional processors (these can update velocity and/or position)
         for (var i = 0; i < processors.length; i++)
         {
-            processors[i].update(this, delta, step, t);
+            var processor = processors[i];
+
+            if (processor.active)
+            {
+                processor.update(this, delta, step, t);
+            }
         }
     },
 
@@ -613,7 +624,6 @@ var Particle = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Emitter to check the bounds against.
-     */
     checkBounds: function (emitter)
     {
         var bounds = emitter.bounds;
@@ -641,6 +651,7 @@ var Particle = new Class({
             this.velocityY *= bounce;
         }
     },
+     */
 
     /**
      * The main update method for this Particle.
@@ -705,15 +716,15 @@ var Particle = new Class({
 
         this.computeVelocity(emitter, delta, step, processors, t);
 
-        this.x += this.velocityX * step;
-        this.y += this.velocityY * step;
+        // this.x += this.velocityX * step;
+        // this.y += this.velocityY * step;
 
-        if (emitter.bounds)
-        {
-            this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
+        // if (emitter.bounds)
+        // {
+        //     this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
 
-            this.checkBounds(emitter);
-        }
+        //     this.checkBounds(emitter);
+        // }
 
         this.scaleX = ops.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
         this.scaleY = this.scaleX;
