@@ -763,13 +763,15 @@ var AnimationManager = new Class({
 
         for (var i = 0; i < frames.length; i++)
         {
-            if (texture.has(frames[i]))
+            var frameName = frames[i];
+
+            if (texture.has(frameName))
             {
-                out.push({ key: key, frame: frames[i] });
+                out.push({ key: key, frame: frameName });
             }
             else
             {
-                console.warn('generateFrameNumbers: Frame ' + i + ' missing from texture: ' + key);
+                console.warn('Frame "%s" not found in texture "%s"', frameName, key);
             }
         }
 
