@@ -200,7 +200,7 @@ The Animations must have already been created in the Global Animation Manager an
 * It's now possible to create a new Interpolation EmitterOp. You do this by providing an array of values to interpolate between, along with the function name:
 
 ```js
-const emitter = particles.createEmitter({
+const emitter = this.add.particles(0, 0, 'texture', {
     x: { values: [ 50, 500, 200, 800 ], interpolation: 'catmull' }
     ...
 });
@@ -213,7 +213,7 @@ This will interpolate the `x` property of each particle through the data set giv
 * The Particle Emitter config has a new optional parameter `duration`:
 
 ```js
-const emitter = particles.createEmitter({
+const emitter = this.add.particles(0, 0, 'texture', {
     speed: 24,
     lifespan: 1500,
     duration: 500
@@ -231,7 +231,7 @@ This parameter is used for 'flow' emitters only and controls how many millisecon
 * The Particle Emitter config has a new optional `stopAfter` property. This, combined with the `frequency` property allows you to control exactly how many particles are emitted before the emitter then stops:
 
 ```js
-const emitter = particles.createEmitter({
+const emitter = this.add.particles(0, 0, 'texture', {
     x: { start: 400, end: 0 },
     y: { start: 300, end: 0 },
     lifespan: 3000,
@@ -244,6 +244,21 @@ const emitter = particles.createEmitter({
 In the above code the emitter will launch 1 particle (set by the `quantity` property) every 250 ms (set by the `frequency` property) and move it to xy 0x0. Once it has fired 6 particles (the `stopAfter` property) the emitter will stop and emit the `COMPLETE` event.
 
 * The `stopAfter` counter is reset each time you call the `start` or `flow` methods.
+
+#### Particle Hold
+
+* You can configure a Particle to be frozen or 'held in place' after it has finished its lifespan for a set number of ms via the new `hold` configuration option:
+
+```js
+const emitter = this.add.particles(0, 0, 'texture', {
+    lifespan: 2000,
+    scale: { start: 0, end: 1 },
+    hold: 1000
+    ...
+});
+```
+
+The above will scale a Particle in from 0 to 1 over the course of its lifespan (2 seconds). It will then `hold` it on-screen for another second (1000 ms) before the Emitter recycles it and removes it from display.
 
 #### Particle Emitter Events
 
