@@ -78,7 +78,7 @@ var GravityWell = new Class({
          * @default 0
          * @since 3.0.0
          */
-        this._power = 0;
+        this._power = power * gravity;
 
         /**
          * Internal epsilon value.
@@ -89,25 +89,7 @@ var GravityWell = new Class({
          * @default 0
          * @since 3.0.0
          */
-        this._epsilon = 0;
-
-        /**
-         * The strength of the gravity force - larger numbers produce a stronger force.
-         *
-         * @name Phaser.GameObjects.Particles.GravityWell#power
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.power = power;
-
-        /**
-         * The minimum distance for which the gravity force is calculated.
-         *
-         * @name Phaser.GameObjects.Particles.GravityWell#epsilon
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.epsilon = epsilon;
+        this._epsilon = epsilon * epsilon;
     },
 
     /**
@@ -144,6 +126,15 @@ var GravityWell = new Class({
         particle.velocityY += y * factor;
     },
 
+    /**
+     * The minimum distance for which the gravity force is calculated.
+     *
+     * Defaults to 100.
+     *
+     * @name Phaser.GameObjects.Particles.GravityWell#epsilon
+     * @type {number}
+     * @since 3.0.0
+     */
     epsilon: {
 
         get: function ()
@@ -158,6 +149,15 @@ var GravityWell = new Class({
 
     },
 
+    /**
+     * The strength of the gravity force - larger numbers produce a stronger force.
+     *
+     * Defaults to 0.
+     *
+     * @name Phaser.GameObjects.Particles.GravityWell#power
+     * @type {number}
+     * @since 3.0.0
+     */
     power: {
 
         get: function ()
@@ -172,6 +172,15 @@ var GravityWell = new Class({
 
     },
 
+    /**
+     * The gravitational force of this Gravity Well.
+     *
+     * Defaults to 50.
+     *
+     * @name Phaser.GameObjects.Particles.GravityWell#gravity
+     * @type {number}
+     * @since 3.0.0
+     */
     gravity: {
 
         get: function ()
