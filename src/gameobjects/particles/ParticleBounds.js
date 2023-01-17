@@ -19,7 +19,14 @@ var Rectangle = require('../../geom/rectangle/Rectangle');
  * @constructor
  * @since 3.60.0
  *
- * @param {number} [x=0] - The gravitational force of this Gravity Well.
+ * @param {number} x - The x position (top-left) of the bounds, in world space.
+ * @param {number} y - The y position (top-left) of the bounds, in world space.
+ * @param {number} width - The width of the bounds.
+ * @param {number} height - The height of the bounds.
+ * @param {boolean} [collideLeft=true] - Whether particles interact with the left edge of the bounds.
+ * @param {boolean} [collideRight=true] - Whether particles interact with the right edge of the bounds.
+ * @param {boolean} [collideTop=true] - Whether particles interact with the top edge of the bounds.
+ * @param {boolean} [collideBottom=true] - Whether particles interact with the bottom edge of the bounds.
  */
 var ParticleBounds = new Class({
 
@@ -29,6 +36,11 @@ var ParticleBounds = new Class({
 
     function ParticleBounds (x, y, width, height, collideLeft, collideRight, collideTop, collideBottom)
     {
+        if (collideLeft === undefined) { collideLeft = true; }
+        if (collideRight === undefined) { collideRight = true; }
+        if (collideTop === undefined) { collideTop = true; }
+        if (collideBottom === undefined) { collideBottom = true; }
+
         ParticleProcessor.call(this, x, y, true);
 
         /**
@@ -85,39 +97,38 @@ var ParticleBounds = new Class({
     },
 
     /**
-     * Takes a Particle and updates it based on the properties of this Gravity Well.
+     * Takes a Particle and updates it against the bounds.
      *
      * @method Phaser.GameObjects.Particles.ParticleBounds#update
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Particles.Particle} particle - The Particle to update.
-     * @param {number} delta - The delta time in ms.
-     * @param {number} step - The delta value divided by 1000.
      */
     update: function (particle)
     {
         var bounds = this.bounds;
         var bounce = -particle.bounce;
+        var pos = particle.worldPosition;
 
-        if (particle.x < bounds.x && this.collideLeft)
+        if (pos.x < bounds.x && this.collideLeft)
         {
-            particle.x = bounds.x;
+            particle.x += bounds.x - pos.x;
             particle.velocityX *= bounce;
         }
-        else if (particle.x > bounds.right && this.collideRight)
+        else if (pos.x > bounds.right && this.collideRight)
         {
-            particle.x = bounds.right;
+            particle.x -= pos.x - bounds.right;
             particle.velocityX *= bounce;
         }
 
-        if (particle.y < bounds.y && this.collideTop)
+        if (pos.y < bounds.y && this.collideTop)
         {
-            particle.y = bounds.y;
+            particle.y += bounds.y - pos.y;
             particle.velocityY *= bounce;
         }
-        else if (particle.y > bounds.bottom && this.collideBottom)
+        else if (pos.y > bounds.bottom && this.collideBottom)
         {
-            particle.y = bounds.bottom;
+            particle.y -= pos.y - bounds.bottom;
             particle.velocityY *= bounce;
         }
     }
