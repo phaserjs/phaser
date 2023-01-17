@@ -285,6 +285,35 @@ var configOpMap = [
  * By using the above configuration options you have an unlimited about of
  * control over how your particles behave.
  *
+ * ## v3.55 Differences
+ *
+ * Prior to v3.60 Phaser used a `ParticleEmitterManager`. This was removed in v3.60
+ * and now calling `this.add.particles` returns a `ParticleEmitter` instance instead.
+ *
+ * In order to streamline memory and the display list we have removed the
+ * `ParticleEmitterManager` entirely. When you call `this.add.particles` you're now
+ * creating a `ParticleEmitter` instance, which is being added directly to the
+ * display list and can be manipulated just like any other Game Object, i.e.
+ * scaled, rotated, positioned, added to a Container, etc. It now extends the
+ * `GameObject` base class, meaning it's also an event emitter, which allowed us
+ * to create some handy new events for particles.
+ *
+ * So, to create an emitter, you now give it an xy coordinate, a texture and an
+ * emitter configuration object (you can also set this later, but most commonly
+ * you'd do it on creation). I.e.:
+ *
+ * ```js
+ * const emitter = this.add.particles(100, 300, 'flares', {
+ *   frame: 'red',
+ *   angle: { min: -30, max: 30 },
+ *   speed: 150
+ * });
+ * ```
+ *
+ * This will create a 'red flare' emitter at 100 x 300.
+ *
+ * Please update your code to ensure it adheres to the new function signatures.
+ *
  * @class ParticleEmitter
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects.Particles
@@ -2959,6 +2988,18 @@ var ParticleEmitter = new Class({
         }
 
         return output;
+    },
+
+    /**
+     * Prints a warning to the console if you mistakenly call this function
+     * thinking it works the same way as Phaser v3.55.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#createEmitter
+     * @since 3.60.0
+     */
+    createEmitter: function ()
+    {
+        throw new Error('createEmitter removed. See ParticleEmitter docs for info');
     },
 
     /**
