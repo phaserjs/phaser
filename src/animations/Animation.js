@@ -399,6 +399,13 @@ var Animation = new Class({
         {
             textureKey = frames;
 
+            if (!textureManager.exists(textureKey))
+            {
+                console.warn('Texture "%s" not found', textureKey);
+
+                return out;
+            }
+
             var texture = textureManager.get(textureKey);
             var frameKeys = texture.getFrameNames();
 
@@ -436,6 +443,13 @@ var Animation = new Class({
 
             //  The actual texture frame
             var textureFrame = textureManager.getFrame(key, frame);
+
+            if (!textureFrame)
+            {
+                console.warn('Texture "%s" not found', key);
+
+                continue;
+            }
 
             animationFrame = new Frame(key, frame, index, textureFrame);
 
