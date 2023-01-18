@@ -937,19 +937,6 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Gets all active Particle Processors.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#getProcessors
-     * @since 3.60.0
-     *
-     * @return {Phaser.GameObjects.Particles.ParticleProcessor[]} - An array of active Particle Processors.
-     */
-    getProcessors: function ()
-    {
-        return this.processors.getAll('active', true);
-    },
-
-    /**
      * Merges configuration settings into the emitter's current settings.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setConfig
@@ -2017,6 +2004,19 @@ var ParticleEmitter = new Class({
         }
 
         return processor;
+    },
+
+    /**
+     * Gets all active Particle Processors.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#getProcessors
+     * @since 3.60.0
+     *
+     * @return {Phaser.GameObjects.Particles.ParticleProcessor[]} - An array of active Particle Processors.
+     */
+    getProcessors: function ()
+    {
+        return this.processors.getAll('active', true);
     },
 
     /**
