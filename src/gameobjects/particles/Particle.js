@@ -550,7 +550,108 @@ var Particle = new Class({
     },
 
     /**
-     * An internal method that calculates the velocity of the Particle.
+     * The main update method for this Particle.
+     *
+     * Updates its life values, computes the velocity and repositions the Particle.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#update
+     * @since 3.0.0
+     *
+     * @param {number} delta - The delta time in ms.
+     * @param {number} step - The delta value divided by 1000.
+     * @param {Phaser.GameObjects.Particles.ParticleProcessor[]} processors - An array of all active Particle Processors.
+     *
+     * @return {boolean} Returns `true` if this Particle has now expired and should be removed, otherwise `false` if still active.
+     */
+    update: function (delta, step, processors)
+    {
+        if (this.lifeCurrent <= 0)
+        {
+            //  Particle is dead via `Particle.kill` method, or being held
+            if (this.holdCurrent > 0)
+            {
+                this.holdCurrent -= delta;
+
+                return (this.holdCurrent <= 0);
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        if (this.delayCurrent > 0)
+        {
+            this.delayCurrent -= delta;
+
+            return false;
+        }
+
+        this.anims.update(0, delta);
+
+        var emitter = this.emitter;
+        var ops = emitter.ops;
+
+        //  How far along in life is this particle? (t = 0 to 1)
+        var t = 1 - (this.lifeCurrent / this.life);
+
+        this.lifeT = t;
+
+        this.x = ops.x.onUpdate(this, 'x', t, this.x);
+        this.y = ops.y.onUpdate(this, 'y', t, this.y);
+
+        if (emitter.moveTo)
+        {
+            var mx = ops.moveToX.onUpdate(this, 'moveToX', t, emitter.moveToX);
+            var my = ops.moveToY.onUpdate(this, 'moveToY', t, emitter.moveToY);
+            var lifeS = this.lifeCurrent / 1000;
+
+            this.velocityX = (mx - this.x) / lifeS;
+            this.velocityY = (my - this.y) / lifeS;
+        }
+
+        this.computeVelocity(emitter, delta, step, processors, t);
+
+        this.scaleX = ops.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
+        this.scaleY = this.scaleX;
+
+        if (ops.scaleY.active)
+        {
+            this.scaleY = ops.scaleY.onUpdate(this, 'scaleY', t, this.scaleY);
+        }
+
+        this.angle = ops.rotate.onUpdate(this, 'rotate', t, this.angle);
+
+        this.rotation = DegToRad(this.angle);
+
+        if (emitter.getDeathZone(this))
+        {
+            this.lifeCurrent = 0;
+
+            //  No need to go any further, particle has been killed
+            return true;
+        }
+
+        this.alpha = ops.alpha.onUpdate(this, 'alpha', t, this.alpha);
+
+        if (ops.color.active)
+        {
+            this.tint = ops.color.onUpdate(this, 'color', t, this.tint);
+        }
+        else
+        {
+            this.tint = ops.tint.onUpdate(this, 'tint', t, this.tint);
+        }
+
+        this.lifeCurrent -= delta;
+
+        return (this.lifeCurrent <= 0 && this.holdCurrent <= 0);
+    },
+
+    /**
+     * An internal method that calculates the velocity of the Particle and
+     * its world position. It also runs it against any active Processors
+     * that are set on the Emitter.
      *
      * @method Phaser.GameObjects.Particles.Particle#computeVelocity
      * @since 3.0.0
@@ -626,153 +727,6 @@ var Particle = new Class({
                 processor.update(this, delta, step, t);
             }
         }
-    },
-
-    /**
-     * Checks if this Particle is still within the bounds defined by the given Emitter.
-     *
-     * If not, and depending on the Emitter collision flags, the Particle may either stop or rebound.
-     *
-     * @method Phaser.GameObjects.Particles.Particle#checkBounds
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Emitter to check the bounds against.
-    checkBounds: function (emitter)
-    {
-        var bounds = emitter.bounds;
-        var bounce = -this.bounce;
-
-        if (this.x < bounds.x && emitter.collideLeft)
-        {
-            this.x = bounds.x;
-            this.velocityX *= bounce;
-        }
-        else if (this.x > bounds.right && emitter.collideRight)
-        {
-            this.x = bounds.right;
-            this.velocityX *= bounce;
-        }
-
-        if (this.y < bounds.y && emitter.collideTop)
-        {
-            this.y = bounds.y;
-            this.velocityY *= bounce;
-        }
-        else if (this.y > bounds.bottom && emitter.collideBottom)
-        {
-            this.y = bounds.bottom;
-            this.velocityY *= bounce;
-        }
-    },
-     */
-
-    /**
-     * The main update method for this Particle.
-     *
-     * Updates its life values, computes the velocity and repositions the Particle.
-     *
-     * @method Phaser.GameObjects.Particles.Particle#update
-     * @since 3.0.0
-     *
-     * @param {number} delta - The delta time in ms.
-     * @param {number} step - The delta value divided by 1000.
-     * @param {Phaser.GameObjects.Particles.ParticleProcessor[]} processors - An array of all active Particle Processors.
-     *
-     * @return {boolean} Returns `true` if this Particle has now expired and should be removed, otherwise `false` if still active.
-     */
-    update: function (delta, step, processors)
-    {
-        if (this.lifeCurrent <= 0)
-        {
-            //  Particle is dead via `Particle.kill` method, or being held
-            if (this.holdCurrent > 0)
-            {
-                this.holdCurrent -= delta;
-
-                return (this.holdCurrent <= 0);
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        if (this.delayCurrent > 0)
-        {
-            this.delayCurrent -= delta;
-
-            return false;
-        }
-
-        this.anims.update(0, delta);
-
-        var emitter = this.emitter;
-        var ops = emitter.ops;
-
-        //  How far along in life is this particle? (t = 0 to 1)
-        var t = 1 - (this.lifeCurrent / this.life);
-
-        this.lifeT = t;
-
-        this.x = ops.x.onUpdate(this, 'x', t, this.x);
-        this.y = ops.y.onUpdate(this, 'y', t, this.y);
-
-        if (emitter.moveTo)
-        {
-            var mx = ops.moveToX.onUpdate(this, 'moveToX', t, emitter.moveToX);
-            var my = ops.moveToY.onUpdate(this, 'moveToY', t, emitter.moveToY);
-            var lifeS = this.lifeCurrent / 1000;
-
-            this.velocityX = (mx - this.x) / lifeS;
-            this.velocityY = (my - this.y) / lifeS;
-        }
-
-        this.computeVelocity(emitter, delta, step, processors, t);
-
-        // this.x += this.velocityX * step;
-        // this.y += this.velocityY * step;
-
-        // if (emitter.bounds)
-        // {
-        //     this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
-
-        //     this.checkBounds(emitter);
-        // }
-
-        this.scaleX = ops.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
-        this.scaleY = this.scaleX;
-
-        if (ops.scaleY.active)
-        {
-            this.scaleY = ops.scaleY.onUpdate(this, 'scaleY', t, this.scaleY);
-        }
-
-        this.angle = ops.rotate.onUpdate(this, 'rotate', t, this.angle);
-
-        this.rotation = DegToRad(this.angle);
-
-        if (emitter.getDeathZone(this))
-        {
-            this.lifeCurrent = 0;
-
-            //  No need to go any further, particle has been killed
-            return true;
-        }
-
-        this.alpha = ops.alpha.onUpdate(this, 'alpha', t, this.alpha);
-
-        if (ops.color.active)
-        {
-            this.tint = ops.color.onUpdate(this, 'color', t, this.tint);
-        }
-        else
-        {
-            this.tint = ops.tint.onUpdate(this, 'tint', t, this.tint);
-        }
-
-        this.lifeCurrent -= delta;
-
-        return (this.lifeCurrent <= 0 && this.holdCurrent <= 0);
     },
 
     /**
