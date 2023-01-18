@@ -467,6 +467,7 @@ Another potentially breaking change is the removal of two internal private count
 
 #### Further Particle System Updates and Fixes:
 
+* The Particle `DeathZone.willKill` method now takes a `Particle` instance as its only parameter, instead of x and y coordinates, allowing you to perform more complex checks before deciding if the Particle should be killed, or not.
 * The `Particle.resetPosition` method has been renamed to `setPosition` and it now takes optional x/y parameters. If not given, it performs the same task as `resetPosition` did in earlier versions.
 * The `ParticleEmitter` class now has the `AlphaSingle` Component. This allows you to call `setAlpha` on the Emitter instance itself and have it impact all particles being rendered by it, allowing you to now 'fade in/out' a whole Emitter.
 * Setting `frequency` wasn't working correctly in earlier versions. It should allow you to specify a time, in ms, between which each 'quantity' of particles is emitted. However, the `preUpdate` loop was calculating the value incorrectly. It will now count down the right amount of time before emiting another batch of particles.
