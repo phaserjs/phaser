@@ -387,6 +387,18 @@ emitter.setSortProperty('y', true);
 * `ParticleEmitter.getWorldTransformMatrix` is a new method that allows a Particle Emitter to calculate its world transform, factoring in any parents.
 * `ParticleEmitter.worldMatrix` is a new property that holds a TransformMatrix used for bounds calculations.
 
+#### Particle Emitter Bounds
+
+* Prior to v3.60 a Particle Emitter had a `bounds` property. This was a Rectangle and if a Particle hit any of its edges it would rebound off it based on the Particles `bounce` value. In v3.60 this action has been moved to a Particle Processor. You can still configure the bounds via the Emitter config using the `bounds` property, as before. And you can configure which faces collide via the `collideLeft` etc properties. However, the following internal changes have taken place:
+* `ParticleBounds` is a new Particle Processor class that handles updating the particles.
+* The `ParticleEmitter.setBounds` method has been replaced with `ParticleEmitter.addParticleBounds` which now returns a new `ParticleBounds` Particle Processor instance.
+* The `ParticleEmitter.bounds` property has been removed. Please see the `addParticleBounds` method if you wish to retain this object.
+* The `ParticleEmitter.collideLeft` property has been removed. It's now part of the `ParticleBounds` Particle Processor.
+* The `ParticleEmitter.collideRight` property has been removed. It's now part of the `ParticleBounds` Particle Processor.
+* The `ParticleEmitter.collideTop` property has been removed. It's now part of the `ParticleBounds` Particle Processor.
+* The `ParticleEmitter.collideBottom` property has been removed. It's now part of the `ParticleBounds` Particle Processor.
+* The `Particle.checkBounds` method has been removed as it's now handled by the Particle Processors.
+
 #### Particle Processors
 
 * `ParticleProcessor` is a new base class that you can use to create your own Particle Processors, which are special processors capable of manipulating the path of Particles based on your own logic or math. It provides the structure required to handle the processing of particles and should be used as a base for your own classes.
