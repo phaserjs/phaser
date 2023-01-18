@@ -5,6 +5,7 @@
  */
 
 var AnimationState = require('../../animations/AnimationState');
+var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
 var Rectangle = require('../../geom/rectangle/Rectangle');
@@ -677,36 +678,11 @@ var Particle = new Class({
 
         this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
 
-        vx += (emitter.gravityX * step);
-        vy += (emitter.gravityY * step);
+        vx += (emitter.gravityX * step) + (ax * step);
+        vy += (emitter.gravityY * step) + (ay * step);
 
-        if (ax)
-        {
-            vx += (ax * step);
-        }
-
-        if (ay)
-        {
-            vy += (ay * step);
-        }
-
-        if (vx > mx)
-        {
-            vx = mx;
-        }
-        else if (vx < -mx)
-        {
-            vx = -mx;
-        }
-
-        if (vy > my)
-        {
-            vy = my;
-        }
-        else if (vy < -my)
-        {
-            vy = -my;
-        }
+        vx = Clamp(vx, -mx, mx);
+        vy = Clamp(vy, -my, my);
 
         this.velocityX = vx;
         this.velocityY = vy;
