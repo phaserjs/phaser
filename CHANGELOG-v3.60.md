@@ -843,6 +843,9 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* The `CanvasTexture.draw` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)
+* The `CanvasTexture.drawFrame` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)
+* The `CanvasTexture.clear` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)
 * The `Game.registry`, which is a `DataManager` instance that can be used as a global store of game wide data will now use its own Event Emitter, instead of the Game's Event Emitter. This means it's perfectly safe for you to now use the Registry to emit and listen for your own custom events without conflicting with events the Phaser Game instance emits.
 * The `GenerateVerts` function has a new optional parameter `flipUV` which, if set, will flip the UV texture coordinates (thanks cedarcantab)
 * The `GenerateVerts` function no longer errors if the verts and uvs arrays are not the same size and `containsZ` is true (thanks cedarcantab)
@@ -1096,6 +1099,7 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @necrokot
 @Nero0
 @orjandh
+@pavle-goloskokovic
 @PhaserEditor2D
 @Pythux
 @quocsinh
