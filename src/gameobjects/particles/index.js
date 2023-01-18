@@ -15,6 +15,7 @@ module.exports = {
     Events: require('./events'),
     GravityWell: require('./GravityWell'),
     Particle: require('./Particle'),
+    ParticleBounds: require('./ParticleBounds'),
     ParticleEmitter: require('./ParticleEmitter'),
     ParticleProcessor: require('./ParticleProcessor'),
     Zones: require('./zones')
