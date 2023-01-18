@@ -1910,9 +1910,8 @@ var ParticleEmitter = new Class({
         for (var i = 0; i < zones.length; i++)
         {
             var zone = zones[i];
-            var pos = particle.worldPosition;
 
-            if (zone.willKill(pos.x, pos.y))
+            if (zone.willKill(particle))
             {
                 this.emit(Events.DEATH_ZONE, this, particle, zone);
 
