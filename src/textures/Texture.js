@@ -218,7 +218,7 @@ var Texture = new Class({
      */
     has: function (name)
     {
-        return (this.frames[name]);
+        return this.frames.hasOwnProperty(name);
     },
 
     /**
