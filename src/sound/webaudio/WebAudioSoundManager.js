@@ -34,61 +34,61 @@ var WebAudioSoundManager = new Class({
 
     initialize:
 
-    function WebAudioSoundManager (game)
-    {
-        /**
-         * The AudioContext being used for playback.
-         *
-         * @name Phaser.Sound.WebAudioSoundManager#context
-         * @type {AudioContext}
-         * @since 3.0.0
-         */
-        this.context = this.createAudioContext(game);
-
-        /**
-         * Gain node responsible for controlling global muting.
-         *
-         * @name Phaser.Sound.WebAudioSoundManager#masterMuteNode
-         * @type {GainNode}
-         * @since 3.0.0
-         */
-        this.masterMuteNode = this.context.createGain();
-
-        /**
-         * Gain node responsible for controlling global volume.
-         *
-         * @name Phaser.Sound.WebAudioSoundManager#masterVolumeNode
-         * @type {GainNode}
-         * @since 3.0.0
-         */
-        this.masterVolumeNode = this.context.createGain();
-
-        this.masterMuteNode.connect(this.masterVolumeNode);
-
-        this.masterVolumeNode.connect(this.context.destination);
-
-        /**
-         * Destination node for connecting individual sounds to.
-         *
-         * @name Phaser.Sound.WebAudioSoundManager#destination
-         * @type {AudioNode}
-         * @since 3.0.0
-         */
-        this.destination = this.masterMuteNode;
-
-        this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
-
-        BaseSoundManager.call(this, game);
-
-        if (this.locked && game.isBooted)
+        function WebAudioSoundManager (game)
         {
-            this.unlock();
-        }
-        else
-        {
-            game.events.once(GameEvents.BOOT, this.unlock, this);
-        }
-    },
+            /**
+             * The AudioContext being used for playback.
+             *
+             * @name Phaser.Sound.WebAudioSoundManager#context
+             * @type {AudioContext}
+             * @since 3.0.0
+             */
+            this.context = this.createAudioContext(game);
+
+            /**
+             * Gain node responsible for controlling global muting.
+             *
+             * @name Phaser.Sound.WebAudioSoundManager#masterMuteNode
+             * @type {GainNode}
+             * @since 3.0.0
+             */
+            this.masterMuteNode = this.context.createGain();
+
+            /**
+             * Gain node responsible for controlling global volume.
+             *
+             * @name Phaser.Sound.WebAudioSoundManager#masterVolumeNode
+             * @type {GainNode}
+             * @since 3.0.0
+             */
+            this.masterVolumeNode = this.context.createGain();
+
+            this.masterMuteNode.connect(this.masterVolumeNode);
+
+            this.masterVolumeNode.connect(this.context.destination);
+
+            /**
+             * Destination node for connecting individual sounds to.
+             *
+             * @name Phaser.Sound.WebAudioSoundManager#destination
+             * @type {AudioNode}
+             * @since 3.0.0
+             */
+            this.destination = this.masterMuteNode;
+
+            this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
+
+            BaseSoundManager.call(this, game);
+
+            if (this.locked && game.isBooted)
+            {
+                this.unlock();
+            }
+            else
+            {
+                game.events.once(GameEvents.BOOT, this.unlock, this);
+            }
+        },
 
     /**
      * Method responsible for instantiating and returning AudioContext instance.
@@ -271,6 +271,24 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
+     * Sets the destination for the spatial sound.
+     * Currently only WebAudio is supported.
+     *
+     * @method Phaser.Sound.BaseSoundManager#setAudioDestination
+     * @override
+     * @since 3.6.0
+     *
+     * @param {Phaser.Types.Sound.SpatialSoundConfig|object} [destination] - An object with x and y fields
+     */
+    setAudioDestination: function (destination)
+    {
+
+        this.audioDestination = destination;
+        this.context.listener.positionZ.value = 300;
+
+    },
+
+    /**
      * Unlocks Web Audio API on the initial input event.
      *
      * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
@@ -365,6 +383,20 @@ var WebAudioSoundManager = new Class({
      */
     update: function (time, delta)
     {
+        // Track audioDestination is set
+        if (this.audioDestination)
+        {
+            var listener = this.context.listener;
+            if (this.audioDestination.x && !isNaN(this.audioDestination.x))
+            {
+                listener.positionX.value = this.audioDestination.x;
+            }
+            if (this.audioDestination.y && !isNaN(this.audioDestination.y))
+            {
+                listener.positionY.value = this.audioDestination.y;
+            }
+        }
+
         BaseSoundManager.prototype.update.call(this, time, delta);
 
         //  Resume interrupted audio on iOS

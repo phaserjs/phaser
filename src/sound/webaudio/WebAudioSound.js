@@ -29,173 +29,177 @@ var WebAudioSound = new Class({
 
     initialize:
 
-    function WebAudioSound (manager, key, config)
-    {
-        if (config === undefined) { config = {}; }
-
-        /**
-         * Audio buffer containing decoded data of the audio asset to be played.
-         *
-         * @name Phaser.Sound.WebAudioSound#audioBuffer
-         * @type {AudioBuffer}
-         * @since 3.0.0
-         */
-        this.audioBuffer = manager.game.cache.audio.get(key);
-
-        if (!this.audioBuffer)
+        function WebAudioSound (manager, key, config)
         {
-            throw new Error('Audio key "' + key + '" missing from cache');
-        }
+            if (config === undefined) { config = {}; }
 
-        /**
-         * A reference to an audio source node used for playing back audio from
-         * audio data stored in Phaser.Sound.WebAudioSound#audioBuffer.
-         *
-         * @name Phaser.Sound.WebAudioSound#source
-         * @type {AudioBufferSourceNode}
-         * @default null
-         * @since 3.0.0
-         */
-        this.source = null;
+            /**
+             * Audio buffer containing decoded data of the audio asset to be played.
+             *
+             * @name Phaser.Sound.WebAudioSound#audioBuffer
+             * @type {AudioBuffer}
+             * @since 3.0.0
+             */
+            this.audioBuffer = manager.game.cache.audio.get(key);
 
-        /**
-         * A reference to a second audio source used for gapless looped playback.
-         *
-         * @name Phaser.Sound.WebAudioSound#loopSource
-         * @type {AudioBufferSourceNode}
-         * @default null
-         * @since 3.0.0
-         */
-        this.loopSource = null;
+            if (!this.audioBuffer)
+            {
+                throw new Error('Audio key "' + key + '" missing from cache');
+            }
 
-        /**
-         * Gain node responsible for controlling this sound's muting.
-         *
-         * @name Phaser.Sound.WebAudioSound#muteNode
-         * @type {GainNode}
-         * @since 3.0.0
-         */
-        this.muteNode = manager.context.createGain();
+            /**
+             * A reference to an audio source node used for playing back audio from
+             * audio data stored in Phaser.Sound.WebAudioSound#audioBuffer.
+             *
+             * @name Phaser.Sound.WebAudioSound#source
+             * @type {AudioBufferSourceNode}
+             * @default null
+             * @since 3.0.0
+             */
+            this.source = null;
 
-        /**
-         * Gain node responsible for controlling this sound's volume.
-         *
-         * @name Phaser.Sound.WebAudioSound#volumeNode
-         * @type {GainNode}
-         * @since 3.0.0
-         */
-        this.volumeNode = manager.context.createGain();
+            /**
+             * A reference to a second audio source used for gapless looped playback.
+             *
+             * @name Phaser.Sound.WebAudioSound#loopSource
+             * @type {AudioBufferSourceNode}
+             * @default null
+             * @since 3.0.0
+             */
+            this.loopSource = null;
 
-        /**
-         * Panner node responsible for controlling this sound's pan.
-         *
-         * Doesn't work on iOS / Safari.
-         *
-         * @name Phaser.Sound.WebAudioSound#pannerNode
-         * @type {StereoPannerNode}
-         * @since 3.50.0
-         */
-        this.pannerNode = null;
+            /**
+             * Gain node responsible for controlling this sound's muting.
+             *
+             * @name Phaser.Sound.WebAudioSound#muteNode
+             * @type {GainNode}
+             * @since 3.0.0
+             */
+            this.muteNode = manager.context.createGain();
 
-        /**
-         * The time at which the sound should have started playback from the beginning.
-         *
-         * Treat this property as read-only.
-         *
-         * Based on `BaseAudioContext.currentTime` value.
-         *
-         * @name Phaser.Sound.WebAudioSound#playTime
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.playTime = 0;
+            /**
+             * Gain node responsible for controlling this sound's volume.
+             *
+             * @name Phaser.Sound.WebAudioSound#volumeNode
+             * @type {GainNode}
+             * @since 3.0.0
+             */
+            this.volumeNode = manager.context.createGain();
 
-        /**
-         * The time at which the sound source should have actually started playback.
-         *
-         * Treat this property as read-only.
-         *
-         * Based on `BaseAudioContext.currentTime` value.
-         *
-         * @name Phaser.Sound.WebAudioSound#startTime
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.startTime = 0;
+            /**
+             * Panner node responsible for controlling this sound's pan.
+             *
+             * Doesn't work on iOS / Safari.
+             *
+             * @name Phaser.Sound.WebAudioSound#pannerNode
+             * @type {StereoPannerNode}
+             * @since 3.50.0
+             */
+            this.pannerNode = null;
 
-        /**
-         * The time at which the sound loop source should actually start playback.
-         *
-         * Based on `BaseAudioContext.currentTime` value.
-         *
-         * @name Phaser.Sound.WebAudioSound#loopTime
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.loopTime = 0;
+            /**
+             * The time at which the sound should have started playback from the beginning.
+             *
+             * Treat this property as read-only.
+             *
+             * Based on `BaseAudioContext.currentTime` value.
+             *
+             * @name Phaser.Sound.WebAudioSound#playTime
+             * @type {number}
+             * @default 0
+             * @since 3.0.0
+             */
+            this.playTime = 0;
 
-        /**
-         * An array where we keep track of all rate updates during playback.
-         *
-         * Treat this property as read-only.
-         *
-         * Array of object types: `{ time: number, rate: number }`
-         *
-         * @name Phaser.Sound.WebAudioSound#rateUpdates
-         * @type {array}
-         * @default []
-         * @since 3.0.0
-         */
-        this.rateUpdates = [];
+            /**
+             * The time at which the sound source should have actually started playback.
+             *
+             * Treat this property as read-only.
+             *
+             * Based on `BaseAudioContext.currentTime` value.
+             *
+             * @name Phaser.Sound.WebAudioSound#startTime
+             * @type {number}
+             * @default 0
+             * @since 3.0.0
+             */
+            this.startTime = 0;
 
-        /**
-         * Used for keeping track when sound source playback has ended
-         * so its state can be updated accordingly.
-         *
-         * @name Phaser.Sound.WebAudioSound#hasEnded
-         * @type {boolean}
-         * @readonly
-         * @default false
-         * @since 3.0.0
-         */
-        this.hasEnded = false;
+            /**
+             * The time at which the sound loop source should actually start playback.
+             *
+             * Based on `BaseAudioContext.currentTime` value.
+             *
+             * @name Phaser.Sound.WebAudioSound#loopTime
+             * @type {number}
+             * @default 0
+             * @since 3.0.0
+             */
+            this.loopTime = 0;
 
-        /**
-         * Used for keeping track when sound source has looped
-         * so its state can be updated accordingly.
-         *
-         * @name Phaser.Sound.WebAudioSound#hasLooped
-         * @type {boolean}
-         * @readonly
-         * @default false
-         * @since 3.0.0
-         */
-        this.hasLooped = false;
+            /**
+             * An array where we keep track of all rate updates during playback.
+             *
+             * Treat this property as read-only.
+             *
+             * Array of object types: `{ time: number, rate: number }`
+             *
+             * @name Phaser.Sound.WebAudioSound#rateUpdates
+             * @type {array}
+             * @default []
+             * @since 3.0.0
+             */
+            this.rateUpdates = [];
 
-        this.muteNode.connect(this.volumeNode);
+            /**
+             * Used for keeping track when sound source playback has ended
+             * so its state can be updated accordingly.
+             *
+             * @name Phaser.Sound.WebAudioSound#hasEnded
+             * @type {boolean}
+             * @readonly
+             * @default false
+             * @since 3.0.0
+             */
+            this.hasEnded = false;
 
-        if (manager.context.createStereoPanner)
-        {
-            this.pannerNode = manager.context.createStereoPanner();
+            /**
+             * Used for keeping track when sound source has looped
+             * so its state can be updated accordingly.
+             *
+             * @name Phaser.Sound.WebAudioSound#hasLooped
+             * @type {boolean}
+             * @readonly
+             * @default false
+             * @since 3.0.0
+             */
+            this.hasLooped = false;
 
-            this.volumeNode.connect(this.pannerNode);
+            this.muteNode.connect(this.volumeNode);
 
-            this.pannerNode.connect(manager.destination);
-        }
-        else
-        {
-            this.volumeNode.connect(manager.destination);
-        }
+            if (manager.context.createStereoPanner)
+            {
+                this.pannerNode = manager.context.createStereoPanner();
 
-        this.duration = this.audioBuffer.duration;
+                this.volumeNode.connect(this.pannerNode);
 
-        this.totalDuration = this.audioBuffer.duration;
+                this.pannerNode.connect(manager.destination);
+            }
+            else
+            {
+                this.volumeNode.connect(manager.destination);
+            }
 
-        BaseSound.call(this, manager, key, config);
-    },
+            this.duration = this.audioBuffer.duration;
+
+            this.totalDuration = this.audioBuffer.duration;
+
+            this.spatialNode = this.createSpatialPanner(manager);
+
+            this.spatialNode.connect(this.muteNode);
+
+            BaseSound.call(this, manager, key, config);
+        },
 
     /**
      * Play this sound, or a marked section of it.
@@ -373,7 +377,7 @@ var WebAudioSound = new Class({
 
         source.buffer = this.audioBuffer;
 
-        source.connect(this.muteNode);
+        source.connect(this.spatialNode);
 
         source.onended = function (ev)
         {
@@ -394,6 +398,17 @@ var WebAudioSound = new Class({
         };
 
         return source;
+    },
+
+    /**
+     * This method is only used internally and creates a PannerNode
+     *
+     * @method Phaser.Sound.WebAudioSound#createSpatialPanner
+     * @since 3.6.0
+     */
+    createSpatialPanner: function (manager)
+    {
+        return new PannerNode(manager.context);
     },
 
     /**
@@ -450,6 +465,32 @@ var WebAudioSound = new Class({
             rate: 1
         });
 
+        var source = this.currentConfig.source;
+        if (source)
+        {
+            if (!this.manager.listenerDestination)
+            {
+                // Set the position of the listener
+                this.manager.setAudioDestination({ x: this.manager.game.config.width / 2, y: this.manager.game.config.height / 2 });
+            }
+            this.spatialNode.panningModel = source.panningModel || 'equalpower',
+            this.spatialNode.distanceModel = source.distanceModel || 'linear',
+            this.spatialNode.positionX.value = source.x;
+            this.spatialNode.positionY.value = source.y;
+            this.spatialNode.positionZ.value = source.z || 0;
+            this.spatialNode.orientationX.value = source.orientationX || 0;
+            this.spatialNode.orientationY.value = source.orientationY || 0;
+            this.spatialNode.orientationZ.value = source.orientationZ || -1.0;
+            this.spatialNode.refDistance = source.refDistance || 1;
+            this.spatialNode.maxDistance = source.maxDistance || 10000;
+            this.spatialNode.rolloffFactor = source.rollOff || 1;
+            this.spatialNode.coneInnerAngle = source.innerCone || 360;
+            this.spatialNode.coneOuterAngle = source.outerCone || 360;
+            this.spatialNode.coneOuterGain = source.outerGain || 0;
+
+            this.spatialSource = source;
+        }
+
         BaseSound.prototype.applyConfig.call(this);
     },
 
@@ -463,6 +504,12 @@ var WebAudioSound = new Class({
      */
     update: function ()
     {
+        if (this.isPlaying && this.spatialSource)
+        {
+            this.spatialNode.positionX.value = this.spatialSource.x;
+            this.spatialNode.positionY.value = this.spatialSource.y;
+        }
+
         if (this.hasEnded)
         {
             this.hasEnded = false;
@@ -519,6 +566,12 @@ var WebAudioSound = new Class({
         {
             this.pannerNode.disconnect();
             this.pannerNode = null;
+        }
+
+        if (this.spatialNode)
+        {
+            this.spatialNode.disconnect();
+            this.spatialNode = null;
         }
 
         this.rateUpdates.length = 0;

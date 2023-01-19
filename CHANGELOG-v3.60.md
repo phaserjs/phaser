@@ -728,6 +728,45 @@ You should use a Dynamic Texture if the texture isn't going to be displayed in-g
 
 You should use a Render Texture if you need to display the texture in-game on a single Game Object, as it provides the convenience of wrapping an Image and Dynamic Texture together for you.
 
+### New Features - Spatial Sound
+
+Spatial sound takes advantage of the Web Audio API (https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Web_audio_spatialization_basics). This allows to configure sounds to come from a specific position or to track objects with x and y properties. Currently this is designed for 2D but could be 3D capable with a few modifications.
+
+* Works only with `WebAudioSound` and `WebAudioSoundManager` and only in 2D (ignores ang changes to Z or Orientation).
+* The `WebAudioSoundManager.setAudioDestination` method accepts any object with `x` and `y` properties. If this method is not used in conjunction with the source configuration, it will default to the center of the canvas.
+* The `SoundConfig.source` is a new property that allows `WebAudioSound` to be configured in 2D space. The property can be set to either an object with `x` and `y` properties or a `SpatialSoundConfig`. If set to a object `WebAudioSound` will track it's position. If using  `SoundConfig.source` it can be set in the `SoundConfig` parameter when initializing `WebAudioSound` or when calling method `WebAudioSound.play`.
+
+The following are examples of implementing the above.
+
+* Adding a source coordinates on `WebAudioSound` initialization.
+
+```js
+var config = {
+                source: {x:200, y:100}
+             };
+var music = this.sound.add('music', config);
+```
+
+* Adding a source object on `WebAudioSound.play`
+
+```js
+var enemy = this.image.add('tank');
+rumbleSound.play({source:enemy});
+```
+
+* Adding the destination coordinates on `WebAudioSoundManager.setAudioDestination`
+
+```js
+game.sound.setAudioDestination({x:200, y:100});
+```
+
+* Adding a destination object on `WebAudioSoundManager.setAudioDestination`
+
+```js
+var player = this.image.add('mario');
+game.sound.setAudioDestination(player);
+```
+
 ### Input System Updates
 
 There are breaking changes from previous versions of Phaser.
@@ -1069,6 +1108,7 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @0day-oni
 @201flaviosilva
 @AlbertMontagutCasero
+@alxwest
 @Arcanorum
 @arosemena
 @austinlyon

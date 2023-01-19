@@ -453,6 +453,18 @@ var BaseSoundManager = new Class({
     },
 
     /**
+     * Sets the destination for the spatial sound.
+     * Currently only WebAudio is supported.
+     *
+     * @method Phaser.Sound.BaseSoundManager#setAudioDestination
+     * @override
+     * @since 3.6.0
+     *
+     * @param {Phaser.Types.Sound.SpatialSoundConfig|object} [destination] - An object with x and y fields
+     */
+    setAudioDestination: NOOP,
+
+    /**
      * Stops all the sounds in the game.
      *
      * @method Phaser.Sound.BaseSoundManager#stopAll
