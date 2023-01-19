@@ -856,6 +856,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `Texture.has` will now return a strict boolean, rather than an object that can be cooerced into a boolean (thanks @samme)
 * The `CanvasTexture.draw` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)
 * The `CanvasTexture.drawFrame` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)
 * The `CanvasTexture.clear` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)
