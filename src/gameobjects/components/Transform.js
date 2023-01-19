@@ -512,13 +512,17 @@ var Transform = {
     getWorldTransformMatrix: function (tempMatrix, parentMatrix)
     {
         if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
-        if (parentMatrix === undefined) { parentMatrix = new TransformMatrix(); }
 
         var parent = this.parentContainer;
 
         if (!parent)
         {
             return this.getLocalTransformMatrix(tempMatrix);
+        }
+
+        if (!parentMatrix)
+        {
+            parentMatrix = new TransformMatrix();
         }
 
         tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);

@@ -637,6 +637,13 @@ var AnimationManager = new Class({
         var out = GetValue(config, 'outputArray', []);
         var frames = GetValue(config, 'frames', false);
 
+        if (!this.textureManager.exists(key))
+        {
+            console.warn('Texture "%s" not found', key);
+
+            return out;
+        }
+
         var texture = this.textureManager.get(key);
 
         if (!texture)
@@ -673,7 +680,7 @@ var AnimationManager = new Class({
                 }
                 else
                 {
-                    console.warn('generateFrameNames: Frame missing: ' + frame + ' from texture: ' + key);
+                    console.warn('Frame "%s" not found in texture "%s"', frame, key);
                 }
             }
         }
@@ -736,6 +743,13 @@ var AnimationManager = new Class({
         var out = GetValue(config, 'outputArray', []);
         var frames = GetValue(config, 'frames', false);
 
+        if (!this.textureManager.exists(key))
+        {
+            console.warn('Texture "%s" not found', key);
+
+            return out;
+        }
+
         var texture = this.textureManager.get(key);
 
         if (!texture)
@@ -763,13 +777,15 @@ var AnimationManager = new Class({
 
         for (var i = 0; i < frames.length; i++)
         {
-            if (texture.has(frames[i]))
+            var frameName = frames[i];
+
+            if (texture.has(frameName))
             {
-                out.push({ key: key, frame: frames[i] });
+                out.push({ key: key, frame: frameName });
             }
             else
             {
-                console.warn('generateFrameNumbers: Frame ' + i + ' missing from texture: ' + key);
+                console.warn('Frame "%s" not found in texture "%s"', frameName, key);
             }
         }
 

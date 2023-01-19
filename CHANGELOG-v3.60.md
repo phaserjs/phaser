@@ -387,6 +387,18 @@ emitter.setSortProperty('y', true);
 * `ParticleEmitter.getWorldTransformMatrix` is a new method that allows a Particle Emitter to calculate its world transform, factoring in any parents.
 * `ParticleEmitter.worldMatrix` is a new property that holds a TransformMatrix used for bounds calculations.
 
+#### Particle Emitter Bounds
+
+* Prior to v3.60 a Particle Emitter had a `bounds` property. This was a Rectangle and if a Particle hit any of its edges it would rebound off it based on the Particles `bounce` value. In v3.60 this action has been moved to a Particle Processor. You can still configure the bounds via the Emitter config using the `bounds` property, as before. And you can configure which faces collide via the `collideLeft` etc properties. However, the following internal changes have taken place:
+* `ParticleBounds` is a new Particle Processor class that handles updating the particles.
+* The `ParticleEmitter.setBounds` method has been replaced with `ParticleEmitter.addParticleBounds` which now returns a new `ParticleBounds` Particle Processor instance.
+* The `ParticleEmitter.bounds` property has been removed. Please see the `addParticleBounds` method if you wish to retain this object.
+* The `ParticleEmitter.collideLeft` property has been removed. It's now part of the `ParticleBounds` Particle Processor.
+* The `ParticleEmitter.collideRight` property has been removed. It's now part of the `ParticleBounds` Particle Processor.
+* The `ParticleEmitter.collideTop` property has been removed. It's now part of the `ParticleBounds` Particle Processor.
+* The `ParticleEmitter.collideBottom` property has been removed. It's now part of the `ParticleBounds` Particle Processor.
+* The `Particle.checkBounds` method has been removed as it's now handled by the Particle Processors.
+
 #### Particle Processors
 
 * `ParticleProcessor` is a new base class that you can use to create your own Particle Processors, which are special processors capable of manipulating the path of Particles based on your own logic or math. It provides the structure required to handle the processing of particles and should be used as a base for your own classes.
@@ -467,6 +479,7 @@ Another potentially breaking change is the removal of two internal private count
 
 #### Further Particle System Updates and Fixes:
 
+* The Particle `DeathZone.willKill` method now takes a `Particle` instance as its only parameter, instead of x and y coordinates, allowing you to perform more complex checks before deciding if the Particle should be killed, or not.
 * The `Particle.resetPosition` method has been renamed to `setPosition` and it now takes optional x/y parameters. If not given, it performs the same task as `resetPosition` did in earlier versions.
 * The `ParticleEmitter` class now has the `AlphaSingle` Component. This allows you to call `setAlpha` on the Emitter instance itself and have it impact all particles being rendered by it, allowing you to now 'fade in/out' a whole Emitter.
 * Setting `frequency` wasn't working correctly in earlier versions. It should allow you to specify a time, in ms, between which each 'quantity' of particles is emitted. However, the `preUpdate` loop was calculating the value incorrectly. It will now count down the right amount of time before emiting another batch of particles.
@@ -882,6 +895,10 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `Texture.has` will now return a strict boolean, rather than an object that can be cooerced into a boolean (thanks @samme)
+* The `CanvasTexture.draw` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)
+* The `CanvasTexture.drawFrame` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)
+* The `CanvasTexture.clear` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)
 * The `Game.registry`, which is a `DataManager` instance that can be used as a global store of game wide data will now use its own Event Emitter, instead of the Game's Event Emitter. This means it's perfectly safe for you to now use the Registry to emit and listen for your own custom events without conflicting with events the Phaser Game instance emits.
 * The `GenerateVerts` function has a new optional parameter `flipUV` which, if set, will flip the UV texture coordinates (thanks cedarcantab)
 * The `GenerateVerts` function no longer errors if the verts and uvs arrays are not the same size and `containsZ` is true (thanks cedarcantab)
@@ -1136,6 +1153,7 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @necrokot
 @Nero0
 @orjandh
+@pavle-goloskokovic
 @PhaserEditor2D
 @Pythux
 @quocsinh

@@ -220,14 +220,22 @@ var CanvasTexture = new Class({
      * @param {number} x - The x coordinate to draw the source at.
      * @param {number} y - The y coordinate to draw the source at.
      * @param {(HTMLImageElement|HTMLCanvasElement)} source - The element to draw to this canvas.
+     * @param {boolean} [update=true] - Update the internal ImageData buffer and arrays.
      *
      * @return {Phaser.Textures.CanvasTexture} This CanvasTexture.
      */
-    draw: function (x, y, source)
+    draw: function (x, y, source, update)
     {
+        if (update === undefined) { update = true; }
+
         this.context.drawImage(source, x, y);
 
-        return this.update();
+        if (update)
+        {
+            this.update();
+        }
+
+        return this;
     },
 
     /**
@@ -241,13 +249,15 @@ var CanvasTexture = new Class({
      * @param {(string|number)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
      * @param {number} [x=0] - The x coordinate to draw the source at.
      * @param {number} [y=0] - The y coordinate to draw the source at.
+     * @param {boolean} [update=true] - Update the internal ImageData buffer and arrays.
      *
      * @return {Phaser.Textures.CanvasTexture} This CanvasTexture.
      */
-    drawFrame: function (key, frame, x, y)
+    drawFrame: function (key, frame, x, y, update)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
+        if (update === undefined) { update = true; }
 
         var textureFrame = this.manager.getFrame(key, frame);
 
@@ -269,12 +279,13 @@ var CanvasTexture = new Class({
                 height / res
             );
 
-            return this.update();
+            if (update)
+            {
+                this.update();
+            }
         }
-        else
-        {
-            return this;
-        }
+
+        return this;
     },
 
     /**
@@ -551,19 +562,26 @@ var CanvasTexture = new Class({
      * @param {number} [y=0] - The y coordinate of the top-left of the region to clear.
      * @param {number} [width] - The width of the region.
      * @param {number} [height] - The height of the region.
+     * @param {boolean} [update=true] - Update the internal ImageData buffer and arrays.
      *
      * @return {Phaser.Textures.CanvasTexture} The Canvas Texture.
      */
-    clear: function (x, y, width, height)
+    clear: function (x, y, width, height, update)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = this.width; }
         if (height === undefined) { height = this.height; }
+        if (update === undefined) { update = true; }
 
         this.context.clearRect(x, y, width, height);
 
-        return this.update();
+        if (update)
+        {
+            this.update();
+        }
+
+        return this;
     },
 
     /**

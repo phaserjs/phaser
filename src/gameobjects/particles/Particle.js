@@ -5,6 +5,7 @@
  */
 
 var AnimationState = require('../../animations/AnimationState');
+var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
 var Rectangle = require('../../geom/rectangle/Rectangle');
@@ -81,6 +82,17 @@ var Particle = new Class({
          * @since 3.0.0
          */
         this.y = 0;
+
+        /**
+         * The coordinates of this Particle in world space.
+         *
+         * Updated as part of `computeVelocity`.
+         *
+         * @name Phaser.GameObjects.Particles.Particle#worldPosition
+         * @type {Phaser.Math.Vector2}
+         * @since 3.60.0
+         */
+        this.worldPosition = new Vector2();
 
         /**
          * The x velocity of this Particle.
@@ -480,6 +492,8 @@ var Particle = new Class({
 
         this.rotation = DegToRad(this.angle);
 
+        emitter.worldMatrix.transformPoint(this.x, this.y, this.worldPosition);
+
         //  Check we didn't spawn in the middle of a DeathZone
         if (this.delayCurrent === 0 && emitter.getDeathZone(this))
         {
@@ -536,110 +550,6 @@ var Particle = new Class({
         }
 
         return true;
-    },
-
-    /**
-     * An internal method that calculates the velocity of the Particle.
-     *
-     * @method Phaser.GameObjects.Particles.Particle#computeVelocity
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Emitter that is updating this Particle.
-     * @param {number} delta - The delta time in ms.
-     * @param {number} step - The delta value divided by 1000.
-     * @param {Phaser.GameObjects.Particles.ParticleProcessor[]} processors - An array of all active Particle Processors.
-     * @param {number} t - The current normalized lifetime of the particle, between 0 (birth) and 1 (death).
-     */
-    computeVelocity: function (emitter, delta, step, processors, t)
-    {
-        var ops = emitter.ops;
-
-        var vx = this.velocityX;
-        var vy = this.velocityY;
-
-        var ax = ops.accelerationX.onUpdate(this, 'accelerationX', t, this.accelerationX);
-        var ay = ops.accelerationY.onUpdate(this, 'accelerationY', t, this.accelerationY);
-
-        var mx = ops.maxVelocityX.onUpdate(this, 'maxVelocityX', t, this.maxVelocityX);
-        var my = ops.maxVelocityY.onUpdate(this, 'maxVelocityY', t, this.maxVelocityY);
-
-        vx += (emitter.gravityX * step);
-        vy += (emitter.gravityY * step);
-
-        if (ax)
-        {
-            vx += (ax * step);
-        }
-
-        if (ay)
-        {
-            vy += (ay * step);
-        }
-
-        if (vx > mx)
-        {
-            vx = mx;
-        }
-        else if (vx < -mx)
-        {
-            vx = -mx;
-        }
-
-        if (vy > my)
-        {
-            vy = my;
-        }
-        else if (vy < -my)
-        {
-            vy = -my;
-        }
-
-        this.velocityX = vx;
-        this.velocityY = vy;
-
-        //  Apply any additional processors
-        for (var i = 0; i < processors.length; i++)
-        {
-            processors[i].update(this, delta, step, t);
-        }
-    },
-
-    /**
-     * Checks if this Particle is still within the bounds defined by the given Emitter.
-     *
-     * If not, and depending on the Emitter collision flags, the Particle may either stop or rebound.
-     *
-     * @method Phaser.GameObjects.Particles.Particle#checkBounds
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Emitter to check the bounds against.
-     */
-    checkBounds: function (emitter)
-    {
-        var bounds = emitter.bounds;
-        var bounce = -this.bounce;
-
-        if (this.x < bounds.x && emitter.collideLeft)
-        {
-            this.x = bounds.x;
-            this.velocityX *= bounce;
-        }
-        else if (this.x > bounds.right && emitter.collideRight)
-        {
-            this.x = bounds.right;
-            this.velocityX *= bounce;
-        }
-
-        if (this.y < bounds.y && emitter.collideTop)
-        {
-            this.y = bounds.y;
-            this.velocityY *= bounce;
-        }
-        else if (this.y > bounds.bottom && emitter.collideBottom)
-        {
-            this.y = bounds.bottom;
-            this.velocityY *= bounce;
-        }
     },
 
     /**
@@ -705,16 +615,6 @@ var Particle = new Class({
 
         this.computeVelocity(emitter, delta, step, processors, t);
 
-        this.x += this.velocityX * step;
-        this.y += this.velocityY * step;
-
-        if (emitter.bounds)
-        {
-            this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
-
-            this.checkBounds(emitter);
-        }
-
         this.scaleX = ops.scaleX.onUpdate(this, 'scaleX', t, this.scaleX);
         this.scaleY = this.scaleX;
 
@@ -749,6 +649,62 @@ var Particle = new Class({
         this.lifeCurrent -= delta;
 
         return (this.lifeCurrent <= 0 && this.holdCurrent <= 0);
+    },
+
+    /**
+     * An internal method that calculates the velocity of the Particle and
+     * its world position. It also runs it against any active Processors
+     * that are set on the Emitter.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#computeVelocity
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Emitter that is updating this Particle.
+     * @param {number} delta - The delta time in ms.
+     * @param {number} step - The delta value divided by 1000.
+     * @param {Phaser.GameObjects.Particles.ParticleProcessor[]} processors - An array of all active Particle Processors.
+     * @param {number} t - The current normalized lifetime of the particle, between 0 (birth) and 1 (death).
+     */
+    computeVelocity: function (emitter, delta, step, processors, t)
+    {
+        var ops = emitter.ops;
+
+        var vx = this.velocityX;
+        var vy = this.velocityY;
+
+        var ax = ops.accelerationX.onUpdate(this, 'accelerationX', t, this.accelerationX);
+        var ay = ops.accelerationY.onUpdate(this, 'accelerationY', t, this.accelerationY);
+
+        var mx = ops.maxVelocityX.onUpdate(this, 'maxVelocityX', t, this.maxVelocityX);
+        var my = ops.maxVelocityY.onUpdate(this, 'maxVelocityY', t, this.maxVelocityY);
+
+        this.bounce = ops.bounce.onUpdate(this, 'bounce', t, this.bounce);
+
+        vx += (emitter.gravityX * step) + (ax * step);
+        vy += (emitter.gravityY * step) + (ay * step);
+
+        vx = Clamp(vx, -mx, mx);
+        vy = Clamp(vy, -my, my);
+
+        this.velocityX = vx;
+        this.velocityY = vy;
+
+        //  Integrate back in to the position
+        this.x += vx * step;
+        this.y += vy * step;
+
+        emitter.worldMatrix.transformPoint(this.x, this.y, this.worldPosition);
+
+        //  Apply any additional processors (these can update velocity and/or position)
+        for (var i = 0; i < processors.length; i++)
+        {
+            var processor = processors[i];
+
+            if (processor.active)
+            {
+                processor.update(this, delta, step, t);
+            }
+        }
     },
 
     /**

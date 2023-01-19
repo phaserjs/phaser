@@ -20,13 +20,15 @@ var TilemapLayer = require('./TilemapLayer');
 var Tileset = require('./Tileset');
 
 /**
+ * A predicate, to test each element of the array.
+ *
  * @callback TilemapFilterCallback
  *
  * @param {Phaser.GameObjects.GameObject} value - An object found in the filtered area.
  * @param {number} index - The index of the object within the array.
  * @param {Phaser.GameObjects.GameObject[]} array - An array of all the objects found.
  *
- * @return {Phaser.GameObjects.GameObject} The object.
+ * @return {boolean} A value that coerces to `true` to keep the element, or to `false` otherwise.
  */
 
 /**
@@ -925,7 +927,7 @@ var Tilemap = new Class({
 
     /**
      * For each object in the given object layer, run the given filter callback function. Any
-     * objects that pass the filter test (i.e. where the callback returns true) will returned as a
+     * objects that pass the filter test (i.e. where the callback returns true) will be returned in a
      * new array. Similar to Array.prototype.Filter in vanilla JS.
      *
      * @method Phaser.Tilemaps.Tilemap#filterObjects

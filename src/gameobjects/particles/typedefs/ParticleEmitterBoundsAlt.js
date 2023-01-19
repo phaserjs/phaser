@@ -7,5 +7,5 @@
  * @property {number} w - The width of the rectangle.
  * @property {number} h - The height of the rectangle.
  *
- * @see Phaser.GameObjects.Particles.ParticleEmitter#setBounds
+ * @see Phaser.GameObjects.Particles.ParticleEmitter#addParticleBounds
  */
