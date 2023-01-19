@@ -383,7 +383,6 @@ var WebAudioSoundManager = new Class({
      */
     update: function (time, delta)
     {
-        // Track audioDestination is set
         if (this.audioDestination)
         {
             var listener = this.context.listener;
