@@ -75,8 +75,9 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
 
     camera.addToRenderList(emitter);
 
-    var scrollFactorX = emitter.scrollFactorX;
-    var scrollFactorY = emitter.scrollFactorY;
+    camMatrix.copyFrom(camera.matrix);
+
+    camMatrix.multiplyWithOffset(managerMatrix, -camera.scrollX * emitter.scrollFactorX, -camera.scrollY * emitter.scrollFactorY);
 
     renderer.setBlendMode(emitter.blendMode);
 
@@ -101,10 +102,6 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
         }
 
         particleMatrix.applyITRS(particle.x, particle.y, particle.rotation, particle.scaleX, particle.scaleY);
-
-        camMatrix.copyFrom(camera.matrix);
-
-        camMatrix.multiplyWithOffset(managerMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
 
         //  Undo the camera scroll
         particleMatrix.e = particle.x;
