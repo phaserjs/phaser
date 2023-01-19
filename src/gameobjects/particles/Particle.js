@@ -492,6 +492,8 @@ var Particle = new Class({
 
         this.rotation = DegToRad(this.angle);
 
+        emitter.worldMatrix.transformPoint(this.x, this.y, this.worldPosition);
+
         //  Check we didn't spawn in the middle of a DeathZone
         if (this.delayCurrent === 0 && emitter.getDeathZone(this))
         {
