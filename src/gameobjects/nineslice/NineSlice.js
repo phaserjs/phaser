@@ -909,6 +909,15 @@ var NineSlice = new Class({
      */
     setSizeToFrame: function ()
     {
+        if (this.is3Slice)
+        {
+            var height = this.frame.height;
+
+            this._height = height;
+            this.topHeight = height;
+            this.bottomHeight = 0;
+        }
+
         this.updateUVs();
 
         return this;
