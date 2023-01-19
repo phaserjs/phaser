@@ -154,7 +154,7 @@ var NineSlice = new Class({
          * @type {number}
          * @since 3.60.0
          */
-        this._width = width;
+        this._width;
 
         /**
          * Internal height value. Do not modify this property directly.
@@ -164,7 +164,7 @@ var NineSlice = new Class({
          * @type {number}
          * @since 3.60.0
          */
-        this._height = height;
+        this._height;
 
         /**
          * Internal originX value. Do not modify this property directly.
@@ -226,51 +226,47 @@ var NineSlice = new Class({
         /**
          * The size of the left vertical bar (A).
          *
-         * You should treat this property as read-only.
-         *
          * @name Phaser.GameObjects.NineSlice#leftWidth
          * @type {number}
+         * @readonly
          * @since 3.60.0
          */
-        this.leftWidth = leftWidth;
+        this.leftWidth;
 
         /**
          * The size of the right vertical bar (B).
          *
-         * You should treat this property as read-only.
-         *
          * @name Phaser.GameObjects.NineSlice#rightWidth
          * @type {number}
+         * @readonly
          * @since 3.60.0
          */
-        this.rightWidth = rightWidth;
+        this.rightWidth;
 
         /**
          * The size of the top horizontal bar (C).
-         *
-         * You should treat this property as read-only.
          *
          * If this is a 3 slice object this property will be set to the
          * height of the texture being used.
          *
          * @name Phaser.GameObjects.NineSlice#topHeight
          * @type {number}
+         * @readonly
          * @since 3.60.0
          */
-        this.topHeight = topHeight;
+        this.topHeight;
 
         /**
          * The size of the bottom horizontal bar (D).
-         *
-         * You should treat this property as read-only.
          *
          * If this is a 3 slice object this property will be set to zero.
          *
          * @name Phaser.GameObjects.NineSlice#bottomHeight
          * @type {number}
+         * @readonly
          * @since 3.60.0
          */
-        this.bottomHeight = bottomHeight;
+        this.bottomHeight;
 
         /**
          * The tint value being applied to the top-left vertice of the Game Object.
@@ -316,21 +312,74 @@ var NineSlice = new Class({
         }
 
         this.setPosition(x, y);
+
         this.setTexture(texture, frame);
 
-        if (this.is3Slice)
-        {
-            height = this.frame.height;
-
-            this._height = height;
-            this.topHeight = height;
-            this.bottomHeight = 0;
-        }
-
-        this.updateVertices();
-        this.updateUVs();
+        this.setSlices(width, height, leftWidth, rightWidth, topHeight, bottomHeight);
 
         this.initPipeline();
+    },
+
+    /**
+     * Resets the width, height and slices for this NineSlice Game Object.
+     *
+     * This allows you to modify the texture being used by this object and then reset the slice configuration,
+     * to avoid having to destroy this Game Object in order to use it for a different game element.
+     *
+     * Please note that you cannot change a 9-slice to a 3-slice or vice versa.
+     *
+     * @method Phaser.GameObjects.NineSlice#setSlices
+     * @since 3.60.0
+     *
+     * @param {number} [width=256] - The width of the Nine Slice Game Object. You can adjust the width post-creation.
+     * @param {number} [height=256] - The height of the Nine Slice Game Object. If this is a 3 slice object the height will be fixed to the height of the texture and cannot be changed.
+     * @param {number} [leftWidth=10] - The size of the left vertical column (A).
+     * @param {number} [rightWidth=10] - The size of the right vertical column (B).
+     * @param {number} [topHeight=0] - The size of the top horiztonal row (C). Set to zero or undefined to create a 3 slice object.
+     * @param {number} [bottomHeight=0] - The size of the bottom horiztonal row (D). Set to zero or undefined to create a 3 slice object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setSlices: function (width, height, leftWidth, rightWidth, topHeight, bottomHeight)
+    {
+        if (width === undefined) { width = 256; }
+        if (height === undefined) { height = 256; }
+
+        if (leftWidth === undefined) { leftWidth = 10; }
+        if (rightWidth === undefined) { rightWidth = 10; }
+        if (topHeight === undefined) { topHeight = 0; }
+        if (bottomHeight === undefined) { bottomHeight = 0; }
+
+        var is3Slice = (topHeight === 0 && bottomHeight === 0);
+
+        if (this.is3Slice !== is3Slice)
+        {
+            console.warn('Cannot change 9 slice to 3 slice');
+        }
+        else
+        {
+            this._width = width;
+            this._height = height;
+
+            this.leftWidth = leftWidth;
+            this.rightWidth = rightWidth;
+            this.topHeight = topHeight;
+            this.bottomHeight = bottomHeight;
+
+            if (this.is3Slice)
+            {
+                height = this.frame.height;
+
+                this._height = height;
+                this.topHeight = height;
+                this.bottomHeight = 0;
+            }
+
+            this.updateVertices();
+            this.updateUVs();
+        }
+
+        return this;
     },
 
     /**
@@ -340,7 +389,7 @@ var NineSlice = new Class({
      * Unlike with the `updateVertice` method, you do not need to call this
      * method if the Nine Slice changes size. Only if it changes texture frame.
      *
-     * @method Phaser.GameObjects.Mesh#updateUVs
+     * @method Phaser.GameObjects.NineSlice#updateUVs
      * @since 3.60.0
      */
     updateUVs: function ()
