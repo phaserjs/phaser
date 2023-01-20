@@ -29,177 +29,177 @@ var WebAudioSound = new Class({
 
     initialize:
 
-        function WebAudioSound (manager, key, config)
+    function WebAudioSound (manager, key, config)
+    {
+        if (config === undefined) { config = {}; }
+
+        /**
+         * Audio buffer containing decoded data of the audio asset to be played.
+         *
+         * @name Phaser.Sound.WebAudioSound#audioBuffer
+         * @type {AudioBuffer}
+         * @since 3.0.0
+         */
+        this.audioBuffer = manager.game.cache.audio.get(key);
+
+        if (!this.audioBuffer)
         {
-            if (config === undefined) { config = {}; }
+            throw new Error('Audio key "' + key + '" missing from cache');
+        }
 
-            /**
-             * Audio buffer containing decoded data of the audio asset to be played.
-             *
-             * @name Phaser.Sound.WebAudioSound#audioBuffer
-             * @type {AudioBuffer}
-             * @since 3.0.0
-             */
-            this.audioBuffer = manager.game.cache.audio.get(key);
+        /**
+         * A reference to an audio source node used for playing back audio from
+         * audio data stored in Phaser.Sound.WebAudioSound#audioBuffer.
+         *
+         * @name Phaser.Sound.WebAudioSound#source
+         * @type {AudioBufferSourceNode}
+         * @default null
+         * @since 3.0.0
+         */
+        this.source = null;
 
-            if (!this.audioBuffer)
-            {
-                throw new Error('Audio key "' + key + '" missing from cache');
-            }
+        /**
+         * A reference to a second audio source used for gapless looped playback.
+         *
+         * @name Phaser.Sound.WebAudioSound#loopSource
+         * @type {AudioBufferSourceNode}
+         * @default null
+         * @since 3.0.0
+         */
+        this.loopSource = null;
 
-            /**
-             * A reference to an audio source node used for playing back audio from
-             * audio data stored in Phaser.Sound.WebAudioSound#audioBuffer.
-             *
-             * @name Phaser.Sound.WebAudioSound#source
-             * @type {AudioBufferSourceNode}
-             * @default null
-             * @since 3.0.0
-             */
-            this.source = null;
+        /**
+         * Gain node responsible for controlling this sound's muting.
+         *
+         * @name Phaser.Sound.WebAudioSound#muteNode
+         * @type {GainNode}
+         * @since 3.0.0
+         */
+        this.muteNode = manager.context.createGain();
 
-            /**
-             * A reference to a second audio source used for gapless looped playback.
-             *
-             * @name Phaser.Sound.WebAudioSound#loopSource
-             * @type {AudioBufferSourceNode}
-             * @default null
-             * @since 3.0.0
-             */
-            this.loopSource = null;
+        /**
+         * Gain node responsible for controlling this sound's volume.
+         *
+         * @name Phaser.Sound.WebAudioSound#volumeNode
+         * @type {GainNode}
+         * @since 3.0.0
+         */
+        this.volumeNode = manager.context.createGain();
 
-            /**
-             * Gain node responsible for controlling this sound's muting.
-             *
-             * @name Phaser.Sound.WebAudioSound#muteNode
-             * @type {GainNode}
-             * @since 3.0.0
-             */
-            this.muteNode = manager.context.createGain();
+        /**
+         * Panner node responsible for controlling this sound's pan.
+         *
+         * Doesn't work on iOS / Safari.
+         *
+         * @name Phaser.Sound.WebAudioSound#pannerNode
+         * @type {StereoPannerNode}
+         * @since 3.50.0
+         */
+        this.pannerNode = null;
 
-            /**
-             * Gain node responsible for controlling this sound's volume.
-             *
-             * @name Phaser.Sound.WebAudioSound#volumeNode
-             * @type {GainNode}
-             * @since 3.0.0
-             */
-            this.volumeNode = manager.context.createGain();
+        /**
+         * The time at which the sound should have started playback from the beginning.
+         *
+         * Treat this property as read-only.
+         *
+         * Based on `BaseAudioContext.currentTime` value.
+         *
+         * @name Phaser.Sound.WebAudioSound#playTime
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.playTime = 0;
 
-            /**
-             * Panner node responsible for controlling this sound's pan.
-             *
-             * Doesn't work on iOS / Safari.
-             *
-             * @name Phaser.Sound.WebAudioSound#pannerNode
-             * @type {StereoPannerNode}
-             * @since 3.50.0
-             */
-            this.pannerNode = null;
+        /**
+         * The time at which the sound source should have actually started playback.
+         *
+         * Treat this property as read-only.
+         *
+         * Based on `BaseAudioContext.currentTime` value.
+         *
+         * @name Phaser.Sound.WebAudioSound#startTime
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.startTime = 0;
 
-            /**
-             * The time at which the sound should have started playback from the beginning.
-             *
-             * Treat this property as read-only.
-             *
-             * Based on `BaseAudioContext.currentTime` value.
-             *
-             * @name Phaser.Sound.WebAudioSound#playTime
-             * @type {number}
-             * @default 0
-             * @since 3.0.0
-             */
-            this.playTime = 0;
+        /**
+         * The time at which the sound loop source should actually start playback.
+         *
+         * Based on `BaseAudioContext.currentTime` value.
+         *
+         * @name Phaser.Sound.WebAudioSound#loopTime
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.loopTime = 0;
 
-            /**
-             * The time at which the sound source should have actually started playback.
-             *
-             * Treat this property as read-only.
-             *
-             * Based on `BaseAudioContext.currentTime` value.
-             *
-             * @name Phaser.Sound.WebAudioSound#startTime
-             * @type {number}
-             * @default 0
-             * @since 3.0.0
-             */
-            this.startTime = 0;
+        /**
+         * An array where we keep track of all rate updates during playback.
+         *
+         * Treat this property as read-only.
+         *
+         * Array of object types: `{ time: number, rate: number }`
+         *
+         * @name Phaser.Sound.WebAudioSound#rateUpdates
+         * @type {array}
+         * @default []
+         * @since 3.0.0
+         */
+        this.rateUpdates = [];
 
-            /**
-             * The time at which the sound loop source should actually start playback.
-             *
-             * Based on `BaseAudioContext.currentTime` value.
-             *
-             * @name Phaser.Sound.WebAudioSound#loopTime
-             * @type {number}
-             * @default 0
-             * @since 3.0.0
-             */
-            this.loopTime = 0;
+        /**
+         * Used for keeping track when sound source playback has ended
+         * so its state can be updated accordingly.
+         *
+         * @name Phaser.Sound.WebAudioSound#hasEnded
+         * @type {boolean}
+         * @readonly
+         * @default false
+         * @since 3.0.0
+         */
+        this.hasEnded = false;
 
-            /**
-             * An array where we keep track of all rate updates during playback.
-             *
-             * Treat this property as read-only.
-             *
-             * Array of object types: `{ time: number, rate: number }`
-             *
-             * @name Phaser.Sound.WebAudioSound#rateUpdates
-             * @type {array}
-             * @default []
-             * @since 3.0.0
-             */
-            this.rateUpdates = [];
+        /**
+         * Used for keeping track when sound source has looped
+         * so its state can be updated accordingly.
+         *
+         * @name Phaser.Sound.WebAudioSound#hasLooped
+         * @type {boolean}
+         * @readonly
+         * @default false
+         * @since 3.0.0
+         */
+        this.hasLooped = false;
 
-            /**
-             * Used for keeping track when sound source playback has ended
-             * so its state can be updated accordingly.
-             *
-             * @name Phaser.Sound.WebAudioSound#hasEnded
-             * @type {boolean}
-             * @readonly
-             * @default false
-             * @since 3.0.0
-             */
-            this.hasEnded = false;
+        this.muteNode.connect(this.volumeNode);
 
-            /**
-             * Used for keeping track when sound source has looped
-             * so its state can be updated accordingly.
-             *
-             * @name Phaser.Sound.WebAudioSound#hasLooped
-             * @type {boolean}
-             * @readonly
-             * @default false
-             * @since 3.0.0
-             */
-            this.hasLooped = false;
+        if (manager.context.createStereoPanner)
+        {
+            this.pannerNode = manager.context.createStereoPanner();
 
-            this.muteNode.connect(this.volumeNode);
+            this.volumeNode.connect(this.pannerNode);
 
-            if (manager.context.createStereoPanner)
-            {
-                this.pannerNode = manager.context.createStereoPanner();
+            this.pannerNode.connect(manager.destination);
+        }
+        else
+        {
+            this.volumeNode.connect(manager.destination);
+        }
 
-                this.volumeNode.connect(this.pannerNode);
+        this.duration = this.audioBuffer.duration;
 
-                this.pannerNode.connect(manager.destination);
-            }
-            else
-            {
-                this.volumeNode.connect(manager.destination);
-            }
+        this.totalDuration = this.audioBuffer.duration;
 
-            this.duration = this.audioBuffer.duration;
+        this.spatialNode = this.createSpatialPanner(manager);
 
-            this.totalDuration = this.audioBuffer.duration;
+        this.spatialNode.connect(this.muteNode);
 
-            this.spatialNode = this.createSpatialPanner(manager);
-
-            this.spatialNode.connect(this.muteNode);
-
-            BaseSound.call(this, manager, key, config);
-        },
+        BaseSound.call(this, manager, key, config);
+    },
 
     /**
      * Play this sound, or a marked section of it.

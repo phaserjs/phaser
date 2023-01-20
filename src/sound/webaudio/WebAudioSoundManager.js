@@ -34,61 +34,61 @@ var WebAudioSoundManager = new Class({
 
     initialize:
 
-        function WebAudioSoundManager (game)
+    function WebAudioSoundManager (game)
+    {
+        /**
+         * The AudioContext being used for playback.
+         *
+         * @name Phaser.Sound.WebAudioSoundManager#context
+         * @type {AudioContext}
+         * @since 3.0.0
+         */
+        this.context = this.createAudioContext(game);
+
+        /**
+         * Gain node responsible for controlling global muting.
+         *
+         * @name Phaser.Sound.WebAudioSoundManager#masterMuteNode
+         * @type {GainNode}
+         * @since 3.0.0
+         */
+        this.masterMuteNode = this.context.createGain();
+
+        /**
+         * Gain node responsible for controlling global volume.
+         *
+         * @name Phaser.Sound.WebAudioSoundManager#masterVolumeNode
+         * @type {GainNode}
+         * @since 3.0.0
+         */
+        this.masterVolumeNode = this.context.createGain();
+
+        this.masterMuteNode.connect(this.masterVolumeNode);
+
+        this.masterVolumeNode.connect(this.context.destination);
+
+        /**
+         * Destination node for connecting individual sounds to.
+         *
+         * @name Phaser.Sound.WebAudioSoundManager#destination
+         * @type {AudioNode}
+         * @since 3.0.0
+         */
+        this.destination = this.masterMuteNode;
+
+        this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
+
+        BaseSoundManager.call(this, game);
+
+        if (this.locked && game.isBooted)
         {
-            /**
-             * The AudioContext being used for playback.
-             *
-             * @name Phaser.Sound.WebAudioSoundManager#context
-             * @type {AudioContext}
-             * @since 3.0.0
-             */
-            this.context = this.createAudioContext(game);
-
-            /**
-             * Gain node responsible for controlling global muting.
-             *
-             * @name Phaser.Sound.WebAudioSoundManager#masterMuteNode
-             * @type {GainNode}
-             * @since 3.0.0
-             */
-            this.masterMuteNode = this.context.createGain();
-
-            /**
-             * Gain node responsible for controlling global volume.
-             *
-             * @name Phaser.Sound.WebAudioSoundManager#masterVolumeNode
-             * @type {GainNode}
-             * @since 3.0.0
-             */
-            this.masterVolumeNode = this.context.createGain();
-
-            this.masterMuteNode.connect(this.masterVolumeNode);
-
-            this.masterVolumeNode.connect(this.context.destination);
-
-            /**
-             * Destination node for connecting individual sounds to.
-             *
-             * @name Phaser.Sound.WebAudioSoundManager#destination
-             * @type {AudioNode}
-             * @since 3.0.0
-             */
-            this.destination = this.masterMuteNode;
-
-            this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
-
-            BaseSoundManager.call(this, game);
-
-            if (this.locked && game.isBooted)
-            {
-                this.unlock();
-            }
-            else
-            {
-                game.events.once(GameEvents.BOOT, this.unlock, this);
-            }
-        },
+            this.unlock();
+        }
+        else
+        {
+            game.events.once(GameEvents.BOOT, this.unlock, this);
+        }
+    },
 
     /**
      * Method responsible for instantiating and returning AudioContext instance.
