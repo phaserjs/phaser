@@ -25,4 +25,5 @@
  * @property {number} [baselineY=1.4] - The amount of vertical padding added to the height of the text when calculating the font metrics.
  * @property {Phaser.Types.GameObjects.Text.TextWordWrap} [wordWrap] - The Text Word wrap configuration object.
  * @property {Phaser.Types.GameObjects.Text.TextMetrics} [metrics] - A Text Metrics object. Use this to avoid expensive font size calculations in text heavy games.
+ * @property {number} [lineSpacing] - The amount to add to the font height to achieve the overall line height.
  */
