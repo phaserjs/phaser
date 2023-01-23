@@ -570,6 +570,7 @@ Previously, `WebGLRenderer.whiteTexture` and `WebGLRenderer.blankTexture` had a 
 
 * The `RenderTarget` class will now create a Framebuffer that includes a Depth Stencil Buffer attachment by default. Previously, it didn't. By attaching a stencil buffer it allows things like Geometry Masks to work in combination with Post FX and other Pipelines. Fix #5802 (thanks @mijinc0)
 * When calling `PipelineManager.clear` and `rebind` it will now check if the vao extension is available, and if so, it'll bind a null vertex array. This helps clean-up from 3rd party libs that don't do this directly, such as ThreeJS.
+* The `mipmapFilter` property in the Game Config now defaults to '' (an empty string) instead of 'LINEAR'. The WebGLRenderer has been updated so that it will no longer create mipmaps at all with a default config. This potential saves a lot of VRAM (if your game has a lot of power-of-two textures) where before it was creating mipmaps that may never have been used. However, you may notice scaling doesn't look as crisp as it did before if you were using this feature without knowing it. To get it back, just add `mipmapFilter: 'LINEAR'` to your game config. Remember, as this is WebGL1 it _only_ works with power-of-two sized textures.
 
 #### Mobile Pipeline
 
