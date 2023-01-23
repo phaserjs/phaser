@@ -363,7 +363,7 @@ var Config = new Class({
         /**
          * @const {string} Phaser.Core.Config#mipmapFilter - Sets the `mipmapFilter` property when the WebGL renderer is created.
          */
-        this.mipmapFilter = GetValue(renderConfig, 'mipmapFilter', 'LINEAR', config);
+        this.mipmapFilter = GetValue(renderConfig, 'mipmapFilter', '', config);
 
         /**
          * @const {boolean} Phaser.Core.Config#desynchronized - When set to `true` it will create a desynchronized context for both 2D and WebGL. See https://developers.google.com/web/updates/2019/05/desynchronized for details.
