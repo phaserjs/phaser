@@ -856,6 +856,19 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `ColorMatrix._matrix` and `_data` are now Float32Arrays.
+* Calling the `ColorMatrix.set`, `reset` and `getData` methods all now use the built-in Float32 Array operations, making them considerably faster.
+* `ColorMatrix.BLACK_WHITE` is a new constant used by blackwhite operations.
+* `ColorMatrix.NEGATIVE` is a new constant used by negative operations.
+* `ColorMatrix.DESATURATE_LUMINANCE` is a new constant used by desaturation operations.
+* `ColorMatrix.SEPIA` is a new constant used by sepia operations.
+* `ColorMatrix.LSD` is a new constant used by LSD operations.
+* `ColorMatrix.BROWN` is a new constant used by brown operations.
+* `ColorMatrix.VINTAGE` is a new constant used by vintage pinhole operations.
+* `ColorMatrix.KODACHROME` is a new constant used by kodachrome operations.
+* `ColorMatrix.TECHNICOLOR` is a new constant used by technicolor operations.
+* `ColorMatrix.POLAROID` is a new constant used by polaroid operations.
+* `ColorMatrix.SHIFT_BGR` is a new constant used by shift BGR operations.
 * If no Audio URLs match the given device a new warning is now displayed in the console (thanks @samme)
 * `Texture.has` will now return a strict boolean, rather than an object that can be cooerced into a boolean (thanks @samme)
 * The `CanvasTexture.draw` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)
