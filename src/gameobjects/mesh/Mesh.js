@@ -409,8 +409,11 @@ var Mesh = new Class({
     /**
      * Translates the view position of this Mesh on the z axis by the given amount.
      *
-     * As the default `panZ` value is 0, vertices with `z=0` (the default) need special care or else they will not display as they are behind the camera.
-     * Consider using `mesh.panZ(mesh.height / (2 * Math.tan(Math.PI / 16)))`, which will interpret vertex geometry 1:1 with pixel geometry (or see `setOrtho`).
+     * As the default `panZ` value is 0, vertices with `z=0` (the default) need special
+     * care or else they will not display as they are "behind" the camera.
+     *
+     * Consider using `mesh.panZ(mesh.height / (2 * Math.tan(Math.PI / 16)))`,
+     * which will interpret vertex geometry 1:1 with pixel geometry (or see `setOrtho`).
      *
      * @method Phaser.GameObjects.Mesh#panZ
      * @since 3.50.0
@@ -429,7 +432,7 @@ var Mesh = new Class({
     /**
      * Builds a new perspective projection matrix from the given values.
      *
-     * These are also the initial projection matrix & parameters for `Mesh` (and see `panZ` for more discussion).
+     * These are also the initial projection matrix and parameters for `Mesh` (see `Mesh.panZ` for more discussion).
      *
      * See also `setOrtho`.
      *
