@@ -177,13 +177,32 @@ var WebAudioSound = new Class({
 
         this.muteNode.connect(this.volumeNode);
 
+        if (manager.context.createPanner)
+        {
+            this.spatialNode = manager.context.createPanner;
+
+            this.volumeNode.connect(this.spatialNode);
+
+        }
+
         if (manager.context.createStereoPanner)
         {
             this.pannerNode = manager.context.createStereoPanner();
 
-            this.volumeNode.connect(this.pannerNode);
+            if (manager.context.createPanner)
+            {
+                this.spatialNode.connect(this.pannerNode);
+            }
+            else
+            {
+                this.volumeNode.connect(this.pannerNode);
+            }
 
             this.pannerNode.connect(manager.destination);
+        }
+        else if (manager.context.createPanner)
+        {
+            this.spatialNode.connect(manager.destination);
         }
         else
         {
@@ -193,8 +212,6 @@ var WebAudioSound = new Class({
         this.duration = this.audioBuffer.duration;
 
         this.totalDuration = this.audioBuffer.duration;
-
-        this.spatialNode = this.createSpatialPanner(manager);
 
         this.spatialNode.connect(this.muteNode);
 
@@ -398,17 +415,6 @@ var WebAudioSound = new Class({
         };
 
         return source;
-    },
-
-    /**
-     * This method is only used internally and creates a PannerNode
-     *
-     * @method Phaser.Sound.WebAudioSound#createSpatialPanner
-     * @since 3.60.0
-     */
-    createSpatialPanner: function (manager)
-    {
-        return new PannerNode(manager.context);
     },
 
     /**
