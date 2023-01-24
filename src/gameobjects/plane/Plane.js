@@ -7,8 +7,6 @@
 var Class = require('../../utils/Class');
 var Mesh = require('../mesh/Mesh');
 var GenerateGridVerts = require('../../geom/mesh/GenerateGridVerts');
-var Between = require('../../math/Between');
-var DegToRad = require('../../math/DegToRad');
 
 /**
  * @classdesc
@@ -48,49 +46,26 @@ var Plane = new Class({
 
         this.hideCCW = false;
 
-        //  TODO
-
-        //  Set width/height and grid size in constructor (width/height = texture size)
-        //  Use uvScale for tiling
-        //  Functions for x rotation to fixed angles
-
         // this.modelRotation.x = -0.75;
 
-        //  works for equal sized images?
+        this.setSizeToFrame();
+        this.setHeight();
+    },
 
-        //  fov = 45 = 0.7853981633974483
+    setSizeToFrame: function ()
+    {
+        this.setPerspective(this.width / this.frame.width, this.height / this.frame.height);
+    },
 
-        this.setPerspective(800 / 98, 600 / 167);
+    setHeight: function (value)
+    {
+        if (value === undefined) { value = this.frame.height; }
 
-        // this.setPerspective(800/128, 600/128);
-        // this.setPerspective(800/256, 600/256);
+        var vFOV = this.fov * (Math.PI / 180);
 
-        //  98 x 167 (ratio? 0.5868)
-        // this.panZ(8.75);
+        this.viewPosition.z = (this.height / value) / (Math.tan(vFOV / 2));
 
-        // this.panZ(167 / (2 * Math.tan(DegToRad(45))));
-        // this.panZ((167/98) / (0.5 * Math.tan(DegToRad(45 / 2))));
-        // this.panZ(((167 / 98) / 2) / (1 * Math.tan(DegToRad(45 / 2))) * 2);
-
-        var aspect = 600 / 800; // 0.75
-        var fov = 0.7853981633974483; // 45
-        var dist = 8.75;
-
-        this.panZ((167 / 2) / (Math.tan(fov / 2) + dist));
-
-        //  128x128 (with perspective 128)
-        // this.panZ(11.3);
-
-        //  256x256
-        // this.panZ(5.65);
-
-        // this.check();
-
-        // this.width = 256;
-        // this.height = 256;
-
-        //  renderer height
-        // this.panZ(600 / (1 * Math.tan(Math.PI / 2)));
+        this.dirtyCache[10] = 1;
     },
 
     check: function (color1, color2)
