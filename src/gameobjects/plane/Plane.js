@@ -5,8 +5,9 @@
  */
 
 var Class = require('../../utils/Class');
-var Mesh = require('../mesh/Mesh');
 var GenerateGridVerts = require('../../geom/mesh/GenerateGridVerts');
+var IntegerToRGB = require('../../display/color/IntegerToRGB');
+var Mesh = require('../mesh/Mesh');
 
 /**
  * @classdesc
@@ -48,8 +49,10 @@ var Plane = new Class({
 
         // this.modelRotation.x = -0.75;
 
+        this.createCheckerboard();
+
         this.setSizeToFrame();
-        this.setHeight();
+        this.setViewHeight();
     },
 
     setSizeToFrame: function ()
@@ -57,7 +60,7 @@ var Plane = new Class({
         this.setPerspective(this.width / this.frame.width, this.height / this.frame.height);
     },
 
-    setHeight: function (value)
+    setViewHeight: function (value)
     {
         if (value === undefined) { value = this.frame.height; }
 
@@ -68,10 +71,12 @@ var Plane = new Class({
         this.dirtyCache[10] = 1;
     },
 
-    check: function (color1, color2)
+    createCheckerboard: function (color1, color2, alpha1, alpha2)
     {
         if (color1 === undefined) { color1 = 0xffffff; }
         if (color2 === undefined) { color2 = 0x0000ff; }
+        if (alpha1 === undefined) { alpha1 = 255; }
+        if (alpha2 === undefined) { alpha2 = 255; }
 
         var gl = this.scene.sys.renderer.gl;
 
@@ -86,6 +91,9 @@ var Plane = new Class({
 
         //  Let's assume 16x16 for our texture size and 8x8 cell size
 
+        var c1 = IntegerToRGB(color1);
+        var c2 = IntegerToRGB(color2);
+
         var colors = [];
 
         for (var h = 0; h < 16; h++)
@@ -94,11 +102,11 @@ var Plane = new Class({
             {
                 if ((h < 8 && w < 8) || (h > 7 && w > 7))
                 {
-                    colors.push(255, 255, 255, 255);
+                    colors.push(c1.r, c1.g, c1.b, alpha1);
                 }
                 else
                 {
-                    colors.push(0, 0, 255, 255);
+                    colors.push(c2.r, c2.g, c2.b, alpha2);
                 }
             }
         }
@@ -110,13 +118,12 @@ var Plane = new Class({
         glTexture.width = 16;
         glTexture.height = 16;
 
+        //  TODO - Use UUID here and remove in `preDestroy` (or on texture change?)
         var texture = this.scene.sys.textures.addGLTexture('plane', glTexture, 16, 16);
 
         gl.bindTexture(gl.TEXTURE_2D, null);
 
-        this.setTexture(texture);
-
-        return texture;
+        return this.setTexture(texture);
     },
 
     uvScroll: function (x, y)
