@@ -160,21 +160,6 @@ var HTML5AudioSoundManager = new Class({
     },
 
     /**
-     * Sets the destination for the spatial sound.
-     * Currently only WebAudio is supported.
-     *
-     * @method Phaser.Sound.BaseSoundManager#setAudioDestination
-     * @override
-     * @since 3.6.0
-     *
-     * @param {Phaser.Types.Sound.SpatialSoundConfig|object} [destination] - An object with x and y fields
-     */
-    setAudioDestination: function ()
-    {
-
-    },
-
-    /**
      * Unlocks HTML5 Audio loading and playback on mobile
      * devices on the initial explicit user interaction.
      *

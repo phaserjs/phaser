@@ -404,7 +404,7 @@ var WebAudioSound = new Class({
      * This method is only used internally and creates a PannerNode
      *
      * @method Phaser.Sound.WebAudioSound#createSpatialPanner
-     * @since 3.6.0
+     * @since 3.60.0
      */
     createSpatialPanner: function (manager)
     {

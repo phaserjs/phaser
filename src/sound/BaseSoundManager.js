@@ -458,7 +458,7 @@ var BaseSoundManager = new Class({
      *
      * @method Phaser.Sound.BaseSoundManager#setAudioDestination
      * @override
-     * @since 3.6.0
+     * @since 3.60.0
      *
      * @param {Phaser.Types.Sound.SpatialSoundConfig|object} [destination] - An object with x and y fields
      */
