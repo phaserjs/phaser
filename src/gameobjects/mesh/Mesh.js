@@ -345,6 +345,22 @@ var Mesh = new Class({
          */
         this.ignoreDirtyCache = false;
 
+        /**
+         * The Camera fov (field of view) in degrees.
+         *
+         * This is set automatically as part of the `Mesh.setPerspective` call, but exposed
+         * here for additional math.
+         *
+         * Do not modify this property directly, doing so will not change the fov. For that,
+         * call the respective Mesh methods.
+         *
+         * @name Phaser.GameObjects.Mesh#fov
+         * @type {number}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.fov;
+
         var renderer = scene.sys.renderer;
 
         this.setPosition(x, y);
@@ -451,6 +467,8 @@ var Mesh = new Class({
         if (near === undefined) { near = 0.01; }
         if (far === undefined) { far = 1000; }
 
+        this.fov = fov;
+
         this.projectionMatrix.perspective(DegToRad(fov), width / height, near, far);
 
         this.dirtyCache[10] = 1;
@@ -484,6 +502,8 @@ var Mesh = new Class({
         if (scaleY === undefined) { scaleY = 1; }
         if (near === undefined) { near = -1000; }
         if (far === undefined) { far = 1000; }
+
+        this.fov = 0;
 
         this.projectionMatrix.ortho(-scaleX, scaleX, -scaleY, scaleY, near, far);
 
