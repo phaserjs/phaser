@@ -165,10 +165,31 @@ var Vertex = new Class({
          * @since 3.50.0
          */
         this.ta = 0;
+
+        /**
+         * The translated uv u coordinate of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#tu
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.tu = u;
+
+        /**
+         * The translated uv v coordinate of this vertex.
+         *
+         * @name Phaser.Geom.Mesh.Vertex#tv
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.tv = v;
     },
 
     /**
      * Sets the U and V properties.
+     *
+     * Also resets the translated uv properties, undoing any scale
+     * or shift they may have had.
      *
      * @method Phaser.Geom.Mesh.Vertex#setUVs
      * @since 3.50.0
@@ -182,6 +203,57 @@ var Vertex = new Class({
     {
         this.u = u;
         this.v = v;
+
+        this.tu = u;
+        this.tv = v;
+
+        return this;
+    },
+
+    /**
+     * Translates the original UV positions by the given amounts.
+     *
+     * The original properties `Vertex.u` and `Vertex.v`
+     * remain unchanged, only the translated properties
+     * `Vertex.tu` and `Vertex.tv`, as used in rendering,
+     * are updated.
+     *
+     * @method Phaser.Geom.Mesh.Vertex#scrollUV
+     * @since 3.60.0
+     *
+     * @param {number} x - The amount to scroll the UV u coordinate by.
+     * @param {number} y - The amount to scroll the UV v coordinate by.
+     *
+     * @return {this} This Vertex.
+     */
+    scrollUV: function (x, y)
+    {
+        this.tu += x;
+        this.tv += y;
+
+        return this;
+    },
+
+    /**
+     * Scales the original UV values by the given amounts.
+     *
+     * The original properties `Vertex.u` and `Vertex.v`
+     * remain unchanged, only the translated properties
+     * `Vertex.tu` and `Vertex.tv`, as used in rendering,
+     * are updated.
+     *
+     * @method Phaser.Geom.Mesh.Vertex#scaleUV
+     * @since 3.60.0
+     *
+     * @param {number} x - The amount to scale the UV u coordinate by.
+     * @param {number} y - The amount to scale the UV v coordinate by.
+     *
+     * @return {this} This Vertex.
+     */
+    scaleUV: function (x, y)
+    {
+        this.tu = this.u * x;
+        this.tv = this.v * y;
 
         return this;
     },
@@ -322,8 +394,8 @@ var Vertex = new Class({
     {
         F32[++offset] = this.tx;
         F32[++offset] = this.ty;
-        F32[++offset] = this.u;
-        F32[++offset] = this.v;
+        F32[++offset] = this.tu;
+        F32[++offset] = this.tv;
         F32[++offset] = textureUnit;
         F32[++offset] = tintEffect;
         U32[++offset] = Utils.getTintAppendFloatAlpha(this.color, this.ta);
