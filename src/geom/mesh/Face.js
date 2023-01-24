@@ -406,6 +406,75 @@ var Face = new Class({
     },
 
     /**
+     * Translates the original UV positions of each vertex by the given amounts.
+     *
+     * The original properties `Vertex.u` and `Vertex.v`
+     * remain unchanged, only the translated properties
+     * `Vertex.tu` and `Vertex.tv`, as used in rendering,
+     * are updated.
+     *
+     * @method Phaser.Geom.Mesh.Face#scrollUV
+     * @since 3.60.0
+     *
+     * @param {number} x - The amount to scroll the UV u coordinate by.
+     * @param {number} y - The amount to scroll the UV v coordinate by.
+     *
+     * @return {this} This Face instance.
+     */
+    scrollUV: function (x, y)
+    {
+        this.vertex1.scrollUV(x, y);
+        this.vertex2.scrollUV(x, y);
+        this.vertex3.scrollUV(x, y);
+
+        return this;
+    },
+
+    /**
+     * Scales the original UV values of each vertex by the given amounts.
+     *
+     * The original properties `Vertex.u` and `Vertex.v`
+     * remain unchanged, only the translated properties
+     * `Vertex.tu` and `Vertex.tv`, as used in rendering,
+     * are updated.
+     *
+     * @method Phaser.Geom.Mesh.Face#scaleUV
+     * @since 3.60.0
+     *
+     * @param {number} x - The amount to scale the UV u coordinate by.
+     * @param {number} y - The amount to scale the UV v coordinate by.
+     *
+     * @return {this} This Face instance.
+     */
+    scaleUV: function (x, y)
+    {
+        this.vertex1.scaleUV(x, y);
+        this.vertex2.scaleUV(x, y);
+        this.vertex3.scaleUV(x, y);
+
+        return this;
+    },
+
+    /**
+     * Sets the color value for each Vertex in this Face.
+     *
+     * @method Phaser.Geom.Mesh.Face#setColor
+     * @since 3.60.0
+     *
+     * @param {number} color - The color value for each vertex.
+     *
+     * @return {this} This Face instance.
+     */
+    setColor: function (color)
+    {
+        this.vertex1.color = color;
+        this.vertex2.color = color;
+        this.vertex3.color = color;
+
+        return this;
+    },
+
+    /**
      * Calls the `Vertex.update` method on each of the vertices. This populates them
      * with the new translated values, updating their `tx`, `ty` and `ta` properties.
      *
@@ -420,6 +489,8 @@ var Face = new Class({
      * @param {number} e - The parent transform matrix data e component.
      * @param {number} f - The parent transform matrix data f component.
      * @param {boolean} roundPixels - Round the vertex position or not?
+     *
+     * @return {this} This Face instance.
      */
     update: function (alpha, a, b, c, d, e, f, roundPixels)
     {
