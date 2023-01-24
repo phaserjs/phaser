@@ -2465,11 +2465,13 @@ var Body = new Class({
         if (left)
         {
             blocked.left = true;
+            blocked.none = false;
         }
 
         if (right)
         {
             blocked.right = true;
+            blocked.none = false;
         }
     },
 
@@ -2501,11 +2503,13 @@ var Body = new Class({
         if (up)
         {
             blocked.up = true;
+            blocked.none = false;
         }
 
         if (down)
         {
             blocked.down = true;
+            blocked.none = false;
         }
     },
 

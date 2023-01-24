@@ -570,6 +570,7 @@ Previously, `WebGLRenderer.whiteTexture` and `WebGLRenderer.blankTexture` had a 
 
 * The `RenderTarget` class will now create a Framebuffer that includes a Depth Stencil Buffer attachment by default. Previously, it didn't. By attaching a stencil buffer it allows things like Geometry Masks to work in combination with Post FX and other Pipelines. Fix #5802 (thanks @mijinc0)
 * When calling `PipelineManager.clear` and `rebind` it will now check if the vao extension is available, and if so, it'll bind a null vertex array. This helps clean-up from 3rd party libs that don't do this directly, such as ThreeJS.
+* The `mipmapFilter` property in the Game Config now defaults to '' (an empty string) instead of 'LINEAR'. The WebGLRenderer has been updated so that it will no longer create mipmaps at all with a default config. This potential saves a lot of VRAM (if your game has a lot of power-of-two textures) where before it was creating mipmaps that may never have been used. However, you may notice scaling doesn't look as crisp as it did before if you were using this feature without knowing it. To get it back, just add `mipmapFilter: 'LINEAR'` to your game config. Remember, as this is WebGL1 it _only_ works with power-of-two sized textures.
 
 #### Mobile Pipeline
 
@@ -856,6 +857,20 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `ColorMatrix._matrix` and `_data` are now Float32Arrays.
+* Calling the `ColorMatrix.set`, `reset` and `getData` methods all now use the built-in Float32 Array operations, making them considerably faster.
+* `ColorMatrix.BLACK_WHITE` is a new constant used by blackwhite operations.
+* `ColorMatrix.NEGATIVE` is a new constant used by negative operations.
+* `ColorMatrix.DESATURATE_LUMINANCE` is a new constant used by desaturation operations.
+* `ColorMatrix.SEPIA` is a new constant used by sepia operations.
+* `ColorMatrix.LSD` is a new constant used by LSD operations.
+* `ColorMatrix.BROWN` is a new constant used by brown operations.
+* `ColorMatrix.VINTAGE` is a new constant used by vintage pinhole operations.
+* `ColorMatrix.KODACHROME` is a new constant used by kodachrome operations.
+* `ColorMatrix.TECHNICOLOR` is a new constant used by technicolor operations.
+* `ColorMatrix.POLAROID` is a new constant used by polaroid operations.
+* `ColorMatrix.SHIFT_BGR` is a new constant used by shift BGR operations.
+* If no Audio URLs match the given device a new warning is now displayed in the console (thanks @samme)
 * `Texture.has` will now return a strict boolean, rather than an object that can be cooerced into a boolean (thanks @samme)
 * The `CanvasTexture.draw` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)
 * The `CanvasTexture.drawFrame` method has a new optional parameter `update` which allows you to control if the internal ImageData is recalculated, or not (thanks @samme)

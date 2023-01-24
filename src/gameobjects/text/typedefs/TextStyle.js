@@ -5,7 +5,7 @@
  * @since 3.0.0
  *
  * @property {string} [fontFamily='Courier'] - The font the Text object will render with. This is a Canvas style font string.
- * @property {string} [fontSize='16px'] - The font size, as a CSS size string.
+ * @property {(number|string)} [fontSize='16px'] - The font size, as a CSS size string.
  * @property {string} [fontStyle] - Any addition font styles, such as 'strong'.
  * @property {string} [font] - The font family or font settings to set. Overrides the other font settings.
  * @property {string} [backgroundColor] - A solid fill color that is rendered behind the Text object. Given as a CSS string color such as `#ff0`.
@@ -25,4 +25,5 @@
  * @property {number} [baselineY=1.4] - The amount of vertical padding added to the height of the text when calculating the font metrics.
  * @property {Phaser.Types.GameObjects.Text.TextWordWrap} [wordWrap] - The Text Word wrap configuration object.
  * @property {Phaser.Types.GameObjects.Text.TextMetrics} [metrics] - A Text Metrics object. Use this to avoid expensive font size calculations in text heavy games.
+ * @property {number} [lineSpacing] - The amount to add to the font height to achieve the overall line height.
  */
