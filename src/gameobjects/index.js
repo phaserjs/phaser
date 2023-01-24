@@ -130,11 +130,13 @@ if (typeof WEBGL_RENDERER)
     GameObjects.Mesh = require('./mesh/Mesh');
     GameObjects.NineSlice = require('./nineslice/NineSlice');
     GameObjects.PointLight = require('./pointlight/PointLight');
+    GameObjects.Plane = require('./plane/Plane');
 
     GameObjects.Factories.Shader = require('./shader/ShaderFactory');
     GameObjects.Factories.Mesh = require('./mesh/MeshFactory');
     GameObjects.Factories.NineSlice = require('./nineslice/NineSliceFactory');
     GameObjects.Factories.PointLight = require('./pointlight/PointLightFactory');
+    GameObjects.Factories.Plane = require('./plane/PlaneFactory');
 
     GameObjects.Creators.Shader = require('./shader/ShaderCreator');
     GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
