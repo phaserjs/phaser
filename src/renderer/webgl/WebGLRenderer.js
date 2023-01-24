@@ -526,6 +526,10 @@ var WebGLRenderer = new Class({
          *
          * For more details see https://webglfundamentals.org/webgl/lessons/webgl-3d-textures.html
          *
+         * As of v3.60 no mipmaps will be generated unless a string is given in
+         * the game config. This saves on VRAM use when it may not be required.
+         * To obtain the previous result set the property to `LINEAR` in the config.
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#mipmapFilter
          * @type {GLenum}
          * @since 3.21.0
@@ -771,7 +775,10 @@ var WebGLRenderer = new Class({
         gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, clearColor.alphaGL);
 
         //  Mipmaps
-        this.mipmapFilter = gl[config.mipmapFilter];
+        if (config.mipmapFilter !== '')
+        {
+            this.mipmapFilter = gl[config.mipmapFilter];
+        }
 
         //  Check maximum supported textures
         this.maxTextures = Utils.checkShaderMax(gl, config.maxTextures);
@@ -1694,7 +1701,7 @@ var WebGLRenderer = new Class({
 
         if (scaleMode === CONST.ScaleModes.LINEAR && this.config.antialias)
         {
-            minFilter = (pow) ? this.mipmapFilter : gl.LINEAR;
+            minFilter = (pow && this.mipmapFilter) ? this.mipmapFilter : gl.LINEAR;
             magFilter = gl.LINEAR;
         }
 
@@ -2665,7 +2672,7 @@ var WebGLRenderer = new Class({
 
         if (this.config.antialias)
         {
-            minFilter = (pow) ? this.mipmapFilter : gl.LINEAR;
+            minFilter = (pow && this.mipmapFilter) ? this.mipmapFilter : gl.LINEAR;
             magFilter = gl.LINEAR;
         }
 
@@ -2755,7 +2762,7 @@ var WebGLRenderer = new Class({
 
         if (this.config.antialias)
         {
-            minFilter = (pow) ? this.mipmapFilter : gl.LINEAR;
+            minFilter = (pow && this.mipmapFilter) ? this.mipmapFilter : gl.LINEAR;
             magFilter = gl.LINEAR;
         }
 

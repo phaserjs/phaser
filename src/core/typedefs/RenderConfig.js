@@ -16,7 +16,7 @@
  * @property {number} [batchSize=4096] - The default WebGL batch size. Represents the number of _quads_ that can be added to a single batch.
  * @property {number} [maxLights=10] - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
  * @property {number} [maxTextures=-1] - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
- * @property {string} [mipmapFilter='LINEAR'] - The mipmap magFilter to be used when creating WebGL textures.
+ * @property {string} [mipmapFilter=''] - The mipmap magFilter to be used when creating WebGL textures.
  * @property {Phaser.Types.Core.PipelineConfig} [pipeline] - The WebGL Pipeline configuration object.
  * @property {boolean} [autoMobilePipeline=true] - Automatically enable the Mobile Pipeline if iOS or Android detected?
  * @property {string} [defaultPipeline='MultiPipeline'] - The WebGL Pipeline that Game Objects will use by default. Set to 'MultiPipeline' as standard.

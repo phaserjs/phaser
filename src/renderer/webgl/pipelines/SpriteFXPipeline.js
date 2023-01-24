@@ -7,6 +7,7 @@
 var BlendModes = require('../../BlendModes');
 var CenterOn = require('../../../geom/rectangle/CenterOn');
 var Class = require('../../../utils/Class');
+var ColorMatrixFS = require('../shaders/ColorMatrix-frag.js');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var MultiPipeline = require('./MultiPipeline');
 var PostFXFS = require('../shaders/PostFX-frag.js');
@@ -71,6 +72,10 @@ var SpriteFXPipeline = new Class({
                 name: 'DrawGame',
                 fragShader: drawShader,
                 vertShader: SingleQuadVS
+            },
+            {
+                name: 'ColorMatrix',
+                fragShader: ColorMatrixFS
             }
         ];
 
@@ -132,6 +137,17 @@ var SpriteFXPipeline = new Class({
          * @since 3.60.0
          */
         this.gameShader;
+
+        /**
+         * A reference to the Color Matrix Shader belonging to this Pipeline.
+         *
+         * This property is set during the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#colorMatrixShader
+         * @type {Phaser.Renderer.WebGL.WebGLShader}
+         * @since 3.60.0
+         */
+        this.colorMatrixShader;
 
         /**
          * Raw byte buffer of vertices used specifically during the copySprite method.
@@ -219,6 +235,7 @@ var SpriteFXPipeline = new Class({
         this.drawSpriteShader = shaders[0];
         this.copyShader = shaders[1];
         this.gameShader = shaders[2];
+        this.colorMatrixShader = shaders[3];
 
         //  Our full-screen target (exclusive to this pipeline)
         this.fsTarget = new RenderTarget(renderer, renderer.width, renderer.height, 1, 0, true, true);
@@ -455,18 +472,22 @@ var SpriteFXPipeline = new Class({
      * the `onFXCopy` callback on the Sprite. Both of these happen prior to the copy, allowing you
      * to use them to set shader uniforms and other values.
      *
+     * You can optionally pass in a ColorMatrix. If so, it will use the ColorMatrix shader
+     * during the copy, allowing you to manipulate the colors to a fine degree.
+     * See the `ColorMatrix` class for more details.
+     *
      * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#copySprite
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target being copied from.
      * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target that will be copied to.
-     * @param {Phaser.GameObjects.Sprite} gameObject - The Sprite being copied.
      * @param {boolean} [clear=true] - Clear the target before copying?
      * @param {boolean} [clearAlpha=true] - Clear the alpha channel when running `gl.clear` on the target?
      * @param {boolean} [eraseMode=false] - Erase source from target using ERASE Blend Mode?
+     * @param {Phaser.Display.ColorMatrix} [colorMatrix] - Optional ColorMatrix to use when copying the Sprite.
      * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to use to copy the target. Defaults to the `copyShader`.
      */
-    copySprite: function (source, target, clear, clearAlpha, eraseMode, shader)
+    copySprite: function (source, target, clear, clearAlpha, eraseMode, colorMatrix, shader)
     {
         if (clear === undefined) { clear = true; }
         if (clearAlpha === undefined) { clearAlpha = true; }
@@ -475,6 +496,11 @@ var SpriteFXPipeline = new Class({
 
         var gl = this.gl;
         var sprite = this.tempSprite;
+
+        if (colorMatrix)
+        {
+            shader = this.colorMatrixShader;
+        }
 
         this.currentShader = shader;
 
@@ -487,6 +513,12 @@ var SpriteFXPipeline = new Class({
         sprite.onFXCopy(this);
 
         this.onCopySprite(source, target, sprite);
+
+        if (colorMatrix)
+        {
+            this.set1fv('uColorMatrix', colorMatrix.getData());
+            this.set1f('uAlpha', colorMatrix.alpha);
+        }
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
@@ -811,6 +843,7 @@ var SpriteFXPipeline = new Class({
         this.drawSpriteShader = null;
         this.copyShader = null;
         this.gameShader = null;
+        this.colorMatrixShader = null;
 
         this.quadVertexData = null;
         this.quadVertexBuffer = null;

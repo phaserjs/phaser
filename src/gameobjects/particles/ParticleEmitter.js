@@ -728,7 +728,7 @@ var ParticleEmitter = new Class({
          * @type {boolean}
          * @default true
          * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setFrame
+         * @see Phaser.GameObjects.Particles.ParticleEmitter#setEmitterFrame
          */
         this.randomFrame = true;
 
@@ -739,7 +739,7 @@ var ParticleEmitter = new Class({
          * @type {number}
          * @default 1
          * @since 3.0.0
-         * @see Phaser.GameObjects.Particles.ParticleEmitter#setFrame
+         * @see Phaser.GameObjects.Particles.ParticleEmitter#setEmitterFrame
          */
         this.frameQuantity = 1;
 
