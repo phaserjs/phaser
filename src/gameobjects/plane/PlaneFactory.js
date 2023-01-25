@@ -15,14 +15,14 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @method Phaser.GameObjects.GameObjectFactory#plane
  * @since 3.60.0
  *
- * @param {number} x - The horizontal position of this Game Object in the world.
- * @param {number} y - The vertical position of this Game Object in the world.
- * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {(string|number)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {number} [x] - The horizontal position of this Game Object in the world.
+ * @param {number} [y] - The vertical position of this Game Object in the world.
+ * @param {string|Phaser.Textures.Texture} [texture] - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {string|number} [frame] - An optional frame from the Texture this Game Object is rendering with.
  *
  * @return {Phaser.GameObjects.Image} The Game Object that was created.
  */
-GameObjectFactory.register('plane', function (x, y, texture, width, height)
+GameObjectFactory.register('plane', function (x, y, texture, frame, width, height)
 {
-    return this.displayList.add(new Plane(this.scene, x, y, texture, width, height));
+    return this.displayList.add(new Plane(this.scene, x, y, texture, frame, width, height));
 });
