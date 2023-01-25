@@ -5,9 +5,11 @@
  */
 
 var Class = require('../../utils/Class');
+var DegToRad = require('../../math/DegToRad');
 var GenerateGridVerts = require('../../geom/mesh/GenerateGridVerts');
 var IntegerToRGB = require('../../display/color/IntegerToRGB');
 var Mesh = require('../mesh/Mesh');
+var RadToDeg = require('../../math/RadToDeg');
 var UUID = require('../../utils/string/UUID');
 
 /**
@@ -183,6 +185,69 @@ var Plane = new Class({
 
             this._checkerboard = null;
         }
+    },
+
+    addRotateX: function (value)
+    {
+        this.rotateX += value;
+
+        return this;
+    },
+
+    addRotateY: function (value)
+    {
+        this.rotateY += value;
+
+        return this;
+    },
+
+    addRotateZ: function (value)
+    {
+        this.rotateZ += value;
+
+        return this;
+    },
+
+    rotateX: {
+
+        get: function ()
+        {
+            return RadToDeg(this.modelRotation.x);
+        },
+
+        set: function (value)
+        {
+            this.modelRotation.x = DegToRad(value);
+        }
+
+    },
+
+    rotateY: {
+
+        get: function ()
+        {
+            return RadToDeg(this.modelRotation.y);
+        },
+
+        set: function (value)
+        {
+            this.modelRotation.y = DegToRad(value);
+        }
+
+    },
+
+    rotateZ: {
+
+        get: function ()
+        {
+            return RadToDeg(this.modelRotation.z);
+        },
+
+        set: function (value)
+        {
+            this.modelRotation.z = DegToRad(value);
+        }
+
     },
 
     /**
