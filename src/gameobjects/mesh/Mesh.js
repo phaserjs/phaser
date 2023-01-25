@@ -797,6 +797,42 @@ var Mesh = new Class({
     },
 
     /**
+     * Tests to see if _any_ face in this Mesh intersects with the given coordinates.
+     *
+     * The given position is translated through the matrix of this Mesh and the given Camera,
+     * before being compared against the vertices.
+     *
+     * @method Phaser.GameObjects.Mesh#hasFaceAt
+     * @since 3.60.0
+     *
+     * @param {number} x - The x position to check against.
+     * @param {number} y - The y position to check against.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera to pass the coordinates through. If not give, the default Scene Camera is used.
+     *
+     * @return {boolean} Returns `true` if _any_ face of this Mesh intersects with the given coordinate, otherwise `false`.
+     */
+    hasFaceAt: function (x, y, camera)
+    {
+        if (camera === undefined) { camera = this.scene.sys.cameras.main; }
+
+        var calcMatrix = GetCalcMatrix(this, camera).calc;
+
+        var faces = this.faces;
+
+        for (var i = 0; i < faces.length; i++)
+        {
+            var face = faces[i];
+
+            if (face.contains(x, y, calcMatrix))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    /**
      * Return an array of Face objects from this Mesh that intersect with the given coordinates.
      *
      * The given position is translated through the matrix of this Mesh and the given Camera,
