@@ -179,7 +179,7 @@ var WebAudioSound = new Class({
 
         if (manager.context.createPanner)
         {
-            this.spatialNode = manager.context.createPanner;
+            this.spatialNode = manager.context.createPanner();
 
             this.volumeNode.connect(this.spatialNode);
 
