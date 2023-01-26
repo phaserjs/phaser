@@ -284,7 +284,6 @@ var WebAudioSoundManager = new Class({
     {
 
         this.audioDestination = destination;
-        this.context.listener.positionZ.value = 300;
 
     },
 

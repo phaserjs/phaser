@@ -182,7 +182,6 @@ var WebAudioSound = new Class({
             this.spatialNode = manager.context.createPanner();
 
             this.volumeNode.connect(this.spatialNode);
-
         }
 
         if (manager.context.createStereoPanner)
@@ -478,7 +477,7 @@ var WebAudioSound = new Class({
                 this.manager.setAudioDestination({ x: this.manager.game.config.width / 2, y: this.manager.game.config.height / 2 });
             }
             this.spatialNode.panningModel = source.panningModel || 'equalpower',
-            this.spatialNode.distanceModel = source.distanceModel || 'linear',
+            this.spatialNode.distanceModel = source.distanceModel || 'inverse',
             this.spatialNode.positionX.value = source.x;
             this.spatialNode.positionY.value = source.y;
             this.spatialNode.positionZ.value = source.z || 0;
