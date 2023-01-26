@@ -213,8 +213,6 @@ var WebAudioSound = new Class({
 
         this.totalDuration = this.audioBuffer.duration;
 
-        this.spatialNode.connect(this.muteNode);
-
         BaseSound.call(this, manager, key, config);
     },
 
@@ -394,7 +392,7 @@ var WebAudioSound = new Class({
 
         source.buffer = this.audioBuffer;
 
-        source.connect(this.spatialNode);
+        source.connect(this.muteNode);
 
         source.onended = function (ev)
         {
@@ -472,7 +470,7 @@ var WebAudioSound = new Class({
         });
 
         var source = this.currentConfig.source;
-        if (source)
+        if (source && this.manager.context.createPanner)
         {
             if (!this.manager.listenerDestination)
             {
