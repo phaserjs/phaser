@@ -4,12 +4,11 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
-var DegToRad = require('../../math/DegToRad');
 var GenerateGridVerts = require('../../geom/mesh/GenerateGridVerts');
 var IntegerToRGB = require('../../display/color/IntegerToRGB');
 var Mesh = require('../mesh/Mesh');
-var RadToDeg = require('../../math/RadToDeg');
 var UUID = require('../../utils/string/UUID');
 
 /**
@@ -43,12 +42,64 @@ var Plane = new Class({
 
         Mesh.call(this, scene, x, y, texture, frame);
 
+        this.type = 'Plane';
+
+        /**
+         * The Animation State component of this Sprite.
+         *
+         * This component provides features to apply animations to this Sprite.
+         * It is responsible for playing, loading, queuing animations for later playback,
+         * mixing between animations and setting the current animation frame to this Sprite.
+         *
+         * @name Phaser.GameObjects.Sprite#anims
+         * @type {Phaser.Animations.AnimationState}
+         * @since 3.0.0
+         */
+        this.anims = new AnimationState(this);
+
+        this._gridWidth = width;
+        this._gridHeight = height;
+        this._gridTile = tile;
+        this._checkerboard = null;
+
+        this.hideCCW = false;
+
+        this.setGridSize(width, height, tile);
+        this.setSizeToFrame(false);
+        this.setViewHeight();
+    },
+
+    /**
+     * Update this Sprite's animations.
+     *
+     * @method Phaser.GameObjects.Sprite#preUpdate
+     * @protected
+     * @since 3.0.0
+     *
+     * @param {number} time - The current timestamp.
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
+     */
+    preUpdate: function (time, delta)
+    {
+        Mesh.prototype.preUpdate.call(this, time, delta);
+
+        this.anims.update(time, delta);
+    },
+
+    setGridSize: function (width, height, tile)
+    {
+        if (width === undefined) { width = 8; }
+        if (height === undefined) { height = 8; }
+        if (tile === undefined) { tile = false; }
+
         var flipY = false;
 
         if (tile)
         {
             flipY = true;
         }
+
+        this.clear();
 
         GenerateGridVerts({
             mesh: this,
@@ -59,25 +110,98 @@ var Plane = new Class({
             flipY: flipY
         });
 
-        this.type = 'Plane';
-
-        this.hideCCW = false;
-
-        this._checkerboard = null;
-
-        this.setSizeToFrame();
-        this.setViewHeight();
-
-        // this.modelRotation.x = -0.75;
+        return this;
     },
 
-    setSizeToFrame: function ()
+    setSizeToFrame: function (resetUV)
     {
+        if (resetUV === undefined) { resetUV = true; }
+
         this.setPerspective(this.width / this.frame.width, this.height / this.frame.height);
 
         if (this._checkerboard && this._checkerboard !== this.texture)
         {
             this.removeCheckerboard();
+        }
+
+        //  Reset UV coordinates if frame has changed
+        if (!resetUV)
+        {
+            return;
+        }
+
+        var gridX = this._gridWidth;
+        var gridY = this._gridHeight;
+
+        var verts = this.vertices;
+        var frame = this.frame;
+
+        var frameU0 = frame.u0;
+        var frameU1 = frame.u1;
+        var frameV0 = frame.v0;
+        var frameV1 = frame.v1;
+
+        var x;
+        var y;
+        var i = 0;
+
+        if (this._gridTile)
+        {
+            //  flipY
+            frameV0 = frame.v1;
+            frameV1 = frame.v0;
+
+            for (y = 0; y < gridY; y++)
+            {
+                for (x = 0; x < gridX; x++)
+                {
+                    verts[i++].setUVs(frameU0, frameV1);
+                    verts[i++].setUVs(frameU0, frameV0);
+                    verts[i++].setUVs(frameU1, frameV1);
+                    verts[i++].setUVs(frameU0, frameV0);
+                    verts[i++].setUVs(frameU1, frameV0);
+                    verts[i++].setUVs(frameU1, frameV1);
+                }
+            }
+        }
+        else
+        {
+            var gridX1 = gridX + 1;
+            var gridY1 = gridY + 1;
+
+            var frameU = frameU1 - frameU0;
+            var frameV = frameV1 - frameV0;
+
+            var uvs = [];
+
+            for (y = 0; y < gridY1; y++)
+            {
+                for (x = 0; x < gridX1; x++)
+                {
+                    var tu = frameU0 + frameU * (x / gridX);
+                    var tv = frameV0 + frameV * (y / gridY);
+
+                    uvs.push(tu, tv);
+                }
+            }
+
+            for (y = 0; y < gridY; y++)
+            {
+                for (x = 0; x < gridX; x++)
+                {
+                    var a = (x + gridX1 * y) * 2;
+                    var b = (x + gridX1 * (y + 1)) * 2;
+                    var c = ((x + 1) + gridX1 * (y + 1)) * 2;
+                    var d = ((x + 1) + gridX1 * y) * 2;
+
+                    verts[i++].setUVs(uvs[a], uvs[a + 1]);
+                    verts[i++].setUVs(uvs[b], uvs[b + 1]);
+                    verts[i++].setUVs(uvs[d], uvs[d + 1]);
+                    verts[i++].setUVs(uvs[b], uvs[b + 1]);
+                    verts[i++].setUVs(uvs[c], uvs[c + 1]);
+                    verts[i++].setUVs(uvs[d], uvs[d + 1]);
+                }
+            }
         }
     },
 
@@ -157,26 +281,6 @@ var Plane = new Class({
         return this;
     },
 
-    uvScroll: function (x, y)
-    {
-        var faces = this.faces;
-
-        for (var i = 0; i < faces.length; i++)
-        {
-            faces[i].scrollUV(x, y);
-        }
-    },
-
-    uvScale: function (x, y)
-    {
-        var faces = this.faces;
-
-        for (var i = 0; i < faces.length; i++)
-        {
-            faces[i].scaleUV(x, y);
-        }
-    },
-
     removeCheckerboard: function ()
     {
         if (this._checkerboard)
@@ -187,67 +291,9 @@ var Plane = new Class({
         }
     },
 
-    addRotateX: function (value)
+    play: function (key, ignoreIfPlaying)
     {
-        this.rotateX += value;
-
-        return this;
-    },
-
-    addRotateY: function (value)
-    {
-        this.rotateY += value;
-
-        return this;
-    },
-
-    addRotateZ: function (value)
-    {
-        this.rotateZ += value;
-
-        return this;
-    },
-
-    rotateX: {
-
-        get: function ()
-        {
-            return RadToDeg(this.modelRotation.x);
-        },
-
-        set: function (value)
-        {
-            this.modelRotation.x = DegToRad(value);
-        }
-
-    },
-
-    rotateY: {
-
-        get: function ()
-        {
-            return RadToDeg(this.modelRotation.y);
-        },
-
-        set: function (value)
-        {
-            this.modelRotation.y = DegToRad(value);
-        }
-
-    },
-
-    rotateZ: {
-
-        get: function ()
-        {
-            return RadToDeg(this.modelRotation.z);
-        },
-
-        set: function (value)
-        {
-            this.modelRotation.z = DegToRad(value);
-        }
-
+        return this.anims.play(key, ignoreIfPlaying);
     },
 
     /**
@@ -261,6 +307,10 @@ var Plane = new Class({
     {
         this.clear();
         this.removeCheckerboard();
+
+        this.anims.destroy();
+
+        this.anims = undefined;
 
         this.debugCallback = null;
         this.debugGraphic = null;
