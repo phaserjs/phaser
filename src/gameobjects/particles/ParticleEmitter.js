@@ -937,7 +937,8 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Merges configuration settings into the emitter's current settings.
+     * Takes an Emitter Configuration file and resets this Emitter, using any
+     * properties defined in the config to then set it up again.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setConfig
      * @since 3.60.0
