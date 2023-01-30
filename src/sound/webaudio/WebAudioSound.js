@@ -471,8 +471,9 @@ var WebAudioSound = new Class({
         var source = this.currentConfig.source;
         if (source && this.manager.context.createPanner)
         {
-            if (!this.manager.listenerDestination)
+            if (!this.manager.audioDestination)
             {
+
                 // Set the position of the listener
                 this.manager.setAudioDestination({ x: this.manager.game.config.width / 2, y: this.manager.game.config.height / 2 });
             }
