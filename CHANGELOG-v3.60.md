@@ -858,6 +858,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `Time.Clock.startTime` is a new property that stores the time the Clock (and therefore the Scene) was started. This can be useful for comparing against the current time to see how much real world time has elapsed (thanks @samme)
 * `ColorMatrix._matrix` and `_data` are now Float32Arrays.
 * Calling the `ColorMatrix.set`, `reset` and `getData` methods all now use the built-in Float32 Array operations, making them considerably faster.
 * `ColorMatrix.BLACK_WHITE` is a new constant used by blackwhite operations.
