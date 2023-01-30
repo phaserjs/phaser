@@ -1958,9 +1958,10 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#addParticleProcessor
      * @since 3.60.0
      *
-     * @param {Phaser.GameObjects.Particles.ParticleProcessor} processor - The Particle Processor to add to this Emitter Manager.
+     * @generic {Phaser.GameObjects.Particles.ParticleProcessor} T
+     * @param {T} processor - The Particle Processor to add to this Emitter Manager.
      *
-     * @return {Phaser.GameObjects.Particles.ParticleProcessor} The Particle Processor that was added to this Emitter Manager.
+     * @return {T} The Particle Processor that was added to this Emitter Manager.
      */
     addParticleProcessor: function (processor)
     {
@@ -1990,9 +1991,10 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#removeParticleProcessor
      * @since 3.60.0
      *
-     * @param {Phaser.GameObjects.Particles.ParticleProcessor} processor - The Particle Processor to remove from this Emitter Manager.
+     * @generic {Phaser.GameObjects.Particles.ParticleProcessor} T
+     * @param {T} processor - The Particle Processor to remove from this Emitter Manager.
      *
-     * @return {?Phaser.GameObjects.Particles.ParticleProcessor} The Particle Processor that was removed, or null if it could not be found.
+     * @return {?T} The Particle Processor that was removed, or null if it could not be found.
      */
     removeParticleProcessor: function (processor)
     {
