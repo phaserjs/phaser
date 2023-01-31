@@ -142,6 +142,7 @@ if (typeof WEBGL_RENDERER)
     GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
     GameObjects.Creators.NineSlice = require('./nineslice/NineSliceCreator');
     GameObjects.Creators.PointLight = require('./pointlight/PointLightCreator');
+    GameObjects.Creators.Plane = require('./plane/PlaneCreator');
 
     GameObjects.Light = require('./lights/Light');
     GameObjects.LightsManager = require('./lights/LightsManager');
