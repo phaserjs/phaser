@@ -8,6 +8,7 @@
 var BaseSound = require('../BaseSound');
 var Class = require('../../utils/Class');
 var Events = require('../events');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * @classdesc
@@ -497,20 +498,22 @@ var WebAudioSound = new Class({
                 this.manager.setAudioDestination({ x: this.manager.game.config.width / 2, y: this.manager.game.config.height / 2 });
             }
 
-            this.spatialNode.panningModel = source.panningModel || 'equalpower';
-            this.spatialNode.distanceModel = source.distanceModel || 'inverse';
-            this.spatialNode.positionX.value = source.x;
-            this.spatialNode.positionY.value = source.y;
-            this.spatialNode.positionZ.value = source.z || 0;
-            this.spatialNode.orientationX.value = source.orientationX || 0;
-            this.spatialNode.orientationY.value = source.orientationY || 0;
-            this.spatialNode.orientationZ.value = source.orientationZ || -1.0;
-            this.spatialNode.refDistance = source.refDistance || 1;
-            this.spatialNode.maxDistance = source.maxDistance || 10000;
-            this.spatialNode.rolloffFactor = source.rollOff || 1;
-            this.spatialNode.coneInnerAngle = source.innerCone || 360;
-            this.spatialNode.coneOuterAngle = source.outerCone || 0;
-            this.spatialNode.coneOuterGain = source.outerGain || 0;
+            var node = this.spatialNode;
+
+            node.panningModel = GetFastValue(source, 'panningModel', 'equalpower');
+            node.distanceModel = GetFastValue(source, 'distanceModel', 'inverse');
+            node.positionX = GetFastValue(source, 'x', 0);
+            node.positionY = GetFastValue(source, 'y', 0);
+            node.positionZ = GetFastValue(source, 'z', 0);
+            node.orientationX.value = GetFastValue(source, 'orientationX', 0);
+            node.orientationY.value = GetFastValue(source, 'orientationY', 0);
+            node.orientationZ.value = GetFastValue(source, 'orientationZ', -1);
+            node.refDistance = GetFastValue(source, 'refDistance', 1);
+            node.maxDistance = GetFastValue(source, 'maxDistance', 10000);
+            node.rolloffFactor = GetFastValue(source, 'rolloffFactor', 1);
+            node.coneInnerAngle = GetFastValue(source, 'coneInnerAngle', 360);
+            node.coneOuterAngle = GetFastValue(source, 'coneOuterAngle', 0);
+            node.coneOuterGain = GetFastValue(source, 'coneOuterGain', 0);
 
             this.spatialSource = source;
         }
