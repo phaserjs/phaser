@@ -271,6 +271,23 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
+     * Sets the destination for the spatial sound.
+     * Currently only WebAudio is supported.
+     *
+     * @method Phaser.Sound.BaseSoundManager#setAudioDestination
+     * @override
+     * @since 3.60.0
+     *
+     * @param {Phaser.Types.Sound.SpatialSoundConfig|object} [destination] - An object with x and y fields
+     */
+    setAudioDestination: function (destination)
+    {
+
+        this.audioDestination = destination;
+
+    },
+
+    /**
      * Unlocks Web Audio API on the initial input event.
      *
      * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
@@ -365,6 +382,19 @@ var WebAudioSoundManager = new Class({
      */
     update: function (time, delta)
     {
+        if (this.audioDestination)
+        {
+            var listener = this.context.listener;
+            if (this.audioDestination.x && !isNaN(this.audioDestination.x))
+            {
+                listener.positionX.value = this.audioDestination.x;
+            }
+            if (this.audioDestination.y && !isNaN(this.audioDestination.y))
+            {
+                listener.positionY.value = this.audioDestination.y;
+            }
+        }
+
         BaseSoundManager.prototype.update.call(this, time, delta);
 
         //  Resume interrupted audio on iOS

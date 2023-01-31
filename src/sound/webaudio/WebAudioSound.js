@@ -177,13 +177,31 @@ var WebAudioSound = new Class({
 
         this.muteNode.connect(this.volumeNode);
 
+        if (manager.context.createPanner)
+        {
+            this.spatialNode = manager.context.createPanner();
+
+            this.volumeNode.connect(this.spatialNode);
+        }
+
         if (manager.context.createStereoPanner)
         {
             this.pannerNode = manager.context.createStereoPanner();
 
-            this.volumeNode.connect(this.pannerNode);
+            if (manager.context.createPanner)
+            {
+                this.spatialNode.connect(this.pannerNode);
+            }
+            else
+            {
+                this.volumeNode.connect(this.pannerNode);
+            }
 
             this.pannerNode.connect(manager.destination);
+        }
+        else if (manager.context.createPanner)
+        {
+            this.spatialNode.connect(manager.destination);
         }
         else
         {
@@ -450,6 +468,32 @@ var WebAudioSound = new Class({
             rate: 1
         });
 
+        var source = this.currentConfig.source;
+        if (source && this.manager.context.createPanner)
+        {
+            if (!this.manager.audioDestination)
+            {
+                // Set the position of the listener
+                this.manager.setAudioDestination({ x: this.manager.game.config.width / 2, y: this.manager.game.config.height / 2 });
+            }
+            this.spatialNode.panningModel = source.panningModel || 'equalpower',
+            this.spatialNode.distanceModel = source.distanceModel || 'inverse',
+            this.spatialNode.positionX.value = source.x;
+            this.spatialNode.positionY.value = source.y;
+            this.spatialNode.positionZ.value = source.z || 0;
+            this.spatialNode.orientationX.value = source.orientationX || 0;
+            this.spatialNode.orientationY.value = source.orientationY || 0;
+            this.spatialNode.orientationZ.value = source.orientationZ || -1.0;
+            this.spatialNode.refDistance = source.refDistance || 1;
+            this.spatialNode.maxDistance = source.maxDistance || 10000;
+            this.spatialNode.rolloffFactor = source.rollOff || 1;
+            this.spatialNode.coneInnerAngle = source.innerCone || 360;
+            this.spatialNode.coneOuterAngle = source.outerCone || 360;
+            this.spatialNode.coneOuterGain = source.outerGain || 0;
+
+            this.spatialSource = source;
+        }
+
         BaseSound.prototype.applyConfig.call(this);
     },
 
@@ -463,6 +507,12 @@ var WebAudioSound = new Class({
      */
     update: function ()
     {
+        if (this.isPlaying && this.spatialSource)
+        {
+            this.spatialNode.positionX.value = this.spatialSource.x;
+            this.spatialNode.positionY.value = this.spatialSource.y;
+        }
+
         if (this.hasEnded)
         {
             this.hasEnded = false;
@@ -519,6 +569,12 @@ var WebAudioSound = new Class({
         {
             this.pannerNode.disconnect();
             this.pannerNode = null;
+        }
+
+        if (this.spatialNode)
+        {
+            this.spatialNode.disconnect();
+            this.spatialNode = null;
         }
 
         this.rateUpdates.length = 0;
