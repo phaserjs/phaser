@@ -20,7 +20,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Sound.WebAudioSoundManager} manager - Reference to the current sound manager instance.
+ * @param {Phaser.Sound.WebAudioSoundManager} manager - Reference to the WebAudio Sound Manager that owns this Sound instance.
  * @param {string} key - Asset key for the sound.
  * @param {Phaser.Types.Sound.SoundConfig} [config={}] - An optional config object containing default sound settings.
  */
@@ -108,7 +108,7 @@ var WebAudioSound = new Class({
         this.spatialNode = null;
 
         /**
-         * If the Spatial Panner node has been set to track an vector or
+         * If the Spatial Panner node has been set to track a vector or
          * Game Object, this retains a reference to it.
          *
          * @name Phaser.Sound.WebAudioSound#spatialSource
@@ -492,19 +492,13 @@ var WebAudioSound = new Class({
 
         if (source && this.manager.context.createPanner)
         {
-            if (!this.manager.audioDestination)
-            {
-                // Set the position of the listener
-                this.manager.setAudioDestination({ x: this.manager.game.config.width / 2, y: this.manager.game.config.height / 2 });
-            }
-
             var node = this.spatialNode;
 
             node.panningModel = GetFastValue(source, 'panningModel', 'equalpower');
             node.distanceModel = GetFastValue(source, 'distanceModel', 'inverse');
-            node.positionX = GetFastValue(source, 'x', 0);
-            node.positionY = GetFastValue(source, 'y', 0);
-            node.positionZ = GetFastValue(source, 'z', 0);
+            node.positionX.value = GetFastValue(source, 'x', 0);
+            node.positionY.value = GetFastValue(source, 'y', 0);
+            node.positionZ.value = GetFastValue(source, 'z', 0);
             node.orientationX.value = GetFastValue(source, 'orientationX', 0);
             node.orientationY.value = GetFastValue(source, 'orientationY', 0);
             node.orientationZ.value = GetFastValue(source, 'orientationZ', -1);
@@ -515,10 +509,86 @@ var WebAudioSound = new Class({
             node.coneOuterAngle = GetFastValue(source, 'coneOuterAngle', 0);
             node.coneOuterGain = GetFastValue(source, 'coneOuterGain', 0);
 
-            this.spatialSource = source;
+            this.spatialSource = GetFastValue(source, 'follow', null);
         }
 
         BaseSound.prototype.applyConfig.call(this);
+    },
+
+    /**
+     * Sets the x position of this Sound in Spatial Audio space.
+     *
+     * This only has any effect if the sound was created with a SpatialSoundConfig object.
+     *
+     * Also see the `WebAudioSoundManager.setListenerPosition` method.
+     *
+     * If you find that the sound becomes too quiet, too quickly, as it moves away from
+     * the listener, then try different `refDistance` property values when configuring
+     * the spatial sound.
+     *
+     * @name Phaser.Sound.WebAudioSound#x
+     * @type {number}
+     * @since 3.60.0
+     */
+    x: {
+
+        get: function ()
+        {
+            if (this.spatialNode)
+            {
+                return this.spatialNode.positionX;
+            }
+            else
+            {
+                return 0;
+            }
+        },
+
+        set: function (value)
+        {
+            if (this.spatialNode)
+            {
+                this.spatialNode.positionX.value = value;
+            }
+        }
+    },
+
+    /**
+     * Sets the y position of this Sound in Spatial Audio space.
+     *
+     * This only has any effect if the sound was created with a SpatialSoundConfig object.
+     *
+     * Also see the `WebAudioSoundManager.setListenerPosition` method.
+     *
+     * If you find that the sound becomes too quiet, too quickly, as it moves away from
+     * the listener, then try different `refDistance` property values when configuring
+     * the spatial sound.
+     *
+     * @name Phaser.Sound.WebAudioSound#y
+     * @type {number}
+     * @since 3.60.0
+     */
+    y: {
+
+        get: function ()
+        {
+            if (this.spatialNode)
+            {
+                return this.spatialNode.positionY;
+            }
+            else
+            {
+                return 0;
+            }
+        },
+
+        set: function (value)
+        {
+            if (this.spatialNode)
+            {
+                this.spatialNode.positionY.value = value;
+            }
+        }
     },
 
     /**
@@ -533,8 +603,8 @@ var WebAudioSound = new Class({
     {
         if (this.isPlaying && this.spatialSource)
         {
-            this.spatialNode.positionX.value = this.spatialSource.x;
-            this.spatialNode.positionY.value = this.spatialSource.y;
+            this.x = this.spatialSource.x;
+            this.y = this.spatialSource.y;
         }
 
         if (this.hasEnded)

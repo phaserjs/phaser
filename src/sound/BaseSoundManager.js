@@ -10,9 +10,10 @@ var Clone = require('../utils/object/Clone');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var GameEvents = require('../core/events');
-var NOOP = require('../utils/NOOP');
 var GetAll = require('../utils/array/GetAll');
 var GetFirst = require('../utils/array/GetFirst');
+var NOOP = require('../utils/NOOP');
+var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
@@ -147,6 +148,20 @@ var BaseSoundManager = new Class({
          * @since 3.0.0
          */
         this.unlocked = false;
+
+        /**
+         * The Spatial Audio listener position.
+         *
+         * Only available with WebAudio.
+         *
+         * You can modify the x/y properties of this Vec2 directly to
+         * adjust the listener position within the game world.
+         *
+         * @name Phaser.Sound.BaseSoundManager#listenerPosition
+         * @type {Phaser.Math.Vector2}
+         * @since 3.60.0
+         */
+        this.listenerPosition = new Vector2();
 
         game.events.on(GameEvents.BLUR, this.onGameBlur, this);
         game.events.on(GameEvents.FOCUS, this.onGameFocus, this);
@@ -453,16 +468,21 @@ var BaseSoundManager = new Class({
     },
 
     /**
-     * Sets the destination for the spatial sound.
-     * Currently only WebAudio is supported.
+     * Sets the X and Y position of the Spatial Audio listener on this Web Audios context.
      *
-     * @method Phaser.Sound.BaseSoundManager#setAudioDestination
-     * @override
+     * If you call this method with no parameters it will default to the center-point of
+     * the game canvas. Depending on the type of game you're making, you may need to call
+     * this method constantly to reset the listener position as the camera scrolls.
+     *
+     * Calling this method does nothing on HTML5Audio.
+     *
+     * @method Phaser.Sound.BaseSoundManager#setListenerPosition
      * @since 3.60.0
      *
-     * @param {Phaser.Types.Sound.SpatialSoundConfig|object} [destination] - An object with x and y fields
+     * @param {number} [x] - The x position of the Spatial Audio listener.
+     * @param {number} [y] - The y position of the Spatial Audio listener.
      */
-    setAudioDestination: NOOP,
+    setListenerPosition: NOOP,
 
     /**
      * Stops all the sounds in the game.
@@ -622,7 +642,7 @@ var BaseSoundManager = new Class({
 
         this.sounds.length = 0;
         this.sounds = null;
-
+        this.listenerPosition = null;
         this.game = null;
     },
 

@@ -271,16 +271,28 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
-     * Sets the destination for the spatial sound.
+     * Sets the X and Y position of the Spatial Audio listener on this Web Audios context.
      *
-     * @method Phaser.Sound.WebAudioSoundManager#setAudioDestination
+     * If you call this method with no parameters it will default to the center-point of
+     * the game canvas. Depending on the type of game you're making, you may need to call
+     * this method constantly to reset the listener position as the camera scrolls.
+     *
+     * Calling this method does nothing on HTML5Audio.
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#setListenerPosition
      * @since 3.60.0
      *
-     * @param {Phaser.Types.Sound.SpatialSoundConfig|object} [destination] - An object with x and y fields
+     * @param {number} [x] - The x position of the Spatial Audio listener.
+     * @param {number} [y] - The y position of the Spatial Audio listener.
      */
-    setAudioDestination: function (destination)
+    setListenerPosition: function (x, y)
     {
-        this.audioDestination = destination;
+        if (x === undefined) { x = this.game.scale.width / 2; }
+        if (y === undefined) { y = this.game.scale.height / 2; }
+
+        this.listenerPosition.set(x, y);
+
+        return this;
     },
 
     /**
@@ -366,6 +378,7 @@ var WebAudioSoundManager = new Class({
 
     /**
      * Update method called on every game step.
+     *
      * Removes destroyed sounds and updates every active sound in the game.
      *
      * @method Phaser.Sound.WebAudioSoundManager#update
@@ -378,19 +391,12 @@ var WebAudioSoundManager = new Class({
      */
     update: function (time, delta)
     {
-        if (this.audioDestination)
+        var listener = this.context.listener;
+
+        if (this.listenerPosition && listener)
         {
-            var listener = this.context.listener;
-
-            if (this.audioDestination.x && !isNaN(this.audioDestination.x))
-            {
-                listener.positionX.value = this.audioDestination.x;
-            }
-
-            if (this.audioDestination.y && !isNaN(this.audioDestination.y))
-            {
-                listener.positionY.value = this.audioDestination.y;
-            }
+            listener.positionX.value = this.listenerPosition.x;
+            listener.positionY.value = this.listenerPosition.y;
         }
 
         BaseSoundManager.prototype.update.call(this, time, delta);
