@@ -173,6 +173,21 @@ var GameObject = new Class({
         this.cameraFilter = 0;
 
         /**
+         * A bitmask that controls if this Game Object is drawn by an exclusive Camera or not.
+         * Not usually set directly, instead call `Camera.accpet`, however you can
+         * set this property directly using the Camera.id property:
+         *
+         * @example
+         * this.cameraFilter2 |= camera.id
+         *
+         * @name Phaser.GameObjects.GameObject#cameraFilter2
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.cameraFilter2 = 0;
+
+        /**
          * If this Game Object is enabled for input then this property will contain an InteractiveObject instance.
          * Not usually set directly. Instead call `GameObject.setInteractive()`.
          *
@@ -622,7 +637,24 @@ var GameObject = new Class({
     {
         var listWillRender = (this.displayList && this.displayList.active) ? this.displayList.willRender(camera) : true;
 
-        return !(!listWillRender || GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
+        if (!listWillRender) 
+        {
+            return false;
+        }
+
+        if (GameObject.RENDER_MASK !== this.renderFlags) 
+        {
+            return false;
+        }
+
+        if (!camera.exclusive)
+        {
+            return (this.cameraFilter === 0) || ((this.cameraFilter & camera.id) === 0);
+        }
+        else
+        {
+            return (this.cameraFilter2 !== 0) && ((this.cameraFilter2 & camera.id) !== 0);
+        }
     },
 
     /**

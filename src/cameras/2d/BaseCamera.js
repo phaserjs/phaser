@@ -517,6 +517,18 @@ var BaseCamera = new Class({
          * @since 3.60.0
          */
         this.isSceneCamera = true;
+        
+        /**
+         * Exclusive camera will ignore all game objects, 
+         * only accepted game objects will be rendered.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#exclusive
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
+         */
+        this.exclusive = false;
+
     },
 
     /**
@@ -908,6 +920,65 @@ var BaseCamera = new Class({
                 entry.cameraFilter |= id;
             }
         }
+
+        return this;
+    },
+
+    /**
+     * Enable exclusive camera, only accepted game objects will be rendered.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#setExclusiveEnable
+     * @since 3.60.0
+     *
+     * @return {this} This Camera instance.
+     */
+    setExclusive: function()
+    {
+        this.exclusive = true;
+
+        return this;
+    },
+
+    /**
+     * For exclusive camera, given a Game Object, or an array of Game Objects, it will update all of their camera filter2 settings
+     * so that they are accepted by this Camera. This means they will be rendered by this Camera.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#accept
+     * @since 3.60.0
+     *
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group)} entries - The Game Object, or array of Game Objects, to be ignored by this Camera.
+     *
+     * @return {this} This Camera instance.
+     */
+    accept: function (entries)
+    {
+        var id = this.id;
+
+        if (!Array.isArray(entries))
+        {
+            entries = [ entries ];
+        }
+
+        for (var i = 0; i < entries.length; i++)
+        {
+            var entry = entries[i];
+
+            if (Array.isArray(entry))
+            {
+                this.ignore(entry);
+            }
+            else if (entry.isParent)
+            {
+                this.ignore(entry.getChildren());
+            }
+            else
+            {
+                entry.cameraFilter2 |= id;
+
+                // Don't render by all other cameras
+                entry.cameraFilter = 0xffffffff;
+            }
+        }        
 
         return this;
     },

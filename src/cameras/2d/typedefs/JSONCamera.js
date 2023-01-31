@@ -10,6 +10,8 @@
  * @property {number} zoom - The zoom of camera
  * @property {number} rotation - The rotation of camera
  * @property {boolean} roundPixels - The round pixels st status of camera
+ * @property {boolean} visible - Visible of camera
+ * @property {boolean} exclusive - The exclusive flag of camera
  * @property {number} scrollX - The horizontal scroll of camera
  * @property {number} scrollY - The vertical scroll of camera
  * @property {string} backgroundColor - The background color of camera

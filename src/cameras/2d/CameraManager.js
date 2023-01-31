@@ -426,6 +426,7 @@ var CameraManager = new Class({
             camera.scrollY = GetFastValue(cameraConfig, 'scrollY', 0);
             camera.roundPixels = GetFastValue(cameraConfig, 'roundPixels', false);
             camera.visible = GetFastValue(cameraConfig, 'visible', true);
+            camera.exclusive = GetFastValue(cameraConfig, 'exclusive', false);
 
             // Background Color
 
