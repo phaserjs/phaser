@@ -509,7 +509,7 @@ var WebAudioSound = new Class({
             this.spatialNode.maxDistance = source.maxDistance || 10000;
             this.spatialNode.rolloffFactor = source.rollOff || 1;
             this.spatialNode.coneInnerAngle = source.innerCone || 360;
-            this.spatialNode.coneOuterAngle = source.outerCone || 360;
+            this.spatialNode.coneOuterAngle = source.outerCone || 0;
             this.spatialNode.coneOuterGain = source.outerGain || 0;
 
             this.spatialSource = source;
