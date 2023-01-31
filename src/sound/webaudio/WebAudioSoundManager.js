@@ -272,19 +272,15 @@ var WebAudioSoundManager = new Class({
 
     /**
      * Sets the destination for the spatial sound.
-     * Currently only WebAudio is supported.
      *
-     * @method Phaser.Sound.BaseSoundManager#setAudioDestination
-     * @override
+     * @method Phaser.Sound.WebAudioSoundManager#setAudioDestination
      * @since 3.60.0
      *
      * @param {Phaser.Types.Sound.SpatialSoundConfig|object} [destination] - An object with x and y fields
      */
     setAudioDestination: function (destination)
     {
-
         this.audioDestination = destination;
-
     },
 
     /**
@@ -385,10 +381,12 @@ var WebAudioSoundManager = new Class({
         if (this.audioDestination)
         {
             var listener = this.context.listener;
+
             if (this.audioDestination.x && !isNaN(this.audioDestination.x))
             {
                 listener.positionX.value = this.audioDestination.x;
             }
+
             if (this.audioDestination.y && !isNaN(this.audioDestination.y))
             {
                 listener.positionY.value = this.audioDestination.y;
