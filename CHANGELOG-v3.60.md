@@ -1,8 +1,24 @@
 ## Version 3.60.0 - Miku - in development
 
+### New Features - Plane Game Object
+
+Phaser v3.60 contains a new native Plane Game Object. The Plane Game Object is a helper class that takes the Mesh Game Object and extends it, allowing for fast and easy creation of Planes. A Plane is a one-sided grid of cells, where you specify the number of cells in each dimension. The Plane can have a texture that is either repeated (tiled) across each cell, or applied to the full Plane.
+
+The Plane can then be manipulated in 3D space, with rotation across all 3 axis.
+
+This allows you to create effects not possible with regular Sprites, such as perspective distortion. You can also adjust the vertices on a per-vertex basis. Plane data becomes part of the WebGL batch, just like standard Sprites, so doesn't introduce any additional shader overhead. Because the Plane just generates vertices into the WebGL batch, like any other Sprite, you can use all of the common Game Object components on a Plane too, such as a custom pipeline, mask, blend mode or texture.
+
+You can use the `uvScroll` and `uvScale` methods to adjust the placement and scaling of the texture if this Plane is using a single texture, and not a frame from a texture atlas or sprite sheet.
+
+The Plane Game Object also has the Animation component, allowing you to play animations across the Plane just as you would with a Sprite.
+
+While a Plane cannot be enabled for input it does have the methods `hasFaceAt` and `getFaceAt` which can be used with Pointer coordinates to detect if they have clicked on Plane face, or not.
+
+As of Phaser 3.60 this Game Object is WebGL only. Please see the new examples and documentation for how to use it.
+
 ### New Features - Nine Slice Game Object
 
-Phaser 3.60 contains a new native Nine Slice Game Object. A Nine Slice Game Object allows you to display a texture-based object that can be stretched both horizontally and vertically, but that retains fixed-sized corners. The dimensions of the corners are set via the parameters to the class. When you resize a Nine Slice Game Object only the middle sections of the texture stretch. This is extremely useful for UI and button-like elements, where you need them to expand to accommodate the content without distorting the texture.
+Phaser v3.60 contains a new native Nine Slice Game Object. A Nine Slice Game Object allows you to display a texture-based object that can be stretched both horizontally and vertically, but that retains fixed-sized corners. The dimensions of the corners are set via the parameters to the class. When you resize a Nine Slice Game Object only the middle sections of the texture stretch. This is extremely useful for UI and button-like elements, where you need them to expand to accommodate the content without distorting the texture.
 
 The texture you provide for this Game Object should be based on the following layout structure:
 
@@ -52,9 +68,7 @@ you must supply all parameters.
 The _minimum_ width this Game Object can be is the total of `leftWidth` + `rightWidth`.  The _minimum_ height this Game Object
 can be is the total of `topHeight` + `bottomHeight`. If you need to display this object at a smaller size, you can scale it.
 
-In terms of performance, using a 3 slice Game Object is the equivalent of having 3 Sprites in a row. Using a 9 slice Game Object is the equivalent
-of having 9 Sprites in a row. The vertices of this object are all batched together and can co-exist with other Sprites and graphics on the display
-list, without incurring any additional overhead.
+In terms of performance, using a 3 slice Game Object is the equivalent of having 3 Sprites in a row. Using a 9 slice Game Object is the equivalent of having 9 Sprites in a row. The vertices of this object are all batched together and can co-exist with other Sprites and graphics on the display list, without incurring any additional overhead.
 
 As of Phaser 3.60 this Game Object is WebGL only. Please see the new examples and documentation for how to use it.
 
