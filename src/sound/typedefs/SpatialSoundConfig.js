@@ -1,5 +1,6 @@
 /**
- * Config object containing settings for the source of the sound.
+ * Config object containing settings for the source of the spatial sound.
+ *
  * See https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Web_audio_spatialization_basics
  *
  * @typedef {object} Phaser.Types.Sound.SpatialSoundConfig
@@ -14,10 +15,9 @@
  * @property {number} [orientationY=0] - Y orientation of the sound.
  * @property {number} [orientationZ=-1.0] - Z orientation of the sound.
  * @property {number} [refDistance=1] - Used by the distance models.
- * @property {number} [maxDistance =10000] - Maximum distance between the source and the listener.
+ * @property {number} [maxDistance=10000] - Maximum distance between the source and the listener.
  * @property {number} [rolloffFactor=1] - How quickly the volume is reduced as the panner moves away from the listener.
  * @property {number} [coneInnerAngle=360] - Specifies where the sound emanates from.
  * @property {number} [coneOuterAngle=360] - Specifies where the volume starts to drop away.
  * @property {number} [coneOuterGain=0] - Specifies the amount volume is reduced by.
-
  */
