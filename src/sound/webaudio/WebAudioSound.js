@@ -98,6 +98,25 @@ var WebAudioSound = new Class({
         this.pannerNode = null;
 
         /**
+         * The Stereo Spatial Panner node.
+         *
+         * @name Phaser.Sound.WebAudioSound#spatialNode
+         * @type {PannerNode}
+         * @since 3.60.0
+         */
+        this.spatialNode = null;
+
+        /**
+         * If the Spatial Panner node has been set to track an vector or
+         * Game Object, this retains a reference to it.
+         *
+         * @name Phaser.Sound.WebAudioSound#spatialSource
+         * @type {Phaser.Types.Math.Vector2Like}
+         * @since 3.60.0
+         */
+        this.spatialSource = null;
+
+        /**
          * The time at which the sound should have started playback from the beginning.
          *
          * Treat this property as read-only.
@@ -469,6 +488,7 @@ var WebAudioSound = new Class({
         });
 
         var source = this.currentConfig.source;
+
         if (source && this.manager.context.createPanner)
         {
             if (!this.manager.audioDestination)
@@ -476,8 +496,9 @@ var WebAudioSound = new Class({
                 // Set the position of the listener
                 this.manager.setAudioDestination({ x: this.manager.game.config.width / 2, y: this.manager.game.config.height / 2 });
             }
-            this.spatialNode.panningModel = source.panningModel || 'equalpower',
-            this.spatialNode.distanceModel = source.distanceModel || 'inverse',
+
+            this.spatialNode.panningModel = source.panningModel || 'equalpower';
+            this.spatialNode.distanceModel = source.distanceModel || 'inverse';
             this.spatialNode.positionX.value = source.x;
             this.spatialNode.positionY.value = source.y;
             this.spatialNode.positionZ.value = source.z || 0;
@@ -575,6 +596,7 @@ var WebAudioSound = new Class({
         {
             this.spatialNode.disconnect();
             this.spatialNode = null;
+            this.spatialSource = null;
         }
 
         this.rateUpdates.length = 0;
