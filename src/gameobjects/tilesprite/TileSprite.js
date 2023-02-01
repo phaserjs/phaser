@@ -105,7 +105,14 @@ var TileSprite = new Class({
 
         if (displayFrame.source.compressionAlgorithm)
         {
-            console.warn('TileSprite cannot use compressed textures');
+            console.warn('TileSprite cannot use compressed texture');
+            displayTexture = scene.sys.textures.get('__MISSING');
+            displayFrame = displayTexture.get();
+        }
+
+        if (displayTexture.type === 'DynamicTexture')
+        {
+            console.warn('TileSprite cannot use Dynamic Texture');
             displayTexture = scene.sys.textures.get('__MISSING');
             displayFrame = displayTexture.get();
         }
