@@ -509,8 +509,17 @@ var WebAudioSound = new Class({
     {
         if (this.isPlaying && this.spatialSource)
         {
-            this.spatialNode.positionX.value = this.spatialSource.x;
-            this.spatialNode.positionY.value = this.spatialSource.y;
+            if (this.spatialSource.x !== this._spatialx && !isNaN(this.spatialSource.x))
+            {
+                this.spatialNode.positionX.value = this.spatialSource.x;
+                this._spatialx = this.spatialSource.x;
+            }
+            if (this.spatialSource.y !== this._spatialy && !isNaN(this.spatialSource.y))
+            {
+                this.spatialNode.positionY.value = this.spatialSource.y;
+                this._spatialy = this.spatialSource.y;
+            }
+
         }
 
         if (this.hasEnded)

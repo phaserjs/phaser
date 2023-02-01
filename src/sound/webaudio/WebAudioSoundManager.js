@@ -385,13 +385,15 @@ var WebAudioSoundManager = new Class({
         if (this.audioDestination)
         {
             var listener = this.context.listener;
-            if (this.audioDestination.x && !isNaN(this.audioDestination.x))
+            if (this.audioDestination.x && !isNaN(this.audioDestination.x) && this.audioDestination.x !== this._spatialx)
             {
                 listener.positionX.value = this.audioDestination.x;
+                this._spatialx = this.audioDestination.x;
             }
-            if (this.audioDestination.y && !isNaN(this.audioDestination.y))
+            if (this.audioDestination.y && !isNaN(this.audioDestination.y) && this.audioDestination.y !== this._spatialy)
             {
                 listener.positionY.value = this.audioDestination.y;
+                this._spatialy = this.audioDestination.y;
             }
         }
 
