@@ -95,7 +95,7 @@ var World = new Class({
          * An object containing the 4 wall bodies that bound the physics world.
          *
          * @name Phaser.Physics.Matter.World#walls
-         * @type {object}
+         * @type {Phaser.Types.Physics.Matter.MatterWalls}
          * @since 3.0.0
          */
         this.walls = { left: null, right: null, top: null, bottom: null };
@@ -716,6 +716,7 @@ var World = new Class({
 
     /**
      * Sets the bounds of the Physics world to match the given world pixel dimensions.
+     *
      * You can optionally set which 'walls' to create: left, right, top or bottom.
      * If none of the walls are given it will default to use the walls settings it had previously.
      * I.e. if you previously told it to not have the left or right walls, and you then adjust the world size
