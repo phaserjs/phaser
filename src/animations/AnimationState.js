@@ -566,7 +566,10 @@ var AnimationState = new Class({
      */
     load: function (key)
     {
-        this.stop();
+        if (this.isPlaying)
+        {
+            this.stop();
+        }
 
         var manager = this.animationManager;
         var animKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', null);
