@@ -141,7 +141,7 @@ var DynamicTexture = new Class({
         /**
          * Is this Dynamic Texture being used as the base texture for a Sprite Game Object?
          *
-         * This is enabled by default, as we expect that will be the core use for Dymamic Textures.
+         * This is enabled by default, as we expect that will be the core use for Dynamic Textures.
          *
          * However, to disable it, call `RenderTexture.setIsSpriteTexture(false)`.
          *
