@@ -1126,6 +1126,7 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @danfoster
 @darrylpizarro
 @DeweyHur
+@drunkcat
 @ef4
 @eltociear
 @EsteFilipe
