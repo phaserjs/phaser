@@ -1144,6 +1144,7 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @monteiz
 @necrokot
 @Nero0
+@OdinvonDoom
 @orjandh
 @pavle-goloskokovic
 @PhaserEditor2D
