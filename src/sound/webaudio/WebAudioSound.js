@@ -496,9 +496,6 @@ var WebAudioSound = new Class({
 
             node.panningModel = GetFastValue(source, 'panningModel', 'equalpower');
             node.distanceModel = GetFastValue(source, 'distanceModel', 'inverse');
-            node.positionX.value = GetFastValue(source, 'x', 0);
-            node.positionY.value = GetFastValue(source, 'y', 0);
-            node.positionZ.value = GetFastValue(source, 'z', 0);
             node.orientationX.value = GetFastValue(source, 'orientationX', 0);
             node.orientationY.value = GetFastValue(source, 'orientationY', 0);
             node.orientationZ.value = GetFastValue(source, 'orientationZ', -1);
@@ -510,6 +507,13 @@ var WebAudioSound = new Class({
             node.coneOuterGain = GetFastValue(source, 'coneOuterGain', 0);
 
             this.spatialSource = GetFastValue(source, 'follow', null);
+
+            if (!this.spatialSource)
+            {
+                node.positionX.value = GetFastValue(source, 'x', 0);
+                node.positionY.value = GetFastValue(source, 'y', 0);
+                node.positionZ.value = GetFastValue(source, 'z', 0);
+            }
         }
 
         BaseSound.prototype.applyConfig.call(this);
