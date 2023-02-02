@@ -93,7 +93,7 @@ var SpriteSheetFromAtlas = function (texture, frame, config)
     var frameX = margin;
     var frameY = margin;
     var frameIndex = 0;
-    var sourceIndex = frame.sourceIndex;
+    var sourceIndex = 0;
 
     for (var sheetY = 0; sheetY < column; sheetY++)
     {

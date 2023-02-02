@@ -57,6 +57,17 @@ var Clock = new Class({
         this.now = 0;
 
         /**
+         * The time the Clock (and Scene) started, in milliseconds.
+         *
+         * This can be compared to the `time` parameter passed to a Scene's `update` method.
+         *
+         * @name Phaser.Time.Clock#startTime
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.startTime = 0;
+
+        /**
          * The scale of the Clock's time delta.
          *
          * The time delta is the time elapsed between two consecutive frames and influences the speed of time for this Clock and anything which uses it, such as its Timer Events. Values higher than 1 increase the speed of time, while values smaller than 1 decrease it. A value of 0 freezes time and is effectively equivalent to pausing the Clock.
@@ -144,6 +155,8 @@ var Clock = new Class({
      */
     start: function ()
     {
+        this.startTime = this.systems.game.loop.time;
+
         var eventEmitter = this.systems.events;
 
         eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);

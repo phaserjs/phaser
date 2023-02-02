@@ -9,11 +9,12 @@ var Components = require('../components');
 var DegToRad = require('../../math/DegToRad');
 var Face = require('../../geom/mesh/Face');
 var GameObject = require('../GameObject');
-var GenerateVerts = require('../../geom/mesh/GenerateVerts');
 var GenerateObjVerts = require('../../geom/mesh/GenerateObjVerts');
+var GenerateVerts = require('../../geom/mesh/GenerateVerts');
 var GetCalcMatrix = require('../GetCalcMatrix');
 var Matrix4 = require('../../math/Matrix4');
 var MeshRender = require('./MeshRender');
+var RadToDeg = require('../../math/RadToDeg');
 var StableSort = require('../../utils/array/StableSort');
 var Vector3 = require('../../math/Vector3');
 var Vertex = require('../../geom/mesh/Vertex');
@@ -62,13 +63,14 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
- * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} [x] - The horizontal position of this Game Object in the world.
@@ -91,13 +93,14 @@ var Mesh = new Class({
         Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
+        Components.FX,
         Components.Mask,
         Components.Pipeline,
+        Components.ScrollFactor,
         Components.Size,
         Components.Texture,
         Components.Transform,
         Components.Visible,
-        Components.ScrollFactor,
         MeshRender
     ],
 
@@ -345,6 +348,22 @@ var Mesh = new Class({
          */
         this.ignoreDirtyCache = false;
 
+        /**
+         * The Camera fov (field of view) in degrees.
+         *
+         * This is set automatically as part of the `Mesh.setPerspective` call, but exposed
+         * here for additional math.
+         *
+         * Do not modify this property directly, doing so will not change the fov. For that,
+         * call the respective Mesh methods.
+         *
+         * @name Phaser.GameObjects.Mesh#fov
+         * @type {number}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.fov;
+
         var renderer = scene.sys.renderer;
 
         this.setPosition(x, y);
@@ -409,8 +428,11 @@ var Mesh = new Class({
     /**
      * Translates the view position of this Mesh on the z axis by the given amount.
      *
-     * As the default `panZ` value is 0, vertices with `z=0` (the default) need special care or else they will not display as they are behind the camera.
-     * Consider using `mesh.panZ(mesh.height / (2 * Math.tan(Math.PI / 16)))`, which will interpret vertex geometry 1:1 with pixel geometry (or see `setOrtho`).
+     * As the default `panZ` value is 0, vertices with `z=0` (the default) need special
+     * care or else they will not display as they are "behind" the camera.
+     *
+     * Consider using `mesh.panZ(mesh.height / (2 * Math.tan(Math.PI / 16)))`,
+     * which will interpret vertex geometry 1:1 with pixel geometry (or see `setOrtho`).
      *
      * @method Phaser.GameObjects.Mesh#panZ
      * @since 3.50.0
@@ -429,7 +451,7 @@ var Mesh = new Class({
     /**
      * Builds a new perspective projection matrix from the given values.
      *
-     * These are also the initial projection matrix & parameters for `Mesh` (and see `panZ` for more discussion).
+     * These are also the initial projection matrix and parameters for `Mesh` (see `Mesh.panZ` for more discussion).
      *
      * See also `setOrtho`.
      *
@@ -447,6 +469,8 @@ var Mesh = new Class({
         if (fov === undefined) { fov = 45; }
         if (near === undefined) { near = 0.01; }
         if (far === undefined) { far = 1000; }
+
+        this.fov = fov;
 
         this.projectionMatrix.perspective(DegToRad(fov), width / height, near, far);
 
@@ -481,6 +505,8 @@ var Mesh = new Class({
         if (scaleY === undefined) { scaleY = 1; }
         if (near === undefined) { near = -1000; }
         if (far === undefined) { far = 1000; }
+
+        this.fov = 0;
 
         this.projectionMatrix.ortho(-scaleX, scaleX, -scaleY, scaleY, near, far);
 
@@ -771,6 +797,42 @@ var Mesh = new Class({
     getFace: function (index)
     {
         return this.faces[index];
+    },
+
+    /**
+     * Tests to see if _any_ face in this Mesh intersects with the given coordinates.
+     *
+     * The given position is translated through the matrix of this Mesh and the given Camera,
+     * before being compared against the vertices.
+     *
+     * @method Phaser.GameObjects.Mesh#hasFaceAt
+     * @since 3.60.0
+     *
+     * @param {number} x - The x position to check against.
+     * @param {number} y - The y position to check against.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera to pass the coordinates through. If not give, the default Scene Camera is used.
+     *
+     * @return {boolean} Returns `true` if _any_ face of this Mesh intersects with the given coordinate, otherwise `false`.
+     */
+    hasFaceAt: function (x, y, camera)
+    {
+        if (camera === undefined) { camera = this.scene.sys.cameras.main; }
+
+        var calcMatrix = GetCalcMatrix(this, camera).calc;
+
+        var faces = this.faces;
+
+        for (var i = 0; i < faces.length; i++)
+        {
+            var face = faces[i];
+
+            if (face.contains(x, y, calcMatrix))
+            {
+                return true;
+            }
+        }
+
+        return false;
     },
 
     /**
@@ -1117,6 +1179,82 @@ var Mesh = new Class({
     },
 
     /**
+     * Scrolls the UV texture coordinates of all faces in this Mesh by
+     * adding the given x/y amounts to them.
+     *
+     * If you only wish to scroll one coordinate, pass a value of zero
+     * to the other.
+     *
+     * Use small values for scrolling. UVs are set from the range 0
+     * to 1, so you should increment (or decrement) them by suitably
+     * small values, such as 0.01.
+     *
+     * Due to a limitation in WebGL1 you can only UV scroll textures
+     * that are a power-of-two in size. Scrolling NPOT textures will
+     * work but will result in clamping the pixels to the edges.
+     *
+     * Note that if this Mesh is using a _frame_ from a texture atlas
+     * then you will be unable to UV scroll its texture.
+     *
+     * @method Phaser.GameObjects.Mesh#uvScroll
+     * @webglOnly
+     * @since 3.60.0
+     *
+     * @param {number} x - The amount to horizontally shift the UV coordinates by.
+     * @param {number} y - The amount to vertically shift the UV coordinates by.
+     *
+     * @return {this} This Game Object instance.
+     */
+    uvScroll: function (x, y)
+    {
+        var faces = this.faces;
+
+        for (var i = 0; i < faces.length; i++)
+        {
+            faces[i].scrollUV(x, y);
+        }
+
+        return this;
+    },
+
+    /**
+     * Scales the UV texture coordinates of all faces in this Mesh by
+     * the exact given amounts.
+     *
+     * If you only wish to scale one coordinate, pass a value of one
+     * to the other.
+     *
+     * Due to a limitation in WebGL1 you can only UV scale textures
+     * that are a power-of-two in size. Scaling NPOT textures will
+     * work but will result in clamping the pixels to the edges if
+     * you scale beyond a value of 1. Scaling below 1 will work
+     * regardless of texture size.
+     *
+     * Note that if this Mesh is using a _frame_ from a texture atlas
+     * then you will be unable to UV scale its texture.
+     *
+     * @method Phaser.GameObjects.Mesh#uvScale
+     * @webglOnly
+     * @since 3.60.0
+     *
+     * @param {number} x - The amount to horizontally scale the UV coordinates by.
+     * @param {number} y - The amount to vertically scale the UV coordinates by.
+     *
+     * @return {this} This Game Object instance.
+     */
+    uvScale: function (x, y)
+    {
+        var faces = this.faces;
+
+        for (var i = 0; i < faces.length; i++)
+        {
+            faces[i].scaleUV(x, y);
+        }
+
+        return this;
+    },
+
+    /**
      * The tint value being applied to the whole of the Game Object.
      * This property is a setter-only.
      *
@@ -1131,7 +1269,77 @@ var Mesh = new Class({
         {
             this.setTint(value);
         }
+    },
+
+    /**
+     * The x rotation of the Model in 3D space, as specified in degrees.
+     *
+     * If you need the value in radians use the `modelRotation.x` property directly.
+     *
+     * @method Phaser.GameObjects.Mesh#rotateX
+     * @type {number}
+     * @since 3.60.0
+     */
+    rotateX: {
+
+        get: function ()
+        {
+            return RadToDeg(this.modelRotation.x);
+        },
+
+        set: function (value)
+        {
+            this.modelRotation.x = DegToRad(value);
+        }
+
+    },
+
+    /**
+     * The y rotation of the Model in 3D space, as specified in degrees.
+     *
+     * If you need the value in radians use the `modelRotation.y` property directly.
+     *
+     * @method Phaser.GameObjects.Mesh#rotateY
+     * @type {number}
+     * @since 3.60.0
+     */
+    rotateY: {
+
+        get: function ()
+        {
+            return RadToDeg(this.modelRotation.y);
+        },
+
+        set: function (value)
+        {
+            this.modelRotation.y = DegToRad(value);
+        }
+
+    },
+
+    /**
+     * The z rotation of the Model in 3D space, as specified in degrees.
+     *
+     * If you need the value in radians use the `modelRotation.z` property directly.
+     *
+     * @method Phaser.GameObjects.Mesh#rotateZ
+     * @type {number}
+     * @since 3.60.0
+     */
+    rotateZ: {
+
+        get: function ()
+        {
+            return RadToDeg(this.modelRotation.z);
+        },
+
+        set: function (value)
+        {
+            this.modelRotation.z = DegToRad(value);
+        }
+
     }
+
 });
 
 module.exports = Mesh;

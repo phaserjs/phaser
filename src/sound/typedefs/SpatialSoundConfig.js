@@ -1,23 +1,24 @@
 /**
- * Config object containing settings for the source of the sound.
+ * Config object containing settings for the source of the spatial sound.
+ *
  * See https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Web_audio_spatialization_basics
  *
  * @typedef {object} Phaser.Types.Sound.SpatialSoundConfig
  * @since 3.60.0
  *
- * @property {number} [x=0] - X coordinate for the source of the sound.
- * @property {number} [y=0] - Y coordinate for the source of the sound.
- * @property {number} [z=0] - Z coordinate for the source of the sound.
- * @property {('equalpower'|'HRTF')} [panningModel='equalpower'] - The spacialization algorithm that's used to position the audio in 3D space.
- * @property {('linear'|'inverse'|'exponential')} [distanceModel='inverse'] - Different algorithms which are used to reduce the volume of the audio source as it moves away from the listener.
- * @property {number} [orientationX=0] - X orientation of the sound.
- * @property {number} [orientationY=0] - Y orientation of the sound.
- * @property {number} [orientationZ=-1.0] - Z orientation of the sound.
- * @property {number} [refDistance=1] - Used by the distance models.
- * @property {number} [maxDistance =10000] - Maximum distance between the source and the listener.
- * @property {number} [rolloffFactor=1] - How quickly the volume is reduced as the panner moves away from the listener.
- * @property {number} [coneInnerAngle=360] - Specifies where the sound emanates from.
- * @property {number} [coneOuterAngle=360] - Specifies where the volume starts to drop away.
- * @property {number} [coneOuterGain=0] - Specifies the amount volume is reduced by.
-
+ * @property {number} [x=0] - The horizontal position of the audio in a right-hand Cartesian coordinate system.
+ * @property {number} [y=0] - The vertical position of the audio in a right-hand Cartesian coordinate system.
+ * @property {number} [z=0] - Represents the longitudinal (back and forth) position of the audio in a right-hand Cartesian coordinate system.
+ * @property {('equalpower'|'HRTF')} [panningModel='equalpower'] - An enumerated value determining which spatialization algorithm to use to position the audio in 3D space.
+ * @property {('linear'|'inverse'|'exponential')} [distanceModel='inverse'] - Which algorithm to use to reduce the volume of the audio source as it moves away from the listener. Possible values are "linear", "inverse" and "exponential". The default value is "inverse".
+ * @property {number} [orientationX=0] - The horizontal position of the audio source's vector in a right-hand Cartesian coordinate system.
+ * @property {number} [orientationY=0] - The vertical position of the audio source's vector in a right-hand Cartesian coordinate system.
+ * @property {number} [orientationZ=-1] - Represents the longitudinal (back and forth) position of the audio source's vector in a right-hand Cartesian coordinate system.
+ * @property {number} [refDistance=1] - A double value representing the reference distance for reducing volume as the audio source moves further from the listener. For distances greater than this the volume will be reduced based on `rolloffFactor` and `distanceModel`.
+ * @property {number} [maxDistance=10000] - The maximum distance between the audio source and the listener, after which the volume is not reduced any further.
+ * @property {number} [rolloffFactor=1] - A double value describing how quickly the volume is reduced as the source moves away from the listener. This value is used by all distance models.
+ * @property {number} [coneInnerAngle=360] - The angle, in degrees, of a cone inside of which there will be no volume reduction.
+ * @property {number} [coneOuterAngle=0] - The angle, in degrees, of a cone outside of which the volume will be reduced by a constant value, defined by the `coneOuterGain` property.
+ * @property {number} [coneOuterGain=0] - The amount of volume reduction outside the cone defined by the `coneOuterAngle` attribute. Its default value is 0, meaning that no sound can be heard.
+ * @property {Phaser.Math.Vector2Like} [follow] - Set this Sound object to automatically track the x/y position of this object. Can be a Phaser Game Object, Vec2 or anything that exposes public x/y properties.
  */

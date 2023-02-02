@@ -76,9 +76,16 @@ var GenerateGridVerts = function (config)
     tempRotation.set(rotateX, rotateY, rotateZ);
     tempMatrix.fromRotationXYTranslation(tempRotation, tempPosition, zIsUp);
 
+    var textureFrame;
+
     if (!texture && mesh)
     {
         texture = mesh.texture;
+
+        if (!frame)
+        {
+            textureFrame = mesh.frame;
+        }
     }
     else if (mesh && typeof(texture) === 'string')
     {
@@ -90,7 +97,10 @@ var GenerateGridVerts = function (config)
         return result;
     }
 
-    var textureFrame = texture.get(frame);
+    if (!textureFrame)
+    {
+        textureFrame = texture.get(frame);
+    }
 
     //  If the Mesh is ortho and no width / height is given, we'll default to texture sizes (if set!)
     if (!widthSet && isOrtho && texture && mesh)

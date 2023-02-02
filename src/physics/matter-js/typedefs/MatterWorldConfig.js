@@ -2,7 +2,7 @@
  * @typedef {object} Phaser.Types.Physics.Matter.MatterWorldConfig
  * @since 3.0.0
  *
- * @property {(Phaser.Types.Math.Vector2Like|boolean)} [gravity] - Sets {@link Phaser.Physics.Matter.World#gravity}. If `false` Gravity will be set to zero.
+ * @property {Phaser.Types.Math.Vector2Like} [gravity] - Sets {@link Phaser.Physics.Matter.World#gravity}.
  * @property {(object|boolean)} [setBounds] - Should the world have bounds enabled by default?
  * @property {number} [setBounds.x=0] - The x coordinate of the world bounds.
  * @property {number} [setBounds.y=0] - The y coordinate of the world bounds.

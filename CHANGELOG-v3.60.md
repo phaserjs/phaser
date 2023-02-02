@@ -1,8 +1,24 @@
 ## Version 3.60.0 - Miku - in development
 
+### New Features - Plane Game Object
+
+Phaser v3.60 contains a new native Plane Game Object. The Plane Game Object is a helper class that takes the Mesh Game Object and extends it, allowing for fast and easy creation of Planes. A Plane is a one-sided grid of cells, where you specify the number of cells in each dimension. The Plane can have a texture that is either repeated (tiled) across each cell, or applied to the full Plane.
+
+The Plane can then be manipulated in 3D space, with rotation across all 3 axis.
+
+This allows you to create effects not possible with regular Sprites, such as perspective distortion. You can also adjust the vertices on a per-vertex basis. Plane data becomes part of the WebGL batch, just like standard Sprites, so doesn't introduce any additional shader overhead. Because the Plane just generates vertices into the WebGL batch, like any other Sprite, you can use all of the common Game Object components on a Plane too, such as a custom pipeline, mask, blend mode or texture.
+
+You can use the `uvScroll` and `uvScale` methods to adjust the placement and scaling of the texture if this Plane is using a single texture, and not a frame from a texture atlas or sprite sheet.
+
+The Plane Game Object also has the Animation component, allowing you to play animations across the Plane just as you would with a Sprite.
+
+While a Plane cannot be enabled for input it does have the methods `hasFaceAt` and `getFaceAt` which can be used with Pointer coordinates to detect if they have clicked on Plane face, or not.
+
+As of Phaser 3.60 this Game Object is WebGL only. Please see the new examples and documentation for how to use it.
+
 ### New Features - Nine Slice Game Object
 
-Phaser 3.60 contains a new native Nine Slice Game Object. A Nine Slice Game Object allows you to display a texture-based object that can be stretched both horizontally and vertically, but that retains fixed-sized corners. The dimensions of the corners are set via the parameters to the class. When you resize a Nine Slice Game Object only the middle sections of the texture stretch. This is extremely useful for UI and button-like elements, where you need them to expand to accommodate the content without distorting the texture.
+Phaser v3.60 contains a new native Nine Slice Game Object. A Nine Slice Game Object allows you to display a texture-based object that can be stretched both horizontally and vertically, but that retains fixed-sized corners. The dimensions of the corners are set via the parameters to the class. When you resize a Nine Slice Game Object only the middle sections of the texture stretch. This is extremely useful for UI and button-like elements, where you need them to expand to accommodate the content without distorting the texture.
 
 The texture you provide for this Game Object should be based on the following layout structure:
 
@@ -52,9 +68,7 @@ you must supply all parameters.
 The _minimum_ width this Game Object can be is the total of `leftWidth` + `rightWidth`.  The _minimum_ height this Game Object
 can be is the total of `topHeight` + `bottomHeight`. If you need to display this object at a smaller size, you can scale it.
 
-In terms of performance, using a 3 slice Game Object is the equivalent of having 3 Sprites in a row. Using a 9 slice Game Object is the equivalent
-of having 9 Sprites in a row. The vertices of this object are all batched together and can co-exist with other Sprites and graphics on the display
-list, without incurring any additional overhead.
+In terms of performance, using a 3 slice Game Object is the equivalent of having 3 Sprites in a row. Using a 9 slice Game Object is the equivalent of having 9 Sprites in a row. The vertices of this object are all batched together and can co-exist with other Sprites and graphics on the display list, without incurring any additional overhead.
 
 As of Phaser 3.60 this Game Object is WebGL only. Please see the new examples and documentation for how to use it.
 
@@ -801,6 +815,7 @@ There are breaking changes from previous versions of Phaser.
 * All of the following Texture Manager methods will now allow you to pass in a Phaser Texture as the `source` parameter: `addSpriteSheet`, `addAtlas`, `addAtlasJSONArray`, `addAtlasJSONHash`, `addAtlasXML` and `addAtlasUnity`. This allows you to add sprite sheet or atlas data to existing textures, or textures that came from external sources, such as SVG files, canvas elements or Dynamic Textures.
 * `Game.pause` is a new method that will pause the entire game and all Phaser systems.
 * `Game.resume` is a new method that will resume the entire game and resume all of Phaser's systems.
+* `Game.isPaused` is a new boolean that tracks if the Game loop is paused, or not (and can also be toggled directly)
 * `ScaleManager.getViewPort` is a new method that will return a Rectangle geometry object that matches the visible area of the screen, or the given Camera instance (thanks @rexrainbow)
 * When starting a Scene and using an invalid key, Phaser will now raise a console warning informing you of this, instead of silently failing. Fix #5811 (thanks @ubershmekel)
 * `GameObjects.Layer.addToDisplayList` and `removeFromDisplayList` are new methods that allows for you to now add a Layer as a child of another Layer. Fix #5799 (thanks @samme)
@@ -857,6 +872,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `Time.Clock.startTime` is a new property that stores the time the Clock (and therefore the Scene) was started. This can be useful for comparing against the current time to see how much real world time has elapsed (thanks @samme)
 * `ColorMatrix._matrix` and `_data` are now Float32Arrays.
 * Calling the `ColorMatrix.set`, `reset` and `getData` methods all now use the built-in Float32 Array operations, making them considerably faster.
 * `ColorMatrix.BLACK_WHITE` is a new constant used by blackwhite operations.
@@ -976,6 +992,7 @@ ArtemSiz)
 
 ### Bug Fixes
 
+* The `SpriteSheetFromAtlas` parser was using the incorrect `sourceIndex` to grab frames from a given texture. This caused a crash whenever a trimmed spritesheet was added from any multiatlas image other than the first (thanks @Bambosh)
 * The `maxSpeed` setting in Arcade Physics wasn't recalculated during the Body update, prior to being compared, leading to inconsistent results. Fix #6329 (thanks @Bambosh)
 * Several paths have been fixed in the `phaser-core.js` entry point (thanks @pavle-goloskokovic)
 * When a Game Object had Input Debug Enabled the debug image would be incorrectly offset if the Game Object was attached to was scaled and the hit area shape was smaller, or offset, from the Game Object. Fix #4905 #6317 (thanks @PavelMishin @justinlueders)

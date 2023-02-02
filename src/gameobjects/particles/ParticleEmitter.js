@@ -937,7 +937,8 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Merges configuration settings into the emitter's current settings.
+     * Takes an Emitter Configuration file and resets this Emitter, using any
+     * properties defined in the config to then set it up again.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setConfig
      * @since 3.60.0
@@ -1958,9 +1959,10 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#addParticleProcessor
      * @since 3.60.0
      *
-     * @param {Phaser.GameObjects.Particles.ParticleProcessor} processor - The Particle Processor to add to this Emitter Manager.
+     * @generic {Phaser.GameObjects.Particles.ParticleProcessor} T
+     * @param {T} processor - The Particle Processor to add to this Emitter Manager.
      *
-     * @return {Phaser.GameObjects.Particles.ParticleProcessor} The Particle Processor that was added to this Emitter Manager.
+     * @return {T} The Particle Processor that was added to this Emitter Manager.
      */
     addParticleProcessor: function (processor)
     {
@@ -1990,9 +1992,10 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#removeParticleProcessor
      * @since 3.60.0
      *
-     * @param {Phaser.GameObjects.Particles.ParticleProcessor} processor - The Particle Processor to remove from this Emitter Manager.
+     * @generic {Phaser.GameObjects.Particles.ParticleProcessor} T
+     * @param {T} processor - The Particle Processor to remove from this Emitter Manager.
      *
-     * @return {?Phaser.GameObjects.Particles.ParticleProcessor} The Particle Processor that was removed, or null if it could not be found.
+     * @return {?T} The Particle Processor that was removed, or null if it could not be found.
      */
     removeParticleProcessor: function (processor)
     {
