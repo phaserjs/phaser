@@ -11,6 +11,7 @@ var Class = require('../../utils/Class');
 var Events = require('../events');
 var GameEvents = require('../../core/events');
 var WebAudioSound = require('./WebAudioSound');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * @classdesc
