@@ -607,15 +607,17 @@ var WebAudioSound = new Class({
     {
         if (this.isPlaying && this.spatialSource)
         {
-            if (this.spatialSource.x !== this._spatialx && !isNaN(this.spatialSource.x))
+
+            var x = GetFastValue(this.spatialSource, 'x', null);
+            var y = GetFastValue(this.spatialSource, 'y', null);
+
+            if (x && x !== this._spatialx)
             {
-                this.spatialNode.positionX.value = this.spatialSource.x;
-                this._spatialx = this.spatialSource.x;
+                this._spatialx = this.spatialNode.positionX.value = x;
             }
-            if (this.spatialSource.y !== this._spatialy && !isNaN(this.spatialSource.y))
+            if (y && y !== this._spatialy)
             {
-                this.spatialNode.positionY.value = this.spatialSource.y;
-                this._spatialy = this.spatialSource.y;
+                this._spatialy = this.spatialNode.positionY.value = y;
             }
 
         }
