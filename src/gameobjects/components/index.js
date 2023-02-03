@@ -23,6 +23,7 @@ module.exports = {
     Origin: require('./Origin'),
     PathFollower: require('./PathFollower'),
     Pipeline: require('./Pipeline'),
+    PostPipeline: require('./PostPipeline'),
     ScrollFactor: require('./ScrollFactor'),
     Size: require('./Size'),
     Texture: require('./Texture'),
