@@ -61,7 +61,7 @@ var BaseCamera = new Class({
     Extends: EventEmitter,
 
     Mixins: [
-        Components.Alpha,
+        Components.AlphaSingle,
         Components.Visible
     ],
 
