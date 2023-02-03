@@ -389,6 +389,8 @@ var PipelineManager = new Class({
 
                 instance = new pipelineClass(game);
 
+                instance.name = pipelineName;
+
                 if (instance.isPostFX)
                 {
                     this.postPipelineClasses.set(pipelineName, pipelineClass);
@@ -627,10 +629,12 @@ var PipelineManager = new Class({
         var pipelineClasses = this.postPipelineClasses;
 
         var instance;
+        var pipelineName = '';
 
         if (typeof pipeline === 'string')
         {
             instance = pipelineClasses.get(pipeline);
+            pipelineName = pipeline;
         }
         else if (typeof pipeline === 'function')
         {
@@ -639,16 +643,22 @@ var PipelineManager = new Class({
             {
                 instance = pipeline;
             }
+
+            pipelineName = pipeline.name;
         }
         else if (typeof pipeline === 'object')
         {
             //  Instance
             instance = pipelineClasses.get(pipeline.name);
+
+            pipelineName = pipeline.name;
         }
 
         if (instance)
         {
             var newPipeline = new instance(this.game);
+
+            newPipeline.name = pipelineName;
 
             if (gameObject)
             {
