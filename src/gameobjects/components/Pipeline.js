@@ -5,7 +5,6 @@
  */
 
 var DeepCopy = require('../../utils/object/DeepCopy');
-var SpliceOne = require('../../utils/array/SpliceOne');
 
 /**
  * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
@@ -42,31 +41,6 @@ var Pipeline = {
     pipeline: null,
 
     /**
-     * Does this Game Object have any Post Pipelines set?
-     *
-     * @name Phaser.GameObjects.Components.Pipeline#hasPostPipeline
-     * @type {boolean}
-     * @webglOnly
-     * @since 3.50.0
-     */
-    hasPostPipeline: false,
-
-    /**
-     * The WebGL Post FX Pipelines this Game Object uses for post-render effects.
-     *
-     * The pipelines are processed in the order in which they appear in this array.
-     *
-     * If you modify this array directly, be sure to set the
-     * `hasPostPipeline` property accordingly.
-     *
-     * @name Phaser.GameObjects.Components.Pipeline#postPipelines
-     * @type {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[]}
-     * @webglOnly
-     * @since 3.50.0
-     */
-    postPipelines: null,
-
-    /**
      * An object to store pipeline specific data in, to be read by the pipelines this Game Object uses.
      *
      * @name Phaser.GameObjects.Components.Pipeline#pipelineData
@@ -91,6 +65,8 @@ var Pipeline = {
      */
     initPipeline: function (pipeline)
     {
+        this.pipelineData = {};
+
         var renderer = this.scene.sys.renderer;
 
         if (!renderer)
@@ -99,9 +75,6 @@ var Pipeline = {
         }
 
         var pipelines = renderer.pipelines;
-
-        this.postPipelines = [];
-        this.pipelineData = {};
 
         if (pipelines)
         {
@@ -171,80 +144,11 @@ var Pipeline = {
     },
 
     /**
-     * Sets one, or more, Post Pipelines on this Game Object.
-     *
-     * Post Pipelines are invoked after this Game Object has rendered to its target and
-     * are commonly used for post-fx.
-     *
-     * The post pipelines are appended to the `postPipelines` array belonging to this
-     * Game Object. When the renderer processes this Game Object, it iterates through the post
-     * pipelines in the order in which they appear in the array. If you are stacking together
-     * multiple effects, be aware that the order is important.
-     *
-     * If you call this method multiple times, the new pipelines will be appended to any existing
-     * post pipelines already set. Use the `resetPostPipeline` method to clear them first, if required.
-     *
-     * You can optionally also set the `pipelineData` property, if the parameter is given.
-     *
-     * Both the pipeline and post pipelines share the pipeline data object together.
-     *
-     * @method Phaser.GameObjects.Components.Pipeline#setPostPipeline
-     * @webglOnly
-     * @since 3.50.0
-     *
-     * @param {(string|string[]|function|function[]|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} pipelines - Either the string-based name of the pipeline, or a pipeline instance, or class, or an array of them.
-     * @param {object} [pipelineData] - Optional pipeline data object that is _deep copied_ into the `pipelineData` property of this Game Object.
-     * @param {boolean} [copyData=true] - Should the pipeline data object be _deep copied_ into the `pipelineData` property of this Game Object? If `false` it will be set by reference instead.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setPostPipeline: function (pipelines, pipelineData, copyData)
-    {
-        var renderer = this.scene.sys.renderer;
-
-        if (!renderer)
-        {
-            return this;
-        }
-
-        var pipelineManager = renderer.pipelines;
-
-        if (pipelineManager)
-        {
-            if (!Array.isArray(pipelines))
-            {
-                pipelines = [ pipelines ];
-            }
-
-            for (var i = 0; i < pipelines.length; i++)
-            {
-                var instance = pipelineManager.getPostPipeline(pipelines[i], this);
-
-                if (instance)
-                {
-                    this.postPipelines.push(instance);
-                }
-            }
-
-            if (pipelineData)
-            {
-                this.pipelineData = (copyData) ? DeepCopy(pipelineData) : pipelineData;
-            }
-        }
-
-        this.hasPostPipeline = (this.postPipelines.length > 0);
-
-        return this;
-    },
-
-    /**
      * Adds an entry to the `pipelineData` object belonging to this Game Object.
      *
      * If the 'key' already exists, its value is updated. If it doesn't exist, it is created.
      *
      * If `value` is undefined, and `key` exists, `key` is removed from the data object.
-     *
-     * Both the pipeline and post pipelines share the pipeline data object together.
      *
      * @method Phaser.GameObjects.Components.Pipeline#setPipelineData
      * @webglOnly
@@ -272,61 +176,21 @@ var Pipeline = {
     },
 
     /**
-     * Gets a Post Pipeline instance from this Game Object, based on the given name, and returns it.
-     *
-     * @method Phaser.GameObjects.Components.Pipeline#getPostPipeline
-     * @webglOnly
-     * @since 3.50.0
-     *
-     * @param {(string|function|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline)} pipeline - The string-based name of the pipeline, or a pipeline class.
-     *
-     * @return {(Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} The Post Pipeline/s matching the name, or undefined if no match. If more than one match they are returned in an array.
-     */
-    getPostPipeline: function (pipeline)
-    {
-        var isString = (typeof pipeline === 'string');
-
-        var pipelines = this.postPipelines;
-
-        var results = [];
-
-        for (var i = 0; i < pipelines.length; i++)
-        {
-            var instance = pipelines[i];
-
-            if ((isString && instance.name === pipeline) || (!isString && instance instanceof pipeline))
-            {
-                results.push(instance);
-            }
-        }
-
-        return (results.length === 1) ? results[0] : results;
-    },
-
-    /**
      * Resets the WebGL Pipeline of this Game Object back to the default it was created with.
      *
      * @method Phaser.GameObjects.Components.Pipeline#resetPipeline
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {boolean} [resetPostPipelines=false] - Reset all of the post pipelines?
      * @param {boolean} [resetData=false] - Reset the `pipelineData` object to being an empty object?
      *
      * @return {boolean} `true` if the pipeline was reset successfully, otherwise `false`.
      */
-    resetPipeline: function (resetPostPipelines, resetData)
+    resetPipeline: function (resetData)
     {
-        if (resetPostPipelines === undefined) { resetPostPipelines = false; }
         if (resetData === undefined) { resetData = false; }
 
         this.pipeline = this.defaultPipeline;
-
-        if (resetPostPipelines)
-        {
-            this.postPipelines = [];
-            this.hasPostPipeline = false;
-        }
 
         if (resetData)
         {
@@ -334,72 +198,6 @@ var Pipeline = {
         }
 
         return (this.pipeline !== null);
-    },
-
-    /**
-     * Resets the WebGL Post Pipelines of this Game Object. It does this by calling
-     * the `destroy` method on each post pipeline and then clearing the local array.
-     *
-     * @method Phaser.GameObjects.Components.Pipeline#resetPostPipeline
-     * @webglOnly
-     * @since 3.50.0
-     *
-     * @param {boolean} [resetData=false] - Reset the `pipelineData` object to being an empty object?
-     */
-    resetPostPipeline: function (resetData)
-    {
-        if (resetData === undefined) { resetData = false; }
-
-        var pipelines = this.postPipelines;
-
-        for (var i = 0; i < pipelines.length; i++)
-        {
-            pipelines[i].destroy();
-        }
-
-        this.postPipelines = [];
-        this.hasPostPipeline = false;
-
-        if (resetData)
-        {
-            this.pipelineData = {};
-        }
-    },
-
-    /**
-     * Removes a type of Post Pipeline instances from this Game Object, based on the given name, and destroys them.
-     *
-     * If you wish to remove all Post Pipelines use the `resetPostPipeline` method instead.
-     *
-     * @method Phaser.GameObjects.Components.Pipeline#removePostPipeline
-     * @webglOnly
-     * @since 3.50.0
-     *
-     * @param {string|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} pipeline - The string-based name of the pipeline, or a pipeline class.
-     *
-     * @return {this} This Game Object.
-     */
-    removePostPipeline: function (pipeline)
-    {
-        var pipelines = this.postPipelines;
-
-        for (var i = pipelines.length - 1; i >= 0; i--)
-        {
-            var instance = pipelines[i];
-
-            if (
-                (typeof pipeline === 'string' && instance.name === pipeline) ||
-                (typeof pipeline !== 'string' && instance instanceof pipeline))
-            {
-                instance.destroy();
-
-                SpliceOne(pipelines, i);
-            }
-        }
-
-        this.hasPostPipeline = (this.postPipelines.length > 0);
-
-        return this;
     },
 
     /**
