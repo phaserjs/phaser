@@ -70,7 +70,7 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
@@ -89,7 +89,7 @@ var Container = new Class({
         Components.ComputedSize,
         Components.Depth,
         Components.Mask,
-        Components.Pipeline,
+        Components.PostPipeline,
         Components.Transform,
         Components.Visible,
         Render
@@ -244,7 +244,7 @@ var Container = new Class({
          */
         this.scrollFactorY = 1;
 
-        this.initPipeline();
+        this.initPostPipeline();
 
         this.setPosition(x, y);
 

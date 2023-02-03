@@ -70,7 +70,7 @@ var StableSort = require('../../utils/array/StableSort');
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -85,7 +85,7 @@ var Layer = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.Mask,
-        Components.Pipeline,
+        Components.PostPipeline,
         Components.Visible,
         EventEmitter,
         Render
@@ -304,7 +304,7 @@ var Layer = new Class({
         this.addCallback = this.addChildCallback;
         this.removeCallback = this.removeChildCallback;
 
-        this.initPipeline();
+        this.initPostPipeline();
 
         this.clearAlpha();
 
