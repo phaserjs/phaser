@@ -756,6 +756,16 @@ You should use a Dynamic Texture if the texture isn't going to be displayed in-g
 
 You should use a Render Texture if you need to display the texture in-game on a single Game Object, as it provides the convenience of wrapping an Image and Dynamic Texture together for you.
 
+### Post Pipeline Updates
+
+In order to add clarity in the codebase we have created a new `PostPipeline` Component and moved all of the relevant functions from the `Pipeline` component in to it. This leads to the following changes:
+
+* `PostPipeline` is a new Game Object Component that is now inherited by all Game Objects that are capable of using it.
+* Game Objects with the `PostPipeline` component now have a new property called `postPipelineData`. This object is used for storing Post Pipeline specific data in. Previously, both regular and post pipelines used the same `pipelineData` object, but this has now been split up for flexibility.
+* The `Pipeline.resetPipeline` method no longer has its first `resetPostPipelines` argument. It now has just one argument `resetData` so please be aware of this if you call this function anywhere in your code.
+* `PostPipeline.initPostPipeline` is a new method that should be called by any Game Object that supports Post Pipelines.
+* The following Game Objects now have the new `PostPipeline` Component exclusively: `Container` and `Layer`.
+
 ### Input System Updates
 
 There are breaking changes from previous versions of Phaser.
