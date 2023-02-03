@@ -18,7 +18,8 @@ var Vector2 = require('../../math/Vector2');
  *
  * The Rope object is WebGL only and does not have a Canvas counterpart.
  *
- * A Rope is a special kind of Game Object that has a texture that repeats along its entire length.
+ * A Rope is a special kind of Game Object that has a texture is stretched along its entire length.
+ * 
  * Unlike a Sprite, it isn't restricted to using just a quad and can have as many vertices as you define
  * when creating it. The vertices can be arranged in a horizontal or vertical strip and have their own
  * color and alpha values as well.
@@ -38,6 +39,7 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -65,6 +67,7 @@ var Rope = new Class({
         Components.Flip,
         Components.Mask,
         Components.Pipeline,
+        Components.PostPipeline,
         Components.Size,
         Components.Texture,
         Components.Transform,

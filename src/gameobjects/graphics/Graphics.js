@@ -7,14 +7,7 @@
 var BaseCamera = require('../../cameras/2d/BaseCamera.js');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');
-var ComponentsAlpha = require('../components/AlphaSingle');
-var ComponentsBlendMode = require('../components/BlendMode');
-var ComponentsDepth = require('../components/Depth');
-var ComponentsMask = require('../components/Mask');
-var ComponentsPipeline = require('../components/Pipeline');
-var ComponentsScrollFactor = require('../components/ScrollFactor');
-var ComponentsTransform = require('../components/Transform');
-var ComponentsVisible = require('../components/Visible');
+var Components = require('../components');
 var Ellipse = require('../../geom/ellipse/Ellipse');
 var GameObject = require('../GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
@@ -74,6 +67,7 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  * @extends Phaser.GameObjects.Components.ScrollFactor
@@ -86,14 +80,15 @@ var Graphics = new Class({
     Extends: GameObject,
 
     Mixins: [
-        ComponentsAlpha,
-        ComponentsBlendMode,
-        ComponentsDepth,
-        ComponentsMask,
-        ComponentsPipeline,
-        ComponentsTransform,
-        ComponentsVisible,
-        ComponentsScrollFactor,
+        Components.Alpha,
+        Components.BlendMode,
+        Components.Depth,
+        Components.Mask,
+        Components.Pipeline,
+        Components.PostPipeline,
+        Components.Transform,
+        Components.Visible,
+        Components.ScrollFactor,
         Render
     ],
 
@@ -108,6 +103,7 @@ var Graphics = new Class({
 
         this.setPosition(x, y);
         this.initPipeline();
+        this.initPostPipeline();
 
         /**
          * The horizontal display origin of the Graphics.

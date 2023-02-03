@@ -323,6 +323,7 @@ var configOpMap = [
  * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -341,6 +342,7 @@ var ParticleEmitter = new Class({
         Components.FX,
         Components.Mask,
         Components.Pipeline,
+        Components.PostPipeline,
         Components.ScrollFactor,
         Components.Texture,
         Components.Transform,
@@ -914,6 +916,7 @@ var ParticleEmitter = new Class({
         this.tintFill = false;
 
         this.initPipeline();
+        this.initPostPipeline();
 
         this.setPosition(x, y);
         this.setTexture(texture);

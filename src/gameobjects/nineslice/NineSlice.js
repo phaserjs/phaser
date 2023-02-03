@@ -95,6 +95,7 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -125,6 +126,7 @@ var NineSlice = new Class({
         Components.Mask,
         Components.Origin,
         Components.Pipeline,
+        Components.PostPipeline,
         Components.ScrollFactor,
         Components.Texture,
         Components.Transform,
@@ -318,6 +320,7 @@ var NineSlice = new Class({
         this.setSlices(width, height, leftWidth, rightWidth, topHeight, bottomHeight);
 
         this.initPipeline();
+        this.initPostPipeline();
     },
 
     /**

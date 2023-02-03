@@ -66,6 +66,7 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
@@ -96,6 +97,7 @@ var Mesh = new Class({
         Components.FX,
         Components.Mask,
         Components.Pipeline,
+        Components.PostPipeline,
         Components.ScrollFactor,
         Components.Size,
         Components.Texture,
@@ -370,6 +372,7 @@ var Mesh = new Class({
         this.setTexture(texture, frame);
         this.setSize(renderer.width, renderer.height);
         this.initPipeline();
+        this.initPostPipeline();
 
         this.setPerspective(renderer.width, renderer.height);
 

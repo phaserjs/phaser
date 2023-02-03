@@ -69,6 +69,7 @@ var TextStyle = require('./TextStyle');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
@@ -98,6 +99,7 @@ var Text = new Class({
         Components.Mask,
         Components.Origin,
         Components.Pipeline,
+        Components.PostPipeline,
         Components.ScrollFactor,
         Components.Tint,
         Components.Transform,
@@ -126,6 +128,7 @@ var Text = new Class({
         this.setPosition(x, y);
         this.setOrigin(0, 0);
         this.initPipeline();
+        this.initPostPipeline();
 
         /**
          * The canvas element that the text is rendered to.
