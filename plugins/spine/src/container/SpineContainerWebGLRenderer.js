@@ -107,7 +107,7 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
 
     renderer.nextTypeMatch = rendererNextType;
 
-    if (!rendererNextType)
+    if (!rendererNextType || container.mask)
     {
         //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
