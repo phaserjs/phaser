@@ -1,5 +1,11 @@
 ## Version 3.60.0 - Miku - in development
 
+### New Features - Spine 4 Support
+
+### Additional Spine 3 Bug Fixes
+
+* Using `drawDebug` on a Spine Game Object to view its skeleton would cause the next object in the display list to be skipped for rendering, if it wasn't a Spine Game Object too. This is because the Spine 3 skeleton debug draw ends the spine batch but the Scene Renderer wasn't rebound. Fix #6380 (thanks @spayton)
+
 ### New Features - Plane Game Object
 
 Phaser v3.60 contains a new native Plane Game Object. The Plane Game Object is a helper class that takes the Mesh Game Object and extends it, allowing for fast and easy creation of Planes. A Plane is a one-sided grid of cells, where you specify the number of cells in each dimension. The Plane can have a texture that is either repeated (tiled) across each cell, or applied to the full Plane.
