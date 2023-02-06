@@ -5,6 +5,7 @@
 ### Additional Spine 3 Bug Fixes
 
 * Using `drawDebug` on a Spine Game Object to view its skeleton would cause the next object in the display list to be skipped for rendering, if it wasn't a Spine Game Object too. This is because the Spine 3 skeleton debug draw ends the spine batch but the Scene Renderer wasn't rebound. Fix #6380 (thanks @spayton)
+* The Spine Plugin `add` and `make` functions didn't clear and rebind the WebGL pipeline. This could cause two different visual issues: The first is that a Phaser Game Object (such as a Sprite) could be seen to change its texture to display the Spine atlas texture instead for a single frame, and then on the next pass revert back to normal again. The second issue is that if the Spine skeleton wasn't added to the display list, but just created (via `addToScene: false`) then the Sprite would take on the texture frame entirely from that point on. Fix #6362 (thanks @frissonlabs)
 
 ### New Features - Plane Game Object
 
