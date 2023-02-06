@@ -124,9 +124,12 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
 
         skeleton.x = oldX;
         skeleton.y = oldY;
-    }
 
-    if (!renderer.nextTypeMatch)
+        //  The Spine debug draw has reset the batcher, so we need to do this regardless:
+        sceneRenderer.end();
+        renderer.pipelines.rebind();
+    }
+    else if (!renderer.nextTypeMatch)
     {
         //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
