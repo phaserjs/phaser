@@ -319,13 +319,25 @@ var SpinePlugin = new Class({
             };
         }
 
+        var isWebGL = this.isWebGL;
+
         var add = function (x, y, key, animationName, loop)
         {
+            if (isWebGL)
+            {
+                this.scene.sys.renderer.pipelines.clear();
+            }
+
             var spinePlugin = this.scene.sys[pluginKey];
             var spineGO = new SpineGameObject(this.scene, spinePlugin, x, y, key, animationName, loop);
 
             this.displayList.add(spineGO);
             this.updateList.add(spineGO);
+
+            if (isWebGL)
+            {
+                this.scene.sys.renderer.pipelines.rebind();
+            }
 
             return spineGO;
         };
@@ -333,6 +345,11 @@ var SpinePlugin = new Class({
         var make = function (config, addToScene)
         {
             if (config === undefined) { config = {}; }
+
+            if (isWebGL)
+            {
+                this.scene.sys.renderer.pipelines.clear();
+            }
 
             var key = GetValue(config, 'key', null);
             var animationName = GetValue(config, 'animationName', null);
@@ -362,6 +379,11 @@ var SpinePlugin = new Class({
             if (slotName)
             {
                 spineGO.setAttachment(slotName, attachmentName);
+            }
+
+            if (isWebGL)
+            {
+                this.scene.sys.renderer.pipelines.rebind();
             }
 
             return spineGO.refresh();
@@ -654,7 +676,7 @@ var SpinePlugin = new Class({
      * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the Spine json file. Used in replacement of the Loaders default XHR Settings.
      * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the Spine atlas file. Used in replacement of the Loaders default XHR Settings.
      * @param {object} [settings] - An external Settings configuration object { prefix: '' }
-     * 
+     *
      * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
      */
     spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings, settings)
