@@ -44,7 +44,7 @@ var Vector2 = require('../../math/Vector2');
  * @since 3.0.0
  *
  * @extends Phaser.Cameras.Scene2D.BaseCamera
- * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.PostPipeline
  *
  * @param {number} x - The x position of the Camera, relative to the top-left of the game canvas.
  * @param {number} y - The y position of the Camera, relative to the top-left of the game canvas.
@@ -56,7 +56,7 @@ var Camera = new Class({
     Extends: BaseCamera,
 
     Mixins: [
-        Components.Pipeline
+        Components.PostPipeline
     ],
 
     initialize:
@@ -65,8 +65,7 @@ var Camera = new Class({
     {
         BaseCamera.call(this, x, y, width, height);
 
-        this.postPipelines = [];
-        this.pipelineData = {};
+        this.initPostPipeline();
 
         /**
          * Does this Camera allow the Game Objects it renders to receive input events?
