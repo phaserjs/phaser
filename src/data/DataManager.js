@@ -255,10 +255,10 @@ var DataManager = new Class({
      * @generic {any} T
      * @genericUse {(string|T)} - [key]
      *
-     * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
-     * @param {*} data - The value to set for the given key. If an object is provided as the key this argument is ignored.
+     * @param {(string|object)} key - The key to set the value for. Or an object of key value pairs. If an object the `data` argument is ignored.
+     * @param {*} [data] - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     set: function (key, data)
     {
@@ -297,9 +297,9 @@ var DataManager = new Class({
      * @genericUse {(string|T)} - [key]
      *
      * @param {(string|object)} key - The key to increase the value for.
-     * @param {*} [data] - The value to increase for the given key.
+     * @param {number} [data=1] - The amount to increase the given key by. Pass a negative value to decrease the key.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     inc: function (key, data)
     {
@@ -314,6 +314,7 @@ var DataManager = new Class({
         }
 
         var value = this.get(key);
+
         if (value === undefined)
         {
             value = 0;
@@ -340,7 +341,7 @@ var DataManager = new Class({
      *
      * @param {(string|object)} key - The key to toggle the value for.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     toggle: function (key)
     {
@@ -367,7 +368,7 @@ var DataManager = new Class({
      * @param {string} key - The key to set the value for.
      * @param {*} data - The value to set.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     setValue: function (key, data)
     {
@@ -431,7 +432,7 @@ var DataManager = new Class({
      * @param {*} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the game object, key, and data.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     each: function (callback, context)
     {
@@ -468,7 +469,7 @@ var DataManager = new Class({
      * @param {Object.<string, *>} data - The data to merge.
      * @param {boolean} [overwrite=true] - Whether to overwrite existing data. Defaults to true.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     merge: function (data, overwrite)
     {
@@ -504,7 +505,7 @@ var DataManager = new Class({
      *
      * @param {(string|string[])} key - The key to remove, or an array of keys to remove.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     remove: function (key)
     {
@@ -538,7 +539,7 @@ var DataManager = new Class({
      *
      * @param {string} key - The key to set the value for.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     removeValue: function (key)
     {
@@ -610,7 +611,7 @@ var DataManager = new Class({
      *
      * @param {boolean} value - Whether to freeze or unfreeze the Data Manager.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     setFreeze: function (value)
     {
@@ -625,7 +626,7 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#reset
      * @since 3.0.0
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     reset: function ()
     {
