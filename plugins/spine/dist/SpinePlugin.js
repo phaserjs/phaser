@@ -11352,7 +11352,7 @@ var SpineFile = new Class({
                 {
                     var textureURL = textures[i];
 
-                    var key = textureURL;
+                    var key = this.key + ':' + textureURL;
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
@@ -11756,13 +11756,25 @@ var SpinePlugin = new Class({
             };
         }
 
+        var isWebGL = this.isWebGL;
+
         var add = function (x, y, key, animationName, loop)
         {
+            if (isWebGL)
+            {
+                this.scene.sys.renderer.pipelines.clear();
+            }
+
             var spinePlugin = this.scene.sys[pluginKey];
             var spineGO = new SpineGameObject(this.scene, spinePlugin, x, y, key, animationName, loop);
 
             this.displayList.add(spineGO);
             this.updateList.add(spineGO);
+
+            if (isWebGL)
+            {
+                this.scene.sys.renderer.pipelines.rebind();
+            }
 
             return spineGO;
         };
@@ -11770,6 +11782,11 @@ var SpinePlugin = new Class({
         var make = function (config, addToScene)
         {
             if (config === undefined) { config = {}; }
+
+            if (isWebGL)
+            {
+                this.scene.sys.renderer.pipelines.clear();
+            }
 
             var key = GetValue(config, 'key', null);
             var animationName = GetValue(config, 'animationName', null);
@@ -11799,6 +11816,11 @@ var SpinePlugin = new Class({
             if (slotName)
             {
                 spineGO.setAttachment(slotName, attachmentName);
+            }
+
+            if (isWebGL)
+            {
+                this.scene.sys.renderer.pipelines.rebind();
             }
 
             return spineGO.refresh();
@@ -11962,7 +11984,7 @@ var SpinePlugin = new Class({
 
             atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
-                return new Spine.canvas.CanvasTexture(textures.get(atlasEntry.prefix + path).getSourceImage());
+                return new Spine.canvas.CanvasTexture(textures.get(atlasEntry.prefix + key + ':' + path).getSourceImage());
             });
         }
 
@@ -12007,7 +12029,7 @@ var SpinePlugin = new Class({
 
             atlas = new Spine.TextureAtlas(atlasEntry.data, function (path)
             {
-                return new Spine.webgl.GLTexture(gl, textures.get(atlasEntry.prefix + path).getSourceImage(), false);
+                return new Spine.webgl.GLTexture(gl, textures.get(atlasEntry.prefix + key + ':' + path).getSourceImage(), false);
             });
         }
 
@@ -12091,7 +12113,7 @@ var SpinePlugin = new Class({
      * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the Spine json file. Used in replacement of the Loaders default XHR Settings.
      * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the Spine atlas file. Used in replacement of the Loaders default XHR Settings.
      * @param {object} [settings] - An external Settings configuration object { prefix: '' }
-     * 
+     *
      * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
      */
     spineFileCallback: function (key, jsonURL, atlasURL, preMultipliedAlpha, jsonXhrSettings, atlasXhrSettings, settings)
@@ -13035,7 +13057,7 @@ var SpineContainerWebGLRenderer = function (renderer, container, camera, parentM
 
     renderer.nextTypeMatch = rendererNextType;
 
-    if (!rendererNextType)
+    if (!rendererNextType || container.mask)
     {
         //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
@@ -15242,9 +15264,12 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
 
         skeleton.x = oldX;
         skeleton.y = oldY;
-    }
 
-    if (!renderer.nextTypeMatch)
+        //  The Spine debug draw has reset the batcher, so we need to do this regardless:
+        sceneRenderer.end();
+        renderer.pipelines.rebind();
+    }
+    else if (!renderer.nextTypeMatch)
     {
         //  The next object in the display list is not a Spine Game Object or Spine Container, so we end the batch
         sceneRenderer.end();
@@ -15664,10 +15689,10 @@ var DataManager = new Class({
      * @generic {any} T
      * @genericUse {(string|T)} - [key]
      *
-     * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
-     * @param {*} data - The value to set for the given key. If an object is provided as the key this argument is ignored.
+     * @param {(string|object)} key - The key to set the value for. Or an object of key value pairs. If an object the `data` argument is ignored.
+     * @param {*} [data] - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     set: function (key, data)
     {
@@ -15706,9 +15731,9 @@ var DataManager = new Class({
      * @genericUse {(string|T)} - [key]
      *
      * @param {(string|object)} key - The key to increase the value for.
-     * @param {*} [data] - The value to increase for the given key.
+     * @param {number} [data=1] - The amount to increase the given key by. Pass a negative value to decrease the key.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     inc: function (key, data)
     {
@@ -15723,6 +15748,7 @@ var DataManager = new Class({
         }
 
         var value = this.get(key);
+
         if (value === undefined)
         {
             value = 0;
@@ -15749,7 +15775,7 @@ var DataManager = new Class({
      *
      * @param {(string|object)} key - The key to toggle the value for.
      *
-     * @return {Phaser.Data.DataManager} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     toggle: function (key)
     {
@@ -15776,7 +15802,7 @@ var DataManager = new Class({
      * @param {string} key - The key to set the value for.
      * @param {*} data - The value to set.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     setValue: function (key, data)
     {
@@ -15840,7 +15866,7 @@ var DataManager = new Class({
      * @param {*} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the game object, key, and data.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     each: function (callback, context)
     {
@@ -15877,7 +15903,7 @@ var DataManager = new Class({
      * @param {Object.<string, *>} data - The data to merge.
      * @param {boolean} [overwrite=true] - Whether to overwrite existing data. Defaults to true.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     merge: function (data, overwrite)
     {
@@ -15913,7 +15939,7 @@ var DataManager = new Class({
      *
      * @param {(string|string[])} key - The key to remove, or an array of keys to remove.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     remove: function (key)
     {
@@ -15947,7 +15973,7 @@ var DataManager = new Class({
      *
      * @param {string} key - The key to set the value for.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     removeValue: function (key)
     {
@@ -16019,7 +16045,7 @@ var DataManager = new Class({
      *
      * @param {boolean} value - Whether to freeze or unfreeze the Data Manager.
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     setFreeze: function (value)
     {
@@ -16034,7 +16060,7 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#reset
      * @since 3.0.0
      *
-     * @return {this} This DataManager object.
+     * @return {this} This Data Manager instance.
      */
     reset: function ()
     {
@@ -22039,7 +22065,6 @@ module.exports = PathFollower;
  */
 
 var DeepCopy = __webpack_require__(3911);
-var SpliceOne = __webpack_require__(8935);
 
 /**
  * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
@@ -22076,31 +22101,6 @@ var Pipeline = {
     pipeline: null,
 
     /**
-     * Does this Game Object have any Post Pipelines set?
-     *
-     * @name Phaser.GameObjects.Components.Pipeline#hasPostPipeline
-     * @type {boolean}
-     * @webglOnly
-     * @since 3.50.0
-     */
-    hasPostPipeline: false,
-
-    /**
-     * The WebGL Post FX Pipelines this Game Object uses for post-render effects.
-     *
-     * The pipelines are processed in the order in which they appear in this array.
-     *
-     * If you modify this array directly, be sure to set the
-     * `hasPostPipeline` property accordingly.
-     *
-     * @name Phaser.GameObjects.Components.Pipeline#postPipelines
-     * @type {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[]}
-     * @webglOnly
-     * @since 3.50.0
-     */
-    postPipelines: null,
-
-    /**
      * An object to store pipeline specific data in, to be read by the pipelines this Game Object uses.
      *
      * @name Phaser.GameObjects.Components.Pipeline#pipelineData
@@ -22125,6 +22125,8 @@ var Pipeline = {
      */
     initPipeline: function (pipeline)
     {
+        this.pipelineData = {};
+
         var renderer = this.scene.sys.renderer;
 
         if (!renderer)
@@ -22133,9 +22135,6 @@ var Pipeline = {
         }
 
         var pipelines = renderer.pipelines;
-
-        this.postPipelines = [];
-        this.pipelineData = {};
 
         if (pipelines)
         {
@@ -22205,6 +22204,154 @@ var Pipeline = {
     },
 
     /**
+     * Adds an entry to the `pipelineData` object belonging to this Game Object.
+     *
+     * If the 'key' already exists, its value is updated. If it doesn't exist, it is created.
+     *
+     * If `value` is undefined, and `key` exists, `key` is removed from the data object.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#setPipelineData
+     * @webglOnly
+     * @since 3.50.0
+     *
+     * @param {string} key - The key of the pipeline data to set, update, or delete.
+     * @param {any} [value] - The value to be set with the key. If `undefined` then `key` will be deleted from the object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setPipelineData: function (key, value)
+    {
+        var data = this.pipelineData;
+
+        if (value === undefined)
+        {
+            delete data[key];
+        }
+        else
+        {
+            data[key] = value;
+        }
+
+        return this;
+    },
+
+    /**
+     * Resets the WebGL Pipeline of this Game Object back to the default it was created with.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#resetPipeline
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @param {boolean} [resetData=false] - Reset the `pipelineData` object to being an empty object?
+     *
+     * @return {boolean} `true` if the pipeline was reset successfully, otherwise `false`.
+     */
+    resetPipeline: function (resetData)
+    {
+        if (resetData === undefined) { resetData = false; }
+
+        this.pipeline = this.defaultPipeline;
+
+        if (resetData)
+        {
+            this.pipelineData = {};
+        }
+
+        return (this.pipeline !== null);
+    },
+
+    /**
+     * Gets the name of the WebGL Pipeline this Game Object is currently using.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#getPipelineName
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @return {string} The string-based name of the pipeline being used by this Game Object.
+     */
+    getPipelineName: function ()
+    {
+        return this.pipeline.name;
+    }
+
+};
+
+module.exports = Pipeline;
+
+
+/***/ }),
+
+/***/ 4461:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var DeepCopy = __webpack_require__(3911);
+var SpliceOne = __webpack_require__(8935);
+
+/**
+ * Provides methods used for setting the WebGL rendering post pipeline of a Game Object.
+ *
+ * @namespace Phaser.GameObjects.Components.PostPipeline
+ * @webglOnly
+ * @since 3.60.0
+ */
+
+var PostPipeline = {
+
+    /**
+     * Does this Game Object have any Post Pipelines set?
+     *
+     * @name Phaser.GameObjects.Components.PostPipeline#hasPostPipeline
+     * @type {boolean}
+     * @webglOnly
+     * @since 3.60.0
+     */
+    hasPostPipeline: false,
+
+    /**
+     * The WebGL Post FX Pipelines this Game Object uses for post-render effects.
+     *
+     * The pipelines are processed in the order in which they appear in this array.
+     *
+     * If you modify this array directly, be sure to set the
+     * `hasPostPipeline` property accordingly.
+     *
+     * @name Phaser.GameObjects.Components.PostPipeline#postPipelines
+     * @type {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[]}
+     * @webglOnly
+     * @since 3.60.0
+     */
+    postPipelines: null,
+
+    /**
+     * An object to store pipeline specific data in, to be read by the pipelines this Game Object uses.
+     *
+     * @name Phaser.GameObjects.Components.PostPipeline#postPipelineData
+     * @type {object}
+     * @webglOnly
+     * @since 3.60.0
+     */
+    postPipelineData: null,
+
+    /**
+     * This should only be called during the instantiation of the Game Object. After that, use `setPostPipeline`.
+     *
+     * @method Phaser.GameObjects.Components.PostPipeline#initPostPipeline
+     * @webglOnly
+     * @since 3.60.0
+     */
+    initPostPipeline: function ()
+    {
+        this.postPipelines = [];
+        this.postPipelineData = {};
+    },
+
+    /**
      * Sets one, or more, Post Pipelines on this Game Object.
      *
      * Post Pipelines are invoked after this Game Object has rendered to its target and
@@ -22222,9 +22369,9 @@ var Pipeline = {
      *
      * Both the pipeline and post pipelines share the pipeline data object together.
      *
-     * @method Phaser.GameObjects.Components.Pipeline#setPostPipeline
+     * @method Phaser.GameObjects.Components.PostPipeline#setPostPipeline
      * @webglOnly
-     * @since 3.50.0
+     * @since 3.60.0
      *
      * @param {(string|string[]|function|function[]|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} pipelines - Either the string-based name of the pipeline, or a pipeline instance, or class, or an array of them.
      * @param {object} [pipelineData] - Optional pipeline data object that is _deep copied_ into the `pipelineData` property of this Game Object.
@@ -22262,7 +22409,7 @@ var Pipeline = {
 
             if (pipelineData)
             {
-                this.pipelineData = (copyData) ? DeepCopy(pipelineData) : pipelineData;
+                this.postPipelineData = (copyData) ? DeepCopy(pipelineData) : pipelineData;
             }
         }
 
@@ -22280,18 +22427,18 @@ var Pipeline = {
      *
      * Both the pipeline and post pipelines share the pipeline data object together.
      *
-     * @method Phaser.GameObjects.Components.Pipeline#setPipelineData
+     * @method Phaser.GameObjects.Components.PostPipeline#setPostPipelineData
      * @webglOnly
-     * @since 3.50.0
+     * @since 3.60.0
      *
      * @param {string} key - The key of the pipeline data to set, update, or delete.
      * @param {any} [value] - The value to be set with the key. If `undefined` then `key` will be deleted from the object.
      *
      * @return {this} This Game Object instance.
      */
-    setPipelineData: function (key, value)
+    setPostPipelineData: function (key, value)
     {
-        var data = this.pipelineData;
+        var data = this.postPipelineData;
 
         if (value === undefined)
         {
@@ -22308,9 +22455,9 @@ var Pipeline = {
     /**
      * Gets a Post Pipeline instance from this Game Object, based on the given name, and returns it.
      *
-     * @method Phaser.GameObjects.Components.Pipeline#getPostPipeline
+     * @method Phaser.GameObjects.Components.PostPipeline#getPostPipeline
      * @webglOnly
-     * @since 3.50.0
+     * @since 3.60.0
      *
      * @param {(string|function|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline)} pipeline - The string-based name of the pipeline, or a pipeline class.
      *
@@ -22338,45 +22485,12 @@ var Pipeline = {
     },
 
     /**
-     * Resets the WebGL Pipeline of this Game Object back to the default it was created with.
-     *
-     * @method Phaser.GameObjects.Components.Pipeline#resetPipeline
-     * @webglOnly
-     * @since 3.0.0
-     *
-     * @param {boolean} [resetPostPipelines=false] - Reset all of the post pipelines?
-     * @param {boolean} [resetData=false] - Reset the `pipelineData` object to being an empty object?
-     *
-     * @return {boolean} `true` if the pipeline was reset successfully, otherwise `false`.
-     */
-    resetPipeline: function (resetPostPipelines, resetData)
-    {
-        if (resetPostPipelines === undefined) { resetPostPipelines = false; }
-        if (resetData === undefined) { resetData = false; }
-
-        this.pipeline = this.defaultPipeline;
-
-        if (resetPostPipelines)
-        {
-            this.postPipelines = [];
-            this.hasPostPipeline = false;
-        }
-
-        if (resetData)
-        {
-            this.pipelineData = {};
-        }
-
-        return (this.pipeline !== null);
-    },
-
-    /**
      * Resets the WebGL Post Pipelines of this Game Object. It does this by calling
      * the `destroy` method on each post pipeline and then clearing the local array.
      *
-     * @method Phaser.GameObjects.Components.Pipeline#resetPostPipeline
+     * @method Phaser.GameObjects.Components.PostPipeline#resetPostPipeline
      * @webglOnly
-     * @since 3.50.0
+     * @since 3.60.0
      *
      * @param {boolean} [resetData=false] - Reset the `pipelineData` object to being an empty object?
      */
@@ -22396,7 +22510,7 @@ var Pipeline = {
 
         if (resetData)
         {
-            this.pipelineData = {};
+            this.postPipelineData = {};
         }
     },
 
@@ -22405,9 +22519,9 @@ var Pipeline = {
      *
      * If you wish to remove all Post Pipelines use the `resetPostPipeline` method instead.
      *
-     * @method Phaser.GameObjects.Components.Pipeline#removePostPipeline
+     * @method Phaser.GameObjects.Components.PostPipeline#removePostPipeline
      * @webglOnly
-     * @since 3.50.0
+     * @since 3.60.0
      *
      * @param {string|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} pipeline - The string-based name of the pipeline, or a pipeline class.
      *
@@ -22434,25 +22548,11 @@ var Pipeline = {
         this.hasPostPipeline = (this.postPipelines.length > 0);
 
         return this;
-    },
-
-    /**
-     * Gets the name of the WebGL Pipeline this Game Object is currently using.
-     *
-     * @method Phaser.GameObjects.Components.Pipeline#getPipelineName
-     * @webglOnly
-     * @since 3.0.0
-     *
-     * @return {string} The string-based name of the pipeline being used by this Game Object.
-     */
-    getPipelineName: function ()
-    {
-        return this.pipeline.name;
     }
 
 };
 
-module.exports = Pipeline;
+module.exports = PostPipeline;
 
 
 /***/ }),
@@ -25258,6 +25358,7 @@ module.exports = {
     Origin: __webpack_require__(5085),
     PathFollower: __webpack_require__(77),
     Pipeline: __webpack_require__(986),
+    PostPipeline: __webpack_require__(4461),
     ScrollFactor: __webpack_require__(4627),
     Size: __webpack_require__(1868),
     Texture: __webpack_require__(4976),
@@ -25348,7 +25449,7 @@ var Vector2 = __webpack_require__(2529);
  * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
@@ -25367,7 +25468,7 @@ var Container = new Class({
         Components.ComputedSize,
         Components.Depth,
         Components.Mask,
-        Components.Pipeline,
+        Components.PostPipeline,
         Components.Transform,
         Components.Visible,
         Render
@@ -25522,7 +25623,7 @@ var Container = new Class({
          */
         this.scrollFactorY = 1;
 
-        this.initPipeline();
+        this.initPostPipeline();
 
         this.setPosition(x, y);
 
