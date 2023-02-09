@@ -412,16 +412,25 @@ var Container = new Class({
                 if (entry.getBounds)
                 {
                     entry.getBounds(tempRect);
+                }
+                else if (entry.getTextBounds)
+                {
+                    var textBounds = entry.getTextBounds().global;
+                    tempRect.setTo(textBounds.x, textBounds.y, textBounds.width, textBounds.height);
+                }
+                else
+                {
+                    continue;
+                }
 
-                    if (!hasSetFirst)
-                    {
-                        output.setTo(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
-                        hasSetFirst = true;
-                    }
-                    else
-                    {
-                        Union(tempRect, output, output);
-                    }
+                if (!hasSetFirst)
+                {
+                    output.setTo(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
+                    hasSetFirst = true;
+                }
+                else
+                {
+                    Union(tempRect, output, output);
                 }
             }
         }
