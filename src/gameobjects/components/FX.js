@@ -4,6 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Bloom = require('../../renderer/webgl/pipelines/fx/Bloom.js');
+
 /**
  * Provides methods used for setting the FX values of a Game Object.
  * Should be applied as a mixin and not used directly.
@@ -89,6 +91,20 @@ var FX = {
      */
     onFX: function ()
     {
+    },
+
+    addBloom: function (r, g, b)
+    {
+        var instance = new Bloom(this.scene.sys.game);
+
+        instance.gameObject = this;
+        instance.setColor(r, g, b);
+
+        this.postPipelines.push(instance);
+
+        this.hasPostPipeline = true;
+
+        return instance;
     }
 
 };
