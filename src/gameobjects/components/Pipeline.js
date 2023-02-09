@@ -102,14 +102,12 @@ var Pipeline = {
      *
      * Also sets the `pipelineData` property, if the parameter is given.
      *
-     * Both the pipeline and post pipelines share the same pipeline data object.
-     *
      * @method Phaser.GameObjects.Components.Pipeline#setPipeline
      * @webglOnly
      * @since 3.0.0
      *
      * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline, or a pipeline instance to set.
-     * @param {object} [pipelineData] - Optional pipeline data object that is _deep copied_ into the `pipelineData` property of this Game Object.
+     * @param {object} [pipelineData] - Optional pipeline data object that is set in to the `pipelineData` property of this Game Object.
      * @param {boolean} [copyData=true] - Should the pipeline data object be _deep copied_ into the `pipelineData` property of this Game Object? If `false` it will be set by reference instead.
      *
      * @return {this} This Game Object instance.

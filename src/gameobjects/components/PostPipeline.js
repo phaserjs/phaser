@@ -79,17 +79,15 @@ var PostPipeline = {
      * If you call this method multiple times, the new pipelines will be appended to any existing
      * post pipelines already set. Use the `resetPostPipeline` method to clear them first, if required.
      *
-     * You can optionally also set the `pipelineData` property, if the parameter is given.
-     *
-     * Both the pipeline and post pipelines share the pipeline data object together.
+     * You can optionally also set the `postPipelineData` property, if the parameter is given.
      *
      * @method Phaser.GameObjects.Components.PostPipeline#setPostPipeline
      * @webglOnly
      * @since 3.60.0
      *
      * @param {(string|string[]|function|function[]|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} pipelines - Either the string-based name of the pipeline, or a pipeline instance, or class, or an array of them.
-     * @param {object} [pipelineData] - Optional pipeline data object that is _deep copied_ into the `pipelineData` property of this Game Object.
-     * @param {boolean} [copyData=true] - Should the pipeline data object be _deep copied_ into the `pipelineData` property of this Game Object? If `false` it will be set by reference instead.
+     * @param {object} [pipelineData] - Optional pipeline data object that is set in to the `postPipelineData` property of this Game Object.
+     * @param {boolean} [copyData=true] - Should the pipeline data object be _deep copied_ into the `postPipelineData` property of this Game Object? If `false` it will be set by reference instead.
      *
      * @return {this} This Game Object instance.
      */
@@ -133,13 +131,11 @@ var PostPipeline = {
     },
 
     /**
-     * Adds an entry to the `pipelineData` object belonging to this Game Object.
+     * Adds an entry to the `postPipelineData` object belonging to this Game Object.
      *
      * If the 'key' already exists, its value is updated. If it doesn't exist, it is created.
      *
      * If `value` is undefined, and `key` exists, `key` is removed from the data object.
-     *
-     * Both the pipeline and post pipelines share the pipeline data object together.
      *
      * @method Phaser.GameObjects.Components.PostPipeline#setPostPipelineData
      * @webglOnly
@@ -206,7 +202,7 @@ var PostPipeline = {
      * @webglOnly
      * @since 3.60.0
      *
-     * @param {boolean} [resetData=false] - Reset the `pipelineData` object to being an empty object?
+     * @param {boolean} [resetData=false] - Reset the `postPipelineData` object to being an empty object?
      */
     resetPostPipeline: function (resetData)
     {
