@@ -409,14 +409,14 @@ var Container = new Class({
             {
                 var entry = children[i];
 
-                if (entry.getBounds)
-                {
-                    entry.getBounds(tempRect);
-                }
-                else if (entry.getTextBounds)
+                if (entry.getTextBounds)
                 {
                     var textBounds = entry.getTextBounds().global;
                     tempRect.setTo(textBounds.x, textBounds.y, textBounds.width, textBounds.height);
+                }
+                else if (entry.getBounds)
+                {
+                    entry.getBounds(tempRect);
                 }
                 else
                 {
