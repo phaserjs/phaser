@@ -169,7 +169,7 @@ var Transform = {
             {
                 this.renderFlags &= ~_FLAG;
             }
-            else
+            else if (this._scaleY !== 0)
             {
                 this.renderFlags |= _FLAG;
             }
@@ -200,7 +200,7 @@ var Transform = {
             {
                 this.renderFlags &= ~_FLAG;
             }
-            else
+            else if (this._scaleX !== 0)
             {
                 this.renderFlags |= _FLAG;
             }
