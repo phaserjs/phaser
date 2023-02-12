@@ -279,12 +279,12 @@ var WebGLPipeline = new Class({
         /**
          * Indicates if this is a Sprite FX Pipeline, or not.
          *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#isSpriteFX
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#isPreFX
          * @type {boolean}
          * @readonly
          * @since 3.60.0
          */
-        this.isSpriteFX = false;
+        this.isPreFX = false;
 
         /**
          * An array of RenderTarget instances that belong to this pipeline.

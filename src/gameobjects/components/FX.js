@@ -19,7 +19,7 @@ var FX = {
 
     /**
      * The amount of extra padding to be applied to this Game Object
-     * when it is being rendered by a SpriteFX Pipeline.
+     * when it is being rendered by a PreFX or SpriteFX Pipeline.
      *
      * Lots of FX require additional spacing added to the texture the
      * Game Object uses, for example a glow or shadow effect, and this
@@ -35,7 +35,7 @@ var FX = {
 
     /**
      * Sets the amount of extra padding to be applied to this Game Object
-     * when it is being rendered by a SpriteFX Pipeline.
+     * when it is being rendered by a PreFX or SpriteFX Pipeline.
      *
      * Lots of FX require additional spacing added to the texture the
      * Game Object uses, for example a glow or shadow effect, and this
@@ -60,7 +60,7 @@ var FX = {
     },
 
     /**
-     * This callback is invoked when this Game Object is copied by a SpriteFX Pipeline.
+     * This callback is invoked when this Game Object is copied by a PreFX Pipeline.
      *
      * This happens when the pipeline uses its `copySprite` method.
      *
@@ -70,14 +70,14 @@ var FX = {
      * @webglOnly
      * @since 3.60.0
      *
-     * @param {Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline} pipeline - The SpriteFX Pipeline that invoked this callback.
+     * @param {Phaser.Renderer.WebGL.Pipelines.PreFXPipeline} pipeline - The PreFX Pipeline that invoked this callback.
      */
     onFXCopy: function ()
     {
     },
 
     /**
-     * This callback is invoked when this Game Object is rendered by a SpriteFX Pipeline.
+     * This callback is invoked when this Game Object is rendered by a PreFX Pipeline.
      *
      * This happens when the pipeline uses its `drawSprite` method.
      *
@@ -87,7 +87,7 @@ var FX = {
      * @webglOnly
      * @since 3.60.0
      *
-     * @param {Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline} pipeline - The SpriteFX Pipeline that invoked this callback.
+     * @param {Phaser.Renderer.WebGL.Pipelines.PreFXPipeline} pipeline - The PreFX Pipeline that invoked this callback.
      */
     onFX: function ()
     {

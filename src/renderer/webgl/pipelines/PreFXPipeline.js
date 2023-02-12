@@ -19,13 +19,13 @@ var WebGLPipeline = require('../WebGLPipeline');
 
 /**
  * @classdesc
- * The SpriteFX Pipeline is a special kind of pipeline designed specifically for applying
- * special effects to Sprites. Where-as the Post FX Pipeline applies an effect _after_ the
- * object has been rendered, the Sprite FX Pipeline allows you to control the rendering of
- * the object itself - passing it off to its own texture where multi-buffer compositing
+ * The Pre FX Pipeline is a special kind of pipeline designed specifically for applying
+ * special effects to Game Objects before they are rendered. Where-as the Post FX Pipeline applies an effect _after_ the
+ * object has been rendered, the Pre FX Pipeline allows you to control the rendering of
+ * the object itself - passing it off to its own texture, where multi-buffer compositing
  * can take place.
  *
- * You can only use the SpriteFX Pipeline on the following types of Game Objects, or those
+ * You can only use the PreFX Pipeline on the following types of Game Objects, or those
  * that extend from them:
  *
  * Sprite
@@ -37,7 +37,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  *
  * // TODO - Explain about the fbos and functions
  *
- * @class SpriteFXPipeline
+ * @class PreFXPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
  * @memberof Phaser.Renderer.WebGL.Pipelines
  * @constructor
@@ -45,13 +45,13 @@ var WebGLPipeline = require('../WebGLPipeline');
  *
  * @param {Phaser.Types.Renderer.WebGL.WebGLPipelineConfig} config - The configuration options for this pipeline.
  */
-var SpriteFXPipeline = new Class({
+var PreFXPipeline = new Class({
 
     Extends: MultiPipeline,
 
     initialize:
 
-    function SpriteFXPipeline (config)
+    function PreFXPipeline (config)
     {
         var fragShader = GetFastValue(config, 'fragShader', PostFXFS);
         var vertShader = GetFastValue(config, 'vertShader', SingleQuadVS);
@@ -92,7 +92,7 @@ var SpriteFXPipeline = new Class({
 
         MultiPipeline.call(this, config);
 
-        this.isSpriteFX = true;
+        this.isPreFX = true;
 
         this.customMainSampler = null;
 
@@ -103,7 +103,7 @@ var SpriteFXPipeline = new Class({
          *
          * This property is set during the `boot` method.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#drawSpriteShader
+         * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#drawSpriteShader
          * @type {Phaser.Renderer.WebGL.WebGLShader}
          * @default null
          * @since 3.60.0
@@ -117,7 +117,7 @@ var SpriteFXPipeline = new Class({
          *
          * This property is set during the `boot` method.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#copyShader
+         * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#copyShader
          * @type {Phaser.Renderer.WebGL.WebGLShader}
          * @default null
          * @since 3.60.0
@@ -131,7 +131,7 @@ var SpriteFXPipeline = new Class({
          *
          * This property is set during the `boot` method.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#gameShader
+         * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#gameShader
          * @type {Phaser.Renderer.WebGL.WebGLShader}
          * @default null
          * @since 3.60.0
@@ -143,7 +143,7 @@ var SpriteFXPipeline = new Class({
          *
          * This property is set during the `boot` method.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#colorMatrixShader
+         * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#colorMatrixShader
          * @type {Phaser.Renderer.WebGL.WebGLShader}
          * @since 3.60.0
          */
@@ -152,7 +152,7 @@ var SpriteFXPipeline = new Class({
         /**
          * Raw byte buffer of vertices used specifically during the copySprite method.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#quadVertexData
+         * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#quadVertexData
          * @type {ArrayBuffer}
          * @readonly
          * @since 3.60.0
@@ -162,7 +162,7 @@ var SpriteFXPipeline = new Class({
         /**
          * The WebGLBuffer that holds the quadVertexData.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#quadVertexBuffer
+         * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#quadVertexBuffer
          * @type {WebGLBuffer}
          * @readonly
          * @since 3.60.0
@@ -172,7 +172,7 @@ var SpriteFXPipeline = new Class({
         /**
          * Float32 view of the quad array buffer.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#quadVertexViewF32
+         * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#quadVertexViewF32
          * @type {Float32Array}
          * @since 3.60.0
          */
@@ -181,7 +181,7 @@ var SpriteFXPipeline = new Class({
         /**
          * A temporary Rectangle object re-used internally during sprite drawing.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#spriteBounds
+         * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#spriteBounds
          * @type {Phaser.Geom.Rectangle}
          * @private
          * @since 3.60.0
@@ -191,7 +191,7 @@ var SpriteFXPipeline = new Class({
         /**
          * A temporary Rectangle object re-used internally during sprite drawing.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#targetBounds
+         * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#targetBounds
          * @type {Phaser.Geom.Rectangle}
          * @private
          * @since 3.60.0
@@ -201,7 +201,7 @@ var SpriteFXPipeline = new Class({
         /**
          * The full-screen Render Target that the sprite is first drawn to.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#fsTarget
+         * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#fsTarget
          * @type {Phaser.Renderer.WebGL.RenderTarget}
          * @since 3.60.0
          */
@@ -210,7 +210,7 @@ var SpriteFXPipeline = new Class({
         /**
          * The most recent Game Object drawn.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#tempSprite
+         * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#tempSprite
          * @type {Phaser.GameObjects.Sprite}
          * @private
          * @since 3.60.0
@@ -261,7 +261,7 @@ var SpriteFXPipeline = new Class({
     /**
      * Handles the resizing of the quad vertex data.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#onResize
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#onResize
      * @since 3.60.0
      *
      * @param {number} width - The new width of the quad.
@@ -308,7 +308,7 @@ var SpriteFXPipeline = new Class({
      *
      * Where x0 / y0 = 0, x1 / y1 = 1, x2 / y2 = 2 and x3 / y3 = 3
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#batchQuad
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#batchQuad
      * @since 3.60.0
      *
      * @param {(Phaser.GameObjects.GameObject|null)} gameObject - The Game Object, if any, drawing this quad.
@@ -433,7 +433,7 @@ var SpriteFXPipeline = new Class({
      *
      * Note: Manipulating the Sprite during this callback will _not_ change how it is drawn to the Render Target.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#onDrawSprite
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#onDrawSprite
      * @since 3.60.0
      *
      * @param {Phaser.GameObjects.Sprite} gameObject - The Sprite being drawn.
@@ -451,7 +451,7 @@ var SpriteFXPipeline = new Class({
      *
      * Note: Manipulating the Sprite during this callback will _not_ change the Render Targets.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#onCopySprite
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#onCopySprite
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target being copied from.
@@ -476,7 +476,7 @@ var SpriteFXPipeline = new Class({
      * during the copy, allowing you to manipulate the colors to a fine degree.
      * See the `ColorMatrix` class for more details.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#copySprite
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#copySprite
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target being copied from.
@@ -570,7 +570,7 @@ var SpriteFXPipeline = new Class({
      * Draws the `source1` and `source2` Render Targets to the `target` Render Target
      * using a linear blend effect, which is controlled by the `strength` parameter.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#blendFrames
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#blendFrames
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
@@ -588,7 +588,7 @@ var SpriteFXPipeline = new Class({
      * Draws the `source1` and `source2` Render Targets to the `target` Render Target
      * using an additive blend effect, which is controlled by the `strength` parameter.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#blendFramesAdditive
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#blendFramesAdditive
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source1 - The first source Render Target.
@@ -611,7 +611,7 @@ var SpriteFXPipeline = new Class({
      *
      * This method should be the final thing called in your pipeline.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#drawToGame
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#drawToGame
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw to the game.
@@ -636,7 +636,7 @@ var SpriteFXPipeline = new Class({
      *
      * This method should be the final thing called in your pipeline.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#copyToGame
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#copyToGame
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to copy to the game.
@@ -660,7 +660,7 @@ var SpriteFXPipeline = new Class({
      *
      * Note that it does _not_ set a shader. You should do this yourself if invoking this.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#bindAndDraw
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#bindAndDraw
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The Render Target to draw to the game.
@@ -734,7 +734,7 @@ var SpriteFXPipeline = new Class({
      * `drawToGame` or `copyToGame` methods as the final thing it does. However, you can do as
      * much additional processing as you like prior to this.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#onDraw
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#onDraw
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} target - The Render Target to draw to the game.
@@ -751,7 +751,7 @@ var SpriteFXPipeline = new Class({
      *
      * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#setUVs
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#setUVs
      * @since 3.60.0
      *
      * @param {number} uA - The u value of vertex A.
@@ -792,7 +792,7 @@ var SpriteFXPipeline = new Class({
      *
      * Be sure to call `resetUVs` once you have finished manipulating the UV coordinates.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#setTargetUVs
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#setTargetUVs
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
@@ -819,7 +819,7 @@ var SpriteFXPipeline = new Class({
      *
      * The quad is used by the copy shader in this pipeline.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#resetUVs
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#resetUVs
      * @since 3.60.0
      */
     resetUVs: function ()
@@ -830,7 +830,7 @@ var SpriteFXPipeline = new Class({
     /**
      * Destroys all shader instances, removes all object references and nulls all external references.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline#destroy
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#destroy
      * @fires Phaser.Renderer.WebGL.Pipelines.Events#DESTROY
      * @since 3.60.0
      *
@@ -859,4 +859,4 @@ var SpriteFXPipeline = new Class({
 
 });
 
-module.exports = SpriteFXPipeline;
+module.exports = PreFXPipeline;

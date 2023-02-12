@@ -15,15 +15,14 @@ var Pipelines = {
 
     BitmapMaskPipeline: require('./BitmapMaskPipeline'),
     Events: require('./events'),
-    FX: require('./fx'),
     LightPipeline: require('./LightPipeline'),
     MobilePipeline: require('./MobilePipeline'),
     MultiPipeline: require('./MultiPipeline'),
     PointLightPipeline: require('./PointLightPipeline'),
     PostFXPipeline: require('./PostFXPipeline'),
+    PreFXPipeline: require('./PreFXPipeline'),
     RopePipeline: require('./RopePipeline'),
     SinglePipeline: require('./SinglePipeline'),
-    SpriteFXPipeline: require('./SpriteFXPipeline'),
     UtilityPipeline: require('./UtilityPipeline')
 
 };

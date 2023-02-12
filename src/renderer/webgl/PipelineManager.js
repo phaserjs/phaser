@@ -502,7 +502,7 @@ var PipelineManager = new Class({
             pipeline.boot();
         }
 
-        if (renderer.width !== 0 && renderer.height !== 0 && !pipeline.isSpriteFX)
+        if (renderer.width !== 0 && renderer.height !== 0 && !pipeline.isPreFX)
         {
             pipeline.resize(renderer.width, renderer.height);
         }
