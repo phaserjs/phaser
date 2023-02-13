@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BaseFX = require('./BaseFX');
 var Class = require('../../utils/Class');
 var FX_CONST = require('./const');
 
@@ -11,6 +12,7 @@ var FX_CONST = require('./const');
  * @classdesc
  *
  * @class Glow
+ * @extends Phaser.GameObjects.FX.BaseFX
  * @memberof Phaser.GameObjects.FX
  * @constructor
  * @since 3.60.0
@@ -19,15 +21,13 @@ var FX_CONST = require('./const');
  */
 var Glow = new Class({
 
+    Extends: BaseFX,
+
     initialize:
 
     function Glow (gameObject)
     {
-        this.type = FX_CONST.GLOW;
-
-        this.gameObject = gameObject;
-
-        this.active = true;
+        BaseFX.call(this, FX_CONST.GLOW, gameObject);
 
         this.distance = 16;
         this.outerStrength = 4;
@@ -61,11 +61,6 @@ var Glow = new Class({
             color[2] = (value & 0xFF) / 255;
         }
 
-    },
-
-    destroy: function ()
-    {
-        this.gameObject = null;
     }
 
 });

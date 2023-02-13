@@ -11,6 +11,7 @@ var PixelateFrag = require('../shaders/FXPixelate-frag.js');
 var PreFXPipeline = require('./PreFXPipeline');
 var ShadowFrag = require('../shaders/FXShadow-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
+var VignetteFrag = require('../shaders/FXVignette-frag.js');
 
 /**
  * @classdesc
@@ -34,7 +35,8 @@ var FXPipeline = new Class({
         config.shaders = [
             { name: 'Glow', fragShader: GlowFrag, vertShader: SingleQuadVS },
             { name: 'Shadow', fragShader: ShadowFrag, vertShader: SingleQuadVS },
-            { name: 'Pixelate', fragShader: PixelateFrag, vertShader: SingleQuadVS }
+            { name: 'Pixelate', fragShader: PixelateFrag, vertShader: SingleQuadVS },
+            { name: 'Vignette', fragShader: VignetteFrag, vertShader: SingleQuadVS }
         ];
 
         PreFXPipeline.call(this, config);
@@ -42,13 +44,6 @@ var FXPipeline = new Class({
         this.source;
         this.target;
         this.swap;
-    },
-
-    boot: function ()
-    {
-        PreFXPipeline.prototype.boot.call(this);
-
-        console.log(this.shaders);
     },
 
     onDraw: function (target1, target2, target3)
@@ -71,17 +66,22 @@ var FXPipeline = new Class({
                     switch (fx.type)
                     {
                         case FX_CONST.GLOW:
-                            this.onGlowDraw(fx);
+                            this.glow(fx);
                             drawn = true;
                             break;
 
                         case FX_CONST.SHADOW:
-                            this.onShadowDraw(fx);
+                            this.shadow(fx);
                             drawn = true;
                             break;
 
                         case FX_CONST.PIXELATE:
-                            this.onPixelateDraw(fx);
+                            this.pixelate(fx);
+                            drawn = true;
+                            break;
+
+                        case FX_CONST.VIGNETTE:
+                            this.vignette(fx);
                             drawn = true;
                             break;
                     }
@@ -97,7 +97,7 @@ var FXPipeline = new Class({
         this.drawToGame(this.source);
     },
 
-    onGlowDraw: function (config)
+    glow: function (config)
     {
         var source = this.source;
         var target = this.target;
@@ -117,7 +117,7 @@ var FXPipeline = new Class({
         this.target = source;
     },
 
-    onShadowDraw: function (config)
+    shadow: function (config)
     {
         var source = this.source;
         var target = this.target;
@@ -137,7 +137,7 @@ var FXPipeline = new Class({
         this.target = source;
     },
 
-    onPixelateDraw: function (config)
+    pixelate: function (config)
     {
         var source = this.source;
         var target = this.target;
@@ -146,6 +146,21 @@ var FXPipeline = new Class({
 
         this.set1f('amount', config.amount);
         this.set2f('resolution', source.width, source.height);
+
+        this.copy(source, target);
+
+        this.source = target;
+        this.target = source;
+    },
+
+    vignette: function (config)
+    {
+        var source = this.source;
+        var target = this.target;
+
+        this.setShader(this.shaders[FX_CONST.VIGNETTE]);
+
+        this.set1f('strength', config.strength);
 
         this.copy(source, target);
 

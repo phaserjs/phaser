@@ -4,9 +4,10 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Glow = require('../fx/Glow');
-var Shadow = require('../fx/Shadow');
-var Pixelate = require('../fx/Pixelate');
+var Effects = require('../fx/');
+// var Shadow = require('../fx/Shadow');
+// var Pixelate = require('../fx/Pixelate');
+// var Vignette = require('../fx/Vignette');
 
 /**
  * Provides methods used for setting the FX values of a Game Object.
@@ -151,7 +152,7 @@ var FX = {
 
     addGlowFX: function ()
     {
-        var fx = new Glow(this);
+        var fx = new Effects.Glow(this);
 
         this.fx.push(fx);
 
@@ -160,7 +161,7 @@ var FX = {
 
     addShadowFX: function ()
     {
-        var fx = new Shadow(this);
+        var fx = new Effects.Shadow(this);
 
         this.fx.push(fx);
 
@@ -169,7 +170,16 @@ var FX = {
 
     addPixelateFX: function ()
     {
-        var fx = new Pixelate(this);
+        var fx = new Effects.Pixelate(this);
+
+        this.fx.push(fx);
+
+        return fx;
+    },
+
+    addVignetteFX: function ()
+    {
+        var fx = new Effects.Vignette(this);
 
         this.fx.push(fx);
 

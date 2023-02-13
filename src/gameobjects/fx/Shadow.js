@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BaseFX = require('./BaseFX');
 var Class = require('../../utils/Class');
 var FX_CONST = require('./const');
 
@@ -11,6 +12,7 @@ var FX_CONST = require('./const');
  * @classdesc
  *
  * @class Shadow
+ * @extends Phaser.GameObjects.FX.BaseFX
  * @memberof Phaser.GameObjects.FX
  * @constructor
  * @since 3.60.0
@@ -19,15 +21,13 @@ var FX_CONST = require('./const');
  */
 var Shadow = new Class({
 
+    Extends: BaseFX,
+
     initialize:
 
     function Shadow (gameObject)
     {
-        this.type = FX_CONST.SHADOW;
-
-        this.gameObject = gameObject;
-
-        this.active = true;
+        BaseFX.call(this, FX_CONST.SHADOW, gameObject);
 
         this.x = 0;
         this.y = 0;
@@ -63,11 +63,6 @@ var Shadow = new Class({
             color[2] = (value & 0xFF) / 255;
         }
 
-    },
-
-    destroy: function ()
-    {
-        this.gameObject = null;
     }
 
 });

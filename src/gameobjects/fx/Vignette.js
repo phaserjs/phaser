@@ -11,7 +11,7 @@ var FX_CONST = require('./const');
 /**
  * @classdesc
  *
- * @class Pixelate
+ * @class Vignette
  * @extends Phaser.GameObjects.FX.BaseFX
  * @memberof Phaser.GameObjects.FX
  * @constructor
@@ -19,19 +19,19 @@ var FX_CONST = require('./const');
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
  */
-var Pixelate = new Class({
+var Vignette = new Class({
 
     Extends: BaseFX,
 
     initialize:
 
-    function Pixelate (gameObject)
+    function Vignette (gameObject)
     {
-        BaseFX.call(this, FX_CONST.PIXELATE, gameObject);
+        BaseFX.call(this, FX_CONST.VIGNETTE, gameObject);
 
-        this.amount = 1;
+        this.strength = 3;
     }
 
 });
 
-module.exports = Pixelate;
+module.exports = Vignette;

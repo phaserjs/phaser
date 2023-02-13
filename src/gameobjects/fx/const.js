@@ -34,7 +34,17 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    PIXELATE: 6
+    PIXELATE: 6,
+
+    /**
+     * The Vignette FX.
+     *
+     * @name Phaser.GameObjects.FX.VIGNETTE
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    VIGNETTE: 7
 
 };
 
