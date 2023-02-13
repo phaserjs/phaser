@@ -5,9 +5,10 @@
  */
 
 var Class = require('../../../utils/Class');
-var PreFXPipeline = require('./PreFXPipeline');
-var BloomFrag = require('../shaders/FXBloom-frag.js');
+var FX_CONST = require('../../../gameobjects/fx/const');
 var GlowFrag = require('../shaders/FXGlow-frag.js');
+var PixelateFrag = require('../shaders/FXPixelate-frag.js');
+var PreFXPipeline = require('./PreFXPipeline');
 var ShadowFrag = require('../shaders/FXShadow-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
 
@@ -30,54 +31,17 @@ var FXPipeline = new Class({
 
     function FXPipeline (config)
     {
-        var shaders = [];
-
-        var fragShader = GlowFrag;
-        var quality = 0.1;
-        var distance = 10;
-
-        fragShader = fragShader.replace(/__SIZE__/gi, `${(1 / quality / distance).toFixed(7)}`);
-        fragShader = fragShader.replace(/__DIST__/gi, `${distance.toFixed(0)}.0`);
-
-        shaders.push({
-            name: 'Glow',
-            fragShader: fragShader,
-            vertShader: SingleQuadVS
-        });
-
-        fragShader = ShadowFrag;
-
-        var samples = 12;
-
-        fragShader = fragShader.replace(/__SAMPLES__/gi, samples.toFixed(0));
-
-        shaders.push({
-            name: 'Shadow',
-            fragShader: fragShader,
-            vertShader: SingleQuadVS
-        });
-
-        config.shaders = shaders;
+        config.shaders = [
+            { name: 'Glow', fragShader: GlowFrag, vertShader: SingleQuadVS },
+            { name: 'Shadow', fragShader: ShadowFrag, vertShader: SingleQuadVS },
+            { name: 'Pixelate', fragShader: PixelateFrag, vertShader: SingleQuadVS }
+        ];
 
         PreFXPipeline.call(this, config);
 
-        this.bloom = {
-            steps: 4,
-            offsetX: 2,
-            offsetY: 3,
-            blurStrength: 1,
-            strength: 1.5,
-            color: [ 1, 1, 1 ]
-        };
-
-        this.glow = {
-            quality: 0.1,
-            distance: 10,
-            outerStrength: 4,
-            innerStrength: 0,
-            knockout: false,
-            color: [ 1, 1, 1, 1 ]
-        };
+        this.source;
+        this.target;
+        this.swap;
     },
 
     boot: function ()
@@ -85,60 +49,130 @@ var FXPipeline = new Class({
         PreFXPipeline.prototype.boot.call(this);
 
         console.log(this.shaders);
-
     },
 
     onDraw: function (target1, target2, target3)
     {
-        //  tempSprite = current sprite being drawn
+        this.source = target1;
+        this.target = target2;
+        this.swap = target3;
 
-        this.setShader(this.shaders[4]);
+        var drawn = false;
+        var sprite = this.tempSprite;
 
-        var glow = this.tempSprite.fx.glow;
-
-        this.set1f('outerStrength', glow.outerStrength);
-        this.set1f('innerStrength', glow.innerStrength);
-        this.set4fv('glowColor', glow.color);
-        this.setBoolean('knockout', glow.knockout);
-        this.set2f('resolution', target1.width, target1.height);
-
-        this.copy(target1, target2);
-
-        this.setShader(this.shaders[5]);
-
-        var shadow = this.tempSprite.fx.shadow;
-
-        this.set1f('intensity', shadow.intensity);
-        this.set1f('decay', shadow.decay);
-        this.set1f('power', shadow.power / shadow.samples);
-        this.set2f('lightPosition', shadow.x, shadow.y);
-        this.set4fv('shadowColor', shadow.shadowColor);
-
-        this.copy(target2, target1);
-
-        this.drawToGame(target1);
-    },
-
-    onBloomDraw: function (target1, target2, target3)
-    {
-        this.manager.copyFrame(target1, target3);
-
-        var x = (2 / target1.width) * this.offsetX;
-        var y = (2 / target1.height) * this.offsetY;
-
-        for (var i = 0; i < this.steps; i++)
+        if (sprite && sprite.fx)
         {
-            this.set2f('uOffset', x, 0);
-            this.copySprite(target1, target2);
+            for (var i = 0; i < sprite.fx.length; i++)
+            {
+                var fx = sprite.fx[i];
 
-            this.set2f('uOffset', 0, y);
-            this.copySprite(target2, target1);
+                if (fx.active)
+                {
+                    switch (fx.type)
+                    {
+                        case FX_CONST.GLOW:
+                            this.onGlowDraw(fx);
+                            drawn = true;
+                            break;
+
+                        case FX_CONST.SHADOW:
+                            this.onShadowDraw(fx);
+                            drawn = true;
+                            break;
+
+                        case FX_CONST.PIXELATE:
+                            this.onPixelateDraw(fx);
+                            drawn = true;
+                            break;
+                    }
+                }
+            }
         }
 
-        this.blendFrames(target3, target1, target2, this.strength);
+        if (!drawn)
+        {
+            this.source = target1;
+        }
 
-        this.copyToGame(target2);
-    }
+        this.drawToGame(this.source);
+    },
+
+    onGlowDraw: function (config)
+    {
+        var source = this.source;
+        var target = this.target;
+
+        this.setShader(this.shaders[FX_CONST.GLOW]);
+
+        this.set1f('distance', config.distance);
+        this.set1f('outerStrength', config.outerStrength);
+        this.set1f('innerStrength', config.innerStrength);
+        this.set4fv('glowColor', config._color);
+        this.setBoolean('knockout', config.knockout);
+        this.set2f('resolution', source.width, source.height);
+
+        this.copy(source, target);
+
+        this.source = target;
+        this.target = source;
+    },
+
+    onShadowDraw: function (config)
+    {
+        var source = this.source;
+        var target = this.target;
+
+        this.setShader(this.shaders[FX_CONST.SHADOW]);
+
+        this.set1i('samples', config.samples);
+        this.set1f('intensity', config.intensity);
+        this.set1f('decay', config.decay);
+        this.set1f('power', config.power / config.samples);
+        this.set2f('lightPosition', config.x, config.y);
+        this.set4fv('color', config._color);
+
+        this.copy(source, target);
+
+        this.source = target;
+        this.target = source;
+    },
+
+    onPixelateDraw: function (config)
+    {
+        var source = this.source;
+        var target = this.target;
+
+        this.setShader(this.shaders[FX_CONST.PIXELATE]);
+
+        this.set1f('amount', config.amount);
+        this.set2f('resolution', source.width, source.height);
+
+        this.copy(source, target);
+
+        this.source = target;
+        this.target = source;
+    },
+
+    // onBloomDraw: function (target1, target2, target3)
+    // {
+    //     this.manager.copyFrame(target1, target3);
+
+    //     var x = (2 / target1.width) * this.offsetX;
+    //     var y = (2 / target1.height) * this.offsetY;
+
+    //     for (var i = 0; i < this.steps; i++)
+    //     {
+    //         this.set2f('uOffset', x, 0);
+    //         this.copySprite(target1, target2);
+
+    //         this.set2f('uOffset', 0, y);
+    //         this.copySprite(target2, target1);
+    //     }
+
+    //     this.blendFrames(target3, target1, target2, this.strength);
+
+    //     this.copyToGame(target2);
+    // }
 
 });
 

@@ -566,25 +566,22 @@ var PreFXPipeline = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     },
 
-    // cls: function (target1, target2, target3)
-    // {
-    //     var gl = this.gl;
-
-    //     gl.clearColor(0, 0, 0, 0);
-    //     gl.viewport(0, 0, target1.width, target1.height);
-
-    //     gl.bindFramebuffer(gl.FRAMEBUFFER, target1.framebuffer);
-    //     gl.clear(gl.COLOR_BUFFER_BIT);
-
-    //     gl.bindFramebuffer(gl.FRAMEBUFFER, target2.framebuffer);
-    //     gl.clear(gl.COLOR_BUFFER_BIT);
-
-    //     gl.bindFramebuffer(gl.FRAMEBUFFER, target3.framebuffer);
-    //     gl.clear(gl.COLOR_BUFFER_BIT);
-
-    //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    // },
-
+    /**
+     * Draws the `source` Render Target to the `target` Render Target.
+     *
+     * This is done using whatever the currently bound shader is. This method does
+     * not set a shader. All it does is bind the source texture, set the viewport and UVs
+     * then bind the target framebuffer, clears it and draws the source to it.
+     *
+     * At the end a null framebuffer is bound. No other clearing-up takes place, so
+     * use this method carefully.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#copy
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
+     */
     copy: function (source, target)
     {
         var gl = this.gl;

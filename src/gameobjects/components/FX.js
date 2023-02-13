@@ -4,6 +4,10 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Glow = require('../fx/Glow');
+var Shadow = require('../fx/Shadow');
+var Pixelate = require('../fx/Pixelate');
+
 /**
  * Provides methods used for setting the FX values of a Game Object.
  * Should be applied as a mixin and not used directly.
@@ -93,28 +97,8 @@ var FX = {
     {
     },
 
-    enableFX: function ()
+    enableFX: function (padding)
     {
-        this.fx = {
-            glow: {
-                quality: 0.1,
-                distance: 10,
-                outerStrength: 4,
-                innerStrength: 0,
-                knockout: false,
-                color: [ 1, 1, 1, 1 ]
-            },
-            shadow: {
-                x: 0,
-                y: 0,
-                decay: 0.1,
-                power: 1.0,
-                shadowColor: [ 0, 0, 0, 1 ],
-                samples: 12,
-                intensity: 1
-            }
-        };
-
         var renderer = this.scene.sys.renderer;
 
         if (!renderer)
@@ -132,7 +116,64 @@ var FX = {
 
         this.pipeline = pipeline;
 
+        if (!this.fx)
+        {
+            this.fx = [];
+        }
+
+        if (padding !== undefined)
+        {
+            this.fxPadding = padding;
+        }
+
         return this;
+    },
+
+    clearFX: function ()
+    {
+        //  Remove them all
+    },
+
+    removeFX: function (fx)
+    {
+        //  Remove specific fx
+    },
+
+    disableFX: function (clear)
+    {
+        this.resetPipeline();
+
+        if (clear)
+        {
+            this.clearFX();
+        }
+    },
+
+    addGlowFX: function ()
+    {
+        var fx = new Glow(this);
+
+        this.fx.push(fx);
+
+        return fx;
+    },
+
+    addShadowFX: function ()
+    {
+        var fx = new Shadow(this);
+
+        this.fx.push(fx);
+
+        return fx;
+    },
+
+    addPixelateFX: function ()
+    {
+        var fx = new Pixelate(this);
+
+        this.fx.push(fx);
+
+        return fx;
     },
 
     addBloom: function (r, g, b)
