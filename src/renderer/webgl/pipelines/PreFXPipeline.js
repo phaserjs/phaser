@@ -566,6 +566,51 @@ var PreFXPipeline = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     },
 
+    // cls: function (target1, target2, target3)
+    // {
+    //     var gl = this.gl;
+
+    //     gl.clearColor(0, 0, 0, 0);
+    //     gl.viewport(0, 0, target1.width, target1.height);
+
+    //     gl.bindFramebuffer(gl.FRAMEBUFFER, target1.framebuffer);
+    //     gl.clear(gl.COLOR_BUFFER_BIT);
+
+    //     gl.bindFramebuffer(gl.FRAMEBUFFER, target2.framebuffer);
+    //     gl.clear(gl.COLOR_BUFFER_BIT);
+
+    //     gl.bindFramebuffer(gl.FRAMEBUFFER, target3.framebuffer);
+    //     gl.clear(gl.COLOR_BUFFER_BIT);
+
+    //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    // },
+
+    copy: function (source, target)
+    {
+        var gl = this.gl;
+
+        this.set1i('uMainSampler', 0);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+
+        //  source and target must always be the same size
+        gl.viewport(0, 0, source.width, source.height);
+
+        this.setUVs(0, 0, 0, 1, 1, 1, 1, 0);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        gl.bufferData(gl.ARRAY_BUFFER, this.quadVertexData, gl.STATIC_DRAW);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    },
+
     /**
      * Draws the `source1` and `source2` Render Targets to the `target` Render Target
      * using a linear blend effect, which is controlled by the `strength` parameter.
@@ -713,14 +758,22 @@ var PreFXPipeline = new Class({
         // var y2 = matrix.getY(xw, y);
         // var y3 = matrix.getY(xw, yh);
 
-        this.batchVert(x0, y0, 0, 0, 0, 0, 0xffffff);
-        this.batchVert(x1, y1, 0, 1, 0, 0, 0xffffff);
-        this.batchVert(x2, y2, 1, 1, 0, 0, 0xffffff);
-        this.batchVert(x0, y0, 0, 0, 0, 0, 0xffffff);
-        this.batchVert(x2, y2, 1, 1, 0, 0, 0xffffff);
-        this.batchVert(x3, y3, 1, 0, 0, 0, 0xffffff);
+        var white = 0xffffff;
+
+        this.batchVert(x0, y0, 0, 0, 0, 0, white);
+        this.batchVert(x1, y1, 0, 1, 0, 0, white);
+        this.batchVert(x2, y2, 1, 1, 0, 0, white);
+        this.batchVert(x0, y0, 0, 0, 0, 0, white);
+        this.batchVert(x2, y2, 1, 1, 0, 0, white);
+        this.batchVert(x3, y3, 1, 0, 0, 0, white);
 
         this.flush();
+
+        //  Clear the source framebuffer out, ready for the next pass
+        gl.clearColor(0, 0, 0, 0);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, source.framebuffer);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         //  No hanging references
         this.tempSprite = null;

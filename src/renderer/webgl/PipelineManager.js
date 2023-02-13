@@ -14,6 +14,7 @@ var SnapCeil = require('../../math/snap/SnapCeil');
 
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
+var FXPipeline = require('./pipelines/FXPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
 var MobilePipeline = require('./pipelines/MobilePipeline');
 var MultiPipeline = require('./pipelines/MultiPipeline');
@@ -30,7 +31,7 @@ var UtilityPipeline = require('./pipelines/UtilityPipeline');
  * The `WebGLRenderer` owns a single instance of the Pipeline Manager, which you can access
  * via the `WebGLRenderer.pipelines` property.
  *
- * By default, there are 7 pipelines installed into the Pipeline Manager when Phaser boots:
+ * By default, there are 9 pipelines installed into the Pipeline Manager when Phaser boots:
  *
  * 1. The Multi Pipeline. Responsible for all multi-texture rendering, i.e. Sprites and Tilemaps.
  * 2. The Rope Pipeline. Responsible for rendering the Rope Game Object.
@@ -40,6 +41,7 @@ var UtilityPipeline = require('./pipelines/UtilityPipeline');
  * 6. The Bitmap Mask Pipeline. Responsible for Bitmap Mask rendering.
  * 7. The Utility Pipeline. Responsible for providing lots of handy texture manipulation functions.
  * 8. The Mobile Pipeline. Responsible for rendering on mobile with single-bound textures.
+ * 9. The FX Pipeline. Responsible for rendering Game Objects with special FX applied to them.
  *
  * You can add your own custom pipeline via the `PipelineManager.add` method. Pipelines are
  * identified by unique string-based keys.
@@ -92,7 +94,8 @@ var PipelineManager = new Class({
             [ CONST.ROPE_PIPELINE, RopePipeline ],
             [ CONST.LIGHT_PIPELINE, LightPipeline ],
             [ CONST.POINTLIGHT_PIPELINE, PointLightPipeline ],
-            [ CONST.MOBILE_PIPELINE, MobilePipeline ]
+            [ CONST.MOBILE_PIPELINE, MobilePipeline ],
+            [ CONST.FX_PIPELINE, FXPipeline ]
         ]);
 
         /**
@@ -186,7 +189,7 @@ var PipelineManager = new Class({
         /**
          * A constant-style reference to the Mobile Pipeline Instance.
          *
-         * This is the default Phaser 3 pipeline and is used by the WebGL Renderer to manage
+         * This is the default Phaser 3 mobile pipeline and is used by the WebGL Renderer to manage
          * camera effects and more on mobile devices. This property is set during the `boot` method.
          *
          * @name Phaser.Renderer.WebGL.PipelineManager#MOBILE_PIPELINE
@@ -195,6 +198,19 @@ var PipelineManager = new Class({
          * @since 3.60.0
          */
         this.MOBILE_PIPELINE = null;
+
+        /**
+         * A constant-style reference to the FX Pipeline Instance.
+         *
+         * This is the default Phaser 3 FX pipeline and is used by the WebGL Renderer to manage
+         * Game Objects with special effects enabled. This property is set during the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.PipelineManager#FX_PIPELINE
+         * @type {Phaser.Renderer.WebGL.Pipelines.FXPipeline}
+         * @default null
+         * @since 3.60.0
+         */
+        this.FX_PIPELINE = null;
 
         /**
          * A reference to the Full Frame 1 Render Target that belongs to the
@@ -378,6 +394,7 @@ var PipelineManager = new Class({
         this.MULTI_PIPELINE = this.get(CONST.MULTI_PIPELINE);
         this.BITMAPMASK_PIPELINE = this.get(CONST.BITMAPMASK_PIPELINE);
         this.MOBILE_PIPELINE = this.get(CONST.MOBILE_PIPELINE);
+        this.FX_PIPELINE = this.get(CONST.FX_PIPELINE);
 
         //  And now the ones in the config, if any
 
@@ -1144,6 +1161,19 @@ var PipelineManager = new Class({
     setUtility: function (currentShader)
     {
         return this.UTILITY_PIPELINE.bind(currentShader);
+    },
+
+    /**
+     * Sets the FX Pipeline to be the currently bound pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#setFX
+     * @since 3.60.0
+     *
+     * @return {Phaser.Renderer.WebGL.Pipelines.FXPipeline} The FX Pipeline instance.
+     */
+    setFX: function ()
+    {
+        return this.set(this.FX_PIPELINE);
     },
 
     /**

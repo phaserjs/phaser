@@ -4,8 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Bloom = require('../../renderer/webgl/pipelines/fx/Bloom.js');
-
 /**
  * Provides methods used for setting the FX values of a Game Object.
  * Should be applied as a mixin and not used directly.
@@ -16,6 +14,8 @@ var Bloom = require('../../renderer/webgl/pipelines/fx/Bloom.js');
  */
 
 var FX = {
+
+    fx: null,
 
     /**
      * The amount of extra padding to be applied to this Game Object
@@ -93,18 +93,50 @@ var FX = {
     {
     },
 
+    enableFX: function ()
+    {
+        this.fx = {
+            glow: {
+                quality: 0.1,
+                distance: 10,
+                outerStrength: 4,
+                innerStrength: 0,
+                knockout: false,
+                color: [ 1, 1, 1, 1 ]
+            },
+            shadow: {
+                x: 0,
+                y: 0,
+                decay: 0.1,
+                power: 1.0,
+                shadowColor: [ 0, 0, 0, 1 ],
+                samples: 12,
+                intensity: 1
+            }
+        };
+
+        var renderer = this.scene.sys.renderer;
+
+        if (!renderer)
+        {
+            return this;
+        }
+
+        var pipeline;
+        var pipelines = renderer.pipelines;
+
+        if (pipelines)
+        {
+            pipeline = pipelines.FX_PIPELINE;
+        }
+
+        this.pipeline = pipeline;
+
+        return this;
+    },
+
     addBloom: function (r, g, b)
     {
-        var instance = new Bloom(this.scene.sys.game);
-
-        instance.gameObject = this;
-        instance.setColor(r, g, b);
-
-        this.postPipelines.push(instance);
-
-        this.hasPostPipeline = true;
-
-        return instance;
     }
 
 };

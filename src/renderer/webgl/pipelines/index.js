@@ -15,6 +15,7 @@ var Pipelines = {
 
     BitmapMaskPipeline: require('./BitmapMaskPipeline'),
     Events: require('./events'),
+    FXPipeline: require('./FXPipeline'),
     LightPipeline: require('./LightPipeline'),
     MobilePipeline: require('./MobilePipeline'),
     MultiPipeline: require('./MultiPipeline'),
