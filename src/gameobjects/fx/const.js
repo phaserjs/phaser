@@ -14,7 +14,7 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    GLOW: 0,
+    GLOW: 4,
 
     /**
      * The Shadow FX.
@@ -24,7 +24,7 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    SHADOW: 1,
+    SHADOW: 5,
 
     /**
      * The Pixelate FX.
@@ -34,7 +34,7 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    PIXELATE: 2,
+    PIXELATE: 6,
 
     /**
      * The Vignette FX.
@@ -44,7 +44,7 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    VIGNETTE: 3,
+    VIGNETTE: 7,
 
     /**
      * The Shine FX.
@@ -54,7 +54,7 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    SHINE: 4,
+    SHINE: 8,
 
     /**
      * The Blur FX.
@@ -64,7 +64,17 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    BLUR: 5
+    BLUR: 9, // uses 3 shaders, slots 9, 10 and 11
+
+    /**
+     * The Linear Gradient FX.
+     *
+     * @name Phaser.GameObjects.FX.LINEAR_GRADIENT
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    LINEAR_GRADIENT: 12
 
 };
 

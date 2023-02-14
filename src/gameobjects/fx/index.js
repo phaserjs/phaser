@@ -16,6 +16,7 @@ module.exports = {
     Shadow: require('./Shadow'),
     Shine: require('./Shine'),
     Blur: require('./Blur'),
+    LinearGradient: require('./LinearGradient'),
     Vignette: require('./Vignette')
 
 };

@@ -209,8 +209,32 @@ var FX = {
         return fx;
     },
 
-    addBloom: function (r, g, b)
+    addBlurFX: function ()
     {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
+        var fx = new Effects.Blur(this);
+
+        this.fx.push(fx);
+
+        return fx;
+    },
+
+    addLinearGradientFX: function ()
+    {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
+        var fx = new Effects.LinearGradient(this);
+
+        this.fx.push(fx);
+
+        return fx;
     }
 
 };

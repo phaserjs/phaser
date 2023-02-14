@@ -4,15 +4,20 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BlurHighFrag = require('../shaders/FXBlurHigh-frag.js');
+var BlurLowFrag = require('../shaders/FXBlurLow-frag.js');
+var BlurMedFrag = require('../shaders/FXBlurMed-frag.js');
 var Class = require('../../../utils/Class');
 var FX_CONST = require('../../../gameobjects/fx/const');
+var GetFastValue = require('../../../utils/object/GetFastValue');
 var GlowFrag = require('../shaders/FXGlow-frag.js');
 var PixelateFrag = require('../shaders/FXPixelate-frag.js');
 var PreFXPipeline = require('./PreFXPipeline');
 var ShadowFrag = require('../shaders/FXShadow-frag.js');
+var ShineFrag = require('../shaders/FXShine-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
 var VignetteFrag = require('../shaders/FXVignette-frag.js');
-var ShineFrag = require('../shaders/FXShine-frag.js');
+var LinearGradientFrag = require('../shaders/FXLinearGradient-frag.js');
 
 /**
  * @classdesc
@@ -33,12 +38,19 @@ var FXPipeline = new Class({
 
     function FXPipeline (config)
     {
+        var vertShader = SingleQuadVS;
+
+        //  Order is fixed to match with the FX_CONST. Do not adjust.
         config.shaders = [
-            { name: 'Glow', fragShader: GlowFrag, vertShader: SingleQuadVS },
-            { name: 'Shadow', fragShader: ShadowFrag, vertShader: SingleQuadVS },
-            { name: 'Pixelate', fragShader: PixelateFrag, vertShader: SingleQuadVS },
-            { name: 'Vignette', fragShader: VignetteFrag, vertShader: SingleQuadVS },
-            { name: 'Shine', fragShader: ShineFrag, vertShader: SingleQuadVS }
+            { name: 'Glow', fragShader: GlowFrag, vertShader: vertShader },
+            { name: 'Shadow', fragShader: ShadowFrag, vertShader: vertShader },
+            { name: 'Pixelate', fragShader: PixelateFrag, vertShader: vertShader },
+            { name: 'Vignette', fragShader: VignetteFrag, vertShader: vertShader },
+            { name: 'Shine', fragShader: ShineFrag, vertShader: vertShader },
+            { name: 'BlurLow', fragShader: BlurLowFrag, vertShader: vertShader },
+            { name: 'BlurMed', fragShader: BlurMedFrag, vertShader: vertShader },
+            { name: 'BlurHigh', fragShader: BlurHighFrag, vertShader: vertShader },
+            { name: 'LinearGradient', fragShader: LinearGradientFrag, vertShader: vertShader }
         ];
 
         PreFXPipeline.call(this, config);
@@ -50,7 +62,9 @@ var FXPipeline = new Class({
         this.pixelate = manager.getPostPipeline('PixelateFX');
         this.vignette = manager.getPostPipeline('VignetteFX');
         this.shine = manager.getPostPipeline('ShineFX');
+        this.linearGradient = manager.getPostPipeline('LinearGradientFX');
 
+        //  This is a sparse array
         this.fxHandlers = [];
 
         this.fxHandlers[FX_CONST.GLOW] = this.onGlow;
@@ -58,6 +72,8 @@ var FXPipeline = new Class({
         this.fxHandlers[FX_CONST.PIXELATE] = this.onPixelate;
         this.fxHandlers[FX_CONST.VIGNETTE] = this.onVignette;
         this.fxHandlers[FX_CONST.SHINE] = this.onShine;
+        this.fxHandlers[FX_CONST.BLUR] = this.onBlur;
+        this.fxHandlers[FX_CONST.LINEAR_GRADIENT] = this.onLinearGradient;
 
         this.source;
         this.target;
@@ -107,7 +123,7 @@ var FXPipeline = new Class({
 
     onGlow: function (config, width, height)
     {
-        var shader = this.shaders[4 + FX_CONST.GLOW];
+        var shader = this.shaders[FX_CONST.GLOW];
 
         this.setShader(shader);
 
@@ -118,7 +134,7 @@ var FXPipeline = new Class({
 
     onShadow: function (config)
     {
-        var shader = this.shaders[4 + FX_CONST.SHADOW];
+        var shader = this.shaders[FX_CONST.SHADOW];
 
         this.setShader(shader);
 
@@ -129,7 +145,7 @@ var FXPipeline = new Class({
 
     onPixelate: function (config, width, height)
     {
-        var shader = this.shaders[4 + FX_CONST.PIXELATE];
+        var shader = this.shaders[FX_CONST.PIXELATE];
 
         this.setShader(shader);
 
@@ -140,7 +156,7 @@ var FXPipeline = new Class({
 
     onVignette: function (config)
     {
-        var shader = this.shaders[4 + FX_CONST.VIGNETTE];
+        var shader = this.shaders[FX_CONST.VIGNETTE];
 
         this.setShader(shader);
 
@@ -151,11 +167,49 @@ var FXPipeline = new Class({
 
     onShine: function (config, width, height)
     {
-        var shader = this.shaders[4 + FX_CONST.SHINE];
+        var shader = this.shaders[FX_CONST.SHINE];
 
         this.setShader(shader);
 
         this.shine.onPreRender(config, shader, width, height);
+
+        this.runDraw();
+    },
+
+    onBlur: function (config, width, height)
+    {
+        var quality = GetFastValue(config, 'quality');
+
+        var shader = this.shaders[FX_CONST.BLUR + quality];
+
+        this.setShader(shader);
+
+        this.set1i('uMainSampler', 0);
+        this.set2f('resolution', width, height);
+        this.set1f('strength', GetFastValue(config, 'strength'));
+        this.set3fv('color', GetFastValue(config, 'glcolor'));
+
+        var x = GetFastValue(config, 'x');
+        var y = GetFastValue(config, 'y');
+        var steps = GetFastValue(config, 'steps');
+
+        for (var i = 0; i < steps; i++)
+        {
+            this.set2f('offset', x, 0);
+            this.runDraw();
+
+            this.set2f('offset', 0, y);
+            this.runDraw();
+        }
+    },
+
+    onLinearGradient: function (config)
+    {
+        var shader = this.shaders[FX_CONST.LINEAR_GRADIENT];
+
+        this.setShader(shader);
+
+        this.linearGradient.onPreRender(config, shader);
 
         this.runDraw();
     },

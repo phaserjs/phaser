@@ -18,12 +18,11 @@ module.exports = [
     '',
     '    vec2 offset = vec2(1.333) * strength;',
     '',
-    '    col += texture2D(uMainSampler, uv) * 0.29411764705882354 * 1.5;',
+    '    col += texture2D(uMainSampler, uv) * 0.29411764705882354;',
     '    col += texture2D(uMainSampler, uv + (offset / resolution)) * 0.35294117647058826;',
     '    col += texture2D(uMainSampler, uv - (offset / resolution)) * 0.35294117647058826;',
     '',
-    '    // gl_FragColor = col * vec4(color, 1.0);',
-    '    gl_FragColor = col;',
+    '    gl_FragColor = col * vec4(color, 1.0);',
     '}',
     ''
 ].join('\n');
