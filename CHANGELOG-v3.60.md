@@ -100,6 +100,7 @@ As of Phaser 3.60 this Game Object is WebGL only. Please see the new examples an
 * `PipelineManager.getRenderTarget` is a new method that will return the a `RenderTarget` that best fits the dimensions given. This is typically called by Pre FX Pipelines, rather than directly.
 * `PipelineManager.getSwapRenderTarget` is a new method that will return a 'swap' `RenderTarget` that matches the size of the main target. This is called by Pre FX pipelines and not typically called directly.
 * `PipelineManager.getAltSwapRenderTarget` is a new method that will return a 'alternative swap' `RenderTarget` that matches the size of the main target. This is called by Pre FX pipelines and not typically called directly.
+* The `WebGLPipeline.setTime` method has a new optional parameter `shader`, which allows you to control the shader on which the time value is set.
 
 ### New Features - Compressed Texture Support
 
