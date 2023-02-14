@@ -1953,12 +1953,13 @@ var WebGLPipeline = new Class({
      * @since 3.50.0
      *
      * @param {string} name - The name of the uniform to set.
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [shader] - The shader to set the value on. If not given, the `currentShader` is used.
      *
      * @return {this} This WebGLPipeline instance.
      */
-    setTime: function (uniform)
+    setTime: function (name, shader)
     {
-        this.set1f(uniform, this.game.loop.getDuration());
+        this.set1f(name, this.game.loop.getDuration(), shader);
 
         return this;
     },
