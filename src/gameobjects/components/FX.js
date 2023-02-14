@@ -5,9 +5,6 @@
  */
 
 var Effects = require('../fx/');
-// var Shadow = require('../fx/Shadow');
-// var Pixelate = require('../fx/Pixelate');
-// var Vignette = require('../fx/Vignette');
 
 /**
  * Provides methods used for setting the FX values of a Game Object.
