@@ -277,7 +277,7 @@ var WebGLPipeline = new Class({
         this.isPostFX = false;
 
         /**
-         * Indicates if this is a Sprite FX Pipeline, or not.
+         * Indicates if this is a Pre FX Pipeline, or not.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#isPreFX
          * @type {boolean}
