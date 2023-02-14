@@ -132,13 +132,18 @@ var RenderTarget = new Class({
          * @readonly
          * @since 3.50.0
          */
-        this.autoResize = false;
+        this.autoResize = true;
 
         this.resize(width, height);
 
         if (autoResize)
         {
             this.setAutoResize(true);
+        }
+        else
+        {
+            //  Block resizing unless this RT allows it
+            this.autoResize = false;
         }
     },
 
@@ -192,7 +197,7 @@ var RenderTarget = new Class({
         var scaledWidth = width * this.scale;
         var scaledHeight = height * this.scale;
 
-        if (scaledWidth !== this.width || scaledHeight !== this.height)
+        if (this.autoResize && (scaledWidth !== this.width || scaledHeight !== this.height))
         {
             var renderer = this.renderer;
 
