@@ -284,8 +284,8 @@ var PostFXPipeline = new Class({
     },
 
     /**
-     * Copy the `source` Render Target to the `target` Render Target, using the
-     * given Color Matrix.
+     * Copy the `source` Render Target to the `target` Render Target, using this pipelines
+     * Color Matrix.
      *
      * The difference between this method and `copyFrame` is that this method
      * uses a color matrix shader, where you have full control over the luminance

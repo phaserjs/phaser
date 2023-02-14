@@ -54,7 +54,17 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    SHINE: 4
+    SHINE: 4,
+
+    /**
+     * The Blur FX.
+     *
+     * @name Phaser.GameObjects.FX.BLUR
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    BLUR: 5
 
 };
 

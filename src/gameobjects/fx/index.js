@@ -15,6 +15,7 @@ module.exports = {
     Pixelate: require('./Pixelate'),
     Shadow: require('./Shadow'),
     Shine: require('./Shine'),
+    Blur: require('./Blur'),
     Vignette: require('./Vignette')
 
 };

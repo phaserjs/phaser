@@ -23,25 +23,9 @@ var GlowFXPipeline = new Class({
         });
 
         this.distance = 10;
-
-        /**
-         * The strength of the glow outward from the edge of the sprite.
-         * @default 4
-         */
         this.outerStrength = 4;
-
-        /**
-         * The strength of the glow inward from the edge of the sprite.
-         * @default 0
-         */
         this.innerStrength = 0;
-
-        /**
-         * Only draw the glow, not the texture itself
-         * @default false
-         */
         this.knockout = false;
-
         this.glcolor = [ 1, 1, 1, 1 ];
     },
 
