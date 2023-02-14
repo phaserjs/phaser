@@ -22,6 +22,7 @@ var PointLightPipeline = require('./pipelines/PointLightPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
 var SinglePipeline = require('./pipelines/SinglePipeline');
 var UtilityPipeline = require('./pipelines/UtilityPipeline');
+var GlowFXPipeline = require('./pipelines/fx/GlowFXPipeline');
 
 /**
  * @classdesc
@@ -105,7 +106,9 @@ var PipelineManager = new Class({
          * @type {Phaser.Structs.Map.<string, Class>}
          * @since 3.50.0
          */
-        this.postPipelineClasses = new CustomMap();
+        this.postPipelineClasses = new CustomMap([
+            [ 'GlowFX', GlowFXPipeline ]
+        ]);
 
         /**
          * This map stores all pipeline instances in this manager.
@@ -1297,6 +1300,8 @@ var PipelineManager = new Class({
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#getRenderTarget
      * @since 3.60.0
+     *
+     * @param {number} size - The maximum dimension required.
      *
      * @return {Phaser.Renderer.WebGL.RenderTarget} A Render Target large enough to fit the sprite.
      */
