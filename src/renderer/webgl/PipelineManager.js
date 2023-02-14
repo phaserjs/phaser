@@ -22,7 +22,13 @@ var PointLightPipeline = require('./pipelines/PointLightPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
 var SinglePipeline = require('./pipelines/SinglePipeline');
 var UtilityPipeline = require('./pipelines/UtilityPipeline');
+
+//  FX Pipelines
 var GlowFXPipeline = require('./pipelines/fx/GlowFXPipeline');
+var ShadowFXPipeline = require('./pipelines/fx/ShadowFXPipeline');
+var PixelateFXPipeline = require('./pipelines/fx/PixelateFXPipeline');
+var VignetteFXPipeline = require('./pipelines/fx/VignetteFXPipeline');
+var ShineFXPipeline = require('./pipelines/fx/ShineFXPipeline');
 
 /**
  * @classdesc
@@ -107,7 +113,11 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.postPipelineClasses = new CustomMap([
-            [ 'GlowFX', GlowFXPipeline ]
+            [ 'GlowFX', GlowFXPipeline ],
+            [ 'ShadowFX', ShadowFXPipeline ],
+            [ 'PixelateFX', PixelateFXPipeline ],
+            [ 'VignetteFX', VignetteFXPipeline ],
+            [ 'ShineFX', ShineFXPipeline ]
         ]);
 
         /**

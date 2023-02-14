@@ -12,7 +12,12 @@ var PreFXPipeline = require('./PreFXPipeline');
 var ShadowFrag = require('../shaders/FXShadow-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
 var VignetteFrag = require('../shaders/FXVignette-frag.js');
+var ShineFrag = require('../shaders/FXShine-frag.js');
 var GlowFXPipeline = require('./fx/GlowFXPipeline');
+var ShadowFXPipeline = require('./fx/ShadowFXPipeline');
+var PixelateFXPipeline = require('./fx/PixelateFXPipeline');
+var VignetteFXPipeline = require('./fx/VignetteFXPipeline');
+var ShineFXPipeline = require('./fx/ShineFXPipeline');
 
 /**
  * @classdesc
@@ -37,7 +42,8 @@ var FXPipeline = new Class({
             { name: 'Glow', fragShader: GlowFrag, vertShader: SingleQuadVS },
             { name: 'Shadow', fragShader: ShadowFrag, vertShader: SingleQuadVS },
             { name: 'Pixelate', fragShader: PixelateFrag, vertShader: SingleQuadVS },
-            { name: 'Vignette', fragShader: VignetteFrag, vertShader: SingleQuadVS }
+            { name: 'Vignette', fragShader: VignetteFrag, vertShader: SingleQuadVS },
+            { name: 'Shine', fragShader: ShineFrag, vertShader: SingleQuadVS }
         ];
 
         PreFXPipeline.call(this, config);
@@ -45,6 +51,18 @@ var FXPipeline = new Class({
         var game = this.game;
 
         this.glow = new GlowFXPipeline(game);
+        this.shadow = new ShadowFXPipeline(game);
+        this.pixelate = new PixelateFXPipeline(game);
+        this.vignette = new VignetteFXPipeline(game);
+        this.shine = new ShineFXPipeline(game);
+
+        this.fxHandlers = [];
+
+        this.fxHandlers[FX_CONST.GLOW] = this.onGlow;
+        this.fxHandlers[FX_CONST.SHADOW] = this.onShadow;
+        this.fxHandlers[FX_CONST.PIXELATE] = this.onPixelate;
+        this.fxHandlers[FX_CONST.VIGNETTE] = this.onVignette;
+        this.fxHandlers[FX_CONST.SHINE] = this.onShine;
 
         this.source;
         this.target;
@@ -61,6 +79,7 @@ var FXPipeline = new Class({
         var height = target1.height;
 
         var sprite = this.tempSprite;
+        var handlers = this.fxHandlers;
 
         if (sprite && sprite.fx)
         {
@@ -72,26 +91,7 @@ var FXPipeline = new Class({
 
                 if (config.active)
                 {
-                    //  TODO - We can remove all of this by having an array
-                    //  that maps the CONSTs to the onGlow, onShadow etc methods
-                    switch (config.type)
-                    {
-                        case FX_CONST.GLOW:
-                            this.onGlow(config, width, height);
-                            break;
-
-                        case FX_CONST.SHADOW:
-                            this.onShadow(config, width, height);
-                            break;
-
-                        case FX_CONST.PIXELATE:
-                            this.onPixelate(config, width, height);
-                            break;
-
-                        case FX_CONST.VIGNETTE:
-                            this.onVignette(config, width, height);
-                            break;
-                    }
+                    handlers[config.type].call(this, config, width, height);
                 }
             }
         }
@@ -112,7 +112,7 @@ var FXPipeline = new Class({
 
     onGlow: function (config, width, height)
     {
-        var shader = this.shaders[FX_CONST.GLOW];
+        var shader = this.shaders[4 + FX_CONST.GLOW];
 
         this.setShader(shader);
 
@@ -123,56 +123,46 @@ var FXPipeline = new Class({
 
     onShadow: function (config)
     {
-        var source = this.source;
-        var target = this.target;
+        var shader = this.shaders[4 + FX_CONST.SHADOW];
 
-        this.setShader(this.shaders[FX_CONST.SHADOW]);
+        this.setShader(shader);
 
-        this.set1i('samples', config.samples);
-        this.set1f('intensity', config.intensity);
-        this.set1f('decay', config.decay);
-        this.set1f('power', config.power / config.samples);
-        this.set2f('lightPosition', config.x, config.y);
-        this.set4fv('color', config._color);
+        this.shadow.onPreRender(config, shader);
 
-        this.copy(source, target);
-
-        this.source = target;
-        this.target = source;
+        this.runDraw();
     },
 
-    onPixelate: function (config)
+    onPixelate: function (config, width, height)
     {
-        var source = this.source;
-        var target = this.target;
+        var shader = this.shaders[4 + FX_CONST.PIXELATE];
 
-        this.setShader(this.shaders[FX_CONST.PIXELATE]);
+        this.setShader(shader);
 
-        this.set1f('amount', config.amount);
-        this.set2f('resolution', source.width, source.height);
+        this.pixelate.onPreRender(config, shader, width, height);
 
-        this.copy(source, target);
-
-        this.source = target;
-        this.target = source;
+        this.runDraw();
     },
 
     onVignette: function (config)
     {
-        var source = this.source;
-        var target = this.target;
+        var shader = this.shaders[4 + FX_CONST.VIGNETTE];
 
-        // console.log(source, target);
-        // debugger;
+        this.setShader(shader);
 
-        this.setShader(this.shaders[FX_CONST.VIGNETTE]);
+        this.vignette.onPreRender(config, shader);
 
-        this.set1f('strength', config.strength);
+        this.runDraw();
+    },
 
-        this.copy(source, target);
+    onShine: function (config, width, height)
+    {
+        var shader = this.shaders[4 + FX_CONST.SHINE];
 
-        this.source = target;
-        this.target = source;
+        this.setShader(shader);
+
+        this.shine.onPreRender(config, shader, width, height);
+
+        this.runDraw();
     },
 
     // onBloom: function (target1, target2, target3)

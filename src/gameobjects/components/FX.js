@@ -183,6 +183,15 @@ var FX = {
         return fx;
     },
 
+    addShineFX: function ()
+    {
+        var fx = new Effects.Shine(this);
+
+        this.fx.push(fx);
+
+        return fx;
+    },
+
     addBloom: function (r, g, b)
     {
     }

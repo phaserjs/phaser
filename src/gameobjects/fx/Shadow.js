@@ -33,7 +33,7 @@ var Shadow = new Class({
         this.y = 0;
         this.decay = 0.1;
         this.power = 1.0;
-        this._color = [ 0, 0, 0, 1 ];
+        this.glcolor = [ 0, 0, 0, 1 ];
         this.samples = 6; // max 12, min 1
         this.intensity = 1;
     },
@@ -49,14 +49,14 @@ var Shadow = new Class({
 
         get: function ()
         {
-            var color = this._color;
+            var color = this.glcolor;
 
             return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
         },
 
         set: function (value)
         {
-            var color = this._color;
+            var color = this.glcolor;
 
             color[0] = ((value >> 16) & 0xFF) / 255;
             color[1] = ((value >> 8) & 0xFF) / 255;

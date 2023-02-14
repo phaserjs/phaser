@@ -14,7 +14,7 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    GLOW: 4,
+    GLOW: 0,
 
     /**
      * The Shadow FX.
@@ -24,7 +24,7 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    SHADOW: 5,
+    SHADOW: 1,
 
     /**
      * The Pixelate FX.
@@ -34,7 +34,7 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    PIXELATE: 6,
+    PIXELATE: 2,
 
     /**
      * The Vignette FX.
@@ -44,7 +44,17 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    VIGNETTE: 7
+    VIGNETTE: 3,
+
+    /**
+     * The Shine FX.
+     *
+     * @name Phaser.GameObjects.FX.SHINE
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    SHINE: 4
 
 };
 
