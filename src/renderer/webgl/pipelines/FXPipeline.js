@@ -13,11 +13,6 @@ var ShadowFrag = require('../shaders/FXShadow-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
 var VignetteFrag = require('../shaders/FXVignette-frag.js');
 var ShineFrag = require('../shaders/FXShine-frag.js');
-var GlowFXPipeline = require('./fx/GlowFXPipeline');
-var ShadowFXPipeline = require('./fx/ShadowFXPipeline');
-var PixelateFXPipeline = require('./fx/PixelateFXPipeline');
-var VignetteFXPipeline = require('./fx/VignetteFXPipeline');
-var ShineFXPipeline = require('./fx/ShineFXPipeline');
 
 /**
  * @classdesc
@@ -48,13 +43,13 @@ var FXPipeline = new Class({
 
         PreFXPipeline.call(this, config);
 
-        var game = this.game;
+        var manager = this.manager;
 
-        this.glow = new GlowFXPipeline(game);
-        this.shadow = new ShadowFXPipeline(game);
-        this.pixelate = new PixelateFXPipeline(game);
-        this.vignette = new VignetteFXPipeline(game);
-        this.shine = new ShineFXPipeline(game);
+        this.glow = manager.getPostPipeline('GlowFX');
+        this.shadow = manager.getPostPipeline('ShadowFX');
+        this.pixelate = manager.getPostPipeline('PixelateFX');
+        this.vignette = manager.getPostPipeline('VignetteFX');
+        this.shine = manager.getPostPipeline('ShineFX');
 
         this.fxHandlers = [];
 

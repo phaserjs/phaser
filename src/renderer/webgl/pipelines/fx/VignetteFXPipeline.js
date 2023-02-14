@@ -22,7 +22,10 @@ var VignetteFXPipeline = new Class({
             fragShader: VignetteFrag
         });
 
-        this.strength = 1;
+        this.x = 0.5;
+        this.y = 0.5;
+        this.radius = 0.5;
+        this.strength = 0.5;
     },
 
     onPreRender: function (config, shader)
@@ -30,7 +33,9 @@ var VignetteFXPipeline = new Class({
         // eslint-disable-next-line consistent-this
         if (config === undefined) { config = this; }
 
+        this.set1f('radius', GetFastValue(config, 'radius'), shader);
         this.set1f('strength', GetFastValue(config, 'strength'), shader);
+        this.set2f('position', GetFastValue(config, 'x'), GetFastValue(config, 'y'), shader);
     }
 
 });

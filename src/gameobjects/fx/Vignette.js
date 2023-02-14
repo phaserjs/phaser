@@ -29,7 +29,10 @@ var Vignette = new Class({
     {
         BaseFX.call(this, FX_CONST.VIGNETTE, gameObject);
 
-        this.strength = 1;
+        this.x = 0.5;
+        this.y = 0.5;
+        this.radius = 0.5;
+        this.strength = 0.5;
     }
 
 });

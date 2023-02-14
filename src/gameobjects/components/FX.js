@@ -99,20 +99,12 @@ var FX = {
     {
         var renderer = this.scene.sys.renderer;
 
-        if (!renderer)
+        if (!renderer || !renderer.pipelines)
         {
             return this;
         }
 
-        var pipeline;
-        var pipelines = renderer.pipelines;
-
-        if (pipelines)
-        {
-            pipeline = pipelines.FX_PIPELINE;
-        }
-
-        this.pipeline = pipeline;
+        this.pipeline = renderer.pipelines.FX_PIPELINE;
 
         if (!this.fx)
         {
@@ -149,6 +141,11 @@ var FX = {
 
     addGlowFX: function ()
     {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
         var fx = new Effects.Glow(this);
 
         this.fx.push(fx);
@@ -158,6 +155,11 @@ var FX = {
 
     addShadowFX: function ()
     {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
         var fx = new Effects.Shadow(this);
 
         this.fx.push(fx);
@@ -167,6 +169,11 @@ var FX = {
 
     addPixelateFX: function ()
     {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
         var fx = new Effects.Pixelate(this);
 
         this.fx.push(fx);
@@ -176,6 +183,11 @@ var FX = {
 
     addVignetteFX: function ()
     {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
         var fx = new Effects.Vignette(this);
 
         this.fx.push(fx);
@@ -185,6 +197,11 @@ var FX = {
 
     addShineFX: function ()
     {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
         var fx = new Effects.Shine(this);
 
         this.fx.push(fx);
