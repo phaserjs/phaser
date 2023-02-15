@@ -29,7 +29,10 @@ var Gradient = new Class({
     {
         BaseFX.call(this, FX_CONST.GRADIENT, gameObject);
 
-        this.alpha = 0.1;
+        this.alpha = 0.2;
+
+        //  How many 'chunks' the gradient is divided in to, over the entire
+        //  height of the texture. Leave at zero for a smoothed gradient.
         this.size = 0;
 
         this.fromX = 0;

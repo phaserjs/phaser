@@ -23,7 +23,7 @@ var GradientFXPipeline = new Class({
         });
 
         this.size = 0;
-        this.alpha = 0.1;
+        this.alpha = 0.2;
 
         this.fromX = 0;
         this.fromY = 0;
