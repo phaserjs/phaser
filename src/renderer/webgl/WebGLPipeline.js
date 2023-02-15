@@ -728,6 +728,17 @@ var WebGLPipeline = new Class({
                 var fragShader = Utils.parseFragmentShaderMaxTextures(GetFastValue(shaderEntry, fName, defaultFragShader), renderer.maxTextures);
                 var attributes = GetFastValue(shaderEntry, aName, defaultAttribs);
 
+                if (name === 'default')
+                {
+                    var lines = fragShader.split('\n');
+                    var test = lines[0].trim();
+
+                    if (test.indexOf('#define SHADER_NAME') > -1)
+                    {
+                        name = test.substring(20);
+                    }
+                }
+
                 if (vertShader && fragShader)
                 {
                     newShaders.push(new WebGLShader(this, name, vertShader, fragShader, DeepCopy(attributes)));
