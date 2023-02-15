@@ -15,7 +15,6 @@ var PixelateFrag = require('../shaders/FXPixelate-frag.js');
 var PreFXPipeline = require('./PreFXPipeline');
 var ShadowFrag = require('../shaders/FXShadow-frag.js');
 var ShineFrag = require('../shaders/FXShine-frag.js');
-var SingleQuadVS = require('../shaders/Single-vert.js');
 var VignetteFrag = require('../shaders/FXVignette-frag.js');
 var GradientFrag = require('../shaders/FXGradient-frag.js');
 var BloomFrag = require('../shaders/FXBloom-frag.js');
@@ -40,20 +39,21 @@ var FXPipeline = new Class({
 
     function FXPipeline (config)
     {
-        var vertShader = SingleQuadVS;
+        //  TODO - Could get bundleshaders to create an index.js that
+        //  exposes all of the fragment shaders, so we don't have to import each one
 
-        //  Order is fixed to match with the FX_CONST. Do not adjust.
+        //  This order is fixed to match with the FX_CONST. Do not adjust.
         config.shaders = [
-            { fragShader: GlowFrag, vertShader: vertShader },
-            { fragShader: ShadowFrag, vertShader: vertShader },
-            { fragShader: PixelateFrag, vertShader: vertShader },
-            { fragShader: VignetteFrag, vertShader: vertShader },
-            { fragShader: ShineFrag, vertShader: vertShader },
-            { fragShader: BlurLowFrag, vertShader: vertShader },
-            { fragShader: BlurMedFrag, vertShader: vertShader },
-            { fragShader: BlurHighFrag, vertShader: vertShader },
-            { fragShader: GradientFrag, vertShader: vertShader },
-            { fragShader: BloomFrag, vertShader: vertShader }
+            { fragShader: GlowFrag },
+            { fragShader: ShadowFrag },
+            { fragShader: PixelateFrag },
+            { fragShader: VignetteFrag },
+            { fragShader: ShineFrag },
+            { fragShader: BlurLowFrag },
+            { fragShader: BlurMedFrag },
+            { fragShader: BlurHighFrag },
+            { fragShader: GradientFrag },
+            { fragShader: BloomFrag }
         ];
 
         PreFXPipeline.call(this, config);
