@@ -249,8 +249,21 @@ var FX = {
         this.fx.push(fx);
 
         return fx;
-    }
+    },
 
+    addColorMatrixFX: function ()
+    {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
+        var fx = new Effects.ColorMatrix(this);
+
+        this.fx.push(fx);
+
+        return fx;
+    }
 };
 
 module.exports = FX;

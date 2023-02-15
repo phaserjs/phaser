@@ -84,7 +84,17 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    BLOOM: 13
+    BLOOM: 13,
+
+    /**
+     * The Color Matrix FX.
+     *
+     * @name Phaser.GameObjects.FX.COLOR_MATRIX
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    COLOR_MATRIX: 14
 
 };
 

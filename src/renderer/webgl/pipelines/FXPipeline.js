@@ -78,6 +78,7 @@ var FXPipeline = new Class({
         this.fxHandlers[FX_CONST.BLUR] = this.onBlur;
         this.fxHandlers[FX_CONST.GRADIENT] = this.onGradient;
         this.fxHandlers[FX_CONST.BLOOM] = this.onBloom;
+        this.fxHandlers[FX_CONST.COLOR_MATRIX] = this.onColorMatrix;
 
         this.source;
         this.target;
@@ -244,6 +245,13 @@ var FXPipeline = new Class({
         }
 
         this.blendFrames(this.swap, this.source, this.target, GetFastValue(config, 'strength'));
+        this.copySprite(this.target, this.source);
+    },
+
+    onColorMatrix: function (config, width, height)
+    {
+        this.copySprite(this.source, this.target, true, true, false, config);
+
         this.copySprite(this.target, this.source);
     }
 
