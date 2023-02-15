@@ -22,8 +22,13 @@ var CircleFXPipeline = new Class({
             fragShader: CircleFrag
         });
 
-        //  A value between 0 and 100, with 0 being 'no ring' and 100 being 'very thick'
-        this.width = 10;
+        this.scale = 1;
+
+        //  0.005 = strength of the ring (0.5 = super soft, 0.05 = gentle, 0.005 = harsh)
+        this.feather = 0.005;
+
+        this.thickness = 8;
+
         this.glcolor = [ 1, 0.2, 0.7 ];
         this.glcolor2 = [ 1, 0, 0, 0.4 ];
     },
@@ -33,9 +38,9 @@ var CircleFXPipeline = new Class({
         // eslint-disable-next-line consistent-this
         if (config === undefined) { config = this; }
 
-        var circleWidth = GetFastValue(config, 'width');
-
-        this.set1f('width', 0.4 + (0.1 - (circleWidth / 1000)), shader);
+        this.set1f('scale', GetFastValue(config, 'scale'), shader);
+        this.set1f('feather', GetFastValue(config, 'feather'), shader);
+        this.set1f('thickness', GetFastValue(config, 'thickness'), shader);
         this.set3fv('color', GetFastValue(config, 'glcolor'), shader);
         this.set4fv('backgroundColor', GetFastValue(config, 'glcolor2'), shader);
 

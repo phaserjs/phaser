@@ -7,7 +7,9 @@
 var BlurHighFrag = require('../shaders/FXBlurHigh-frag.js');
 var BlurLowFrag = require('../shaders/FXBlurLow-frag.js');
 var BlurMedFrag = require('../shaders/FXBlurMed-frag.js');
+var CircleFrag = require('../shaders/FXCircle-frag.js');
 var Class = require('../../../utils/Class');
+var ColorMatrixFrag = require('../shaders/ColorMatrix-frag.js');
 var FX_CONST = require('../../../gameobjects/fx/const');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var GlowFrag = require('../shaders/FXGlow-frag.js');
@@ -53,7 +55,9 @@ var FXPipeline = new Class({
             { fragShader: BlurMedFrag },
             { fragShader: BlurHighFrag },
             { fragShader: GradientFrag },
-            { fragShader: BloomFrag }
+            { fragShader: BloomFrag },
+            { fragShader: ColorMatrixFrag },
+            { fragShader: CircleFrag }
         ];
 
         PreFXPipeline.call(this, config);
@@ -66,6 +70,7 @@ var FXPipeline = new Class({
         this.vignette = new FX.Vignette(game);
         this.shine = new FX.Shine(game);
         this.gradient = new FX.Gradient(game);
+        this.circle = new FX.Circle(game);
 
         //  This array is intentionally sparse. Do not adjust.
         this.fxHandlers = [];
@@ -79,6 +84,7 @@ var FXPipeline = new Class({
         this.fxHandlers[FX_CONST.GRADIENT] = this.onGradient;
         this.fxHandlers[FX_CONST.BLOOM] = this.onBloom;
         this.fxHandlers[FX_CONST.COLOR_MATRIX] = this.onColorMatrix;
+        this.fxHandlers[FX_CONST.CIRCLE] = this.onCircle;
 
         this.source;
         this.target;
@@ -255,6 +261,17 @@ var FXPipeline = new Class({
         this.set1i('uMainSampler', 0);
         this.set1fv('uColorMatrix', config.getData());
         this.set1f('uAlpha', config.alpha);
+
+        this.runDraw();
+    },
+
+    onCircle: function (config, width, height)
+    {
+        var shader = this.shaders[FX_CONST.CIRCLE];
+
+        this.setShader(shader);
+
+        this.circle.onPreRender(config, shader, width, height);
 
         this.runDraw();
     }

@@ -263,7 +263,23 @@ var FX = {
         this.fx.push(fx);
 
         return fx;
+    },
+
+    addCircleFX: function ()
+    {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
+        var fx = new Effects.Circle(this);
+
+        this.fx.push(fx);
+
+        return fx;
     }
+
+
 };
 
 module.exports = FX;

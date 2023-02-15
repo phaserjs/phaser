@@ -94,7 +94,17 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    COLOR_MATRIX: 14
+    COLOR_MATRIX: 14,
+
+    /**
+     * The Circle FX.
+     *
+     * @name Phaser.GameObjects.FX.CIRCLE
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    CIRCLE: 15
 
 };
 
