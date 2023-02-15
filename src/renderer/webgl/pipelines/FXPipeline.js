@@ -19,6 +19,7 @@ var SingleQuadVS = require('../shaders/Single-vert.js');
 var VignetteFrag = require('../shaders/FXVignette-frag.js');
 var GradientFrag = require('../shaders/FXGradient-frag.js');
 var BloomFrag = require('../shaders/FXBloom-frag.js');
+var FX = require('../pipelines/fx');
 
 /**
  * @classdesc
@@ -43,28 +44,28 @@ var FXPipeline = new Class({
 
         //  Order is fixed to match with the FX_CONST. Do not adjust.
         config.shaders = [
-            { name: 'Glow', fragShader: GlowFrag, vertShader: vertShader },
-            { name: 'Shadow', fragShader: ShadowFrag, vertShader: vertShader },
-            { name: 'Pixelate', fragShader: PixelateFrag, vertShader: vertShader },
-            { name: 'Vignette', fragShader: VignetteFrag, vertShader: vertShader },
-            { name: 'Shine', fragShader: ShineFrag, vertShader: vertShader },
-            { name: 'BlurLow', fragShader: BlurLowFrag, vertShader: vertShader },
-            { name: 'BlurMed', fragShader: BlurMedFrag, vertShader: vertShader },
-            { name: 'BlurHigh', fragShader: BlurHighFrag, vertShader: vertShader },
-            { name: 'Gradient', fragShader: GradientFrag, vertShader: vertShader },
-            { name: 'Bloom', fragShader: BloomFrag, vertShader: vertShader }
+            { fragShader: GlowFrag, vertShader: vertShader },
+            { fragShader: ShadowFrag, vertShader: vertShader },
+            { fragShader: PixelateFrag, vertShader: vertShader },
+            { fragShader: VignetteFrag, vertShader: vertShader },
+            { fragShader: ShineFrag, vertShader: vertShader },
+            { fragShader: BlurLowFrag, vertShader: vertShader },
+            { fragShader: BlurMedFrag, vertShader: vertShader },
+            { fragShader: BlurHighFrag, vertShader: vertShader },
+            { fragShader: GradientFrag, vertShader: vertShader },
+            { fragShader: BloomFrag, vertShader: vertShader }
         ];
 
         PreFXPipeline.call(this, config);
 
-        var manager = this.manager;
+        var game = this.game;
 
-        this.glow = manager.getPostPipeline('GlowFX');
-        this.shadow = manager.getPostPipeline('ShadowFX');
-        this.pixelate = manager.getPostPipeline('PixelateFX');
-        this.vignette = manager.getPostPipeline('VignetteFX');
-        this.shine = manager.getPostPipeline('ShineFX');
-        this.gradient = manager.getPostPipeline('GradientFX');
+        this.glow = new FX.Glow(game);
+        this.shadow = new FX.Shadow(game);
+        this.pixelate = new FX.Pixelate(game);
+        this.vignette = new FX.Vignette(game);
+        this.shine = new FX.Shine(game);
+        this.gradient = new FX.Gradient(game);
 
         //  This is a sparse array
         this.fxHandlers = [];

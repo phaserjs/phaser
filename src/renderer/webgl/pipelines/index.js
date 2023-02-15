@@ -13,7 +13,7 @@ var Extend = require('../../../utils/object/Extend');
 
 var Pipelines = {
 
-    GlowFXPipeline: require('./fx/GlowFXPipeline'),
+    FX: require('./fx'),
 
     BitmapMaskPipeline: require('./BitmapMaskPipeline'),
     Events: require('./events'),

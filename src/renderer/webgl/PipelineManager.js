@@ -14,6 +14,7 @@ var SnapCeil = require('../../math/snap/SnapCeil');
 
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
+var FX = require('./pipelines/fx');
 var FXPipeline = require('./pipelines/FXPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
 var MobilePipeline = require('./pipelines/MobilePipeline');
@@ -22,16 +23,6 @@ var PointLightPipeline = require('./pipelines/PointLightPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
 var SinglePipeline = require('./pipelines/SinglePipeline');
 var UtilityPipeline = require('./pipelines/UtilityPipeline');
-
-//  FX Pipelines
-var GlowFXPipeline = require('./pipelines/fx/GlowFXPipeline');
-var ShadowFXPipeline = require('./pipelines/fx/ShadowFXPipeline');
-var PixelateFXPipeline = require('./pipelines/fx/PixelateFXPipeline');
-var VignetteFXPipeline = require('./pipelines/fx/VignetteFXPipeline');
-var ShineFXPipeline = require('./pipelines/fx/ShineFXPipeline');
-var BlurFXPipeline = require('./pipelines/fx/BlurFXPipeline');
-var GradientFXPipeline = require('./pipelines/fx/GradientFXPipeline');
-var BloomFXPipeline = require('./pipelines/fx/BloomFXPipeline');
 
 /**
  * @classdesc
@@ -111,19 +102,22 @@ var PipelineManager = new Class({
         /**
          * This map stores all Post FX Pipeline classes available in this manager.
          *
+         * As of v3.60 this is now populated by default with a variety of
+         * different Special FX Pipelines.
+         *
          * @name Phaser.Renderer.WebGL.PipelineManager#postPipelineClasses
          * @type {Phaser.Structs.Map.<string, Class>}
          * @since 3.50.0
          */
         this.postPipelineClasses = new CustomMap([
-            [ 'GlowFX', GlowFXPipeline ],
-            [ 'ShadowFX', ShadowFXPipeline ],
-            [ 'PixelateFX', PixelateFXPipeline ],
-            [ 'VignetteFX', VignetteFXPipeline ],
-            [ 'ShineFX', ShineFXPipeline ],
-            [ 'BlurFX', BlurFXPipeline ],
-            [ 'GradientFX', GradientFXPipeline ],
-            [ 'BloomFX', BloomFXPipeline ]
+            [ 'BloomFX', FX.Bloom ],
+            [ 'BlurFX', FX.Blur ],
+            [ 'GlowFX', FX.Glow ],
+            [ 'GradientFX', FX.Gradient ],
+            [ 'PixelateFX', FX.Pixelate ],
+            [ 'ShadowFX', FX.Shadow ],
+            [ 'ShineFX', FX.Shine ],
+            [ 'VignetteFX', FX.Vignette ]
         ]);
 
         /**
