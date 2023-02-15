@@ -11,12 +11,12 @@
 module.exports = {
 
     BaseFX: require('./BaseFX'),
+    Blur: require('./Blur'),
     Glow: require('./Glow'),
+    Gradient: require('./Gradient'),
     Pixelate: require('./Pixelate'),
     Shadow: require('./Shadow'),
     Shine: require('./Shine'),
-    Blur: require('./Blur'),
-    Gradient: require('./Gradient'),
     Vignette: require('./Vignette')
 
 };

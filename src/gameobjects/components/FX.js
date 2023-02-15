@@ -223,14 +223,14 @@ var FX = {
         return fx;
     },
 
-    addLinearGradientFX: function ()
+    addGradientFX: function ()
     {
         if (!this.fx)
         {
             this.enableFX();
         }
 
-        var fx = new Effects.LinearGradient(this);
+        var fx = new Effects.Gradient(this);
 
         this.fx.push(fx);
 
