@@ -12,6 +12,8 @@ var FX = {
 
     Bloom: require('./BloomFXPipeline'),
     Blur: require('./BlurFXPipeline'),
+    Circle: require('./CircleFXPipeline'),
+    ColorMatrix: require('./ColorMatrixFXPipeline'),
     Glow: require('./GlowFXPipeline'),
     Gradient: require('./GradientFXPipeline'),
     Pixelate: require('./PixelateFXPipeline'),

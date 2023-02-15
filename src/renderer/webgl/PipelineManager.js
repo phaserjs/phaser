@@ -112,6 +112,8 @@ var PipelineManager = new Class({
         this.postPipelineClasses = new CustomMap([
             [ 'BloomFX', FX.Bloom ],
             [ 'BlurFX', FX.Blur ],
+            [ 'CircleFX', FX.Circle ],
+            [ 'ColorMatrixFX', FX.ColorMatrix ],
             [ 'GlowFX', FX.Glow ],
             [ 'GradientFX', FX.Gradient ],
             [ 'PixelateFX', FX.Pixelate ],

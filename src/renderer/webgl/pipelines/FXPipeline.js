@@ -67,7 +67,7 @@ var FXPipeline = new Class({
         this.shine = new FX.Shine(game);
         this.gradient = new FX.Gradient(game);
 
-        //  This is a sparse array
+        //  This array is intentionally sparse. Do not adjust.
         this.fxHandlers = [];
 
         this.fxHandlers[FX_CONST.GLOW] = this.onGlow;
@@ -248,11 +248,15 @@ var FXPipeline = new Class({
         this.copySprite(this.target, this.source);
     },
 
-    onColorMatrix: function (config, width, height)
+    onColorMatrix: function (config)
     {
-        this.copySprite(this.source, this.target, true, true, false, config);
+        this.setShader(this.colorMatrixShader);
 
-        this.copySprite(this.target, this.source);
+        this.set1i('uMainSampler', 0);
+        this.set1fv('uColorMatrix', config.getData());
+        this.set1f('uAlpha', config.alpha);
+
+        this.runDraw();
     }
 
 });
