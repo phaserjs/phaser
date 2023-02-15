@@ -11,6 +11,7 @@
 module.exports = {
 
     BaseFX: require('./BaseFX'),
+    Bloom: require('./Bloom'),
     Blur: require('./Blur'),
     Glow: require('./Glow'),
     Gradient: require('./Gradient'),

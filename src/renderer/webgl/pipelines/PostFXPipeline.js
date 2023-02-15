@@ -243,6 +243,36 @@ var PostFXPipeline = new Class({
     /**
      * Copy the `source` Render Target to the `target` Render Target.
      *
+     * This method does _not_ bind a shader. It uses whatever shader
+     * is currently bound in this pipeline. It also does _not_ clear
+     * the frame buffers after use. You should take care of both of
+     * these things if you call this method directly.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#copySprite
+     * @since 3.60.0
+     *
+     * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
+     * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
+     */
+    copySprite: function (source, target)
+    {
+        var gl = this.gl;
+
+        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+    },
+
+    /**
+     * Copy the `source` Render Target to the `target` Render Target.
+     *
      * You can optionally set the brightness factor of the copy.
      *
      * The difference between this method and `drawFrame` is that this method

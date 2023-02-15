@@ -84,32 +84,16 @@ var BlurFXPipeline = new Class({
         for (var i = 0; i < this.steps; i++)
         {
             this.set2f('offset', this.x, 0);
-            this.copy(target1, target2);
+            this.copySprite(target1, target2);
 
             this.set2f('offset', 0, this.y);
-            this.copy(target2, target1);
+            this.copySprite(target2, target1);
         }
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.bindTexture(gl.TEXTURE_2D, null);
 
         this.copyToGame(target1);
-    },
-
-    copy: function (source, target)
-    {
-        var gl = this.gl;
-
-        gl.bindTexture(gl.TEXTURE_2D, source.texture);
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
-
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-
-        gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
 });

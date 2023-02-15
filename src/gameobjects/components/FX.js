@@ -124,7 +124,7 @@ var FX = {
         //  Remove them all
     },
 
-    removeFX: function (fx)
+    removeFX: function ()
     {
         //  Remove specific fx
     },
@@ -231,6 +231,20 @@ var FX = {
         }
 
         var fx = new Effects.Gradient(this);
+
+        this.fx.push(fx);
+
+        return fx;
+    },
+
+    addBloomFX: function ()
+    {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
+        var fx = new Effects.Bloom(this);
 
         this.fx.push(fx);
 

@@ -74,7 +74,17 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    GRADIENT: 12
+    GRADIENT: 12,
+
+    /**
+     * The Bloom FX.
+     *
+     * @name Phaser.GameObjects.FX.BLOOM
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    BLOOM: 13
 
 };
 

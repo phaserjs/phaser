@@ -31,6 +31,7 @@ var VignetteFXPipeline = require('./pipelines/fx/VignetteFXPipeline');
 var ShineFXPipeline = require('./pipelines/fx/ShineFXPipeline');
 var BlurFXPipeline = require('./pipelines/fx/BlurFXPipeline');
 var GradientFXPipeline = require('./pipelines/fx/GradientFXPipeline');
+var BloomFXPipeline = require('./pipelines/fx/BloomFXPipeline');
 
 /**
  * @classdesc
@@ -121,7 +122,8 @@ var PipelineManager = new Class({
             [ 'VignetteFX', VignetteFXPipeline ],
             [ 'ShineFX', ShineFXPipeline ],
             [ 'BlurFX', BlurFXPipeline ],
-            [ 'GradientFX', GradientFXPipeline ]
+            [ 'GradientFX', GradientFXPipeline ],
+            [ 'BloomFX', BloomFXPipeline ]
         ]);
 
         /**

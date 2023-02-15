@@ -18,6 +18,7 @@ var ShineFrag = require('../shaders/FXShine-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
 var VignetteFrag = require('../shaders/FXVignette-frag.js');
 var GradientFrag = require('../shaders/FXGradient-frag.js');
+var BloomFrag = require('../shaders/FXBloom-frag.js');
 
 /**
  * @classdesc
@@ -50,7 +51,8 @@ var FXPipeline = new Class({
             { name: 'BlurLow', fragShader: BlurLowFrag, vertShader: vertShader },
             { name: 'BlurMed', fragShader: BlurMedFrag, vertShader: vertShader },
             { name: 'BlurHigh', fragShader: BlurHighFrag, vertShader: vertShader },
-            { name: 'Gradient', fragShader: GradientFrag, vertShader: vertShader }
+            { name: 'Gradient', fragShader: GradientFrag, vertShader: vertShader },
+            { name: 'Bloom', fragShader: BloomFrag, vertShader: vertShader }
         ];
 
         PreFXPipeline.call(this, config);
@@ -74,6 +76,7 @@ var FXPipeline = new Class({
         this.fxHandlers[FX_CONST.SHINE] = this.onShine;
         this.fxHandlers[FX_CONST.BLUR] = this.onBlur;
         this.fxHandlers[FX_CONST.GRADIENT] = this.onGradient;
+        this.fxHandlers[FX_CONST.BLOOM] = this.onBloom;
 
         this.source;
         this.target;
@@ -214,26 +217,34 @@ var FXPipeline = new Class({
         this.runDraw();
     },
 
-    // onBloom: function (target1, target2, target3)
-    // {
-    //     this.manager.copyFrame(target1, target3);
+    onBloom: function (config, width, height)
+    {
+        var shader = this.shaders[FX_CONST.BLOOM];
 
-    //     var x = (2 / target1.width) * this.offsetX;
-    //     var y = (2 / target1.height) * this.offsetY;
+        this.copySprite(this.source, this.swap);
 
-    //     for (var i = 0; i < this.steps; i++)
-    //     {
-    //         this.set2f('uOffset', x, 0);
-    //         this.copySprite(target1, target2);
+        this.setShader(shader);
 
-    //         this.set2f('uOffset', 0, y);
-    //         this.copySprite(target2, target1);
-    //     }
+        this.set1i('uMainSampler', 0);
+        this.set1f('strength', GetFastValue(config, 'blurStrength'));
+        this.set3fv('color', GetFastValue(config, 'glcolor'));
 
-    //     this.blendFrames(target3, target1, target2, this.strength);
+        var x = (2 / width) * GetFastValue(config, 'offsetX');
+        var y = (2 / height) * GetFastValue(config, 'offsetY');
+        var steps = GetFastValue(config, 'steps');
 
-    //     this.copyToGame(target2);
-    // }
+        for (var i = 0; i < steps; i++)
+        {
+            this.set2f('offset', x, 0);
+            this.runDraw();
+
+            this.set2f('offset', 0, y);
+            this.runDraw();
+        }
+
+        this.blendFrames(this.swap, this.source, this.target, GetFastValue(config, 'strength'));
+        this.copySprite(this.target, this.source);
+    }
 
 });
 
