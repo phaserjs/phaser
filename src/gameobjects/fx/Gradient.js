@@ -11,7 +11,7 @@ var FX_CONST = require('./const');
 /**
  * @classdesc
  *
- * @class LinearGradient
+ * @class Gradient
  * @extends Phaser.GameObjects.FX.BaseFX
  * @memberof Phaser.GameObjects.FX
  * @constructor
@@ -19,22 +19,29 @@ var FX_CONST = require('./const');
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
  */
-var LinearGradient = new Class({
+var Gradient = new Class({
 
     Extends: BaseFX,
 
     initialize:
 
-    function LinearGradient (gameObject)
+    function Gradient (gameObject)
     {
-        BaseFX.call(this, FX_CONST.LINEAR_GRADIENT, gameObject);
+        BaseFX.call(this, FX_CONST.GRADIENT, gameObject);
 
-        this.alpha = 1;
-        this.size = 16;
+        this.alpha = 0.1;
+        this.size = 0;
+
+        this.fromX = 0;
+        this.fromY = 0;
+
+        this.toX = 0;
+        this.toY = 1;
+
         this.glcolor1 = [ 255, 0, 0 ];
         this.glcolor2 = [ 0, 255, 0 ];
     }
 
 });
 
-module.exports = LinearGradient;
+module.exports = Gradient;

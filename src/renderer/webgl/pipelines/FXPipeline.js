@@ -17,7 +17,7 @@ var ShadowFrag = require('../shaders/FXShadow-frag.js');
 var ShineFrag = require('../shaders/FXShine-frag.js');
 var SingleQuadVS = require('../shaders/Single-vert.js');
 var VignetteFrag = require('../shaders/FXVignette-frag.js');
-var LinearGradientFrag = require('../shaders/FXLinearGradient-frag.js');
+var GradientFrag = require('../shaders/FXGradient-frag.js');
 
 /**
  * @classdesc
@@ -50,7 +50,7 @@ var FXPipeline = new Class({
             { name: 'BlurLow', fragShader: BlurLowFrag, vertShader: vertShader },
             { name: 'BlurMed', fragShader: BlurMedFrag, vertShader: vertShader },
             { name: 'BlurHigh', fragShader: BlurHighFrag, vertShader: vertShader },
-            { name: 'LinearGradient', fragShader: LinearGradientFrag, vertShader: vertShader }
+            { name: 'Gradient', fragShader: GradientFrag, vertShader: vertShader }
         ];
 
         PreFXPipeline.call(this, config);
@@ -62,7 +62,7 @@ var FXPipeline = new Class({
         this.pixelate = manager.getPostPipeline('PixelateFX');
         this.vignette = manager.getPostPipeline('VignetteFX');
         this.shine = manager.getPostPipeline('ShineFX');
-        this.linearGradient = manager.getPostPipeline('LinearGradientFX');
+        this.gradient = manager.getPostPipeline('GradientFX');
 
         //  This is a sparse array
         this.fxHandlers = [];
@@ -73,7 +73,7 @@ var FXPipeline = new Class({
         this.fxHandlers[FX_CONST.VIGNETTE] = this.onVignette;
         this.fxHandlers[FX_CONST.SHINE] = this.onShine;
         this.fxHandlers[FX_CONST.BLUR] = this.onBlur;
-        this.fxHandlers[FX_CONST.LINEAR_GRADIENT] = this.onLinearGradient;
+        this.fxHandlers[FX_CONST.GRADIENT] = this.onGradient;
 
         this.source;
         this.target;
@@ -203,13 +203,13 @@ var FXPipeline = new Class({
         }
     },
 
-    onLinearGradient: function (config)
+    onGradient: function (config)
     {
-        var shader = this.shaders[FX_CONST.LINEAR_GRADIENT];
+        var shader = this.shaders[FX_CONST.GRADIENT];
 
         this.setShader(shader);
 
-        this.linearGradient.onPreRender(config, shader);
+        this.gradient.onPreRender(config, shader);
 
         this.runDraw();
     },

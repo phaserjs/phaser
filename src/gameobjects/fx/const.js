@@ -67,14 +67,14 @@ var FX_CONST = {
     BLUR: 9, // uses 3 shaders, slots 9, 10 and 11
 
     /**
-     * The Linear Gradient FX.
+     * The Gradient FX.
      *
-     * @name Phaser.GameObjects.FX.LINEAR_GRADIENT
+     * @name Phaser.GameObjects.FX.GRADIENT
      * @type {number}
      * @const
      * @since 3.60.0
      */
-    LINEAR_GRADIENT: 12
+    GRADIENT: 12
 
 };
 

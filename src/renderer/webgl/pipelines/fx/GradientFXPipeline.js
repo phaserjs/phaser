@@ -6,24 +6,30 @@
 
 var Class = require('../../../../utils/Class');
 var GetFastValue = require('../../../../utils/object/GetFastValue');
-var LinearGradientFrag = require('../../shaders/FXLinearGradient-frag.js');
+var GradientFrag = require('../../shaders/FXGradient-frag.js');
 var PostFXPipeline = require('../PostFXPipeline');
 
-var LinearGradientFXPipeline = new Class({
+var GradientFXPipeline = new Class({
 
     Extends: PostFXPipeline,
 
     initialize:
 
-    function LinearGradientFXPipeline (game)
+    function GradientFXPipeline (game)
     {
         PostFXPipeline.call(this, {
             game: game,
-            fragShader: LinearGradientFrag
+            fragShader: GradientFrag
         });
 
-        this.alpha = 1;
-        this.size = 16;
+        this.size = 0;
+        this.alpha = 0.1;
+
+        this.fromX = 0;
+        this.fromY = 0;
+
+        this.toX = 0;
+        this.toY = 1;
 
         this.glcolor1 = [ 255, 0, 0 ];
         this.glcolor2 = [ 0, 255, 0 ];
@@ -38,8 +44,10 @@ var LinearGradientFXPipeline = new Class({
         this.set1i('size', GetFastValue(config, 'size'), shader);
         this.set3fv('color1', GetFastValue(config, 'glcolor1'), shader);
         this.set3fv('color2', GetFastValue(config, 'glcolor2'), shader);
+        this.set2f('positionFrom', GetFastValue(config, 'fromX'), GetFastValue(config, 'fromY'), shader);
+        this.set2f('positionTo', GetFastValue(config, 'toX'), GetFastValue(config, 'toY'), shader);
     }
 
 });
 
-module.exports = LinearGradientFXPipeline;
+module.exports = GradientFXPipeline;
