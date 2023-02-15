@@ -1,15 +1,5 @@
 let fs = require('fs-extra');
 
-/*
-BitmapMask.frag
-BitmapMask.vert
-Light.frag
-Single.frag
-Single.vert
-Multi.frag
-Multi.vert
-*/
-
 let srcdir = './src/renderer/webgl/shaders/src/';
 let destdir = './src/renderer/webgl/shaders/';
 
@@ -28,6 +18,11 @@ files.forEach(function (file) {
     for (var i = 0; i < lines.length; i++)
     {
         let line = lines[i].trimRight();
+
+        if (line == '' || line.trimStart().startsWith('//'))
+        {
+            continue;
+        }
 
         if (i < lines.length - 1)
         {
