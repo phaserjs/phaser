@@ -139,172 +139,76 @@ var FX = {
         }
     },
 
-    addGlowFX: function ()
+    addFX: function (fx)
     {
         if (!this.fx)
         {
             this.enableFX();
         }
 
-        var fx = new Effects.Glow(this);
-
         this.fx.push(fx);
 
         return fx;
+    },
+
+    addGlowFX: function ()
+    {
+        return this.addFX(new Effects.Glow(this));
     },
 
     addShadowFX: function ()
     {
-        if (!this.fx)
-        {
-            this.enableFX();
-        }
-
-        var fx = new Effects.Shadow(this);
-
-        this.fx.push(fx);
-
-        return fx;
+        return this.addFX(new Effects.Shadow(this));
     },
 
     addPixelateFX: function ()
     {
-        if (!this.fx)
-        {
-            this.enableFX();
-        }
-
-        var fx = new Effects.Pixelate(this);
-
-        this.fx.push(fx);
-
-        return fx;
+        return this.addFX(new Effects.Pixelate(this));
     },
 
     addVignetteFX: function ()
     {
-        if (!this.fx)
-        {
-            this.enableFX();
-        }
-
-        var fx = new Effects.Vignette(this);
-
-        this.fx.push(fx);
-
-        return fx;
+        return this.addFX(new Effects.Vignette(this));
     },
 
     addShineFX: function ()
     {
-        if (!this.fx)
-        {
-            this.enableFX();
-        }
-
-        var fx = new Effects.Shine(this);
-
-        this.fx.push(fx);
-
-        return fx;
+        return this.addFX(new Effects.Shine(this));
     },
 
     addBlurFX: function ()
     {
-        if (!this.fx)
-        {
-            this.enableFX();
-        }
-
-        var fx = new Effects.Blur(this);
-
-        this.fx.push(fx);
-
-        return fx;
+        return this.addFX(new Effects.Blur(this));
     },
 
     addGradientFX: function ()
     {
-        if (!this.fx)
-        {
-            this.enableFX();
-        }
-
-        var fx = new Effects.Gradient(this);
-
-        this.fx.push(fx);
-
-        return fx;
+        return this.addFX(new Effects.Gradient(this));
     },
 
     addBloomFX: function ()
     {
-        if (!this.fx)
-        {
-            this.enableFX();
-        }
-
-        var fx = new Effects.Bloom(this);
-
-        this.fx.push(fx);
-
-        return fx;
+        return this.addFX(new Effects.Bloom(this));
     },
 
     addColorMatrixFX: function ()
     {
-        if (!this.fx)
-        {
-            this.enableFX();
-        }
-
-        var fx = new Effects.ColorMatrix(this);
-
-        this.fx.push(fx);
-
-        return fx;
+        return this.addFX(new Effects.ColorMatrix(this));
     },
 
     addCircleFX: function ()
     {
-        if (!this.fx)
-        {
-            this.enableFX();
-        }
-
-        var fx = new Effects.Circle(this);
-
-        this.fx.push(fx);
-
-        return fx;
+        return this.addFX(new Effects.Circle(this));
     },
 
     addBarrelFX: function ()
     {
-        if (!this.fx)
-        {
-            this.enableFX();
-        }
-
-        var fx = new Effects.Barrel(this);
-
-        this.fx.push(fx);
-
-        return fx;
+        return this.addFX(new Effects.Barrel(this));
     },
 
     addDisplacementFX: function ()
     {
-        if (!this.fx)
-        {
-            this.enableFX();
-        }
-
-        var fx = new Effects.Displacement(this);
-
-        this.fx.push(fx);
-
-        return fx;
+        return this.addFX(new Effects.Displacement(this));
     }
 
 };
