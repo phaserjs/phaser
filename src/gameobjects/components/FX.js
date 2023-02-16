@@ -216,6 +216,8 @@ var FX = {
         return this.addFX(new Effects.Wipe(this));
     }
 
+    //  tilt shift / god rays / motion blur?
+
 };
 
 module.exports = FX;
