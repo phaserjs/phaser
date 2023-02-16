@@ -23,10 +23,32 @@ var BaseFX = new Class({
 
     function BaseFX (type, gameObject)
     {
+        /**
+         * The FX_CONST type of this effect.
+         *
+         * @name Phaser.GameObjects.FX.BaseFX#type
+         * @type {number}
+         * @since 3.60.0
+         */
         this.type = type;
 
+        /**
+         * A reference to the Game Object that owns this effect.
+         *
+         * @name Phaser.GameObjects.FX.BaseFX#gameObject
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.60.0
+         */
         this.gameObject = gameObject;
 
+        /**
+         * Toggle this boolean to enable or disable this effect,
+         * without removing and adding it from the Game Object.
+         *
+         * @name Phaser.GameObjects.FX.BaseFX#active
+         * @type {boolean}
+         * @since 3.60.0
+         */
         this.active = true;
     },
 

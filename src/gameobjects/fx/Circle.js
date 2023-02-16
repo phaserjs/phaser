@@ -25,19 +25,131 @@ var Circle = new Class({
 
     initialize:
 
-    function Circle (gameObject)
+    function Circle (gameObject, thickness, color, backgroundColor, scale, feather)
     {
+        if (thickness === undefined) { thickness = 8; }
+        if (scale === undefined) { scale = 1; }
+        if (feather === undefined) { feather = 0.005; }
+
         BaseFX.call(this, FX_CONST.CIRCLE, gameObject);
 
-        this.scale = 1;
+        /**
+         * The scale of the circle. The default scale is 1, which is a circle
+         * the full size of the underlying texture. Reduce this value to create
+         * a smaller circle, or increase it to create a circle that extends off
+         * the edges of the texture.
+         *
+         * @name Phaser.GameObjects.FX.Circle#scale
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.scale = scale;
 
-        //  0.005 = strength of the ring (0.5 = super soft, 0.05 = gentle, 0.005 = harsh)
-        this.feather = 0.005;
+        /**
+         * The amount of feathering to apply to the circle from the ring,
+         * extending into the middle of the circle. The default is 0.005,
+         * which is a very low amount of feathering just making sure the ring
+         * has a smooth edge. Increase this amount to a value such as 0.5
+         * or 0.025 for larger amounts of feathering.
+         *
+         * @name Phaser.GameObjects.FX.Circle#feather
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.feather = feather;
 
-        this.thickness = 8;
+        /**
+         * The width of the circle around the texture, in pixels. This value
+         * doesn't factor in the feather, which can extend the thickness
+         * internally depending on its value.
+         *
+         * @name Phaser.GameObjects.FX.Circle#thickness
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.thickness = thickness;
 
+        /**
+         * The internal gl color array for the ring color.
+         *
+         * @name Phaser.GameObjects.FX.Circle#glcolor
+         * @type {number[]}
+         * @since 3.60.0
+         */
         this.glcolor = [ 1, 0.2, 0.7 ];
+
+        /**
+         * The internal gl color array for the background color.
+         *
+         * @name Phaser.GameObjects.FX.Circle#glcolor2
+         * @type {number[]}
+         * @since 3.60.0
+         */
         this.glcolor2 = [ 1, 0, 0, 0.4 ];
+
+        if (color !== undefined && color !== null)
+        {
+            this.color = color;
+        }
+
+        if (backgroundColor !== undefined && backgroundColor !== null)
+        {
+            this.backgroundColor = backgroundColor;
+        }
+    },
+
+    /**
+     * The color of the circular ring, given as a number value.
+     *
+     * @name Phaser.GameObjects.FX.Circle#color
+     * @type {number}
+     * @since 3.60.0
+     */
+    color: {
+
+        get: function ()
+        {
+            var color = this.glcolor;
+
+            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+        },
+
+        set: function (value)
+        {
+            var color = this.glcolor;
+
+            color[0] = ((value >> 16) & 0xFF) / 255;
+            color[1] = ((value >> 8) & 0xFF) / 255;
+            color[2] = (value & 0xFF) / 255;
+        }
+
+    },
+
+    /**
+     * The color of the background, behind the texture, given as a number value.
+     *
+     * @name Phaser.GameObjects.FX.Circle#backgroundColor
+     * @type {number}
+     * @since 3.60.0
+     */
+    backgroundColor: {
+
+        get: function ()
+        {
+            var color = this.glcolor2;
+
+            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+        },
+
+        set: function (value)
+        {
+            var color = this.glcolor2;
+
+            color[0] = ((value >> 16) & 0xFF) / 255;
+            color[1] = ((value >> 8) & 0xFF) / 255;
+            color[2] = (value & 0xFF) / 255;
+        }
+
     }
 
 });

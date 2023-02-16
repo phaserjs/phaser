@@ -25,16 +25,109 @@ var Bloom = new Class({
 
     initialize:
 
-    function Bloom (gameObject)
+    function Bloom (gameObject, color, offsetX, offsetY, blurStrength, strength, steps)
     {
+        if (offsetX === undefined) { offsetX = 1; }
+        if (offsetY === undefined) { offsetY = 1; }
+        if (blurStrength === undefined) { blurStrength = 1; }
+        if (strength === undefined) { strength = 1; }
+        if (steps === undefined) { steps = 4; }
+
         BaseFX.call(this, FX_CONST.BLOOM, gameObject);
 
-        this.steps = 4;
-        this.offsetX = 1;
-        this.offsetY = 1;
-        this.blurStrength = 1;
-        this.strength = 1; // blend strength
+        /**
+         * The number of steps to run the Bloom effect for.
+         *
+         * This value should always be an integer.
+         *
+         * It defaults to 4. The higher the value, the smoother the Bloom,
+         * but at the cost of exponentially more gl operations.
+         *
+         * Keep this to the lowest possible number you can have it, while
+         * still looking correct for your game.
+         *
+         * @name Phaser.GameObjects.FX.Bloom#steps
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.steps = steps;
+
+        /**
+         * The horizontal offset of the bloom effect.
+         *
+         * @name Phaser.GameObjects.FX.Bloom#offsetX
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.offsetX = offsetX;
+
+        /**
+         * The vertical offset of the bloom effect.
+         *
+         * @name Phaser.GameObjects.FX.Bloom#offsetY
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.offsetY = offsetY;
+
+        /**
+         * The strength of the blur process of the bloom effect.
+         *
+         * @name Phaser.GameObjects.FX.Bloom#blurStrength
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.blurStrength = blurStrength;
+
+        /**
+         * The strength of the blend process of the bloom effect.
+         *
+         * @name Phaser.GameObjects.FX.Bloom#strength
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.strength = strength;
+
+        /**
+         * The internal gl color array.
+         *
+         * @name Phaser.GameObjects.FX.Bloom#glcolor
+         * @type {number[]}
+         * @since 3.60.0
+         */
         this.glcolor = [ 1, 1, 1 ];
+
+        if (color !== undefined && color !== null)
+        {
+            this.color = color;
+        }
+    },
+
+    /**
+     * The color of the bloom as a number value.
+     *
+     * @name Phaser.GameObjects.FX.Bloom#color
+     * @type {number}
+     * @since 3.60.0
+     */
+    color: {
+
+        get: function ()
+        {
+            var color = this.glcolor;
+
+            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+        },
+
+        set: function (value)
+        {
+            var color = this.glcolor;
+
+            color[0] = ((value >> 16) & 0xFF) / 255;
+            color[1] = ((value >> 8) & 0xFF) / 255;
+            color[2] = (value & 0xFF) / 255;
+        }
+
     }
 
 });

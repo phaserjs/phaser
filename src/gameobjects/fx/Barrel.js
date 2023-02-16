@@ -25,8 +25,10 @@ var Barrel = new Class({
 
     initialize:
 
-    function Barrel (gameObject)
+    function Barrel (gameObject, amount)
     {
+        if (amount === undefined) { amount = 1; }
+
         BaseFX.call(this, FX_CONST.BARREL, gameObject);
 
         /**
@@ -36,10 +38,9 @@ var Barrel = new Class({
          *
          * @name Phaser.GameObjects.FX.Barrel#amount
          * @type {number}
-         * @webglOnly
          * @since 3.60.0
          */
-        this.amount = 1;
+        this.amount = amount;
     }
 
 });

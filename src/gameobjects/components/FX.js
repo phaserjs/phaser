@@ -240,9 +240,9 @@ var FX = new Class({
         return this.add(new Effects.Shine(this.gameObject));
     },
 
-    addBlur: function ()
+    addBlur: function (quality, x, y, strength, color, steps)
     {
-        return this.add(new Effects.Blur(this.gameObject));
+        return this.add(new Effects.Blur(this.gameObject, quality, x, y, strength, color, steps));
     },
 
     addGradient: function ()
@@ -250,9 +250,9 @@ var FX = new Class({
         return this.add(new Effects.Gradient(this.gameObject));
     },
 
-    addBloom: function ()
+    addBloom: function (color, offsetX, offsetY, blurStrength, strength, steps)
     {
-        return this.add(new Effects.Bloom(this.gameObject));
+        return this.add(new Effects.Bloom(this.gameObject, color, offsetX, offsetY, blurStrength, strength, steps));
     },
 
     addColorMatrix: function ()
@@ -260,14 +260,14 @@ var FX = new Class({
         return this.add(new Effects.ColorMatrix(this.gameObject));
     },
 
-    addCircle: function ()
+    addCircle: function (thickness, color, backgroundColor, scale, feather)
     {
-        return this.add(new Effects.Circle(this.gameObject));
+        return this.add(new Effects.Circle(this.gameObject, thickness, color, backgroundColor, scale, feather));
     },
 
-    addBarrel: function ()
+    addBarrel: function (amount)
     {
-        return this.add(new Effects.Barrel(this.gameObject));
+        return this.add(new Effects.Barrel(this.gameObject, amount));
     },
 
     addDisplacement: function ()

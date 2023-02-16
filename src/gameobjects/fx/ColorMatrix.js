@@ -29,10 +29,32 @@ var ColorMatrix = new Class({
     {
         BaseColorMatrix.call(this);
 
+        /**
+         * The FX_CONST type of this effect.
+         *
+         * @name Phaser.GameObjects.FX.ColorMatrix#type
+         * @type {number}
+         * @since 3.60.0
+         */
         this.type = FX_CONST.COLOR_MATRIX;
 
+        /**
+         * A reference to the Game Object that owns this effect.
+         *
+         * @name Phaser.GameObjects.FX.ColorMatrix#gameObject
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.60.0
+         */
         this.gameObject = gameObject;
 
+        /**
+         * Toggle this boolean to enable or disable this effect,
+         * without removing and adding it from the Game Object.
+         *
+         * @name Phaser.GameObjects.FX.ColorMatrix#active
+         * @type {boolean}
+         * @since 3.60.0
+         */
         this.active = true;
     },
 
