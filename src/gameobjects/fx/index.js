@@ -4,11 +4,14 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Extend = require('../../utils/object/Extend');
+var FX_CONST = require('./const');
+
 /**
  * @namespace Phaser.GameObjects.FX
  */
 
-module.exports = {
+var FX = {
 
     Barrel: require('./Barrel'),
     BaseFX: require('./BaseFX'),
@@ -27,3 +30,7 @@ module.exports = {
     Wipe: require('./Wipe')
 
 };
+
+FX = Extend(false, FX, FX_CONST);
+
+module.exports = FX;

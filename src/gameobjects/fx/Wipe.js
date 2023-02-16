@@ -25,8 +25,13 @@ var Wipe = new Class({
 
     initialize:
 
-    function Wipe (gameObject)
+    function Wipe (gameObject, wipeWidth, direction, axis, reveal)
     {
+        if (wipeWidth === undefined) { wipeWidth = 0.1; }
+        if (direction === undefined) { direction = 0; }
+        if (axis === undefined) { axis = 0; }
+        if (reveal === undefined) { reveal = false; }
+
         BaseFX.call(this, FX_CONST.WIPE, gameObject);
 
         //  left to right: direction 0, axis 0
@@ -38,10 +43,14 @@ var Wipe = new Class({
         //  progress: 0 - 1
 
         this.progress = 0;
-        this.wipeWidth = 0.1;
-        this.direction = 0;
-        this.axis = 0;
-        this.reveal = false;
+
+        this.wipeWidth = wipeWidth;
+
+        this.direction = direction;
+
+        this.axis = axis;
+
+        this.reveal = reveal;
     }
 
 });

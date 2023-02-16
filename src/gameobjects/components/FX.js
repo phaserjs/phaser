@@ -235,9 +235,9 @@ var FX = new Class({
         return this.add(new Effects.Vignette(this.gameObject, x, y, radius, strength));
     },
 
-    addShine: function ()
+    addShine: function (speed, lineWidth, gradient, reveal)
     {
-        return this.add(new Effects.Shine(this.gameObject));
+        return this.add(new Effects.Shine(this.gameObject, speed, lineWidth, gradient, reveal));
     },
 
     addBlur: function (quality, x, y, strength, color, steps)
@@ -245,9 +245,9 @@ var FX = new Class({
         return this.add(new Effects.Blur(this.gameObject, quality, x, y, strength, color, steps));
     },
 
-    addGradient: function ()
+    addGradient: function (color1, color2, alpha, fromX, fromY, toX, toY, size)
     {
-        return this.add(new Effects.Gradient(this.gameObject));
+        return this.add(new Effects.Gradient(this.gameObject, color1, color2, alpha, fromX, fromY, toX, toY, size));
     },
 
     addBloom: function (color, offsetX, offsetY, blurStrength, strength, steps)
@@ -270,19 +270,24 @@ var FX = new Class({
         return this.add(new Effects.Barrel(this.gameObject, amount));
     },
 
-    addDisplacement: function ()
+    addDisplacement: function (displacementTexture, x, y)
     {
-        return this.add(new Effects.Displacement(this.gameObject));
+        return this.add(new Effects.Displacement(this.gameObject, displacementTexture, x, y));
     },
 
-    addWipe: function ()
+    addWipe: function (wipeWidth, direction, axis, reveal)
     {
-        return this.add(new Effects.Wipe(this.gameObject));
+        return this.add(new Effects.Wipe(this.gameObject, wipeWidth, direction, axis, reveal));
     },
 
-    addBokeh: function ()
+    addBokeh: function (radius, amount, contrast)
     {
-        return this.add(new Effects.Bokeh(this.gameObject));
+        return this.add(new Effects.Bokeh(this.gameObject, radius, amount, contrast));
+    },
+
+    addTiltShift: function (radius, amount, contrast, blurX, blurY, strength)
+    {
+        return this.add(new Effects.Bokeh(this.gameObject, radius, amount, contrast, true, blurX, blurY, strength));
     }
 
 });

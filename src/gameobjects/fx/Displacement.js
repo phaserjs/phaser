@@ -25,16 +25,20 @@ var Displacement = new Class({
 
     initialize:
 
-    function Displacement (gameObject)
+    function Displacement (gameObject, displacementTexture, x, y)
     {
+        if (displacementTexture === undefined) { displacementTexture = '__WHITE'; }
+        if (x === undefined) { x = 0.005; }
+        if (y === undefined) { y = 0.005; }
+
         BaseFX.call(this, FX_CONST.DISPLACEMENT, gameObject);
 
-        this.x = 0.005;
-        this.y = 0.005;
+        this.x = x;
+        this.y = y;
 
         this.glTexture;
 
-        this.setTexture('__WHITE');
+        this.setTexture(displacementTexture);
     },
 
     setTexture: function (texture)

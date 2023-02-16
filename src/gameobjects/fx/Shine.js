@@ -25,8 +25,13 @@ var Shine = new Class({
 
     initialize:
 
-    function Shine (gameObject)
+    function Shine (gameObject, speed, lineWidth, gradient, reveal)
     {
+        if (speed === undefined) { speed = 0.5; }
+        if (lineWidth === undefined) { lineWidth = 0.5; }
+        if (gradient === undefined) { gradient = 3; }
+        if (reveal === undefined) { reveal = false; }
+
         BaseFX.call(this, FX_CONST.SHINE, gameObject);
 
         this.speed = 0.5;

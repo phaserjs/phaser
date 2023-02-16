@@ -25,17 +25,26 @@ var Bokeh = new Class({
 
     initialize:
 
-    function Bokeh (gameObject)
+    function Bokeh (gameObject, radius, amount, contrast, isTiltShift, blurX, blurY, strength)
     {
+        if (radius === undefined) { radius = 0.5; }
+        if (amount === undefined) { amount = 1; }
+        if (contrast === undefined) { contrast = 0.2; }
+        if (isTiltShift === undefined) { isTiltShift = false; }
+        if (blurX === undefined) { blurX = 1; }
+        if (blurY === undefined) { blurY = 1; }
+        if (strength === undefined) { strength = 1; }
+
         BaseFX.call(this, FX_CONST.BOKEH, gameObject);
 
-        this.isTiltShift = false;
-        this.strength = 1;
-        this.blurX = 1;
-        this.blurY = 1;
-        this.radius = 0.5;
-        this.amount = 1;
-        this.contrast = 0.2;
+        this.radius = radius;
+        this.amount = amount;
+        this.contrast = contrast;
+
+        this.isTiltShift = isTiltShift;
+        this.strength = strength;
+        this.blurX = blurX;
+        this.blurY = blurY;
     }
 
 });

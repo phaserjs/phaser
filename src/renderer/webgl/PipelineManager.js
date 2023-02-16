@@ -15,6 +15,7 @@ var SnapCeil = require('../../math/snap/SnapCeil');
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
 var FX = require('./pipelines/fx');
+var FX_CONST = require('../../gameobjects/fx/const');
 var FXPipeline = require('./pipelines/FXPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
 var MobilePipeline = require('./pipelines/MobilePipeline');
@@ -110,21 +111,23 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.postPipelineClasses = new CustomMap([
-            [ 'BarrelFX', FX.Barrel ],
-            [ 'BloomFX', FX.Bloom ],
-            [ 'BlurFX', FX.Blur ],
-            [ 'BokehFX', FX.Bokeh ],
-            [ 'CircleFX', FX.Circle ],
-            [ 'ColorMatrixFX', FX.ColorMatrix ],
-            [ 'DisplacementFX', FX.Displacement ],
-            [ 'GlowFX', FX.Glow ],
-            [ 'GradientFX', FX.Gradient ],
-            [ 'PixelateFX', FX.Pixelate ],
-            [ 'ShadowFX', FX.Shadow ],
-            [ 'ShineFX', FX.Shine ],
-            [ 'VignetteFX', FX.Vignette ],
-            [ 'WipeFX', FX.Wipe ]
+            [ FX_CONST.BARREL, FX.Barrel ],
+            [ FX_CONST.BLOOM, FX.Bloom ],
+            [ FX_CONST.BLUR, FX.Blur ],
+            [ FX_CONST.BOKEH, FX.Bokeh ],
+            [ FX_CONST.CIRCLE, FX.Circle ],
+            [ FX_CONST.COLOR_MATRIX, FX.ColorMatrix ],
+            [ FX_CONST.DISPLACEMENT, FX.Displacement ],
+            [ FX_CONST.GLOW, FX.Glow ],
+            [ FX_CONST.GRADIENT, FX.Gradient ],
+            [ FX_CONST.PIXELATE, FX.Pixelate ],
+            [ FX_CONST.SHADOW, FX.Shadow ],
+            [ FX_CONST.SHINE, FX.Shine ],
+            [ FX_CONST.VIGNETTE, FX.Vignette ],
+            [ FX_CONST.WIPE, FX.Wipe ]
         ]);
+
+        console.log(this.postPipelineClasses);
 
         /**
          * This map stores all pipeline instances in this manager.
@@ -666,13 +669,14 @@ var PipelineManager = new Class({
 
         var instance;
         var pipelineName = '';
+        var pipetype = typeof pipeline;
 
-        if (typeof pipeline === 'string')
+        if (pipetype === 'string' || pipetype === 'number')
         {
             instance = pipelineClasses.get(pipeline);
             pipelineName = pipeline;
         }
-        else if (typeof pipeline === 'function')
+        else if (pipetype === 'function')
         {
             //  A class
             if (pipelineClasses.contains(pipeline))
@@ -682,7 +686,7 @@ var PipelineManager = new Class({
 
             pipelineName = pipeline.name;
         }
-        else if (typeof pipeline === 'object')
+        else if (pipetype === 'object')
         {
             //  Instance
             instance = pipelineClasses.get(pipeline.name);
