@@ -23,6 +23,7 @@ var Phaser = {
     Display: { Masks: require('./display/mask') },
     DOM: require('./dom'),
     Events: require('./events'),
+    FX: require('./fx'),
     Game: require('./core/Game'),
     GameObjects: {
         DisplayList: require('./gameobjects/DisplayList'),
