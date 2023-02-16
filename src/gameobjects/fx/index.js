@@ -10,6 +10,7 @@
 
 module.exports = {
 
+    Barrel: require('./Barrel'),
     BaseFX: require('./BaseFX'),
     Bloom: require('./Bloom'),
     Blur: require('./Blur'),

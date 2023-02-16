@@ -277,6 +277,20 @@ var FX = {
         this.fx.push(fx);
 
         return fx;
+    },
+
+    addBarrelFX: function ()
+    {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
+        var fx = new Effects.Barrel(this);
+
+        this.fx.push(fx);
+
+        return fx;
     }
 
 

@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BarrelFrag = require('../shaders/FXBarrel-frag.js');
 var BlurHighFrag = require('../shaders/FXBlurHigh-frag.js');
 var BlurLowFrag = require('../shaders/FXBlurLow-frag.js');
 var BlurMedFrag = require('../shaders/FXBlurMed-frag.js');
@@ -57,7 +58,8 @@ var FXPipeline = new Class({
             { fragShader: GradientFrag },
             { fragShader: BloomFrag },
             { fragShader: ColorMatrixFrag },
-            { fragShader: CircleFrag }
+            { fragShader: CircleFrag },
+            { fragShader: BarrelFrag }
         ];
 
         PreFXPipeline.call(this, config);
@@ -71,6 +73,7 @@ var FXPipeline = new Class({
         this.shine = new FX.Shine(game);
         this.gradient = new FX.Gradient(game);
         this.circle = new FX.Circle(game);
+        this.barrel = new FX.Barrel(game);
 
         //  This array is intentionally sparse. Do not adjust.
         this.fxHandlers = [];
@@ -85,6 +88,7 @@ var FXPipeline = new Class({
         this.fxHandlers[FX_CONST.BLOOM] = this.onBloom;
         this.fxHandlers[FX_CONST.COLOR_MATRIX] = this.onColorMatrix;
         this.fxHandlers[FX_CONST.CIRCLE] = this.onCircle;
+        this.fxHandlers[FX_CONST.BARREL] = this.onBarrel;
 
         this.source;
         this.target;
@@ -272,6 +276,17 @@ var FXPipeline = new Class({
         this.setShader(shader);
 
         this.circle.onPreRender(config, shader, width, height);
+
+        this.runDraw();
+    },
+
+    onBarrel: function (config)
+    {
+        var shader = this.shaders[FX_CONST.BARREL];
+
+        this.setShader(shader);
+
+        this.barrel.onPreRender(config, shader);
 
         this.runDraw();
     }

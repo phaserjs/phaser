@@ -110,6 +110,7 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.postPipelineClasses = new CustomMap([
+            [ 'BarrelFX', FX.Barrel ],
             [ 'BloomFX', FX.Bloom ],
             [ 'BlurFX', FX.Blur ],
             [ 'CircleFX', FX.Circle ],

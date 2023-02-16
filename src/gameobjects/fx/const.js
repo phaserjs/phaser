@@ -104,7 +104,17 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    CIRCLE: 15
+    CIRCLE: 15,
+
+    /**
+     * The Barrel FX.
+     *
+     * @name Phaser.GameObjects.FX.BARREL
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    BARREL: 16
 
 };
 

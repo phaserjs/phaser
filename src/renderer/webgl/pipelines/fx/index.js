@@ -10,6 +10,7 @@
 
 var FX = {
 
+    Barrel: require('./BarrelFXPipeline'),
     Bloom: require('./BloomFXPipeline'),
     Blur: require('./BlurFXPipeline'),
     Circle: require('./CircleFXPipeline'),
