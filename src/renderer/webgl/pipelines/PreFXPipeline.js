@@ -33,7 +33,6 @@ var WebGLPipeline = require('../WebGLPipeline');
  * Text
  * TileSprite
  * RenderTexture
- * Shape
  *
  * // TODO - Explain about the fbos and functions
  *
@@ -344,7 +343,7 @@ var PreFXPipeline = new Class({
 
         var bounds = this.spriteBounds.setTo(bx, by, bw, bh);
 
-        var padding = (gameObject) ? gameObject.fxPadding : 0;
+        var padding = (gameObject) ? gameObject.fx.padding : 0;
         var width = bw + (padding * 2);
         var height = bh + (padding * 2);
         var maxDimension = Math.abs(Math.max(width, height));
@@ -373,7 +372,7 @@ var PreFXPipeline = new Class({
         {
             this.onDrawSprite(gameObject, target);
 
-            gameObject.onFX(this);
+            gameObject.fx.onFX(this);
         }
 
         var fsTarget = this.fsTarget;

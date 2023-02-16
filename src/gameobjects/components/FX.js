@@ -4,61 +4,97 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Class = require('../../utils/Class');
 var Effects = require('../fx/');
+var SpliceOne = require('../../utils/array/SpliceOne');
 
 /**
- * Provides methods used for setting the FX values of a Game Object.
- * Should be applied as a mixin and not used directly.
+ * @classdesc
  *
- * @namespace Phaser.GameObjects.Components.FX
- * @webglOnly
+ * @class FX
+ * @memberof Phaser.GameObjects.Components
+ * @constructor
  * @since 3.60.0
+ * @webglOnly
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that owns this FX Component.
  */
+var FX = new Class({
 
-var FX = {
+    initialize:
 
-    fx: null,
+    function FX (gameObject)
+    {
+        /**
+         * A reference to the Game Object that owns this FX Component.
+         *
+         * @name Phaser.GameObjects.Components.FX#gameObject
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.60.0
+         */
+        this.gameObject = gameObject;
 
-    /**
-     * The amount of extra padding to be applied to this Game Object
-     * when it is being rendered by a PreFX or SpriteFX Pipeline.
-     *
-     * Lots of FX require additional spacing added to the texture the
-     * Game Object uses, for example a glow or shadow effect, and this
-     * method allows you to control how much extra padding is included
-     * in addition to the texture size.
-     *
-     * @name Phaser.GameObjects.Components.FX#fxPadding
-     * @type {number}
-     * @default 0
-     * @since 3.60.0
-     */
-    fxPadding: 0,
+        /**
+         * Has this FX Component been enabled?
+         *
+         * You should treat this property as read-only.
+         *
+         * @name Phaser.GameObjects.Components.FX#enabled
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.enabled = false;
+
+        /**
+         * An array containing all of the FX that have been added to this FX Component.
+         *
+         * @name Phaser.GameObjects.Components.FX#list
+         * @type {Phaser.GameObjects.FX.BaseFX[]}
+         * @since 3.60.0
+         */
+        this.list = [];
+
+        /**
+         * The amount of extra padding to be applied to this Game Object
+         * when it is being rendered by a PreFX or SpriteFX Pipeline.
+         *
+         * Lots of FX require additional spacing added to the texture the
+         * Game Object uses, for example a glow or shadow effect, and this
+         * method allows you to control how much extra padding is included
+         * in addition to the texture size.
+         *
+         * @name Phaser.GameObjects.Components.FX#padding
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.padding = 0;
+    },
 
     /**
      * Sets the amount of extra padding to be applied to this Game Object
-     * when it is being rendered by a PreFX or SpriteFX Pipeline.
+     * when it is being rendered by a PreFX Pipeline.
      *
      * Lots of FX require additional spacing added to the texture the
      * Game Object uses, for example a glow or shadow effect, and this
      * method allows you to control how much extra padding is included
      * in addition to the texture size.
      *
-     * @method Phaser.GameObjects.Components.FX#setFXPadding
+     * @method Phaser.GameObjects.Components.FX#setPadding
      * @webglOnly
      * @since 3.60.0
      *
-     * @param {number} [padding=0] - The amount of padding to add to the texture.
+     * @param {number} [padding=0] - The amount of padding to add to this Game Object.
      *
      * @return {this} This Game Object instance.
      */
-    setFXPadding: function (padding)
+    setPadding: function (padding)
     {
         if (padding === undefined) { padding = 0; }
 
-        this.fxPadding = padding;
+        this.padding = padding;
 
-        return this;
+        return this.gameObject;
     },
 
     /**
@@ -69,7 +105,6 @@ var FX = {
      * It's invoked prior to the copy, allowing you to set shader uniforms, etc on the pipeline.
      *
      * @method Phaser.GameObjects.Components.FX#onFXCopy
-     * @webglOnly
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.Pipelines.PreFXPipeline} pipeline - The PreFX Pipeline that invoked this callback.
@@ -86,7 +121,6 @@ var FX = {
      * It's invoked prior to the draw, allowing you to set shader uniforms, etc on the pipeline.
      *
      * @method Phaser.GameObjects.Components.FX#onFX
-     * @webglOnly
      * @since 3.60.0
      *
      * @param {Phaser.Renderer.WebGL.Pipelines.PreFXPipeline} pipeline - The PreFX Pipeline that invoked this callback.
@@ -95,132 +129,164 @@ var FX = {
     {
     },
 
-    enableFX: function (padding)
+    /**
+     * Enables this FX Component and applies the FXPipeline to the parent Game Object.
+     *
+     * This is called automatically whenever you call a method such as `addBloom`, etc.
+     *
+     * You can check the `enabled` property to see if the Game Object is already enabled, or not.
+     *
+     * @method Phaser.GameObjects.Components.FX#enable
+     * @since 3.60.0
+     *
+     * @param {number} [padding=0] - The amount of padding to add to this Game Object.
+     */
+    enable: function (padding)
     {
-        var renderer = this.scene.sys.renderer;
+        var renderer = this.gameObject.scene.sys.renderer;
 
-        if (!renderer || !renderer.pipelines)
+        if (renderer && renderer.pipelines)
         {
-            return this;
+            this.gameObject.pipeline = renderer.pipelines.FX_PIPELINE;
+
+            if (padding !== undefined)
+            {
+                this.padding = padding;
+            }
+
+            this.enabled = true;
         }
-
-        this.pipeline = renderer.pipelines.FX_PIPELINE;
-
-        if (!this.fx)
+        else
         {
-            this.fx = [];
+            this.enabled = false;
         }
-
-        if (padding !== undefined)
-        {
-            this.fxPadding = padding;
-        }
-
-        return this;
     },
 
-    clearFX: function ()
+    clear: function ()
     {
-        //  Remove them all
+        var list = this.list;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            list[i].destroy();
+        }
+
+        this.list = [];
+
+        this.enabled = false;
     },
 
-    removeFX: function ()
+    remove: function (fx)
     {
-        //  Remove specific fx
+        var list = this.list;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            if (list[i] === fx)
+            {
+                SpliceOne(list, i);
+            }
+        }
     },
 
-    disableFX: function (clear)
+    disable: function (clear)
     {
-        this.resetPipeline();
+        if (clear === undefined) { clear = false; }
+
+        this.gameObject.resetPipeline();
+
+        this.enabled = false;
 
         if (clear)
         {
-            this.clearFX();
+            this.clear();
         }
     },
 
-    addFX: function (fx)
+    add: function (fx)
     {
-        if (!this.fx)
+        if (!this.enabled)
         {
-            this.enableFX();
+            this.enable();
         }
 
-        this.fx.push(fx);
+        var instance = new fx(this.gameObject);
 
-        return fx;
+        this.list.push(instance);
+
+        return instance;
     },
 
-    addGlowFX: function ()
+    addGlow: function ()
     {
-        return this.addFX(new Effects.Glow(this));
+        return this.add(Effects.Glow);
     },
 
-    addShadowFX: function ()
+    addShadow: function ()
     {
-        return this.addFX(new Effects.Shadow(this));
+        return this.add(Effects.Shadow);
     },
 
-    addPixelateFX: function ()
+    addPixelate: function ()
     {
-        return this.addFX(new Effects.Pixelate(this));
+        return this.add(Effects.Pixelate);
     },
 
-    addVignetteFX: function ()
+    addVignette: function ()
     {
-        return this.addFX(new Effects.Vignette(this));
+        return this.add(Effects.Vignette);
     },
 
-    addShineFX: function ()
+    addShine: function ()
     {
-        return this.addFX(new Effects.Shine(this));
+        return this.add(Effects.Shine);
     },
 
-    addBlurFX: function ()
+    addBlur: function ()
     {
-        return this.addFX(new Effects.Blur(this));
+        return this.add(Effects.Blur);
     },
 
-    addGradientFX: function ()
+    addGradient: function ()
     {
-        return this.addFX(new Effects.Gradient(this));
+        return this.add(Effects.Gradient);
     },
 
-    addBloomFX: function ()
+    addBloom: function ()
     {
-        return this.addFX(new Effects.Bloom(this));
+        return this.add(Effects.Bloom);
     },
 
-    addColorMatrixFX: function ()
+    addColorMatrix: function ()
     {
-        return this.addFX(new Effects.ColorMatrix(this));
+        return this.add(Effects.ColorMatrix);
     },
 
-    addCircleFX: function ()
+    addCircle: function ()
     {
-        return this.addFX(new Effects.Circle(this));
+        return this.add(Effects.Circle);
     },
 
-    addBarrelFX: function ()
+    addBarrel: function ()
     {
-        return this.addFX(new Effects.Barrel(this));
+        return this.add(Effects.Barrel);
     },
 
-    addDisplacementFX: function ()
+    addDisplacement: function ()
     {
-        return this.addFX(new Effects.Displacement(this));
+        return this.add(Effects.Displacement);
     },
 
-    addWipeFX: function ()
+    addWipe: function ()
     {
-        return this.addFX(new Effects.Wipe(this));
+        return this.add(Effects.Wipe);
     },
 
-    addBokehFX: function ()
+    addBokeh: function ()
     {
-        return this.addFX(new Effects.Bokeh(this));
+        return this.add(Effects.Bokeh);
     }
 
-};
+});
 
 module.exports = FX;

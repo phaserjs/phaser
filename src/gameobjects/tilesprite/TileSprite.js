@@ -51,8 +51,7 @@ var _FLAG = 8; // 1000
  * @extends Phaser.GameObjects.Components.Crop
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
- * @extends Phaser.GameObjects.Components.FX
- * @extends Phaser.GameObjects.Components.GetBounds
+  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
@@ -81,7 +80,6 @@ var TileSprite = new Class({
         Components.Crop,
         Components.Depth,
         Components.Flip,
-        Components.FX,
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
@@ -129,6 +127,29 @@ var TileSprite = new Class({
             width = Math.floor(width);
             height = Math.floor(height);
         }
+
+        /**
+         * The Special FX component of this Game Object.
+         *
+         * This component allows you to apply a variety of built-in effects to this Game Object, such
+         * as glow, blur, bloom, displacements, vignettes and more. You access them via this property,
+         * for example:
+         *
+         * ```js
+         * const player = this.add.sprite();
+         * player.fx.addBloom();
+         * ```
+         *
+         * All FX are WebGL only and do not have Canvas counterparts.
+         *
+         * Please see the FX Class for more details and available methods.
+         *
+         * @name Phaser.GameObjects.TileSprite#fx
+         * @type {Phaser.GameObjects.Components.FX}
+         * @webglOnly
+         * @since 3.60.0
+         */
+        this.fx = new Components.FX(this);
 
         /**
          * Internal tile position vector.

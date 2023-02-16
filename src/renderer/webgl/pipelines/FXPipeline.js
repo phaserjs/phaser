@@ -104,7 +104,7 @@ var FXPipeline = new Class({
 
         if (sprite && sprite.fx)
         {
-            var fx = sprite.fx;
+            var fx = sprite.fx.list;
 
             for (var i = 0; i < fx.length; i++)
             {

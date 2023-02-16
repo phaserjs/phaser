@@ -880,6 +880,13 @@ var GameObject = new Class({
             this.body = undefined;
         }
 
+        if (this.fx)
+        {
+            this.fx.destroy();
+
+            this.fx = undefined;
+        }
+
         this.active = false;
         this.visible = false;
 

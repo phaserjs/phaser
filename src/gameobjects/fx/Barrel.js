@@ -29,6 +29,16 @@ var Barrel = new Class({
     {
         BaseFX.call(this, FX_CONST.BARREL, gameObject);
 
+        /**
+         * The amount of distortion applied to the barrel effect.
+         *
+         * Typically keep this within the range 0 (no distortion) to 1.
+         *
+         * @name Phaser.GameObjects.FX.Barrel#amount
+         * @type {number}
+         * @webglOnly
+         * @since 3.60.0
+         */
         this.amount = 1;
     }
 
