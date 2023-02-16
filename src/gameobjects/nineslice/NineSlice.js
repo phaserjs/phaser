@@ -90,7 +90,6 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
- * @extends Phaser.GameObjects.Components.FX
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
@@ -121,7 +120,6 @@ var NineSlice = new Class({
         Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
-        Components.FX,
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
