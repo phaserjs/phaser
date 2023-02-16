@@ -25,17 +25,29 @@ var Shadow = new Class({
 
     initialize:
 
-    function Shadow (gameObject)
+    function Shadow (gameObject, x, y, decay, power, color, samples, intensity)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (decay === undefined) { decay = 0.1; }
+        if (power === undefined) { power = 1; }
+        if (samples === undefined) { samples = 6; }
+        if (intensity === undefined) { intensity = 1; }
+
         BaseFX.call(this, FX_CONST.SHADOW, gameObject);
 
-        this.x = 0;
-        this.y = 0;
-        this.decay = 0.1;
-        this.power = 1.0;
+        this.x = x;
+        this.y = y;
+        this.decay = decay;
+        this.power = power;
         this.glcolor = [ 0, 0, 0, 1 ];
-        this.samples = 6; // max 12, min 1
-        this.intensity = 1;
+        this.samples = samples; // max 12, min 1
+        this.intensity = intensity;
+
+        if (color !== undefined)
+        {
+            this.color = color;
+        }
     },
 
     /**

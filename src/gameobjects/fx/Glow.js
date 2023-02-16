@@ -25,8 +25,13 @@ var Glow = new Class({
 
     initialize:
 
-    function Glow (gameObject)
+    function Glow (gameObject, distance, outerStrength, innerStrength, knockout, color)
     {
+        if (distance === undefined) { distance = 16; }
+        if (outerStrength === undefined) { outerStrength = 4; }
+        if (innerStrength === undefined) { innerStrength = 0; }
+        if (knockout === undefined) { knockout = false; }
+
         BaseFX.call(this, FX_CONST.GLOW, gameObject);
 
         /**
@@ -41,7 +46,7 @@ var Glow = new Class({
          * @type {number}
          * @since 3.60.0
          */
-        this.distance = 16;
+        this.distance = distance;
 
         /**
          * The strength of the glow outward from the edge of the Sprite.
@@ -50,7 +55,7 @@ var Glow = new Class({
          * @type {number}
          * @since 3.60.0
          */
-        this.outerStrength = 4;
+        this.outerStrength = outerStrength;
 
         /**
          * The strength of the glow inward from the edge of the Sprite.
@@ -59,7 +64,7 @@ var Glow = new Class({
          * @type {number}
          * @since 3.60.0
          */
-        this.innerStrength = 0;
+        this.innerStrength = innerStrength;
 
         /**
          * If `true` on the glow is drawn, not the texture itself.
@@ -68,7 +73,7 @@ var Glow = new Class({
          * @type {number}
          * @since 3.60.0
          */
-        this.knockout = false;
+        this.knockout = knockout;
 
         /**
          * A 4 element array of gl color values.
@@ -78,6 +83,11 @@ var Glow = new Class({
          * @since 3.60.0
          */
         this.glcolor = [ 1, 1, 1, 1 ];
+
+        if (color !== undefined)
+        {
+            this.color = color;
+        }
     },
 
     /**

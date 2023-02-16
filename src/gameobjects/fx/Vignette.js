@@ -25,14 +25,19 @@ var Vignette = new Class({
 
     initialize:
 
-    function Vignette (gameObject)
+    function Vignette (gameObject, x, y, radius, strength)
     {
+        if (x === undefined) { x = 0.5; }
+        if (y === undefined) { y = 0.5; }
+        if (radius === undefined) { radius = 0.5; }
+        if (strength === undefined) { strength = 0.5; }
+
         BaseFX.call(this, FX_CONST.VIGNETTE, gameObject);
 
-        this.x = 0.5;
-        this.y = 0.5;
-        this.radius = 0.5;
-        this.strength = 0.5;
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.strength = strength;
     }
 
 });

@@ -25,11 +25,13 @@ var Pixelate = new Class({
 
     initialize:
 
-    function Pixelate (gameObject)
+    function Pixelate (gameObject, amount)
     {
+        if (amount === undefined) { amount = 1; }
+
         BaseFX.call(this, FX_CONST.PIXELATE, gameObject);
 
-        this.amount = 1;
+        this.amount = amount;
     }
 
 });

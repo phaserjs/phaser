@@ -210,81 +210,79 @@ var FX = new Class({
             this.enable();
         }
 
-        var instance = new fx(this.gameObject);
+        this.list.push(fx);
 
-        this.list.push(instance);
-
-        return instance;
+        return fx;
     },
 
-    addGlow: function ()
+    addGlow: function (distance, outerStrength, innerStrength, knockout, color)
     {
-        return this.add(Effects.Glow);
+        return this.add(new Effects.Glow(this.gameObject, distance, outerStrength, innerStrength, knockout, color));
     },
 
-    addShadow: function ()
+    addShadow: function (x, y, decay, power, color, samples, intensity)
     {
-        return this.add(Effects.Shadow);
+        return this.add(new Effects.Shadow(this.gameObject, x, y, decay, power, color, samples, intensity));
     },
 
-    addPixelate: function ()
+    addPixelate: function (amount)
     {
-        return this.add(Effects.Pixelate);
+        return this.add(new Effects.Pixelate(this.gameObject, amount));
     },
 
-    addVignette: function ()
+    addVignette: function (x, y, radius, strength)
     {
-        return this.add(Effects.Vignette);
+        return this.add(new Effects.Vignette(this.gameObject, x, y, radius, strength));
     },
 
     addShine: function ()
     {
-        return this.add(Effects.Shine);
+        return this.add(new Effects.Shine(this.gameObject));
     },
 
     addBlur: function ()
     {
-        return this.add(Effects.Blur);
+        return this.add(new Effects.Blur(this.gameObject));
     },
 
     addGradient: function ()
     {
-        return this.add(Effects.Gradient);
+        return this.add(new Effects.Gradient(this.gameObject));
     },
 
     addBloom: function ()
     {
-        return this.add(Effects.Bloom);
+        return this.add(new Effects.Bloom(this.gameObject));
     },
 
     addColorMatrix: function ()
     {
-        return this.add(Effects.ColorMatrix);
+        return this.add(new Effects.ColorMatrix(this.gameObject));
     },
 
     addCircle: function ()
     {
-        return this.add(Effects.Circle);
+        return this.add(new Effects.Circle(this.gameObject));
     },
 
     addBarrel: function ()
     {
-        return this.add(Effects.Barrel);
+        return this.add(new Effects.Barrel(this.gameObject));
     },
 
     addDisplacement: function ()
     {
-        return this.add(Effects.Displacement);
+        return this.add(new Effects.Displacement(this.gameObject));
     },
 
     addWipe: function ()
     {
-        return this.add(Effects.Wipe);
+        return this.add(new Effects.Wipe(this.gameObject));
     },
 
     addBokeh: function ()
     {
-        return this.add(Effects.Bokeh);
+        return this.add(new Effects.Bokeh(this.gameObject));
     }
 
 });
