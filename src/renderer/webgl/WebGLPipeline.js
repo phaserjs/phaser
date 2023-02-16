@@ -722,11 +722,25 @@ var WebGLPipeline = new Class({
             {
                 var shaderEntry = configShaders[i];
 
-                var name = GetFastValue(shaderEntry, 'name', 'default');
+                var name;
+                var vertShader;
+                var fragShader;
+                var attributes;
 
-                var vertShader = GetFastValue(shaderEntry, vName, defaultVertShader);
-                var fragShader = Utils.parseFragmentShaderMaxTextures(GetFastValue(shaderEntry, fName, defaultFragShader), renderer.maxTextures);
-                var attributes = GetFastValue(shaderEntry, aName, defaultAttribs);
+                if (typeof shaderEntry === 'string')
+                {
+                    name = 'default';
+                    vertShader = defaultVertShader;
+                    fragShader = Utils.parseFragmentShaderMaxTextures(shaderEntry, renderer.maxTextures);
+                    attributes = defaultAttribs;
+                }
+                else
+                {
+                    name = GetFastValue(shaderEntry, 'name', 'default');
+                    vertShader = GetFastValue(shaderEntry, vName, defaultVertShader);
+                    fragShader = Utils.parseFragmentShaderMaxTextures(GetFastValue(shaderEntry, fName, defaultFragShader), renderer.maxTextures);
+                    attributes = GetFastValue(shaderEntry, aName, defaultAttribs);
+                }
 
                 if (name === 'default')
                 {
