@@ -9,6 +9,7 @@ var BlurHighFrag = require('../shaders/FXBlurHigh-frag.js');
 var BlurLowFrag = require('../shaders/FXBlurLow-frag.js');
 var BlurMedFrag = require('../shaders/FXBlurMed-frag.js');
 var CircleFrag = require('../shaders/FXCircle-frag.js');
+var DisplacementFrag = require('../shaders/FXDisplacement-frag.js');
 var Class = require('../../../utils/Class');
 var ColorMatrixFrag = require('../shaders/ColorMatrix-frag.js');
 var FX_CONST = require('../../../gameobjects/fx/const');
@@ -59,7 +60,8 @@ var FXPipeline = new Class({
             { fragShader: BloomFrag },
             { fragShader: ColorMatrixFrag },
             { fragShader: CircleFrag },
-            { fragShader: BarrelFrag }
+            { fragShader: BarrelFrag },
+            { fragShader: DisplacementFrag }
         ];
 
         PreFXPipeline.call(this, config);
@@ -89,6 +91,7 @@ var FXPipeline = new Class({
         this.fxHandlers[FX_CONST.COLOR_MATRIX] = this.onColorMatrix;
         this.fxHandlers[FX_CONST.CIRCLE] = this.onCircle;
         this.fxHandlers[FX_CONST.BARREL] = this.onBarrel;
+        this.fxHandlers[FX_CONST.DISPLACEMENT] = this.onDisplacement;
 
         this.source;
         this.target;
@@ -262,7 +265,6 @@ var FXPipeline = new Class({
     {
         this.setShader(this.colorMatrixShader);
 
-        this.set1i('uMainSampler', 0);
         this.set1fv('uColorMatrix', config.getData());
         this.set1f('uAlpha', config.alpha);
 
@@ -287,6 +289,18 @@ var FXPipeline = new Class({
         this.setShader(shader);
 
         this.barrel.onPreRender(config, shader);
+
+        this.runDraw();
+    },
+
+    onDisplacement: function (config)
+    {
+        this.setShader(this.shaders[FX_CONST.DISPLACEMENT]);
+
+        this.set1i('uDisplacementSampler', 1);
+        this.set2f('amount', config.x, config.y);
+
+        this.bindTexture(config.glTexture, 1);
 
         this.runDraw();
     }

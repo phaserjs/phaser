@@ -115,6 +115,7 @@ var PipelineManager = new Class({
             [ 'BlurFX', FX.Blur ],
             [ 'CircleFX', FX.Circle ],
             [ 'ColorMatrixFX', FX.ColorMatrix ],
+            [ 'DisplacementFX', FX.Displacement ],
             [ 'GlowFX', FX.Glow ],
             [ 'GradientFX', FX.Gradient ],
             [ 'PixelateFX', FX.Pixelate ],

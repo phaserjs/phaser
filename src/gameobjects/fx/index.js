@@ -16,6 +16,7 @@ module.exports = {
     Blur: require('./Blur'),
     Circle: require('./Circle'),
     ColorMatrix: require('./ColorMatrix'),
+    Displacement: require('./Displacement'),
     Glow: require('./Glow'),
     Gradient: require('./Gradient'),
     Pixelate: require('./Pixelate'),

@@ -291,8 +291,21 @@ var FX = {
         this.fx.push(fx);
 
         return fx;
-    }
+    },
 
+    addDisplacementFX: function ()
+    {
+        if (!this.fx)
+        {
+            this.enableFX();
+        }
+
+        var fx = new Effects.Displacement(this);
+
+        this.fx.push(fx);
+
+        return fx;
+    }
 
 };
 

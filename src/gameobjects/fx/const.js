@@ -114,7 +114,17 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    BARREL: 16
+    BARREL: 16,
+
+    /**
+     * The Displacement FX.
+     *
+     * @name Phaser.GameObjects.FX.DISPLACEMENT
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    DISPLACEMENT: 17
 
 };
 

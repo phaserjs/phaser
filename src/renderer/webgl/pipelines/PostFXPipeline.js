@@ -254,10 +254,13 @@ var PostFXPipeline = new Class({
      * @param {Phaser.Renderer.WebGL.RenderTarget} source - The source Render Target.
      * @param {Phaser.Renderer.WebGL.RenderTarget} target - The target Render Target.
      */
-    copySprite: function (source, target)
+    copySprite: function (source, target, reset)
     {
+        if (reset === undefined) { reset = false; }
+
         var gl = this.gl;
 
+        gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
@@ -268,6 +271,12 @@ var PostFXPipeline = new Class({
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        if (reset)
+        {
+            gl.bindTexture(gl.TEXTURE_2D, null);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
     },
 
     /**

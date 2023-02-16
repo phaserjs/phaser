@@ -15,6 +15,7 @@ var FX = {
     Blur: require('./BlurFXPipeline'),
     Circle: require('./CircleFXPipeline'),
     ColorMatrix: require('./ColorMatrixFXPipeline'),
+    Displacement: require('./DisplacementFXPipeline'),
     Glow: require('./GlowFXPipeline'),
     Gradient: require('./GradientFXPipeline'),
     Pixelate: require('./PixelateFXPipeline'),
