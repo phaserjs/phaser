@@ -6,7 +6,7 @@
 
 var Class = require('../../../utils/Class');
 var FX = require('../pipelines/fx');
-var FX_CONST = require('../../../gameobjects/fx/const');
+var FX_CONST = require('../../../fx/const');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var PreFXPipeline = require('./PreFXPipeline');
 var Shaders = require('../shaders');

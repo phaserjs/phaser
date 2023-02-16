@@ -15,7 +15,7 @@ var SnapCeil = require('../../math/snap/SnapCeil');
 //  Default Phaser 3 Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
 var FX = require('./pipelines/fx');
-var FX_CONST = require('../../gameobjects/fx/const');
+var FX_CONST = require('../../fx/const');
 var FXPipeline = require('./pipelines/FXPipeline');
 var LightPipeline = require('./pipelines/LightPipeline');
 var MobilePipeline = require('./pipelines/MobilePipeline');
