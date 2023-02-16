@@ -5,7 +5,21 @@ let destdir = './src/renderer/webgl/shaders/';
 
 let files = fs.readdirSync(srcdir);
 
-files.forEach(function (file) {
+let index = `/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Renderer.WebGL.Shaders
+ */
+
+module.exports = {
+
+`;
+
+files.forEach(function (file, c) {
 
     let shaderSource = fs.readFileSync(srcdir + file, 'utf8');
     let type = file.substr(-4);
@@ -48,5 +62,41 @@ files.forEach(function (file) {
         }
 
     });
+
+    let inc = file.substr(0, file.lastIndexOf('.'));
+
+    if (file.substr(-4) === 'frag')
+    {
+        inc = inc.concat('Frag');
+    }
+    else
+    {
+        inc = inc.concat('Vert');
+    }
+
+    index = index.concat(`    ${inc}: require('./${shaderFilename}')`);
+
+    if (c < files.length - 1)
+    {
+        index = index.concat(',\n');
+    }
+
+});
+
+index = index.concat(`
+
+};
+`);
+
+fs.writeFile(destdir + 'index.js', index, function (error) {
+
+    if (error)
+    {
+        throw error;
+    }
+    else
+    {
+        console.log('Index Saved');
+    }
 
 });
