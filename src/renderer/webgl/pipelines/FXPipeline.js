@@ -4,27 +4,12 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BokehFrag = require('../shaders/FXBokeh-frag.js');
-var BarrelFrag = require('../shaders/FXBarrel-frag.js');
-var BlurHighFrag = require('../shaders/FXBlurHigh-frag.js');
-var BlurLowFrag = require('../shaders/FXBlurLow-frag.js');
-var BlurMedFrag = require('../shaders/FXBlurMed-frag.js');
-var CircleFrag = require('../shaders/FXCircle-frag.js');
-var DisplacementFrag = require('../shaders/FXDisplacement-frag.js');
 var Class = require('../../../utils/Class');
-var ColorMatrixFrag = require('../shaders/ColorMatrix-frag.js');
+var FX = require('../pipelines/fx');
 var FX_CONST = require('../../../gameobjects/fx/const');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var GlowFrag = require('../shaders/FXGlow-frag.js');
-var PixelateFrag = require('../shaders/FXPixelate-frag.js');
 var PreFXPipeline = require('./PreFXPipeline');
-var ShadowFrag = require('../shaders/FXShadow-frag.js');
-var ShineFrag = require('../shaders/FXShine-frag.js');
-var VignetteFrag = require('../shaders/FXVignette-frag.js');
-var GradientFrag = require('../shaders/FXGradient-frag.js');
-var BloomFrag = require('../shaders/FXBloom-frag.js');
-var WipeFrag = require('../shaders/FXWipe-frag.js');
-var FX = require('../pipelines/fx');
+var Shaders = require('../shaders');
 
 /**
  * @classdesc
@@ -45,27 +30,24 @@ var FXPipeline = new Class({
 
     function FXPipeline (config)
     {
-        //  TODO - Could get bundleshaders to create an index.js that
-        //  exposes all of the fragment shaders, so we don't have to import each one
-
         //  This order is fixed to match with the FX_CONST. Do not adjust.
         config.shaders = [
-            { fragShader: GlowFrag },
-            { fragShader: ShadowFrag },
-            { fragShader: PixelateFrag },
-            { fragShader: VignetteFrag },
-            { fragShader: ShineFrag },
-            { fragShader: BlurLowFrag },
-            { fragShader: BlurMedFrag },
-            { fragShader: BlurHighFrag },
-            { fragShader: GradientFrag },
-            { fragShader: BloomFrag },
-            { fragShader: ColorMatrixFrag },
-            { fragShader: CircleFrag },
-            { fragShader: BarrelFrag },
-            { fragShader: DisplacementFrag },
-            { fragShader: WipeFrag },
-            { fragShader: BokehFrag }
+            Shaders.FXGlowFrag,
+            Shaders.FXShadowFrag,
+            Shaders.FXPixelateFrag,
+            Shaders.FXVignetteFrag,
+            Shaders.FXShineFrag,
+            Shaders.FXBlurLowFrag,
+            Shaders.FXBlurMedFrag,
+            Shaders.FXBlurHighFrag,
+            Shaders.FXGradientFrag,
+            Shaders.FXBloomFrag,
+            Shaders.ColorMatrixFrag,
+            Shaders.FXCircleFrag,
+            Shaders.FXBarrelFrag,
+            Shaders.FXDisplacementFrag,
+            Shaders.FXWipeFrag,
+            Shaders.FXBokehFrag
         ];
 
         PreFXPipeline.call(this, config);
@@ -84,22 +66,24 @@ var FXPipeline = new Class({
         this.bokeh = new FX.Bokeh(game);
 
         //  This array is intentionally sparse. Do not adjust.
-        this.fxHandlers = [];
+        var fxHandlers = [];
 
-        this.fxHandlers[FX_CONST.GLOW] = this.onGlow;
-        this.fxHandlers[FX_CONST.SHADOW] = this.onShadow;
-        this.fxHandlers[FX_CONST.PIXELATE] = this.onPixelate;
-        this.fxHandlers[FX_CONST.VIGNETTE] = this.onVignette;
-        this.fxHandlers[FX_CONST.SHINE] = this.onShine;
-        this.fxHandlers[FX_CONST.BLUR] = this.onBlur;
-        this.fxHandlers[FX_CONST.GRADIENT] = this.onGradient;
-        this.fxHandlers[FX_CONST.BLOOM] = this.onBloom;
-        this.fxHandlers[FX_CONST.COLOR_MATRIX] = this.onColorMatrix;
-        this.fxHandlers[FX_CONST.CIRCLE] = this.onCircle;
-        this.fxHandlers[FX_CONST.BARREL] = this.onBarrel;
-        this.fxHandlers[FX_CONST.DISPLACEMENT] = this.onDisplacement;
-        this.fxHandlers[FX_CONST.WIPE] = this.onWipe;
-        this.fxHandlers[FX_CONST.BOKEH] = this.onBokeh;
+        fxHandlers[FX_CONST.GLOW] = this.onGlow;
+        fxHandlers[FX_CONST.SHADOW] = this.onShadow;
+        fxHandlers[FX_CONST.PIXELATE] = this.onPixelate;
+        fxHandlers[FX_CONST.VIGNETTE] = this.onVignette;
+        fxHandlers[FX_CONST.SHINE] = this.onShine;
+        fxHandlers[FX_CONST.BLUR] = this.onBlur;
+        fxHandlers[FX_CONST.GRADIENT] = this.onGradient;
+        fxHandlers[FX_CONST.BLOOM] = this.onBloom;
+        fxHandlers[FX_CONST.COLOR_MATRIX] = this.onColorMatrix;
+        fxHandlers[FX_CONST.CIRCLE] = this.onCircle;
+        fxHandlers[FX_CONST.BARREL] = this.onBarrel;
+        fxHandlers[FX_CONST.DISPLACEMENT] = this.onDisplacement;
+        fxHandlers[FX_CONST.WIPE] = this.onWipe;
+        fxHandlers[FX_CONST.BOKEH] = this.onBokeh;
+
+        this.fxHandlers = fxHandlers;
 
         this.source;
         this.target;
