@@ -13,6 +13,7 @@ var FX = {
     Barrel: require('./BarrelFXPipeline'),
     Bloom: require('./BloomFXPipeline'),
     Blur: require('./BlurFXPipeline'),
+    Bokeh: require('./BokehFXPipeline'),
     Circle: require('./CircleFXPipeline'),
     ColorMatrix: require('./ColorMatrixFXPipeline'),
     Displacement: require('./DisplacementFXPipeline'),

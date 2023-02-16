@@ -214,9 +214,12 @@ var FX = {
     addWipeFX: function ()
     {
         return this.addFX(new Effects.Wipe(this));
-    }
+    },
 
-    //  tilt shift / god rays / motion blur?
+    addBokehFX: function ()
+    {
+        return this.addFX(new Effects.Bokeh(this));
+    }
 
 };
 

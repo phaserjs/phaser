@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BokehFrag = require('../shaders/FXBokeh-frag.js');
 var BarrelFrag = require('../shaders/FXBarrel-frag.js');
 var BlurHighFrag = require('../shaders/FXBlurHigh-frag.js');
 var BlurLowFrag = require('../shaders/FXBlurLow-frag.js');
@@ -63,7 +64,8 @@ var FXPipeline = new Class({
             { fragShader: CircleFrag },
             { fragShader: BarrelFrag },
             { fragShader: DisplacementFrag },
-            { fragShader: WipeFrag }
+            { fragShader: WipeFrag },
+            { fragShader: BokehFrag }
         ];
 
         PreFXPipeline.call(this, config);
@@ -79,6 +81,7 @@ var FXPipeline = new Class({
         this.circle = new FX.Circle(game);
         this.barrel = new FX.Barrel(game);
         this.wipe = new FX.Wipe(game);
+        this.bokeh = new FX.Bokeh(game);
 
         //  This array is intentionally sparse. Do not adjust.
         this.fxHandlers = [];
@@ -96,6 +99,7 @@ var FXPipeline = new Class({
         this.fxHandlers[FX_CONST.BARREL] = this.onBarrel;
         this.fxHandlers[FX_CONST.DISPLACEMENT] = this.onDisplacement;
         this.fxHandlers[FX_CONST.WIPE] = this.onWipe;
+        this.fxHandlers[FX_CONST.BOKEH] = this.onBokeh;
 
         this.source;
         this.target;
@@ -316,6 +320,17 @@ var FXPipeline = new Class({
         this.setShader(shader);
 
         this.wipe.onPreRender(config, shader);
+
+        this.runDraw();
+    },
+
+    onBokeh: function (config, width, height)
+    {
+        var shader = this.shaders[FX_CONST.BOKEH];
+
+        this.setShader(shader);
+
+        this.bokeh.onPreRender(config, shader, width, height);
 
         this.runDraw();
     }

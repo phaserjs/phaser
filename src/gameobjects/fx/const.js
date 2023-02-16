@@ -134,7 +134,17 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    WIPE: 18
+    WIPE: 18,
+
+    /**
+     * The Bokeh and Tilt Shift FX.
+     *
+     * @name Phaser.GameObjects.FX.BOKEH
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    BOKEH: 19
 
 };
 

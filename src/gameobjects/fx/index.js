@@ -14,6 +14,7 @@ module.exports = {
     BaseFX: require('./BaseFX'),
     Bloom: require('./Bloom'),
     Blur: require('./Blur'),
+    Bokeh: require('./Bokeh'),
     Circle: require('./Circle'),
     ColorMatrix: require('./ColorMatrix'),
     Displacement: require('./Displacement'),

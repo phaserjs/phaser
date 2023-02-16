@@ -113,6 +113,7 @@ var PipelineManager = new Class({
             [ 'BarrelFX', FX.Barrel ],
             [ 'BloomFX', FX.Bloom ],
             [ 'BlurFX', FX.Blur ],
+            [ 'BokehFX', FX.Bokeh ],
             [ 'CircleFX', FX.Circle ],
             [ 'ColorMatrixFX', FX.ColorMatrix ],
             [ 'DisplacementFX', FX.Displacement ],
