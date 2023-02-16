@@ -4,38 +4,44 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Class = require('../../utils/Class');
+var Class = require('../utils/Class');
+var BaseColorMatrix = require('../display/ColorMatrix');
+var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
- * @class BaseFX
- * @memberof Phaser.GameObjects.FX
+ * @class ColorMatrix
+ * @extends Phaser.Display.ColorMatrix
+ * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
  *
- * @param {number} type - The FX Type constant.
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
  */
-var BaseFX = new Class({
+var ColorMatrix = new Class({
+
+    Extends: BaseColorMatrix,
 
     initialize:
 
-    function BaseFX (type, gameObject)
+    function ColorMatrix (gameObject)
     {
+        BaseColorMatrix.call(this);
+
         /**
          * The FX_CONST type of this effect.
          *
-         * @name Phaser.GameObjects.FX.BaseFX#type
+         * @name Phaser.FX.ColorMatrix#type
          * @type {number}
          * @since 3.60.0
          */
-        this.type = type;
+        this.type = FX_CONST.COLOR_MATRIX;
 
         /**
          * A reference to the Game Object that owns this effect.
          *
-         * @name Phaser.GameObjects.FX.BaseFX#gameObject
+         * @name Phaser.FX.ColorMatrix#gameObject
          * @type {Phaser.GameObjects.GameObject}
          * @since 3.60.0
          */
@@ -45,7 +51,7 @@ var BaseFX = new Class({
          * Toggle this boolean to enable or disable this effect,
          * without removing and adding it from the Game Object.
          *
-         * @name Phaser.GameObjects.FX.BaseFX#active
+         * @name Phaser.FX.ColorMatrix#active
          * @type {boolean}
          * @since 3.60.0
          */
@@ -55,8 +61,10 @@ var BaseFX = new Class({
     destroy: function ()
     {
         this.gameObject = null;
+        this._matrix = null;
+        this._data = null;
     }
 
 });
 
-module.exports = BaseFX;
+module.exports = ColorMatrix;

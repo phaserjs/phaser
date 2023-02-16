@@ -9,7 +9,7 @@ var FX_CONST = {
     /**
      * The Glow FX.
      *
-     * @name Phaser.GameObjects.FX.GLOW
+     * @name Phaser.FX.GLOW
      * @type {number}
      * @const
      * @since 3.60.0
@@ -19,7 +19,7 @@ var FX_CONST = {
     /**
      * The Shadow FX.
      *
-     * @name Phaser.GameObjects.FX.SHADOW
+     * @name Phaser.FX.SHADOW
      * @type {number}
      * @const
      * @since 3.60.0
@@ -29,7 +29,7 @@ var FX_CONST = {
     /**
      * The Pixelate FX.
      *
-     * @name Phaser.GameObjects.FX.PIXELATE
+     * @name Phaser.FX.PIXELATE
      * @type {number}
      * @const
      * @since 3.60.0
@@ -39,7 +39,7 @@ var FX_CONST = {
     /**
      * The Vignette FX.
      *
-     * @name Phaser.GameObjects.FX.VIGNETTE
+     * @name Phaser.FX.VIGNETTE
      * @type {number}
      * @const
      * @since 3.60.0
@@ -49,7 +49,7 @@ var FX_CONST = {
     /**
      * The Shine FX.
      *
-     * @name Phaser.GameObjects.FX.SHINE
+     * @name Phaser.FX.SHINE
      * @type {number}
      * @const
      * @since 3.60.0
@@ -59,7 +59,7 @@ var FX_CONST = {
     /**
      * The Blur FX.
      *
-     * @name Phaser.GameObjects.FX.BLUR
+     * @name Phaser.FX.BLUR
      * @type {number}
      * @const
      * @since 3.60.0
@@ -69,7 +69,7 @@ var FX_CONST = {
     /**
      * The Gradient FX.
      *
-     * @name Phaser.GameObjects.FX.GRADIENT
+     * @name Phaser.FX.GRADIENT
      * @type {number}
      * @const
      * @since 3.60.0
@@ -79,7 +79,7 @@ var FX_CONST = {
     /**
      * The Bloom FX.
      *
-     * @name Phaser.GameObjects.FX.BLOOM
+     * @name Phaser.FX.BLOOM
      * @type {number}
      * @const
      * @since 3.60.0
@@ -89,7 +89,7 @@ var FX_CONST = {
     /**
      * The Color Matrix FX.
      *
-     * @name Phaser.GameObjects.FX.COLOR_MATRIX
+     * @name Phaser.FX.COLOR_MATRIX
      * @type {number}
      * @const
      * @since 3.60.0
@@ -99,7 +99,7 @@ var FX_CONST = {
     /**
      * The Circle FX.
      *
-     * @name Phaser.GameObjects.FX.CIRCLE
+     * @name Phaser.FX.CIRCLE
      * @type {number}
      * @const
      * @since 3.60.0
@@ -109,7 +109,7 @@ var FX_CONST = {
     /**
      * The Barrel FX.
      *
-     * @name Phaser.GameObjects.FX.BARREL
+     * @name Phaser.FX.BARREL
      * @type {number}
      * @const
      * @since 3.60.0
@@ -119,7 +119,7 @@ var FX_CONST = {
     /**
      * The Displacement FX.
      *
-     * @name Phaser.GameObjects.FX.DISPLACEMENT
+     * @name Phaser.FX.DISPLACEMENT
      * @type {number}
      * @const
      * @since 3.60.0
@@ -129,7 +129,7 @@ var FX_CONST = {
     /**
      * The Wipe FX.
      *
-     * @name Phaser.GameObjects.FX.WIPE
+     * @name Phaser.FX.WIPE
      * @type {number}
      * @const
      * @since 3.60.0
@@ -139,7 +139,7 @@ var FX_CONST = {
     /**
      * The Bokeh and Tilt Shift FX.
      *
-     * @name Phaser.GameObjects.FX.BOKEH
+     * @name Phaser.FX.BOKEH
      * @type {number}
      * @const
      * @since 3.60.0

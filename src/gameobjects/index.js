@@ -126,8 +126,6 @@ var GameObjects = {
 //  WebGL only Game Objects
 if (typeof WEBGL_RENDERER)
 {
-    GameObjects.FX = require('./fx');
-
     GameObjects.Shader = require('./shader/Shader');
     GameObjects.Mesh = require('./mesh/Mesh');
     GameObjects.NineSlice = require('./nineslice/NineSlice');

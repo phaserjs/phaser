@@ -5,15 +5,15 @@
  */
 
 var BaseFX = require('./BaseFX');
-var Class = require('../../utils/Class');
+var Class = require('../utils/Class');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Bloom
- * @extends Phaser.GameObjects.FX.BaseFX
- * @memberof Phaser.GameObjects.FX
+ * @extends Phaser.FX.BaseFX
+ * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
  *
@@ -46,7 +46,7 @@ var Bloom = new Class({
          * Keep this to the lowest possible number you can have it, while
          * still looking correct for your game.
          *
-         * @name Phaser.GameObjects.FX.Bloom#steps
+         * @name Phaser.FX.Bloom#steps
          * @type {number}
          * @since 3.60.0
          */
@@ -55,7 +55,7 @@ var Bloom = new Class({
         /**
          * The horizontal offset of the bloom effect.
          *
-         * @name Phaser.GameObjects.FX.Bloom#offsetX
+         * @name Phaser.FX.Bloom#offsetX
          * @type {number}
          * @since 3.60.0
          */
@@ -64,7 +64,7 @@ var Bloom = new Class({
         /**
          * The vertical offset of the bloom effect.
          *
-         * @name Phaser.GameObjects.FX.Bloom#offsetY
+         * @name Phaser.FX.Bloom#offsetY
          * @type {number}
          * @since 3.60.0
          */
@@ -73,7 +73,7 @@ var Bloom = new Class({
         /**
          * The strength of the blur process of the bloom effect.
          *
-         * @name Phaser.GameObjects.FX.Bloom#blurStrength
+         * @name Phaser.FX.Bloom#blurStrength
          * @type {number}
          * @since 3.60.0
          */
@@ -82,7 +82,7 @@ var Bloom = new Class({
         /**
          * The strength of the blend process of the bloom effect.
          *
-         * @name Phaser.GameObjects.FX.Bloom#strength
+         * @name Phaser.FX.Bloom#strength
          * @type {number}
          * @since 3.60.0
          */
@@ -91,7 +91,7 @@ var Bloom = new Class({
         /**
          * The internal gl color array.
          *
-         * @name Phaser.GameObjects.FX.Bloom#glcolor
+         * @name Phaser.FX.Bloom#glcolor
          * @type {number[]}
          * @since 3.60.0
          */
@@ -106,7 +106,7 @@ var Bloom = new Class({
     /**
      * The color of the bloom as a number value.
      *
-     * @name Phaser.GameObjects.FX.Bloom#color
+     * @name Phaser.FX.Bloom#color
      * @type {number}
      * @since 3.60.0
      */

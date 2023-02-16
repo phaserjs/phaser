@@ -5,15 +5,15 @@
  */
 
 var BaseFX = require('./BaseFX');
-var Class = require('../../utils/Class');
+var Class = require('../utils/Class');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Blur
- * @extends Phaser.GameObjects.FX.BaseFX
- * @memberof Phaser.GameObjects.FX
+ * @extends Phaser.FX.BaseFX
+ * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
  *
@@ -52,7 +52,7 @@ var Blur = new Class({
          * Keep this value as low as you can, while still achieving the
          * desired effect you need for your game.
          *
-         * @name Phaser.GameObjects.FX.Blur#quality
+         * @name Phaser.FX.Blur#quality
          * @type {number}
          * @since 3.60.0
          */
@@ -61,7 +61,7 @@ var Blur = new Class({
         /**
          * The horizontal offset of the blur effect.
          *
-         * @name Phaser.GameObjects.FX.Blur#x
+         * @name Phaser.FX.Blur#x
          * @type {number}
          * @since 3.60.0
          */
@@ -70,7 +70,7 @@ var Blur = new Class({
         /**
          * The vertical offset of the blur effect.
          *
-         * @name Phaser.GameObjects.FX.Blur#y
+         * @name Phaser.FX.Blur#y
          * @type {number}
          * @since 3.60.0
          */
@@ -87,7 +87,7 @@ var Blur = new Class({
          * Keep this to the lowest possible number you can have it, while
          * still looking correct for your game.
          *
-         * @name Phaser.GameObjects.FX.Blur#steps
+         * @name Phaser.FX.Blur#steps
          * @type {number}
          * @since 3.60.0
          */
@@ -96,7 +96,7 @@ var Blur = new Class({
         /**
          * The strength of the blur effect.
          *
-         * @name Phaser.GameObjects.FX.Blur#strength
+         * @name Phaser.FX.Blur#strength
          * @type {number}
          * @since 3.60.0
          */
@@ -105,7 +105,7 @@ var Blur = new Class({
         /**
          * The internal gl color array.
          *
-         * @name Phaser.GameObjects.FX.Blur#glcolor
+         * @name Phaser.FX.Blur#glcolor
          * @type {number[]}
          * @since 3.60.0
          */
@@ -120,7 +120,7 @@ var Blur = new Class({
     /**
      * The color of the blur as a number value.
      *
-     * @name Phaser.GameObjects.FX.Blur#color
+     * @name Phaser.FX.Blur#color
      * @type {number}
      * @since 3.60.0
      */

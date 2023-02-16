@@ -5,15 +5,15 @@
  */
 
 var BaseFX = require('./BaseFX');
-var Class = require('../../utils/Class');
+var Class = require('../utils/Class');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Vignette
- * @extends Phaser.GameObjects.FX.BaseFX
- * @memberof Phaser.GameObjects.FX
+ * @extends Phaser.FX.BaseFX
+ * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
  *

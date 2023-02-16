@@ -5,15 +5,15 @@
  */
 
 var BaseFX = require('./BaseFX');
-var Class = require('../../utils/Class');
+var Class = require('../utils/Class');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Glow
- * @extends Phaser.GameObjects.FX.BaseFX
- * @memberof Phaser.GameObjects.FX
+ * @extends Phaser.FX.BaseFX
+ * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
  *
@@ -42,7 +42,7 @@ var Glow = new Class({
          * The higher the value, the more iterations the shader takes
          * when drawing the glow.
          *
-         * @name Phaser.GameObjects.FX.Glow#distance
+         * @name Phaser.FX.Glow#distance
          * @type {number}
          * @since 3.60.0
          */
@@ -51,7 +51,7 @@ var Glow = new Class({
         /**
          * The strength of the glow outward from the edge of the Sprite.
          *
-         * @name Phaser.GameObjects.FX.Glow#outerStrength
+         * @name Phaser.FX.Glow#outerStrength
          * @type {number}
          * @since 3.60.0
          */
@@ -60,7 +60,7 @@ var Glow = new Class({
         /**
          * The strength of the glow inward from the edge of the Sprite.
          *
-         * @name Phaser.GameObjects.FX.Glow#innerStrength
+         * @name Phaser.FX.Glow#innerStrength
          * @type {number}
          * @since 3.60.0
          */
@@ -69,7 +69,7 @@ var Glow = new Class({
         /**
          * If `true` on the glow is drawn, not the texture itself.
          *
-         * @name Phaser.GameObjects.FX.Glow#knockout
+         * @name Phaser.FX.Glow#knockout
          * @type {number}
          * @since 3.60.0
          */
@@ -78,7 +78,7 @@ var Glow = new Class({
         /**
          * A 4 element array of gl color values.
          *
-         * @name Phaser.GameObjects.FX.Glow#glcolor
+         * @name Phaser.FX.Glow#glcolor
          * @type {number[]}
          * @since 3.60.0
          */
@@ -93,7 +93,7 @@ var Glow = new Class({
     /**
      * The color of the glow as a number value.
      *
-     * @name Phaser.GameObjects.FX.Glow#color
+     * @name Phaser.FX.Glow#color
      * @type {number}
      * @since 3.60.0
      */

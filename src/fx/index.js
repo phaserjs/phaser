@@ -4,11 +4,11 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Extend = require('../../utils/object/Extend');
+var Extend = require('../utils/object/Extend');
 var FX_CONST = require('./const');
 
 /**
- * @namespace Phaser.GameObjects.FX
+ * @namespace Phaser.FX
  */
 
 var FX = {

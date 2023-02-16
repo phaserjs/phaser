@@ -5,15 +5,15 @@
  */
 
 var BaseFX = require('./BaseFX');
-var Class = require('../../utils/Class');
+var Class = require('../utils/Class');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Gradient
- * @extends Phaser.GameObjects.FX.BaseFX
- * @memberof Phaser.GameObjects.FX
+ * @extends Phaser.FX.BaseFX
+ * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
  *
@@ -65,7 +65,7 @@ var Gradient = new Class({
     /**
      * The first gradient color, given as a number value.
      *
-     * @name Phaser.GameObjects.FX.Gradient#color1
+     * @name Phaser.FX.Gradient#color1
      * @type {number}
      * @since 3.60.0
      */
@@ -92,7 +92,7 @@ var Gradient = new Class({
     /**
      * The second gradient color, given as a number value.
      *
-     * @name Phaser.GameObjects.FX.Gradient#color2
+     * @name Phaser.FX.Gradient#color2
      * @type {number}
      * @since 3.60.0
      */

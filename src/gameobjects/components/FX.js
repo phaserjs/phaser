@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
-var Effects = require('../fx/');
+var Effects = require('../../fx/');
 var SpliceOne = require('../../utils/array/SpliceOne');
 
 /**

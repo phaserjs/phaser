@@ -4,44 +4,38 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Class = require('../../utils/Class');
-var BaseColorMatrix = require('../../display/ColorMatrix');
-var FX_CONST = require('./const');
+var Class = require('../utils/Class');
 
 /**
  * @classdesc
  *
- * @class ColorMatrix
- * @extends Phaser.Display.ColorMatrix
- * @memberof Phaser.GameObjects.FX
+ * @class BaseFX
+ * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
  *
+ * @param {number} type - The FX Type constant.
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
  */
-var ColorMatrix = new Class({
-
-    Extends: BaseColorMatrix,
+var BaseFX = new Class({
 
     initialize:
 
-    function ColorMatrix (gameObject)
+    function BaseFX (type, gameObject)
     {
-        BaseColorMatrix.call(this);
-
         /**
          * The FX_CONST type of this effect.
          *
-         * @name Phaser.GameObjects.FX.ColorMatrix#type
+         * @name Phaser.FX.BaseFX#type
          * @type {number}
          * @since 3.60.0
          */
-        this.type = FX_CONST.COLOR_MATRIX;
+        this.type = type;
 
         /**
          * A reference to the Game Object that owns this effect.
          *
-         * @name Phaser.GameObjects.FX.ColorMatrix#gameObject
+         * @name Phaser.FX.BaseFX#gameObject
          * @type {Phaser.GameObjects.GameObject}
          * @since 3.60.0
          */
@@ -51,7 +45,7 @@ var ColorMatrix = new Class({
          * Toggle this boolean to enable or disable this effect,
          * without removing and adding it from the Game Object.
          *
-         * @name Phaser.GameObjects.FX.ColorMatrix#active
+         * @name Phaser.FX.BaseFX#active
          * @type {boolean}
          * @since 3.60.0
          */
@@ -61,10 +55,8 @@ var ColorMatrix = new Class({
     destroy: function ()
     {
         this.gameObject = null;
-        this._matrix = null;
-        this._data = null;
     }
 
 });
 
-module.exports = ColorMatrix;
+module.exports = BaseFX;

@@ -5,15 +5,15 @@
  */
 
 var BaseFX = require('./BaseFX');
-var Class = require('../../utils/Class');
+var Class = require('../utils/Class');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Circle
- * @extends Phaser.GameObjects.FX.BaseFX
- * @memberof Phaser.GameObjects.FX
+ * @extends Phaser.FX.BaseFX
+ * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
  *
@@ -39,7 +39,7 @@ var Circle = new Class({
          * a smaller circle, or increase it to create a circle that extends off
          * the edges of the texture.
          *
-         * @name Phaser.GameObjects.FX.Circle#scale
+         * @name Phaser.FX.Circle#scale
          * @type {number}
          * @since 3.60.0
          */
@@ -52,7 +52,7 @@ var Circle = new Class({
          * has a smooth edge. Increase this amount to a value such as 0.5
          * or 0.025 for larger amounts of feathering.
          *
-         * @name Phaser.GameObjects.FX.Circle#feather
+         * @name Phaser.FX.Circle#feather
          * @type {number}
          * @since 3.60.0
          */
@@ -63,7 +63,7 @@ var Circle = new Class({
          * doesn't factor in the feather, which can extend the thickness
          * internally depending on its value.
          *
-         * @name Phaser.GameObjects.FX.Circle#thickness
+         * @name Phaser.FX.Circle#thickness
          * @type {number}
          * @since 3.60.0
          */
@@ -72,7 +72,7 @@ var Circle = new Class({
         /**
          * The internal gl color array for the ring color.
          *
-         * @name Phaser.GameObjects.FX.Circle#glcolor
+         * @name Phaser.FX.Circle#glcolor
          * @type {number[]}
          * @since 3.60.0
          */
@@ -81,7 +81,7 @@ var Circle = new Class({
         /**
          * The internal gl color array for the background color.
          *
-         * @name Phaser.GameObjects.FX.Circle#glcolor2
+         * @name Phaser.FX.Circle#glcolor2
          * @type {number[]}
          * @since 3.60.0
          */
@@ -101,7 +101,7 @@ var Circle = new Class({
     /**
      * The color of the circular ring, given as a number value.
      *
-     * @name Phaser.GameObjects.FX.Circle#color
+     * @name Phaser.FX.Circle#color
      * @type {number}
      * @since 3.60.0
      */
@@ -128,7 +128,7 @@ var Circle = new Class({
     /**
      * The color of the background, behind the texture, given as a number value.
      *
-     * @name Phaser.GameObjects.FX.Circle#backgroundColor
+     * @name Phaser.FX.Circle#backgroundColor
      * @type {number}
      * @since 3.60.0
      */
