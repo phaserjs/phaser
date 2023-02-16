@@ -21,7 +21,8 @@ var FX = {
     Pixelate: require('./PixelateFXPipeline'),
     Shadow: require('./ShadowFXPipeline'),
     Shine: require('./ShineFXPipeline'),
-    Vignette: require('./VignetteFXPipeline')
+    Vignette: require('./VignetteFXPipeline'),
+    Wipe: require('./WipeFXPipeline')
 
 };
 

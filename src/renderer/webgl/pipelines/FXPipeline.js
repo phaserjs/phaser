@@ -22,6 +22,7 @@ var ShineFrag = require('../shaders/FXShine-frag.js');
 var VignetteFrag = require('../shaders/FXVignette-frag.js');
 var GradientFrag = require('../shaders/FXGradient-frag.js');
 var BloomFrag = require('../shaders/FXBloom-frag.js');
+var WipeFrag = require('../shaders/FXWipe-frag.js');
 var FX = require('../pipelines/fx');
 
 /**
@@ -61,7 +62,8 @@ var FXPipeline = new Class({
             { fragShader: ColorMatrixFrag },
             { fragShader: CircleFrag },
             { fragShader: BarrelFrag },
-            { fragShader: DisplacementFrag }
+            { fragShader: DisplacementFrag },
+            { fragShader: WipeFrag }
         ];
 
         PreFXPipeline.call(this, config);
@@ -76,6 +78,7 @@ var FXPipeline = new Class({
         this.gradient = new FX.Gradient(game);
         this.circle = new FX.Circle(game);
         this.barrel = new FX.Barrel(game);
+        this.wipe = new FX.Wipe(game);
 
         //  This array is intentionally sparse. Do not adjust.
         this.fxHandlers = [];
@@ -92,6 +95,7 @@ var FXPipeline = new Class({
         this.fxHandlers[FX_CONST.CIRCLE] = this.onCircle;
         this.fxHandlers[FX_CONST.BARREL] = this.onBarrel;
         this.fxHandlers[FX_CONST.DISPLACEMENT] = this.onDisplacement;
+        this.fxHandlers[FX_CONST.WIPE] = this.onWipe;
 
         this.source;
         this.target;
@@ -301,6 +305,17 @@ var FXPipeline = new Class({
         this.set2f('amount', config.x, config.y);
 
         this.bindTexture(config.glTexture, 1);
+
+        this.runDraw();
+    },
+
+    onWipe: function (config)
+    {
+        var shader = this.shaders[FX_CONST.WIPE];
+
+        this.setShader(shader);
+
+        this.wipe.onPreRender(config, shader);
 
         this.runDraw();
     }

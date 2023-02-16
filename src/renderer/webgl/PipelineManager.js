@@ -121,7 +121,8 @@ var PipelineManager = new Class({
             [ 'PixelateFX', FX.Pixelate ],
             [ 'ShadowFX', FX.Shadow ],
             [ 'ShineFX', FX.Shine ],
-            [ 'VignetteFX', FX.Vignette ]
+            [ 'VignetteFX', FX.Vignette ],
+            [ 'WipeFX', FX.Wipe ]
         ]);
 
         /**

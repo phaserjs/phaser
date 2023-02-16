@@ -209,6 +209,11 @@ var FX = {
     addDisplacementFX: function ()
     {
         return this.addFX(new Effects.Displacement(this));
+    },
+
+    addWipeFX: function ()
+    {
+        return this.addFX(new Effects.Wipe(this));
     }
 
 };

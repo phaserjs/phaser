@@ -124,7 +124,17 @@ var FX_CONST = {
      * @const
      * @since 3.60.0
      */
-    DISPLACEMENT: 17
+    DISPLACEMENT: 17,
+
+    /**
+     * The Wipe FX.
+     *
+     * @name Phaser.GameObjects.FX.WIPE
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    WIPE: 18
 
 };
 
