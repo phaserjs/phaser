@@ -52,9 +52,16 @@ var Controller = new Class({
         this.active = true;
     },
 
+    /**
+     * Destroys this FX Controller.
+     *
+     * @method Phaser.FX.Controller#destroy
+     * @since 3.60.0
+     */
     destroy: function ()
     {
         this.gameObject = null;
+        this.active = false;
     }
 
 });

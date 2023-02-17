@@ -18,6 +18,13 @@ var FX_CONST = require('./const');
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [radius=0.5] - The radius of the bokeh effect.
+ * @param {number} [amount=1] - The amount of the bokeh effect.
+ * @param {number} [contrast=0.2] - The color contrast of the bokeh effect.
+ * @param {boolean} [isTiltShift=false] - Is this a bokeh or Tile Shift effect?
+ * @param {number} [blurX=1] - If Tilt Shift, the amount of horizontal blur.
+ * @param {number} [blurY=1] - If Tilt Shift, the amount of vertical blur.
+ * @param {number} [strength=1] - If Tilt Shift, the strength of the blur.
  */
 var Bokeh = new Class({
 

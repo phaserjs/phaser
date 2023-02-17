@@ -18,6 +18,13 @@ var FX_CONST = require('./const');
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [x=0] - The horizontal offset of the shadow effect.
+ * @param {number} [y=0] - The vertical offset of the shadow effect.
+ * @param {number} [decay=0.1] - The amount of decay for shadow effect.
+ * @param {number} [power=1] - The power of the shadow effect.
+ * @param {number} [color=0x000000] - The color of the shadow.
+ * @param {number} [samples=6] - The number of samples that the shadow effect will run for. An integer between 1 and 12.
+ * @param {number} [intensity=1] - The intensity of the shadow effect.
  */
 var Shadow = new Class({
 
@@ -36,12 +43,69 @@ var Shadow = new Class({
 
         Controller.call(this, FX_CONST.SHADOW, gameObject);
 
+        /**
+         * The horizontal offset of the shadow effect.
+         *
+         * @name Phaser.FX.Shadow#x
+         * @type {number}
+         * @since 3.60.0
+         */
         this.x = x;
+
+        /**
+         * The vertical offset of the shadow effect.
+         *
+         * @name Phaser.FX.Shadow#y
+         * @type {number}
+         * @since 3.60.0
+         */
         this.y = y;
+
+        /**
+         * The amount of decay for the shadow effect.
+         *
+         * @name Phaser.FX.Shadow#decay
+         * @type {number}
+         * @since 3.60.0
+         */
         this.decay = decay;
+
+        /**
+         * The power of the shadow effect.
+         *
+         * @name Phaser.FX.Shadow#power
+         * @type {number}
+         * @since 3.60.0
+         */
         this.power = power;
+
+        /**
+         * The internal gl color array.
+         *
+         * @name Phaser.FX.Shadow#glcolor
+         * @type {number[]}
+         * @since 3.60.0
+         */
         this.glcolor = [ 0, 0, 0, 1 ];
-        this.samples = samples; // max 12, min 1
+
+        /**
+         * The number of samples that the shadow effect will run for.
+         *
+         * This should be an integer with a minimum value of 1 and a maximum of 12.
+         *
+         * @name Phaser.FX.Shadow#samples
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.samples = samples;
+
+        /**
+         * The intensity of the shadow effect.
+         *
+         * @name Phaser.FX.Shadow#intensity
+         * @type {number}
+         * @since 3.60.0
+         */
         this.intensity = intensity;
 
         if (color !== undefined)

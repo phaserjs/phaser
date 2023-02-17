@@ -18,6 +18,10 @@ var FX_CONST = require('./const');
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [wipeWidth=0.1] - The width of the wipe effect. This value is normalized in the range 0 to 1.
+ * @param {number} [direction=0] - The direction of the wipe effect. Either 0 or 1. Set in conjunction with the axis property.
+ * @param {number} [axis=0] - The axis of the wipe effect. Either 0 or 1. Set in conjunction with the direction property.
+ * @param {boolean} [reveal=false] - Is this a reveal (true) or a fade (false) effect?
  */
 var Wipe = new Class({
 
@@ -42,14 +46,51 @@ var Wipe = new Class({
         //  reveal: reveal 1
         //  progress: 0 - 1
 
+        /**
+         * The progress of the Wipe effect. This value is normalized to the range 0 to 1.
+         *
+         * Adjust this value to make the wipe transition (i.e. via a Tween)
+         *
+         * @name Phaser.FX.Wipe#progress
+         * @type {number}
+         * @since 3.60.0
+         */
         this.progress = 0;
 
+        /**
+         * The width of the wipe effect. This value is normalized in the range 0 to 1.
+         *
+         * @name Phaser.FX.Wipe#wipeWidth
+         * @type {number}
+         * @since 3.60.0
+         */
         this.wipeWidth = wipeWidth;
 
+        /**
+         * The direction of the wipe effect. Either 0 or 1. Set in conjunction with the axis property.
+         *
+         * @name Phaser.FX.Wipe#direction
+         * @type {number}
+         * @since 3.60.0
+         */
         this.direction = direction;
 
+        /**
+         * The axis of the wipe effect. Either 0 or 1. Set in conjunction with the direction property.
+         *
+         * @name Phaser.FX.Wipe#axis
+         * @type {number}
+         * @since 3.60.0
+         */
         this.axis = axis;
 
+        /**
+         * Is this a reveal (true) or a fade (false) effect?
+         *
+         * @name Phaser.FX.Wipe#reveal
+         * @type {boolean}
+         * @since 3.60.0
+         */
         this.reveal = reveal;
     }
 

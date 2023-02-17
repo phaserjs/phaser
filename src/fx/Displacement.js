@@ -18,6 +18,9 @@ var FX_CONST = require('./const');
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {string} [key='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
+ * @param {number} [x=0.005] - The amount of horizontal displacement to apply.
+ * @param {number} [y=0.005] - The amount of vertical displacement to apply.
  */
 var Displacement = new Class({
 
@@ -33,9 +36,31 @@ var Displacement = new Class({
 
         Controller.call(this, FX_CONST.DISPLACEMENT, gameObject);
 
+        /**
+         * The amount of horizontal displacement to apply.
+         *
+         * @name Phaser.FX.Displacement#x
+         * @type {number}
+         * @since 3.60.0
+         */
         this.x = x;
+
+        /**
+         * The amount of vertical displacement to apply.
+         *
+         * @name Phaser.FX.Displacement#y
+         * @type {number}
+         * @since 3.60.0
+         */
         this.y = y;
 
+        /**
+         * The underlying WebGLTexture used for displacement.
+         *
+         * @name Phaser.FX.Displacement#glTexture
+         * @type {WebGLTexture}
+         * @since 3.60.0
+         */
         this.glTexture;
 
         this.setTexture(displacementTexture);

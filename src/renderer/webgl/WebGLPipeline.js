@@ -1231,6 +1231,8 @@ var WebGLPipeline = new Class({
      * renderer has just performed a flush. It will bind the current render target, if any are set
      * and finally call the `onPreBatch` hook.
      *
+     * It is also called as part of the `PipelineManager.preBatch` method when processing Post FX Pipelines.
+     *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#preBatch
      * @since 3.50.0
      *
@@ -1257,6 +1259,8 @@ var WebGLPipeline = new Class({
      *
      * It calls the `onDraw` hook followed by the `onPostBatch` hook, which can be used to perform
      * additional Post FX Pipeline processing.
+     *
+     * It is also called as part of the `PipelineManager.postBatch` method when processing Post FX Pipelines.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#postBatch
      * @since 3.50.0

@@ -18,6 +18,12 @@ var FX_CONST = require('./const');
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [quality=0] - The quality of the blur effect. Can be either 0 for Low Quality, 1 for Medium Quality or 2 for High Quality.
+ * @param {number} [x=2] - The horizontal offset of the blur effect.
+ * @param {number} [y=2] - The vertical offset of the blur effect.
+ * @param {number} [strength=1] - The strength of the blur effect.
+ * @param {number} [color=0xffffff] - The color of the blur, as a hex value.
+ * @param {number} [steps=4] - The number of steps to run the blur effect for. This value should always be an integer.
  */
 var Blur = new Class({
 

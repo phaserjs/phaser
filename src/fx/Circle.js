@@ -18,6 +18,11 @@ var FX_CONST = require('./const');
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [thickness=8] - The width of the circle around the texture, in pixels.
+ * @param {number} [color=16724914] - The color of the circular ring, given as a number value.
+ * @param {number} [backgroundColor=0xff0000] - The color of the background, behind the texture, given as a number value.
+ * @param {number} [scale=1] - The scale of the circle. The default scale is 1, which is a circle the full size of the underlying texture.
+ * @param {number} [feather=0.005] - The amount of feathering to apply to the circle from the ring.
  */
 var Circle = new Class({
 

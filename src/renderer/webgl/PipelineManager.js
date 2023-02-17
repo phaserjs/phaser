@@ -806,9 +806,15 @@ var PipelineManager = new Class({
 
     /**
      * This method is called by the `WebGLPipeline.batchQuad` method, right before a quad
-     * belonging to a Game Object is about to be added to the batch. It causes a batch
-     * flush, then calls the `preBatch` method on the post-fx pipelines belonging to the
-     * Game Object.
+     * belonging to a Game Object is about to be added to the batch.
+     *
+     * It is also called directly bu custom Game Objects, such as Nine Slice or Mesh,
+     * from their render methods.
+     *
+     * It causes a batch flush, then calls the `preBatch` method on the Post FX Pipelines
+     * belonging to the Game Object.
+     *
+     * It should be followed by a call to `postBatch` to complete the process.
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#preBatch
      * @since 3.50.0
@@ -838,9 +844,15 @@ var PipelineManager = new Class({
 
     /**
      * This method is called by the `WebGLPipeline.batchQuad` method, right after a quad
-     * belonging to a Game Object has been added to the batch. It causes a batch
-     * flush, then calls the `postBatch` method on the post-fx pipelines belonging to the
-     * Game Object.
+     * belonging to a Game Object has been added to the batch.
+     *
+     * It is also called directly bu custom Game Objects, such as Nine Slice or Mesh,
+     * from their render methods.
+     *
+     * It causes a batch flush, then calls the `postBatch` method on the Post FX Pipelines
+     * belonging to the Game Object.
+     *
+     * It should be preceeded by a call to `preBatch` to start the process.
      *
      * @method Phaser.Renderer.WebGL.PipelineManager#postBatch
      * @since 3.50.0

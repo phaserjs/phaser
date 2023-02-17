@@ -18,6 +18,10 @@ var FX_CONST = require('./const');
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [speed=0.5] - The speed of the Shine effect.
+ * @param {number} [lineWidth=0.5] - The line width of the Shine effect.
+ * @param {number} [gradient=3] - The gradient of the Shine effect.
+ * @param {boolean} [reveal=false] - Does this Shine effect reveal or get added to its target?
  */
 var Shine = new Class({
 
@@ -34,10 +38,41 @@ var Shine = new Class({
 
         Controller.call(this, FX_CONST.SHINE, gameObject);
 
-        this.speed = 0.5;
-        this.lineWidth = 0.5;
-        this.gradient = 3;
-        this.reveal = false;
+        /**
+         * The speed of the Shine effect.
+         *
+         * @name Phaser.FX.Shine#speed
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.speed = speed;
+
+        /**
+         * The line width of the Shine effect.
+         *
+         * @name Phaser.FX.Shine#lineWidth
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.lineWidth = lineWidth;
+
+        /**
+         * The gradient of the Shine effect.
+         *
+         * @name Phaser.FX.Shine#gradient
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.gradient = gradient;
+
+        /**
+         * Does this Shine effect reveal or get added to its target?
+         *
+         * @name Phaser.FX.Shine#reveal
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.reveal = reveal;
     }
 
 });

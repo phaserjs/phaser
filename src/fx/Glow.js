@@ -18,6 +18,11 @@ var FX_CONST = require('./const');
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [color=0xffffff] - The color of the glow effect as a number value.
+ * @param {number} [distance=16] - The distance of the glow. This must be an integer and can be between 0 and 128 inclusive.
+ * @param {number} [outerStrength=4] - The strength of the glow outward from the edge of the Sprite.
+ * @param {number} [innerStrength=0] - The strength of the glow inward from the edge of the Sprite.
+ * @param {boolean} [knockout=false] - If `true` only the glow is drawn, not the texture itself.
  */
 var Glow = new Class({
 
@@ -25,7 +30,7 @@ var Glow = new Class({
 
     initialize:
 
-    function Glow (gameObject, distance, outerStrength, innerStrength, knockout, color)
+    function Glow (gameObject, color, distance, outerStrength, innerStrength, knockout)
     {
         if (distance === undefined) { distance = 16; }
         if (outerStrength === undefined) { outerStrength = 4; }
@@ -67,7 +72,7 @@ var Glow = new Class({
         this.innerStrength = innerStrength;
 
         /**
-         * If `true` on the glow is drawn, not the texture itself.
+         * If `true` only the glow is drawn, not the texture itself.
          *
          * @name Phaser.FX.Glow#knockout
          * @type {number}
