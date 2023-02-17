@@ -28,13 +28,17 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 20th September 2022
+> 17th February 2023
 
-We've been quietly but solidly working away on Phaser 3.60 for months now and are very close to release. Today I'm happy to say that 3.60 Beta 10 has been published and I would urge you to test it, if you can do so. There are a few breaking changes in this release, mostly to do with Tween Timelines, which have been removed and replaced with Tween Chains. If you don't use those, it should be a safe replacement for 3.55. As always, it brings a lot of new features and fixes to the table.
+After months of hard work we're in the final stretch for the Phaser 3.60 release. Today we published Beta 19 and I would strongly urge you to test it out in production. It includes lots of new features, such as built-in Special Effects, support for Spine 4, Spatial Audio, Nine Slice Game Objects, Plane Game Objects and lots, lots more! There are a few breaking changes in this release, mostly to do with Tween Timelines, which have been removed and replaced with Tween Chains. If you don't use those, it should be a safe replacement for 3.55. As always, it brings a lot of new features and fixes to the table.
 
 Some of the new features include:
 
-**Sprite FX** - The ability to create and use SpriteFX Pipelines directly on Sprite Game Objects. These allow a really easy way to define per-Sprite shaders, including extra padding space, perfect for effects such as blur, distort, glow, outline, shadow and more.
+**Built-in Special FX** - We now bundle 14 highly flexible special effects into the core, which are available to all Game Objects. These include Glow, Blur, Bloom, Bokeh, Barrel, Wipe, Pixelate, Vignette, Displacement and more.
+
+**Nine-Slice Game Object** - A new native Nine Slice Game Object. A Nine Slice Game Object allows you to display a texture-based object that can be stretched both horizontally and vertically, but that retains fixed-sized corners. The dimensions of the corners are set via the parameters to the class. When you resize a Nine Slice Game Object only the middle sections of the texture stretch. This is extremely useful for UI and button-like elements, where you need them to expand to accommodate the content without distorting the texture.
+
+**Plane Game Object** - A new native Plane Game Object. The Plane Game Object is a helper class that takes the Mesh Game Object and extends it, allowing for fast and easy creation of Planes. A Plane is a one-sided grid of cells, where you specify the number of cells in each dimension. The Plane can have a texture that is either repeated (tiled) across each cell, or applied to the full Plane.
 
 **New Tween System** - We've reworked the entire Tween system to make it both more efficient, more powerful and easier for you to extend. New in this version are perfectly sequential Tween Chains, the ability to tween Sprite textures, much better garbage-collection and auto-destruction of expired tweens and lots more.
 
@@ -46,9 +50,10 @@ There are also hundreds of updates and bug fixes across the entire codebase.
 
 As always, I have been careful to record all of these in their own [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.60.md). So it's easier for you to identify which change happened in the 3.60 version specifically.
 
-Beta 10 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases). You can also download it from npm:
+Beta 19 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases). You can also download it from npm:
+
 ```
-npm i phaser@3.60.0-beta.10
+npm i phaser@beta
 ```
 
 I have published new TypeScript defs files that align with this version. You can find them in the `types` folder of this repository.

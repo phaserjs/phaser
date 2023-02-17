@@ -1,6 +1,117 @@
 ## Version 3.60.0 - Miku - in development
 
+### New Features - Built-in Special FX
+
+We have decided to bundle a selection of highly flexible special effect shaders in to Phaser 3.60 and provide access to them via an easy to use set of API calls. The FX included are:
+
+* Barrel - A nice pinch / bulge distortion effect.
+* Bloom - Add bloom to any Game Object, with custom offset, blur strength, steps and color.
+* Blur - 3 different levels of gaussian blur (low, medium and high) and custom distance and color.
+* Bokeh / TiltShift - A bokeh and tiltshift effect, with intensity, contrast and distance settings.
+* Circle - Add a circular ring around any Game Object, useful for masking / avatar frames, with custom color, width and background color.
+* ColorMatrix - Add a ColorMatrix to any Game Object with access to all of its methods, such as `sepia`, `greyscale`, `lsd` and lots more.
+* Displacement - Use a displacement texture, such as a noise texture, to drastically (or subtly!) alter the appearance of a Game Object.
+* Glow - Add a smooth inner or outer glow, with custom distance, strength and color.
+* Gradient - Draw a gradient between two colors across any Game Object, with optional 'chunky' mode for classic retro style games.
+* Pixelate - Make any Game Object appear pixelated, to a varying degree.
+* Shadow - Add a drop shadow behind a Game Object, with custom depth and color.
+* Shine - Run a 'shine' effect across a Game Object, either additively or as part of a reveal.
+* Vignette - Apply a vignette around a Game Object, with custom offset position, radius and color.
+* Wipe - Set a Game Object to 'wipe' or 'reveal' with custom line width, direction and axis of the effect.
+
+What's more, the FX can be stacked up. You could add, for example, a `Barrel` followed by a `Blur` and then topped-off with a `Circle` effect. Just by adjusting the ordering you can achieve some incredible and unique effects, very quickly.
+
+We've worked hard to make the API as easy to use as possible, too. No more messing with pipelines or importing plugins. You can simply do:
+
+```js
+const player = this.add.sprite(x, y, texture);
+
+player.preFX.addGlow(0xff0000, 32);
+```
+
+This will add a 32 pixel red glow around the `player` Sprite.
+
+Each effect returns a new FX Controller instance, allowing you to easily adjust the special effects in real-time via your own code, tweens and similar:
+
+```js
+const fx = container.postFX.addWipe();
+
+this.tweens.add({
+    targets: fx,
+    progress: 1
+});
+```
+
+This will add a Wipe Effect to a Container instance and then tween its progress value from 0 to 1, causing the wipe to play out.
+
+All texture-based Game Objects have access to `Pre FX` (so that includes Images, Sprites, TileSprites, Text, RenderTexture and Video). However, _all_ Game Objects have access to `Post FX`, as do cameras. The difference is just when the effect is applied. For a 'pre' effect, it is applied before the Game Object is drawn. For a 'post' effect, it's applied after it has been drawn. All of the same effects are available to both.
+
+```js
+this.cameras.main.postFX.addTiltShift();
+```
+
+For example, this will apply a Tilt Shift effect to everything being rendered by the Camera. Which is a much faster way of doing it than applying the same effect to every child in a Scene. You can also apply them to Containers, allowing more fine-grained control over the display.
+
+The full list of new methods are as follows:
+
+Available only to texture-based Game Objects:
+
+* `GameObject.preFX.addGlow` adds a Glow Pre FX effect to the Game Object.
+* `GameObject.preFX.addShadow` adds a Shadow Pre FX effect to the Game Object.
+* `GameObject.preFX.addPixelate` adds a Pixelate Pre FX effect to the Game Object.
+* `GameObject.preFX.addVignette` adds a Vignette Pre FX effect to the Game Object.
+* `GameObject.preFX.addShine` adds a Shine Pre FX effect to the Game Object.
+* `GameObject.preFX.addBlur` adds a Blur Pre FX effect to the Game Object.
+* `GameObject.preFX.addGradient` adds a Gradient Pre FX effect to the Game Object.
+* `GameObject.preFX.addBloom` adds a Bloom Pre FX effect to the Game Object.
+* `GameObject.preFX.addColorMatrix` adds a ColorMatrix Pre FX effect to the Game Object.
+* `GameObject.preFX.addCircle` adds a Circle Pre FX effect to the Game Object.
+* `GameObject.preFX.addBarrel` adds a Barrel Pre FX effect to the Game Object.
+* `GameObject.preFX.addDisplacement` adds a Displacement Pre FX effect to the Game Object.
+* `GameObject.preFX.addWipe` adds a Wipe Pre FX effect to the Game Object.
+* `GameObject.preFX.addReveal` adds a Reveal Pre FX effect to the Game Object.
+* `GameObject.preFX.addBokeh` adds a Bokeh Pre FX effect to the Game Object.
+* `GameObject.preFX.addTiltShift` adds a TiltShift Pre FX effect to the Game Object.
+
+Available to all Game Objects:
+
+* `GameObject.postFX.addGlow` adds a Glow Post FX effect to the Game Object.
+* `GameObject.postFX.addShadow` adds a Shadow Post FX effect to the Game Object.
+* `GameObject.postFX.addPixelate` adds a Pixelate Post FX effect to the Game Object.
+* `GameObject.postFX.addVignette` adds a Vignette Post FX effect to the Game Object.
+* `GameObject.postFX.addShine` adds a Shine Post FX effect to the Game Object.
+* `GameObject.postFX.addBlur` adds a Blur Post FX effect to the Game Object.
+* `GameObject.postFX.addGradient` adds a Gradient Post FX effect to the Game Object.
+* `GameObject.postFX.addBloom` adds a Bloom Post FX effect to the Game Object.
+* `GameObject.postFX.addColorMatrix` adds a ColorMatrix Post FX effect to the Game Object.
+* `GameObject.postFX.addCircle` adds a Circle Post FX effect to the Game Object.
+* `GameObject.postFX.addBarrel` adds a Barrel Post FX effect to the Game Object.
+* `GameObject.postFX.addDisplacement` adds a Displacement Post FX effect to the Game Object.
+* `GameObject.postFX.addWipe` adds a Wipe Post FX effect to the Game Object.
+* `GameObject.postFX.addReveal` adds a Reveal Post FX effect to the Game Object.
+* `GameObject.postFX.addBokeh` adds a Bokeh Post FX effect to the Game Object.
+* `GameObject.postFX.addTiltShift` adds a TiltShift Post FX effect to the Game Object.
+
+### New Features - Spatial Sound
+
+Thanks to a contribution from @alxwest the Web Audio Sound system now supports spatial sound.
+
+TODO - List all of the new properties and methods!
+
 ### New Features - Spine 4 Support
+
+Thanks to a contribution from @justintien we now have a Spine 4 Plugin available.
+
+You can find it in the `plugins/spine4.1` folder in the main repository. There are also a bunch of new npm scripts to help build this plugin:
+
+`npm run plugin.spine4.1.full.dist` - To build new dist files for both canvas and WebGL.
+`npm run plugin.spine4.1.dist` - To build new dist files.
+`npm run plugin.spine4.1.watch` - To enter watch mode when doing dev work on the plugin.
+`npm run plugin.spine4.1.runtimes` - To build new versions of the Spine 4 runtimes.
+
+The core plugin API remains largely the same. You can find lots of updated examples in the Phaser 3 Examples repo in the `3.60/spine4.1` folder.
+
+We will maintain both the Spine 3 and 4 plugins for the forseeable future.
 
 ### Additional Spine 3 Bug Fixes
 
@@ -1014,6 +1125,8 @@ ArtemSiz)
 
 ### Bug Fixes
 
+* The `Container.getBounds` method will now use `getTextBounds` if one of its children is a `BitmapText` Game Object, giving more accurate bounds results (thanks @EmilSV)
+* The `renderFlags` property, used to determine if a Game Object will render, or not, would be calculated incorrectly depending on the order of the `scaleX` and `scaleY` properties. It now works regardless of the order (thanks @mizunokazumi)
 * The `SpriteSheetFromAtlas` parser was using the incorrect `sourceIndex` to grab frames from a given texture. This caused a crash whenever a trimmed spritesheet was added from any multiatlas image other than the first (thanks @Bambosh)
 * The `maxSpeed` setting in Arcade Physics wasn't recalculated during the Body update, prior to being compared, leading to inconsistent results. Fix #6329 (thanks @Bambosh)
 * Several paths have been fixed in the `phaser-core.js` entry point (thanks @pavle-goloskokovic)
