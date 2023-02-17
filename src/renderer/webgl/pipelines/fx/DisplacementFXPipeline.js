@@ -23,7 +23,7 @@ var DisplacementFXPipeline = new Class({
 
         this.x = 0.005;
         this.y = 0.005;
-        this.displacementTexture;
+        this.glTexture;
     },
 
     onBoot: function ()
@@ -37,21 +37,23 @@ var DisplacementFXPipeline = new Class({
 
         if (phaserTexture)
         {
-            this.displacementTexture = phaserTexture.glTexture;
+            this.glTexture = phaserTexture.glTexture;
         }
     },
 
     onDraw: function (source)
     {
+        var controller = this.getController();
+
         var target = this.fullFrame1;
 
         this.bind();
 
         this.set1i('uMainSampler', 0);
         this.set1i('uDisplacementSampler', 1);
-        this.set2f('amount', this.x, this.y);
+        this.set2f('amount', controller.x, controller.y);
 
-        this.bindTexture(this.displacementTexture, 1);
+        this.bindTexture(controller.glTexture, 1);
 
         this.copySprite(source, target);
 

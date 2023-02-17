@@ -68,6 +68,8 @@ var BlurFXPipeline = new Class({
 
     onDraw: function (target1)
     {
+        var controller = this.getController();
+
         var gl = this.gl;
         var target2 = this.fullFrame1;
 
@@ -78,15 +80,15 @@ var BlurFXPipeline = new Class({
 
         this.set1i('uMainSampler', 0);
         this.set2f('resolution', target1.width, target1.height);
-        this.set1f('strength', this.strength);
-        this.set3fv('color', this.glcolor);
+        this.set1f('strength', controller.strength);
+        this.set3fv('color', controller.glcolor);
 
-        for (var i = 0; i < this.steps; i++)
+        for (var i = 0; i < controller.steps; i++)
         {
-            this.set2f('offset', this.x, 0);
+            this.set2f('offset', controller.x, 0);
             this.copySprite(target1, target2);
 
-            this.set2f('offset', 0, this.y);
+            this.set2f('offset', 0, controller.y);
             this.copySprite(target2, target1);
         }
 

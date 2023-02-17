@@ -6,7 +6,6 @@
 
 var Class = require('../../../../utils/Class');
 var CircleFrag = require('../../shaders/FXCircle-frag.js');
-var GetFastValue = require('../../../../utils/object/GetFastValue');
 var PostFXPipeline = require('../PostFXPipeline');
 
 var CircleFXPipeline = new Class({
@@ -33,16 +32,15 @@ var CircleFXPipeline = new Class({
         this.glcolor2 = [ 1, 0, 0, 0.4 ];
     },
 
-    onPreRender: function (config, shader, width, height)
+    onPreRender: function (controller, shader, width, height)
     {
-        // eslint-disable-next-line consistent-this
-        if (config === undefined) { config = this; }
+        controller = this.getController(controller);
 
-        this.set1f('scale', GetFastValue(config, 'scale'), shader);
-        this.set1f('feather', GetFastValue(config, 'feather'), shader);
-        this.set1f('thickness', GetFastValue(config, 'thickness'), shader);
-        this.set3fv('color', GetFastValue(config, 'glcolor'), shader);
-        this.set4fv('backgroundColor', GetFastValue(config, 'glcolor2'), shader);
+        this.set1f('scale', controller.scale, shader);
+        this.set1f('feather', controller.feather, shader);
+        this.set1f('thickness', controller.thickness, shader);
+        this.set3fv('color', controller.glcolor, shader);
+        this.set4fv('backgroundColor', controller.glcolor2, shader);
 
         if (width && height)
         {

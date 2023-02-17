@@ -24,7 +24,14 @@ var ColorMatrixFXPipeline = new Class({
     {
         var target = this.fullFrame1;
 
-        this.drawFrame(source, target);
+        if (this.controller)
+        {
+            this.manager.drawFrame(source, target, true, this.controller);
+        }
+        else
+        {
+            this.drawFrame(source, target);
+        }
 
         this.copyToGame(target);
     }

@@ -5,7 +5,6 @@
  */
 
 var Class = require('../../../../utils/Class');
-var GetFastValue = require('../../../../utils/object/GetFastValue');
 var GradientFrag = require('../../shaders/FXGradient-frag.js');
 var PostFXPipeline = require('../PostFXPipeline');
 
@@ -35,17 +34,16 @@ var GradientFXPipeline = new Class({
         this.glcolor2 = [ 0, 255, 0 ];
     },
 
-    onPreRender: function (config, shader)
+    onPreRender: function (controller, shader)
     {
-        // eslint-disable-next-line consistent-this
-        if (config === undefined) { config = this; }
+        controller = this.getController(controller);
 
-        this.set1f('alpha', GetFastValue(config, 'alpha'), shader);
-        this.set1i('size', GetFastValue(config, 'size'), shader);
-        this.set3fv('color1', GetFastValue(config, 'glcolor1'), shader);
-        this.set3fv('color2', GetFastValue(config, 'glcolor2'), shader);
-        this.set2f('positionFrom', GetFastValue(config, 'fromX'), GetFastValue(config, 'fromY'), shader);
-        this.set2f('positionTo', GetFastValue(config, 'toX'), GetFastValue(config, 'toY'), shader);
+        this.set1f('alpha', controller.alpha, shader);
+        this.set1i('size', controller.size, shader);
+        this.set3fv('color1', controller.glcolor1, shader);
+        this.set3fv('color2', controller.glcolor2, shader);
+        this.set2f('positionFrom', controller.fromX, controller.fromY, shader);
+        this.set2f('positionTo', controller.toX, controller.toY, shader);
     }
 
 });

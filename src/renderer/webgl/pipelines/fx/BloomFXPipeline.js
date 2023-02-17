@@ -29,23 +29,27 @@ var BloomFXPipeline = new Class({
         this.glcolor = [ 1, 1, 1 ];
     },
 
-    onPreRender: function ()
+    onPreRender: function (controller)
     {
-        this.set1f('strength', this.blurStrength);
-        this.set3fv('color', this.glcolor);
+        controller = this.getController(controller);
+
+        this.set1f('strength', controller.blurStrength);
+        this.set3fv('color', controller.glcolor);
     },
 
     onDraw: function (target1)
     {
+        var controller = this.getController();
+
         var target2 = this.fullFrame1;
         var target3 = this.fullFrame2;
 
         this.copyFrame(target1, target3);
 
-        var x = (2 / target1.width) * this.offsetX;
-        var y = (2 / target1.height) * this.offsetY;
+        var x = (2 / target1.width) * controller.offsetX;
+        var y = (2 / target1.height) * controller.offsetY;
 
-        for (var i = 0; i < this.steps; i++)
+        for (var i = 0; i < controller.steps; i++)
         {
             this.set2f('offset', x, 0);
             this.copySprite(target1, target2);
@@ -54,7 +58,7 @@ var BloomFXPipeline = new Class({
             this.copySprite(target2, target1);
         }
 
-        this.blendFrames(target3, target1, target2, this.strength);
+        this.blendFrames(target3, target1, target2, controller.strength);
 
         this.copyToGame(target2);
     }

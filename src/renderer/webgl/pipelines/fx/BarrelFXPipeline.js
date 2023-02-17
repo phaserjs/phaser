@@ -6,7 +6,6 @@
 
 var Class = require('../../../../utils/Class');
 var BarrelFrag = require('../../shaders/FXBarrel-frag.js');
-var GetFastValue = require('../../../../utils/object/GetFastValue');
 var PostFXPipeline = require('../PostFXPipeline');
 
 var BarrelFXPipeline = new Class({
@@ -25,12 +24,11 @@ var BarrelFXPipeline = new Class({
         this.amount = 1;
     },
 
-    onPreRender: function (config, shader)
+    onPreRender: function (controller, shader)
     {
-        // eslint-disable-next-line consistent-this
-        if (config === undefined) { config = this; }
+        controller = this.getController(controller);
 
-        this.set1f('amount', GetFastValue(config, 'amount'), shader);
+        this.set1f('amount', controller.amount, shader);
     }
 
 });

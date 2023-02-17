@@ -5,7 +5,6 @@
  */
 
 var Class = require('../../../../utils/Class');
-var GetFastValue = require('../../../../utils/object/GetFastValue');
 var GlowFrag = require('../../shaders/FXGlow-frag.js');
 var PostFXPipeline = require('../PostFXPipeline');
 
@@ -29,16 +28,15 @@ var GlowFXPipeline = new Class({
         this.glcolor = [ 1, 1, 1, 1 ];
     },
 
-    onPreRender: function (config, shader, width, height)
+    onPreRender: function (controller, shader, width, height)
     {
-        // eslint-disable-next-line consistent-this
-        if (config === undefined) { config = this; }
+        controller = this.getController(controller);
 
-        this.set1f('distance', GetFastValue(config, 'distance'), shader);
-        this.set1f('outerStrength', GetFastValue(config, 'outerStrength'), shader);
-        this.set1f('innerStrength', GetFastValue(config, 'innerStrength'), shader);
-        this.set4fv('glowColor', GetFastValue(config, 'glcolor'), shader);
-        this.setBoolean('knockout', GetFastValue(config, 'knockout'), shader);
+        this.set1f('distance', controller.distance, shader);
+        this.set1f('outerStrength', controller.outerStrength, shader);
+        this.set1f('innerStrength', controller.innerStrength, shader);
+        this.set4fv('glowColor', controller.glcolor, shader);
+        this.setBoolean('knockout', controller.knockout, shader);
 
         if (width && height)
         {

@@ -5,7 +5,6 @@
  */
 
 var Class = require('../../../../utils/Class');
-var GetFastValue = require('../../../../utils/object/GetFastValue');
 var ShineFrag = require('../../shaders/FXShine-frag.js');
 var PostFXPipeline = require('../PostFXPipeline');
 
@@ -28,17 +27,16 @@ var ShineFXPipeline = new Class({
         this.reveal = false;
     },
 
-    onPreRender: function (config, shader, width, height)
+    onPreRender: function (controller, shader, width, height)
     {
-        // eslint-disable-next-line consistent-this
-        if (config === undefined) { config = this; }
+        controller = this.getController(controller);
 
         this.setTime('time', shader);
 
-        this.set1f('speed', GetFastValue(config, 'speed'), shader);
-        this.set1f('lineWidth', GetFastValue(config, 'lineWidth'), shader);
-        this.set1f('gradient', GetFastValue(config, 'gradient'), shader);
-        this.setBoolean('reveal', GetFastValue(config, 'reveal'), shader);
+        this.set1f('speed', controller.speed, shader);
+        this.set1f('lineWidth', controller.lineWidth, shader);
+        this.set1f('gradient', controller.gradient, shader);
+        this.setBoolean('reveal', controller.reveal, shader);
 
         if (width && height)
         {

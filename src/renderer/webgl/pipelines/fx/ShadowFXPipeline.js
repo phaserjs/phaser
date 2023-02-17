@@ -5,7 +5,6 @@
  */
 
 var Class = require('../../../../utils/Class');
-var GetFastValue = require('../../../../utils/object/GetFastValue');
 var ShadowFrag = require('../../shaders/FXShadow-frag.js');
 var PostFXPipeline = require('../PostFXPipeline');
 
@@ -31,19 +30,18 @@ var ShadowFXPipeline = new Class({
         this.intensity = 1;
     },
 
-    onPreRender: function (config, shader)
+    onPreRender: function (controller, shader)
     {
-        // eslint-disable-next-line consistent-this
-        if (config === undefined) { config = this; }
+        controller = this.getController(controller);
 
-        var samples = GetFastValue(config, 'samples');
+        var samples = controller.samples;
 
         this.set1i('samples', samples, shader);
-        this.set1f('intensity', GetFastValue(config, 'intensity'), shader);
-        this.set1f('decay', GetFastValue(config, 'decay'), shader);
-        this.set1f('power', (GetFastValue(config, 'power') / samples), shader);
-        this.set2f('lightPosition', GetFastValue(config, 'x'), GetFastValue(config, 'y'), shader);
-        this.set4fv('color', GetFastValue(config, 'glcolor'), shader);
+        this.set1f('intensity', controller.intensity, shader);
+        this.set1f('decay', controller.decay, shader);
+        this.set1f('power', (controller.power / samples), shader);
+        this.set2f('lightPosition', controller.x, controller.y, shader);
+        this.set4fv('color', controller.glcolor, shader);
     }
 
 });

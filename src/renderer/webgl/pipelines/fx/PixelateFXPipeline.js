@@ -5,7 +5,6 @@
  */
 
 var Class = require('../../../../utils/Class');
-var GetFastValue = require('../../../../utils/object/GetFastValue');
 var PixelateFrag = require('../../shaders/FXPixelate-frag.js');
 var PostFXPipeline = require('../PostFXPipeline');
 
@@ -25,12 +24,11 @@ var PixelateFXPipeline = new Class({
         this.amount = 1;
     },
 
-    onPreRender: function (config, shader, width, height)
+    onPreRender: function (controller, shader, width, height)
     {
-        // eslint-disable-next-line consistent-this
-        if (config === undefined) { config = this; }
+        controller = this.getController(controller);
 
-        this.set1f('amount', GetFastValue(config, 'amount'), shader);
+        this.set1f('amount', controller.amount, shader);
 
         if (width && height)
         {

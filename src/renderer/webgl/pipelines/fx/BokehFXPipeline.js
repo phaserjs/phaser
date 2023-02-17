@@ -6,7 +6,6 @@
 
 var Class = require('../../../../utils/Class');
 var BokehFrag = require('../../shaders/FXBokeh-frag.js');
-var GetFastValue = require('../../../../utils/object/GetFastValue');
 var PostFXPipeline = require('../PostFXPipeline');
 
 var BokehFXPipeline = new Class({
@@ -31,17 +30,16 @@ var BokehFXPipeline = new Class({
         this.contrast = 0.2;
     },
 
-    onPreRender: function (config, shader, width, height)
+    onPreRender: function (controller, shader, width, height)
     {
-        // eslint-disable-next-line consistent-this
-        if (config === undefined) { config = this; }
+        controller = this.getController(controller);
 
-        this.set1f('radius', GetFastValue(config, 'radius'), shader);
-        this.set1f('amount', GetFastValue(config, 'amount'), shader);
-        this.set1f('contrast', GetFastValue(config, 'contrast'), shader);
-        this.set1f('strength', GetFastValue(config, 'strength'), shader);
-        this.set2f('blur', GetFastValue(config, 'blurX'), GetFastValue(config, 'blurY'), shader);
-        this.setBoolean('isTiltShift', GetFastValue(config, 'isTiltShift'), shader);
+        this.set1f('radius', controller.radius, shader);
+        this.set1f('amount', controller.amount, shader);
+        this.set1f('contrast', controller.contrast, shader);
+        this.set1f('strength', controller.strength, shader);
+        this.set2f('blur', controller.blurX, controller.blurY, shader);
+        this.setBoolean('isTiltShift', controller.isTiltShift, shader);
 
         if (width && height)
         {

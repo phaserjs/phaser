@@ -6,7 +6,6 @@
 
 var Class = require('../../../../utils/Class');
 var WipeFrag = require('../../shaders/FXWipe-frag.js');
-var GetFastValue = require('../../../../utils/object/GetFastValue');
 var PostFXPipeline = require('../PostFXPipeline');
 
 var WipeFXPipeline = new Class({
@@ -37,18 +36,17 @@ var WipeFXPipeline = new Class({
         this.reveal = false;
     },
 
-    onPreRender: function (config, shader)
+    onPreRender: function (controller, shader)
     {
-        // eslint-disable-next-line consistent-this
-        if (config === undefined) { config = this; }
+        controller = this.getController(controller);
 
-        var progress = GetFastValue(config, 'progress');
-        var wipeWidth = GetFastValue(config, 'wipeWidth');
-        var direction = GetFastValue(config, 'direction');
-        var axis = GetFastValue(config, 'axis');
+        var progress = controller.progress;
+        var wipeWidth = controller.wipeWidth;
+        var direction = controller.direction;
+        var axis = controller.axis;
 
         this.set4f('config', progress, wipeWidth, direction, axis, shader);
-        this.setBoolean('reveal', GetFastValue(config, 'reveal'), shader);
+        this.setBoolean('reveal', controller.reveal, shader);
     }
 
 });

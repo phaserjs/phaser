@@ -5,7 +5,6 @@
  */
 
 var Class = require('../../../../utils/Class');
-var GetFastValue = require('../../../../utils/object/GetFastValue');
 var VignetteFrag = require('../../shaders/FXVignette-frag.js');
 var PostFXPipeline = require('../PostFXPipeline');
 
@@ -28,14 +27,13 @@ var VignetteFXPipeline = new Class({
         this.strength = 0.5;
     },
 
-    onPreRender: function (config, shader)
+    onPreRender: function (controller, shader)
     {
-        // eslint-disable-next-line consistent-this
-        if (config === undefined) { config = this; }
+        controller = this.getController(controller);
 
-        this.set1f('radius', GetFastValue(config, 'radius'), shader);
-        this.set1f('strength', GetFastValue(config, 'strength'), shader);
-        this.set2f('position', GetFastValue(config, 'x'), GetFastValue(config, 'y'), shader);
+        this.set1f('radius', controller.radius, shader);
+        this.set1f('strength', controller.strength, shader);
+        this.set2f('position', controller.x, controller.y, shader);
     }
 
 });
