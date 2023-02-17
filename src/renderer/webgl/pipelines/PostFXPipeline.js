@@ -144,7 +144,7 @@ var PostFXPipeline = new Class({
          * reference to it.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#controller
-         * @type {Phaser.FX.BaseFX}
+         * @type {Phaser.FX.Controller}
          * @since 3.60.0
          */
         this.controller;
@@ -249,6 +249,34 @@ var PostFXPipeline = new Class({
     onDraw: function (renderTarget)
     {
         this.bindAndDraw(renderTarget);
+    },
+
+    /**
+     * Returns the FX Controller for this Post FX Pipeline.
+     *
+     * This is called internally and not typically required outside.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#getController
+     * @since 3.60.0
+     *
+     * @param {Phaser.FX.Controller} [controller] - An FX Controller, or undefined.
+     *
+     * @return {Phaser.FX.Controller|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} The FX Controller responsible, or this Pipeline.
+     */
+    getController: function (controller)
+    {
+        if (controller !== undefined)
+        {
+            return controller;
+        }
+        else if (this.controller)
+        {
+            return this.controller;
+        }
+        else
+        {
+            return this;
+        }
     },
 
     /**
