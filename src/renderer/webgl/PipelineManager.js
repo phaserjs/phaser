@@ -103,28 +103,45 @@ var PipelineManager = new Class({
         /**
          * This map stores all Post FX Pipeline classes available in this manager.
          *
-         * As of v3.60 this is now populated by default with a variety of
-         * different Special FX Pipelines.
+         * As of v3.60 this is now populated by default with the following
+         * Post FX Pipelines:
+         *
+         * * Barrel
+         * * Bloom
+         * * Blur
+         * * Bokeh / TiltShift
+         * * Circle
+         * * ColorMatrix
+         * * Displacement
+         * * Glow
+         * * Gradient
+         * * Pixelate
+         * * Shadow
+         * * Shine
+         * * Vignette
+         * * Wipe
+         *
+         * See the FX Controller class for more details.
          *
          * @name Phaser.Renderer.WebGL.PipelineManager#postPipelineClasses
          * @type {Phaser.Structs.Map.<string, Class>}
          * @since 3.50.0
          */
         this.postPipelineClasses = new CustomMap([
-            [ FX_CONST.BARREL, FX.Barrel ],
-            [ FX_CONST.BLOOM, FX.Bloom ],
-            [ FX_CONST.BLUR, FX.Blur ],
-            [ FX_CONST.BOKEH, FX.Bokeh ],
-            [ FX_CONST.CIRCLE, FX.Circle ],
-            [ FX_CONST.COLOR_MATRIX, FX.ColorMatrix ],
-            [ FX_CONST.DISPLACEMENT, FX.Displacement ],
-            [ FX_CONST.GLOW, FX.Glow ],
-            [ FX_CONST.GRADIENT, FX.Gradient ],
-            [ FX_CONST.PIXELATE, FX.Pixelate ],
-            [ FX_CONST.SHADOW, FX.Shadow ],
-            [ FX_CONST.SHINE, FX.Shine ],
-            [ FX_CONST.VIGNETTE, FX.Vignette ],
-            [ FX_CONST.WIPE, FX.Wipe ]
+            [ String(FX_CONST.BARREL), FX.Barrel ],
+            [ String(FX_CONST.BLOOM), FX.Bloom ],
+            [ String(FX_CONST.BLUR), FX.Blur ],
+            [ String(FX_CONST.BOKEH), FX.Bokeh ],
+            [ String(FX_CONST.CIRCLE), FX.Circle ],
+            [ String(FX_CONST.COLOR_MATRIX), FX.ColorMatrix ],
+            [ String(FX_CONST.DISPLACEMENT), FX.Displacement ],
+            [ String(FX_CONST.GLOW), FX.Glow ],
+            [ String(FX_CONST.GRADIENT), FX.Gradient ],
+            [ String(FX_CONST.PIXELATE), FX.Pixelate ],
+            [ String(FX_CONST.SHADOW), FX.Shadow ],
+            [ String(FX_CONST.SHINE), FX.Shine ],
+            [ String(FX_CONST.VIGNETTE), FX.Vignette ],
+            [ String(FX_CONST.WIPE), FX.Wipe ]
         ]);
 
         /**

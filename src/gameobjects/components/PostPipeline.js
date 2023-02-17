@@ -245,7 +245,7 @@ var PostPipeline = {
      */
     getPostPipeline: function (pipeline)
     {
-        var isString = (typeof pipeline === 'string' || typeof pipeline === 'number');
+        var isString = (typeof pipeline === 'string');
 
         var pipelines = this.postPipelines;
 

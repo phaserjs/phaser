@@ -217,9 +217,11 @@ var FX = new Class({
     {
         if (this.isPost)
         {
-            this.gameObject.setPostPipeline(fx.type);
+            var type = String(fx.type);
 
-            var pipeline = this.gameObject.getPostPipeline(fx.type);
+            this.gameObject.setPostPipeline(type);
+
+            var pipeline = this.gameObject.getPostPipeline(type);
 
             if (pipeline)
             {
