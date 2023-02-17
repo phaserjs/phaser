@@ -102,9 +102,9 @@ var FXPipeline = new Class({
         var sprite = this.tempSprite;
         var handlers = this.fxHandlers;
 
-        if (sprite && sprite.fx)
+        if (sprite && sprite.preFX)
         {
-            var fx = sprite.fx.list;
+            var fx = sprite.preFX.list;
 
             for (var i = 0; i < fx.length; i++)
             {

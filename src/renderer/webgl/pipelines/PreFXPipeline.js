@@ -343,7 +343,7 @@ var PreFXPipeline = new Class({
 
         var bounds = this.spriteBounds.setTo(bx, by, bw, bh);
 
-        var padding = (gameObject) ? gameObject.fx.padding : 0;
+        var padding = (gameObject) ? gameObject.preFX.padding : 0;
         var width = bw + (padding * 2);
         var height = bh + (padding * 2);
         var maxDimension = Math.abs(Math.max(width, height));
@@ -372,7 +372,7 @@ var PreFXPipeline = new Class({
         {
             this.onDrawSprite(gameObject, target);
 
-            gameObject.fx.onFX(this);
+            gameObject.preFX.onFX(this);
         }
 
         var fsTarget = this.fsTarget;
