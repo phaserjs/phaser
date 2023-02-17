@@ -5,6 +5,7 @@
  */
 
 var DeepCopy = require('../../utils/object/DeepCopy');
+var FX = require('../components/FX');
 var SpliceOne = require('../../utils/array/SpliceOne');
 
 /**
@@ -53,16 +54,85 @@ var PostPipeline = {
     postPipelineData: null,
 
     /**
-     * This should only be called during the instantiation of the Game Object. After that, use `setPostPipeline`.
+     * The Pre FX component of this Game Object.
+     *
+     * Only the following Game Objects support Pre FX:
+     *
+     * * Image
+     * * Sprite
+     * * TileSprite
+     * * Text
+     * * RenderTexture
+     * * Video
+     *
+     * This component allows you to apply a variety of built-in effects to this Game Object, such
+     * as glow, blur, bloom, displacements, vignettes and more. You access them via this property,
+     * for example:
+     *
+     * ```js
+     * const player = this.add.sprite();
+     * player.preFX.addBloom();
+     * ```
+     *
+     * All FX are WebGL only and do not have Canvas counterparts.
+     *
+     * Please see the FX Class for more details and available methods.
+     *
+     * @name Phaser.GameObjects.Components.PostPipeline#preFX
+     * @type {Phaser.GameObjects.Components.FX}
+     * @webglOnly
+     * @since 3.60.0
+     */
+    preFX: null,
+
+    /**
+     * The Post FX component of this Game Object.
+     *
+     * This component allows you to apply a variety of built-in effects to this Game Object, such
+     * as glow, blur, bloom, displacements, vignettes and more. You access them via this property,
+     * for example:
+     *
+     * ```js
+     * const player = this.add.sprite();
+     * player.postFX.addBloom();
+     * ```
+     *
+     * All FX are WebGL only and do not have Canvas counterparts.
+     *
+     * Please see the FX Class for more details and available methods.
+     *
+     * @name Phaser.GameObjects.Components.PostPipeline#postFX
+     * @type {Phaser.GameObjects.Components.FX}
+     * @webglOnly
+     * @since 3.60.0
+     */
+    postFX: null,
+
+    /**
+     * This should only be called during the instantiation of the Game Object.
+     *
+     * It is called by default by all core Game Objects and doesn't need
+     * calling again.
+     *
+     * After that, use `setPostPipeline`.
      *
      * @method Phaser.GameObjects.Components.PostPipeline#initPostPipeline
      * @webglOnly
      * @since 3.60.0
+     *
+     * @param {boolean} [preFX=false] - Does this Game Object support Pre FX?
      */
-    initPostPipeline: function ()
+    initPostPipeline: function (preFX)
     {
         this.postPipelines = [];
         this.postPipelineData = {};
+
+        this.postFX = new FX(this, true);
+
+        if (preFX)
+        {
+            this.preFX = new FX(this, false);
+        }
     },
 
     /**
@@ -171,11 +241,11 @@ var PostPipeline = {
      *
      * @param {(string|function|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline)} pipeline - The string-based name of the pipeline, or a pipeline class.
      *
-     * @return {(Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} The Post Pipeline/s matching the name, or undefined if no match. If more than one match they are returned in an array.
+     * @return {(Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} An array of all the Post Pipelines matching the name. This array will be empty if there was no match. If there was only one single match, that pipeline is returned directly, not in an array.
      */
     getPostPipeline: function (pipeline)
     {
-        var isString = (typeof pipeline === 'string');
+        var isString = (typeof pipeline === 'string' || typeof pipeline === 'number');
 
         var pipelines = this.postPipelines;
 
