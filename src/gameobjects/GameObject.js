@@ -880,11 +880,18 @@ var GameObject = new Class({
             this.body = undefined;
         }
 
-        if (this.fx)
+        if (this.preFX)
         {
-            this.fx.destroy();
+            this.preFX.destroy();
 
-            this.fx = undefined;
+            this.preFX = undefined;
+        }
+
+        if (this.postFX)
+        {
+            this.postFX.destroy();
+
+            this.postFX = undefined;
         }
 
         this.active = false;
