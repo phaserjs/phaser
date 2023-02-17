@@ -11,6 +11,7 @@ var Class = require('../../utils/Class');
 var Events = require('../events');
 var GameEvents = require('../../core/events');
 var WebAudioSound = require('./WebAudioSound');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * @classdesc
@@ -395,8 +396,17 @@ var WebAudioSoundManager = new Class({
 
         if (listener && listener.positionX !== undefined)
         {
-            listener.positionX.value = this.listenerPosition.x;
-            listener.positionY.value = this.listenerPosition.y;
+            var x = GetFastValue(this.listenerPosition, 'x', null);
+            var y = GetFastValue(this.listenerPosition, 'y', null);
+
+            if (x && x !== this._spatialx)
+            {
+                this._spatialx = listener.positionX.value = x;
+            }
+            if (y && y !== this._spatialy)
+            {
+                this._spatialy = listener.positionY.value = y;
+            }
         }
 
         BaseSoundManager.prototype.update.call(this, time, delta);
