@@ -9,7 +9,7 @@ var Class = require('../utils/Class');
 /**
  * @classdesc
  *
- * @class BaseFX
+ * @class Controller
  * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
@@ -17,16 +17,16 @@ var Class = require('../utils/Class');
  * @param {number} type - The FX Type constant.
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
  */
-var BaseFX = new Class({
+var Controller = new Class({
 
     initialize:
 
-    function BaseFX (type, gameObject)
+    function Controller (type, gameObject)
     {
         /**
          * The FX_CONST type of this effect.
          *
-         * @name Phaser.FX.BaseFX#type
+         * @name Phaser.FX.Controller#type
          * @type {number}
          * @since 3.60.0
          */
@@ -35,7 +35,7 @@ var BaseFX = new Class({
         /**
          * A reference to the Game Object that owns this effect.
          *
-         * @name Phaser.FX.BaseFX#gameObject
+         * @name Phaser.FX.Controller#gameObject
          * @type {Phaser.GameObjects.GameObject}
          * @since 3.60.0
          */
@@ -45,7 +45,7 @@ var BaseFX = new Class({
          * Toggle this boolean to enable or disable this effect,
          * without removing and adding it from the Game Object.
          *
-         * @name Phaser.FX.BaseFX#active
+         * @name Phaser.FX.Controller#active
          * @type {boolean}
          * @since 3.60.0
          */
@@ -59,4 +59,4 @@ var BaseFX = new Class({
 
 });
 
-module.exports = BaseFX;
+module.exports = Controller;

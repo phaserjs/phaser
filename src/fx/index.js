@@ -14,7 +14,7 @@ var FX_CONST = require('./const');
 var FX = {
 
     Barrel: require('./Barrel'),
-    BaseFX: require('./BaseFX'),
+    Controller: require('./Controller'),
     Bloom: require('./Bloom'),
     Blur: require('./Blur'),
     Bokeh: require('./Bokeh'),

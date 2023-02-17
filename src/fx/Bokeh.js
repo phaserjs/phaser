@@ -4,15 +4,15 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseFX = require('./BaseFX');
 var Class = require('../utils/Class');
+var Controller = require('./Controller');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Bokeh
- * @extends Phaser.FX.BaseFX
+ * @extends Phaser.FX.Controller
  * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
@@ -21,7 +21,7 @@ var FX_CONST = require('./const');
  */
 var Bokeh = new Class({
 
-    Extends: BaseFX,
+    Extends: Controller,
 
     initialize:
 
@@ -35,7 +35,7 @@ var Bokeh = new Class({
         if (blurY === undefined) { blurY = 1; }
         if (strength === undefined) { strength = 1; }
 
-        BaseFX.call(this, FX_CONST.BOKEH, gameObject);
+        Controller.call(this, FX_CONST.BOKEH, gameObject);
 
         this.radius = radius;
         this.amount = amount;

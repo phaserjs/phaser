@@ -4,15 +4,15 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseFX = require('./BaseFX');
 var Class = require('../utils/Class');
+var Controller = require('./Controller');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Shine
- * @extends Phaser.FX.BaseFX
+ * @extends Phaser.FX.Controller
  * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
@@ -21,7 +21,7 @@ var FX_CONST = require('./const');
  */
 var Shine = new Class({
 
-    Extends: BaseFX,
+    Extends: Controller,
 
     initialize:
 
@@ -32,7 +32,7 @@ var Shine = new Class({
         if (gradient === undefined) { gradient = 3; }
         if (reveal === undefined) { reveal = false; }
 
-        BaseFX.call(this, FX_CONST.SHINE, gameObject);
+        Controller.call(this, FX_CONST.SHINE, gameObject);
 
         this.speed = 0.5;
         this.lineWidth = 0.5;

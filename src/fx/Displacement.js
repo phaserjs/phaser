@@ -4,15 +4,15 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseFX = require('./BaseFX');
 var Class = require('../utils/Class');
+var Controller = require('./Controller');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Displacement
- * @extends Phaser.FX.BaseFX
+ * @extends Phaser.FX.Controller
  * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
@@ -21,7 +21,7 @@ var FX_CONST = require('./const');
  */
 var Displacement = new Class({
 
-    Extends: BaseFX,
+    Extends: Controller,
 
     initialize:
 
@@ -31,7 +31,7 @@ var Displacement = new Class({
         if (x === undefined) { x = 0.005; }
         if (y === undefined) { y = 0.005; }
 
-        BaseFX.call(this, FX_CONST.DISPLACEMENT, gameObject);
+        Controller.call(this, FX_CONST.DISPLACEMENT, gameObject);
 
         this.x = x;
         this.y = y;

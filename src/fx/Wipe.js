@@ -4,15 +4,15 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseFX = require('./BaseFX');
 var Class = require('../utils/Class');
+var Controller = require('./Controller');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Wipe
- * @extends Phaser.FX.BaseFX
+ * @extends Phaser.FX.Controller
  * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
@@ -21,7 +21,7 @@ var FX_CONST = require('./const');
  */
 var Wipe = new Class({
 
-    Extends: BaseFX,
+    Extends: Controller,
 
     initialize:
 
@@ -32,7 +32,7 @@ var Wipe = new Class({
         if (axis === undefined) { axis = 0; }
         if (reveal === undefined) { reveal = false; }
 
-        BaseFX.call(this, FX_CONST.WIPE, gameObject);
+        Controller.call(this, FX_CONST.WIPE, gameObject);
 
         //  left to right: direction 0, axis 0
         //  right to left: direction 1, axis 0

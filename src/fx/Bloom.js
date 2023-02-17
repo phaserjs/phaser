@@ -4,15 +4,15 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseFX = require('./BaseFX');
 var Class = require('../utils/Class');
+var Controller = require('./Controller');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Bloom
- * @extends Phaser.FX.BaseFX
+ * @extends Phaser.FX.Controller
  * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
@@ -21,7 +21,7 @@ var FX_CONST = require('./const');
  */
 var Bloom = new Class({
 
-    Extends: BaseFX,
+    Extends: Controller,
 
     initialize:
 
@@ -33,7 +33,7 @@ var Bloom = new Class({
         if (strength === undefined) { strength = 1; }
         if (steps === undefined) { steps = 4; }
 
-        BaseFX.call(this, FX_CONST.BLOOM, gameObject);
+        Controller.call(this, FX_CONST.BLOOM, gameObject);
 
         /**
          * The number of steps to run the Bloom effect for.

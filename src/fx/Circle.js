@@ -4,15 +4,15 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseFX = require('./BaseFX');
 var Class = require('../utils/Class');
+var Controller = require('./Controller');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Circle
- * @extends Phaser.FX.BaseFX
+ * @extends Phaser.FX.Controller
  * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
@@ -21,7 +21,7 @@ var FX_CONST = require('./const');
  */
 var Circle = new Class({
 
-    Extends: BaseFX,
+    Extends: Controller,
 
     initialize:
 
@@ -31,7 +31,7 @@ var Circle = new Class({
         if (scale === undefined) { scale = 1; }
         if (feather === undefined) { feather = 0.005; }
 
-        BaseFX.call(this, FX_CONST.CIRCLE, gameObject);
+        Controller.call(this, FX_CONST.CIRCLE, gameObject);
 
         /**
          * The scale of the circle. The default scale is 1, which is a circle

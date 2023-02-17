@@ -4,15 +4,15 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseFX = require('./BaseFX');
 var Class = require('../utils/Class');
+var Controller = require('./Controller');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Barrel
- * @extends Phaser.FX.BaseFX
+ * @extends Phaser.FX.Controller
  * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
@@ -21,7 +21,7 @@ var FX_CONST = require('./const');
  */
 var Barrel = new Class({
 
-    Extends: BaseFX,
+    Extends: Controller,
 
     initialize:
 
@@ -29,7 +29,7 @@ var Barrel = new Class({
     {
         if (amount === undefined) { amount = 1; }
 
-        BaseFX.call(this, FX_CONST.BARREL, gameObject);
+        Controller.call(this, FX_CONST.BARREL, gameObject);
 
         /**
          * The amount of distortion applied to the barrel effect.

@@ -4,15 +4,15 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseFX = require('./BaseFX');
 var Class = require('../utils/Class');
+var Controller = require('./Controller');
 var FX_CONST = require('./const');
 
 /**
  * @classdesc
  *
  * @class Vignette
- * @extends Phaser.FX.BaseFX
+ * @extends Phaser.FX.Controller
  * @memberof Phaser.FX
  * @constructor
  * @since 3.60.0
@@ -21,7 +21,7 @@ var FX_CONST = require('./const');
  */
 var Vignette = new Class({
 
-    Extends: BaseFX,
+    Extends: Controller,
 
     initialize:
 
@@ -32,7 +32,7 @@ var Vignette = new Class({
         if (radius === undefined) { radius = 0.5; }
         if (strength === undefined) { strength = 0.5; }
 
-        BaseFX.call(this, FX_CONST.VIGNETTE, gameObject);
+        Controller.call(this, FX_CONST.VIGNETTE, gameObject);
 
         this.x = x;
         this.y = y;
