@@ -124,29 +124,6 @@ var Video = new Class({
         GameObject.call(this, scene, 'Video');
 
         /**
-         * The Special FX component of this Game Object.
-         *
-         * This component allows you to apply a variety of built-in effects to this Game Object, such
-         * as glow, blur, bloom, displacements, vignettes and more. You access them via this property,
-         * for example:
-         *
-         * ```js
-         * const player = this.add.sprite();
-         * player.fx.addBloom();
-         * ```
-         *
-         * All FX are WebGL only and do not have Canvas counterparts.
-         *
-         * Please see the FX Class for more details and available methods.
-         *
-         * @name Phaser.GameObjects.Video#fx
-         * @type {Phaser.GameObjects.Components.FX}
-         * @webglOnly
-         * @since 3.60.0
-         */
-        this.fx = new Components.FX(this);
-
-        /**
          * A reference to the HTML Video Element this Video Game Object is playing.
          * Will be `null` until a video is loaded for playback.
          *
@@ -406,7 +383,7 @@ var Video = new Class({
         this.setPosition(x, y);
         this.setSize(256, 256);
         this.initPipeline();
-        this.initPostPipeline();
+        this.initPostPipeline(true);
 
         if (key)
         {

@@ -85,35 +85,12 @@ var Image = new Class({
          */
         this._crop = this.resetCropObject();
 
-        /**
-         * The Special FX component of this Game Object.
-         *
-         * This component allows you to apply a variety of built-in effects to this Game Object, such
-         * as glow, blur, bloom, displacements, vignettes and more. You access them via this property,
-         * for example:
-         *
-         * ```js
-         * const player = this.add.sprite();
-         * player.fx.addBloom();
-         * ```
-         *
-         * All FX are WebGL only and do not have Canvas counterparts.
-         *
-         * Please see the FX Class for more details and available methods.
-         *
-         * @name Phaser.GameObjects.Image#fx
-         * @type {Phaser.GameObjects.Components.FX}
-         * @webglOnly
-         * @since 3.60.0
-         */
-        this.fx = new Components.FX(this);
-
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOriginFromFrame();
         this.initPipeline();
-        this.initPostPipeline();
+        this.initPostPipeline(true);
     }
 
 });

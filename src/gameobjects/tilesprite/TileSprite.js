@@ -129,29 +129,6 @@ var TileSprite = new Class({
         }
 
         /**
-         * The Special FX component of this Game Object.
-         *
-         * This component allows you to apply a variety of built-in effects to this Game Object, such
-         * as glow, blur, bloom, displacements, vignettes and more. You access them via this property,
-         * for example:
-         *
-         * ```js
-         * const player = this.add.sprite();
-         * player.fx.addBloom();
-         * ```
-         *
-         * All FX are WebGL only and do not have Canvas counterparts.
-         *
-         * Please see the FX Class for more details and available methods.
-         *
-         * @name Phaser.GameObjects.TileSprite#fx
-         * @type {Phaser.GameObjects.Components.FX}
-         * @webglOnly
-         * @since 3.60.0
-         */
-        this.fx = new Components.FX(this);
-
-        /**
          * Internal tile position vector.
          *
          * @name Phaser.GameObjects.TileSprite#_tilePosition
@@ -312,7 +289,7 @@ var TileSprite = new Class({
         this.setFrame(frameKey);
         this.setOriginFromFrame();
         this.initPipeline();
-        this.initPostPipeline();
+        this.initPostPipeline(true);
     },
 
     /**
