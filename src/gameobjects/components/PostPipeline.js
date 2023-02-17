@@ -56,15 +56,6 @@ var PostPipeline = {
     /**
      * The Pre FX component of this Game Object.
      *
-     * Only the following Game Objects support Pre FX:
-     *
-     * * Image
-     * * Sprite
-     * * TileSprite
-     * * Text
-     * * RenderTexture
-     * * Video
-     *
      * This component allows you to apply a variety of built-in effects to this Game Object, such
      * as glow, blur, bloom, displacements, vignettes and more. You access them via this property,
      * for example:
@@ -73,6 +64,15 @@ var PostPipeline = {
      * const player = this.add.sprite();
      * player.preFX.addBloom();
      * ```
+     *
+     * Only the following Game Objects support Pre FX:
+     *
+     * * Image
+     * * Sprite
+     * * TileSprite
+     * * Text
+     * * RenderTexture
+     * * Video
      *
      * All FX are WebGL only and do not have Canvas counterparts.
      *
