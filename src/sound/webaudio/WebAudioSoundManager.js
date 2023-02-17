@@ -393,7 +393,7 @@ var WebAudioSoundManager = new Class({
     {
         var listener = this.context.listener;
 
-        if (this.listenerPosition && listener)
+        if (listener && listener.positionX !== undefined)
         {
             listener.positionX.value = this.listenerPosition.x;
             listener.positionY.value = this.listenerPosition.y;
