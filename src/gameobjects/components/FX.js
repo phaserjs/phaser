@@ -23,7 +23,7 @@ var FX = new Class({
 
     initialize:
 
-    function FX (gameObject)
+    function FX (gameObject, isPost)
     {
         /**
          * A reference to the Game Object that owns this FX Component.
@@ -33,6 +33,15 @@ var FX = new Class({
          * @since 3.60.0
          */
         this.gameObject = gameObject;
+
+        /**
+         * Is this a Post FX Controller? or a Pre FX Controller?
+         *
+         * @name Phaser.GameObjects.Components.FX#isPost
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.isPost = isPost;
 
         /**
          * Has this FX Component been enabled?
@@ -46,10 +55,11 @@ var FX = new Class({
         this.enabled = false;
 
         /**
-         * An array containing all of the FX that have been added to this FX Component.
+         * An array containing all of the FX Controllers that
+         * have been added to this FX Component.
          *
          * @name Phaser.GameObjects.Components.FX#list
-         * @type {Phaser.GameObjects.FX.BaseFX[]}
+         * @type {Phaser.FX.Controller[]}
          * @since 3.60.0
          */
         this.list = [];
@@ -205,14 +215,35 @@ var FX = new Class({
 
     add: function (fx)
     {
-        if (!this.enabled)
+        if (this.isPost)
         {
-            this.enable();
+            this.gameObject.setPostPipeline(fx.type);
+
+            var pipeline = this.gameObject.getPostPipeline(fx.type);
+
+            if (pipeline)
+            {
+                if (Array.isArray(pipeline))
+                {
+                    pipeline = pipeline.pop();
+                }
+
+                pipeline.controller = fx;
+
+                return fx;
+            }
         }
+        else
+        {
+            if (!this.enabled)
+            {
+                this.enable();
+            }
 
-        this.list.push(fx);
+            this.list.push(fx);
 
-        return fx;
+            return fx;
+        }
     },
 
     addGlow: function (distance, outerStrength, innerStrength, knockout, color)
