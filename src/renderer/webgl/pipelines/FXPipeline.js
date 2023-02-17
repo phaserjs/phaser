@@ -108,11 +108,11 @@ var FXPipeline = new Class({
 
             for (var i = 0; i < fx.length; i++)
             {
-                var config = fx[i];
+                var controller = fx[i];
 
-                if (config.active)
+                if (controller.active)
                 {
-                    handlers[config.type].call(this, config, width, height);
+                    handlers[controller.type].call(this, controller, width, height);
                 }
             }
         }
