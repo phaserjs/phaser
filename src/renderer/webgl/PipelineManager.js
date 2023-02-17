@@ -127,8 +127,6 @@ var PipelineManager = new Class({
             [ FX_CONST.WIPE, FX.Wipe ]
         ]);
 
-        console.log(this.postPipelineClasses);
-
         /**
          * This map stores all pipeline instances in this manager.
          *
