@@ -20,5 +20,5 @@
  * @property {number} [coneInnerAngle=360] - The angle, in degrees, of a cone inside of which there will be no volume reduction.
  * @property {number} [coneOuterAngle=0] - The angle, in degrees, of a cone outside of which the volume will be reduced by a constant value, defined by the `coneOuterGain` property.
  * @property {number} [coneOuterGain=0] - The amount of volume reduction outside the cone defined by the `coneOuterAngle` attribute. Its default value is 0, meaning that no sound can be heard. A value between 0 and 1.
- * @property {Phaser.Math.Vector2Like} [follow] - Set this Sound object to automatically track the x/y position of this object. Can be a Phaser Game Object, Vec2 or anything that exposes public x/y properties.
+ * @property {Phaser.Types.Math.Vector2Like} [follow] - Set this Sound object to automatically track the x/y position of this object. Can be a Phaser Game Object, Vec2 or anything that exposes public x/y properties.
  */

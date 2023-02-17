@@ -114,19 +114,19 @@ var Size = {
      * @method Phaser.GameObjects.Components.Size#setSizeToFrame
      * @since 3.0.0
      *
-     * @param {Phaser.Textures.Frame} frame - The frame to base the size of this Game Object on.
+     * @param {Phaser.Textures.Frame|boolean} [frame] - The frame to base the size of this Game Object on.
      *
      * @return {this} This Game Object instance.
      */
     setSizeToFrame: function (frame)
     {
-        if (frame === undefined) { frame = this.frame; }
+        if (!frame) { frame = this.frame; }
 
         this.width = frame.realWidth;
         this.height = frame.realHeight;
 
         var input = this.input;
-    
+
         if (input && !input.customHitArea)
         {
             input.hitArea.width = this.width;

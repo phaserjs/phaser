@@ -310,7 +310,7 @@ var FX = new Class({
      * @param {number} [innerStrength=0] - The strength of the glow inward from the edge of the Sprite.
      * @param {boolean} [knockout=false] - If `true` only the glow is drawn, not the texture itself.
      *
-     * @return {Phaser.FX.Controller.Glow} The Glow FX Controller.
+     * @return {Phaser.FX.Glow} The Glow FX Controller.
      */
     addGlow: function (color, distance, outerStrength, innerStrength, knockout)
     {
@@ -331,7 +331,7 @@ var FX = new Class({
      * @param {number} [samples=6] - The number of samples that the shadow effect will run for. An integer between 1 and 12.
      * @param {number} [intensity=1] - The intensity of the shadow effect.
      *
-     * @return {Phaser.FX.Controller.Shadow} The Shadow FX Controller.
+     * @return {Phaser.FX.Shadow} The Shadow FX Controller.
      */
     addShadow: function (x, y, decay, power, color, samples, intensity)
     {
@@ -346,7 +346,7 @@ var FX = new Class({
      *
      * @param {number} [amount=1] - The amount of pixelation to apply.
      *
-     * @return {Phaser.FX.Controller.Pixelate} The Pixelate FX Controller.
+     * @return {Phaser.FX.Pixelate} The Pixelate FX Controller.
      */
     addPixelate: function (amount)
     {
@@ -364,7 +364,7 @@ var FX = new Class({
      * @param {number} [radius=0.5] - The radius of the vignette effect. This value is normalized to the range 0 to 1.
      * @param {number} [strength=0.5] - The strength of the vignette effect.
      *
-     * @return {Phaser.FX.Controller.Vignette} The Vignette FX Controller.
+     * @return {Phaser.FX.Vignette} The Vignette FX Controller.
      */
     addVignette: function (x, y, radius, strength)
     {
@@ -382,7 +382,7 @@ var FX = new Class({
      * @param {number} [gradient=3] - The gradient of the Shine effect.
      * @param {boolean} [reveal=false] - Does this Shine effect reveal or get added to its target?
      *
-     * @return {Phaser.FX.Controller.Shine} The Shine FX Controller.
+     * @return {Phaser.FX.Shine} The Shine FX Controller.
      */
     addShine: function (speed, lineWidth, gradient, reveal)
     {
@@ -402,7 +402,7 @@ var FX = new Class({
      * @param {number} [color=0xffffff] - The color of the blur, as a hex value.
      * @param {number} [steps=4] - The number of steps to run the blur effect for. This value should always be an integer.
      *
-     * @return {Phaser.FX.Controller.Blur} The Blur FX Controller.
+     * @return {Phaser.FX.Blur} The Blur FX Controller.
      */
     addBlur: function (quality, x, y, strength, color, steps)
     {
@@ -424,7 +424,7 @@ var FX = new Class({
      * @param {number} [toY=1] - The vertical position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
      * @param {number} [size=0] - How many 'chunks' the gradient is divided in to, as spread over the entire height of the texture. Leave this at zero for a smooth gradient, or set higher for a more retro chunky effect.
      *
-     * @return {Phaser.FX.Controller.Gradient} The Gradient FX Controller.
+     * @return {Phaser.FX.Gradient} The Gradient FX Controller.
      */
     addGradient: function (color1, color2, alpha, fromX, fromY, toX, toY, size)
     {
@@ -444,7 +444,7 @@ var FX = new Class({
      * @param {number} [strength=1] - The strength of the blend process of the bloom effect.
      * @param {number} [steps=4] - The number of steps to run the Bloom effect for. This value should always be an integer.
      *
-     * @return {Phaser.FX.Controller.Bloom} The Bloom FX Controller.
+     * @return {Phaser.FX.Bloom} The Bloom FX Controller.
      */
     addBloom: function (color, offsetX, offsetY, blurStrength, strength, steps)
     {
@@ -457,7 +457,7 @@ var FX = new Class({
      * @method Phaser.GameObjects.Components.FX#addColorMatrix
      * @since 3.60.0
      *
-     * @return {Phaser.FX.Controller.ColorMatrix} The ColorMatrix FX Controller.
+     * @return {Phaser.FX.ColorMatrix} The ColorMatrix FX Controller.
      */
     addColorMatrix: function ()
     {
@@ -476,7 +476,7 @@ var FX = new Class({
      * @param {number} [scale=1] - The scale of the circle. The default scale is 1, which is a circle the full size of the underlying texture.
      * @param {number} [feather=0.005] - The amount of feathering to apply to the circle from the ring.
      *
-     * @return {Phaser.FX.Controller.Circle} The Circle FX Controller.
+     * @return {Phaser.FX.Circle} The Circle FX Controller.
      */
     addCircle: function (thickness, color, backgroundColor, scale, feather)
     {
@@ -491,7 +491,7 @@ var FX = new Class({
      *
      * @param {number} [amount=1] - The amount of distortion applied to the barrel effect. Typically keep this within the range 0 (no distortion) to 1.
      *
-     * @return {Phaser.FX.Controller.Barrel} The Barrel FX Controller.
+     * @return {Phaser.FX.Barrel} The Barrel FX Controller.
      */
     addBarrel: function (amount)
     {
@@ -508,7 +508,7 @@ var FX = new Class({
      * @param {number} [x=0.005] - The amount of horizontal displacement to apply.
      * @param {number} [y=0.005] - The amount of vertical displacement to apply.
      *
-     * @return {Phaser.FX.Controller.Displacement} The Displacement FX Controller.
+     * @return {Phaser.FX.Displacement} The Displacement FX Controller.
      */
     addDisplacement: function (displacementTexture, x, y)
     {
@@ -525,7 +525,7 @@ var FX = new Class({
      * @param {number} [direction=0] - The direction of the wipe effect. Either 0 or 1. Set in conjunction with the axis property.
      * @param {number} [axis=0] - The axis of the wipe effect. Either 0 or 1. Set in conjunction with the direction property.
      *
-     * @return {Phaser.FX.Controller.Wipe} The Wipe FX Controller.
+     * @return {Phaser.FX.Wipe} The Wipe FX Controller.
      */
     addWipe: function (wipeWidth, direction, axis)
     {
@@ -542,7 +542,7 @@ var FX = new Class({
      * @param {number} [direction=0] - The direction of the wipe effect. Either 0 or 1. Set in conjunction with the axis property.
      * @param {number} [axis=0] - The axis of the wipe effect. Either 0 or 1. Set in conjunction with the direction property.
      *
-     * @return {Phaser.FX.Controller.Wipe} The Wipe FX Controller.
+     * @return {Phaser.FX.Wipe} The Wipe FX Controller.
      */
     addReveal: function (wipeWidth, direction, axis)
     {
@@ -559,7 +559,7 @@ var FX = new Class({
      * @param {number} [amount=1] - The amount of the bokeh effect.
      * @param {number} [contrast=0.2] - The color contrast of the bokeh effect.
      *
-     * @return {Phaser.FX.Controller.Bokeh} The Bokeh FX Controller.
+     * @return {Phaser.FX.Bokeh} The Bokeh FX Controller.
      */
     addBokeh: function (radius, amount, contrast)
     {
@@ -579,7 +579,7 @@ var FX = new Class({
      * @param {number} [blurY=1] - If Tilt Shift, the amount of vertical blur.
      * @param {number} [strength=1] - If Tilt Shift, the strength of the blur.
      *
-     * @return {Phaser.FX.Controller.Bokeh} The TiltShift FX Controller.
+     * @return {Phaser.FX.Bokeh} The Bokeh TiltShift FX Controller.
      */
     addTiltShift: function (radius, amount, contrast, blurX, blurY, strength)
     {

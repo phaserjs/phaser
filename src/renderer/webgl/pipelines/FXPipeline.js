@@ -14,7 +14,7 @@ var Shaders = require('../shaders');
 /**
  * @classdesc
  *
- * @class FX
+ * @class FXPipeline
  * @extends Phaser.Renderer.WebGL.Pipelines.PreFXPipeline
  * @memberof Phaser.Renderer.WebGL.Pipelines
  * @constructor

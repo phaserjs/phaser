@@ -198,8 +198,11 @@ var Plane = new Class({
      *
      * @method Phaser.GameObjects.Plane#setSizeToFrame
      * @since 3.60.0
+     * @override
      *
      * @param {boolean} [resetUV=true] - Reset all of the cell UV coordinates?
+     *
+     * @return {this} This Game Object instance.
      */
     setSizeToFrame: function (resetUV)
     {
@@ -216,7 +219,7 @@ var Plane = new Class({
 
         if (!resetUV)
         {
-            return;
+            return this;
         }
 
         //  Reset UV coordinates if frame has changed
@@ -293,6 +296,8 @@ var Plane = new Class({
                 }
             }
         }
+
+        return this;
     },
 
     /**
