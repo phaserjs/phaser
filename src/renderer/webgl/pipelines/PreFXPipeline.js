@@ -509,7 +509,7 @@ var PreFXPipeline = new Class({
 
         this.set1i('uMainSampler', 0);
 
-        sprite.onFXCopy(this);
+        sprite.preFX.onFXCopy(this);
 
         this.onCopySprite(source, target, sprite);
 
