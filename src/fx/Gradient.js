@@ -143,16 +143,16 @@ var Gradient = new Class({
         {
             var color = this.glcolor1;
 
-            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+            return (((color[0]) << 16) + ((color[1]) << 8) + (color[2] | 0));
         },
 
         set: function (value)
         {
             var color = this.glcolor1;
 
-            color[0] = ((value >> 16) & 0xFF) / 255;
-            color[1] = ((value >> 8) & 0xFF) / 255;
-            color[2] = (value & 0xFF) / 255;
+            color[0] = ((value >> 16) & 0xFF);
+            color[1] = ((value >> 8) & 0xFF);
+            color[2] = (value & 0xFF);
         }
 
     },
@@ -170,16 +170,16 @@ var Gradient = new Class({
         {
             var color = this.glcolor2;
 
-            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+            return (((color[0]) << 16) + ((color[1]) << 8) + (color[2] | 0));
         },
 
         set: function (value)
         {
             var color = this.glcolor2;
 
-            color[0] = ((value >> 16) & 0xFF) / 255;
-            color[1] = ((value >> 8) & 0xFF) / 255;
-            color[2] = (value & 0xFF) / 255;
+            color[0] = ((value >> 16) & 0xFF);
+            color[1] = ((value >> 8) & 0xFF);
+            color[2] = (value & 0xFF);
         }
 
     }
