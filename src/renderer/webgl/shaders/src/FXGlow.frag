@@ -6,16 +6,19 @@ uniform sampler2D uMainSampler;
 
 varying vec2 outTexCoord;
 
-uniform float distance;
 uniform float outerStrength;
 uniform float innerStrength;
+
 uniform vec2 resolution;
 uniform vec4 glowColor;
 uniform bool knockout;
 
 const float PI = 3.14159265358979323846264;
-const float MAX_DIST = 128.0;
-const float SIZE = 0.15;
+
+const float DIST = __DIST__;
+const float SIZE = min(__SIZE__, PI * 2.0);
+const float STEP = ceil(PI * 2.0 / SIZE);
+const float MAX_ALPHA = STEP * DIST * (DIST + 1.0) / 2.0;
 
 void main ()
 {
@@ -25,35 +28,32 @@ void main ()
 
     vec2 direction;
     vec2 displaced;
+    vec4 color;
 
     for (float angle = 0.0; angle < PI * 2.0; angle += SIZE)
     {
         direction = vec2(cos(angle), sin(angle)) * px;
 
-        for (float curDistance = 0.0; curDistance < MAX_DIST; curDistance++)
+        for (float curDistance = 0.0; curDistance < DIST; curDistance++)
         {
-            if (curDistance >= distance)
-            {
-                break;
-            }
-
             displaced = outTexCoord + direction * (curDistance + 1.0);
 
-            totalAlpha += (distance - curDistance) * texture2D(uMainSampler, displaced).a;
+            color = texture2D(uMainSampler, displaced);
+
+            totalAlpha += (DIST - curDistance) * color.a;
         }
     }
 
-    vec4 curColor = texture2D(uMainSampler, outTexCoord);
+    color = texture2D(uMainSampler, outTexCoord);
 
-    float maxAlpha = 42.0 * distance * (distance + 1.0) / 2.0;
-    float alphaRatio = (totalAlpha / maxAlpha);
+    float alphaRatio = (totalAlpha / MAX_ALPHA);
 
-    float innerGlowAlpha = (1.0 - alphaRatio) * innerStrength * curColor.a;
+    float innerGlowAlpha = (1.0 - alphaRatio) * innerStrength * color.a;
     float innerGlowStrength = min(1.0, innerGlowAlpha);
 
-    vec4 innerColor = mix(curColor, glowColor, innerGlowStrength);
+    vec4 innerColor = mix(color, glowColor, innerGlowStrength);
 
-    float outerGlowAlpha = alphaRatio * outerStrength * (1.0 - curColor.a);
+    float outerGlowAlpha = alphaRatio * outerStrength * (1.0 - color.a);
     float outerGlowStrength = min(1.0 - innerColor.a, outerGlowAlpha);
 
     vec4 outerGlowColor = outerGlowStrength * glowColor.rgba;
