@@ -305,16 +305,15 @@ var FX = new Class({
      * @since 3.60.0
      *
      * @param {number} [color=0xffffff] - The color of the glow effect as a number value.
-     * @param {number} [distance=16] - The distance of the glow. This must be an integer and can be between 0 and 128 inclusive.
      * @param {number} [outerStrength=4] - The strength of the glow outward from the edge of the Sprite.
      * @param {number} [innerStrength=0] - The strength of the glow inward from the edge of the Sprite.
      * @param {boolean} [knockout=false] - If `true` only the glow is drawn, not the texture itself.
      *
      * @return {Phaser.FX.Glow} The Glow FX Controller.
      */
-    addGlow: function (color, distance, outerStrength, innerStrength, knockout)
+    addGlow: function (color, outerStrength, innerStrength, knockout)
     {
-        return this.add(new Effects.Glow(this.gameObject, color, distance, outerStrength, innerStrength, knockout));
+        return this.add(new Effects.Glow(this.gameObject, color, outerStrength, innerStrength, knockout));
     },
 
     /**
@@ -489,7 +488,7 @@ var FX = new Class({
      * @method Phaser.GameObjects.Components.FX#addBarrel
      * @since 3.60.0
      *
-     * @param {number} [amount=1] - The amount of distortion applied to the barrel effect. Typically keep this within the range 0 (no distortion) to 1.
+     * @param {number} [amount=1] - The amount of distortion applied to the barrel effect. A value of 1 is no distortion. Typically keep this within +- 1.
      *
      * @return {Phaser.FX.Barrel} The Barrel FX Controller.
      */
