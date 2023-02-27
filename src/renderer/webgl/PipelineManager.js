@@ -675,10 +675,11 @@ var PipelineManager = new Class({
      *
      * @param {(string|function|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline)} pipeline - Either the string-based name of the pipeline to get, or a pipeline instance, or class to look-up.
      * @param {Phaser.GameObjects.GameObject} [gameObject] - If this post pipeline is being installed into a Game Object or Camera, this is a reference to it.
+     * @param {object} [config] - Optional pipeline data object that is set in to the `postPipelineData` property of this Game Object.
      *
      * @return {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} The pipeline instance, or `undefined` if not found.
      */
-    getPostPipeline: function (pipeline, gameObject)
+    getPostPipeline: function (pipeline, gameObject, config)
     {
         var pipelineClasses = this.postPipelineClasses;
 
@@ -711,7 +712,7 @@ var PipelineManager = new Class({
 
         if (instance)
         {
-            var newPipeline = new instance(this.game);
+            var newPipeline = new instance(this.game, config);
 
             newPipeline.name = pipelineName;
 
