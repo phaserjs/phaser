@@ -10,6 +10,23 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The Glow FX Controller.
+ *
+ * This FX controller manages the glow effect for a Game Object.
+ *
+ * A glow effect allows you to apply a soft, blurred 'glow' around either the outside,
+ * inside, or both of a Game Object. The color and strength of the glow can be modified.
+ *
+ * You can modify most of its properties in real-time to adjust the visual effect.
+ *
+ * A Glow effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addGlow();
+ * sprite.postFX.addGlow();
+ * ```
  *
  * @class Glow
  * @extends Phaser.FX.Controller

@@ -10,6 +10,32 @@ var GlowFrag = require('../../shaders/FXGlow-frag.js');
 var PostFXPipeline = require('../PostFXPipeline');
 var Utils = require('../../Utils');
 
+/**
+ * @classdesc
+ * The Glow FX Pipeline.
+ *
+ * A glow effect allows you to apply a soft, blurred 'glow' around either the outside,
+ * inside, or both of a Game Object. The color and strength of the glow can be modified.
+ *
+ * You can modify most of its properties in real-time to adjust the visual effect.
+ *
+ * A Glow effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.postFX.addGlow();
+ * ```
+ *
+ * @class GlowFXPipeline
+ * @extends Phaser.Renderer.WebGL.WebGLPipeline
+ * @memberof Phaser.Renderer.WebGL.Pipelines.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.Game} game - A reference to the Phaser Game instance.
+ * @param {object} config - The configuration options for this pipeline.
+ */
 var GlowFXPipeline = new Class({
 
     Extends: PostFXPipeline,
@@ -26,9 +52,40 @@ var GlowFXPipeline = new Class({
             fragShader: Utils.setGlowQuality(GlowFrag, game, quality, distance)
         });
 
+        /**
+         * The strength of the glow outward from the edge of the Sprite.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.FX.GlowFXPipeline#outerStrength
+         * @type {number}
+         * @since 3.60.0
+         */
         this.outerStrength = 4;
+
+        /**
+         * The strength of the glow inward from the edge of the Sprite.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.FX.GlowFXPipeline#innerStrength
+         * @type {number}
+         * @since 3.60.0
+         */
         this.innerStrength = 0;
+
+        /**
+         * If `true` only the glow is drawn, not the texture itself.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.FX.GlowFXPipeline#knockout
+         * @type {number}
+         * @since 3.60.0
+         */
         this.knockout = false;
+
+        /**
+         * A 4 element array of gl color values.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.FX.GlowFXPipeline#glcolor
+         * @type {number[]}
+         * @since 3.60.0
+         */
         this.glcolor = [ 1, 1, 1, 1 ];
     },
 

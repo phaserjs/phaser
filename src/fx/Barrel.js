@@ -10,6 +10,21 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The Barrel FX Controller.
+ *
+ * This FX controller manages the barrel distortion effect for a Game Object.
+ *
+ * A barrel effect allows you to apply either a 'pinch' or 'expand' distortion to
+ * a Game Object. The amount of the effect can be modified in real-time.
+ *
+ * A Barrel effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addBarrel();
+ * sprite.postFX.addBarrel();
+ * ```
  *
  * @class Barrel
  * @extends Phaser.FX.Controller
