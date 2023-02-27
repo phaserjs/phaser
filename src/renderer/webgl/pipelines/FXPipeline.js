@@ -10,6 +10,7 @@ var FX_CONST = require('../../../fx/const');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var PreFXPipeline = require('./PreFXPipeline');
 var Shaders = require('../shaders');
+var Utils = require('../Utils');
 
 /**
  * @classdesc
@@ -32,7 +33,7 @@ var FXPipeline = new Class({
     {
         //  This order is fixed to match with the FX_CONST. Do not adjust.
         config.shaders = [
-            Shaders.FXGlowFrag,
+            Utils.setGlowQuality(Shaders.FXGlowFrag, config.game),
             Shaders.FXShadowFrag,
             Shaders.FXPixelateFrag,
             Shaders.FXVignetteFrag,

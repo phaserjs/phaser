@@ -7,6 +7,7 @@
 var Class = require('../../../../utils/Class');
 var GlowFrag = require('../../shaders/FXGlow-frag.js');
 var PostFXPipeline = require('../PostFXPipeline');
+var Utils = require('../../Utils');
 
 var GlowFXPipeline = new Class({
 
@@ -14,14 +15,16 @@ var GlowFXPipeline = new Class({
 
     initialize:
 
-    function GlowFXPipeline (game)
+    function GlowFXPipeline (game, quality, distance)
     {
+        if (quality === undefined) { quality = 0.1; }
+        if (distance === undefined) { distance = 10; }
+
         PostFXPipeline.call(this, {
             game: game,
-            fragShader: GlowFrag
+            fragShader: Utils.setGlowQuality(GlowFrag, game, quality, distance)
         });
 
-        this.distance = 10;
         this.outerStrength = 4;
         this.innerStrength = 0;
         this.knockout = false;
@@ -32,7 +35,6 @@ var GlowFXPipeline = new Class({
     {
         controller = this.getController(controller);
 
-        this.set1f('distance', controller.distance, shader);
         this.set1f('outerStrength', controller.outerStrength, shader);
         this.set1f('innerStrength', controller.innerStrength, shader);
         this.set4fv('glowColor', controller.glcolor, shader);
