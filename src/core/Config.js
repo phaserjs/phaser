@@ -528,6 +528,16 @@ var Config = new Class({
          */
         this.loaderLocalScheme = GetValue(config, 'loader.localScheme', [ 'file://', 'capacitor://' ]);
 
+        /**
+         * @const {number} Phaser.Core.Config#glowFXQuality - The quality of the Glow FX (defaults to 0.1)
+         */
+        this.glowFXQuality = GetValue(config, 'fx.glow.quality', 0.1);
+
+        /**
+         * @const {number} Phaser.Core.Config#glowFXDistance - The distance of the Glow FX (defaults to 10)
+         */
+        this.glowFXDistance = GetValue(config, 'fx.glow.distance', 10);
+
         /*
          * Allows `plugins` property to either be an array, in which case it just replaces
          * the default plugins like previously, or a config object.
