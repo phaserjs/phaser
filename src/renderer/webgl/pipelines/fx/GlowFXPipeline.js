@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
+var GetFastValue = require('../../../../utils/object/GetFastValue');
 var GlowFrag = require('../../shaders/FXGlow-frag.js');
 var PostFXPipeline = require('../PostFXPipeline');
 var Utils = require('../../Utils');
@@ -15,10 +16,10 @@ var GlowFXPipeline = new Class({
 
     initialize:
 
-    function GlowFXPipeline (game, quality, distance)
+    function GlowFXPipeline (game, config)
     {
-        if (quality === undefined) { quality = 0.1; }
-        if (distance === undefined) { distance = 10; }
+        var quality = GetFastValue(config, 'quality', 0.1);
+        var distance = GetFastValue(config, 'distance', 10);
 
         PostFXPipeline.call(this, {
             game: game,

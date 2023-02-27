@@ -38,20 +38,6 @@ var Glow = new Class({
         Controller.call(this, FX_CONST.GLOW, gameObject);
 
         /**
-         * The distance of the glow.
-         *
-         * This must be an integer and can be between 0 and 128 inclusive.
-         *
-         * The higher the value, the more iterations the shader takes
-         * when drawing the glow.
-         *
-         * @name Phaser.FX.Glow#distance
-         * @type {number}
-         * @since 3.60.0
-         */
-        // this.distance = distance;
-
-        /**
          * The strength of the glow outward from the edge of the Sprite.
          *
          * @name Phaser.FX.Glow#outerStrength

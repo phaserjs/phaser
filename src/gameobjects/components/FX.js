@@ -260,16 +260,17 @@ var FX = new Class({
      * @since 3.60.0
      *
      * @param {Phaser.FX.Controller} fx - The FX Controller to add to this FX Component.
+     * @param {object} [config] - Optional configuration object that is passed to the pipeline during instantiation.
      *
      * @return {Phaser.FX.Controller} The FX Controller.
      */
-    add: function (fx)
+    add: function (fx, config)
     {
         if (this.isPost)
         {
             var type = String(fx.type);
 
-            this.gameObject.setPostPipeline(type);
+            this.gameObject.setPostPipeline(type, config);
 
             var pipeline = this.gameObject.getPostPipeline(type);
 
@@ -308,12 +309,14 @@ var FX = new Class({
      * @param {number} [outerStrength=4] - The strength of the glow outward from the edge of the Sprite.
      * @param {number} [innerStrength=0] - The strength of the glow inward from the edge of the Sprite.
      * @param {boolean} [knockout=false] - If `true` only the glow is drawn, not the texture itself.
+     * @param {number} [quality=0.1] - Only available for PostFX. Sets the quality of this Glow effect. Default is 0.1. Cannot be changed post-creation.
+     * @param {number} [distance=10] - Only available for PostFX. Sets the distance of this Glow effect. Default is 10. Cannot be changed post-creation.
      *
      * @return {Phaser.FX.Glow} The Glow FX Controller.
      */
-    addGlow: function (color, outerStrength, innerStrength, knockout)
+    addGlow: function (color, outerStrength, innerStrength, knockout, quality, distance)
     {
-        return this.add(new Effects.Glow(this.gameObject, color, outerStrength, innerStrength, knockout));
+        return this.add(new Effects.Glow(this.gameObject, color, outerStrength, innerStrength, knockout), { quality: quality, distance: distance });
     },
 
     /**
