@@ -31,12 +31,13 @@ var RenderTarget = new Class({
 
     initialize:
 
-    function RenderTarget (renderer, width, height, scale, minFilter, autoClear, autoResize)
+    function RenderTarget (renderer, width, height, scale, minFilter, autoClear, autoResize, addDepthBuffer)
     {
         if (scale === undefined) { scale = 1; }
         if (minFilter === undefined) { minFilter = 0; }
         if (autoClear === undefined) { autoClear = true; }
         if (autoResize === undefined) { autoResize = false; }
+        if (addDepthBuffer === undefined) { addDepthBuffer = true; }
 
         /**
          * A reference to the WebGLRenderer instance.
@@ -134,6 +135,16 @@ var RenderTarget = new Class({
          */
         this.autoResize = true;
 
+        /**
+         * Does this Render Target have a Depth Buffer?
+         *
+         * @name Phaser.Renderer.WebGL.RenderTarget#hasDepthBuffer
+         * @type {boolean}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.hasDepthBuffer = addDepthBuffer;
+
         this.resize(width, height);
 
         if (autoResize)
@@ -222,7 +233,7 @@ var RenderTarget = new Class({
             }
 
             this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter, true);
-            this.framebuffer = renderer.createFramebuffer(width, height, this.texture, true);
+            this.framebuffer = renderer.createFramebuffer(width, height, this.texture, this.hasDepthBuffer);
 
             this.width = width;
             this.height = height;
@@ -259,7 +270,9 @@ var RenderTarget = new Class({
             this.resize(width, height);
         }
 
-        this.renderer.pushFramebuffer(this.framebuffer, false, false, false);
+        this.renderer.log('RenderTarget.bind - push FBO');
+
+        this.renderer.pushFramebuffer(this.framebuffer, false, false);
 
         if (adjustViewport)
         {
@@ -304,6 +317,8 @@ var RenderTarget = new Class({
         var renderer = this.renderer;
         var gl = renderer.gl;
 
+        this.renderer.log('RenderTarget.clear - push FBO');
+
         renderer.pushFramebuffer(this.framebuffer);
 
         gl.disable(gl.SCISSOR_TEST);
@@ -313,6 +328,8 @@ var RenderTarget = new Class({
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         renderer.popFramebuffer();
+
+        this.renderer.log('RenderTarget.clear - pop FBO');
 
         renderer.resetScissor();
     },
@@ -337,6 +354,8 @@ var RenderTarget = new Class({
         {
             renderer.flush();
         }
+
+        this.renderer.log('RenderTarget.unbind - pop FBO');
 
         return renderer.popFramebuffer();
     },
