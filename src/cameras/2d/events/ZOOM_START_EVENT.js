@@ -9,6 +9,18 @@
  *
  * This event is dispatched by a Camera instance when the Zoom Effect starts.
  *
+ * Listen for it via either of the following:
+ *
+ * ```js
+ * this.cameras.main.on('camerazoomstart', () => {});
+ * ```
+ *
+ * or use the constant, to avoid having to remember the correct event string:
+ *
+ * ```js
+ * this.cameras.main.on(Phaser.Cameras.Scene2D.Events.ZOOM_START, () => {});
+ * ```
+ *
  * @event Phaser.Cameras.Scene2D.Events#ZOOM_START
  * @type {string}
  * @since 3.3.0

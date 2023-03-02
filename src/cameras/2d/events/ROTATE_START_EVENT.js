@@ -9,6 +9,18 @@
  *
  * This event is dispatched by a Camera instance when the Rotate Effect starts.
  *
+ * Listen for it via either of the following:
+ *
+ * ```js
+ * this.cameras.main.on('camerarotatestart', () => {});
+ * ```
+ *
+ * or use the constant, to avoid having to remember the correct event string:
+ *
+ * ```js
+ * this.cameras.main.on(Phaser.Cameras.Scene2D.Events.ROTATE_START, () => {});
+ * ```
+ *
  * @event Phaser.Cameras.Scene2D.Events#ROTATE_START
  * @type {string}
  * @since 3.23.0
