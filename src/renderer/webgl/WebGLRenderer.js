@@ -68,7 +68,7 @@ var WebGLRenderer = new Class({
         var contextCreationConfig = {
             alpha: gameConfig.transparent,
             desynchronized: gameConfig.desynchronized,
-            depth: false,
+            depth: true,
             antialias: gameConfig.antialiasGL,
             premultipliedAlpha: gameConfig.premultipliedAlpha,
             stencil: true,
@@ -886,6 +886,14 @@ var WebGLRenderer = new Class({
         if (DEBUG && this.spector)
         {
             return this.spector.getFps();
+        }
+    },
+
+    log: function (value)
+    {
+        if (DEBUG && this.spector)
+        {
+            return this.spector.log(value);
         }
     },
 
@@ -1837,6 +1845,8 @@ var WebGLRenderer = new Class({
      */
     createFramebuffer: function (width, height, renderTexture, addDepthStencilBuffer)
     {
+        if (addDepthStencilBuffer === undefined) { addDepthStencilBuffer = false; }
+
         var gl = this.gl;
         var framebuffer = gl.createFramebuffer();
         var complete = 0;
