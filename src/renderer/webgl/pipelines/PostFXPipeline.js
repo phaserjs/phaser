@@ -302,6 +302,8 @@ var PostFXPipeline = new Class({
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
+        var currentFBO = gl.getParameter(gl.FRAMEBUFFER_BINDING);
+
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
 
@@ -314,7 +316,7 @@ var PostFXPipeline = new Class({
         if (reset)
         {
             gl.bindTexture(gl.TEXTURE_2D, null);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, currentFBO);
         }
     },
 
@@ -553,7 +555,7 @@ var PostFXPipeline = new Class({
         if (target)
         {
             gl.bindTexture(gl.TEXTURE_2D, null);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, renderer.currentFramebuffer);
         }
     }
 
