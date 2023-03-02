@@ -889,11 +889,13 @@ var WebGLRenderer = new Class({
         }
     },
 
-    log: function (value)
+    log: function ()
     {
         if (DEBUG && this.spector)
         {
-            return this.spector.log(value);
+            var t = Array.prototype.slice.call(arguments).join(' ');
+
+            return this.spector.log(t);
         }
     },
 
