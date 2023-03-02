@@ -134,7 +134,7 @@ var PostFXPipeline = new Class({
          * this property contains a reference to it.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#gameObject
-         * @type {Phaser.GameObjects.GameObject}
+         * @type {(Phaser.GameObjects.GameObject|Phaser.Cameras.Scene2D.Camera)}
          * @since 3.50.0
          */
         this.gameObject;
