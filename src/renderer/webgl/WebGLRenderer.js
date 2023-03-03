@@ -1510,10 +1510,12 @@ var WebGLRenderer = new Class({
      * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
      * @param {boolean} [updateScissor=false] - Set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
      * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
+     * @param {WebGLTexture} [texture=null] - Bind the given frame buffer texture?
+     * @param {boolean} [clear=false] - Clear the frame buffer after binding?
      *
      * @return {this} This WebGLRenderer instance.
      */
-    pushFramebuffer: function (framebuffer, updateScissor, setViewport)
+    pushFramebuffer: function (framebuffer, updateScissor, setViewport, texture, clear)
     {
         if (framebuffer === this.currentFramebuffer)
         {
@@ -1522,7 +1524,7 @@ var WebGLRenderer = new Class({
 
         this.fboStack.push(framebuffer);
 
-        return this.setFramebuffer(framebuffer, updateScissor, setViewport);
+        return this.setFramebuffer(framebuffer, updateScissor, setViewport, texture, clear);
     },
 
     /**
@@ -1538,13 +1540,17 @@ var WebGLRenderer = new Class({
      * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
      * @param {boolean} [updateScissor=false] - If a framebuffer is given, set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
      * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
+     * @param {WebGLTexture} [texture=null] - Bind the given frame buffer texture?
+     * @param {boolean} [clear=false] - Clear the frame buffer after binding?
      *
      * @return {this} This WebGLRenderer instance.
      */
-    setFramebuffer: function (framebuffer, updateScissor, setViewport)
+    setFramebuffer: function (framebuffer, updateScissor, setViewport, texture, clear)
     {
         if (updateScissor === undefined) { updateScissor = false; }
         if (setViewport === undefined) { setViewport = true; }
+        if (texture === undefined) { texture = null; }
+        if (clear === undefined) { clear = false; }
 
         if (framebuffer === this.currentFramebuffer)
         {
@@ -1571,6 +1577,17 @@ var WebGLRenderer = new Class({
         if (setViewport)
         {
             gl.viewport(0, 0, width, height);
+        }
+
+        if (texture)
+        {
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+        }
+
+        if (clear)
+        {
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
         if (updateScissor)
@@ -1626,6 +1643,32 @@ var WebGLRenderer = new Class({
         this.setFramebuffer(framebuffer, updateScissor, setViewport);
 
         return framebuffer;
+    },
+
+    /**
+     * Restores the previous framebuffer from the fbo stack and sets it.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#restoreFramebuffer
+     * @since 3.60.0
+     *
+     * @param {boolean} [updateScissor=false] - If a framebuffer is given, set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
+     * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
+     */
+    restoreFramebuffer: function (updateScissor, setViewport)
+    {
+        if (updateScissor === undefined) { updateScissor = false; }
+        if (setViewport === undefined) { setViewport = true; }
+
+        var fboStack = this.fboStack;
+
+        var framebuffer = fboStack[fboStack.length - 1];
+
+        if (!framebuffer)
+        {
+            framebuffer = null;
+        }
+
+        this.setFramebuffer(framebuffer, updateScissor, setViewport);
     },
 
     /**
