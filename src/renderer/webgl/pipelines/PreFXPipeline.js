@@ -379,14 +379,18 @@ var PreFXPipeline = new Class({
 
         this.flush();
 
-        var currentFBO = gl.getParameter(gl.FRAMEBUFFER_BINDING);
+        // var currentFBO = gl.getParameter(gl.FRAMEBUFFER_BINDING);
 
-        gl.viewport(0, 0, renderer.width, renderer.height);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, fsTarget.framebuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, fsTarget.texture, 0);
+        // renderer.pushFramebuffer(target.framebuffer, false, true, target.texture, true);
 
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        renderer.pushFramebuffer(fsTarget.framebuffer, false, true, fsTarget.texture, true);
+
+        // gl.viewport(0, 0, renderer.width, renderer.height);
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, fsTarget.framebuffer);
+        // gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, fsTarget.texture, 0);
+
+        // gl.clearColor(0, 0, 0, 0);
+        // gl.clear(gl.COLOR_BUFFER_BIT);
 
         this.setTexture2D(texture);
 
@@ -408,9 +412,8 @@ var PreFXPipeline = new Class({
         gl.bindTexture(gl.TEXTURE_2D, target.texture);
         gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, targetBounds.x, targetBounds.y, targetBounds.width, targetBounds.height);
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, currentFBO);
-
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        // gl.bindTexture(gl.TEXTURE_2D, null);
 
         //  We've drawn the sprite to the target (using our pipeline shader)
         //  we can pass it to the pipeline in case they want to do further
@@ -421,6 +424,8 @@ var PreFXPipeline = new Class({
 
         //  Set this here, so we can immediately call the set uniform functions and it'll work on the correct shader
         this.currentShader = this.copyShader;
+
+        renderer.popFramebuffer(false, true);
 
         this.onDraw(target, this.manager.getSwapRenderTarget(), this.manager.getAltSwapRenderTarget());
 
@@ -589,6 +594,7 @@ var PreFXPipeline = new Class({
     copy: function (source, target)
     {
         var gl = this.gl;
+        var renderer = this.renderer;
 
         this.set1i('uMainSampler', 0);
 
@@ -600,18 +606,22 @@ var PreFXPipeline = new Class({
 
         this.setUVs(0, 0, 0, 1, 1, 1, 1, 0);
 
-        var currentFBO = gl.getParameter(gl.FRAMEBUFFER_BINDING);
+        // var currentFBO = gl.getParameter(gl.FRAMEBUFFER_BINDING);
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+        renderer.pushFramebuffer(target.framebuffer, false, true, target.texture, true);
 
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+        // gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+
+        // gl.clearColor(0, 0, 0, 0);
+        // gl.clear(gl.COLOR_BUFFER_BIT);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.quadVertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, currentFBO);
+        renderer.popFramebuffer(false, false);
+
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, currentFBO);
     },
 
     /**
@@ -720,12 +730,14 @@ var PreFXPipeline = new Class({
 
         this.set1i('uMainSampler', 0);
 
-        renderer.popFramebuffer(false, false, false);
+        // renderer.restoreFramebuffer(false, false);
 
-        if (!renderer.currentFramebuffer)
-        {
-            gl.viewport(0, 0, renderer.width, renderer.height);
-        }
+        // renderer.popFramebuffer(false, false);
+
+        // if (!renderer.currentFramebuffer)
+        // {
+        //     gl.viewport(0, 0, renderer.width, renderer.height);
+        // }
 
         if (this.customMainSampler)
         {
@@ -773,9 +785,11 @@ var PreFXPipeline = new Class({
         this.flush();
 
         //  Clear the source framebuffer out, ready for the next pass
-        gl.bindFramebuffer(gl.FRAMEBUFFER, source.framebuffer);
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, source.framebuffer);
+        // gl.clearColor(0, 0, 0, 0);
+        // gl.clear(gl.COLOR_BUFFER_BIT);
+
+        renderer.restoreFramebuffer(false, false);
 
         if (renderer.currentFramebuffer)
         {
