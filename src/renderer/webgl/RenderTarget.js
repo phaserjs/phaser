@@ -37,7 +37,7 @@ var RenderTarget = new Class({
         if (minFilter === undefined) { minFilter = 0; }
         if (autoClear === undefined) { autoClear = true; }
         if (autoResize === undefined) { autoResize = false; }
-        if (addDepthBuffer === undefined) { addDepthBuffer = true; }
+        if (addDepthBuffer === undefined) { addDepthBuffer = false; }
 
         /**
          * A reference to the WebGLRenderer instance.

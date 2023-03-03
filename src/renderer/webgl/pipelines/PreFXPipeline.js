@@ -410,7 +410,7 @@ var PreFXPipeline = new Class({
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, currentFBO);
 
-        // gl.bindTexture(gl.TEXTURE_2D, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
 
         //  We've drawn the sprite to the target (using our pipeline shader)
         //  we can pass it to the pipeline in case they want to do further
@@ -720,12 +720,12 @@ var PreFXPipeline = new Class({
 
         this.set1i('uMainSampler', 0);
 
-        // renderer.popFramebuffer(false, false, false);
+        renderer.popFramebuffer(false, false, false);
 
-        // if (!renderer.currentFramebuffer)
-        // {
-        //     gl.viewport(0, 0, renderer.width, renderer.height);
-        // }
+        if (!renderer.currentFramebuffer)
+        {
+            gl.viewport(0, 0, renderer.width, renderer.height);
+        }
 
         if (this.customMainSampler)
         {
