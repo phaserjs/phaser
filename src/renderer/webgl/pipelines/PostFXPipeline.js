@@ -538,7 +538,7 @@ var PostFXPipeline = new Class({
         }
         else
         {
-            renderer.popFramebuffer(false, false, false);
+            renderer.popFramebuffer(false, false);
 
             if (!renderer.currentFramebuffer)
             {
