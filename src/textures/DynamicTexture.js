@@ -191,7 +191,7 @@ var DynamicTexture = new Class({
          * @type {Phaser.Renderer.WebGL.RenderTarget}
          * @since 3.60.0
          */
-        this.renderTarget = (!isCanvas) ? new RenderTarget(renderer, width, height, 1, 0, false) : null;
+        this.renderTarget = (!isCanvas) ? new RenderTarget(renderer, width, height, 1, 0, false, true) : null;
 
         /**
          * A reference to the WebGL Single Pipeline.
