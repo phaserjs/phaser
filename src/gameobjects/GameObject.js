@@ -174,7 +174,7 @@ var GameObject = new Class({
 
         /**
          * A bitmask that controls if this Game Object is drawn by an exclusive Camera or not.
-         * Not usually set directly, instead call `Camera.accpet`, however you can
+         * Not usually set directly, instead call `Camera.accept`, however you can
          * set this property directly using the Camera.id property:
          *
          * @example
