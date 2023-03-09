@@ -80,7 +80,7 @@ var Graphics = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Alpha,
+        Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
         Components.Mask,
