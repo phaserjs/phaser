@@ -397,7 +397,7 @@ var TextureManager = new Class({
             var cd = textureFrame.canvasData;
 
             var canvas = CanvasPool.create2D(this, cd.width, cd.height);
-            var ctx = canvas.getContext('2d');
+            var ctx = canvas.getContext('2d', { willReadFrequently: true });
 
             if (cd.width > 0 && cd.height > 0)
             {

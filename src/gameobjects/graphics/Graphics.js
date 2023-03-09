@@ -762,7 +762,7 @@ var Graphics = new Class({
         var tr = radius;
         var bl = radius;
         var br = radius;
-        
+
         var maxRadius = Math.min(width, height) / 2;
 
         if (typeof radius !== 'number')
@@ -772,7 +772,7 @@ var Graphics = new Class({
             bl = GetFastValue(radius, 'bl', 20);
             br = GetFastValue(radius, 'br', 20);
         }
-        
+
         var convexTL = (tl >= 0);
         var convexTR = (tr >= 0);
         var convexBL = (bl >= 0);
@@ -782,12 +782,12 @@ var Graphics = new Class({
         tr = Math.min(Math.abs(tr), maxRadius);
         bl = Math.min(Math.abs(bl), maxRadius);
         br = Math.min(Math.abs(br), maxRadius);
-        
+
         this.beginPath();
         this.moveTo(x + tl, y);
         this.lineTo(x + width - tr, y);
         this.moveTo(x + width - tr, y);
-        
+
         if (convexTR)
         {
             this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
@@ -796,7 +796,7 @@ var Graphics = new Class({
         {
             this.arc(x + width, y, tr, Math.PI, MATH_CONST.TAU, true);
         }
-                
+
         this.lineTo(x + width, y + height - br);
         this.moveTo(x + width, y + height - br);
 
@@ -808,7 +808,7 @@ var Graphics = new Class({
         {
             this.arc(x + width, y + height, br, -MATH_CONST.TAU, Math.PI, true);
         }
-        
+
         this.lineTo(x + bl, y + height);
         this.moveTo(x + bl, y + height);
 
@@ -1498,6 +1498,7 @@ var Graphics = new Class({
 
         var texture;
         var ctx;
+        var willRead = { willReadFrequently: true };
 
         if (typeof key === 'string')
         {
@@ -1511,7 +1512,7 @@ var Graphics = new Class({
 
                 if (src instanceof HTMLCanvasElement)
                 {
-                    ctx = src.getContext('2d');
+                    ctx = src.getContext('2d', willRead);
                 }
             }
             else
@@ -1520,14 +1521,14 @@ var Graphics = new Class({
 
                 texture = sys.textures.createCanvas(key, width, height);
 
-                ctx = texture.getSourceImage().getContext('2d');
+                ctx = texture.getSourceImage().getContext('2d', willRead);
             }
         }
         else if (key instanceof HTMLCanvasElement)
         {
             //  Key is a Canvas, so draw to it
 
-            ctx = key.getContext('2d');
+            ctx = key.getContext('2d', willRead);
         }
 
         if (ctx)

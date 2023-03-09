@@ -82,7 +82,7 @@ var CanvasPool = function ()
 
         if (_disableContextSmoothing && canvasType === CONST.CANVAS)
         {
-            Smoothing.disable(canvas.getContext('2d'));
+            Smoothing.disable(canvas.getContext('2d', { willReadFrequently: false }));
         }
 
         return canvas;

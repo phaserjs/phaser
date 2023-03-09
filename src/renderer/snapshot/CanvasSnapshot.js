@@ -33,7 +33,7 @@ var CanvasSnapshot = function (canvas, config)
 
     if (getPixel)
     {
-        var context = canvas.getContext('2d');
+        var context = canvas.getContext('2d', { willReadFrequently: false });
         var imageData = context.getImageData(x, y, 1, 1);
         var data = imageData.data;
 
@@ -43,7 +43,7 @@ var CanvasSnapshot = function (canvas, config)
     {
         //  Area Grab
         var copyCanvas = CanvasPool.createWebGL(this, width, height);
-        var ctx = copyCanvas.getContext('2d');
+        var ctx = copyCanvas.getContext('2d', { willReadFrequently: true });
 
         if (width > 0 && height > 0)
         {

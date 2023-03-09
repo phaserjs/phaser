@@ -19,16 +19,16 @@ var Vector = require('../geometry/Vector');
 // var Mouse = require('../core/Mouse');
 
 (function() {
-    
+
     var _requestAnimationFrame,
         _cancelAnimationFrame;
 
     if (typeof window !== 'undefined') {
         _requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame
-                                      || window.mozRequestAnimationFrame || window.msRequestAnimationFrame 
+                                      || window.mozRequestAnimationFrame || window.msRequestAnimationFrame
                                       || function(callback){ window.setTimeout(function() { callback(Common.now()); }, 1000 / 60); };
-   
-        _cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame 
+
+        _cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame
                                       || window.webkitCancelAnimationFrame || window.msCancelAnimationFrame;
     }
 
@@ -86,15 +86,15 @@ var Vector = require('../geometry/Vector');
         render.mouse = options.mouse;
         render.engine = options.engine;
         render.canvas = render.canvas || _createCanvas(render.options.width, render.options.height);
-        render.context = render.canvas.getContext('2d');
+        render.context = render.canvas.getContext('2d', { willReadFrequently: true });
         render.textures = {};
 
-        render.bounds = render.bounds || { 
-            min: { 
+        render.bounds = render.bounds || {
+            min: {
                 x: 0,
                 y: 0
-            }, 
-            max: { 
+            },
+            max: {
                 x: render.canvas.width,
                 y: render.canvas.height
             }
@@ -188,19 +188,19 @@ var Vector = require('../geometry/Vector');
         for (var i = 0; i < objects.length; i += 1) {
             var object = objects[i],
                 min = object.bounds ? object.bounds.min : (object.min || object.position || object),
-                max = object.bounds ? object.bounds.max : (object.max || object.position || object); 
+                max = object.bounds ? object.bounds.max : (object.max || object.position || object);
 
-            if (min && max) { 
-                if (min.x < bounds.min.x) 
+            if (min && max) {
+                if (min.x < bounds.min.x)
                     bounds.min.x = min.x;
-                    
-                if (max.x > bounds.max.x) 
+
+                if (max.x > bounds.max.x)
                     bounds.max.x = max.x;
 
-                if (min.y < bounds.min.y) 
+                if (min.y < bounds.min.y)
                     bounds.min.y = min.y;
 
-                if (max.y > bounds.max.y) 
+                if (max.y > bounds.max.y)
                     bounds.max.y = max.y;
             }
         }
@@ -375,7 +375,7 @@ var Vector = require('../geometry/Vector');
 
         if (options.showAxes || options.showAngleIndicator)
             Render.bodyAxes(render, bodies, context);
-        
+
         if (options.showPositions)
             Render.bodyPositions(render, bodies, context);
 
@@ -456,7 +456,7 @@ var Vector = require('../geometry/Vector');
                 text += "mid: " + metrics.midEff + space;
                 text += "narrow: " + metrics.narrowEff + space;
             }
-            // @endif            
+            // @endif
 
             render.debugString = text;
             render.debugTimestamp = engine.timing.timestamp;
@@ -555,7 +555,7 @@ var Vector = require('../geometry/Vector');
             }
         }
     };
-    
+
     /**
      * Description
      * @private
@@ -647,20 +647,20 @@ var Vector = require('../geometry/Vector');
                     var sprite = part.render.sprite,
                         texture = _getTexture(render, sprite.texture);
 
-                    c.translate(part.position.x, part.position.y); 
+                    c.translate(part.position.x, part.position.y);
                     c.rotate(part.angle);
 
                     c.drawImage(
                         texture,
-                        texture.width * -sprite.xOffset * sprite.xScale, 
-                        texture.height * -sprite.yOffset * sprite.yScale, 
-                        texture.width * sprite.xScale, 
+                        texture.width * -sprite.xOffset * sprite.xScale,
+                        texture.height * -sprite.yOffset * sprite.yScale,
+                        texture.width * sprite.xScale,
                         texture.height * sprite.yScale
                     );
 
                     // revert translation, hopefully faster than save / restore
                     c.rotate(-part.angle);
-                    c.translate(-part.position.x, -part.position.y); 
+                    c.translate(-part.position.x, -part.position.y);
                 } else {
                     // part polygon
                     if (part.circleRadius) {
@@ -681,7 +681,7 @@ var Vector = require('../geometry/Vector');
                                 c.moveTo(part.vertices[(j + 1) % part.vertices.length].x, part.vertices[(j + 1) % part.vertices.length].y);
                             }
                         }
-                        
+
                         c.lineTo(part.vertices[0].x, part.vertices[0].y);
                         c.closePath();
                     }
@@ -751,7 +751,7 @@ var Vector = require('../geometry/Vector');
                         c.moveTo(part.vertices[(j + 1) % part.vertices.length].x, part.vertices[(j + 1) % part.vertices.length].y);
                     }
                 }
-                
+
                 c.lineTo(part.vertices[0].x, part.vertices[0].y);
             }
         }
@@ -791,7 +791,7 @@ var Vector = require('../geometry/Vector');
             for (j = 1; j < body.vertices.length; j++) {
                 c.lineTo(body.vertices[j].x, body.vertices[j].y);
             }
-            
+
             c.lineTo(body.vertices[0].x, body.vertices[0].y);
         }
 
@@ -919,7 +919,7 @@ var Vector = require('../geometry/Vector');
                     for (k = 0; k < part.axes.length; k++) {
                         // render a single axis indicator
                         c.moveTo(part.position.x, part.position.y);
-                        c.lineTo((part.vertices[0].x + part.vertices[part.vertices.length-1].x) / 2, 
+                        c.lineTo((part.vertices[0].x + part.vertices[part.vertices.length-1].x) / 2,
                                  (part.vertices[0].y + part.vertices[part.vertices.length-1].y) / 2);
                     }
                 }
@@ -1094,7 +1094,7 @@ var Vector = require('../geometry/Vector');
         c.fill();
 
         c.beginPath();
-            
+
         // render collision normals
         for (i = 0; i < pairs.length; i++) {
             pair = pairs[i];
@@ -1112,7 +1112,7 @@ var Vector = require('../geometry/Vector');
                     normalPosX = (pair.activeContacts[0].vertex.x + pair.activeContacts[1].vertex.x) / 2;
                     normalPosY = (pair.activeContacts[0].vertex.y + pair.activeContacts[1].vertex.y) / 2;
                 }
-                
+
                 if (collision.bodyB === collision.supports[0].body || collision.bodyA.isStatic === true) {
                     c.moveTo(normalPosX - collision.normal.x * 8, normalPosY - collision.normal.y * 8);
                 } else {
@@ -1219,9 +1219,9 @@ var Vector = require('../geometry/Vector');
                 continue;
 
             var region = bucketId.split(/C|R/);
-            c.rect(0.5 + parseInt(region[1], 10) * grid.bucketWidth, 
-                    0.5 + parseInt(region[2], 10) * grid.bucketHeight, 
-                    grid.bucketWidth, 
+            c.rect(0.5 + parseInt(region[1], 10) * grid.bucketWidth,
+                    0.5 + parseInt(region[2], 10) * grid.bucketHeight,
+                    grid.bucketWidth,
                     grid.bucketHeight);
         }
 
@@ -1248,7 +1248,7 @@ var Vector = require('../geometry/Vector');
                 boundsHeight = render.bounds.max.y - render.bounds.min.y,
                 boundsScaleX = boundsWidth / render.options.width,
                 boundsScaleY = boundsHeight / render.options.height;
-            
+
             context.scale(1 / boundsScaleX, 1 / boundsScaleY);
             context.translate(-render.bounds.min.x, -render.bounds.min.y);
         }
@@ -1268,7 +1268,7 @@ var Vector = require('../geometry/Vector');
                 // render body selections
                 bounds = item.bounds;
                 context.beginPath();
-                context.rect(Math.floor(bounds.min.x - 3), Math.floor(bounds.min.y - 3), 
+                context.rect(Math.floor(bounds.min.x - 3), Math.floor(bounds.min.y - 3),
                              Math.floor(bounds.max.x - bounds.min.x + 6), Math.floor(bounds.max.y - bounds.min.y + 6));
                 context.closePath();
                 context.stroke();
@@ -1302,7 +1302,7 @@ var Vector = require('../geometry/Vector');
             context.fillStyle = 'rgba(255,165,0,0.1)';
             bounds = inspector.selectBounds;
             context.beginPath();
-            context.rect(Math.floor(bounds.min.x), Math.floor(bounds.min.y), 
+            context.rect(Math.floor(bounds.min.x), Math.floor(bounds.min.y),
                          Math.floor(bounds.max.x - bounds.min.x), Math.floor(bounds.max.y - bounds.min.y));
             context.closePath();
             context.stroke();
@@ -1339,7 +1339,7 @@ var Vector = require('../geometry/Vector');
      * @return {Number} pixel ratio
      */
     var _getPixelRatio = function(canvas) {
-        var context = canvas.getContext('2d'),
+        var context = canvas.getContext('2d', { willReadFrequently: true }),
             devicePixelRatio = window.devicePixelRatio || 1,
             backingStorePixelRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio
                                       || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio
@@ -1480,7 +1480,7 @@ var Vector = require('../geometry/Vector');
      */
 
     /**
-     * A `Bounds` object that specifies the drawing view region. 
+     * A `Bounds` object that specifies the drawing view region.
      * Rendering will be automatically transformed and scaled to fit within the canvas size (`render.options.width` and `render.options.height`).
      * This allows for creating views that can pan or zoom around the scene.
      * You must also set `render.options.hasBounds` to `true` to enable bounded rendering.

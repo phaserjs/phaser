@@ -187,7 +187,7 @@ var TileSprite = new Class({
          * @type {CanvasRenderingContext2D}
          * @since 3.12.0
          */
-        this.context = this.canvas.getContext('2d');
+        this.context = this.canvas.getContext('2d', { willReadFrequently: false });
 
         /**
          * The Texture the TileSprite is using as its fill pattern.
@@ -272,7 +272,7 @@ var TileSprite = new Class({
          * @type {CanvasRenderingContext2D}
          * @since 3.12.0
          */
-        this.fillContext = this.fillCanvas.getContext('2d');
+        this.fillContext = this.fillCanvas.getContext('2d', { willReadFrequently: false });
 
         /**
          * The texture that the Tile Sprite is rendered to, which is then rendered to a Scene.

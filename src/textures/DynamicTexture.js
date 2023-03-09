@@ -127,7 +127,7 @@ var DynamicTexture = new Class({
          * @type {CanvasRenderingContext2D}
          * @since 3.7.0
          */
-        this.context = (isCanvas) ? source.getContext('2d') : null;
+        this.context = (isCanvas) ? source.getContext('2d', { willReadFrequently: true }) : null;
 
         /**
          * Is this Dynamic Texture dirty or not? If not it won't spend time clearing or filling itself.
