@@ -248,8 +248,6 @@ var Container = new Class({
 
         this.setPosition(x, y);
 
-        this.clearAlpha();
-
         this.setBlendMode(BlendModes.SKIP_CHECK);
 
         if (children)
