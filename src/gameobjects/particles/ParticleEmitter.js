@@ -816,28 +816,6 @@ var ParticleEmitter = new Class({
         this.counters = new Float32Array(10);
 
         /**
-         * Cached amount of frames in the `ParticleEmitter.frames` array.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#_frameLength
-         * @type {number}
-         * @private
-         * @default 0
-         * @since 3.0.0
-         */
-        this._frameLength = 0;
-
-        /**
-         * Cached amount of animations in the `ParticleEmitter.anims` array.
-         *
-         * @name Phaser.GameObjects.Particles.ParticleEmitter#_animLength
-         * @type {number}
-         * @private
-         * @default 0
-         * @since 3.60.0
-         */
-        this._animLength = 0;
-
-        /**
          * An internal property used to tell when the emitter is in fast-forwarc mode.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#skipping
@@ -1201,9 +1179,10 @@ var ParticleEmitter = new Class({
     getFrame: function ()
     {
         var frames = this.frames;
+        var len = frames.length;
         var current;
 
-        if (frames.length === 1)
+        if (len === 1)
         {
             current = frames[0];
         }
@@ -1220,7 +1199,7 @@ var ParticleEmitter = new Class({
             if (this.frameCounter >= this.frameQuantity)
             {
                 this.frameCounter = 0;
-                this.currentFrame = Wrap(this.currentFrame + 1, 0, this._frameLength);
+                this.currentFrame = Wrap(this.currentFrame + 1, 0, len - 1);
             }
         }
 
@@ -1285,9 +1264,7 @@ var ParticleEmitter = new Class({
             this.frameQuantity = GetFastValue(frameConfig, 'quantity', quantity);
         }
 
-        this._frameLength = this.frames.length;
-
-        if (this._frameLength === 1)
+        if (this.frames.length === 1)
         {
             this.frameQuantity = 1;
             this.randomFrame = false;
@@ -1307,12 +1284,13 @@ var ParticleEmitter = new Class({
     getAnim: function ()
     {
         var anims = this.anims;
+        var len = anims.length;
 
-        if (anims.length === 0)
+        if (len === 0)
         {
             return null;
         }
-        else if (anims.length === 1)
+        else if (len === 1)
         {
             return anims[0];
         }
@@ -1329,7 +1307,7 @@ var ParticleEmitter = new Class({
             if (this.animCounter >= this.animQuantity)
             {
                 this.animCounter = 0;
-                this.currentAnim = Wrap(this.currentAnim + 1, 0, this._animLength);
+                this.currentAnim = Wrap(this.currentAnim + 1, 0, len - 1);
             }
 
             return anim;
@@ -1392,9 +1370,7 @@ var ParticleEmitter = new Class({
             this.animQuantity = GetFastValue(animConfig, 'quantity', quantity);
         }
 
-        this._animLength = this.anims.length;
-
-        if (this._animLength === 1)
+        if (this.anims.length === 1)
         {
             this.animQuantity = 1;
             this.randomAnim = false;
