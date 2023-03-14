@@ -70,11 +70,11 @@ var GeometryMask = new Class({
         this.isStencil = true;
 
         /**
-         * The current stencil level.
+         * The current stencil level. This can change dynamically at runtime
+         * and is set in the applyStencil method.
          *
          * @name Phaser.Display.Masks.GeometryMask#level
          * @type {boolean}
-         * @private
          * @since 3.17.0
          */
         this.level = 0;
@@ -172,17 +172,25 @@ var GeometryMask = new Class({
         var gl = renderer.gl;
         var geometryMask = this.geometryMask;
         var level = renderer.maskCount;
+        var mask = 0xff;
+
+        if (inc)
+        {
+            level++;
+        }
+
+        this.level = level;
 
         gl.colorMask(false, false, false, false);
 
         if (inc)
         {
-            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            gl.stencilFunc(gl.ALWAYS, level, mask);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
         }
         else
         {
-            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            gl.stencilFunc(gl.ALWAYS, level, mask);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
         }
 
@@ -192,26 +200,27 @@ var GeometryMask = new Class({
         renderer.flush();
 
         gl.colorMask(true, true, true, true);
+
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
         if (inc)
         {
             if (this.invertAlpha)
             {
-                gl.stencilFunc(gl.NOTEQUAL, level + 1, 0xFF);
+                gl.stencilFunc(gl.NOTEQUAL, level, mask);
             }
             else
             {
-                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+                gl.stencilFunc(gl.EQUAL, level, mask);
             }
         }
         else if (this.invertAlpha)
         {
-            gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
+            gl.stencilFunc(gl.NOTEQUAL, level, mask);
         }
         else
         {
-            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            gl.stencilFunc(gl.EQUAL, level, mask);
         }
     },
 
