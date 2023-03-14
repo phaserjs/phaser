@@ -37,7 +37,7 @@ var RenderTarget = new Class({
         if (minFilter === undefined) { minFilter = 0; }
         if (autoClear === undefined) { autoClear = true; }
         if (autoResize === undefined) { autoResize = false; }
-        if (addDepthBuffer === undefined) { addDepthBuffer = false; }
+        if (addDepthBuffer === undefined) { addDepthBuffer = true; }
 
         /**
          * A reference to the WebGLRenderer instance.
@@ -260,9 +260,11 @@ var RenderTarget = new Class({
     {
         if (adjustViewport === undefined) { adjustViewport = false; }
 
+        var renderer = this.renderer;
+
         if (adjustViewport)
         {
-            this.renderer.flush();
+            renderer.flush();
         }
 
         if (width && height)
@@ -270,9 +272,7 @@ var RenderTarget = new Class({
             this.resize(width, height);
         }
 
-        this.renderer.log('RenderTarget.bind - push FBO');
-
-        this.renderer.pushFramebuffer(this.framebuffer, false, false);
+        renderer.pushFramebuffer(this.framebuffer, false, false);
 
         if (adjustViewport)
         {
@@ -287,6 +287,8 @@ var RenderTarget = new Class({
 
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
+
+        renderer.zeroStencilMask();
     },
 
     /**
@@ -317,8 +319,6 @@ var RenderTarget = new Class({
         var renderer = this.renderer;
         var gl = renderer.gl;
 
-        this.renderer.log('RenderTarget.clear - push FBO');
-
         renderer.pushFramebuffer(this.framebuffer);
 
         gl.disable(gl.SCISSOR_TEST);
@@ -328,8 +328,6 @@ var RenderTarget = new Class({
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         renderer.popFramebuffer();
-
-        this.renderer.log('RenderTarget.clear - pop FBO');
 
         renderer.resetScissor();
     },
@@ -354,8 +352,6 @@ var RenderTarget = new Class({
         {
             renderer.flush();
         }
-
-        this.renderer.log('RenderTarget.unbind - pop FBO');
 
         return renderer.popFramebuffer();
     },
