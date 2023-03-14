@@ -1242,8 +1242,6 @@ var WebGLPipeline = new Class({
      */
     preBatch: function (gameObject)
     {
-        this.renderer.log('WebGLPipe.preBatch', (this.currentRenderTarget) ? 'with RT' : 'without RT');
-
         if (this.currentRenderTarget)
         {
             this.currentRenderTarget.bind();
@@ -1273,8 +1271,6 @@ var WebGLPipeline = new Class({
      */
     postBatch: function (gameObject)
     {
-        this.renderer.log('WebGLPipe.postBatch');
-
         this.onDraw(this.currentRenderTarget);
 
         this.onPostBatch(gameObject);
