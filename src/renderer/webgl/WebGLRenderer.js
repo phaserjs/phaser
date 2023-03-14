@@ -1890,22 +1890,13 @@ var WebGLRenderer = new Class({
      */
     createFramebuffer: function (width, height, renderTexture, addDepthStencilBuffer)
     {
-        if (addDepthStencilBuffer === undefined) { addDepthStencilBuffer = false; }
+        if (addDepthStencilBuffer === undefined) { addDepthStencilBuffer = true; }
 
         var gl = this.gl;
         var framebuffer = gl.createFramebuffer();
         var complete = 0;
 
         this.setFramebuffer(framebuffer);
-
-        if (addDepthStencilBuffer)
-        {
-            var depthStencilBuffer = gl.createRenderbuffer();
-
-            gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilBuffer);
-            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
-            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, depthStencilBuffer);
-        }
 
         renderTexture.isRenderTexture = true;
         renderTexture.isAlphaPremultiplied = false;
@@ -1927,6 +1918,15 @@ var WebGLRenderer = new Class({
         }
 
         framebuffer.renderTexture = renderTexture;
+
+        if (addDepthStencilBuffer)
+        {
+            var depthStencilBuffer = gl.createRenderbuffer();
+
+            gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilBuffer);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, depthStencilBuffer);
+        }
 
         this.setFramebuffer(null);
 
@@ -2491,6 +2491,46 @@ var WebGLRenderer = new Class({
             WebGLSnapshot(this.gl, state);
 
             state.callback = null;
+        }
+    },
+
+    /**
+     * Sets the current stencil function to gl.EQUAL with a mask of 0xff and reference of zero.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#zeroStencilMask
+     * @since 3.60.0
+     */
+    zeroStencilMask: function ()
+    {
+        var gl = this.gl;
+
+        gl.stencilFunc(gl.EQUAL, 0, 0xff);
+    },
+
+    /**
+     * Restores the current stencil function to the one that was in place before `zeroStencilMask` was called.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#zeroStencilMask
+     * @since 3.60.0
+     */
+    restoreStencilMask: function ()
+    {
+        var gl = this.gl;
+
+        var current = this.getCurrentStencilMask();
+
+        if (current)
+        {
+            var mask = current.mask;
+
+            if (mask.invertAlpha)
+            {
+                gl.stencilFunc(gl.NOTEQUAL, mask.level, 0xff);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL, mask.level, 0xff);
+            }
         }
     },
 
