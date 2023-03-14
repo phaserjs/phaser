@@ -379,18 +379,7 @@ var PreFXPipeline = new Class({
 
         this.flush();
 
-        // var currentFBO = gl.getParameter(gl.FRAMEBUFFER_BINDING);
-
-        // renderer.pushFramebuffer(target.framebuffer, false, true, target.texture, true);
-
         renderer.pushFramebuffer(fsTarget.framebuffer, false, true, fsTarget.texture, true);
-
-        // gl.viewport(0, 0, renderer.width, renderer.height);
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, fsTarget.framebuffer);
-        // gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, fsTarget.texture, 0);
-
-        // gl.clearColor(0, 0, 0, 0);
-        // gl.clear(gl.COLOR_BUFFER_BIT);
 
         this.setTexture2D(texture);
 
@@ -411,9 +400,6 @@ var PreFXPipeline = new Class({
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, target.texture);
         gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, targetBounds.x, targetBounds.y, targetBounds.width, targetBounds.height);
-
-        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        // gl.bindTexture(gl.TEXTURE_2D, null);
 
         //  We've drawn the sprite to the target (using our pipeline shader)
         //  we can pass it to the pipeline in case they want to do further
@@ -781,6 +767,8 @@ var PreFXPipeline = new Class({
         this.batchVert(x0, y0, 0, 0, 0, 0, white);
         this.batchVert(x2, y2, 1, 1, 0, 0, white);
         this.batchVert(x3, y3, 1, 0, 0, 0, white);
+
+        renderer.restoreStencilMask();
 
         this.flush();
 
