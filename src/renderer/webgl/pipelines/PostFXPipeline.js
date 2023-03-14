@@ -546,6 +546,8 @@ var PostFXPipeline = new Class({
             }
         }
 
+        renderer.restoreStencilMask();
+
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, source.texture);
 
