@@ -288,7 +288,7 @@ var RenderTarget = new Class({
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
-        renderer.zeroStencilMask();
+        renderer.clearStencilMask();
     },
 
     /**

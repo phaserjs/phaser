@@ -362,7 +362,7 @@ var PreFXPipeline = new Class({
         var gl = this.gl;
         var renderer = this.renderer;
 
-        renderer.zeroStencilMask();
+        renderer.clearStencilMask();
 
         this.setShader(this.drawSpriteShader);
 
