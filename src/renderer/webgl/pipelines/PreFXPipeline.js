@@ -758,7 +758,7 @@ var PreFXPipeline = new Class({
         this.batchVert(x2, y2, 1, 1, 0, 0, white);
         this.batchVert(x3, y3, 1, 0, 0, 0, white);
 
-        renderer.restoreFramebuffer(true, true);
+        renderer.restoreFramebuffer(false, true);
 
         if (!renderer.currentFramebuffer)
         {
