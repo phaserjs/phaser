@@ -1519,10 +1519,14 @@ var WebGLRenderer = new Class({
     {
         if (framebuffer === this.currentFramebuffer)
         {
+            this.log('pushFramebuffer abort as matches current');
+
             return this;
         }
 
         this.fboStack.push(framebuffer);
+
+        this.log('pushFramebuffer added', this.fboStack.length);
 
         return this.setFramebuffer(framebuffer, updateScissor, setViewport, texture, clear);
     },
@@ -1554,6 +1558,8 @@ var WebGLRenderer = new Class({
 
         if (framebuffer === this.currentFramebuffer)
         {
+            this.log('setFramebuffer', this.fboStack.length, 'aborted as matches current');
+
             return this;
         }
 
@@ -1569,8 +1575,12 @@ var WebGLRenderer = new Class({
         }
         else
         {
+            this.log('setFramebuffer', this.fboStack.length, 'flushed');
+
             this.flush();
         }
+
+        this.log('setFramebuffer', this.fboStack.length, 'bound');
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 
@@ -1632,6 +1642,8 @@ var WebGLRenderer = new Class({
         //  Remove the current fbo
         fboStack.pop();
 
+        this.log('popFramebuffer removed', this.fboStack.length);
+
         //  Reset the previous framebuffer
         var framebuffer = fboStack[fboStack.length - 1];
 
@@ -1663,10 +1675,14 @@ var WebGLRenderer = new Class({
 
         var framebuffer = fboStack[fboStack.length - 1];
 
+        this.log('restoreFramebuffer', this.fboStack.length);
+
         if (!framebuffer)
         {
             framebuffer = null;
         }
+
+        this.currentFramebuffer = null;
 
         this.setFramebuffer(framebuffer, updateScissor, setViewport);
     },
@@ -2230,6 +2246,8 @@ var WebGLRenderer = new Class({
 
         camera.emit(CameraEvents.PRE_RENDER, camera);
 
+        this.log('preBatchCamera');
+
         this.pipelines.preBatchCamera(camera);
 
         this.pushScissor(cx, cy, cw, ch);
@@ -2504,7 +2522,9 @@ var WebGLRenderer = new Class({
     {
         var gl = this.gl;
 
-        gl.stencilFunc(gl.EQUAL, 0, 0xff);
+        gl.disable(gl.STENCIL_TEST);
+
+        // gl.stencilFunc(gl.EQUAL, 0, 0xff);
     },
 
     /**
@@ -2522,6 +2542,10 @@ var WebGLRenderer = new Class({
         if (current)
         {
             var mask = current.mask;
+
+            gl.enable(gl.STENCIL_TEST);
+            gl.colorMask(true, true, true, true);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
             if (mask.invertAlpha)
             {
