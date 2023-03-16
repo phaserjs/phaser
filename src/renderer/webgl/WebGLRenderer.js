@@ -2543,6 +2543,8 @@ var WebGLRenderer = new Class({
         {
             var mask = current.mask;
 
+            this.log('restoreStencilMask: ' + mask.level);
+
             gl.enable(gl.STENCIL_TEST);
             gl.colorMask(true, true, true, true);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
