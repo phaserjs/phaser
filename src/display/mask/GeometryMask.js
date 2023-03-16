@@ -152,8 +152,6 @@ var GeometryMask = new Class({
 
         renderer.maskStack.push({ mask: this, camera: camera });
 
-        renderer.log('GeometryMask.preRenderWebGL - count: ' + renderer.maskCount + ' len: ' + renderer.maskStack.length);
-
         this.applyStencil(renderer, camera, true);
 
         renderer.maskCount++;
@@ -176,27 +174,23 @@ var GeometryMask = new Class({
         var level = renderer.maskCount;
         var mask = 0xff;
 
-        if (inc)
-        {
-            level++;
-        }
-
-        this.level = level;
-
-        renderer.log('GeometryMask.applyStencil - level: ' + level);
-
         gl.colorMask(false, false, false, false);
 
         if (inc)
         {
-            gl.stencilFunc(gl.ALWAYS, level, mask);
+            gl.stencilFunc(gl.EQUAL, level, mask);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+
+            //  Do this _after_ we set the stencilFunc
+            level++;
         }
         else
         {
-            gl.stencilFunc(gl.ALWAYS, level, mask);
+            gl.stencilFunc(gl.EQUAL, level + 1, mask);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
         }
+
+        this.level = level;
 
         //  Write stencil buffer
         geometryMask.renderWebGL(renderer, geometryMask, camera);
@@ -204,7 +198,6 @@ var GeometryMask = new Class({
         renderer.flush();
 
         gl.colorMask(true, true, true, true);
-
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
         if (this.invertAlpha)
@@ -232,8 +225,6 @@ var GeometryMask = new Class({
         renderer.maskStack.pop();
 
         renderer.maskCount--;
-
-        renderer.log('GeometryMask.postRenderWebGL - count: ' + renderer.maskCount + ' len: ' + renderer.maskStack.length);
 
         //  Force flush before disabling stencil test
         renderer.flush();
