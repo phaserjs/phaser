@@ -1519,14 +1519,10 @@ var WebGLRenderer = new Class({
     {
         if (framebuffer === this.currentFramebuffer)
         {
-            this.log('pushFramebuffer abort as matches current');
-
             return this;
         }
 
         this.fboStack.push(framebuffer);
-
-        this.log('pushFramebuffer added', this.fboStack.length);
 
         return this.setFramebuffer(framebuffer, updateScissor, setViewport, texture, clear);
     },
@@ -1558,8 +1554,6 @@ var WebGLRenderer = new Class({
 
         if (framebuffer === this.currentFramebuffer)
         {
-            this.log('setFramebuffer', this.fboStack.length, 'aborted as matches current');
-
             return this;
         }
 
@@ -1575,12 +1569,8 @@ var WebGLRenderer = new Class({
         }
         else
         {
-            this.log('setFramebuffer', this.fboStack.length, 'flushed');
-
             this.flush();
         }
-
-        this.log('setFramebuffer', this.fboStack.length, 'bound');
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 
@@ -1642,8 +1632,6 @@ var WebGLRenderer = new Class({
         //  Remove the current fbo
         fboStack.pop();
 
-        this.log('popFramebuffer removed', this.fboStack.length);
-
         //  Reset the previous framebuffer
         var framebuffer = fboStack[fboStack.length - 1];
 
@@ -1674,8 +1662,6 @@ var WebGLRenderer = new Class({
         var fboStack = this.fboStack;
 
         var framebuffer = fboStack[fboStack.length - 1];
-
-        this.log('restoreFramebuffer', this.fboStack.length);
 
         if (!framebuffer)
         {
@@ -2246,8 +2232,6 @@ var WebGLRenderer = new Class({
 
         camera.emit(CameraEvents.PRE_RENDER, camera);
 
-        this.log('preBatchCamera');
-
         this.pipelines.preBatchCamera(camera);
 
         this.pushScissor(cx, cy, cw, ch);
@@ -2513,24 +2497,22 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the current stencil function to gl.EQUAL with a mask of 0xff and reference of zero.
+     * Disables the STENCIL_TEST but does not change the status
+     * of the current stencil mask.
      *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#zeroStencilMask
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#clearStencilMask
      * @since 3.60.0
      */
-    zeroStencilMask: function ()
+    clearStencilMask: function ()
     {
-        var gl = this.gl;
-
-        gl.disable(gl.STENCIL_TEST);
-
-        // gl.stencilFunc(gl.EQUAL, 0, 0xff);
+        this.gl.disable(this.gl.STENCIL_TEST);
     },
 
     /**
-     * Restores the current stencil function to the one that was in place before `zeroStencilMask` was called.
+     * Restores the current stencil function to the one that was in place
+     * before `clearStencilMask` was called.
      *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#zeroStencilMask
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#restoreStencilMask
      * @since 3.60.0
      */
     restoreStencilMask: function ()
@@ -2543,11 +2525,9 @@ var WebGLRenderer = new Class({
         {
             var mask = current.mask;
 
-            this.log('restoreStencilMask: ' + mask.level);
-
             gl.enable(gl.STENCIL_TEST);
-            gl.colorMask(true, true, true, true);
-            gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+
+            //  colorMask + stencilOp(KEEP)
 
             if (mask.invertAlpha)
             {
