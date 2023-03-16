@@ -203,18 +203,7 @@ var GeometryMask = new Class({
 
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
-        if (inc)
-        {
-            if (this.invertAlpha)
-            {
-                gl.stencilFunc(gl.NOTEQUAL, level, mask);
-            }
-            else
-            {
-                gl.stencilFunc(gl.EQUAL, level, mask);
-            }
-        }
-        else if (this.invertAlpha)
+        if (this.invertAlpha)
         {
             gl.stencilFunc(gl.NOTEQUAL, level, mask);
         }
