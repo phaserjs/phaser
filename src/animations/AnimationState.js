@@ -1872,16 +1872,16 @@ var AnimationState = new Class({
      * Example:
      *
      * If you have a sprite sheet loaded called `explosion` and it contains 12 frames, then you can call this method using:
-     * `this.anims.generateFrameNumbers('explosion', { start: 0, end: 12 })`.
+     * `this.anims.generateFrameNumbers('explosion', { start: 0, end: 11 })`.
      *
      * The `end` value tells it to stop after 12 frames. To create an animation using this method, you can do:
      *
      * ```javascript
      * this.anims.create({
      *   key: 'boom',
-     *   frames: this.anims.generateFrameNames('explosion', {
+     *   frames: this.anims.generateFrameNumbers('explosion', {
      *     start: 0,
-     *     end: 12
+     *     end: 11
      *   })
      * });
      * ```
@@ -1900,7 +1900,7 @@ var AnimationState = new Class({
      * @since 3.50.0
      *
      * @param {string} key - The key for the texture containing the animation frames.
-     * @param {Phaser.Types.Animations.GenerateFrameNumbers} config - The configuration object for the animation frames.
+     * @param {Phaser.Types.Animations.GenerateFrameNumbers} [config] - The configuration object for the animation frames.
      *
      * @return {Phaser.Types.Animations.AnimationFrame[]} The array of {@link Phaser.Types.Animations.AnimationFrame} objects.
      */

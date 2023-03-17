@@ -710,7 +710,7 @@ var AnimationManager = new Class({
      * ```javascript
      * this.anims.create({
      *   key: 'boom',
-     *   frames: this.anims.generateFrameNames('explosion', {
+     *   frames: this.anims.generateFrameNumbers('explosion', {
      *     start: 0,
      *     end: 11
      *   })
@@ -731,7 +731,7 @@ var AnimationManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key for the texture containing the animation frames.
-     * @param {Phaser.Types.Animations.GenerateFrameNumbers} config - The configuration object for the animation frames.
+     * @param {Phaser.Types.Animations.GenerateFrameNumbers} [config] - The configuration object for the animation frames.
      *
      * @return {Phaser.Types.Animations.AnimationFrame[]} The array of {@link Phaser.Types.Animations.AnimationFrame} objects.
      */
