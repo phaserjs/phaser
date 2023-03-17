@@ -12713,7 +12713,7 @@ module.exports = SpinePlugin;
 
 var Class = __webpack_require__(7473);
 var Container = __webpack_require__(7361);
-var SpineContainerRender = __webpack_require__(2437);
+var SpineContainerRender = __webpack_require__(7738);
 
 /**
  * @classdesc
@@ -12913,7 +12913,7 @@ module.exports = SpineContainerCanvasRenderer;
 
 /***/ }),
 
-/***/ 2437:
+/***/ 7738:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**
@@ -15309,7 +15309,7 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.60.0-beta.19',
+    VERSION: '3.60.0-beta.20',
 
     BlendModes: __webpack_require__(8351),
 
@@ -17419,6 +17419,698 @@ module.exports = {
 
 /***/ }),
 
+/***/ 5686:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+
+var tempMatrix = new Float32Array(20);
+
+/**
+ * @classdesc
+ * The ColorMatrix class creates a 5x4 matrix that can be used in shaders and graphics
+ * operations. It provides methods required to modify the color values, such as adjusting
+ * the brightness, setting a sepia tone, hue rotation and more.
+ *
+ * Use the method `getData` to return a Float32Array containing the current color values.
+ *
+ * @class ColorMatrix
+ * @memberof Phaser.Display
+ * @constructor
+ * @since 3.50.0
+ */
+var ColorMatrix = new Class({
+
+    initialize:
+
+    function ColorMatrix ()
+    {
+        /**
+         * Internal ColorMatrix array.
+         *
+         * @name Phaser.Display.ColorMatrix#_matrix
+         * @type {Float32Array}
+         * @private
+         * @since 3.50.0
+         */
+        this._matrix = new Float32Array(20);
+
+        /**
+         * The value that determines how much of the original color is used
+         * when mixing the colors. A value between 0 (all original) and 1 (all final)
+         *
+         * @name Phaser.Display.ColorMatrix#alpha
+         * @type {number}
+         * @since 3.50.0
+         */
+        this.alpha = 1;
+
+        /**
+         * Is the ColorMatrix array dirty?
+         *
+         * @name Phaser.Display.ColorMatrix#_dirty
+         * @type {boolean}
+         * @private
+         * @since 3.50.0
+         */
+        this._dirty = true;
+
+        /**
+         * The matrix data as a Float32Array.
+         *
+         * Returned by the `getData` method.
+         *
+         * @name Phaser.Display.ColorMatrix#data
+         * @type {Float32Array}
+         * @private
+         * @since 3.50.0
+         */
+        this._data = new Float32Array(20);
+
+        this.reset();
+    },
+
+    /**
+     * Sets this ColorMatrix from the given array of color values.
+     *
+     * @method Phaser.Display.ColorMatrix#set
+     * @since 3.50.0
+     *
+     * @param {(number[]|Float32Array)} value - The ColorMatrix values to set. Must have 20 elements.
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    set: function (value)
+    {
+        this._matrix.set(value);
+
+        this._dirty = true;
+
+        return this;
+    },
+
+    /**
+     * Resets the ColorMatrix to default values and also resets
+     * the `alpha` property back to 1.
+     *
+     * @method Phaser.Display.ColorMatrix#reset
+     * @since 3.50.0
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    reset: function ()
+    {
+        var m = this._matrix;
+
+        m.fill(0);
+
+        m[0] = 1;
+        m[6] = 1;
+        m[12] = 1;
+        m[18] = 1;
+
+        this.alpha = 1;
+
+        this._dirty = true;
+
+        return this;
+    },
+
+    /**
+     * Gets the ColorMatrix as a Float32Array.
+     *
+     * Can be used directly as a 1fv shader uniform value.
+     *
+     * @method Phaser.Display.ColorMatrix#getData
+     * @since 3.50.0
+     *
+     * @return {Float32Array} The ColorMatrix as a Float32Array.
+     */
+    getData: function ()
+    {
+        var data = this._data;
+
+        if (this._dirty)
+        {
+            data.set(this._matrix);
+
+            data[4] /= 255;
+            data[9] /= 255;
+            data[14] /= 255;
+            data[19] /= 255;
+
+            this._dirty = false;
+        }
+
+        return data;
+    },
+
+    /**
+     * Changes the brightness of this ColorMatrix by the given amount.
+     *
+     * @method Phaser.Display.ColorMatrix#brightness
+     * @since 3.50.0
+     *
+     * @param {number} [value=0] - The amount of brightness to apply to this ColorMatrix. Between 0 (black) and 1.
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    brightness: function (value, multiply)
+    {
+        if (value === undefined) { value = 0; }
+        if (multiply === undefined) { multiply = false; }
+
+        var b = value;
+
+        return this.multiply([
+            b, 0, 0, 0, 0,
+            0, b, 0, 0, 0,
+            0, 0, b, 0, 0,
+            0, 0, 0, 1, 0
+        ], multiply);
+    },
+
+    /**
+     * Changes the saturation of this ColorMatrix by the given amount.
+     *
+     * @method Phaser.Display.ColorMatrix#saturate
+     * @since 3.50.0
+     *
+     * @param {number} [value=0] - The amount of saturation to apply to this ColorMatrix.
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    saturate: function (value, multiply)
+    {
+        if (value === undefined) { value = 0; }
+        if (multiply === undefined) { multiply = false; }
+
+        var x = (value * 2 / 3) + 1;
+        var y = ((x - 1) * -0.5);
+
+        return this.multiply([
+            x, y, y, 0, 0,
+            y, x, y, 0, 0,
+            y, y, x, 0, 0,
+            0, 0, 0, 1, 0
+        ], multiply);
+    },
+
+    /**
+     * Desaturates this ColorMatrix (removes color from it).
+     *
+     * @method Phaser.Display.ColorMatrix#saturation
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    desaturate: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.saturate(-1, multiply);
+    },
+
+    /**
+     * Rotates the hues of this ColorMatrix by the value given.
+     *
+     * @method Phaser.Display.ColorMatrix#hue
+     * @since 3.50.0
+     *
+     * @param {number} [rotation=0] - The amount of hue rotation to apply to this ColorMatrix, in degrees.
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    hue: function (rotation, multiply)
+    {
+        if (rotation === undefined) { rotation = 0; }
+        if (multiply === undefined) { multiply = false; }
+
+        rotation = rotation / 180 * Math.PI;
+
+        var cos = Math.cos(rotation);
+        var sin = Math.sin(rotation);
+        var lumR = 0.213;
+        var lumG = 0.715;
+        var lumB = 0.072;
+
+        return this.multiply([
+            lumR + cos * (1 - lumR) + sin * (-lumR),lumG + cos * (-lumG) + sin * (-lumG),lumB + cos * (-lumB) + sin * (1 - lumB), 0, 0,
+            lumR + cos * (-lumR) + sin * (0.143),lumG + cos * (1 - lumG) + sin * (0.140),lumB + cos * (-lumB) + sin * (-0.283), 0, 0,
+            lumR + cos * (-lumR) + sin * (-(1 - lumR)),lumG + cos * (-lumG) + sin * (lumG),lumB + cos * (1 - lumB) + sin * (lumB), 0, 0,
+            0, 0, 0, 1, 0
+        ], multiply);
+    },
+
+    /**
+     * Sets this ColorMatrix to be grayscale.
+     *
+     * @method Phaser.Display.ColorMatrix#grayscale
+     * @since 3.50.0
+     *
+     * @param {number} [value=1] - The grayscale scale (0 is black).
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    grayscale: function (value, multiply)
+    {
+        if (value === undefined) { value = 1; }
+        if (multiply === undefined) { multiply = false; }
+
+        return this.saturate(-value, multiply);
+    },
+
+    /**
+     * Sets this ColorMatrix to be black and white.
+     *
+     * @method Phaser.Display.ColorMatrix#blackWhite
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    blackWhite: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.BLACK_WHITE, multiply);
+    },
+
+    /**
+     * Change the contrast of this ColorMatrix by the amount given.
+     *
+     * @method Phaser.Display.ColorMatrix#contrast
+     * @since 3.50.0
+     *
+     * @param {number} [value=0] - The amount of contrast to apply to this ColorMatrix.
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    contrast: function (value, multiply)
+    {
+        if (value === undefined) { value = 0; }
+        if (multiply === undefined) { multiply = false; }
+
+        var v = value + 1;
+        var o = -0.5 * (v - 1);
+
+        return this.multiply([
+            v, 0, 0, 0, o,
+            0, v, 0, 0, o,
+            0, 0, v, 0, o,
+            0, 0, 0, 1, 0
+        ], multiply);
+    },
+
+    /**
+     * Converts this ColorMatrix to have negative values.
+     *
+     * @method Phaser.Display.ColorMatrix#negative
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    negative: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.NEGATIVE, multiply);
+    },
+
+    /**
+     * Apply a desaturated luminance to this ColorMatrix.
+     *
+     * @method Phaser.Display.ColorMatrix#desaturateLuminance
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    desaturateLuminance: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.DESATURATE_LUMINANCE, multiply);
+    },
+
+    /**
+     * Applies a sepia tone to this ColorMatrix.
+     *
+     * @method Phaser.Display.ColorMatrix#sepia
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    sepia: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.SEPIA, multiply);
+    },
+
+    /**
+     * Applies a night vision tone to this ColorMatrix.
+     *
+     * @method Phaser.Display.ColorMatrix#night
+     * @since 3.50.0
+     *
+     * @param {number} [intensity=0.1] - The intensity of this effect.
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    night: function (intensity, multiply)
+    {
+        if (intensity === undefined) { intensity = 0.1; }
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply([
+            intensity * (-2.0), -intensity, 0, 0, 0,
+            -intensity, 0, intensity, 0, 0,
+            0, intensity, intensity * 2.0, 0, 0,
+            0, 0, 0, 1, 0
+        ], multiply);
+    },
+
+    /**
+     * Applies a trippy color tone to this ColorMatrix.
+     *
+     * @method Phaser.Display.ColorMatrix#lsd
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    lsd: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.LSD, multiply);
+    },
+
+    /**
+     * Applies a brown tone to this ColorMatrix.
+     *
+     * @method Phaser.Display.ColorMatrix#brown
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    brown: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.BROWN, multiply);
+    },
+
+    /**
+     * Applies a vintage pinhole color effect to this ColorMatrix.
+     *
+     * @method Phaser.Display.ColorMatrix#vintagePinhole
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    vintagePinhole: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.VINTAGE, multiply);
+    },
+
+    /**
+     * Applies a kodachrome color effect to this ColorMatrix.
+     *
+     * @method Phaser.Display.ColorMatrix#kodachrome
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    kodachrome: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.KODACHROME, multiply);
+    },
+
+    /**
+     * Applies a technicolor color effect to this ColorMatrix.
+     *
+     * @method Phaser.Display.ColorMatrix#technicolor
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    technicolor: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.TECHNICOLOR, multiply);
+    },
+
+    /**
+     * Applies a polaroid color effect to this ColorMatrix.
+     *
+     * @method Phaser.Display.ColorMatrix#polaroid
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    polaroid: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.POLAROID, multiply);
+    },
+
+    /**
+     * Shifts the values of this ColorMatrix into BGR order.
+     *
+     * @method Phaser.Display.ColorMatrix#shiftToBGR
+     * @since 3.50.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    shiftToBGR: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.SHIFT_BGR, multiply);
+    },
+
+    /**
+     * Multiplies the two given matrices.
+     *
+     * @method Phaser.Display.ColorMatrix#multiply
+     * @since 3.50.0
+     *
+     * @param {number[]} a - The 5x4 array to multiply with ColorMatrix._matrix.
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    multiply: function (a, multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        //  Duplicate _matrix into c
+
+        if (!multiply)
+        {
+            this.reset();
+        }
+
+        var m = this._matrix;
+        var c = tempMatrix;
+
+        //  copy _matrix to tempMatrox
+        c.set(m);
+
+        m.set([
+            //  R
+            (c[0] * a[0]) + (c[1] * a[5]) + (c[2] * a[10]) + (c[3] * a[15]),
+            (c[0] * a[1]) + (c[1] * a[6]) + (c[2] * a[11]) + (c[3] * a[16]),
+            (c[0] * a[2]) + (c[1] * a[7]) + (c[2] * a[12]) + (c[3] * a[17]),
+            (c[0] * a[3]) + (c[1] * a[8]) + (c[2] * a[13]) + (c[3] * a[18]),
+            (c[0] * a[4]) + (c[1] * a[9]) + (c[2] * a[14]) + (c[3] * a[19]) + c[4],
+
+            //  G
+            (c[5] * a[0]) + (c[6] * a[5]) + (c[7] * a[10]) + (c[8] * a[15]),
+            (c[5] * a[1]) + (c[6] * a[6]) + (c[7] * a[11]) + (c[8] * a[16]),
+            (c[5] * a[2]) + (c[6] * a[7]) + (c[7] * a[12]) + (c[8] * a[17]),
+            (c[5] * a[3]) + (c[6] * a[8]) + (c[7] * a[13]) + (c[8] * a[18]),
+            (c[5] * a[4]) + (c[6] * a[9]) + (c[7] * a[14]) + (c[8] * a[19]) + c[9],
+
+            //  B
+            (c[10] * a[0]) + (c[11] * a[5]) + (c[12] * a[10]) + (c[13] * a[15]),
+            (c[10] * a[1]) + (c[11] * a[6]) + (c[12] * a[11]) + (c[13] * a[16]),
+            (c[10] * a[2]) + (c[11] * a[7]) + (c[12] * a[12]) + (c[13] * a[17]),
+            (c[10] * a[3]) + (c[11] * a[8]) + (c[12] * a[13]) + (c[13] * a[18]),
+            (c[10] * a[4]) + (c[11] * a[9]) + (c[12] * a[14]) + (c[13] * a[19]) + c[14],
+
+            //  A
+            (c[15] * a[0]) + (c[16] * a[5]) + (c[17] * a[10]) + (c[18] * a[15]),
+            (c[15] * a[1]) + (c[16] * a[6]) + (c[17] * a[11]) + (c[18] * a[16]),
+            (c[15] * a[2]) + (c[16] * a[7]) + (c[17] * a[12]) + (c[18] * a[17]),
+            (c[15] * a[3]) + (c[16] * a[8]) + (c[17] * a[13]) + (c[18] * a[18]),
+            (c[15] * a[4]) + (c[16] * a[9]) + (c[17] * a[14]) + (c[18] * a[19]) + c[19]
+
+        ]);
+
+        this._dirty = true;
+
+        return this;
+    }
+
+});
+
+/**
+ * A constant array used by the ColorMatrix class for black_white operations.
+ *
+ * @name Phaser.Display.ColorMatrix.BLACK_WHITE
+ * @const
+ * @type {number[]}
+ * @since 3.60.0
+ */
+ColorMatrix.BLACK_WHITE = [ 0.3, 0.6, 0.1, 0, 0, 0.3, 0.6, 0.1, 0, 0, 0.3, 0.6, 0.1, 0, 0, 0, 0, 0, 1, 0 ];
+
+/**
+ * A constant array used by the ColorMatrix class for negative operations.
+ *
+ * @name Phaser.Display.ColorMatrix.NEGATIVE
+ * @const
+ * @type {number[]}
+ * @since 3.60.0
+ */
+ColorMatrix.NEGATIVE = [ -1, 0, 0, 1, 0, 0, -1, 0, 1, 0, 0, 0, -1, 1, 0, 0, 0, 0, 1, 0 ];
+
+/**
+ * A constant array used by the ColorMatrix class for desatured luminance operations.
+ *
+ * @name Phaser.Display.ColorMatrix.DESATURATE_LUMINANCE
+ * @const
+ * @type {number[]}
+ * @since 3.60.0
+ */
+ColorMatrix.DESATURATE_LUMINANCE = [ 0.2764723, 0.9297080, 0.0938197, 0, -37.1, 0.2764723, 0.9297080, 0.0938197, 0, -37.1, 0.2764723, 0.9297080, 0.0938197, 0, -37.1, 0, 0, 0, 1, 0 ];
+
+/**
+ * A constant array used by the ColorMatrix class for sepia operations.
+ *
+ * @name Phaser.Display.ColorMatrix.SEPIA
+ * @const
+ * @type {number[]}
+ * @since 3.60.0
+ */
+ColorMatrix.SEPIA = [ 0.393, 0.7689999, 0.18899999, 0, 0, 0.349, 0.6859999, 0.16799999, 0, 0, 0.272, 0.5339999, 0.13099999, 0, 0, 0, 0, 0, 1, 0 ];
+
+/**
+ * A constant array used by the ColorMatrix class for lsd operations.
+ *
+ * @name Phaser.Display.ColorMatrix.LSD
+ * @const
+ * @type {number[]}
+ * @since 3.60.0
+ */
+ColorMatrix.LSD = [ 2, -0.4, 0.5, 0, 0, -0.5, 2, -0.4, 0, 0, -0.4, -0.5, 3, 0, 0, 0, 0, 0, 1, 0 ];
+
+/**
+ * A constant array used by the ColorMatrix class for brown operations.
+ *
+ * @name Phaser.Display.ColorMatrix.BROWN
+ * @const
+ * @type {number[]}
+ * @since 3.60.0
+ */
+ColorMatrix.BROWN = [ 0.5997023498159715, 0.34553243048391263, -0.2708298674538042, 0, 47.43192855600873, -0.037703249837783157, 0.8609577587992641, 0.15059552388459913, 0, -36.96841498319127, 0.24113635128153335, -0.07441037908422492, 0.44972182064877153, 0, -7.562075277591283, 0, 0, 0, 1, 0 ];
+
+/**
+ * A constant array used by the ColorMatrix class for vintage pinhole operations.
+ *
+ * @name Phaser.Display.ColorMatrix.VINTAGE
+ * @const
+ * @type {number[]}
+ * @since 3.60.0
+ */
+ColorMatrix.VINTAGE = [ 0.6279345635605994, 0.3202183420819367, -0.03965408211312453, 0, 9.651285835294123, 0.02578397704808868, 0.6441188644374771, 0.03259127616149294, 0, 7.462829176470591, 0.0466055556782719, -0.0851232987247891, 0.5241648018700465, 0, 5.159190588235296, 0, 0, 0, 1, 0 ];
+
+/**
+ * A constant array used by the ColorMatrix class for kodachrome operations.
+ *
+ * @name Phaser.Display.ColorMatrix.KODACHROME
+ * @const
+ * @type {number[]}
+ * @since 3.60.0
+ */
+ColorMatrix.KODACHROME = [ 1.1285582396593525, -0.3967382283601348, -0.03992559172921793, 0, 63.72958762196502, -0.16404339962244616, 1.0835251566291304, -0.05498805115633132, 0, 24.732407896706203, -0.16786010706155763, -0.5603416277695248, 1.6014850761964943, 0, 35.62982807460946, 0, 0, 0, 1, 0 ];
+
+/**
+ * A constant array used by the ColorMatrix class for technicolor operations.
+ *
+ * @name Phaser.Display.ColorMatrix.TECHNICOLOR
+ * @const
+ * @type {number[]}
+ * @since 3.60.0
+ */
+ColorMatrix.TECHNICOLOR = [ 1.9125277891456083, -0.8545344976951645, -0.09155508482755585, 0, 11.793603434377337, -0.3087833385928097, 1.7658908555458428, -0.10601743074722245, 0, -70.35205161461398, -0.231103377548616, -0.7501899197440212, 1.847597816108189, 0, 30.950940869491138, 0, 0, 0, 1, 0 ];
+
+/**
+ * A constant array used by the ColorMatrix class for polaroid shift operations.
+ *
+ * @name Phaser.Display.ColorMatrix.POLAROID
+ * @const
+ * @type {number[]}
+ * @since 3.60.0
+ */
+ColorMatrix.POLAROID = [ 1.438, -0.062, -0.062, 0, 0, -0.122, 1.378, -0.122, 0, 0, -0.016, -0.016, 1.483, 0, 0, 0, 0, 0, 1, 0 ];
+
+/**
+ * A constant array used by the ColorMatrix class for shift BGR operations.
+ *
+ * @name Phaser.Display.ColorMatrix.SHIFT_BGR
+ * @const
+ * @type {number[]}
+ * @since 3.60.0
+ */
+ColorMatrix.SHIFT_BGR = [ 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0 ];
+
+module.exports = ColorMatrix;
+
+
+/***/ }),
+
 /***/ 8073:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -17506,7 +18198,7 @@ var CanvasPool = function ()
 
         if (_disableContextSmoothing && canvasType === CONST.CANVAS)
         {
-            Smoothing.disable(canvas.getContext('2d'));
+            Smoothing.disable(canvas.getContext('2d', { willReadFrequently: false }));
         }
 
         return canvas;
@@ -18132,11 +18824,11 @@ var GeometryMask = new Class({
         this.isStencil = true;
 
         /**
-         * The current stencil level.
+         * The current stencil level. This can change dynamically at runtime
+         * and is set in the applyStencil method.
          *
          * @name Phaser.Display.Masks.GeometryMask#level
          * @type {boolean}
-         * @private
          * @since 3.17.0
          */
         this.level = 0;
@@ -18234,19 +18926,25 @@ var GeometryMask = new Class({
         var gl = renderer.gl;
         var geometryMask = this.geometryMask;
         var level = renderer.maskCount;
+        var mask = 0xff;
 
         gl.colorMask(false, false, false, false);
 
         if (inc)
         {
-            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            gl.stencilFunc(gl.EQUAL, level, mask);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+
+            //  Do this _after_ we set the stencilFunc
+            level++;
         }
         else
         {
-            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            gl.stencilFunc(gl.EQUAL, level + 1, mask);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
         }
+
+        this.level = level;
 
         //  Write stencil buffer
         geometryMask.renderWebGL(renderer, geometryMask, camera);
@@ -18256,24 +18954,13 @@ var GeometryMask = new Class({
         gl.colorMask(true, true, true, true);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
-        if (inc)
+        if (this.invertAlpha)
         {
-            if (this.invertAlpha)
-            {
-                gl.stencilFunc(gl.NOTEQUAL, level + 1, 0xFF);
-            }
-            else
-            {
-                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
-            }
-        }
-        else if (this.invertAlpha)
-        {
-            gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
+            gl.stencilFunc(gl.NOTEQUAL, level, mask);
         }
         else
         {
-            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            gl.stencilFunc(gl.EQUAL, level, mask);
         }
     },
 
@@ -18374,6 +19061,1882 @@ var GeometryMask = new Class({
 });
 
 module.exports = GeometryMask;
+
+
+/***/ }),
+
+/***/ 8325:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ * The Barrel FX Controller.
+ *
+ * This FX controller manages the barrel distortion effect for a Game Object.
+ *
+ * A barrel effect allows you to apply either a 'pinch' or 'expand' distortion to
+ * a Game Object. The amount of the effect can be modified in real-time.
+ *
+ * A Barrel effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addBarrel();
+ * sprite.postFX.addBarrel();
+ * ```
+ *
+ * @class Barrel
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [amount=1] - The amount of distortion applied to the barrel effect. A value of 1 is no distortion. Typically keep this within +- 1.
+ */
+var Barrel = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Barrel (gameObject, amount)
+    {
+        if (amount === undefined) { amount = 1; }
+
+        Controller.call(this, FX_CONST.BARREL, gameObject);
+
+        /**
+         * The amount of distortion applied to the barrel effect.
+         *
+         * Typically keep this within the range 1 (no distortion) to +- 1.
+         *
+         * @name Phaser.FX.Barrel#amount
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.amount = amount;
+    }
+
+});
+
+module.exports = Barrel;
+
+
+/***/ }),
+
+/***/ 5170:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class Bloom
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [color] - The color of the Bloom, as a hex value.
+ * @param {number} [offsetX=1] - The horizontal offset of the bloom effect.
+ * @param {number} [offsetY=1] - The vertical offset of the bloom effect.
+ * @param {number} [blurStrength=1] - The strength of the blur process of the bloom effect.
+ * @param {number} [strength=1] - The strength of the blend process of the bloom effect.
+ * @param {number} [steps=4] - The number of steps to run the Bloom effect for. This value should always be an integer.
+ */
+var Bloom = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Bloom (gameObject, color, offsetX, offsetY, blurStrength, strength, steps)
+    {
+        if (offsetX === undefined) { offsetX = 1; }
+        if (offsetY === undefined) { offsetY = 1; }
+        if (blurStrength === undefined) { blurStrength = 1; }
+        if (strength === undefined) { strength = 1; }
+        if (steps === undefined) { steps = 4; }
+
+        Controller.call(this, FX_CONST.BLOOM, gameObject);
+
+        /**
+         * The number of steps to run the Bloom effect for.
+         *
+         * This value should always be an integer.
+         *
+         * It defaults to 4. The higher the value, the smoother the Bloom,
+         * but at the cost of exponentially more gl operations.
+         *
+         * Keep this to the lowest possible number you can have it, while
+         * still looking correct for your game.
+         *
+         * @name Phaser.FX.Bloom#steps
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.steps = steps;
+
+        /**
+         * The horizontal offset of the bloom effect.
+         *
+         * @name Phaser.FX.Bloom#offsetX
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.offsetX = offsetX;
+
+        /**
+         * The vertical offset of the bloom effect.
+         *
+         * @name Phaser.FX.Bloom#offsetY
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.offsetY = offsetY;
+
+        /**
+         * The strength of the blur process of the bloom effect.
+         *
+         * @name Phaser.FX.Bloom#blurStrength
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.blurStrength = blurStrength;
+
+        /**
+         * The strength of the blend process of the bloom effect.
+         *
+         * @name Phaser.FX.Bloom#strength
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.strength = strength;
+
+        /**
+         * The internal gl color array.
+         *
+         * @name Phaser.FX.Bloom#glcolor
+         * @type {number[]}
+         * @since 3.60.0
+         */
+        this.glcolor = [ 1, 1, 1 ];
+
+        if (color !== undefined && color !== null)
+        {
+            this.color = color;
+        }
+    },
+
+    /**
+     * The color of the bloom as a number value.
+     *
+     * @name Phaser.FX.Bloom#color
+     * @type {number}
+     * @since 3.60.0
+     */
+    color: {
+
+        get: function ()
+        {
+            var color = this.glcolor;
+
+            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+        },
+
+        set: function (value)
+        {
+            var color = this.glcolor;
+
+            color[0] = ((value >> 16) & 0xFF) / 255;
+            color[1] = ((value >> 8) & 0xFF) / 255;
+            color[2] = (value & 0xFF) / 255;
+        }
+
+    }
+
+});
+
+module.exports = Bloom;
+
+
+/***/ }),
+
+/***/ 4199:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class Blur
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [quality=0] - The quality of the blur effect. Can be either 0 for Low Quality, 1 for Medium Quality or 2 for High Quality.
+ * @param {number} [x=2] - The horizontal offset of the blur effect.
+ * @param {number} [y=2] - The vertical offset of the blur effect.
+ * @param {number} [strength=1] - The strength of the blur effect.
+ * @param {number} [color=0xffffff] - The color of the blur, as a hex value.
+ * @param {number} [steps=4] - The number of steps to run the blur effect for. This value should always be an integer.
+ */
+var Blur = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Blur (gameObject, quality, x, y, strength, color, steps)
+    {
+        if (quality === undefined) { quality = 0; }
+        if (x === undefined) { x = 2; }
+        if (y === undefined) { y = 2; }
+        if (strength === undefined) { strength = 1; }
+        if (steps === undefined) { steps = 4; }
+
+        Controller.call(this, FX_CONST.BLUR, gameObject);
+
+        /**
+         * The quality of the blur effect.
+         *
+         * This can be:
+         *
+         * 0 for Low Quality
+         * 1 for Medium Quality
+         * 2 for High Quality
+         *
+         * The higher the quality, the more complex shader is used
+         * and the more processing time is spent on the GPU calculating
+         * the final blur. This value is used in conjunction with the
+         * `steps` value, as one has a direct impact on the other.
+         *
+         * Keep this value as low as you can, while still achieving the
+         * desired effect you need for your game.
+         *
+         * @name Phaser.FX.Blur#quality
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.quality = 0;
+
+        /**
+         * The horizontal offset of the blur effect.
+         *
+         * @name Phaser.FX.Blur#x
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.x = x;
+
+        /**
+         * The vertical offset of the blur effect.
+         *
+         * @name Phaser.FX.Blur#y
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.y = y;
+
+        /**
+         * The number of steps to run the Blur effect for.
+         *
+         * This value should always be an integer.
+         *
+         * It defaults to 4. The higher the value, the smoother the blur,
+         * but at the cost of exponentially more gl operations.
+         *
+         * Keep this to the lowest possible number you can have it, while
+         * still looking correct for your game.
+         *
+         * @name Phaser.FX.Blur#steps
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.steps = steps;
+
+        /**
+         * The strength of the blur effect.
+         *
+         * @name Phaser.FX.Blur#strength
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.strength = strength;
+
+        /**
+         * The internal gl color array.
+         *
+         * @name Phaser.FX.Blur#glcolor
+         * @type {number[]}
+         * @since 3.60.0
+         */
+        this.glcolor = [ 1, 1, 1 ];
+
+        if (color !== undefined && color !== null)
+        {
+            this.color = color;
+        }
+    },
+
+    /**
+     * The color of the blur as a number value.
+     *
+     * @name Phaser.FX.Blur#color
+     * @type {number}
+     * @since 3.60.0
+     */
+    color: {
+
+        get: function ()
+        {
+            var color = this.glcolor;
+
+            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+        },
+
+        set: function (value)
+        {
+            var color = this.glcolor;
+
+            color[0] = ((value >> 16) & 0xFF) / 255;
+            color[1] = ((value >> 8) & 0xFF) / 255;
+            color[2] = (value & 0xFF) / 255;
+        }
+
+    }
+
+});
+
+module.exports = Blur;
+
+
+/***/ }),
+
+/***/ 3132:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class Bokeh
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [radius=0.5] - The radius of the bokeh effect.
+ * @param {number} [amount=1] - The amount of the bokeh effect.
+ * @param {number} [contrast=0.2] - The color contrast of the bokeh effect.
+ * @param {boolean} [isTiltShift=false] - Is this a bokeh or Tile Shift effect?
+ * @param {number} [blurX=1] - If Tilt Shift, the amount of horizontal blur.
+ * @param {number} [blurY=1] - If Tilt Shift, the amount of vertical blur.
+ * @param {number} [strength=1] - If Tilt Shift, the strength of the blur.
+ */
+var Bokeh = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Bokeh (gameObject, radius, amount, contrast, isTiltShift, blurX, blurY, strength)
+    {
+        if (radius === undefined) { radius = 0.5; }
+        if (amount === undefined) { amount = 1; }
+        if (contrast === undefined) { contrast = 0.2; }
+        if (isTiltShift === undefined) { isTiltShift = false; }
+        if (blurX === undefined) { blurX = 1; }
+        if (blurY === undefined) { blurY = 1; }
+        if (strength === undefined) { strength = 1; }
+
+        Controller.call(this, FX_CONST.BOKEH, gameObject);
+
+        this.radius = radius;
+        this.amount = amount;
+        this.contrast = contrast;
+
+        this.isTiltShift = isTiltShift;
+        this.strength = strength;
+        this.blurX = blurX;
+        this.blurY = blurY;
+    }
+
+});
+
+module.exports = Bokeh;
+
+
+/***/ }),
+
+/***/ 6610:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class Circle
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [thickness=8] - The width of the circle around the texture, in pixels.
+ * @param {number} [color=16724914] - The color of the circular ring, given as a number value.
+ * @param {number} [backgroundColor=0xff0000] - The color of the background, behind the texture, given as a number value.
+ * @param {number} [scale=1] - The scale of the circle. The default scale is 1, which is a circle the full size of the underlying texture.
+ * @param {number} [feather=0.005] - The amount of feathering to apply to the circle from the ring.
+ */
+var Circle = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Circle (gameObject, thickness, color, backgroundColor, scale, feather)
+    {
+        if (thickness === undefined) { thickness = 8; }
+        if (scale === undefined) { scale = 1; }
+        if (feather === undefined) { feather = 0.005; }
+
+        Controller.call(this, FX_CONST.CIRCLE, gameObject);
+
+        /**
+         * The scale of the circle. The default scale is 1, which is a circle
+         * the full size of the underlying texture. Reduce this value to create
+         * a smaller circle, or increase it to create a circle that extends off
+         * the edges of the texture.
+         *
+         * @name Phaser.FX.Circle#scale
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.scale = scale;
+
+        /**
+         * The amount of feathering to apply to the circle from the ring,
+         * extending into the middle of the circle. The default is 0.005,
+         * which is a very low amount of feathering just making sure the ring
+         * has a smooth edge. Increase this amount to a value such as 0.5
+         * or 0.025 for larger amounts of feathering.
+         *
+         * @name Phaser.FX.Circle#feather
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.feather = feather;
+
+        /**
+         * The width of the circle around the texture, in pixels. This value
+         * doesn't factor in the feather, which can extend the thickness
+         * internally depending on its value.
+         *
+         * @name Phaser.FX.Circle#thickness
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.thickness = thickness;
+
+        /**
+         * The internal gl color array for the ring color.
+         *
+         * @name Phaser.FX.Circle#glcolor
+         * @type {number[]}
+         * @since 3.60.0
+         */
+        this.glcolor = [ 1, 0.2, 0.7 ];
+
+        /**
+         * The internal gl color array for the background color.
+         *
+         * @name Phaser.FX.Circle#glcolor2
+         * @type {number[]}
+         * @since 3.60.0
+         */
+        this.glcolor2 = [ 1, 0, 0, 0.4 ];
+
+        if (color !== undefined && color !== null)
+        {
+            this.color = color;
+        }
+
+        if (backgroundColor !== undefined && backgroundColor !== null)
+        {
+            this.backgroundColor = backgroundColor;
+        }
+    },
+
+    /**
+     * The color of the circular ring, given as a number value.
+     *
+     * @name Phaser.FX.Circle#color
+     * @type {number}
+     * @since 3.60.0
+     */
+    color: {
+
+        get: function ()
+        {
+            var color = this.glcolor;
+
+            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+        },
+
+        set: function (value)
+        {
+            var color = this.glcolor;
+
+            color[0] = ((value >> 16) & 0xFF) / 255;
+            color[1] = ((value >> 8) & 0xFF) / 255;
+            color[2] = (value & 0xFF) / 255;
+        }
+
+    },
+
+    /**
+     * The color of the background, behind the texture, given as a number value.
+     *
+     * @name Phaser.FX.Circle#backgroundColor
+     * @type {number}
+     * @since 3.60.0
+     */
+    backgroundColor: {
+
+        get: function ()
+        {
+            var color = this.glcolor2;
+
+            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+        },
+
+        set: function (value)
+        {
+            var color = this.glcolor2;
+
+            color[0] = ((value >> 16) & 0xFF) / 255;
+            color[1] = ((value >> 8) & 0xFF) / 255;
+            color[2] = (value & 0xFF) / 255;
+        }
+
+    }
+
+});
+
+module.exports = Circle;
+
+
+/***/ }),
+
+/***/ 4931:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var BaseColorMatrix = __webpack_require__(5686);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class ColorMatrix
+ * @extends Phaser.Display.ColorMatrix
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ */
+var ColorMatrix = new Class({
+
+    Extends: BaseColorMatrix,
+
+    initialize:
+
+    function ColorMatrix (gameObject)
+    {
+        BaseColorMatrix.call(this);
+
+        /**
+         * The FX_CONST type of this effect.
+         *
+         * @name Phaser.FX.ColorMatrix#type
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.type = FX_CONST.COLOR_MATRIX;
+
+        /**
+         * A reference to the Game Object that owns this effect.
+         *
+         * @name Phaser.FX.ColorMatrix#gameObject
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.60.0
+         */
+        this.gameObject = gameObject;
+
+        /**
+         * Toggle this boolean to enable or disable this effect,
+         * without removing and adding it from the Game Object.
+         *
+         * @name Phaser.FX.ColorMatrix#active
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.active = true;
+    },
+
+    destroy: function ()
+    {
+        this.gameObject = null;
+        this._matrix = null;
+        this._data = null;
+    }
+
+});
+
+module.exports = ColorMatrix;
+
+
+/***/ }),
+
+/***/ 6128:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+
+/**
+ * @classdesc
+ *
+ * @class Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {number} type - The FX Type constant.
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ */
+var Controller = new Class({
+
+    initialize:
+
+    function Controller (type, gameObject)
+    {
+        /**
+         * The FX_CONST type of this effect.
+         *
+         * @name Phaser.FX.Controller#type
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.type = type;
+
+        /**
+         * A reference to the Game Object that owns this effect.
+         *
+         * @name Phaser.FX.Controller#gameObject
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.60.0
+         */
+        this.gameObject = gameObject;
+
+        /**
+         * Toggle this boolean to enable or disable this effect,
+         * without removing and adding it from the Game Object.
+         *
+         * @name Phaser.FX.Controller#active
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.active = true;
+    },
+
+    /**
+     * Destroys this FX Controller.
+     *
+     * @method Phaser.FX.Controller#destroy
+     * @since 3.60.0
+     */
+    destroy: function ()
+    {
+        this.gameObject = null;
+        this.active = false;
+    }
+
+});
+
+module.exports = Controller;
+
+
+/***/ }),
+
+/***/ 9195:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class Displacement
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {string} [key='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
+ * @param {number} [x=0.005] - The amount of horizontal displacement to apply.
+ * @param {number} [y=0.005] - The amount of vertical displacement to apply.
+ */
+var Displacement = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Displacement (gameObject, displacementTexture, x, y)
+    {
+        if (displacementTexture === undefined) { displacementTexture = '__WHITE'; }
+        if (x === undefined) { x = 0.005; }
+        if (y === undefined) { y = 0.005; }
+
+        Controller.call(this, FX_CONST.DISPLACEMENT, gameObject);
+
+        /**
+         * The amount of horizontal displacement to apply.
+         *
+         * @name Phaser.FX.Displacement#x
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.x = x;
+
+        /**
+         * The amount of vertical displacement to apply.
+         *
+         * @name Phaser.FX.Displacement#y
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.y = y;
+
+        /**
+         * The underlying WebGLTexture used for displacement.
+         *
+         * @name Phaser.FX.Displacement#glTexture
+         * @type {WebGLTexture}
+         * @since 3.60.0
+         */
+        this.glTexture;
+
+        this.setTexture(displacementTexture);
+    },
+
+    setTexture: function (texture)
+    {
+        var phaserTexture = this.gameObject.scene.sys.textures.getFrame(texture);
+
+        if (phaserTexture)
+        {
+            this.glTexture = phaserTexture.glTexture;
+        }
+    }
+
+});
+
+module.exports = Displacement;
+
+
+/***/ }),
+
+/***/ 445:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ * The Glow FX Controller.
+ *
+ * This FX controller manages the glow effect for a Game Object.
+ *
+ * A glow effect allows you to apply a soft, blurred 'glow' around either the outside,
+ * inside, or both of a Game Object. The color and strength of the glow can be modified.
+ *
+ * You can modify most of its properties in real-time to adjust the visual effect.
+ *
+ * A Glow effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addGlow();
+ * sprite.postFX.addGlow();
+ * ```
+ *
+ * @class Glow
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [color=0xffffff] - The color of the glow effect as a number value.
+ * @param {number} [outerStrength=4] - The strength of the glow outward from the edge of the Sprite.
+ * @param {number} [innerStrength=0] - The strength of the glow inward from the edge of the Sprite.
+ * @param {boolean} [knockout=false] - If `true` only the glow is drawn, not the texture itself.
+ */
+var Glow = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Glow (gameObject, color, outerStrength, innerStrength, knockout)
+    {
+        if (outerStrength === undefined) { outerStrength = 4; }
+        if (innerStrength === undefined) { innerStrength = 0; }
+        if (knockout === undefined) { knockout = false; }
+
+        Controller.call(this, FX_CONST.GLOW, gameObject);
+
+        /**
+         * The strength of the glow outward from the edge of the Sprite.
+         *
+         * @name Phaser.FX.Glow#outerStrength
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.outerStrength = outerStrength;
+
+        /**
+         * The strength of the glow inward from the edge of the Sprite.
+         *
+         * @name Phaser.FX.Glow#innerStrength
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.innerStrength = innerStrength;
+
+        /**
+         * If `true` only the glow is drawn, not the texture itself.
+         *
+         * @name Phaser.FX.Glow#knockout
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.knockout = knockout;
+
+        /**
+         * A 4 element array of gl color values.
+         *
+         * @name Phaser.FX.Glow#glcolor
+         * @type {number[]}
+         * @since 3.60.0
+         */
+        this.glcolor = [ 1, 1, 1, 1 ];
+
+        if (color !== undefined)
+        {
+            this.color = color;
+        }
+    },
+
+    /**
+     * The color of the glow as a number value.
+     *
+     * @name Phaser.FX.Glow#color
+     * @type {number}
+     * @since 3.60.0
+     */
+    color: {
+
+        get: function ()
+        {
+            var color = this.glcolor;
+
+            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+        },
+
+        set: function (value)
+        {
+            var color = this.glcolor;
+
+            color[0] = ((value >> 16) & 0xFF) / 255;
+            color[1] = ((value >> 8) & 0xFF) / 255;
+            color[2] = (value & 0xFF) / 255;
+        }
+
+    }
+
+});
+
+module.exports = Glow;
+
+
+/***/ }),
+
+/***/ 7724:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class Gradient
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [color1=0xff0000] - The first gradient color, given as a number value.
+ * @param {number} [color2=0x00ff00] - The second gradient color, given as a number value.
+ * @param {number} [alpha=0.2] - The alpha value of the gradient effect.
+ * @param {number} [fromX=0] - The horizontal position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+ * @param {number} [fromY=0] - The vertical position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+ * @param {number} [toX=0] - The horizontal position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
+ * @param {number} [toY=1] - The vertical position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
+ * @param {number} [size=0] - How many 'chunks' the gradient is divided in to, as spread over the entire height of the texture. Leave this at zero for a smooth gradient, or set higher for a more retro chunky effect.
+ */
+var Gradient = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Gradient (gameObject, color1, color2, alpha, fromX, fromY, toX, toY, size)
+    {
+        if (alpha === undefined) { alpha = 0.2; }
+        if (fromX === undefined) { fromX = 0; }
+        if (fromY === undefined) { fromY = 0; }
+        if (toX === undefined) { toX = 0; }
+        if (toY === undefined) { toY = 1; }
+        if (size === undefined) { size = 0; }
+
+        Controller.call(this, FX_CONST.GRADIENT, gameObject);
+
+        /**
+         * The alpha value of the gradient effect.
+         *
+         * @name Phaser.FX.Gradient#alpha
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.alpha = alpha;
+
+        /**
+         * Sets how many 'chunks' the gradient is divided in to, as spread over the
+         * entire height of the texture. Leave this at zero for a smooth gradient,
+         * or set to a higher number to split the gradient into that many sections, giving
+         * a more banded 'retro' effect.
+         *
+         * @name Phaser.FX.Gradient#size
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.size = size;
+
+        /**
+         * The horizontal position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+         *
+         * @name Phaser.FX.Gradient#fromX
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.fromX = fromX;
+
+        /**
+         * The vertical position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+         *
+         * @name Phaser.FX.Gradient#fromY
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.fromY = fromY;
+
+        /**
+         * The horizontal position the gradient will end. This value is noralized, between 0 and 1 and is not in pixels.
+         *
+         * @name Phaser.FX.Gradient#toX
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.toX = toX;
+
+        /**
+         * The vertical position the gradient will end. This value is noralized, between 0 and 1 and is not in pixels.
+         *
+         * @name Phaser.FX.Gradient#toY
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.toY = toY;
+
+        /**
+         * The internal gl color array for the starting color.
+         *
+         * @name Phaser.FX.Gradient#glcolor1
+         * @type {number[]}
+         * @since 3.60.0
+         */
+        this.glcolor1 = [ 255, 0, 0 ];
+
+        /**
+         * The internal gl color array for the ending color.
+         *
+         * @name Phaser.FX.Gradient#glcolor2
+         * @type {number[]}
+         * @since 3.60.0
+         */
+        this.glcolor2 = [ 0, 255, 0 ];
+
+        if (color1 !== undefined && color1 !== null)
+        {
+            this.color1 = color1;
+        }
+
+        if (color2 !== undefined && color2 !== null)
+        {
+            this.color2 = color2;
+        }
+    },
+
+    /**
+     * The first gradient color, given as a number value.
+     *
+     * @name Phaser.FX.Gradient#color1
+     * @type {number}
+     * @since 3.60.0
+     */
+    color1: {
+
+        get: function ()
+        {
+            var color = this.glcolor1;
+
+            return (((color[0]) << 16) + ((color[1]) << 8) + (color[2] | 0));
+        },
+
+        set: function (value)
+        {
+            var color = this.glcolor1;
+
+            color[0] = ((value >> 16) & 0xFF);
+            color[1] = ((value >> 8) & 0xFF);
+            color[2] = (value & 0xFF);
+        }
+
+    },
+
+    /**
+     * The second gradient color, given as a number value.
+     *
+     * @name Phaser.FX.Gradient#color2
+     * @type {number}
+     * @since 3.60.0
+     */
+    color2: {
+
+        get: function ()
+        {
+            var color = this.glcolor2;
+
+            return (((color[0]) << 16) + ((color[1]) << 8) + (color[2] | 0));
+        },
+
+        set: function (value)
+        {
+            var color = this.glcolor2;
+
+            color[0] = ((value >> 16) & 0xFF);
+            color[1] = ((value >> 8) & 0xFF);
+            color[2] = (value & 0xFF);
+        }
+
+    }
+
+});
+
+module.exports = Gradient;
+
+
+/***/ }),
+
+/***/ 4412:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class Pixelate
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [amount=1] - The amount of pixelation to apply.
+ */
+var Pixelate = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Pixelate (gameObject, amount)
+    {
+        if (amount === undefined) { amount = 1; }
+
+        Controller.call(this, FX_CONST.PIXELATE, gameObject);
+
+        /**
+         * The amount of pixelation to apply.
+         *
+         * @name Phaser.FX.Pixelate#amount
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.amount = amount;
+    }
+
+});
+
+module.exports = Pixelate;
+
+
+/***/ }),
+
+/***/ 75:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class Shadow
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [x=0] - The horizontal offset of the shadow effect.
+ * @param {number} [y=0] - The vertical offset of the shadow effect.
+ * @param {number} [decay=0.1] - The amount of decay for shadow effect.
+ * @param {number} [power=1] - The power of the shadow effect.
+ * @param {number} [color=0x000000] - The color of the shadow.
+ * @param {number} [samples=6] - The number of samples that the shadow effect will run for. An integer between 1 and 12.
+ * @param {number} [intensity=1] - The intensity of the shadow effect.
+ */
+var Shadow = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Shadow (gameObject, x, y, decay, power, color, samples, intensity)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (decay === undefined) { decay = 0.1; }
+        if (power === undefined) { power = 1; }
+        if (samples === undefined) { samples = 6; }
+        if (intensity === undefined) { intensity = 1; }
+
+        Controller.call(this, FX_CONST.SHADOW, gameObject);
+
+        /**
+         * The horizontal offset of the shadow effect.
+         *
+         * @name Phaser.FX.Shadow#x
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.x = x;
+
+        /**
+         * The vertical offset of the shadow effect.
+         *
+         * @name Phaser.FX.Shadow#y
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.y = y;
+
+        /**
+         * The amount of decay for the shadow effect.
+         *
+         * @name Phaser.FX.Shadow#decay
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.decay = decay;
+
+        /**
+         * The power of the shadow effect.
+         *
+         * @name Phaser.FX.Shadow#power
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.power = power;
+
+        /**
+         * The internal gl color array.
+         *
+         * @name Phaser.FX.Shadow#glcolor
+         * @type {number[]}
+         * @since 3.60.0
+         */
+        this.glcolor = [ 0, 0, 0, 1 ];
+
+        /**
+         * The number of samples that the shadow effect will run for.
+         *
+         * This should be an integer with a minimum value of 1 and a maximum of 12.
+         *
+         * @name Phaser.FX.Shadow#samples
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.samples = samples;
+
+        /**
+         * The intensity of the shadow effect.
+         *
+         * @name Phaser.FX.Shadow#intensity
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.intensity = intensity;
+
+        if (color !== undefined)
+        {
+            this.color = color;
+        }
+    },
+
+    /**
+     * The color of the shadow.
+     *
+     * @name Phaser.FX.Shadow#color
+     * @type {number}
+     * @since 3.60.0
+     */
+    color: {
+
+        get: function ()
+        {
+            var color = this.glcolor;
+
+            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+        },
+
+        set: function (value)
+        {
+            var color = this.glcolor;
+
+            color[0] = ((value >> 16) & 0xFF) / 255;
+            color[1] = ((value >> 8) & 0xFF) / 255;
+            color[2] = (value & 0xFF) / 255;
+        }
+
+    }
+
+});
+
+module.exports = Shadow;
+
+
+/***/ }),
+
+/***/ 8734:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class Shine
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [speed=0.5] - The speed of the Shine effect.
+ * @param {number} [lineWidth=0.5] - The line width of the Shine effect.
+ * @param {number} [gradient=3] - The gradient of the Shine effect.
+ * @param {boolean} [reveal=false] - Does this Shine effect reveal or get added to its target?
+ */
+var Shine = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Shine (gameObject, speed, lineWidth, gradient, reveal)
+    {
+        if (speed === undefined) { speed = 0.5; }
+        if (lineWidth === undefined) { lineWidth = 0.5; }
+        if (gradient === undefined) { gradient = 3; }
+        if (reveal === undefined) { reveal = false; }
+
+        Controller.call(this, FX_CONST.SHINE, gameObject);
+
+        /**
+         * The speed of the Shine effect.
+         *
+         * @name Phaser.FX.Shine#speed
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.speed = speed;
+
+        /**
+         * The line width of the Shine effect.
+         *
+         * @name Phaser.FX.Shine#lineWidth
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.lineWidth = lineWidth;
+
+        /**
+         * The gradient of the Shine effect.
+         *
+         * @name Phaser.FX.Shine#gradient
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.gradient = gradient;
+
+        /**
+         * Does this Shine effect reveal or get added to its target?
+         *
+         * @name Phaser.FX.Shine#reveal
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.reveal = reveal;
+    }
+
+});
+
+module.exports = Shine;
+
+
+/***/ }),
+
+/***/ 2437:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class Vignette
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [x=0.5] - The horizontal offset of the vignette effect. This value is normalized to the range 0 to 1.
+ * @param {number} [y=0.5] - The vertical offset of the vignette effect. This value is normalized to the range 0 to 1.
+ * @param {number} [radius=0.5] - The radius of the vignette effect. This value is normalized to the range 0 to 1.
+ * @param {number} [strength=0.5] - The strength of the vignette effect.
+ */
+var Vignette = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Vignette (gameObject, x, y, radius, strength)
+    {
+        if (x === undefined) { x = 0.5; }
+        if (y === undefined) { y = 0.5; }
+        if (radius === undefined) { radius = 0.5; }
+        if (strength === undefined) { strength = 0.5; }
+
+        Controller.call(this, FX_CONST.VIGNETTE, gameObject);
+
+        /**
+         * The horizontal offset of the vignette effect. This value is normalized to the range 0 to 1.
+         *
+         * @name Phaser.FX.Vignette#x
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.x = x;
+
+        /**
+         * The vertical offset of the vignette effect. This value is normalized to the range 0 to 1.
+         *
+         * @name Phaser.FX.Vignette#y
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.y = y;
+
+        /**
+         * The radius of the vignette effect. This value is normalized to the range 0 to 1.
+         *
+         * @name Phaser.FX.Vignette#radius
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.radius = radius;
+
+        /**
+         * The strength of the vignette effect.
+         *
+         * @name Phaser.FX.Vignette#strength
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.strength = strength;
+    }
+
+});
+
+module.exports = Vignette;
+
+
+/***/ }),
+
+/***/ 5984:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = __webpack_require__(7473);
+var Controller = __webpack_require__(6128);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @classdesc
+ *
+ * @class Wipe
+ * @extends Phaser.FX.Controller
+ * @memberof Phaser.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
+ * @param {number} [wipeWidth=0.1] - The width of the wipe effect. This value is normalized in the range 0 to 1.
+ * @param {number} [direction=0] - The direction of the wipe effect. Either 0 or 1. Set in conjunction with the axis property.
+ * @param {number} [axis=0] - The axis of the wipe effect. Either 0 or 1. Set in conjunction with the direction property.
+ * @param {boolean} [reveal=false] - Is this a reveal (true) or a fade (false) effect?
+ */
+var Wipe = new Class({
+
+    Extends: Controller,
+
+    initialize:
+
+    function Wipe (gameObject, wipeWidth, direction, axis, reveal)
+    {
+        if (wipeWidth === undefined) { wipeWidth = 0.1; }
+        if (direction === undefined) { direction = 0; }
+        if (axis === undefined) { axis = 0; }
+        if (reveal === undefined) { reveal = false; }
+
+        Controller.call(this, FX_CONST.WIPE, gameObject);
+
+        //  left to right: direction 0, axis 0
+        //  right to left: direction 1, axis 0
+        //  top to bottom: direction 1, axis 1
+        //  bottom to top: direction 1, axis 0
+        //  wipe: reveal 0
+        //  reveal: reveal 1
+        //  progress: 0 - 1
+
+        /**
+         * The progress of the Wipe effect. This value is normalized to the range 0 to 1.
+         *
+         * Adjust this value to make the wipe transition (i.e. via a Tween)
+         *
+         * @name Phaser.FX.Wipe#progress
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.progress = 0;
+
+        /**
+         * The width of the wipe effect. This value is normalized in the range 0 to 1.
+         *
+         * @name Phaser.FX.Wipe#wipeWidth
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.wipeWidth = wipeWidth;
+
+        /**
+         * The direction of the wipe effect. Either 0 or 1. Set in conjunction with the axis property.
+         *
+         * @name Phaser.FX.Wipe#direction
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.direction = direction;
+
+        /**
+         * The axis of the wipe effect. Either 0 or 1. Set in conjunction with the direction property.
+         *
+         * @name Phaser.FX.Wipe#axis
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.axis = axis;
+
+        /**
+         * Is this a reveal (true) or a fade (false) effect?
+         *
+         * @name Phaser.FX.Wipe#reveal
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.reveal = reveal;
+    }
+
+});
+
+module.exports = Wipe;
+
+
+/***/ }),
+
+/***/ 1571:
+/***/ ((module) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var FX_CONST = {
+
+    /**
+     * The Glow FX.
+     *
+     * @name Phaser.FX.GLOW
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    GLOW: 4,
+
+    /**
+     * The Shadow FX.
+     *
+     * @name Phaser.FX.SHADOW
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    SHADOW: 5,
+
+    /**
+     * The Pixelate FX.
+     *
+     * @name Phaser.FX.PIXELATE
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    PIXELATE: 6,
+
+    /**
+     * The Vignette FX.
+     *
+     * @name Phaser.FX.VIGNETTE
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    VIGNETTE: 7,
+
+    /**
+     * The Shine FX.
+     *
+     * @name Phaser.FX.SHINE
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    SHINE: 8,
+
+    /**
+     * The Blur FX.
+     *
+     * @name Phaser.FX.BLUR
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    BLUR: 9, // uses 3 shaders, slots 9, 10 and 11
+
+    /**
+     * The Gradient FX.
+     *
+     * @name Phaser.FX.GRADIENT
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    GRADIENT: 12,
+
+    /**
+     * The Bloom FX.
+     *
+     * @name Phaser.FX.BLOOM
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    BLOOM: 13,
+
+    /**
+     * The Color Matrix FX.
+     *
+     * @name Phaser.FX.COLOR_MATRIX
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    COLOR_MATRIX: 14,
+
+    /**
+     * The Circle FX.
+     *
+     * @name Phaser.FX.CIRCLE
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    CIRCLE: 15,
+
+    /**
+     * The Barrel FX.
+     *
+     * @name Phaser.FX.BARREL
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    BARREL: 16,
+
+    /**
+     * The Displacement FX.
+     *
+     * @name Phaser.FX.DISPLACEMENT
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    DISPLACEMENT: 17,
+
+    /**
+     * The Wipe FX.
+     *
+     * @name Phaser.FX.WIPE
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    WIPE: 18,
+
+    /**
+     * The Bokeh and Tilt Shift FX.
+     *
+     * @name Phaser.FX.BOKEH
+     * @type {number}
+     * @const
+     * @since 3.60.0
+     */
+    BOKEH: 19
+
+};
+
+module.exports = FX_CONST;
+
+
+/***/ }),
+
+/***/ 7347:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Extend = __webpack_require__(1030);
+var FX_CONST = __webpack_require__(1571);
+
+/**
+ * @namespace Phaser.FX
+ */
+
+var FX = {
+
+    Barrel: __webpack_require__(8325),
+    Controller: __webpack_require__(6128),
+    Bloom: __webpack_require__(5170),
+    Blur: __webpack_require__(4199),
+    Bokeh: __webpack_require__(3132),
+    Circle: __webpack_require__(6610),
+    ColorMatrix: __webpack_require__(4931),
+    Displacement: __webpack_require__(9195),
+    Glow: __webpack_require__(445),
+    Gradient: __webpack_require__(7724),
+    Pixelate: __webpack_require__(4412),
+    Shadow: __webpack_require__(75),
+    Shine: __webpack_require__(8734),
+    Vignette: __webpack_require__(2437),
+    Wipe: __webpack_require__(5984)
+
+};
+
+FX = Extend(false, FX, FX_CONST);
+
+module.exports = FX;
 
 
 /***/ }),
@@ -19390,6 +21953,20 @@ var GameObject = new Class({
             this.body.destroy();
 
             this.body = undefined;
+        }
+
+        if (this.preFX)
+        {
+            this.preFX.destroy();
+
+            this.preFX = undefined;
+        }
+
+        if (this.postFX)
+        {
+            this.postFX.destroy();
+
+            this.postFX = undefined;
         }
 
         this.active = false;
@@ -20628,7 +23205,7 @@ module.exports = Depth;
 /***/ }),
 
 /***/ 1626:
-/***/ ((module) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
@@ -20636,94 +23213,606 @@ module.exports = Depth;
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Class = __webpack_require__(7473);
+var Effects = __webpack_require__(7347);
+var SpliceOne = __webpack_require__(8935);
+
 /**
- * Provides methods used for setting the FX values of a Game Object.
- * Should be applied as a mixin and not used directly.
+ * @classdesc
  *
- * @namespace Phaser.GameObjects.Components.FX
- * @webglOnly
+ * @class FX
+ * @memberof Phaser.GameObjects.Components
+ * @constructor
  * @since 3.60.0
+ * @webglOnly
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that owns this FX Component.
+ * @param {boolean} isPost - Is this a Pre or Post FX Component?
++- *
  */
+var FX = new Class({
 
-var FX = {
+    initialize:
 
-    /**
-     * The amount of extra padding to be applied to this Game Object
-     * when it is being rendered by a SpriteFX Pipeline.
-     *
-     * Lots of FX require additional spacing added to the texture the
-     * Game Object uses, for example a glow or shadow effect, and this
-     * method allows you to control how much extra padding is included
-     * in addition to the texture size.
-     *
-     * @name Phaser.GameObjects.Components.FX#fxPadding
-     * @type {number}
-     * @default 0
-     * @since 3.60.0
-     */
-    fxPadding: 0,
-
-    /**
-     * Sets the amount of extra padding to be applied to this Game Object
-     * when it is being rendered by a SpriteFX Pipeline.
-     *
-     * Lots of FX require additional spacing added to the texture the
-     * Game Object uses, for example a glow or shadow effect, and this
-     * method allows you to control how much extra padding is included
-     * in addition to the texture size.
-     *
-     * @method Phaser.GameObjects.Components.FX#setFXPadding
-     * @webglOnly
-     * @since 3.60.0
-     *
-     * @param {number} [padding=0] - The amount of padding to add to the texture.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setFXPadding: function (padding)
+    function FX (gameObject, isPost)
     {
-        if (padding === undefined) { padding = 0; }
+        /**
+         * A reference to the Game Object that owns this FX Component.
+         *
+         * @name Phaser.GameObjects.Components.FX#gameObject
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.60.0
+         */
+        this.gameObject = gameObject;
 
-        this.fxPadding = padding;
+        /**
+         * Is this a Post FX Controller? or a Pre FX Controller?
+         *
+         * @name Phaser.GameObjects.Components.FX#isPost
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.isPost = isPost;
 
-        return this;
+        /**
+         * Has this FX Component been enabled?
+         *
+         * You should treat this property as read-only.
+         *
+         * @name Phaser.GameObjects.Components.FX#enabled
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.enabled = false;
+
+        /**
+         * An array containing all of the FX Controllers that
+         * have been added to this FX Component.
+         *
+         * @name Phaser.GameObjects.Components.FX#list
+         * @type {Phaser.FX.Controller[]}
+         * @since 3.60.0
+         */
+        this.list = [];
+
+        /**
+         * The amount of extra padding to be applied to this Game Object
+         * when it is being rendered by a PreFX or SpriteFX Pipeline.
+         *
+         * Lots of FX require additional spacing added to the texture the
+         * Game Object uses, for example a glow or shadow effect, and this
+         * method allows you to control how much extra padding is included
+         * in addition to the texture size.
+         *
+         * @name Phaser.GameObjects.Components.FX#padding
+         * @type {number}
+         * @default 0
+         * @since 3.60.0
+         */
+        this.padding = 0;
     },
 
     /**
-     * This callback is invoked when this Game Object is copied by a SpriteFX Pipeline.
+     * Sets the amount of extra padding to be applied to this Game Object
+     * when it is being rendered by a PreFX Pipeline.
+     *
+     * Lots of FX require additional spacing added to the texture the
+     * Game Object uses, for example a glow or shadow effect, and this
+     * method allows you to control how much extra padding is included
+     * in addition to the texture size.
+     *
+     * @method Phaser.GameObjects.Components.FX#setPadding
+     * @webglOnly
+     * @since 3.60.0
+     *
+     * @param {number} [padding=0] - The amount of padding to add to this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setPadding: function (padding)
+    {
+        if (padding === undefined) { padding = 0; }
+
+        this.padding = padding;
+
+        return this.gameObject;
+    },
+
+    /**
+     * This callback is invoked when this Game Object is copied by a PreFX Pipeline.
      *
      * This happens when the pipeline uses its `copySprite` method.
      *
      * It's invoked prior to the copy, allowing you to set shader uniforms, etc on the pipeline.
      *
      * @method Phaser.GameObjects.Components.FX#onFXCopy
-     * @webglOnly
      * @since 3.60.0
      *
-     * @param {Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline} pipeline - The SpriteFX Pipeline that invoked this callback.
+     * @param {Phaser.Renderer.WebGL.Pipelines.PreFXPipeline} pipeline - The PreFX Pipeline that invoked this callback.
      */
     onFXCopy: function ()
     {
     },
 
     /**
-     * This callback is invoked when this Game Object is rendered by a SpriteFX Pipeline.
+     * This callback is invoked when this Game Object is rendered by a PreFX Pipeline.
      *
      * This happens when the pipeline uses its `drawSprite` method.
      *
      * It's invoked prior to the draw, allowing you to set shader uniforms, etc on the pipeline.
      *
      * @method Phaser.GameObjects.Components.FX#onFX
-     * @webglOnly
      * @since 3.60.0
      *
-     * @param {Phaser.Renderer.WebGL.Pipelines.SpriteFXPipeline} pipeline - The SpriteFX Pipeline that invoked this callback.
+     * @param {Phaser.Renderer.WebGL.Pipelines.PreFXPipeline} pipeline - The PreFX Pipeline that invoked this callback.
      */
     onFX: function ()
     {
+    },
+
+    /**
+     * Enables this FX Component and applies the FXPipeline to the parent Game Object.
+     *
+     * This is called automatically whenever you call a method such as `addBloom`, etc.
+     *
+     * You can check the `enabled` property to see if the Game Object is already enabled, or not.
+     *
+     * @method Phaser.GameObjects.Components.FX#enable
+     * @since 3.60.0
+     *
+     * @param {number} [padding=0] - The amount of padding to add to this Game Object.
+     */
+    enable: function (padding)
+    {
+        var renderer = this.gameObject.scene.sys.renderer;
+
+        if (renderer && renderer.pipelines)
+        {
+            this.gameObject.pipeline = renderer.pipelines.FX_PIPELINE;
+
+            if (padding !== undefined)
+            {
+                this.padding = padding;
+            }
+
+            this.enabled = true;
+        }
+        else
+        {
+            this.enabled = false;
+        }
+    },
+
+    /**
+     * Destroys and removes all FX Controllers that are part of this FX Component,
+     * then disables it.
+     *
+     * @method Phaser.GameObjects.Components.FX#clear
+     * @since 3.60.0
+     */
+    clear: function ()
+    {
+        var list = this.list;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            list[i].destroy();
+        }
+
+        this.list = [];
+
+        this.enabled = false;
+    },
+
+    /**
+     * Searches for the given FX Controler within this FX Component.
+     *
+     * If found, the controller is removed from this compoent and then destroyed.
+     *
+     * @method Phaser.GameObjects.Components.FX#remove
+     * @since 3.60.0
+     *
+     * @param {Phaser.FX.Controller} fx - The FX Controller to remove from this FX Component.
+     */
+    remove: function (fx)
+    {
+        var list = this.list;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            if (list[i] === fx)
+            {
+                SpliceOne(list, i);
+
+                fx.destroy();
+            }
+        }
+    },
+
+    /**
+     * Disables this FX Component.
+     *
+     * This will reset the pipeline on the Game Object that owns this component back to its
+     * default and flag this component as disabled.
+     *
+     * You can re-enable it again by calling `enable`.
+     *
+     * Optionally, set `clear` to destroy all current FX Controllers.
+     *
+     * @method Phaser.GameObjects.Components.FX#disable
+     * @since 3.60.0
+     *
+     * @param {boolean} [clear=false] - Destroy and remove all FX Controllers that are part of this FX Component.
+     */
+    disable: function (clear)
+    {
+        if (clear === undefined) { clear = false; }
+
+        this.gameObject.resetPipeline();
+
+        this.enabled = false;
+
+        if (clear)
+        {
+            this.clear();
+        }
+    },
+
+    /**
+     * Adds the given FX Controler to this FX Component.
+     *
+     * Note that adding an FX Controller does not remove any existing FX. They all stack-up
+     * on-top of each other. If you don't want this, make sure to call either `remove` or
+     * `clear` first.
+     *
+     * @method Phaser.GameObjects.Components.FX#add
+     * @since 3.60.0
+     *
+     * @param {Phaser.FX.Controller} fx - The FX Controller to add to this FX Component.
+     * @param {object} [config] - Optional configuration object that is passed to the pipeline during instantiation.
+     *
+     * @return {Phaser.FX.Controller} The FX Controller.
+     */
+    add: function (fx, config)
+    {
+        if (this.isPost)
+        {
+            var type = String(fx.type);
+
+            this.gameObject.setPostPipeline(type, config);
+
+            var pipeline = this.gameObject.getPostPipeline(type);
+
+            if (pipeline)
+            {
+                if (Array.isArray(pipeline))
+                {
+                    pipeline = pipeline.pop();
+                }
+
+                pipeline.controller = fx;
+
+                return fx;
+            }
+        }
+        else
+        {
+            if (!this.enabled)
+            {
+                this.enable();
+            }
+
+            this.list.push(fx);
+
+            return fx;
+        }
+    },
+
+    /**
+     * Adds a Glow effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addGlow
+     * @since 3.60.0
+     *
+     * @param {number} [color=0xffffff] - The color of the glow effect as a number value.
+     * @param {number} [outerStrength=4] - The strength of the glow outward from the edge of the Sprite.
+     * @param {number} [innerStrength=0] - The strength of the glow inward from the edge of the Sprite.
+     * @param {boolean} [knockout=false] - If `true` only the glow is drawn, not the texture itself.
+     * @param {number} [quality=0.1] - Only available for PostFX. Sets the quality of this Glow effect. Default is 0.1. Cannot be changed post-creation.
+     * @param {number} [distance=10] - Only available for PostFX. Sets the distance of this Glow effect. Default is 10. Cannot be changed post-creation.
+     *
+     * @return {Phaser.FX.Glow} The Glow FX Controller.
+     */
+    addGlow: function (color, outerStrength, innerStrength, knockout, quality, distance)
+    {
+        return this.add(new Effects.Glow(this.gameObject, color, outerStrength, innerStrength, knockout), { quality: quality, distance: distance });
+    },
+
+    /**
+     * Adds a Shadow effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addShadow
+     * @since 3.60.0
+     *
+     * @param {number} [x=0] - The horizontal offset of the shadow effect.
+     * @param {number} [y=0] - The vertical offset of the shadow effect.
+     * @param {number} [decay=0.1] - The amount of decay for shadow effect.
+     * @param {number} [power=1] - The power of the shadow effect.
+     * @param {number} [color=0x000000] - The color of the shadow.
+     * @param {number} [samples=6] - The number of samples that the shadow effect will run for. An integer between 1 and 12.
+     * @param {number} [intensity=1] - The intensity of the shadow effect.
+     *
+     * @return {Phaser.FX.Shadow} The Shadow FX Controller.
+     */
+    addShadow: function (x, y, decay, power, color, samples, intensity)
+    {
+        return this.add(new Effects.Shadow(this.gameObject, x, y, decay, power, color, samples, intensity));
+    },
+
+    /**
+     * Adds a Pixelate effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addPixelate
+     * @since 3.60.0
+     *
+     * @param {number} [amount=1] - The amount of pixelation to apply.
+     *
+     * @return {Phaser.FX.Pixelate} The Pixelate FX Controller.
+     */
+    addPixelate: function (amount)
+    {
+        return this.add(new Effects.Pixelate(this.gameObject, amount));
+    },
+
+    /**
+     * Adds a Vignette effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addVignette
+     * @since 3.60.0
+     *
+     * @param {number} [x=0.5] - The horizontal offset of the vignette effect. This value is normalized to the range 0 to 1.
+     * @param {number} [y=0.5] - The vertical offset of the vignette effect. This value is normalized to the range 0 to 1.
+     * @param {number} [radius=0.5] - The radius of the vignette effect. This value is normalized to the range 0 to 1.
+     * @param {number} [strength=0.5] - The strength of the vignette effect.
+     *
+     * @return {Phaser.FX.Vignette} The Vignette FX Controller.
+     */
+    addVignette: function (x, y, radius, strength)
+    {
+        return this.add(new Effects.Vignette(this.gameObject, x, y, radius, strength));
+    },
+
+    /**
+     * Adds a Shine effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addShine
+     * @since 3.60.0
+     *
+     * @param {number} [speed=0.5] - The speed of the Shine effect.
+     * @param {number} [lineWidth=0.5] - The line width of the Shine effect.
+     * @param {number} [gradient=3] - The gradient of the Shine effect.
+     * @param {boolean} [reveal=false] - Does this Shine effect reveal or get added to its target?
+     *
+     * @return {Phaser.FX.Shine} The Shine FX Controller.
+     */
+    addShine: function (speed, lineWidth, gradient, reveal)
+    {
+        return this.add(new Effects.Shine(this.gameObject, speed, lineWidth, gradient, reveal));
+    },
+
+    /**
+     * Adds a Blur effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addBlur
+     * @since 3.60.0
+     *
+     * @param {number} [quality=0] - The quality of the blur effect. Can be either 0 for Low Quality, 1 for Medium Quality or 2 for High Quality.
+     * @param {number} [x=2] - The horizontal offset of the blur effect.
+     * @param {number} [y=2] - The vertical offset of the blur effect.
+     * @param {number} [strength=1] - The strength of the blur effect.
+     * @param {number} [color=0xffffff] - The color of the blur, as a hex value.
+     * @param {number} [steps=4] - The number of steps to run the blur effect for. This value should always be an integer.
+     *
+     * @return {Phaser.FX.Blur} The Blur FX Controller.
+     */
+    addBlur: function (quality, x, y, strength, color, steps)
+    {
+        return this.add(new Effects.Blur(this.gameObject, quality, x, y, strength, color, steps));
+    },
+
+    /**
+     * Adds a Gradient effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addGradient
+     * @since 3.60.0
+     *
+     * @param {number} [color1=0xff0000] - The first gradient color, given as a number value.
+     * @param {number} [color2=0x00ff00] - The second gradient color, given as a number value.
+     * @param {number} [alpha=0.2] - The alpha value of the gradient effect.
+     * @param {number} [fromX=0] - The horizontal position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+     * @param {number} [fromY=0] - The vertical position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+     * @param {number} [toX=0] - The horizontal position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
+     * @param {number} [toY=1] - The vertical position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
+     * @param {number} [size=0] - How many 'chunks' the gradient is divided in to, as spread over the entire height of the texture. Leave this at zero for a smooth gradient, or set higher for a more retro chunky effect.
+     *
+     * @return {Phaser.FX.Gradient} The Gradient FX Controller.
+     */
+    addGradient: function (color1, color2, alpha, fromX, fromY, toX, toY, size)
+    {
+        return this.add(new Effects.Gradient(this.gameObject, color1, color2, alpha, fromX, fromY, toX, toY, size));
+    },
+
+    /**
+     * Adds a Bloom effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addBloom
+     * @since 3.60.0
+     *
+     * @param {number} [color] - The color of the Bloom, as a hex value.
+     * @param {number} [offsetX=1] - The horizontal offset of the bloom effect.
+     * @param {number} [offsetY=1] - The vertical offset of the bloom effect.
+     * @param {number} [blurStrength=1] - The strength of the blur process of the bloom effect.
+     * @param {number} [strength=1] - The strength of the blend process of the bloom effect.
+     * @param {number} [steps=4] - The number of steps to run the Bloom effect for. This value should always be an integer.
+     *
+     * @return {Phaser.FX.Bloom} The Bloom FX Controller.
+     */
+    addBloom: function (color, offsetX, offsetY, blurStrength, strength, steps)
+    {
+        return this.add(new Effects.Bloom(this.gameObject, color, offsetX, offsetY, blurStrength, strength, steps));
+    },
+
+    /**
+     * Adds a ColorMatrix effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addColorMatrix
+     * @since 3.60.0
+     *
+     * @return {Phaser.FX.ColorMatrix} The ColorMatrix FX Controller.
+     */
+    addColorMatrix: function ()
+    {
+        return this.add(new Effects.ColorMatrix(this.gameObject));
+    },
+
+    /**
+     * Adds a Circle effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addCircle
+     * @since 3.60.0
+     *
+     * @param {number} [thickness=8] - The width of the circle around the texture, in pixels.
+     * @param {number} [color=16724914] - The color of the circular ring, given as a number value.
+     * @param {number} [backgroundColor=0xff0000] - The color of the background, behind the texture, given as a number value.
+     * @param {number} [scale=1] - The scale of the circle. The default scale is 1, which is a circle the full size of the underlying texture.
+     * @param {number} [feather=0.005] - The amount of feathering to apply to the circle from the ring.
+     *
+     * @return {Phaser.FX.Circle} The Circle FX Controller.
+     */
+    addCircle: function (thickness, color, backgroundColor, scale, feather)
+    {
+        return this.add(new Effects.Circle(this.gameObject, thickness, color, backgroundColor, scale, feather));
+    },
+
+    /**
+     * Adds a Barrel effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addBarrel
+     * @since 3.60.0
+     *
+     * @param {number} [amount=1] - The amount of distortion applied to the barrel effect. A value of 1 is no distortion. Typically keep this within +- 1.
+     *
+     * @return {Phaser.FX.Barrel} The Barrel FX Controller.
+     */
+    addBarrel: function (amount)
+    {
+        return this.add(new Effects.Barrel(this.gameObject, amount));
+    },
+
+    /**
+     * Adds a Displacement effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addDisplacement
+     * @since 3.60.0
+     *
+     * @param {string} [key='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
+     * @param {number} [x=0.005] - The amount of horizontal displacement to apply.
+     * @param {number} [y=0.005] - The amount of vertical displacement to apply.
+     *
+     * @return {Phaser.FX.Displacement} The Displacement FX Controller.
+     */
+    addDisplacement: function (displacementTexture, x, y)
+    {
+        return this.add(new Effects.Displacement(this.gameObject, displacementTexture, x, y));
+    },
+
+    /**
+     * Adds a Wipe effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addWipe
+     * @since 3.60.0
+     *
+     * @param {number} [wipeWidth=0.1] - The width of the wipe effect. This value is normalized in the range 0 to 1.
+     * @param {number} [direction=0] - The direction of the wipe effect. Either 0 or 1. Set in conjunction with the axis property.
+     * @param {number} [axis=0] - The axis of the wipe effect. Either 0 or 1. Set in conjunction with the direction property.
+     *
+     * @return {Phaser.FX.Wipe} The Wipe FX Controller.
+     */
+    addWipe: function (wipeWidth, direction, axis)
+    {
+        return this.add(new Effects.Wipe(this.gameObject, wipeWidth, direction, axis));
+    },
+
+    /**
+     * Adds a Reveal Wipe effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addReveal
+     * @since 3.60.0
+     *
+     * @param {number} [wipeWidth=0.1] - The width of the wipe effect. This value is normalized in the range 0 to 1.
+     * @param {number} [direction=0] - The direction of the wipe effect. Either 0 or 1. Set in conjunction with the axis property.
+     * @param {number} [axis=0] - The axis of the wipe effect. Either 0 or 1. Set in conjunction with the direction property.
+     *
+     * @return {Phaser.FX.Wipe} The Wipe FX Controller.
+     */
+    addReveal: function (wipeWidth, direction, axis)
+    {
+        return this.add(new Effects.Wipe(this.gameObject, wipeWidth, direction, axis, true));
+    },
+
+    /**
+     * Adds a Bokeh effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addBokeh
+     * @since 3.60.0
+     *
+     * @param {number} [radius=0.5] - The radius of the bokeh effect.
+     * @param {number} [amount=1] - The amount of the bokeh effect.
+     * @param {number} [contrast=0.2] - The color contrast of the bokeh effect.
+     *
+     * @return {Phaser.FX.Bokeh} The Bokeh FX Controller.
+     */
+    addBokeh: function (radius, amount, contrast)
+    {
+        return this.add(new Effects.Bokeh(this.gameObject, radius, amount, contrast));
+    },
+
+    /**
+     * Adds a TiltShift effect.
+     *
+     * @method Phaser.GameObjects.Components.FX#addTiltShift
+     * @since 3.60.0
+     *
+     * @param {number} [radius=0.5] - The radius of the bokeh effect.
+     * @param {number} [amount=1] - The amount of the bokeh effect.
+     * @param {number} [contrast=0.2] - The color contrast of the bokeh effect.
+     * @param {number} [blurX=1] - If Tilt Shift, the amount of horizontal blur.
+     * @param {number} [blurY=1] - If Tilt Shift, the amount of vertical blur.
+     * @param {number} [strength=1] - If Tilt Shift, the strength of the blur.
+     *
+     * @return {Phaser.FX.Bokeh} The Bokeh TiltShift FX Controller.
+     */
+    addTiltShift: function (radius, amount, contrast, blurX, blurY, strength)
+    {
+        return this.add(new Effects.Bokeh(this.gameObject, radius, amount, contrast, true, blurX, blurY, strength));
+    },
+
+    /**
+     * Destroys this FX Component.
+     *
+     * Called automatically when Game Objects are destroyed.
+     *
+     * @method Phaser.GameObjects.Components.FX#destroy
+     * @since 3.60.0
+     */
+    destroy: function ()
+    {
+        this.clear();
+
+        this.gameObject = null;
     }
 
-};
+});
 
 module.exports = FX;
 
@@ -22162,14 +25251,12 @@ var Pipeline = {
      *
      * Also sets the `pipelineData` property, if the parameter is given.
      *
-     * Both the pipeline and post pipelines share the same pipeline data object.
-     *
      * @method Phaser.GameObjects.Components.Pipeline#setPipeline
      * @webglOnly
      * @since 3.0.0
      *
      * @param {(string|Phaser.Renderer.WebGL.WebGLPipeline)} pipeline - Either the string-based name of the pipeline, or a pipeline instance to set.
-     * @param {object} [pipelineData] - Optional pipeline data object that is _deep copied_ into the `pipelineData` property of this Game Object.
+     * @param {object} [pipelineData] - Optional pipeline data object that is set in to the `pipelineData` property of this Game Object.
      * @param {boolean} [copyData=true] - Should the pipeline data object be _deep copied_ into the `pipelineData` property of this Game Object? If `false` it will be set by reference instead.
      *
      * @return {this} This Game Object instance.
@@ -22291,6 +25378,7 @@ module.exports = Pipeline;
  */
 
 var DeepCopy = __webpack_require__(3911);
+var FX = __webpack_require__(1626);
 var SpliceOne = __webpack_require__(8935);
 
 /**
@@ -22339,16 +25427,85 @@ var PostPipeline = {
     postPipelineData: null,
 
     /**
-     * This should only be called during the instantiation of the Game Object. After that, use `setPostPipeline`.
+     * The Pre FX component of this Game Object.
+     *
+     * This component allows you to apply a variety of built-in effects to this Game Object, such
+     * as glow, blur, bloom, displacements, vignettes and more. You access them via this property,
+     * for example:
+     *
+     * ```js
+     * const player = this.add.sprite();
+     * player.preFX.addBloom();
+     * ```
+     *
+     * Only the following Game Objects support Pre FX:
+     *
+     * * Image
+     * * Sprite
+     * * TileSprite
+     * * Text
+     * * RenderTexture
+     * * Video
+     *
+     * All FX are WebGL only and do not have Canvas counterparts.
+     *
+     * Please see the FX Class for more details and available methods.
+     *
+     * @name Phaser.GameObjects.Components.PostPipeline#preFX
+     * @type {Phaser.GameObjects.Components.FX}
+     * @webglOnly
+     * @since 3.60.0
+     */
+    preFX: null,
+
+    /**
+     * The Post FX component of this Game Object.
+     *
+     * This component allows you to apply a variety of built-in effects to this Game Object, such
+     * as glow, blur, bloom, displacements, vignettes and more. You access them via this property,
+     * for example:
+     *
+     * ```js
+     * const player = this.add.sprite();
+     * player.postFX.addBloom();
+     * ```
+     *
+     * All FX are WebGL only and do not have Canvas counterparts.
+     *
+     * Please see the FX Class for more details and available methods.
+     *
+     * @name Phaser.GameObjects.Components.PostPipeline#postFX
+     * @type {Phaser.GameObjects.Components.FX}
+     * @webglOnly
+     * @since 3.60.0
+     */
+    postFX: null,
+
+    /**
+     * This should only be called during the instantiation of the Game Object.
+     *
+     * It is called by default by all core Game Objects and doesn't need
+     * calling again.
+     *
+     * After that, use `setPostPipeline`.
      *
      * @method Phaser.GameObjects.Components.PostPipeline#initPostPipeline
      * @webglOnly
      * @since 3.60.0
+     *
+     * @param {boolean} [preFX=false] - Does this Game Object support Pre FX?
      */
-    initPostPipeline: function ()
+    initPostPipeline: function (preFX)
     {
         this.postPipelines = [];
         this.postPipelineData = {};
+
+        this.postFX = new FX(this, true);
+
+        if (preFX)
+        {
+            this.preFX = new FX(this, false);
+        }
     },
 
     /**
@@ -22365,17 +25522,15 @@ var PostPipeline = {
      * If you call this method multiple times, the new pipelines will be appended to any existing
      * post pipelines already set. Use the `resetPostPipeline` method to clear them first, if required.
      *
-     * You can optionally also set the `pipelineData` property, if the parameter is given.
-     *
-     * Both the pipeline and post pipelines share the pipeline data object together.
+     * You can optionally also set the `postPipelineData` property, if the parameter is given.
      *
      * @method Phaser.GameObjects.Components.PostPipeline#setPostPipeline
      * @webglOnly
      * @since 3.60.0
      *
      * @param {(string|string[]|function|function[]|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} pipelines - Either the string-based name of the pipeline, or a pipeline instance, or class, or an array of them.
-     * @param {object} [pipelineData] - Optional pipeline data object that is _deep copied_ into the `pipelineData` property of this Game Object.
-     * @param {boolean} [copyData=true] - Should the pipeline data object be _deep copied_ into the `pipelineData` property of this Game Object? If `false` it will be set by reference instead.
+     * @param {object} [pipelineData] - Optional pipeline data object that is set in to the `postPipelineData` property of this Game Object.
+     * @param {boolean} [copyData=true] - Should the pipeline data object be _deep copied_ into the `postPipelineData` property of this Game Object? If `false` it will be set by reference instead.
      *
      * @return {this} This Game Object instance.
      */
@@ -22399,7 +25554,7 @@ var PostPipeline = {
 
             for (var i = 0; i < pipelines.length; i++)
             {
-                var instance = pipelineManager.getPostPipeline(pipelines[i], this);
+                var instance = pipelineManager.getPostPipeline(pipelines[i], this, pipelineData);
 
                 if (instance)
                 {
@@ -22419,13 +25574,11 @@ var PostPipeline = {
     },
 
     /**
-     * Adds an entry to the `pipelineData` object belonging to this Game Object.
+     * Adds an entry to the `postPipelineData` object belonging to this Game Object.
      *
      * If the 'key' already exists, its value is updated. If it doesn't exist, it is created.
      *
      * If `value` is undefined, and `key` exists, `key` is removed from the data object.
-     *
-     * Both the pipeline and post pipelines share the pipeline data object together.
      *
      * @method Phaser.GameObjects.Components.PostPipeline#setPostPipelineData
      * @webglOnly
@@ -22461,7 +25614,7 @@ var PostPipeline = {
      *
      * @param {(string|function|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline)} pipeline - The string-based name of the pipeline, or a pipeline class.
      *
-     * @return {(Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} The Post Pipeline/s matching the name, or undefined if no match. If more than one match they are returned in an array.
+     * @return {(Phaser.Renderer.WebGL.Pipelines.PostFXPipeline|Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[])} An array of all the Post Pipelines matching the name. This array will be empty if there was no match. If there was only one single match, that pipeline is returned directly, not in an array.
      */
     getPostPipeline: function (pipeline)
     {
@@ -22492,7 +25645,7 @@ var PostPipeline = {
      * @webglOnly
      * @since 3.60.0
      *
-     * @param {boolean} [resetData=false] - Reset the `pipelineData` object to being an empty object?
+     * @param {boolean} [resetData=false] - Reset the `postPipelineData` object to being an empty object?
      */
     resetPostPipeline: function (resetData)
     {
@@ -22784,19 +25937,19 @@ var Size = {
      * @method Phaser.GameObjects.Components.Size#setSizeToFrame
      * @since 3.0.0
      *
-     * @param {Phaser.Textures.Frame} frame - The frame to base the size of this Game Object on.
+     * @param {Phaser.Textures.Frame|boolean} [frame] - The frame to base the size of this Game Object on.
      *
      * @return {this} This Game Object instance.
      */
     setSizeToFrame: function (frame)
     {
-        if (frame === undefined) { frame = this.frame; }
+        if (!frame) { frame = this.frame; }
 
         this.width = frame.realWidth;
         this.height = frame.realHeight;
 
         var input = this.input;
-    
+
         if (input && !input.customHitArea)
         {
             input.hitArea.width = this.width;
@@ -23701,7 +26854,7 @@ var Transform = {
             {
                 this.renderFlags &= ~_FLAG;
             }
-            else
+            else if (this._scaleY !== 0)
             {
                 this.renderFlags |= _FLAG;
             }
@@ -23732,7 +26885,7 @@ var Transform = {
             {
                 this.renderFlags &= ~_FLAG;
             }
-            else
+            else if (this._scaleX !== 0)
             {
                 this.renderFlags |= _FLAG;
             }
@@ -25627,8 +28780,6 @@ var Container = new Class({
 
         this.setPosition(x, y);
 
-        this.clearAlpha();
-
         this.setBlendMode(BlendModes.SKIP_CHECK);
 
         if (children)
@@ -25788,19 +28939,28 @@ var Container = new Class({
             {
                 var entry = children[i];
 
-                if (entry.getBounds)
+                if (entry.getTextBounds)
+                {
+                    var textBounds = entry.getTextBounds().global;
+                    tempRect.setTo(textBounds.x, textBounds.y, textBounds.width, textBounds.height);
+                }
+                else if (entry.getBounds)
                 {
                     entry.getBounds(tempRect);
+                }
+                else
+                {
+                    continue;
+                }
 
-                    if (!hasSetFirst)
-                    {
-                        output.setTo(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
-                        hasSetFirst = true;
-                    }
-                    else
-                    {
-                        Union(tempRect, output, output);
-                    }
+                if (!hasSetFirst)
+                {
+                    output.setTo(tempRect.x, tempRect.y, tempRect.width, tempRect.height);
+                    hasSetFirst = true;
+                }
+                else
+                {
+                    Union(tempRect, output, output);
                 }
             }
         }
@@ -39672,6 +42832,10 @@ var MATH_CONST = {
 
     /**
      * The value of PI * 0.5.
+     *
+     * Yes, we undertstand that this should actually be PI * 2, but
+     * it has been like this for so long we can't change it now.
+     * If you need PI * 2, use the PI2 constant instead.
      *
      * @name Phaser.Math.TAU
      * @type {number}
