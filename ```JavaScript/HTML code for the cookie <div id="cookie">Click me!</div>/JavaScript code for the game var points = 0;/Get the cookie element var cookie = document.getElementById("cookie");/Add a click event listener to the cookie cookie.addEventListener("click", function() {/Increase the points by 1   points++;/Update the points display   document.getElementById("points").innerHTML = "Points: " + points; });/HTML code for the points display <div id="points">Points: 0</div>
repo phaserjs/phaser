@@ -1,0 +1,21 @@
+```JavaScript
+// HTML code for the cookie
+<div id="cookie">Click me!</div>
+
+// JavaScript code for the game
+var points = 0;
+
+// Get the cookie element
+var cookie = document.getElementById("cookie");
+
+// Add a click event listener to the cookie
+cookie.addEventListener("click", function() {
+  // Increase the points by 1
+  points++;
+  // Update the points display
+  document.getElementById("points").innerHTML = "Points: " + points;
+});
+
+// HTML code for the points display
+<div id="points">Points: 0</div>
+
