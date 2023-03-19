@@ -878,7 +878,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#ignore
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group)} entries - The Game Object, or array of Game Objects, to be ignored by this Camera.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Layer|Phaser.GameObjects.Layer[])} entries - The Game Object, or array of Game Objects, to be ignored by this Camera.
      *
      * @return {this} This Camera instance.
      */
