@@ -19,7 +19,6 @@ var SpliceOne = require('../../utils/array/SpliceOne');
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that owns this FX Component.
  * @param {boolean} isPost - Is this a Pre or Post FX Component?
-+- *
  */
 var FX = new Class({
 
