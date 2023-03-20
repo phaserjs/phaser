@@ -40,6 +40,9 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
+    //  This causes a flush if the BitmapText has a Post Pipeline
+    renderer.pipelines.preBatch(src);
+
     var spriteMatrix = result.sprite;
     var calcMatrix = result.calc;
 
@@ -116,8 +119,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
     var roundPixels = camera.roundPixels;
     var displayCallback = src.displayCallback;
     var callbackData = src.callbackData;
-
-    renderer.pipelines.preBatch(src);
 
     for (var i = 0; i < textLength; i++)
     {

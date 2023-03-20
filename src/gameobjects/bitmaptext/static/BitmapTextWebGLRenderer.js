@@ -38,6 +38,9 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
+    //  This causes a flush if the BitmapText has a Post Pipeline
+    renderer.pipelines.preBatch(src);
+
     var roundPixels = camera.roundPixels;
 
     var cameraAlpha = camera.alpha;
@@ -69,8 +72,6 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var dropShadowY = src.dropShadowY;
 
     var dropShadow = (dropShadowX !== 0 || dropShadowY !== 0);
-
-    renderer.pipelines.preBatch(src);
 
     if (dropShadow)
     {
