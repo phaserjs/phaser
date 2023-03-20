@@ -65,6 +65,11 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     renderer.pipelines.preBatch(src);
 
+    if (!pipeline.currentBatch)
+    {
+        textureUnit = pipeline.setGameObject(src);
+    }
+
     for (var i = 0; i < totalFaces; i++)
     {
         var face = faces[i];
@@ -79,10 +84,7 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
         {
             pipeline.flush();
 
-            if (!pipeline.currentBatch)
-            {
-                textureUnit = pipeline.setGameObject(src);
-            }
+            textureUnit = pipeline.setGameObject(src);
 
             vertexOffset = 0;
         }
