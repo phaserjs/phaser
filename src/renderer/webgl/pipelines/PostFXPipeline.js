@@ -559,6 +559,27 @@ var PostFXPipeline = new Class({
             gl.bindTexture(gl.TEXTURE_2D, null);
             gl.bindFramebuffer(gl.FRAMEBUFFER, renderer.currentFramebuffer);
         }
+    },
+
+    /**
+     * Destroys all shader instances, removes all object references and nulls all external references.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#destroy
+     * @since 3.60.0
+     */
+    destroy: function ()
+    {
+        this.controller.destroy();
+
+        this.gameObject = null;
+        this.controller = null;
+        this.colorMatrix = null;
+        this.fullFrame1 = null;
+        this.fullFrame2 = null;
+        this.halfFrame1 = null;
+        this.halfFrame2 = null;
+
+        WebGLPipeline.prototype.destroy.call(this);
     }
 
 });
