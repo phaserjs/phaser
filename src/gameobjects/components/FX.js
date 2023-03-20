@@ -10,6 +10,57 @@ var SpliceOne = require('../../utils/array/SpliceOne');
 
 /**
  * @classdesc
+ * The FX Component features a set of methods used for applying a range of special built-in effects to a Game Object.
+ *
+ * The effects include the following:
+ *
+ * * Barrel Distortion
+ * * Bloom
+ * * Blur
+ * * Bokeh
+ * * Circle Outlines
+ * * Color Matrix
+ * * Glow
+ * * Displacement
+ * * Gradient
+ * * Pixelate
+ * * Shine
+ * * Shadow
+ * * Vignette
+ * * Wipe / Reveal
+ *
+ * All Game Objects support Post FX. These are effects applied after the Game Object has been rendered.
+ *
+ * Texture-based Game Objects also support Pre FX, including:
+ *
+ * * Image
+ * * Sprite
+ * * TileSprite
+ * * Text
+ * * RenderTexture
+ * * Video
+ *
+ * And any Game Object that extends the above.
+ *
+ * The difference between Pre FX and Post FX are that all Post FX take place in a canvas (renderer) sized frame buffer,
+ * after the Game Object has been rendered. Pre FX, however, take place in a texture sized frame buffer, which is sized
+ * based on the Game Object itself. The end result is then composited back to the main game canvas. For intensive effects,
+ * such as blur, bloom or glow, which can require many iterations, this is a much more efficient way to apply the effect,
+ * as only it only has to work on a Game Object sized texture and not all pixels in the canvas.
+ *
+ * In short, you should always try and use a Pre FX if you can.
+ *
+ * Due to the way that FX work they can be stacked-up. For example, you can apply a blur to a Game Object, then apply
+ * a bloom effect to the same Game Object. The bloom effect will be applied to the blurred texture, not the original.
+ * Keep the order in mind when stacking effects.
+ *
+ * All effects are WebGL only and do not have canvas counterparts.
+ *
+ * As you can appreciate, some effects are more expensive than others. For example, a bloom effect is going to be more
+ * expensive than a simple color matrix effect, so please consider using them wisely and performance test your target
+ * platforms early on in production.
+ *
+ * This component is created automatically by the `PostPipeline` class and does not need to be instantiated directly.
  *
  * @class FX
  * @memberof Phaser.GameObjects.Components
@@ -31,6 +82,7 @@ var FX = new Class({
          *
          * @name Phaser.GameObjects.Components.FX#gameObject
          * @type {Phaser.GameObjects.GameObject}
+         * @readonly
          * @since 3.60.0
          */
         this.gameObject = gameObject;
@@ -40,6 +92,7 @@ var FX = new Class({
          *
          * @name Phaser.GameObjects.Components.FX#isPost
          * @type {boolean}
+         * @readonly
          * @since 3.60.0
          */
         this.isPost = isPost;
@@ -47,7 +100,8 @@ var FX = new Class({
         /**
          * Has this FX Component been enabled?
          *
-         * You should treat this property as read-only.
+         * You should treat this property as read-only, although it is toggled
+         * automaticaly during internal use.
          *
          * @name Phaser.GameObjects.Components.FX#enabled
          * @type {boolean}
@@ -57,7 +111,8 @@ var FX = new Class({
 
         /**
          * An array containing all of the FX Controllers that
-         * have been added to this FX Component.
+         * have been added to this FX Component. They are processed in
+         * the order they are added.
          *
          * @name Phaser.GameObjects.Components.FX#list
          * @type {Phaser.FX.Controller[]}
@@ -67,12 +122,14 @@ var FX = new Class({
 
         /**
          * The amount of extra padding to be applied to this Game Object
-         * when it is being rendered by a PreFX or SpriteFX Pipeline.
+         * when it is being rendered by a PreFX Pipeline.
          *
          * Lots of FX require additional spacing added to the texture the
          * Game Object uses, for example a glow or shadow effect, and this
          * method allows you to control how much extra padding is included
          * in addition to the texture size.
+         *
+         * You do not need to set this if you're only using Post FX.
          *
          * @name Phaser.GameObjects.Components.FX#padding
          * @type {number}
@@ -90,6 +147,8 @@ var FX = new Class({
      * Game Object uses, for example a glow or shadow effect, and this
      * method allows you to control how much extra padding is included
      * in addition to the texture size.
+     *
+     * You do not need to set this if you're only using Post FX.
      *
      * @method Phaser.GameObjects.Components.FX#setPadding
      * @webglOnly
@@ -486,6 +545,9 @@ var FX = new Class({
 
     /**
      * Adds a Barrel effect.
+     *
+     * A barrel effect allows you to apply either a 'pinch' or 'expand' distortion to
+     * a Game Object. The amount of the effect can be modified in real-time.
      *
      * @method Phaser.GameObjects.Components.FX#addBarrel
      * @since 3.60.0
