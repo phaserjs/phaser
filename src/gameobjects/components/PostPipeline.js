@@ -79,7 +79,7 @@ var PostPipeline = {
      * Please see the FX Class for more details and available methods.
      *
      * @name Phaser.GameObjects.Components.PostPipeline#preFX
-     * @type {Phaser.GameObjects.Components.FX}
+     * @type {?Phaser.GameObjects.Components.FX}
      * @webglOnly
      * @since 3.60.0
      */
@@ -100,6 +100,8 @@ var PostPipeline = {
      * All FX are WebGL only and do not have Canvas counterparts.
      *
      * Please see the FX Class for more details and available methods.
+     *
+     * This property is always `null` until the `initPostPipeline` method is called.
      *
      * @name Phaser.GameObjects.Components.PostPipeline#postFX
      * @type {Phaser.GameObjects.Components.FX}
