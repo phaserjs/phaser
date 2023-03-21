@@ -452,6 +452,11 @@ var FX = new Class({
     /**
      * Adds a Blur effect.
      *
+     * A Gaussian blur is the result of blurring an image by a Gaussian function. It is a widely used effect,
+     * typically to reduce image noise and reduce detail. The visual effect of this blurring technique is a
+     * smooth blur resembling that of viewing the image through a translucent screen, distinctly different
+     * from the bokeh effect produced by an out-of-focus lens or the shadow of an object under usual illumination.
+     *
      * @method Phaser.GameObjects.Components.FX#addBlur
      * @since 3.60.0
      *
@@ -494,6 +499,11 @@ var FX = new Class({
     /**
      * Adds a Bloom effect.
      *
+     * Bloom is an effect used to reproduce an imaging artifact of real-world cameras.
+     * The effect produces fringes of light extending from the borders of bright areas in an image,
+     * contributing to the illusion of an extremely bright light overwhelming the
+     * camera or eye capturing the scene.
+     *
      * @method Phaser.GameObjects.Components.FX#addBloom
      * @since 3.60.0
      *
@@ -527,11 +537,19 @@ var FX = new Class({
     /**
      * Adds a Circle effect.
      *
+     * This effect will draw a circle around the texture of the Game Object, effectively masking off
+     * any area outside of the circle without the need for an actual mask. You can control the thickness
+     * of the circle, the color of the circle and the color of the background, should the texture be
+     * transparent. You can also control the feathering applied to the circle, allowing for a harsh or soft edge.
+     *
+     * Please note that adding this effect to a Game Object will not change the input area or physics body of
+     * the Game Object, should it have one.
+     *
      * @method Phaser.GameObjects.Components.FX#addCircle
      * @since 3.60.0
      *
      * @param {number} [thickness=8] - The width of the circle around the texture, in pixels.
-     * @param {number} [color=16724914] - The color of the circular ring, given as a number value.
+     * @param {number} [color=0xfeedb6] - The color of the circular ring, given as a number value.
      * @param {number} [backgroundColor=0xff0000] - The color of the background, behind the texture, given as a number value.
      * @param {number} [scale=1] - The scale of the circle. The default scale is 1, which is a circle the full size of the underlying texture.
      * @param {number} [feather=0.005] - The amount of feathering to apply to the circle from the ring.
@@ -615,6 +633,13 @@ var FX = new Class({
     /**
      * Adds a Bokeh effect.
      *
+     * Bokeh refers to a visual effect that mimics the photographic technique of creating a shallow depth of field.
+     * This effect is used to emphasize the game's main subject or action, by blurring the background or foreground
+     * elements, resulting in a more immersive and visually appealing experience. It is achieved through rendering
+     * techniques that simulate the out-of-focus areas, giving a sense of depth and realism to the game's graphics.
+     *
+     * See also Tilt Shift.
+     *
      * @method Phaser.GameObjects.Components.FX#addBokeh
      * @since 3.60.0
      *
@@ -630,7 +655,13 @@ var FX = new Class({
     },
 
     /**
-     * Adds a TiltShift effect.
+     * Adds a Tilt Shift effect.
+     *
+     * This Bokeh effect can also be used to generate a Tilt Shift effect, which is a technique used to create a miniature
+     * effect by blurring everything except a small area of the image. This effect is achieved by blurring the
+     * top and bottom elements, while keeping the center area in focus.
+     *
+     * See also Bokeh.
      *
      * @method Phaser.GameObjects.Components.FX#addTiltShift
      * @since 3.60.0
@@ -638,9 +669,9 @@ var FX = new Class({
      * @param {number} [radius=0.5] - The radius of the bokeh effect.
      * @param {number} [amount=1] - The amount of the bokeh effect.
      * @param {number} [contrast=0.2] - The color contrast of the bokeh effect.
-     * @param {number} [blurX=1] - If Tilt Shift, the amount of horizontal blur.
-     * @param {number} [blurY=1] - If Tilt Shift, the amount of vertical blur.
-     * @param {number} [strength=1] - If Tilt Shift, the strength of the blur.
+     * @param {number} [blurX=1] - The amount of horizontal blur.
+     * @param {number} [blurY=1] - The amount of vertical blur.
+     * @param {number} [strength=1] - The strength of the blur.
      *
      * @return {Phaser.FX.Bokeh} The Bokeh TiltShift FX Controller.
      */

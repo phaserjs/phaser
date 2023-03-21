@@ -8,6 +8,9 @@ var Class = require('../utils/Class');
 
 /**
  * @classdesc
+ * FX Controller is the base class that all built-in FX use.
+ *
+ * You should not normally create an instance of this class directly, but instead use one of the built-in FX that extend it.
  *
  * @class Controller
  * @memberof Phaser.FX

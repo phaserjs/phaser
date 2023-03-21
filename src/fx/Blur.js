@@ -10,6 +10,23 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The Blur FX Controller.
+ *
+ * This FX controller manages the blur effect for a Game Object.
+ *
+ * A Gaussian blur is the result of blurring an image by a Gaussian function. It is a widely used effect,
+ * typically to reduce image noise and reduce detail. The visual effect of this blurring technique is a
+ * smooth blur resembling that of viewing the image through a translucent screen, distinctly different
+ * from the bokeh effect produced by an out-of-focus lens or the shadow of an object under usual illumination.
+ *
+ * A Blur effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addBlur();
+ * sprite.postFX.addBlur();
+ * ```
  *
  * @class Blur
  * @extends Phaser.FX.Controller

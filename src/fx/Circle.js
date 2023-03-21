@@ -10,6 +10,26 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The Circle FX Controller.
+ *
+ * This FX controller manages the circle effect for a Game Object.
+ *
+ * This effect will draw a circle around the texture of the Game Object, effectively masking off
+ * any area outside of the circle without the need for an actual mask. You can control the thickness
+ * of the circle, the color of the circle and the color of the background, should the texture be
+ * transparent. You can also control the feathering applied to the circle, allowing for a harsh or soft edge.
+ *
+ * Please note that adding this effect to a Game Object will not change the input area or physics body of
+ * the Game Object, should it have one.
+ *
+ * A Circle effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addCircle();
+ * sprite.postFX.addCircle();
+ * ```
  *
  * @class Circle
  * @extends Phaser.FX.Controller
@@ -19,7 +39,7 @@ var FX_CONST = require('./const');
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
  * @param {number} [thickness=8] - The width of the circle around the texture, in pixels.
- * @param {number} [color=16724914] - The color of the circular ring, given as a number value.
+ * @param {number} [color=0xfeedb6] - The color of the circular ring, given as a number value.
  * @param {number} [backgroundColor=0xff0000] - The color of the background, behind the texture, given as a number value.
  * @param {number} [scale=1] - The scale of the circle. The default scale is 1, which is a circle the full size of the underlying texture.
  * @param {number} [feather=0.005] - The amount of feathering to apply to the circle from the ring.
