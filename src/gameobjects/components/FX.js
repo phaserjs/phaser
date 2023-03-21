@@ -17,8 +17,8 @@ var SpliceOne = require('../../utils/array/SpliceOne');
  * * Barrel Distortion
  * * Bloom
  * * Blur
- * * Bokeh
- * * Circle Outlines
+ * * Bokeh / Tilt Shift
+ * * Circle Outline
  * * Color Matrix
  * * Glow
  * * Displacement
@@ -639,6 +639,20 @@ var FX = new Class({
     /**
      * Adds a Wipe effect.
      *
+     * The wipe or reveal effect is a visual technique that gradually uncovers or conceals elements
+     * in the game, such as images, text, or scene transitions. This effect is often used to create
+     * a sense of progression, reveal hidden content, or provide a smooth and visually appealing transition
+     * between game states.
+     *
+     * You can set both the direction and the axis of the wipe effect. The following combinations are possible:
+     *
+     * * left to right: direction 0, axis 0
+     * * right to left: direction 1, axis 0
+     * * top to bottom: direction 1, axis 1
+     * * bottom to top: direction 1, axis 0
+     *
+     * It is up to you to set the `progress` value yourself, i.e. via a Tween, in order to transition the effect.
+     *
      * @method Phaser.GameObjects.Components.FX#addWipe
      * @since 3.60.0
      *
@@ -655,6 +669,20 @@ var FX = new Class({
 
     /**
      * Adds a Reveal Wipe effect.
+     *
+     * The wipe or reveal effect is a visual technique that gradually uncovers or conceals elements
+     * in the game, such as images, text, or scene transitions. This effect is often used to create
+     * a sense of progression, reveal hidden content, or provide a smooth and visually appealing transition
+     * between game states.
+     *
+     * You can set both the direction and the axis of the wipe effect. The following combinations are possible:
+     *
+     * * left to right: direction 0, axis 0
+     * * right to left: direction 1, axis 0
+     * * top to bottom: direction 1, axis 1
+     * * bottom to top: direction 1, axis 0
+     *
+     * It is up to you to set the `progress` value yourself, i.e. via a Tween, in order to transition the effect.
      *
      * @method Phaser.GameObjects.Components.FX#addReveal
      * @since 3.60.0
