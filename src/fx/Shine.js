@@ -10,6 +10,23 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The Shine FX Controller.
+ *
+ * This FX controller manages the shift effect for a Game Object.
+ *
+ * The shine effect is a visual technique that simulates the appearance of reflective
+ * or glossy surfaces by passing a light beam across a Game Object. This effect is used to
+ * enhance visual appeal, emphasize certain features, and create a sense of depth or
+ * material properties.
+ *
+ * A Shine effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addShine();
+ * sprite.postFX.addShine();
+ * ```
  *
  * @class Shine
  * @extends Phaser.FX.Controller

@@ -10,6 +10,24 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The Displacement FX Controller.
+ *
+ * This FX controller manages the displacement effect for a Game Object.
+ *
+ * The displacement effect is a visual technique that alters the position of pixels in an image
+ * or texture based on the values of a displacement map. This effect is used to create the illusion
+ * of depth, surface irregularities, or distortion in otherwise flat elements. It can be applied to
+ * characters, objects, or backgrounds to enhance realism, convey movement, or achieve various
+ * stylistic appearances.
+ *
+ * A Displacement effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addDisplacement();
+ * sprite.postFX.addDisplacement();
+ * ```
  *
  * @class Displacement
  * @extends Phaser.FX.Controller
@@ -18,9 +36,9 @@ var FX_CONST = require('./const');
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
- * @param {string} [key='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
- * @param {number} [x=0.005] - The amount of horizontal displacement to apply.
- * @param {number} [y=0.005] - The amount of vertical displacement to apply.
+ * @param {string} [texture='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
+ * @param {number} [x=0.005] - The amount of horizontal displacement to apply. A very small float number, such as 0.005.
+ * @param {number} [y=0.005] - The amount of vertical displacement to apply. A very small float number, such as 0.005.
  */
 var Displacement = new Class({
 
@@ -28,9 +46,9 @@ var Displacement = new Class({
 
     initialize:
 
-    function Displacement (gameObject, displacementTexture, x, y)
+    function Displacement (gameObject, texture, x, y)
     {
-        if (displacementTexture === undefined) { displacementTexture = '__WHITE'; }
+        if (texture === undefined) { texture = '__WHITE'; }
         if (x === undefined) { x = 0.005; }
         if (y === undefined) { y = 0.005; }
 
@@ -63,9 +81,21 @@ var Displacement = new Class({
          */
         this.glTexture;
 
-        this.setTexture(displacementTexture);
+        this.setTexture(texture);
     },
 
+    /**
+     * Sets the Texture to be used for the displacement effect.
+     *
+     * You can only use a whole texture, not a frame from a texture atlas or sprite sheet.
+     *
+     * @method Phaser.GameObjects.Components.FX#setTexture
+     * @since 3.60.0
+     *
+     * @param {string} [texture='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
+     *
+     * @return {this} This FX Controller.
+     */
     setTexture: function (texture)
     {
         var phaserTexture = this.gameObject.scene.sys.textures.getFrame(texture);
@@ -74,6 +104,8 @@ var Displacement = new Class({
         {
             this.glTexture = phaserTexture.glTexture;
         }
+
+        return this;
     }
 
 });

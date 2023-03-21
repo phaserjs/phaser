@@ -10,6 +10,24 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The ColorMatrix FX Controller.
+ *
+ * This FX controller manages the color matrix effect for a Game Object.
+ *
+ * The color matrix effect is a visual technique that involves manipulating the colors of an image
+ * or scene using a mathematical matrix. This process can adjust hue, saturation, brightness, and contrast,
+ * allowing developers to create various stylistic appearances or mood settings within the game.
+ * Common applications include simulating different lighting conditions, applying color filters,
+ * or achieving a specific visual style.
+ *
+ * A ColorMatrix effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addColorMatrix();
+ * sprite.postFX.addColorMatrix();
+ * ```
  *
  * @class ColorMatrix
  * @extends Phaser.Display.ColorMatrix

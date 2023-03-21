@@ -360,6 +360,11 @@ var FX = new Class({
     /**
      * Adds a Glow effect.
      *
+     * The glow effect is a visual technique that creates a soft, luminous halo around game objects,
+     * characters, or UI elements. This effect is used to emphasize importance, enhance visual appeal,
+     * or convey a sense of energy, magic, or otherworldly presence. The effect can also be set on
+     * the inside of the Game Object. The color and strength of the glow can be modified.
+     *
      * @method Phaser.GameObjects.Components.FX#addGlow
      * @since 3.60.0
      *
@@ -379,6 +384,10 @@ var FX = new Class({
 
     /**
      * Adds a Shadow effect.
+     *
+     * The shadow effect is a visual technique used to create the illusion of depth and realism by adding darker,
+     * offset silhouettes or shapes beneath game objects, characters, or environments. These simulated shadows
+     * help to enhance the visual appeal and immersion, making the 2D game world appear more dynamic and three-dimensional.
      *
      * @method Phaser.GameObjects.Components.FX#addShadow
      * @since 3.60.0
@@ -401,6 +410,11 @@ var FX = new Class({
     /**
      * Adds a Pixelate effect.
      *
+     * The pixelate effect is a visual technique that deliberately reduces the resolution or detail of an image,
+     * creating a blocky or mosaic appearance composed of large, visible pixels. This effect can be used for stylistic
+     * purposes, as a homage to retro gaming, or as a means to obscure certain elements within the game, such as
+     * during a transition or to censor specific content.
+     *
      * @method Phaser.GameObjects.Components.FX#addPixelate
      * @since 3.60.0
      *
@@ -415,6 +429,10 @@ var FX = new Class({
 
     /**
      * Adds a Vignette effect.
+     *
+     * The vignette effect is a visual technique where the edges of the screen, or a Game Object, gradually darken or blur,
+     * creating a frame-like appearance. This effect is used to draw the player's focus towards the central action or subject,
+     * enhance immersion, and provide a cinematic or artistic quality to the game's visuals.
      *
      * @method Phaser.GameObjects.Components.FX#addVignette
      * @since 3.60.0
@@ -433,6 +451,11 @@ var FX = new Class({
 
     /**
      * Adds a Shine effect.
+     *
+     * The shine effect is a visual technique that simulates the appearance of reflective
+     * or glossy surfaces by passing a light beam across a Game Object. This effect is used to
+     * enhance visual appeal, emphasize certain features, and create a sense of depth or
+     * material properties.
      *
      * @method Phaser.GameObjects.Components.FX#addShine
      * @since 3.60.0
@@ -476,6 +499,11 @@ var FX = new Class({
 
     /**
      * Adds a Gradient effect.
+     *
+     * The gradient overlay effect is a visual technique where a smooth color transition is applied over Game Objects,
+     * such as sprites or UI components. This effect is used to enhance visual appeal, emphasize depth, or create
+     * stylistic and atmospheric variations. It can also be utilized to convey information, such as representing
+     * progress or health status through color changes.
      *
      * @method Phaser.GameObjects.Components.FX#addGradient
      * @since 3.60.0
@@ -523,6 +551,12 @@ var FX = new Class({
 
     /**
      * Adds a ColorMatrix effect.
+     *
+     * The color matrix effect is a visual technique that involves manipulating the colors of an image
+     * or scene using a mathematical matrix. This process can adjust hue, saturation, brightness, and contrast,
+     * allowing developers to create various stylistic appearances or mood settings within the game.
+     * Common applications include simulating different lighting conditions, applying color filters,
+     * or achieving a specific visual style.
      *
      * @method Phaser.GameObjects.Components.FX#addColorMatrix
      * @since 3.60.0
@@ -582,18 +616,24 @@ var FX = new Class({
     /**
      * Adds a Displacement effect.
      *
+     * The displacement effect is a visual technique that alters the position of pixels in an image
+     * or texture based on the values of a displacement map. This effect is used to create the illusion
+     * of depth, surface irregularities, or distortion in otherwise flat elements. It can be applied to
+     * characters, objects, or backgrounds to enhance realism, convey movement, or achieve various
+     * stylistic appearances.
+     *
      * @method Phaser.GameObjects.Components.FX#addDisplacement
      * @since 3.60.0
      *
-     * @param {string} [key='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
-     * @param {number} [x=0.005] - The amount of horizontal displacement to apply.
-     * @param {number} [y=0.005] - The amount of vertical displacement to apply.
+     * @param {string} [texture='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
+     * @param {number} [x=0.005] - The amount of horizontal displacement to apply. A very small float number, such as 0.005.
+     * @param {number} [y=0.005] - The amount of vertical displacement to apply. A very small float number, such as 0.005.
      *
      * @return {Phaser.FX.Displacement} The Displacement FX Controller.
      */
-    addDisplacement: function (displacementTexture, x, y)
+    addDisplacement: function (texture, x, y)
     {
-        return this.add(new Effects.Displacement(this.gameObject, displacementTexture, x, y));
+        return this.add(new Effects.Displacement(this.gameObject, texture, x, y));
     },
 
     /**

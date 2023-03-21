@@ -14,10 +14,10 @@ var FX_CONST = require('./const');
  *
  * This FX controller manages the glow effect for a Game Object.
  *
- * A glow effect allows you to apply a soft, blurred 'glow' around either the outside,
- * inside, or both of a Game Object. The color and strength of the glow can be modified.
- *
- * You can modify most of its properties in real-time to adjust the visual effect.
+ * The glow effect is a visual technique that creates a soft, luminous halo around game objects,
+ * characters, or UI elements. This effect is used to emphasize importance, enhance visual appeal,
+ * or convey a sense of energy, magic, or otherworldly presence. The effect can also be set on
+ * the inside of the Game Object. The color and strength of the glow can be modified.
  *
  * A Glow effect is added to a Game Object via the FX component:
  *

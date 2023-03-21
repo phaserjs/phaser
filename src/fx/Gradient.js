@@ -10,6 +10,23 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The Gradient FX Controller.
+ *
+ * This FX controller manages the gradient effect for a Game Object.
+ *
+ * The gradient overlay effect is a visual technique where a smooth color transition is applied over Game Objects,
+ * such as sprites or UI components. This effect is used to enhance visual appeal, emphasize depth, or create
+ * stylistic and atmospheric variations. It can also be utilized to convey information, such as representing
+ * progress or health status through color changes.
+ *
+ * A Gradient effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addGradient();
+ * sprite.postFX.addGradient();
+ * ```
  *
  * @class Gradient
  * @extends Phaser.FX.Controller
