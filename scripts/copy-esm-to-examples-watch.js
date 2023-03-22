@@ -1,10 +1,10 @@
 let fs = require('fs-extra');
 
-let source = './build/phaser.js';
-let sourceMap = './build/phaser.js.map';
-let dest = '../phaser3-examples/public/build/dev.js';
+let source = './build/phaser.esm.js';
+let sourceMap = './build/phaser.esm.js.map';
+let dest = '../phaser3-examples/public/build/dev.esm.js';
 let destDir = '../phaser3-examples/public/build/';
-let destMap = '../phaser3-examples/public/build/phaser.js.map';
+let destMap = '../phaser3-examples/public/build/phaser.esm.js.map';
 
 if (fs.existsSync(destDir))
 {
