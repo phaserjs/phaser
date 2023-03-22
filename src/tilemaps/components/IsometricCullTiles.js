@@ -31,7 +31,7 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
     var mapData = layer.data;
     var mapWidth = layer.width;
     var mapHeight = layer.height;
-    var skipCull = layer.skipCull;
+    var skipCull = tilemapLayer.skipCull;
 
     var drawLeft = 0;
     var drawRight = mapWidth;
@@ -48,7 +48,7 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
 
         for (y = drawTop; y < drawBottom; y++)
         {
-            for (x = drawLeft; mapData[y] && x < drawRight; x++)
+            for (x = drawLeft; x < drawRight; x++)
             {
                 if (skipCull || CheckIsoBounds(x, y, layer, camera))
                 {
@@ -70,7 +70,7 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
 
         for (y = drawTop; y < drawBottom; y++)
         {
-            for (x = drawRight; mapData[y] && x >= drawLeft; x--)
+            for (x = drawRight; x >= drawLeft; x--)
             {
                 if (skipCull || CheckIsoBounds(x, y, layer, camera))
                 {
@@ -92,7 +92,7 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
 
         for (y = drawBottom; y >= drawTop; y--)
         {
-            for (x = drawLeft; mapData[y] && x < drawRight; x++)
+            for (x = drawLeft; x < drawRight; x++)
             {
                 if (skipCull || CheckIsoBounds(x, y, layer, camera))
                 {
@@ -114,7 +114,7 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
 
         for (y = drawBottom; y >= drawTop; y--)
         {
-            for (x = drawRight; mapData[y] && x >= drawLeft; x--)
+            for (x = drawRight; x >= drawLeft; x--)
             {
                 if (skipCull || CheckIsoBounds(x, y, layer, camera))
                 {
