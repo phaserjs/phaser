@@ -117,6 +117,15 @@ var MatterTileBody = new Class({
         {
             this.setBody(body, addToWorld);
         }
+
+        if (tile.flipX || tile.flipY)
+        {
+            var rotationPoint = { x: tile.getCenterX(), y: tile.getCenterY() };
+            var scaleX = (tile.flipX) ? -1 : 1;
+            var scaleY = (tile.flipY) ? -1 : 1;
+
+            Body.scale(body, scaleX, scaleY, rotationPoint);
+        }
     },
 
     /**
