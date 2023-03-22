@@ -1,3 +1,4 @@
+src/phaser-esm.js
 src/phaser-arcade-physics.js
 src/animations/config.json
 src/physics/matter-js/lib/
