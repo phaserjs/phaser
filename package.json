@@ -3,7 +3,7 @@
   "version": "3.60.0-beta.21",
   "release": "Miku",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
-  "author": "Richard Davey <rich@photonstorm.com> (http://www.photonstorm.com)",
+  "author": "Richard Davey <rich@photonstorm.com> (https://www.photonstorm.com)",
   "homepage": "https://phaser.io",
   "bugs": "https://github.com/photonstorm/phaser/issues",
   "license": "MIT",
@@ -11,6 +11,7 @@
   "main": "./src/phaser.js",
   "types": "./types/phaser.d.ts",
   "browser": "./dist/phaser.js",
+  "module": "./dist/phaser.esm.js",
   "repository": {
     "type": "git",
     "url": "https://photonstorm@github.com/photonstorm/phaser.git"
