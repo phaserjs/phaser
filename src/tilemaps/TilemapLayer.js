@@ -31,6 +31,7 @@ var Vector2 = require('../math/Vector2');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -56,6 +57,7 @@ var TilemapLayer = new Class({
         Components.Mask,
         Components.Origin,
         Components.Pipeline,
+        Components.PostPipeline,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -301,6 +303,7 @@ var TilemapLayer = new Class({
         this.setSize(tilemap.tileWidth * this.layer.width, tilemap.tileHeight * this.layer.height);
 
         this.initPipeline();
+        this.initPostPipeline(false);
     },
 
     /**
