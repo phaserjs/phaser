@@ -29,15 +29,20 @@ var StaggeredCullTiles = function (layer, camera, outputArray, renderOrder)
 
     var tilemapLayer = layer.tilemapLayer;
 
-    if (!tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)
+    //  Camera world view bounds, snapped for scaled tile size
+    //  Cull Padding values are given in tiles, not pixels
+
+    var bounds = CullBounds(layer, camera);
+
+    if (tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)
     {
-        //  Camera world view bounds, snapped for scaled tile size
-        //  Cull Padding values are given in tiles, not pixels
-
-        var bounds = CullBounds(layer, camera);
-
-        RunCull(layer, bounds, renderOrder, outputArray);
+        bounds.left = 0;
+        bounds.right = layer.width;
+        bounds.top = 0;
+        bounds.bottom = layer.height;
     }
+
+    RunCull(layer, bounds, renderOrder, outputArray);
 
     return outputArray;
 };
