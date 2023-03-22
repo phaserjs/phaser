@@ -3,6 +3,8 @@
 const webpack = require('webpack');
 const exec = require('child_process').exec;
 
+// https://webpack.js.org/configuration/configuration-types/#exporting-multiple-configurations
+
 module.exports = {
     mode: 'development',
 
@@ -25,6 +27,22 @@ module.exports = {
         umdNamedDefine: true,
         globalObject: 'this'
     },
+
+    /*
+    output: {
+        path: `${__dirname}/../build/`,
+        globalObject: 'this',
+        sourceMapFilename: '[file].map',
+        devtoolModuleFilenameTemplate: 'webpack:///[resource-path]', // string
+        devtoolFallbackModuleFilenameTemplate: 'webpack:///[resource-path]?[hash]', // string
+        filename: '[name].js',
+        library: {
+            name: 'Phaser',
+            type: 'umd',
+            umdNamedDefine: true,
+        }
+    },
+    */
 
     performance: { hints: false },
 
