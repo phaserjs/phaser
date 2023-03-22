@@ -1168,6 +1168,7 @@ ArtemSiz)
 
 ### Bug Fixes
 
+* The `TilemapLayer.skipCull` feature wasn't being applied correctly for Isometric, Hexagonal or Staggered tiles, only for Orthographic tiles (the default). It will now respect the `skipCull` property and return all tiles during culling if enabled. Fix #5524 (thanks @veleek)
 * Shutting down a Scene that didn't have the `LoaderPlugin` would throw an error when removing event handlers. It now checks first, before removing (thanks @samme)
 * The `Container.getBounds` method will now use `getTextBounds` if one of its children is a `BitmapText` Game Object, giving more accurate bounds results (thanks @EmilSV)
 * The `renderFlags` property, used to determine if a Game Object will render, or not, would be calculated incorrectly depending on the order of the `scaleX` and `scaleY` properties. It now works regardless of the order (thanks @mizunokazumi)
