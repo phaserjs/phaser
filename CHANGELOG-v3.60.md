@@ -1046,6 +1046,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* The `GetBounds.getCenter` method now has an optional `includeParent` argument, which allows you to get the value in world space.
 * The `MatterTileBody` class, which is created when you convert a Tilemap into a Matter Physics world, will now check to see if the Tile has `flipX` or `flipY` set on it and rotate the body accordingly. Fix #5893 (thanks @Olliebrown @phaserhelp)
 * The `BaseCamera` has had its `Alpha` component replaced with `AlphaSingle`. Previously you had access to properties such as `alphaTopLeft` that never worked, now it correctly has just a single alpha property (thanks @samme)
 * `Time.Clock.startTime` is a new property that stores the time the Clock (and therefore the Scene) was started. This can be useful for comparing against the current time to see how much real world time has elapsed (thanks @samme)
