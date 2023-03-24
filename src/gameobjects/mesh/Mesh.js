@@ -364,6 +364,7 @@ var Mesh = new Class({
          */
         this.fov;
 
+        //  Set these to allow setInteractive to work
         this.displayOriginX = 0;
         this.displayOriginY = 0;
 
@@ -1164,54 +1165,25 @@ var Mesh = new Class({
      */
     setInteractive: function ()
     {
-        this.scene.sys.input.enable(this, this.hitAreaCallback.bind(this));
-
-        return this;
-    },
-
-    /**
-     * The internal hit area callback for this Mesh.
-     *
-     * @method Phaser.GameObjects.Mesh#hitAreaCallback
-     * @since 3.60.0
-     *
-     * @return {this} This GameObject.
-     */
-    hitAreaCallback: function (area, x, y)
-    {
         var faces = this.faces;
 
-        for (var i = 0; i < faces.length; i++)
+        var hitAreaCallback = function (area, x, y)
         {
-            var face = faces[i];
-
-            //  Don't pass a calcMatrix, as the x/y are already transformed
-            if (face.contains(x, y))
+            for (var i = 0; i < faces.length; i++)
             {
-                return true;
+                var face = faces[i];
+
+                //  Don't pass a calcMatrix, as the x/y are already transformed
+                if (face.contains(x, y))
+                {
+                    return true;
+                }
             }
-        }
 
-        return false;
-    },
+            return false;
+        };
 
-    /**
-     * If this Mesh Game Object has previously been enabled for input, this will disable it.
-     *
-     * An object that is disabled for input stops processing or being considered for
-     * input events, but can be turned back on again at any time by simply calling
-     * `setInteractive()` with no arguments provided.
-     *
-     * If want to completely remove interaction from this Game Object then use `removeInteractive` instead.
-     *
-     * @method Phaser.GameObjects.Mesh#disableInteractive
-     * @since 3.60.0
-     *
-     * @return {this} This GameObject.
-     */
-    disableInteractive: function ()
-    {
-        this.scene.sys.input.disable(this);
+        this.scene.sys.input.enable(this, hitAreaCallback);
 
         return this;
     },

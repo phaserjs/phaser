@@ -36,10 +36,6 @@ var UUID = require('../../utils/string/UUID');
  * The Plane Game Object also has the Animation component, allowing you to play animations
  * across the Plane just as you would with a Sprite.
  *
- * While a Plane cannot be enabled for input it does have the methods `hasFaceAt` and
- * `getFaceAt` which can be used with Pointer coordinates to detect if they have clicked
- * on Plane face, or not.
- *
  * Note that the Plane object is WebGL only and does not have a Canvas counterpart.
  *
  * The Plane origin is always 0.5 x 0.5 and cannot be changed.
