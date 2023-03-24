@@ -8,6 +8,31 @@ var Class = require('../../../../utils/Class');
 var PixelateFrag = require('../../shaders/FXPixelate-frag.js');
 var PostFXPipeline = require('../PostFXPipeline');
 
+/**
+ * @classdesc
+ * The Pixelate FX Pipeline.
+ *
+ * The pixelate effect is a visual technique that deliberately reduces the resolution or detail of an image,
+ * creating a blocky or mosaic appearance composed of large, visible pixels. This effect can be used for stylistic
+ * purposes, as a homage to retro gaming, or as a means to obscure certain elements within the game, such as
+ * during a transition or to censor specific content.
+ *
+ * A Pixelate effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.postFX.addPixelate();
+ * ```
+ *
+ * @class PixelateFXPipeline
+ * @extends Phaser.Renderer.WebGL.WebGLPipeline
+ * @memberof Phaser.Renderer.WebGL.Pipelines.FX
+ * @constructor
+ * @since 3.60.0
+ *
+ * @param {Phaser.Game} game - A reference to the Phaser Game instance.
+ */
 var PixelateFXPipeline = new Class({
 
     Extends: PostFXPipeline,
@@ -21,6 +46,13 @@ var PixelateFXPipeline = new Class({
             fragShader: PixelateFrag
         });
 
+        /**
+         * The amount of pixelation to apply.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.FX.PixelateFXPipeline#amount
+         * @type {number}
+         * @since 3.60.0
+         */
         this.amount = 1;
     },
 

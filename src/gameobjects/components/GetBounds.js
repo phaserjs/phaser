@@ -25,12 +25,12 @@ var GetBounds = {
      * @private
      * @since 3.18.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Types.Math.Vector2Like} O - [output,$return]
      *
-     * @param {(Phaser.Math.Vector2|object)} output - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {Phaser.Types.Math.Vector2Like} output - An object to store the values in. If not provided a new Vector2 will be created.
      * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
-     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     * @return {Phaser.Types.Math.Vector2Like} The values stored in the output object.
      */
     prepareBoundsOutput: function (output, includeParent)
     {
@@ -53,40 +53,45 @@ var GetBounds = {
 
     /**
      * Gets the center coordinate of this Game Object, regardless of origin.
-     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * The returned point is calculated in local space and does not factor in any parent Containers,
+     * unless the `includeParent` argument is set to `true`.
      *
      * @method Phaser.GameObjects.Components.GetBounds#getCenter
      * @since 3.0.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Types.Math.Vector2Like} O - [output,$return]
      *
-     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {Phaser.Types.Math.Vector2Like} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
-     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     * @return {Phaser.Types.Math.Vector2Like} The values stored in the output object.
      */
-    getCenter: function (output)
+    getCenter: function (output, includeParent)
     {
         if (output === undefined) { output = new Vector2(); }
 
         output.x = this.x - (this.displayWidth * this.originX) + (this.displayWidth / 2);
         output.y = this.y - (this.displayHeight * this.originY) + (this.displayHeight / 2);
 
-        return output;
+        return this.prepareBoundsOutput(output, includeParent);
     },
 
     /**
      * Gets the top-left corner coordinate of this Game Object, regardless of origin.
-     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * The returned point is calculated in local space and does not factor in any parent Containers,
+     * unless the `includeParent` argument is set to `true`.
      *
      * @method Phaser.GameObjects.Components.GetBounds#getTopLeft
      * @since 3.0.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Types.Math.Vector2Like} O - [output,$return]
      *
-     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {Phaser.Types.Math.Vector2Like} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
-     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     * @return {Phaser.Types.Math.Vector2Like} The values stored in the output object.
      */
     getTopLeft: function (output, includeParent)
     {
@@ -100,17 +105,19 @@ var GetBounds = {
 
     /**
      * Gets the top-center coordinate of this Game Object, regardless of origin.
-     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * The returned point is calculated in local space and does not factor in any parent Containers,
+     * unless the `includeParent` argument is set to `true`.
      *
      * @method Phaser.GameObjects.Components.GetBounds#getTopCenter
      * @since 3.18.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Types.Math.Vector2Like} O - [output,$return]
      *
-     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {Phaser.Types.Math.Vector2Like} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
-     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     * @return {Phaser.Types.Math.Vector2Like} The values stored in the output object.
      */
     getTopCenter: function (output, includeParent)
     {
@@ -124,17 +131,19 @@ var GetBounds = {
 
     /**
      * Gets the top-right corner coordinate of this Game Object, regardless of origin.
-     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * The returned point is calculated in local space and does not factor in any parent Containers,
+     * unless the `includeParent` argument is set to `true`.
      *
      * @method Phaser.GameObjects.Components.GetBounds#getTopRight
      * @since 3.0.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Types.Math.Vector2Like} O - [output,$return]
      *
-     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {Phaser.Types.Math.Vector2Like} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
-     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     * @return {Phaser.Types.Math.Vector2Like} The values stored in the output object.
      */
     getTopRight: function (output, includeParent)
     {
@@ -148,17 +157,19 @@ var GetBounds = {
 
     /**
      * Gets the left-center coordinate of this Game Object, regardless of origin.
-     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * The returned point is calculated in local space and does not factor in any parent Containers,
+     * unless the `includeParent` argument is set to `true`.
      *
      * @method Phaser.GameObjects.Components.GetBounds#getLeftCenter
      * @since 3.18.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Types.Math.Vector2Like} O - [output,$return]
      *
-     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {Phaser.Types.Math.Vector2Like} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
-     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     * @return {Phaser.Types.Math.Vector2Like} The values stored in the output object.
      */
     getLeftCenter: function (output, includeParent)
     {
@@ -172,17 +183,19 @@ var GetBounds = {
 
     /**
      * Gets the right-center coordinate of this Game Object, regardless of origin.
-     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * The returned point is calculated in local space and does not factor in any parent Containers,
+     * unless the `includeParent` argument is set to `true`.
      *
      * @method Phaser.GameObjects.Components.GetBounds#getRightCenter
      * @since 3.18.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Types.Math.Vector2Like} O - [output,$return]
      *
-     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {Phaser.Types.Math.Vector2Like} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
-     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     * @return {Phaser.Types.Math.Vector2Like} The values stored in the output object.
      */
     getRightCenter: function (output, includeParent)
     {
@@ -196,17 +209,19 @@ var GetBounds = {
 
     /**
      * Gets the bottom-left corner coordinate of this Game Object, regardless of origin.
-     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * The returned point is calculated in local space and does not factor in any parent Containers,
+     * unless the `includeParent` argument is set to `true`.
      *
      * @method Phaser.GameObjects.Components.GetBounds#getBottomLeft
      * @since 3.0.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Types.Math.Vector2Like} O - [output,$return]
      *
-     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {Phaser.Types.Math.Vector2Like} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
-     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     * @return {Phaser.Types.Math.Vector2Like} The values stored in the output object.
      */
     getBottomLeft: function (output, includeParent)
     {
@@ -220,17 +235,19 @@ var GetBounds = {
 
     /**
      * Gets the bottom-center coordinate of this Game Object, regardless of origin.
-     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * The returned point is calculated in local space and does not factor in any parent Containers,
+     * unless the `includeParent` argument is set to `true`.
      *
      * @method Phaser.GameObjects.Components.GetBounds#getBottomCenter
      * @since 3.18.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Types.Math.Vector2Like} O - [output,$return]
      *
-     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {Phaser.Types.Math.Vector2Like} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
-     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     * @return {Phaser.Types.Math.Vector2Like} The values stored in the output object.
      */
     getBottomCenter: function (output, includeParent)
     {
@@ -244,17 +261,19 @@ var GetBounds = {
 
     /**
      * Gets the bottom-right corner coordinate of this Game Object, regardless of origin.
-     * The returned point is calculated in local space and does not factor in any parent containers
+     *
+     * The returned point is calculated in local space and does not factor in any parent Containers,
+     * unless the `includeParent` argument is set to `true`.
      *
      * @method Phaser.GameObjects.Components.GetBounds#getBottomRight
      * @since 3.0.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Types.Math.Vector2Like} O - [output,$return]
      *
-     * @param {(Phaser.Math.Vector2|object)} [output] - An object to store the values in. If not provided a new Vector2 will be created.
+     * @param {Phaser.Types.Math.Vector2Like} [output] - An object to store the values in. If not provided a new Vector2 will be created.
      * @param {boolean} [includeParent=false] - If this Game Object has a parent Container, include it (and all other ancestors) in the resulting vector?
      *
-     * @return {(Phaser.Math.Vector2|object)} The values stored in the output object.
+     * @return {Phaser.Types.Math.Vector2Like} The values stored in the output object.
      */
     getBottomRight: function (output, includeParent)
     {
@@ -268,6 +287,7 @@ var GetBounds = {
 
     /**
      * Gets the bounds of this Game Object, regardless of origin.
+     *
      * The values are stored and returned in a Rectangle, or Rectangle-like, object.
      *
      * @method Phaser.GameObjects.Components.GetBounds#getBounds

@@ -10,6 +10,22 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The Vignette FX Controller.
+ *
+ * This FX controller manages the vignette effect for a Game Object.
+ *
+ * The vignette effect is a visual technique where the edges of the screen, or a Game Object, gradually darken or blur,
+ * creating a frame-like appearance. This effect is used to draw the player's focus towards the central action or subject,
+ * enhance immersion, and provide a cinematic or artistic quality to the game's visuals.
+ *
+ * A Vignette effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addVignette();
+ * sprite.postFX.addVignette();
+ * ```
  *
  * @class Vignette
  * @extends Phaser.FX.Controller

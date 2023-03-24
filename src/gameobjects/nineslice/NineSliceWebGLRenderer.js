@@ -37,6 +37,9 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, false).calc;
 
+    //  This causes a flush if the NineSlice has a Post Pipeline
+    renderer.pipelines.preBatch(src);
+
     var textureUnit = pipeline.setGameObject(src);
 
     var F32 = pipeline.vertexViewF32;
@@ -49,8 +52,6 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var tintEffect = src.tintFill;
     var alpha = camera.alpha * src.alpha;
     var color = Utils.getTintAppendFloatAlpha(src.tint, alpha);
-
-    renderer.pipelines.preBatch(src);
 
     var available = pipeline.vertexAvailable();
     var flushCount = -1;
@@ -68,10 +69,7 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
         {
             pipeline.flush();
 
-            if (!pipeline.currentBatch)
-            {
-                textureUnit = pipeline.setGameObject(src);
-            }
+            textureUnit = pipeline.setGameObject(src);
 
             vertexOffset = 0;
         }

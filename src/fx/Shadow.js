@@ -10,6 +10,22 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The Shadow FX Controller.
+ *
+ * This FX controller manages the shadow effect for a Game Object.
+ *
+ * The shadow effect is a visual technique used to create the illusion of depth and realism by adding darker,
+ * offset silhouettes or shapes beneath game objects, characters, or environments. These simulated shadows
+ * help to enhance the visual appeal and immersion, making the 2D game world appear more dynamic and three-dimensional.
+ *
+ * A Shadow effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addShadow();
+ * sprite.postFX.addShadow();
+ * ```
  *
  * @class Shadow
  * @extends Phaser.FX.Controller

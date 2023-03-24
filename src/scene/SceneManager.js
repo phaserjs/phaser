@@ -1296,8 +1296,11 @@ var SceneManager = new Class({
         {
             var loader = scene.sys.load;
 
-            loader.off(LoaderEvents.COMPLETE, this.loadComplete, this);
-            loader.off(LoaderEvents.COMPLETE, this.payloadComplete, this);
+            if (loader)
+            {
+                loader.off(LoaderEvents.COMPLETE, this.loadComplete, this);
+                loader.off(LoaderEvents.COMPLETE, this.payloadComplete, this);
+            }
 
             scene.sys.shutdown(data);
         }

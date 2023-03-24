@@ -36,6 +36,9 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
+    //  This causes a flush if the Mesh has a Post Pipeline
+    renderer.pipelines.preBatch(src);
+
     var textureUnit = pipeline.setGameObject(src);
 
     var F32 = pipeline.vertexViewF32;
@@ -63,8 +66,6 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var totalFacesRendered = 0;
 
-    renderer.pipelines.preBatch(src);
-
     for (var i = 0; i < totalFaces; i++)
     {
         var face = faces[i];
@@ -79,10 +80,7 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
         {
             pipeline.flush();
 
-            if (!pipeline.currentBatch)
-            {
-                textureUnit = pipeline.setGameObject(src);
-            }
+            textureUnit = pipeline.setGameObject(src);
 
             vertexOffset = 0;
         }

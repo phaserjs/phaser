@@ -364,6 +364,10 @@ var Mesh = new Class({
          */
         this.fov;
 
+        //  Set these to allow setInteractive to work
+        this.displayOriginX = 0;
+        this.displayOriginY = 0;
+
         var renderer = scene.sys.renderer;
 
         this.setPosition(x, y);
@@ -1144,6 +1148,44 @@ var Mesh = new Class({
     clearTint: function ()
     {
         return this.setTint();
+    },
+
+    /**
+     * Pass this Mesh Game Object to the Input Manager to enable it for Input.
+     *
+     * Unlike other Game Objects, the Mesh Game Object uses its own special hit area callback, which you cannot override.
+     *
+     * @example
+     * mesh.setInteractive();
+     *
+     * @method Phaser.GameObjects.Mesh#setInteractive
+     * @since 3.60.0
+     *
+     * @return {this} This GameObject.
+     */
+    setInteractive: function ()
+    {
+        var faces = this.faces;
+
+        var hitAreaCallback = function (area, x, y)
+        {
+            for (var i = 0; i < faces.length; i++)
+            {
+                var face = faces[i];
+
+                //  Don't pass a calcMatrix, as the x/y are already transformed
+                if (face.contains(x, y))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        this.scene.sys.input.enable(this, hitAreaCallback);
+
+        return this;
     },
 
     /**

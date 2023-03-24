@@ -219,7 +219,14 @@ var ObjectHelper = new Class({
 
         for (var key in properties)
         {
-            sprite.setData(key, properties[key]);
+            if (sprite[key] !== undefined)
+            {
+                sprite[key] = properties[key];
+            }
+            else
+            {
+                sprite.setData(key, properties[key]);
+            }
         }
     }
 });

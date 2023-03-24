@@ -10,6 +10,23 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The Bloom FX Controller.
+ *
+ * This FX controller manages the bloom effect for a Game Object.
+ *
+ * Bloom is an effect used to reproduce an imaging artifact of real-world cameras.
+ * The effect produces fringes of light extending from the borders of bright areas in an image,
+ * contributing to the illusion of an extremely bright light overwhelming the
+ * camera or eye capturing the scene.
+ *
+ * A Bloom effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addBloom();
+ * sprite.postFX.addBloom();
+ * ```
  *
  * @class Bloom
  * @extends Phaser.FX.Controller

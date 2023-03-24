@@ -1557,8 +1557,6 @@ var World = new Class({
         var overlapX = (overlap + MATH_CONST.EPSILON) * Math.cos(angle);
         var overlapY = (overlap + MATH_CONST.EPSILON) * Math.sin(angle);
 
-        console.log('overlap', overlap, 'xy', overlapX, overlapY);
-
         var results = { overlap: overlap, result: false, x: overlapX, y: overlapY };
 
         //  We know the AABBs already intersect before we enter this method
@@ -1602,15 +1600,11 @@ var World = new Class({
                 p *= 2;
             }
 
-            console.log('circ vel', body1Velocity, body2Velocity, 'p', p, 'nxy', nx, ny);
-
             if (!body1Immovable)
             {
                 body1Velocity.x = (body1Velocity.x - p / body1.mass * nx);
                 body1Velocity.y = (body1Velocity.y - p / body1.mass * ny);
                 body1Velocity.multiply(body1.bounce);
-
-                console.log('body1', body1Velocity, 'y', body1.y);
             }
 
             if (!body2Immovable)
@@ -1618,8 +1612,6 @@ var World = new Class({
                 body2Velocity.x = (body2Velocity.x + p / body2.mass * nx);
                 body2Velocity.y = (body2Velocity.y + p / body2.mass * ny);
                 body2Velocity.multiply(body2.bounce);
-
-                console.log('body2', body2Velocity, 'y', body2.y);
             }
 
             if (!body1Immovable && !body2Immovable)
@@ -1634,8 +1626,6 @@ var World = new Class({
                 body1.y -= overlapY;
 
                 body1.updateCenter();
-
-                console.log('body1 sep', body1.y);
             }
 
             if (!body2Immovable)

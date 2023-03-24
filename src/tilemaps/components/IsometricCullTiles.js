@@ -31,103 +31,101 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
     var mapData = layer.data;
     var mapWidth = layer.width;
     var mapHeight = layer.height;
+    var skipCull = tilemapLayer.skipCull;
 
     var drawLeft = 0;
     var drawRight = mapWidth;
     var drawTop = 0;
     var drawBottom = mapHeight;
 
-    if (!tilemapLayer.skipCull)
+    var x;
+    var y;
+    var tile;
+
+    if (renderOrder === 0)
     {
-        var x;
-        var y;
-        var tile;
+        //  right-down
 
-        if (renderOrder === 0)
+        for (y = drawTop; y < drawBottom; y++)
         {
-            //  right-down
-
-            for (y = drawTop; y < drawBottom; y++)
+            for (x = drawLeft; x < drawRight; x++)
             {
-                for (x = drawLeft; mapData[y] && x < drawRight; x++)
+                if (skipCull || CheckIsoBounds(x, y, layer, camera))
                 {
-                    if (CheckIsoBounds(x, y, layer, camera))
+                    tile = mapData[y][x];
+
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                     {
-                        tile = mapData[y][x];
-
-                        if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                        {
-                            continue;
-                        }
-
-                        outputArray.push(tile);
+                        continue;
                     }
+
+                    outputArray.push(tile);
                 }
             }
         }
-        else if (renderOrder === 1)
+    }
+    else if (renderOrder === 1)
+    {
+        //  left-down
+
+        for (y = drawTop; y < drawBottom; y++)
         {
-            //  left-down
-
-            for (y = drawTop; y < drawBottom; y++)
+            for (x = drawRight; x >= drawLeft; x--)
             {
-                for (x = drawRight; mapData[y] && x >= drawLeft; x--)
+                if (skipCull || CheckIsoBounds(x, y, layer, camera))
                 {
-                    if (CheckIsoBounds(x, y, layer, camera))
+                    tile = mapData[y][x];
+
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                     {
-                        tile = mapData[y][x];
-
-                        if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                        {
-                            continue;
-                        }
-
-                        outputArray.push(tile);
+                        continue;
                     }
+
+                    outputArray.push(tile);
                 }
             }
         }
-        else if (renderOrder === 2)
+    }
+    else if (renderOrder === 2)
+    {
+        //  right-up
+
+        for (y = drawBottom; y >= drawTop; y--)
         {
-            //  right-up
-
-            for (y = drawBottom; y >= drawTop; y--)
+            for (x = drawLeft; x < drawRight; x++)
             {
-                for (x = drawLeft; mapData[y] && x < drawRight; x++)
+                if (skipCull || CheckIsoBounds(x, y, layer, camera))
                 {
-                    if (CheckIsoBounds(x, y, layer, camera))
+                    tile = mapData[y][x];
+
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                     {
-                        tile = mapData[y][x];
-
-                        if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                        {
-                            continue;
-                        }
-
-                        outputArray.push(tile);
+                        continue;
                     }
+
+                    outputArray.push(tile);
                 }
             }
         }
-        else if (renderOrder === 3)
+    }
+    else if (renderOrder === 3)
+    {
+        //  left-up
+
+        for (y = drawBottom; y >= drawTop; y--)
         {
-            //  left-up
-
-            for (y = drawBottom; y >= drawTop; y--)
+            for (x = drawRight; x >= drawLeft; x--)
             {
-                for (x = drawRight; mapData[y] && x >= drawLeft; x--)
+                if (skipCull || CheckIsoBounds(x, y, layer, camera))
                 {
-                    if (CheckIsoBounds(x, y, layer, camera))
+                    tile = mapData[y][x];
+
+                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                     {
-                        tile = mapData[y][x];
-
-                        if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                        {
-                            continue;
-                        }
-
-                        outputArray.push(tile);
+                        continue;
                     }
+
+                    outputArray.push(tile);
                 }
             }
         }

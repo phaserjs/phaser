@@ -10,6 +10,34 @@ var FX_CONST = require('./const');
 
 /**
  * @classdesc
+ * The Wipe FX Controller.
+ *
+ * This FX controller manages the wipe effect for a Game Object.
+ *
+ * The wipe or reveal effect is a visual technique that gradually uncovers or conceals elements
+ * in the game, such as images, text, or scene transitions. This effect is often used to create
+ * a sense of progression, reveal hidden content, or provide a smooth and visually appealing transition
+ * between game states.
+ *
+ * You can set both the direction and the axis of the wipe effect. The following combinations are possible:
+ *
+ * * left to right: direction 0, axis 0
+ * * right to left: direction 1, axis 0
+ * * top to bottom: direction 1, axis 1
+ * * bottom to top: direction 1, axis 0
+ *
+ * It is up to you to set the `progress` value yourself, i.e. via a Tween, in order to transition the effect.
+ *
+ * A Wipe effect is added to a Game Object via the FX component:
+ *
+ * ```js
+ * const sprite = this.add.sprite();
+ *
+ * sprite.preFX.addWipe();
+ * sprite.postFX.addWipe();
+ * sprite.preFX.addReveal();
+ * sprite.postFX.addReveal();
+ * ```
  *
  * @class Wipe
  * @extends Phaser.FX.Controller
@@ -37,14 +65,6 @@ var Wipe = new Class({
         if (reveal === undefined) { reveal = false; }
 
         Controller.call(this, FX_CONST.WIPE, gameObject);
-
-        //  left to right: direction 0, axis 0
-        //  right to left: direction 1, axis 0
-        //  top to bottom: direction 1, axis 1
-        //  bottom to top: direction 1, axis 0
-        //  wipe: reveal 0
-        //  reveal: reveal 1
-        //  progress: 0 - 1
 
         /**
          * The progress of the Wipe effect. This value is normalized to the range 0 to 1.

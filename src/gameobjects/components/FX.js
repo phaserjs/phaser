@@ -10,6 +10,57 @@ var SpliceOne = require('../../utils/array/SpliceOne');
 
 /**
  * @classdesc
+ * The FX Component features a set of methods used for applying a range of special built-in effects to a Game Object.
+ *
+ * The effects include the following:
+ *
+ * * Barrel Distortion
+ * * Bloom
+ * * Blur
+ * * Bokeh / Tilt Shift
+ * * Circle Outline
+ * * Color Matrix
+ * * Glow
+ * * Displacement
+ * * Gradient
+ * * Pixelate
+ * * Shine
+ * * Shadow
+ * * Vignette
+ * * Wipe / Reveal
+ *
+ * All Game Objects support Post FX. These are effects applied after the Game Object has been rendered.
+ *
+ * Texture-based Game Objects also support Pre FX, including:
+ *
+ * * Image
+ * * Sprite
+ * * TileSprite
+ * * Text
+ * * RenderTexture
+ * * Video
+ *
+ * And any Game Object that extends the above.
+ *
+ * The difference between Pre FX and Post FX are that all Post FX take place in a canvas (renderer) sized frame buffer,
+ * after the Game Object has been rendered. Pre FX, however, take place in a texture sized frame buffer, which is sized
+ * based on the Game Object itself. The end result is then composited back to the main game canvas. For intensive effects,
+ * such as blur, bloom or glow, which can require many iterations, this is a much more efficient way to apply the effect,
+ * as only it only has to work on a Game Object sized texture and not all pixels in the canvas.
+ *
+ * In short, you should always try and use a Pre FX if you can.
+ *
+ * Due to the way that FX work they can be stacked-up. For example, you can apply a blur to a Game Object, then apply
+ * a bloom effect to the same Game Object. The bloom effect will be applied to the blurred texture, not the original.
+ * Keep the order in mind when stacking effects.
+ *
+ * All effects are WebGL only and do not have canvas counterparts.
+ *
+ * As you can appreciate, some effects are more expensive than others. For example, a bloom effect is going to be more
+ * expensive than a simple color matrix effect, so please consider using them wisely and performance test your target
+ * platforms early on in production.
+ *
+ * This component is created automatically by the `PostPipeline` class and does not need to be instantiated directly.
  *
  * @class FX
  * @memberof Phaser.GameObjects.Components
@@ -19,7 +70,6 @@ var SpliceOne = require('../../utils/array/SpliceOne');
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that owns this FX Component.
  * @param {boolean} isPost - Is this a Pre or Post FX Component?
-+- *
  */
 var FX = new Class({
 
@@ -32,6 +82,7 @@ var FX = new Class({
          *
          * @name Phaser.GameObjects.Components.FX#gameObject
          * @type {Phaser.GameObjects.GameObject}
+         * @readonly
          * @since 3.60.0
          */
         this.gameObject = gameObject;
@@ -41,6 +92,7 @@ var FX = new Class({
          *
          * @name Phaser.GameObjects.Components.FX#isPost
          * @type {boolean}
+         * @readonly
          * @since 3.60.0
          */
         this.isPost = isPost;
@@ -48,7 +100,8 @@ var FX = new Class({
         /**
          * Has this FX Component been enabled?
          *
-         * You should treat this property as read-only.
+         * You should treat this property as read-only, although it is toggled
+         * automaticaly during internal use.
          *
          * @name Phaser.GameObjects.Components.FX#enabled
          * @type {boolean}
@@ -58,7 +111,8 @@ var FX = new Class({
 
         /**
          * An array containing all of the FX Controllers that
-         * have been added to this FX Component.
+         * have been added to this FX Component. They are processed in
+         * the order they are added.
          *
          * @name Phaser.GameObjects.Components.FX#list
          * @type {Phaser.FX.Controller[]}
@@ -68,12 +122,14 @@ var FX = new Class({
 
         /**
          * The amount of extra padding to be applied to this Game Object
-         * when it is being rendered by a PreFX or SpriteFX Pipeline.
+         * when it is being rendered by a PreFX Pipeline.
          *
          * Lots of FX require additional spacing added to the texture the
          * Game Object uses, for example a glow or shadow effect, and this
          * method allows you to control how much extra padding is included
          * in addition to the texture size.
+         *
+         * You do not need to set this if you're only using Post FX.
          *
          * @name Phaser.GameObjects.Components.FX#padding
          * @type {number}
@@ -91,6 +147,8 @@ var FX = new Class({
      * Game Object uses, for example a glow or shadow effect, and this
      * method allows you to control how much extra padding is included
      * in addition to the texture size.
+     *
+     * You do not need to set this if you're only using Post FX.
      *
      * @method Phaser.GameObjects.Components.FX#setPadding
      * @webglOnly
@@ -302,6 +360,11 @@ var FX = new Class({
     /**
      * Adds a Glow effect.
      *
+     * The glow effect is a visual technique that creates a soft, luminous halo around game objects,
+     * characters, or UI elements. This effect is used to emphasize importance, enhance visual appeal,
+     * or convey a sense of energy, magic, or otherworldly presence. The effect can also be set on
+     * the inside of the Game Object. The color and strength of the glow can be modified.
+     *
      * @method Phaser.GameObjects.Components.FX#addGlow
      * @since 3.60.0
      *
@@ -321,6 +384,10 @@ var FX = new Class({
 
     /**
      * Adds a Shadow effect.
+     *
+     * The shadow effect is a visual technique used to create the illusion of depth and realism by adding darker,
+     * offset silhouettes or shapes beneath game objects, characters, or environments. These simulated shadows
+     * help to enhance the visual appeal and immersion, making the 2D game world appear more dynamic and three-dimensional.
      *
      * @method Phaser.GameObjects.Components.FX#addShadow
      * @since 3.60.0
@@ -343,6 +410,11 @@ var FX = new Class({
     /**
      * Adds a Pixelate effect.
      *
+     * The pixelate effect is a visual technique that deliberately reduces the resolution or detail of an image,
+     * creating a blocky or mosaic appearance composed of large, visible pixels. This effect can be used for stylistic
+     * purposes, as a homage to retro gaming, or as a means to obscure certain elements within the game, such as
+     * during a transition or to censor specific content.
+     *
      * @method Phaser.GameObjects.Components.FX#addPixelate
      * @since 3.60.0
      *
@@ -357,6 +429,10 @@ var FX = new Class({
 
     /**
      * Adds a Vignette effect.
+     *
+     * The vignette effect is a visual technique where the edges of the screen, or a Game Object, gradually darken or blur,
+     * creating a frame-like appearance. This effect is used to draw the player's focus towards the central action or subject,
+     * enhance immersion, and provide a cinematic or artistic quality to the game's visuals.
      *
      * @method Phaser.GameObjects.Components.FX#addVignette
      * @since 3.60.0
@@ -376,6 +452,11 @@ var FX = new Class({
     /**
      * Adds a Shine effect.
      *
+     * The shine effect is a visual technique that simulates the appearance of reflective
+     * or glossy surfaces by passing a light beam across a Game Object. This effect is used to
+     * enhance visual appeal, emphasize certain features, and create a sense of depth or
+     * material properties.
+     *
      * @method Phaser.GameObjects.Components.FX#addShine
      * @since 3.60.0
      *
@@ -393,6 +474,11 @@ var FX = new Class({
 
     /**
      * Adds a Blur effect.
+     *
+     * A Gaussian blur is the result of blurring an image by a Gaussian function. It is a widely used effect,
+     * typically to reduce image noise and reduce detail. The visual effect of this blurring technique is a
+     * smooth blur resembling that of viewing the image through a translucent screen, distinctly different
+     * from the bokeh effect produced by an out-of-focus lens or the shadow of an object under usual illumination.
      *
      * @method Phaser.GameObjects.Components.FX#addBlur
      * @since 3.60.0
@@ -413,6 +499,11 @@ var FX = new Class({
 
     /**
      * Adds a Gradient effect.
+     *
+     * The gradient overlay effect is a visual technique where a smooth color transition is applied over Game Objects,
+     * such as sprites or UI components. This effect is used to enhance visual appeal, emphasize depth, or create
+     * stylistic and atmospheric variations. It can also be utilized to convey information, such as representing
+     * progress or health status through color changes.
      *
      * @method Phaser.GameObjects.Components.FX#addGradient
      * @since 3.60.0
@@ -436,6 +527,11 @@ var FX = new Class({
     /**
      * Adds a Bloom effect.
      *
+     * Bloom is an effect used to reproduce an imaging artifact of real-world cameras.
+     * The effect produces fringes of light extending from the borders of bright areas in an image,
+     * contributing to the illusion of an extremely bright light overwhelming the
+     * camera or eye capturing the scene.
+     *
      * @method Phaser.GameObjects.Components.FX#addBloom
      * @since 3.60.0
      *
@@ -456,6 +552,12 @@ var FX = new Class({
     /**
      * Adds a ColorMatrix effect.
      *
+     * The color matrix effect is a visual technique that involves manipulating the colors of an image
+     * or scene using a mathematical matrix. This process can adjust hue, saturation, brightness, and contrast,
+     * allowing developers to create various stylistic appearances or mood settings within the game.
+     * Common applications include simulating different lighting conditions, applying color filters,
+     * or achieving a specific visual style.
+     *
      * @method Phaser.GameObjects.Components.FX#addColorMatrix
      * @since 3.60.0
      *
@@ -469,11 +571,19 @@ var FX = new Class({
     /**
      * Adds a Circle effect.
      *
+     * This effect will draw a circle around the texture of the Game Object, effectively masking off
+     * any area outside of the circle without the need for an actual mask. You can control the thickness
+     * of the circle, the color of the circle and the color of the background, should the texture be
+     * transparent. You can also control the feathering applied to the circle, allowing for a harsh or soft edge.
+     *
+     * Please note that adding this effect to a Game Object will not change the input area or physics body of
+     * the Game Object, should it have one.
+     *
      * @method Phaser.GameObjects.Components.FX#addCircle
      * @since 3.60.0
      *
      * @param {number} [thickness=8] - The width of the circle around the texture, in pixels.
-     * @param {number} [color=16724914] - The color of the circular ring, given as a number value.
+     * @param {number} [color=0xfeedb6] - The color of the circular ring, given as a number value.
      * @param {number} [backgroundColor=0xff0000] - The color of the background, behind the texture, given as a number value.
      * @param {number} [scale=1] - The scale of the circle. The default scale is 1, which is a circle the full size of the underlying texture.
      * @param {number} [feather=0.005] - The amount of feathering to apply to the circle from the ring.
@@ -487,6 +597,9 @@ var FX = new Class({
 
     /**
      * Adds a Barrel effect.
+     *
+     * A barrel effect allows you to apply either a 'pinch' or 'expand' distortion to
+     * a Game Object. The amount of the effect can be modified in real-time.
      *
      * @method Phaser.GameObjects.Components.FX#addBarrel
      * @since 3.60.0
@@ -503,22 +616,42 @@ var FX = new Class({
     /**
      * Adds a Displacement effect.
      *
+     * The displacement effect is a visual technique that alters the position of pixels in an image
+     * or texture based on the values of a displacement map. This effect is used to create the illusion
+     * of depth, surface irregularities, or distortion in otherwise flat elements. It can be applied to
+     * characters, objects, or backgrounds to enhance realism, convey movement, or achieve various
+     * stylistic appearances.
+     *
      * @method Phaser.GameObjects.Components.FX#addDisplacement
      * @since 3.60.0
      *
-     * @param {string} [key='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
-     * @param {number} [x=0.005] - The amount of horizontal displacement to apply.
-     * @param {number} [y=0.005] - The amount of vertical displacement to apply.
+     * @param {string} [texture='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
+     * @param {number} [x=0.005] - The amount of horizontal displacement to apply. A very small float number, such as 0.005.
+     * @param {number} [y=0.005] - The amount of vertical displacement to apply. A very small float number, such as 0.005.
      *
      * @return {Phaser.FX.Displacement} The Displacement FX Controller.
      */
-    addDisplacement: function (displacementTexture, x, y)
+    addDisplacement: function (texture, x, y)
     {
-        return this.add(new Effects.Displacement(this.gameObject, displacementTexture, x, y));
+        return this.add(new Effects.Displacement(this.gameObject, texture, x, y));
     },
 
     /**
      * Adds a Wipe effect.
+     *
+     * The wipe or reveal effect is a visual technique that gradually uncovers or conceals elements
+     * in the game, such as images, text, or scene transitions. This effect is often used to create
+     * a sense of progression, reveal hidden content, or provide a smooth and visually appealing transition
+     * between game states.
+     *
+     * You can set both the direction and the axis of the wipe effect. The following combinations are possible:
+     *
+     * * left to right: direction 0, axis 0
+     * * right to left: direction 1, axis 0
+     * * top to bottom: direction 1, axis 1
+     * * bottom to top: direction 1, axis 0
+     *
+     * It is up to you to set the `progress` value yourself, i.e. via a Tween, in order to transition the effect.
      *
      * @method Phaser.GameObjects.Components.FX#addWipe
      * @since 3.60.0
@@ -537,6 +670,20 @@ var FX = new Class({
     /**
      * Adds a Reveal Wipe effect.
      *
+     * The wipe or reveal effect is a visual technique that gradually uncovers or conceals elements
+     * in the game, such as images, text, or scene transitions. This effect is often used to create
+     * a sense of progression, reveal hidden content, or provide a smooth and visually appealing transition
+     * between game states.
+     *
+     * You can set both the direction and the axis of the wipe effect. The following combinations are possible:
+     *
+     * * left to right: direction 0, axis 0
+     * * right to left: direction 1, axis 0
+     * * top to bottom: direction 1, axis 1
+     * * bottom to top: direction 1, axis 0
+     *
+     * It is up to you to set the `progress` value yourself, i.e. via a Tween, in order to transition the effect.
+     *
      * @method Phaser.GameObjects.Components.FX#addReveal
      * @since 3.60.0
      *
@@ -554,6 +701,13 @@ var FX = new Class({
     /**
      * Adds a Bokeh effect.
      *
+     * Bokeh refers to a visual effect that mimics the photographic technique of creating a shallow depth of field.
+     * This effect is used to emphasize the game's main subject or action, by blurring the background or foreground
+     * elements, resulting in a more immersive and visually appealing experience. It is achieved through rendering
+     * techniques that simulate the out-of-focus areas, giving a sense of depth and realism to the game's graphics.
+     *
+     * See also Tilt Shift.
+     *
      * @method Phaser.GameObjects.Components.FX#addBokeh
      * @since 3.60.0
      *
@@ -569,7 +723,13 @@ var FX = new Class({
     },
 
     /**
-     * Adds a TiltShift effect.
+     * Adds a Tilt Shift effect.
+     *
+     * This Bokeh effect can also be used to generate a Tilt Shift effect, which is a technique used to create a miniature
+     * effect by blurring everything except a small area of the image. This effect is achieved by blurring the
+     * top and bottom elements, while keeping the center area in focus.
+     *
+     * See also Bokeh.
      *
      * @method Phaser.GameObjects.Components.FX#addTiltShift
      * @since 3.60.0
@@ -577,9 +737,9 @@ var FX = new Class({
      * @param {number} [radius=0.5] - The radius of the bokeh effect.
      * @param {number} [amount=1] - The amount of the bokeh effect.
      * @param {number} [contrast=0.2] - The color contrast of the bokeh effect.
-     * @param {number} [blurX=1] - If Tilt Shift, the amount of horizontal blur.
-     * @param {number} [blurY=1] - If Tilt Shift, the amount of vertical blur.
-     * @param {number} [strength=1] - If Tilt Shift, the strength of the blur.
+     * @param {number} [blurX=1] - The amount of horizontal blur.
+     * @param {number} [blurY=1] - The amount of vertical blur.
+     * @param {number} [strength=1] - The strength of the blur.
      *
      * @return {Phaser.FX.Bokeh} The Bokeh TiltShift FX Controller.
      */

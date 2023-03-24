@@ -317,6 +317,8 @@ var NineSlice = new Class({
 
         this.setSlices(width, height, leftWidth, rightWidth, topHeight, bottomHeight);
 
+        this.setOrigin(0.5, 0.5);
+
         this.initPipeline();
         this.initPostPipeline();
     },

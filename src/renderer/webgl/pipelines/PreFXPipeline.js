@@ -773,10 +773,7 @@ var PreFXPipeline = new Class({
         // gl.clearColor(0, 0, 0, 0);
         // gl.bindFramebuffer(gl.FRAMEBUFFER, source.framebuffer);
         // gl.clear(gl.COLOR_BUFFER_BIT);
-
         // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        // renderer.restoreFramebuffer(false, true);
 
         //  No hanging references
         this.tempSprite = null;

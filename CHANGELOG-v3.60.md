@@ -1,5 +1,44 @@
 ## Version 3.60.0 - Miku - in development
 
+### New Features - ESM Support
+
+Phaser 3.60 uses the new release of Webpack 5 in order to handle the builds. The configurations have been updated to follow the new format this upgrade introduced. As a bonus, Webpack 5 also bought a new experimental feature called 'output modules', which will take a CommonJS code-base, like Phaser uses and wrap the output in modern ES Module declarations.
+
+We are now using this as part of our build. You will find in the `dist` folder a new `phaser.esm.js` file, which is also linked in from our `package.json` module property. Using this build you can access any of the Phaser modules directly via named imports, meaning you can code like this:
+
+```js
+import { AUTO, Scene, Game } from './phaser.esm.js';
+
+class Test extends Scene
+{
+    constructor ()
+    {
+        super();
+    }
+
+    create ()
+    {
+        this.add.text(10, 10, 'Welcome to Phaser ESM');
+    }
+}
+
+const config = {
+    type: AUTO,
+    width: 800,
+    height: 600,
+    parent: 'phaser-example',
+    scene: [ Test ]
+};
+
+const game = new Game(config);
+```
+
+Note that we're importing from the local esm bundle. By using this approach you don't need to even use a bundler for quick local prototyping or testing, you can simply import and code directly.
+
+The dist folder still also contains `phaser.js` which, as before, uses a UMD export.
+
+Because the Webpack feature is experimental we won't make the ESM version the default just yet, but if you're curious and want to explore, please go ahead!
+
 ### New Features - Built-in Special FX
 
 We have decided to bundle a selection of highly flexible special effect shaders in to Phaser 3.60 and provide access to them via an easy to use set of API calls. The FX included are:
@@ -131,8 +170,6 @@ This allows you to create effects not possible with regular Sprites, such as per
 You can use the `uvScroll` and `uvScale` methods to adjust the placement and scaling of the texture if this Plane is using a single texture, and not a frame from a texture atlas or sprite sheet.
 
 The Plane Game Object also has the Animation component, allowing you to play animations across the Plane just as you would with a Sprite.
-
-While a Plane cannot be enabled for input it does have the methods `hasFaceAt` and `getFaceAt` which can be used with Pointer coordinates to detect if they have clicked on Plane face, or not.
 
 As of Phaser 3.60 this Game Object is WebGL only. Please see the new examples and documentation for how to use it.
 
@@ -931,6 +968,7 @@ There are breaking changes from previous versions of Phaser.
 
 ### New Features
 
+* The Arcade Physics World has a new property `tileFilterOptions` which is an object passed to the `GetTilesWithin` methods used by the Sprite vs. Tilemap collision functions. These filters dramatically reduce the quantity of tiles being checked for collision, potentially saving thousands of redundant math comparisons from taking place.
 * The `Graphics.strokeRoundedRect` and `fillRoundedRect` methods can now accept negative values for the corner radius settings, in which case a concave corner is drawn instead (thanks @rexrainbow)
 * `AnimationManager.getAnimsFromTexture` is a new method that will return all global Animations, as stored in the Animation Manager, that have at least one frame using the given Texture. This will not include animations created directly on local Sprites.
 * `BitmapText.setLineSpacing` is a new method that allows you to set the vertical spacing between lines in multi-line BitmapText Game Objects. It works in the same was as spacing for Text objects and the spacing value can be positive or negative. See also `BitmapText.lineSpacing` for the property rather than the method.
@@ -1006,6 +1044,8 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* The `GetBounds.getCenter` method now has an optional `includeParent` argument, which allows you to get the value in world space.
+* The `MatterTileBody` class, which is created when you convert a Tilemap into a Matter Physics world, will now check to see if the Tile has `flipX` or `flipY` set on it and rotate the body accordingly. Fix #5893 (thanks @Olliebrown @phaserhelp)
 * The `BaseCamera` has had its `Alpha` component replaced with `AlphaSingle`. Previously you had access to properties such as `alphaTopLeft` that never worked, now it correctly has just a single alpha property (thanks @samme)
 * `Time.Clock.startTime` is a new property that stores the time the Clock (and therefore the Scene) was started. This can be useful for comparing against the current time to see how much real world time has elapsed (thanks @samme)
 * `ColorMatrix._matrix` and `_data` are now Float32Arrays.
@@ -1127,6 +1167,8 @@ ArtemSiz)
 
 ### Bug Fixes
 
+* The `TilemapLayer.skipCull` feature wasn't being applied correctly for Isometric, Hexagonal or Staggered tiles, only for Orthographic tiles (the default). It will now respect the `skipCull` property and return all tiles during culling if enabled. Fix #5524 (thanks @veleek)
+* Shutting down a Scene that didn't have the `LoaderPlugin` would throw an error when removing event handlers. It now checks first, before removing (thanks @samme)
 * The `Container.getBounds` method will now use `getTextBounds` if one of its children is a `BitmapText` Game Object, giving more accurate bounds results (thanks @EmilSV)
 * The `renderFlags` property, used to determine if a Game Object will render, or not, would be calculated incorrectly depending on the order of the `scaleX` and `scaleY` properties. It now works regardless of the order (thanks @mizunokazumi)
 * The `SpriteSheetFromAtlas` parser was using the incorrect `sourceIndex` to grab frames from a given texture. This caused a crash whenever a trimmed spritesheet was added from any multiatlas image other than the first (thanks @Bambosh)
