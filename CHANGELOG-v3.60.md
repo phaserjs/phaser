@@ -171,8 +171,6 @@ You can use the `uvScroll` and `uvScale` methods to adjust the placement and sca
 
 The Plane Game Object also has the Animation component, allowing you to play animations across the Plane just as you would with a Sprite.
 
-While a Plane cannot be enabled for input it does have the methods `hasFaceAt` and `getFaceAt` which can be used with Pointer coordinates to detect if they have clicked on Plane face, or not.
-
 As of Phaser 3.60 this Game Object is WebGL only. Please see the new examples and documentation for how to use it.
 
 ### New Features - Nine Slice Game Object
