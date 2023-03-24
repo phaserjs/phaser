@@ -174,7 +174,7 @@ var FXPipeline = new Class({
          *
          * This array is intentionally sparse. Do not adjust.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.FXPipeline#glow
+         * @name Phaser.Renderer.WebGL.Pipelines.FXPipeline#fxHandlers
          * @type {function[]}
          * @since 3.60.0
          */
@@ -276,7 +276,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onGlow
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Glow} config - The Glow FX controller.
+     * @param {Phaser.FX.Glow} config - The Glow FX controller.
      * @param {number} width - The width of the target.
      * @param {number} height - The height of the target.
      */
@@ -297,7 +297,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onShadow
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Shadow} config - The Shadow FX controller.
+     * @param {Phaser.FX.Shadow} config - The Shadow FX controller.
      */
     onShadow: function (config)
     {
@@ -316,7 +316,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onPixelate
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Pixelate} config - The Pixelate FX controller.
+     * @param {Phaser.FX.Pixelate} config - The Pixelate FX controller.
      * @param {number} width - The width of the target.
      * @param {number} height - The height of the target.
      */
@@ -337,7 +337,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onVignette
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Vignette} config - The Vignette FX controller.
+     * @param {Phaser.FX.Vignette} config - The Vignette FX controller.
      */
     onVignette: function (config)
     {
@@ -356,7 +356,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onShine
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Shine} config - The Shine FX controller.
+     * @param {Phaser.FX.Shine} config - The Shine FX controller.
      * @param {number} width - The width of the target.
      * @param {number} height - The height of the target.
      */
@@ -377,7 +377,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onBlur
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Blur} config - The Blur FX controller.
+     * @param {Phaser.FX.Blur} config - The Blur FX controller.
      * @param {number} width - The width of the target.
      * @param {number} height - The height of the target.
      */
@@ -414,7 +414,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onGradient
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Gradient} config - The Gradient FX controller.
+     * @param {Phaser.FX.Gradient} config - The Gradient FX controller.
      */
     onGradient: function (config)
     {
@@ -433,7 +433,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onBloom
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Bloom} config - The Bloom FX controller.
+     * @param {Phaser.FX.Bloom} config - The Bloom FX controller.
      * @param {number} width - The width of the target.
      * @param {number} height - The height of the target.
      */
@@ -472,7 +472,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onColorMatrix
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.ColorMatrix} config - The ColorMatrix FX controller.
+     * @param {Phaser.FX.ColorMatrix} config - The ColorMatrix FX controller.
      */
     onColorMatrix: function (config)
     {
@@ -490,7 +490,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onCircle
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Circle} config - The Circle FX controller.
+     * @param {Phaser.FX.Circle} config - The Circle FX controller.
      * @param {number} width - The width of the target.
      * @param {number} height - The height of the target.
      */
@@ -511,7 +511,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onBarrel
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Barrel} config - The Barrel FX controller.
+     * @param {Phaser.FX.Barrel} config - The Barrel FX controller.
      */
     onBarrel: function (config)
     {
@@ -530,7 +530,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onDisplacement
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Displacement} config - The Displacement FX controller.
+     * @param {Phaser.FX.Displacement} config - The Displacement FX controller.
      */
     onDisplacement: function (config)
     {
@@ -550,7 +550,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onWipe
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Wipe} config - The Wipe FX controller.
+     * @param {Phaser.FX.Wipe} config - The Wipe FX controller.
      */
     onWipe: function (config)
     {
@@ -569,7 +569,7 @@ var FXPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#onBokeh
      * @since 3.60.0
      *
-     * @param {Phaser.FX.Controller.Bokeh} config - The Bokeh FX controller.
+     * @param {Phaser.FX.Bokeh} config - The Bokeh FX controller.
      */
     onBokeh: function (config, width, height)
     {
@@ -587,6 +587,8 @@ var FXPipeline = new Class({
      *
      * @method Phaser.Renderer.WebGL.Pipelines.FXPipeline#destroy
      * @since 3.60.0
+     *
+     * @return {this} This WebGLPipeline instance.
      */
     destroy: function ()
     {
@@ -607,6 +609,8 @@ var FXPipeline = new Class({
         this.swap = null;
 
         PreFXPipeline.prototype.destroy.call(this);
+
+        return this;
     }
 });
 

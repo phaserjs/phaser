@@ -566,6 +566,8 @@ var PostFXPipeline = new Class({
      *
      * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#destroy
      * @since 3.60.0
+     *
+     * @return {this} This WebGLPipeline instance.
      */
     destroy: function ()
     {
@@ -580,6 +582,8 @@ var PostFXPipeline = new Class({
         this.halfFrame2 = null;
 
         WebGLPipeline.prototype.destroy.call(this);
+
+        return this;
     }
 
 });
