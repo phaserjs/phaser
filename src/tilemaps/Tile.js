@@ -781,19 +781,36 @@ var Tile = new Class({
             var len = this.layer.hexSideLength;
 
             var rowWidth, rowHeight;
-            if ((staggerAxis === 'y') && (staggerIndex === 'odd'))
+            if (staggerAxis === 'y')
             {
                 rowHeight = ((this.baseHeight - len) / 2 + len);
 
-                this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
+                if (staggerIndex === 'odd')
+                {
+                    this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
+                }
+                else
+                {
+                    this.pixelX = this.x * this.baseWidth - this.y % 2 * (this.baseWidth / 2);
+                }
+                
                 this.pixelY = this.y * rowHeight;
             }
-            else if ((staggerAxis === 'x') && (staggerIndex === 'odd'))
+            else if (staggerAxis === 'x')
             {
                 rowWidth = ((this.baseWidth - len) / 2 + len);
 
                 this.pixelX = this.x * rowWidth;
-                this.pixelY = this.y * this.baseHeight + this.x % 2 * (this.baseHeight / 2);
+
+                if (staggerIndex === 'odd')
+                {
+                    this.pixelY = this.y * this.baseHeight + this.x % 2 * (this.baseHeight / 2);
+                }
+                else
+                {
+                    this.pixelY = this.y * this.baseHeight - this.x % 2 * (this.baseHeight / 2);
+                }
+                
             }
 
         }

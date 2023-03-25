@@ -59,7 +59,7 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
     var q, r, s;
 
     //  size
-    if (this.staggerAxis === 'y')
+    if (layer.staggerAxis === 'y')
     {
         //  x = b0 * tileWidth
         //  y = tileHeightHalf
@@ -99,9 +99,18 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
         ri = -qi - si;
     }
 
-    var y = ri;
+    var x, y;
 
-    var x = (y % 2 === 0) ? (ri / 2) + qi : (ri / 2) + qi - 0.5;
+    y = ri;
+
+    if (layer.staggerIndex === 'odd')
+    {
+        x = (y % 2 === 0) ? (ri / 2) + qi : (ri / 2) + qi - 0.5;
+    }
+    else
+    {
+        x = (y % 2 === 0) ? (ri / 2) + qi : (ri / 2) + qi + 0.5;
+    }
 
     return point.set(x, y);
 };
