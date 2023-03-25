@@ -50,13 +50,30 @@ var HexagonalTileToWorldXY = function (tileX, tileY, point, camera, layer)
     var tileWidthHalf = tileWidth / 2;
     var tileHeightHalf = tileHeight / 2;
 
-    var x = worldX + (tileWidth * tileX) + tileWidth;
-    var y = worldY + ((1.5 * tileY) * tileHeightHalf) + tileHeightHalf;
+    var x, y;
 
-    if (tileY % 2 === 0)
+    if ((this.staggerAxis === 'y') && (this.staggerIndex === 'odd'))
     {
-        x -= tileWidthHalf;
+        x = worldX + (tileWidth * tileX) + tileWidth;
+        y = worldY + ((1.5 * tileY) * tileHeightHalf) + tileHeightHalf;
+    
+        if (tileY % 2 === 0)
+        {
+            x -= tileWidthHalf;
+        }
     }
+    else if ((this.staggerAxis === 'x') && (this.staggerIndex === 'odd'))
+    {
+        x = worldX + ((1.5 * tileX) * tileWidthHalf) + tileWidthHalf;
+        y = worldY + (tileHeight * tileX) + tileHeight;
+    
+        if (tileX % 2 === 0)
+        {
+            y -= tileHeightHalf;
+        }
+    }
+
+
 
     return point.set(x, y);
 };

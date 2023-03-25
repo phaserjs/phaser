@@ -776,11 +776,26 @@ var Tile = new Class({
         }
         else if (orientation === CONST.HEXAGONAL)
         {
+            var staggerAxis = this.layer.staggerAxis;
+            var staggerIndex = this.layer.staggerIndex;
             var len = this.layer.hexSideLength;
-            var rowHeight = ((this.baseHeight - len) / 2 + len);
 
-            this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
-            this.pixelY = this.y * rowHeight;
+            var rowWidth, rowHeight;
+            if ((staggerAxis === 'y') && (staggerIndex === 'odd'))
+            {
+                rowHeight = ((this.baseHeight - len) / 2 + len);
+
+                this.pixelX = this.x * this.baseWidth + this.y % 2 * (this.baseWidth / 2);
+                this.pixelY = this.y * rowHeight;
+            }
+            else if ((staggerAxis === 'x') && (staggerIndex === 'odd'))
+            {
+                rowWidth = ((this.baseWidth - len) / 2 + len);
+
+                this.pixelX = this.x * rowWidth;
+                this.pixelY = this.y * this.baseHeight + this.x % 2 * (this.baseHeight / 2);
+            }
+
         }
 
         this.right = this.pixelX + this.baseWidth;
