@@ -8,7 +8,6 @@ var Tile = require('../Tile');
 var IsInLayerBounds = require('./IsInLayerBounds');
 var CalculateFacesAt = require('./CalculateFacesAt');
 var SetTileCollision = require('./SetTileCollision');
-var BuildTilesetIndex = require('../parsers/tiled/BuildTilesetIndex');
 
 /**
  * Puts a tile at the given tile coordinates in the specified layer. You can pass in either an index
@@ -67,16 +66,22 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
     var newTile = layer.data[tileY][tileX];
     var collides = layer.collideIndexes.indexOf(newTile.index) !== -1;
 
-    // Copy properties from tileset to tiles.
-    var tiles = BuildTilesetIndex(layer.tilemapLayer.tilemap);
-
     index = tile instanceof Tile ? tile.index : tile;
 
-    var sid = tiles[index][2];
-    var set = layer.tilemapLayer.tileset[sid];
+    if (index === -1)
+    {
+        newTile.width = layer.tileWidth;
+        newTile.height = layer.tileHeight;
+    }
+    else
+    {
+        var tiles = layer.tilemapLayer.tilemap.tiles;
+        var sid = tiles[index][2];
+        var set = layer.tilemapLayer.tileset[sid];
 
-    newTile.width = set.tileWidth;
-    newTile.height = set.tileHeight;
+        newTile.width = set.tileWidth;
+        newTile.height = set.tileHeight;
+    }
 
     SetTileCollision(newTile, collides);
 
