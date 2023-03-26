@@ -2666,6 +2666,7 @@ var Tilemap = new Class({
     {
         this.removeAllLayers();
 
+        this.tiles.length = 0;
         this.tilesets.length = 0;
         this.objects.length = 0;
 
