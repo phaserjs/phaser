@@ -571,7 +571,10 @@ var PostFXPipeline = new Class({
      */
     destroy: function ()
     {
-        this.controller.destroy();
+        if (this.controller)
+        {
+            this.controller.destroy();
+        }
 
         this.gameObject = null;
         this.controller = null;
