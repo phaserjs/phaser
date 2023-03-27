@@ -26,18 +26,21 @@ var Events = require('../events');
  * @param {number} [minFilter=0] - The minFilter mode of the texture when created. 0 is `LINEAR`, 1 is `NEAREST`.
  * @param {boolean} [autoClear=true] - Automatically clear this framebuffer when bound?
  * @param {boolean} [autoResize=false] - Automatically resize this Render Target if the WebGL Renderer resizes?
+ * @param {boolean} [addDepthBuffer=true] - Add a DEPTH_STENCIL and attachment to this Render Target?
+ * @param {boolean} [forceClamp=true] - Force the texture to use the CLAMP_TO_EDGE wrap mode, even if a power of two?
  */
 var RenderTarget = new Class({
 
     initialize:
 
-    function RenderTarget (renderer, width, height, scale, minFilter, autoClear, autoResize, addDepthBuffer)
+    function RenderTarget (renderer, width, height, scale, minFilter, autoClear, autoResize, addDepthBuffer, forceClamp)
     {
         if (scale === undefined) { scale = 1; }
         if (minFilter === undefined) { minFilter = 0; }
         if (autoClear === undefined) { autoClear = true; }
         if (autoResize === undefined) { autoResize = false; }
         if (addDepthBuffer === undefined) { addDepthBuffer = true; }
+        if (forceClamp === undefined) { forceClamp = true; }
 
         /**
          * A reference to the WebGLRenderer instance.
@@ -145,6 +148,18 @@ var RenderTarget = new Class({
          */
         this.hasDepthBuffer = addDepthBuffer;
 
+        /**
+         * Force the WebGL Texture to use the CLAMP_TO_EDGE wrap mode, even if a power of two?
+         *
+         * If `false` it will use `gl.REPEAT` instead, which may be required for some effects, such
+         * as using this Render Target as a texture for a Shader.
+         *
+         * @name Phaser.Renderer.WebGL.RenderTarget#forceClamp
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.forceClamp = forceClamp;
+
         this.resize(width, height);
 
         if (autoResize)
@@ -232,7 +247,7 @@ var RenderTarget = new Class({
                 height = 1;
             }
 
-            this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter, true);
+            this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter, this.forceClamp);
             this.framebuffer = renderer.createFramebuffer(width, height, this.texture, this.hasDepthBuffer);
 
             this.width = width;
