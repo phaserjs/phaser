@@ -11,6 +11,7 @@
 module.exports = {
 
     Clock: require('./Clock'),
+    Timeline: require('./Timeline'),
     TimerEvent: require('./TimerEvent')
 
 };
