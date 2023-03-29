@@ -15,7 +15,7 @@ var SceneEvents = require('../scene/events');
  * A Timeline is a way to schedule events to happen at specific times in the future.
  *
  * You can think of it as an event sequencer for your game, allowing you to schedule the
- * running of callbacks, events and other actions at specific times.
+ * running of callbacks, events and other actions at specific times in the future.
  *
  * A Timeline is a Scene level system, meaning you can have as many Timelines as you like, each
  * belonging to a different Scene. You can also have multiple Timelines running at the same time.
@@ -45,7 +45,7 @@ var SceneEvents = require('../scene/events');
  * timeline.play();
  * ```
  *
- * In this example we queue together a few different events:
+ * In this example we sequence a few different events:
  *
  * ```js
  * const timeline = this.add.timeline([
@@ -65,8 +65,8 @@ var SceneEvents = require('../scene/events');
  *     },
  *     {
  *         at: 8000,
- *         target: this.background,
  *         event: 'HURRY_PLAYER',
+ *         target: this.background,
  *         set: {
  *             tint: 0xff0000
  *         }
@@ -215,6 +215,8 @@ var Timeline = new Class({
         var i;
         var events = this.events;
         var removeSweep = false;
+        var sys = this.systems;
+        var target;
 
         for (i = 0; i < events.length; i++)
         {
@@ -229,19 +231,42 @@ var Timeline = new Class({
                     removeSweep = true;
                 }
 
-                if (event.action)
+                if (event.set && event.target)
                 {
-                    event.action.call(this, event);
+                    //  set is an object of key value pairs, apply them to target
+                    for (var key in event.set)
+                    {
+                        event.target[key] = event.set[key];
+                    }
                 }
+
+                if (event.tween)
+                {
+                    sys.twen.add(event.tween);
+                }
+
+                if (event.sound)
+                {
+                    if (typeof event.sound === 'string')
+                    {
+                        sys.sound.play(event.sound);
+                    }
+                    else
+                    {
+                        sys.sound.play(event.sound.key, event.sound.config);
+                    }
+                }
+
+                target = (event.target) ? event.target : this;
 
                 if (event.event)
                 {
-                    this.emit(event.event, event.target);
+                    this.emit(event.event, target);
                 }
 
                 if (event.run)
                 {
-                    event.run.call(event.target);
+                    event.run.call(target);
                 }
             }
         }
@@ -292,10 +317,11 @@ var Timeline = new Class({
     /**
      * Pauses this Timeline.
      *
-     * To resume it again, call the `Timeline.resume` method.
+     * To resume it again, call the `Timeline.resume` method or set the `Timeline.paused` property to `false`.
      *
      * If the Timeline is paused while processing the current game step, then it
-     * will carry on with all events that are due to run during that step.
+     * will carry on with all events that are due to run during that step and pause
+     * from the next game step.
      *
      * @method Phaser.Time.Timeline#pause
      * @since 3.60.0
@@ -333,6 +359,9 @@ var Timeline = new Class({
      *
      * This will set the elapsed time to zero and set all events to be incomplete.
      *
+     * If the Timeline had any events that were set to `once` that have already
+     * been removed, they will **not** be present again after calling this method.
+     *
      * @method Phaser.Time.Timeline#reset
      * @since 3.60.0
      *
@@ -351,7 +380,7 @@ var Timeline = new Class({
     },
 
     /**
-     * Adds one or more Timeline Events to this Timeline.
+     * Adds one or more events to this Timeline.
      *
      *
      * @method Phaser.Time.Timeline#add
@@ -369,7 +398,6 @@ var Timeline = new Class({
         }
 
         var events = this.events;
-        var sys = this.systems;
         var prevTime = 0;
 
         if (events.length > 0)
@@ -400,64 +428,16 @@ var Timeline = new Class({
                 startTime = prevTime + fromTime;
             }
 
-            //  User-defined callback that will be invoked when the event runs
-            var run = GetFastValue(entry, 'run', null);
-
-            //  User-defined event to emit when the event runs
-            var event = GetFastValue(entry, 'event', null);
-
-            var target = GetFastValue(entry, 'target', this);
-
-            var once = GetFastValue(entry, 'once', false);
-
-            //  The internal action to perform (sound, tween, animation, etc)
-
-            var action = null;
-
-            var tween = GetFastValue(entry, 'tween', null);
-            var set = GetFastValue(entry, 'set', null);
-            var sound = GetFastValue(entry, 'sound', null);
-
-            if (tween || (set && target) || sound)
-            {
-                action = function ()
-                {
-                    if (set && target)
-                    {
-                        //  set is an object of key value pairs, apply them to target
-                        for (var key in set)
-                        {
-                            target[key] = set[key];
-                        }
-                    }
-
-                    if (tween)
-                    {
-                        sys.tweens.add(tween);
-                    }
-
-                    if (sound)
-                    {
-                        if (typeof sound === 'string')
-                        {
-                            sys.sound.play(sound);
-                        }
-                        else
-                        {
-                            sys.sound.play(sound.key, sound.config);
-                        }
-                    }
-                };
-            }
-
             events.push({
                 complete: false,
                 time: startTime,
-                run: run,
-                event: event,
-                target: target,
-                action: action,
-                once: once
+                run: GetFastValue(entry, 'run', null),
+                event: GetFastValue(entry, 'event', null),
+                target: GetFastValue(entry, 'target', null),
+                set: GetFastValue(entry, 'set', null),
+                tween: GetFastValue(entry, 'tween', null),
+                sound: GetFastValue(entry, 'run', null),
+                once: GetFastValue(entry, 'once', false)
             });
 
             prevTime = startTime;
@@ -511,6 +491,72 @@ var Timeline = new Class({
 });
 
 /**
+ * A Timeline is a way to schedule events to happen at specific times in the future.
+ *
+ * You can think of it as an event sequencer for your game, allowing you to schedule the
+ * running of callbacks, events and other actions at specific times in the future.
+ *
+ * A Timeline is a Scene level system, meaning you can have as many Timelines as you like, each
+ * belonging to a different Scene. You can also have multiple Timelines running at the same time.
+ *
+ * If the Scene is paused, the Timeline will also pause. If the Scene is destroyed, the Timeline
+ * will be automatically destroyed. However, you can control the Timeline directly, pausing,
+ * resuming and stopping it at any time.
+ *
+ * Create an instance of a Timeline via the Game Object Factory:
+ *
+ * ```js
+ * const timeline = this.add.timeline();
+ * ```
+ *
+ * The Timeline always starts paused. You must call `play` on it to start it running.
+ *
+ * You can also pass in a configuration object on creation, or an array of them:
+ *
+ * ```js
+ * const timeline = this.add.timeline({
+ *     at: 1000,
+ *     run: () => {
+ *         this.add.sprite(400, 300, 'logo');
+ *     }
+ * });
+ *
+ * timeline.play();
+ * ```
+ *
+ * In this example we sequence a few different events:
+ *
+ * ```js
+ * const timeline = this.add.timeline([
+ *     {
+ *         at: 1000,
+ *         run: () => { this.logo = this.add.sprite(400, 300, 'logo'); },
+ *         sound: 'TitleMusic'
+ *     },
+ *     {
+ *         at: 2500,
+ *         tween: {
+ *             targets: this.logo,
+ *             y: 600,
+ *             yoyo: true
+ *         },
+ *         sound: 'Explode'
+ *     },
+ *     {
+ *         at: 8000,
+ *         event: 'HURRY_PLAYER',
+ *         target: this.background,
+ *         set: {
+ *             tint: 0xff0000
+ *         }
+ *     }
+ * ]);
+ *
+ * timeline.play();
+ * ```
+ *
+ * There are lots of options available to you via the configuration object. See the
+ * {@link Phaser.Types.Time.TimelineEventConfig} typedef for more details.
  *
  * @method Phaser.GameObjects.GameObjectFactory#timeline
  * @since 3.60.0
