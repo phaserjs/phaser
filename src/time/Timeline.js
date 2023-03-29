@@ -19,6 +19,7 @@ var SceneEvents = require('../scene/events');
  * @since 3.60.0
  *
  * @param {Phaser.Scene} scene - The Scene which owns this Timeline.
+ * @param {object} [config] - The configuration object for this Timeline.
  */
 var Timeline = new Class({
 
@@ -31,55 +32,66 @@ var Timeline = new Class({
         EventEmitter.call(this);
 
         /**
-         * The Scene which owns this Clock.
+         * The Scene to which this Timeline belongs.
          *
-         * @name Phaser.Time.Clock#scene
+         * @name Phaser.Time.Timeline#scene
          * @type {Phaser.Scene}
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.scene = scene;
 
         /**
-         * The Scene Systems object of the Scene which owns this Clock.
+         * A reference to the Scene Systems.
          *
-         * @name Phaser.Time.Clock#systems
+         * @name Phaser.Time.Timeline#systems
          * @type {Phaser.Scenes.Systems}
-         * @since 3.0.0
+         * @since 3.60.0
          */
         this.systems = scene.sys;
 
+        /**
+         * The elapsed time counter.
+         *
+         * Treat this as read-only.
+         *
+         * @name Phaser.Time.Timeline#elapsed
+         * @type {number}
+         * @since 3.60.0
+         */
         this.elapsed = 0;
 
         /**
-         * Whether the Clock is paused (`true`) or active (`false`).
+         * Whether the Timeline is running (`true`) or active (`false`).
          *
-         * When paused, the Clock will not update any of its Timer Events, thus freezing time.
+         * When paused, the Timeline will not run any of its actions.
          *
-         * @name Phaser.Time.Clock#paused
+         * By default a Timeline is always paused and should be started by
+         * calling the `Timeline.play` method.
+         *
+         * You can use the `Timeline.pause` and `Timeline.resume` methods to control
+         * this value in a chainable way.
+         *
+         * @name Phaser.Time.Timeline#paused
          * @type {boolean}
-         * @default false
-         * @since 3.0.0
+         * @default true
+         * @since 3.60.0
          */
         this.paused = true;
 
         /**
-         * An array of all Timer Events whose delays haven't expired - these are actively updating Timer Events.
+         * An array of all the Timeline Events.
          *
-         * @name Phaser.Time.Clock#_active
-         * @type {Phaser.Time.TimerEvent[]}
-         * @private
-         * @default []
-         * @since 3.0.0
-        this._active = [];
-        */
-
+         * @name Phaser.Time.Timeline#events
+         * @type {object[]}
+         * @since 3.60.0
+         */
         this.events = [];
 
         var eventEmitter = this.systems.events;
 
         eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
         eventEmitter.on(SceneEvents.UPDATE, this.update, this);
-        eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
+        eventEmitter.once(SceneEvents.SHUTDOWN, this.destroy, this);
 
         if (config)
         {
@@ -88,10 +100,10 @@ var Timeline = new Class({
     },
 
     /**
-     * Updates the arrays of active and pending Timer Events. Called at the start of the frame.
+     * Updates the elapsed time counter, if this Timeline is not paused.
      *
-     * @method Phaser.Time.Clock#preUpdate
-     * @since 3.0.0
+     * @method Phaser.Time.Timeline#preUpdate
+     * @since 3.60.0
      *
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -106,43 +118,38 @@ var Timeline = new Class({
         this.elapsed += delta;
     },
 
-    play: function (resetElapsed)
-    {
-        if (resetElapsed === undefined) { resetElapsed = true; }
-
-        this.paused = false;
-
-        if (resetElapsed)
-        {
-            this.elapsed = 0;
-        }
-    },
-
     /**
-     * Updates the Clock's internal time and all of its Timer Events.
      *
-     * @method Phaser.Time.Clock#update
-     * @since 3.0.0
+     *
+     * @method Phaser.Time.Timeline#update
+     * @since 3.60.0
      *
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    update: function ()
+    update: function (time)
     {
         if (this.paused)
         {
             return;
         }
 
+        var i;
         var events = this.events;
+        var removeSweep = false;
 
-        for (var i = 0; i < events.length; i++)
+        for (i = 0; i < events.length; i++)
         {
             var event = events[i];
 
             if (!event.complete && event.time <= this.elapsed)
             {
                 event.complete = true;
+
+                if (event.once)
+                {
+                    removeSweep = true;
+                }
 
                 if (event.action)
                 {
@@ -158,57 +165,124 @@ var Timeline = new Class({
                 {
                     event.run.call(event.target);
                 }
+
+                console.log(new Date().toTimeString().substring(0, 8));
+            }
+        }
+
+        if (removeSweep)
+        {
+            for (i = 0; i < events.length; i++)
+            {
+                if (events[i].complete && events[i].once)
+                {
+                    events.splice(i, 1);
+
+                    i--;
+                }
             }
         }
     },
 
     /**
-     * timeline.add({
-     *    time: 1000,
-     *    event: function () { console.log('1 second') }
-     * })
+     * Starts this Timeline running.
      *
-     * timeline.add({
-     *    time: 1000,
-     *    event: 'BOSS_FIGHT_START'
-     * })
+     * If the Timeline is already running and the `fromStart` parameter is `true`,
+     * then calling this method will reset it the Timeline to the start.
      *
-     * //   Sets the event context to be 'target', so you can use 'this' inside of it without it having been declared yet
-     * timeline.add({
-     *    time: 1000,
-     *    target: sprite,
-     *    event: function () { this.x += 10; }
-     * })
+     * If you wish to resume a paused Timeline, then use the `Timeline.resume` method instead.
      *
-     * //   Creates and runs the Tween at the given time
-     * timeline.add({
-     *    time: 1000,
-     *    tween: TweenConfig
-     *    event: () => { // optional actual as well }
-     * })
+     * @method Phaser.Time.Timeline#play
+     * @since 3.60.0
      *
-     * //   Plays the Animation on the target Sprite/s at the given time
-     * timeline.add({
-     *    time: 1000,
-     *    target: sprite,
-     *    play: AnimationPlayConfig
-     *    event: () => { // optional actual as well }
-     * })
+     * @param {boolean} [fromStart=true] - Reset this Timeline back to the start before playing.
      *
-     * //   Plays the Sound at the given time
-     * timeline.add({
-     *    time: 1000,
-     *    sound: SoundConfig
-     *    event: () => { // optional actual as well }
-     * })
+     * @return {this} This Timeline instance.
+     */
+    play: function (fromStart)
+    {
+        if (fromStart === undefined) { fromStart = true; }
+
+        this.paused = false;
+
+        if (fromStart)
+        {
+            this.reset();
+        }
+
+        return this;
+    },
+
+    /**
+     * Pauses this Timeline.
      *
-     * //   Sets the properties defined in 'set' on the target Sprite/s at the given time (no tween, direct set)
-     * timeline.add({
-     *    time: 1000,
-     *    target: sprite[],
-     *    set: { x: 100, y: 200 }
-     *    event: () => { // optional actual as well }
-     * })
+     * To resume it again, call the `Timeline.resume` method.
+     *
+     * If the Timeline is paused while processing the current game step, then it
+     * will carry on with all events that are due to run during that step.
+     *
+     * @method Phaser.Time.Timeline#pause
+     * @since 3.60.0
+     *
+     * @return {this} This Timeline instance.
+     */
+    pause: function ()
+    {
+        this.paused = true;
+
+        return this;
+    },
+
+    /**
+     * Resumes this Timeline from a paused state.
+     *
+     * The Timeline will carry on from where it left off.
+     *
+     * If you need to reset the Timeline to the start, then call the `Timeline.reset` method.
+     *
+     * @method Phaser.Time.Timeline#resume
+     * @since 3.60.0
+     *
+     * @return {this} This Timeline instance.
+     */
+    resume: function ()
+    {
+        this.paused = false;
+
+        return this;
+    },
+
+    /**
+     * Resets this Timeline back to the start.
+     *
+     * This will set the elapsed time to zero and set all events to be incomplete.
+     *
+     * @method Phaser.Time.Timeline#reset
+     * @since 3.60.0
+     *
+     * @return {this} This Timeline instance.
+     */
+    reset: function ()
+    {
+        this.elapsed = 0;
+
+        for (var i = 0; i < this.events.length; i++)
+        {
+            this.events[i].complete = false;
+        }
+
+        return this;
+    },
+
+    /**
+     *
+     *
+     * @method Phaser.Time.Timeline#add
+     * @since 3.60.0
+     *
+     * @param {object} config - The configuration object for this Timeline Event.
+     *
+     * @return {this} This Timeline instance.
      */
     add: function (config)
     {
@@ -218,7 +292,7 @@ var Timeline = new Class({
             config = [ config ];
         }
 
-        var firstTime;
+        var prevTime = 0;
         var sys = this.systems;
 
         for (var i = 0; i < config.length; i++)
@@ -236,9 +310,12 @@ var Timeline = new Class({
                 startTime = this.elapsed + offsetTime;
             }
 
-            if (firstTime === undefined)
+            //  Start in x ms from whatever the previous event's start time was (i.e. x ms after the previous event)
+            var fromTime = GetFastValue(entry, 'from', null);
+
+            if (fromTime !== null)
             {
-                firstTime = startTime;
+                startTime = prevTime + fromTime;
             }
 
             //  User-defined callback that will be invoked when the event runs
@@ -248,6 +325,8 @@ var Timeline = new Class({
             var event = GetFastValue(entry, 'event', null);
 
             var target = GetFastValue(entry, 'target', this);
+
+            var once = GetFastValue(entry, 'once', false);
 
             //  The internal action to perform (sound, tween, animation, etc)
 
@@ -295,51 +374,38 @@ var Timeline = new Class({
                 run: run,
                 event: event,
                 target: target,
-                action: action
+                action: action,
+                once: once
             });
+
+            prevTime = startTime;
         }
 
         return this;
     },
 
-    reset: function ()
-    {
-        this.elapsed = 0;
-    },
-
     /**
-     * The Scene that owns this plugin is shutting down.
-     * We need to kill and reset all internal properties as well as stop listening to Scene events.
+     * Destroys this Timeline.
      *
-     * @method Phaser.Time.Clock#shutdown
-     * @private
-     * @since 3.0.0
+     * This will remove all events from the Timeline and stop it from processing.
+     *
+     * This method is called automatically when the Scene shuts down, but you may
+     * also call it directly should you need to destroy the Timeline earlier.
+     *
+     * @method Phaser.Time.Timeline#destroy
+     * @since 3.60.0
      */
-    shutdown: function ()
+    destroy: function ()
     {
         var eventEmitter = this.systems.events;
 
         eventEmitter.off(SceneEvents.PRE_UPDATE, this.preUpdate, this);
         eventEmitter.off(SceneEvents.UPDATE, this.update, this);
-        eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
-
-    /**
-     * The Scene that owns this plugin is being destroyed.
-     * We need to shutdown and then kill off all external references.
-     *
-     * @method Phaser.Time.Clock#destroy
-     * @private
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        this.shutdown();
-
-        this.scene.sys.events.off(SceneEvents.START, this.start, this);
+        eventEmitter.off(SceneEvents.SHUTDOWN, this.destroy, this);
 
         this.scene = null;
         this.systems = null;
+        this.events = [];
     }
 
 });
