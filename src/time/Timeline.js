@@ -242,7 +242,7 @@ var Timeline = new Class({
 
                 if (event.tween)
                 {
-                    sys.tween.add(event.tween);
+                    sys.tweens.add(event.tween);
                 }
 
                 if (event.sound)
