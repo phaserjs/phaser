@@ -35,7 +35,7 @@ var FX_CONST = require('./const');
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - A reference to the Game Object that has this fx.
- * @param {number} [color] - The color of the Bloom, as a hex value.
+ * @param {number} [color=0xffffff] - The color of the Bloom, as a hex value.
  * @param {number} [offsetX=1] - The horizontal offset of the bloom effect.
  * @param {number} [offsetY=1] - The vertical offset of the bloom effect.
  * @param {number} [blurStrength=1] - The strength of the blur process of the bloom effect.
