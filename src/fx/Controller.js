@@ -56,6 +56,25 @@ var Controller = new Class({
     },
 
     /**
+     * Sets the active state of this FX Controller.
+     *
+     * A disabled FX Controller will not be updated.
+     *
+     * @method Phaser.FX.Controller#setActive
+     * @since 3.60.0
+     *
+     * @param {boolean} value - `true` to enable this FX Controller, or `false` to disable it.
+     *
+     * @return {this} This FX Controller instance.
+     */
+    setActive: function (value)
+    {
+        this.active = value;
+
+        return this;
+    },
+
+    /**
      * Destroys this FX Controller.
      *
      * @method Phaser.FX.Controller#destroy
