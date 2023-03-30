@@ -513,10 +513,7 @@ var Timeline = new Class({
             prevTime = startTime;
         }
 
-        if (!this.paused)
-        {
-            this.complete = false;
-        }
+        this.complete = false;
 
         return this;
     },
