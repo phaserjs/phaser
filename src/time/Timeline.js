@@ -436,7 +436,7 @@ var Timeline = new Class({
                 target: GetFastValue(entry, 'target', null),
                 set: GetFastValue(entry, 'set', null),
                 tween: GetFastValue(entry, 'tween', null),
-                sound: GetFastValue(entry, 'run', null),
+                sound: GetFastValue(entry, 'sound', null),
                 once: GetFastValue(entry, 'once', false)
             });
 
