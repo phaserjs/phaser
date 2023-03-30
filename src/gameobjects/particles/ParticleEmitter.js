@@ -4,7 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Add = require('../../utils/array/Add');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var ComponentsToJSON = require('../components/ToJSON');
@@ -1196,10 +1195,16 @@ var ParticleEmitter = new Class({
 
             this.frameCounter++;
 
-            if (this.frameCounter >= this.frameQuantity)
+            if (this.frameCounter === this.frameQuantity)
             {
                 this.frameCounter = 0;
-                this.currentFrame = Wrap(this.currentFrame + 1, 0, len - 1);
+
+                this.currentFrame++;
+
+                if (this.currentFrame === len)
+                {
+                    this.currentFrame = 0;
+                }
             }
         }
 
@@ -1673,6 +1678,7 @@ var ParticleEmitter = new Class({
         }
 
         var zone;
+        var deathZones = this.deathZones;
 
         for (var i = 0; i < config.length; i++)
         {
@@ -1680,13 +1686,13 @@ var ParticleEmitter = new Class({
 
             if (zone instanceof DeathZone)
             {
-                Add(this.deathZones, zone);
+                deathZones.push(zone);
             }
             else if (typeof zone.contains === 'function')
             {
                 zone = new DeathZone(zone, true);
 
-                Add(this.deathZones, zone);
+                deathZones.push(zone);
             }
             else
             {
@@ -1699,7 +1705,7 @@ var ParticleEmitter = new Class({
 
                     zone = new DeathZone(source, killOnEnter);
 
-                    Add(this.deathZones, zone);
+                    deathZones.push(zone);
                 }
             }
         }
@@ -1751,6 +1757,7 @@ var ParticleEmitter = new Class({
         }
 
         var zone;
+        var emitZones = this.emitZones;
 
         for (var i = 0; i < config.length; i++)
         {
@@ -1758,7 +1765,7 @@ var ParticleEmitter = new Class({
 
             if (zone instanceof RandomZone || zone instanceof EdgeZone)
             {
-                Add(this.emitZones, zone);
+                emitZones.push(zone);
             }
             else
             {
@@ -1786,7 +1793,7 @@ var ParticleEmitter = new Class({
 
                 if (zone)
                 {
-                    Add(this.emitZones, zone);
+                    emitZones.push(zone);
                 }
             }
         }
@@ -1845,11 +1852,16 @@ var ParticleEmitter = new Class({
             {
                 this.zoneTotal++;
 
-                if (this.zoneTotal >= zone.total)
+                if (this.zoneTotal === zone.total)
                 {
                     this.zoneTotal = 0;
 
-                    this.zoneIndex = Wrap(this.zoneIndex + 1, 0, len);
+                    this.zoneIndex++;
+
+                    if (this.zoneIndex === len)
+                    {
+                        this.zoneIndex = 0;
+                    }
                 }
             }
         }
