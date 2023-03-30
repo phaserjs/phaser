@@ -145,6 +145,37 @@ var Timeline = new Class({
         this.paused = true;
 
         /**
+         * Whether the Timeline is complete (`true`) or not (`false`).
+         *
+         * A Timeline is considered complete when all of its events have been run.
+         *
+         * If you wish to restart a Timeline after it has completed, you can do so
+         * by calling the `Timeline.restart` method.
+         *
+         * You can also use the `Timeline.stop` method to stop a running Timeline,
+         * at any point, without resetting it.
+         *
+         * @name Phaser.Time.Timeline#complete
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
+         */
+        this.complete = false;
+
+        /**
+         * The total number of events that have been run.
+         *
+         * This value is reset to zero if the Timeline is restarted.
+         *
+         * Treat this as read-only.
+         *
+         * @name Phaser.Time.Timeline#totalComplete
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.totalComplete = 0;
+
+        /**
          * An array of all the Timeline Events.
          *
          * @name Phaser.Time.Timeline#events
@@ -226,6 +257,8 @@ var Timeline = new Class({
             {
                 event.complete = true;
 
+                this.totalComplete++;
+
                 if (event.once)
                 {
                     removeSweep = true;
@@ -268,6 +301,11 @@ var Timeline = new Class({
                 {
                     event.run.call(target);
                 }
+
+                if (event.stop)
+                {
+                    this.stop();
+                }
             }
         }
 
@@ -283,13 +321,19 @@ var Timeline = new Class({
                 }
             }
         }
+
+        //  It may be greater than the length if events have been removed
+        if (this.totalComplete >= events.length)
+        {
+            this.complete = true;
+        }
     },
 
     /**
      * Starts this Timeline running.
      *
      * If the Timeline is already running and the `fromStart` parameter is `true`,
-     * then calling this method will reset it the Timeline to the start.
+     * then calling this method will reset the Timeline events as incomplete.
      *
      * If you wish to resume a paused Timeline, then use the `Timeline.resume` method instead.
      *
@@ -305,6 +349,8 @@ var Timeline = new Class({
         if (fromStart === undefined) { fromStart = true; }
 
         this.paused = false;
+        this.complete = false;
+        this.totalComplete = 0;
 
         if (fromStart)
         {
@@ -355,12 +401,35 @@ var Timeline = new Class({
     },
 
     /**
+     * Stops this Timeline.
+     *
+     * This will set the `paused` and `complete` properties to `true`.
+     *
+     * If you wish to reset the Timeline to the start, then call the `Timeline.reset` method.
+     *
+     * @method Phaser.Time.Timeline#stop
+     * @since 3.60.0
+     *
+     * @return {this} This Timeline instance.
+     */
+    stop: function ()
+    {
+        this.paused = true;
+        this.complete = true;
+
+        return this;
+    },
+
+    /**
      * Resets this Timeline back to the start.
      *
      * This will set the elapsed time to zero and set all events to be incomplete.
      *
      * If the Timeline had any events that were set to `once` that have already
      * been removed, they will **not** be present again after calling this method.
+     *
+     * If the Timeline isn't currently running (i.e. it's paused or complete) then
+     * calling this method resets those states, the same as calling `Timeline.play(true)`.
      *
      * @method Phaser.Time.Timeline#reset
      * @since 3.60.0
@@ -376,7 +445,7 @@ var Timeline = new Class({
             this.events[i].complete = false;
         }
 
-        return this;
+        return this.play(false);
     },
 
     /**
@@ -437,10 +506,16 @@ var Timeline = new Class({
                 set: GetFastValue(entry, 'set', null),
                 tween: GetFastValue(entry, 'tween', null),
                 sound: GetFastValue(entry, 'sound', null),
-                once: GetFastValue(entry, 'once', false)
+                once: GetFastValue(entry, 'once', false),
+                stop: GetFastValue(entry, 'stop', false)
             });
 
             prevTime = startTime;
+        }
+
+        if (!this.paused)
+        {
+            this.complete = false;
         }
 
         return this;
@@ -462,6 +537,46 @@ var Timeline = new Class({
         this.paused = true;
 
         return this;
+    },
+
+    /**
+     * Returns `true` if this Timeline is currently playing.
+     *
+     * A Timeline is playing if it is not paused or not complete.
+     *
+     * @method Phaser.Time.Timeline#isPlaying
+     * @since 3.60.0
+     *
+     * @return {boolean} `true` if this Timeline is playing, otherwise `false`.
+     */
+    isPlaying: function ()
+    {
+        return (!this.paused && !this.complete);
+    },
+
+    /**
+     * Returns a number between 0 and 1 representing the progress of this Timeline.
+     *
+     * A value of 0 means the Timeline has just started, 0.5 means it's half way through,
+     * and 1 means it's complete.
+     *
+     * If the Timeline has no events, or all events have been removed, this will return 1.
+     *
+     * If the Timeline is paused, this will return the progress value at the time it was paused.
+     *
+     * Note that the value returned is based on the number of events that have been completed,
+     * not the 'duration' of the events (as this is unknown to the Timeline).
+     *
+     * @method Phaser.Time.Timeline#getProgress
+     * @since 3.60.0
+     *
+     * @return {number} A number between 0 and 1 representing the progress of this Timeline.
+     */
+    getProgress: function ()
+    {
+        var total = Math.min(this.totalComplete, this.events.length);
+
+        return total / this.events.length;
     },
 
     /**
