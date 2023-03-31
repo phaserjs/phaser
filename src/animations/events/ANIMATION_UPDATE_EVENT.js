@@ -8,7 +8,7 @@
  * The Animation Update Event.
  *
  * This event is dispatched by a Sprite when an animation playing on it updates. This happens when the animation changes frame.
- * An animation will change frame based on the frme rate and other factors like `timeScale` and `delay`. It can also change
+ * An animation will change frame based on the frame rate and other factors like `timeScale` and `delay`. It can also change
  * frame when stopped or restarted.
  *
  * Listen for it on the Sprite using `sprite.on('animationupdate', listener)`

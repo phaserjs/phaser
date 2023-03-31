@@ -451,6 +451,16 @@ var Timeline = new Class({
     /**
      * Adds one or more events to this Timeline.
      *
+     * You can pass in a single configuration object, or an array of them:
+     *
+     * ```js
+     * const timeline = this.add.timeline({
+     *     at: 1000,
+     *     run: () => {
+     *         this.add.sprite(400, 300, 'logo');
+     *     }
+     * });
+     * ```
      *
      * @method Phaser.Time.Timeline#add
      * @since 3.60.0
