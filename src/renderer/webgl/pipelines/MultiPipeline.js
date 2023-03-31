@@ -325,11 +325,11 @@ var MultiPipeline = new Class({
         var gx = gameObject.x;
         var gy = gameObject.y;
 
-        if (camera.roundPixels)
-        {
-            gx = Math.floor(gx);
-            gy = Math.floor(gy);
-        }
+        // if (camera.roundPixels)
+        // {
+        //     gx = Math.floor(gx);
+        //     gy = Math.floor(gy);
+        // }
 
         spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
 
@@ -353,7 +353,7 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight, false);
+        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight, camera.roundPixels);
 
         var getTint = Utils.getTintAppendFloatAlpha;
         var cameraAlpha = camera.alpha;
@@ -505,11 +505,11 @@ var MultiPipeline = new Class({
             y += srcHeight;
         }
 
-        if (camera.roundPixels)
-        {
-            srcX = Math.floor(srcX);
-            srcY = Math.floor(srcY);
-        }
+        // if (camera.roundPixels)
+        // {
+        //     srcX = Math.floor(srcX);
+        //     srcY = Math.floor(srcY);
+        // }
 
         spriteMatrix.applyITRS(srcX, srcY, rotation, scaleX, scaleY);
 
@@ -533,7 +533,7 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var quad = calcMatrix.setQuad(x, y, x + width, y + height, false);
+        var quad = calcMatrix.setQuad(x, y, x + width, y + height, camera.roundPixels);
 
         if (textureUnit === undefined)
         {
