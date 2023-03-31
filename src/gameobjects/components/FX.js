@@ -233,28 +233,46 @@ var FX = new Class({
     },
 
     /**
-     * Destroys and removes all FX Controllers that are part of this FX Component,
+     * Destroys and removes all Pre and Post FX Controllers that are part of this FX Component,
      * then disables it.
      *
      * @method Phaser.GameObjects.Components.FX#clear
      * @since 3.60.0
+     *
+     * @param {boolean} [removePre=true] - Should the Pre FX Controllers be removed?
+     * @param {boolean} [removePost=true] - Should the Post FX Controllers be removed?
+     *
+     * @return {this} This Game Object instance.
      */
-    clear: function ()
+    clear: function (removePre, removePost)
     {
-        var list = this.list;
+        if (removePre === undefined) { removePre = true; }
+        if (removePost === undefined) { removePost = true; }
 
-        for (var i = 0; i < list.length; i++)
+        if (removePre)
         {
-            list[i].destroy();
+            var list = this.list;
+
+            for (var i = 0; i < list.length; i++)
+            {
+                list[i].destroy();
+            }
+
+            this.list = [];
         }
 
-        this.list = [];
+        if (removePost)
+        {
+            this.gameObject.resetPostPipeline(true);
+        }
 
         this.enabled = false;
+
+        return this.gameObject;
     },
 
     /**
-     * Searches for the given FX Controler within this FX Component.
+     * Searches for the given FX Controller within this FX Component.
      *
      * If found, the controller is removed from this compoent and then destroyed.
      *
@@ -262,6 +280,8 @@ var FX = new Class({
      * @since 3.60.0
      *
      * @param {Phaser.FX.Controller} fx - The FX Controller to remove from this FX Component.
+     *
+     * @return {this} This Game Object instance.
      */
     remove: function (fx)
     {
@@ -276,6 +296,8 @@ var FX = new Class({
                 fx.destroy();
             }
         }
+
+        return this.gameObject;
     },
 
     /**
@@ -286,12 +308,14 @@ var FX = new Class({
      *
      * You can re-enable it again by calling `enable`.
      *
-     * Optionally, set `clear` to destroy all current FX Controllers.
+     * Optionally, set `clear` to destroy all current Per and Post FX Controllers.
      *
      * @method Phaser.GameObjects.Components.FX#disable
      * @since 3.60.0
      *
-     * @param {boolean} [clear=false] - Destroy and remove all FX Controllers that are part of this FX Component.
+     * @param {boolean} [clear=false] - Destroy and remove all Pre and Post FX Controllers that are part of this FX Component.
+     *
+     * @return {this} This Game Object instance.
      */
     disable: function (clear)
     {
@@ -305,6 +329,8 @@ var FX = new Class({
         {
             this.clear();
         }
+
+        return this.gameObject;
     },
 
     /**
