@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var BuildTilesetIndex = require('./parsers/tiled/BuildTilesetIndex');
 var Class = require('../utils/Class');
 var DegToRad = require('../math/DegToRad');
 var Formats = require('./Formats');
@@ -245,6 +246,16 @@ var Tilemap = new Class({
         this.layers = mapData.layers;
 
         /**
+         * Master list of tiles -> x, y, index in tileset.
+         *
+         * @name Phaser.Tilemaps.Tilemap#tiles
+         * @type {array}
+         * @since 3.60.0
+         * @see Phaser.Tilemaps.Parsers.Tiled.BuildTilesetIndex
+         */
+        this.tiles = mapData.tiles;
+
+        /**
          * An array of Tilesets used in the map.
          *
          * @name Phaser.Tilemaps.Tilemap#tilesets
@@ -419,6 +430,8 @@ var Tilemap = new Class({
         tileset.setImage(texture);
 
         this.tilesets.push(tileset);
+
+        this.tiles = BuildTilesetIndex(this);
 
         return tileset;
     },
@@ -2653,6 +2666,7 @@ var Tilemap = new Class({
     {
         this.removeAllLayers();
 
+        this.tiles.length = 0;
         this.tilesets.length = 0;
         this.objects.length = 0;
 
