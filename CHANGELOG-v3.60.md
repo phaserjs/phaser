@@ -968,6 +968,7 @@ There are breaking changes from previous versions of Phaser.
 
 ### New Features
 
+* The Hexagonal Tilemap system now supports all 4 different types of layout as offered by Tiled: `staggeraxis-y + staggerindex-odd`, `staggeraxis-x + staggerindex-odd`, `staggeraxis-y + staggerindex-even` and `staggeraxis-x, staggerindex-even` (thanks @rexrainbow)
 * The Arcade Physics World has a new property `tileFilterOptions` which is an object passed to the `GetTilesWithin` methods used by the Sprite vs. Tilemap collision functions. These filters dramatically reduce the quantity of tiles being checked for collision, potentially saving thousands of redundant math comparisons from taking place.
 * The `Graphics.strokeRoundedRect` and `fillRoundedRect` methods can now accept negative values for the corner radius settings, in which case a concave corner is drawn instead (thanks @rexrainbow)
 * `AnimationManager.getAnimsFromTexture` is a new method that will return all global Animations, as stored in the Animation Manager, that have at least one frame using the given Texture. This will not include animations created directly on local Sprites.
@@ -1044,6 +1045,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* `Tilemap.addTilesetImage` has a new optional parameter `tileOffset` which, if given, controls the rendering offset of the tiles. This was always available on the Tileset itself, but not from this function (thanks @imothee)
 * The `GameObject.getBounds` method will now return a `Geom.Rectangle` instance, rather than a plain Object (thanks @samme)
 * The `GetBounds.getCenter` method now has an optional `includeParent` argument, which allows you to get the value in world space.
 * The `MatterTileBody` class, which is created when you convert a Tilemap into a Matter Physics world, will now check to see if the Tile has `flipX` or `flipY` set on it and rotate the body accordingly. Fix #5893 (thanks @Olliebrown @phaserhelp)
@@ -1318,6 +1320,7 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @jerricko
 @joegaffey
 @jonasrundberg
+@kainage
 @kootoopas
 @lolimay
 @MaffDev
