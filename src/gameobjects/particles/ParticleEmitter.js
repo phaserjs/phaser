@@ -1601,7 +1601,7 @@ var ParticleEmitter = new Class({
      */
     setParticleLifespan: function (value)
     {
-        this.lifespan.onChange(value);
+        this.ops.lifespan.onChange(value);
 
         return this;
     },
