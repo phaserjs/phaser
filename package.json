@@ -91,9 +91,9 @@
     "remove-files-webpack-plugin": "^1.5.0",
     "source-map": "^0.7.4",
     "terser-webpack-plugin": "^5.3.7",
-    "typescript": "^5.0.2",
+    "typescript": "^5.0.3",
     "vivid-cli": "^1.1.2",
-    "webpack": "^5.76.3",
+    "webpack": "^5.77.0",
     "webpack-cli": "^5.0.1",
     "webpack-shell-plugin": "^0.5.0"
   },
