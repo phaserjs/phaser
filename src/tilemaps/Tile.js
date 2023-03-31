@@ -779,8 +779,9 @@ var Tile = new Class({
             var staggerAxis = this.layer.staggerAxis;
             var staggerIndex = this.layer.staggerIndex;
             var len = this.layer.hexSideLength;
+            var rowWidth;
+            var rowHeight;
 
-            var rowWidth, rowHeight;
             if (staggerAxis === 'y')
             {
                 rowHeight = ((this.baseHeight - len) / 2 + len);
@@ -793,7 +794,7 @@ var Tile = new Class({
                 {
                     this.pixelX = this.x * this.baseWidth - this.y % 2 * (this.baseWidth / 2);
                 }
-                
+
                 this.pixelY = this.y * rowHeight;
             }
             else if (staggerAxis === 'x')
@@ -810,9 +811,7 @@ var Tile = new Class({
                 {
                     this.pixelY = this.y * this.baseHeight - this.x % 2 * (this.baseHeight / 2);
                 }
-                
             }
-
         }
 
         this.right = this.pixelX + this.baseWidth;

@@ -55,8 +55,11 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
     var tileWidthHalf = tileWidth / 2;
     var tileHeightHalf = tileHeight / 2;
 
-    var px, py;
-    var q, r, s;
+    var px;
+    var py;
+    var q;
+    var r;
+    var s;
 
     //  size
     if (layer.staggerAxis === 'y')
@@ -79,7 +82,7 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
         q = b1 * px + b0 * py;
         r = b3 * px + b2 * py;
     }
-    
+
     s = -q - r;
 
     var qi = Math.round(q);
@@ -99,9 +102,8 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
         ri = -qi - si;
     }
 
-    var x, y;
-
-    y = ri;
+    var x;
+    var y = ri;
 
     if (layer.staggerIndex === 'odd')
     {
