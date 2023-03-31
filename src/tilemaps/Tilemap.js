@@ -383,11 +383,13 @@ var Tilemap = new Class({
      * If not specified, it will default to 0 or the value specified in the Tiled JSON file.
      * @param {number} [gid=0] - If adding multiple tilesets to a blank map, specify the starting
      * GID this set will use here.
+     * @param {object} [tileOffset={x: 0, y: 0}] - Tile texture drawing offset.
+     * If not specified, it will default to {0, 0}
      *
      * @return {?Phaser.Tilemaps.Tileset} Returns the Tileset object that was created or updated, or null if it
      * failed.
      */
-    addTilesetImage: function (tilesetName, key, tileWidth, tileHeight, tileMargin, tileSpacing, gid)
+    addTilesetImage: function (tilesetName, key, tileWidth, tileHeight, tileMargin, tileSpacing, gid, tileOffset)
     {
         if (tilesetName === undefined) { return null; }
         if (key === undefined || key === null) { key = tilesetName; }
@@ -424,8 +426,9 @@ var Tilemap = new Class({
         if (tileMargin === undefined) { tileMargin = 0; }
         if (tileSpacing === undefined) { tileSpacing = 0; }
         if (gid === undefined) { gid = 0; }
+        if (tileOffset === undefined) { tileOffset = {x: 0, y: 0} }
 
-        tileset = new Tileset(tilesetName, gid, tileWidth, tileHeight, tileMargin, tileSpacing);
+        tileset = new Tileset(tilesetName, gid, tileWidth, tileHeight, tileMargin, tileSpacing, undefined, undefined, tileOffset);
 
         tileset.setImage(texture);
 
