@@ -227,13 +227,13 @@ var LayerData = new Class({
          * @since 3.50.0
          */
         this.hexSideLength = GetFastValue(config, 'hexSideLength', 0);
-        
+
         /**
          * The Stagger Axis as defined in Tiled.
          *
          * Only used for hexagonal orientation Tilemaps.
          *
-         * @name Phaser.Tilemaps.MapData#staggerAxis
+         * @name Phaser.Tilemaps.LayerData#staggerAxis
          * @type {string}
          * @since 3.60.0
          */
@@ -246,7 +246,7 @@ var LayerData = new Class({
          *
          * Only used for hexagonal orientation Tilemaps.
          *
-         * @name Phaser.Tilemaps.MapData#staggerIndex
+         * @name Phaser.Tilemaps.LayerData#staggerIndex
          * @type {string}
          * @since 3.60.0
          */
