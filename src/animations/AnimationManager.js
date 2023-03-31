@@ -405,6 +405,8 @@ var AnimationManager = new Class({
 
         if (!data)
         {
+            console.warn('No Aseprite data found for: ' + key);
+
             return output;
         }
 
@@ -533,6 +535,10 @@ var AnimationManager = new Class({
                 this.anims.set(key, anim);
 
                 this.emit(Events.ADD_ANIMATION, key, anim);
+            }
+            else
+            {
+                console.warn('AnimationManager key already exists: ' + key);
             }
         }
 

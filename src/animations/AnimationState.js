@@ -1724,6 +1724,10 @@ var AnimationState = new Class({
 
                 this.anims.set(key, anim);
             }
+            else
+            {
+                console.warn('Animation key already exists: ' + key);
+            }
         }
 
         return anim;
