@@ -137,6 +137,8 @@ var ParseTileLayers = function (json, insertNull)
             if (layerData.orientation === CONST.HEXAGONAL)
             {
                 layerData.hexSideLength = json.hexsidelength;
+                layerData.staggerAxis = json.staggeraxis;
+                layerData.staggerIndex = json.staggerindex;
             }
 
             for (var c = 0; c < curl.height; c++)
@@ -215,6 +217,8 @@ var ParseTileLayers = function (json, insertNull)
             if (layerData.orientation === CONST.HEXAGONAL)
             {
                 layerData.hexSideLength = json.hexsidelength;
+                layerData.staggerAxis = json.staggeraxis;
+                layerData.staggerIndex = json.staggerindex;
             }
             var row = [];
 

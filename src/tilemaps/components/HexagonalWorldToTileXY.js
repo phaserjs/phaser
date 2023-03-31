@@ -55,15 +55,32 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
     var tileWidthHalf = tileWidth / 2;
     var tileHeightHalf = tileHeight / 2;
 
-    //  size
-    //  x = b0 * tileWidth
-    //  y = tileHeightHalf
-    var px = (worldX - tileWidthHalf) / (b0 * tileWidth);
-    var py = (worldY - tileHeightHalf) / tileHeightHalf;
+    var px, py;
+    var q, r, s;
 
-    var q = b0 * px + b1 * py;
-    var r = b2 * px + b3 * py;
-    var s = -q - r;
+    //  size
+    if (layer.staggerAxis === 'y')
+    {
+        //  x = b0 * tileWidth
+        //  y = tileHeightHalf
+        px = (worldX - tileWidthHalf) / (b0 * tileWidth);
+        py = (worldY - tileHeightHalf) / tileHeightHalf;
+
+        q = b0 * px + b1 * py;
+        r = b2 * px + b3 * py;
+    }
+    else
+    {
+        //  x = tileWidthHalf
+        //  y = b0 * tileHeight
+        px = (worldX - tileWidthHalf) / tileWidthHalf;
+        py = (worldY - tileHeightHalf) / (b0 * tileHeight);
+
+        q = b1 * px + b0 * py;
+        r = b3 * px + b2 * py;
+    }
+    
+    s = -q - r;
 
     var qi = Math.round(q);
     var ri = Math.round(r);
@@ -82,10 +99,18 @@ var HexagonalWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
         ri = -qi - si;
     }
 
-    var y = ri;
+    var x, y;
 
-    //  odd-r implementation:
-    var x = (y % 2 === 0) ? (ri / 2) + qi : (ri / 2) + qi - 0.5;
+    y = ri;
+
+    if (layer.staggerIndex === 'odd')
+    {
+        x = (y % 2 === 0) ? (ri / 2) + qi : (ri / 2) + qi - 0.5;
+    }
+    else
+    {
+        x = (y % 2 === 0) ? (ri / 2) + qi : (ri / 2) + qi + 0.5;
+    }
 
     return point.set(x, y);
 };

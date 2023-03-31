@@ -31,13 +31,28 @@ var HexagonalCullBounds = function (layer, camera)
     var tileH = Math.floor(tilemap.tileHeight * tilemapLayer.scaleY);
 
     var len = layer.hexSideLength;
-    var rowH = ((tileH - len) / 2 + len);
+    var boundsLeft, boundsRight, boundsTop, boundsBottom;
+    if (this.staggerAxis === 'y')
+    {
+        var rowH = ((tileH - len) / 2 + len);
+    
+        boundsLeft = SnapFloor(camera.worldView.x - tilemapLayer.x, tileW, 0, true) - tilemapLayer.cullPaddingX;
+        boundsRight = SnapCeil(camera.worldView.right - tilemapLayer.x, tileW, 0, true) + tilemapLayer.cullPaddingX;
+    
+        boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, rowH, 0, true) - tilemapLayer.cullPaddingY;
+        boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, rowH, 0, true) + tilemapLayer.cullPaddingY;
+    }
+    else
+    {
+        var rowW = ((tileW - len) / 2 + len);
+    
+        boundsLeft = SnapFloor(camera.worldView.x - tilemapLayer.x, rowW, 0, true) - tilemapLayer.cullPaddingX;
+        boundsRight = SnapCeil(camera.worldView.right - tilemapLayer.x, rowW, 0, true) + tilemapLayer.cullPaddingX;
+    
+        boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, tileH, 0, true) - tilemapLayer.cullPaddingY;
+        boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, tileH, 0, true) + tilemapLayer.cullPaddingY;
+    }
 
-    var boundsLeft = SnapFloor(camera.worldView.x - tilemapLayer.x, tileW, 0, true) - tilemapLayer.cullPaddingX;
-    var boundsRight = SnapCeil(camera.worldView.right - tilemapLayer.x, tileW, 0, true) + tilemapLayer.cullPaddingX;
-
-    var boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, rowH, 0, true) - tilemapLayer.cullPaddingY;
-    var boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, rowH, 0, true) + tilemapLayer.cullPaddingY;
 
     return {
         left: boundsLeft,

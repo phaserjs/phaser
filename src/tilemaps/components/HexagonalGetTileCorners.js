@@ -42,8 +42,17 @@ var HexagonalGetTileCorners = function (tileX, tileY, camera, layer)
     //  Hard-coded orientation values for Pointy-Top Hexagons only
     var b0 = 0.5773502691896257; // Math.sqrt(3) / 3
 
-    var hexWidth = b0 * tileWidth;
-    var hexHeight = tileHeight / 2;
+    var hexWidth, hexHeight;
+    if (this.staggerAxis === 'y')
+    {
+        hexWidth = b0 * tileWidth;
+        hexHeight = tileHeight / 2;
+    }
+    else
+    {
+        hexWidth = tileWidth / 2;
+        hexHeight = b0 * tileHeight;
+    }
 
     for (var i = 0; i < 6; i++)
     {

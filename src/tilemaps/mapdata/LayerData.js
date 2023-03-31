@@ -227,6 +227,30 @@ var LayerData = new Class({
          * @since 3.50.0
          */
         this.hexSideLength = GetFastValue(config, 'hexSideLength', 0);
+        
+        /**
+         * The Stagger Axis as defined in Tiled.
+         *
+         * Only used for hexagonal orientation Tilemaps.
+         *
+         * @name Phaser.Tilemaps.MapData#staggerAxis
+         * @type {string}
+         * @since 3.60.0
+         */
+        this.staggerAxis = GetFastValue(config, 'staggerAxis', 'y');
+
+        /**
+         * The Stagger Index as defined in Tiled.
+         *
+         * Either 'odd' or 'even'.
+         *
+         * Only used for hexagonal orientation Tilemaps.
+         *
+         * @name Phaser.Tilemaps.MapData#staggerIndex
+         * @type {string}
+         * @since 3.60.0
+         */
+        this.staggerIndex = GetFastValue(config, 'staggerIndex', 'odd');
     }
 
 });
