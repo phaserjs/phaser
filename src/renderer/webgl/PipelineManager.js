@@ -394,14 +394,14 @@ var PipelineManager = new Class({
 
             //  Duplicate RT for alt swap frame
             targets.push(new RenderTarget(renderer, targetWidth, targetWidth));
+
+            this.maxDimension = targetWidth;
         }
 
         //  Full-screen RTs
         targets.push(new RenderTarget(renderer, renderWidth, renderHeight, 1, 0, true, true));
         targets.push(new RenderTarget(renderer, renderWidth, renderHeight, 1, 0, true, true));
         targets.push(new RenderTarget(renderer, renderWidth, renderHeight, 1, 0, true, true));
-
-        this.maxDimension = (qty - 1) * this.frameInc;
 
         //  Install each of the default pipelines
 
