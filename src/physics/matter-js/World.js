@@ -111,20 +111,6 @@ var World = new Class({
         this.enabled = GetValue(config, 'enabled', true);
 
         /**
-         * The correction argument is an optional Number that specifies the time correction factor to apply to the update.
-         * This can help improve the accuracy of the simulation in cases where delta is changing between updates.
-         * The value of correction is defined as delta / lastDelta, i.e. the percentage change of delta over the last step.
-         * Therefore the value is always 1 (no correction) when delta is constant (or when no correction is desired, which is the default).
-         * See the paper on Time Corrected Verlet for more information.
-         *
-         * @name Phaser.Physics.Matter.World#correction
-         * @type {number}
-         * @default 1
-         * @since 3.4.0
-         */
-        this.correction = GetValue(config, 'correction', 1);
-
-        /**
          * This function is called every time the core game loop steps, which is bound to the
          * Request Animation Frame frequency unless otherwise modified.
          *
@@ -181,7 +167,6 @@ var World = new Class({
          */
         this.runner = {
             fps: fps,
-            correction: GetFastValue(runnerConfig, 'correction', 1),
             deltaSampleSize: GetFastValue(runnerConfig, 'deltaSampleSize', 60),
             counterTimestamp: 0,
             frameCounter: 0,
@@ -1122,7 +1107,6 @@ var World = new Class({
         var runner = this.runner;
 
         var timing = engine.timing;
-        var correction = this.correction;
 
         if (runner.isFixed)
         {
@@ -1144,26 +1128,11 @@ var World = new Class({
             delta = delta < runner.deltaMin ? runner.deltaMin : delta;
             delta = delta > runner.deltaMax ? runner.deltaMax : delta;
 
-            // correction for delta
-            correction = delta / runner.delta;
-
             // update engine timing object
             runner.delta = delta;
         }
 
-        // time correction for time scaling
-        if (runner.timeScalePrev !== 0)
-        {
-            correction *= timing.timeScale / runner.timeScalePrev;
-        }
-
-        if (timing.timeScale === 0)
-        {
-            correction = 0;
-        }
-
         runner.timeScalePrev = timing.timeScale;
-        runner.correction = correction;
 
         // fps counter
         runner.frameCounter += 1;
@@ -1175,7 +1144,7 @@ var World = new Class({
             runner.frameCounter = 0;
         }
 
-        Engine.update(engine, delta, correction);
+        Engine.update(engine, delta);
     },
 
     /**
@@ -1203,11 +1172,10 @@ var World = new Class({
      * @since 3.4.0
      *
      * @param {number} [delta=16.666] - The delta value.
-     * @param {number} [correction=1] - Optional delta correction value.
      */
-    step: function (delta, correction)
+    step: function (delta)
     {
-        Engine.update(this.engine, delta, correction);
+        Engine.update(this.engine, delta);
     },
 
     /**

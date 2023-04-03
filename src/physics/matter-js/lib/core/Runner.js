@@ -53,13 +53,11 @@ var Common = require('./Common');
     Runner.create = function(options) {
         var defaults = {
             fps: 60,
-            correction: 1,
             deltaSampleSize: 60,
             counterTimestamp: 0,
             frameCounter: 0,
             deltaHistory: [],
             timePrev: null,
-            timeScalePrev: 1,
             frameRequestId: null,
             isFixed: false,
             enabled: true
@@ -87,8 +85,8 @@ var Common = require('./Common');
             runner = Runner.create();
         }
 
-        (function render(time){
-            runner.frameRequestId = _requestAnimationFrame(render);
+        (function run(time){
+            runner.frameRequestId = _requestAnimationFrame(run);
 
             if (time && runner.enabled) {
                 Runner.tick(runner, engine, time);
@@ -109,15 +107,7 @@ var Common = require('./Common');
      */
     Runner.tick = function(runner, engine, time) {
         var timing = engine.timing,
-            correction = 1,
             delta;
-
-        // create an event object
-        var event = {
-            timestamp: timing.timestamp
-        };
-
-        Events.trigger(runner, 'beforeTick', event);
 
         if (runner.isFixed) {
             // fixed timestep
@@ -131,27 +121,21 @@ var Common = require('./Common');
             runner.deltaHistory.push(delta);
             runner.deltaHistory = runner.deltaHistory.slice(-runner.deltaSampleSize);
             delta = Math.min.apply(null, runner.deltaHistory);
-            
+
             // limit delta
             delta = delta < runner.deltaMin ? runner.deltaMin : delta;
             delta = delta > runner.deltaMax ? runner.deltaMax : delta;
-
-            // correction for delta
-            correction = delta / runner.delta;
 
             // update engine timing object
             runner.delta = delta;
         }
 
-        // time correction for time scaling
-        if (runner.timeScalePrev !== 0)
-            correction *= timing.timeScale / runner.timeScalePrev;
+        // create an event object
+        var event = {
+            timestamp: timing.timestamp
+        };
 
-        if (timing.timeScale === 0)
-            correction = 0;
-
-        runner.timeScalePrev = timing.timeScale;
-        runner.correction = correction;
+        Events.trigger(runner, 'beforeTick', event);
 
         // fps counter
         runner.frameCounter += 1;
@@ -165,7 +149,8 @@ var Common = require('./Common');
 
         // update
         Events.trigger(runner, 'beforeUpdate', event);
-        Engine.update(engine, delta, correction);
+
+        Engine.update(engine, delta);
         Events.trigger(runner, 'afterUpdate', event);
 
         Events.trigger(runner, 'afterTick', event);

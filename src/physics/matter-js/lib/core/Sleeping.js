@@ -8,7 +8,9 @@ var Sleeping = {};
 
 module.exports = Sleeping;
 
+var Body = require('../body/Body');
 var Events = require('./Events');
+var Common = require('./Common');
 
 (function() {
 
@@ -20,15 +22,18 @@ var Events = require('./Events');
      * Puts bodies to sleep or wakes them up depending on their motion.
      * @method update
      * @param {body[]} bodies
-     * @param {number} timeScale
+     * @param {number} delta
      */
-    Sleeping.update = function(bodies, timeScale) {
-        var timeFactor = timeScale * timeScale * timeScale;
-
+    Sleeping.update = function(bodies, delta) {
+        var timeScale = delta / Common._baseDelta,
+            motionSleepThreshold = Sleeping._motionSleepThreshold;
+        
         // update bodies sleeping status
         for (var i = 0; i < bodies.length; i++) {
             var body = bodies[i],
-                motion = body.speed * body.speed + body.angularSpeed * body.angularSpeed;
+                speed = Body.getSpeed(body),
+                angularSpeed = Body.getAngularSpeed(body),
+                motion = speed * speed + angularSpeed * angularSpeed;
 
             // wake up bodies if they have a force applied
             if (body.force.x !== 0 || body.force.y !== 0) {
@@ -41,12 +46,13 @@ var Events = require('./Events');
         
             // biased average motion estimation between frames
             body.motion = Sleeping._minBias * minMotion + (1 - Sleeping._minBias) * maxMotion;
-            
-            if (body.sleepThreshold > 0 && body.motion < Sleeping._motionSleepThreshold * timeFactor) {
+
+            if (body.sleepThreshold > 0 && body.motion < motionSleepThreshold) {
                 body.sleepCounter += 1;
                 
-                if (body.sleepCounter >= body.sleepThreshold)
+                if (body.sleepCounter >= body.sleepThreshold / timeScale) {
                     Sleeping.set(body, true);
+                }
             } else if (body.sleepCounter > 0) {
                 body.sleepCounter -= 1;
             }
@@ -57,10 +63,9 @@ var Events = require('./Events');
      * Given a set of colliding pairs, wakes the sleeping bodies involved.
      * @method afterCollisions
      * @param {pair[]} pairs
-     * @param {number} timeScale
      */
-    Sleeping.afterCollisions = function(pairs, timeScale) {
-        var timeFactor = timeScale * timeScale * timeScale;
+    Sleeping.afterCollisions = function(pairs) {
+        var motionSleepThreshold = Sleeping._motionSleepThreshold;
 
         // wake up bodies involved in collisions
         for (var i = 0; i < pairs.length; i++) {
@@ -82,7 +87,7 @@ var Events = require('./Events');
                 var sleepingBody = (bodyA.isSleeping && !bodyA.isStatic) ? bodyA : bodyB,
                     movingBody = sleepingBody === bodyA ? bodyB : bodyA;
 
-                if (!sleepingBody.isStatic && movingBody.motion > Sleeping._motionWakeThreshold * timeFactor) {
+                if (!sleepingBody.isStatic && movingBody.motion > motionSleepThreshold) {
                     Sleeping.set(sleepingBody, false);
                 }
             }

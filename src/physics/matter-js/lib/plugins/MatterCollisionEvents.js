@@ -8,7 +8,7 @@ var MatterCollisionEvents = {
 
     name: 'matter-collision-events',
     version: '0.1.6',
-    for: 'matter-js@^0.18.0',
+    for: 'matter-js@^0.19.0',
     silent: true,
 
     install: function (matter)

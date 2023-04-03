@@ -20,10 +20,12 @@ var Axes = require('../geometry/Axes');
 
 (function() {
 
+    Body._timeCorrection = true;
     Body._inertiaScale = 4;
     Body._nextCollidingGroupId = 1;
     Body._nextNonCollidingGroupId = -1;
     Body._nextCategory = 0x0001;
+    Body._baseDelta = 1000 / 60;
 
     /**
      * Creates a new rigid body model. The options parameter is an object that specifies any properties you wish to override the defaults.
@@ -82,6 +84,7 @@ var Axes = require('../geometry/Axes');
             mass: 0,
             inverseMass: 0,
             inertia: 0,
+            deltaTime: 1000 / 60,
             inverseInertia: 0,
             _original: null,
             render: {
@@ -189,11 +192,9 @@ var Axes = require('../geometry/Axes');
             parent: body.parent || body
         });
 
-        var bounds = body.bounds;
-
         Vertices.rotate(body.vertices, body.angle, body.position);
         Axes.rotate(body.axes, body.angle);
-        Bounds.update(bounds, body.vertices, body.velocity);
+        Bounds.update(body.bounds, body.vertices, body.velocity);
 
         // allow options to override the automatically calculated properties
         Body.set(body, {
@@ -205,6 +206,8 @@ var Axes = require('../geometry/Axes');
 
         if (body.parts.length === 1)
         {
+            var bounds = body.bounds;
+
             var centerOfMass = body.centerOfMass;
             var centerOffset = body.centerOffset;
 
@@ -217,6 +220,10 @@ var Axes = require('../geometry/Axes');
             centerOffset.x = bodyWidth * centerOfMass.x;
             centerOffset.y = bodyHeight * centerOfMass.y;
         }
+
+        //  From Matter render code:
+        // body.render.sprite.xOffset += -(body.bounds.min.x - body.position.x) / (body.bounds.max.x - body.bounds.min.x);
+        // body.render.sprite.yOffset += -(body.bounds.min.y - body.position.y) / (body.bounds.max.y - body.bounds.min.y);
     };
 
     /**
@@ -273,6 +280,12 @@ var Axes = require('../geometry/Axes');
             case 'angularVelocity':
                 Body.setAngularVelocity(body, value);
                 break;
+            case 'speed':
+                Body.setSpeed(body, value);
+                break;
+            case 'angularSpeed':
+                Body.setAngularSpeed(body, value);
+                break;
             case 'parts':
                 Body.setParts(body, value);
                 break;
@@ -294,9 +307,9 @@ var Axes = require('../geometry/Axes');
     Body.setStatic = function(body, isStatic) {
         for (var i = 0; i < body.parts.length; i++) {
             var part = body.parts[i];
-            part.isStatic = isStatic;
 
             if (isStatic) {
+                if (!part.isStatic) {
                 part._original = {
                     restitution: part.restitution,
                     friction: part.friction,
@@ -306,6 +319,7 @@ var Axes = require('../geometry/Axes');
                     inverseMass: part.inverseMass,
                     inverseInertia: part.inverseInertia
                 };
+                }
 
                 part.restitution = 0;
                 part.friction = 1;
@@ -330,6 +344,7 @@ var Axes = require('../geometry/Axes');
 
                 part._original = null;
             }
+            part.isStatic = isStatic;
         }
     };
 
@@ -484,6 +499,12 @@ var Axes = require('../geometry/Axes');
         body.positionPrev.x = cx;
         body.positionPrev.y = cy;
 
+        //  Matter.js original
+        // body.position.x = total.centre.x;
+        // body.position.y = total.centre.y;
+        // body.positionPrev.x = total.centre.x;
+        // body.positionPrev.y = total.centre.y;
+
         Body.setMass(body, total.mass);
         Body.setInertia(body, total.inertia);
         Body.setPosition(body, total.centre);
@@ -520,10 +541,18 @@ var Axes = require('../geometry/Axes');
      * @param {body} body
      * @param {vector} position
      */
-    Body.setPosition = function(body, position) {
+    Body.setPosition = function(body, position, updateVelocity) {
         var delta = Vector.sub(position, body.position);
+        if (updateVelocity) {
+            body.positionPrev.x = body.position.x;
+            body.positionPrev.y = body.position.y;
+            body.velocity.x = delta.x;
+            body.velocity.y = delta.y;
+            body.speed = Vector.magnitude(delta);
+        } else {
         body.positionPrev.x += delta.x;
         body.positionPrev.y += delta.y;
+        }
 
         for (var i = 0; i < body.parts.length; i++) {
             var part = body.parts[i];
@@ -540,9 +569,15 @@ var Axes = require('../geometry/Axes');
      * @param {body} body
      * @param {number} angle
      */
-    Body.setAngle = function(body, angle) {
+    Body.setAngle = function(body, angle, updateVelocity) {
         var delta = angle - body.angle;
+        if (updateVelocity) {
+            body.anglePrev = body.angle;
+            body.angularVelocity = delta;
+            body.angularSpeed = Math.abs(delta);
+        } else {
         body.anglePrev += delta;
+        }
 
         for (var i = 0; i < body.parts.length; i++) {
             var part = body.parts[i];
@@ -563,11 +598,49 @@ var Axes = require('../geometry/Axes');
      * @param {vector} velocity
      */
     Body.setVelocity = function(body, velocity) {
-        body.positionPrev.x = body.position.x - velocity.x;
-        body.positionPrev.y = body.position.y - velocity.y;
-        body.velocity.x = velocity.x;
-        body.velocity.y = velocity.y;
+        var timeScale = body.deltaTime / Body._baseDelta;
+        body.positionPrev.x = body.position.x - velocity.x * timeScale;
+        body.positionPrev.y = body.position.y - velocity.y * timeScale;
+        body.velocity.x = (body.position.x - body.positionPrev.x) / timeScale;
+        body.velocity.y = (body.position.y - body.positionPrev.y) / timeScale;
         body.speed = Vector.magnitude(body.velocity);
+    };
+
+    /**
+     * Gets the current linear velocity of the body.
+     * @method getVelocity
+     * @param {body} body
+     * @return {vector} velocity
+     */
+    Body.getVelocity = function(body) {
+        var timeScale = Body._baseDelta / body.deltaTime;
+
+        return {
+            x: (body.position.x - body.positionPrev.x) * timeScale,
+            y: (body.position.y - body.positionPrev.y) * timeScale
+        };
+    };
+
+    /**
+     * Gets the current linear speed of the body.
+     * Equivalent to the magnitude of its velocity.
+     * @method getSpeed
+     * @param {body} body
+     * @return {number} speed
+     */
+    Body.getSpeed = function(body) {
+        return Vector.magnitude(Body.getVelocity(body));
+    };
+
+    /**
+     * Sets the current linear speed of the body.
+     * Direction is maintained. Affects body velocity.
+     * @method setSpeed
+     * @param {body} body
+     * @param {number} speed
+     */
+    Body.setSpeed = function(body, speed) {
+        Body.setVelocity(body, Vector.mult(Vector.normalise(Body.getVelocity(body)), speed));
     };
 
     /**
@@ -577,9 +650,42 @@ var Axes = require('../geometry/Axes');
      * @param {number} velocity
      */
     Body.setAngularVelocity = function(body, velocity) {
-        body.anglePrev = body.angle - velocity;
-        body.angularVelocity = velocity;
+        var timeScale = body.deltaTime / Body._baseDelta;
+        body.anglePrev = body.angle - velocity * timeScale;
+        body.angularVelocity = (body.angle - body.anglePrev) / timeScale;
         body.angularSpeed = Math.abs(body.angularVelocity);
+    };
+
+    /**
+     * Gets the current rotational velocity of the body.
+     * @method getAngularVelocity
+     * @param {body} body
+     * @return {number} angular velocity
+     */
+    Body.getAngularVelocity = function(body) {
+        return (body.angle - body.anglePrev) * Body._baseDelta / body.deltaTime;
+    };
+
+    /**
+     * Gets the current rotational speed of the body.
+     * Equivalent to the magnitude of its angular velocity.
+     * @method getAngularSpeed
+     * @param {body} body
+     * @return {number} angular speed
+     */
+    Body.getAngularSpeed = function(body) {
+        return Math.abs(Body.getAngularVelocity(body));
+    };
+
+    /**
+     * Sets the current rotational speed of the body.
+     * Direction is maintained. Affects body angular velocity.
+     * @method setAngularSpeed
+     * @param {body} body
+     * @param {number} speed
+     */
+    Body.setAngularSpeed = function(body, speed) {
+        Body.setAngularVelocity(body, Common.sign(Body.getAngularVelocity(body)) * speed);
     };
 
     /**
@@ -588,8 +694,8 @@ var Axes = require('../geometry/Axes');
      * @param {body} body
      * @param {vector} translation
      */
-    Body.translate = function(body, translation) {
-        Body.setPosition(body, Vector.add(body.position, translation));
+    Body.translate = function(body, translation, updateVelocity) {
+        Body.setPosition(body, Vector.add(body.position, translation), updateVelocity);
     };
 
     /**
@@ -599,9 +705,9 @@ var Axes = require('../geometry/Axes');
      * @param {number} rotation
      * @param {vector} [point]
      */
-    Body.rotate = function(body, rotation, point) {
+    Body.rotate = function(body, rotation, point, updateVelocity) {
         if (!point) {
-            Body.setAngle(body, body.angle + rotation);
+            Body.setAngle(body, body.angle + rotation, updateVelocity);
         } else {
             var cos = Math.cos(rotation),
                 sin = Math.sin(rotation),
@@ -611,9 +717,9 @@ var Axes = require('../geometry/Axes');
             Body.setPosition(body, {
                 x: point.x + (dx * cos - dy * sin),
                 y: point.y + (dx * sin + dy * cos)
-            });
+            }, updateVelocity);
 
-            Body.setAngle(body, body.angle + rotation);
+            Body.setAngle(body, body.angle + rotation, updateVelocity);
         }
     };
 
@@ -692,22 +798,25 @@ var Axes = require('../geometry/Axes');
      * @param {number} timeScale
      * @param {number} correction
      */
-    Body.update = function(body, deltaTime, timeScale, correction) {
-        var deltaTimeSquared = Math.pow(deltaTime * timeScale * body.timeScale, 2);
+    Body.update = function(body, deltaTime) {
+        deltaTime = (typeof deltaTime !== 'undefined' ? deltaTime : (1000 / 60)) * body.timeScale;
+        var deltaTimeSquared = deltaTime * deltaTime,
+            correction = Body._timeCorrection ? deltaTime / (body.deltaTime || deltaTime) : 1;
 
         // from the previous step
-        var frictionAir = 1 - body.frictionAir * timeScale * body.timeScale,
-            velocityPrevX = body.position.x - body.positionPrev.x,
-            velocityPrevY = body.position.y - body.positionPrev.y;
+        var frictionAir = 1 - body.frictionAir * (deltaTime / Common._baseDelta),
+            velocityPrevX = (body.position.x - body.positionPrev.x) * correction,
+            velocityPrevY = (body.position.y - body.positionPrev.y) * correction;
 
         // update velocity with Verlet integration
-        body.velocity.x = (velocityPrevX * frictionAir * correction) + (body.force.x / body.mass) * deltaTimeSquared;
-        body.velocity.y = (velocityPrevY * frictionAir * correction) + (body.force.y / body.mass) * deltaTimeSquared;
+        body.velocity.x = (velocityPrevX * frictionAir) + (body.force.x / body.mass) * deltaTimeSquared;
+        body.velocity.y = (velocityPrevY * frictionAir) + (body.force.y / body.mass) * deltaTimeSquared;
 
         body.positionPrev.x = body.position.x;
         body.positionPrev.y = body.position.y;
         body.position.x += body.velocity.x;
         body.position.y += body.velocity.y;
+        body.deltaTime = deltaTime;
 
         // update angular velocity with Verlet integration
         body.angularVelocity = ((body.angle - body.anglePrev) * frictionAir * correction) + (body.torque / body.inertia) * deltaTimeSquared;
@@ -742,6 +851,23 @@ var Axes = require('../geometry/Axes');
     };
 
     /**
+     * Updates properties `body.velocity`, `body.speed`, `body.angularVelocity` and `body.angularSpeed` which are normalised in relation to `Body._baseDelta`.
+     * @method updateVelocities
+     * @param {body} body
+     */
+    Body.updateVelocities = function(body) {
+        var timeScale = Body._baseDelta / body.deltaTime,
+            bodyVelocity = body.velocity;
+
+        bodyVelocity.x = (body.position.x - body.positionPrev.x) * timeScale;
+        bodyVelocity.y = (body.position.y - body.positionPrev.y) * timeScale;
+        body.speed = Math.sqrt((bodyVelocity.x * bodyVelocity.x) + (bodyVelocity.y * bodyVelocity.y));
+
+        body.angularVelocity = (body.angle - body.anglePrev) * timeScale;
+        body.angularSpeed = Math.abs(body.angularVelocity);
+    };
+
+    /**
      * Applies a force to a body from a given world-space position, including resulting torque.
      * @method applyForce
      * @param {body} body
@@ -749,9 +875,9 @@ var Axes = require('../geometry/Axes');
      * @param {vector} force
      */
     Body.applyForce = function(body, position, force) {
+        var offset = { x: position.x - body.position.x, y: position.y - body.position.y };
         body.force.x += force.x;
         body.force.y += force.y;
-        var offset = { x: position.x - body.position.x, y: position.y - body.position.y };
         body.torque += offset.x * force.y - offset.y * force.x;
     };
 

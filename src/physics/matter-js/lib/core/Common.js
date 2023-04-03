@@ -10,6 +10,7 @@ module.exports = Common;
 
 (function() {
 
+    Common._baseDelta = 1000 / 60;
     Common._nextId = 0;
     Common._seed = 0;
     Common._nowStartTime = +(new Date());

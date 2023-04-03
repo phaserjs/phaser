@@ -66,30 +66,20 @@ var Body = require('../body/Body');
         engine.world.gravity = engine.gravity;
         engine.broadphase = engine.grid;
         engine.metrics = {};
-        
+
         return engine;
     };
 
     /**
      * Moves the simulation forward in time by `delta` ms.
-     * The `correction` argument is an optional `Number` that specifies the time correction factor to apply to the update.
-     * This can help improve the accuracy of the simulation in cases where `delta` is changing between updates.
-     * The value of `correction` is defined as `delta / lastDelta`, i.e. the percentage change of `delta` over the last step.
-     * Therefore the value is always `1` (no correction) when `delta` constant (or when no correction is desired, which is the default).
-     * See the paper on <a href="http://lonesock.net/article/verlet.html">Time Corrected Verlet</a> for more information.
-     *
      * Triggers `beforeUpdate` and `afterUpdate` events.
      * Triggers `collisionStart`, `collisionActive` and `collisionEnd` events.
      * @method update
      * @param {engine} engine
      * @param {number} [delta=16.666]
-     * @param {number} [correction=1]
      */
-    Engine.update = function(engine, delta, correction) {
+    Engine.update = function(engine, delta) {
         var startTime = Common.now();
-
-        delta = delta || 1000 / 60;
-        correction = correction || 1;
 
         var world = engine.world,
             detector = engine.detector,
@@ -98,13 +88,17 @@ var Body = require('../body/Body');
             timestamp = timing.timestamp,
             i;
 
+        delta = typeof delta !== 'undefined' ? delta : Common._baseDelta;
+        delta *= timing.timeScale;
+
         // increment timestamp
-        timing.timestamp += delta * timing.timeScale;
-        timing.lastDelta = delta * timing.timeScale;
+        timing.timestamp += delta;
+        timing.lastDelta = delta;
 
         // create an event object
         var event = {
-            timestamp: timing.timestamp
+            timestamp: timing.timestamp,
+            delta: delta
         };
 
         Events.trigger(engine, 'beforeUpdate', event);
@@ -113,30 +107,33 @@ var Body = require('../body/Body');
         var allBodies = Composite.allBodies(world),
             allConstraints = Composite.allConstraints(world);
 
-        // update the detector bodies if they have changed
+        // if the world has changed
         if (world.isModified) {
+            // update the detector bodies
             Detector.setBodies(detector, allBodies);
-        }
 
-        // reset all composite modified flags
-        if (world.isModified) {
+            // reset all composite modified flags
             Composite.setModified(world, false, false, true);
         }
 
         // update sleeping if enabled
         if (engine.enableSleeping)
-            Sleeping.update(allBodies, timing.timeScale);
+            Sleeping.update(allBodies, delta);
 
         // apply gravity to all bodies
         Engine._bodiesApplyGravity(allBodies, engine.gravity);
 
         // update all body position and rotation by integration
-        Engine._bodiesUpdate(allBodies, delta, timing.timeScale, correction, world.bounds);
+        if (delta > 0) {
+            Engine._bodiesUpdate(allBodies, delta);
+        }
+
+        Events.trigger(engine, 'beforeSolve', event);
 
         // update all constraints (first pass)
         Constraint.preSolveAll(allBodies);
         for (i = 0; i < engine.constraintIterations; i++) {
-            Constraint.solveAll(allConstraints, timing.timeScale);
+            Constraint.solveAll(allConstraints, delta);
         }
         Constraint.postSolveAll(allBodies);
 
@@ -149,38 +146,58 @@ var Body = require('../body/Body');
 
         // wake up bodies involved in collisions
         if (engine.enableSleeping)
-            Sleeping.afterCollisions(pairs.list, timing.timeScale);
+            Sleeping.afterCollisions(pairs.list);
 
         // trigger collision events
-        if (pairs.collisionStart.length > 0)
-            Events.trigger(engine, 'collisionStart', { pairs: pairs.collisionStart });
+        if (pairs.collisionStart.length > 0) {
+            Events.trigger(engine, 'collisionStart', {
+                pairs: pairs.collisionStart,
+                timestamp: timing.timestamp,
+                delta: delta
+            });
+        }
 
         // iteratively resolve position between collisions
+        var positionDamping = Common.clamp(20 / engine.positionIterations, 0, 1);
+
         Resolver.preSolvePosition(pairs.list);
         for (i = 0; i < engine.positionIterations; i++) {
-            Resolver.solvePosition(pairs.list, timing.timeScale);
+            Resolver.solvePosition(pairs.list, delta, positionDamping);
         }
         Resolver.postSolvePosition(allBodies);
 
         // update all constraints (second pass)
         Constraint.preSolveAll(allBodies);
         for (i = 0; i < engine.constraintIterations; i++) {
-            Constraint.solveAll(allConstraints, timing.timeScale);
+            Constraint.solveAll(allConstraints, delta);
         }
         Constraint.postSolveAll(allBodies);
 
         // iteratively resolve velocity between collisions
         Resolver.preSolveVelocity(pairs.list);
         for (i = 0; i < engine.velocityIterations; i++) {
-            Resolver.solveVelocity(pairs.list, timing.timeScale);
+            Resolver.solveVelocity(pairs.list, delta);
         }
 
-        // trigger collision events
-        if (pairs.collisionActive.length > 0)
-            Events.trigger(engine, 'collisionActive', { pairs: pairs.collisionActive });
+        // update body speed and velocity properties
+        Engine._bodiesUpdateVelocities(allBodies);
 
-        if (pairs.collisionEnd.length > 0)
-            Events.trigger(engine, 'collisionEnd', { pairs: pairs.collisionEnd });
+        // trigger collision events
+        if (pairs.collisionActive.length > 0) {
+            Events.trigger(engine, 'collisionActive', {
+                pairs: pairs.collisionActive,
+                timestamp: timing.timestamp,
+                delta: delta
+            });
+        }
+
+        if (pairs.collisionEnd.length > 0) {
+            Events.trigger(engine, 'collisionEnd', {
+                pairs: pairs.collisionEnd,
+                timestamp: timing.timestamp,
+                delta: delta
+            });
+        }
 
         // clear force buffers
         Engine._bodiesClearForces(allBodies);
@@ -192,7 +209,7 @@ var Body = require('../body/Body');
 
         return engine;
     };
-    
+
     /**
      * Merges two engines by keeping the configuration of `engineA` but replacing the world with the one from `engineB`.
      * @method merge
@@ -201,7 +218,7 @@ var Body = require('../body/Body');
      */
     Engine.merge = function(engineA, engineB) {
         Common.extend(engineA, engineB);
-        
+
         if (engineB.world) {
             engineA.world = engineB.world;
 
@@ -234,7 +251,8 @@ var Body = require('../body/Body');
      * @param {body[]} bodies
      */
     Engine._bodiesClearForces = function(bodies) {
-        for (var i = 0; i < bodies.length; i++) {
+        var bodiesLength = bodies.length;
+        for (var i = 0; i < bodiesLength; i++) {
             var body = bodies[i];
 
             // reset force buffers
@@ -252,44 +270,56 @@ var Body = require('../body/Body');
      * @param {vector} gravity
      */
     Engine._bodiesApplyGravity = function(bodies, gravity) {
-        var gravityScale = typeof gravity.scale !== 'undefined' ? gravity.scale : 0.001;
+        var gravityScale = typeof gravity.scale !== 'undefined' ? gravity.scale : 0.001,
+            bodiesLength = bodies.length;
 
         if ((gravity.x === 0 && gravity.y === 0) || gravityScale === 0) {
             return;
         }
-        
-        for (var i = 0; i < bodies.length; i++) {
-            var body = bodies[i];
 
-            if (body.ignoreGravity || body.isStatic || body.isSleeping)
-                continue;
-
-            // apply gravity
-            body.force.x += (body.mass * gravity.x * gravityScale) * body.gravityScale.x;
-            body.force.y += (body.mass * gravity.y * gravityScale) * body.gravityScale.y;
-        }
-    };
-
-    /**
-     * Applys `Body.update` to all given `bodies`.
-     * @method _bodiesUpdate
-     * @private
-     * @param {body[]} bodies
-     * @param {number} deltaTime 
-     * The amount of time elapsed between updates
-     * @param {number} timeScale
-     * @param {number} correction 
-     * The Verlet correction factor (deltaTime / lastDeltaTime)
-     * @param {bounds} worldBounds
-     */
-    Engine._bodiesUpdate = function(bodies, deltaTime, timeScale, correction, worldBounds) {
-        for (var i = 0; i < bodies.length; i++) {
+        for (var i = 0; i < bodiesLength; i++) {
             var body = bodies[i];
 
             if (body.isStatic || body.isSleeping)
                 continue;
 
-            Body.update(body, deltaTime, timeScale, correction);
+            // add the resultant force of gravity
+            body.force.y += body.mass * gravity.y * gravityScale;
+            body.force.x += body.mass * gravity.x * gravityScale;
+        }
+    };
+
+    /**
+     * Applies `Body.update` to all given `bodies`.
+     * @method _bodiesUpdate
+     * @private
+     * @param {body[]} bodies
+     * @param {number} delta The amount of time elapsed between updates
+     */
+    Engine._bodiesUpdate = function(bodies, delta) {
+        var bodiesLength = bodies.length;
+
+        for (var i = 0; i < bodiesLength; i++) {
+            var body = bodies[i];
+
+            if (body.isStatic || body.isSleeping)
+                continue;
+
+            Body.update(body, delta);
+        }
+    };
+
+    /**
+     * Applies `Body.updateVelocities` to all given `bodies`.
+     * @method _bodiesUpdateVelocities
+     * @private
+     * @param {body[]} bodies
+     */
+    Engine._bodiesUpdateVelocities = function(bodies) {
+        var bodiesLength = bodies.length;
+
+        for (var i = 0; i < bodiesLength; i++) {
+            Body.updateVelocities(bodies[i]);
         }
     };
 
@@ -397,7 +427,7 @@ var Body = require('../body/Body');
      */
 
     /**
-     * An `Object` containing properties regarding the timing systems of the engine. 
+     * An `Object` containing properties regarding the timing systems of the engine.
      *
      * @property timing
      * @type object
@@ -415,8 +445,8 @@ var Body = require('../body/Body');
      */
 
     /**
-     * A `Number` that specifies the current simulation-time in milliseconds starting from `0`. 
-     * It is incremented on every `Engine.update` by the given `delta` argument. 
+     * A `Number` that specifies the current simulation-time in milliseconds starting from `0`.
+     * It is incremented on every `Engine.update` by the given `delta` argument.
      *
      * @property timing.timestamp
      * @type number

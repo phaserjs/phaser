@@ -54,6 +54,7 @@ var Vector = require('../geometry/Vector');
 
     /**
      * Creates a new rigid body model with a trapezoid hull.
+     * The `slope` is parameterised as a fraction of `width` and must be < 1 to form a valid trapezoid.
      * The options parameter is an object that specifies any properties you wish to override the defaults.
      * See the properties section of the `Matter.Body` module for detailed information on what you can pass via the `options` object.
      * @method trapezoid
@@ -61,7 +62,7 @@ var Vector = require('../geometry/Vector');
      * @param {number} y
      * @param {number} width
      * @param {number} height
-     * @param {number} slope
+     * @param {number} slope Must be a number < 1.
      * @param {object} [options]
      * @return {body} A new trapezoid body
      */
@@ -309,9 +310,37 @@ var Vector = require('../geometry/Vector');
         }
 
         // flag internal edges (coincident part edges)
-        if (flagInternal)
-        {
-            Bodies.flagCoincidentParts(parts, 5);
+        if (flagInternal) {
+            var coincident_max_dist = 5;
+
+            for (i = 0; i < parts.length; i++) {
+                var partA = parts[i];
+
+                for (j = i + 1; j < parts.length; j++) {
+                    var partB = parts[j];
+
+                    if (Bounds.overlaps(partA.bounds, partB.bounds)) {
+                        var pav = partA.vertices,
+                            pbv = partB.vertices;
+
+                        // iterate vertices of both parts
+                        for (k = 0; k < partA.vertices.length; k++) {
+                            for (z = 0; z < partB.vertices.length; z++) {
+                                // find distances between the vertices
+                                var da = Vector.magnitudeSquared(Vector.sub(pav[(k + 1) % pav.length], pbv[z])),
+                                    db = Vector.magnitudeSquared(Vector.sub(pav[k], pbv[(z + 1) % pbv.length]));
+
+                                // if both vertices are very close, consider the edge concident (internal)
+                                if (da < coincident_max_dist && db < coincident_max_dist) {
+                                    pav[k].isInternal = true;
+                                    pbv[z].isInternal = true;
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
         }
 
         if (parts.length > 1) {

@@ -9,7 +9,7 @@ var MatterWrap = {
   // plugin meta
   name: 'matter-wrap', // PLUGIN_NAME
   version: '0.1.4', // PLUGIN_VERSION
-  for: 'matter-js@^0.18.0',
+  for: 'matter-js@^0.19.0',
   silent: true, // no console log please
 
   // installs the plugin where `base` is `Matter`
