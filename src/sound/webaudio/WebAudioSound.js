@@ -607,7 +607,6 @@ var WebAudioSound = new Class({
     {
         if (this.isPlaying && this.spatialSource)
         {
-
             var x = GetFastValue(this.spatialSource, 'x', null);
             var y = GetFastValue(this.spatialSource, 'y', null);
 
@@ -619,7 +618,6 @@ var WebAudioSound = new Class({
             {
                 this._spatialy = this.spatialNode.positionY.value = y;
             }
-
         }
 
         if (this.hasEnded)
