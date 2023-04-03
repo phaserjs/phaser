@@ -87,6 +87,10 @@ var Tileset = require('./Tileset');
  * child called 'Layer 1'. In the Tilemap object, 'Layer 1' will have the name
  * 'ParentGroup/Layer 1'.
  *
+ * The Phaser Tiled Parser does **not** support the 'Collection of Images' feature for a Tileset.
+ * You must ensure all of your tiles are contained in a single tileset image file (per layer)
+ * and have this 'embedded' in the exported Tiled JSON map data.
+ *
  * @class Tilemap
  * @memberof Phaser.Tilemaps
  * @constructor
@@ -426,7 +430,7 @@ var Tilemap = new Class({
         if (tileMargin === undefined) { tileMargin = 0; }
         if (tileSpacing === undefined) { tileSpacing = 0; }
         if (gid === undefined) { gid = 0; }
-        if (tileOffset === undefined) { tileOffset = {x: 0, y: 0} }
+        if (tileOffset === undefined) { tileOffset = { x: 0, y: 0 }; }
 
         tileset = new Tileset(tilesetName, gid, tileWidth, tileHeight, tileMargin, tileSpacing, undefined, undefined, tileOffset);
 

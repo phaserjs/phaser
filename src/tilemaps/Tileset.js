@@ -9,7 +9,7 @@ var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
- * A Tileset is a combination of an image containing the tiles and a container for data about
+ * A Tileset is a combination of a single image containing the tiles and a container for data about
  * each tile.
  *
  * @class Tileset
