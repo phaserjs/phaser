@@ -11,11 +11,11 @@ var SceneEvents = require('../scene/events');
 /**
  * @classdesc
  * The Game Object Creator is a Scene plugin that allows you to quickly create many common
- * types of Game Objects and return them. Unlike the Game Object Factory, they are not automatically
- * added to the Scene.
+ * types of Game Objects and return them using a configuration object, rather than
+ * having to specify a limited set of parameters such as with the GameObjectFactory.
  *
- * Game Objects directly register themselves with the Creator and inject their own creation
- * methods into the class.
+ * Game Objects made via this class are automatically added to the Scene and Update List
+ * unless you explicitly set the `add` property in the configuration object to `false`.
  *
  * @class GameObjectCreator
  * @memberof Phaser.GameObjects
