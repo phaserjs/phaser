@@ -78,7 +78,7 @@ var Velocity = {
      * @method Phaser.Physics.Matter.Components.Velocity#getVelocity
      * @since 3.60.0
      *
-     * @return {Phaser.Math.Types.Vec2Like} The current linear velocity of the body.
+     * @return {Phaser.Types.Math.Vector2Like} The current linear velocity of the body.
      */
     getVelocity: function ()
     {
@@ -138,7 +138,7 @@ var Velocity = {
      * Gets the current rotational speed of the body.
      * Equivalent to the magnitude of its angular velocity.
      *
-     * @method Phaser.Physics.Matter.Components.Speed#getAngularSpeed
+     * @method Phaser.Physics.Matter.Components.Velocity#getAngularSpeed
      * @since 3.60.0
      *
      * @return {number} The current angular velocity of the body.

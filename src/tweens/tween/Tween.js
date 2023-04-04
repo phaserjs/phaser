@@ -816,7 +816,7 @@ var Tween = new Class({
  * @method Phaser.GameObjects.GameObjectFactory#tween
  * @since 3.0.0
  *
- * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The Tween configuration.
+ * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.Tween|Phaser.Tweens.TweenChain} config - A Tween Configuration object, or a Tween or TweenChain instance.
  *
  * @return {Phaser.Tweens.Tween} The Tween that was created.
  */
@@ -833,7 +833,7 @@ GameObjectFactory.register('tween', function (config)
  * @method Phaser.GameObjects.GameObjectCreator#tween
  * @since 3.0.0
  *
- * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The Tween configuration.
+ * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.Tween|Phaser.Tweens.TweenChain} config - A Tween Configuration object, or a Tween or TweenChain instance.
  *
  * @return {Phaser.Tweens.Tween} The Tween that was created.
  */

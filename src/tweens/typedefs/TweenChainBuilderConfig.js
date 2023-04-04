@@ -1,5 +1,6 @@
 /**
  * @typedef {object} Phaser.Types.Tweens.TweenChainBuilderConfig
+ * @extends object
  * @since 3.60.0
  *
  * @property {any} targets - The object, or an array of objects, to run the tween on.
