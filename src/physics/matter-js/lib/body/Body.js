@@ -540,6 +540,7 @@ var Axes = require('../geometry/Axes');
      * @method setPosition
      * @param {body} body
      * @param {vector} position
+     * @param {boolean} updateVelocity
      */
     Body.setPosition = function(body, position, updateVelocity) {
         var delta = Vector.sub(position, body.position);
@@ -568,6 +569,7 @@ var Axes = require('../geometry/Axes');
      * @method setAngle
      * @param {body} body
      * @param {number} angle
+     * @param {boolean} updateVelocity
      */
     Body.setAngle = function(body, angle, updateVelocity) {
         var delta = angle - body.angle;
@@ -693,6 +695,7 @@ var Axes = require('../geometry/Axes');
      * @method translate
      * @param {body} body
      * @param {vector} translation
+     * @param {boolean} [updateVelocity]
      */
     Body.translate = function(body, translation, updateVelocity) {
         Body.setPosition(body, Vector.add(body.position, translation), updateVelocity);
@@ -704,6 +707,7 @@ var Axes = require('../geometry/Axes');
      * @param {body} body
      * @param {number} rotation
      * @param {vector} [point]
+     * @param {boolean} [updateVelocity]
      */
     Body.rotate = function(body, rotation, point, updateVelocity) {
         if (!point) {
@@ -795,8 +799,6 @@ var Axes = require('../geometry/Axes');
      * @method update
      * @param {body} body
      * @param {number} deltaTime
-     * @param {number} timeScale
-     * @param {number} correction
      */
     Body.update = function(body, deltaTime) {
         deltaTime = (typeof deltaTime !== 'undefined' ? deltaTime : (1000 / 60)) * body.timeScale;

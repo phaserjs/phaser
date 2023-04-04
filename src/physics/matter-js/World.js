@@ -848,14 +848,11 @@ var World = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 1; }
+        if (scale === undefined) { scale = 0.001; }
 
         this.localWorld.gravity.x = x;
         this.localWorld.gravity.y = y;
-
-        if (scale !== undefined)
-        {
-            this.localWorld.gravity.scale = scale;
-        }
+        this.localWorld.gravity.scale = scale;
 
         return this;
     },

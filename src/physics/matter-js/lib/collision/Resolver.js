@@ -223,7 +223,7 @@ var Bounds = require('../geometry/Bounds');
      * Find a solution for pair velocities.
      * @method solveVelocity
      * @param {pair[]} pairs
-     * @param {number} timeScale
+     * @param {number} delta
      */
     Resolver.solveVelocity = function(pairs, delta) {
         var timeScale = delta / Common._baseDelta,
