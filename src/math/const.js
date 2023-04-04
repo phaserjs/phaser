@@ -18,7 +18,7 @@ var MATH_CONST = {
     /**
      * The value of PI * 0.5.
      *
-     * Yes, we undertstand that this should actually be PI * 2, but
+     * Yes, we understand that this should actually be PI * 2, but
      * it has been like this for so long we can't change it now.
      * If you need PI * 2, use the PI2 constant instead.
      *
