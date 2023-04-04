@@ -42,7 +42,7 @@ export class Parser {
         this.topLevel.push(phaserPkgModuleDOM);
     }
 
-    emit() {
+    emit(): string {
 
         let ignored = [];
 
@@ -57,6 +57,9 @@ export class Parser {
             console.log('ignored top level properties:');
             console.log(ignored);
         }
+
+        //  replace 'object &' in result with '{[key: string]: any}'
+        result = result.replace(/object &/g, '{[key: string]: any} &');
 
         return result;
     }
@@ -559,6 +562,7 @@ export class Parser {
         if (name === 'function') return 'Function';
         if (name === 'Array.<function()>') return 'Function[]';
         if (name === 'array') return 'any[]';
+        // if (name === 'object') return '{[key: string]: any}';
 
         if (name.startsWith('Array<')) {
             let matches = name.match(/^Array<(.*)>$/);
