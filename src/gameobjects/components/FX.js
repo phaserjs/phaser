@@ -110,9 +110,11 @@ var FX = new Class({
         this.enabled = false;
 
         /**
-         * An array containing all of the FX Controllers that
+         * An array containing all of the Pre FX Controllers that
          * have been added to this FX Component. They are processed in
          * the order they are added.
+         *
+         * This array is empty if this is a Post FX Component.
          *
          * @name Phaser.GameObjects.Components.FX#list
          * @type {Phaser.FX.Controller[]}
@@ -206,6 +208,8 @@ var FX = new Class({
      *
      * You can check the `enabled` property to see if the Game Object is already enabled, or not.
      *
+     * This only applies to Pre FX. Post FX are always enabled.
+     *
      * @method Phaser.GameObjects.Components.FX#enable
      * @since 3.60.0
      *
@@ -213,6 +217,11 @@ var FX = new Class({
      */
     enable: function (padding)
     {
+        if (this.isPost)
+        {
+            return;
+        }
+
         var renderer = this.gameObject.scene.sys.renderer;
 
         if (renderer && renderer.pipelines)
@@ -233,23 +242,26 @@ var FX = new Class({
     },
 
     /**
-     * Destroys and removes all Pre and Post FX Controllers that are part of this FX Component,
+     * Destroys and removes all FX Controllers that are part of this FX Component,
      * then disables it.
+     *
+     * If this is a Pre FX Component it will only remove Pre FX.
+     * If this is a Post FX Component it will only remove Post FX.
+     *
+     * To remove both at once use the `GameObject.clearFX` method instead.
      *
      * @method Phaser.GameObjects.Components.FX#clear
      * @since 3.60.0
      *
-     * @param {boolean} [removePre=true] - Should the Pre FX Controllers be removed?
-     * @param {boolean} [removePost=true] - Should the Post FX Controllers be removed?
-     *
      * @return {this} This Game Object instance.
      */
-    clear: function (removePre, removePost)
+    clear: function ()
     {
-        if (removePre === undefined) { removePre = true; }
-        if (removePost === undefined) { removePost = true; }
-
-        if (removePre)
+        if (this.isPost)
+        {
+            this.gameObject.resetPostPipeline(true);
+        }
+        else
         {
             var list = this.list;
 
@@ -261,11 +273,6 @@ var FX = new Class({
             this.list = [];
         }
 
-        if (removePost)
-        {
-            this.gameObject.resetPostPipeline(true);
-        }
-
         this.enabled = false;
 
         return this.gameObject;
@@ -274,10 +281,13 @@ var FX = new Class({
     /**
      * Searches for the given FX Controller within this FX Component.
      *
-     * If found, the controller is removed from this compoent and then destroyed.
+     * If found, the controller is removed from this component and then destroyed.
      *
      * @method Phaser.GameObjects.Components.FX#remove
      * @since 3.60.0
+     *
+     * @generic {Phaser.FX.Controller} T
+     * @genericUse {T} - [fx]
      *
      * @param {Phaser.FX.Controller} fx - The FX Controller to remove from this FX Component.
      *
@@ -285,15 +295,38 @@ var FX = new Class({
      */
     remove: function (fx)
     {
-        var list = this.list;
+        var i;
 
-        for (var i = 0; i < list.length; i++)
+        if (this.isPost)
         {
-            if (list[i] === fx)
-            {
-                SpliceOne(list, i);
+            var pipelines = this.gameObject.getPostPipeline(fx.type);
 
-                fx.destroy();
+            for (i = 0; i < pipelines.length; i++)
+            {
+                var pipeline = pipelines[i];
+
+                if (pipeline.controller === fx)
+                {
+                    this.gameObject.removePostPipeline(pipeline);
+
+                    fx.destroy();
+
+                    break;
+                }
+            }
+        }
+        else
+        {
+            var list = this.list;
+
+            for (i = 0; i < list.length; i++)
+            {
+                if (list[i] === fx)
+                {
+                    SpliceOne(list, i);
+
+                    fx.destroy();
+                }
             }
         }
 
@@ -306,14 +339,14 @@ var FX = new Class({
      * This will reset the pipeline on the Game Object that owns this component back to its
      * default and flag this component as disabled.
      *
-     * You can re-enable it again by calling `enable`.
+     * You can re-enable it again by calling `enable` for Pre FX or by adding an FX for Post FX.
      *
-     * Optionally, set `clear` to destroy all current Per and Post FX Controllers.
+     * Optionally, set `clear` to destroy all current FX Controllers.
      *
      * @method Phaser.GameObjects.Components.FX#disable
      * @since 3.60.0
      *
-     * @param {boolean} [clear=false] - Destroy and remove all Pre and Post FX Controllers that are part of this FX Component.
+     * @param {boolean} [clear=false] - Destroy and remove all FX Controllers that are part of this component.
      *
      * @return {this} This Game Object instance.
      */
@@ -321,7 +354,10 @@ var FX = new Class({
     {
         if (clear === undefined) { clear = false; }
 
-        this.gameObject.resetPipeline();
+        if (!this.isPost)
+        {
+            this.gameObject.resetPipeline();
+        }
 
         this.enabled = false;
 
@@ -342,6 +378,9 @@ var FX = new Class({
      *
      * @method Phaser.GameObjects.Components.FX#add
      * @since 3.60.0
+     *
+     * @generic {Phaser.FX.Controller} T
+     * @genericUse {T} - [fx]
      *
      * @param {Phaser.FX.Controller} fx - The FX Controller to add to this FX Component.
      * @param {object} [config] - Optional configuration object that is passed to the pipeline during instantiation.

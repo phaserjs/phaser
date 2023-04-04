@@ -330,6 +330,34 @@ var PostPipeline = {
         this.hasPostPipeline = (this.postPipelines.length > 0);
 
         return this;
+    },
+
+    /**
+     * Removes all Pre and Post FX Controllers from this Game Object.
+     *
+     * If you wish to remove a single controller, use the `preFX.remove(fx)` or `postFX.remove(fx)` methods instead.
+     *
+     * If you wish to clear a single controller, use the `preFX.clear()` or `postFX.clear()` methods instead.
+     *
+     * @method Phaser.GameObjects.Components.PostPipeline#clearFX
+     * @webglOnly
+     * @since 3.60.0
+     *
+     * @return {this} This Game Object.
+     */
+    clearFX: function ()
+    {
+        if (this.preFX)
+        {
+            this.preFX.clear();
+        }
+
+        if (this.postFX)
+        {
+            this.postFX.clear();
+        }
+
+        return this;
     }
 
 };
