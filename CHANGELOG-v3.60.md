@@ -888,8 +888,8 @@ The WebGL Graphics Pipeline has been removed. This pipeline wasn't used in v3.55
 We have updated the version of Matter Physics to the latest v0.19 release. This is a big jump and brings with it quite a few internal changes to Matter. The following are the differences we have identified in this release:
 
 * Improves general consistency of results between different timesteps based on 60hz as a baseline
-* Changes Body.setAngularVelocity and Body.setVelocity functions to be timestep independent
-* Adds timestep independent Body.setSpeed, Body.setAngularSpeed, Body.getSpeed, Body.getVelocity, Body.getAngularVelocity
+* Changes `Body.setAngularVelocity` and `Body.setVelocity` functions to be timestep independent
+* Adds timestep independent `Body.setSpeed`, `Body.setAngularSpeed`, `Body.getSpeed`, `Body.getVelocity` and `Body.getAngularVelocity`
 * Adds optional `updateVelocity` argument to `Body.setPosition`, `Body.setAngle`, `Body.translate` and `Body.rotate`
 * Removes `correction` parameter from `Engine.update` as it is now built-in
 * Changed `Body.setAngularVelocity` and `Body.setVelocity` to be timestep independent
@@ -943,6 +943,13 @@ The following changes came from the v0.18 release, which are also part of v0.19:
 * `MatterPhysics.grid` has been removed as this is now handled by the `Collision` module.
 * `MatterPhysics.sat` has been removed as this is now handled by the `Collision` module.
 * The `Matter.Body.previousPositionImpulse` property has been removed as it's no longer used.
+
+Because of the changes above, the following new methods are available to any Phaser Matter Physics Game Object:
+
+* `getVelocity` - Returns the current linear velocity of the Body as a Vec2.
+* `getAngularVelocity` - Returns the current rotation velocity of the Body.
+* `setAngularSpeed` - Sets the current rotational speed of the body. Direction is maintained. Affects body angular velocity.
+* `getAngularSpeed` - Returns the current rotational speed of the body. Equivalent to the magnitude of its angular velocity.
 
 ### New Features - New Tween Manager
 
