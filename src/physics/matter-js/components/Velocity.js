@@ -15,24 +15,6 @@ var Body = require('../lib/body/Body');
 var Velocity = {
 
     /**
-     * Sets the angular velocity of the body instantly.
-     * Position, angle, force etc. are unchanged.
-     *
-     * @method Phaser.Physics.Matter.Components.Velocity#setAngularVelocity
-     * @since 3.0.0
-     *
-     * @param {number} value - The angular velocity.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setAngularVelocity: function (value)
-    {
-        Body.setAngularVelocity(this.body, value);
-
-        return this;
-    },
-
-    /**
      * Sets the horizontal velocity of the physics body.
      *
      * @method Phaser.Physics.Matter.Components.Velocity#setVelocityX
@@ -88,6 +70,82 @@ var Velocity = {
         Body.setVelocity(this.body, this._tempVec2);
 
         return this;
+    },
+
+    /**
+     * Gets the current linear velocity of the physics body.
+     *
+     * @method Phaser.Physics.Matter.Components.Velocity#getVelocity
+     * @since 3.60.0
+     *
+     * @return {Phaser.Math.Types.Vec2Like} The current linear velocity of the body.
+     */
+    getVelocity: function ()
+    {
+        return Body.getVelocity(this.body);
+    },
+
+    /**
+     * Sets the angular velocity of the body instantly.
+     * Position, angle, force etc. are unchanged.
+     *
+     * @method Phaser.Physics.Matter.Components.Velocity#setAngularVelocity
+     * @since 3.0.0
+     *
+     * @param {number} velocity - The angular velocity.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setAngularVelocity: function (velocity)
+    {
+        Body.setAngularVelocity(this.body, velocity);
+
+        return this;
+    },
+
+    /**
+     * Gets the current rotational velocity of the body.
+     *
+     * @method Phaser.Physics.Matter.Components.Velocity#getAngularVelocity
+     * @since 3.60.0
+     *
+     * @return {number} The current angular velocity of the body.
+     */
+    getAngularVelocity: function ()
+    {
+        return Body.getAngularVelocity(this.body);
+    },
+
+    /**
+     * Sets the current rotational speed of the body.
+     * Direction is maintained. Affects body angular velocity.
+     *
+     * @method Phaser.Physics.Matter.Components.Velocity#setAngularSpeed
+     * @since 3.60.0
+     *
+     * @param {number} speed - The angular speed.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setAngularSpeed: function (speed)
+    {
+        Body.setAngularSpeed(this.body, speed);
+
+        return this;
+    },
+
+    /**
+     * Gets the current rotational speed of the body.
+     * Equivalent to the magnitude of its angular velocity.
+     *
+     * @method Phaser.Physics.Matter.Components.Speed#getAngularSpeed
+     * @since 3.60.0
+     *
+     * @return {number} The current angular velocity of the body.
+     */
+    getAngularSpeed: function ()
+    {
+        return Body.getAngularSpeed(this.body);
     }
 
 };
