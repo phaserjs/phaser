@@ -159,6 +159,8 @@ The full list of new methods are as follows:
 
 Available only to texture-based Game Objects:
 
+* `GameObject.preFX` an instance of the FX Controller, which allows you to add and remove  Pre FX from the Game Object. It features methods such as `add`, `remove` and `clear`. Plus the following:
+
 * `GameObject.preFX.addGlow` adds a Glow Pre FX effect to the Game Object.
 * `GameObject.preFX.addShadow` adds a Shadow Pre FX effect to the Game Object.
 * `GameObject.preFX.addPixelate` adds a Pixelate Pre FX effect to the Game Object.
@@ -177,6 +179,9 @@ Available only to texture-based Game Objects:
 * `GameObject.preFX.addTiltShift` adds a TiltShift Pre FX effect to the Game Object.
 
 Available to all Game Objects:
+
+* `GameObject.clearFX` removes both Pre and Post FX from the Game Object.
+* `GameObject.postFX` an instance of the FX Controller, which allows you to add and remove  Post FX from the Game Object. It features methods such as `add`, `remove` and `clear`. Plus the following:
 
 * `GameObject.postFX.addGlow` adds a Glow Post FX effect to the Game Object.
 * `GameObject.postFX.addShadow` adds a Shadow Post FX effect to the Game Object.
