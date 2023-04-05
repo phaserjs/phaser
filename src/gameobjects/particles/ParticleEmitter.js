@@ -1731,6 +1731,21 @@ var ParticleEmitter = new Class({
     },
 
     /**
+     * Clear all Particle Death Zone from this Emitter.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#clearDeathZone
+     * @since 3.60.0
+     *
+     * @return {this} This Particle Emitter.
+     */
+    clearDeathZone: function ()
+    {
+        this.deathZones.length = 0;
+
+        return this;
+    },
+
+    /**
      * Adds a new Particle Emission Zone to this Emitter.
      *
      * An {@link Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig EdgeZone} places particles on its edges.
@@ -1814,6 +1829,23 @@ var ParticleEmitter = new Class({
     removeEmitZone: function (zone)
     {
         Remove(this.emitZones, zone);
+
+        this.zoneIndex = 0;
+
+        return this;
+    },
+
+    /**
+     * Clear all Particle Emission Zone from this Emitter.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#clearEmitZone
+     * @since 3.60.0
+     *
+     * @return {this} This Particle Emitter.
+     */
+    clearEmitZone: function ()
+    {
+        this.emitZones.length = 0;
 
         this.zoneIndex = 0;
 
