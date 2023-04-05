@@ -20,8 +20,8 @@ var GameObjectFactory = require('../../gameobjects/GameObjectFactory');
  *
  * For example, if a pure blue pixel with an alpha of 0.95 is masked with a pure red pixel with an
  * alpha of 0.5, the resulting pixel will be pure blue with an alpha of 0.475. Naturally, this means
- * that a pixel in the mask with an alpha of 0 will hide the corresponding pixel in all masked Game Objects
- *  A pixel with an alpha of 1 in the masked Game Object will receive the same alpha as the
+ * that a pixel in the mask with an alpha of 0 will hide the corresponding pixel in all masked Game Objects.
+ * A pixel with an alpha of 1 in the masked Game Object will receive the same alpha as the
  * corresponding pixel in the mask.
  *
  * Note: You cannot combine Bitmap Masks and Blend Modes on the same Game Object. You can, however,
