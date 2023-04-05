@@ -311,6 +311,8 @@ var PostPipeline = {
      */
     removePostPipeline: function (pipeline)
     {
+        var isString = (typeof pipeline === 'string');
+
         var pipelines = this.postPipelines;
 
         for (var i = pipelines.length - 1; i >= 0; i--)
@@ -318,8 +320,8 @@ var PostPipeline = {
             var instance = pipelines[i];
 
             if (
-                (typeof pipeline === 'string' && instance.name === pipeline) ||
-                (typeof pipeline !== 'string' && instance instanceof pipeline))
+                (isString && instance.name === pipeline) ||
+                (!isString && instance === pipeline))
             {
                 instance.destroy();
 

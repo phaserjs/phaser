@@ -299,7 +299,12 @@ var FX = new Class({
 
         if (this.isPost)
         {
-            var pipelines = this.gameObject.getPostPipeline(fx.type);
+            var pipelines = this.gameObject.getPostPipeline(String(fx.type));
+
+            if (!Array.isArray(pipelines))
+            {
+                pipelines = [ pipelines ];
+            }
 
             for (i = 0; i < pipelines.length; i++)
             {
