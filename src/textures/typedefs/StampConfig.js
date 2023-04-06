@@ -15,4 +15,5 @@
  * @property {number} [originY=0.5] - The vertical origin of the stamp. 0 is the top, 0.5 is the center and 1 is the bottom.
  * @property {(string|Phaser.BlendModes|number)} [blendMode=0] - The blend mode used when drawing the stamp. Defaults to 0 (normal).
  * @property {boolean} [erase=false] - Erase this stamp from the texture?
+ * @property {boolean} [skipBatch=false] - Skip beginning and ending a batch with this call. Use if this is part of a bigger batched draw.
  */

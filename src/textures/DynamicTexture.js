@@ -450,6 +450,7 @@ var DynamicTexture = new Class({
         var originY = GetFastValue(config, 'originY', 0.5);
         var blendMode = GetFastValue(config, 'blendMode', 0);
         var erase = GetFastValue(config, 'erase', false);
+        var skipBatch = GetFastValue(config, 'skipBatch', false);
 
         var stamp = this.manager.resetStamp(alpha, tint);
 
@@ -474,7 +475,15 @@ var DynamicTexture = new Class({
             this._eraseMode = true;
         }
 
-        this.draw(stamp, x, y);
+        if (!skipBatch)
+        {
+            this.draw(stamp, x, y);
+        }
+        else
+        {
+            this.batchDraw(stamp, x, y)
+        }
+        
 
         if (erase)
         {
