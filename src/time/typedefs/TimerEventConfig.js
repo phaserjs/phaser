@@ -6,7 +6,7 @@
  * @property {number} [repeat=0] - The total number of times the Timer Event will repeat before finishing.
  * @property {boolean} [loop=false] - `true` if the Timer Event should repeat indefinitely.
  * @property {function} [callback] - The callback which will be called when the Timer Event fires.
- * @property {*} [callbackScope] - The scope (`this` object) with which to invoke the `callback`.
+ * @property {*} [callbackScope] - The scope (`this` object) with which to invoke the `callback`. The default is the Timer Event.
  * @property {Array.<*>} [args] - Additional arguments to be passed to the `callback`.
  * @property {number} [timeScale=1] - The scale of the elapsed time.
  * @property {number} [startAt=0] - The initial elapsed time in milliseconds. Useful if you want a long duration with repeat, but for the first loop to fire quickly.
