@@ -174,7 +174,7 @@ var TimerEvent = new Class({
 
         this.callback = GetFastValue(config, 'callback', undefined);
 
-        this.callbackScope = GetFastValue(config, 'callbackScope', this.callback);
+        this.callbackScope = GetFastValue(config, 'callbackScope', this);
 
         this.args = GetFastValue(config, 'args', []);
 
