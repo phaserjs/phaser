@@ -48,6 +48,10 @@ var Controller = new Class({
          * Toggle this boolean to enable or disable this effect,
          * without removing and adding it from the Game Object.
          *
+         * Only works for Pre FX.
+         *
+         * Post FX are always active.
+         *
          * @name Phaser.FX.Controller#active
          * @type {boolean}
          * @since 3.60.0
