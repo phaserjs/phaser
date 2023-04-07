@@ -1206,6 +1206,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
+* The default callback context of the `TimerEvent` has changed to be the `TimerEvent` instance itself, rather than the context (thanks @samme)
 * You will now get a warning from the `AnimationManager` and `AnimationState` if you try to add an animation with a key that already exists. Fix #6434.
 * `Tilemap.addTilesetImage` has a new optional parameter `tileOffset` which, if given, controls the rendering offset of the tiles. This was always available on the Tileset itself, but not from this function (thanks @imothee)
 * The `GameObject.getBounds` method will now return a `Geom.Rectangle` instance, rather than a plain Object (thanks @samme)
