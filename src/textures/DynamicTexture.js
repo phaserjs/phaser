@@ -481,9 +481,8 @@ var DynamicTexture = new Class({
         }
         else
         {
-            this.batchDraw(stamp, x, y)
+            this.batchGameObject(stamp, x, y);
         }
-        
 
         if (erase)
         {
