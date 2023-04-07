@@ -15,6 +15,7 @@ var SoundEvents = require('../../sound/events/');
 var UUID = require('../../utils/string/UUID');
 var VideoRender = require('./VideoRender');
 var MATH_CONST = require('../../math/const');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * @classdesc
@@ -92,7 +93,9 @@ var MATH_CONST = require('../../math/const');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string} [key] - Optional key of the Video this Game Object will play, as stored in the Video Cache.
+ * @param {(string|string[]|Phaser.Types.Loader.FileTypes.VideoFileURLConfig|Phaser.Types.Loader.FileTypes.VideoFileURLConfig[])} [urls] - The absolute or relative URL to load the video files from.
+ * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
+ * @param {string} [loadEvent='loadeddata'] - The load event to listen for. Either `loadeddata`, `canplay` or `canplaythrough`.
  */
 var Video = new Class({
 
@@ -119,7 +122,7 @@ var Video = new Class({
 
     initialize:
 
-    function Video (scene, x, y, key)
+    function Video (scene, x, y, urls, noAudio, loadEvent)
     {
         GameObject.call(this, scene, 'Video');
 
@@ -144,7 +147,7 @@ var Video = new Class({
         this.videoTexture = null;
 
         /**
-         * A reference to the TextureSource belong to the `videoTexture` Texture object.
+         * A reference to the TextureSource backing the `videoTexture` Texture object.
          * Will be `null` until a video is loaded for playback.
          *
          * @name Phaser.GameObjects.Video#videoTextureSource
@@ -380,26 +383,36 @@ var Video = new Class({
          */
         this.removeVideoElementOnDestroy = false;
 
+        var game = scene.sys.game;
+
+        /**
+         * Device.video
+         *
+         * @name Phaser.GameObjects.Video#_device
+         * @type {string[]}
+         * @private
+         * @since 3.60.0
+         */
+        this._device = game.device.video;
+
         this.setPosition(x, y);
         this.setSize(256, 256);
         this.initPipeline();
         this.initPostPipeline(true);
 
-        if (key)
-        {
-            this.changeSource(key, false);
-        }
-
-        var game = scene.sys.game.events;
-
-        game.on(GameEvents.PAUSE, this.globalPause, this);
-        game.on(GameEvents.RESUME, this.globalResume, this);
+        game.events.on(GameEvents.PAUSE, this.globalPause, this);
+        game.events.on(GameEvents.RESUME, this.globalResume, this);
 
         var sound = scene.sys.sound;
 
         if (sound)
         {
             sound.on(SoundEvents.GLOBAL_MUTE, this.globalMute, this);
+        }
+
+        if (urls)
+        {
+            this.load(urls, noAudio, loadEvent);
         }
     },
 
@@ -413,6 +426,259 @@ var Video = new Class({
     removedFromScene: function ()
     {
         this.scene.sys.updateList.remove(this);
+    },
+
+    /**
+     * Loads a Video from the given URL, ready for playback with the `Video.play` method.
+     *
+     * You can control at what point the browser determines the video as being ready for playback via
+     * the `loadEvent` parameter. See https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement
+     * for more details.
+     *
+     * @method Phaser.GameObjects.Video#load
+     * @since 3.60.0
+     *
+     * @param {(string|string[]|Phaser.Types.Loader.FileTypes.VideoFileURLConfig|Phaser.Types.Loader.FileTypes.VideoFileURLConfig[])} [urls] - The absolute or relative URL to load the video files from.
+     * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
+     * @param {string} [loadEvent='loadeddata'] - The load event to listen for. Either `loadeddata`, `canplay` or `canplaythrough`.
+     * @param {string} [crossOrigin] - The value to use for the `crossOrigin` property in the video load request.  Either undefined, `anonymous` or `use-credentials`. If no value is given, `crossorigin` will not be set in the request.
+     *
+     * @return {this} This Video Game Object for method chaining.
+     */
+    load: function (urls, noAudio, loadEvent, crossOrigin)
+    {
+        if (noAudio === undefined) { noAudio = false; }
+        if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
+
+        var urlConfig = this.getVideoURL(urls);
+
+        if (!urlConfig)
+        {
+            console.warn('No supported video format found for ' + urls);
+
+            return this;
+        }
+
+        if (this.video)
+        {
+            this.stop();
+        }
+
+        if (this.videoTexture)
+        {
+            this.scene.sys.textures.remove(this._key);
+        }
+
+        var video = document.createElement('video');
+
+        video.controls = false;
+
+        if (noAudio)
+        {
+            video.muted = true;
+            video.defaultMuted = true;
+
+            video.setAttribute('autoplay', 'autoplay');
+        }
+
+        if (crossOrigin !== undefined)
+        {
+            video.setAttribute('crossorigin', crossOrigin);
+        }
+
+        video.setAttribute('playsinline', 'playsinline');
+        video.setAttribute('preload', 'auto');
+        video.setAttribute('disablePictureInPicture', 'true');
+
+        video.addEventListener(loadEvent, function (event) {
+            console.log('Video loadEvent', event);
+        });
+
+        video.addEventListener('error', function (event) {
+            console.log('Video error', event);
+        });
+
+        // video.addEventListener(loadEvent, this.onLoadCallback, true);
+        // video.addEventListener('error', this.onErrorCallback, true);
+
+        video.src = urlConfig.url;
+
+        /*
+        if ('srcObject' in video)
+        {
+            try
+            {
+                video.srcObject = stream;
+            }
+            catch (err)
+            {
+                if (err.name !== 'TypeError')
+                {
+                    throw err;
+                }
+
+                // Even if they do, they may only support MediaStream
+                video.src = URL.createObjectURL(stream);
+            }
+        }
+        else
+        {
+            video.src = URL.createObjectURL(stream);
+        }
+        */
+
+        video.load();
+
+        this._lastUpdate = 0;
+
+        this.video = video;
+
+        if ('requestVideoFrameCallback' in HTMLVideoElement.prototype)
+        {
+            console.log('Using requestVideoFrameCallback');
+            video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
+        }
+
+        return this;
+    },
+
+    /**
+     * https://web.dev/requestvideoframecallback-rvfc
+     *
+     * @param {DOMHighResTimeStamp} now
+     * @param {VideoFrameCallbackMetadata} metadata - https://wicg.github.io/video-rvfc/#video-frame-metadata-callback
+     * @returns
+     */
+    requestVideoFrame: function (now, metadata)
+    {
+        var video = this.video;
+
+        if (!video)
+        {
+            return;
+        }
+
+        var width = metadata.width;
+        var height = metadata.height;
+
+        if (this._lastUpdate === 0)
+        {
+            //  First frame
+            this._codePaused = video.paused;
+            this._codeMuted = video.muted;
+
+            if (this.videoTexture)
+            {
+                this.scene.sys.textures.remove(this._key);
+            }
+
+            this.videoTexture = this.scene.sys.textures.create(this._key, video, width, height);
+            this.videoTextureSource = this.videoTexture.source[0];
+            this.videoTexture.add('__BASE', 0, 0, 0, width, height);
+
+            this.setTexture(this.videoTexture);
+            this.setSizeToFrame();
+            this.updateDisplayOrigin();
+
+            this.emit(Events.VIDEO_CREATED, this, width, height);
+
+            console.log('First frame', width, height);
+        }
+        else
+        {
+            // this.updateTexture();
+
+            var textureSource = this.videoTextureSource;
+
+            if (textureSource.source !== video)
+            {
+                textureSource.source = video;
+                textureSource.width = width;
+                textureSource.height = height;
+            }
+
+            textureSource.update();
+
+            console.log('updated frame', metadata.expectedDisplayTime, 'mediaTime', metadata.mediaTime);
+        }
+
+        this._lastUpdate = metadata.mediaTime;
+
+        this.video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
+    },
+
+    /**
+     * Creates a Video Element within the DOM.
+     *
+     * @method Phaser.Loader.FileTypes.VideoFile#createVideoElement
+     * @private
+     * @since 3.20.0
+     *
+     * @return {HTMLVideoElement} The newly created Video element.
+    createVideoElement: function ()
+    {
+        var video = document.createElement('video');
+
+        video.controls = false;
+        video.crossOrigin = this.loader.crossOrigin;
+
+        if (this.config.noAudio)
+        {
+            video.muted = true;
+            video.defaultMuted = true;
+
+            video.setAttribute('autoplay', 'autoplay');
+        }
+
+        video.setAttribute('playsinline', 'playsinline');
+        video.setAttribute('preload', 'auto');
+
+        return video;
+    },
+     */
+
+    getVideoURL: function (urls)
+    {
+        if (!Array.isArray(urls))
+        {
+            urls = [ urls ];
+        }
+
+        for (var i = 0; i < urls.length; i++)
+        {
+            var url = GetFastValue(urls[i], 'url', urls[i]);
+
+            if (url.indexOf('blob:') === 0)
+            {
+                return {
+                    url: url,
+                    type: ''
+                };
+            }
+
+            var videoType;
+
+            if (url.indexOf('data:') === 0)
+            {
+                videoType = url.split(',')[0].match(/\/(.*?);/);
+            }
+            else
+            {
+                videoType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
+            }
+
+            videoType = GetFastValue(urls[i], 'type', (videoType) ? videoType[1] : '').toLowerCase();
+
+            if (this._device[videoType])
+            {
+                return {
+                    url: url,
+                    type: videoType
+                };
+            }
+        }
+
+        return null;
     },
 
     /**
@@ -504,10 +770,14 @@ var Video = new Class({
 
         if (playPromise !== undefined)
         {
+            console.log('play promise');
+
             playPromise.then(this.playPromiseSuccessHandler.bind(this)).catch(this.playPromiseErrorHandler.bind(this));
         }
         else
         {
+            console.log('No play promise returned');
+
             //  Old-school browsers with no Promises
             video.addEventListener('playing', callbacks.play);
 
@@ -526,19 +796,19 @@ var Video = new Class({
         }
 
         //  Set these _after_ calling `play` or they don't fire (useful, thanks browsers)
-        video.addEventListener('error', callbacks.error);
-        video.addEventListener('abort', callbacks.error);
-        video.addEventListener('stalled', callbacks.error);
-        video.addEventListener('suspend', callbacks.error);
-        video.addEventListener('waiting', callbacks.error);
+        // video.addEventListener('error', callbacks.error);
+        // video.addEventListener('abort', callbacks.error);
+        // video.addEventListener('stalled', callbacks.error);
+        // video.addEventListener('suspend', callbacks.error);
+        // video.addEventListener('waiting', callbacks.error);
 
-        video.addEventListener('ended', callbacks.end);
-        video.addEventListener('timeupdate', callbacks.time);
-        video.addEventListener('seeking', callbacks.seeking);
-        video.addEventListener('seeked', callbacks.seeked);
+        // video.addEventListener('ended', callbacks.end);
+        // video.addEventListener('timeupdate', callbacks.time);
+        // video.addEventListener('seeking', callbacks.seeking);
+        // video.addEventListener('seeked', callbacks.seeked);
 
-        video.addEventListener('play', this.playHandler2.bind(this));
-        video.addEventListener('pause', this.pauseHandler.bind(this));
+        // video.addEventListener('play', this.playHandler2.bind(this));
+        // video.addEventListener('pause', this.pauseHandler.bind(this));
 
         return this;
     },
@@ -550,6 +820,8 @@ var Video = new Class({
 
     pauseHandler: function (event)
     {
+        debugger;
+
         console.log('paused', this._cacheKey);
 
         // this.video.play();
@@ -574,7 +846,6 @@ var Video = new Class({
      * @param {number} [markerOut] - Optional out marker time, in seconds, for playback of a sequence of the video.
      *
      * @return {this} This Video Game Object for method chaining.
-     */
     changeSource: function (key, autoplay, loop, markerIn, markerOut)
     {
         if (autoplay === undefined) { autoplay = true; }
@@ -632,6 +903,7 @@ var Video = new Class({
 
         return this;
     },
+     */
 
     /**
      * Adds a sequence marker to this video.
@@ -850,58 +1122,16 @@ var Video = new Class({
      * @method Phaser.GameObjects.Video#loadURL
      * @since 3.20.0
      *
-     * @param {string} url - The URL of the video to load or be streamed.
+     * @param {(string|string[]|Phaser.Types.Loader.FileTypes.VideoFileURLConfig|Phaser.Types.Loader.FileTypes.VideoFileURLConfig[])} [urls] - The absolute or relative URL to load the video files from.
      * @param {string} [loadEvent='loadeddata'] - The load event to listen for. Either `loadeddata`, `canplay` or `canplaythrough`.
      * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
      * @param {string} [crossOrigin] - The value to use for the `crossOrigin` property in the video load request.  Either undefined, `anonymous` or `use-credentials`. If no value is given, `crossorigin` will not be set in the request.
      *
      * @return {this} This Video Game Object for method chaining.
      */
-    loadURL: function (url, loadEvent, noAudio, crossOrigin)
+    loadURL: function (urls, loadEvent, noAudio, crossOrigin)
     {
-        if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
-        if (noAudio === undefined) { noAudio = false; }
-
-        if (this.video)
-        {
-            this.stop();
-        }
-
-        if (this.videoTexture)
-        {
-            this.scene.sys.textures.remove(this._key);
-        }
-
-        var video = document.createElement('video');
-
-        video.controls = false;
-
-        if (noAudio)
-        {
-            video.muted = true;
-            video.defaultMuted = true;
-
-            video.setAttribute('autoplay', 'autoplay');
-        }
-
-        video.setAttribute('playsinline', 'playsinline');
-        video.setAttribute('preload', 'auto');
-
-        if (crossOrigin !== undefined)
-        {
-            video.setAttribute('crossorigin', crossOrigin);
-        }
-
-        video.addEventListener('error', this._callbacks.error);
-        video.addEventListener(loadEvent, this._callbacks.load);
-
-        video.src = url;
-
-        video.load();
-
-        this.video = video;
-
-        return this;
+        return this.load(urls, noAudio, loadEvent, crossOrigin);
     },
 
     /**
@@ -922,51 +1152,7 @@ var Video = new Class({
      */
     loadMediaStream: function (stream, loadEvent, noAudio)
     {
-        if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
-        if (noAudio === undefined) { noAudio = false; }
-
-        if (this.video)
-        {
-            this.stop();
-        }
-
-        if (this.videoTexture)
-        {
-            this.scene.sys.textures.remove(this._key);
-        }
-
-        var video = document.createElement('video');
-
-        video.controls = false;
-
-        if (noAudio)
-        {
-            video.muted = true;
-            video.defaultMuted = true;
-
-            video.setAttribute('autoplay', 'autoplay');
-        }
-
-        video.setAttribute('playsinline', 'playsinline');
-        video.setAttribute('preload', 'auto');
-
-        video.addEventListener('error', this._callbacks.error, true);
-        video.addEventListener(loadEvent, this._callbacks.load, true);
-
-        try
-        {
-            video.srcObject = stream;
-        }
-        catch (error)
-        {
-            video.src = window.URL.createObjectURL(stream);
-        }
-
-        video.load();
-
-        this.video = video;
-
-        return this;
+        return this.load(stream, noAudio, loadEvent);
     },
 
     /**
@@ -995,6 +1181,7 @@ var Video = new Class({
      *
      * @method Phaser.GameObjects.Video#playPromiseErrorHandler
      * @fires Phaser.GameObjects.Events#VIDEO_ERROR
+     * @fires Phaser.GameObjects.Events#VIDEO_LOCKED
      * @private
      * @since 3.20.0
      *
@@ -1002,7 +1189,7 @@ var Video = new Class({
      */
     playPromiseErrorHandler: function (error)
     {
-        console.log('pp error handler', error);
+        // console.log('pp error handler', error);
 
         this.scene.sys.input.once(InputEvents.POINTER_DOWN, this.unlockHandler, this);
 
@@ -1010,6 +1197,7 @@ var Video = new Class({
         this.playWhenUnlocked = true;
 
         this.emit(Events.VIDEO_ERROR, this, error);
+        this.emit(Events.VIDEO_LOCKED, this);
     },
 
     /**
@@ -1117,6 +1305,8 @@ var Video = new Class({
      */
     timeUpdateHandler: function ()
     {
+        console.log('timeUpdateHandler');
+
         if (this.video && this.video.currentTime < this._lastUpdate)
         {
             this.emit(Events.VIDEO_LOOP, this);
@@ -1134,6 +1324,7 @@ var Video = new Class({
      */
     preUpdate: function ()
     {
+        /*
         var video = this.video;
 
         if (video)
@@ -1170,6 +1361,7 @@ var Video = new Class({
                 }
             }
         }
+        */
     },
 
     /**
@@ -1179,7 +1371,6 @@ var Video = new Class({
      * @fires Phaser.GameObjects.Events#VIDEO_TIMEOUT
      * @private
      * @since 3.20.0
-     */
     checkVideoProgress: function ()
     {
         if (this.video.readyState >= 2)
@@ -1201,6 +1392,7 @@ var Video = new Class({
             }
         }
     },
+     */
 
     /**
      * Internal method that is called when enough video data has been received in order to create a texture
@@ -1268,6 +1460,9 @@ var Video = new Class({
      * seeking (i.e. reaches its designated timestamp) it will emit a `seeked` event.
      *
      * If you wish to seek based on time instead, use the `Video.setCurrentTime` method.
+     *
+     * Unfortunately, the DOM video element does not guarantee frame-accurate seeking.
+     * This has been an ongoing subject of discussion: https://github.com/w3c/media-and-entertainment/issues/4
      *
      * @method Phaser.GameObjects.Video#seekTo
      * @since 3.20.0
@@ -1352,7 +1547,7 @@ var Video = new Class({
 
             video.currentTime = value;
 
-            this._lastUpdate = value;
+            // this._lastUpdate = value;
         }
 
         return this;
@@ -1546,6 +1741,7 @@ var Video = new Class({
         if (this.video && !this._codePaused)
         {
             this.createPlayPromise();
+
             // this.video.play();
         }
     },

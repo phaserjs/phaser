@@ -16,6 +16,7 @@ module.exports = {
     VIDEO_COMPLETE: require('./VIDEO_COMPLETE_EVENT'),
     VIDEO_CREATED: require('./VIDEO_CREATED_EVENT'),
     VIDEO_ERROR: require('./VIDEO_ERROR_EVENT'),
+    VIDEO_LOCKED: require('./VIDEO_LOCKED_EVENT'),
     VIDEO_LOOP: require('./VIDEO_LOOP_EVENT'),
     VIDEO_PLAY: require('./VIDEO_PLAY_EVENT'),
     VIDEO_SEEKED: require('./VIDEO_SEEKED_EVENT'),
