@@ -1,3 +1,5 @@
+# Phaser 3 Change Log
+
 ## Version 3.50.0 - Subaru - 16th December 2020
 
 Due to the massive amount of changes in 3.50 this Change Log is, by its nature, very long. It's important to scan through it, especially if you're porting a game from an earlier version of Phaser to 3.50. However, if you're after more top-level descriptions of what's new, with example code, then please see the posts we will be making to the Phaser site and Phaser Patreon in the coming months after release. We have also updated the Phaser 3 Examples site, so that every single example up there has been rewritten for 3.50, so you don't have to struggle working through old or deprecated syntax. Virtually all new features are covered in new examples, as well.
