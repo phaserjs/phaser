@@ -196,7 +196,7 @@ var Video = new Class({
          * @type {boolean}
          * @since 3.20.0
          */
-        this.touchLocked = true;
+        this.touchLocked = false;
 
         /**
          * Should the video auto play when document interaction is required and happens?
@@ -208,6 +208,16 @@ var Video = new Class({
         this.playWhenUnlocked = false;
 
         /**
+         * Records the number of times the video has failed to play,
+         * typically because the user hasn't interacted with the page yet.
+         *
+         * @name Phaser.GameObjects.Video#failedPlayAttempts
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.failedPlayAttempts = 0;
+
+        /**
          * When starting playback of a video Phaser will monitor its `readyState` using a `setTimeout` call.
          * The `setTimeout` happens once every `Video.retryInterval` ms. It will carry on monitoring the video
          * state in this manner until the `retryLimit` is reached and then abort.
@@ -216,10 +226,10 @@ var Video = new Class({
          * @type {number}
          * @since 3.20.0
          */
-        this.retryLimit = 20;
+        // this.retryLimit = 20;
 
         /**
-         * The current retry attempt.
+         * The current retry elapsed time.
          *
          * @name Phaser.GameObjects.Video#retry
          * @type {number}
@@ -244,7 +254,7 @@ var Video = new Class({
          * @private
          * @since 3.20.0
          */
-        this._retryID = null;
+        // this._retryID = null;
 
         /**
          * The video was muted due to a system event, such as the game losing focus.
@@ -374,6 +384,26 @@ var Video = new Class({
         this._isSeeking = false;
 
         /**
+         * Has Video.play been called? This is reset if a new Video is loaded.
+         *
+         * @name Phaser.GameObjects.Video#_playCalled
+         * @type {boolean}
+         * @private
+         * @since 3.60.0
+         */
+        this._playCalled = false;
+
+        /**
+         * The Promise returned by Video.play.
+         *
+         * @name Phaser.GameObjects.Video#_playPromise
+         * @type {Promise}
+         * @private
+         * @since 3.60.0
+         */
+        this._playPromise;
+
+        /**
          * Should the Video element that this Video is using, be removed from the DOM
          * when this Video is destroyed?
          *
@@ -464,6 +494,7 @@ var Video = new Class({
             this.stop();
         }
 
+        //  Why do we do this?
         if (this.videoTexture)
         {
             this.scene.sys.textures.remove(this._key);
@@ -530,6 +561,8 @@ var Video = new Class({
         video.load();
 
         this._lastUpdate = 0;
+        this._playCalled = false;
+        this.retry = 0;
 
         this.video = video;
 
@@ -717,29 +750,21 @@ var Video = new Class({
      */
     play: function (loop, markerIn, markerOut)
     {
-        if ((this.touchLocked && this.playWhenUnlocked) || this.isPlaying())
-        {
-            return this;
-        }
-
         var video = this.video;
 
-        if (!video)
+        if (!video || this.isPlaying())
         {
-            console.warn('Video not loaded');
+            if (!video)
+            {
+                console.warn('Video not loaded');
+            }
 
             return this;
         }
 
+        //  We can reset these each time play is called, even if the video hasn't started yet
+
         if (loop === undefined) { loop = video.loop; }
-
-        var sound = this.scene.sys.sound;
-
-        if (sound && sound.mute)
-        {
-            //  Mute will be set based on the global mute state of the Sound Manager (if there is one)
-            this.setMute(true);
-        }
 
         if (!isNaN(markerIn))
         {
@@ -753,31 +778,82 @@ var Video = new Class({
 
         video.loop = loop;
 
-        return this.createPlayPromise();
+        //  But we go no further if play has already been called
+
+        if (!this._playCalled)
+        {
+            this._playPromise = video.play();
+
+            if (this._playPromise !== undefined)
+            {
+                console.log('Video.play promise creation');
+
+                this._playPromise.then(this.ppSuccess.bind(this)).catch(this.ppError.bind(this));
+            }
+            else
+            {
+                //  Old-school fallback here
+            }
+        }
+
+        this._playCalled = true;
+
+        return this;
+    },
+
+    addEventHandlers: function ()
+    {
+        var video = this.video;
+        var callbacks = this._callbacks;
+
+        //  Set these _after_ calling `play` or they don't fire (useful, thanks browsers)
+
+        video.addEventListener('error', callbacks.error);
+        video.addEventListener('abort', callbacks.error);
+        video.addEventListener('stalled', callbacks.error);
+        video.addEventListener('suspend', callbacks.error);
+        video.addEventListener('waiting', callbacks.error);
+
+        video.addEventListener('ended', callbacks.end);
+        video.addEventListener('timeupdate', callbacks.time);
+        video.addEventListener('seeking', callbacks.seeking);
+        video.addEventListener('seeked', callbacks.seeked);
+    },
+
+    removeEventHandlers: function ()
+    {
+        var video = this.video;
+        var callbacks = this._callbacks;
+
+        video.removeEventListener('error', callbacks.error);
+        video.removeEventListener('abort', callbacks.error);
+        video.removeEventListener('stalled', callbacks.error);
+        video.removeEventListener('suspend', callbacks.error);
+        video.removeEventListener('waiting', callbacks.error);
+
+        video.removeEventListener('ended', callbacks.end);
+        video.removeEventListener('timeupdate', callbacks.time);
+        video.removeEventListener('seeking', callbacks.seeking);
+        video.removeEventListener('seeked', callbacks.seeked);
     },
 
     createPlayPromise: function ()
     {
         var video = this.video;
-        var callbacks = this._callbacks;
 
-        if (this.isPlaying())
-        {
-            // this.stop();
-        }
+        this._playPromise = video.play();
 
-        var playPromise = video.play();
-
-        if (playPromise !== undefined)
+        if (this._playPromise !== undefined)
         {
             console.log('play promise');
 
-            playPromise.then(this.playPromiseSuccessHandler.bind(this)).catch(this.playPromiseErrorHandler.bind(this));
+            this._playPromise.then(this.ppSuccess.bind(this)).catch(this.ppError.bind(this));
         }
         else
         {
             console.log('No play promise returned');
 
+            /*
             //  Old-school browsers with no Promises
             video.addEventListener('playing', callbacks.play);
 
@@ -793,7 +869,10 @@ var Video = new Class({
 
                 this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
             }
+            */
         }
+
+        var callbacks = this._callbacks;
 
         //  Set these _after_ calling `play` or they don't fire (useful, thanks browsers)
         // video.addEventListener('error', callbacks.error);
@@ -1165,6 +1244,8 @@ var Video = new Class({
      */
     playPromiseSuccessHandler: function ()
     {
+        console.log('video.play has succeeded via promise');
+
         this._codePaused = false;
         this.touchLocked = false;
 
@@ -1174,6 +1255,76 @@ var Video = new Class({
         {
             this.video.currentTime = this._markerIn;
         }
+
+        var sound = this.scene.sys.sound;
+
+        if (sound && sound.mute)
+        {
+            //  Mute will be set based on the global mute state of the Sound Manager (if there is one)
+            this.setMute(true);
+        }
+    },
+
+    /**
+     * This internal method is called automatically if the playback Promise resolves successfully.
+     *
+     * @method Phaser.GameObjects.Video#ppSuccess
+     * @fires Phaser.GameObjects.Events#VIDEO_PLAY
+     * @fires Phaser.GameObjects.Events#VIDEO_UNLOCKED
+     * @private
+     * @since 3.60.0
+     */
+    ppSuccess: function ()
+    {
+        console.log('video.play has succeeded via promise after failed attempts: ' + this.failedPlayAttempts);
+
+        this.addEventHandlers();
+
+        if (this.touchLocked)
+        {
+            this.emit(Events.VIDEO_UNLOCKED, this);
+        }
+
+        this._codePaused = false;
+        this.touchLocked = false;
+
+        this.emit(Events.VIDEO_PLAY, this);
+
+        if (this._markerIn > -1)
+        {
+            this.video.currentTime = this._markerIn;
+        }
+
+        var sound = this.scene.sys.sound;
+
+        if (sound && sound.mute)
+        {
+            //  Mute will be set based on the global mute state of the Sound Manager (if there is one)
+            this.setMute(true);
+        }
+    },
+
+    /**
+     * This internal method is called automatically if the playback Promise fails to resolve.
+     *
+     * @method Phaser.GameObjects.Video#ppError
+     * @fires Phaser.GameObjects.Events#VIDEO_ERROR
+     * @fires Phaser.GameObjects.Events#VIDEO_LOCKED
+     * @private
+     * @since 3.60.0
+     *
+     * @param {any} error - The Promise resolution error.
+     */
+    ppError: function (error)
+    {
+        console.log('pp error handler', error);
+
+        this.touchLocked = true;
+        this.playWhenUnlocked = true;
+        this.failedPlayAttempts = 1;
+
+        this.emit(Events.VIDEO_ERROR, this, error);
+        this.emit(Events.VIDEO_LOCKED, this);
     },
 
     /**
@@ -1189,9 +1340,9 @@ var Video = new Class({
      */
     playPromiseErrorHandler: function (error)
     {
-        // console.log('pp error handler', error);
+        console.log('pp error handler', error);
 
-        this.scene.sys.input.once(InputEvents.POINTER_DOWN, this.unlockHandler, this);
+        // this.scene.sys.input.once(InputEvents.POINTER_DOWN, this.unlockHandler, this);
 
         this.touchLocked = true;
         this.playWhenUnlocked = true;
@@ -1259,7 +1410,6 @@ var Video = new Class({
      * @since 3.20.0
      *
      * @param {any} error - The Promise resolution error.
-     */
     unlockHandler: function ()
     {
         this.touchLocked = false;
@@ -1277,6 +1427,7 @@ var Video = new Class({
         // this.video.play();
         // this.emit(Events.VIDEO_PLAY, this);
     },
+     */
 
     /**
      * Called when the video completes playback, i.e. reaches an `ended` state.
@@ -1289,7 +1440,7 @@ var Video = new Class({
      */
     completeHandler: function ()
     {
-        console.log('ended');
+        console.log('completeHandler - ended');
         this.emit(Events.VIDEO_COMPLETE, this);
     },
 
@@ -1321,9 +1472,65 @@ var Video = new Class({
      * @method Phaser.GameObjects.Video#preUpdate
      * @private
      * @since 3.20.0
+     *
+     * @param {number} time - The current timestamp.
+     * @param {number} delta - The delta time in ms since the last frame.
      */
-    preUpdate: function ()
+    preUpdate: function (time, delta)
     {
+        var video = this.video;
+
+        if (!video || !this._playCalled)
+        {
+            return;
+        }
+
+        if (this.touchLocked && this.playWhenUnlocked)
+        {
+            this.retry += delta;
+
+            if (this.retry >= this.retryInterval)
+            {
+                var playPromise = video.play();
+                var _this = this;
+
+                if (playPromise !== undefined)
+                {
+                    playPromise.then(this.ppSuccess.bind(this)).catch(function ()
+                    {
+                        _this.failedPlayAttempts++;
+                        console.log('unlock failed', _this.failedPlayAttempts);
+                    });
+                }
+
+                this.retry = 0;
+            }
+        }
+        else
+        {
+            var currentTime = video.currentTime;
+
+            if (currentTime >= this._markerOut)
+            {
+                if (video.loop)
+                {
+                    video.currentTime = this._markerIn;
+
+                    this._lastUpdate = currentTime;
+
+                    this.emit(Events.VIDEO_LOOP, this);
+                }
+                else
+                {
+                    this.emit(Events.VIDEO_COMPLETE, this);
+
+                    console.log('prEUp stop');
+
+                    this.stop();
+                }
+            }
+        }
+
         /*
         var video = this.video;
 
@@ -1788,6 +1995,16 @@ var Video = new Class({
         }
 
         return this;
+    },
+
+    pause: function ()
+    {
+        return this.setPaused(true);
+    },
+
+    resume: function ()
+    {
+        return this.setPaused(false);
     },
 
     /**
