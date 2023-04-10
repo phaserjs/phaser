@@ -1282,7 +1282,7 @@ var Tilemap = new Class({
         {
             return layer;
         }
-        else if (layer instanceof TilemapLayer)
+        else if (layer instanceof TilemapLayer && layer.tilemap === this)
         {
             return layer.layerIndex;
         }
