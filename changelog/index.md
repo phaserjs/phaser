@@ -5,7 +5,7 @@ You can find the exhaustive Change Logs for all versions of Phaser 3 here.
 Please select a version to read that specific change log:
 
 | Version | Name | Release Date |
-+---------+------+--------------|
+| ------- | ---- | ------------ |
 | [3.55.2](3.55.2/CHANGELOG-v3.55.2.md) | Ichika | 27th May 2021 |
 | [3.55.1](3.55.1/CHANGELOG-v3.55.1.md) | Ichika | 26th May 2021 |
 | [3.55](3.55/CHANGELOG-v3.55.md) | Ichika | 24th May 2021 |
