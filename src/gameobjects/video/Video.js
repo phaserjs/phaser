@@ -4,18 +4,17 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Class = require('../../utils/Class');
 var Clamp = require('../../math/Clamp');
+var Class = require('../../utils/Class');
 var Components = require('../components');
 var Events = require('../events');
 var GameEvents = require('../../core/events/');
-var InputEvents = require('../../input/events/');
 var GameObject = require('../GameObject');
+var GetFastValue = require('../../utils/object/GetFastValue');
+var MATH_CONST = require('../../math/const');
 var SoundEvents = require('../../sound/events/');
 var UUID = require('../../utils/string/UUID');
 var VideoRender = require('./VideoRender');
-var MATH_CONST = require('../../math/const');
-var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * @classdesc
@@ -208,6 +207,33 @@ var Video = new Class({
         this.playWhenUnlocked = false;
 
         /**
+         * This read-only property returns `true` if the video is currently stalled, i.e. it has stopped
+         * playing due to a lack of data, or too much data, but hasn't yet reached the end of the video.
+         *
+         * This is set if the Video DOM element emits any of the following events:
+         *
+         * `stalled`
+         * `suspend`
+         * `waiting`
+         *
+         * And is cleared if the Video DOM element emits the `playing` event, or handles
+         * a requestVideoFrame call.
+         *
+         * Listen for the Phaser Event `VIDEO_STALLED` to be notified and inspect the event
+         * to see which DOM event caused it.
+         *
+         * Note that being stalled isn't always a negative thing. A video can be stalled if it
+         * has downloaded enough data in to its buffer to not need to download any more until
+         * the current batch of frames have rendered.
+         *
+         * @name Phaser.GameObjects.Video#isStalled
+         * @type {boolean}
+         * @readonly
+         * @since 3.60.0
+         */
+        this.isStalled = false;
+
+        /**
          * Records the number of times the video has failed to play,
          * typically because the user hasn't interacted with the page yet.
          *
@@ -216,6 +242,27 @@ var Video = new Class({
          * @since 3.60.0
          */
         this.failedPlayAttempts = 0;
+
+        /**
+         * If the browser supports the Request Video Frame API then this
+         * property will hold the metadata that is returned from
+         * the callback each time it is invoked.
+         *
+         * See https://wicg.github.io/video-rvfc/#video-frame-metadata-callback
+         * for a complete list of all properties that will be in this object.
+         * Likely of most interest is the `mediaTime` property:
+         *
+         * The media presentation timestamp (PTS) in seconds of the frame presented
+         * (e.g. its timestamp on the video.currentTime timeline). MAY have a zero
+         * value for live-streams or WebRTC applications.
+         *
+         * If the browser doesn't support the API then this property will be undefined.
+         *
+         * @name Phaser.GameObjects.Video#metadata
+         * @type {VideoFrameCallbackMetadata}
+         * @since 3.60.0
+         */
+        this.metadata;
 
         /**
          * When starting playback of a video Phaser will monitor its `readyState` using a `setTimeout` call.
@@ -305,14 +352,24 @@ var Video = new Class({
          * @since 3.20.0
          */
         this._callbacks = {
-            play: this.playHandler.bind(this),
-            load: this.loadHandler.bind(this),
-            error: this.loadErrorHandler.bind(this),
-            end: this.completeHandler.bind(this),
-            time: this.timeUpdateHandler.bind(this),
+            ended: this.completeHandler.bind(this),
+            playing: this.playingHandler.bind(this),
+            seeked: this.seekedHandler.bind(this),
             seeking: this.seekingHandler.bind(this),
-            seeked: this.seekedHandler.bind(this)
+            stalled: this.stalledHandler.bind(this),
+            suspend: this.stalledHandler.bind(this),
+            waiting: this.stalledHandler.bind(this)
         };
+
+        /**
+         * The locally bound event callback handlers.
+         *
+         * @name Phaser.GameObjects.Video#_callbacks
+         * @type {any}
+         * @private
+         * @since 3.20.0
+         */
+        this._loadCallbackHandler = this.loadErrorHandler.bind(this);
 
         /**
          * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
@@ -394,14 +451,23 @@ var Video = new Class({
         this._playCalled = false;
 
         /**
-         * The Promise returned by Video.play.
+         * The Callback ID returned by Request Video Frame.
          *
-         * @name Phaser.GameObjects.Video#_playPromise
-         * @type {Promise}
+         * @name Phaser.GameObjects.Video#_rfvCallbackId
+         * @type {number}
          * @private
          * @since 3.60.0
          */
-        this._playPromise;
+        this._rfvCallbackId = 0;
+
+        /**
+         * Does the browser support the Request Video Frame callback?
+         *
+         * @name Phaser.GameObjects.Video#hasRequestVideoFrame
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.hasRequestVideoFrame = ('requestVideoFrameCallback' in HTMLVideoElement.prototype);
 
         /**
          * Should the Video element that this Video is using, be removed from the DOM
@@ -489,20 +555,32 @@ var Video = new Class({
             return this;
         }
 
-        if (this.video)
+        var video = this.video;
+
+        if (video)
         {
+            //  Re-use the existing video element
+
+            this.removeLoadEventHandlers();
+
             this.stop();
+        }
+        else
+        {
+            video = document.createElement('video');
+
+            video.controls = false;
+
+            video.setAttribute('playsinline', 'playsinline');
+            video.setAttribute('preload', 'auto');
+            video.setAttribute('disablePictureInPicture', 'true');
         }
 
         //  Why do we do this?
-        if (this.videoTexture)
-        {
-            this.scene.sys.textures.remove(this._key);
-        }
-
-        var video = document.createElement('video');
-
-        video.controls = false;
+        // if (this.videoTexture)
+        // {
+        //     this.scene.sys.textures.remove(this._key);
+        // }
 
         if (noAudio)
         {
@@ -511,26 +589,22 @@ var Video = new Class({
 
             video.setAttribute('autoplay', 'autoplay');
         }
+        else
+        {
+            video.muted = false;
+            video.defaultMuted = false;
+
+            video.removeAttribute('autoplay');
+        }
 
         if (crossOrigin !== undefined)
         {
             video.setAttribute('crossorigin', crossOrigin);
         }
-
-        video.setAttribute('playsinline', 'playsinline');
-        video.setAttribute('preload', 'auto');
-        video.setAttribute('disablePictureInPicture', 'true');
-
-        video.addEventListener(loadEvent, function (event) {
-            console.log('Video loadEvent', event);
-        });
-
-        video.addEventListener('error', function (event) {
-            console.log('Video error', event);
-        });
-
-        // video.addEventListener(loadEvent, this.onLoadCallback, true);
-        // video.addEventListener('error', this.onErrorCallback, true);
+        else
+        {
+            video.removeAttribute('crossorigin');
+        }
 
         video.src = urlConfig.url;
 
@@ -558,7 +632,7 @@ var Video = new Class({
         }
         */
 
-        video.load();
+        this.addLoadEventHandlers();
 
         this._lastUpdate = 0;
         this._playCalled = false;
@@ -566,11 +640,7 @@ var Video = new Class({
 
         this.video = video;
 
-        if ('requestVideoFrameCallback' in HTMLVideoElement.prototype)
-        {
-            console.log('Using requestVideoFrameCallback');
-            video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
-        }
+        video.load();
 
         return this;
     },
@@ -594,22 +664,38 @@ var Video = new Class({
         var width = metadata.width;
         var height = metadata.height;
 
-        if (this._lastUpdate === 0)
+        var texture = this.videoTexture;
+        var textureSource = this.videoTextureSource;
+        var newVideo = (!texture || textureSource.source !== video);
+
+        if (newVideo)
         {
-            //  First frame
+            //  First frame of a new video
             this._codePaused = video.paused;
             this._codeMuted = video.muted;
 
-            if (this.videoTexture)
+            if (!texture)
             {
-                this.scene.sys.textures.remove(this._key);
+                texture = this.scene.sys.textures.create(this._key, video, width, height);
+
+                texture.add('__BASE', 0, 0, 0, width, height);
+
+                this.setTexture(texture);
+
+                this.videoTexture = texture;
+                this.videoTextureSource = texture.source[0];
+            }
+            else
+            {
+                //  Re-use the existing texture
+                textureSource.source = video;
+                textureSource.width = width;
+                textureSource.height = height;
+
+                //  Resize base frame
+                texture.get().setSize(width, height);
             }
 
-            this.videoTexture = this.scene.sys.textures.create(this._key, video, width, height);
-            this.videoTextureSource = this.videoTexture.source[0];
-            this.videoTexture.add('__BASE', 0, 0, 0, width, height);
-
-            this.setTexture(this.videoTexture);
             this.setSizeToFrame();
             this.updateDisplayOrigin();
 
@@ -621,23 +707,17 @@ var Video = new Class({
         {
             // this.updateTexture();
 
-            var textureSource = this.videoTextureSource;
-
-            if (textureSource.source !== video)
-            {
-                textureSource.source = video;
-                textureSource.width = width;
-                textureSource.height = height;
-            }
-
             textureSource.update();
 
-            console.log('updated frame', metadata.expectedDisplayTime, 'mediaTime', metadata.mediaTime);
+            console.log('updated frame', metadata.expectedDisplayTime, 'mediaTime', metadata.mediaTime, 'of', video.duration);
         }
+
+        this.isStalled = false;
+        this.metadata = metadata;
 
         this._lastUpdate = metadata.mediaTime;
 
-        this.video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
+        this._rfvCallbackId = this.video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
     },
 
     /**
@@ -782,13 +862,22 @@ var Video = new Class({
 
         if (!this._playCalled)
         {
-            this._playPromise = video.play();
+            if (this.hasRequestVideoFrame)
+            {
+                console.log('Using requestVideoFrameCallback');
 
-            if (this._playPromise !== undefined)
+                this._rfvCallbackId = video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
+            }
+
+            this._playCalled = true;
+
+            var playPromise = video.play();
+
+            if (playPromise !== undefined)
             {
                 console.log('Video.play promise creation');
 
-                this._playPromise.then(this.ppSuccess.bind(this)).catch(this.ppError.bind(this));
+                playPromise.then(this.ppSuccess.bind(this)).catch(this.ppError.bind(this));
             }
             else
             {
@@ -796,45 +885,62 @@ var Video = new Class({
             }
         }
 
-        this._playCalled = true;
-
         return this;
+    },
+
+    addLoadEventHandlers: function ()
+    {
+        var video = this.video;
+
+        if (video)
+        {
+            video.addEventListener('error', this._loadCallbackHandler);
+            video.addEventListener('abort', this._loadCallbackHandler);
+        }
+    },
+
+    removeLoadEventHandlers: function ()
+    {
+        var video = this.video;
+
+        if (video)
+        {
+            video.removeEventListener('error', this._loadCallbackHandler);
+            video.removeEventListener('abort', this._loadCallbackHandler);
+        }
     },
 
     addEventHandlers: function ()
     {
         var video = this.video;
-        var callbacks = this._callbacks;
 
-        //  Set these _after_ calling `play` or they don't fire (useful, thanks browsers)
+        //  Set these _after_ calling `video.play` or they don't fire
+        //  (really useful, thanks browsers!)
 
-        video.addEventListener('error', callbacks.error);
-        video.addEventListener('abort', callbacks.error);
-        video.addEventListener('stalled', callbacks.error);
-        video.addEventListener('suspend', callbacks.error);
-        video.addEventListener('waiting', callbacks.error);
+        if (video)
+        {
+            var callbacks = this._callbacks;
 
-        video.addEventListener('ended', callbacks.end);
-        video.addEventListener('timeupdate', callbacks.time);
-        video.addEventListener('seeking', callbacks.seeking);
-        video.addEventListener('seeked', callbacks.seeked);
+            for (var callback in callbacks)
+            {
+                video.addEventListener(callback, callbacks[callback]);
+            }
+        }
     },
 
     removeEventHandlers: function ()
     {
         var video = this.video;
-        var callbacks = this._callbacks;
 
-        video.removeEventListener('error', callbacks.error);
-        video.removeEventListener('abort', callbacks.error);
-        video.removeEventListener('stalled', callbacks.error);
-        video.removeEventListener('suspend', callbacks.error);
-        video.removeEventListener('waiting', callbacks.error);
+        if (video)
+        {
+            var callbacks = this._callbacks;
 
-        video.removeEventListener('ended', callbacks.end);
-        video.removeEventListener('timeupdate', callbacks.time);
-        video.removeEventListener('seeking', callbacks.seeking);
-        video.removeEventListener('seeked', callbacks.seeked);
+            for (var callback in callbacks)
+            {
+                video.removeEventListener(callback, callbacks[callback]);
+            }
+        }
     },
 
     createPlayPromise: function ()
@@ -892,6 +998,7 @@ var Video = new Class({
         return this;
     },
 
+    /*
     playHandler2: function (event)
     {
         console.log('play', this._cacheKey);
@@ -905,6 +1012,7 @@ var Video = new Class({
 
         // this.video.play();
     },
+    */
 
     /**
      * This method allows you to change the source of the current video element. It works by first stopping the
@@ -1241,7 +1349,6 @@ var Video = new Class({
      * @fires Phaser.GameObjects.Events#VIDEO_PLAY
      * @private
      * @since 3.20.0
-     */
     playPromiseSuccessHandler: function ()
     {
         console.log('video.play has succeeded via promise');
@@ -1264,6 +1371,7 @@ var Video = new Class({
             this.setMute(true);
         }
     },
+     */
 
     /**
      * This internal method is called automatically if the playback Promise resolves successfully.
@@ -1278,21 +1386,22 @@ var Video = new Class({
     {
         console.log('video.play has succeeded via promise after failed attempts: ' + this.failedPlayAttempts);
 
+        if (!this._playCalled)
+        {
+            //  The stop method has been called but the Promise has resolved
+            //  after this, so we need to just abort.
+            return;
+        }
+
         this.addEventHandlers();
+
+        this._codePaused = false;
 
         if (this.touchLocked)
         {
+            this.touchLocked = false;
+
             this.emit(Events.VIDEO_UNLOCKED, this);
-        }
-
-        this._codePaused = false;
-        this.touchLocked = false;
-
-        this.emit(Events.VIDEO_PLAY, this);
-
-        if (this._markerIn > -1)
-        {
-            this.video.currentTime = this._markerIn;
         }
 
         var sound = this.scene.sys.sound;
@@ -1302,6 +1411,13 @@ var Video = new Class({
             //  Mute will be set based on the global mute state of the Sound Manager (if there is one)
             this.setMute(true);
         }
+
+        if (this._markerIn > -1)
+        {
+            this.video.currentTime = this._markerIn;
+        }
+
+        this.emit(Events.VIDEO_PLAY, this);
     },
 
     /**
@@ -1337,7 +1453,6 @@ var Video = new Class({
      * @since 3.20.0
      *
      * @param {any} error - The Promise resolution error.
-     */
     playPromiseErrorHandler: function (error)
     {
         console.log('pp error handler', error);
@@ -1350,6 +1465,7 @@ var Video = new Class({
         this.emit(Events.VIDEO_ERROR, this, error);
         this.emit(Events.VIDEO_LOCKED, this);
     },
+     */
 
     /**
      * Called when the video emits a `playing` event during load.
@@ -1371,16 +1487,30 @@ var Video = new Class({
     },
 
     /**
+     * Called when the video emits a `playing` event.
+     *
+     * @method Phaser.GameObjects.Video#playingHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_PLAYING
+     * @since 3.60.0
+     */
+    playingHandler: function ()
+    {
+        this.isStalled = false;
+
+        this.emit(Events.VIDEO_PLAYING, this);
+    },
+
+    /**
      * This internal method is called automatically when the video loads.
      *
      * @method Phaser.GameObjects.Video#loadHandler
      * @private
      * @since 3.60.0
-     */
     loadHandler: function ()
     {
         this.updateTexture();
     },
+     */
 
     /**
      * This internal method is called automatically if the video fails to load.
@@ -1394,9 +1524,30 @@ var Video = new Class({
      */
     loadErrorHandler: function (event)
     {
+        console.log('loadErrorHandler', event);
+
         this.stop();
 
         this.emit(Events.VIDEO_ERROR, this, event);
+    },
+
+    /**
+     * This internal method is called automatically if the video fails to load.
+     *
+     * @method Phaser.GameObjects.Video#stalledHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_STALLED
+     * @private
+     * @since 3.60.0
+     *
+     * @param {Event} event - The error Event.
+     */
+    stalledHandler: function (event)
+    {
+        console.log('stalledHandler', event);
+
+        this.isStalled = true;
+
+        this.emit(Events.VIDEO_STALLED, this, event);
     },
 
     /**
@@ -1441,6 +1592,7 @@ var Video = new Class({
     completeHandler: function ()
     {
         console.log('completeHandler - ended');
+
         this.emit(Events.VIDEO_COMPLETE, this);
     },
 
@@ -1453,7 +1605,6 @@ var Video = new Class({
      * @method Phaser.GameObjects.Video#timeUpdateHandler
      * @fires Phaser.GameObjects.Events#VIDEO_LOOP
      * @since 3.20.0
-     */
     timeUpdateHandler: function ()
     {
         console.log('timeUpdateHandler');
@@ -1463,8 +1614,11 @@ var Video = new Class({
             this.emit(Events.VIDEO_LOOP, this);
 
             this._lastUpdate = 0;
+
+            console.log('timeUpdateHandler - looped?');
         }
     },
+     */
 
     /**
      * The internal update step.
@@ -1491,6 +1645,8 @@ var Video = new Class({
 
             if (this.retry >= this.retryInterval)
             {
+                console.log('retrying unlock', this.retry);
+
                 var playPromise = video.play();
                 var _this = this;
 
@@ -1519,6 +1675,8 @@ var Video = new Class({
                     this._lastUpdate = currentTime;
 
                     this.emit(Events.VIDEO_LOOP, this);
+
+                    console.log('preUpdate loop');
                 }
                 else
                 {
@@ -1827,12 +1985,11 @@ var Video = new Class({
 
         if (video)
         {
-            var now = video.currentTime;
             var duration = video.duration;
 
             if (duration !== Infinity && !isNaN(duration))
             {
-                return now / duration;
+                return video.currentTime / duration;
             }
         }
 
@@ -2221,20 +2378,18 @@ var Video = new Class({
 
         if (video)
         {
-            var callbacks = this._callbacks;
+            this.removeEventHandlers();
 
-            for (var callback in callbacks)
+            if (this.hasRequestVideoFrame)
             {
-                video.removeEventListener(callback, callbacks[callback]);
+                video.cancelVideoFrameCallback(this._rfvCallbackId);
             }
 
             video.pause();
         }
 
-        if (this._retryID)
-        {
-            window.clearTimeout(this._retryID);
-        }
+        this.retry = 0;
+        this._playCalled = false;
 
         this.emit(Events.VIDEO_STOP, this);
 
@@ -2296,6 +2451,8 @@ var Video = new Class({
     {
         this.stop();
 
+        this.removeLoadEventHandlers();
+
         if (this.removeVideoElementOnDestroy)
         {
             this.removeVideoElement();
@@ -2313,10 +2470,10 @@ var Video = new Class({
             sound.off(SoundEvents.GLOBAL_MUTE, this.globalMute, this);
         }
 
-        if (this._retryID)
-        {
-            window.clearTimeout(this._retryID);
-        }
+        // if (this._retryID)
+        // {
+        //     window.clearTimeout(this._retryID);
+        // }
     }
 
 });
