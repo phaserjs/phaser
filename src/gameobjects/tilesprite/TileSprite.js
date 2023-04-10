@@ -51,7 +51,7 @@ var _FLAG = 8; // 1000
  * @extends Phaser.GameObjects.Components.Crop
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
-  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
@@ -66,7 +66,7 @@ var _FLAG = 8; // 1000
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {number} width - The width of the Game Object. If zero it will use the size of the texture frame.
  * @param {number} height - The height of the Game Object. If zero it will use the size of the texture frame.
- * @param {string} textureKey - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {string} textureKey - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager. Cannot be a DynamicTexture.
  * @param {(string|number)} [frameKey] - An optional frame from the Texture this Game Object is rendering with.
  */
 var TileSprite = new Class({
