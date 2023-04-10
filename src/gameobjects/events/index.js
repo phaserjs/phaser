@@ -19,8 +19,10 @@ module.exports = {
     VIDEO_LOCKED: require('./VIDEO_LOCKED_EVENT'),
     VIDEO_LOOP: require('./VIDEO_LOOP_EVENT'),
     VIDEO_PLAY: require('./VIDEO_PLAY_EVENT'),
+    VIDEO_PLAYING: require('./VIDEO_PLAYING_EVENT'),
     VIDEO_SEEKED: require('./VIDEO_SEEKED_EVENT'),
     VIDEO_SEEKING: require('./VIDEO_SEEKING_EVENT'),
+    VIDEO_STALLED: require('./VIDEO_STALLED_EVENT'),
     VIDEO_STOP: require('./VIDEO_STOP_EVENT'),
     VIDEO_TIMEOUT: require('./VIDEO_TIMEOUT_EVENT'),
     VIDEO_UNLOCKED: require('./VIDEO_UNLOCKED_EVENT')
