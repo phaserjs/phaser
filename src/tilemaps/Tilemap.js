@@ -1210,7 +1210,7 @@ var Tilemap = new Class({
      *
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The name of the layer from Tiled, the index of the layer in the map or Tilemap Layer. If not given will default to the maps current layer index.
      *
-     * @return {Phaser.Tilemaps.LayerData} The corresponding LayerData within this.layers.
+     * @return {?Phaser.Tilemaps.LayerData} The corresponding `LayerData` within `this.layers`, or null.
      */
     getLayer: function (layer)
     {
