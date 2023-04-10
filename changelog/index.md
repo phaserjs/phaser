@@ -1,4 +1,4 @@
-# Phaser 3 Change Log
+# Phaser 3 Change Logs
 
 You can find the exhaustive Change Logs for all versions of Phaser 3 here.
 
