@@ -1336,7 +1336,6 @@ ArtemSiz)
 
 * The `TilemapLayer.skipCull` feature wasn't being applied correctly for Isometric, Hexagonal or Staggered tiles, only for Orthographic tiles (the default). It will now respect the `skipCull` property and return all tiles during culling if enabled. Fix #5524 (thanks @veleek)
 * Shutting down a Scene that didn't have the `LoaderPlugin` would throw an error when removing event handlers. It now checks first, before removing (thanks @samme)
-* The `Container.getBounds` method will now use `getTextBounds` if one of its children is a `BitmapText` Game Object, giving more accurate bounds results (thanks @EmilSV)
 * The `renderFlags` property, used to determine if a Game Object will render, or not, would be calculated incorrectly depending on the order of the `scaleX` and `scaleY` properties. It now works regardless of the order (thanks @mizunokazumi)
 * The `SpriteSheetFromAtlas` parser was using the incorrect `sourceIndex` to grab frames from a given texture. This caused a crash whenever a trimmed spritesheet was added from any multiatlas image other than the first (thanks @Bambosh)
 * The `maxSpeed` setting in Arcade Physics wasn't recalculated during the Body update, prior to being compared, leading to inconsistent results. Fix #6329 (thanks @Bambosh)
@@ -1507,6 +1506,7 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @sylvainpolletvillard
 @twoco
 @ubershmekel
+@ultimoistante
 @VanaMartin
 @vforsh
 @Vidminas
