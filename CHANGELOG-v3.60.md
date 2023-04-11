@@ -1206,7 +1206,7 @@ The following are API-breaking, in that a new optional parameter has been insert
 
 ### Updates
 
-* `Device.Video.hasRequestVideoFrame` is a new boolean property that tells if the browser support the new `requestVideoFrameCallback` API, or not.
+* We've added a polyfill for the `requestVideoFrameCallback` API because not all current browsers support it, but the Video Game Object now relies upon it.
 * `Tilemap.getLayerIndex` will now return `null` if a given TilemapLayer instance doesn't belong to the Tilemap or has been destroyed.
 * The default callback context of the `TimerEvent` has changed to be the `TimerEvent` instance itself, rather than the context (thanks @samme)
 * You will now get a warning from the `AnimationManager` and `AnimationState` if you try to add an animation with a key that already exists. Fix #6434.
