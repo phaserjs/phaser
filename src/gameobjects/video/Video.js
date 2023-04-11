@@ -843,6 +843,10 @@ var Video = new Class({
 
                 this.videoTexture = texture;
                 this.videoTextureSource = texture.source[0];
+
+                this.videoTextureSource.setFlipY(this.flipY);
+
+                this.emit(Events.VIDEO_TEXTURE, this, texture);
             }
             else
             {
@@ -1479,6 +1483,8 @@ var Video = new Class({
      */
     completeHandler: function ()
     {
+        this._playCalled = false;
+
         this.emit(Events.VIDEO_COMPLETE, this);
     },
 
@@ -2019,16 +2025,34 @@ var Video = new Class({
 
     /**
      * Stores this Video in the Texture Manager using the given key as a dynamic texture,
-     * which any texture-based Game Object, such as a Sprite, can use as its texture:
+     * which any texture-based Game Object, such as a Sprite, can use as its source:
      *
      * ```javascript
-     * var vid = this.add.video(0, 0, 'intro');
+     * const vid = this.add.video(0, 0, 'intro');
      *
      * vid.play();
      *
      * vid.saveTexture('doodle');
      *
      * this.add.image(400, 300, 'doodle');
+     * ```
+     *
+     * If the video is not yet playing then you need to listen for the `TEXTURE_READY` event before
+     * you can use this texture on a Game Object:
+     *
+     * ```javascript
+     * const vid = this.add.video(0, 0, 'intro');
+     *
+     * vid.play();
+     *
+     * if (!vid.saveTexture('doodle'))
+     * {
+     *     vid.once('textureready', () => {
+     *
+     *         this.add.image(400, 300, 'doodle');
+     *
+     *     });
+     * }
      * ```
      *
      * The saved texture is automatically updated as the video plays. If you pause this video,
@@ -2049,7 +2073,7 @@ var Video = new Class({
      * @param {string} key - The unique key to store the texture as within the global Texture Manager.
      * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y` during upload?
      *
-     * @return {Phaser.Textures.Texture} The Texture that was saved.
+     * @return {boolean} Returns `true` if the texture is available immediately, otherwise returns `false` and you should listen for the `TEXTURE_READY` event.
      */
     saveTexture: function (key, flipY)
     {
@@ -2058,18 +2082,13 @@ var Video = new Class({
         if (this.videoTexture)
         {
             this.scene.sys.textures.renameTexture(this._key, key);
-        }
-
-        this._key = key;
-
-        this.flipY = flipY;
-
-        if (this.videoTextureSource)
-        {
             this.videoTextureSource.setFlipY(flipY);
         }
 
-        return this.videoTexture;
+        this._key = key;
+        this.flipY = flipY;
+
+        return (this.videoTexture) ? true : false;
     },
 
     /**
