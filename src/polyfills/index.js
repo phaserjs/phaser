@@ -5,4 +5,5 @@ require('./console');
 require('./Math.trunc');
 require('./performance.now');
 require('./requestAnimationFrame');
+require('./requestVideoFrame');
 require('./Uint32Array');

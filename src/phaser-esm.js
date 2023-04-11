@@ -4,6 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+require('./polyfills/requestVideoFrame');
+
 var CONST = require('./const');
 
 export const Actions = require('./actions');
