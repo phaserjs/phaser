@@ -28,9 +28,8 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.VideoFileConfig)} key - The key to use for this file, or a file configuration object.
- * @param {Phaser.Types.Loader.FileTypes.VideoFileURLConfig} [urlConfig] - The absolute or relative URL to load this file from in a config object.
- * @param {boolean} [noAudio] - Does the video have an audio track? If not you can enable auto-playing on it.
- * @param {string} [loadEvent] - The load event to listen for when _not_ loading as a blob. Either 'loadeddata', 'canplay' or 'canplaythrough'.
+ * @param {(string|string[]|Phaser.Types.Loader.FileTypes.VideoFileURLConfig|Phaser.Types.Loader.FileTypes.VideoFileURLConfig[])} [urls] - The absolute or relative URL to load the video files from.
+ * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
  */
 var VideoFile = new Class({
 
@@ -38,11 +37,9 @@ var VideoFile = new Class({
 
     initialize:
 
-    //  URL is an object created by VideoFile.getVideoURL
-    function VideoFile (loader, key, url, noAudio, loadEvent)
+    function VideoFile (loader, key, url, noAudio)
     {
         if (noAudio === undefined) { noAudio = false; }
-        if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
 
         if (IsPlainObject(key))
         {
@@ -50,13 +47,7 @@ var VideoFile = new Class({
 
             key = GetFastValue(config, 'key');
             url = GetFastValue(config, 'url', []);
-            loadEvent = GetFastValue(config, 'loadEvent', 'loadeddata');
             noAudio = GetFastValue(config, 'noAudio', false);
-        }
-
-        if (loadEvent !== 'loadeddata' && loadEvent !== 'canplay' && loadEvent !== 'canplaythrough')
-        {
-            loadEvent = 'loadeddata';
         }
 
         var urlConfig = loader.systems.game.device.video.getVideoURL(url);
@@ -73,7 +64,6 @@ var VideoFile = new Class({
             key: key,
             url: urlConfig.url,
             config: {
-                loadEvent: loadEvent,
                 noAudio: noAudio
             }
         };
@@ -92,7 +82,6 @@ var VideoFile = new Class({
     {
         this.data = {
             url: this.src,
-            loadEvent: this.config.loadEvent,
             noAudio: this.config.noAudio,
             crossOrigin: this.crossOrigin
         };
@@ -177,11 +166,10 @@ var VideoFile = new Class({
  * @param {(string|Phaser.Types.Loader.FileTypes.VideoFileConfig|Phaser.Types.Loader.FileTypes.VideoFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {(string|string[]|Phaser.Types.Loader.FileTypes.VideoFileURLConfig|Phaser.Types.Loader.FileTypes.VideoFileURLConfig[])} [urls] - The absolute or relative URL to load the video files from.
  * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
- * @param {string} [loadEvent='loadeddata'] - The load event to listen for when _not_ loading as a blob. Either `loadeddata`, `canplay` or `canplaythrough`.
  *
  * @return {this} The Loader instance.
  */
-FileTypesManager.register('video', function (key, urls, noAudio, loadEvent)
+FileTypesManager.register('video', function (key, urls, noAudio)
 {
     if (Array.isArray(key))
     {
@@ -192,7 +180,7 @@ FileTypesManager.register('video', function (key, urls, noAudio, loadEvent)
     }
     else
     {
-        this.addFile(new VideoFile(this, key, urls, noAudio, loadEvent));
+        this.addFile(new VideoFile(this, key, urls, noAudio));
     }
 
     return this;
