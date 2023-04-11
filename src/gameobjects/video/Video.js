@@ -806,6 +806,7 @@ var Video = new Class({
      * @fires Phaser.GameObjects.Events#VIDEO_LOOP
      * @fires Phaser.GameObjects.Events#VIDEO_COMPLETE
      * @fires Phaser.GameObjects.Events#VIDEO_PLAY
+     * @fires Phaser.GameObjects.Events#VIDEO_TEXTURE
      * @since 3.60.0
      *
      * @param {DOMHighResTimeStamp} now - The current time in milliseconds.
@@ -2045,14 +2046,13 @@ var Video = new Class({
      *
      * vid.play();
      *
-     * if (!vid.saveTexture('doodle'))
-     * {
-     *     vid.once('textureready', () => {
+     * vid.once('textureready', (video, texture, key) => {
      *
-     *         this.add.image(400, 300, 'doodle');
+     *     this.add.image(400, 300, key);
      *
-     *     });
-     * }
+     * });
+     *
+     * vid.saveTexture('doodle');
      * ```
      *
      * The saved texture is automatically updated as the video plays. If you pause this video,
