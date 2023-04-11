@@ -1492,6 +1492,22 @@ var DynamicTexture = new Class({
     },
 
     /**
+     * Returns the underlying WebGLTexture, if not running in Canvas mode.
+     *
+     * @method Phaser.Textures.DynamicTexture#getWebGLTexture
+     * @since 3.60.0
+     *
+     * @return {?WebGLTexture} The underlying WebGLTexture, if not running in Canvas mode.
+     */
+    getWebGLTexture: function ()
+    {
+        if (this.renderTarget)
+        {
+            return this.renderTarget.texture;
+        }
+    },
+
+    /**
      * Renders this Dynamic Texture onto the Stamp Game Object as a BitmapMask.
      *
      * @method Phaser.Textures.DynamicTexture#renderWebGL
