@@ -6,7 +6,9 @@
 
 /**
  * Determines the video support of the browser running this Phaser Game instance.
+ *
  * These values are read-only and populated during the boot sequence of the game.
+ *
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.video` from within any Scene.
  *
@@ -22,6 +24,7 @@
  * @property {boolean} ogg - Can this device play ogg video files?
  * @property {boolean} vp9 - Can this device play vp9 video files?
  * @property {boolean} webm - Can this device play webm video files?
+ * @property {boolean} hasRequestVideoFrame - Does this browser support the `requestVideoFrameCallback` API?
  */
 var Video = {
 
@@ -31,7 +34,8 @@ var Video = {
     m4v: false,
     ogg: false,
     vp9: false,
-    webm: false
+    webm: false,
+    hasRequestVideoFrame: false
 
 };
 
@@ -41,6 +45,8 @@ function init ()
     {
         return Video;
     }
+
+    Video.hasRequestVideoFrame = ('requestVideoFrameCallback' in HTMLVideoElement.prototype);
 
     var videoElement = document.createElement('video');
     var result = !!videoElement.canPlayType;
@@ -86,6 +92,11 @@ function init ()
     catch (e)
     {
         //  Nothing to do
+    }
+
+    if (videoElement.parentNode)
+    {
+        videoElement.parentNode.removeChild(videoElement);
     }
 
     return Video;
