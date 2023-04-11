@@ -1,5 +1,12 @@
 ## Version 3.60.0 - Miku - in development
 
+### New Features - New Video Game Object
+
+The Video Game Object has been fully recoded in v3.60.
+
+* Video RTC was not reliably working. Fix #6130 (thanks @mshopf)
+* If you switched tabs, then return to your game, a completed video would start playing again. It now remains stopped. Fix #5873 (thanks @marcusx2)
+
 ### New Features - Timeline Class
 
 Phaser 3.60 has a new Timeline Class which allows for fine-grained control of sequenced events. Previously in 3.55 the Timeline was part of the Tween system and it never quite worked as intended. In 3.60 it has been removed from Tweens entirely, replaced with the much more solid and reliable Tween Chains and Timeline has now becomes its own first-class citizen within Phaser. It allows you to sequence _any_ event you like, not just tweens.
