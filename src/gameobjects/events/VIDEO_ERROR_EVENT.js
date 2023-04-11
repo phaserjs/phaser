@@ -16,6 +16,6 @@
  * @since 3.20.0
  *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which threw the error.
- * @param {Event} event - The native DOM event the browser raised during playback.
+ * @param {DOMException|string} event - The native DOM event the browser raised during playback.
  */
 module.exports = 'error';
