@@ -295,7 +295,7 @@ var Video = new Class({
         /**
          * If a video fails to play due to a lack of user interaction, this is the
          * amount of time, in ms, that the video will wait before trying again to
-         * play again. The default is 500ms.
+         * play. The default is 500ms.
          *
          * @name Phaser.GameObjects.Video#retryInterval
          * @type {number}
@@ -399,7 +399,7 @@ var Video = new Class({
          * @private
          * @since 3.20.0
          */
-        this._markerIn = -1;
+        this._markerIn = 0;
 
         /**
          * The out marker.
@@ -409,7 +409,7 @@ var Video = new Class({
          * @private
          * @since 3.20.0
          */
-        this._markerOut = MATH_CONST.MAX_SAFE_INTEGER;
+        this._markerOut = 0;
 
         /**
          * Are we playing a marked segment of the video?
@@ -422,23 +422,13 @@ var Video = new Class({
         this._playingMarker = false;
 
         /**
-         * The time the first frame was rendered.
-         *
-         * @name Phaser.GameObjects.Video#_firstFrame
-         * @type {number}
-         * @private
-         * @since 3.60.0
-         */
-        this._firstFrame = 0;
-
-        /**
-         * The last time the TextureSource was updated.
+         * The previous frames mediaTime.
          *
          * @name Phaser.GameObjects.Video#_lastUpdate
          * @type {number}
          * @private
-         * @since 3.20.0
-         */
+         * @since 3.60.0
+        */
         this._lastUpdate = 0;
 
         /**
@@ -566,7 +556,7 @@ var Video = new Class({
         {
             this.cacheKey = key;
 
-            this.loadHandler(video.url, video.noAudio, video.loadEvent, video.crossOrigin);
+            this.loadHandler(video.url, video.noAudio, video.crossOrigin);
         }
         else
         {
@@ -636,24 +626,18 @@ var Video = new Class({
      * state, even if you change the source of the video. By changing the source to a new video you avoid having to
      * go through the unlock process again.
      *
-     * You can control at what point the browser determines the video as being ready for playback via
-     * the `loadEvent` parameter. See https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement
-     * for more details.
-     *
      * @method Phaser.GameObjects.Video#loadURL
      * @since 3.60.0
      *
      * @param {(string|string[]|Phaser.Types.Loader.FileTypes.VideoFileURLConfig|Phaser.Types.Loader.FileTypes.VideoFileURLConfig[])} [urls] - The absolute or relative URL to load the video files from.
      * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
-     * @param {string} [loadEvent='loadeddata'] - The load event to listen for. Either `loadeddata`, `canplay` or `canplaythrough`.
      * @param {string} [crossOrigin] - The value to use for the `crossOrigin` property in the video load request.  Either undefined, `anonymous` or `use-credentials`. If no value is given, `crossorigin` will not be set in the request.
      *
      * @return {this} This Video Game Object for method chaining.
      */
-    loadURL: function (urls, noAudio, loadEvent, crossOrigin)
+    loadURL: function (urls, noAudio, crossOrigin)
     {
         if (noAudio === undefined) { noAudio = false; }
-        if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
 
         var urlConfig = this._device.getVideoURL(urls);
 
@@ -665,7 +649,7 @@ var Video = new Class({
         {
             this.cacheKey = '';
 
-            this.loadHandler(urlConfig.url, noAudio, loadEvent, crossOrigin);
+            this.loadHandler(urlConfig.url, noAudio, crossOrigin);
         }
 
         return this;
@@ -674,25 +658,23 @@ var Video = new Class({
     /**
      * Loads a Video from the given MediaStream object, ready for playback with the `Video.play` method.
      *
-     * You can control at what point the browser determines the video as being ready for playback via
-     * the `loadEvent` parameter. See https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement
-     * for more details.
-     *
      * @method Phaser.GameObjects.Video#loadMediaStream
      * @since 3.50.0
      *
      * @param {string} stream - The MediaStream object.
      * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
+     * @param {string} [crossOrigin] - The value to use for the `crossOrigin` property in the video load request.  Either undefined, `anonymous` or `use-credentials`. If no value is given, `crossorigin` will not be set in the request.
      *
      * @return {this} This Video Game Object for method chaining.
      */
-    loadMediaStream: function (stream, noAudio)
+    loadMediaStream: function (stream, noAudio, crossOrigin)
     {
-        return this.loadHandler(null, noAudio, null, null, stream);
+        return this.loadHandler(null, noAudio, crossOrigin, stream);
     },
 
     /**
-     * Loads a Video from the given URL, ready for playback with the `Video.play` method.
+     * Internal method that loads a Video from the given URL, ready for playback with the
+     * `Video.play` method.
      *
      * Normally you don't call this method directly, but instead use the `Video.loadURL` method,
      * or the `Video.load` method if you have preloaded the video.
@@ -705,16 +687,14 @@ var Video = new Class({
      *
      * @param {string} [url] - The absolute or relative URL to load the video file from. Set to `null` if passing in a MediaStream object.
      * @param {boolean} [noAudio] - Does the video have an audio track? If not you can enable auto-playing on it.
-     * @param {string} [loadEvent] - The load event to listen for. Either `loadeddata`, `canplay` or `canplaythrough`.
      * @param {string} [crossOrigin] - The value to use for the `crossOrigin` property in the video load request.  Either undefined, `anonymous` or `use-credentials`. If no value is given, `crossorigin` will not be set in the request.
      * @param {string} [stream] - A MediaStream object if this is playing a stream instead of a file.
      *
      * @return {this} This Video Game Object for method chaining.
      */
-    loadHandler: function (url, noAudio, loadEvent, crossOrigin, stream)
+    loadHandler: function (url, noAudio, crossOrigin, stream)
     {
         if (!noAudio) { noAudio = false; }
-        if (!loadEvent) { loadEvent = 'loadeddata'; }
 
         var video = this.video;
 
@@ -791,11 +771,10 @@ var Video = new Class({
 
         this.addLoadEventHandlers();
 
-        this._lastUpdate = 0;
-        this._playCalled = false;
         this.retry = 0;
-
         this.video = video;
+
+        this._playCalled = false;
 
         video.load();
 
@@ -814,6 +793,9 @@ var Video = new Class({
      * https://web.dev/requestvideoframecallback-rvfc
      *
      * @method Phaser.GameObjects.Video#requestVideoFrame
+     * @fires Phaser.GameObjects.Events#VIDEO_CREATED
+     * @fires Phaser.GameObjects.Events#VIDEO_LOOP
+     * @fires Phaser.GameObjects.Events#VIDEO_COMPLETE
      * @since 3.60.0
      *
      * @param {DOMHighResTimeStamp} now - The current time in milliseconds.
@@ -875,20 +857,39 @@ var Video = new Class({
 
         this.metadata = metadata;
 
-        this._lastUpdate = metadata.mediaTime;
+        var currentTime = metadata.mediaTime;
 
         if (newVideo)
         {
-            // this._firstFrame = this.getProgress();
+            this._lastUpdate = currentTime;
 
             this.emit(Events.VIDEO_CREATED, this, width, height);
         }
-        else
-        {
-            //  TODO - Figure out how to see if the video has looped
 
-            // console.log('updated frame', metadata.expectedDisplayTime, 'mediaTime', metadata.mediaTime, 'of', video.duration);
+        if (this._playingMarker)
+        {
+            if (currentTime >= this._markerOut)
+            {
+                if (video.loop)
+                {
+                    video.currentTime = this._markerIn;
+
+                    this.emit(Events.VIDEO_LOOP, this);
+                }
+                else
+                {
+                    this.stop(false);
+
+                    this.emit(Events.VIDEO_COMPLETE, this);
+                }
+            }
         }
+        else if (currentTime < this._lastUpdate)
+        {
+            this.emit(Events.VIDEO_LOOP, this);
+        }
+
+        this._lastUpdate = currentTime;
 
         this._rfvCallbackId = this.video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
     },
@@ -1070,8 +1071,8 @@ var Video = new Class({
 
         if (playPromise !== undefined)
         {
-            var success = this.ppSuccess.bind(this);
-            var error = this.ppError.bind(this);
+            var success = this.playSuccess.bind(this);
+            var error = this.playError.bind(this);
 
             if (!catchError)
             {
@@ -1307,16 +1308,14 @@ var Video = new Class({
     /**
      * This internal method is called automatically if the playback Promise resolves successfully.
      *
-     * @method Phaser.GameObjects.Video#ppSuccess
+     * @method Phaser.GameObjects.Video#playSuccess
      * @fires Phaser.GameObjects.Events#VIDEO_PLAY
      * @fires Phaser.GameObjects.Events#VIDEO_UNLOCKED
      * @private
      * @since 3.60.0
      */
-    ppSuccess: function ()
+    playSuccess: function ()
     {
-        console.log('video.play has succeeded via promise after failed attempts: ' + this.failedPlayAttempts);
-
         if (!this._playCalled)
         {
             //  The stop method has been called but the Promise has resolved
@@ -1354,7 +1353,7 @@ var Video = new Class({
     /**
      * This internal method is called automatically if the playback Promise fails to resolve.
      *
-     * @method Phaser.GameObjects.Video#ppError
+     * @method Phaser.GameObjects.Video#playError
      * @fires Phaser.GameObjects.Events#VIDEO_ERROR
      * @fires Phaser.GameObjects.Events#VIDEO_UNSUPPORTED
      * @fires Phaser.GameObjects.Events#VIDEO_LOCKED
@@ -1363,10 +1362,8 @@ var Video = new Class({
      *
      * @param {DOMException} error - The Promise DOM Exception error.
      */
-    ppError: function (error)
+    playError: function (error)
     {
-        // console.log('pp error handler', error);
-
         var name = error.name;
 
         if (name === 'NotAllowedError')
@@ -1379,12 +1376,14 @@ var Video = new Class({
         }
         else if (name === 'NotSupportedError')
         {
-            this.stop();
+            this.stop(false);
 
             this.emit(Events.VIDEO_UNSUPPORTED, this, error);
         }
         else
         {
+            this.stop(false);
+
             this.emit(Events.VIDEO_ERROR, this, error);
         }
     },
@@ -1392,21 +1391,18 @@ var Video = new Class({
     /**
      * Called when the video emits a `playing` event.
      *
-     * This is the legacy handler for browsers that don't support the Promise based playback.
+     * This is the legacy handler for browsers that don't support Promise based playback.
      *
      * @method Phaser.GameObjects.Video#legacyPlayHandler
-     * @fires Phaser.GameObjects.Events#VIDEO_PLAYING
      * @since 3.60.0
      */
     legacyPlayHandler: function ()
     {
-        console.log('legacyPlayingHandler');
-
         var video = this.video;
 
         if (video)
         {
-            this.ppSuccess();
+            this.playSuccess();
 
             video.removeEventListener('playing', this._callbacks.legacy);
         }
@@ -1423,8 +1419,6 @@ var Video = new Class({
     {
         this.isStalled = false;
 
-        console.log('VIDEO_PLAYING');
-
         this.emit(Events.VIDEO_PLAYING, this);
     },
 
@@ -1433,14 +1427,13 @@ var Video = new Class({
      *
      * @method Phaser.GameObjects.Video#loadErrorHandler
      * @fires Phaser.GameObjects.Events#VIDEO_ERROR
-     * @private
      * @since 3.20.0
      *
      * @param {Event} event - The error Event.
      */
     loadErrorHandler: function (event)
     {
-        this.stop();
+        this.stop(false);
 
         this.emit(Events.VIDEO_ERROR, this, event);
     },
@@ -1450,7 +1443,6 @@ var Video = new Class({
      *
      * @method Phaser.GameObjects.Video#stalledHandler
      * @fires Phaser.GameObjects.Events#VIDEO_STALLED
-     * @private
      * @since 3.60.0
      *
      * @param {Event} event - The error Event.
@@ -1504,28 +1496,6 @@ var Video = new Class({
                 this.createPlayPromise(false);
 
                 this.retry = 0;
-            }
-        }
-        else if (this._playingMarker)
-        {
-            var currentTime = video.currentTime;
-
-            if (currentTime >= this._markerOut)
-            {
-                if (video.loop)
-                {
-                    video.currentTime = this._markerIn;
-
-                    this._lastUpdate = currentTime;
-
-                    this.emit(Events.VIDEO_LOOP, this);
-                }
-                else
-                {
-                    this.stop(false);
-
-                    this.emit(Events.VIDEO_COMPLETE, this);
-                }
             }
         }
     },
