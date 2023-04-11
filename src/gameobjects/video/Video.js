@@ -226,6 +226,15 @@ var Video = new Class({
         this.playWhenUnlocked = false;
 
         /**
+         * Has the video created its texture and populated it with the first frame of video?
+         *
+         * @name Phaser.GameObjects.Video#frameReady
+         * @type {boolean}
+         * @since 3.60.0
+         */
+        this.frameReady = false;
+
+        /**
          * This read-only property returns `true` if the video is currently stalled, i.e. it has stopped
          * playing due to a lack of data, or too much data, but hasn't yet reached the end of the video.
          *
@@ -796,6 +805,7 @@ var Video = new Class({
      * @fires Phaser.GameObjects.Events#VIDEO_CREATED
      * @fires Phaser.GameObjects.Events#VIDEO_LOOP
      * @fires Phaser.GameObjects.Events#VIDEO_COMPLETE
+     * @fires Phaser.GameObjects.Events#VIDEO_PLAY
      * @since 3.60.0
      *
      * @param {DOMHighResTimeStamp} now - The current time in milliseconds.
@@ -864,6 +874,13 @@ var Video = new Class({
             this._lastUpdate = currentTime;
 
             this.emit(Events.VIDEO_CREATED, this, width, height);
+
+            if (!this.frameReady)
+            {
+                this.frameReady = true;
+
+                this.emit(Events.VIDEO_PLAY, this);
+            }
         }
 
         if (this._playingMarker)
@@ -1309,7 +1326,6 @@ var Video = new Class({
      * This internal method is called automatically if the playback Promise resolves successfully.
      *
      * @method Phaser.GameObjects.Video#playSuccess
-     * @fires Phaser.GameObjects.Events#VIDEO_PLAY
      * @fires Phaser.GameObjects.Events#VIDEO_UNLOCKED
      * @private
      * @since 3.60.0
@@ -1346,8 +1362,6 @@ var Video = new Class({
         {
             this.video.currentTime = this._markerIn;
         }
-
-        this.emit(Events.VIDEO_PLAY, this);
     },
 
     /**
@@ -1786,6 +1800,8 @@ var Video = new Class({
      *
      * If no video is loaded, this method does nothing.
      *
+     * If the video has not yet been played, `Video.play` will be called with no parameters.
+     *
      * @method Phaser.GameObjects.Video#setPaused
      * @since 3.20.0
      *
@@ -1814,7 +1830,11 @@ var Video = new Class({
             }
             else if (!value)
             {
-                if (video.paused && !this._systemPaused)
+                if (!this._playCalled)
+                {
+                    this.play();
+                }
+                else if (video.paused && !this._systemPaused)
                 {
                     this.createPlayPromise();
                 }
@@ -1994,7 +2014,7 @@ var Video = new Class({
      */
     isPaused: function ()
     {
-        return ((this.video && this.video.paused) || this._codePaused || this._systemPaused);
+        return ((this.video && this._playCalled && this.video.paused) || this._codePaused || this._systemPaused);
     },
 
     /**
