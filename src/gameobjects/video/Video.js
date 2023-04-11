@@ -19,8 +19,9 @@ var VideoRender = require('./VideoRender');
  * @classdesc
  * A Video Game Object.
  *
- * This Game Object is capable of handling playback of a previously loaded video from the Phaser Video Cache,
- * or playing a video based on a given URL. Videos can be either local, or streamed.
+ * This Game Object is capable of handling playback of a video file, video stream or media stream.
+ *
+ * You can optionally 'preload' the video into the Phaser Video Cache:
  *
  * ```javascript
  * preload () {
@@ -48,11 +49,14 @@ var VideoRender = require('./VideoRender');
  * an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render
  * in-game with full transparency.
  *
+ * Playback is handled entirely via the Request Video Frame API, which is supported by most modern browsers.
+ * A polyfill is provided for older browsers.
+ *
  * ### Autoplaying Videos
  *
  * Videos can only autoplay if the browser has been unlocked with an interaction, or satisfies the MEI settings.
- * The policies that control autoplaying are vast and vary between browser.
- * You can, and should, read more about it here: https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide
+ * The policies that control autoplaying are vast and vary between browser. You can, and should, read more about
+ * it here: https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide
  *
  * If your video doesn't contain any audio, then set the `noAudio` parameter to `true` when the video is _loaded_,
  * and it will often allow the video to play immediately:
@@ -63,6 +67,10 @@ var VideoRender = require('./VideoRender');
  * }
  * ```
  *
+ * The 3rd parameter in the load call tells Phaser that the video doesn't contain any audio tracks. Video without
+ * audio can autoplay without requiring a user interaction. Video with audio cannot do this unless it satisfies
+ * the browsers MEI settings. See the MDN Autoplay Guide for further details.
+ *
  * Or:
  *
  * ```javascript
@@ -71,9 +79,8 @@ var VideoRender = require('./VideoRender');
  * }
  * ```
  *
- * The 3rd parameter in the load call tells Phaser that the video doesn't contain any audio tracks. Video without
- * audio can autoplay without requiring a user interaction. Video with audio cannot do this unless it satisfies
- * the browsers MEI settings. See the MDN Autoplay Guide for further details.
+ * You can set the `noAudio` parameter to `true` even if the video does contain audio. It will still allow the video
+ * to play immediately, but the audio will not start.
  *
  * Note that due to a bug in IE11 you cannot play a video texture to a Sprite in WebGL. For IE11 force Canvas mode.
  *
@@ -212,6 +219,7 @@ var Video = new Class({
          *
          * @name Phaser.GameObjects.Video#touchLocked
          * @type {boolean}
+         * @readonly
          * @since 3.20.0
          */
         this.touchLocked = false;
@@ -1774,7 +1782,7 @@ var Video = new Class({
     {
         this._systemPaused = true;
 
-        if (this.video)
+        if (this.video && !this.video.ended)
         {
             this.removeEventHandlers();
 
@@ -1793,7 +1801,7 @@ var Video = new Class({
     {
         this._systemPaused = false;
 
-        if (this.video && !this._codePaused)
+        if (this.video && !this._codePaused && !this.video.ended)
         {
             this.createPlayPromise();
         }
@@ -1808,6 +1816,8 @@ var Video = new Class({
      * If no video is loaded, this method does nothing.
      *
      * If the video has not yet been played, `Video.play` will be called with no parameters.
+     *
+     * If the video has ended, this method will do nothing.
      *
      * @method Phaser.GameObjects.Video#setPaused
      * @since 3.20.0
@@ -1824,7 +1834,7 @@ var Video = new Class({
 
         this._codePaused = value;
 
-        if (video)
+        if (video && !video.ended)
         {
             if (value)
             {
