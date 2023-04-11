@@ -127,43 +127,49 @@ var Video = new Class({
 
         /**
          * A reference to the HTML Video Element this Video Game Object is playing.
-         * Will be `null` until a video is loaded for playback.
+         *
+         * Will be `undefined` until a video is loaded for playback.
          *
          * @name Phaser.GameObjects.Video#video
          * @type {?HTMLVideoElement}
          * @since 3.20.0
          */
-        this.video = null;
+        this.video;
 
         /**
          * The Phaser Texture this Game Object is using to render the video to.
-         * Will be `null` until a video is loaded for playback.
+         *
+         * Will be `undefined` until a video is loaded for playback.
          *
          * @name Phaser.GameObjects.Video#videoTexture
          * @type {?Phaser.Textures.Texture}
          * @since 3.20.0
          */
-        this.videoTexture = null;
+        this.videoTexture;
 
         /**
          * A reference to the TextureSource backing the `videoTexture` Texture object.
-         * Will be `null` until a video is loaded for playback.
+         *
+         * Will be `undefined` until a video is loaded for playback.
          *
          * @name Phaser.GameObjects.Video#videoTextureSource
          * @type {?Phaser.Textures.TextureSource}
          * @since 3.20.0
          */
-        this.videoTextureSource = null;
+        this.videoTextureSource;
 
         /**
-         * A Phaser CanvasTexture instance that holds the most recent snapshot taken from the video.
-         * This will only be set if `snapshot` or `snapshotArea` have been called, and will be `null` until that point.
+         * A Phaser `CanvasTexture` instance that holds the most recent snapshot taken from the video.
+         *
+         * This will only be set if the `snapshot` or `snapshotArea` methods have been called.
+         *
+         * Until those methods are called, this property will be `undefined`.
          *
          * @name Phaser.GameObjects.Video#snapshotTexture
          * @type {?Phaser.Textures.CanvasTexture}
          * @since 3.20.0
          */
-        this.snapshotTexture = null;
+        this.snapshotTexture;
 
         /**
          * If you have saved this video to a texture via the `saveTexture` method, this controls if the video
@@ -427,8 +433,8 @@ var Video = new Class({
          * @type {string}
          * @private
          * @since 3.20.0
-         */
         this._cacheKey = '';
+        */
 
         /**
          * Is the video currently seeking?
@@ -459,15 +465,6 @@ var Video = new Class({
          * @since 3.60.0
          */
         this._rfvCallbackId = 0;
-
-        /**
-         * Does the browser support the Request Video Frame callback?
-         *
-         * @name Phaser.GameObjects.Video#hasRequestVideoFrame
-         * @type {boolean}
-         * @since 3.60.0
-         */
-        this.hasRequestVideoFrame = ('requestVideoFrameCallback' in HTMLVideoElement.prototype);
 
         /**
          * Should the Video element that this Video is using, be removed from the DOM
@@ -576,12 +573,6 @@ var Video = new Class({
             video.setAttribute('disablePictureInPicture', 'true');
         }
 
-        //  Why do we do this?
-        // if (this.videoTexture)
-        // {
-        //     this.scene.sys.textures.remove(this._key);
-        // }
-
         if (noAudio)
         {
             video.muted = true;
@@ -648,9 +639,11 @@ var Video = new Class({
     /**
      * https://web.dev/requestvideoframecallback-rvfc
      *
-     * @param {DOMHighResTimeStamp} now
-     * @param {VideoFrameCallbackMetadata} metadata - https://wicg.github.io/video-rvfc/#video-frame-metadata-callback
-     * @returns
+     * @method Phaser.GameObjects.Video#requestVideoFrame
+     * @since 3.60.0
+     *
+     * @param {DOMHighResTimeStamp} now - The current time in milliseconds.
+     * @param {VideoFrameCallbackMetadata} metadata - Useful metadata about the video frame that was most recently presented for composition. See https://wicg.github.io/video-rvfc/#video-frame-metadata-callback
      */
     requestVideoFrame: function (now, metadata)
     {
@@ -862,7 +855,7 @@ var Video = new Class({
 
         if (!this._playCalled)
         {
-            if (this.hasRequestVideoFrame)
+            if (this._device.hasRequestVideoFrame)
             {
                 console.log('Using requestVideoFrameCallback');
 
@@ -871,18 +864,7 @@ var Video = new Class({
 
             this._playCalled = true;
 
-            var playPromise = video.play();
-
-            if (playPromise !== undefined)
-            {
-                console.log('Video.play promise creation');
-
-                playPromise.then(this.ppSuccess.bind(this)).catch(this.ppError.bind(this));
-            }
-            else
-            {
-                //  Old-school fallback here
-            }
+            this.createPlayPromise();
         }
 
         return this;
@@ -943,76 +925,40 @@ var Video = new Class({
         }
     },
 
-    createPlayPromise: function ()
+    createPlayPromise: function (catchError)
     {
+        if (catchError === undefined) { catchError = true; }
+
         var video = this.video;
 
-        this._playPromise = video.play();
+        var playPromise = video.play();
 
-        if (this._playPromise !== undefined)
+        if (playPromise !== undefined)
         {
-            console.log('play promise');
+            console.log('Video.createPlayPromise creation');
 
-            this._playPromise.then(this.ppSuccess.bind(this)).catch(this.ppError.bind(this));
+            var success = this.ppSuccess.bind(this);
+            var error = this.ppError.bind(this);
+
+            if (!catchError)
+            {
+                var _this = this;
+
+                error = function ()
+                {
+                    _this.failedPlayAttempts++;
+
+                    console.log('unlock failed', _this.failedPlayAttempts);
+                };
+            }
+
+            playPromise.then(success).catch(error);
         }
         else
         {
-            console.log('No play promise returned');
-
-            /*
-            //  Old-school browsers with no Promises
-            video.addEventListener('playing', callbacks.play);
-
-            //  If video hasn't downloaded properly yet ...
-            if (video.readyState < 2)
-            {
-                this.retry = this.retryLimit;
-
-                if (this._retryID)
-                {
-                    window.clearTimeout(this._retryID);
-                }
-
-                this._retryID = window.setTimeout(this.checkVideoProgress.bind(this), this.retryInterval);
-            }
-            */
+            //  Old-school fallback here
         }
-
-        var callbacks = this._callbacks;
-
-        //  Set these _after_ calling `play` or they don't fire (useful, thanks browsers)
-        // video.addEventListener('error', callbacks.error);
-        // video.addEventListener('abort', callbacks.error);
-        // video.addEventListener('stalled', callbacks.error);
-        // video.addEventListener('suspend', callbacks.error);
-        // video.addEventListener('waiting', callbacks.error);
-
-        // video.addEventListener('ended', callbacks.end);
-        // video.addEventListener('timeupdate', callbacks.time);
-        // video.addEventListener('seeking', callbacks.seeking);
-        // video.addEventListener('seeked', callbacks.seeked);
-
-        // video.addEventListener('play', this.playHandler2.bind(this));
-        // video.addEventListener('pause', this.pauseHandler.bind(this));
-
-        return this;
     },
-
-    /*
-    playHandler2: function (event)
-    {
-        console.log('play', this._cacheKey);
-    },
-
-    pauseHandler: function (event)
-    {
-        debugger;
-
-        console.log('paused', this._cacheKey);
-
-        // this.video.play();
-    },
-    */
 
     /**
      * This method allows you to change the source of the current video element. It works by first stopping the
@@ -1025,71 +971,6 @@ var Video = new Class({
      *
      * @method Phaser.GameObjects.Video#changeSource
      * @since 3.20.0
-     *
-     * @param {string} key - The key of the Video this Game Object will swap to playing, as stored in the Video Cache.
-     * @param {boolean} [autoplay=true] - Should the video start playing immediately, once the swap is complete?
-     * @param {boolean} [loop=false] - Should the video loop automatically when it reaches the end? Please note that not all browsers support _seamless_ video looping for all encoding formats.
-     * @param {number} [markerIn] - Optional in marker time, in seconds, for playback of a sequence of the video.
-     * @param {number} [markerOut] - Optional out marker time, in seconds, for playback of a sequence of the video.
-     *
-     * @return {this} This Video Game Object for method chaining.
-    changeSource: function (key, autoplay, loop, markerIn, markerOut)
-    {
-        if (autoplay === undefined) { autoplay = true; }
-
-        var currentVideo = this.video;
-
-        if (currentVideo)
-        {
-            this.stop();
-        }
-
-        var newVideo = this.scene.sys.cache.video.get(key);
-
-        if (newVideo)
-        {
-            this.video = newVideo;
-
-            this._cacheKey = key;
-
-            this._codePaused = newVideo.paused;
-            this._codeMuted = newVideo.muted;
-
-            if (this.videoTexture)
-            {
-                this.scene.sys.textures.remove(this._key);
-
-                this.videoTexture = this.scene.sys.textures.create(this._key, newVideo, newVideo.videoWidth, newVideo.videoHeight);
-                this.videoTextureSource = this.videoTexture.source[0];
-                this.videoTexture.add('__BASE', 0, 0, 0, newVideo.videoWidth, newVideo.videoHeight);
-
-                this.setTexture(this.videoTexture);
-                this.setSizeToFrame();
-                this.updateDisplayOrigin();
-
-                this.emit(Events.VIDEO_CREATED, this, newVideo.videoWidth, newVideo.videoHeight);
-            }
-            else
-            {
-                this.updateTexture();
-            }
-
-            newVideo.currentTime = 0;
-
-            this._lastUpdate = 0;
-
-            if (autoplay)
-            {
-                this.play(loop, markerIn, markerOut);
-            }
-        }
-        else
-        {
-            this.video = null;
-        }
-
-        return this;
-    },
      */
 
     /**
@@ -1425,22 +1306,37 @@ var Video = new Class({
      *
      * @method Phaser.GameObjects.Video#ppError
      * @fires Phaser.GameObjects.Events#VIDEO_ERROR
+     * @fires Phaser.GameObjects.Events#VIDEO_UNSUPPORTED
      * @fires Phaser.GameObjects.Events#VIDEO_LOCKED
      * @private
      * @since 3.60.0
      *
-     * @param {any} error - The Promise resolution error.
+     * @param {DOMException} error - The Promise DOM Exception error.
      */
     ppError: function (error)
     {
         console.log('pp error handler', error);
 
-        this.touchLocked = true;
-        this.playWhenUnlocked = true;
-        this.failedPlayAttempts = 1;
+        var name = error.name;
 
-        this.emit(Events.VIDEO_ERROR, this, error);
-        this.emit(Events.VIDEO_LOCKED, this);
+        if (name === 'NotAllowedError')
+        {
+            this.touchLocked = true;
+            this.playWhenUnlocked = true;
+            this.failedPlayAttempts = 1;
+
+            this.emit(Events.VIDEO_LOCKED, this);
+        }
+        else if (name === 'NotSupportedError')
+        {
+            this.stop();
+
+            this.emit(Events.VIDEO_UNSUPPORTED, this, error);
+        }
+        else
+        {
+            this.emit(Events.VIDEO_ERROR, this, error);
+        }
     },
 
     /**
@@ -1475,7 +1371,6 @@ var Video = new Class({
      * @method Phaser.GameObjects.Video#playHandler
      * @fires Phaser.GameObjects.Events#VIDEO_PLAY
      * @since 3.20.0
-     */
     playHandler: function ()
     {
         this._codePaused = false;
@@ -1485,6 +1380,7 @@ var Video = new Class({
 
         this.video.removeEventListener('playing', this._callbacks.play, true);
     },
+     */
 
     /**
      * Called when the video emits a `playing` event.
@@ -1647,17 +1543,7 @@ var Video = new Class({
             {
                 console.log('retrying unlock', this.retry);
 
-                var playPromise = video.play();
-                var _this = this;
-
-                if (playPromise !== undefined)
-                {
-                    playPromise.then(this.ppSuccess.bind(this)).catch(function ()
-                    {
-                        _this.failedPlayAttempts++;
-                        console.log('unlock failed', _this.failedPlayAttempts);
-                    });
-                }
+                this.createPlayPromise(false);
 
                 this.retry = 0;
             }
@@ -1766,7 +1652,6 @@ var Video = new Class({
      *
      * @method Phaser.GameObjects.Video#updateTexture
      * @since 3.20.0
-     */
     updateTexture: function ()
     {
         var video = this.video;
@@ -1800,6 +1685,7 @@ var Video = new Class({
             textureSource.update();
         }
     },
+     */
 
     /**
      * Returns the key of the currently played video, as stored in the Video Cache.
@@ -1911,8 +1797,6 @@ var Video = new Class({
             }
 
             video.currentTime = value;
-
-            // this._lastUpdate = value;
         }
 
         return this;
@@ -1960,12 +1844,12 @@ var Video = new Class({
 
         this.emit(Events.VIDEO_SEEKED, this);
 
-        var video = this.video;
+        // var video = this.video;
 
-        if (video)
-        {
-            this.updateTexture();
-        }
+        // if (video)
+        // {
+        //     this.updateTexture();
+        // }
     },
 
     /**
@@ -2139,6 +2023,8 @@ var Video = new Class({
             {
                 if (!video.paused)
                 {
+                    this.removeEventHandlers();
+
                     video.pause();
                 }
             }
@@ -2380,7 +2266,7 @@ var Video = new Class({
         {
             this.removeEventHandlers();
 
-            if (this.hasRequestVideoFrame)
+            if (this._device.hasRequestVideoFrame)
             {
                 video.cancelVideoFrameCallback(this._rfvCallbackId);
             }
