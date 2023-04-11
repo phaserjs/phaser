@@ -29,10 +29,8 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.VideoFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {Phaser.Types.Loader.FileTypes.VideoFileURLConfig} [urlConfig] - The absolute or relative URL to load this file from in a config object.
- * @param {string} [loadEvent] - The load event to listen for when _not_ loading as a blob. Either 'loadeddata', 'canplay' or 'canplaythrough'.
- * @param {boolean} [asBlob] - Load the video as a data blob, or via the Video element?
  * @param {boolean} [noAudio] - Does the video have an audio track? If not you can enable auto-playing on it.
- * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {string} [loadEvent] - The load event to listen for when _not_ loading as a blob. Either 'loadeddata', 'canplay' or 'canplaythrough'.
  */
 var VideoFile = new Class({
 
@@ -41,34 +39,44 @@ var VideoFile = new Class({
     initialize:
 
     //  URL is an object created by VideoFile.getVideoURL
-    function VideoFile (loader, key, urlConfig, loadEvent, asBlob, noAudio, xhrSettings)
+    function VideoFile (loader, key, url, noAudio, loadEvent)
     {
-        if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
-        if (asBlob === undefined) { asBlob = false; }
         if (noAudio === undefined) { noAudio = false; }
+        if (loadEvent === undefined) { loadEvent = 'loadeddata'; }
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url', []);
+            loadEvent = GetFastValue(config, 'loadEvent', 'loadeddata');
+            noAudio = GetFastValue(config, 'noAudio', false);
+        }
 
         if (loadEvent !== 'loadeddata' && loadEvent !== 'canplay' && loadEvent !== 'canplaythrough')
         {
             loadEvent = 'loadeddata';
         }
 
+        var urlConfig = loader.systems.game.device.video.getVideoURL(url);
+
+        if (!urlConfig)
+        {
+            console.warn('VideoFile: No supported format for ' + key);
+        }
+
         var fileConfig = {
             type: 'video',
             cache: loader.cacheManager.video,
             extension: urlConfig.type,
-            responseType: 'blob',
             key: key,
             url: urlConfig.url,
-            xhrSettings: xhrSettings,
             config: {
                 loadEvent: loadEvent,
-                asBlob: asBlob,
                 noAudio: noAudio
             }
         };
-
-        this.onLoadCallback = this.onVideoLoadHandler.bind(this);
-        this.onErrorCallback = this.onVideoErrorHandler.bind(this);
 
         File.call(this, loader, fileConfig);
     },
@@ -79,118 +87,17 @@ var VideoFile = new Class({
      *
      * @method Phaser.Loader.FileTypes.VideoFile#onProcess
      * @since 3.20.0
-     */
+    */
     onProcess: function ()
     {
-        this.state = CONST.FILE_PROCESSING;
-
-        if (!this.config.asBlob)
-        {
-            this.onProcessComplete();
-
-            return;
-        }
-
-        //  Load Video as blob
-
-        var video = this.createVideoElement();
-
-        this.data = video;
-
-        var _this = this;
-
-        this.data.onloadeddata = function ()
-        {
-            _this.onProcessComplete();
+        this.data = {
+            url: this.src,
+            loadEvent: this.config.loadEvent,
+            noAudio: this.config.noAudio,
+            crossOrigin: this.crossOrigin
         };
 
-        this.data.onerror = function ()
-        {
-            File.revokeObjectURL(_this.data);
-
-            _this.onProcessError();
-        };
-
-        File.createObjectURL(video, this.xhrLoader.response, '');
-
-        video.load();
-    },
-
-    /**
-     * Creates a Video Element within the DOM.
-     *
-     * @method Phaser.Loader.FileTypes.VideoFile#createVideoElement
-     * @private
-     * @since 3.20.0
-     *
-     * @return {HTMLVideoElement} The newly created Video element.
-     */
-    createVideoElement: function ()
-    {
-        var video = document.createElement('video');
-
-        video.controls = false;
-        video.crossOrigin = this.loader.crossOrigin;
-
-        if (this.config.noAudio)
-        {
-            video.muted = true;
-            video.defaultMuted = true;
-
-            video.setAttribute('autoplay', 'autoplay');
-        }
-
-        video.setAttribute('playsinline', 'playsinline');
-        video.setAttribute('preload', 'auto');
-
-        return video;
-    },
-
-    /**
-     * Internal load event callback.
-     *
-     * @method Phaser.Loader.FileTypes.VideoFile#onVideoLoadHandler
-     * @private
-     * @since 3.20.0
-     *
-     * @param {ProgressEvent} event - The DOM ProgressEvent that resulted from this load.
-     */
-    onVideoLoadHandler: function (event)
-    {
-        var video = event.target;
-
-        video.removeEventListener(this.config.loadEvent, this.onLoadCallback, true);
-        video.removeEventListener('error', this.onErrorCallback, true);
-
-        this.data = video;
-
-        this.resetXHR();
-
-        this.loader.nextFile(this, true);
-    },
-
-    /**
-     * Internal load error event callback.
-     *
-     * @method Phaser.Loader.FileTypes.VideoFile#onVideoErrorHandler
-     * @private
-     * @since 3.20.0
-     *
-     * @param {ProgressEvent} event - The DOM ProgressEvent that resulted from this load.
-     */
-    onVideoErrorHandler: function (event)
-    {
-        var video = event.target;
-
-        if (video)
-        {
-            video.removeEventListener(this.config.loadEvent, this.onLoadCallback, true);
-            video.removeEventListener('error', this.onErrorCallback, true);
-        }
-
-        this.resetXHR();
-
-        this.loader.nextFile(this, false);
+        this.onProcessComplete();
     },
 
     /**
@@ -203,95 +110,16 @@ var VideoFile = new Class({
      */
     load: function ()
     {
-        var loadEvent = this.config.loadEvent;
+        //  We set these, but we don't actually load anything (the Video Game Object does that)
 
-        if (this.config.asBlob)
-        {
-            File.prototype.load.call(this);
-        }
-        else
-        {
-            this.percentComplete = 0;
+        this.src = GetURL(this, this.loader.baseURL);
 
-            var video = this.createVideoElement();
+        this.state = CONST.FILE_LOADED;
 
-            video.addEventListener(loadEvent, this.onLoadCallback, true);
-            video.addEventListener('error', this.onErrorCallback, true);
-
-            video.src = GetURL(this, this.loader.baseURL);
-
-            video.load();
-        }
+        this.loader.nextFile(this, true);
     }
 
 });
-
-VideoFile.create = function (loader, key, urls, loadEvent, asBlob, noAudio, xhrSettings)
-{
-    var game = loader.systems.game;
-
-    //  url may be inside key, which may be an object
-    if (IsPlainObject(key))
-    {
-        urls = GetFastValue(key, 'url', []);
-        loadEvent = GetFastValue(key, 'loadEvent', 'loadeddata');
-        asBlob = GetFastValue(key, 'asBlob', false);
-        noAudio = GetFastValue(key, 'noAudio', false);
-        xhrSettings = GetFastValue(key, 'xhrSettings');
-        key = GetFastValue(key, 'key');
-    }
-
-    var urlConfig = VideoFile.getVideoURL(game, urls);
-    
-    if (urlConfig)
-    {
-        return new VideoFile(loader, key, urlConfig, loadEvent, asBlob, noAudio, xhrSettings);
-    }
-};
-
-VideoFile.getVideoURL = function (game, urls)
-{
-    if (!Array.isArray(urls))
-    {
-        urls = [ urls ];
-    }
-
-    for (var i = 0; i < urls.length; i++)
-    {
-        var url = GetFastValue(urls[i], 'url', urls[i]);
-
-        if (url.indexOf('blob:') === 0)
-        {
-            return {
-                url: url,
-                type: ''
-            };
-        }
-
-        var videoType;
-
-        if (url.indexOf('data:') === 0)
-        {
-            videoType = url.split(',')[0].match(/\/(.*?);/);
-        }
-        else
-        {
-            videoType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
-        }
-
-        videoType = GetFastValue(urls[i], 'type', (videoType) ? videoType[1] : '').toLowerCase();
-
-        if (game.device.video[videoType])
-        {
-            return {
-                url: url,
-                type: videoType
-            };
-        }
-    }
-
-    return null;
-};
 
 /**
  * Adds a Video file, or array of video files, to the current load queue.
@@ -324,7 +152,6 @@ VideoFile.getVideoURL = function (game, urls)
  * this.load.video({
  *     key: 'intro',
  *     url: [ 'video/level1.mp4', 'video/level1.webm', 'video/level1.mov' ],
- *     asBlob: false,
  *     noAudio: true
  * });
  * ```
@@ -349,38 +176,23 @@ VideoFile.getVideoURL = function (game, urls)
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.VideoFileConfig|Phaser.Types.Loader.FileTypes.VideoFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {(string|string[]|Phaser.Types.Loader.FileTypes.VideoFileURLConfig|Phaser.Types.Loader.FileTypes.VideoFileURLConfig[])} [urls] - The absolute or relative URL to load the video files from.
- * @param {string} [loadEvent='loadeddata'] - The load event to listen for when _not_ loading as a blob. Either `loadeddata`, `canplay` or `canplaythrough`.
- * @param {boolean} [asBlob=false] - Load the video as a data blob, or stream it via the Video element?
  * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
- * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {string} [loadEvent='loadeddata'] - The load event to listen for when _not_ loading as a blob. Either `loadeddata`, `canplay` or `canplaythrough`.
  *
  * @return {this} The Loader instance.
  */
-FileTypesManager.register('video', function (key, urls, loadEvent, asBlob, noAudio, xhrSettings)
+FileTypesManager.register('video', function (key, urls, noAudio, loadEvent)
 {
-    var videoFile;
-
     if (Array.isArray(key))
     {
         for (var i = 0; i < key.length; i++)
         {
-            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            videoFile = VideoFile.create(this, key[i]);
-
-            if (videoFile)
-            {
-                this.addFile(videoFile);
-            }
+            this.addFile(new VideoFile(this, key[i]));
         }
     }
     else
     {
-        videoFile = VideoFile.create(this, key, urls, loadEvent, asBlob, noAudio, xhrSettings);
-
-        if (videoFile)
-        {
-            this.addFile(videoFile);
-        }
+        this.addFile(new VideoFile(this, key, urls, noAudio, loadEvent));
     }
 
     return this;
