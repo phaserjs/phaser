@@ -4,6 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var GetFastValue = require('../utils/object/GetFastValue');
+
 /**
  * Determines the video support of the browser running this Phaser Game instance.
  *
@@ -24,7 +26,7 @@
  * @property {boolean} ogg - Can this device play ogg video files?
  * @property {boolean} vp9 - Can this device play vp9 video files?
  * @property {boolean} webm - Can this device play webm video files?
- * @property {boolean} hasRequestVideoFrame - Does this browser support the `requestVideoFrameCallback` API?
+ * @property {function} getVideoURL - Returns the first video URL that can be played by this browser.
  */
 var Video = {
 
@@ -45,8 +47,6 @@ function init ()
     {
         return Video;
     }
-
-    Video.hasRequestVideoFrame = ('requestVideoFrameCallback' in HTMLVideoElement.prototype);
 
     var videoElement = document.createElement('video');
     var result = !!videoElement.canPlayType;
@@ -98,6 +98,50 @@ function init ()
     {
         videoElement.parentNode.removeChild(videoElement);
     }
+
+    Video.getVideoURL = function (urls)
+    {
+        if (!Array.isArray(urls))
+        {
+            urls = [ urls ];
+        }
+
+        for (var i = 0; i < urls.length; i++)
+        {
+            var url = GetFastValue(urls[i], 'url', urls[i]);
+
+            if (url.indexOf('blob:') === 0)
+            {
+                return {
+                    url: url,
+                    type: ''
+                };
+            }
+
+            var videoType;
+
+            if (url.indexOf('data:') === 0)
+            {
+                videoType = url.split(',')[0].match(/\/(.*?);/);
+            }
+            else
+            {
+                videoType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
+            }
+
+            videoType = GetFastValue(urls[i], 'type', (videoType) ? videoType[1] : '').toLowerCase();
+
+            if (Video[videoType])
+            {
+                return {
+                    url: url,
+                    type: videoType
+                };
+            }
+        }
+
+        return null;
+    };
 
     return Video;
 }
