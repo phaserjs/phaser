@@ -33,6 +33,7 @@ Before Phaser 3.60 this was known as a Render Texture. Dynamic Textures have bee
 * Using `DynamicTexture.fill` in CANVAS mode only would produce a nearly always black color due to float conversion (thanks @andymikulski)
 * Using `DynamicTexture.fill` in CANVAS mode only, after using the `erase` method, wouldn't reset the global composite operation correctly, resulting in fills. Fix #6124 (thanks @mateuszkmiecik)
 * Drawing a frame via `draw`, `drawFrame` or `batchDrawFrame` and specifying a `tint` value would inverse the Red and Blue channels. These are now handled properly. Fix #5509 (thanks @anthonygood)
+* Drawing Game Objects to a Render Texture in WebGL would skip their blend modes. This is now applied correctly. Fix #5565 #5996 (thanks @sjb933 @danarcher)
 
 Due to the creation of the Dynamic Texture class, we have completely revamped the old Render Texture Game Object. This is now a combination of a Dynamic Texture and an Image Game Object, that uses the Dynamic Texture to display itself with.
 

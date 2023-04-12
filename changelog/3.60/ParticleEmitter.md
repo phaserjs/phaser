@@ -445,6 +445,14 @@ Another potentially breaking change is the removal of two internal private count
 * The `ParticleEmitter.alpha` property has been renamed to `particleAlpha` and is a new EmitterOp capable of being tweened.
 * The `ParticleEmitter.angle` property has been renamed to `particleAngle` and is a new EmitterOp capable of being tweened.
 * The `ParticleEmitter.rotate` property has been renamed to `particleRotate` and is a new EmitterOp capable of being tweened.
+* `maxAliveParticles` is a new Particle Emitter config property that sets the maximum number of _alive_ particles the emitter is allowed to update. When this limit is reached a particle will have to die before another can be spawned.
+* `Particle.fire` will now throw an error if the particle has no texture frame. This prevents an uncaught error later when the particle fails to render. Fix #5838 (thanks @samme @monteiz)
+* `ParticleEmitter.setEmitterFrames` will now print out console warnings if an invalid texture frame is given, or if no texture frames were set. Fix #5838 (thanks @samme @monteiz)
+* The Particle 'moveTo' calculations have been simplied and made more efficient (thanks @samme)
+* You can now have a particle frequency smaller than the delta step, which would previously lead to inconsistencies in emission rates (thanks @samme)
+* `Particle.fire` will now check to see if the parent Emitter is set to follow a Game Object and if so, and if the x/y EmitterOps are spread ops, then it'll space the particles out based on the follower coordinates, instead of clumping them all together. Fix #5847 (thanks @sreadixl)
+* Calling `ParticleEmitter.setScale` would set the `scaleY` property to `null`, causing calls to `setScaleY` to throw a runtime error. `scaleY` is now a required property across both the Particle and Emitter classes and all of the conditional checks for it have been removed (thanks ojg15)
+* Particles can now be moved to 0x0. `moveToX` and `moveToY` now default to null instead of 0 (thanks @samme)
 
 ---------------------------------------
 

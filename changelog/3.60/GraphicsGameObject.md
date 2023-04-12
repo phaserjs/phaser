@@ -2,16 +2,19 @@
 
 Return to the [Change Log index](CHANGELOG-v3.60.md).
 
-## Animation System New Features
+## Graphics Game Object New Features
+
+* The `Graphics.strokeRoundedRect` and `fillRoundedRect` methods can now accept negative values for the corner radius settings, in which case a concave corner is drawn instead (thanks @rexrainbow)
+* Earcut has been updated to version 2.2.4. This release improves performance by 10-15% and fixes 2 rare race conditions that could leave to infinite loops. Earcut is used internally by Graphics and Shape game objects when triangulating polygons for complex shapes.
+
+
+## Graphics Game Object Updates
 
 
 
-## Animation System Updates
+## Graphics Game Object Bug Fixes
 
-
-
-## Animation System Bug Fixes
-
+* `Graphics.strokeRoundedRect` would incorrectly draw the rectangle if you passed in a radius greater than half of the smaller side. This is now clamped internally (thanks @temajm)
 
 ---------------------------------------
 

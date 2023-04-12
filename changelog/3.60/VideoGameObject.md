@@ -19,6 +19,8 @@ The Video Game Object has been fully recoded in v3.60. Previously, it had issues
 * The new `VIDEO_STALLED` event allows you to know when the browser has stalled playback.
 * The new `VIDEO_TEXTURE` event allows you to know when the Video Game Object has received its first frame data and created a texture from it.
 * The new `VIDEO_UNSUPPORTED` event allows you to know when the Video Game Object has been asked to play a video file that the browser doesn't support (handy for testing if a browser can play WebM for example).
+* `Video.loadURL` has a new optional parameter `crossOrigin`. This allows you to specify a cross origin request type when loading the video cross-domain (thanks @rmartell)
+* The `Video` config will now detect for `x-m4v` playback support for video formats and store it in the `Video.m4v` property. This is used automatically by the `VideoFile` file loader. Fix #5719 (thanks @patrickkeenan)
 
 ### Breaking Changes:
 
@@ -82,6 +84,8 @@ this.load.video('wormhole', 'wormhole.mp4', true);
 * If you had multiple Video Game Objects all using the same video URL, they would conflict in some browsers and only one of the videos would play. They now all use their own unique Video element allowing for multiple playback of exact same video. Fix #5458 (thanks @rexrainbow)
 * Often, but intermittently, the Video Game Object would fail emit the `VIDEO_COMPLETE` event. Using the new Request Video Frame approach and better callback handling, this should now be fixed. Fix #6192 (thanks @dino8890)
 * The Loader would intermittently not finish loading a video file. This often happened if you queued too many videos at once. Under v3.60 Videos are no longer preloaded at all, instead the Video Game Object manages all of this, meaning this issue no longer happens. Fix #4910 (thanks @micsun-al)
+* Calling `setDisplayOrigin` on a `Video` Game Object would cause the origins to be set to `NaN` if the Video was created without an asset key. It will now give Videos a default size, preventing this error, which is reset once a video is loaded. Fix #5560 (thanks @mattjennings)
+* The `Video.loadURL` method wouldn't load the video or emit the `VIDEO_CREATED` event unless `noAudio` was specified. A load event handler has been added to resolve this (thanks @samme)
 
 ---------------------------------------
 
