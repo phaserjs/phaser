@@ -2,24 +2,24 @@
 
 Due to the size and importance of the v3.60 release we have split the Change Log up into multiple sections.
 
-This should make it easier for you to browse the changes and find the information you need.
+This makes it easier for you to browse and find the information you need.
 
 ## New Features
 
 These are the headliner features in this release:
 
-* 14 bundled [Special FX](FX.md) including Bloom, Blur, Distort and more
-* Vastly improved [Mobile Rendering Performance](MobilePerformance.md) - our fastest release ever
+* 14 bundled [Special FX](FX.md) including Bloom, Blur, Distort, Glow, Wipe and more
+* Vastly improved [Mobile Rendering Performance](MobilePerformance.md) - over 7000% faster!
 * New [Timeline Sequencer](Timeline.md) for creating complex flows of events
 * New [Plane Game Object](PlaneGameObject.md) for perspective distortions
 * New [Nine Slice Game Object](NineSliceGameObject.md) for perfect UI scaling
 * [Built-in Spector JS](Spector.md) for WebGL debugging on desktop and mobile
-* Brand new [Video Game Object](VideoGameObject.md) for videos and media streams
-* Brand new [Particle Emitter](ParticleEmitter.md) with stacks of new features
+* Brand new [Video Game Object](VideoGameObject.md) handles videos and media streams with ease
+* Brand new [Particle Emitter](ParticleEmitter.md) comes with explosive new features
 * Support for [Spatial Audio](SpatialSound.md) and distance based volume
-* New [Spine 4 Plugin](Spine4.md)
+* New [Spine 4 Plugin](Spine4.md) support
 * Upgraded to [Matter Physics v0.19](MatterPhysics.md)
-* New [Tween Manager](TweenManager.md) for better performance and memory management
+* New [Tween Manager](TweenManager.md) with better performance and memory management
 * New [Dynamic Textures](DynamicTextures.md) for rendering to textures at runtime
 * New [TimeStep features and Timer Event Updates](Timestep.md) for enforcing fps rates and more
 * Support for [Compressed Textures](CompressedTextures.md)
