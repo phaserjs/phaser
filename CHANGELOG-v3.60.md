@@ -979,6 +979,7 @@ Previously, `WebGLRenderer.whiteTexture` and `WebGLRenderer.blankTexture` had a 
 * The `Light.frag` shader now uses a new `uLightCount` uniform to know when to stop iterating through the max lights.
 * The `LightPipeline.LIGHT_COUNT` constant has been removed as it's not used internally.
 * The `LightPipeline` previous created a global level temporary vec2 for calculations. This is now part of the class as the new `tempVec2` property.
+* You can now correctly loading a Sprite Sheet with a Normal Map. The `TextureManager.addSpriteSheet` method has been updated to take an optional `dataSource` parameter and the `SpriteSheetFile.addToCache` method has been rewritten to handle normal maps as well.
 
 #### Removed - Graphics Pipeline
 
