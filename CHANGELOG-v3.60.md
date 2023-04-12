@@ -62,7 +62,6 @@ New Methods:
 * `Video.playError` is a new internal method that is called automatically if the playback Promise errors.
 * `Video.stalledHandler` is a new method that is called if a video stalls, for whatever reason.
 
-
 New Properties:
 
 * `Video.frameReady` is a new property that lets you know if the texture has been created and populated with the first frame of the video, or not.
