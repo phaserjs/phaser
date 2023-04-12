@@ -66,9 +66,7 @@ As usual, I'd like to send my thanks to the Phaser community for their help in b
 
 I'd like to send a massive thank-you to everyone who supports [Phaser on Patreon](https://www.patreon.com/photonstorm), GitHub Sponsors and our corporate backers. Your continued funding allows me to keep working on Phaser full-time and this monster of a new release is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
 
-[![Phaser Games Showcase video]
-(https://img.youtube.com/vi/gnfgwkVg7vc/maxresdefault.jpg)]
-(https://www.youtube.com/watch?v=gnfgwkVg7vc)
+[![Phaser Games Showcase video](https://img.youtube.com/vi/gnfgwkVg7vc/maxresdefault.jpg)](https://www.youtube.com/watch?v=gnfgwkVg7vc)
 
 If you'd like to stay abreast of developments then I'm now publishing them to the [Phaser Patreon](https://www.patreon.com/photonstorm). Here you can find the latest development reports including the concepts behind Phaser 4.
 
