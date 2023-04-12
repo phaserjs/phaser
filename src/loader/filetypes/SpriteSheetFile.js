@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var CONST = require('../const');
 var FileTypesManager = require('../FileTypesManager');
 var ImageFile = require('./ImageFile.js');
 
@@ -49,7 +50,36 @@ var SpriteSheetFile = new Class({
      */
     addToCache: function ()
     {
-        this.cache.addSpriteSheet(this.key, this.data, this.config);
+        //  Check if we have a linked normal map
+        var linkFile = this.linkFile;
+
+        if (linkFile)
+        {
+            //  We do, but has it loaded?
+            if (linkFile.state >= CONST.FILE_COMPLETE)
+            {
+                //  Both files have loaded
+                if (this.type === 'normalMap')
+                {
+                    //  linkFile.data = Image
+                    //  this.data = Normal Map
+                    this.cache.addSpriteSheet(this.key, linkFile.data, this.config, this.data);
+                }
+                else
+                {
+                    //  linkFile.data = Normal Map
+                    //  this.data = Image
+                    this.cache.addSpriteSheet(this.key, this.data, this.config, linkFile.data);
+                }
+            }
+
+            //  Nothing to do here, we'll use the linkFile `addToCache` call
+            //  to process this pair
+        }
+        else
+        {
+            this.cache.addSpriteSheet(this.key, this.data, this.config);
+        }
     }
 
 });

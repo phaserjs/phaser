@@ -1048,10 +1048,11 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture. Give an empty string if you provide a Phaser Texture as the 2nd argument.
      * @param {(HTMLImageElement|Phaser.Textures.Texture)} source - The source Image element, or a Phaser Texture.
      * @param {Phaser.Types.Textures.SpriteSheetConfig} config - The configuration object for this Sprite Sheet.
+     * @param {HTMLImageElement|HTMLCanvasElement} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created or updated, or `null` if the key is already in use.
      */
-    addSpriteSheet: function (key, source, config)
+    addSpriteSheet: function (key, source, config, dataSource)
     {
         var texture = null;
 
@@ -1071,6 +1072,11 @@ var TextureManager = new Class({
             var height = texture.source[0].height;
 
             Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
+
+            if (dataSource)
+            {
+                texture.setDataSource(dataSource);
+            }
 
             this.emit(Events.ADD, key, texture);
             this.emit(Events.ADD_KEY + key, texture);
