@@ -33,8 +33,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  * Text
  * TileSprite
  * RenderTexture
- *
- * // TODO - Explain about the fbos and functions
+ * Video
  *
  * @class PreFXPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
