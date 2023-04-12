@@ -16,9 +16,9 @@ Thousands of developers from indie and multi-national digital agencies, and univ
 **Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)<br />
 **Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
 **Learn:** [API Docs](https://newdocs.phaser.io), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
-**Code:** 1770+ [Examples](https://phaser.io/examples) (source available in this [repo][examples])<br />
+**Code:** 2000+ [Examples](https://phaser.io/examples) (source available in this [repo][examples])<br />
 **Read:** The [Phaser World](#newsletter) Newsletter<br />
-**Discord:** Join us on [Discord](https://phaser.io/community/discord)<br />
+**Discord:** Join us on [Discord](https://discord.gg/phaser)<br />
 **Extend:** With [Phaser Plugins](https://phaser.io/shop/plugins)<br />
 **Be awesome:** [Support](#support) the future of Phaser<br />
 
@@ -28,11 +28,13 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 17th February 2023
+> 12th April 2023
 
-After months of hard work we're in the final stretch for the Phaser 3.60 release. Today we published Beta 19 and I would strongly urge you to test it out in production. It includes lots of new features, such as built-in Special Effects, support for Spine 4, Spatial Audio, Nine Slice Game Objects, Plane Game Objects and lots, lots more! There are a few breaking changes in this release, mostly to do with Tween Timelines, which have been removed and replaced with Tween Chains. If you don't use those, it should be a safe replacement for 3.55. As always, it brings a lot of new features and fixes to the table.
+After 24 Beta releases, over 2000 updated examples and a year of insanely hard work we're thrilled to finally announce the release of Phaser 3.60!
 
-Some of the new features include:
+Today is also the 10th birthday of Phaser, so it's a very special day for us. 10 years ago we released the v0.5 version on the unsuspecting public and it's no exaggeration to say that it changed both our lives and the face of HTML5 game development forever.
+
+Phaser 3.60 is our biggest release ever. Eclipsing any version before it. Some of the headline features include:
 
 **Built-in Special FX** - We now bundle 14 highly flexible special effects into the core, which are available to all Game Objects. These include Glow, Blur, Bloom, Bokeh, Barrel, Wipe, Pixelate, Vignette, Displacement and more.
 
@@ -44,29 +46,33 @@ Some of the new features include:
 
 **Compressed Texture Support** - Phaser 3.60 contains support for Compressed Textures. It can parse both KTX and PVR containers and within those has support for the following formats: ETC, ETC1, ATC, ASTC, BPTC, RGTC, PVRTC, S3TC and S3TCSRB. Compressed Textures differ from normal textures in that their structure is optimized for fast GPU data reads and lower memory consumption. Popular tools that can create compressed textures include PVRTexTool, ASTC Encoder and Texture Packer.
 
-**Matter Physics v0.18** - We have updated the version of Matter Physics to the latest v0.18 release. This is a big jump and brings with it quite a few internal changes to Matter, as well as a ~40% performance improvement.
+**Matter Physics v0.19** - We have updated the version of Matter Physics to the latest v0.18 release. This is a big jump and brings with it quite a few internal changes to Matter, as well as a ~40% performance improvement.
 
 There are also hundreds of updates and bug fixes across the entire codebase.
 
-As always, I have been careful to record all of these in their own [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.60.md). So it's easier for you to identify which change happened in the 3.60 version specifically.
+We have created a brand new [Change Log](https://github.com/photonstorm/phaser/blob/master/changelog/3.60/CHANGELOG-v3.60.md) just for v3.60. Previously, we used to put all of the changes in a single file, but this felt impractical. So we've split it all into sections now, so you can easily see what's new and updated.
 
-Beta 19 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases). You can also download it from npm:
+v3.60 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases). You can also download it from npm:
 
 ```
-npm i phaser@beta
+npm i phaser
 ```
 
-I have published new TypeScript defs files that align with this version. You can find them in the `types` folder of this repository.
+You'll find up to date TypeScript defs that align with this release in the `types` folder of this repository.
 
-> If you find any problems with this release I'd urge you to please report them in GitHub issues.
+> If you find any problems please report them in GitHub issues.
 
-As usual, I'd like to send my thanks to the Phaser community for their help in both reporting issues and submitting pull requests to fix them. So, please do spend some time digging through the [Change Log](#changelog). I assure you, it's worth while :)
+As usual, I'd like to send my thanks to the Phaser community for their help in both reporting issues and submitting pull requests to fix them. So, please do spend some time digging through the Change Log. I assure you, it's worth while 🙂
 
 I'd like to send a massive thank-you to everyone who supports [Phaser on Patreon](https://www.patreon.com/photonstorm), GitHub Sponsors and our corporate backers. Your continued funding allows me to keep working on Phaser full-time and this monster of a new release is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
 
+[![Phaser Games Showcase video]
+(https://img.youtube.com/vi/gnfgwkVg7vc/maxresdefault.jpg)]
+(https://www.youtube.com/watch?v=gnfgwkVg7vc)
+
 If you'd like to stay abreast of developments then I'm now publishing them to the [Phaser Patreon](https://www.patreon.com/photonstorm). Here you can find the latest development reports including the concepts behind Phaser 4.
 
-You can also follow Phaser on [Twitter](https://twitter.com/phaser_) and chat with fellow Phaser devs in our [Discord](https://phaser.io/community/discord).
+You can also follow Phaser on [Twitter](https://twitter.com/phaser_) and chat with fellow Phaser devs in our [Discord](https://discord.gg/phaser).
 
 Phaser 3 wouldn't have been possible without the fantastic support of the community and Patreon. Thank you to everyone who supports our work, who shares our belief in the future of HTML5 gaming, and Phaser's role in that.
 
@@ -135,13 +141,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -162,7 +168,7 @@ Depending on your project, you may need to add the following to your `tsconfig.j
 "types": ["Phaser"]
 ```
 
-We recently published a new [Phaser 3 TypeScript Project Template](https://github.com/photonstorm/phaser3-typescript-project-template), which you can use to get started with.
+We recently updated our [Phaser 3 TypeScript Project Template](https://github.com/photonstorm/phaser3-typescript-project-template), which you can use to get started with. This now uses TypeScript 5 and Phaser v3.60.
 
 The TS defs are automatically generated from the JSDoc comments found in the Phaser source code. If you wish to help refine them then you must edit the Phaser JSDoc blocks directly, not the defs file. You can find more details about the parser we built in the `scripts/tsgen` folder.
 
@@ -194,7 +200,7 @@ We've 3 tutorials related specifically to creating **Facebook Instant Games** wi
 
 ### Source Code Examples
 
-During our development of Phaser 3, we created hundreds of examples with the full source code and assets ready available. These examples are now fully integrated into the [Phaser website](https://phaser.io/examples). You can also browse them on [Phaser 3 Labs](https://labs.phaser.io) via a more advanced interface, or clone the [examples repo][examples]. We are constantly adding to and refining these examples.
+During our development of Phaser 3, we created hundreds of examples with the full source code and assets ready available. These examples can be browsed on the [Phaser 3 Labs](https://labs.phaser.io), or clone the [examples repo][examples]. We are constantly adding to and refining these examples.
 
 ### Hathora
 
@@ -227,7 +233,7 @@ Create an `index.html` page locally and paste the following code into it:
 This is a standard empty webpage. You'll notice there's a script tag that is pulling in a build of Phaser 3, but otherwise this webpage doesn't do anything yet. Now let's set-up the game config. Paste the following between the `<script></script>` tags:
 
 ```javascript
-var config = {
+const config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
@@ -237,56 +243,59 @@ var config = {
             gravity: { y: 200 }
         }
     },
-    scene: {
-        preload: preload,
-        create: create
-    }
+    scene: Example
 };
+
+const game = new Phaser.Game(config);
 ```
 
-`config` is a pretty standard Phaser 3 Game Configuration object. We tell `config` to use the WebGL renderer if it can, set the canvas to a size of 800x600 pixels, enable Arcade Physics, and finally call the `preload` and `create` functions. `preload` and `create` have not been implemented yet, so if you run this JavaScript code, you will have an error. Add the following after `config`:
+`config` is a pretty standard Phaser 3 Game Configuration object. We tell `config` to use the WebGL renderer if it can, set the canvas to a size of 800 x 600 pixels, enable Arcade Physics, and finally we tell it to use the Example Scene. This hasn't been implemented yet, so if you run this JavaScript code now you will have an error. Add the following above the `config`:
 
 ```javascript
-var game = new Phaser.Game(config);
-
-function preload ()
+class Example extends Phaser.Scene
 {
-    this.load.setBaseURL('https://labs.phaser.io');
+    constructor ()
+    {
+        super();
+    }
 
-    this.load.image('sky', 'assets/skies/space3.png');
-    this.load.image('logo', 'assets/sprites/phaser3-logo.png');
-    this.load.image('red', 'assets/particles/red.png');
-}
+    preload ()
+    {
+        this.load.setBaseURL('https://labs.phaser.io');
 
-function create ()
-{
+        this.load.image('sky', 'assets/skies/space3.png');
+        this.load.image('logo', 'assets/sprites/phaser3-logo.png');
+        this.load.image('red', 'assets/particles/red.png');
+    }
+
+    create ()
+    {
+    }
 }
 ```
 
-`game` is a Phaser Game instance that uses our configuration object `config`. We also add function definitions for `preload` and `create`. The `preload` function helps you easily load assets into your game. In `preload`, we set the Base URL to be the Phaser server and load 3 PNG files.
+Here we create a Scene called `Example`. We've given it 2 functions. The `preload` function is where you load assets into your game. In `preload`, we set the Base URL to be the Phaser server and load 3 PNG files.
 
 The `create` function is empty, so it's time to fill it in:
 
 ```javascript
-function create ()
+create ()
 {
     this.add.image(400, 300, 'sky');
 
-    var particles = this.add.particles('red');
-
-    var emitter = particles.createEmitter({
+    const particles = this.add.particles(0, 0, 'red', {
         speed: 100,
         scale: { start: 1, end: 0 },
         blendMode: 'ADD'
     });
 
-    var logo = this.physics.add.image(400, 100, 'logo');
+    const logo = this.physics.add.image(400, 100, 'logo');
 
     logo.setVelocity(100, 200);
     logo.setBounce(1, 1);
     logo.setCollideWorldBounds(true);
 
-    emitter.startFollow(logo);
+    particles.startFollow(logo);
 }
 ```
 
@@ -333,10 +342,10 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 Due to the increasing size of our Change Logs we have now split them up, one version per folder.
 
-* [v3.60.0 Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG-v3.60.md) (the 3.60 specific change log, still in Beta)
-* [v3.0.0 to v3.55.2. Change Logs](changelog/index.md)
+* [v3.60.0 Change Log](changelog/3.60/CHANGELOG-v3.60.md)
+* [v3.0.0 to v3.55.2. Change Logs](CHANGELOG.md)
 
-We've organized the Change Logs into commonly themed sections to make it more digestible, but we appreciate there is a lot in there. Please don't feel overwhelmed! If you need clarification about something, join us on the Phaser Discord and feel free to ask.
+We've organized the Change Logs into commonly themed sections to make it more digestible, but we appreciate there is a lot in there. Please don't feel overwhelmed! If you need clarification about something, join us on the Phaser Discord and ask.
 
 ![Contributing](https://phaser.io/images/github/div-contributing.png "Contributing")
 <a name="contributing"></a>
@@ -359,14 +368,14 @@ Phaser is a [Photon Storm](http://www.photonstorm.com) production.
 
 Created by [Richard Davey](mailto:rich@photonstorm.com). Powered by coffee, anime, pixels and love.
 
-The Phaser logo and characters are &copy; 2011 - 2022 Photon Storm Limited.
+The Phaser logo and characters are &copy; 2011 - 2023 Photon Storm Limited.
 
 All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.55.2/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.55.2/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.60.0/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.60.0/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser
