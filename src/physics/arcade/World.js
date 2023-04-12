@@ -1929,8 +1929,6 @@ var World = new Class({
             return false;
         }
 
-        //  TODO - Convert to fast-path index for Collider
-
         //  SPRITE
         if (object1.body || object1.isBody)
         {

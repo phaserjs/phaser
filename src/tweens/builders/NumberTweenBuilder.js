@@ -68,8 +68,6 @@ var NumberTweenBuilder = function (parent, config, defaults)
 
     var tween = new Tween(parent, targets);
 
-    //  TODO - Needs tidying up + easeParams being used, etc
-
     var tweenData = tween.add(
         0,
         'value',

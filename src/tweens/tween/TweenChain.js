@@ -14,7 +14,17 @@ var TWEEN_CONST = require('./const');
 
 /**
  * @classdesc
- * TODO
+ * A TweenChain is a special type of Tween that allows you to create a sequence of Tweens, chained to one-another,
+ * and add them to the Tween Manager.
+ *
+ * The tweens are played in order, from start to finish. You can optionally set the chain
+ * to repeat as many times as you like. Once the chain has finished playing, or repeating if set,
+ * all tweens in the chain will be destroyed automatically. To override this, set the 'persists'
+ * argument to 'true'.
+ *
+ * Playback will start immediately unless the _first_ Tween has been configured to be paused.
+ *
+ * Please note that Tweens will not manipulate any target property that begins with an underscore.
  *
  * @class TweenChain
  * @memberof Phaser.Tweens
