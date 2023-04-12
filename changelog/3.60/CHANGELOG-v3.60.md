@@ -59,11 +59,11 @@ Finally, here are the updates related to Game Objects:
 * [Tilemap Game Object](Tilemap.md)
 * [All other Game Object related Updates](GameObject.md)
 
-### Examples, Documentation, Beta Testing and TypeScript
+## Examples, Documentation, Beta Testing and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-|       |       |       |       |
+| 💖 | 💖 | 💖 | 💖 |
 | ----- | ----- | ----- | ----- |
 | @0day-oni | @201flaviosilva | @AlbertMontagutCasero | @Arcanorum |
 | @arosemena | @austinlyon | @chrisl8 | @christian-post |
