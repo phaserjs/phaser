@@ -626,6 +626,14 @@ var WebGLRenderer = new Class({
          */
         this.spector = null;
 
+        /**
+         * Is Spector currently capturing a WebGL frame?
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#_debugCapture
+         * @type {boolean}
+         * @private
+         * @since 3.60.0
+         */
         this._debugCapture = false;
 
         this.init(this.config);
@@ -858,6 +866,26 @@ var WebGLRenderer = new Class({
         this.resize(width, height);
     },
 
+    /**
+     * This method is only available in the Debug Build of Phaser, or a build with the
+     * `WEBGL_DEBUG` flag set in the Webpack Config.
+     *
+     * Phaser v3.60 Debug has a build of Spector.js embedded in it, which is a WebGL inspector
+     * that allows for live inspection of your WebGL calls. Although it's easy to add the Spector
+     * extension to a desktop browsr, by embedding it in Phaser we can make it available in mobile
+     * browsers too, making it a powerful tool for debugging WebGL games on mobile devices where
+     * extensions are not permitted.
+     *
+     * See https://github.com/BabylonJS/Spector.js for more details.
+     *
+     * This method will capture the current WebGL frame and send it to the Spector.js tool for inspection.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#captureFrame
+     * @since 3.60.0
+     *
+     * @param {boolean} [quickCapture=false] - If `true` thumbnails are not captured in order to speed up the capture.
+     * @param {boolean} [fullCapture=false] - If `true` all details are captured.
+     */
     captureFrame: function (quickCapture, fullCapture)
     {
         if (quickCapture === undefined) { quickCapture = false; }
@@ -871,6 +899,23 @@ var WebGLRenderer = new Class({
         }
     },
 
+    /**
+     * This method is only available in the Debug Build of Phaser, or a build with the
+     * `WEBGL_DEBUG` flag set in the Webpack Config.
+     *
+     * Phaser v3.60 Debug has a build of Spector.js embedded in it, which is a WebGL inspector
+     * that allows for live inspection of your WebGL calls. Although it's easy to add the Spector
+     * extension to a desktop browsr, by embedding it in Phaser we can make it available in mobile
+     * browsers too, making it a powerful tool for debugging WebGL games on mobile devices where
+     * extensions are not permitted.
+     *
+     * See https://github.com/BabylonJS/Spector.js for more details.
+     *
+     * This method will capture the next WebGL frame and send it to the Spector.js tool for inspection.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#captureNextFrame
+     * @since 3.60.0
+     */
     captureNextFrame: function ()
     {
         if (DEBUG && this.spector && !this._debugCapture)
@@ -881,6 +926,25 @@ var WebGLRenderer = new Class({
         }
     },
 
+    /**
+     * This method is only available in the Debug Build of Phaser, or a build with the
+     * `WEBGL_DEBUG` flag set in the Webpack Config.
+     *
+     * Phaser v3.60 Debug has a build of Spector.js embedded in it, which is a WebGL inspector
+     * that allows for live inspection of your WebGL calls. Although it's easy to add the Spector
+     * extension to a desktop browsr, by embedding it in Phaser we can make it available in mobile
+     * browsers too, making it a powerful tool for debugging WebGL games on mobile devices where
+     * extensions are not permitted.
+     *
+     * See https://github.com/BabylonJS/Spector.js for more details.
+     *
+     * This method will return the current FPS of the WebGL canvas.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#getFps
+     * @since 3.60.0
+     *
+     * @return {number} The current FPS of the WebGL canvas.
+     */
     getFps: function ()
     {
         if (DEBUG && this.spector)
@@ -889,6 +953,28 @@ var WebGLRenderer = new Class({
         }
     },
 
+    /**
+     * This method is only available in the Debug Build of Phaser, or a build with the
+     * `WEBGL_DEBUG` flag set in the Webpack Config.
+     *
+     * Phaser v3.60 Debug has a build of Spector.js embedded in it, which is a WebGL inspector
+     * that allows for live inspection of your WebGL calls. Although it's easy to add the Spector
+     * extension to a desktop browsr, by embedding it in Phaser we can make it available in mobile
+     * browsers too, making it a powerful tool for debugging WebGL games on mobile devices where
+     * extensions are not permitted.
+     *
+     * See https://github.com/BabylonJS/Spector.js for more details.
+     *
+     * This method adds a command with the name value in the list. This can be filtered in the search.
+     * All logs can be filtered searching for "LOG".
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#log
+     * @since 3.60.0
+     *
+     * @param {...*} arguments - The arguments to log to Spector.
+     *
+     * @return {string} The current log.
+     */
     log: function ()
     {
         if (DEBUG && this.spector)
@@ -899,6 +985,29 @@ var WebGLRenderer = new Class({
         }
     },
 
+    /**
+     * This method is only available in the Debug Build of Phaser, or a build with the
+     * `WEBGL_DEBUG` flag set in the Webpack Config.
+     *
+     * Phaser v3.60 Debug has a build of Spector.js embedded in it, which is a WebGL inspector
+     * that allows for live inspection of your WebGL calls. Although it's easy to add the Spector
+     * extension to a desktop browsr, by embedding it in Phaser we can make it available in mobile
+     * browsers too, making it a powerful tool for debugging WebGL games on mobile devices where
+     * extensions are not permitted.
+     *
+     * See https://github.com/BabylonJS/Spector.js for more details.
+     *
+     * This method will start a capture on the Phaser canvas. The capture will stop once it reaches
+     * the number of commands specified as a parameter, or after 10 seconds. If quick capture is true,
+     * the thumbnails are not captured in order to speed up the capture.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#startCapture
+     * @since 3.60.0
+     *
+     * @param {number} [commandCount=0] - The number of commands to capture. If zero it will capture for 10 seconds.
+     * @param {boolean} [quickCapture=false] - If `true` thumbnails are not captured in order to speed up the capture.
+     * @param {boolean} [fullCapture=false] - If `true` all details are captured.
+     */
     startCapture: function (commandCount, quickCapture, fullCapture)
     {
         if (commandCount === undefined) { commandCount = 0; }
@@ -913,14 +1022,47 @@ var WebGLRenderer = new Class({
         }
     },
 
+    /**
+     * This method is only available in the Debug Build of Phaser, or a build with the
+     * `WEBGL_DEBUG` flag set in the Webpack Config.
+     *
+     * Phaser v3.60 Debug has a build of Spector.js embedded in it, which is a WebGL inspector
+     * that allows for live inspection of your WebGL calls. Although it's easy to add the Spector
+     * extension to a desktop browsr, by embedding it in Phaser we can make it available in mobile
+     * browsers too, making it a powerful tool for debugging WebGL games on mobile devices where
+     * extensions are not permitted.
+     *
+     * See https://github.com/BabylonJS/Spector.js for more details.
+     *
+     * This method will stop the current capture and returns the result in JSON. It displays the
+     * result if the UI has been displayed. This returns undefined if the capture has not been completed
+     * or did not find any commands.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#stopCapture
+     * @since 3.60.0
+     *
+     * @return {object} The current capture.
+     */
     stopCapture: function ()
     {
         if (DEBUG && this.spector && this._debugCapture)
         {
-            this.spector.stopCapture();
+            return this.spector.stopCapture();
         }
     },
 
+    /**
+     * This method is only available in the Debug Build of Phaser, or a build with the
+     * `WEBGL_DEBUG` flag set in the Webpack Config.
+     *
+     * Internal onCapture handler.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#onCapture
+     * @private
+     * @since 3.60.0
+     *
+     * @param {object} capture - The capture data.
+     */
     onCapture: function (capture)
     {
         if (DEBUG)
@@ -2989,6 +3131,11 @@ var WebGLRenderer = new Class({
         this.contextLost = true;
         this.currentMask = null;
         this.currentCameraMask = null;
+
+        if (DEBUG)
+        {
+            this.spector = null;
+        }
     }
 
 });
