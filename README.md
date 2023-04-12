@@ -11,7 +11,9 @@ Phaser is a fast, free, and fun open source HTML5 game framework that offers Web
 
 Along with the fantastic open source community, Phaser is actively developed and maintained by [Photon Storm](http://www.photonstorm.com). As a result of rapid support, and a developer friendly API, Phaser is currently one of the [most starred](https://github.com/collections/javascript-game-engines) game frameworks on GitHub.
 
-Thousands of developers from indie and multi-national digital agencies, and universities worldwide use Phaser. Take a look at their incredible [games](https://phaser.io/games/).
+Thousands of developers from indie and multi-national digital agencies, and universities worldwide use Phaser. Take a look at their incredible [games](https://phaser.io/games/) in our showcase video:
+
+[![Phaser Games Showcase video](https://img.youtube.com/vi/gnfgwkVg7vc/maxresdefault.jpg)](https://www.youtube.com/watch?v=gnfgwkVg7vc)
 
 **Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)<br />
 **Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
@@ -64,9 +66,9 @@ You'll find up to date TypeScript defs that align with this release in the `type
 
 As usual, I'd like to send my thanks to the Phaser community for their help in both reporting issues and submitting pull requests to fix them. So, please do spend some time digging through the Change Log. I assure you, it's worth while 🙂
 
-I'd like to send a massive thank-you to everyone who supports [Phaser on Patreon](https://www.patreon.com/photonstorm), GitHub Sponsors and our corporate backers. Your continued funding allows me to keep working on Phaser full-time and this monster of a new release is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
+![Phaser is 10](changelog/3.60/images/pphaser10banner.png)
 
-[![Phaser Games Showcase video](https://img.youtube.com/vi/gnfgwkVg7vc/maxresdefault.jpg)](https://www.youtube.com/watch?v=gnfgwkVg7vc)
+I'd like to send a massive thank-you to everyone who supports [Phaser on Patreon](https://www.patreon.com/photonstorm), GitHub Sponsors and our corporate backers. Your continued funding allows me to keep working on Phaser full-time and this monster of a new release is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
 
 If you'd like to stay abreast of developments then I'm now publishing them to the [Phaser Patreon](https://www.patreon.com/photonstorm). Here you can find the latest development reports including the concepts behind Phaser 4.
 
