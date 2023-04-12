@@ -66,7 +66,7 @@ You'll find up to date TypeScript defs that align with this release in the `type
 
 As usual, I'd like to send my thanks to the Phaser community for their help in both reporting issues and submitting pull requests to fix them. So, please do spend some time digging through the Change Log. I assure you, it's worth while 🙂
 
-![Phaser is 10](changelog/3.60/images/pphaser10banner.png)
+![Phaser is 10](changelog/3.60/images/phaser10banner.png)
 
 I'd like to send a massive thank-you to everyone who supports [Phaser on Patreon](https://www.patreon.com/photonstorm), GitHub Sponsors and our corporate backers. Your continued funding allows me to keep working on Phaser full-time and this monster of a new release is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
 
