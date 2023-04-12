@@ -22,3 +22,5 @@ We will maintain both the Spine 3 and 4 plugins for the forseeable future.
 ---------------------------------------
 
 Return to the [Change Log index](CHANGELOG-v3.60.md).
+
+📖 Read the [Phaser 3 API Docs](https://newdocs.phaser.io/) 💻 Browse 2000+ [Code Examples](https://labs.phaser.io) 🤝 Join the awesome [Phaser Discord](https://discord.gg/phaser)

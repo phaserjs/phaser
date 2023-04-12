@@ -6,24 +6,24 @@ This should make it easier for you to browse the changes and find the informatio
 
 ## New Features
 
-These are the headliner new features in this release:
+These are the headliner features in this release:
 
-* [Built-in Spector JS](Spector.md) for WebGL debugging on desktop and mobile
-* New and improved [Video Game Object](VideoGameObject.md)
-* New [Timeline Sequencer](Timeline.md)
-* [ESM Module Support](ESMSupport.md)
-* Built-in [Special FX](FX.md) including Bloom, Blur, Distort and more
-* Support for [Spatial Audio](SpatialSound.md)
-* New [Spine 4 Plugin](Spine4.md)
+* 14 bundled [Special FX](FX.md) including Bloom, Blur, Distort and more
+* Vastly improved [Mobile Rendering Performance](MobilePerformance.md) - our fastest release ever
+* New [Timeline Sequencer](Timeline.md) for creating complex flows of events
 * New [Plane Game Object](PlaneGameObject.md) for perspective distortions
 * New [Nine Slice Game Object](NineSliceGameObject.md) for perfect UI scaling
-* Support for [Compressed Textures](CompressedTextures.md)
-* Brand new [Particle Emitter](ParticleEmitter.md) system with loads of new features
+* [Built-in Spector JS](Spector.md) for WebGL debugging on desktop and mobile
+* Brand new [Video Game Object](VideoGameObject.md) for videos and media streams
+* Brand new [Particle Emitter](ParticleEmitter.md) with stacks of new features
+* Support for [Spatial Audio](SpatialSound.md) and distance based volume
+* New [Spine 4 Plugin](Spine4.md)
 * Upgraded to [Matter Physics v0.19](MatterPhysics.md)
 * New [Tween Manager](TweenManager.md) for better performance and memory management
 * New [Dynamic Textures](DynamicTextures.md) for rendering to textures at runtime
-* Vastly improved [WebGL Renderer](WebGLRenderer.md) mobile performance and other updates and pipeline changes
 * New [TimeStep features and Timer Event Updates](Timestep.md) for enforcing fps rates and more
+* Support for [Compressed Textures](CompressedTextures.md)
+* [ESM Module Support](ESMSupport.md)
 
 ## System and Plugins
 
@@ -34,6 +34,7 @@ Pick any of the following sections to see the breaking changes, new features, up
 * [Bitmap and Geometry Masks](Masks.md)
 * [Camera System](Camera.md)
 * [Canvas Renderer](CanvasRenderer.md)
+* [WebGL Renderer](WebGLRenderer.md)
 * [Colors and Display](Colors.md)
 * [Game, Device and Game Config](Game.md)
 * [Geometry, Paths and Curves](Geometry.md)
@@ -80,3 +81,5 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 | @VanaMartin | @vforsh | @Vidminas | @x-wk |
 | @xmahle | @xuxucode | @YeloPartyHat | @ZekeLu |
 | FromChris | Golen | OmniOwl | and you ... |
+
+📖 Read the [Phaser 3 API Docs](https://newdocs.phaser.io/) 💻 Browse 2000+ [Code Examples](https://labs.phaser.io) 🤝 Join the awesome [Phaser Discord](https://discord.gg/phaser)

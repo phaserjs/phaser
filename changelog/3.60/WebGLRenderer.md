@@ -2,10 +2,6 @@
 
 Return to the [Change Log index](CHANGELOG-v3.60.md).
 
-## New Feature - Vastly Improved Mobile Performance and WebGL Pipeline Changes
-
-TODO
-
 ## WebGL Renderer Updates
 
 Due to all of the changes with how WebGL texture batching works a lot of mostly internal methods and properties have been removed. This is the complete list:
@@ -113,3 +109,5 @@ In order to add clarity in the codebase we have created a new `PostPipeline` Com
 ---------------------------------------
 
 Return to the [Change Log index](CHANGELOG-v3.60.md).
+
+📖 Read the [Phaser 3 API Docs](https://newdocs.phaser.io/) 💻 Browse 2000+ [Code Examples](https://labs.phaser.io) 🤝 Join the awesome [Phaser Discord](https://discord.gg/phaser)

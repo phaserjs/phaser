@@ -18,9 +18,8 @@ Return to the [Change Log index](CHANGELOG-v3.60.md).
 * `Mesh.addVertices` will now throw a console warning if invalid vertices data is given to the method (thanks @omniowl)
 * `Mesh.addVerticesFromObj` will now throw a console warning if invalid vertices data is given to the method (thanks @omniowl)
 
-## Mesh, Vertex and Face Bug Fixes
-
-
 ---------------------------------------
 
 Return to the [Change Log index](CHANGELOG-v3.60.md).
+
+📖 Read the [Phaser 3 API Docs](https://newdocs.phaser.io/) 💻 Browse 2000+ [Code Examples](https://labs.phaser.io) 🤝 Join the awesome [Phaser Discord](https://discord.gg/phaser)

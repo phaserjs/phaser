@@ -2,8 +2,6 @@
 
 Return to the [Change Log index](CHANGELOG-v3.60.md).
 
-## Canvas Renderer New Features
-
 ## Canvas Renderer Updates
 
 * `BlitterCanvasRenderer` will now skip the `drawImage` call in canvas if the frame width or height are zero.
@@ -20,3 +18,5 @@ Return to the [Change Log index](CHANGELOG-v3.60.md).
 ---------------------------------------
 
 Return to the [Change Log index](CHANGELOG-v3.60.md).
+
+📖 Read the [Phaser 3 API Docs](https://newdocs.phaser.io/) 💻 Browse 2000+ [Code Examples](https://labs.phaser.io) 🤝 Join the awesome [Phaser Discord](https://discord.gg/phaser)

@@ -10,7 +10,6 @@ Return to the [Change Log index](CHANGELOG-v3.60.md).
 
 * `ScaleManager.listeners` has been renamed to `domlisteners` to avoid conflicting with the EventEmitter listeners object. Fix #6260 (thanks @x-wk)
 
-
 ## Scale Manager Bug Fixes
 
 * `ScaleManager.getParentBounds` will now also check to see if the canvas bounds have changed x or y position, and if so return `true`, causing the Scale Manager to refresh all of its internal cached values. This fixes an issue where the canvas may have changed position on the page, but not its width or height, so a refresh wasn't triggered. Fix #5884 (thanks @jameswilddev)
@@ -19,3 +18,5 @@ Return to the [Change Log index](CHANGELOG-v3.60.md).
 ---------------------------------------
 
 Return to the [Change Log index](CHANGELOG-v3.60.md).
+
+📖 Read the [Phaser 3 API Docs](https://newdocs.phaser.io/) 💻 Browse 2000+ [Code Examples](https://labs.phaser.io) 🤝 Join the awesome [Phaser Discord](https://discord.gg/phaser)

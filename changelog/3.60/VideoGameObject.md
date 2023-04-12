@@ -8,8 +8,6 @@ The Video Game Object has been fully recoded in v3.60. Previously, it had issues
 
 ![Video Game Object](images/videogameobject.png)
 
-### New Features:
-
 * The Video Game Object now has a much better method of handling user-interaction unlocking. We can detect for input locking by seeing if the Play Promise fails. If it does, we use the `retryInterval` and then try to play the video again. This continues until input is unlocked. This can happen via a tap, click or key press. The Video Game Object itself never needs to listen for this, it just needs to wait for a success Play Promise resolution.
 * Use the new `VIDEO_LOCKED` event to know if the video is playback locked due to needing input.
 * Previously, the Video Game Object would use the `preUpdate` method to check how far along the video was and then update the source texture. This is now all handled by the Request Video Frame callback, which is only invoked when a video frame is ready. This makes the Video Game Object much more efficient as it will only ever update the source texture when a new frame is decoded by the browser.
@@ -22,7 +20,7 @@ The Video Game Object has been fully recoded in v3.60. Previously, it had issues
 * `Video.loadURL` has a new optional parameter `crossOrigin`. This allows you to specify a cross origin request type when loading the video cross-domain (thanks @rmartell)
 * The `Video` config will now detect for `x-m4v` playback support for video formats and store it in the `Video.m4v` property. This is used automatically by the `VideoFile` file loader. Fix #5719 (thanks @patrickkeenan)
 
-### Breaking Changes:
+## Video Game Object Breaking Changes
 
 * There `loadEvent` parameter when loading a video has been removed.
 * There 'asBlob' parameter when loading a video has been removed.
@@ -56,7 +54,7 @@ this.load.video('wormhole', 'wormhole.mp4', true);
 * The `VIDEO_TIMEOUT` event has been removed.
 * The `Video.removeVideoElementOnDestroy` property has been removed. The Video Element is now always removed when the Video Game Object is destroyed.
 
-### New Methods:
+### Video Game Object New Methods
 
 * `Video.load` is a new method that loads a video from the Video Cache, ready for playback with the `Video.play` method.
 * `Video.addLoadEventHandlers` is a new method that adds the loader specific event handlers to the video element.
@@ -68,7 +66,7 @@ this.load.video('wormhole', 'wormhole.mp4', true);
 * `Video.playError` is a new internal method that is called automatically if the playback Promise errors.
 * `Video.stalledHandler` is a new method that is called if a video stalls, for whatever reason.
 
-### New Properties:
+### Video Game Object New Properties
 
 * `Video.frameReady` is a new property that lets you know if the texture has been created and populated with the first frame of the video, or not.
 * `Video.isStalled` is a new read-only property that lets you know if the video is currently stalled or not. This is useful for detecting if the video is buffering or not.
@@ -77,7 +75,7 @@ this.load.video('wormhole', 'wormhole.mp4', true);
 * `Video.cacheKey` is a new property that contains the key of the curreng video if it came from the Video Cache, otherwise it's empty.
 * `Video.isSeeking` is a new read-only property that lets you know if the video is currently seeking or not.
 
-### Fixed Bugs:
+## Video Game Object Bug Fixes
 
 * Video RTC was not reliably working. Fix #6130 (thanks @mshopf)
 * If you switched tabs, then return to your game, a completed video would start playing again. It now remains stopped. Fix #5873 (thanks @marcusx2)
@@ -90,3 +88,5 @@ this.load.video('wormhole', 'wormhole.mp4', true);
 ---------------------------------------
 
 Return to the [Change Log index](CHANGELOG-v3.60.md).
+
+📖 Read the [Phaser 3 API Docs](https://newdocs.phaser.io/) 💻 Browse 2000+ [Code Examples](https://labs.phaser.io) 🤝 Join the awesome [Phaser Discord](https://discord.gg/phaser)
