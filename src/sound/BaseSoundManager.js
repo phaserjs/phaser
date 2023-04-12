@@ -150,6 +150,16 @@ var BaseSoundManager = new Class({
         this.unlocked = false;
 
         /**
+         * Flag used to track if the game has lost focus.
+         *
+         * @name Phaser.Sound.BaseSoundManager#gameLostFocus
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
+         */
+        this.gameLostFocus = false;
+
+        /**
          * The Spatial Audio listener position.
          *
          * Only available with WebAudio.
@@ -567,6 +577,8 @@ var BaseSoundManager = new Class({
      */
     onGameBlur: function ()
     {
+        this.gameLostFocus = true;
+
         if (this.pauseOnBlur)
         {
             this.onBlur();
@@ -582,6 +594,8 @@ var BaseSoundManager = new Class({
      */
     onGameFocus: function ()
     {
+        this.gameLostFocus = false;
+
         if (this.pauseOnBlur)
         {
             this.onFocus();

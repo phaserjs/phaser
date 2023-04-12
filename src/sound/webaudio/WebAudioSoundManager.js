@@ -411,8 +411,11 @@ var WebAudioSoundManager = new Class({
 
         BaseSoundManager.prototype.update.call(this, time, delta);
 
-        //  Resume interrupted audio on iOS
-        this.onFocus();
+        //  Resume interrupted audio on iOS only if the game has focus
+        if (!this.gameLostFocus)
+        {
+            this.onFocus();
+        }
     },
 
     /**
