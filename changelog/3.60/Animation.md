@@ -23,3 +23,5 @@ Return to the [Change Log index](CHANGELOG-v3.60.md).
 ---------------------------------------
 
 Return to the [Change Log index](CHANGELOG-v3.60.md).
+
+Read the [Phaser 3 API Docs](https://newdocs.phaser.io/), browse over 2000 [Code Examples](https://labs.phaser.io) and join the awesome [Phaser Discord](https://discord.gg/phaser).
