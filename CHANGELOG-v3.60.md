@@ -1209,6 +1209,7 @@ There are breaking changes from previous versions of Phaser.
 
 ### New Features
 
+* `BaseSoundManager.gameLostFocus` is a new boolean property that is set to `true` when the game loses focus and `false` when it regains focus.
 * The Hexagonal Tilemap system now supports all 4 different types of layout as offered by Tiled: `staggeraxis-y + staggerindex-odd`, `staggeraxis-x + staggerindex-odd`, `staggeraxis-y + staggerindex-even` and `staggeraxis-x, staggerindex-even` (thanks @rexrainbow)
 * The Arcade Physics World has a new property `tileFilterOptions` which is an object passed to the `GetTilesWithin` methods used by the Sprite vs. Tilemap collision functions. These filters dramatically reduce the quantity of tiles being checked for collision, potentially saving thousands of redundant math comparisons from taking place.
 * The `Graphics.strokeRoundedRect` and `fillRoundedRect` methods can now accept negative values for the corner radius settings, in which case a concave corner is drawn instead (thanks @rexrainbow)
@@ -1415,6 +1416,7 @@ ArtemSiz)
 
 ### Bug Fixes
 
+* Setting `SoundManager.pauseOnBlur` to `true` would not stop the audio if a game lost focus on certain browsers (like Firefox and Chrome on Android 13). This is now enforced via the new `gameLostFocus` flag. Fix #6354 (thanks @klaritan @michalfialadev)
 * `Matter.convertTilemapLayers` had an edge-case which could create composite bodies unintentionally. If any tiles had multiple colliders and you were providing body creation options, the `parts` property in the options would be modified and then concatenated with any bodies created after it. This could mean that some tiles would be combined when they shouldn't be, and on large maps would eventually hang once the convex hull got too big / complex. It now runs a copy on the object before using it (thanks @EddieCameron)
 * The `TilemapLayer.skipCull` feature wasn't being applied correctly for Isometric, Hexagonal or Staggered tiles, only for Orthographic tiles (the default). It will now respect the `skipCull` property and return all tiles during culling if enabled. Fix #5524 (thanks @veleek)
 * Shutting down a Scene that didn't have the `LoaderPlugin` would throw an error when removing event handlers. It now checks first, before removing (thanks @samme)
