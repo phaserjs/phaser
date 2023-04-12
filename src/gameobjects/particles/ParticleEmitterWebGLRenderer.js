@@ -61,7 +61,7 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
     var particleCount = particles.length;
     var viewBounds = emitter.viewBounds;
 
-    if (!emitter.visible || particleCount === 0 || (viewBounds && !RectangleToRectangle(viewBounds, camera.worldView)))
+    if (particleCount === 0 || (viewBounds && !RectangleToRectangle(viewBounds, camera.worldView)))
     {
         return;
     }
@@ -118,7 +118,7 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
         var quad = calcMatrix.setQuad(x, y, x + frame.width, y + frame.height, roundPixels);
 
         var tint = getTint(particle.tint, alpha);
-        
+
         if (pipeline.shouldFlush(6))
         {
             pipeline.flush();
