@@ -9,7 +9,7 @@
  *
  * This event is dispatched by a Video Game Object when the video playback stalls.
  *
- * This can happen if the video is buffering, or if the video file is corrupt.
+ * This can happen if the video is buffering.
  *
  * If will fire for any of the following native DOM events:
  *
@@ -18,6 +18,10 @@
  * `waiting`
  *
  * Listen for it from a Video Game Object instance using `Video.on('stalled', listener)`.
+ *
+ * Note that being stalled isn't always a negative thing. A video can be stalled if it
+ * has downloaded enough data in to its buffer to not need to download any more until
+ * the current batch of frames have rendered.
  *
  * @event Phaser.GameObjects.Events#VIDEO_STALLED
  * @type {string}
