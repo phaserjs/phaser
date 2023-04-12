@@ -36,6 +36,8 @@ After 24 Beta releases, over 2000 updated examples and a year of insanely hard w
 
 Today is also the 10th birthday of Phaser, so it's a very special day for us. 10 years ago we released the v0.5 version on the unsuspecting public and it's no exaggeration to say that it changed both our lives and the face of HTML5 game development forever.
 
+![Phaser is 10](changelog/3.60/images/phaser10banner.png)
+
 Phaser 3.60 is our biggest release ever. Eclipsing any version before it. Some of the headline features include:
 
 **Built-in Special FX** - We now bundle 14 highly flexible special effects into the core, which are available to all Game Objects. These include Glow, Blur, Bloom, Bokeh, Barrel, Wipe, Pixelate, Vignette, Displacement and more.
@@ -65,8 +67,6 @@ You'll find up to date TypeScript defs that align with this release in the `type
 > If you find any problems please report them in GitHub issues.
 
 As usual, I'd like to send my thanks to the Phaser community for their help in both reporting issues and submitting pull requests to fix them. So, please do spend some time digging through the Change Log. I assure you, it's worth while 🙂
-
-![Phaser is 10](changelog/3.60/images/phaser10banner.png)
 
 I'd like to send a massive thank-you to everyone who supports [Phaser on Patreon](https://www.patreon.com/photonstorm), GitHub Sponsors and our corporate backers. Your continued funding allows me to keep working on Phaser full-time and this monster of a new release is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
 
