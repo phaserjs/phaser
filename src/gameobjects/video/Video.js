@@ -380,12 +380,12 @@ var Video = new Class({
         };
 
         /**
-         * The locally bound event callback handlers.
+         * The locally bound callback handler specifically for load and load error events.
          *
-         * @name Phaser.GameObjects.Video#_callbacks
-         * @type {any}
+         * @name Phaser.GameObjects.Video#_loadCallbackHandler
+         * @type {function}
          * @private
-         * @since 3.20.0
+         * @since 3.60.0
          */
         this._loadCallbackHandler = this.loadErrorHandler.bind(this);
 
@@ -493,20 +493,10 @@ var Video = new Class({
          */
         this._rfvCallbackId = 0;
 
-        /**
-         * Should the Video element that this Video is using, be removed from the DOM
-         * when this Video is destroyed?
-         *
-         * @name Phaser.GameObjects.Video#removeVideoElementOnDestroy
-         * @type {boolean}
-         * @since 3.21.0
-         */
-        this.removeVideoElementOnDestroy = false;
-
         var game = scene.sys.game;
 
         /**
-         * Device.video
+         * A reference to Device.Video.
          *
          * @name Phaser.GameObjects.Video#_device
          * @type {string[]}
@@ -621,6 +611,7 @@ var Video = new Class({
 
     /**
      * Returns the key of the currently played video, as stored in the Video Cache.
+     *
      * If the video did not come from the cache this will return an empty string.
      *
      * @method Phaser.GameObjects.Video#getVideoKey
@@ -1340,7 +1331,6 @@ var Video = new Class({
      *
      * @method Phaser.GameObjects.Video#playSuccess
      * @fires Phaser.GameObjects.Events#VIDEO_UNLOCKED
-     * @private
      * @since 3.60.0
      */
     playSuccess: function ()
@@ -1384,7 +1374,6 @@ var Video = new Class({
      * @fires Phaser.GameObjects.Events#VIDEO_ERROR
      * @fires Phaser.GameObjects.Events#VIDEO_UNSUPPORTED
      * @fires Phaser.GameObjects.Events#VIDEO_LOCKED
-     * @private
      * @since 3.60.0
      *
      * @param {DOMException} error - The Promise DOM Exception error.
@@ -1466,7 +1455,7 @@ var Video = new Class({
     },
 
     /**
-     * This internal method is called automatically if the video fails to load.
+     * This internal method is called automatically if the video stalls, for whatever reason.
      *
      * @method Phaser.GameObjects.Video#stalledHandler
      * @fires Phaser.GameObjects.Events#VIDEO_STALLED
@@ -1571,7 +1560,10 @@ var Video = new Class({
 
     /**
      * A double-precision floating-point value indicating the current playback time in seconds.
+     *
      * If the media has not started to play and has not been seeked, this value is the media's initial playback time.
+     *
+     * For a more accurate value, use the `Video.metadata.mediaTime` property instead.
      *
      * @method Phaser.GameObjects.Video#getCurrentTime
      * @since 3.20.0
@@ -2146,14 +2138,13 @@ var Video = new Class({
     /**
      * Removes the Video element from the DOM by calling parentNode.removeChild on itself.
      *
-     * Also removes the autoplay and src attributes and nulls the Video reference.
-     *
-     * You should not call this method if you were playing a video from the Video Cache that
-     * you wish to play again in your game, or if another Video object is also using the same
-     * video.
+     * Also removes the autoplay and src attributes and nulls the `Video.video` reference.
      *
      * If you loaded an external video via `Video.loadURL` then you should call this function
-     * to clear up once you are done with the instance.
+     * to clear up once you are done with the instance, but don't want to destroy this
+     * Video Game Object.
+     *
+     * This method is called automatically by `Video.destroy`.
      *
      * @method Phaser.GameObjects.Video#removeVideoElement
      * @since 3.20.0
@@ -2200,10 +2191,7 @@ var Video = new Class({
 
         this.removeLoadEventHandlers();
 
-        if (this.removeVideoElementOnDestroy)
-        {
-            this.removeVideoElement();
-        }
+        this.removeVideoElement();
 
         var game = this.scene.sys.game.events;
 
