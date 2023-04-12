@@ -95,6 +95,7 @@ In order to add clarity in the codebase we have created a new `PostPipeline` Com
 * The `Renderer.Snapshot.WebGL` function has had its first parameter changed from an `HTMLCanvasElement` to a `WebGLRenderingContext`. This is now passed in from the `snapshot` methods inside the WebGL Renderer. The change was made to allow it to work with WebGL2 custom contexts (thanks @andymikulski)
 * `WebGLSnapshot` will now flip the pixels in the created Image element if the source was a framebuffer. This means grabbing a snapshot from a Dynamic or Render Texture will now correctly invert the pixels on the y axis for an Image. Grabbing from the game renderer will skip this.
 * `WebGLRenderer.snapshotFramebuffer` and by extension, the snapshot methods in Dynamic Textures and Render Textures, has been updated to ensure that the width and height never exceed the framebuffer dimensions, or it'll cause a runtime error. The method `snapshotArea` has had this limitation removed as a result, allowing you to snapshot areas that are larger than the Canvas. Fix #5707 (thanks @teng-z)
+* `WebGLSnapshot` and `CanvasSnapshot` will now Math.floor the width/height values to ensure no sub-pixel dimensions, which corrupts the resulting texture. Fix #6099 (thanks @orjandh)
 
 ## Context Loss Handling Updates
 
@@ -102,6 +103,12 @@ In order to add clarity in the codebase we have created a new `PostPipeline` Com
 * The `Text` and `TileSprite` Game Objects no longer listen for the `CONTEXT_RESTORED` event and have had their `onContextRestored` methods removed.
 * The context restore event handler is now turned off when a Game Object is destroyed. This helps avoid memory leakage from Text and TileSprite Game Objects, especially if you consistently destroy and recreate your Game instance in a single-page app (thanks @rollinsafary-inomma @rexrainbow @samme)
 
+## WebGL Shader New Features
+
+* `WebGLShader.fragSrc` is a new property that holds the source of the fragment shader.
+* `WebGLShader.vertSrc` is a new property that holds the source of the vertex shader.
+* `WebGLShader#.createProgram` is a new method that will destroy and then re-create the shader program based on the given (or stored) vertex and fragment shader source.
+* `WebGLShader.setBoolean` is a new method that allows you to set a boolean uniform on a shader.
 
 ---------------------------------------
 

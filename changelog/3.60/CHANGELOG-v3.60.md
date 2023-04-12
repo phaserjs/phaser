@@ -23,7 +23,7 @@ These are the headliner new features in this release:
 * New [Tween Manager](TweenManager.md) for better performance and memory management
 * New [Dynamic Textures](DynamicTextures.md) for rendering to textures at runtime
 * Vastly improved [WebGL Renderer](WebGLRenderer.md) mobile performance and other updates and pipeline changes
-* New [TimeStep features](TimeStep.md) for enforcing fps rates and more
+* New [TimeStep features and Timer Event Updates](Timestep.md) for enforcing fps rates and more
 
 ## System and Plugins
 
@@ -34,8 +34,9 @@ Pick any of the following sections to see the breaking changes, new features, up
 * [Bitmap and Geometry Masks](Masks.md)
 * [Camera System](Camera.md)
 * [Canvas Renderer](CanvasRenderer.md)
+* [Colors and Display](Colors.md)
 * [Game, Device and Game Config](Game.md)
-* [Geometry](Geometry.md)
+* [Geometry, Paths and Curves](Geometry.md)
 * [Input System](Input.md)
 * [Loader System](Loader.md)
 * [Scale Manager](ScaleManager.md)
@@ -43,19 +44,20 @@ Pick any of the following sections to see the breaking changes, new features, up
 * [Sound System](Sound.md)
 * [Spine 3 Plugin](Spine3.md)
 * [Texture Manager](TextureManager.md)
-* [Utils](Utils.md)
+* [Utils, Math and Actions](Utils.md)
+* [Build Config and Browser Updates](Build.md)
 
 ## Game Object Updates
 
 Finally, here are the updates related to Game Objects:
 
-* [Base Game Object](GameObject.md)
 * [Bitmap Text Game Object](BitmapTextGameObject.md)
 * [Container Game Object](Container.md)
 * [Graphics Game Object](GraphicsGameObject.md)
 * [Mesh Game Object, Vertices and Faces](Mesh.md)
 * [Text Game Object](TextGameObject.md)
 * [Tilemap Game Object](Tilemap.md)
+* [All other Game Object related Updates](GameObject.md)
 
 ### Examples, Documentation, Beta Testing and TypeScript
 
