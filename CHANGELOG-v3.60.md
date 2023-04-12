@@ -1415,6 +1415,7 @@ ArtemSiz)
 
 ### Bug Fixes
 
+* `Matter.convertTilemapLayers` had an edge-case which could create composite bodies unintentionally. If any tiles had multiple colliders and you were providing body creation options, the `parts` property in the options would be modified and then concatenated with any bodies created after it. This could mean that some tiles would be combined when they shouldn't be, and on large maps would eventually hang once the convex hull got too big / complex. It now runs a copy on the object before using it (thanks @EddieCameron)
 * The `TilemapLayer.skipCull` feature wasn't being applied correctly for Isometric, Hexagonal or Staggered tiles, only for Orthographic tiles (the default). It will now respect the `skipCull` property and return all tiles during culling if enabled. Fix #5524 (thanks @veleek)
 * Shutting down a Scene that didn't have the `LoaderPlugin` would throw an error when removing event handlers. It now checks first, before removing (thanks @samme)
 * The `renderFlags` property, used to determine if a Game Object will render, or not, would be calculated incorrectly depending on the order of the `scaleX` and `scaleY` properties. It now works regardless of the order (thanks @mizunokazumi)
