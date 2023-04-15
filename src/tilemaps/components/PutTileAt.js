@@ -75,9 +75,10 @@ var PutTileAt = function (tile, tileX, tileY, recalculateFaces, layer)
     }
     else
     {
-        var tiles = layer.tilemapLayer.tilemap.tiles;
+        var tilemap = layer.tilemaplayer.tilemap;
+        var tiles = tilemap.tiles;
         var sid = tiles[index][2];
-        var set = layer.tilemapLayer.tileset[sid];
+        var set = tilemap.tileset[sid];
 
         newTile.width = set.tileWidth;
         newTile.height = set.tileHeight;
