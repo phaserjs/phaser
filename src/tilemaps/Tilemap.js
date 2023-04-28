@@ -682,12 +682,25 @@ var Tilemap = new Class({
      * class must have {@link Phaser.GameObjects.Components.Transform#setPosition setPosition} and
      * {@link Phaser.GameObjects.Components.Texture#setTexture setTexture} methods.
      *
-     * Custom properties on the Object are copied onto any existing properties on the Game Object, so you can use this as an easy
-     * way to configure properties from within the map editor. For example giving an Object a
-     * property of `alpha: 0.5` in Tiled will be reflected in the Game Object that is created.
+     * This method will set the following Tiled Object properties on the new Game Object:
      *
-     * Custom properties that do not exist on the Game Object are set in the
-     * Game Object's {@link Phaser.GameObjects.GameObject#data data store}.
+     * - `flippedHorizontal` as `flipX`
+     * - `flippedVertical` as `flipY`
+     * - `height` as `displayHeight`
+     * - `name`
+     * - `rotation`
+     * - `visible`
+     * - `width` as `displayWidth`
+     * - `x`, adjusted for origin
+     * - `y`, adjusted for origin
+     *
+     * Additionally, this method will set Tiled Object custom properties
+     *
+     * - on the Game Object, if it has the same property name and a value that isn't `undefined`; or
+     * - on the Game Object's {@link Phaser.GameObjects.GameObject#data data store} otherwise.
+     *
+     * For example, a Tiled Object with custom properties `{ alpha: 0.5, gold: 1 }` will be created as a Game
+     * Object with an `alpha` value of 0.5 and a `data.values.gold` value of 1.
      *
      * When `useTileset` is `true` (the default), Tile Objects will inherit the texture and any tile properties
      * from the tileset, and the local tile ID will be used as the texture frame. For the frame selection to work
