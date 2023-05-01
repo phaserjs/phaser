@@ -208,11 +208,19 @@ var ObjectHelper = new Class({
 
         if (Array.isArray(properties))
         {
-            // Tiled objects custom properties format
-            properties.forEach(function (propData)
+            for (var i = 0; i < properties.length; i++)
             {
-                sprite.setData(propData.name, propData.value);
-            });
+                var prop = properties[i];
+
+                if (sprite[prop.name] !== undefined)
+                {
+                    sprite[prop.name] = prop.value;
+                }
+                else
+                {
+                    sprite.setData(prop.name, prop.value);
+                }
+            }
 
             return;
         }
