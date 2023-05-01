@@ -45,7 +45,7 @@ var HexagonalGetTileCorners = function (tileX, tileY, camera, layer)
     var hexWidth;
     var hexHeight;
 
-    if (this.staggerAxis === 'y')
+    if (layer.staggerAxis === 'y')
     {
         hexWidth = b0 * tileWidth;
         hexHeight = tileHeight / 2;
