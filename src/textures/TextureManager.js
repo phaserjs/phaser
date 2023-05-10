@@ -1058,7 +1058,7 @@ var TextureManager = new Class({
 
         if (source instanceof Texture)
         {
-            key = texture.key;
+            key = source.key;
             texture = source;
         }
         else if (this.checkKey(key))
