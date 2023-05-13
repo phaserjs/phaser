@@ -233,6 +233,19 @@ var Text = new Class({
         this.lineSpacing = 0;
 
         /**
+         * Adds / Removes spacing between characters.
+         * Can be a negative or positive number.
+         * 
+         * If you update this property directly, instead of using the `setLetterSpacing` method, then
+         * be sure to call `updateText` after, or you won't see the change reflected in the Text object.
+         *
+         * @name Phaser.GameObjects.Text#letterSpacing
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.letterSpacing = 0;
+
+        /**
          * Whether the text or its settings have changed and need updating.
          *
          * @name Phaser.GameObjects.Text#dirty
@@ -1055,6 +1068,26 @@ var Text = new Class({
     },
 
     /**
+     * Sets the letter spacing value.
+     *
+     * Adds / Removes spacing between characters.
+     * Can be a negative or positive number.
+     *
+     * @method Phaser.GameObjects.Text#setLetterSpacing
+     * @since 3.60.0
+     *
+     * @param {number} value - The amount to add to the letter width.
+     *
+     * @return {this} This Text object.
+     */
+    setLetterSpacing: function (value)
+    {
+        this.letterSpacing = value;
+
+        return this.updateText();
+    },
+
+    /**
      * Set the text padding.
      *
      * 'left' can be an object.
@@ -1313,7 +1346,25 @@ var Text = new Class({
             {
                 style.syncShadow(context, style.shadowFill);
 
-                context.fillText(lines[i], linePositionX, linePositionY);
+                // Looping fillText could be an expensive operation, we should ignore it if it is not needed
+                if (this.letterSpacing)
+                {
+                    var charPositionX = 0;
+
+                    var line = lines[i].split('');
+
+                    //  Draw text letter by letter
+                    for (var l = 0; l < line.length; l++)
+                    {
+                        context.fillText(line[l], linePositionX + charPositionX, linePositionY);
+
+                        charPositionX += context.measureText(line[l]).width + this.letterSpacing;
+                    }
+                }
+                else
+                {
+                    context.fillText(lines[i], linePositionX, linePositionY);
+                }
             }
         }
 
