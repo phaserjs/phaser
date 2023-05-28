@@ -26,7 +26,7 @@ var GetLast = function (items, compare, index)
 {
     if (index === undefined) { index = 0; }
 
-    for (var i = index; i < items.length; i++)
+    for (var i = items.length - 1; i >= index; i--)
     {
         var item = items[i];
 
