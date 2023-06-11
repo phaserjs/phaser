@@ -38,10 +38,10 @@ var FX_CONST = require('./const');
  * @param {number} [color1=0xff0000] - The first gradient color, given as a number value.
  * @param {number} [color2=0x00ff00] - The second gradient color, given as a number value.
  * @param {number} [alpha=0.2] - The alpha value of the gradient effect.
- * @param {number} [fromX=0] - The horizontal position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
- * @param {number} [fromY=0] - The vertical position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
- * @param {number} [toX=0] - The horizontal position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
- * @param {number} [toY=1] - The vertical position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
+ * @param {number} [fromX=0] - The horizontal position the gradient will start from. This value is normalized, between 0 and 1, and is not in pixels.
+ * @param {number} [fromY=0] - The vertical position the gradient will start from. This value is normalized, between 0 and 1, and is not in pixels.
+ * @param {number} [toX=0] - The horizontal position the gradient will end at. This value is normalized, between 0 and 1, and is not in pixels.
+ * @param {number} [toY=1] - The vertical position the gradient will end at. This value is normalized, between 0 and 1, and is not in pixels.
  * @param {number} [size=0] - How many 'chunks' the gradient is divided in to, as spread over the entire height of the texture. Leave this at zero for a smooth gradient, or set higher for a more retro chunky effect.
  */
 var Gradient = new Class({
@@ -83,7 +83,7 @@ var Gradient = new Class({
         this.size = size;
 
         /**
-         * The horizontal position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+         * The horizontal position the gradient will start from. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.FX.Gradient#fromX
          * @type {number}
@@ -92,7 +92,7 @@ var Gradient = new Class({
         this.fromX = fromX;
 
         /**
-         * The vertical position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+         * The vertical position the gradient will start from. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.FX.Gradient#fromY
          * @type {number}
@@ -101,7 +101,7 @@ var Gradient = new Class({
         this.fromY = fromY;
 
         /**
-         * The horizontal position the gradient will end. This value is noralized, between 0 and 1 and is not in pixels.
+         * The horizontal position the gradient will end. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.FX.Gradient#toX
          * @type {number}
@@ -110,7 +110,7 @@ var Gradient = new Class({
         this.toX = toX;
 
         /**
-         * The vertical position the gradient will end. This value is noralized, between 0 and 1 and is not in pixels.
+         * The vertical position the gradient will end. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.FX.Gradient#toY
          * @type {number}

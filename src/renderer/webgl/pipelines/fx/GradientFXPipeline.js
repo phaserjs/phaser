@@ -68,7 +68,7 @@ var GradientFXPipeline = new Class({
         this.size = 0;
 
         /**
-         * The horizontal position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+         * The horizontal position the gradient will start from. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FX.GradientFXPipeline#fromX
          * @type {number}
@@ -77,7 +77,7 @@ var GradientFXPipeline = new Class({
         this.fromX = 0;
 
         /**
-         * The vertical position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+         * The vertical position the gradient will start from. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FX.GradientFXPipeline#fromY
          * @type {number}
@@ -86,7 +86,7 @@ var GradientFXPipeline = new Class({
         this.fromY = 0;
 
         /**
-         * The horizontal position the gradient will end. This value is noralized, between 0 and 1 and is not in pixels.
+         * The horizontal position the gradient will end. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FX.GradientFXPipeline#toX
          * @type {number}
@@ -95,7 +95,7 @@ var GradientFXPipeline = new Class({
         this.toX = 0;
 
         /**
-         * The vertical position the gradient will end. This value is noralized, between 0 and 1 and is not in pixels.
+         * The vertical position the gradient will end. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FX.GradientFXPipeline#toY
          * @type {number}

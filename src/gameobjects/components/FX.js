@@ -581,10 +581,10 @@ var FX = new Class({
      * @param {number} [color1=0xff0000] - The first gradient color, given as a number value.
      * @param {number} [color2=0x00ff00] - The second gradient color, given as a number value.
      * @param {number} [alpha=0.2] - The alpha value of the gradient effect.
-     * @param {number} [fromX=0] - The horizontal position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
-     * @param {number} [fromY=0] - The vertical position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
-     * @param {number} [toX=0] - The horizontal position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
-     * @param {number} [toY=1] - The vertical position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
+     * @param {number} [fromX=0] - The horizontal position the gradient will start from. This value is normalized, between 0 and 1, and is not in pixels.
+     * @param {number} [fromY=0] - The vertical position the gradient will start from. This value is normalized, between 0 and 1, and is not in pixels.
+     * @param {number} [toX=0] - The horizontal position the gradient will end at. This value is normalized, between 0 and 1, and is not in pixels.
+     * @param {number} [toY=1] - The vertical position the gradient will end at. This value is normalized, between 0 and 1, and is not in pixels.
      * @param {number} [size=0] - How many 'chunks' the gradient is divided in to, as spread over the entire height of the texture. Leave this at zero for a smooth gradient, or set higher for a more retro chunky effect.
      *
      * @return {Phaser.FX.Gradient} The Gradient FX Controller.
