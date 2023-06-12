@@ -4,9 +4,9 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Class = require('../../utils/Class');
-var CONST = require('../const/ORIENTATION_CONST');
-var GetFastValue = require('../../utils/object/GetFastValue');
+var Class = require("../../utils/Class");
+var CONST = require("../const/ORIENTATION_CONST");
+var GetFastValue = require("../../utils/object/GetFastValue");
 
 /**
  * @classdesc
@@ -22,12 +22,10 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {Phaser.Types.Tilemaps.MapDataConfig} [config] - The Map configuration object.
  */
 var MapData = new Class({
-
-    initialize:
-
-    function MapData (config)
-    {
-        if (config === undefined) { config = {}; }
+    initialize: function MapData(config) {
+        if (config === undefined) {
+            config = {};
+        }
 
         /**
          * The key in the Phaser cache that corresponds to the loaded tilemap data.
@@ -36,7 +34,7 @@ var MapData = new Class({
          * @type {string}
          * @since 3.0.0
          */
-        this.name = GetFastValue(config, 'name', 'map');
+        this.name = GetFastValue(config, "name", "map");
 
         /**
          * The width of the entire tilemap.
@@ -45,7 +43,7 @@ var MapData = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.width = GetFastValue(config, 'width', 0);
+        this.width = GetFastValue(config, "width", 0);
 
         /**
          * The height of the entire tilemap.
@@ -54,7 +52,7 @@ var MapData = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.height = GetFastValue(config, 'height', 0);
+        this.height = GetFastValue(config, "height", 0);
 
         /**
          * If the map is infinite or not.
@@ -63,7 +61,7 @@ var MapData = new Class({
          * @type {boolean}
          * @since 3.17.0
          */
-        this.infinite = GetFastValue(config, 'infinite', false);
+        this.infinite = GetFastValue(config, "infinite", false);
 
         /**
          * The width of the tiles.
@@ -72,7 +70,7 @@ var MapData = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.tileWidth = GetFastValue(config, 'tileWidth', 0);
+        this.tileWidth = GetFastValue(config, "tileWidth", 0);
 
         /**
          * The height of the tiles.
@@ -81,7 +79,7 @@ var MapData = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.tileHeight = GetFastValue(config, 'tileHeight', 0);
+        this.tileHeight = GetFastValue(config, "tileHeight", 0);
 
         /**
          * The width in pixels of the entire tilemap.
@@ -90,7 +88,11 @@ var MapData = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.widthInPixels = GetFastValue(config, 'widthInPixels', this.width * this.tileWidth);
+        this.widthInPixels = GetFastValue(
+            config,
+            "widthInPixels",
+            this.width * this.tileWidth
+        );
 
         /**
          * The height in pixels of the entire tilemap.
@@ -99,7 +101,11 @@ var MapData = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.heightInPixels = GetFastValue(config, 'heightInPixels', this.height * this.tileHeight);
+        this.heightInPixels = GetFastValue(
+            config,
+            "heightInPixels",
+            this.height * this.tileHeight
+        );
 
         /**
          * The format of the map data.
@@ -108,7 +114,7 @@ var MapData = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.format = GetFastValue(config, 'format', null);
+        this.format = GetFastValue(config, "format", null);
 
         /**
          * The orientation of the map data (i.e. orthogonal, isometric, hexagonal), default 'orthogonal'.
@@ -117,7 +123,11 @@ var MapData = new Class({
          * @type {Phaser.Tilemaps.OrientationType}
          * @since 3.50.0
          */
-        this.orientation = GetFastValue(config, 'orientation', CONST.ORTHOGONAL);
+        this.orientation = GetFastValue(
+            config,
+            "orientation",
+            CONST.ORTHOGONAL
+        );
 
         /**
          * Determines the draw order of tilemap. Default is right-down
@@ -131,7 +141,7 @@ var MapData = new Class({
          * @type {string}
          * @since 3.12.0
          */
-        this.renderOrder = GetFastValue(config, 'renderOrder', 'right-down');
+        this.renderOrder = GetFastValue(config, "renderOrder", "right-down");
 
         /**
          * The version of the map data (as specified in Tiled).
@@ -140,7 +150,7 @@ var MapData = new Class({
          * @type {string}
          * @since 3.0.0
          */
-        this.version = GetFastValue(config, 'version', '1');
+        this.version = GetFastValue(config, "version", "1");
 
         /**
          * Map specific properties (can be specified in Tiled)
@@ -149,7 +159,7 @@ var MapData = new Class({
          * @type {object}
          * @since 3.0.0
          */
-        this.properties = GetFastValue(config, 'properties', {});
+        this.properties = GetFastValue(config, "properties", []);
 
         /**
          * An array with all the layers configured to the MapData.
@@ -158,7 +168,7 @@ var MapData = new Class({
          * @type {(Phaser.Tilemaps.LayerData[]|Phaser.Tilemaps.ObjectLayer)}
          * @since 3.0.0
          */
-        this.layers = GetFastValue(config, 'layers', []);
+        this.layers = GetFastValue(config, "layers", []);
 
         /**
          * An array of Tiled Image Layers.
@@ -167,7 +177,7 @@ var MapData = new Class({
          * @type {array}
          * @since 3.0.0
          */
-        this.images = GetFastValue(config, 'images', []);
+        this.images = GetFastValue(config, "images", []);
 
         /**
          * An object of Tiled Object Layers.
@@ -176,11 +186,10 @@ var MapData = new Class({
          * @type {Phaser.Types.Tilemaps.ObjectLayerConfig[]}
          * @since 3.0.0
          */
-        this.objects = GetFastValue(config, 'objects', []);
+        this.objects = GetFastValue(config, "objects", []);
 
         //  Because Tiled can sometimes create an empty object if you don't populate it, not an empty array
-        if (!Array.isArray(this.objects))
-        {
+        if (!Array.isArray(this.objects)) {
             this.objects = [];
         }
 
@@ -191,7 +200,7 @@ var MapData = new Class({
          * @type {object}
          * @since 3.0.0
          */
-        this.collision = GetFastValue(config, 'collision', {});
+        this.collision = GetFastValue(config, "collision", {});
 
         /**
          * An array of Tilesets.
@@ -200,7 +209,7 @@ var MapData = new Class({
          * @type {Phaser.Tilemaps.Tileset[]}
          * @since 3.0.0
          */
-        this.tilesets = GetFastValue(config, 'tilesets', []);
+        this.tilesets = GetFastValue(config, "tilesets", []);
 
         /**
          * The collection of images the map uses(specified in Tiled)
@@ -209,7 +218,7 @@ var MapData = new Class({
          * @type {array}
          * @since 3.0.0
          */
-        this.imageCollections = GetFastValue(config, 'imageCollections', []);
+        this.imageCollections = GetFastValue(config, "imageCollections", []);
 
         /**
          * An array of tile instances.
@@ -218,7 +227,7 @@ var MapData = new Class({
          * @type {array}
          * @since 3.0.0
          */
-        this.tiles = GetFastValue(config, 'tiles', []);
+        this.tiles = GetFastValue(config, "tiles", []);
 
         /**
          * The length of the horizontal sides of the hexagon.
@@ -229,7 +238,7 @@ var MapData = new Class({
          * @type {number}
          * @since 3.50.0
          */
-        this.hexSideLength = GetFastValue(config, 'hexSideLength', 0);
+        this.hexSideLength = GetFastValue(config, "hexSideLength", 0);
 
         /**
          * The Stagger Axis as defined in Tiled.
@@ -240,7 +249,7 @@ var MapData = new Class({
          * @type {string}
          * @since 3.60.0
          */
-        this.staggerAxis = GetFastValue(config, 'staggerAxis', 'y');
+        this.staggerAxis = GetFastValue(config, "staggerAxis", "y");
 
         /**
          * The Stagger Index as defined in Tiled.
@@ -253,9 +262,8 @@ var MapData = new Class({
          * @type {string}
          * @since 3.60.0
          */
-        this.staggerIndex = GetFastValue(config, 'staggerIndex', 'odd');
-    }
-
+        this.staggerIndex = GetFastValue(config, "staggerIndex", "odd");
+    },
 });
 
 module.exports = MapData;
