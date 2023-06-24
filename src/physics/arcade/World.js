@@ -1009,6 +1009,21 @@ var World = new Class({
     },
 
     /**
+     * Advances the simulation by a single step.
+     *
+     * @method Phaser.Physics.Arcade.World#step
+     * @fires Phaser.Physics.Arcade.Events#WORLD_STEP
+     * @since 3.60.1
+     *
+     * @param {number} delta - The delta time amount, in seconds, by which to advance the simulation.
+     */
+    singleStep: function ()
+    {
+        this.update(0, this._frameTimeMS);
+        this.postUpdate();
+    },
+
+    /**
      * Advances the simulation by a time increment.
      *
      * @method Phaser.Physics.Arcade.World#step
