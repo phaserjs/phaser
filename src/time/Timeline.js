@@ -449,6 +449,23 @@ var Timeline = new Class({
     },
 
     /**
+     * Restarts this Timeline from the beginning.
+     *
+     * This method resets the elapsed time to zero and sets all events to be incomplete.
+     * It is equivalent to calling `reset` followed by `play`.
+     *
+     * @method Phaser.Time.Timeline#restart
+     * @since 3.60.1
+     *
+     * @return {this} This Timeline instance.
+     */
+    restart: function ()
+    {
+        this.reset();
+        return this.play();
+    },
+
+    /**
      * Adds one or more events to this Timeline.
      *
      * You can pass in a single configuration object, or an array of them:
