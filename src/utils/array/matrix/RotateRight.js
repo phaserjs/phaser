@@ -30,12 +30,20 @@ var RotateMatrix = require('./RotateMatrix');
  * @genericUse {T[][]} - [matrix,$return]
  *
  * @param {T[][]} [matrix] - The array to rotate.
+ * @param {number} [amount=1] - The number of times to rotate the matrix.
  *
  * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
  */
-var RotateRight = function (matrix)
+var RotateRight = function (matrix, amount)
 {
-    return RotateMatrix(matrix, -90);
+    if (amount === undefined) { amount = 1; }
+
+    for (var i = 0; i < amount; i++)
+    {
+        matrix = RotateMatrix(matrix, -90);
+    }
+
+    return matrix;
 };
 
 module.exports = RotateRight;
