@@ -1487,7 +1487,7 @@ var AnimationState = new Class({
             return;
         }
 
-        this.accumulator += delta * this.timeScale;
+        this.accumulator += delta * this.timeScale * this.animationManager.globalTimeScale;
 
         if (this._pendingStop === 1)
         {
