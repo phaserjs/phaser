@@ -5,6 +5,7 @@
  */
 
 var GetTilesWithin = require('./GetTilesWithin');
+var MATH = require('../../math');
 
 /**
  * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the
@@ -51,7 +52,7 @@ var WeightedRandomize = function (tileX, tileY, width, height, weightedIndexes, 
 
     for (i = 0; i < tiles.length; i++)
     {
-        var rand = Math.random() * weightTotal;
+        var rand = MATH.RND.frac() * weightTotal;
         var sum = 0;
         var randomIndex = -1;
 
@@ -64,7 +65,7 @@ var WeightedRandomize = function (tileX, tileY, width, height, weightedIndexes, 
                 var chosen = weightedIndexes[j].index;
 
                 randomIndex = Array.isArray(chosen)
-                    ? chosen[Math.floor(Math.random() * chosen.length)]
+                    ? chosen[Math.floor(MATH.RND.frac() * chosen.length)]
                     : chosen;
                 break;
             }
