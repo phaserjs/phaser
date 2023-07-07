@@ -39,6 +39,15 @@ var LayerData = new Class({
         this.name = GetFastValue(config, 'name', 'layer');
 
         /**
+         * The id of the layer, as specified in the map data, NOT the index.
+         * 
+         * @name Phaser.Tilemaps.LayerData#id
+         * @type {number}
+         * @since 3.60.1
+         */
+        this.id = GetFastValue(config, 'id', 0);
+
+        /**
          * The x offset of where to draw from the top left.
          *
          * @name Phaser.Tilemaps.LayerData#x
