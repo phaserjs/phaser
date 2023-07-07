@@ -122,6 +122,7 @@ var ParseTileLayers = function (json, insertNull)
 
             layerData = new LayerData({
                 name: (curGroupState.name + curl.name),
+                id: curl.id,
                 x: (curGroupState.x + GetFastValue(curl, 'offsetx', 0) + layerOffsetX * json.tilewidth),
                 y: (curGroupState.y + GetFastValue(curl, 'offsety', 0) + layerOffsetY * json.tileheight),
                 width: curl.width,
@@ -202,6 +203,7 @@ var ParseTileLayers = function (json, insertNull)
         {
             layerData = new LayerData({
                 name: (curGroupState.name + curl.name),
+                id: curl.id,
                 x: (curGroupState.x + GetFastValue(curl, 'offsetx', 0) + curl.x),
                 y: (curGroupState.y + GetFastValue(curl, 'offsety', 0) + curl.y),
                 width: curl.width,
