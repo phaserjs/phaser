@@ -41,6 +41,15 @@ var ObjectLayer = new Class({
         this.name = GetFastValue(config, 'name', 'object layer');
 
         /**
+         * The id of the object layer, as specified in the map data.
+         * 
+         * @name Phaser.Tilemaps.ObjectLayer#id
+         * @type {number}
+         * @since 3.60.1
+         */
+        this.id = GetFastValue(config, 'id', 0);
+
+        /**
          * The opacity of the layer, between 0 and 1.
          *
          * @name Phaser.Tilemaps.ObjectLayer#opacity
