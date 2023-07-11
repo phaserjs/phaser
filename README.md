@@ -204,9 +204,9 @@ During our development of Phaser 3, we created hundreds of examples with the ful
 
 ### Hathora
 
-[Hathora Cloud](https://hathora.dev/docs) is a scalable hosting platform for online multiplayer games. You upload your server project using the Hathora console or CLI, and then dynamically create instances in 10+ regions around the world. You get charged only for the duration of active matches/sessions. It's perfect for nodejs servers handling WebSocket connections, and takes care of SSL termination (for wss) and DDoS protection.
+[Hathora Cloud](https://hathora.dev/docs) is a scalable hosting platform for online multiplayer games. You upload your server project using the Hathora console or CLI, and then dynamically create server instances in 10+ regions around the world. You get charged only for the duration of active matches/sessions. It's perfect for nodejs servers handling WebSocket connections, and takes care of SSL termination (for wss) and DDoS protection.
 
-They have also published a [brand-new tutorial](https://bullet-mania.vercel.app/) on creating a scalable multiplayer Phaser game. If you think this could be useful for your hosting needs, you can join their [Discord server](https://discord.gg/hathora) to get in touch.
+They have also published a [brand-new tutorial](https://bullet-mania.vercel.app/) on creating a scalable multiplayer Phaser game. If you think this could be useful for your hosting needs, join their [Discord server](https://discord.gg/hathora) to get in touch.
 
 ### Huge list of Phaser 3 Plugins
 
