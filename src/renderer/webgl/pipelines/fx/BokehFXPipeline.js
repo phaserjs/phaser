@@ -30,7 +30,7 @@ var PostFXPipeline = require('../PostFXPipeline');
  * ```
  *
  * @class BokehFXPipeline
- * @extends Phaser.Renderer.WebGL.PostFXPipeline
+ * @extends Phaser.Renderer.WebGL.Pipelines.PostFXPipeline
  * @memberof Phaser.Renderer.WebGL.Pipelines.FX
  * @constructor
  * @since 3.60.0
