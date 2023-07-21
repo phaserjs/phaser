@@ -79,7 +79,7 @@ var Blur = new Class({
          * @type {number}
          * @since 3.60.0
          */
-        this.quality = 0;
+        this.quality = quality;
 
         /**
          * The horizontal offset of the blur effect.
