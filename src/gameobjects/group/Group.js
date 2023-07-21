@@ -431,6 +431,16 @@ var Group = new Class({
             this.removeCallback = options.removeCallback;
         }
 
+        if (options.internalCreateCallback)
+        {
+            this.internalCreateCallback = options.internalCreateCallback;
+        }
+
+        if (options.internalRemoveCallback)
+        {
+            this.internalRemoveCallback = options.internalRemoveCallback;
+        }
+
         for (var c = 0; c < range.length; c++)
         {
             var created = this.create(0, 0, range[c].a, range[c].b, visible, active);
