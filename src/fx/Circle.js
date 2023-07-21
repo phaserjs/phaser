@@ -182,7 +182,7 @@ var Circle = new Class({
      *
      * @name Phaser.FX.Circle#backgroundAlpha
      * @type {number}
-     * @since 3.60.0
+     * @since 3.61.0
      */
     backgroundAlpha: {
 
