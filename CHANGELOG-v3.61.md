@@ -37,6 +37,7 @@
 * The `HexagonalTileToWorldXY` function incorrectly referenced `this` within it, instead of `layer` (thanks @DaliborTrampota)
 * The `BitmapText` Game Object will now reset the WebGL Texture unit on flush, which fixes an issue of a flush happened part-way during the rendering a BitmapText (thanks @EmilSV)
 * When using interpolation for a Particle Emitter operation, such as: `x: { values: [ 50, 500, 200, 800 ] }` it would fail to set the final value unless you specified the `interpolation` property as well. It now defaults to `linear` if not given. Fix #6551 (thanks @orcomarcio)
+* The Matter Physics `ignoreGravity` boolean is now checked during the Matter Engine internal functions, allowing this property to now work again. Fix #6473 (thanks @peer2p)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
