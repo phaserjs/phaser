@@ -13,6 +13,7 @@
 
 * The `WebAudioSoundManager` will now bind the `body` to the `removeEventListener` method, if it exists, to prevent memory leaks (thanks @wjaykim)
 * The `AnimationManager.globalTimeScale` property is now applied to all Game Objects using the Animation component, allowing you to globally speed-up or slow down all animating objects (thanks @TJ09)
+* The `Rope` Game Object now calls `initPostPipeline` allowing you to use Post FX directly on it, such as glow, blur, etc. Fix #6550 (thanks @rexrainbow)
 
 # Bug Fixes
 
