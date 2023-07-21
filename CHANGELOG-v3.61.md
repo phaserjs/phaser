@@ -2,6 +2,7 @@
 
 * `Text.setRTL` is a new method that allows you to set a Text Game Object as being rendered from right-to-left, instead of the default left to right (thanks @rexrainbow)
 * `FX.Circle.backgroundAlpha` is a new property that allows you to set the amount of the alpha of the background color in the Circle FX (thanks @rexrainbow)
+* `Physics.Arcade.World.singleStep` is a new method that will advance the Arcade Physics World simulation by exactly 1 step (thanks @monteiz)
 
 # Updates
 
@@ -17,6 +18,10 @@
 * The `BlurFXPipeline` didn't bind the quality of shader specified in the controller, meaning it always used the Low Blur shader, regardless of what the FX controller asked for.
 * The `FXBlurLow` fragment shader didn't have the `offset` uniform. This is now passed in and applued to the resulting blur, preventing it from creating 45 degree artifacts (thanks Wayfinder)
 * The `Tilemap.createFromObjects` method wouldn't always copy custom properties to the target objects or Data Manager. Fix #6391 (thanks @samme @paxperscientiam)
+* The `scale.min` and `scale.max` `width` and `height` properties in Game Config were ignored by the Game constructor, which was expecting `minWidth` and `minHeight`. This now matches the documnentation. Fix #6501 (thanks @NikitaShpanko @wpederzoli)
+* Due to a copy-paste bug, the `Actions.GetLast` function had the same code as the `GetFirst` function. It now does what you'd expect it to do. Fix #6513 (thanks @dmokel)
+* The `TilemapLayer.PutTileAt` method would use an incorrect local GID if the Tilemap Layer wasn't using all available tilesets. Fix #5931 (thanks @christianvoigt @wjaykim)
+* The `TextureManager.addSpriteSheet` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @charlieschwabacher)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
