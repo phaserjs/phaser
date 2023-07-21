@@ -27,7 +27,7 @@ var PostFXPipeline = require('../PostFXPipeline');
  * ```
  *
  * @class DisplacementFXPipeline
- * @extends Phaser.Renderer.WebGL.WebGLPipeline
+ * @extends Phaser.Renderer.WebGL.PostFXPipeline
  * @memberof Phaser.Renderer.WebGL.Pipelines.FX
  * @constructor
  * @since 3.60.0
