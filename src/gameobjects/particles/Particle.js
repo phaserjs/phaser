@@ -638,7 +638,7 @@ var Particle = new Class({
             return true;
         }
 
-        this.alpha = ops.alpha.onUpdate(this, 'alpha', t, this.alpha);
+        this.alpha = Clamp(ops.alpha.onUpdate(this, 'alpha', t, this.alpha), 0, 1);
 
         if (ops.color.active)
         {
