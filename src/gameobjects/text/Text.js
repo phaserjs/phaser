@@ -235,7 +235,7 @@ var Text = new Class({
         /**
          * Adds / Removes spacing between characters.
          * Can be a negative or positive number.
-         * 
+         *
          * If you update this property directly, instead of using the `setLetterSpacing` method, then
          * be sure to call `updateText` after, or you won't see the change reflected in the Text object.
          *
@@ -1070,13 +1070,19 @@ var Text = new Class({
     /**
      * Sets the letter spacing value.
      *
-     * Adds / Removes spacing between characters.
-     * Can be a negative or positive number.
+     * This will add, or remove spacing between each character of this Text Game Object. The value can be
+     * either positive or negative. Positive values increase the space between each character, whilst negative
+     * values decrease it. Note that some fonts are spaced naturally closer together than others.
+     *
+     * Please understand that enabling this feature will cause Phaser to render each character in this Text object
+     * one by one, rather than use a draw for the whole string. This makes it extremely expensive when used with
+     * either long strings, or lots of strings in total. You will be better off creating bitmap font text if you
+     * need to display large quantities of characters with fine control over the letter spacing.
      *
      * @method Phaser.GameObjects.Text#setLetterSpacing
-     * @since 3.60.0
+     * @since 3.61.0
      *
-     * @param {number} value - The amount to add to the letter width.
+     * @param {number} value - The amount to add to the letter width. Set to zero to disable.
      *
      * @return {this} This Text object.
      */
@@ -1396,7 +1402,10 @@ var Text = new Class({
                 style.syncShadow(context, style.shadowFill);
 
                 // Looping fillText could be an expensive operation, we should ignore it if it is not needed
-                if (this.letterSpacing)
+
+                var letterSpacing = this.letterSpacing;
+
+                if (letterSpacing !== 0)
                 {
                     var charPositionX = 0;
 
@@ -1407,7 +1416,7 @@ var Text = new Class({
                     {
                         context.fillText(line[l], linePositionX + charPositionX, linePositionY);
 
-                        charPositionX += context.measureText(line[l]).width + this.letterSpacing;
+                        charPositionX += context.measureText(line[l]).width + letterSpacing;
                     }
                 }
                 else
