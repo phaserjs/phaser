@@ -267,6 +267,12 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
             ty3 = Math.round(ty3);
         }
 
+        if (pipeline.shouldFlush(6))
+        {
+            pipeline.flush();
+            textureUnit = pipeline.setGameObject(src);
+        }
+
         pipeline.batchQuad(src, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
     }
 

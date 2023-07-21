@@ -107,6 +107,12 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
             continue;
         }
 
+        if (pipeline.shouldFlush(6))
+        {
+            pipeline.flush();
+            textureUnit = pipeline.setGameObject(src);
+        }
+
         if (charColors[char.i])
         {
             var color = charColors[char.i];
