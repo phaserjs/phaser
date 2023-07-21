@@ -7,6 +7,7 @@
 # Updates
 
 * The `WebAudioSoundManager` will now bind the `body` to the `removeEventListener` method, if it exists, to prevent memory leaks (thanks @wjaykim)
+* The `AnimationManager.globalTimeScale` property is now applied to all Game Objects using the Animation component, allowing you to globally speed-up or slow down all animating objects (thanks @TJ09)
 
 # Bug Fixes
 
@@ -22,6 +23,10 @@
 * Due to a copy-paste bug, the `Actions.GetLast` function had the same code as the `GetFirst` function. It now does what you'd expect it to do. Fix #6513 (thanks @dmokel)
 * The `TilemapLayer.PutTileAt` method would use an incorrect local GID if the Tilemap Layer wasn't using all available tilesets. Fix #5931 (thanks @christianvoigt @wjaykim)
 * The `TextureManager.addSpriteSheet` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @charlieschwabacher)
+* The `HexagonalCullBounds` function incorrectly referenced `this` within it, instead of `layer` (thanks @DaliborTrampota)
+* The `HexagonalGetTileCorners` function incorrectly referenced `this` within it, instead of `layer` (thanks @DaliborTrampota)
+* The `HexagonalTileToWorldXY` function incorrectly referenced `this` within it, instead of `layer` (thanks @DaliborTrampota)
+* The `BitmapText` Game Object will now reset the WebGL Texture unit on flush, which fixes an issue of a flush happened part-way during the rendering a BitmapText (thanks @EmilSV)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
