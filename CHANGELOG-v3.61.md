@@ -17,6 +17,7 @@
 * The `Tween.stop` method will now check to see if `Tween.parent` is set. If not, it won't try to set a pending removal state or dispatch an event, which should help guard against errors where `Tween.stop` is called by mistake on already destroyed tweens (thanks @orcomarcio)
 * The `Tween.remove` method will now check to see if `Tween.parent` exists before trying to remove it from the parent. This should help guard against errors where `Tween.remove` is called by mistake on already removed or destroyed tweens. Fix #6539 (thanks @orcomarcio)
 * `Particle.alpha` is now clamped to the range 0 to 1 within the `update` method, preventing it from going out of range. Fix #6551 (thanks @orcomarcio)
+* `Math.Wrap` has been reverted to the previous version. Fix #6479 (thanks @EmilSV)
 
 # Bug Fixes
 
