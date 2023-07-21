@@ -94,22 +94,12 @@ var Config = new Class({
         /**
          * @const {number} Phaser.Core.Config#resizeInterval - How many ms should elapse before checking if the browser size has changed?
          */
-        this.resizeInterval = GetValue(
-            scaleConfig,
-            'resizeInterval',
-            500,
-            config
-        );
+        this.resizeInterval = GetValue(scaleConfig, 'resizeInterval', 500, config);
 
         /**
          * @const {?(HTMLElement|string)} Phaser.Core.Config#fullscreenTarget - The DOM element that will be sent into full screen mode, or its `id`. If undefined Phaser will create its own div and insert the canvas into it when entering fullscreen mode.
          */
-        this.fullscreenTarget = GetValue(
-            scaleConfig,
-            'fullscreenTarget',
-            null,
-            config
-        );
+        this.fullscreenTarget = GetValue(scaleConfig, 'fullscreenTarget', null, config);
 
         /**
          * @const {number} Phaser.Core.Config#minWidth - The minimum width, in pixels, the canvas will scale down to. A value of zero means no minimum.
