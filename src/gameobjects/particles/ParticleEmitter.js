@@ -1731,14 +1731,14 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Clear all Particle Death Zone from this Emitter.
+     * Clear all Death Zones from this Particle Emitter.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#clearDeathZone
-     * @since 3.60.0
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#clearDeathZones
+     * @since 3.61.0
      *
      * @return {this} This Particle Emitter.
      */
-    clearDeathZone: function ()
+    clearDeathZones: function ()
     {
         this.deathZones.length = 0;
 
@@ -1839,14 +1839,14 @@ var ParticleEmitter = new Class({
     },
 
     /**
-     * Clear all Particle Emission Zone from this Emitter.
+     * Clear all Emission Zones from this Particle Emitter.
      *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#clearEmitZone
-     * @since 3.60.0
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#clearEmitZones
+     * @since 3.61.0
      *
      * @return {this} This Particle Emitter.
      */
-    clearEmitZone: function ()
+    clearEmitZones: function ()
     {
         this.emitZones.length = 0;
 
