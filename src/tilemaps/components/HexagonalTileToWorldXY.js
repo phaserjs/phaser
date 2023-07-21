@@ -53,7 +53,7 @@ var HexagonalTileToWorldXY = function (tileX, tileY, point, camera, layer)
     var x;
     var y;
 
-    if (this.staggerAxis === 'y')
+    if (layer.staggerAxis === 'y')
     {
         x = worldX + (tileWidth * tileX) + tileWidth;
         y = worldY + ((1.5 * tileY) * tileHeightHalf) + tileHeightHalf;

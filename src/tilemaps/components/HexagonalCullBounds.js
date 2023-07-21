@@ -37,7 +37,7 @@ var HexagonalCullBounds = function (layer, camera)
     var boundsTop;
     var boundsBottom;
 
-    if (this.staggerAxis === 'y')
+    if (layer.staggerAxis === 'y')
     {
         var rowH = ((tileH - len) / 2 + len);
 
