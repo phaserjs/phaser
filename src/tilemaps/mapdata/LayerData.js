@@ -40,12 +40,12 @@ var LayerData = new Class({
 
         /**
          * The id of the layer, as specified in the map data.
-         * 
+         *
          * Note: This is not the index of the layer in the map data, but its actual ID in Tiled.
-         * 
+         *
          * @name Phaser.Tilemaps.LayerData#id
          * @type {number}
-         * @since 3.60.1
+         * @since 3.61.0
          */
         this.id = GetFastValue(config, 'id', 0);
 
