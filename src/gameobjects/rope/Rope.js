@@ -19,7 +19,7 @@ var Vector2 = require('../../math/Vector2');
  * The Rope object is WebGL only and does not have a Canvas counterpart.
  *
  * A Rope is a special kind of Game Object that has a texture is stretched along its entire length.
- * 
+ *
  * Unlike a Sprite, it isn't restricted to using just a quad and can have as many vertices as you define
  * when creating it. The vertices can be arranged in a horizontal or vertical strip and have their own
  * color and alpha values as well.
@@ -278,6 +278,7 @@ var Rope = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.initPipeline(PIPELINE_CONST.ROPE_PIPELINE);
+        this.initPostPipeline();
 
         if (Array.isArray(points))
         {
