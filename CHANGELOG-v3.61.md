@@ -16,6 +16,7 @@
 * The `Rope` Game Object now calls `initPostPipeline` allowing you to use Post FX directly on it, such as glow, blur, etc. Fix #6550 (thanks @rexrainbow)
 * The `Tween.stop` method will now check to see if `Tween.parent` is set. If not, it won't try to set a pending removal state or dispatch an event, which should help guard against errors where `Tween.stop` is called by mistake on already destroyed tweens (thanks @orcomarcio)
 * The `Tween.remove` method will now check to see if `Tween.parent` exists before trying to remove it from the parent. This should help guard against errors where `Tween.remove` is called by mistake on already removed or destroyed tweens. Fix #6539 (thanks @orcomarcio)
+* `Particle.alpha` is now clamped to the range 0 to 1 within the `update` method, preventing it from going out of range. Fix #6551 (thanks @orcomarcio)
 
 # Bug Fixes
 
