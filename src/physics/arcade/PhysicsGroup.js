@@ -67,17 +67,16 @@ var PhysicsGroup = new Class({
         else if (Array.isArray(children) && IsPlainObject(children[0]))
         {
             //  children is an array of plain objects (i.e., configs)
-            config = children[0];
-
             var _this = this;
 
             children.forEach(function (singleConfig)
             {
                 singleConfig.internalCreateCallback = _this.createCallbackHandler;
                 singleConfig.internalRemoveCallback = _this.removeCallbackHandler;
+                singleConfig.classType = GetFastValue(singleConfig, 'classType', ArcadeSprite);
             });
 
-            children = null;
+            config = null;
         }
         else
         {
@@ -108,7 +107,10 @@ var PhysicsGroup = new Class({
          * @since 3.0.0
          * @see Phaser.Types.GameObjects.Group.GroupClassTypeConstructor
          */
-        config.classType = GetFastValue(config, 'classType', ArcadeSprite);
+        if (config)
+        {
+            config.classType = GetFastValue(config, 'classType', ArcadeSprite);
+        }
 
         /**
          * The physics type of the Group's members.
