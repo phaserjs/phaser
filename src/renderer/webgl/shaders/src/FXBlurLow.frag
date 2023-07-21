@@ -4,6 +4,7 @@ precision mediump float;
 
 uniform sampler2D uMainSampler;
 uniform vec2 resolution;
+uniform vec2 offset;
 uniform float strength;
 uniform vec3 color;
 
@@ -15,7 +16,7 @@ void main ()
 
     vec4 col = vec4(0.0);
 
-    vec2 offset = vec2(1.333) * strength;
+    vec2 offset = vec2(1.333) * offset * strength;
 
     col += texture2D(uMainSampler, uv) * 0.29411764705882354;
     col += texture2D(uMainSampler, uv + (offset / resolution)) * 0.35294117647058826;
