@@ -423,7 +423,7 @@ var EmitterOp = new Class({
                 //  Custom onEmit onUpdate
                 return 8;
             }
-            else if (this.has(value, 'interpolation'))
+            else if (this.hasEither(value, 'values', 'interpolation'))
             {
                 //  Interpolation
                 return 9;
