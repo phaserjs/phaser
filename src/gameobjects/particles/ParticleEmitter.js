@@ -2961,7 +2961,7 @@ var ParticleEmitter = new Class({
      * However, it can be set to any valid EmitterOp onEmit type.
      *
      * @name Phaser.GameObjects.Particles.ParticleEmitter#particleX
-     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType}
      * @since 3.60.0
      */
     particleX: {
@@ -2987,7 +2987,7 @@ var ParticleEmitter = new Class({
      * However, it can be set to any valid EmitterOp onEmit type.
      *
      * @name Phaser.GameObjects.Particles.ParticleEmitter#particleY
-     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+     * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType}
      * @since 3.60.0
      */
     particleY: {
