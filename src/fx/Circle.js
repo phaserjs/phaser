@@ -175,8 +175,28 @@ var Circle = new Class({
             color[2] = (value & 0xFF) / 255;
         }
 
-    }
+    },
 
+    /**
+     * The alpha of the background, behind the texture, given as a number value.
+     *
+     * @name Phaser.FX.Circle#backgroundAlpha
+     * @type {number}
+     * @since 3.60.0
+     */
+    backgroundAlpha: {
+
+        get: function ()
+        {
+            return this.glcolor2[3];
+        },
+
+        set: function (value)
+        {
+            this.glcolor2[3] = value;
+        }
+
+    }
 });
 
 module.exports = Circle;
