@@ -1061,6 +1061,20 @@ var World = new Class({
     },
 
     /**
+     * Advances the simulation by a single step.
+     *
+     * @method Phaser.Physics.Arcade.World#singleStep
+     * @fires Phaser.Physics.Arcade.Events#WORLD_STEP
+     * @since 3.61.0
+     */
+    singleStep: function ()
+    {
+        this.update(0, this._frameTimeMS);
+
+        this.postUpdate();
+    },
+
+    /**
      * Updates bodies, draws the debug display, and handles pending queue operations.
      *
      * @method Phaser.Physics.Arcade.World#postUpdate
