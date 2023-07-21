@@ -1139,18 +1139,15 @@ var Text = new Class({
      * Render text from right-to-left or left-to-right.
      *
      * @method Phaser.GameObjects.Text#setRTL
-     * @since 3.60.1
+     * @since 3.61.0
      *
      * @param {boolean} [rtl=true] - Set to `true` to render from right-to-left.
      *
      * @return {this} This Text object.
      */
-    setRTL: function(rtl)
+    setRTL: function (rtl)
     {
-        if (rtl === undefined)
-        {
-            rtl = true;
-        }
+        if (rtl === undefined) { rtl = true; }
 
         var style = this.style;
 
@@ -1166,6 +1163,7 @@ var Text = new Class({
             this.canvas.dir = 'rtl';
             this.context.direction = 'rtl';
             this.canvas.style.display = 'none';
+
             AddToDOM(this.canvas, this.scene.sys.canvas);
         }
         else
