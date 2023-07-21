@@ -359,7 +359,7 @@ var PathFollower = {
     {
         var tween = this.pathTween;
 
-        if (tween)
+        if (tween && tween.data)
         {
             var tweenData = tween.data[0];
             var pathDelta = this.pathDelta;
