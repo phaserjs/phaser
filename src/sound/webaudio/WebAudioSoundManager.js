@@ -314,7 +314,7 @@ var WebAudioSoundManager = new Class({
         {
             if (_this.context && body)
             {
-                var bodyRemove = body.removeEventListener;
+                var bodyRemove = body.removeEventListener.bind(body);
 
                 _this.context.resume().then(function ()
                 {
