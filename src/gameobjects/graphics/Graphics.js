@@ -203,7 +203,10 @@ var Graphics = new Class({
          * @private
          * @since 3.0.0
          */
-        this._lineWidth = 1.0;
+        this._lineWidth = 1;
+
+        this.lineStyle(1, 0, 0);
+        this.fillStyle(0, 0);
 
         this.setDefaultStyles(options);
     },
