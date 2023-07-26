@@ -328,10 +328,10 @@ var configOpMap = [
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
- * @param {number} x - The horizontal position of this Game Object in the world.
- * @param {number} y - The vertical position of this Game Object in the world.
- * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} config - Settings for this emitter.
+ * @param {number} [x] - The horizontal position of this Game Object in the world.
+ * @param {number} [y] - The vertical position of this Game Object in the world.
+ * @param {(string|Phaser.Textures.Texture)} [texture] - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} [config] - Settings for this emitter.
  */
 var ParticleEmitter = new Class({
 
