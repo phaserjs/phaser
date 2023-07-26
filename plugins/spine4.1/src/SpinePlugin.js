@@ -628,7 +628,7 @@ var SpinePlugin = new Class({
      * Note: The ability to load this type of file will only be available if the Spine Plugin has been built or loaded into Phaser.
      *
      * @method Phaser.Loader.LoaderPlugin#spine
-     * @fires Phaser.Loader.LoaderPlugin#ADD
+     * @fires Phaser.Loader.Events#ADD
      * @since 3.19.0
      *
      * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig|Phaser.Types.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
