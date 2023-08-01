@@ -783,7 +783,9 @@ var WebGLRenderer = new Class({
         gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, clearColor.alphaGL);
 
         //  Mipmaps
-        if (config.mipmapFilter !== '')
+        var validMipMaps = [ 'NEAREST', 'LINEAR', 'NEAREST_MIPMAP_NEAREST', 'LINEAR_MIPMAP_NEAREST', 'NEAREST_MIPMAP_LINEAR', 'LINEAR_MIPMAP_LINEAR' ];
+
+        if (validMipMaps.indexOf(config.mipmapFilter) !== -1)
         {
             this.mipmapFilter = gl[config.mipmapFilter];
         }
