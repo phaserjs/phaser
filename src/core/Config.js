@@ -361,7 +361,7 @@ var Config = new Class({
         this.antialiasGL = GetValue(renderConfig, 'antialiasGL', true, config);
 
         /**
-         * @const {string} Phaser.Core.Config#mipmapFilter - Sets the `mipmapFilter` property when the WebGL renderer is created.
+         * @const {string} Phaser.Core.Config#mipmapFilter - Sets the mipmap magFilter to be used when creating WebGL textures. Don't set unless you wish to create mipmaps. Set to one of the following: 'NEAREST', 'LINEAR', 'NEAREST_MIPMAP_NEAREST', 'LINEAR_MIPMAP_NEAREST', 'NEAREST_MIPMAP_LINEAR' or 'LINEAR_MIPMAP_LINEAR'.
          */
         this.mipmapFilter = GetValue(renderConfig, 'mipmapFilter', '', config);
 
