@@ -48,12 +48,12 @@
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [speedX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedX} (emit only).
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} [speedY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedY} (emit only).
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType} [tint] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleTint}.
- * @property {number[]} [color] - An array of color values that the Particles interpolate through during theif life. If set, overrides any `tint` property.
+ * @property {number[]} [color] - An array of color values that the Particles interpolate through during their life. If set, overrides any `tint` property.
  * @property {string} [colorEase] - The string-based name of the Easing function to use if you have enabled Particle color interpolation via the `color` property, otherwise has no effect.
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType} [x] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleX}.
  * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType} [y] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleY}.
- * @property {Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig|Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig} [emitZone] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
- * @property {Phaser.Types.GameObjects.Particles.ParticleEmitterDeathZoneConfig} [deathZone] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setDeathZone}.
+ * @property {Phaser.Types.GameObjects.Particles.EmitZoneObject|Phaser.Types.GameObjects.Particles.EmitZoneObject[]} [emitZone] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
+ * @property {Phaser.Types.GameObjects.Particles.DeathZoneObject|Phaser.Types.GameObjects.Particles.DeathZoneObject[]} [deathZone] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setDeathZone}.
  * @property {Phaser.Types.GameObjects.Particles.ParticleEmitterBounds|Phaser.Types.GameObjects.Particles.ParticleEmitterBoundsAlt} [bounds] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setBounds}.
  * @property {object} [followOffset] - Assigns to {@link Phaser.GameObjects.Particles.ParticleEmitter#followOffset}.
  * @property {number} [followOffset.x] - x coordinate of the offset.
