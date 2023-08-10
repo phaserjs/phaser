@@ -1165,10 +1165,10 @@ var Mesh = new Class({
      */
     setInteractive: function ()
     {
-        var faces = this.faces;
-
         var hitAreaCallback = function (area, x, y)
         {
+            var faces = this.faces;
+
             for (var i = 0; i < faces.length; i++)
             {
                 var face = faces[i];
@@ -1181,7 +1181,7 @@ var Mesh = new Class({
             }
 
             return false;
-        };
+        }.bind(this);
 
         this.scene.sys.input.enable(this, hitAreaCallback);
 
