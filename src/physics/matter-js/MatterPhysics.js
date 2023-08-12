@@ -855,9 +855,9 @@ var MatterPhysics = new Class({
      *
      * If intersection occurs this method will return `true` and, if provided, invoke the callbacks.
      *
-     * If no bodies are provided for the second parameter the target will check again all bodies in the Matter World.
+     * If no bodies are provided for the second parameter the target will check against all bodies in the Matter World.
      *
-     * Note that bodies can only overlap if they are in non-colliding collision groups or categories.
+     * **Note that bodies can only overlap if they are in non-colliding collision groups or categories.**
      *
      * If you provide a `processCallback` then the two bodies that overlap are sent to it. This callback
      * must return a boolean and is used to allow you to perform additional processing tests before a final

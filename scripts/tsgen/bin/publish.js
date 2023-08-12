@@ -18,6 +18,8 @@ function publish(data, opts) {
     if (!fs.existsSync(opts.destination)) {
         fs.mkdirSync(opts.destination);
     }
+    var str = JSON.stringify(data().get(), null, 4);
+    fs.writeFileSync(path.join(opts.destination, 'phaser.json'), str);
     var out = new Parser_1.Parser(data().get()).emit();
     fs.writeFileSync(path.join(opts.destination, 'phaser.d.ts'), out);
 }
