@@ -960,6 +960,10 @@ var World = new Class({
      *
      * Set the appropriate tiles in your layer to collide before calling this method!
      *
+     * If you modify the map after calling this method, i.e. via a function like `putTileAt` then
+     * you should call the `Phaser.Physics.Matter.World.convertTiles` function directly, passing
+     * it an array of the tiles you've added to your map.
+     *
      * @method Phaser.Physics.Matter.World#convertTilemapLayer
      * @since 3.0.0
      *
@@ -979,8 +983,10 @@ var World = new Class({
     },
 
     /**
-     * Adds `MatterTileBody` instances for the given tiles. This adds bodies regardless of whether the
-     * tiles are set to collide or not.
+     * Creates `MatterTileBody` instances for all of the given tiles. This creates bodies regardless of whether the
+     * tiles are set to collide or not, or if they have a body already, or not.
+     *
+     * If you wish to pass an array of tiles that may already have bodies, you should filter the array before hand.
      *
      * @method Phaser.Physics.Matter.World#convertTiles
      * @since 3.0.0
