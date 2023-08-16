@@ -125,7 +125,6 @@ var Polygon = new Class({
         }
 
         var p;
-        var y0 = Number.MAX_VALUE;
 
         //  The points argument is an array, so iterate through it
         for (var i = 0; i < points.length; i++)
@@ -151,15 +150,9 @@ var Polygon = new Class({
             }
 
             this.points.push(p);
-
-            //  Lowest boundary
-            if (p.y < y0)
-            {
-                y0 = p.y;
-            }
         }
 
-        this.calculateArea(y0);
+        this.calculateArea();
 
         return this;
     },
