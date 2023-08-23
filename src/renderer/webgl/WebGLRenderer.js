@@ -25,7 +25,7 @@ var DEBUG = false;
 
 if (typeof WEBGL_DEBUG)
 {
-    var SPECTOR = require('phaser3spectorjs');
+    var SPECTOR = require('spectorjs');
     DEBUG = true;
 }
 
