@@ -238,7 +238,7 @@ var Timeline = new Class({
      */
     update: function ()
     {
-        if (this.paused)
+        if (this.paused || this.complete)
         {
             return;
         }
