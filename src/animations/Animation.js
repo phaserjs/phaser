@@ -359,7 +359,6 @@ var Animation = new Class({
      * Returns the AnimationFrame at the provided index
      *
      * @method Phaser.Animations.Animation#getFrameAt
-     * @protected
      * @since 3.0.0
      *
      * @param {number} index - The index in the AnimationFrame array
