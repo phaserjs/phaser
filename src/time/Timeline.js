@@ -9,6 +9,7 @@ var EventEmitter = require('eventemitter3');
 var GameObjectFactory = require('../gameobjects/GameObjectFactory');
 var GetFastValue = require('../utils/object/GetFastValue');
 var SceneEvents = require('../scene/events');
+var Events = require('./events');
 
 /**
  * @classdesc
@@ -231,6 +232,7 @@ var Timeline = new Class({
      * If the `TimelineEvent.target` property is set then the Timeline invokes the `run` method on that target.
      *
      * @method Phaser.Time.Timeline#update
+     * @fires Phaser.Time.Events#COMPLETE
      * @since 3.60.0
      *
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
@@ -326,6 +328,11 @@ var Timeline = new Class({
         if (this.totalComplete >= events.length)
         {
             this.complete = true;
+        }
+
+        if (this.complete)
+        {
+            this.emit(Events.COMPLETE, this);
         }
     },
 
