@@ -21,7 +21,7 @@ var Rectangle = require('../geom/rectangle');
  * @constructor
  * @since 3.0.0
  *
- * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.Visible
  *
@@ -41,7 +41,7 @@ var Rectangle = require('../geom/rectangle');
 var Tile = new Class({
 
     Mixins: [
-        Components.Alpha,
+        Components.AlphaSingle,
         Components.Flip,
         Components.Visible
     ],
