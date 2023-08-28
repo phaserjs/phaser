@@ -171,7 +171,7 @@ var ProcessQueue = new Class({
     add: function (item)
     {
         //  Don't add if already active or pending, but DO add if active AND in the destroy list
-        if (this.checkQueue && (this.isActive() && !this.isDestroying()) || this.isPending())
+        if (this.checkQueue && (this.isActive(item) && !this.isDestroying(item)) || this.isPending(item))
         {
             return item;
         }
