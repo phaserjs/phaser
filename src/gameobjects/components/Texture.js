@@ -51,6 +51,10 @@ var Texture = {
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
      *
+     * Calling this method will modify the `width` and `height` properties of your Game Object.
+     *
+     * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
+     *
      * @method Phaser.GameObjects.Components.Texture#setTexture
      * @since 3.0.0
      *
