@@ -48,6 +48,10 @@
 * The `PathFollower.pathUpdate` method will now check if the `tween` property has a valid `data` component before running the update. This prevents a call to `PathFollower.stopFollow` from throwing a `Cannot read properties of null (reading '0')` error as it tried to do a single update post stop. Fix #6508 (thanks @francois-dibulo)
 * Added missing parameter to some function calls in `Structs.ProcessQueue#add` (thanks @Trissolo)
 * `Tile` was incorrectly using the `Alpha` Game Object component, instead of the `AlphaSingle` component, which meant although the methods implied you could set a different alpha per tile corner, it was never reflected in the rendering. It has now been updated to use just the single alpha value. Fix #6594 (thanks @jcoppage)
+* The `TextureManager.addAtlasJSONArray` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @1DAfT)
+* The `TextureManager.addAtlasJSONHash` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @1DAfT)
+* The `TextureManager.addAtlasXML` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @1DAfT)
+* The `TextureManager.addUnityAtlas` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @1DAfT)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
