@@ -690,7 +690,10 @@ var StaticBody = new Class({
     },
 
     /**
-     * Resets this Body to the given coordinates. Also positions its parent Game Object to the same coordinates.
+     * Resets this Static Body to its parent Game Object's position.
+     *
+     * If `x` and `y` are given, the parent Game Object is placed there and this Static Body is centered on it.
+     * Otherwise this Static Body is centered on the Game Object's current position.
      *
      * @method Phaser.Physics.Arcade.StaticBody#reset
      * @since 3.0.0
