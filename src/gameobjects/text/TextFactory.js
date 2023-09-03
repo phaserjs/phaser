@@ -21,7 +21,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * loaded externally, such as Google or TypeKit Web fonts.
  *
  * You can only display fonts that are currently loaded and available to the browser: therefore fonts must
- * be pre-loaded. Phaser does not do ths for you, so you will require the use of a 3rd party font loader,
+ * be pre-loaded. Phaser does not do this for you, so you will require the use of a 3rd party font loader,
  * or have the fonts ready available in the CSS on the page in which your Phaser game resides.
  *
  * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts
