@@ -22,6 +22,7 @@
 * The `Graphics` Game Object will now set a default line and fill style to fully transparent and black. This prevents issues where a Graphics object would render with a color set in other Shape Game Objects if it had been drawn to and no style was previous set (thanks Whitesmith)
 * The WebGLRenderer will now validate that the `mipmapFilter` property in the Game Config is a valid mipmap before assigning it.
 * A small amount of unused code has been removed from the `Polygon.setTo` method (thanks @Trissolo)
+* The `WebGLRenderer.deleteFramebuffer` method has been updated so it now tests for the exitennce of a COLOR and DEPTH_STENCIL attachments, and if found, removes the bindings and deletes the stencil buffer. The code that previously deelted the `RENDERERBUFFER_BINDING` has also been removed to avoid side-effects.
 
 # Bug Fixes
 
