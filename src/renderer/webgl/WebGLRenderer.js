@@ -2297,11 +2297,23 @@ var WebGLRenderer = new Class({
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 
-            var renderBuffer = gl.getParameter(gl.RENDERBUFFER_BINDING);
+            // Check for a color attachment and remove it
+            var colorAttachment = gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
 
-            if (renderBuffer)
+            if (colorAttachment !== null)
             {
-                gl.deleteRenderbuffer(renderBuffer);
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, null, 0);
+
+                // TODO: Check if this texture is used elsewhere. If not, delete it:
+                // gl.deleteTexture(colorAttachment);
+            }
+
+            // Check for a depth-stencil attachment and delete it
+            var depthStencilAttachment = gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
+
+            if (depthStencilAttachment !== null)
+            {
+                gl.deleteRenderbuffer(depthStencilAttachment);
             }
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
