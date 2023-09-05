@@ -1544,14 +1544,15 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Internal destroy handler, called as part of the destroy process.
+     * Destroys this Texture and releases references to its sources and frames.
      *
-     * @method Phaser.Textures.DynamicTexture#preDestroy
-     * @protected
-     * @since 3.9.0
+     * @method Phaser.Textures.DynamicTexture#destroy
+     * @since 3.60.0
      */
-    preDestroy: function ()
+    destroy: function ()
     {
+        Texture.prototype.destroy.call(this);
+
         CanvasPool.remove(this.canvas);
 
         if (this.renderTarget)
@@ -1560,12 +1561,10 @@ var DynamicTexture = new Class({
         }
 
         this.camera.destroy();
-        this.stamp.destroy();
 
         this.canvas = null;
         this.context = null;
         this.renderer = null;
-        this.scene = null;
     }
 
 });
