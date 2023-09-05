@@ -52,6 +52,7 @@
 * The `TextureManager.addAtlasJSONHash` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @1DAfT)
 * The `TextureManager.addAtlasXML` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @1DAfT)
 * The `TextureManager.addUnityAtlas` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @1DAfT)
+* `DynamicTexture.preDestroy` was never called, leading to an accumlation of framebuffers in memory. This method has now been renamed to `destroy` and cleans all references correctly.
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
