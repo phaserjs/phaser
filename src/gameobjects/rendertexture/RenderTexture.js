@@ -815,6 +815,8 @@ var RenderTexture = new Class({
      */
     preDestroy: function ()
     {
+        this.camera = null;
+
         if (!this._saved)
         {
             this.texture.destroy();
