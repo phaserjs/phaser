@@ -12,7 +12,7 @@ var Tileset = require('../../Tileset');
  * @function Phaser.Tilemaps.Parsers.Tiled.BuildTilesetIndex
  * @since 3.0.0
  *
- * @param {Phaser.Tilemaps.MapData} mapData - The Map Data object.
+ * @param {(Phaser.Tilemaps.MapData|Phaser.Tilemaps.Tilemap)} mapData - The Map Data object.
  *
  * @return {array} An array of Tileset objects.
  */
