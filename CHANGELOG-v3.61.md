@@ -24,6 +24,7 @@
 * A small amount of unused code has been removed from the `Polygon.setTo` method (thanks @Trissolo)
 * The `WebGLRenderer.deleteFramebuffer` method has been updated so it now tests for the exitennce of a COLOR and DEPTH_STENCIL attachments, and if found, removes the bindings and deletes the stencil buffer. The code that previously deelted the `RENDERERBUFFER_BINDING` has also been removed to avoid side-effects.
 * If you make a `Mesh` Game Object interactive, it will now bind to the scope of the Mesh and uses the current `faces` in the hit area callback, rather than the faces as defined when the Mesh was made interactive. This will help keep the input in sync with a potentially changing Mesh structure (thanks @rexrainbow)
+* iOS and any browser identifying as `AppleWebKit` will now set the `Device.es2019` flag to `true`. This causes Phaser to use the native array Stable Sort. This fixes an issue where overlapping particles could flicker on iOS. Fix #6483 (thanks @mattkelliher @spayton)
 
 # Bug Fixes
 
@@ -57,6 +58,7 @@
 * The `TextureManager.addUnityAtlas` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @1DAfT)
 * `DynamicTexture.preDestroy` was never called, leading to an accumlation of framebuffers in memory. This method has now been renamed to `destroy` and cleans all references correctly.
 * If you gave the `width` or `height` in the Game Config object as a string it would multiply the value given by the parent size, often leading to a huge game canvas, or causing WebGL errors as it tried to create a texture larger than the GPU could handle. This has now been strengthened. If you give a string with a % at the end, it works as before, i.e. `"100%"` or `"50%"` to set the scale based on the parent. If you don't include the %, or use another unit, such as `"800px"` it will now be treated as a fixed value, not a percentage.
+* The `ParticleEmitterWebGLRenderer` has been refactored so that the `particle.frame` is used as the source of the `glTexture` used in the batch and also if a new texture unit is required. This fixes issues where a Particle Emitter would fail to use the correct frame from a multi-atlas texture. Fix #6515 (thanks @Demeno)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
