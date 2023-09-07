@@ -487,33 +487,50 @@ var ScaleManager = new Class({
         //  If width = '100%', or similar value
         if (typeof width === 'string')
         {
-            //  If we have a parent with a height, we'll work it out from that
-            var parentWidth = this.parentSize.width;
-
-            if (parentWidth === 0)
+            //  Does width have a % character at the end? If not, we use it as a numeric value.
+            if (width.substr(-1) !== '%')
             {
-                parentWidth = window.innerWidth;
+                width = parseInt(width, 10);
+            }
+            else
+            {
+                //  If we have a parent with a width, we'll work it out from that
+                var parentWidth = this.parentSize.width;
+
+                if (parentWidth === 0)
+                {
+                    parentWidth = window.innerWidth;
+                }
+
+                var parentScaleX = parseInt(width, 10) / 100;
+
+                width = Math.floor(parentWidth * parentScaleX);
             }
 
-            var parentScaleX = parseInt(width, 10) / 100;
-
-            width = Math.floor(parentWidth * parentScaleX);
         }
 
         //  If height = '100%', or similar value
         if (typeof height === 'string')
         {
-            //  If we have a parent with a height, we'll work it out from that
-            var parentHeight = this.parentSize.height;
-
-            if (parentHeight === 0)
+            //  Does height have a % character at the end? If not, we use it as a numeric value.
+            if (height.substr(-1) !== '%')
             {
-                parentHeight = window.innerHeight;
+                height = parseInt(height, 10);
             }
+            else
+            {
+                //  If we have a parent with a height, we'll work it out from that
+                var parentHeight = this.parentSize.height;
 
-            var parentScaleY = parseInt(height, 10) / 100;
+                if (parentHeight === 0)
+                {
+                    parentHeight = window.innerHeight;
+                }
 
-            height = Math.floor(parentHeight * parentScaleY);
+                var parentScaleY = parseInt(height, 10) / 100;
+
+                height = Math.floor(parentHeight * parentScaleY);
+            }
         }
 
         this.scaleMode = scaleMode;
