@@ -23,6 +23,7 @@
 * The WebGLRenderer will now validate that the `mipmapFilter` property in the Game Config is a valid mipmap before assigning it.
 * A small amount of unused code has been removed from the `Polygon.setTo` method (thanks @Trissolo)
 * The `WebGLRenderer.deleteFramebuffer` method has been updated so it now tests for the exitennce of a COLOR and DEPTH_STENCIL attachments, and if found, removes the bindings and deletes the stencil buffer. The code that previously deelted the `RENDERERBUFFER_BINDING` has also been removed to avoid side-effects.
+* If you make a `Mesh` Game Object interactive, it will now bind to the scope of the Mesh and uses the current `faces` in the hit area callback, rather than the faces as defined when the Mesh was made interactive. This will help keep the input in sync with a potentially changing Mesh structure (thanks @rexrainbow)
 
 # Bug Fixes
 
