@@ -44,19 +44,63 @@ var WebGLPipeline = require('../WebGLPipeline');
  * `uProjectionMatrix` (mat4)
  * `uMainSampler` (sampler2D array)
  *
- * If you wish to create a custom pipeline extending from this one, you should use the string
- * declaration `%count%` in your fragment shader source, which is used to set the number of
- * `sampler2Ds` available. Also add `%getSampler%` so Phaser can inject the getSampler glsl function.
- * This function can be used to get the pixel vec4 from the texture:
+ * If you wish to create a custom pipeline extending from this one, you can use two string
+ * declarations in your fragment shader source: `%count%` and `%forloop%`, where `count` is
+ * used to set the number of `sampler2Ds` available, and `forloop` is a block of GLSL code
+ * that will get the currently bound texture unit.
  *
- * `vec4 texture = getSampler(int(outTexId), outTexCoord);`
- *
- * This pipeline will automatically inject the getSampler function for you, should the value exist
+ * This pipeline will automatically inject that code for you, should those values exist
  * in your shader source. If you wish to handle this yourself, you can also use the
  * function `Utils.parseFragmentShaderMaxTextures`.
  *
+ * The following fragment shader shows how to use the two variables:
+ *
+ * ```glsl
+ * #define SHADER_NAME PHASER_MULTI_FS
+ *
+ * #ifdef GL_FRAGMENT_PRECISION_HIGH
+ * precision highp float;
+ * #else
+ * precision mediump float;
+ * #endif
+ *
+ * uniform sampler2D uMainSampler[%count%];
+ *
+ * varying vec2 outTexCoord;
+ * varying float outTexId;
+ * varying float outTintEffect;
+ * varying vec4 outTint;
+ *
+ * void main ()
+ * {
+ *     vec4 texture;
+ *
+ *     %forloop%
+ *
+ *     vec4 texel = vec4(outTint.bgr * outTint.a, outTint.a);
+ *
+ *     //  Multiply texture tint
+ *     vec4 color = texture * texel;
+ *
+ *     if (outTintEffect == 1.0)
+ *     {
+ *         //  Solid color + texture alpha
+ *         color.rgb = mix(texture.rgb, outTint.bgr * outTint.a, texture.a);
+ *     }
+ *     else if (outTintEffect == 2.0)
+ *     {
+ *         //  Solid color, no texture
+ *         color = texel;
+ *     }
+ *
+ *     gl_FragColor = color;
+ * }
+ * ```
+ *
  * If you wish to create a pipeline that works from a single texture, or that doesn't have
- * internal texture iteration, please see the `SinglePipeline` instead.
+ * internal texture iteration, please see the `SinglePipeline` instead. If you wish to create
+ * a special effect, especially one that can impact the pixels around a texture (i.e. such as
+ * a glitch effect) then you should use the PreFX and PostFX Pipelines for this task.
  *
  * @class MultiPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
