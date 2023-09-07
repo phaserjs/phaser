@@ -79,6 +79,7 @@ function init ()
     else if ((/AppleWebKit/).test(ua) && OS.iOS)
     {
         Browser.mobileSafari = true;
+        Browser.es2019 = true;
     }
     else if ((/MSIE (\d+\.\d+);/).test(ua))
     {
