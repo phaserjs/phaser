@@ -58,6 +58,7 @@
  * @property {object} [followOffset] - Assigns to {@link Phaser.GameObjects.Particles.ParticleEmitter#followOffset}.
  * @property {number} [followOffset.x] - x coordinate of the offset.
  * @property {number} [followOffset.y] - y coordinate of the offset.
+ * @property {string|string[]|Phaser.Types.GameObjects.Particles.ParticleEmitterAnimConfig} [anim] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#anims}.
  * @property {number|number[]|string|string[]|Phaser.Textures.Frame|Phaser.Textures.Frame[]|Phaser.Types.GameObjects.Particles.ParticleEmitterFrameConfig} [frame] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
  * @property {string|Phaser.Textures.Frame} [texture] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#texture}. Overrides any texture already set on the Emitter.
  * @property {number} [reserve] - Creates specified number of inactive particles and adds them to this emitter's pool. {@link Phaser.GameObjects.Particles.ParticleEmitter#reserve}
