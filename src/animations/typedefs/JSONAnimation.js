@@ -15,4 +15,5 @@
  * @property {boolean} showBeforeDelay - If this animation has a delay, should it show the first frame immediately (true), or only after the delay (false)
  * @property {boolean} showOnStart - Should sprite.visible = true when the animation starts to play?
  * @property {boolean} hideOnComplete - Should sprite.visible = false when the animation finishes?
+ * @property {boolean} [randomFrame] - Start playback of this animation from a randomly selected frame?
  */

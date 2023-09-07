@@ -198,6 +198,16 @@ var Animation = new Class({
         this.hideOnComplete = GetValue(config, 'hideOnComplete', false);
 
         /**
+         * Start playback of this animation from a random frame?
+         *
+         * @name Phaser.Animations.Animation#randomFrame
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
+         */
+        this.randomFrame = GetValue(config, 'randomFrame', false);
+
+        /**
          * Global pause. All Game Objects using this Animation instance are impacted by this property.
          *
          * @name Phaser.Animations.Animation#paused
@@ -805,6 +815,7 @@ var Animation = new Class({
             yoyo: this.yoyo,
             showBeforeDelay: this.showBeforeDelay,
             showOnStart: this.showOnStart,
+            randomFrame: this.randomFrame,
             hideOnComplete: this.hideOnComplete
         };
 

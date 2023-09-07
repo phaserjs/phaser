@@ -4,11 +4,12 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Animation = require('./Animation');
+var Between = require('../math/Between');
 var Class = require('../utils/Class');
 var CustomMap = require('../structs/Map');
-var GetFastValue = require('../utils/object/GetFastValue');
 var Events = require('./events');
-var Animation = require('./Animation');
+var GetFastValue = require('../utils/object/GetFastValue');
 
 /**
  * @classdesc
@@ -226,6 +227,16 @@ var AnimationState = new Class({
          * @since 3.0.0
          */
         this.skipMissedFrames = true;
+
+        /**
+         * Start playback of this animation from a random frame?
+         *
+         * @name Phaser.Animations.AnimationState#randomFrame
+         * @type {boolean}
+         * @default false
+         * @since 3.60.0
+         */
+        this.randomFrame = false;
 
         /**
          * The delay before starting playback of the current animation, in milliseconds.
@@ -601,14 +612,20 @@ var AnimationState = new Class({
             this.showOnStart = GetFastValue(key, 'showOnStart', anim.showOnStart);
             this.hideOnComplete = GetFastValue(key, 'hideOnComplete', anim.hideOnComplete);
             this.skipMissedFrames = GetFastValue(key, 'skipMissedFrames', anim.skipMissedFrames);
+            this.randomFrame = GetFastValue(key, 'randomFrame', anim.randomFrame);
 
             this.timeScale = GetFastValue(key, 'timeScale', this.timeScale);
 
             var startFrame = GetFastValue(key, 'startFrame', 0);
 
-            if (startFrame > anim.getTotalFrames())
+            if (startFrame > totalFrames)
             {
                 startFrame = 0;
+            }
+
+            if (this.randomFrame)
+            {
+                startFrame = Between(0, totalFrames - 1);
             }
 
             var frame = anim.frames[startFrame];

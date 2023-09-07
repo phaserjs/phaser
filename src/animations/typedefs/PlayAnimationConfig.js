@@ -15,4 +15,5 @@
  * @property {boolean} [skipMissedFrames] - Skip frames if the time lags, or always advanced anyway?
  * @property {number} [startFrame] - The frame of the animation to start playback from.
  * @property {number} [timeScale] - The time scale to be applied to playback of this animation.
+ * @property {boolean} [randomFrame] - Start playback of this animation from a randomly selected frame?
  */
