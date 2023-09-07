@@ -1316,7 +1316,7 @@ var ParticleEmitter = new Class({
             if (this.animCounter >= this.animQuantity)
             {
                 this.animCounter = 0;
-                this.currentAnim = Wrap(this.currentAnim + 1, 0, len - 1);
+                this.currentAnim = Wrap(this.currentAnim + 1, 0, len);
             }
 
             return anim;
