@@ -244,6 +244,13 @@ var PostFXPipeline = new Class({
         this.halfFrame2 = utility.halfFrame2;
 
         this.set1i('uMainSampler', 0);
+
+        var targets = this.renderTargets;
+
+        for (var i = 0; i < targets.length; i++)
+        {
+            targets[i].autoResize = true;
+        }
     },
 
     onDraw: function (renderTarget)
