@@ -37,16 +37,16 @@
 * `Array.Matrix.TranslateMatrix` didn't work with any translation values above 1 due to missing parameters in `RotateLeft` and `RotateRight`
 * `FX.Blur` didn't set the `quality` parameter to its property, meaning it wasn't applied in the shader, causing it to always use a Low Blur quality (unless modified post-creation).
 * The `BlurFXPipeline` didn't bind the quality of shader specified in the controller, meaning it always used the Low Blur shader, regardless of what the FX controller asked for.
-* The `FXBlurLow` fragment shader didn't have the `offset` uniform. This is now passed in and applued to the resulting blur, preventing it from creating 45 degree artifacts (thanks Wayfinder)
+* The `FXBlurLow` fragment shader didn't have the `offset` uniform. This is now passed in and applied to the resulting blur, preventing it from creating 45 degree artifacts (thanks Wayfinder)
 * The `Tilemap.createFromObjects` method wouldn't always copy custom properties to the target objects or Data Manager. Fix #6391 (thanks @samme @paxperscientiam)
-* The `scale.min` and `scale.max` `width` and `height` properties in Game Config were ignored by the Game constructor, which was expecting `minWidth` and `minHeight`. This now matches the documnentation. Fix #6501 (thanks @NikitaShpanko @wpederzoli)
+* The `scale.min` and `scale.max` `width` and `height` properties in Game Config were ignored by the Game constructor, which was expecting `minWidth` and `minHeight`. This now matches the documentation. Fix #6501 (thanks @NikitaShpanko @wpederzoli)
 * Due to a copy-paste bug, the `Actions.GetLast` function had the same code as the `GetFirst` function. It now does what you'd expect it to do. Fix #6513 (thanks @dmokel)
 * The `TilemapLayer.PutTileAt` method would use an incorrect local GID if the Tilemap Layer wasn't using all available tilesets. Fix #5931 (thanks @christianvoigt @wjaykim)
 * The `TextureManager.addSpriteSheet` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @charlieschwabacher)
 * The `HexagonalCullBounds` function incorrectly referenced `this` within it, instead of `layer` (thanks @DaliborTrampota)
 * The `HexagonalGetTileCorners` function incorrectly referenced `this` within it, instead of `layer` (thanks @DaliborTrampota)
 * The `HexagonalTileToWorldXY` function incorrectly referenced `this` within it, instead of `layer` (thanks @DaliborTrampota)
-* The `BitmapText` Game Object will now reset the WebGL Texture unit on flush, which fixes an issue of a flush happened part-way during the rendering a BitmapText (thanks @EmilSV)
+* The `BitmapText` Game Object will now reset the WebGL Texture unit on flush, which fixes an issue of a flush happening part-way during the rendering a BitmapText (thanks @EmilSV)
 * When using interpolation for a Particle Emitter operation, such as: `x: { values: [ 50, 500, 200, 800 ] }` it would fail to set the final value unless you specified the `interpolation` property as well. It now defaults to `linear` if not given. Fix #6551 (thanks @orcomarcio)
 * The Matter Physics `ignoreGravity` boolean is now checked during the Matter Engine internal functions, allowing this property to now work again. Fix #6473 (thanks @peer2p)
 * `Group.createFromConfig` will now check to see if the config contains either `internalCreateCallback` or `internalRemoveCallback` and set them accordingly. This fixes an issue where the callbacks would never be set if specified in an array of single configuration objects. Fix #6519 (thanks @samme)
@@ -58,7 +58,7 @@
 * The `TextureManager.addAtlasJSONHash` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @1DAfT)
 * The `TextureManager.addAtlasXML` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @1DAfT)
 * The `TextureManager.addUnityAtlas` method would fail if a `Texture` instance was given as the second parameter, throwing a `Cannot read property 'key' of null` (thanks @1DAfT)
-* `DynamicTexture.preDestroy` was never called, leading to an accumlation of framebuffers in memory. This method has now been renamed to `destroy` and cleans all references correctly.
+* `DynamicTexture.preDestroy` was never called, leading to an accumulation of framebuffers in memory. This method has now been renamed to `destroy` and cleans all references correctly.
 * If you gave the `width` or `height` in the Game Config object as a string it would multiply the value given by the parent size, often leading to a huge game canvas, or causing WebGL errors as it tried to create a texture larger than the GPU could handle. This has now been strengthened. If you give a string with a % at the end, it works as before, i.e. `"100%"` or `"50%"` to set the scale based on the parent. If you don't include the %, or use another unit, such as `"800px"` it will now be treated as a fixed value, not a percentage.
 * The `ParticleEmitterWebGLRenderer` has been refactored so that the `particle.frame` is used as the source of the `glTexture` used in the batch and also if a new texture unit is required. This fixes issues where a Particle Emitter would fail to use the correct frame from a multi-atlas texture. Fix #6515 (thanks @Demeno)
 
