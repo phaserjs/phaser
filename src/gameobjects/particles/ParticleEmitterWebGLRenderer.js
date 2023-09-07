@@ -53,7 +53,6 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
     var getTint = Utils.getTintAppendFloatAlpha;
     var camerAlpha = camera.alpha;
     var emitterAlpha = emitter.alpha;
-    var texture = emitter.frame.glTexture;
 
     renderer.pipelines.preBatch(emitter);
 
@@ -71,8 +70,6 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
         emitter.depthSort();
     }
 
-    var textureUnit = pipeline.setGameObject(emitter, emitter.frame);
-
     camera.addToRenderList(emitter);
 
     camMatrix.copyFrom(camera.matrix);
@@ -89,6 +86,8 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
     }
 
     var tintEffect = emitter.tintFill;
+    var textureUnit;
+    var glTexture;
 
     for (var i = 0; i < particleCount; i++)
     {
@@ -112,6 +111,13 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
 
         var frame = particle.frame;
 
+        if (frame.glTexture !== glTexture)
+        {
+            glTexture = frame.glTexture;
+
+            textureUnit = pipeline.setGameObject(emitter, frame);
+        }
+
         var x = -frame.halfWidth;
         var y = -frame.halfHeight;
 
@@ -122,10 +128,19 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
         if (pipeline.shouldFlush(6))
         {
             pipeline.flush();
-            textureUnit = pipeline.setGameObject(emitter, emitter.frame);
+
+            textureUnit = pipeline.setGameObject(emitter, frame);
         }
 
-        pipeline.batchQuad(emitter, quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7], frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, texture, textureUnit);
+        pipeline.batchQuad(
+            emitter,
+            quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7],
+            frame.u0, frame.v0, frame.u1, frame.v1,
+            tint, tint, tint, tint,
+            tintEffect,
+            glTexture,
+            textureUnit
+        );
     }
 
     if (emitter.mask)
