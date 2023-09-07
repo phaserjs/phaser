@@ -27,6 +27,7 @@
 
 # Bug Fixes
 
+* The `PostFXPipeline` will now set `autoResize` to `true` on all of its `RenderTarget` instances. This fixes an issue where the `PostFXPipeline` would not resize the render targets when the game size changed, causing them to become out of sync with the game canvas. Fix #6503 #6527 (thanks @Waclaw-I @rexrainbow)
 * `Particle.scaleY` would always be set to the `scaleX` value, even if given a different one within the config. It will now use its own value correctly.
 * `Array.Matrix.RotateLeft` was missing the `total` parameter, which controls how many times to rotate the matrix.
 * `Array.Matrix.RotateRight` was missing the `total` parameter, which controls how many times to rotate the matrix.
