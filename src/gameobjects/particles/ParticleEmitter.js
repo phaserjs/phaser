@@ -1334,8 +1334,8 @@ var ParticleEmitter = new Class({
      * @since 3.60.0
      *
      * @param {(string|string[]|Phaser.Types.GameObjects.Particles.ParticleEmitterAnimConfig)} anims - One or more animations, or a configuration object.
-     * @param {boolean} [pickRandom=true] - Whether animations should be assigned at random from `anims`.
-     * @param {number} [quantity=1] - The number of consecutive particles that will receive each animation.
+     * @param {boolean} [pickRandom=true] - Whether animations should be assigned at random from `anims`. If a config object is given, this parameter is ignored.
+     * @param {number} [quantity=1] - The number of consecutive particles that will receive each animation. If a config object is given, this parameter is ignored.
      *
      * @return {this} This Particle Emitter.
      */
