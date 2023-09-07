@@ -2559,7 +2559,7 @@ var ParticleEmitter = new Class({
      * @param {number} [x=this.x] - The x coordinate to emit the Particles from.
      * @param {number} [y=this.x] - The y coordinate to emit the Particles from.
      *
-     * @return {Phaser.GameObjects.Particles.Particle | undefined} The most recently emitted Particle.
+     * @return {(Phaser.GameObjects.Particles.Particle|undefined)} The most recently emitted Particle, or `undefined` if the emitter is at its limit.
      */
     explode: function (count, x, y)
     {
@@ -2585,7 +2585,7 @@ var ParticleEmitter = new Class({
      * @param {number} [y=this.x] - The y coordinate to emit the Particles from.
      * @param {number} [count=this.quantity] - The number of Particles to emit.
      *
-     * @return {Phaser.GameObjects.Particles.Particle | undefined} The most recently emitted Particle.
+     * @return {(Phaser.GameObjects.Particles.Particle|undefined)} The most recently emitted Particle, or `undefined` if the emitter is at its limit.
      */
     emitParticleAt: function (x, y, count)
     {
@@ -2602,7 +2602,7 @@ var ParticleEmitter = new Class({
      * @param {number} [x=this.x] - The x coordinate to emit the Particles from.
      * @param {number} [y=this.x] - The y coordinate to emit the Particles from.
      *
-     * @return {Phaser.GameObjects.Particles.Particle | undefined} The most recently emitted Particle.
+     * @return {(Phaser.GameObjects.Particles.Particle|undefined)} The most recently emitted Particle, or `undefined` if the emitter is at its limit.
      *
      * @see Phaser.GameObjects.Particles.Particle#fire
      */
