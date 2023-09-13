@@ -6,5 +6,5 @@
  *
  * @property {number} min - The minimum value.
  * @property {number} max - The maximum value.
- * @property {boolean} [int] - If true, this works like {@link EmitterOpRandomConfig}.
+ * @property {boolean} [int] - If true, only integers are selected from the range.
  */
