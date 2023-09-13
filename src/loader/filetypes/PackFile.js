@@ -119,14 +119,14 @@ var PackFile = new Class({
  * }
  * ```
  *
- * The pack can be split into sections. In the example above you'll see a section called `test1. You can tell
+ * The pack can be split into sections. In the example above you'll see a section called `test1`. You can tell
  * the `load.pack` method to parse only a particular section of a pack. The pack is stored in the JSON Cache,
  * so you can pass it to the Loader to process additional sections as needed in your game, or you can just load
  * them all at once without specifying anything.
  *
  * The pack file can contain an entry for any type of file that Phaser can load. The object structures exactly
  * match that of the file type configs, and all properties available within the file type configs can be used
- * in the pack file too.
+ * in the pack file too. An entry's `type` is the name of the Loader method that will load it, e.g., 'image'.
  *
  * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
  * or if it's already running, when the next free load slot becomes available. This happens automatically if you
