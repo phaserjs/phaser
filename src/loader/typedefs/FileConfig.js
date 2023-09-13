@@ -2,7 +2,7 @@
  * @typedef {object} Phaser.Types.Loader.FileConfig
  * @since 3.0.0
  *
- * @property {string} type - The file type string (image, json, etc) for sorting within the Loader.
+ * @property {string} type - The name of the Loader method that loads this file, e.g., 'image', 'json', 'spritesheet'.
  * @property {string} key - Unique cache key (unique within its file type)
  * @property {object|string} [url] - The URL of the file, not including baseURL.
  * @property {string} [path] - The path of the file, not including the baseURL.
