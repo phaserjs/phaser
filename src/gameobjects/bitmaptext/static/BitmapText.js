@@ -860,7 +860,7 @@ var BitmapText = new Class({
      *
      * Calling this will adjust the scale.
      *
-     * @method Phaser.GameObjects.Components.Size#setDisplaySize
+     * @method Phaser.GameObjects.BitmapText#setDisplaySize
      * @since 3.61.0
      *
      * @param {number} width - The width of this BitmapText Game Object.
