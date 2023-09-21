@@ -136,6 +136,42 @@ var Plane = new Class({
         this.setViewHeight();
     },
 
+    /**     
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Plane#originX
+     * @type {number}
+     * @readonly
+     * @override
+     * @since 3.61.0
+     */
+    originX: {
+
+        get: function ()
+        {
+            return 0.5;
+        }
+
+    },
+
+    /**     
+     * Do not change this value. It has no effect other than to break things.
+     *
+     * @name Phaser.GameObjects.Plane#originY
+     * @type {number}
+     * @readonly
+     * @override
+     * @since 3.61.0
+     */
+    originY: {
+
+        get: function ()
+        {
+            return 0.5;
+        }
+
+    },
+
     /**
      * Modifies the layout of this Plane by adjusting the grid dimensions to the
      * given width and height. The values are given in cells, not pixels.
