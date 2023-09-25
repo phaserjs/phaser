@@ -299,7 +299,7 @@ var Particle = new Class({
         };
 
         /**
-         * Interal private value.
+         * Internal private value.
          *
          * @name Phaser.GameObjects.Particles.Particle#isCropped
          * @type {boolean}
