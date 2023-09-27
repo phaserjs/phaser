@@ -67,6 +67,7 @@
 * The `ParticleEmitterWebGLRenderer` has been refactored so that the `particle.frame` is used as the source of the `glTexture` used in the batch and also if a new texture unit is required. This fixes issues where a Particle Emitter would fail to use the correct frame from a multi-atlas texture. Fix #6515 (thanks @Demeno)
 * `StaticBody.setSize` will now check to see if the body has a Game Object or not, and only call `getCenter` and the frame sizes if it has. This fixes a bug where calling `physics.add.staticBody` would throw an error if you provided a width and height. Fix #6630 (thanks @Legend-Master)
 * The `DynamicTexture.fill` method will now correctly draw the fill rectangle if the `width` and `height` are provided in WebGL, where-as before it would assume the y axis started from the bottom-left instead of top-left. Fix #6615 (thanks @rexrainbow)
+* Calling the `Line.setLineWidth` method on the Line Shape Game Object would result in a line with double the thickness it should have had in WebGL. In Canvas it was the correct width. Both renderers now match. Fix #6604 (thanks @AlvaroNeuronup)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
