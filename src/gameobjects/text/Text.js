@@ -245,16 +245,6 @@ var Text = new Class({
          */
         this.letterSpacing = 0;
 
-        /**
-         * Whether the text or its settings have changed and need updating.
-         *
-         * @name Phaser.GameObjects.Text#dirty
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.dirty = false;
-
         //  If resolution wasn't set, force it to 1
         if (this.style.resolution === 0)
         {
@@ -1440,8 +1430,6 @@ var Text = new Class({
                 this.frame.glTexture.__SPECTOR_Metadata = { textureKey: 'Text Game Object' };
             }
         }
-
-        this.dirty = true;
 
         var input = this.input;
 
