@@ -351,9 +351,10 @@ var DynamicTexture = new Class({
 
             var sx = renderer.width / renderTarget.width;
             var sy = renderer.height / renderTarget.height;
+            var ty = renderTarget.height - (y + height);
 
             pipeline.drawFillRect(
-                x * sx, y * sy, width * sx, height * sy,
+                x * sx, ty * sy, width * sx, height * sy,
                 Utils.getTintFromFloats(b / 255, g / 255, r / 255, 1),
                 alpha
             );
