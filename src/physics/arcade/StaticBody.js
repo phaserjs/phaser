@@ -82,7 +82,6 @@ var StaticBody = new Class({
          */
         this.gameObject = (hasGameObject) ? gameObject : undefined;
 
-
         /**
          * A quick-test flag that signifies this is a Body, used in the World collision handler.
          *
@@ -591,14 +590,17 @@ var StaticBody = new Class({
 
         var gameObject = this.gameObject;
 
-        if (!width && gameObject.frame)
+        if (gameObject && gameObject.frame)
         {
-            width = gameObject.frame.realWidth;
-        }
+            if (!width)
+            {
+                width = gameObject.frame.realWidth;
+            }
 
-        if (!height && gameObject.frame)
-        {
-            height = gameObject.frame.realHeight;
+            if (!height)
+            {
+                height = gameObject.frame.realHeight;
+            }
         }
 
         this.world.staticTree.remove(this);
@@ -609,7 +611,7 @@ var StaticBody = new Class({
         this.halfWidth = Math.floor(width / 2);
         this.halfHeight = Math.floor(height / 2);
 
-        if (center && gameObject.getCenter)
+        if (center && gameObject && gameObject.getCenter)
         {
             var ox = gameObject.displayWidth / 2;
             var oy = gameObject.displayHeight / 2;
