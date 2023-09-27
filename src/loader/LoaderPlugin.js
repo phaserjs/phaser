@@ -1067,6 +1067,8 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_SHUTDOWN;
 
+        this.removeAllListeners();
+
         this.systems.events.off(SceneEvents.UPDATE, this.update, this);
         this.systems.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
