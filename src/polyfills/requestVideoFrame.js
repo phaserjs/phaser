@@ -1,6 +1,6 @@
 //  From https://github.com/ThaUnknown/rvfc-polyfill
 
-if (!('requestVideoFrameCallback' in HTMLVideoElement.prototype) && 'getVideoPlaybackQuality' in HTMLVideoElement.prototype)
+if (HTMLVideoElement && !('requestVideoFrameCallback' in HTMLVideoElement.prototype) && 'getVideoPlaybackQuality' in HTMLVideoElement.prototype)
 {
     HTMLVideoElement.prototype._rvfcpolyfillmap = {}
     HTMLVideoElement.prototype.requestVideoFrameCallback = function (callback) {
