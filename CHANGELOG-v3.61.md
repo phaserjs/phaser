@@ -28,6 +28,7 @@
 * If you make a `Mesh` Game Object interactive, it will now bind to the scope of the Mesh and uses the current `faces` in the hit area callback, rather than the faces as defined when the Mesh was made interactive. This will help keep the input in sync with a potentially changing Mesh structure (thanks @rexrainbow)
 * iOS and any browser identifying as `AppleWebKit` will now set the `Device.es2019` flag to `true`. This causes Phaser to use the native array Stable Sort. This fixes an issue where overlapping particles could flicker on iOS. Fix #6483 (thanks @mattkelliher @spayton)
 * The `Text.dirty` Game Object property has been removed. It wasn't used internally at all, so was just adding confusion and using space.
+* The Request Video Frame polyfill will now check first to see if the browser supports `HTMLVideoElement` before trying to inspect its prototype. This should help in non-browser environments.
 
 # Bug Fixes
 
