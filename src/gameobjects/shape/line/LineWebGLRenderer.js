@@ -47,16 +47,13 @@ var LineWebGLRenderer = function (renderer, src, camera, parentMatrix)
         strokeTint.BL = color;
         strokeTint.BR = color;
 
-        var startWidth = src._startWidth;
-        var endWidth = src._endWidth;
-
         pipeline.batchLine(
             src.geom.x1 - dx,
             src.geom.y1 - dy,
             src.geom.x2 - dx,
             src.geom.y2 - dy,
-            startWidth,
-            endWidth,
+            src._startWidth / 2,
+            src._endWidth / 2,
             1,
             0,
             false,
