@@ -1,3 +1,17 @@
+# New Features - Arcade Physics
+
+* Arcade Physics Bodies have a new property called `slideFactor`. This is a Vector2 that controls how much velocity is retained by a Body after it has been pushed by another Body. The default value is 1, which means it retains all of its velocity. If set to zero, it will retain none of it. This allows you to create a Body that can be pushed around without imparting any velocity to it.
+* `Body.setSlideFactor` is a new method that sets the Body's `slideFactor` property.
+* The Arcade Physics World has a new method `nextCategory` which will create a new collision category and return it. You can define up to 32 unique collision categories per world.
+* Arcade Physics Bodies have two new properties: `collisionCategory` and `collisionMask`. These allow you to set a specific collision category and list of categories the body will collide with. This allows for fine-grained control over which bodies collide with which others. The default is that all bodies collide with all others, just like before.
+* `setCollisionCategory` is a new method available on Arcade Physics Bodies that allows you to set the collision category of the body. It's also available on Arcade Sprites, Images, Tilemap Layers, Groups and Static Groups directly.
+* `setCollidesWith` is a new method available on Arcade Physics Bodies that allows you to set which collision categories the body should collide with. It's also available on Arcade Sprites, Images, Tilemap Layers, Groups and Static Groups directly.
+* `resetCollision` is a new method available on Arcade Physics Bodies that allows you to reset the collision category and mask to their defaults. It's also available on Arcade Sprites, Images, Tilemap Layers, Groups and Static Groups directly.
+
+The default is as before: all bodies collide with each other. However, by using the categories you now have much more fine-grained control over which objects collide together, or not. They are filtered out at the top-level, meaning you can have a Sprite set to not collide with a Physics Group and it will skip checking every single child in the Group, potentially saving a lot of processing time.
+
+The new collision categories are used automatically by either directly calling the `collide` or `overlap` methods, or by creating a Collider object. This allows you to use far less colliders than you may have needed previously and skip needing to filter the pairs in the collision handlers.
+
 # New Features
 
 * `Text.setRTL` is a new method that allows you to set a Text Game Object as being rendered from right-to-left, instead of the default left to right (thanks @rexrainbow)
@@ -11,8 +25,6 @@
 * The `GameObject.setTexture` method has 2 new optional parameters: `updateSize` and `updateOrigin`, which are both passed to the `setFrame` method and allows you to control if the size and origin of the Game Object should be updated when the texture is set (thanks @Trissolo)
 * Both the Animation Config and the Play Animation Config allow you to set a new boolean property `randomFrame`. This is `false` by default, but if set, it will pick a random frame from the animation when it _starts_ playback. This allows for much more variety in groups of sprites created at the same time, using the same animation. This is also reflected in the new `Animation.randomFrame` and `AnimationState.randomFrame` properties.
 * You can now use a `Phaser.Types.Animations.PlayAnimationConfig` object in the `anims` property of the `ParticleEmitter` configuration object. This gives you far more control over what happens to the animation when used by particles, including setting random start frames, repeat delays, yoyo, etc. Close #6478 (thanks @michalfialadev)
-* Arcade Physics Bodies have a new property called `slideFactor`. This is a Vector2 that controls how much velocity is retained by a Body after it has been pushed by another Body. The default value is 1, which means it retains all of its velocity. If set to zero, it will retain none of it. This allows you to create a Body that can be pushed around without imparting any velocity to it.
-* `Body.setSlideFactor` is a new method that sets the Body's `slideFactor` property.
 
 # Updates
 
