@@ -652,6 +652,31 @@ var Body = new Class({
         this.pushable = true;
 
         /**
+         * The Slide Factor of this Body.
+         *
+         * The Slide Factor controls how much velocity is preserved when
+         * this Body is pushed by another Body.
+         *
+         * The default value is 1, which means that it will take on all
+         * velocity given in the push. You can adjust this value to control
+         * how much velocity is retained by this Body when the push ends.
+         *
+         * A value of 0, for example, will allow this Body to be pushed
+         * but then remain completely still after the push ends, such as
+         * you see in a game like Sokoban.
+         *
+         * Or you can set a mid-point, such as 0.25 which will allow it
+         * to keep 25% of the original velocity when the push ends. You
+         * can combine this with the `setDrag()` method to create deceleration.
+         *
+         * @name Phaser.Physics.Arcade.Body#slideFactor
+         * @type {Phaser.Math.Vector2}
+         * @since 3.61.0
+         * @see Phaser.GameObjects.Components.Pushable#setSlideFactor
+         */
+        this.slideFactor = new Vector2(1, 1);
+
+        /**
          * Whether the Body's position and rotation are affected by its velocity, acceleration, drag, and gravity.
          *
          * @name Phaser.Physics.Arcade.Body#moves
@@ -1986,6 +2011,39 @@ var Body = new Class({
     },
 
     /**
+     * Sets the Slide Factor of this Body.
+     *
+     * The Slide Factor controls how much velocity is preserved when
+     * this Body is pushed by another Body.
+     *
+     * The default value is 1, which means that it will take on all
+     * velocity given in the push. You can adjust this value to control
+     * how much velocity is retained by this Body when the push ends.
+     *
+     * A value of 0, for example, will allow this Body to be pushed
+     * but then remain completely still after the push ends, such as
+     * you see in a game like Sokoban.
+     *
+     * Or you can set a mid-point, such as 0.25 which will allow it
+     * to keep 25% of the original velocity when the push ends. You
+     * can combine this with the `setDrag()` method to create deceleration.
+     *
+     * @method Phaser.Physics.Arcade.Body#setSlideFactor
+     * @since 3.61.0
+     *
+     * @param {number} x - The horizontal slide factor. A value between 0 and 1.
+     * @param {number} [y=x] - The vertical slide factor. A value between 0 and 1.
+     *
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setSlideFactor: function (x, y)
+    {
+        this.slideFactor.set(x, y);
+
+        return this;
+    },
+
+    /**
      * Sets the Body's bounce.
      *
      * @method Phaser.Physics.Arcade.Body#setBounce
@@ -2456,7 +2514,7 @@ var Body = new Class({
 
         if (vx !== null)
         {
-            this.velocity.x = vx;
+            this.velocity.x = vx * this.slideFactor.x;
         }
 
         var blocked = this.blocked;
@@ -2494,7 +2552,7 @@ var Body = new Class({
 
         if (vy !== null)
         {
-            this.velocity.y = vy;
+            this.velocity.y = vy * this.slideFactor.y;
         }
 
         var blocked = this.blocked;
