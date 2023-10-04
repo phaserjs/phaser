@@ -1992,6 +1992,27 @@ var World = new Class({
     },
 
     /**
+     * Checks if the two given Arcade Physics bodies will collide, or not,
+     * based on their collision mask and collision categories.
+     *
+     * @method Phaser.Physics.Arcade.World#canCollide
+     * @since 3.61.0
+     *
+     * @param {Phaser.Types.Physics.Arcade.ArcadeCollider} body1 - The first body to check.
+     * @param {Phaser.Types.Physics.Arcade.ArcadeCollider} body2 - The second body to check.
+     *
+     * @return {boolean} True if the two bodies will collide, otherwise false.
+     */
+    canCollide: function (body1, body2)
+    {
+        return (
+            (body1 && body2) &&
+            (body1.collisionMask & body2.collisionCategory) !== 0 &&
+            (body2.collisionMask & body1.collisionCategory) !== 0
+        );
+    },
+
+    /**
      * Internal handler for Sprite vs. Sprite collisions.
      * Please use Phaser.Physics.Arcade.World#collide instead.
      *
@@ -2013,7 +2034,7 @@ var World = new Class({
         var body1 = (sprite1.isBody) ? sprite1 : sprite1.body;
         var body2 = (sprite2.isBody) ? sprite2 : sprite2.body;
 
-        if (!body1 || !body2)
+        if (!this.canCollide(body1, body2))
         {
             return false;
         }
@@ -2045,14 +2066,18 @@ var World = new Class({
      * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
      * @param {any} callbackContext - The scope in which to call the callbacks.
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
-     *
-     * @return {boolean} `true` if the Sprite collided with the given Group, otherwise `false`.
      */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly)
     {
         var bodyA = (sprite.isBody) ? sprite : sprite.body;
 
-        if (group.length === 0 || !bodyA || !bodyA.enable || bodyA.checkCollision.none)
+        if (
+            group.length === 0 ||
+            !bodyA ||
+            !bodyA.enable ||
+            bodyA.checkCollision.none ||
+            !this.canCollide(bodyA, group)
+        )
         {
             return;
         }
@@ -2145,6 +2170,11 @@ var World = new Class({
      */
     collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)
     {
+        if (!this.canCollide(group, tilemapLayer))
+        {
+            return false;
+        }
+
         var children = group.getChildren();
 
         if (children.length === 0)
@@ -2184,6 +2214,8 @@ var World = new Class({
      * tiles as the interesting face calculations are skipped. However, for quick-fire small collision set tests on
      * dynamic maps, this method can prove very useful.
      *
+     * This method does not factor in the Collision Mask or Category.
+     *
      * @method Phaser.Physics.Arcade.World#collideTiles
      * @fires Phaser.Physics.Arcade.Events#TILE_COLLIDE
      * @since 3.17.0
@@ -2218,6 +2250,8 @@ var World = new Class({
      * having to set any collision attributes on the tiles in question. This allows you to perform quick dynamic overlap
      * tests on small sets of Tiles. As such, no culling or checks are made to the array of Tiles given to this method,
      * you should filter them before passing them to this method.
+     *
+     * This method does not factor in the Collision Mask or Category.
      *
      * @method Phaser.Physics.Arcade.World#overlapTiles
      * @fires Phaser.Physics.Arcade.Events#TILE_OVERLAP
@@ -2265,7 +2299,7 @@ var World = new Class({
     {
         var body = (sprite.isBody) ? sprite : sprite.body;
 
-        if (!body.enable || body.checkCollision.none)
+        if (!body.enable || body.checkCollision.none || !this.canCollide(body, tilemapLayer))
         {
             return false;
         }
@@ -2403,7 +2437,7 @@ var World = new Class({
      */
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
-        if (group1.length === 0 || group2.length === 0)
+        if (group1.length === 0 || group2.length === 0 || !this.canCollide(group1, group2))
         {
             return;
         }
