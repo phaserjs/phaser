@@ -28,7 +28,14 @@ var Collision = {
      */
     setCollisionCategory: function (value)
     {
-        this.body.setCollisionCategory(value);
+        if (this.body)
+        {
+            this.body.setCollisionCategory(value);
+        }
+        else if (this.collisionCategory)
+        {
+            this.setCollisionCategory(value);
+        }
 
         return this;
     },
@@ -50,7 +57,14 @@ var Collision = {
      */
     setCollidesWith: function (categories)
     {
-        this.body.setCollidesWith(categories);
+        if (this.body)
+        {
+            this.body.setCollidesWith(categories);
+        }
+        else if (this.collisionCategory)
+        {
+            this.setCollidesWith(categories);
+        }
 
         return this;
     },
@@ -66,7 +80,14 @@ var Collision = {
      */
     resetCollisionCategory: function ()
     {
-        this.body.resetCollisionCategory();
+        if (this.body)
+        {
+            this.body.resetCollisionCategory();
+        }
+        else if (this.collisionCategory)
+        {
+            this.resetCollisionCategory();
+        }
 
         return this;
     }
