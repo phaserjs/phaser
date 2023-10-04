@@ -13,6 +13,7 @@ module.exports = {
     Acceleration: require('./Acceleration'),
     Angular: require('./Angular'),
     Bounce: require('./Bounce'),
+    Collision: require('./Collision'),
     Debug: require('./Debug'),
     Drag: require('./Drag'),
     Enable: require('./Enable'),
