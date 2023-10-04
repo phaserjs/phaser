@@ -9,7 +9,7 @@
  *
  * Mostly only used internally.
  *
- * @function Phaser.Physics.Arcade.CreateCollisionObject
+ * @function Phaser.Physics.Arcade.SetCollisionObject
  * @since 3.61.0
  *
  * @param {boolean} noneFlip - Is `none` true or false?
