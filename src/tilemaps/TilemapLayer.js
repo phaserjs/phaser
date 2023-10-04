@@ -7,6 +7,7 @@
 var Class = require('../utils/Class');
 var Components = require('../gameobjects/components');
 var GameObject = require('../gameobjects/GameObject');
+var SetCollidesWith = require('../physics/arcade/SetCollidesWith');
 var TilemapComponents = require('./components');
 var TilemapLayerRender = require('./TilemapLayerRender');
 var Vector2 = require('../math/Vector2');
@@ -257,6 +258,34 @@ var TilemapLayer = new Class({
         this.tempVec = new Vector2();
 
         /**
+         * The Tilemap Layer Collision Category.
+         *
+         * This is exclusively used by the Arcade Physics system.
+         *
+         * This can be set to any valid collision bitfield value.
+         *
+         * See the `setCollisionCategory` method for more details.
+         *
+         * @name Phaser.Tilemaps.TilemapLayer#collisionCategory
+         * @type {number}
+         * @since 3.61.0
+         */
+        this.collisionCategory = 0x0001;
+
+        /**
+         * The Tilemap Layer Collision Mask.
+         *
+         * This is exclusively used by the Arcade Physics system.
+         *
+         * See the `setCollidesWith` method for more details.
+         *
+         * @name Phaser.Tilemaps.TilemapLayer#collisionMask
+         * @type {number}
+         * @since 3.61.0
+         */
+        this.collisionMask = 1;
+
+        /**
          * The horizontal origin of this Tilemap Layer.
          *
          * @name Phaser.Tilemaps.TilemapLayer#originX
@@ -390,6 +419,72 @@ var TilemapLayer = new Class({
         {
             this._renderOrder = renderOrder;
         }
+
+        return this;
+    },
+
+    /**
+     * Sets the Collision Category that this Tilemap Layer
+     * will use in order to determine what it can collide with.
+     *
+     * If you wish to reset the collision category and mask, call
+     * the `resetCollisionCategory` method.
+     *
+     * This is only used by the Arcade Physics system.
+     *
+     * @method Phaser.Tilemaps.TilemapLayer#setCollisionCategory
+     * @since 3.61.0
+     *
+     * @param {number} value - Unique category bitfield.
+     *
+     * @return {this} This Tilemap Layer instance.
+     */
+    setCollisionCategory: function (value)
+    {
+        this.collisionCategory = value;
+
+        return this;
+    },
+
+    /**
+     * Sets all of the Collision Categories that this Tilemap Layer
+     * will collide with. You can either pass a single category value, or
+     * an array of them.
+     *
+     * If you wish to reset the collision category and mask, call
+     * the `resetCollisionCategory` method.
+     *
+     * This is only used by the Arcade Physics system.
+     *
+     * @method Phaser.Tilemaps.TilemapLayer#setCollidesWith
+     * @since 3.61.0
+     *
+     * @param {(number|number[])} categories - A unique category bitfield, or an array of them.
+     *
+     * @return {this} This Tilemap Layer instance.
+     */
+    setCollidesWith: function (categories)
+    {
+        this.collisionMask = SetCollidesWith(categories);
+
+        return this;
+    },
+
+    /**
+     * Resets the Collision Category and Mask back to the defaults,
+     * which is to collide with everything.
+     *
+     * This is only used by the Arcade Physics system.
+     *
+     * @method Phaser.Tilemaps.TilemapLayer#resetCollisionCategory
+     * @since 3.61.0
+     *
+     * @return {this} This Tilemap Layer instance.
+     */
+    resetCollisionCategory: function ()
+    {
+        this.collisionCategory = 0x0001;
+        this.collisionMask = 1;
 
         return this;
     },

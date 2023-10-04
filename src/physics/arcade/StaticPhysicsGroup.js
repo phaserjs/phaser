@@ -10,6 +10,7 @@ var CONST = require('./const');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Group = require('../../gameobjects/group/Group');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
+var SetCollidesWith = require('./SetCollidesWith');
 
 /**
  * @classdesc
@@ -100,6 +101,30 @@ var StaticPhysicsGroup = new Class({
          */
         this.physicsType = CONST.STATIC_BODY;
 
+        /**
+         * The Arcade Physics Static Group Collision Category.
+         *
+         * This can be set to any valid collision bitfield value.
+         *
+         * See the `setCollisionCategory` method for more details.
+         *
+         * @name Phaser.Physics.Arcade.StaticGroup#collisionCategory
+         * @type {number}
+         * @since 3.61.0
+         */
+        this.collisionCategory = 0x0001;
+
+        /**
+         * The Arcade Physics Static Group Collision Mask.
+         *
+         * See the `setCollidesWith` method for more details.
+         *
+         * @name Phaser.Physics.Arcade.StaticGroup#collisionMask
+         * @type {number}
+         * @since 3.61.0
+         */
+        this.collisionMask = 1;
+
         Group.call(this, scene, children, config);
 
         /**
@@ -163,6 +188,66 @@ var StaticPhysicsGroup = new Class({
     createMultipleCallbackHandler: function ()
     {
         this.refresh();
+    },
+
+    /**
+     * Sets the Collision Category that this Arcade Physics Static Group
+     * will use in order to determine what it can collide with.
+     *
+     * If you wish to reset the collision category and mask, call
+     * the `resetCollisionCategory` method.
+     *
+     * @method Phaser.Physics.Arcade.StaticGroup#setCollisionCategory
+     * @since 3.61.0
+     *
+     * @param {number} value - Unique category bitfield.
+     *
+     * @return {this} This Arcade Physics Static Group instance.
+     */
+    setCollisionCategory: function (value)
+    {
+        this.collisionCategory = value;
+
+        return this;
+    },
+
+    /**
+     * Sets all of the Collision Categories that this Arcade Physics Static Group
+     * will collide with. You can either pass a single category value, or
+     * an array of them.
+     *
+     * If you wish to reset the collision category and mask, call
+     * the `resetCollisionCategory` method.
+     *
+     * @method Phaser.Physics.Arcade.StaticGroup#setCollidesWith
+     * @since 3.61.0
+     *
+     * @param {(number|number[])} categories - A unique category bitfield, or an array of them.
+     *
+     * @return {this} This Arcade Physics Static Group instance.
+     */
+    setCollidesWith: function (categories)
+    {
+        this.collisionMask = SetCollidesWith(categories);
+
+        return this;
+    },
+
+    /**
+     * Resets the Collision Category and Mask back to the defaults,
+     * which is to collide with everything.
+     *
+     * @method Phaser.Physics.Arcade.StaticGroup#resetCollisionCategory
+     * @since 3.61.0
+     *
+     * @return {this} This Arcade Physics Static Group instance.
+     */
+    resetCollisionCategory: function ()
+    {
+        this.collisionCategory = 0x0001;
+        this.collisionMask = 1;
+
+        return this;
     },
 
     /**
