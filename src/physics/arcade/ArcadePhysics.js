@@ -88,6 +88,16 @@ var ArcadePhysics = new Class({
          */
         this.add;
 
+        /**
+         * Holds the internal collision filter category.
+         *
+         * @name Phaser.Physics.Arcade.World#_category
+         * @private
+         * @type {number}
+         * @since 3.61.0
+         */
+        this._category = 0x0001;
+
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
     },
@@ -187,6 +197,28 @@ var ArcadePhysics = new Class({
         );
 
         return config;
+    },
+
+    /**
+     * Returns the next available collision category.
+     *
+     * You can have a maximum of 32 categories.
+     *
+     * By default all bodies collide with all other bodies.
+     *
+     * Use the `Body.setCollisionCategory()` and
+     * `Body.setCollidesWith()` methods to change this.
+     *
+     * @method Phaser.Physics.Arcade.ArcadePhysics#nextCategory
+     * @since 3.61.0
+     *
+     * @return {number} The next collision category.
+     */
+    nextCategory: function ()
+    {
+        this._category = this._category << 1;
+
+        return this._category;
     },
 
     /**
@@ -694,6 +726,7 @@ var ArcadePhysics = new Class({
 
         this.add = null;
         this.world = null;
+        this._category = 1;
     },
 
     /**
