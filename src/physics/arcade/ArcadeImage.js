@@ -24,6 +24,7 @@ var Image = require('../../gameobjects/image/Image');
  * @extends Phaser.Physics.Arcade.Components.Acceleration
  * @extends Phaser.Physics.Arcade.Components.Angular
  * @extends Phaser.Physics.Arcade.Components.Bounce
+ * @extends Phaser.Physics.Arcade.Components.Collision
  * @extends Phaser.Physics.Arcade.Components.Debug
  * @extends Phaser.Physics.Arcade.Components.Drag
  * @extends Phaser.Physics.Arcade.Components.Enable
@@ -64,6 +65,7 @@ var ArcadeImage = new Class({
         Components.Acceleration,
         Components.Angular,
         Components.Bounce,
+        Components.Collision,
         Components.Debug,
         Components.Drag,
         Components.Enable,
