@@ -19,6 +19,7 @@ var Arcade = {
     Components: require('./components'),
     Events: require('./events'),
     Factory: require('./Factory'),
+    GetCollidesWith: require('./GetCollidesWith'),
     GetOverlapX: require('./GetOverlapX'),
     GetOverlapY: require('./GetOverlapY'),
     SeparateX: require('./SeparateX'),

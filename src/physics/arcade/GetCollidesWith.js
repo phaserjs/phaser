@@ -8,14 +8,14 @@
  * Calculates and returns the bitmask needed to determine if the given
  * categories will collide with each other or not.
  *
- * @function Phaser.Physics.Arcade.SetCollidesWith
+ * @function Phaser.Physics.Arcade.GetCollidesWith
  * @since 3.61.0
  *
  * @param {(number|number[])} categories - A unique category bitfield, or an array of them.
  *
  * @return {number} The collision mask.
  */
-var SetCollidesWith = function (categories)
+var GetCollidesWith = function (categories)
 {
     var flags = 0;
 
@@ -34,4 +34,4 @@ var SetCollidesWith = function (categories)
     return flags;
 };
 
-module.exports = SetCollidesWith;
+module.exports = GetCollidesWith;
