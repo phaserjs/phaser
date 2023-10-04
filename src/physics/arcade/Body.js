@@ -7,6 +7,7 @@
 
 var Class = require('../../utils/Class');
 var CONST = require('./const');
+var SetCollisionObject = require('./SetCollisionObject');
 var Events = require('./events');
 var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
@@ -766,7 +767,7 @@ var Body = new Class({
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
-        this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
+        this.checkCollision = SetCollisionObject(false);
 
         /**
          * Whether this Body is colliding with a Body or Static Body and in which direction.
@@ -779,7 +780,7 @@ var Body = new Class({
          * @see Phaser.Physics.Arcade.Body#blocked
          * @see Phaser.Physics.Arcade.Body#embedded
          */
-        this.touching = { none: true, up: false, down: false, left: false, right: false };
+        this.touching = SetCollisionObject(true);
 
         /**
          * This Body's `touching` value during the previous step.
@@ -790,7 +791,7 @@ var Body = new Class({
          *
          * @see Phaser.Physics.Arcade.Body#touching
          */
-        this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
+        this.wasTouching = SetCollisionObject(true);
 
         /**
          * Whether this Body is colliding with a Static Body, a tile, or the world boundary.
@@ -803,7 +804,7 @@ var Body = new Class({
          * @see Phaser.Physics.Arcade.Body#embedded
          * @see Phaser.Physics.Arcade.Body#touching
          */
-        this.blocked = { none: true, up: false, down: false, left: false, right: false };
+        this.blocked = SetCollisionObject(true);
 
         /**
          * Whether to automatically synchronize this Body's dimensions to the dimensions of its Game Object's visual bounds.
@@ -1032,11 +1033,7 @@ var Body = new Class({
 
         if (clear)
         {
-            wasTouching.none = true;
-            wasTouching.up = false;
-            wasTouching.down = false;
-            wasTouching.left = false;
-            wasTouching.right = false;
+            SetCollisionObject(true, wasTouching);
         }
         else
         {
@@ -1047,17 +1044,8 @@ var Body = new Class({
             wasTouching.right = touching.right;
         }
 
-        touching.none = true;
-        touching.up = false;
-        touching.down = false;
-        touching.left = false;
-        touching.right = false;
-
-        blocked.none = true;
-        blocked.up = false;
-        blocked.down = false;
-        blocked.left = false;
-        blocked.right = false;
+        SetCollisionObject(true, touching);
+        SetCollisionObject(true, blocked);
 
         this.overlapR = 0;
         this.overlapX = 0;
@@ -1094,10 +1082,12 @@ var Body = new Class({
 
         if (this.moves)
         {
-            this.prev.x = this.position.x;
-            this.prev.y = this.position.y;
-            this.prevFrame.x = this.position.x;
-            this.prevFrame.y = this.position.y;
+            var pos = this.position;
+
+            this.prev.x = pos.x;
+            this.prev.y = pos.y;
+            this.prevFrame.x = pos.x;
+            this.prevFrame.y = pos.y;
         }
 
         if (willStep)
@@ -1259,6 +1249,8 @@ var Body = new Class({
     checkWorldBounds: function ()
     {
         var pos = this.position;
+        var vel = this.velocity;
+        var blocked = this.blocked;
         var bounds = this.customBoundsRectangle;
         var check = this.world.checkCollision;
 
@@ -1270,30 +1262,30 @@ var Body = new Class({
         if (pos.x < bounds.x && check.left)
         {
             pos.x = bounds.x;
-            this.velocity.x *= bx;
-            this.blocked.left = true;
+            vel.x *= bx;
+            blocked.left = true;
             wasSet = true;
         }
         else if (this.right > bounds.right && check.right)
         {
             pos.x = bounds.right - this.width;
-            this.velocity.x *= bx;
-            this.blocked.right = true;
+            vel.x *= bx;
+            blocked.right = true;
             wasSet = true;
         }
 
         if (pos.y < bounds.y && check.up)
         {
             pos.y = bounds.y;
-            this.velocity.y *= by;
-            this.blocked.up = true;
+            vel.y *= by;
+            blocked.up = true;
             wasSet = true;
         }
         else if (this.bottom > bounds.bottom && check.down)
         {
             pos.y = bounds.bottom - this.height;
-            this.velocity.y *= by;
-            this.blocked.down = true;
+            vel.y *= by;
+            blocked.down = true;
             wasSet = true;
         }
 

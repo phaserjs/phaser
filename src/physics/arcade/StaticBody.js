@@ -7,6 +7,7 @@
 var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
+var SetCollisionObject = require('./SetCollisionObject');
 var RectangleContains = require('../../geom/rectangle/Contains');
 var Vector2 = require('../../math/Vector2');
 
@@ -405,7 +406,7 @@ var StaticBody = new Class({
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
-        this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
+        this.checkCollision = SetCollisionObject(false);
 
         /**
          * This property is kept for compatibility with Dynamic Bodies.
@@ -415,7 +416,7 @@ var StaticBody = new Class({
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
-        this.touching = { none: true, up: false, down: false, left: false, right: false };
+        this.touching = SetCollisionObject(true);
 
         /**
          * This property is kept for compatibility with Dynamic Bodies.
@@ -426,7 +427,7 @@ var StaticBody = new Class({
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
-        this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
+        this.wasTouching = SetCollisionObject(true);
 
         /**
          * This property is kept for compatibility with Dynamic Bodies.
@@ -436,7 +437,7 @@ var StaticBody = new Class({
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
-        this.blocked = { none: true, up: false, down: false, left: false, right: false };
+        this.blocked = SetCollisionObject(true);
 
         /**
          * The StaticBody's physics type (static by default).
