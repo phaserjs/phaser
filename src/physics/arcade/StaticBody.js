@@ -6,9 +6,9 @@
 
 var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
+var CollisionComponent = require('./components/Collision');
 var CONST = require('./const');
 var RectangleContains = require('../../geom/rectangle/Contains');
-var SetCollidesWith = require('./SetCollidesWith');
 var SetCollisionObject = require('./SetCollisionObject');
 var Vector2 = require('../../math/Vector2');
 
@@ -28,10 +28,16 @@ var Vector2 = require('../../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
+ * @extends Phaser.Physics.Arcade.Components.Collision
+ *
  * @param {Phaser.Physics.Arcade.World} world - The Arcade Physics simulation this Static Body belongs to.
  * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object this Body belongs to. As of Phaser 3.60 this is now optional.
  */
 var StaticBody = new Class({
+
+    Mixins: [
+        CollisionComponent
+    ],
 
     initialize:
 
@@ -497,66 +503,6 @@ var StaticBody = new Class({
          * @since 3.10.0
          */
         this._dy = 0;
-    },
-
-    /**
-     * Sets the Collision Category that this Arcade Physics Body
-     * will use in order to determine what it can collide with.
-     *
-     * If you wish to reset the collision category and mask, call
-     * the `resetCollisionCategory` method.
-     *
-     * @method Phaser.Physics.Arcade.StaticBody#setCollisionCategory
-     * @since 3.61.0
-     *
-     * @param {number} value - Unique category bitfield.
-     *
-     * @return {this} This Arcade Physics Body instance.
-     */
-    setCollisionCategory: function (value)
-    {
-        this.collisionCategory = value;
-
-        return this;
-    },
-
-    /**
-     * Sets all of the Collision Categories that this Arcade Physics Body
-     * will collide with. You can either pass a single category value, or
-     * an array of them.
-     *
-     * If you wish to reset the collision category and mask, call
-     * the `resetCollisionCategory` method.
-     *
-     * @method Phaser.Physics.Arcade.StaticBody#setCollidesWith
-     * @since 3.61.0
-     *
-     * @param {(number|number[])} categories - A unique category bitfield, or an array of them.
-     *
-     * @return {this} This Arcade Physics Body instance.
-     */
-    setCollidesWith: function (categories)
-    {
-        this.collisionMask = SetCollidesWith(categories);
-
-        return this;
-    },
-
-    /**
-     * Resets the Collision Category and Mask back to the defaults,
-     * which is to collide with everything.
-     *
-     * @method Phaser.Physics.Arcade.StaticBody#resetCollisionCategory
-     * @since 3.61.0
-     *
-     * @return {this} This Arcade Physics Body instance.
-     */
-    resetCollisionCategory: function ()
-    {
-        this.collisionCategory = 0x0001;
-        this.collisionMask = 1;
-
-        return this;
     },
 
     /**
