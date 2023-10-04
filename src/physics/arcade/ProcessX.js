@@ -88,7 +88,7 @@ var BlockCheck = function ()
         return 1;
     }
 
-    //  Body1 is moving up and Body2 is blocked from going up any further
+    //  Body1 is moving left and Body2 is blocked from going left any further
     if (body1MovingLeft && body2OnLeft && body2.blocked.left)
     {
         body1.processX(overlap, body1FullImpact, true);
@@ -104,7 +104,7 @@ var BlockCheck = function ()
         return 2;
     }
 
-    //  Body2 is moving up and Body1 is blocked from going up any further
+    //  Body2 is moving left and Body1 is blocked from going left any further
     if (body2MovingLeft && body1OnLeft && body1.blocked.left)
     {
         body2.processX(overlap, body2FullImpact, true);
