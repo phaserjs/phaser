@@ -367,22 +367,19 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#incData
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to increase the value for.
-     * @param {*} [data] - The value to increase for the given key.
+     * @param {string} key - The key to change the value for.
+     * @param {number} [amount=1] - The amount to increase the given key by. Pass a negative value to decrease the key.
      *
      * @return {this} This GameObject.
      */
-    incData: function (key, value)
+    incData: function (key, amount)
     {
         if (!this.data)
         {
             this.data = new DataManager(this);
         }
 
-        this.data.inc(key, value);
+        this.data.inc(key, amount);
 
         return this;
     },
@@ -400,10 +397,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#toggleData
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to toggle the value for.
+     * @param {string} key - The key to toggle the value for.
      *
      * @return {this} This GameObject.
      */

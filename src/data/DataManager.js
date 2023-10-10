@@ -293,24 +293,21 @@ var DataManager = new Class({
      * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to increase the value for.
-     * @param {number} [data=1] - The amount to increase the given key by. Pass a negative value to decrease the key.
+     * @param {string} key - The key to change the value for.
+     * @param {number} [amount=1] - The amount to increase the given key by. Pass a negative value to decrease the key.
      *
      * @return {this} This Data Manager instance.
      */
-    inc: function (key, data)
+    inc: function (key, amount)
     {
         if (this._frozen)
         {
             return this;
         }
 
-        if (data === undefined)
+        if (amount === undefined)
         {
-            data = 1;
+            amount = 1;
         }
 
         var value = this.get(key);
@@ -320,7 +317,7 @@ var DataManager = new Class({
             value = 0;
         }
 
-        this.set(key, (value + data));
+        this.set(key, (value + amount));
 
         return this;
     },
@@ -336,10 +333,7 @@ var DataManager = new Class({
      * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to toggle the value for.
+     * @param {string} key - The key to toggle the value for.
      *
      * @return {this} This Data Manager instance.
      */
