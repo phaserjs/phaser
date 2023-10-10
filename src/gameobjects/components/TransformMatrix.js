@@ -949,13 +949,13 @@ var TransformMatrix = new Class({
         quad[6] = xw * a + y * c + e;
         quad[7] = xw * b + y * d + f;
 
-        if (roundPixels)
-        {
-            quad.forEach(function (value, index)
-            {
-                quad[index] = Math.round(value);
-            });
-        }
+        // if (roundPixels)
+        // {
+        //     quad.forEach(function (value, index)
+        //     {
+        //         quad[index] = Math.round(value);
+        //     });
+        // }
 
         return quad;
     },
