@@ -104,7 +104,11 @@ var MobilePipeline = new Class({
     {
         WebGLPipeline.prototype.boot.call(this);
 
+        var renderer = this.renderer;
+
         this.set1i('uMainSampler', 0);
+        this.set2f('uResolution', renderer.width, renderer.height);
+        this.set1i('uRoundPixels', renderer.config.roundPixels);
     }
 
 });
