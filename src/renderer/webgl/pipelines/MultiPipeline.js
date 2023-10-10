@@ -277,7 +277,11 @@ var MultiPipeline = new Class({
     {
         WebGLPipeline.prototype.boot.call(this);
 
-        this.currentShader.set1iv('uMainSampler', this.renderer.textureIndexes);
+        var renderer = this.renderer;
+
+        this.set1iv('uMainSampler', renderer.textureIndexes);
+        this.set2f('uResolution', renderer.width, renderer.height);
+        this.set1i('uRoundPixels', renderer.config.roundPixels);
     },
 
     /**
@@ -369,11 +373,11 @@ var MultiPipeline = new Class({
         var gx = gameObject.x;
         var gy = gameObject.y;
 
-        // if (camera.roundPixels)
-        // {
-        //     gx = Math.floor(gx);
-        //     gy = Math.floor(gy);
-        // }
+        if (camera.roundPixels)
+        {
+            gx = Math.floor(gx);
+            gy = Math.floor(gy);
+        }
 
         spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
 
@@ -397,7 +401,7 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight, camera.roundPixels);
+        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight);
 
         var getTint = Utils.getTintAppendFloatAlpha;
         var cameraAlpha = camera.alpha;
@@ -415,6 +419,8 @@ var MultiPipeline = new Class({
         var unit = this.setGameObject(gameObject, frame);
 
         this.manager.preBatch(gameObject);
+
+        this.currentShader.set1i('uRoundPixels', camera.roundPixels);
 
         this.batchQuad(gameObject, quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7], u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, gameObject.tintFill, texture, unit);
 
@@ -549,11 +555,11 @@ var MultiPipeline = new Class({
             y += srcHeight;
         }
 
-        // if (camera.roundPixels)
-        // {
-        //     srcX = Math.floor(srcX);
-        //     srcY = Math.floor(srcY);
-        // }
+        if (camera.roundPixels)
+        {
+            srcX = Math.floor(srcX);
+            srcY = Math.floor(srcY);
+        }
 
         spriteMatrix.applyITRS(srcX, srcY, rotation, scaleX, scaleY);
 
@@ -577,11 +583,10 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var quad = calcMatrix.setQuad(x, y, x + width, y + height, camera.roundPixels);
+        var quad = calcMatrix.setQuad(x, y, x + width, y + height);
 
         if (textureUnit === undefined)
         {
-            // textureUnit = this.renderer.setTexture2D(texture);
             textureUnit = this.setTexture2D(texture);
         }
 
@@ -589,6 +594,8 @@ var MultiPipeline = new Class({
         {
             this.manager.preBatch(gameObject);
         }
+
+        this.currentShader.set1i('uRoundPixels', camera.roundPixels);
 
         this.batchQuad(gameObject, quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7], u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
 

@@ -3,6 +3,8 @@
 precision mediump float;
 
 uniform mat4 uProjectionMatrix;
+uniform int uRoundPixels;
+uniform vec2 uResolution;
 
 attribute vec2 inPosition;
 attribute vec2 inTexCoord;
@@ -17,6 +19,11 @@ varying vec4 outTint;
 void main ()
 {
     gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);
+
+    if (uRoundPixels == 1)
+    {
+        gl_Position.xy = floor((gl_Position.xy + 1.0) * 0.5 * uResolution) / uResolution * 2.0 - 1.0;
+    }
 
     outTexCoord = inTexCoord;
     outTint = inTint;

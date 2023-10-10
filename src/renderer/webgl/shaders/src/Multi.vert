@@ -1,14 +1,10 @@
 #define SHADER_NAME PHASER_MULTI_VS
 
-#ifdef GL_FRAGMENT_PRECISION_HIGH
-precision highp float;
-#else
 precision mediump float;
-#endif
 
 uniform mat4 uProjectionMatrix;
-// uniform bool uRoundPixels;
-// uniform vec2 uResolution;
+uniform int uRoundPixels;
+uniform vec2 uResolution;
 
 attribute vec2 inPosition;
 attribute vec2 inTexCoord;
@@ -25,13 +21,10 @@ void main ()
 {
     gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);
 
-    /*
-    if (uRoundPixels)
+    if (uRoundPixels == 1)
     {
-        //  Round to nearest pixel
-        gl_Position.xy = round((gl_Position.xy + 1.0) * 0.5 * uResolution) / uResolution * 2.0 - 1.0;
+        gl_Position.xy = floor((gl_Position.xy + 1.0) * 0.5 * uResolution) / uResolution * 2.0 - 1.0;
     }
-    */
 
     outTexCoord = inTexCoord;
     outTexId = inTexId;
