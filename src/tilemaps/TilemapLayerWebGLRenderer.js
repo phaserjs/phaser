@@ -95,7 +95,7 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
             scrollFactorX, scrollFactorY,
             tw, th,
             frameX, frameY, frameWidth, frameHeight,
-            tint, tint, tint, tint, false,
+            tint, tint, tint, tint, tile.tintFill,
             0, 0,
             camera,
             null,
