@@ -303,6 +303,19 @@ var Tile = new Class({
         this.tint = 0xffffff;
 
         /**
+         * The tint fill mode.
+         *
+         * `false` = An additive tint (the default), where vertices colors are blended with the texture.
+         * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
+         *
+         * @name Phaser.Tilemaps.Tile#tintFill
+         * @type {boolean}
+         * @default
+         * @since 3.61.0
+         */
+        this.tintFill = false;
+
+        /**
          * An empty object where physics-engine specific information (e.g. bodies) may be stored.
          *
          * @name Phaser.Tilemaps.Tile#physics
