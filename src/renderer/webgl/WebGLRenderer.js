@@ -2315,7 +2315,7 @@ var WebGLRenderer = new Class({
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, null, 0);
 
             // TODO: Check if this texture is used elsewhere. If not, delete it:
-            // gl.deleteTexture(colorAttachment);
+            gl.deleteTexture(colorAttachment);
         }
 
         // Check for a depth-stencil attachment and delete it
