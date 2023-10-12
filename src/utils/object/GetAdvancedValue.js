@@ -12,7 +12,7 @@ var GetValue = require('./GetValue');
  *
  * Allowed types:
  *
- * Implicit
+ * Explicit:
  * {
  *     x: 4
  * }
