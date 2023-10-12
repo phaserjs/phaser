@@ -1552,6 +1552,13 @@ var DynamicTexture = new Class({
      */
     destroy: function ()
     {
+        var stamp = this.manager.stamp;
+
+        if (stamp && stamp.texture === this)
+        {
+            this.manager.resetStamp();
+        }
+
         Texture.prototype.destroy.call(this);
 
         CanvasPool.remove(this.canvas);
