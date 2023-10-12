@@ -15,6 +15,7 @@ plugins/spine/src/runtimes/
 scripts/
 webpack.*
 webpack.config.js
+webpack-nospector.config.js
 webpack.dist.config.js
 webpack.fb.config.js
 webpack.fb.dist.config.js
