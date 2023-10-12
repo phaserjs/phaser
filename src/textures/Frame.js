@@ -752,9 +752,8 @@ var Frame = new Class({
      */
     destroy: function ()
     {
-        this.source.glTexture = null;
-        this.source = null;
         this.texture = null;
+        this.source = null;
         this.glTexture = null;
         this.customData = null;
         this.data = null;
