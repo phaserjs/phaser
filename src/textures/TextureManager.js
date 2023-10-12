@@ -278,12 +278,14 @@ var TextureManager = new Class({
         }
 
         //  By this point key should be a Texture, if not, the following fails anyway
-        if (this.list.hasOwnProperty(key.key))
+        var textureKey = key.key;
+
+        if (this.list.hasOwnProperty(textureKey))
         {
             key.destroy();
 
-            this.emit(Events.REMOVE, key.key);
-            this.emit(Events.REMOVE_KEY + key.key);
+            this.emit(Events.REMOVE, textureKey);
+            this.emit(Events.REMOVE_KEY + textureKey);
         }
 
         return this;
@@ -1531,6 +1533,7 @@ var TextureManager = new Class({
         stamp.setScale(1);
         stamp.setAlpha(alpha);
         stamp.setTint(tint);
+        stamp.setTexture('__WHITE');
 
         return stamp;
     },
