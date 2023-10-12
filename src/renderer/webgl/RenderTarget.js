@@ -384,10 +384,10 @@ var RenderTarget = new Class({
     {
         var renderer = this.renderer;
 
+        renderer.off(Events.RESIZE, this.resize, this);
+
         renderer.deleteFramebuffer(this.framebuffer);
         renderer.deleteTexture(this.texture);
-
-        renderer.off(Events.RESIZE, this.resize, this);
 
         this.renderer = null;
         this.framebuffer = null;
