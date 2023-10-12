@@ -21,6 +21,7 @@
     "help": "node scripts/help.js",
     "build": "webpack --config config/webpack.config.js",
     "watch": "webpack --watch --config config/webpack.config.js",
+    "watchns": "webpack --watch --config config/webpack-nospector.config.js",
     "buildfb": "webpack --config config/webpack.fb.config.js",
     "watchfb": "webpack --config config/webpack.fb.config.js --watch",
     "dist": "webpack --config config/webpack.dist.config.js",
