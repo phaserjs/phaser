@@ -2307,6 +2307,8 @@ var WebGLRenderer = new Class({
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 
+        framebuffer.renderTexture = undefined;
+
         // Check for a color attachment and remove it
         var colorAttachment = gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
 
@@ -2314,7 +2316,6 @@ var WebGLRenderer = new Class({
         {
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, null, 0);
 
-            // TODO: Check if this texture is used elsewhere. If not, delete it:
             gl.deleteTexture(colorAttachment);
         }
 
