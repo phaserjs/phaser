@@ -53,7 +53,7 @@ The new collision categories are used automatically by either directly calling t
 
 # Bug Fixes
 
-* The `PostFXPipeline` will now set `autoResize` to `true` on all of its `RenderTarget` instances. This fixes an issue where the `PostFXPipeline` would not resize the render targets when the game size changed, causing them to become out of sync with the game canvas. Fix #6503 #6527 (thanks @Waclaw-I @rexrainbow)
+* The `PostFXPipeline` will now set `autoResize` to `true` on all of its `RenderTarget` instances. This fixes an issue where the `PostFXPipeline` would not resize the render targets when the game size changed, causing them to become out of sync with the game canvas. Fix #6503 (thanks @Waclaw-I)
 * `Particle.scaleY` would always be set to the `scaleX` value, even if given a different one within the config. It will now use its own value correctly.
 * `Array.Matrix.RotateLeft` was missing the `total` parameter, which controls how many times to rotate the matrix.
 * `Array.Matrix.RotateRight` was missing the `total` parameter, which controls how many times to rotate the matrix.
@@ -89,6 +89,7 @@ The new collision categories are used automatically by either directly calling t
 * Calling the `Line.setLineWidth` method on the Line Shape Game Object would result in a line with double the thickness it should have had in WebGL. In Canvas it was the correct width. Both renderers now match. Fix #6604 (thanks @AlvaroNeuronup)
 * The `DynamicTexture` was leaking memory by leaving a WebGLTexture in memory when its `setSize` method was called. This happens automatically on instantiation, meaning that if you created DynamicTextures and then destroyed them frequently, memory would continue to increase (thanks David)
 * `DynamicTexture.width` and `height` were missing from the class definition, even though they were set and used internally. They're now exposed as read-only properties.
+* The `BitmapMask` wouldn't correctly set the gl viewport when binding, which caused the mask to distort in games where the canvas resizes from its default. Fix #6527 (thanks @rexrainbow)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
