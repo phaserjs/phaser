@@ -228,7 +228,12 @@ var DynamicTexture = new Class({
 
         if (!isCanvas)
         {
-            this.setFromRenderTarget();
+            var frame = this.get();
+            var textureSource = frame.source;
+
+            textureSource.isRenderTexture = true;
+            textureSource.isGLTexture = true;
+            textureSource.glTexture.flipY = true;
         }
     },
 
