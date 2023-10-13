@@ -48,6 +48,8 @@ The new collision categories are used automatically by either directly calling t
 * `Plane.originX` and `originY` are two new read-only properties that return the origin of the Plane, which is always 0.5 (thanks @rexrainbow)
 * The `LoaderPlugin` will now call `removeAllListeners()` as part of its `shutdown` method, which will clear any event listeners bound to a Loader instance of the Scene, during the Scene shutdown. Fix #6633 (thanks @samme)
 * `SetCollisionObject` is a new function that Arcade Physics bodies use internally to create and reset their `ArcadeBodyCollision` data objects.
+* `DynamicTexture.setFromRenderTarget` is a new method that syncs the internal Frame and TextureSource GL textures with the Render Target GL textures.
+* When a framebuffer is deleted, it now sets its `renderTexture` property to `undefined` to ensure the reference is cleared.
 
 # Bug Fixes
 
@@ -85,6 +87,8 @@ The new collision categories are used automatically by either directly calling t
 * `StaticBody.setSize` will now check to see if the body has a Game Object or not, and only call `getCenter` and the frame sizes if it has. This fixes a bug where calling `physics.add.staticBody` would throw an error if you provided a width and height. Fix #6630 (thanks @Legend-Master)
 * The `DynamicTexture.fill` method will now correctly draw the fill rectangle if the `width` and `height` are provided in WebGL, where-as before it would assume the y axis started from the bottom-left instead of top-left. Fix #6615 (thanks @rexrainbow)
 * Calling the `Line.setLineWidth` method on the Line Shape Game Object would result in a line with double the thickness it should have had in WebGL. In Canvas it was the correct width. Both renderers now match. Fix #6604 (thanks @AlvaroNeuronup)
+* The `DynamicTexture` was leaking memory by leaving a WebGLTexture in memory when its `setSize` method was called. This happens automatically on instantiation, meaning that if you created DynamicTextures and then destroyed them frequently, memory would continue to increase (thanks David)
+* `DynamicTexture.width` and `height` were missing from the class definition, even though they were set and used internally. They're now exposed as read-only properties.
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
