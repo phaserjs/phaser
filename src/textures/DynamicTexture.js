@@ -100,6 +100,28 @@ var DynamicTexture = new Class({
         this.renderer = renderer;
 
         /**
+         * The width of this Dynamic Texture.
+         *
+         * Treat this property as read-only. Use the `setSize` method to change the size.
+         *
+         * @name Phaser.Textures.DynamicTexture#width
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.width = width;
+
+        /**
+         * The height of this Dynamic Texture.
+         *
+         * Treat this property as read-only. Use the `setSize` method to change the size.
+         *
+         * @name Phaser.Textures.DynamicTexture#height
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.height = height;
+
+        /**
          * This flag is set to 'true' during `beginDraw` and reset to 'false` in `endDraw`,
          * allowing you to determine if this Dynamic Texture is batch drawing, or not.
          *
@@ -204,7 +226,10 @@ var DynamicTexture = new Class({
          */
         this.pipeline = (!isCanvas) ? renderer.pipelines.get(PIPELINES.SINGLE_PIPELINE) : null;
 
-        this.setSize(width, height);
+        if (!isCanvas)
+        {
+            this.setFromRenderTarget();
+        }
     },
 
     /**
@@ -246,12 +271,10 @@ var DynamicTexture = new Class({
             {
                 renderTarget.resize(width, height);
 
-                frame.glTexture = renderTarget.texture;
+                //  The WebGLTexture has been resized, so is new, so we need to delete the old one
+                this.renderer.deleteTexture(source.glTexture);
 
-                source.isRenderTexture = true;
-                source.isGLTexture = true;
-                source.glTexture = renderTarget.texture;
-                source.glTexture.flipY = true;
+                this.setFromRenderTarget();
             }
 
             this.camera.setSize(width, height);
@@ -286,6 +309,35 @@ var DynamicTexture = new Class({
     },
 
     /**
+     * Links the WebGL Textures used by this Dynamic Texture to its Render Target.
+     *
+     * This method is called internally by the Dynamic Texture when it is first created,
+     * or if you change its size.
+     *
+     * @method Phaser.Textures.DynamicTexture#setFromRenderTarget
+     * @since 3.61.0
+     *
+     * @return {this} This Dynamic Texture instance.
+     */
+    setFromRenderTarget: function ()
+    {
+        var frame = this.get();
+        var source = frame.source;
+        var renderTarget = this.renderTarget;
+
+        //  Then we can apply the new one
+        frame.glTexture = renderTarget.texture;
+
+        source.isRenderTexture = true;
+        source.isGLTexture = true;
+
+        source.glTexture = renderTarget.texture;
+        source.glTexture.flipY = true;
+
+        return this;
+    },
+
+    /**
      * If you are planning on using this Render Texture as a base texture for Sprite
      * Game Objects, then you should call this method with a value of `true` before
      * drawing anything to it, otherwise you will get inverted frames in WebGL.
@@ -295,7 +347,7 @@ var DynamicTexture = new Class({
      *
      * @param {boolean} value - Is this Render Target being used as a Sprite Texture, or not?
      *
-     * @return {this} This Game Object instance.
+     * @return {this} This Dynamic Texture instance.
      */
     setIsSpriteTexture: function (value)
     {
