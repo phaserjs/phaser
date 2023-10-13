@@ -636,6 +636,9 @@ var WebGLRenderer = new Class({
          */
         this._debugCapture = false;
 
+        this.textureCache = [];
+        this.framebufferCache = [];
+
         this.init(this.config);
     },
 
@@ -807,6 +810,8 @@ var WebGLRenderer = new Class({
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 0, 0, 255, 255 ]));
 
             this.textureIndexes.push(index);
+
+            this.addToTextureCache(tempTexture, 1, 1, 'MacFix' + index);
         }
 
         this.pipelines = new PipelineManager(this);
@@ -1864,6 +1869,40 @@ var WebGLRenderer = new Class({
         return this;
     },
 
+    addToTextureCache: function (texture, width, height, source, isAlphaPremultiplied, isRenderTexture)
+    {
+        if (source === undefined) { source = 'Unknown'; }
+        if (isAlphaPremultiplied === undefined) { isAlphaPremultiplied = true; }
+        if (isRenderTexture === undefined) { isRenderTexture = false; }
+
+        this.textureCache.push({
+            texture: texture,
+            source: source,
+            width: width,
+            height: height,
+            isAlphaPremultiplied: isAlphaPremultiplied,
+            isRenderTexture: isRenderTexture
+        });
+
+        console.log('addToTextureCache', width, height, source, this.textureCache.length);
+
+        return this;
+    },
+
+    getTextureCacheEntry: function (texture)
+    {
+        //  Find the entry in the textureCache
+        var index = this.textureCache.findIndex(function (element)
+        {
+            return (element.texture === texture);
+        });
+
+        if (index !== -1)
+        {
+            return this.textureCache[index];
+        }
+    },
+
     /**
      * Creates a texture from an image source. If the source is not valid it creates an empty texture.
      *
@@ -2013,10 +2052,14 @@ var WebGLRenderer = new Class({
             gl.bindTexture(gl.TEXTURE_2D, currentTexture);
         }
 
-        texture.isAlphaPremultiplied = pma;
-        texture.isRenderTexture = false;
-        texture.width = width;
-        texture.height = height;
+        this.addToTextureCache(texture, width, height, 'Unknown', pma, false);
+
+        //  These properties used to be directly on the WebGLTexture, but now they're stored in the cache:
+
+        // texture.isAlphaPremultiplied = pma;
+        // texture.isRenderTexture = false;
+        // texture.width = width;
+        // texture.height = height;
 
         return texture;
     },
@@ -2044,8 +2087,10 @@ var WebGLRenderer = new Class({
 
         this.setFramebuffer(framebuffer);
 
-        renderTexture.isRenderTexture = true;
-        renderTexture.isAlphaPremultiplied = false;
+        var entry = this.getTextureCacheEntry(renderTexture);
+
+        entry.isRenderTexture = true;
+        entry.isAlphaPremultiplied = false;
 
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, renderTexture, 0);
 
@@ -2063,6 +2108,7 @@ var WebGLRenderer = new Class({
             throw new Error('Framebuffer status: ' + (errors[complete] || complete));
         }
 
+        //  TODO - REMOVE THIS
         framebuffer.renderTexture = renderTexture;
 
         if (addDepthStencilBuffer)
@@ -2265,15 +2311,34 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteTexture
      * @since 3.0.0
      *
-     * @param {WebGLTexture} texture - The WebGL Texture to be deleted.
+     * @param {WebGLTexture} glTexture - The WebGL Texture to be deleted.
      *
      * @return {this} This WebGLRenderer instance.
      */
-    deleteTexture: function (texture)
+    deleteTexture: function (glTexture)
     {
-        if (texture)
+        if (glTexture)
         {
-            this.gl.deleteTexture(texture);
+            //  Find the entry in the textureCache
+            var index = this.textureCache.findIndex(function (element)
+            {
+                return (element.texture === glTexture);
+            });
+
+            if (index !== -1)
+            {
+                var entry = this.textureCache[index];
+
+                this.textureCache.splice(index, 1);
+
+                this.gl.deleteTexture(entry.texture);
+
+                console.log('Texture Deleted from index', index);
+            }
+            else
+            {
+                console.warn('Texture not found in cache', glTexture);
+            }
         }
 
         return this;
@@ -2296,6 +2361,8 @@ var WebGLRenderer = new Class({
             return this;
         }
 
+        console.log('deleteFramebuffer', framebuffer);
+
         var gl = this.gl;
 
         if (this.currentFramebuffer === framebuffer)
@@ -2307,6 +2374,8 @@ var WebGLRenderer = new Class({
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 
+        framebuffer.renderTexture = undefined;
+
         // Check for a color attachment and remove it
         var colorAttachment = gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
 
@@ -2314,8 +2383,14 @@ var WebGLRenderer = new Class({
         {
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, null, 0);
 
-            // TODO: Check if this texture is used elsewhere. If not, delete it:
-            gl.deleteTexture(colorAttachment);
+            var colorEntry = this.getTextureCacheEntry(colorAttachment);
+
+            if (colorEntry)
+            {
+                this.deleteTexture(colorAttachment);
+            }
+
+            // gl.deleteTexture(colorAttachment);
         }
 
         // Check for a depth-stencil attachment and delete it
@@ -2324,6 +2399,8 @@ var WebGLRenderer = new Class({
         if (depthStencilAttachment !== null)
         {
             gl.deleteRenderbuffer(depthStencilAttachment);
+
+            console.log('deleteFramebuffer - delete render buffer', depthStencilAttachment);
         }
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);

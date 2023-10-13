@@ -100,6 +100,28 @@ var DynamicTexture = new Class({
         this.renderer = renderer;
 
         /**
+         * The width of this Dynamic Texture.
+         *
+         * Treat this property as read-only. Use the `setSize` method to change the size.
+         *
+         * @name Phaser.Textures.DynamicTexture#width
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.width = width;
+
+        /**
+         * The height of this Dynamic Texture.
+         *
+         * Treat this property as read-only. Use the `setSize` method to change the size.
+         *
+         * @name Phaser.Textures.DynamicTexture#height
+         * @type {number}
+         * @since 3.60.0
+         */
+        this.height = height;
+
+        /**
          * This flag is set to 'true' during `beginDraw` and reset to 'false` in `endDraw`,
          * allowing you to determine if this Dynamic Texture is batch drawing, or not.
          *
@@ -232,6 +254,8 @@ var DynamicTexture = new Class({
         var frame = this.get();
         var source = frame.source;
 
+        console.log('DT.setSize >>>', width, height, 'from', this.width, this.height);
+
         if (width !== this.width || height !== this.height)
         {
             if (this.canvas)
@@ -246,10 +270,17 @@ var DynamicTexture = new Class({
             {
                 renderTarget.resize(width, height);
 
+                var e = this.renderer.getTextureCacheEntry(frame.glTexture);
+
+                console.log('DT.setSize e', e);
+                console.log('DT.setSize rt', frame, frame.glTexture);
+                console.log('DT.setSize 2', frame.glTexture === renderTarget.texture);
+
                 frame.glTexture = renderTarget.texture;
 
                 source.isRenderTexture = true;
                 source.isGLTexture = true;
+
                 source.glTexture = renderTarget.texture;
                 source.glTexture.flipY = true;
             }

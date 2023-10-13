@@ -224,6 +224,8 @@ var TextureSource = new Class({
                 var height = this.height;
                 var scaleMode = this.scaleMode;
 
+                console.log('TextureSource', this.texture.key);
+
                 if (this.isCanvas)
                 {
                     this.glTexture = renderer.createCanvasTexture(image, false, flipY);

@@ -136,7 +136,7 @@ var Plane = new Class({
         this.setViewHeight();
     },
 
-    /**     
+    /**
      * Do not change this value. It has no effect other than to break things.
      *
      * @name Phaser.GameObjects.Plane#originX
@@ -154,7 +154,7 @@ var Plane = new Class({
 
     },
 
-    /**     
+    /**
      * Do not change this value. It has no effect other than to break things.
      *
      * @name Phaser.GameObjects.Plane#originY
@@ -385,7 +385,8 @@ var Plane = new Class({
         if (alpha2 === undefined) { alpha2 = 255; }
         if (height === undefined) { height = 128; }
 
-        var gl = this.scene.sys.renderer.gl;
+        var renderer = this.scene.sys.renderer;
+        var gl = renderer.gl;
 
         var glTexture = gl.createTexture();
 
@@ -420,10 +421,12 @@ var Plane = new Class({
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 16, 16, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(colors));
 
-        glTexture.isAlphaPremultiplied = true;
-        glTexture.isRenderTexture = false;
-        glTexture.width = 16;
-        glTexture.height = 16;
+        renderer.addToTextureCache(glTexture, 16, 16, 'Plane');
+
+        // glTexture.isAlphaPremultiplied = true;
+        // glTexture.isRenderTexture = false;
+        // glTexture.width = 16;
+        // glTexture.height = 16;
 
         var texture = this.scene.sys.textures.addGLTexture(UUID(), glTexture, 16, 16);
 

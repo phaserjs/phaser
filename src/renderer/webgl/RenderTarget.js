@@ -225,11 +225,13 @@ var RenderTarget = new Class({
 
         if (this.autoResize && (scaledWidth !== this.width || scaledHeight !== this.height))
         {
+            console.log('RenderTarget.resize', width, height);
+
             var renderer = this.renderer;
 
-            renderer.deleteFramebuffer(this.framebuffer);
-
             renderer.deleteTexture(this.texture);
+
+            renderer.deleteFramebuffer(this.framebuffer);
 
             width *= this.scale;
             height *= this.scale;
@@ -386,8 +388,11 @@ var RenderTarget = new Class({
 
         renderer.off(Events.RESIZE, this.resize, this);
 
-        renderer.deleteFramebuffer(this.framebuffer);
+        console.log('RT.destroy');
+
         renderer.deleteTexture(this.texture);
+
+        renderer.deleteFramebuffer(this.framebuffer);
 
         this.renderer = null;
         this.framebuffer = null;

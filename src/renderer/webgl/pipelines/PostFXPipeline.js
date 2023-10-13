@@ -224,16 +224,20 @@ var PostFXPipeline = new Class({
          */
         this.halfFrame2;
 
-        if (this.renderer.isBooted)
-        {
-            this.manager = this.renderer.pipelines;
+        this.pendingBoot = true;
 
-            this.boot();
-        }
+        // if (this.renderer.isBooted)
+        // {
+        //     this.manager = this.renderer.pipelines;
+
+        //     this.boot();
+        // }
     },
 
     boot: function ()
     {
+        this.manager = this.renderer.pipelines;
+
         WebGLPipeline.prototype.boot.call(this);
 
         var utility = this.manager.UTILITY_PIPELINE;
@@ -251,6 +255,34 @@ var PostFXPipeline = new Class({
         {
             targets[i].autoResize = true;
         }
+
+        this.pendingBoot = false;
+    },
+
+    /**
+     * This method is called every time the Pipeline Manager makes this pipeline the currently active one.
+     *
+     * It binds the resources and shader needed for this pipeline, including setting the vertex buffer
+     * and attribute pointers.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
+     * @fires Phaser.Renderer.WebGL.Pipelines.Events#BIND
+     * @since 3.0.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLShader} [currentShader] - The shader to set as being current.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    bind: function (currentShader)
+    {
+        if (this.pendingBoot)
+        {
+            console.log('PostFXPipeline booting');
+
+            this.boot();
+        }
+
+        WebGLPipeline.prototype.bind.call(this, currentShader);
     },
 
     onDraw: function (renderTarget)

@@ -168,6 +168,8 @@ var LightPipeline = new Class({
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 127, 127, 255, 255 ]));
 
+        this.renderer.addToTextureCache(tempTexture, 1, 1, 'LightPipeline');
+
         this.defaultNormalMap = { glTexture: tempTexture };
     },
 
