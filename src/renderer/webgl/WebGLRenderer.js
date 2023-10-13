@@ -2097,7 +2097,7 @@ var WebGLRenderer = new Class({
         {
             this.flush();
 
-            this.maskTarget.bind();
+            this.maskTarget.bind(true);
 
             if (this.currentCameraMask.mask !== bitmapMask)
             {
