@@ -1017,9 +1017,6 @@ var Text = new Class({
     /**
      * Set the resolution used by this Text object.
      *
-     * By default it will be set to match the resolution set in the Game Config,
-     * but you can override it via this method, or by specifying it in the Text style configuration object.
-     *
      * It allows for much clearer text on High DPI devices, at the cost of memory because it uses larger
      * internal Canvas textures for the Text.
      *
