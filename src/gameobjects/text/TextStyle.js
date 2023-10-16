@@ -735,7 +735,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.TextStyle#setFill
      * @since 3.0.0
      *
-     * @param {string} color - The text fill color.
+     * @param {string|CanvasGradient|CanvasPattern} color - The text fill color.
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
