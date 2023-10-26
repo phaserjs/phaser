@@ -931,6 +931,9 @@ var Body = new Class({
          * @since 3.0.0
          */
         this._bounds = new Rectangle();
+
+        this.autoUpdate = false;
+
     },
 
     /**
@@ -1110,7 +1113,7 @@ var Body = new Class({
         this.rotation = this.transform.rotation;
         this.preRotation = this.rotation;
 
-        if (this.moves)
+        if (this.moves && !this.autoUpdate)
         {
             var pos = this.position;
 
@@ -1144,6 +1147,14 @@ var Body = new Class({
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
 
+        if (this.autoUpdate)
+        {
+            this.velocity.set(
+                (this.position.x - this.prevFrame.x) / delta,
+                (this.position.y - this.prevFrame.y) / delta
+            );
+        }
+
         if (this.moves)
         {
             this.world.updateMotion(this, delta);
@@ -1151,9 +1162,12 @@ var Body = new Class({
             var vx = this.velocity.x;
             var vy = this.velocity.y;
 
-            this.newVelocity.set(vx * delta, vy * delta);
+            if (!this.autoUpdate)
+            {
+                this.newVelocity.set(vx * delta, vy * delta);
 
-            this.position.add(this.newVelocity);
+                this.position.add(this.newVelocity);
+            }
 
             this.updateCenter();
 
@@ -1248,6 +1262,12 @@ var Body = new Class({
 
         this._tx = dx;
         this._ty = dy;
+
+        if (this.autoUpdate)
+        {
+            this.prevFrame.x = this.position.x;
+            this.prevFrame.y = this.position.y;
+        }
     },
 
     /**
