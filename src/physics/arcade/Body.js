@@ -933,7 +933,7 @@ var Body = new Class({
         this._bounds = new Rectangle();
 
         this.autoUpdate = false;
-
+        this.autoFrame = this.position.clone();
     },
 
     /**
@@ -1113,12 +1113,13 @@ var Body = new Class({
         this.rotation = this.transform.rotation;
         this.preRotation = this.rotation;
 
-        if (this.moves && !this.autoUpdate)
+        if (this.moves)
         {
             var pos = this.position;
 
             this.prev.x = pos.x;
             this.prev.y = pos.y;
+
             this.prevFrame.x = pos.x;
             this.prevFrame.y = pos.y;
         }
@@ -1144,29 +1145,35 @@ var Body = new Class({
      */
     update: function (delta)
     {
-        this.prev.x = this.position.x;
-        this.prev.y = this.position.y;
+        var prev = this.prev;
+        var pos = this.position;
+        var vel = this.velocity;
+
+        prev.set(pos.x, pos.y);
 
         if (this.autoUpdate)
         {
-            this.velocity.set(
-                (this.position.x - this.prevFrame.x) / delta,
-                (this.position.y - this.prevFrame.y) / delta
+            vel.set(
+                (pos.x - this.autoFrame.x) / delta,
+                (pos.y - this.autoFrame.y) / delta
             );
+
+            this._dx = pos.x - this.autoFrame.x;
+            this._dy = pos.y - this.autoFrame.y;
         }
 
         if (this.moves)
         {
             this.world.updateMotion(this, delta);
 
-            var vx = this.velocity.x;
-            var vy = this.velocity.y;
+            var vx = vel.x;
+            var vy = vel.y;
 
             if (!this.autoUpdate)
             {
                 this.newVelocity.set(vx * delta, vy * delta);
 
-                this.position.add(this.newVelocity);
+                pos.add(this.newVelocity);
             }
 
             this.updateCenter();
@@ -1183,8 +1190,11 @@ var Body = new Class({
             }
         }
 
-        this._dx = this.position.x - this.prev.x;
-        this._dy = this.position.y - this.prev.y;
+        if (!this.autoUpdate)
+        {
+            this._dx = pos.x - prev.x;
+            this._dy = pos.y - prev.y;
+        }
     },
 
     /**
@@ -1197,8 +1207,11 @@ var Body = new Class({
      */
     postUpdate: function ()
     {
-        var dx = this.position.x - this.prevFrame.x;
-        var dy = this.position.y - this.prevFrame.y;
+        var pos = this.position;
+
+        var dx = pos.x - this.prevFrame.x;
+        var dy = pos.y - this.prevFrame.y;
+
         var gameObject = this.gameObject;
 
         if (this.moves)
@@ -1263,11 +1276,7 @@ var Body = new Class({
         this._tx = dx;
         this._ty = dy;
 
-        if (this.autoUpdate)
-        {
-            this.prevFrame.x = this.position.x;
-            this.prevFrame.y = this.position.y;
-        }
+        this.autoFrame.set(pos.x, pos.y);
     },
 
     /**
