@@ -932,7 +932,28 @@ var Body = new Class({
          */
         this._bounds = new Rectangle();
 
-        this.autoUpdate = false;
+        /**
+         * Is this Body under direct control, outside of the physics engine? For example,
+         * are you trying to move it via a Tween? Or have it follow a path? If so then
+         * you can enable this boolean so that the Body will calculate its velocity based
+         * purely on its change in position each frame. This allows you to then tween
+         * the position and still have it collide with other objects. However, setting
+         * the velocity will have no impact on this Body while this is set.
+         *
+         * @name Phaser.Physics.Arcade.Body#directControl
+         * @type {boolean}
+         * @since 3.61.0
+         */
+        this.directControl = false;
+
+        /**
+         * Stores the previous position of the Game Object when directControl is enabled.
+         *
+         * @name Phaser.Physics.Arcade.Body#autoFrame
+         * @type {Phaser.Math.Vector2}
+         * @private
+         * @since 3.61.0
+         */
         this.autoFrame = this.position.clone();
     },
 
@@ -1151,49 +1172,56 @@ var Body = new Class({
 
         prev.set(pos.x, pos.y);
 
-        if (this.autoUpdate)
-        {
-            vel.set(
-                (pos.x - this.autoFrame.x) / delta,
-                (pos.y - this.autoFrame.y) / delta
-            );
-
-            this._dx = pos.x - this.autoFrame.x;
-            this._dy = pos.y - this.autoFrame.y;
-        }
-
-        if (this.moves)
-        {
-            this.world.updateMotion(this, delta);
-
-            var vx = vel.x;
-            var vy = vel.y;
-
-            if (!this.autoUpdate)
-            {
-                this.newVelocity.set(vx * delta, vy * delta);
-
-                pos.add(this.newVelocity);
-            }
-
-            this.updateCenter();
-
-            this.angle = Math.atan2(vy, vx);
-            this.speed = Math.sqrt(vx * vx + vy * vy);
-
-            //  Now the update will throw collision checks at the Body
-            //  And finally we'll integrate the new position back to the Sprite in postUpdate
-
-            if (this.collideWorldBounds && this.checkWorldBounds() && this.onWorldBounds)
-            {
-                this.world.emit(Events.WORLD_BOUNDS, this, this.blocked.up, this.blocked.down, this.blocked.left, this.blocked.right);
-            }
-        }
-
-        if (!this.autoUpdate)
+        if (!this.moves)
         {
             this._dx = pos.x - prev.x;
             this._dy = pos.y - prev.y;
+
+            return;
+        }
+
+        if (this.directControl)
+        {
+            var autoFrame = this.autoFrame;
+
+            vel.set(
+                (pos.x - autoFrame.x) / delta,
+                (pos.y - autoFrame.y) / delta
+            );
+
+            this.world.updateMotion(this, delta);
+
+            this._dx = pos.x - autoFrame.x;
+            this._dy = pos.y - autoFrame.y;
+        }
+        else
+        {
+            this.world.updateMotion(this, delta);
+
+            this.newVelocity.set(vel.x * delta, vel.y * delta);
+
+            pos.add(this.newVelocity);
+
+            this._dx = pos.x - prev.x;
+            this._dy = pos.y - prev.y;
+        }
+
+        var vx = vel.x;
+        var vy = vel.y;
+
+        this.updateCenter();
+
+        this.angle = Math.atan2(vy, vx);
+        this.speed = Math.sqrt(vx * vx + vy * vy);
+
+        //  Now the update will throw collision checks at the Body
+        //  And finally we'll integrate the new position back to the Sprite in postUpdate
+
+        if (this.collideWorldBounds && this.checkWorldBounds() && this.onWorldBounds)
+        {
+            var blocked = this.blocked;
+
+            this.world.emit(Events.WORLD_BOUNDS, this, blocked.up, blocked.down, blocked.left, blocked.right);
         }
     },
 
@@ -1563,6 +1591,7 @@ var Body = new Class({
 
         this.prev.copy(pos);
         this.prevFrame.copy(pos);
+        this.autoFrame.copy(pos);
 
         if (gameObject)
         {
@@ -1887,6 +1916,30 @@ var Body = new Class({
     willDrawDebug: function ()
     {
         return (this.debugShowBody || this.debugShowVelocity);
+    },
+
+    /**
+     * Sets whether this Body should calculate its velocity based on its change in
+     * position every frame. The default, which is to not do this, means that you
+     * make this Body move by setting the velocity directly. However, if you are
+     * trying to move this Body via a Tween, or have it follow a Path, then you
+     * should enable this instead. This will allow it to still collide with other
+     * bodies, something that isn't possible if you're just changing its position directly.
+     *
+     * @method Phaser.Physics.Arcade.Body#setDirectControl
+     * @since 3.61.0
+     *
+     * @param {boolean} [value=true] - `true` if the Body calculate velocity based on changes in position, otherwise `false`.
+     *
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setDirectControl: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.directControl = value;
+
+        return this;
     },
 
     /**
