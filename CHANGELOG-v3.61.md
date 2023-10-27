@@ -1,5 +1,6 @@
 # New Features - Arcade Physics
 
+* Arcade Physics Bodies have a new method called `setDirectControl` which toggles a new boolean property `directControl`. When enabled (it's false by default) it means the Body will calculate its velocity based on its change in position compared to the previous frame. This allows you to directly move a Body around the physics world by just changing its position, without having to use acceleration or velocity. This is useful if you want to move it via a Tween, or follow a Pointer, or a Path. Because its velocity is calculated based on this movement it will still resolve collisions with other bodies, imparting velocity to them as usual.
 * Arcade Physics Bodies have a new property called `slideFactor`. This is a Vector2 that controls how much velocity is retained by a Body after it has been pushed by another Body. The default value is 1, which means it retains all of its velocity. If set to zero, it will retain none of it. This allows you to create a Body that can be pushed around without imparting any velocity to it.
 * `Body.setSlideFactor` is a new method that sets the Body's `slideFactor` property.
 * The Arcade Physics World has a new method `nextCategory` which will create a new collision category and return it. You can define up to 32 unique collision categories per world.
