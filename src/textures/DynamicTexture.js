@@ -108,7 +108,7 @@ var DynamicTexture = new Class({
          * @type {number}
          * @since 3.60.0
          */
-        this.width = width;
+        this.width = -1;
 
         /**
          * The height of this Dynamic Texture.
@@ -119,7 +119,7 @@ var DynamicTexture = new Class({
          * @type {number}
          * @since 3.60.0
          */
-        this.height = height;
+        this.height = -1;
 
         /**
          * This flag is set to 'true' during `beginDraw` and reset to 'false` in `endDraw`,
@@ -228,12 +228,7 @@ var DynamicTexture = new Class({
 
         if (!isCanvas)
         {
-            var frame = this.get();
-            var textureSource = frame.source;
-
-            textureSource.isRenderTexture = true;
-            textureSource.isGLTexture = true;
-            textureSource.glTexture.flipY = true;
+            this.setSize(width, height);
         }
     },
 
@@ -274,10 +269,13 @@ var DynamicTexture = new Class({
 
             if (renderTarget)
             {
-                renderTarget.resize(width, height);
+                if (renderTarget.willResize(width, height))
+                {
+                    renderTarget.resize(width, height);
 
-                //  The WebGLTexture has been resized, so is new, so we need to delete the old one
-                this.renderer.deleteTexture(source.glTexture);
+                    //  The WebGLTexture has been resized, so is new, so we need to delete the old one
+                    this.renderer.deleteTexture(source.glTexture);
+                }
 
                 this.setFromRenderTarget();
             }
