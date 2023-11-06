@@ -937,25 +937,34 @@ var TransformMatrix = new Class({
         var e = matrix[4];
         var f = matrix[5];
 
-        quad[0] = x * a + y * c + e;
-        quad[1] = x * b + y * d + f;
+        if (roundPixels)
+        {
+            quad[0] = Math.round(x * a + y * c + e);
+            quad[1] = Math.round(x * b + y * d + f);
 
-        quad[2] = x * a + yh * c + e;
-        quad[3] = x * b + yh * d + f;
+            quad[2] = Math.round(x * a + yh * c + e);
+            quad[3] = Math.round(x * b + yh * d + f);
 
-        quad[4] = xw * a + yh * c + e;
-        quad[5] = xw * b + yh * d + f;
+            quad[4] = Math.round(xw * a + yh * c + e);
+            quad[5] = Math.round(xw * b + yh * d + f);
 
-        quad[6] = xw * a + y * c + e;
-        quad[7] = xw * b + y * d + f;
+            quad[6] = Math.round(xw * a + y * c + e);
+            quad[7] = Math.round(xw * b + y * d + f);
+        }
+        else
+        {
+            quad[0] = x * a + y * c + e;
+            quad[1] = x * b + y * d + f;
 
-        // if (roundPixels)
-        // {
-        //     quad.forEach(function (value, index)
-        //     {
-        //         quad[index] = Math.round(value);
-        //     });
-        // }
+            quad[2] = x * a + yh * c + e;
+            quad[3] = x * b + yh * d + f;
+
+            quad[4] = xw * a + yh * c + e;
+            quad[5] = xw * b + yh * d + f;
+
+            quad[6] = xw * a + y * c + e;
+            quad[7] = xw * b + y * d + f;
+        }
 
         return quad;
     },
