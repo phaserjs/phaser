@@ -254,6 +254,9 @@ var PreFXPipeline = new Class({
 
         //  So calls to set uniforms in onPreRender target the right shader:
         this.currentShader = this.copyShader;
+
+        this.set2f('uResolution', renderer.width, renderer.height);
+        this.set1i('uRoundPixels', renderer.config.roundPixels);
     },
 
     /**
@@ -366,6 +369,8 @@ var PreFXPipeline = new Class({
         this.setShader(this.drawSpriteShader);
 
         this.set1i('uMainSampler', 0);
+        this.set2f('uResolution', renderer.width, renderer.height);
+        this.set1i('uRoundPixels', renderer.config.roundPixels);
 
         this.flipProjectionMatrix(true);
 
@@ -508,7 +513,11 @@ var PreFXPipeline = new Class({
 
         shader.bind(wasBound, false);
 
+        var renderer = this.renderer;
+
         this.set1i('uMainSampler', 0);
+        this.set2f('uResolution', renderer.width, renderer.height);
+        this.set1i('uRoundPixels', renderer.config.roundPixels);
 
         sprite.preFX.onFXCopy(this);
 

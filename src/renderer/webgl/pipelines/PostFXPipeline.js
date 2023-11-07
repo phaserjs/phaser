@@ -243,7 +243,11 @@ var PostFXPipeline = new Class({
         this.halfFrame1 = utility.halfFrame1;
         this.halfFrame2 = utility.halfFrame2;
 
+        var renderer = this.renderer;
+
         this.set1i('uMainSampler', 0);
+        this.set2f('uResolution', renderer.width, renderer.height);
+        this.set1i('uRoundPixels', renderer.config.roundPixels);
 
         var targets = this.renderTargets;
 
