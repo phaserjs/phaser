@@ -516,24 +516,12 @@ var Camera = new Class({
 
         var emitFollowEvent = false;
 
-        if (this.roundPixels)
-        {
-            originX = Math.floor(originX);
-            originY = Math.floor(originY);
-        }
-
         if (follow && !this.panEffect.isRunning)
         {
             var lerp = this.lerp;
 
             var fx = follow.x - this.followOffset.x;
             var fy = follow.y - this.followOffset.y;
-
-            if (this.roundPixels)
-            {
-                fx = Math.floor(fx);
-                fy = Math.floor(fy);
-            }
 
             if (deadzone)
             {
@@ -570,12 +558,6 @@ var Camera = new Class({
             sy = this.clampY(sy);
         }
 
-        if (this.roundPixels)
-        {
-            sx = Math.floor(sx);
-            sy = Math.floor(sy);
-        }
-
         //  Values are in pixels and not impacted by zooming the Camera
         this.scrollX = sx;
         this.scrollY = sy;
@@ -590,18 +572,13 @@ var Camera = new Class({
         var displayWidth = width / zoom;
         var displayHeight = height / zoom;
 
-        var vwx = midX - (displayWidth / 2);
-        var vwy = midY - (displayHeight / 2);
-
-        if (this.roundPixels)
-        {
-            vwx = Math.floor(vwx);
-            vwy = Math.floor(vwy);
-        }
+        var vwx = Math.floor(midX - (displayWidth / 2));
+        var vwy = Math.floor(midY - (displayHeight / 2));
 
         this.worldView.setTo(vwx, vwy, displayWidth, displayHeight);
 
         matrix.applyITRS(Math.floor(this.x + originX), Math.floor(this.y + originY), this.rotation, zoom, zoom);
+
         matrix.translate(-originX, -originY);
 
         this.shakeEffect.preRender();
