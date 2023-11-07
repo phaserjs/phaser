@@ -945,12 +945,6 @@ var BaseCamera = new Class({
             sy = this.clampY(sy);
         }
 
-        if (this.roundPixels)
-        {
-            originX = Math.round(originX);
-            originY = Math.round(originY);
-        }
-
         //  Values are in pixels and not impacted by zooming the Camera
         this.scrollX = sx;
         this.scrollY = sy;
