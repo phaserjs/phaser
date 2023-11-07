@@ -5,6 +5,8 @@
 * `CanvasRenderer.batchSprite` has been updated to correctly use the Camera `roundPixels` property and apply it to the `drawImage` call.
 * `Camera.preRender` will no longer round the origin, follow coordinates or scrollX/Y coordinates. It will still round the World view.
 * The `MultiPipeline.batchSprite` method (which is also used by the Single Pipeline and Mobile Pipeline) will no longer use `roundPixels` when calculating the quad vertex data. It also won't apply it to any of the sprite values. This is all now handled in the shader directly.
+* `TransformMatrix.setQuad` no longer uses an anonymous function for `roundPixels`, which will help with performance.
+* The `TransformMatrix.setQuad` method signature has changed slightly. The `roundPixels` parameter is now optional and defaults to `false`. Previously, you always had to set it.
 
 # New Features - Arcade Physics
 
@@ -61,7 +63,6 @@ The new collision categories are used automatically by either directly calling t
 * `DynamicTexture.setFromRenderTarget` is a new method that syncs the internal Frame and TextureSource GL textures with the Render Target GL textures.
 * When a framebuffer is deleted, it now sets its `renderTexture` property to `undefined` to ensure the reference is cleared.
 * `TransformMatrix.setToContext` will now use `setTransform(this)` as 'this' is an equivalent object that this method can natively take.
-* `TransformMatrix.setQuad` no longer uses an anonymous function for `roundPixels`, which will help with performance.
 * Optimized `WebGLRenderer.setTextureFilter` so it no longer uses a temporary array for the filter mode.
 
 # Bug Fixes
