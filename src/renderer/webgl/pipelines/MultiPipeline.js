@@ -42,7 +42,9 @@ var WebGLPipeline = require('../WebGLPipeline');
  * The default shader uniforms for this pipeline are:
  *
  * `uProjectionMatrix` (mat4)
- * `uMainSampler` (sampler2D array)
+ * `uRoundPixels` (int)
+ * `uResolution` (vec2)
+ * `uMainSampler` (sampler2D, or sampler2D array)
  *
  * If you wish to create a custom pipeline extending from this one, you can use two string
  * declarations in your fragment shader source: `%count%` and `%forloop%`, where `count` is
@@ -373,12 +375,6 @@ var MultiPipeline = new Class({
         var gx = gameObject.x;
         var gy = gameObject.y;
 
-        if (camera.roundPixels)
-        {
-            gx = Math.floor(gx);
-            gy = Math.floor(gy);
-        }
-
         spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
 
         camMatrix.copyFrom(camera.matrix);
@@ -401,7 +397,7 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight);
+        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight, camera.roundPixels);
 
         var getTint = Utils.getTintAppendFloatAlpha;
         var cameraAlpha = camera.alpha;
@@ -555,12 +551,6 @@ var MultiPipeline = new Class({
             y += srcHeight;
         }
 
-        if (camera.roundPixels)
-        {
-            srcX = Math.floor(srcX);
-            srcY = Math.floor(srcY);
-        }
-
         spriteMatrix.applyITRS(srcX, srcY, rotation, scaleX, scaleY);
 
         camMatrix.copyFrom(camera.matrix);
@@ -583,7 +573,7 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var quad = calcMatrix.setQuad(x, y, x + width, y + height);
+        var quad = calcMatrix.setQuad(x, y, x + width, y + height, camera.roundPixels);
 
         if (textureUnit === undefined)
         {
