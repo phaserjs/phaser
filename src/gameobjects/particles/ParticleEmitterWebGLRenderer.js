@@ -49,7 +49,6 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
         managerMatrix.applyITRS(emitter.x, emitter.y, emitter.rotation, emitter.scaleX, emitter.scaleY);
     }
 
-    var roundPixels = camera.roundPixels;
     var getTint = Utils.getTintAppendFloatAlpha;
     var camerAlpha = camera.alpha;
     var emitterAlpha = emitter.alpha;
@@ -121,7 +120,7 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
         var x = -frame.halfWidth;
         var y = -frame.halfHeight;
 
-        var quad = calcMatrix.setQuad(x, y, x + frame.width, y + frame.height, roundPixels);
+        var quad = calcMatrix.setQuad(x, y, x + frame.width, y + frame.height);
 
         var tint = getTint(particle.tint, alpha);
 

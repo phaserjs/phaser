@@ -573,7 +573,7 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var quad = calcMatrix.setQuad(x, y, x + width, y + height, camera.roundPixels);
+        var quad = calcMatrix.setQuad(x, y, x + width, y + height);
 
         if (textureUnit === undefined)
         {
@@ -631,7 +631,7 @@ var MultiPipeline = new Class({
             calcMatrix = spriteMatrix;
         }
 
-        var quad = calcMatrix.setQuad(x, y, x + frame.width, y + frame.height, false);
+        var quad = calcMatrix.setQuad(x, y, x + frame.width, y + frame.height);
 
         var unit = this.setTexture2D(frame.source.glTexture);
 
@@ -667,7 +667,7 @@ var MultiPipeline = new Class({
             parentMatrix.multiply(currentMatrix, calcMatrix);
         }
 
-        var quad = calcMatrix.setQuad(x, y, x + width, y + height, false);
+        var quad = calcMatrix.setQuad(x, y, x + width, y + height);
 
         var tint = this.fillTint;
 
