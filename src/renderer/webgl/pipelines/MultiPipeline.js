@@ -460,7 +460,8 @@ var MultiPipeline = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container.
      * @param {boolean} [skipFlip=false] - Skip the renderTexture check.
-     * @param {number} [textureUnit] - Use the currently bound texture unit?
+     * @param {number} [textureUnit] - The texture unit to set (defaults to currently bound if undefined or null)
+     * @param {boolean} [skipPrePost=false] - Skip the pre and post manager calls?
      */
     batchTexture: function (
         gameObject,
@@ -479,8 +480,11 @@ var MultiPipeline = new Class({
         camera,
         parentTransformMatrix,
         skipFlip,
-        textureUnit)
+        textureUnit,
+        skipPrePost)
     {
+        if (skipPrePost === undefined) { skipPrePost = false; }
+
         this.manager.set(this, gameObject);
 
         var camMatrix = this._tempMatrix1;
@@ -575,12 +579,12 @@ var MultiPipeline = new Class({
 
         var quad = calcMatrix.setQuad(x, y, x + width, y + height);
 
-        if (textureUnit === undefined)
+        if (textureUnit === undefined || textureUnit === null)
         {
             textureUnit = this.setTexture2D(texture);
         }
 
-        if (gameObject)
+        if (gameObject && !skipPrePost)
         {
             this.manager.preBatch(gameObject);
         }
@@ -589,7 +593,7 @@ var MultiPipeline = new Class({
 
         this.batchQuad(gameObject, quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7], u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
 
-        if (gameObject)
+        if (gameObject && !skipPrePost)
         {
             this.manager.postBatch(gameObject);
         }
