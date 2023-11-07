@@ -397,7 +397,7 @@ var MultiPipeline = new Class({
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
-        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight, camera.roundPixels);
+        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight, false);
 
         var getTint = Utils.getTintAppendFloatAlpha;
         var cameraAlpha = camera.alpha;
