@@ -1,3 +1,11 @@
+# New Features - Round Pixels
+
+* All of the core vertex shaders, including Multi, Single and Mobile now have a new uniform called `uRoundPixels` which is set in all of the corresponding pipelines. This means that all pixel rounding calculations are now done on the GPU instead of the CPU, which can save a lot of math in intensive games.
+* The Game Config `roundPixels` property is now `true` by default. This means that all Game Objects will be positioned and rendered with pixel-perfect precision, which is by far the most common use-case for Phaser games. This will prevent sub-pixelation when rendering at non-integer offsets and allows for smoother camera scrolling, especially at higher zoom scales. If you wish to disable this, you can do so via the Game Config, or by setting the `roundPixels` property in the Game Config to `false`. Note that only `roundPixels` has been set to `true` - the `pixelArt` property remains `false`. So if you're creating a pixel-art style game, please still enable this in your game config.
+* `CanvasRenderer.batchSprite` has been updated to correctly use the Camera `roundPixels` property and apply it to the `drawImage` call.
+* `Camera.preRender` will no longer round the origin, follow coordinates or scrollX/Y coordinates. It will still round the World view.
+* The `MultiPipeline.batchSprite` method (which is also used by the Single Pipeline and Mobile Pipeline) will no longer use `roundPixels` when calculating the quad vertex data. It also won't apply it to any of the sprite values. This is all now handled in the shader directly.
+
 # New Features - Arcade Physics
 
 * Arcade Physics Bodies have a new method called `setDirectControl` which toggles a new boolean property `directControl`. When enabled (it's false by default) it means the Body will calculate its velocity based on its change in position compared to the previous frame. This allows you to directly move a Body around the physics world by just changing its position, without having to use acceleration or velocity. This is useful if you want to move it via a Tween, or follow a Pointer, or a Path. Because its velocity is calculated based on this movement it will still resolve collisions with other bodies, imparting velocity to them as usual.
@@ -52,6 +60,9 @@ The new collision categories are used automatically by either directly calling t
 * `SetCollisionObject` is a new function that Arcade Physics bodies use internally to create and reset their `ArcadeBodyCollision` data objects.
 * `DynamicTexture.setFromRenderTarget` is a new method that syncs the internal Frame and TextureSource GL textures with the Render Target GL textures.
 * When a framebuffer is deleted, it now sets its `renderTexture` property to `undefined` to ensure the reference is cleared.
+* `TransformMatrix.setToContext` will now use `setTransform(this)` as 'this' is an equivalent object that this method can natively take.
+* `TransformMatrix.setQuad` no longer uses an anonymous function for `roundPixels`, which will help with performance.
+* Optimized `WebGLRenderer.setTextureFilter` so it no longer uses a temporary array for the filter mode.
 
 # Bug Fixes
 
