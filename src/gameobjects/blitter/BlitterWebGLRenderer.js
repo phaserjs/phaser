@@ -55,7 +55,6 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var blitterY = src.y - cameraScrollY;
     var prevTextureSourceIndex = -1;
     var tintEffect = false;
-    var roundPixels = camera.roundPixels;
 
     renderer.pipelines.preBatch(src);
 
@@ -88,7 +87,7 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
             y += frame.height;
         }
 
-        var quad = calcMatrix.setQuad(x, y, x + width, y + height, roundPixels);
+        var quad = calcMatrix.setQuad(x, y, x + width, y + height);
 
         var tint = Utils.getTintAppendFloatAlpha(bob.tint, bobAlpha);
 
