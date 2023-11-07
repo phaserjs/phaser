@@ -30,7 +30,9 @@ var MultiPipeline = require('./MultiPipeline');
  * The default shader uniforms for this pipeline are:
  *
  * `uProjectionMatrix` (mat4)
- * `uMainSampler` (sampler2D array)
+ * `uRoundPixels` (int)
+ * `uResolution` (vec2)
+ * `uMainSampler` (sampler2D, or sampler2D array)
  *
  * The pipeline is structurally identical to the Multi Pipeline and should be treated as such.
  *

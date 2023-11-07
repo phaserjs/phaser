@@ -34,7 +34,9 @@ var WebGLPipeline = require('../WebGLPipeline');
  * The default shader uniforms for this pipeline are:
  *
  * `uProjectionMatrix` (mat4)
- * `uMainSampler` (sampler2D)
+ * `uRoundPixels` (int)
+ * `uResolution` (vec2)
+ * `uMainSampler` (sampler2D, or sampler2D array)
  *
  * @class SinglePipeline
  * @extends Phaser.Renderer.WebGL.Pipelines.MultiPipeline
