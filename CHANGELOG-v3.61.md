@@ -39,6 +39,7 @@ The new collision categories are used automatically by either directly calling t
 * `TilemapLayer.setTintFill` is a new method that will apply a fill-based tint to the tiles in the given area, rather than an additive-based tint, which is what the `setTint` method uses.
 * `Tile.tintFill` is a new boolean property that controls if the tile tint is additive or fill based. This is used in the TilemapLayerWebGLRenderer function.
 * `RenderTarget.willResize` is a new method that will return `true` if the Render Target will be resized as a result of the new given width and height values.
+* `PostFXPipeline.bootFX` is a new method, which is the previous `boot` method but renamed. This is no longer called from the constructor, but instead when the Post FX Pipeline is activated by the Pipeline Manager. This means that the resources the Post FX requires, such as creating Render Targets and shaders, is delayed until the FX is actually used, saving on memory.
 
 # Updates
 
@@ -105,7 +106,7 @@ The new collision categories are used automatically by either directly calling t
 * The `DynamicTexture` was leaking memory by leaving a WebGLTexture in memory when its `setSize` method was called. This happens automatically on instantiation, meaning that if you created DynamicTextures and then destroyed them frequently, memory would continue to increase (thanks David)
 * `DynamicTexture.width` and `height` were missing from the class definition, even though they were set and used internally. They're now exposed as read-only properties.
 * The `BitmapMask` wouldn't correctly set the gl viewport when binding, which caused the mask to distort in games where the canvas resizes from its default. Fix #6527 (thanks @rexrainbow)
-* Fixed an issue in the way the Tilemap WebGL Renderer would call `batchTexture` that meant if you applied a PostFX to a Tilemap it would apply the fx for every single tile in the layer, instead of just once per layer. In a simple map this fix has reduced draw calls from over 12,000 to just 52, making it useable.
+* Fixed an issue in the way the Tilemap WebGL Renderer would call `batchTexture` that meant if you applied a PostFX to a Tilemap Layer it would apply the fx for every single tile in the layer, instead of just once per layer. In a simple map this fix has reduced draw calls from over 12,000 to just 52, and it no longer matters how many tiles are on the layer, the cost of applying the FX is consistent regardless.
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
