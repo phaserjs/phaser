@@ -100,7 +100,8 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
             camera,
             null,
             true,
-            textureUnit
+            textureUnit,
+            true
         );
     }
 
