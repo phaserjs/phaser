@@ -373,7 +373,7 @@ var Config = new Class({
         /**
          * @const {boolean} Phaser.Core.Config#roundPixels - Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
          */
-        this.roundPixels = GetValue(renderConfig, 'roundPixels', false, config);
+        this.roundPixels = GetValue(renderConfig, 'roundPixels', true, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#pixelArt - Prevent pixel art from becoming blurred when scaled. It will remain crisp (tells the WebGL renderer to automatically create textures using a linear filter mode).
