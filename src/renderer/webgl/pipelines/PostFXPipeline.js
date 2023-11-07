@@ -227,12 +227,21 @@ var PostFXPipeline = new Class({
         if (this.renderer.isBooted)
         {
             this.manager = this.renderer.pipelines;
-
-            this.boot();
         }
     },
 
-    boot: function ()
+    /**
+     * This method is called once, when this Post FX Pipeline needs to be used.
+     *
+     * Normally, pipelines will boot automatically, ready for instant-use, but Post FX
+     * Pipelines create quite a lot of internal resources, such as Render Targets, so
+     * they don't boot until they are told to do so by the Pipeline Manager, when an
+     * actual Game Object needs to use them.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#bootFX
+     * @since 3.61.0
+     */
+    bootFX: function ()
     {
         WebGLPipeline.prototype.boot.call(this);
 
@@ -255,6 +264,37 @@ var PostFXPipeline = new Class({
         {
             targets[i].autoResize = true;
         }
+    },
+
+    /**
+     * This method is called as a result of the `WebGLPipeline.batchQuad` method, right after a quad
+     * belonging to a Game Object has been added to the batch. When this is called, the
+     * renderer has just performed a flush.
+     *
+     * It calls the `onDraw` hook followed by the `onPostBatch` hook, which can be used to perform
+     * additional Post FX Pipeline processing.
+     *
+     * It is also called as part of the `PipelineManager.postBatch` method when processing Post FX Pipelines.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#postBatch
+     * @since 3.61.0
+     *
+     * @param {(Phaser.GameObjects.GameObject|Phaser.Cameras.Scene2D.Camera)} [gameObject] - The Game Object or Camera that invoked this pipeline, if any.
+     *
+     * @return {this} This WebGLPipeline instance.
+     */
+    postBatch: function (gameObject)
+    {
+        if (!this.hasBooted)
+        {
+            this.bootFX();
+        }
+
+        this.onDraw(this.currentRenderTarget);
+
+        this.onPostBatch(gameObject);
+
+        return this;
     },
 
     onDraw: function (renderTarget)
