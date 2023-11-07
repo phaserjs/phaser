@@ -2963,7 +2963,9 @@ var WebGLRenderer = new Class({
         if (width > 0 && height > 0)
         {
             gl.activeTexture(gl.TEXTURE0);
+
             var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
+
             gl.bindTexture(gl.TEXTURE_2D, dstTexture);
 
             if (flipY)
@@ -3086,7 +3088,8 @@ var WebGLRenderer = new Class({
     setTextureFilter: function (texture, filter)
     {
         var gl = this.gl;
-        var glFilter = [ gl.LINEAR, gl.NEAREST ][filter];
+
+        var glFilter = (filter === 0) ? gl.LINEAR : gl.NEAREST;
 
         gl.activeTexture(gl.TEXTURE0);
 
