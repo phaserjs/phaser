@@ -917,13 +917,14 @@ var TransformMatrix = new Class({
      * @param {number} y - The y value.
      * @param {number} xw - The xw value.
      * @param {number} yh - The yh value.
-     * @param {boolean} roundPixels - Pass the results via Math.round?
+     * @param {boolean} [roundPixels=false] - Pass the results via Math.round?
      * @param {Float32Array} [quad] - Optional Float32Array to store the results in. Otherwises uses the local quad array.
      *
      * @return {Float32Array} The quad Float32Array.
      */
     setQuad: function (x, y, xw, yh, roundPixels, quad)
     {
+        if (roundPixels === undefined) { roundPixels = false; }
         if (quad === undefined) { quad = this.quad; }
 
         var matrix = this.matrix;
