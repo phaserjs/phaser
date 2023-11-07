@@ -144,7 +144,7 @@ var Text = new Class({
          * @type {CanvasRenderingContext2D}
          * @since 3.0.0
          */
-        this.context = this.canvas.getContext('2d', { willReadFrequently: true });
+        this.context;
 
         /**
          * The Text Style object.
@@ -263,6 +263,9 @@ var Text = new Class({
 
         //  Create a Texture for this Text object
         this.texture = scene.sys.textures.addCanvas(null, this.canvas, true);
+
+        //  Set the context to be the CanvasTexture context
+        this.context = this.texture.context;
 
         //  Get the frame
         this.frame = this.texture.get();
