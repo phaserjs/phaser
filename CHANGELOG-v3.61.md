@@ -133,6 +133,7 @@ You can now set in your game config two new boolean properties that control if t
 * `DynamicTexture.width` and `height` were missing from the class definition, even though they were set and used internally. They're now exposed as read-only properties.
 * The `BitmapMask` wouldn't correctly set the gl viewport when binding, which caused the mask to distort in games where the canvas resizes from its default. Fix #6527 (thanks @rexrainbow)
 * The `Geom.Intersects.GetLineToPoints` function has been fixed to correct an oversight where the for loop prevented an intersection test between the given line and the line segment between the first and last point. Fix #6467 (thanks @Trissolo @Abspirit)
+* The `MultiAtlas` File Loader didn't prepend the `Loader.prefix` if set. This now forms part of the key, leading to the correct keys used for the Texture Manager. Fix #6614 (thanks @machineman1357)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
