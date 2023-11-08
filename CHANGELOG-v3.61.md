@@ -88,6 +88,8 @@ You can now set in your game config two new boolean properties that control if t
 * The `GameObjects.Layer.add` method is now chainable (thanks @rexrainbow)
 * The `GameObjects.Layer.remove` and `removeAll` methods are now chainable and have a new optional boolean parameter `destroyChild`, which will destroy the Game Objects removed from the Layer (thanks @rexrainbow)
 * If a Game Object is destroyed, it will now automatically be removed from the Layer it was in, if any (thanks @rexrainbow)
+* `Curves.Path.defaultDivisions` is a new property that holds the default number of divisions to split the Path in to (thanks @AlvaroEstradaDev)
+* The `Curves.Path.getPoints` method has a new optional parameter `stepRate` which allows you to set the distance between points on the curve, and defaults to `defaultDivisions` (thanks @AlvaroEstradaDev)
 
 # Bug Fixes
 
