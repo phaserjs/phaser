@@ -57,6 +57,7 @@ You can now set in your game config two new boolean properties that control if t
 * `Tile.tintFill` is a new boolean property that controls if the tile tint is additive or fill based. This is used in the TilemapLayerWebGLRenderer function.
 * `RenderTarget.willResize` is a new method that will return `true` if the Render Target will be resized as a result of the new given width and height values.
 * `Structs.Map.setAll` is a new method that allows you to pass an array of elements to be set into the Map. This is a chainable method.
+* When creating a `TimelineEvent` you can now set a new optional callback: `if`. If set, this callback is invoked at the start of the TimelineEvent. If it returns `true`, then the rest of the event is processed (i.e. tweens started, sound played, etc) otherwise the event is skipped. This allows you to create conditional events within a Timeline.
 
 # Updates
 
@@ -90,6 +91,7 @@ You can now set in your game config two new boolean properties that control if t
 * If a Game Object is destroyed, it will now automatically be removed from the Layer it was in, if any (thanks @rexrainbow)
 * `Curves.Path.defaultDivisions` is a new property that holds the default number of divisions to split the Path in to (thanks @AlvaroEstradaDev)
 * The `Curves.Path.getPoints` method has a new optional parameter `stepRate` which allows you to set the distance between points on the curve, and defaults to `defaultDivisions` (thanks @AlvaroEstradaDev)
+* The `Timeline` class will now emit the new `Phaser.Time.Events#COMPLETE` event when it completes. It will also no longer process its `update` method once the Timeline has completed (thanks @rexrainbow)
 
 # Bug Fixes
 
