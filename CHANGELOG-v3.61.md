@@ -23,6 +23,15 @@ The default is as before: all bodies collide with each other. However, by using 
 
 The new collision categories are used automatically by either directly calling the `collide` or `overlap` methods, or by creating a Collider object. This allows you to use far less colliders than you may have needed previously and skip needing to filter the pairs in the collision handlers.
 
+# New Features - FX Toggle
+
+You can now set in your game config two new boolean properties that control if the built-in FX are enabled, or not. If you don't need to use the FX then disabling these will help save on texture memory and will compile less shaders, which can help with startup time. These are single-set flags, you cannot toggle them after the game has booted.
+
+* `disablePreFX` set this to `true` in your game config to disable the creation and use of Pre FX on all Game Objects.
+* `disablePostFX` set this to `true` in your game config to disable the creation and use of Post FX on all Game Objects.
+* The `PipelineManager` will now delay the creation of the FX Pipelines until its `boot` method, using these config values to determine if it should proceed.
+* The `PipelineManager.renderTargets` array will no longer be pre-populated if you disable Pre FX, saving on texture memory.
+
 # New Features
 
 * `Text.setRTL` is a new method that allows you to set a Text Game Object as being rendered from right-to-left, instead of the default left to right (thanks @rexrainbow)
@@ -40,6 +49,7 @@ The new collision categories are used automatically by either directly calling t
 * `Tile.tintFill` is a new boolean property that controls if the tile tint is additive or fill based. This is used in the TilemapLayerWebGLRenderer function.
 * `RenderTarget.willResize` is a new method that will return `true` if the Render Target will be resized as a result of the new given width and height values.
 * `PostFXPipeline.bootFX` is a new method, which is the previous `boot` method but renamed. This is no longer called from the constructor, but instead when the Post FX Pipeline is activated by the Pipeline Manager. This means that the resources the Post FX requires, such as creating Render Targets and shaders, is delayed until the FX is actually used, saving on memory.
+* `Structs.Map.setAll` is a new method that allows you to pass an array of elements to be set into the Map. This is a chainable method.
 
 # Updates
 
