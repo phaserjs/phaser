@@ -113,7 +113,7 @@ var TextStyle = new Class({
          * The text fill color.
          *
          * @name Phaser.GameObjects.TextStyle#color
-         * @type {string}
+         * @type {(string|CanvasGradient|CanvasPattern)}
          * @default '#fff'
          * @since 3.0.0
          */
@@ -123,7 +123,7 @@ var TextStyle = new Class({
          * The text stroke color.
          *
          * @name Phaser.GameObjects.TextStyle#stroke
-         * @type {string}
+         * @type {(string|CanvasGradient|CanvasPattern)}
          * @default '#fff'
          * @since 3.0.0
          */
@@ -735,7 +735,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.TextStyle#setFill
      * @since 3.0.0
      *
-     * @param {string} color - The text fill color.
+     * @param {(string|CanvasGradient|CanvasPattern)} color - The text fill color.
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
@@ -752,7 +752,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.TextStyle#setColor
      * @since 3.0.0
      *
-     * @param {string} color - The text fill color.
+     * @param {(string|CanvasGradient|CanvasPattern)} color - The text fill color.
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
@@ -791,7 +791,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.TextStyle#setStroke
      * @since 3.0.0
      *
-     * @param {string} color - The stroke color.
+     * @param {(string|CanvasGradient|CanvasPattern)} color - The stroke color.
      * @param {number} thickness - The stroke thickness.
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.

@@ -9,8 +9,8 @@
  * @property {string} [fontStyle] - Any addition font styles, such as 'strong'.
  * @property {string} [font] - The font family or font settings to set. Overrides the other font settings.
  * @property {string} [backgroundColor] - A solid fill color that is rendered behind the Text object. Given as a CSS string color such as `#ff0`.
- * @property {string} [color='#fff'] - The color the Text is drawn in. Given as a CSS string color such as `#fff` or `rgb()`.
- * @property {string} [stroke='#fff'] - The color used to stroke the Text if the `strokeThickness` property is greater than zero.
+ * @property {(string|CanvasGradient|CanvasPattern)} [color='#fff'] - The color the Text is drawn in. Given as a CSS string color such as `#fff` or `rgb()`.
+ * @property {(string|CanvasGradient|CanvasPattern)} [stroke='#fff'] - The color used to stroke the Text if the `strokeThickness` property is greater than zero.
  * @property {number} [strokeThickness=0] - The thickness of the stroke around the Text. Set to zero for no stroke.
  * @property {Phaser.Types.GameObjects.Text.TextShadow} [shadow] - The Text shadow configuration object.
  * @property {Phaser.Types.GameObjects.Text.TextPadding} [padding] - A Text Padding object.
