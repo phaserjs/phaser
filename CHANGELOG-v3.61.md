@@ -58,6 +58,7 @@ You can now set in your game config two new boolean properties that control if t
 * `RenderTarget.willResize` is a new method that will return `true` if the Render Target will be resized as a result of the new given width and height values.
 * `Structs.Map.setAll` is a new method that allows you to pass an array of elements to be set into the Map. This is a chainable method.
 * When creating a `TimelineEvent` you can now set a new optional callback: `if`. If set, this callback is invoked at the start of the TimelineEvent. If it returns `true`, then the rest of the event is processed (i.e. tweens started, sound played, etc) otherwise the event is skipped. This allows you to create conditional events within a Timeline.
+* `Geom.Line.setFromObjects` is a new method that will set the Line start and end points to match those of the two given objects, which can be Game Objects, or anything Vector2-like (thanks @Trissolo)
 
 # Updates
 
@@ -128,6 +129,7 @@ You can now set in your game config two new boolean properties that control if t
 * The `DynamicTexture` was leaking memory by leaving a WebGLTexture in memory when its `setSize` method was called. This happens automatically on instantiation, meaning that if you created DynamicTextures and then destroyed them frequently, memory would continue to increase (thanks David)
 * `DynamicTexture.width` and `height` were missing from the class definition, even though they were set and used internally. They're now exposed as read-only properties.
 * The `BitmapMask` wouldn't correctly set the gl viewport when binding, which caused the mask to distort in games where the canvas resizes from its default. Fix #6527 (thanks @rexrainbow)
+* The `Geom.Intersects.GetLineToPoints` function has been fixed to correct an oversight where the for loop prevented an intersection test between the given line and the line segment between the first and last point. Fix #6467 (thanks @Trissolo @Abspirit)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
