@@ -636,7 +636,7 @@ var ParticleEmitter = new Class({
          * In 3.60 they can now have an array of Emission Zones.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#emitZones
-         * @type {Phaser.GameObjects.Particles.Zones.EdgeZone[]|Phaser.GameObjects.Particles.Zones.RandomZone[]}
+         * @type {Phaser.Types.GameObjects.Particles.EmitZoneObject[]}
          * @since 3.60.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone
          */
@@ -1766,9 +1766,9 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#addEmitZone
      * @since 3.60.0
      *
-     * @param {Phaser.Types.GameObjects.Particles.EmitZoneObject|Phaser.Types.GameObjects.Particles.EmitZoneObject[]} zone - An Emission Zone configuration object, a RandomZone or EdgeZone instance, or an array of them.
+     * @param {Phaser.Types.GameObjects.Particles.EmitZoneData|Phaser.Types.GameObjects.Particles.EmitZoneData[]} zone - An Emission Zone configuration object, a RandomZone or EdgeZone instance, or an array of them.
      *
-     * @return {Phaser.GameObjects.Particles.Zones.EdgeZone[]|Phaser.GameObjects.Particles.Zones.RandomZone[]} An array of the Emission Zones that were added to this Emitter.
+     * @return {Phaser.Types.GameObjects.Particles.EmitZoneObject[]} An array of the Emission Zones that were added to this Emitter.
      */
     addEmitZone: function (config)
     {
