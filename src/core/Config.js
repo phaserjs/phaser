@@ -331,6 +331,16 @@ var Config = new Class({
          */
         this.fps = GetValue(config, 'fps', null);
 
+        /**
+         * @const {boolean} Phaser.Core.Config#disablePreFX - Disables the automatic creation of the Pre FX Pipelines. If disabled, you cannot use the built-in Pre FX on Game Objects.
+         */
+        this.disablePreFX = GetValue(config, 'disablePreFX', false);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#disablePostFX - Disables the automatic creation of the Post FX Pipelines. If disabled, you cannot use the built-in Post FX on Game Objects.
+         */
+        this.disablePostFX = GetValue(config, 'disablePostFX', false);
+
         //  Render Settings - Anything set in here over-rides anything set in the core game config
 
         var renderConfig = GetValue(config, 'render', null);
