@@ -1431,6 +1431,11 @@ declare namespace MatterJS {
         angle: number;
 
         /**
+        * A `Number` specifying the delta time, in ms, since the last game step
+        */
+        deltaTime: number;
+        
+        /**
          * An array of `Vector` objects that specify the convex hull of the rigid body.
          * These should be provided about the origin `(0, 0)`. E.g.
          *
