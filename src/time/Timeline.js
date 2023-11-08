@@ -261,6 +261,16 @@ var Timeline = new Class({
 
                 this.totalComplete++;
 
+                target = (event.target) ? event.target : this;
+
+                if (event.if)
+                {
+                    if (!event.if.call(target, event))
+                    {
+                        continue;
+                    }
+                }
+
                 if (event.once)
                 {
                     removeSweep = true;
@@ -291,8 +301,6 @@ var Timeline = new Class({
                         sys.sound.play(event.sound.key, event.sound.config);
                     }
                 }
-
-                target = (event.target) ? event.target : this;
 
                 if (event.event)
                 {
@@ -517,6 +525,7 @@ var Timeline = new Class({
             events.push({
                 complete: false,
                 time: startTime,
+                if: GetFastValue(entry, 'if', null),
                 run: GetFastValue(entry, 'run', null),
                 event: GetFastValue(entry, 'event', null),
                 target: GetFastValue(entry, 'target', null),
