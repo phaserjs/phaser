@@ -69,6 +69,13 @@ var MultiFile = new Class({
          */
         this.key = key;
 
+        var loadKey = this.key;
+
+        if (loader.prefix && loader.prefix !== '')
+        {
+            this.key = loader.prefix + loadKey;
+        }
+
         /**
          * The current index being used by multi-file loaders to avoid key clashes.
          *
