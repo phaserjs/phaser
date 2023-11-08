@@ -1,7 +1,9 @@
 # New Features - Round Pixels
 
+All pixel rounding math is now handled on the GPU instead of on the CPU. This feature has now been enabled by default.
+
+* The Game Config `roundPixels` property is now `true` by default. This means that all Game Objects will be positioned and rendered with pixel-perfect precision, which is by far the most common use-case for Phaser games. This will prevent sub-pixelation when rendering at non-integer offsets and allows for smoother camera scrolling, especially at higher zoom scales. If you wish to disable this, you can do so by setting the `roundPixels` property in the Game Config to `false`. Note that only `roundPixels` has been set to `true`. The `pixelArt` property remains `false`. So if you're creating a pixel-art style game, please still enable this in your config.
 * All of the core vertex shaders, including Multi, Single and Mobile now have a new uniform called `uRoundPixels` which is set in all of the corresponding pipelines. This means that all pixel rounding calculations are now done on the GPU instead of the CPU, which can save a lot of math in intensive games.
-* The Game Config `roundPixels` property is now `true` by default. This means that all Game Objects will be positioned and rendered with pixel-perfect precision, which is by far the most common use-case for Phaser games. This will prevent sub-pixelation when rendering at non-integer offsets and allows for smoother camera scrolling, especially at higher zoom scales. If you wish to disable this, you can do so via the Game Config, or by setting the `roundPixels` property in the Game Config to `false`. Note that only `roundPixels` has been set to `true` - the `pixelArt` property remains `false`. So if you're creating a pixel-art style game, please still enable this in your game config.
 * `CanvasRenderer.batchSprite` has been updated to correctly use the Camera `roundPixels` property and apply it to the `drawImage` call.
 * `Camera.preRender` will no longer round the origin, follow coordinates or scrollX/Y coordinates. It will still round the World view.
 * The `MultiPipeline.batchSprite` method (which is also used by the Single Pipeline and Mobile Pipeline) will no longer use `roundPixels` when calculating the quad vertex data. It also won't apply it to any of the sprite values. This is all now handled in the shader directly.
@@ -23,7 +25,7 @@ The default is as before: all bodies collide with each other. However, by using 
 
 The new collision categories are used automatically by either directly calling the `collide` or `overlap` methods, or by creating a Collider object. This allows you to use far less colliders than you may have needed previously and skip needing to filter the pairs in the collision handlers.
 
-# New Features - FX Toggle
+# New Features - FX Updates and Fixes
 
 You can now set in your game config two new boolean properties that control if the built-in FX are enabled, or not. If you don't need to use the FX then disabling these will help save on texture memory and will compile less shaders, which can help with startup time. These are single-set flags, you cannot toggle them after the game has booted.
 
@@ -31,11 +33,17 @@ You can now set in your game config two new boolean properties that control if t
 * `disablePostFX` set this to `true` in your game config to disable the creation and use of Post FX on all Game Objects.
 * The `PipelineManager` will now delay the creation of the FX Pipelines until its `boot` method, using these config values to determine if it should proceed.
 * The `PipelineManager.renderTargets` array will no longer be pre-populated if you disable Pre FX, saving on texture memory.
+* `FX.Circle.backgroundAlpha` is a new property that allows you to set the amount of the alpha of the background color in the Circle FX (thanks @rexrainbow)
+* `PostFXPipeline.bootFX` is a new method, which is the previous `boot` method but renamed. This is no longer called from the constructor, but instead when the Post FX Pipeline is activated by the Pipeline Manager. This means that the resources the Post FX requires, such as creating Render Targets and shaders, is delayed until the FX is actually used, saving on memory.
+* The `PostFXPipeline` will now set `autoResize` to `true` on all of its `RenderTarget` instances. This fixes an issue where the `PostFXPipeline` would not resize the render targets when the game size changed, causing them to become out of sync with the game canvas. Fix #6503 (thanks @Waclaw-I)
+* `FX.Blur` didn't set the `quality` parameter to its property, meaning it wasn't applied in the shader, causing it to always use a Low Blur quality (unless modified post-creation).
+* The `BlurFXPipeline` didn't bind the quality of shader specified in the controller, meaning it always used the Low Blur shader, regardless of what the FX controller asked for.
+* The `FXBlurLow` fragment shader didn't have the `offset` uniform. This is now passed in and applied to the resulting blur, preventing it from creating 45 degree artifacts (thanks Wayfinder)
+* Fixed an issue in the way the Tilemap WebGL Renderer would call `batchTexture` that meant if you applied a PostFX to a Tilemap Layer it would apply the fx for every single tile in the layer, instead of just once per layer. In a simple map this fix has reduced draw calls from over 12,000 to just 52, and it no longer matters how many tiles are on the layer, the cost of applying the FX is consistent regardless.
 
 # New Features
 
 * `Text.setRTL` is a new method that allows you to set a Text Game Object as being rendered from right-to-left, instead of the default left to right (thanks @rexrainbow)
-* `FX.Circle.backgroundAlpha` is a new property that allows you to set the amount of the alpha of the background color in the Circle FX (thanks @rexrainbow)
 * `Physics.Arcade.World.singleStep` is a new method that will advance the Arcade Physics World simulation by exactly 1 step (thanks @monteiz)
 * `Tilemaps.ObjectLayer.id` is a new property that returns the ID of the Object Layer, if specified within Tiled, or zero otherwise. You can now access the unique layer ID of Tiled layers if the event a map doesn't have unique layer names (thanks @rui-han-crh)
 * `Tilemaps.LayerData.id` is a new property that returns the ID of the Data Layer, if specified within Tiled, or zero otherwise (thanks @rui-han-crh)
@@ -48,7 +56,6 @@ You can now set in your game config two new boolean properties that control if t
 * `TilemapLayer.setTintFill` is a new method that will apply a fill-based tint to the tiles in the given area, rather than an additive-based tint, which is what the `setTint` method uses.
 * `Tile.tintFill` is a new boolean property that controls if the tile tint is additive or fill based. This is used in the TilemapLayerWebGLRenderer function.
 * `RenderTarget.willResize` is a new method that will return `true` if the Render Target will be resized as a result of the new given width and height values.
-* `PostFXPipeline.bootFX` is a new method, which is the previous `boot` method but renamed. This is no longer called from the constructor, but instead when the Post FX Pipeline is activated by the Pipeline Manager. This means that the resources the Post FX requires, such as creating Render Targets and shaders, is delayed until the FX is actually used, saving on memory.
 * `Structs.Map.setAll` is a new method that allows you to pass an array of elements to be set into the Map. This is a chainable method.
 
 # Updates
@@ -79,14 +86,10 @@ You can now set in your game config two new boolean properties that control if t
 
 # Bug Fixes
 
-* The `PostFXPipeline` will now set `autoResize` to `true` on all of its `RenderTarget` instances. This fixes an issue where the `PostFXPipeline` would not resize the render targets when the game size changed, causing them to become out of sync with the game canvas. Fix #6503 (thanks @Waclaw-I)
 * `Particle.scaleY` would always be set to the `scaleX` value, even if given a different one within the config. It will now use its own value correctly.
 * `Array.Matrix.RotateLeft` was missing the `total` parameter, which controls how many times to rotate the matrix.
 * `Array.Matrix.RotateRight` was missing the `total` parameter, which controls how many times to rotate the matrix.
 * `Array.Matrix.TranslateMatrix` didn't work with any translation values above 1 due to missing parameters in `RotateLeft` and `RotateRight`
-* `FX.Blur` didn't set the `quality` parameter to its property, meaning it wasn't applied in the shader, causing it to always use a Low Blur quality (unless modified post-creation).
-* The `BlurFXPipeline` didn't bind the quality of shader specified in the controller, meaning it always used the Low Blur shader, regardless of what the FX controller asked for.
-* The `FXBlurLow` fragment shader didn't have the `offset` uniform. This is now passed in and applied to the resulting blur, preventing it from creating 45 degree artifacts (thanks Wayfinder)
 * The `Tilemap.createFromObjects` method wouldn't always copy custom properties to the target objects or Data Manager. Fix #6391 (thanks @samme @paxperscientiam)
 * The `scale.min` and `scale.max` `width` and `height` properties in Game Config were ignored by the Game constructor, which was expecting `minWidth` and `minHeight`. This now matches the documentation. Fix #6501 (thanks @NikitaShpanko @wpederzoli)
 * Due to a copy-paste bug, the `Actions.GetLast` function had the same code as the `GetFirst` function. It now does what you'd expect it to do. Fix #6513 (thanks @dmokel)
@@ -116,7 +119,6 @@ You can now set in your game config two new boolean properties that control if t
 * The `DynamicTexture` was leaking memory by leaving a WebGLTexture in memory when its `setSize` method was called. This happens automatically on instantiation, meaning that if you created DynamicTextures and then destroyed them frequently, memory would continue to increase (thanks David)
 * `DynamicTexture.width` and `height` were missing from the class definition, even though they were set and used internally. They're now exposed as read-only properties.
 * The `BitmapMask` wouldn't correctly set the gl viewport when binding, which caused the mask to distort in games where the canvas resizes from its default. Fix #6527 (thanks @rexrainbow)
-* Fixed an issue in the way the Tilemap WebGL Renderer would call `batchTexture` that meant if you applied a PostFX to a Tilemap Layer it would apply the fx for every single tile in the layer, instead of just once per layer. In a simple map this fix has reduced draw calls from over 12,000 to just 52, and it no longer matters how many tiles are on the layer, the cost of applying the FX is consistent regardless.
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
