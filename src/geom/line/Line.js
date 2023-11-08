@@ -173,6 +173,28 @@ var Line = new Class({
     },
 
     /**
+     * Sets this Line to match the x/y coordinates of the two given Vector2Like objects.
+     *
+     * @method Phaser.Geom.Line#setFromObjects
+     * @since 3.61.0
+     *
+     * @param {Phaser.Types.Math.Vector2Like} start - Any object with public `x` and `y` properties, whose values will be assigned to the x1/y1 components of this Line.
+     * @param {Phaser.Types.Math.Vector2Like} end - Any object with public `x` and `y` properties, whose values will be assigned to the x2/y2 components of this Line.
+     *
+     * @return {this} This Line object.
+     */
+    setFromObjects: function (start, end)
+    {
+        this.x1 = start.x;
+        this.y1 = start.y;
+
+        this.x2 = end.x;
+        this.y2 = end.y;
+
+        return this;
+    },
+
+    /**
      * Returns a Vector2 object that corresponds to the start of this Line.
      *
      * @method Phaser.Geom.Line#getPointA
