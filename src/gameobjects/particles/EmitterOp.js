@@ -31,7 +31,7 @@ var Wrap = require('../../math/Wrap');
  * @since 3.0.0
  *
  * @param {string} key - The name of the property.
- * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} defaultValue - The default value of the property.
+ * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType} defaultValue - The default value of the property.
  * @param {boolean} [emitOnly=false] - Whether the property can only be modified when a Particle is emitted.
  */
 var EmitterOp = new Class({
@@ -58,7 +58,7 @@ var EmitterOp = new Class({
          * configuration object.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#propertyValue
-         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType}
          * @since 3.0.0
          */
         this.propertyValue = defaultValue;
@@ -70,7 +70,7 @@ var EmitterOp = new Class({
          * configuration object.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#defaultValue
-         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType}
          * @since 3.0.0
          */
         this.defaultValue = defaultValue;
