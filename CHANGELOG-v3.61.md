@@ -83,6 +83,11 @@ You can now set in your game config two new boolean properties that control if t
 * `TransformMatrix.setToContext` will now use `setTransform(this)` as 'this' is an equivalent object that this method can natively take.
 * Optimized `WebGLRenderer.setTextureFilter` so it no longer uses a temporary array for the filter mode.
 * The `MultiPipeline.batchTexture` method has a new optional boolean parameter `skipPrePost` that will force the call to ignore calling the `preBatch` and `postBatch` Pipeline Manager methods for the Game Object. This allows you to skip the overhead of calling them if you know you don't need them.
+* The `tint` property can now act as a getter and a setter, where-as previously it was only a setter. Reading this property returns the equivalent of the `tintTopLeft` value (thanks @rexrainbow)
+* `ParticleEmitter.addDeathZone` now returns an _array_ of the Death Zone instances created, rather than just a single zone. This makes it functionally the same as `addEmitZone` (thanks @AlvaroEstradaDev)
+* The `GameObjects.Layer.add` method is now chainable (thanks @rexrainbow)
+* The `GameObjects.Layer.remove` and `removeAll` methods are now chainable and have a new optional boolean parameter `destroyChild`, which will destroy the Game Objects removed from the Layer (thanks @rexrainbow)
+* If a Game Object is destroyed, it will now automatically be removed from the Layer it was in, if any (thanks @rexrainbow)
 
 # Bug Fixes
 
@@ -128,3 +133,5 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @AlvaroEstradaDev
 @julescubtree
 @emadkhezri
+@neki-dev
+@johnhyde
