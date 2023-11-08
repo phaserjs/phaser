@@ -278,7 +278,7 @@ var Particle = new Class({
          * The data used by the ease equation.
          *
          * @name Phaser.GameObjects.Particles.Particle#data
-         * @type {object}
+         * @type {Phaser.Types.GameObjects.Particles.ParticleData}
          * @since 3.0.0
          */
         this.data = {
