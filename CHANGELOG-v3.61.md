@@ -95,6 +95,7 @@ You can now set in your game config two new boolean properties that control if t
 * The `Timeline` class will now emit the new `Phaser.Time.Events#COMPLETE` event when it completes. It will also no longer process its `update` method once the Timeline has completed (thanks @rexrainbow)
 * The `BaseSound.destroy` method will now call `BaseSound.stop` which will reset the `isPlaying` and other flags. Fix #6645 (thanks @rexrainbow)
 * The `RandomDataGenerator#weightedPick` method will no longer under-sample the first and last elements in the given array, leading to better distribution of results. Fix #6562 (thanks @wayfinder @shy @samme)
+* During `Game.runDestroy` it will now check for `this.domContainer.parentNode` before trying to remove it, preventing errors if the DOM Container has already been removed. Fix #6559 (thanks @orcomarcio)
 
 # Bug Fixes
 
