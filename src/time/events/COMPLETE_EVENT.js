@@ -17,10 +17,10 @@
  * timeline.play();
  * ```
  *
- * @event Phaser.Time.Timeline.Events#COMPLETE
+ * @event Phaser.Time.Events#COMPLETE
  * @type {string}
- * @since 3.60.1
+ * @since 3.61.0
  *
- * @param {(Phaser.Time.Timeline)} timeline - A reference to the Timeline that emitted the event.
+ * @param {Phaser.Time.Timeline} timeline - A reference to the Timeline that emitted the event.
  */
 module.exports = 'complete';
