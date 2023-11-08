@@ -477,6 +477,8 @@ var BaseSound = new Class({
             return;
         }
 
+        this.stop();
+
         this.emit(Events.DESTROY, this);
 
         this.removeAllListeners();
