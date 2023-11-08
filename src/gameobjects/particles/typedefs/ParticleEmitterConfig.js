@@ -13,7 +13,7 @@
  * @property {*} [deathCallbackScope] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallbackScope}.
  * @property {function} [emitCallback] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallback}.
  * @property {*} [emitCallbackScope] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallbackScope}.
- * @property {Phaser.GameObjects.GameObject} [follow] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#follow}.
+ * @property {Phaser.Types.Math.Vector2Like} [follow] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#follow}.
  * @property {number} [frequency] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frequency}.
  * @property {number} [gravityX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityX}.
  * @property {number} [gravityY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityY}.
@@ -55,9 +55,7 @@
  * @property {Phaser.Types.GameObjects.Particles.EmitZoneData|Phaser.Types.GameObjects.Particles.EmitZoneData[]} [emitZone] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
  * @property {Phaser.Types.GameObjects.Particles.DeathZoneObject|Phaser.Types.GameObjects.Particles.DeathZoneObject[]} [deathZone] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setDeathZone}.
  * @property {Phaser.Types.GameObjects.Particles.ParticleEmitterBounds|Phaser.Types.GameObjects.Particles.ParticleEmitterBoundsAlt} [bounds] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setBounds}.
- * @property {object} [followOffset] - Assigns to {@link Phaser.GameObjects.Particles.ParticleEmitter#followOffset}.
- * @property {number} [followOffset.x] - x coordinate of the offset.
- * @property {number} [followOffset.y] - y coordinate of the offset.
+ * @property {Phaser.Types.Math.Vector2Like} [followOffset] - Offset coordinates that assigns to {@link Phaser.GameObjects.Particles.ParticleEmitter#followOffset}.
  * @property {string|string[]|Phaser.Types.GameObjects.Particles.ParticleEmitterAnimConfig} [anim] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#anims}.
  * @property {number|number[]|string|string[]|Phaser.Textures.Frame|Phaser.Textures.Frame[]|Phaser.Types.GameObjects.Particles.ParticleEmitterFrameConfig} [frame] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
  * @property {string|Phaser.Textures.Texture} [texture] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#texture}. Overrides any texture already set on the Emitter.
