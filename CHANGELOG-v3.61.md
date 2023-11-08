@@ -94,6 +94,7 @@ You can now set in your game config two new boolean properties that control if t
 * The `Curves.Path.getPoints` method has a new optional parameter `stepRate` which allows you to set the distance between points on the curve, and defaults to `defaultDivisions` (thanks @AlvaroEstradaDev)
 * The `Timeline` class will now emit the new `Phaser.Time.Events#COMPLETE` event when it completes. It will also no longer process its `update` method once the Timeline has completed (thanks @rexrainbow)
 * The `BaseSound.destroy` method will now call `BaseSound.stop` which will reset the `isPlaying` and other flags. Fix #6645 (thanks @rexrainbow)
+* The `RandomDataGenerator#weightedPick` method will no longer under-sample the first and last elements in the given array, leading to better distribution of results. Fix #6562 (thanks @wayfinder @shy @samme)
 
 # Bug Fixes
 
