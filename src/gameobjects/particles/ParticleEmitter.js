@@ -1672,7 +1672,7 @@ var ParticleEmitter = new Class({
      *
      * @param {Phaser.Types.GameObjects.Particles.DeathZoneObject|Phaser.Types.GameObjects.Particles.DeathZoneObject[]} config - A Death Zone configuration object, a Death Zone instance, a valid Geometry object or an array of them.
      *
-     * @return {Phaser.GameObjects.Particles.Zones.DeathZone} The Death Zone that was added to this Emitter.
+     * @return {Phaser.GameObjects.Particles.Zones.DeathZone[]} An array of the Death Zones that were added to this Emitter.
      */
     addDeathZone: function (config)
     {
@@ -1682,7 +1682,7 @@ var ParticleEmitter = new Class({
         }
 
         var zone;
-        var deathZones = this.deathZones;
+        var output = [];
 
         for (var i = 0; i < config.length; i++)
         {
@@ -1690,13 +1690,13 @@ var ParticleEmitter = new Class({
 
             if (zone instanceof DeathZone)
             {
-                deathZones.push(zone);
+                output.push(zone);
             }
             else if (typeof zone.contains === 'function')
             {
                 zone = new DeathZone(zone, true);
 
-                deathZones.push(zone);
+                output.push(zone);
             }
             else
             {
@@ -1709,12 +1709,14 @@ var ParticleEmitter = new Class({
 
                     zone = new DeathZone(source, killOnEnter);
 
-                    deathZones.push(zone);
+                    output.push(zone);
                 }
             }
         }
 
-        return zone;
+        this.deathZones = this.deathZones.concat(output);
+
+        return output;
     },
 
     /**
@@ -1776,7 +1778,6 @@ var ParticleEmitter = new Class({
         }
 
         var zone;
-        var emitZones = this.emitZones;
         var output = [];
 
         for (var i = 0; i < config.length; i++)
@@ -1785,7 +1786,7 @@ var ParticleEmitter = new Class({
 
             if (zone instanceof RandomZone || zone instanceof EdgeZone)
             {
-                emitZones.push(zone);
+                output.push(zone);
             }
             else
             {
@@ -1793,32 +1794,35 @@ var ParticleEmitter = new Class({
                 //  emitZone: { type: 'random', source: X }
                 //  emitZone: { type: 'edge', source: X, quantity: 32, [stepRate=0], [yoyo=false], [seamless=true], [total=1] }
 
-                var type = GetFastValue(zone, 'type', 'random');
                 var source = GetFastValue(zone, 'source', null);
 
-                if (type === 'random')
+                if (source)
                 {
-                    zone = new RandomZone(source);
-                }
-                else if (type === 'edge')
-                {
-                    var quantity = GetFastValue(zone, 'quantity', 1);
-                    var stepRate = GetFastValue(zone, 'stepRate', 0);
-                    var yoyo = GetFastValue(zone, 'yoyo', false);
-                    var seamless = GetFastValue(zone, 'seamless', true);
-                    var total = GetFastValue(zone, 'total', -1);
+                    var type = GetFastValue(zone, 'type', 'random');
 
-                    zone = new EdgeZone(source, quantity, stepRate, yoyo, seamless, total);
-                }
+                    if (type === 'random' && typeof source.getRandomPoint === 'function')
+                    {
+                        zone = new RandomZone(source);
 
-                if (zone)
-                {
-                    emitZones.push(zone);
+                        output.push(zone);
+                    }
+                    else if (type === 'edge' && typeof source.getPoints === 'function')
+                    {
+                        var quantity = GetFastValue(zone, 'quantity', 1);
+                        var stepRate = GetFastValue(zone, 'stepRate', 0);
+                        var yoyo = GetFastValue(zone, 'yoyo', false);
+                        var seamless = GetFastValue(zone, 'seamless', true);
+                        var total = GetFastValue(zone, 'total', -1);
+
+                        zone = new EdgeZone(source, quantity, stepRate, yoyo, seamless, total);
+
+                        output.push(zone);
+                    }
                 }
             }
-
-            output.push(zone);
         }
+
+        this.emitZones = this.emitZones.concat(output);
 
         return output;
     },
