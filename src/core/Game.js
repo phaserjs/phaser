@@ -769,7 +769,7 @@ var Game = new Class({
             }
         }
 
-        if (this.domContainer)
+        if (this.domContainer && this.domContainer.parentNode)
         {
             this.domContainer.parentNode.removeChild(this.domContainer);
         }
