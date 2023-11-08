@@ -93,6 +93,7 @@ You can now set in your game config two new boolean properties that control if t
 * `Curves.Path.defaultDivisions` is a new property that holds the default number of divisions to split the Path in to (thanks @AlvaroEstradaDev)
 * The `Curves.Path.getPoints` method has a new optional parameter `stepRate` which allows you to set the distance between points on the curve, and defaults to `defaultDivisions` (thanks @AlvaroEstradaDev)
 * The `Timeline` class will now emit the new `Phaser.Time.Events#COMPLETE` event when it completes. It will also no longer process its `update` method once the Timeline has completed (thanks @rexrainbow)
+* The `BaseSound.destroy` method will now call `BaseSound.stop` which will reset the `isPlaying` and other flags. Fix #6645 (thanks @rexrainbow)
 
 # Bug Fixes
 
@@ -141,3 +142,4 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @emadkhezri
 @neki-dev
 @johnhyde
+@paxperscientiam
