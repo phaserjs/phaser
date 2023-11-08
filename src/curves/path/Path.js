@@ -53,6 +53,16 @@ var Path = new Class({
          * @since 3.0.0
          */
         this.name = '';
+		
+        /**
+         * The default number of divisions within a curve.
+         *
+         * @name Phaser.Curves.Path#defaultDivisions
+         * @type {number}
+         * @default 12
+         * @since 3.61.0
+         */
+        this.defaultDivisions = 12;
 
         /**
          * The list of Curves which make up this Path.
@@ -603,13 +613,18 @@ var Path = new Class({
      * @method Phaser.Curves.Path#getPoints
      * @since 3.0.0
      *
-     * @param {number} [divisions=12] - The number of divisions per resolution per curve.
+     * @param {number} [divisions] - The number of divisions to make per resolution per curve.
+     * @param {number} [stepRate] - The curve distance between points per curve, implying `divisions`.
      *
      * @return {Phaser.Math.Vector2[]} An array of Vector2 objects that containing the points along the Path.
      */
-    getPoints: function (divisions)
+    getPoints: function (divisions, stepRate)
     {
-        if (divisions === undefined) { divisions = 12; }
+        //  If divisions and stepRate are falsey values (false, null, 0, undefined, etc) then we use the default divisions value.
+        if (!divisions && !stepRate)
+        {
+            divisions = this.defaultDivisions;
+        }
 
         var points = [];
         var last;
@@ -625,7 +640,7 @@ var Path = new Class({
 
             var resolution = curve.getResolution(divisions);
 
-            var pts = curve.getPoints(resolution);
+            var pts = curve.getPoints(resolution, stepRate);
 
             for (var j = 0; j < pts.length; j++)
             {
