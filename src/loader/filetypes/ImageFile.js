@@ -209,8 +209,11 @@ var ImageFile = new Class({
             //  We do, but has it loaded?
             if (linkFile.state >= CONST.FILE_COMPLETE)
             {
-                //  Both files have loaded
-                if (this.type === 'normalMap')
+                if (linkFile.type === 'spritesheet')
+                {
+                    linkFile.addToCache();
+                }
+                else if (this.type === 'normalMap')
                 {
                     //  linkFile.data = Image
                     //  this.data = Normal Map
