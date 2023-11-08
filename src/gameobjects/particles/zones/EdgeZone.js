@@ -17,7 +17,7 @@ var Class = require('../../../utils/Class');
  *
  * @param {Phaser.Types.GameObjects.Particles.EdgeZoneSource} source - An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
  * @param {number} quantity - The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
- * @param {number} stepRate - The distance between each particle. When set, `quantity` is implied and should be set to 0.
+ * @param {number} [stepRate] - The distance between each particle. When set, `quantity` is implied and should be set to 0.
  * @param {boolean} [yoyo=false] - Whether particles are placed from start to end and then end to start.
  * @param {boolean} [seamless=true] - Whether one endpoint will be removed if it's identical to the other.
  * @param {number} [total=-1] - The total number of particles this zone will emit before passing over to the next emission zone in the Emitter. -1 means it will never pass over and you must use `setEmitZone` to change it.
