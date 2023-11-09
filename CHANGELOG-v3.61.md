@@ -10,6 +10,21 @@ All pixel rounding math is now handled on the GPU instead of on the CPU. This fe
 * `TransformMatrix.setQuad` no longer uses an anonymous function for `roundPixels`, which will help with performance.
 * The `TransformMatrix.setQuad` method signature has changed slightly. The `roundPixels` parameter is now optional and defaults to `false`. Previously, you always had to set it.
 
+# New Features - Texture Packer Nine Slice Support
+
+The new version of Texture Packer (v7.1.0) and above will now allow you to export scale9 sprite data in your Phaser 3 Atlas JSON. This allows you to create Nine Slice Sprites directly from the data, without having to specify the border sizes directly in your code. To use this feature, simply edit the sprite in Texture Packer, enable the 'scale9' checkbox and then drag the guides as required. When you export the atlas, the JSON will contain the new `scale9` object, which Phaser will parse and use when creating Nine Slice Game Objects.
+
+* You can now create a `NineSlice` Game Object without specifying a width or height for it. If you do this, it will use the size of the texture frame instead.
+* The `NineSlice` Game Object will now check to see if its associated Frame has any scale9 data set, and if so this is now used automatically to populate all of the border values.
+* The `NineSlice.setSlices` method has a new optional boolean parameter `skipScale9` which will allow you to set the border values of the Nine Slice directly, even if its Frame has associated scale9 data
+* `Frame.setScale9` is a new method that allows you to set the scale9 data associated with the given Frame. This is used internally by the Texture Packer parsers, but can also be called directly.
+* `Frame.scale9` is a new read-only boolean property that returns `true` if the Frame has scale9 data associated with it.
+* `Frame.is3Slice` is a new read-only boolean property that returns `true` if the Frame has scale9 data associated with it that is 3-slice instead of 9-slice.
+* The `JSONHash` texture parser will now check for `scale9` data in the JSON and if found, set it via the `Frame.setScale9` method.
+* The `JSONArray` texture parser will now check for `scale9` data in the JSON and if found, set it via the `Frame.setScale9` method.
+
+
+
 # New Features - Arcade Physics
 
 * Arcade Physics Bodies have a new method called `setDirectControl` which toggles a new boolean property `directControl`. When enabled (it's false by default) it means the Body will calculate its velocity based on its change in position compared to the previous frame. This allows you to directly move a Body around the physics world by just changing its position, without having to use acceleration or velocity. This is useful if you want to move it via a Tween, or follow a Pointer, or a Path. Because its velocity is calculated based on this movement it will still resolve collisions with other bodies, imparting velocity to them as usual.
