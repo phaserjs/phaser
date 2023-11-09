@@ -332,6 +332,14 @@ var Frame = new Class({
                 y: 0,
                 width: 0,
                 height: 0
+            },
+            is3Slice: false,
+            scale9: false,
+            scale9Borders: {
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0
             }
         };
 
@@ -449,6 +457,38 @@ var Frame = new Class({
         this.centerY = Math.floor(destHeight / 2);
 
         return this.updateUVs();
+    },
+
+    /**
+     * Sets the scale9 center rectangle values.
+     *
+     * Scale9 is a feature of Texture Packer, allowing you to define a nine-slice scaling grid.
+     *
+     * This is set automatically by the JSONArray and JSONHash parsers.
+     *
+     * @method Phaser.Textures.Frame#setScale9
+     * @since 3.61.0
+     *
+     * @param {number} x - The left coordinate of the center scale9 rectangle.
+     * @param {number} y - The top coordinate of the center scale9 rectangle.
+     * @param {number} width - The width of the center scale9 rectangle.
+     * @param {number} height - The height coordinate of the center scale9 rectangle.
+     *
+     * @return {this} This Frame object.
+     */
+    setScale9: function (x, y, width, height)
+    {
+        var data = this.data;
+
+        data.scale9 = true;
+        data.is3Slice = (y === 0 && height === this.height);
+
+        data.scale9Borders.x = x;
+        data.scale9Borders.y = y;
+        data.scale9Borders.w = width;
+        data.scale9Borders.h = height;
+
+        return this;
     },
 
     /**
@@ -825,6 +865,40 @@ var Frame = new Class({
         get: function ()
         {
             return this.data.trim;
+        }
+
+    },
+
+    /**
+     * Does the Frame have scale9 border data?
+     *
+     * @name Phaser.Textures.Frame#scale9
+     * @type {boolean}
+     * @readonly
+     * @since 3.61.0
+     */
+    scale9: {
+
+        get: function ()
+        {
+            return this.data.scale9;
+        }
+
+    },
+
+    /**
+     * If the Frame has scale9 border data, is it 3-slice or 9-slice data?
+     *
+     * @name Phaser.Textures.Frame#is3Slice
+     * @type {boolean}
+     * @readonly
+     * @since 3.61.0
+     */
+    is3Slice: {
+
+        get: function ()
+        {
+            return this.data.is3Slice;
         }
 
     },
