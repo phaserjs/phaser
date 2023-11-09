@@ -718,6 +718,8 @@ var MultiPipeline = new Class({
 
         var tint = this.fillTint;
 
+        this.currentShader.set1i('uRoundPixels', false);
+
         this.batchTri(null, tx0, ty0, tx1, ty1, tx2, ty2, 0, 0, 1, 1, tint.TL, tint.TR, tint.BL, 2);
     },
 
@@ -808,6 +810,8 @@ var MultiPipeline = new Class({
 
         polygonIndexArray = Earcut(polygonCache);
         length = polygonIndexArray.length;
+
+        this.currentShader.set1i('uRoundPixels', false);
 
         for (var index = 0; index < length; index += 3)
         {
@@ -961,6 +965,8 @@ var MultiPipeline = new Class({
         var tintTR = tint.TR;
         var tintBL = tint.BL;
         var tintBR = tint.BR;
+
+        this.currentShader.set1i('uRoundPixels', false);
 
         //  TL, BL, BR, TR
         this.batchQuad(null, tlX, tlY, blX, blY, brX, brY, trX, trY, 0, 0, 1, 1, tintTL, tintTR, tintBL, tintBR, 2);
