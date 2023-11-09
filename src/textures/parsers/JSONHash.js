@@ -86,6 +86,16 @@ var JSONHash = function (texture, sourceIndex, json)
             newFrame.pivotY = pivot.y;
         }
 
+        if (src.scale9Borders)
+        {
+            newFrame.setScale9(
+                src.scale9Borders.x,
+                src.scale9Borders.y,
+                src.scale9Borders.w,
+                src.scale9Borders.h
+            );
+        }
+
         //  Copy over any extra data
         newFrame.customData = Clone(src);
     }
