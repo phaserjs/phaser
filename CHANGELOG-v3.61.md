@@ -96,6 +96,7 @@ You can now set in your game config two new boolean properties that control if t
 * The `BaseSound.destroy` method will now call `BaseSound.stop` which will reset the `isPlaying` and other flags. Fix #6645 (thanks @rexrainbow)
 * The `RandomDataGenerator#weightedPick` method will no longer under-sample the first and last elements in the given array, leading to better distribution of results. Fix #6562 (thanks @wayfinder @shy @samme)
 * During `Game.runDestroy` it will now check for `this.domContainer.parentNode` before trying to remove it, preventing errors if the DOM Container has already been removed. Fix #6559 (thanks @orcomarcio)
+* The Game instance will now boot the new `SYSTEM_READY` event, which indicates that the internal Scene System has been created by the Scene Manager and is ready for use. The Texture Manager now listens for this event in order to create the `stamp` Image. This fixes an issue where the stamp would throw a run-time error if the game didn't feature a `preload` function. Fix #6616 (thanks @rexrainbow)
 
 # Bug Fixes
 
