@@ -139,7 +139,7 @@ var Vector = require('../geometry/Vector');
     Render.run = function(render) {
         (function loop(time){
             render.frameRequestId = _requestAnimationFrame(loop);
-            
+
             _updateTiming(render, time);
 
             Render.world(render, time);
@@ -188,14 +188,14 @@ var Vector = require('../geometry/Vector');
 
     /**
      * Sets the render `width` and `height`.
-     * 
-     * Updates the canvas accounting for `render.options.pixelRatio`.  
-     * 
+     *
+     * Updates the canvas accounting for `render.options.pixelRatio`.
+     *
      * Updates the bottom right render bound `render.bounds.max` relative to the provided `width` and `height`.
      * The top left render bound `render.bounds.min` isn't changed.
-     * 
+     *
      * Follow this call with `Render.lookAt` if you need to change the render bounds.
-     * 
+     *
      * See also `Render.setPixelRatio`.
      * @method setSize
      * @param {render} render
@@ -326,10 +326,10 @@ var Vector = require('../geometry/Vector');
             boundsScaleY = boundsHeight / render.options.height;
 
         render.context.setTransform(
-            render.options.pixelRatio / boundsScaleX, 0, 0, 
+            render.options.pixelRatio / boundsScaleX, 0, 0,
             render.options.pixelRatio / boundsScaleY, 0, 0
         );
-        
+
         render.context.translate(-render.bounds.min.x, -render.bounds.min.y);
     };
 
@@ -496,7 +496,7 @@ var Vector = require('../geometry/Vector');
             height = 44,
             x = 0,
             y = 0;
-        
+
         // count parts
         for (var i = 0; i < bodies.length; i += 1) {
             parts += bodies[i].parts.length;
@@ -550,7 +550,7 @@ var Vector = require('../geometry/Vector');
             engineDeltaHistory = timing.engineDeltaHistory,
             engineElapsedHistory = timing.engineElapsedHistory,
             lastEngineDelta = engine.timing.lastDelta;
-        
+
         var deltaMean = _mean(deltaHistory),
             elapsedMean = _mean(elapsedHistory),
             engineDeltaMean = _mean(engineDeltaHistory),
@@ -572,8 +572,8 @@ var Vector = require('../geometry/Vector');
 
         // show FPS
         Render.status(
-            context, x, y, width, graphHeight, deltaHistory.length, 
-            Math.round(fps) + ' fps', 
+            context, x, y, width, graphHeight, deltaHistory.length,
+            Math.round(fps) + ' fps',
             fps / Render._goodFps,
             function(i) { return (deltaHistory[i] / deltaMean) - 1; }
         );
@@ -581,7 +581,7 @@ var Vector = require('../geometry/Vector');
         // show engine delta
         Render.status(
             context, x + gap + width, y, width, graphHeight, engineDeltaHistory.length,
-            lastEngineDelta.toFixed(2) + ' dt', 
+            lastEngineDelta.toFixed(2) + ' dt',
             Render._goodDelta / lastEngineDelta,
             function(i) { return (engineDeltaHistory[i] / engineDeltaMean) - 1; }
         );
@@ -589,7 +589,7 @@ var Vector = require('../geometry/Vector');
         // show engine update time
         Render.status(
             context, x + (gap + width) * 2, y, width, graphHeight, engineElapsedHistory.length,
-            engineElapsedMean.toFixed(2) + ' ut', 
+            engineElapsedMean.toFixed(2) + ' ut',
             1 - (engineElapsedMean / Render._goodFps),
             function(i) { return (engineElapsedHistory[i] / engineElapsedMean) - 1; }
         );
@@ -597,15 +597,15 @@ var Vector = require('../geometry/Vector');
         // show render time
         Render.status(
             context, x + (gap + width) * 3, y, width, graphHeight, elapsedHistory.length,
-            elapsedMean.toFixed(2) + ' rt', 
+            elapsedMean.toFixed(2) + ' rt',
             1 - (elapsedMean / Render._goodFps),
             function(i) { return (elapsedHistory[i] / elapsedMean) - 1; }
         );
 
         // show effective speed
         Render.status(
-            context, x + (gap + width) * 4, y, width, graphHeight, timestampElapsedHistory.length, 
-            rateMean.toFixed(2) + ' x', 
+            context, x + (gap + width) * 4, y, width, graphHeight, timestampElapsedHistory.length,
+            rateMean.toFixed(2) + ' x',
             rateMean * rateMean * rateMean,
             function(i) { return (((timestampElapsedHistory[i] / deltaHistory[i]) / rateMean) || 0) - 1; }
         );
@@ -1205,8 +1205,8 @@ var Vector = require('../geometry/Vector');
                 continue;
 
             collision = pair.collision;
-            for (j = 0; j < pair.activeContacts.length; j++) {
-                var contact = pair.activeContacts[j],
+            for (j = 0; j < pair.contactCount; j++) {
+                var contact = pair.contacts[j],
                     vertex = contact.vertex;
                 c.rect(vertex.x - 1.5, vertex.y - 1.5, 3.5, 3.5);
             }
@@ -1686,7 +1686,7 @@ var Vector = require('../geometry/Vector');
      */
 
     /**
-     * A flag to enable or disable all debug information overlays together.  
+     * A flag to enable or disable all debug information overlays together.
      * This includes and has priority over the values of:
      *
      * - `render.options.showStats`
@@ -1698,7 +1698,7 @@ var Vector = require('../geometry/Vector');
      */
 
     /**
-     * A flag to enable or disable the engine stats info overlay.  
+     * A flag to enable or disable the engine stats info overlay.
      * From left to right, the values shown are:
      *
      * - body parts total
@@ -1713,7 +1713,7 @@ var Vector = require('../geometry/Vector');
      */
 
     /**
-     * A flag to enable or disable performance charts.  
+     * A flag to enable or disable performance charts.
      * From left to right, the values shown are:
      *
      * - average render frequency (e.g. 60 fps)
@@ -1731,7 +1731,7 @@ var Vector = require('../geometry/Vector');
      * @type boolean
      * @default false
      */
-    
+
     /**
      * A flag to enable or disable rendering entirely.
      *

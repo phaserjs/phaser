@@ -11,7 +11,7 @@ module.exports = Pair;
 var Contact = require('./Contact');
 
 (function() {
-    
+
     /**
      * Creates a pair.
      * @method create
@@ -28,11 +28,10 @@ var Contact = require('./Contact');
             bodyA: bodyA,
             bodyB: bodyB,
             collision: collision,
-            contacts: [],
-            activeContacts: [],
+            contacts: [Contact.create(), Contact.create()],
+            contactCount: 0,
             separation: 0,
             isActive: true,
-            confirmedActive: true,
             isSensor: bodyA.isSensor || bodyB.isSensor,
             timeCreated: timestamp,
             timeUpdated: timestamp,
@@ -56,13 +55,12 @@ var Contact = require('./Contact');
      * @param {number} timestamp
      */
     Pair.update = function(pair, collision, timestamp) {
-        var contacts = pair.contacts,
-            supports = collision.supports,
-            activeContacts = pair.activeContacts,
+        var supports = collision.supports,
+            supportCount = collision.supportCount,
+            contacts = pair.contacts,
             parentA = collision.parentA,
-            parentB = collision.parentB,
-            parentAVerticesLength = parentA.vertices.length;
-        
+            parentB = collision.parentB;
+
         pair.isActive = true;
         pair.timeUpdated = timestamp;
         pair.collision = collision;
@@ -73,22 +71,34 @@ var Contact = require('./Contact');
         pair.restitution = parentA.restitution > parentB.restitution ? parentA.restitution : parentB.restitution;
         pair.slop = parentA.slop > parentB.slop ? parentA.slop : parentB.slop;
 
+        pair.contactCount = supportCount;
         collision.pair = pair;
-        activeContacts.length = 0;
-        
-        for (var i = 0; i < supports.length; i++) {
-            var support = supports[i],
-                contactId = support.body === parentA ? support.index : parentAVerticesLength + support.index,
-                contact = contacts[contactId];
 
-            if (contact) {
-                activeContacts.push(contact);
-            } else {
-                activeContacts.push(contacts[contactId] = Contact.create(support));
-            }
+        var support = supports[0],
+            contact = contacts[0];
+
+        // reset first contact if support changed
+        if (contact.vertex !== support) {
+            contact.vertex = support;
+            contact.normalImpulse = 0;
+            contact.tangentImpulse = 0;
+        }
+
+        if (supportCount < 2) {
+            return;
+        }
+
+        support = supports[1];
+        contact = contacts[1];
+
+        // reset second contact if support changed
+        if (contact.vertex !== support) {
+            contact.vertex = support;
+            contact.normalImpulse = 0;
+            contact.tangentImpulse = 0;
         }
     };
-    
+
     /**
      * Set a pair as active or inactive.
      * @method setActive
@@ -102,7 +112,7 @@ var Contact = require('./Contact');
             pair.timeUpdated = timestamp;
         } else {
             pair.isActive = false;
-            pair.activeContacts.length = 0;
+            pair.contactCount = 0;
         }
     };
 
@@ -114,11 +124,8 @@ var Contact = require('./Contact');
      * @return {string} Unique pairId
      */
     Pair.id = function(bodyA, bodyB) {
-        if (bodyA.id < bodyB.id) {
-            return 'A' + bodyA.id + 'B' + bodyB.id;
-        } else {
-            return 'A' + bodyB.id + 'B' + bodyA.id;
-        }
+        return bodyA.id < bodyB.id ? bodyA.id.toString(36) + ':' + bodyB.id.toString(36)
+            : bodyB.id.toString(36) + ':' + bodyA.id.toString(36);
     };
 
 })();
