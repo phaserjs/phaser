@@ -81,6 +81,12 @@ var Vertex = require('../../geom/mesh/Vertex');
  *
  * As of Phaser 3.60 this Game Object is WebGL only.
  *
+ * As of Phaser 2.61 this Game Object can now populate its values automatically
+ * if they have been set within Texture Packer 7.1.0 or above and exported with
+ * the atlas json. If this is the case, you can just call this method without
+ * specifying anything more than the texture key and frame and it will pull the
+ * area data from the atlas.
+ *
  * @class NineSlice
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects
@@ -136,13 +142,13 @@ var NineSlice = new Class({
 
     function NineSlice (scene, x, y, texture, frame, width, height, leftWidth, rightWidth, topHeight, bottomHeight)
     {
-        if (width === undefined) { width = 256; }
-        if (height === undefined) { height = 256; }
+        // if (width === undefined) { width = 256; }
+        // if (height === undefined) { height = 256; }
 
-        if (leftWidth === undefined) { leftWidth = 10; }
-        if (rightWidth === undefined) { rightWidth = 10; }
-        if (topHeight === undefined) { topHeight = 0; }
-        if (bottomHeight === undefined) { bottomHeight = 0; }
+        // if (leftWidth === undefined) { leftWidth = 10; }
+        // if (rightWidth === undefined) { rightWidth = 10; }
+        // if (topHeight === undefined) { topHeight = 0; }
+        // if (bottomHeight === undefined) { bottomHeight = 0; }
 
         GameObject.call(this, scene, 'NineSlice');
 
@@ -293,6 +299,8 @@ var NineSlice = new Class({
          */
         this.tintFill = false;
 
+        var textureFrame = scene.textures.getFrame(texture, frame);
+
         /**
          * This property is `true` if this Nine Slice Game Object was configured
          * with just `leftWidth` and `rightWidth` values, making it a 3-slice
@@ -302,7 +310,13 @@ var NineSlice = new Class({
          * @type {boolean}
          * @since 3.60.0
          */
-        this.is3Slice = (topHeight === 0 && bottomHeight === 0);
+        this.is3Slice = (!topHeight && !bottomHeight);
+
+        if (textureFrame.scale9)
+        {
+            //  If we're using the scale9 data from the frame, override the values from above
+            this.is3Slice = textureFrame.is3Slice;
+        }
 
         var size = this.is3Slice ? 18 : 54;
 
@@ -315,7 +329,7 @@ var NineSlice = new Class({
 
         this.setTexture(texture, frame);
 
-        this.setSlices(width, height, leftWidth, rightWidth, topHeight, bottomHeight);
+        this.setSlices(width, height, leftWidth, rightWidth, topHeight, bottomHeight, false);
 
         this.setOrigin(0.5, 0.5);
 
@@ -340,27 +354,62 @@ var NineSlice = new Class({
      * @param {number} [rightWidth=10] - The size of the right vertical column (B).
      * @param {number} [topHeight=0] - The size of the top horiztonal row (C). Set to zero or undefined to create a 3 slice object.
      * @param {number} [bottomHeight=0] - The size of the bottom horiztonal row (D). Set to zero or undefined to create a 3 slice object.
+     * @param {boolean} [skipScale9=false] -If this Nine Slice was created from Texture Packer scale9 atlas data, set this property to use the given column sizes instead of those specified in the JSON.
      *
      * @return {this} This Game Object instance.
      */
-    setSlices: function (width, height, leftWidth, rightWidth, topHeight, bottomHeight)
+    setSlices: function (width, height, leftWidth, rightWidth, topHeight, bottomHeight, skipScale9)
     {
-        if (width === undefined) { width = 256; }
-        if (height === undefined) { height = 256; }
-
         if (leftWidth === undefined) { leftWidth = 10; }
         if (rightWidth === undefined) { rightWidth = 10; }
         if (topHeight === undefined) { topHeight = 0; }
         if (bottomHeight === undefined) { bottomHeight = 0; }
 
-        var is3Slice = (topHeight === 0 && bottomHeight === 0);
+        if (skipScale9 === undefined) { skipScale9 = false; }
 
-        if (this.is3Slice !== is3Slice)
+        var frame = this.frame;
+
+        var sliceChange = false;
+
+        if (this.is3Slice && skipScale9 && topHeight !== 0 && bottomHeight !== 0)
+        {
+            sliceChange = true;
+        }
+
+        if (sliceChange)
         {
             console.warn('Cannot change 9 slice to 3 slice');
         }
         else
         {
+            if (frame.scale9 && !skipScale9)
+            {
+                var data = frame.data.scale9Borders;
+
+                var x = data.x;
+                var y = data.y;
+
+                leftWidth = x;
+                rightWidth = frame.width - data.w - x;
+                topHeight = y;
+                bottomHeight = frame.height - data.h - y;
+
+                if (width === undefined)
+                {
+                    width = frame.width;
+                }
+
+                if (height === undefined)
+                {
+                    height = frame.height;
+                }
+            }
+            else
+            {
+                if (width === undefined) { width = 256; }
+                if (height === undefined) { height = 256; }
+            }
+
             this._width = width;
             this._height = height;
 
@@ -371,7 +420,7 @@ var NineSlice = new Class({
 
             if (this.is3Slice)
             {
-                height = this.frame.height;
+                height = frame.height;
 
                 this._height = height;
                 this.topHeight = height;
