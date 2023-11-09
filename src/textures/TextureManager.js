@@ -189,6 +189,12 @@ var TextureManager = new Class({
         this.addBase64('__WHITE', config.whiteImage);
 
         this.game.events.once(GameEvents.DESTROY, this.destroy, this);
+
+        this.game.events.once(GameEvents.SYSTEM_READY, function (scene)
+        {
+            this.stamp = new ImageGameObject(scene).setOrigin(0);
+
+        }, this);
     },
 
     /**
@@ -208,8 +214,6 @@ var TextureManager = new Class({
             this.off(Events.ERROR);
 
             this.emit(Events.READY);
-
-            this.stamp = new ImageGameObject(this.game.scene.systemScene).setOrigin(0);
         }
     },
 

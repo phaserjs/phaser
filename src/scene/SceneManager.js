@@ -181,6 +181,7 @@ var SceneManager = new Class({
      *
      * @method Phaser.Scenes.SceneManager#bootQueue
      * @private
+     * @fires Phaser.Core.Events#SYSTEM_READY
      * @since 3.2.0
      */
     bootQueue: function ()
@@ -192,6 +193,8 @@ var SceneManager = new Class({
 
         //  Create the system Scene
         this.systemScene = this.createSceneFromInstance('__SYSTEM', new Scene());
+
+        this.game.events.emit(GameEvents.SYSTEM_READY, this.systemScene, this);
 
         var i;
         var entry;
