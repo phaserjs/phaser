@@ -23,8 +23,6 @@ The new version of Texture Packer (v7.1.0) and above will now allow you to expor
 * The `JSONHash` texture parser will now check for `scale9` data in the JSON and if found, set it via the `Frame.setScale9` method.
 * The `JSONArray` texture parser will now check for `scale9` data in the JSON and if found, set it via the `Frame.setScale9` method.
 
-
-
 # New Features - Arcade Physics
 
 * Arcade Physics Bodies have a new method called `setDirectControl` which toggles a new boolean property `directControl`. When enabled (it's false by default) it means the Body will calculate its velocity based on its change in position compared to the previous frame. This allows you to directly move a Body around the physics world by just changing its position, without having to use acceleration or velocity. This is useful if you want to move it via a Tween, or follow a Pointer, or a Path. Because its velocity is calculated based on this movement it will still resolve collisions with other bodies, imparting velocity to them as usual.
