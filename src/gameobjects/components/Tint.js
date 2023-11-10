@@ -191,7 +191,7 @@ var Tint = {
      */
     tint: {
 
-        get: function()
+        get: function ()
         {
             return this.tintTopLeft;
         },
