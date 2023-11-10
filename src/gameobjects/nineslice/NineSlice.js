@@ -81,7 +81,7 @@ var Vertex = require('../../geom/mesh/Vertex');
  *
  * As of Phaser 3.60 this Game Object is WebGL only.
  *
- * As of Phaser 2.61 this Game Object can now populate its values automatically
+ * As of Phaser 3.70 this Game Object can now populate its values automatically
  * if they have been set within Texture Packer 7.1.0 or above and exported with
  * the atlas json. If this is the case, you can just call this method without
  * specifying anything more than the texture key and frame and it will pull the
