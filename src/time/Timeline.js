@@ -384,6 +384,8 @@ var Timeline = new Class({
      * will carry on with all events that are due to run during that step and pause
      * from the next game step.
      *
+     * Note that if any Tweens have been started prior to calling this method, they will **not** be paused as well.
+     *
      * @method Phaser.Time.Timeline#pause
      * @since 3.60.0
      *
