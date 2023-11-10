@@ -180,6 +180,7 @@ Other examples show smaller improvements as they tend to have a much lower numbe
 * The `MultiAtlas` File Loader didn't prepend the `Loader.prefix` if set. This now forms part of the key, leading to the correct keys used for the Texture Manager. Fix #6614 (thanks @machineman1357)
 * There was an issue when loading Normal Maps with Sprite Sheets. Often, if the normal map image completed loading before the sprite sheet, it would cause it to be incorrectly added to the Texture Manager, resulting in broken frames. Now, regardless of the load order, the sprite sheet is added with its normal map correctly together. Fix #6491 (thanks @dreasgrech @PaulB-H @samme)
 * The `TextureSource.setFilter` method will now check to see if `renderer` is defined before accessing its `gl` property. This avoids Phaser crashing if you're in headless mode and set anti-aliasing to false in the game config. Fix #6663 (thanks @moufmouf)
+* `SpineGameObject.setSkeletonFromJSON` has been fixed so it now passes the parameters in the correct order to the `setSkeleton` method. Fix #6585 (thanks @machineman1357)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
