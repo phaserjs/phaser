@@ -12103,7 +12103,7 @@ var SpinePlugin = new Class({
      * Note: The ability to load this type of file will only be available if the Spine Plugin has been built or loaded into Phaser.
      *
      * @method Phaser.Loader.LoaderPlugin#spine
-     * @fires Phaser.Loader.LoaderPlugin#ADD
+     * @fires Phaser.Loader.Events#ADD
      * @since 3.19.0
      *
      * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig|Phaser.Types.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
@@ -13725,7 +13725,7 @@ var SpineGameObject = new Class({
      */
     setSkeletonFromJSON: function (atlasDataKey, skeletonJSON, animationName, loop)
     {
-        return this.setSkeleton(atlasDataKey, skeletonJSON, animationName, loop);
+        return this.setSkeleton(atlasDataKey, animationName, loop, skeletonJSON);
     },
 
     /**
@@ -15309,7 +15309,7 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.60.0',
+    VERSION: '3.70.0',
 
     BlendModes: __webpack_require__(8351),
 
@@ -15727,24 +15727,21 @@ var DataManager = new Class({
      * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to increase the value for.
-     * @param {number} [data=1] - The amount to increase the given key by. Pass a negative value to decrease the key.
+     * @param {string} key - The key to change the value for.
+     * @param {number} [amount=1] - The amount to increase the given key by. Pass a negative value to decrease the key.
      *
      * @return {this} This Data Manager instance.
      */
-    inc: function (key, data)
+    inc: function (key, amount)
     {
         if (this._frozen)
         {
             return this;
         }
 
-        if (data === undefined)
+        if (amount === undefined)
         {
-            data = 1;
+            amount = 1;
         }
 
         var value = this.get(key);
@@ -15754,7 +15751,7 @@ var DataManager = new Class({
             value = 0;
         }
 
-        this.set(key, (value + data));
+        this.set(key, (value + amount));
 
         return this;
     },
@@ -15770,10 +15767,7 @@ var DataManager = new Class({
      * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to toggle the value for.
+     * @param {string} key - The key to toggle the value for.
      *
      * @return {this} This Data Manager instance.
      */
@@ -16533,6 +16527,7 @@ function init ()
     else if ((/AppleWebKit/).test(ua) && OS.iOS)
     {
         Browser.mobileSafari = true;
+        Browser.es2019 = true;
     }
     else if ((/MSIE (\d+\.\d+);/).test(ua))
     {
@@ -19440,7 +19435,7 @@ var Blur = new Class({
          * @type {number}
          * @since 3.60.0
          */
-        this.quality = 0;
+        this.quality = quality;
 
         /**
          * The horizontal offset of the blur effect.
@@ -19866,8 +19861,28 @@ var Circle = new Class({
             color[2] = (value & 0xFF) / 255;
         }
 
-    }
+    },
 
+    /**
+     * The alpha of the background, behind the texture, given as a number value.
+     *
+     * @name Phaser.FX.Circle#backgroundAlpha
+     * @type {number}
+     * @since 3.70.0
+     */
+    backgroundAlpha: {
+
+        get: function ()
+        {
+            return this.glcolor2[3];
+        },
+
+        set: function (value)
+        {
+            this.glcolor2[3] = value;
+        }
+
+    }
 });
 
 module.exports = Circle;
@@ -20370,10 +20385,10 @@ var FX_CONST = __webpack_require__(1571);
  * @param {number} [color1=0xff0000] - The first gradient color, given as a number value.
  * @param {number} [color2=0x00ff00] - The second gradient color, given as a number value.
  * @param {number} [alpha=0.2] - The alpha value of the gradient effect.
- * @param {number} [fromX=0] - The horizontal position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
- * @param {number} [fromY=0] - The vertical position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
- * @param {number} [toX=0] - The horizontal position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
- * @param {number} [toY=1] - The vertical position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
+ * @param {number} [fromX=0] - The horizontal position the gradient will start from. This value is normalized, between 0 and 1, and is not in pixels.
+ * @param {number} [fromY=0] - The vertical position the gradient will start from. This value is normalized, between 0 and 1, and is not in pixels.
+ * @param {number} [toX=0] - The horizontal position the gradient will end at. This value is normalized, between 0 and 1, and is not in pixels.
+ * @param {number} [toY=1] - The vertical position the gradient will end at. This value is normalized, between 0 and 1, and is not in pixels.
  * @param {number} [size=0] - How many 'chunks' the gradient is divided in to, as spread over the entire height of the texture. Leave this at zero for a smooth gradient, or set higher for a more retro chunky effect.
  */
 var Gradient = new Class({
@@ -20415,7 +20430,7 @@ var Gradient = new Class({
         this.size = size;
 
         /**
-         * The horizontal position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+         * The horizontal position the gradient will start from. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.FX.Gradient#fromX
          * @type {number}
@@ -20424,7 +20439,7 @@ var Gradient = new Class({
         this.fromX = fromX;
 
         /**
-         * The vertical position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
+         * The vertical position the gradient will start from. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.FX.Gradient#fromY
          * @type {number}
@@ -20433,7 +20448,7 @@ var Gradient = new Class({
         this.fromY = fromY;
 
         /**
-         * The horizontal position the gradient will end. This value is noralized, between 0 and 1 and is not in pixels.
+         * The horizontal position the gradient will end. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.FX.Gradient#toX
          * @type {number}
@@ -20442,7 +20457,7 @@ var Gradient = new Class({
         this.toX = toX;
 
         /**
-         * The vertical position the gradient will end. This value is noralized, between 0 and 1 and is not in pixels.
+         * The vertical position the gradient will end. This value is normalized, between 0 and 1 and is not in pixels.
          *
          * @name Phaser.FX.Gradient#toY
          * @type {number}
@@ -21815,22 +21830,19 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#incData
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to increase the value for.
-     * @param {*} [data] - The value to increase for the given key.
+     * @param {string} key - The key to change the value for.
+     * @param {number} [amount=1] - The amount to increase the given key by. Pass a negative value to decrease the key.
      *
      * @return {this} This GameObject.
      */
-    incData: function (key, value)
+    incData: function (key, amount)
     {
         if (!this.data)
         {
             this.data = new DataManager(this);
         }
 
-        this.data.inc(key, value);
+        this.data.inc(key, amount);
 
         return this;
     },
@@ -21848,10 +21860,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#toggleData
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to toggle the value for.
+     * @param {string} key - The key to toggle the value for.
      *
      * @return {this} This GameObject.
      */
@@ -24163,10 +24172,10 @@ var FX = new Class({
      * @param {number} [color1=0xff0000] - The first gradient color, given as a number value.
      * @param {number} [color2=0x00ff00] - The second gradient color, given as a number value.
      * @param {number} [alpha=0.2] - The alpha value of the gradient effect.
-     * @param {number} [fromX=0] - The horizontal position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
-     * @param {number} [fromY=0] - The vertical position the gradient will start from. This value is noralized, between 0 and 1 and is not in pixels.
-     * @param {number} [toX=0] - The horizontal position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
-     * @param {number} [toY=1] - The vertical position the gradient will end at. This value is noralized, between 0 and 1 and is not in pixels.
+     * @param {number} [fromX=0] - The horizontal position the gradient will start from. This value is normalized, between 0 and 1, and is not in pixels.
+     * @param {number} [fromY=0] - The vertical position the gradient will start from. This value is normalized, between 0 and 1, and is not in pixels.
+     * @param {number} [toX=0] - The horizontal position the gradient will end at. This value is normalized, between 0 and 1, and is not in pixels.
+     * @param {number} [toY=1] - The vertical position the gradient will end at. This value is normalized, between 0 and 1, and is not in pixels.
      * @param {number} [size=0] - How many 'chunks' the gradient is divided in to, as spread over the entire height of the texture. Leave this at zero for a smooth gradient, or set higher for a more retro chunky effect.
      *
      * @return {Phaser.FX.Gradient} The Gradient FX Controller.
@@ -25701,7 +25710,7 @@ var PathFollower = {
     {
         var tween = this.pathTween;
 
-        if (tween)
+        if (tween && tween.data)
         {
             var tweenData = tween.data[0];
             var pathDelta = this.pathDelta;
@@ -26725,19 +26734,25 @@ var Texture = {
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
      *
+     * Calling this method will modify the `width` and `height` properties of your Game Object.
+     *
+     * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
+     *
      * @method Phaser.GameObjects.Components.Texture#setTexture
      * @since 3.0.0
      *
      * @param {(string|Phaser.Textures.Texture)} key - The key of the texture to be used, as stored in the Texture Manager, or a Texture instance.
      * @param {(string|number)} [frame] - The name or index of the frame within the Texture.
+     * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
+     * @param {boolean} [updateOrigin=true] - Should this call change the origin of the Game Object?
      *
      * @return {this} This Game Object instance.
      */
-    setTexture: function (key, frame)
+    setTexture: function (key, frame, updateSize, updateOrigin)
     {
         this.texture = this.scene.sys.textures.get(key);
 
-        return this.setFrame(frame);
+        return this.setFrame(frame, updateSize, updateOrigin);
     },
 
     /**
@@ -27222,7 +27237,7 @@ var Tint = {
 
     /**
      * The tint value being applied to the whole of the Game Object.
-     * This property is a setter-only. Use the properties `tintTopLeft` etc to read the current tint value.
+     * Return `tintTopLeft` when read this tint property.
      *
      * @name Phaser.GameObjects.Components.Tint#tint
      * @type {number}
@@ -27230,6 +27245,11 @@ var Tint = {
      * @since 3.0.0
      */
     tint: {
+
+        get: function ()
+        {
+            return this.tintTopLeft;
+        },
 
         set: function (value)
         {
@@ -28674,9 +28694,7 @@ var TransformMatrix = new Class({
      */
     setToContext: function (ctx)
     {
-        var matrix = this.matrix;
-
-        ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        ctx.setTransform(this);
 
         return ctx;
     },
@@ -28886,13 +28904,14 @@ var TransformMatrix = new Class({
      * @param {number} y - The y value.
      * @param {number} xw - The xw value.
      * @param {number} yh - The yh value.
-     * @param {boolean} roundPixels - Pass the results via Math.round?
+     * @param {boolean} [roundPixels=false] - Pass the results via Math.round?
      * @param {Float32Array} [quad] - Optional Float32Array to store the results in. Otherwises uses the local quad array.
      *
      * @return {Float32Array} The quad Float32Array.
      */
     setQuad: function (x, y, xw, yh, roundPixels, quad)
     {
+        if (roundPixels === undefined) { roundPixels = false; }
         if (quad === undefined) { quad = this.quad; }
 
         var matrix = this.matrix;
@@ -28904,24 +28923,33 @@ var TransformMatrix = new Class({
         var e = matrix[4];
         var f = matrix[5];
 
-        quad[0] = x * a + y * c + e;
-        quad[1] = x * b + y * d + f;
-
-        quad[2] = x * a + yh * c + e;
-        quad[3] = x * b + yh * d + f;
-
-        quad[4] = xw * a + yh * c + e;
-        quad[5] = xw * b + yh * d + f;
-
-        quad[6] = xw * a + y * c + e;
-        quad[7] = xw * b + y * d + f;
-
         if (roundPixels)
         {
-            quad.forEach(function (value, index)
-            {
-                quad[index] = Math.round(value);
-            });
+            quad[0] = Math.round(x * a + y * c + e);
+            quad[1] = Math.round(x * b + y * d + f);
+
+            quad[2] = Math.round(x * a + yh * c + e);
+            quad[3] = Math.round(x * b + yh * d + f);
+
+            quad[4] = Math.round(xw * a + yh * c + e);
+            quad[5] = Math.round(xw * b + yh * d + f);
+
+            quad[6] = Math.round(xw * a + y * c + e);
+            quad[7] = Math.round(xw * b + y * d + f);
+        }
+        else
+        {
+            quad[0] = x * a + y * c + e;
+            quad[1] = x * b + y * d + f;
+
+            quad[2] = x * a + yh * c + e;
+            quad[3] = x * b + yh * d + f;
+
+            quad[4] = xw * a + yh * c + e;
+            quad[5] = xw * b + yh * d + f;
+
+            quad[6] = xw * a + y * c + e;
+            quad[7] = xw * b + y * d + f;
         }
 
         return quad;
@@ -31892,6 +31920,28 @@ var Line = new Class({
     },
 
     /**
+     * Sets this Line to match the x/y coordinates of the two given Vector2Like objects.
+     *
+     * @method Phaser.Geom.Line#setFromObjects
+     * @since 3.70.0
+     *
+     * @param {Phaser.Types.Math.Vector2Like} start - Any object with public `x` and `y` properties, whose values will be assigned to the x1/y1 components of this Line.
+     * @param {Phaser.Types.Math.Vector2Like} end - Any object with public `x` and `y` properties, whose values will be assigned to the x2/y2 components of this Line.
+     *
+     * @return {this} This Line object.
+     */
+    setFromObjects: function (start, end)
+    {
+        this.x1 = start.x;
+        this.y1 = start.y;
+
+        this.x2 = end.x;
+        this.y2 = end.y;
+
+        return this;
+    },
+
+    /**
      * Returns a Vector2 object that corresponds to the start of this Line.
      *
      * @method Phaser.Geom.Line#getPointA
@@ -33784,6 +33834,13 @@ var MultiFile = new Class({
          */
         this.key = key;
 
+        var loadKey = this.key;
+
+        if (loader.prefix && loader.prefix !== '')
+        {
+            this.key = loader.prefix + loadKey;
+        }
+
         /**
          * The current index being used by multi-file loaders to avoid key clashes.
          *
@@ -34901,8 +34958,11 @@ var ImageFile = new Class({
             //  We do, but has it loaded?
             if (linkFile.state >= CONST.FILE_COMPLETE)
             {
-                //  Both files have loaded
-                if (this.type === 'normalMap')
+                if (linkFile.type === 'spritesheet')
+                {
+                    linkFile.addToCache();
+                }
+                else if (this.type === 'normalMap')
                 {
                     //  linkFile.data = Image
                     //  this.data = Normal Map
@@ -35013,7 +35073,7 @@ var ImageFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#image
- * @fires Phaser.Loader.LoaderPlugin#ADD
+ * @fires Phaser.Loader.Events#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.ImageFileConfig|Phaser.Types.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
@@ -35252,7 +35312,7 @@ var JSONFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#json
- * @fires Phaser.Loader.LoaderPlugin#ADD
+ * @fires Phaser.Loader.Events#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.JSONFileConfig|Phaser.Types.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
@@ -35433,7 +35493,7 @@ var TextFile = new Class({
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#text
- * @fires Phaser.Loader.LoaderPlugin#ADD
+ * @fires Phaser.Loader.Events#ADD
  * @since 3.0.0
  *
  * @param {(string|Phaser.Types.Loader.FileTypes.TextFileConfig|Phaser.Types.Loader.FileTypes.TextFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
@@ -43057,12 +43117,6 @@ module.exports = Within;
  */
 var Wrap = function (value, min, max)
 {
-    if (value >= min && value <= max)
-    {
-        //  Skip modulo if already in range
-        return value;
-    }
-
     var range = max - min;
 
     return (min + ((((value - min) % range) + range) % range));
@@ -46629,7 +46683,7 @@ var RandomDataGenerator = new Class({
      */
     weightedPick: function (array)
     {
-        return array[~~(Math.pow(this.frac(), 2) * (array.length - 1) + 0.5)];
+        return array[~~(Math.pow(this.frac(), 2) * array.length + 0.5)];
     },
 
     /**
@@ -48934,6 +48988,14 @@ var Frame = new Class({
                 y: 0,
                 width: 0,
                 height: 0
+            },
+            is3Slice: false,
+            scale9: false,
+            scale9Borders: {
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0
             }
         };
 
@@ -49051,6 +49113,38 @@ var Frame = new Class({
         this.centerY = Math.floor(destHeight / 2);
 
         return this.updateUVs();
+    },
+
+    /**
+     * Sets the scale9 center rectangle values.
+     *
+     * Scale9 is a feature of Texture Packer, allowing you to define a nine-slice scaling grid.
+     *
+     * This is set automatically by the JSONArray and JSONHash parsers.
+     *
+     * @method Phaser.Textures.Frame#setScale9
+     * @since 3.70.0
+     *
+     * @param {number} x - The left coordinate of the center scale9 rectangle.
+     * @param {number} y - The top coordinate of the center scale9 rectangle.
+     * @param {number} width - The width of the center scale9 rectangle.
+     * @param {number} height - The height coordinate of the center scale9 rectangle.
+     *
+     * @return {this} This Frame object.
+     */
+    setScale9: function (x, y, width, height)
+    {
+        var data = this.data;
+
+        data.scale9 = true;
+        data.is3Slice = (y === 0 && height === this.height);
+
+        data.scale9Borders.x = x;
+        data.scale9Borders.y = y;
+        data.scale9Borders.w = width;
+        data.scale9Borders.h = height;
+
+        return this;
     },
 
     /**
@@ -49354,8 +49448,8 @@ var Frame = new Class({
      */
     destroy: function ()
     {
-        this.source = null;
         this.texture = null;
+        this.source = null;
         this.glTexture = null;
         this.customData = null;
         this.data = null;
@@ -49427,6 +49521,40 @@ var Frame = new Class({
         get: function ()
         {
             return this.data.trim;
+        }
+
+    },
+
+    /**
+     * Does the Frame have scale9 border data?
+     *
+     * @name Phaser.Textures.Frame#scale9
+     * @type {boolean}
+     * @readonly
+     * @since 3.70.0
+     */
+    scale9: {
+
+        get: function ()
+        {
+            return this.data.scale9;
+        }
+
+    },
+
+    /**
+     * If the Frame has scale9 border data, is it 3-slice or 9-slice data?
+     *
+     * @name Phaser.Textures.Frame#is3Slice
+     * @type {boolean}
+     * @readonly
+     * @since 3.70.0
+     */
+    is3Slice: {
+
+        get: function ()
+        {
+            return this.data.is3Slice;
         }
 
     },
@@ -50712,11 +50840,15 @@ module.exports = GetFirst;
  * @function Phaser.Utils.Array.GetRandom
  * @since 3.0.0
  *
- * @param {array} array - The array to select the random entry from.
+ * @generic T
+ * @genericUse {T[]} - [array]
+ * @genericUse {T} - [$return]
+ *
+ * @param {T[]} array - The array to select the random entry from.
  * @param {number} [startIndex=0] - An optional start index.
  * @param {number} [length=array.length] - An optional length, the total number of elements (from the startIndex) to choose from.
  *
- * @return {*} A random element from the array, or `null` if no element could be found in the range given.
+ * @return {T} A random element from the array, or `null` if no element could be found in the range given.
  */
 var GetRandom = function (array, startIndex, length)
 {
@@ -52711,12 +52843,20 @@ var RotateMatrix = __webpack_require__(7116);
  * @genericUse {T[][]} - [matrix,$return]
  *
  * @param {T[][]} [matrix] - The array to rotate.
+ * @param {number} [amount=1] - The number of times to rotate the matrix.
  *
  * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
  */
-var RotateLeft = function (matrix)
+var RotateLeft = function (matrix, amount)
 {
-    return RotateMatrix(matrix, 90);
+    if (amount === undefined) { amount = 1; }
+
+    for (var i = 0; i < amount; i++)
+    {
+        matrix = RotateMatrix(matrix, 90);
+    }
+
+    return matrix;
 };
 
 module.exports = RotateLeft;
@@ -52846,12 +52986,20 @@ var RotateMatrix = __webpack_require__(7116);
  * @genericUse {T[][]} - [matrix,$return]
  *
  * @param {T[][]} [matrix] - The array to rotate.
+ * @param {number} [amount=1] - The number of times to rotate the matrix.
  *
  * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
  */
-var RotateRight = function (matrix)
+var RotateRight = function (matrix, amount)
 {
-    return RotateMatrix(matrix, -90);
+    if (amount === undefined) { amount = 1; }
+
+    for (var i = 0; i < amount; i++)
+    {
+        matrix = RotateMatrix(matrix, -90);
+    }
+
+    return matrix;
 };
 
 module.exports = RotateRight;
@@ -53212,7 +53360,7 @@ var GetValue = __webpack_require__(5851);
  *
  * Allowed types:
  *
- * Implicit
+ * Explicit:
  * {
  *     x: 4
  * }
