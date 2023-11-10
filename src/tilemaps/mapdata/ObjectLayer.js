@@ -45,7 +45,7 @@ var ObjectLayer = new Class({
          *
          * @name Phaser.Tilemaps.ObjectLayer#id
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.id = GetFastValue(config, 'id', 0);
 

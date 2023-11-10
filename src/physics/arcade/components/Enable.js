@@ -21,7 +21,7 @@ var Enable = {
      * bodies, something that isn't possible if you're just changing its position directly.
      *
      * @method Phaser.Physics.Arcade.Components.Enable#setDirectControl
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {boolean} [value=true] - `true` if the Body calculate velocity based on changes in position, otherwise `false`.
      *

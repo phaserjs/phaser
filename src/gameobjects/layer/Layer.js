@@ -635,7 +635,7 @@ var Layer = new Class({
      * You can also optionally call `destroy` on each Game Object that is removed from the Layer.
      *
      * @method Phaser.GameObjects.Layer#remove
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @generic {Phaser.GameObjects.GameObject} T
      * @genericUse {(T|T[])} - [child]

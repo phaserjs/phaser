@@ -136,14 +136,14 @@ var Plane = new Class({
         this.setViewHeight();
     },
 
-    /**     
+    /**
      * Do not change this value. It has no effect other than to break things.
      *
      * @name Phaser.GameObjects.Plane#originX
      * @type {number}
      * @readonly
      * @override
-     * @since 3.61.0
+     * @since 3.70.0
      */
     originX: {
 
@@ -154,14 +154,14 @@ var Plane = new Class({
 
     },
 
-    /**     
+    /**
      * Do not change this value. It has no effect other than to break things.
      *
      * @name Phaser.GameObjects.Plane#originY
      * @type {number}
      * @readonly
      * @override
-     * @since 3.61.0
+     * @since 3.70.0
      */
     originY: {
 

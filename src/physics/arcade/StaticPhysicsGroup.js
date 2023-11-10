@@ -116,7 +116,7 @@ var StaticPhysicsGroup = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticGroup#collisionCategory
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.collisionCategory = 0x0001;
 
@@ -127,7 +127,7 @@ var StaticPhysicsGroup = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticGroup#collisionMask
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.collisionMask = 1;
 

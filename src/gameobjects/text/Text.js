@@ -1070,7 +1070,7 @@ var Text = new Class({
      * need to display large quantities of characters with fine control over the letter spacing.
      *
      * @method Phaser.GameObjects.Text#setLetterSpacing
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {number} value - The amount to add to the letter width. Set to zero to disable.
      *
@@ -1168,7 +1168,7 @@ var Text = new Class({
      * Render text from right-to-left or left-to-right.
      *
      * @method Phaser.GameObjects.Text#setRTL
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {boolean} [rtl=true] - Set to `true` to render from right-to-left.
      *

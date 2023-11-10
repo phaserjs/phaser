@@ -1740,7 +1740,7 @@ var ParticleEmitter = new Class({
      * Clear all Death Zones from this Particle Emitter.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#clearDeathZones
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @return {this} This Particle Emitter.
      */
@@ -1850,7 +1850,7 @@ var ParticleEmitter = new Class({
      * Clear all Emission Zones from this Particle Emitter.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#clearEmitZones
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @return {this} This Particle Emitter.
      */

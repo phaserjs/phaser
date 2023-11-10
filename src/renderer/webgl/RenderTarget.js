@@ -256,7 +256,7 @@ var RenderTarget = new Class({
      * width and height values.
      *
      * @method Phaser.Renderer.WebGL.RenderTarget#willResize
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {number} width - The new width of this Render Target.
      * @param {number} height - The new height of this Render Target.

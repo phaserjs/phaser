@@ -176,7 +176,7 @@ var Line = new Class({
      * Sets this Line to match the x/y coordinates of the two given Vector2Like objects.
      *
      * @method Phaser.Geom.Line#setFromObjects
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {Phaser.Types.Math.Vector2Like} start - Any object with public `x` and `y` properties, whose values will be assigned to the x1/y1 components of this Line.
      * @param {Phaser.Types.Math.Vector2Like} end - Any object with public `x` and `y` properties, whose values will be assigned to the x2/y2 components of this Line.

@@ -270,7 +270,7 @@ var TilemapLayer = new Class({
          *
          * @name Phaser.Tilemaps.TilemapLayer#collisionCategory
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.collisionCategory = 0x0001;
 
@@ -283,7 +283,7 @@ var TilemapLayer = new Class({
          *
          * @name Phaser.Tilemaps.TilemapLayer#collisionMask
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.collisionMask = 1;
 
@@ -702,7 +702,7 @@ var TilemapLayer = new Class({
      *
      * @method Phaser.Tilemaps.TilemapLayer#setTintFill
      * @webglOnly
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {number} [tint=0xffffff] - The tint color being applied to each tile within the region. Given as a hex value, i.e. `0xff0000` for red. Set to white (`0xffffff`) to reset the tint.
      * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area to search.

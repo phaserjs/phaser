@@ -465,7 +465,7 @@ var StaticBody = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticBody#collisionCategory
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.collisionCategory = 0x0001;
 
@@ -476,7 +476,7 @@ var StaticBody = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticBody#collisionMask
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.collisionMask = 1;
 

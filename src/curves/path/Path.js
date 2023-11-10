@@ -60,7 +60,7 @@ var Path = new Class({
          * @name Phaser.Curves.Path#defaultDivisions
          * @type {number}
          * @default 12
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.defaultDivisions = 12;
 

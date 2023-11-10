@@ -311,7 +311,7 @@ var Tile = new Class({
          * @name Phaser.Tilemaps.Tile#tintFill
          * @type {boolean}
          * @default
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.tintFill = false;
 

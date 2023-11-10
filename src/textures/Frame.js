@@ -467,7 +467,7 @@ var Frame = new Class({
      * This is set automatically by the JSONArray and JSONHash parsers.
      *
      * @method Phaser.Textures.Frame#setScale9
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {number} x - The left coordinate of the center scale9 rectangle.
      * @param {number} y - The top coordinate of the center scale9 rectangle.
@@ -875,7 +875,7 @@ var Frame = new Class({
      * @name Phaser.Textures.Frame#scale9
      * @type {boolean}
      * @readonly
-     * @since 3.61.0
+     * @since 3.70.0
      */
     scale9: {
 
@@ -892,7 +892,7 @@ var Frame = new Class({
      * @name Phaser.Textures.Frame#is3Slice
      * @type {boolean}
      * @readonly
-     * @since 3.61.0
+     * @since 3.70.0
      */
     is3Slice: {
 

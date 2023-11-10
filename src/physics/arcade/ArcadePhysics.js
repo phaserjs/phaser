@@ -94,7 +94,7 @@ var ArcadePhysics = new Class({
          * @name Phaser.Physics.Arcade.World#_category
          * @private
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this._category = 0x0001;
 
@@ -210,7 +210,7 @@ var ArcadePhysics = new Class({
      * `Body.setCollidesWith()` methods to change this.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#nextCategory
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @return {number} The next collision category.
      */

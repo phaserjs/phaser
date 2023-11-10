@@ -239,7 +239,7 @@ var PostFXPipeline = new Class({
      * actual Game Object needs to use them.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#bootFX
-     * @since 3.61.0
+     * @since 3.70.0
      */
     bootFX: function ()
     {
@@ -277,7 +277,7 @@ var PostFXPipeline = new Class({
      * It is also called as part of the `PipelineManager.postBatch` method when processing Post FX Pipelines.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.PostFXPipeline#postBatch
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.Cameras.Scene2D.Camera)} [gameObject] - The Game Object or Camera that invoked this pipeline, if any.
      *

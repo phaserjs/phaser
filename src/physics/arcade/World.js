@@ -1065,7 +1065,7 @@ var World = new Class({
      *
      * @method Phaser.Physics.Arcade.World#singleStep
      * @fires Phaser.Physics.Arcade.Events#WORLD_STEP
-     * @since 3.61.0
+     * @since 3.70.0
      */
     singleStep: function ()
     {
@@ -1996,7 +1996,7 @@ var World = new Class({
      * based on their collision mask and collision categories.
      *
      * @method Phaser.Physics.Arcade.World#canCollide
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {Phaser.Types.Physics.Arcade.ArcadeCollider} body1 - The first body to check.
      * @param {Phaser.Types.Physics.Arcade.ArcadeCollider} body2 - The second body to check.

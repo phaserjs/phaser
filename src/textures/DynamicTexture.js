@@ -318,7 +318,7 @@ var DynamicTexture = new Class({
      * or if you change its size.
      *
      * @method Phaser.Textures.DynamicTexture#setFromRenderTarget
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @return {this} This Dynamic Texture instance.
      */

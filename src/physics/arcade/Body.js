@@ -678,7 +678,7 @@ var Body = new Class({
          *
          * @name Phaser.Physics.Arcade.Body#slideFactor
          * @type {Phaser.Math.Vector2}
-         * @since 3.61.0
+         * @since 3.70.0
          * @see Phaser.GameObjects.Components.Pushable#setSlideFactor
          */
         this.slideFactor = new Vector2(1, 1);
@@ -843,7 +843,7 @@ var Body = new Class({
          *
          * @name Phaser.Physics.Arcade.Body#collisionCategory
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.collisionCategory = 0x0001;
 
@@ -854,7 +854,7 @@ var Body = new Class({
          *
          * @name Phaser.Physics.Arcade.Body#collisionMask
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.collisionMask = 1;
 
@@ -942,7 +942,7 @@ var Body = new Class({
          *
          * @name Phaser.Physics.Arcade.Body#directControl
          * @type {boolean}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.directControl = false;
 
@@ -952,7 +952,7 @@ var Body = new Class({
          * @name Phaser.Physics.Arcade.Body#autoFrame
          * @type {Phaser.Math.Vector2}
          * @private
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.autoFrame = this.position.clone();
     },
@@ -1927,7 +1927,7 @@ var Body = new Class({
      * bodies, something that isn't possible if you're just changing its position directly.
      *
      * @method Phaser.Physics.Arcade.Body#setDirectControl
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {boolean} [value=true] - `true` if the Body calculate velocity based on changes in position, otherwise `false`.
      *
@@ -2133,7 +2133,7 @@ var Body = new Class({
      * can combine this with the `setDrag()` method to create deceleration.
      *
      * @method Phaser.Physics.Arcade.Body#setSlideFactor
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {number} x - The horizontal slide factor. A value between 0 and 1.
      * @param {number} [y=x] - The vertical slide factor. A value between 0 and 1.
