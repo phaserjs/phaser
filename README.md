@@ -32,15 +32,15 @@ Grab the source and join the fun!
 
 > 10th November 2023
 
-The release of Phaser v3.60 in April 2023 was a deal for us. The culmination of 10 years of hard work. Even so, we didn't sit still 🙂 and after 5 heavily tested beta versions, we're back with v3.70!
+The release of Phaser v3.60 in April 2023 was a huge deal for us. The culmination of 10 years of hard work. Even so, we didn't sit still 🙂 and after 5 heavily tested beta versions, we're back with v3.70!
 
-Thankfully, this is a smaller release than v3.60 and contains next to no breaking changes, but it still some great new features and updates. The headliner are:
+Although feature-packed this release doesn't contain any major API breaking changes, so should be an easy upgrade from v3.60. The headliners are:
 
 **Texture Packer Nine Slice Support** - We added the Nine Slice Game Object in version 3.60 but now Phaser can load Nine Slice data directly from a [Texture Packer](https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16) 7.1 atlas file. This makes it much easier to visually configure your Nine Slice sprites.
 
-**Arcade Physics Updates** - Arcade Physics bodies can now be set to be under 'direct control'. When enabled, they'll automatically calculate their velocity based on positional changes. This allows you to directly move a Body around the physics world by just changing its position, without having to use acceleration or velocity. This is really useful if you want to move it via a Tween, or have it follow a Pointer, or a Path. Because its velocity is calculated based on this movement it will still resolve collisions with other bodies.
+**Arcade Physics Updates** - Arcade Physics bodies can now be set to be under 'direct control'. When enabled, they'll automatically calculate their velocity based on positional changes. This allows you to directly move a Body around the physics world by just changing its position, without having to use acceleration or velocity. This is really useful if you want to move it via a Tween, or have it follow a Pointer, or a Path. Because its velocity is calculated based on this movement it will still resolve collisions with other bodies. We also added in support for Collision Groups into Arcade Physics, which allows for very fast filtering of groups of bodies and also the option to set the 'slide' factor of a moving body, great for Sokoban style games.
 
-**Round Pixles** - We've now moved all of the 'round pixels' calculations off the CPU and onto the GPU. This means far less impact on performance when using this feature, which is great for pixel-art style games, or those that want to avoid sub-pixel rendering.
+**Round Pixels** - We've now moved all of the 'round pixels' calculations off the CPU and onto the GPU. This means far less impact on performance when using this feature, which is great for pixel-art style games, or those that want to avoid sub-pixel rendering.
 
 **FX Updates** - In v3.60 we introduced lots of really nice built-in FX, such as Bloom, Blur and Glow. In v3.70 you'll find several fixes related to these as well as the new ability to disable them via the game config. If you know you don't need to use them, disabling them saves boot-up time and memory, especially on mobile devices, as there are less shaders to compile and textures to prepare.
 
