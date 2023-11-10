@@ -349,8 +349,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.60.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.60.0/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.70.0/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.70.0/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser
