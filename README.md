@@ -46,11 +46,7 @@ Although feature-packed this release doesn't contain any major API breaking chan
 
 You'll also find over 100 fixes and updates as well as more new features not listed here. As usual, please check our detailed [Change Log](https://github.com/photonstorm/phaser/blob/master/changelog/3.70/CHANGELOG-v3.70.md) for v3.70.
 
-v3.70 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases) and on npm:
-
-```
-npm i phaser
-```
+v3.70 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases) and npm.
 
 You'll find up to date TypeScript defs that align with this release in the `types` folder of this repository.
 
