@@ -1,3 +1,5 @@
+# Version 3.70.0 - Yotsuba - 10th November 2023
+
 # New Features - Round Pixels
 
 All pixel rounding math is now handled on the GPU instead of on the CPU. This feature has now been enabled by default.
