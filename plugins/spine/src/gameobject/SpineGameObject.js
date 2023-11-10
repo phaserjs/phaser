@@ -501,7 +501,7 @@ var SpineGameObject = new Class({
      */
     setSkeletonFromJSON: function (atlasDataKey, skeletonJSON, animationName, loop)
     {
-        return this.setSkeleton(atlasDataKey, skeletonJSON, animationName, loop);
+        return this.setSkeleton(atlasDataKey, animationName, loop, skeletonJSON);
     },
 
     /**
