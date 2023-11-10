@@ -102,8 +102,6 @@ var List = new Class({
      * @method Phaser.Structs.List#add
      * @since 3.0.0
      *
-     * @genericUse {T} - [child,$return]
-     *
      * @param {*|Array.<*>} child - The item, or array of items, to add to the list.
      * @param {boolean} [skipCallback=false] - Skip calling the List.addCallback if this child is added successfully.
      *
@@ -127,7 +125,7 @@ var List = new Class({
      * @method Phaser.Structs.List#addAt
      * @since 3.0.0
      *
-     * @genericUse {T} - [child,$return]
+     * @genericUse {(T|T[])} - [child,$return]
      *
      * @param {*} child - The item, or array of items, to add to the list.
      * @param {number} [index=0] - The index in the list at which the element(s) will be inserted.
@@ -395,8 +393,6 @@ var List = new Class({
      * @method Phaser.Structs.List#remove
      * @since 3.0.0
      *
-     * @genericUse {T} - [child,$return]
-     *
      * @param {*} child - The item, or array of items, to remove.
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
@@ -471,11 +467,9 @@ var List = new Class({
      * @method Phaser.Structs.List#removeAll
      * @since 3.0.0
      *
-     * @genericUse {Phaser.Structs.List.<T>} - [$return]
-     *
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
-     * @return {Phaser.Structs.List} This List object.
+     * @return {this} This List object.
      */
     removeAll: function (skipCallback)
     {
