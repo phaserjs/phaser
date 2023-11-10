@@ -53,6 +53,8 @@ var Common = require('../core/Common');
             collisionActiveIndex = 0,
             collision,
             pair,
+            bodyA,
+            bodyB,
             i;
 
         for (i = 0; i < collisionsLength; i++) {
@@ -90,11 +92,36 @@ var Common = require('../core/Common');
             pair = pairsList[i];
 
             if (pair.timeUpdated < timestamp) {
-                pairSetActive(pair, false, timestamp);
-                collisionEnd[collisionEndIndex++] = pair;
+
+                bodyA = pair.collision.bodyA;
+                bodyB = pair.collision.bodyB;
+
+                // if ((bodyA.isSleeping && bodyB.isSleeping) || bodyA.isStatic || bodyB.isStatic)
+                // {
+                //     continue;
+                // }
+
+                // keep pair if it is sleeping but not both static
+                // if ((bodyA.isSleeping || bodyA.isStatic) || (bodyB.isSleeping || bodyB.isStatic) && !(bodyA.isStatic && bodyB.isStatic)) {
+                //     pairSetActive(pair, true, timestamp);
+                //     continue;
+                // }
+
+                // pairSetActive(pair, false, timestamp);
+                // collisionEnd[collisionEndIndex++] = pair;
+
+                // keep pair if it is sleeping but not both static
+                // if ((bodyA.isSleeping || bodyA.isStatic) && (bodyB.isSleeping || bodyB.isStatic)
+                // && !(bodyA.isStatic && bodyB.isStatic)) {
+                // continue;
+                // }
 
                 // remove inactive pairs
-                if (!pair.collision.bodyA.isSleeping && !pair.collision.bodyB.isSleeping) {
+                // if (!bodyA.isSleeping && !bodyB.isSleeping && !bodyA.isStatic && !bodyB.isStatic) {
+                if ((!bodyA.isSleeping || !bodyA.isStatic) && (!bodyB.isSleeping || !bodyB.isStatic)) {
+                    console.log('deleted pair', bodyA, bodyB);
+                    pairSetActive(pair, false, timestamp);
+                    collisionEnd[collisionEndIndex++] = pair;
                     delete pairsTable[pair.id];
                 }
             } else {
