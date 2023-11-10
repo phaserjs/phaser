@@ -54,6 +54,36 @@ You can now set in your game config two new boolean properties that control if t
 * The `FXBlurLow` fragment shader didn't have the `offset` uniform. This is now passed in and applied to the resulting blur, preventing it from creating 45 degree artifacts (thanks Wayfinder)
 * Fixed an issue in the way the Tilemap WebGL Renderer would call `batchTexture` that meant if you applied a PostFX to a Tilemap Layer it would apply the fx for every single tile in the layer, instead of just once per layer. In a simple map this fix has reduced draw calls from over 12,000 to just 52, and it no longer matters how many tiles are on the layer, the cost of applying the FX is consistent regardless.
 
+# New Features - Matter JS Updates
+
+I have merged in the Matter JS "Improved performance and reduced memory usage" Pull Request #1238 from liabru. It contains the following updates:
+
+Scenes with a large number of colliding pairs will benefit most from these changes. On the stress3, stress4 examples using the benchmark command in Node running on my Mac M1 Air:
+
+* improved average performance up to ~10%
+* reduced average memory usage up to ~10%
+* reduced minor and major memory GC frequency / duration
+* smoother frame rates as a result
+
+Other examples show smaller improvements as they tend to have a much lower number of colliding pairs.
+
+### Changes
+
+* optimised Pairs.update
+* reduced array resizing and object disposal
+* increased object reuse and caching
+* increased local variable caching
+* changed to a more compact Pair.id format
+* changes to collision.supports as below
+
+### Migration
+
+* no known changes to results or behaviour
+* Matter.Collision use collision.supportCount instead of collision.supports.length for active supports
+* Matter.Pair use pair.contacts instead of pair.activeContacts
+* Matter.Pair use pair.contactCount instead of pair.contacts.length for active contacts
+* Pair.id format has changed
+
 # New Features
 
 * `Text.setRTL` is a new method that allows you to set a Text Game Object as being rendered from right-to-left, instead of the default left to right (thanks @rexrainbow)
