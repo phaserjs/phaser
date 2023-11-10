@@ -30,33 +30,23 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 12th April 2023
+> 10th November 2023
 
-After 24 Beta releases, over 2000 updated examples and a year of insanely hard work we're thrilled to finally announce the release of Phaser 3.60!
+The release of Phaser v3.60 in April 2023 was a deal for us. The culmination of 10 years of hard work. Even so, we didn't sit still 🙂 and after 5 heavily tested beta versions, we're back with v3.70!
 
-Today is also the 10th birthday of Phaser, so it's a very special day for us. 10 years ago we released the v0.5 version on the unsuspecting public and it's no exaggeration to say that it changed both our lives and the face of HTML5 game development forever.
+Thankfully, this is a smaller release than v3.60 and contains next to no breaking changes, but it still some great new features and updates. The headliner are:
 
-![Phaser is 10](changelog/3.60/images/phaser10banner.png)
+**Texture Packer Nine Slice Support** - We added the Nine Slice Game Object in version 3.60 but now Phaser can load Nine Slice data directly from a [Texture Packer](https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16) 7.1 atlas file. This makes it much easier to visually configure your Nine Slice sprites.
 
-Phaser 3.60 is our biggest release ever. Eclipsing any version before it. Some of the headline features include:
+**Arcade Physics Updates** - Arcade Physics bodies can now be set to be under 'direct control'. When enabled, they'll automatically calculate their velocity based on positional changes. This allows you to directly move a Body around the physics world by just changing its position, without having to use acceleration or velocity. This is really useful if you want to move it via a Tween, or have it follow a Pointer, or a Path. Because its velocity is calculated based on this movement it will still resolve collisions with other bodies.
 
-**Built-in Special FX** - We now bundle 14 highly flexible special effects into the core, which are available to all Game Objects. These include Glow, Blur, Bloom, Bokeh, Barrel, Wipe, Pixelate, Vignette, Displacement and more.
+**Round Pixles** - We've now moved all of the 'round pixels' calculations off the CPU and onto the GPU. This means far less impact on performance when using this feature, which is great for pixel-art style games, or those that want to avoid sub-pixel rendering.
 
-**Nine-Slice Game Object** - A new native Nine Slice Game Object. A Nine Slice Game Object allows you to display a texture-based object that can be stretched both horizontally and vertically, but that retains fixed-sized corners. The dimensions of the corners are set via the parameters to the class. When you resize a Nine Slice Game Object only the middle sections of the texture stretch. This is extremely useful for UI and button-like elements, where you need them to expand to accommodate the content without distorting the texture.
+**FX Updates** - In v3.60 we introduced lots of really nice built-in FX, such as Bloom, Blur and Glow. In v3.70 you'll find several fixes related to these as well as the new ability to disable them via the game config. If you know you don't need to use them, disabling them saves boot-up time and memory, especially on mobile devices, as there are less shaders to compile and textures to prepare.
 
-**Plane Game Object** - A new native Plane Game Object. The Plane Game Object is a helper class that takes the Mesh Game Object and extends it, allowing for fast and easy creation of Planes. A Plane is a one-sided grid of cells, where you specify the number of cells in each dimension. The Plane can have a texture that is either repeated (tiled) across each cell, or applied to the full Plane.
+You'll also find over 100 fixes and updates as well as more new features not listed here. As usual, please check our detailed [Change Log](https://github.com/photonstorm/phaser/blob/master/changelog/3.70/CHANGELOG-v3.70.md) for v3.70.
 
-**New Tween System** - We've reworked the entire Tween system to make it both more efficient, more powerful and easier for you to extend. New in this version are perfectly sequential Tween Chains, the ability to tween Sprite textures, much better garbage-collection and auto-destruction of expired tweens and lots more.
-
-**Compressed Texture Support** - Phaser 3.60 contains support for Compressed Textures. It can parse both KTX and PVR containers and within those has support for the following formats: ETC, ETC1, ATC, ASTC, BPTC, RGTC, PVRTC, S3TC and S3TCSRB. Compressed Textures differ from normal textures in that their structure is optimized for fast GPU data reads and lower memory consumption. Popular tools that can create compressed textures include PVRTexTool, ASTC Encoder and Texture Packer.
-
-**Matter Physics v0.19** - We have updated the version of Matter Physics to the latest v0.18 release. This is a big jump and brings with it quite a few internal changes to Matter, as well as a ~40% performance improvement.
-
-There are also hundreds of updates and bug fixes across the entire codebase.
-
-We have created a brand new [Change Log](https://github.com/photonstorm/phaser/blob/master/changelog/3.60/CHANGELOG-v3.60.md) just for v3.60. Previously, we used to put all of the changes in a single file, but this felt impractical. So we've split it all into sections now, so you can easily see what's new and updated.
-
-v3.60 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases). You can also download it from npm:
+v3.70 is available now from the [Releases page](https://github.com/photonstorm/phaser/releases) and on npm:
 
 ```
 npm i phaser
@@ -66,7 +56,7 @@ You'll find up to date TypeScript defs that align with this release in the `type
 
 > If you find any problems please report them in GitHub issues.
 
-As usual, I'd like to send my thanks to the Phaser community for their help in both reporting issues and submitting pull requests to fix them. So, please do spend some time digging through the Change Log. I assure you, it's worth while 🙂
+As usual, I'd like to send my thanks to the Phaser community for their help in both reporting issues and submitting pull requests to fix them 🙂
 
 I'd like to send a massive thank-you to everyone who supports [Phaser on Patreon](https://www.patreon.com/photonstorm), GitHub Sponsors and our corporate backers. Your continued funding allows me to keep working on Phaser full-time and this monster of a new release is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
 
@@ -94,26 +84,15 @@ Those funds allow Phaser to improve, and when it improves, everyone involved ben
 
 We use [Patreon](https://www.patreon.com/photonstorm) to manage the backing and you can [support Phaser](https://www.patreon.com/join/photonstorm?) from $1 per month. The amount you pledge is entirely up to you and can be changed as often as you like. Patreon renews monthly, just like Netflix. You can, of course, cancel at any point. Tears will be shed on this end, but that's not your concern.
 
-You can also support us by using crypto currencies. The Phaser wallet addresses are:
-
-* Ethereum: 0x6a716A122Ad186ECE865C55D16c1D361f1B13724
-* BSC / AVAX / Polygon: 0x94aC3F640b8749AbD1d44f29A62ffeB32CA34628
-
 Extra special thanks to the following companies whose support makes Phaser possible:
 
-* [Hathora](https://hathora.dev)
-* [Cerebral Fix](https://cerebralfix.com)
-* [MoPub](https://www.mopub.com/en)
-* [Facebook](https://www.facebook.com)
-* [Game Distribution](https://gamedistribution.com)
-* [GameCommerce](https://www.gamecommerce.com)
-* [Mozilla](https://www.mozilla.org)
-* [Texture Packer](https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16)
-* [TwilioQuest](https://www.twilio.com/blog/unlock-your-power-to-teach-with-twilioquest?utm_source=github&utm_medium=banner&utm_campaign=phaser)
-* [Poki](https://developers.poki.com/)
-* [CrazyGames](https://www.crazygames.com)
-* [Lagged](https://www.lagged.com)
-* [Nakama](https://heroiclabs.com/phaserjs/)
+| 💖 | 💖 | 💖 |
+| ----- | ----- | ----- |
+| [Hathora](https://hathora.dev) | [Cerebral Fix](https://cerebralfix.com) | [MoPub](https://www.mopub.com/en) |
+| [Facebook](https://www.facebook.com) | [Game Distribution](https://gamedistribution.com) | [GameCommerce](https://www.gamecommerce.com) |
+| [Mozilla](https://www.mozilla.org) | [Texture Packer](https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16) | [TwilioQuest](https://www.twilio.com/blog/unlock-your-power-to-teach-with-twilioquest?utm_source=github&utm_medium=banner&utm_campaign=phaser) |
+| [Poki](https://developers.poki.com/) | [CrazyGames](https://www.crazygames.com) | [Lagged](https://www.lagged.com) |
+| [Nakama](https://heroiclabs.com/phaserjs/) | [OP Games](https://https://www.opgames.org/) | You?! |
 
 ![Sponsors](https://phaser.io/images/github/sponsors-2021-08.png "Our Awesome Sponsors")
 
@@ -141,13 +120,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -342,8 +321,8 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 Due to the increasing size of our Change Logs we have now split them up, one version per folder.
 
-* [v3.60.0 Change Log](changelog/3.60/CHANGELOG-v3.60.md)
-* [v3.0.0 to v3.55.2. Change Logs](CHANGELOG.md)
+* [v3.70.0 Change Log](changelog/3.70/CHANGELOG-v3.70.md)
+* [v3.0.0 to v3.60.0. Change Logs](CHANGELOG.md)
 
 We've organized the Change Logs into commonly themed sections to make it more digestible, but we appreciate there is a lot in there. Please don't feel overwhelmed! If you need clarification about something, join us on the Phaser Discord and ask.
 
