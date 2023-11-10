@@ -1,6 +1,6 @@
 {
   "name": "phaser",
-  "version": "3.61.0-beta.5",
+  "version": "3.70.0",
   "release": "Yotsuba",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rich@photonstorm.com> (https://www.photonstorm.com)",
@@ -76,11 +76,11 @@
     "web audio"
   ],
   "devDependencies": {
-    "@types/offscreencanvas": "^2019.7.0",
+    "@types/offscreencanvas": "^2019.7.3",
     "@types/source-map": "^0.5.7",
     "clean-webpack-plugin": "^4.0.0",
     "dts-dom": "^3.7.0",
-    "eslint": "^8.38.0",
+    "eslint": "^8.53.0",
     "eslint-plugin-es5": "^1.5.0",
     "exports-loader": "^4.0.0",
     "fs-extra": "^11.1.1",
@@ -91,14 +91,14 @@
     "phaser3spectorjs": "^0.0.8",
     "remove-files-webpack-plugin": "^1.5.0",
     "source-map": "^0.7.4",
-    "terser-webpack-plugin": "^5.3.7",
-    "typescript": "^5.0.4",
+    "terser-webpack-plugin": "^5.3.9",
+    "typescript": "^5.2.2",
     "vivid-cli": "^1.1.2",
-    "webpack": "^5.79.0",
-    "webpack-cli": "^5.0.1",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
     "webpack-shell-plugin": "^0.5.0"
   },
   "dependencies": {
-    "eventemitter3": "^5.0.0"
+    "eventemitter3": "^5.0.1"
   }
 }
