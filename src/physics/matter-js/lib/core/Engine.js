@@ -60,7 +60,6 @@ var Body = require('../body/Body');
         engine.world = options.world || Composite.create({ label: 'World' });
         engine.pairs = options.pairs || Pairs.create();
         engine.detector = options.detector || Detector.create();
-        engine.detector.pairs = engine.pairs;
 
         // for temporary back compatibility only
         engine.grid = { buckets: [] };
@@ -139,6 +138,7 @@ var Body = require('../body/Body');
         Constraint.postSolveAll(allBodies);
 
         // find all collisions
+        detector.pairs = engine.pairs;
         var collisions = Detector.collisions(detector);
 
         // update collision pairs

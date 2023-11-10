@@ -22,7 +22,6 @@ var Collision = require('./Collision');
     Detector.create = function(options) {
         var defaults = {
             bodies: [],
-            collisions: [],
             pairs: null
         };
 
@@ -46,12 +45,11 @@ var Collision = require('./Collision');
      */
     Detector.clear = function(detector) {
         detector.bodies = [];
-        detector.collisions = [];
     };
 
     /**
      * Efficiently finds all collisions among all the bodies in `detector.bodies` using a broadphase algorithm.
-     *
+     * 
      * _Note:_ The specific ordering of collisions returned is not guaranteed between releases and may change for performance reasons.
      * If a specific ordering is required then apply a sort to the resulting array.
      * @method collisions
@@ -59,13 +57,12 @@ var Collision = require('./Collision');
      * @return {collision[]} collisions
      */
     Detector.collisions = function(detector) {
-        var pairs = detector.pairs,
+        var collisions = [],
+            pairs = detector.pairs,
             bodies = detector.bodies,
             bodiesLength = bodies.length,
             canCollide = Detector.canCollide,
             collides = Collision.collides,
-            collisions = detector.collisions,
-            collisionIndex = 0,
             i,
             j;
 
@@ -107,12 +104,12 @@ var Collision = require('./Collision');
                     var collision = collides(bodyA, bodyB, pairs);
 
                     if (collision) {
-                        collisions[collisionIndex++] = collision;
+                        collisions.push(collision);
                     }
                 } else {
                     var partsAStart = partsALength > 1 ? 1 : 0,
                         partsBStart = partsBLength > 1 ? 1 : 0;
-
+                    
                     for (var k = partsAStart; k < partsALength; k++) {
                         var partA = bodyA.parts[k],
                             boundsA = partA.bounds;
@@ -129,16 +126,12 @@ var Collision = require('./Collision');
                             var collision = collides(partA, partB, pairs);
 
                             if (collision) {
-                                collisions[collisionIndex++] = collision;
+                                collisions.push(collision);
                             }
                         }
                     }
                 }
             }
-        }
-
-        if (collisions.length !== collisionIndex) {
-            collisions.length = collisionIndex;
         }
 
         return collisions;
@@ -180,17 +173,10 @@ var Collision = require('./Collision');
 
     /**
      * The array of `Matter.Body` between which the detector finds collisions.
-     *
+     * 
      * _Note:_ The order of bodies in this array _is not fixed_ and will be continually managed by the detector.
      * @property bodies
      * @type body[]
-     * @default []
-     */
-
-    /**
-     * The array of `Matter.Collision` found in the last call to `Detector.collisions` on this detector.
-     * @property collisions
-     * @type collision[]
      * @default []
      */
 

@@ -13,7 +13,7 @@ module.exports = Contact;
     /**
      * Creates a new contact.
      * @method create
-     * @param {vertex} [vertex]
+     * @param {vertex} vertex
      * @return {contact} A new contact
      */
     Contact.create = function(vertex) {
