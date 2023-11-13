@@ -687,8 +687,6 @@ var Layer = new Class({
             {
                 if (list[i] && list[i].scene)
                 {
-                    list[i].off(GameObjectEvents.DESTROY, this.remove, this);
-
                     list[i].destroy();
                 }
             }
@@ -829,8 +827,6 @@ var Layer = new Class({
      */
     addChildCallback: function (gameObject)
     {
-        gameObject.once(GameObjectEvents.DESTROY, this.remove, this);
-
         if (gameObject.displayList && gameObject.displayList !== this)
         {
             gameObject.removeFromDisplayList();
@@ -861,8 +857,6 @@ var Layer = new Class({
      */
     removeChildCallback: function (gameObject)
     {
-        gameObject.off(GameObjectEvents.DESTROY, this.remove, this);
-
         this.queueDepthSort();
 
         gameObject.displayList = null;
