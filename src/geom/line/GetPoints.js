@@ -43,12 +43,16 @@ var GetPoints = function (line, quantity, stepRate, out)
     var x2 = line.x2;
     var y2 = line.y2;
 
+    var dx = x2 - x1;
+    var dy = y2 - y1;
+
+    var distance = Math.sqrt(dx * dx + dy * dy);
+    var stepSize = distance / (quantity - 1);
+
     for (var i = 0; i < quantity; i++)
     {
-        var position = i / quantity;
-
-        var x = x1 + (x2 - x1) * position;
-        var y = y1 + (y2 - y1) * position;
+        var x = x1 + (dx / distance) * (stepSize * i);
+        var y = y1 + (dy / distance) * (stepSize * i);
 
         out.push(new Point(x, y));
     }
