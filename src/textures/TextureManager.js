@@ -1152,9 +1152,9 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
-     * @param {number} width - The width of the Texture.
-     * @param {number} height - The height of the Texture.
+     * @param {(HTMLImageElement|HTMLImageElement[])} source - The source Image element.
+     * @param {number} [width] - The width of the Texture.
+     * @param {number} [height] - The height of the Texture.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
