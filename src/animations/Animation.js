@@ -106,6 +106,20 @@ var Animation = new Class({
         this.duration = GetValue(config, 'duration', null);
 
         /**
+         * Whether or not the `duration` property has been set for all frames of the animation.
+         * If the duration is available on all frames, the next tick will be calculated using only
+         * frame duration data.
+         * 
+         * @name Phaser.Animations.Animation#allFramesHaveDuration
+         * @type {boolean}
+         * @since 3.0.0
+         */
+        this.allFramesHaveDuration = !this.frames.some(function (frame)
+        {
+            return frame.duration === undefined;
+        });
+
+        /**
          * How many ms per frame, not including frame specific modifiers.
          *
          * @name Phaser.Animations.Animation#msPerFrame
@@ -362,7 +376,7 @@ var Animation = new Class({
         //  When is the first update due?
         state.accumulator = 0;
 
-        state.nextTick = state.msPerFrame + state.currentFrame.duration;
+        state.nextTick = (state.currentAnim.allFramesHaveDuration ? 0 : state.msPerFrame) + state.currentFrame.duration;
     },
 
     /**
@@ -515,7 +529,7 @@ var Animation = new Class({
     {
         state.accumulator -= state.nextTick;
 
-        state.nextTick = state.msPerFrame + state.currentFrame.duration;
+        state.nextTick = (state.currentAnim.allFramesHaveDuration ? 0 : state.msPerFrame) + state.currentFrame.duration;
     },
 
     /**
