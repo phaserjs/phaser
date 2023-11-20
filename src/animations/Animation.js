@@ -116,7 +116,7 @@ var Animation = new Class({
          */
         this.allFramesHaveDuration = this.frames.every(function (frame)
         {
-            return frame.duration !== undefined;
+            return frame.duration !== 0;
         });
 
         /**
