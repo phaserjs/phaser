@@ -1053,6 +1053,8 @@ var Layer = new Class({
 
         while (list.length)
         {
+            list[0].off(GameObjectEvents.DESTROY, this.remove, this);
+
             list[0].destroy(fromScene);
         }
 
