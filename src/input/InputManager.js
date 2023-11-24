@@ -614,7 +614,7 @@ var InputManager = new Class({
 
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
-                    var element = document.elementFromPoint(changedTouch.pageX, changedTouch.pageY);
+                    var element = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
                     var overCanvas = element === this.canvas;
 
                     if (!this.isOver && overCanvas)
