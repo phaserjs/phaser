@@ -431,7 +431,7 @@ var ScaleManager = new Class({
 
         this.fullscreen = game.device.fullscreen;
 
-        if (this.scaleMode !== CONST.SCALE_MODE.RESIZE)
+        if ((this.scaleMode !== CONST.SCALE_MODE.RESIZE) && (this.scaleMode !== CONST.SCALE_MODE.EXPAND))
         {
             this.displaySize.setAspectMode(this.scaleMode);
         }
@@ -1046,6 +1046,53 @@ var ScaleManager = new Class({
 
             this.canvas.width = styleWidth;
             this.canvas.height = styleHeight;
+        }
+        else if (this.scaleMode === CONST.SCALE_MODE.EXPAND)
+        {            
+            //  Resize to match parent, like RESIZE mode
+
+            //  This will constrain using min/max
+            this.displaySize.setSize(this.parentSize.width, this.parentSize.height);
+            
+            styleWidth = this.displaySize.width;
+            styleHeight = this.displaySize.height;
+
+            if (autoRound)
+            {
+                styleWidth = Math.floor(styleWidth);
+                styleHeight = Math.floor(styleHeight);
+            }
+
+            style.width = styleWidth + 'px';
+            style.height = styleHeight + 'px';
+
+
+            // Expand canvas size to fit game size's width or height
+
+            var scaleX = this.parentSize.width / this.gameSize.width;
+
+            var scaleY = this.parentSize.height / this.gameSize.height;
+
+            if (scaleX < scaleY) 
+            {
+                this.baseSize.setSize(this.gameSize.width, this.parentSize.height / scaleX);
+            } 
+            else
+            {
+                this.baseSize.setSize(this.displaySize.width / scaleY, this.gameSize.height);
+            }
+
+            styleWidth = this.baseSize.width;
+            styleHeight = this.baseSize.height;
+
+            if (autoRound)
+            {
+                styleWidth = Math.floor(styleWidth);
+                styleHeight = Math.floor(styleHeight);
+            }
+
+            this.canvas.width = styleWidth;
+            this.canvas.height = styleHeight;           
         }
         else
         {
