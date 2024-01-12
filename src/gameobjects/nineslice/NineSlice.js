@@ -115,8 +115,8 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @param {number} [height=256] - The height of the Nine Slice Game Object. If this is a 3 slice object the height will be fixed to the height of the texture and cannot be changed.
  * @param {number} [leftWidth=10] - The size of the left vertical column (A).
  * @param {number} [rightWidth=10] - The size of the right vertical column (B).
- * @param {number} [topHeight=0] - The size of the top horiztonal row (C). Set to zero or undefined to create a 3 slice object.
- * @param {number} [bottomHeight=0] - The size of the bottom horiztonal row (D). Set to zero or undefined to create a 3 slice object.
+ * @param {number} [topHeight=0] - The size of the top horizontal row (C). Set to zero or undefined to create a 3 slice object.
+ * @param {number} [bottomHeight=0] - The size of the bottom horizontal row (D). Set to zero or undefined to create a 3 slice object.
  */
 var NineSlice = new Class({
 
@@ -352,8 +352,8 @@ var NineSlice = new Class({
      * @param {number} [height=256] - The height of the Nine Slice Game Object. If this is a 3 slice object the height will be fixed to the height of the texture and cannot be changed.
      * @param {number} [leftWidth=10] - The size of the left vertical column (A).
      * @param {number} [rightWidth=10] - The size of the right vertical column (B).
-     * @param {number} [topHeight=0] - The size of the top horiztonal row (C). Set to zero or undefined to create a 3 slice object.
-     * @param {number} [bottomHeight=0] - The size of the bottom horiztonal row (D). Set to zero or undefined to create a 3 slice object.
+     * @param {number} [topHeight=0] - The size of the top horizontal row (C). Set to zero or undefined to create a 3 slice object.
+     * @param {number} [bottomHeight=0] - The size of the bottom horizontal row (D). Set to zero or undefined to create a 3 slice object.
      * @param {boolean} [skipScale9=false] -If this Nine Slice was created from Texture Packer scale9 atlas data, set this property to use the given column sizes instead of those specified in the JSON.
      *
      * @return {this} This Game Object instance.
