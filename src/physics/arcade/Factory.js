@@ -297,7 +297,7 @@ var Factory = new Class({
      * @param {number} [width=64] - The width of the Body in pixels. Cannot be negative or zero.
      * @param {number} [height=64] - The height of the Body in pixels. Cannot be negative or zero.
      *
-     * @return {Phaser.Physics.Arcade.Body} The Body that was created.
+     * @return {Phaser.Physics.Arcade.StaticBody} The Static Body that was created.
      */
     staticBody: function (x, y, width, height)
     {
