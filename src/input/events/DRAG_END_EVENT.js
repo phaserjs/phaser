@@ -19,5 +19,6 @@
  *
  * @param {Phaser.Input.Pointer} pointer - The Pointer responsible for triggering this event.
  * @param {Phaser.GameObjects.GameObject} gameObject - The interactive Game Object that this pointer stopped dragging.
+ * @param {boolean} dropped - Whether the Game Object was dropped onto a target.
  */
 module.exports = 'dragend';

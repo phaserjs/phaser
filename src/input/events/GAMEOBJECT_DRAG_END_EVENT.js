@@ -22,5 +22,6 @@
  * @param {Phaser.Input.Pointer} pointer - The Pointer responsible for triggering this event.
  * @param {number} dragX - The x coordinate where the Pointer stopped dragging the Game Object, in world space.
  * @param {number} dragY - The y coordinate where the Pointer stopped dragging the Game Object, in world space.
+ * @param {boolean} dropped - Whether the Game Object was dropped onto a target.
  */
 module.exports = 'dragend';
