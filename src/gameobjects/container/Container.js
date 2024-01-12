@@ -1459,7 +1459,7 @@ var Container = new Class({
      *
      * @method Phaser.GameObjects.Container#onChildDestroyed
      * @protected
-     * @since 3.70.1
+     * @since 3.80.0
      */
     onChildDestroyed: function (gameObject)
     {
