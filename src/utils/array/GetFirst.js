@@ -25,7 +25,7 @@ var SafeRange = require('./SafeRange');
  * @param {number} [startIndex=0] - An optional start index to search from.
  * @param {number} [endIndex=array.length] - An optional end index to search up to (but not included)
  *
- * @return {object} The first matching element from the array, or `null` if no element could be found in the range given.
+ * @return {?object} The first matching element from the array, or `null` if no element could be found in the range given.
  */
 var GetFirst = function (array, property, value, startIndex, endIndex)
 {
