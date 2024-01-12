@@ -1152,9 +1152,9 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(HTMLImageElement|HTMLImageElement[])} source - The source Image element.
-     * @param {number} [width] - The width of the Texture.
-     * @param {number} [height] - The height of the Texture.
+     * @param {(HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[])} source - An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
+     * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
+     * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
