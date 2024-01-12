@@ -81,12 +81,13 @@ var Events = require('./events');
  * {@link Phaser.Types.Time.TimelineEventConfig} typedef for more details.
  *
  * @class Timeline
+ * @extends Phaser.Events.EventEmitter
  * @memberof Phaser.Time
  * @constructor
  * @since 3.60.0
  *
  * @param {Phaser.Scene} scene - The Scene which owns this Timeline.
- * @param {Phaser.Types.Time.TimelineEventConfig|Phaser.Types.Time.TimelineEventConfig[]} config - The configuration object for this Timeline Event, or an array of them.
+ * @param {Phaser.Types.Time.TimelineEventConfig|Phaser.Types.Time.TimelineEventConfig[]} [config] - The configuration object for this Timeline Event, or an array of them.
  */
 var Timeline = new Class({
 
