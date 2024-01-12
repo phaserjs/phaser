@@ -41,7 +41,7 @@ var TweenChainBuilder = function (parent, config)
     chain.loop = Math.round(GetAdvancedValue(config, 'loop', GetValue(config, 'repeat', 0)));
     chain.loopDelay = Math.round(GetAdvancedValue(config, 'loopDelay', GetValue(config, 'repeatDelay', 0)));
     chain.paused = GetBoolean(config, 'paused', false);
-    chain.persist = GetBoolean(config, 'persist', true);
+    chain.persist = GetBoolean(config, 'persist', false);
 
     //  Set the Callbacks
     chain.callbackScope = GetValue(config, 'callbackScope', chain);
