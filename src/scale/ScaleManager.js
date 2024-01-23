@@ -1048,12 +1048,12 @@ var ScaleManager = new Class({
             this.canvas.height = styleHeight;
         }
         else if (this.scaleMode === CONST.SCALE_MODE.EXPAND)
-        {            
+        {
             //  Resize to match parent, like RESIZE mode
 
             //  This will constrain using min/max
             this.displaySize.setSize(this.parentSize.width, this.parentSize.height);
-            
+
             styleWidth = this.displaySize.width;
             styleHeight = this.displaySize.height;
 
@@ -1073,10 +1073,10 @@ var ScaleManager = new Class({
 
             var scaleY = this.parentSize.height / this.gameSize.height;
 
-            if (scaleX < scaleY) 
+            if (scaleX < scaleY)
             {
                 this.baseSize.setSize(this.gameSize.width, this.parentSize.height / scaleX);
-            } 
+            }
             else
             {
                 this.baseSize.setSize(this.displaySize.width / scaleY, this.gameSize.height);
@@ -1092,7 +1092,7 @@ var ScaleManager = new Class({
             }
 
             this.canvas.width = styleWidth;
-            this.canvas.height = styleHeight;           
+            this.canvas.height = styleHeight;
         }
         else
         {
