@@ -19,7 +19,8 @@ var WebGL = {
     Utils: require('./Utils'),
     WebGLPipeline: require('./WebGLPipeline'),
     WebGLRenderer: require('./WebGLRenderer'),
-    WebGLShader: require('./WebGLShader')
+    WebGLShader: require('./WebGLShader'),
+    Wrappers: require('./wrappers')
 
 };
 
