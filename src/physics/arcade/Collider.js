@@ -17,7 +17,9 @@ var Class = require('../../utils/Class');
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Arcade.World} world - The Arcade physics World that will manage the collisions.
- * @param {boolean} overlapOnly - Whether to check for collisions or overlap.
+ * @param {boolean} overlapOnly - Whether to check for collisions or overlaps. Note, if checking for overlaps with a 
+ * TilemapLayer, every tile in the layer, regardless of tile ID, will be checked for collision. 
+ * Even if the layer has had only a subset of tile IDs enabled for collision, all tiles will still be checked for overlap.
  * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} object1 - The first object to check for collision.
  * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} object2 - The second object to check for collision.
  * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
