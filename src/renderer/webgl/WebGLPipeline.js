@@ -1374,7 +1374,7 @@ var WebGLPipeline = new Class({
 
                         if (activeTextures[0] !== texture)
                         {
-                            gl.bindTexture(gl.TEXTURE_2D, texture);
+                            gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
 
                             activeTextures[0] = texture;
                         }
@@ -1395,7 +1395,7 @@ var WebGLPipeline = new Class({
                             if (activeTextures[t] !== texture)
                             {
                                 gl.activeTexture(gl.TEXTURE0 + t);
-                                gl.bindTexture(gl.TEXTURE_2D, texture);
+                                gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
 
                                 activeTextures[t] = texture;
                             }
@@ -1951,7 +1951,7 @@ var WebGLPipeline = new Class({
 
         gl.activeTexture(gl.TEXTURE0 + unit);
 
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
 
         return this;
     },

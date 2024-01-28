@@ -484,14 +484,14 @@ var TextureManager = new Class({
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
-    addGLTexture: function (key, glTexture, width, height)
+    addGLTexture: function (key, glTexture)
     {
         var texture = null;
 
         if (this.checkKey(key))
         {
-            if (width === undefined) { width = glTexture.width; }
-            if (height === undefined) { height = glTexture.height; }
+            var width = glTexture.width;
+            var height = glTexture.height;
 
             texture = this.create(key, glTexture, width, height);
 

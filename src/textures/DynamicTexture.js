@@ -328,9 +328,6 @@ var DynamicTexture = new Class({
         var source = frame.source;
         var renderTarget = this.renderTarget;
 
-        //  Then we can apply the new one
-        frame.glTexture = renderTarget.texture;
-
         source.isRenderTexture = true;
         source.isGLTexture = true;
 

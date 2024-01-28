@@ -20,6 +20,7 @@ var ScaleEvents = require('../../scale/events');
 var TextureEvents = require('../../textures/events');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
+var WebGLTextureWrapper = require('./wrappers/WebGLTextureWrapper');
 
 var DEBUG = false;
 
@@ -227,6 +228,15 @@ var WebGLRenderer = new Class({
          * @since 3.50.0
          */
         this.textureIndexes;
+
+        /**
+         * A list of all WebGLTextureWrappers that have been created by this renderer.
+         * 
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#glTextureWrappers
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]}
+         * @since 3.80.0
+         */
+        this.glTextureWrappers = [];
 
         /**
          * The currently bound framebuffer in use.
@@ -1725,7 +1735,7 @@ var WebGLRenderer = new Class({
 
         if (texture)
         {
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture.webGLTexture, 0);
         }
 
         if (clear)
@@ -1936,8 +1946,8 @@ var WebGLRenderer = new Class({
      * @param {number} wrapS - Wrapping mode of the texture.
      * @param {number} format - Which format does the texture use.
      * @param {?object} pixels - pixel data.
-     * @param {number} width - Width of the texture in pixels.
-     * @param {number} height - Height of the texture in pixels.
+     * @param {?number} width - Width of the texture in pixels. If not supplied, it must be derived from `pixels`.
+     * @param {?number} height - Height of the texture in pixels. If not supplied, it must be derived from `pixels`.
      * @param {boolean} [pma=true] - Does the texture have premultiplied alpha?
      * @param {boolean} [forceSize=false] - If `true` it will use the width and height passed to this method, regardless of the pixels dimension.
      * @param {boolean} [flipY=false] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
@@ -1946,77 +1956,12 @@ var WebGLRenderer = new Class({
      */
     createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY)
     {
-        pma = (pma === undefined || pma === null) ? true : pma;
-        if (forceSize === undefined) { forceSize = false; }
-        if (flipY === undefined) { flipY = false; }
+        if (typeof width !== 'number') { width = pixels ? pixels.width : 1; }
+        if (typeof height !== 'number') { height = pixels ? pixels.height : 1; }
 
-        var gl = this.gl;
-        var texture = gl.createTexture();
+        var texture = new WebGLTextureWrapper(this.gl, mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY);
 
-        gl.activeTexture(gl.TEXTURE0);
-
-        var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
-
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
-
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, pma);
-
-        if (flipY)
-        {
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-        }
-
-        var generateMipmap = false;
-
-        if (pixels === null || pixels === undefined)
-        {
-            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, width, height, 0, format, gl.UNSIGNED_BYTE, null);
-
-            generateMipmap = IsSizePowerOfTwo(width, height);
-        }
-        else if (pixels.compressed)
-        {
-            width = pixels.width;
-            height = pixels.height;
-            generateMipmap = pixels.generateMipmap;
-
-            for (var i = 0; i < pixels.mipmaps.length; i++)
-            {
-                gl.compressedTexImage2D(gl.TEXTURE_2D, i, pixels.internalFormat, pixels.mipmaps[i].width, pixels.mipmaps[i].height, 0, pixels.mipmaps[i].data);
-            }
-        }
-        else
-        {
-            if (!forceSize)
-            {
-                width = pixels.width;
-                height = pixels.height;
-            }
-
-            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, format, gl.UNSIGNED_BYTE, pixels);
-
-            generateMipmap = IsSizePowerOfTwo(width, height);
-        }
-
-        if (generateMipmap)
-        {
-            gl.generateMipmap(gl.TEXTURE_2D);
-        }
-
-        if (currentTexture)
-        {
-            gl.bindTexture(gl.TEXTURE_2D, currentTexture);
-        }
-
-        texture.isAlphaPremultiplied = pma;
-        texture.isRenderTexture = false;
-        texture.width = width;
-        texture.height = height;
+        this.glTextureWrappers.push(texture);
 
         return texture;
     },
@@ -2047,7 +1992,7 @@ var WebGLRenderer = new Class({
         renderTexture.isRenderTexture = true;
         renderTexture.isAlphaPremultiplied = false;
 
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, renderTexture, 0);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, renderTexture.webGLTexture, 0);
 
         complete = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
 
@@ -2151,10 +2096,10 @@ var WebGLRenderer = new Class({
         this.pipelines.set(bitmapMaskPipeline);
 
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.maskTarget.texture);
+        gl.bindTexture(gl.TEXTURE_2D, this.maskTarget.texture.webGLTexture);
 
         gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.maskSource.texture);
+        gl.bindTexture(gl.TEXTURE_2D, this.maskSource.texture.webGLTexture);
     },
 
     /**
@@ -2259,8 +2204,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Calls `GL.deleteTexture` on the given WebGLTexture and also optionally
-     * resets the currently defined textures.
+     * Removes a texture from the GPU.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteTexture
      * @since 3.0.0
@@ -2271,11 +2215,13 @@ var WebGLRenderer = new Class({
      */
     deleteTexture: function (texture)
     {
-        if (texture)
+        var index = this.glTextureWrappers.indexOf(texture);
+        if (index === -1)
         {
-            this.gl.deleteTexture(texture);
+            return this;
         }
-
+        var wrapper = this.glTextureWrappers.splice(index, 1)[0];
+        wrapper.destroy();
         return this;
     },
 
@@ -2955,36 +2901,10 @@ var WebGLRenderer = new Class({
     {
         if (flipY === undefined) { flipY = false; }
 
-        var gl = this.gl;
-
         var width = srcCanvas.width;
         var height = srcCanvas.height;
 
-        if (width > 0 && height > 0)
-        {
-            gl.activeTexture(gl.TEXTURE0);
-
-            var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
-
-            gl.bindTexture(gl.TEXTURE_2D, dstTexture);
-
-            if (flipY)
-            {
-                gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-            }
-
-            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
-
-            dstTexture.width = width;
-            dstTexture.height = height;
-
-            if (currentTexture)
-            {
-                gl.bindTexture(gl.TEXTURE_2D, currentTexture);
-            }
-        }
+        dstTexture.update(srcCanvas, width, height, flipY);
 
         return dstTexture;
     },
@@ -3047,29 +2967,10 @@ var WebGLRenderer = new Class({
     {
         if (flipY === undefined) { flipY = false; }
 
-        var gl = this.gl;
-
         var width = srcVideo.videoWidth;
         var height = srcVideo.videoHeight;
 
-        if (width > 0 && height > 0)
-        {
-            gl.activeTexture(gl.TEXTURE0);
-            var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
-            gl.bindTexture(gl.TEXTURE_2D, dstTexture);
-
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
-
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcVideo);
-
-            dstTexture.width = width;
-            dstTexture.height = height;
-
-            if (currentTexture)
-            {
-                gl.bindTexture(gl.TEXTURE_2D, currentTexture);
-            }
-        }
+        dstTexture.update(srcVideo, width, height, flipY);
 
         return dstTexture;
     },
@@ -3126,10 +3027,14 @@ var WebGLRenderer = new Class({
 
         var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
 
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glFilter);
+
+        // Update wrapper.
+        texture.minFilter = glFilter;
+        texture.magFilter = glFilter;
 
         if (currentTexture)
         {

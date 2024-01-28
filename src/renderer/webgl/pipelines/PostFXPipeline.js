@@ -351,12 +351,12 @@ var PostFXPipeline = new Class({
         var gl = this.gl;
 
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
 
         var currentFBO = gl.getParameter(gl.FRAMEBUFFER_BINDING);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
 
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -571,7 +571,7 @@ var PostFXPipeline = new Class({
         {
             gl.viewport(0, 0, target.width, target.height);
             gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
 
             if (clear)
             {
@@ -600,7 +600,7 @@ var PostFXPipeline = new Class({
         renderer.restoreStencilMask();
 
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);

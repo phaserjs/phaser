@@ -1437,8 +1437,7 @@ var Text = new Class({
 
             if (typeof WEBGL_DEBUG)
             {
-                // eslint-disable-next-line camelcase
-                this.frame.glTexture.__SPECTOR_Metadata = { textureKey: 'Text Game Object' };
+                this.frame.glTexture.spectorMetadata = { textureKey: 'Text Game Object' };
             }
         }
 

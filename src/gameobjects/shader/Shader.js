@@ -439,7 +439,7 @@ var Shader = new Class({
 
             if (key)
             {
-                this.texture = this.scene.sys.textures.addGLTexture(key, this.glTexture, width, height);
+                this.texture = this.scene.sys.textures.addGLTexture(key, this.glTexture);
             }
         }
 
@@ -908,7 +908,7 @@ var Shader = new Class({
         var gl = this.gl;
 
         gl.activeTexture(gl.TEXTURE0 + this._textureCount);
-        gl.bindTexture(gl.TEXTURE_2D, uniform.value);
+        gl.bindTexture(gl.TEXTURE_2D, uniform.value.webGLTexture);
 
         //  Extended texture data
 
@@ -1025,7 +1025,7 @@ var Shader = new Class({
             {
                 gl.activeTexture(gl.TEXTURE0 + textureCount);
 
-                gl.bindTexture(gl.TEXTURE_2D, value);
+                gl.bindTexture(gl.TEXTURE_2D, value.webGLTexture);
 
                 gl.uniform1i(location, textureCount);
 

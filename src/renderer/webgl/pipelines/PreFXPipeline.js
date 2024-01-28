@@ -409,7 +409,7 @@ var PreFXPipeline = new Class({
         //  Now we've got the sprite drawn to our screen-sized fbo, copy the rect we need to our target
 
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, target.texture);
+        gl.bindTexture(gl.TEXTURE_2D, target.texture.webGLTexture);
         gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, targetBounds.x, targetBounds.y, targetBounds.width, targetBounds.height);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -530,7 +530,7 @@ var PreFXPipeline = new Class({
         }
 
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
 
         if (source.height > target.height)
         {
@@ -598,7 +598,7 @@ var PreFXPipeline = new Class({
         this.set1i('uMainSampler', 0);
 
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture);
+        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
 
         //  source and target must always be the same size
         gl.viewport(0, 0, source.width, source.height);

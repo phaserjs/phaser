@@ -8,6 +8,7 @@ var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
 var ScaleModes = require('../renderer/ScaleModes');
+var WebGLTextureWrapper = require('../renderer/webgl/wrappers/WebGLTextureWrapper');
 
 /**
  * @classdesc
@@ -166,7 +167,7 @@ var TextureSource = new Class({
          * @type {boolean}
          * @since 3.19.0
          */
-        this.isGLTexture = (window.hasOwnProperty('WebGLTexture') && source instanceof WebGLTexture);
+        this.isGLTexture = source instanceof WebGLTextureWrapper;
 
         /**
          * Are the source image dimensions a power of two?
@@ -255,8 +256,7 @@ var TextureSource = new Class({
 
                 if (typeof WEBGL_DEBUG)
                 {
-                    // eslint-disable-next-line camelcase
-                    this.glTexture.__SPECTOR_Metadata = { textureKey: this.texture.key };
+                    this.glTexture.spectorMetadata = { textureKey: this.texture.key };
                 }
             }
             else if (this.isRenderTexture)
@@ -326,11 +326,11 @@ var TextureSource = new Class({
 
         if (gl && this.isCanvas)
         {
-            this.glTexture = renderer.updateCanvasTexture(image, this.glTexture, flipY);
+            renderer.updateCanvasTexture(image, this.glTexture, flipY);
         }
         else if (gl && this.isVideo)
         {
-            this.glTexture = renderer.updateVideoTexture(image, this.glTexture, flipY);
+            renderer.updateVideoTexture(image, this.glTexture, flipY);
         }
     },
 
