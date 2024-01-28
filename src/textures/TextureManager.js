@@ -1146,13 +1146,52 @@ var TextureManager = new Class({
     },
 
     /**
+     * Creates a texture from an array of colour data.
+     * 
+     * This is only available in WebGL mode.
+     * 
+     * If the dimensions provided are powers of two, the resulting texture
+     * will be automatically set to wrap by the WebGL Renderer.
+     * 
+     * @method Phaser.Textures.TextureManager#addUint8Array
+     * @fires Phaser.Textures.Events#ADD
+     * @since 3.80.0
+     *
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {Uint8Array} data - The color data for the texture.
+     * @param {number} width - The width of the texture.
+     * @param {number} height - The height of the texture.
+     *
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
+     */
+    addUint8Array: function (key, data, width, height)
+    {
+        if (
+            !this.checkKey(key) ||
+            data.length / 4 !== width * height
+        )
+        {
+            return null;
+        }
+
+        var texture = this.create(key, data, width, height);
+
+        texture.add('__BASE', 0, 0, 0, width, height);
+
+        this.emit(Events.ADD, key, texture);
+        this.emit(Events.ADD_KEY + key, texture);
+
+        return texture;
+    },
+
+    /**
      * Creates a new Texture using the given source and dimensions.
      *
      * @method Phaser.Textures.TextureManager#create
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[])} source - An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
+     * @param {(HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]|Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper)} source - An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
      * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
      * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
      *

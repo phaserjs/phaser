@@ -72,10 +72,10 @@ var TextureSource = new Class({
         /**
          * The image data.
          *
-         * This is either an Image element, Canvas element or a Video Element.
+         * This is either an Image element, Canvas element, Video Element, or Uint8Array.
          *
          * @name Phaser.Textures.TextureSource#image
-         * @type {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)}
+         * @type {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Uint8Array)}
          * @since 3.0.0
          */
         this.image = (source.compressed) ? null : source;
@@ -243,6 +243,10 @@ var TextureSource = new Class({
                 else if (this.compressionAlgorithm)
                 {
                     this.glTexture = renderer.createTextureFromSource(source);
+                }
+                else if (source instanceof Uint8Array)
+                {
+                    this.glTexture = renderer.createUint8ArrayTexture(source, width, height, scaleMode);
                 }
                 else
                 {

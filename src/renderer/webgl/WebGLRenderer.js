@@ -3075,6 +3075,37 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * Create a WebGLTexture from a Uint8Array.
+     * 
+     * The Uint8Array is assumed to be RGBA values, one byte per color component.
+     * 
+     * The texture will be filtered with `gl.NEAREST` and will not be mipped.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#createUint8ArrayTexture
+     * @since 3.80.0
+     * @param {Uint8Array} data - The Uint8Array to create the texture from.
+     * @param {number} width - The width of the texture.
+     * @param {number} height - The height of the texture.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created WebGLTextureWrapper.
+     */
+    createUint8ArrayTexture: function (data, width, height)
+    {
+        var gl = this.gl;
+        var minFilter = gl.NEAREST;
+        var magFilter = gl.NEAREST;
+        var wrap = gl.CLAMP_TO_EDGE;
+
+        var pow = IsSizePowerOfTwo(width, height);
+
+        if (pow)
+        {
+            wrap = gl.REPEAT;
+        }
+
+        return this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, data, width, height);
+    },
+
+    /**
      * Sets the minification and magnification filter for a texture.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTextureFilter
