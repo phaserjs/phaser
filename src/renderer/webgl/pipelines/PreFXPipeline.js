@@ -330,7 +330,7 @@ var PreFXPipeline = new Class({
      * @param {number} tintBL - The bottom-left tint color value.
      * @param {number} tintBR - The bottom-right tint color value.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
-     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture] - Texture that will be assigned to the current batch if a flush occurs.
      *
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */

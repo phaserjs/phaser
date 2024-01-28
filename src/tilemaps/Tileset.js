@@ -148,7 +148,7 @@ var Tileset = new Class({
          * The gl texture used by the WebGL renderer.
          *
          * @name Phaser.Tilemaps.Tileset#glTexture
-         * @type {?WebGLTexture}
+         * @type {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @readonly
          * @since 3.11.0
          */

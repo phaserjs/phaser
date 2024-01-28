@@ -24,7 +24,7 @@ var WebGLTextureWrapper = require('../renderer/webgl/wrappers/WebGLTextureWrappe
  * @since 3.0.0
  *
  * @param {Phaser.Textures.Texture} texture - The Texture this TextureSource belongs to.
- * @param {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|WebGLTexture|Phaser.Types.Textures.CompressedTextureData|Phaser.Textures.DynamicTexture)} source - The source image data.
+ * @param {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper|Phaser.Types.Textures.CompressedTextureData|Phaser.Textures.DynamicTexture)} source - The source image data.
  * @param {number} [width] - Optional width of the source image. If not given it's derived from the source itself.
  * @param {number} [height] - Optional height of the source image. If not given it's derived from the source itself.
  * @param {boolean} [flipY=false] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
@@ -60,12 +60,12 @@ var TextureSource = new Class({
         /**
          * The source of the image data.
          *
-         * This is either an Image Element, a Canvas Element, a Video Element, a RenderTexture or a WebGLTexture.
+         * This is either an Image Element, a Canvas Element, a Video Element, a RenderTexture or a WebGLTextureWrapper.
          *
          * In Phaser 3.60 and above it can also be a Compressed Texture data object.
          *
          * @name Phaser.Textures.TextureSource#source
-         * @type {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|WebGLTexture|Phaser.Types.Textures.CompressedTextureData|Phaser.Textures.DynamicTexture)}
+         * @type {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper|Phaser.Types.Textures.CompressedTextureData|Phaser.Textures.DynamicTexture)}
          * @since 3.12.0
          */
         this.source = source;
@@ -161,7 +161,7 @@ var TextureSource = new Class({
         this.isRenderTexture = (source.type === 'RenderTexture' || source.type === 'DynamicTexture');
 
         /**
-         * Is the source image a WebGLTexture?
+         * Is the source image a WebGLTextureWrapper?
          *
          * @name Phaser.Textures.TextureSource#isGLTexture
          * @type {boolean}
@@ -179,11 +179,12 @@ var TextureSource = new Class({
         this.isPowerOf2 = IsSizePowerOfTwo(this.width, this.height);
 
         /**
-         * The WebGL Texture of the source image. If this TextureSource is driven from a WebGLTexture
-         * already, then this is a reference to that WebGLTexture.
+         * The wrapped WebGL Texture of the source image.
+         * If this TextureSource is driven from a WebGLTexture already,
+         * then this wrapper contains a reference to that WebGLTexture.
          *
          * @name Phaser.Textures.TextureSource#glTexture
-         * @type {?WebGLTexture}
+         * @type {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @default null
          * @since 3.0.0
          */

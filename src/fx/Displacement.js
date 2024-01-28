@@ -73,10 +73,10 @@ var Displacement = new Class({
         this.y = y;
 
         /**
-         * The underlying WebGLTexture used for displacement.
+         * The underlying texture used for displacement.
          *
          * @name Phaser.FX.Displacement#glTexture
-         * @type {WebGLTexture}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @since 3.60.0
          */
         this.glTexture;

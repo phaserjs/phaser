@@ -414,7 +414,7 @@ var WebGLRenderer = new Class({
          * This is set in the `boot` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#blankTexture
-         * @type {WebGLTexture}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @readonly
          * @since 3.12.0
          */
@@ -425,7 +425,7 @@ var WebGLRenderer = new Class({
          * This is set in the `boot` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#whiteTexture
-         * @type {WebGLTexture}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @readonly
          * @since 3.50.0
          */
@@ -1664,7 +1664,7 @@ var WebGLRenderer = new Class({
      * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
      * @param {boolean} [updateScissor=false] - Set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
      * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
-     * @param {WebGLTexture} [texture=null] - Bind the given frame buffer texture?
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture=null] - Bind the given frame buffer texture?
      * @param {boolean} [clear=false] - Clear the frame buffer after binding?
      *
      * @return {this} This WebGLRenderer instance.
@@ -1694,7 +1694,7 @@ var WebGLRenderer = new Class({
      * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
      * @param {boolean} [updateScissor=false] - If a framebuffer is given, set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
      * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
-     * @param {WebGLTexture} [texture=null] - Bind the given frame buffer texture?
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture=null] - Bind the given frame buffer texture?
      * @param {boolean} [clear=false] - Clear the frame buffer after binding?
      *
      * @return {this} This WebGLRenderer instance.
@@ -1886,7 +1886,7 @@ var WebGLRenderer = new Class({
      * @param {number} scaleMode - The scale mode to be used by the texture.
      * @param {boolean} [forceClamp=false] - Force the texture to use the CLAMP_TO_EDGE wrap mode, even if a power of two?
      *
-     * @return {?WebGLTexture} The WebGL Texture that was created, or `null` if it couldn't be created.
+     * @return {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The WebGLTextureWrapper that was created, or `null` if it couldn't be created.
      */
     createTextureFromSource: function (source, width, height, scaleMode, forceClamp)
     {
@@ -1934,7 +1934,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * A wrapper for creating a WebGLTexture. If no pixel data is passed it will create an empty texture.
+     * A wrapper for creating a WebGLTextureWrapper. If no pixel data is passed it will create an empty texture.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createTexture2D
      * @since 3.0.0
@@ -1952,7 +1952,7 @@ var WebGLRenderer = new Class({
      * @param {boolean} [forceSize=false] - If `true` it will use the width and height passed to this method, regardless of the pixels dimension.
      * @param {boolean} [flipY=false] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
      *
-     * @return {WebGLTexture} The WebGLTexture that was created.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The WebGLTextureWrapper that was created.
      */
     createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY)
     {
@@ -1974,7 +1974,7 @@ var WebGLRenderer = new Class({
      *
      * @param {number} width - If `addDepthStencilBuffer` is true, this controls the width of the depth stencil.
      * @param {number} height - If `addDepthStencilBuffer` is true, this controls the height of the depth stencil.
-     * @param {WebGLTexture} renderTexture - The color texture where the color pixels are written.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} renderTexture - The color texture where the color pixels are written.
      * @param {boolean} [addDepthStencilBuffer=false] - Create a Renderbuffer for the depth stencil?
      *
      * @return {WebGLFramebuffer} Raw WebGLFramebuffer
@@ -2209,7 +2209,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteTexture
      * @since 3.0.0
      *
-     * @param {WebGLTexture} texture - The WebGL Texture to be deleted.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} texture - The WebGL Texture to be deleted.
      *
      * @return {this} This WebGLRenderer instance.
      */
@@ -2822,11 +2822,11 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {HTMLCanvasElement} srcCanvas - The Canvas to create the WebGL Texture from
-     * @param {WebGLTexture} [dstTexture] - The destination WebGL Texture to set.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [dstTexture] - The destination WebGLTextureWrapper to set.
      * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT` (such as for Text objects?)
      * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      *
-     * @return {WebGLTexture} The newly created, or updated, WebGL Texture.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created, or updated, WebGLTextureWrapper.
      */
     canvasToTexture: function (srcCanvas, dstTexture, noRepeat, flipY)
     {
@@ -2853,7 +2853,7 @@ var WebGLRenderer = new Class({
      * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT` (such as for Text objects?)
      * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      *
-     * @return {WebGLTexture} The newly created WebGL Texture.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created WebGLTextureWrapper.
      */
     createCanvasTexture: function (srcCanvas, noRepeat, flipY)
     {
@@ -2892,10 +2892,10 @@ var WebGLRenderer = new Class({
      * @since 3.20.0
      *
      * @param {HTMLCanvasElement} srcCanvas - The Canvas to update the WebGL Texture from.
-     * @param {WebGLTexture} dstTexture - The destination WebGL Texture to update.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} dstTexture - The destination WebGLTextureWrapper to update.
      * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      *
-     * @return {WebGLTexture} The updated WebGL Texture.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The updated WebGLTextureWrapper. This is the same wrapper object as `dstTexture`.
      */
     updateCanvasTexture: function (srcCanvas, dstTexture, flipY)
     {
@@ -2919,7 +2919,7 @@ var WebGLRenderer = new Class({
      * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT`?
      * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      *
-     * @return {WebGLTexture} The newly created WebGL Texture.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created WebGLTextureWrapper.
      */
     createVideoTexture: function (srcVideo, noRepeat, flipY)
     {
@@ -2958,10 +2958,10 @@ var WebGLRenderer = new Class({
      * @since 3.20.0
      *
      * @param {HTMLVideoElement} srcVideo - The Video to update the WebGL Texture with.
-     * @param {WebGLTexture} dstTexture - The destination WebGL Texture to update.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} dstTexture - The destination WebGLTextureWrapper to update.
      * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      *
-     * @return {WebGLTexture} The updated WebGL Texture.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The updated WebGLTextureWrapper. This is the same wrapper object as `dstTexture`.
      */
     updateVideoTexture: function (srcVideo, dstTexture, flipY)
     {
@@ -3012,7 +3012,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTextureFilter
      * @since 3.0.0
      *
-     * @param {number} texture - The texture to set the filter for.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} texture - The texture to set the filter for.
      * @param {number} filter - The filter to set. 0 for linear filtering, 1 for nearest neighbor (blocky) filtering.
      *
      * @return {this} This WebGL Renderer instance.

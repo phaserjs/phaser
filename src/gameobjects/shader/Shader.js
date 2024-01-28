@@ -312,11 +312,11 @@ var Shader = new Class({
         this.framebuffer = null;
 
         /**
-         * A reference to the WebGLTexture this Shader is rendering to.
+         * A reference to the WebGLTextureWrapper this Shader is rendering to.
          * This property is only set if you have called `Shader.setRenderToTexture`.
          *
          * @name Phaser.GameObjects.Shader#glTexture
-         * @type {?WebGLTexture}
+         * @type {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @since 3.19.0
          */
         this.glTexture = null;
@@ -650,7 +650,7 @@ var Shader = new Class({
     },
 
     /**
-     * Sets a sampler2D uniform on this shader where the source texture is a WebGLTexture.
+     * Sets a sampler2D uniform on this shader where the source texture is a WebGLTextureBuffer.
      *
      * This allows you to feed the output from one Shader into another:
      *
@@ -672,7 +672,7 @@ var Shader = new Class({
      * @since 3.19.0
      *
      * @param {string} uniformKey - The key of the sampler2D uniform to be updated, i.e. `iChannel0`.
-     * @param {WebGLTexture} texture - A WebGLTexture reference.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} texture - A texture reference.
      * @param {number} width - The width of the texture.
      * @param {number} height - The height of the texture.
      * @param {number} [textureIndex=0] - The texture index.

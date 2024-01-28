@@ -273,7 +273,7 @@ var DynamicTexture = new Class({
                 {
                     renderTarget.resize(width, height);
 
-                    //  The WebGLTexture has been resized, so is new, so we need to delete the old one
+                    //  The texture has been resized, so is new, so we need to delete the old one
                     this.renderer.deleteTexture(source.glTexture);
                 }
 
@@ -1545,12 +1545,12 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Returns the underlying WebGLTexture, if not running in Canvas mode.
+     * Returns the underlying WebGLTextureWrapper, if not running in Canvas mode.
      *
      * @method Phaser.Textures.DynamicTexture#getWebGLTexture
      * @since 3.60.0
      *
-     * @return {?WebGLTexture} The underlying WebGLTexture, if not running in Canvas mode.
+     * @return {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The underlying WebGLTextureWrapper, if not running in Canvas mode.
      */
     getWebGLTexture: function ()
     {

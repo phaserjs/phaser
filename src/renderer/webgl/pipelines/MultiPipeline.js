@@ -430,7 +430,7 @@ var MultiPipeline = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject.
-     * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} texture - Texture associated with the quad.
      * @param {number} textureWidth - Real texture width.
      * @param {number} textureHeight - Real texture height.
      * @param {number} srcX - X coordinate of the quad.

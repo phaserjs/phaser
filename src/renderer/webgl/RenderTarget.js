@@ -63,12 +63,12 @@ var RenderTarget = new Class({
         this.framebuffer = null;
 
         /**
-         * The WebGLTexture of this Render Target.
+         * The WebGLTextureWrapper of this Render Target.
          *
          * This is created in the `RenderTarget.resize` method.
          *
          * @name Phaser.Renderer.WebGL.RenderTarget#texture
-         * @type {WebGLTexture}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @since 3.50.0
          */
         this.texture = null;

@@ -287,10 +287,10 @@ var TileSprite = new Class({
 
         /**
          * The texture that the Tile Sprite is rendered to, which is then rendered to a Scene.
-         * In WebGL this is a WebGLTexture. In Canvas it's a Canvas Fill Pattern.
+         * In WebGL this is a WebGLTextureWrapper. In Canvas it's a Canvas Fill Pattern.
          *
          * @name Phaser.GameObjects.TileSprite#fillPattern
-         * @type {?(WebGLTexture|CanvasPattern)}
+         * @type {?(Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper|CanvasPattern)}
          * @since 3.12.0
          */
         this.fillPattern = null;
