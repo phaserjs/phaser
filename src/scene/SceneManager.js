@@ -577,7 +577,7 @@ var SceneManager = new Class({
                 sys.step(time, delta);
             }
 
-            if (sys.scenePlugin._target)
+            if (sys.scenePlugin && sys.scenePlugin._target)
             {
                 sys.scenePlugin.step(time, delta);
             }
