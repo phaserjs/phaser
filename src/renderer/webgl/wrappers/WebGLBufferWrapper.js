@@ -26,6 +26,10 @@ var WebGLBufferWrapper = new Class({
         /**
          * The WebGLBuffer being wrapped by this class.
          * 
+         * This property could change at any time.
+         * Therefore, you should never store a reference to this value.
+         * It should only be passed directly to the WebGL API for drawing.
+         * 
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#webGLBuffer
          * @type {?WebGLBuffer}
          * @default null
@@ -34,7 +38,7 @@ var WebGLBufferWrapper = new Class({
         this.webGLBuffer = null;
 
         /**
-         * The WebGLRenderingContext that owns this WebGLBufferWrapper.
+         * The WebGLRenderingContext that owns this WebGLBuffer.
          * 
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#gl
          * @type {WebGLRenderingContext}

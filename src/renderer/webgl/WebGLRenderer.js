@@ -20,9 +20,10 @@ var ScaleEvents = require('../../scale/events');
 var TextureEvents = require('../../textures/events');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
+var WebGLBufferWrapper = require('./wrappers/WebGLBufferWrapper');
+var WebGLProgramWrapper = require('./wrappers/WebGLProgramWrapper');
 var WebGLTextureWrapper = require('./wrappers/WebGLTextureWrapper');
 var WebGLFramebufferWrapper = require('./wrappers/WebGLFramebufferWrapper');
-var WebGLBufferWrapper = require('./wrappers/WebGLBufferWrapper');
 
 var DEBUG = false;
 
@@ -241,6 +242,15 @@ var WebGLRenderer = new Class({
         this.glBufferWrappers = [];
 
         /**
+         * A list of all WebGLProgramWrappers that have been created by this renderer.
+         * 
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#glProgramWrappers
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper[]}
+         * @since 3.80.0
+         */
+        this.glProgramWrappers = [];
+
+        /**
          * A list of all WebGLTextureWrappers that have been created by this renderer.
          * 
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glTextureWrappers
@@ -281,7 +291,7 @@ var WebGLRenderer = new Class({
          * Current WebGLProgram in use.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentProgram
-         * @type {WebGLProgram}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper}
          * @default null
          * @since 3.0.0
          */
@@ -1865,7 +1875,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setProgram
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - The program that needs to be bound.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The program that needs to be bound.
      *
      * @return {boolean} `true` if the given program was bound, otherwise `false`.
      */
@@ -1875,7 +1885,7 @@ var WebGLRenderer = new Class({
         {
             this.flush();
 
-            this.gl.useProgram(program);
+            this.gl.useProgram(program.webGLProgram);
 
             this.currentProgram = program;
 
@@ -2098,7 +2108,7 @@ var WebGLRenderer = new Class({
     /**
      * Creates a WebGLProgram instance based on the given vertex and fragment shader source.
      *
-     * Then compiles, attaches and links the program before returning it.
+     * Then compiles, attaches and links the program before wrapping and returning it.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createProgram
      * @since 3.0.0
@@ -2106,48 +2116,13 @@ var WebGLRenderer = new Class({
      * @param {string} vertexShader - The vertex shader source code as a single string.
      * @param {string} fragmentShader - The fragment shader source code as a single string.
      *
-     * @return {WebGLProgram} The linked WebGLProgram created from the given shader source.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} The wrapped, linked WebGLProgram created from the given shader source.
      */
     createProgram: function (vertexShader, fragmentShader)
     {
-        var gl = this.gl;
-
-        var program = gl.createProgram();
-
-        var vs = gl.createShader(gl.VERTEX_SHADER);
-        var fs = gl.createShader(gl.FRAGMENT_SHADER);
-
-        gl.shaderSource(vs, vertexShader);
-        gl.shaderSource(fs, fragmentShader);
-
-        gl.compileShader(vs);
-        gl.compileShader(fs);
-
-        var failed = 'Shader failed:\n';
-
-        if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS))
-        {
-            throw new Error('Vertex ' + failed + gl.getShaderInfoLog(vs));
-        }
-
-        if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS))
-        {
-            throw new Error('Fragment ' + failed + gl.getShaderInfoLog(fs));
-        }
-
-        gl.attachShader(program, vs);
-        gl.attachShader(program, fs);
-
-        gl.linkProgram(program);
-
-        if (!gl.getProgramParameter(program, gl.LINK_STATUS))
-        {
-            throw new Error('Link ' + failed + gl.getProgramInfoLog(program));
-        }
-
-        gl.useProgram(program);
-
-        return program;
+        var wrapper = new WebGLProgramWrapper(this.gl, vertexShader, fragmentShader);
+        this.glProgramWrappers.push(wrapper);
+        return wrapper;
     },
 
     /**
@@ -2237,7 +2212,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteProgram
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - The shader program to be deleted.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The shader program to be deleted.
      *
      * @return {this} This WebGLRenderer instance.
      */
@@ -2245,7 +2220,8 @@ var WebGLRenderer = new Class({
     {
         if (program)
         {
-            this.gl.deleteProgram(program);
+            ArrayRemove(this.glProgramWrappers, program);
+            program.destroy();
         }
 
         return this;

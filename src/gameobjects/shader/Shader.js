@@ -169,7 +169,7 @@ var Shader = new Class({
          * The WebGL shader program this shader uses.
          *
          * @name Phaser.GameObjects.Shader#program
-         * @type {WebGLProgram}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper}
          * @since 3.17.0
          */
         this.program = null;
@@ -498,15 +498,15 @@ var Shader = new Class({
 
         if (this.program)
         {
-            gl.deleteProgram(this.program);
+            renderer.deleteProgram(this.program);
         }
 
         var program = renderer.createProgram(this.shader.vertexSrc, this.shader.fragmentSrc);
 
         //  The default uniforms available within the vertex shader
-        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewMatrix'), false, this.viewMatrix);
-        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uProjectionMatrix'), false, this.projectionMatrix);
-        gl.uniform2f(gl.getUniformLocation(program, 'uResolution'), this.width, this.height);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program.webGLProgram, 'uViewMatrix'), false, this.viewMatrix);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program.webGLProgram, 'uProjectionMatrix'), false, this.projectionMatrix);
+        gl.uniform2f(gl.getUniformLocation(program.webGLProgram, 'uResolution'), this.width, this.height);
 
         this.program = program;
 
@@ -607,7 +607,7 @@ var Shader = new Class({
 
         renderer.setProgram(program);
 
-        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uProjectionMatrix'), false, this.projectionMatrix);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program.webGLProgram, 'uProjectionMatrix'), false, this.projectionMatrix);
 
         this._rendererWidth = right;
         this._rendererHeight = bottom;
@@ -638,7 +638,7 @@ var Shader = new Class({
             var type = uniform.type;
             var data = map[type];
 
-            uniform.uniformLocation = gl.getUniformLocation(program, key);
+            uniform.uniformLocation = gl.getUniformLocation(program.webGLProgram, key);
 
             if (type !== 'sampler2D')
             {
@@ -1074,10 +1074,10 @@ var Shader = new Class({
 
         //  Update vertex shader uniforms
 
-        gl.useProgram(program);
+        gl.useProgram(program.webGLProgram);
 
-        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewMatrix'), false, vm);
-        gl.uniform2f(gl.getUniformLocation(program, 'uResolution'), this.width, this.height);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program.webGLProgram, 'uViewMatrix'), false, vm);
+        gl.uniform2f(gl.getUniformLocation(program.webGLProgram, 'uResolution'), this.width, this.height);
 
         //  Update fragment shader uniforms
 
@@ -1137,7 +1137,7 @@ var Shader = new Class({
 
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer.webGLBuffer);
 
-        var location = gl.getAttribLocation(program, 'inPosition');
+        var location = gl.getAttribLocation(program.webGLProgram, 'inPosition');
 
         if (location !== -1)
         {
@@ -1204,14 +1204,14 @@ var Shader = new Class({
      */
     preDestroy: function ()
     {
-        var gl = this.gl;
+        var renderer = this.renderer;
 
-        gl.deleteProgram(this.program);
-        this.renderer.deleteBuffer(this.vertexBuffer);
+        renderer.deleteProgram(this.program);
+        renderer.deleteBuffer(this.vertexBuffer);
 
         if (this.renderToTexture)
         {
-            this.renderer.deleteFramebuffer(this.framebuffer);
+            renderer.deleteFramebuffer(this.framebuffer);
 
             this.texture.destroy();
 

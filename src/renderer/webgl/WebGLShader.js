@@ -99,7 +99,7 @@ var WebGLShader = new Class({
          * The WebGLProgram created from the vertex and fragment shaders.
          *
          * @name Phaser.Renderer.WebGL.WebGLShader#program
-         * @type {WebGLProgram}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper}
          * @since 3.50.0
          */
         this.program = this.renderer.createProgram(vertexShader, fragmentShader);
@@ -313,7 +313,7 @@ var WebGLShader = new Class({
 
             if (reset)
             {
-                var attribLocation = gl.getAttribLocation(program, element.name);
+                var attribLocation = gl.getAttribLocation(program.webGLProgram, element.name);
 
                 if (attribLocation >= 0)
                 {
@@ -348,7 +348,7 @@ var WebGLShader = new Class({
      * Sets up the `WebGLShader.uniforms` object, populating it with the names
      * and locations of the shader uniforms this shader requires.
      *
-     * It works by first calling `gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)` to
+     * It works by first calling `gl.getProgramParameter(program.webGLProgram, gl.ACTIVE_UNIFORMS)` to
      * find out how many active uniforms this shader has. It then iterates through them,
      * calling `gl.getActiveUniform` to get the WebGL Active Info from each one. Finally,
      * the name and location are stored in the local array.
@@ -372,17 +372,17 @@ var WebGLShader = new Class({
 
         //  Look-up all active uniforms
 
-        var totalUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+        var totalUniforms = gl.getProgramParameter(program.webGLProgram, gl.ACTIVE_UNIFORMS);
 
         for (i = 0; i < totalUniforms; i++)
         {
-            var info = gl.getActiveUniform(program, i);
+            var info = gl.getActiveUniform(program.webGLProgram, i);
 
             if (info)
             {
                 name = info.name;
 
-                location = gl.getUniformLocation(program, name);
+                location = gl.getUniformLocation(program.webGLProgram, name);
 
                 if (location !== null)
                 {
@@ -409,7 +409,7 @@ var WebGLShader = new Class({
 
                     if (!uniforms.hasOwnProperty(name))
                     {
-                        location = gl.getUniformLocation(program, name);
+                        location = gl.getUniformLocation(program.webGLProgram, name);
 
                         if (location !== null)
                         {
@@ -1142,11 +1142,9 @@ var WebGLShader = new Class({
         if (vertSrc === undefined) { vertSrc = this.vertSrc; }
         if (fragSrc === undefined) { fragSrc = this.fragSrc; }
 
-        var gl = this.gl;
-
         if (this.program)
         {
-            gl.deleteProgram(this.program);
+            this.renderer.deleteProgram(this.program);
         }
 
         this.vertSrc = vertSrc;
@@ -1169,7 +1167,7 @@ var WebGLShader = new Class({
      */
     destroy: function ()
     {
-        this.gl.deleteProgram(this.program);
+        this.renderer.deleteProgram(this.program);
 
         this.pipeline = null;
         this.renderer = null;

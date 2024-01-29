@@ -35,6 +35,10 @@ var WebGLFramebufferWrapper = new Class({
         /**
          * The WebGLFramebuffer being wrapped by this class.
          * 
+         * This property could change at any time.
+         * Therefore, you should never store a reference to this value.
+         * It should only be passed directly to the WebGL API for drawing.
+         * 
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#webGLFramebuffer
          * @type {?WebGLFramebuffer}
          * @default null
