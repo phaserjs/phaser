@@ -292,7 +292,7 @@ var UtilityPipeline = new Class({
         if (target)
         {
             gl.viewport(0, 0, target.width, target.height);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
         }
         else
@@ -372,7 +372,7 @@ var UtilityPipeline = new Class({
             gl.viewport(0, diff, source.width, source.height);
         }
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
 
         if (clear)
@@ -538,7 +538,7 @@ var UtilityPipeline = new Class({
         if (target)
         {
             gl.viewport(0, 0, target.width, target.height);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
         }
         else
@@ -600,7 +600,7 @@ var UtilityPipeline = new Class({
 
         if (target)
         {
-            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
             gl.viewport(0, 0, target.width, target.height);
         }
@@ -662,7 +662,7 @@ var UtilityPipeline = new Class({
 
         gl.viewport(0, 0, target.width, target.height);
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
 
         if (clearAlpha)
         {

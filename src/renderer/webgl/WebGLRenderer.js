@@ -21,6 +21,7 @@ var TextureEvents = require('../../textures/events');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 var WebGLTextureWrapper = require('./wrappers/WebGLTextureWrapper');
+var WebGLFramebufferWrapper = require('./wrappers/WebGLFramebufferWrapper');
 
 var DEBUG = false;
 
@@ -239,10 +240,19 @@ var WebGLRenderer = new Class({
         this.glTextureWrappers = [];
 
         /**
+         * A list of all WebGLFramebufferWrappers that have been created by this renderer.
+         * 
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#glFramebufferWrappers
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper[]}
+         * @since 3.80.0
+         */
+        this.glFramebufferWrappers = [];
+
+        /**
          * The currently bound framebuffer in use.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentFramebuffer
-         * @type {WebGLFramebuffer}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper}
          * @default null
          * @since 3.0.0
          */
@@ -252,7 +262,7 @@ var WebGLRenderer = new Class({
          * A stack into which the frame buffer objects are pushed and popped.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#fboStack
-         * @type {WebGLFramebuffer[]}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper[]}
          * @since 3.50.0
          */
         this.fboStack = [];
@@ -1661,7 +1671,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#pushFramebuffer
      * @since 3.50.0
      *
-     * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper} framebuffer - The framebuffer that needs to be bound.
      * @param {boolean} [updateScissor=false] - Set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
      * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture=null] - Bind the given frame buffer texture?
@@ -1691,7 +1701,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFramebuffer
      * @since 3.0.0
      *
-     * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
+     * @param {(Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper|null)} framebuffer - The framebuffer that needs to be bound, or `null` to bind back to the default framebuffer.
      * @param {boolean} [updateScissor=false] - If a framebuffer is given, set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
      * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture=null] - Bind the given frame buffer texture?
@@ -1726,7 +1736,14 @@ var WebGLRenderer = new Class({
             this.flush();
         }
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+        if (framebuffer)
+        {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer.webGLFramebuffer);
+        }
+        else
+        {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
 
         if (setViewport)
         {
@@ -1774,7 +1791,7 @@ var WebGLRenderer = new Class({
      * @param {boolean} [updateScissor=false] - If a framebuffer is given, set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
      * @param {boolean} [setViewport=true] - Should the WebGL viewport be set?
      *
-     * @return {WebGLFramebuffer} The Framebuffer that was set, or `null` if there aren't any more in the stack.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper} The Framebuffer that was set, or `null` if there aren't any more in the stack.
      */
     popFramebuffer: function (updateScissor, setViewport)
     {
@@ -1977,49 +1994,15 @@ var WebGLRenderer = new Class({
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} renderTexture - The color texture where the color pixels are written.
      * @param {boolean} [addDepthStencilBuffer=false] - Create a Renderbuffer for the depth stencil?
      *
-     * @return {WebGLFramebuffer} Raw WebGLFramebuffer
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper} Wrapped framebuffer which is safe to use with the renderer.
      */
     createFramebuffer: function (width, height, renderTexture, addDepthStencilBuffer)
     {
-        if (addDepthStencilBuffer === undefined) { addDepthStencilBuffer = true; }
+        // During initialization, the wrapper calls `this.setFramebuffer`
+        // to bind and unbind the new framebuffer.
+        var framebuffer = new WebGLFramebufferWrapper(this, width, height, renderTexture, addDepthStencilBuffer);
 
-        var gl = this.gl;
-        var framebuffer = gl.createFramebuffer();
-        var complete = 0;
-
-        this.setFramebuffer(framebuffer);
-
-        renderTexture.isRenderTexture = true;
-        renderTexture.isAlphaPremultiplied = false;
-
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, renderTexture.webGLTexture, 0);
-
-        complete = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-
-        if (complete !== gl.FRAMEBUFFER_COMPLETE)
-        {
-            var errors = {
-                36054: 'Incomplete Attachment',
-                36055: 'Missing Attachment',
-                36057: 'Incomplete Dimensions',
-                36061: 'Framebuffer Unsupported'
-            };
-
-            throw new Error('Framebuffer status: ' + (errors[complete] || complete));
-        }
-
-        framebuffer.renderTexture = renderTexture;
-
-        if (addDepthStencilBuffer)
-        {
-            var depthStencilBuffer = gl.createRenderbuffer();
-
-            gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilBuffer);
-            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
-            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, depthStencilBuffer);
-        }
-
-        this.setFramebuffer(null);
+        this.glFramebufferWrappers.push(framebuffer);
 
         return framebuffer;
     },
@@ -2215,23 +2198,22 @@ var WebGLRenderer = new Class({
      */
     deleteTexture: function (texture)
     {
-        var index = this.glTextureWrappers.indexOf(texture);
-        if (index === -1)
+        if (!texture)
         {
-            return this;
+            return;
         }
-        var wrapper = this.glTextureWrappers.splice(index, 1)[0];
-        wrapper.destroy();
+        ArrayRemove(this.glTextureWrappers, texture);
+        texture.destroy();
         return this;
     },
 
     /**
-     * Deletes a WebGLFramebuffer from the GL instance.
+     * Deletes a Framebuffer from the GL instance.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteFramebuffer
      * @since 3.0.0
      *
-     * @param {WebGLFramebuffer} framebuffer - The Framebuffer to be deleted.
+     * @param {(Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper|null)} framebuffer - The Framebuffer to be deleted.
      *
      * @return {this} This WebGLRenderer instance.
      */
@@ -2241,42 +2223,9 @@ var WebGLRenderer = new Class({
         {
             return this;
         }
-
-        var gl = this.gl;
-
-        if (this.currentFramebuffer === framebuffer)
-        {
-            this.currentFramebuffer = null;
-        }
-
         ArrayRemove(this.fboStack, framebuffer);
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-
-        framebuffer.renderTexture = undefined;
-
-        // Check for a color attachment and remove it
-        var colorAttachment = gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
-
-        if (colorAttachment !== null)
-        {
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, null, 0);
-
-            gl.deleteTexture(colorAttachment);
-        }
-
-        // Check for a depth-stencil attachment and delete it
-        var depthStencilAttachment = gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
-
-        if (depthStencilAttachment !== null)
-        {
-            gl.deleteRenderbuffer(depthStencilAttachment);
-        }
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        gl.deleteFramebuffer(framebuffer);
-
+        ArrayRemove(this.glFramebufferWrappers, framebuffer);
+        framebuffer.destroy();
         return this;
     },
 
@@ -2757,7 +2706,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#snapshotFramebuffer
      * @since 3.19.0
      *
-     * @param {WebGLFramebuffer} framebuffer - The framebuffer to grab from.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper} framebuffer - The framebuffer to grab from.
      * @param {number} bufferWidth - The width of the framebuffer.
      * @param {number} bufferHeight - The height of the framebuffer.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.

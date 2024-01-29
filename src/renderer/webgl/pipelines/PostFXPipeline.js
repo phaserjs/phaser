@@ -355,7 +355,7 @@ var PostFXPipeline = new Class({
 
         var currentFBO = gl.getParameter(gl.FRAMEBUFFER_BINDING);
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
 
         gl.clearColor(0, 0, 0, 0);
@@ -570,7 +570,7 @@ var PostFXPipeline = new Class({
         if (target)
         {
             gl.viewport(0, 0, target.width, target.height);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
 
             if (clear)

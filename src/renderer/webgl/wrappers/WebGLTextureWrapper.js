@@ -370,15 +370,16 @@ var WebGLTextureWrapper = new Class({
      */
     destroy: function ()
     {
-        if (this.webGLTexture !== null)
+        if (this.webGLTexture === null)
         {
-            if (!(this.pixels instanceof WebGLTextureWrapper))
-            {
-                // Do not delete a texture that belongs to another wrapper.
-                this.gl.deleteTexture(this.webGLTexture);
-            }
-            this.webGLTexture = null;
+            return;
         }
+        if (!(this.pixels instanceof WebGLTextureWrapper))
+        {
+            // Do not delete a texture that belongs to another wrapper.
+            this.gl.deleteTexture(this.webGLTexture);
+        }
+        this.webGLTexture = null;
     }
 });
 

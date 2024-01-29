@@ -306,7 +306,7 @@ var Shader = new Class({
          * This property is only set if you have called `Shader.setRenderToTexture`.
          *
          * @name Phaser.GameObjects.Shader#framebuffer
-         * @type {?WebGLFramebuffer}
+         * @type {?Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper}
          * @since 3.19.0
          */
         this.framebuffer = null;
