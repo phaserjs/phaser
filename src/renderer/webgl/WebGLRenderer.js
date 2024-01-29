@@ -1906,7 +1906,7 @@ var WebGLRenderer = new Class({
      */
     resetProgram: function ()
     {
-        this.gl.useProgram(this.currentProgram);
+        this.gl.useProgram(this.currentProgram.webGLProgramWrapper);
 
         return this;
     },

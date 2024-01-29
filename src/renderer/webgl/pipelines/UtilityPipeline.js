@@ -443,7 +443,7 @@ var UtilityPipeline = new Class({
 
         var gl = this.gl;
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, source.framebuffer);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, source.framebuffer.webGLFramebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, source.texture.webGLTexture, 0);
 
         if (clear)
@@ -677,7 +677,7 @@ var UtilityPipeline = new Class({
 
         var fbo = this.renderer.currentFramebuffer;
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo.webGLFramebuffer);
     },
 
     /**
