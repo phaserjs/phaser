@@ -22,6 +22,7 @@ var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 var WebGLTextureWrapper = require('./wrappers/WebGLTextureWrapper');
 var WebGLFramebufferWrapper = require('./wrappers/WebGLFramebufferWrapper');
+var WebGLBufferWrapper = require('./wrappers/WebGLBufferWrapper');
 
 var DEBUG = false;
 
@@ -229,6 +230,15 @@ var WebGLRenderer = new Class({
          * @since 3.50.0
          */
         this.textureIndexes;
+
+        /**
+         * A list of all WebGLBufferWrappers that have been created by this renderer.
+         * 
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#glBufferWrappers
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper[]}
+         * @since 3.80.0
+         */
+        this.glBufferWrappers = [];
 
         /**
          * A list of all WebGLTextureWrappers that have been created by this renderer.
@@ -2149,17 +2159,13 @@ var WebGLRenderer = new Class({
      * @param {ArrayBuffer} initialDataOrSize - It's either ArrayBuffer or an integer indicating the size of the vbo
      * @param {number} bufferUsage - How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW
      *
-     * @return {WebGLBuffer} Raw vertex buffer
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} Wrapped vertex buffer
      */
     createVertexBuffer: function (initialDataOrSize, bufferUsage)
     {
         var gl = this.gl;
-        var vertexBuffer = gl.createBuffer();
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, initialDataOrSize, bufferUsage);
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
+        var vertexBuffer = new WebGLBufferWrapper(gl, initialDataOrSize, gl.ARRAY_BUFFER, bufferUsage);
+        this.glBufferWrappers.push(vertexBuffer);
         return vertexBuffer;
     },
 
@@ -2172,17 +2178,13 @@ var WebGLRenderer = new Class({
      * @param {ArrayBuffer} initialDataOrSize - Either ArrayBuffer or an integer indicating the size of the vbo.
      * @param {number} bufferUsage - How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW.
      *
-     * @return {WebGLBuffer} Raw index buffer
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} Wrapped index buffer
      */
     createIndexBuffer: function (initialDataOrSize, bufferUsage)
     {
         var gl = this.gl;
-        var indexBuffer = gl.createBuffer();
-
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, initialDataOrSize, bufferUsage);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-
+        var indexBuffer = new WebGLBufferWrapper(gl, initialDataOrSize, gl.ELEMENT_ARRAY_BUFFER, bufferUsage);
+        this.glBufferWrappers.push(indexBuffer);
         return indexBuffer;
     },
 
@@ -2255,14 +2257,15 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteBuffer
      * @since 3.0.0
      *
-     * @param {WebGLBuffer} vertexBuffer - The WebGLBuffer to be deleted.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} vertexBuffer - The WebGLBuffer to be deleted.
      *
      * @return {this} This WebGLRenderer instance.
      */
     deleteBuffer: function (buffer)
     {
-        this.gl.deleteBuffer(buffer);
-
+        if (!buffer) { return this; }
+        ArrayRemove(this.glBufferWrappers, buffer);
+        buffer.destroy();
         return this;
     },
 

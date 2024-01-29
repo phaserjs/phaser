@@ -178,7 +178,7 @@ var WebGLPipeline = new Class({
          * is created. If not, a `DYNAMIC_DRAW` buffer is created.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
-         * @type {WebGLBuffer}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @readonly
          * @since 3.0.0
          */
@@ -188,7 +188,7 @@ var WebGLPipeline = new Class({
          * The currently active WebGLBuffer.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#activeBuffer
-         * @type {WebGLBuffer}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @since 3.60.0
          */
         this.activeBuffer;
@@ -620,7 +620,7 @@ var WebGLPipeline = new Class({
      *
      * @param {Phaser.Renderer.WebGL.WebGLShader} shader - The shader to set as being current.
      * @param {boolean} [setAttributes=false] - Should the vertex attribute pointers be set?
-     * @param {WebGLBuffer} [vertexBuffer] - The vertex buffer to be set before the shader is bound. Defaults to the one owned by this pipeline.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [vertexBuffer] - The vertex buffer to be set before the shader is bound. Defaults to the one owned by this pipeline.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -1129,7 +1129,7 @@ var WebGLPipeline = new Class({
 
         if (gl.getParameter(gl.ARRAY_BUFFER_BINDING) !== this.vertexBuffer)
         {
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer.webGLBuffer);
 
             this.activeBuffer = this.vertexBuffer;
 
@@ -1203,7 +1203,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setVertexBuffer
      * @since 3.50.0
      *
-     * @param {WebGLBuffer} [buffer] - The Vertex Buffer to be bound. Defaults to the one owned by this pipeline.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [buffer] - The Vertex Buffer to be bound. Defaults to the one owned by this pipeline.
      *
      * @return {boolean} `true` if the vertex buffer was bound, or `false` if it was already bound.
      */
@@ -1215,7 +1215,7 @@ var WebGLPipeline = new Class({
         {
             var gl = this.gl;
 
-            this.gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            this.gl.bindBuffer(gl.ARRAY_BUFFER, buffer.webGLBuffer);
 
             this.activeBuffer = buffer;
 
@@ -2577,9 +2577,9 @@ var WebGLPipeline = new Class({
             targets[i].destroy();
         }
 
-        this.gl.deleteBuffer(this.vertexBuffer);
-
         var renderer = this.renderer;
+        
+        renderer.deleteBuffer(this.vertexBuffer);
 
         renderer.off(RendererEvents.RESIZE, this.resize, this);
         renderer.off(RendererEvents.PRE_RENDER, this.onPreRender, this);

@@ -160,7 +160,7 @@ var Shader = new Class({
          * The WebGL vertex buffer object this shader uses.
          *
          * @name Phaser.GameObjects.Shader#vertexBuffer
-         * @type {WebGLBuffer}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @since 3.17.0
          */
         this.vertexBuffer = renderer.createVertexBuffer(this.vertexData.byteLength, this.gl.STREAM_DRAW);
@@ -1135,7 +1135,7 @@ var Shader = new Class({
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer.webGLBuffer);
 
         var location = gl.getAttribLocation(program, 'inPosition');
 
@@ -1207,7 +1207,7 @@ var Shader = new Class({
         var gl = this.gl;
 
         gl.deleteProgram(this.program);
-        gl.deleteBuffer(this.vertexBuffer);
+        this.renderer.deleteBuffer(this.vertexBuffer);
 
         if (this.renderToTexture)
         {

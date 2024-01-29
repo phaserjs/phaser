@@ -161,7 +161,7 @@ var PreFXPipeline = new Class({
          * The WebGLBuffer that holds the quadVertexData.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.PreFXPipeline#quadVertexBuffer
-         * @type {WebGLBuffer}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @readonly
          * @since 3.60.0
          */
@@ -899,7 +899,7 @@ var PreFXPipeline = new Class({
      */
     destroy: function ()
     {
-        this.gl.deleteBuffer(this.quadVertexBuffer);
+        this.renderer.deleteBuffer(this.quadVertexBuffer);
 
         this.drawSpriteShader = null;
         this.copyShader = null;

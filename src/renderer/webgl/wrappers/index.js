@@ -9,7 +9,9 @@
  */
 
 var Wrappers = {
-    WebGLTextureWrapper: require('./WebGLTextureWrapper')
+    WebGLBufferWrapper: require('./WebGLBufferWrapper'),
+    WebGLTextureWrapper: require('./WebGLTextureWrapper'),
+    WebGLFramebufferWrapper: require('./WebGLFramebufferWrapper')
 };
 
 module.exports = Wrappers;
