@@ -12,6 +12,7 @@ var Extend = require('../../utils/object/Extend');
 var SetValue = require('../../utils/object/SetValue');
 var ShaderRender = require('./ShaderRender');
 var TransformMatrix = require('../components/TransformMatrix');
+var ArrayEach = require('../../utils/array/Each');
 
 /**
  * @classdesc
@@ -1218,6 +1219,12 @@ var Shader = new Class({
             this.glTexture = null;
             this.texture = null;
         }
+
+        ArrayEach(this.uniforms, function (uniform)
+        {
+            renderer.deleteUniformLocation(uniform.uniformLocation);
+            uniform.uniformLocation = null;
+        });
     }
 
 });

@@ -2280,6 +2280,42 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * Deletes a WebGLAttribLocation from the GL instance.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteAttribLocation
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper} attrib - The attrib location to be deleted.
+     * @since 3.80.0
+     */
+    deleteAttribLocation: function (attrib)
+    {
+        if (attrib)
+        {
+            ArrayRemove(this.glAttribLocationWrappers, attrib);
+            attrib.destroy();
+        }
+
+        return this;
+    },
+
+    /**
+     * Deletes a WebGLUniformLocation from the GL instance.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteUniformLocation
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper} uniform - The uniform location to be deleted.
+     * @since 3.80.0
+     */
+    deleteUniformLocation: function (uniform)
+    {
+        if (uniform)
+        {
+            ArrayRemove(this.glUniformLocationWrappers, uniform);
+            uniform.destroy();
+        }
+
+        return this;
+    },
+
+    /**
      * Deletes a WebGLBuffer from the GL instance.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteBuffer

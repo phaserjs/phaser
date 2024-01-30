@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var ArrayEach = require('../../utils/array/Each');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var WEBGL_CONST = require('./const');
 
@@ -1167,14 +1168,25 @@ var WebGLShader = new Class({
      */
     destroy: function ()
     {
-        this.renderer.deleteProgram(this.program);
+        var renderer = this.renderer;
+        ArrayEach(this.uniforms, function (uniform)
+        {
+            renderer.deleteUniformLocation(uniform.location);
+        });
+        this.uniforms = null;
+
+        ArrayEach(this.attributes, function (attrib)
+        {
+            renderer.deleteAttribLocation(attrib.location);
+        });
+        this.attributes = null;
+
+        renderer.deleteProgram(this.program);
 
         this.pipeline = null;
         this.renderer = null;
         this.gl = null;
         this.program = null;
-        this.attributes = null;
-        this.uniforms = null;
     }
 
 });
