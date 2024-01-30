@@ -313,29 +313,29 @@ var WebGLShader = new Class({
 
             if (reset)
             {
-                var attribLocation = gl.getAttribLocation(program.webGLProgram, element.name);
+                var attribLocation = this.renderer.createAttribLocation(program, element.name);
 
-                if (attribLocation >= 0)
+                if (attribLocation.webGLAttribLocation >= 0)
                 {
-                    gl.enableVertexAttribArray(attribLocation);
+                    gl.enableVertexAttribArray(attribLocation.webGLAttribLocation);
 
-                    gl.vertexAttribPointer(attribLocation, size, type, normalized, vertexSize, offset);
+                    gl.vertexAttribPointer(attribLocation.webGLAttribLocation, size, type, normalized, vertexSize, offset);
 
                     element.enabled = true;
                     element.location = attribLocation;
                 }
-                else if (attribLocation !== -1)
+                else if (attribLocation.webGLAttribLocation !== -1)
                 {
-                    gl.disableVertexAttribArray(attribLocation);
+                    gl.disableVertexAttribArray(attribLocation.webGLAttribLocation);
                 }
             }
             else if (enabled)
             {
-                gl.vertexAttribPointer(location, size, type, normalized, vertexSize, offset);
+                gl.vertexAttribPointer(location.webGLAttribLocation, size, type, normalized, vertexSize, offset);
             }
-            else if (!enabled && location > -1)
+            else if (!enabled && location !== -1 && location.webGLAttribLocation > -1)
             {
-                gl.disableVertexAttribArray(location);
+                gl.disableVertexAttribArray(location.webGLAttribLocation);
 
                 element.location = -1;
             }
@@ -382,7 +382,7 @@ var WebGLShader = new Class({
             {
                 name = info.name;
 
-                location = gl.getUniformLocation(program.webGLProgram, name);
+                location = this.renderer.createUniformLocation(program, name);
 
                 if (location !== null)
                 {
@@ -409,7 +409,7 @@ var WebGLShader = new Class({
 
                     if (!uniforms.hasOwnProperty(name))
                     {
-                        location = gl.getUniformLocation(program.webGLProgram, name);
+                        location = this.renderer.createUniformLocation(program, name);
 
                         if (location !== null)
                         {
@@ -507,7 +507,7 @@ var WebGLShader = new Class({
 
             this.renderer.setProgram(this.program);
 
-            setter.call(this.gl, uniform.location, value1);
+            setter.call(this.gl, uniform.location.webGLUniformLocation, value1);
 
             this.pipeline.currentShader = this;
         }
@@ -553,7 +553,7 @@ var WebGLShader = new Class({
 
             this.renderer.setProgram(this.program);
 
-            setter.call(this.gl, uniform.location, value1, value2);
+            setter.call(this.gl, uniform.location.webGLUniformLocation, value1, value2);
 
             this.pipeline.currentShader = this;
         }
@@ -601,7 +601,7 @@ var WebGLShader = new Class({
 
             this.renderer.setProgram(this.program);
 
-            setter.call(this.gl, uniform.location, value1, value2, value3);
+            setter.call(this.gl, uniform.location.webGLUniformLocation, value1, value2, value3);
 
             this.pipeline.currentShader = this;
         }
@@ -651,7 +651,7 @@ var WebGLShader = new Class({
 
             this.renderer.setProgram(this.program);
 
-            setter.call(this.gl, uniform.location, value1, value2, value3, value4);
+            setter.call(this.gl, uniform.location.webGLUniformLocation, value1, value2, value3, value4);
 
             this.pipeline.currentShader = this;
         }

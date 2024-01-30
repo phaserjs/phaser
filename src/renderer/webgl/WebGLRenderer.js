@@ -24,6 +24,8 @@ var WebGLBufferWrapper = require('./wrappers/WebGLBufferWrapper');
 var WebGLProgramWrapper = require('./wrappers/WebGLProgramWrapper');
 var WebGLTextureWrapper = require('./wrappers/WebGLTextureWrapper');
 var WebGLFramebufferWrapper = require('./wrappers/WebGLFramebufferWrapper');
+var WebGLAttribLocationWrapper = require('./wrappers/WebGLAttribLocationWrapper');
+var WebGLUniformLocationWrapper = require('./wrappers/WebGLUniformLocationWrapper');
 
 var DEBUG = false;
 
@@ -267,6 +269,24 @@ var WebGLRenderer = new Class({
          * @since 3.80.0
          */
         this.glFramebufferWrappers = [];
+
+        /**
+         * A list of all WebGLAttribLocationWrappers that have been created by this renderer.
+         * 
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#glAttribLocationWrappers
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper[]}
+         * @since 3.80.0
+         */
+        this.glAttribLocationWrappers = [];
+
+        /**
+         * A list of all WebGLUniformLocationWrappers that have been created by this renderer.
+         * 
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#glUniformLocationWrappers
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper[]}
+         * @since 3.80.0
+         */
+        this.glUniformLocationWrappers = [];
 
         /**
          * The currently bound framebuffer in use.
@@ -2142,6 +2162,38 @@ var WebGLRenderer = new Class({
         var vertexBuffer = new WebGLBufferWrapper(gl, initialDataOrSize, gl.ARRAY_BUFFER, bufferUsage);
         this.glBufferWrappers.push(vertexBuffer);
         return vertexBuffer;
+    },
+
+    /**
+     * Creates a WebGLAttribLocationWrapper instance based on the given WebGLProgramWrapper and attribute name.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#createAttribLocation
+     * @since 3.80.0
+     * 
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The WebGLProgramWrapper instance.
+     * @param {string} name - The name of the attribute.
+     */
+    createAttribLocation: function (program, name)
+    {
+        var attrib = new WebGLAttribLocationWrapper(this.gl, program, name);
+        this.glAttribLocationWrappers.push(attrib);
+        return attrib;
+    },
+
+    /**
+     * Creates a WebGLUniformLocationWrapper instance based on the given WebGLProgramWrapper and uniform name.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#createUniformLocation
+     * @since 3.80.0
+     * 
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The WebGLProgramWrapper instance.
+     * @param {string} name - The name of the uniform.
+     */
+    createUniformLocation: function (program, name)
+    {
+        var uniform = new WebGLUniformLocationWrapper(this.gl, program, name);
+        this.glUniformLocationWrappers.push(uniform);
+        return uniform;
     },
 
     /**

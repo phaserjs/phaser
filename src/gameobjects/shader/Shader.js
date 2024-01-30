@@ -625,7 +625,6 @@ var Shader = new Class({
      */
     initUniforms: function ()
     {
-        var gl = this.gl;
         var map = this.renderer.glFuncMap;
         var program = this.program;
 
@@ -638,7 +637,7 @@ var Shader = new Class({
             var type = uniform.type;
             var data = map[type];
 
-            uniform.uniformLocation = gl.getUniformLocation(program.webGLProgram, key);
+            uniform.uniformLocation = this.renderer.createUniformLocation(program, key);
 
             if (type !== 'sampler2D')
             {
@@ -959,7 +958,7 @@ var Shader = new Class({
 
         this.renderer.setProgram(this.program);
 
-        gl.uniform1i(uniform.uniformLocation, this._textureCount);
+        gl.uniform1i(uniform.uniformLocation.webGLUniformLocation, this._textureCount);
 
         this._textureCount++;
     },
@@ -1002,24 +1001,24 @@ var Shader = new Class({
             {
                 if (uniform.glMatrix)
                 {
-                    glFunc.call(gl, location, uniform.transpose, value);
+                    glFunc.call(gl, location.webGLUniformLocation, uniform.transpose, value);
                 }
                 else
                 {
-                    glFunc.call(gl, location, value);
+                    glFunc.call(gl, location.webGLUniformLocation, value);
                 }
             }
             else if (length === 2)
             {
-                glFunc.call(gl, location, value.x, value.y);
+                glFunc.call(gl, location.webGLUniformLocation, value.x, value.y);
             }
             else if (length === 3)
             {
-                glFunc.call(gl, location, value.x, value.y, value.z);
+                glFunc.call(gl, location.webGLUniformLocation, value.x, value.y, value.z);
             }
             else if (length === 4)
             {
-                glFunc.call(gl, location, value.x, value.y, value.z, value.w);
+                glFunc.call(gl, location.webGLUniformLocation, value.x, value.y, value.z, value.w);
             }
             else if (uniform.type === 'sampler2D')
             {
@@ -1027,7 +1026,7 @@ var Shader = new Class({
 
                 gl.bindTexture(gl.TEXTURE_2D, value.webGLTexture);
 
-                gl.uniform1i(location, textureCount);
+                gl.uniform1i(location.webGLUniformLocation, textureCount);
 
                 textureCount++;
             }
