@@ -89,7 +89,7 @@ var Displacement = new Class({
      *
      * You can only use a whole texture, not a frame from a texture atlas or sprite sheet.
      *
-     * @method Phaser.GameObjects.Components.FX#setTexture
+     * @method Phaser.FX.Displacement#setTexture
      * @since 3.60.0
      *
      * @param {string} [texture='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
