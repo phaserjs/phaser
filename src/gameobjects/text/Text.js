@@ -14,6 +14,7 @@ var GetValue = require('../../utils/object/GetValue');
 var RemoveFromDOM = require('../../dom/RemoveFromDOM');
 var TextRender = require('./TextRender');
 var TextStyle = require('./TextStyle');
+var UUID = require('../../utils/string/UUID');
 
 /**
  * @classdesc
@@ -261,8 +262,18 @@ var Text = new Class({
          */
         this._crop = this.resetCropObject();
 
+        /**
+         * The internal unique key to refer to the texture in the TextureManager.
+         *
+         * @name Phaser.GameObjects.Text#_textureKey
+         * @type {string}
+         * @private
+         * @since 3.80.0
+         */
+        this._textureKey = UUID();
+
         //  Create a Texture for this Text object
-        this.texture = scene.sys.textures.addCanvas(null, this.canvas, true);
+        this.texture = scene.sys.textures.addCanvas(this._textureKey, this.canvas);
 
         //  Set the context to be the CanvasTexture context
         this.context = this.texture.context;
@@ -1520,7 +1531,12 @@ var Text = new Class({
 
         CanvasPool.remove(this.canvas);
 
-        this.texture.destroy();
+        var texture = this.texture;
+
+        if (texture)
+        {
+            texture.destroy();
+        }
     }
 
     /**
