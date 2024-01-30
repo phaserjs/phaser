@@ -17,6 +17,7 @@
 * `Factory.staticBody`  had the wrong return type in the docs/TS defs. Fix #6693 (thanks @ddhaiby)
 * The `Time.Timeline` class didn't show as extending the Event Emitter, or have `config` as an optional argument in the docs / TS defs. Fix #6673 (thanks @ghclark2)
 * `Animations.AnimationFrame#duration` is now the complete duration of the frame. Before this included `Animations.AnimationState#msPerFrame` with the value of `Animations.AnimationFrame#duration`. The fix to remove `Animations.AnimationState#msPerFrame` from `Animations.AnimationFrame#duration` has been removed from `Animations.AnimationManager#createFromAseprite` because of this clarification. Fix #6712 (thanks @Nerodon @TomMalitz)
+* The `NineSlice` Game Object method `setSize` now recalculates its origin by calling the `updateDisplayOrigin` method. (thanks @dhashvir)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
@@ -25,4 +26,4 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @AlvaroEstradaDev
 @stevenwithaph
 @paxperscientiam
-
+@samme

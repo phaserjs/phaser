@@ -839,7 +839,9 @@ var NineSlice = new Class({
     {
         this.width = width;
         this.height = height;
+
         this.updateDisplayOrigin();
+
         var input = this.input;
 
         if (input && !input.customHitArea)
