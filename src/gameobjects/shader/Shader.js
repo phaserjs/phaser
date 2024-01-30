@@ -959,8 +959,6 @@ var Shader = new Class({
 
         this.renderer.setProgram(this.program);
 
-        gl.uniform1i(uniform.uniformLocation.webGLUniformLocation, this._textureCount);
-
         this._textureCount++;
     },
 
