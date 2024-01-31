@@ -12,7 +12,6 @@ var DataManager = require('../../data/DataManager');
 var EventEmitter = require('eventemitter3');
 var GameObjectEvents = require('../events');
 var List = require('../../structs/List');
-var RemoveBetween = require('../../utils/array/RemoveBetween');
 var Render = require('./LayerRender');
 var SceneEvents = require('../../scene/events');
 var StableSort = require('../../utils/array/StableSort');
@@ -606,105 +605,6 @@ var Layer = new Class({
     },
 
     /**
-     * Adds the given Game Object, or array of Game Objects, to this Layer.
-     *
-     * Each Game Object must be unique within the Layer.
-     *
-     * @method Phaser.GameObjects.Layer#add
-     * @since 3.4.0
-     *
-     * @generic {Phaser.GameObjects.GameObject} T
-     * @genericUse {(T|T[])} - [child]
-     *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to add to the Layer.
-     *
-     * @return {this} This Layer instance.
-     */
-    add: function (child)
-    {
-        List.prototype.add.call(this, child);
-
-        return this;
-    },
-
-    /**
-     * Removes the given Game Object, or array of Game Objects, from this Layer.
-     *
-     * The Game Objects must already be children of this Layer.
-     *
-     * You can also optionally call `destroy` on each Game Object that is removed from the Layer.
-     *
-     * @method Phaser.GameObjects.Layer#remove
-     * @since 3.70.0
-     *
-     * @generic {Phaser.GameObjects.GameObject} T
-     * @genericUse {(T|T[])} - [child]
-     *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to be removed from the Layer.
-     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each child successfully removed from this Layer.
-     * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
-     *
-     * @return {this} This Layer instance.
-    remove: function (child, destroyChild, skipCallback)
-    {
-        var removed = List.prototype.remove.call(this, child, skipCallback);
-
-        if (destroyChild && removed)
-        {
-            if (!Array.isArray(removed))
-            {
-                removed = [ removed ];
-            }
-
-            for (var i = 0; i < removed.length; i++)
-            {
-                removed[i].destroy();
-            }
-        }
-
-        return this;
-    },
-     */
-
-    /**
-     * Removes all Game Objects from this Layer.
-     *
-     * You can also optionally call `destroy` on each Game Object that is removed from the Layer.
-     *
-     * @method Phaser.GameObjects.Layer#removeAll
-     * @since 3.4.0
-     *
-     * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each Game Object successfully removed from this Layer.
-     *
-     * @return {this} This Layer instance.
-     */
-    removeAll: function (destroyChild)
-    {
-        var list = this.list;
-
-        if (destroyChild)
-        {
-            for (var i = 0; i < list.length; i++)
-            {
-                if (list[i] && list[i].scene)
-                {
-                    list[i].off(GameObjectEvents.DESTROY, this.remove, this);
-
-                    list[i].destroy();
-                }
-            }
-
-            this.list = [];
-        }
-        else
-        {
-            RemoveBetween(list, 0, list.length, this.removeChildCallback, this);
-        }
-
-        return this;
-    },
-
-    /**
      * This callback is invoked when this Game Object is added to a Scene.
      *
      * Can be overriden by custom Game Objects, but be aware of some Game Objects that
@@ -832,13 +732,9 @@ var Layer = new Class({
     {
         var displayList = gameObject.displayList;
 
-        if (displayList && displayList !== this && displayList.exists(gameObject))
+        if (displayList && displayList !== this)
         {
-            displayList.remove(this, true);
-
-            displayList.queueDepthSort();
-
-            gameObject.displayList = null;
+            gameObject.removeFromDisplayList();
         }
 
         if (!gameObject.displayList)
@@ -1044,8 +940,6 @@ var Layer = new Class({
      */
     destroy: function (fromScene)
     {
-        console.log('Layer.destroy', this.list.length);
-
         //  This Game Object has already been destroyed
         if (!this.scene || this.ignoreDestroy)
         {
