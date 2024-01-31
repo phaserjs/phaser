@@ -17,7 +17,7 @@
 * The `Renderer.Canvas` and `Renderer.WebGL` will now only be included in the build file if the corresponding feature flags `CANVAS_RENDERER` and/or `WEBGL_RENDERER` are set to `true`. For Canvas only builds this saves a lot of space in the build (thanks @samme)
 * You can now specify an `autoResize` boolean in the `RenderTargetConfig` which is passed to the Render Targets when they are created by a pipeline.
 * The `UtilityPipeline` now sets `autoResize` to `true` in its Render Target Config, so that the global `fullFrame` and `halfFrame` Render Targets will automatically resize if the renderer changes.
-* `Actions.PlaceOnLine` now has an added an `ease` parameter which accepts a string from the EaseMap or a custom ease function to allow for different distrubutions along a line. (thanks @sB3p)
+* `Actions.PlaceOnLine` now has an added `ease` parameter which accepts a string from the EaseMap or a custom ease function to allow for different distrubutions along a line. (thanks @sB3p)
 
 # Bug Fixes
 
@@ -28,9 +28,9 @@
 * The `NineSlice` Game Object method `setSize` now recalculates its origin by calling the `updateDisplayOrigin` method. (thanks @dhashvir)
 * When a `Layer` Game Object is destroyed, i.e. from changing or restarting a Scene, it will no longer cause an error when trying to destroy the children on its display list. Fix #6675 (thanks @crockergd @gm0nk)
 * `DynamicTexture` will now automatically call `setSize(width, height)` for both WebGL and Canvas. Previously it only did it for WebGL. This fixes an issue where DynamicTextures in Canvas mode would have a width and height of -1. Fix #6682 (thanks @samme)
-* `DynamicTexture.setSize` will now check to see if the `glTexture` bound to the current frame is stale, and if so, destroy it before binding the one from the Render Target. This fixes an issue where constantly destroy and creating Dynamic Textures would cause a memory leak in WebGL. Fix #6669 (thanks @DavidTalevski)
+* `DynamicTexture.setSize` will now check to see if the `glTexture` bound to the current frame is stale, and if so, destroy it before binding the one from the Render Target. This fixes an issue where constantly destroying and creating Dynamic Textures would cause a memory leak in WebGL. Fix #6669 (thanks @DavidTalevski)
 * The `BloomFX` and `BlurFX` and any custom pipeline that relies on using the `UtilityPipeline` full or half frame targets will now correctly draw even after the renderer size changes. Fix #6677 (thanks @Nerodon)
-* The `PostFXPipeline.postBatch` method will now skip `onDraw` is the pipeline hasn't booted, introducing an artificial frame skip. This should potentially fix glitch errors on mobile devices where Post FX would appear corrupted for a single frame. Fix #6681 (thank @moufmouf @tongliang999)
+* The `PostFXPipeline.postBatch` method will now skip `onDraw` if the pipeline hasn't booted, introducing an artificial frame skip. This should potentially fix glitch errors on mobile devices where Post FX would appear corrupted for a single frame. Fix #6681 (thank @moufmouf @tongliang999)
 * The `Matter.Body` function `scale` has been updated so if the Body originally had an `inertia` of `Infinity` this will be restored at the end of the call. This happens if you set a Matter Body to have fixed rotation. Fix #6369 (thanks @sushovande)
 
 ## Examples, Documentation, Beta Testing and TypeScript
