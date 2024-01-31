@@ -10,7 +10,8 @@
 * The `dropped` argument has now been adeded to the documentation for the `DRAG_END` and `GAMEOBJECT_DRAG_END` events (thanks @samme)
 * `Container.onChildDestroyed` is a new internal method used to destroy Container children. Previously, if you destroyed a Game Object in an exclusive Container, the game object would (momentarily) move onto the Scene display list and emit an ADDED_TO_SCENE event. Also, if you added a Sprite to a non-exclusive Container and stopped the Scene, you would get a TypeError (evaluating 'this.anims.destroy'). This happened because the fromChild argument in the DESTROY event was misinterpreted as destroyChild in the Container's remove(), and the Container was calling the Sprite's destroy() again. (thanks @samme)
 * The `Text` and `TileSprite` Game Objects now place their textures into the global `TextureManager` and a `_textureKey` private string property has been added which contains a UUID to reference that texture.
-* `Tilemaps.Components.WeightedRandomize` now uses the Phaser `Math.RND.frac` method with a seed instead the `Math.Random` static method. (thanks @jorbascrumps)
+* `Tilemaps.Components.WeightedRandomize` now uses the Phaser `Math.RND.frac` method with a seed instead of the `Math.Random` static method. (thanks @jorbascrumps)
+* `Tilemaps.Components.IsometricCullTiles` does the `CheckIsoBounds` method check last when building the outputArray, as to help optimize in situations where the tile would not be visible anyways. (thanks @zegenie)
 
 # Bug Fixes
 

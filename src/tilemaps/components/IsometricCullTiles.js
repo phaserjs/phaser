@@ -50,17 +50,19 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
         {
             for (x = drawLeft; x < drawRight; x++)
             {
-                if (skipCull || CheckIsoBounds(x, y, layer, camera))
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
-                    tile = mapData[y][x];
-
-                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                    {
-                        continue;
-                    }
-
-                    outputArray.push(tile);
+                    continue;
                 }
+
+                if (!skipCull && !CheckIsoBounds(x, y, layer, camera))
+                {
+                    continue;
+                }
+
+                outputArray.push(tile);
             }
         }
     }
@@ -72,17 +74,19 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
         {
             for (x = drawRight; x >= drawLeft; x--)
             {
-                if (skipCull || CheckIsoBounds(x, y, layer, camera))
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
-                    tile = mapData[y][x];
-
-                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                    {
-                        continue;
-                    }
-
-                    outputArray.push(tile);
+                    continue;
                 }
+
+                if (!skipCull && !CheckIsoBounds(x, y, layer, camera))
+                {
+                    continue;
+                }
+
+                outputArray.push(tile);
             }
         }
     }
@@ -94,17 +98,19 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
         {
             for (x = drawLeft; x < drawRight; x++)
             {
-                if (skipCull || CheckIsoBounds(x, y, layer, camera))
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
-                    tile = mapData[y][x];
-
-                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                    {
-                        continue;
-                    }
-
-                    outputArray.push(tile);
+                    continue;
                 }
+
+                if (!skipCull && !CheckIsoBounds(x, y, layer, camera))
+                {
+                    continue;
+                }
+
+                outputArray.push(tile);
             }
         }
     }
@@ -116,17 +122,19 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
         {
             for (x = drawRight; x >= drawLeft; x--)
             {
-                if (skipCull || CheckIsoBounds(x, y, layer, camera))
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
-                    tile = mapData[y][x];
-
-                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                    {
-                        continue;
-                    }
-
-                    outputArray.push(tile);
+                    continue;
                 }
+
+                if (!skipCull && !CheckIsoBounds(x, y, layer, camera))
+                {
+                    continue;
+                }
+
+                outputArray.push(tile);
             }
         }
     }
