@@ -390,7 +390,7 @@ var RandomDataGenerator = new Class({
      */
     weightedPick: function (array)
     {
-        return array[~~(Math.pow(this.frac(), 2) * array.length + 0.5)];
+        return array[~~(Math.pow(this.frac(), 2) * (array.length - 0.5) + 0.5)];
     },
 
     /**

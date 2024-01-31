@@ -115,8 +115,7 @@ var AnimationFrame = new Class({
         this.nextFrame = null;
 
         /**
-         * Additional time (in ms) that this frame should appear for during playback.
-         * The value is added onto the msPerFrame set by the animation.
+         * The duration, in ms, of this frame of the animation.
          *
          * @name Phaser.Animations.AnimationFrame#duration
          * @type {number}

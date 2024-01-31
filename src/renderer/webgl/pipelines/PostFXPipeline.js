@@ -289,8 +289,10 @@ var PostFXPipeline = new Class({
         {
             this.bootFX();
         }
-
-        this.onDraw(this.currentRenderTarget);
+        else
+        {
+            this.onDraw(this.currentRenderTarget);
+        }
 
         this.onPostBatch(gameObject);
 

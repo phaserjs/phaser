@@ -15,6 +15,8 @@ var Point = require('../point/Point');
  * Provide a `stepRate` to ensure a specific distance between each point on the line. Set `quantity` to `0` when
  * providing a `stepRate`.
  *
+ * See also `GetEasedPoints` for a way to distribute the points across the line according to an ease type or input function.
+ *
  * @function Phaser.Geom.Line.GetPoints
  * @since 3.0.0
  *

@@ -400,7 +400,7 @@ var Tilemap = new Class({
 
         if (!this.scene.sys.textures.exists(key))
         {
-            console.warn('Invalid Tileset Image: ' + key);
+            console.warn('Texture key "%s" not found', key);
             return null;
         }
 
@@ -410,7 +410,7 @@ var Tilemap = new Class({
 
         if (index === null && this.format === Formats.TILED_JSON)
         {
-            console.warn('No data found for Tileset: ' + tilesetName);
+            console.warn('Tilemap has no tileset "%s". Its tilesets are %o', tilesetName, this.tilesets);
             return null;
         }
 

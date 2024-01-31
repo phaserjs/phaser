@@ -59,16 +59,20 @@ var UtilityPipeline = new Class({
     {
         config.renderTarget = GetFastValue(config, 'renderTarget', [
             {
-                scale: 1
+                scale: 1,
+                autoResize: true
             },
             {
-                scale: 1
+                scale: 1,
+                autoResize: true
             },
             {
-                scale: 0.5
+                scale: 0.5,
+                autoResize: true
             },
             {
-                scale: 0.5
+                scale: 0.5,
+                autoResize: true
             }
         ]);
 
