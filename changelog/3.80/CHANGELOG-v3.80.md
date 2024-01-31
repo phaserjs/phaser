@@ -24,6 +24,7 @@
 * `Animations.AnimationFrame#duration` is now the complete duration of the frame. Before this included `Animations.AnimationState#msPerFrame` with the value of `Animations.AnimationFrame#duration`. The fix to remove `Animations.AnimationState#msPerFrame` from `Animations.AnimationFrame#duration` has been removed from `Animations.AnimationManager#createFromAseprite` because of this clarification. Fix #6712 (thanks @Nerodon @TomMalitz)
 * The `NineSlice` Game Object method `setSize` now recalculates its origin by calling the `updateDisplayOrigin` method. (thanks @dhashvir)
 * When a `Layer` Game Object is destroyed, i.e. from changing or restarting a Scene, it will no longer cause an error when trying to destroy the children on its display list. Fix #6675 (thanks @crockergd @gm0nk)
+* `DynamicTexture` will now automatically call `setSize(width, height)` for both WebGL and Canvas. Previously it only did it for WebGL. This fixes an issue where DynamicTextures in Canvas mode would have a width and height of -1. Fix #6682 (thanks @samme)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
