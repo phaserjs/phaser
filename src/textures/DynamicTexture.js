@@ -226,10 +226,7 @@ var DynamicTexture = new Class({
          */
         this.pipeline = (!isCanvas) ? renderer.pipelines.get(PIPELINES.SINGLE_PIPELINE) : null;
 
-        if (!isCanvas)
-        {
-            this.setSize(width, height);
-        }
+        this.setSize(width, height);
     },
 
     /**
