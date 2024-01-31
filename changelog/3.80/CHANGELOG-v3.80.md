@@ -30,6 +30,7 @@
 * `DynamicTexture.setSize` will now check to see if the `glTexture` bound to the current frame is stale, and if so, destroy it before binding the one from the Render Target. This fixes an issue where constantly destroy and creating Dynamic Textures would cause a memory leak in WebGL. Fix #6669 (thanks @DavidTalevski)
 * The `BloomFX` and `BlurFX` and any custom pipeline that relies on using the `UtilityPipeline` full or half frame targets will now correctly draw even after the renderer size changes. Fix #6677 (thanks @Nerodon)
 * The `PostFXPipeline.postBatch` method will now skip `onDraw` is the pipeline hasn't booted, introducing an artificial frame skip. This should potentially fix glitch errors on mobile devices where Post FX would appear corrupted for a single frame. Fix #6681 (thank @moufmouf @tongliang999)
+* The `Matter.Body` function `scale` has been updated so if the Body originally had an `inertia` of `Infinity` this will be restored at the end of the call. This happens if you set a Matter Body to have fixed rotation. Fix #6369 (thanks @sushovande)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
