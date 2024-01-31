@@ -501,16 +501,17 @@ var WebGLPipeline = new Class({
                 var scale = GetFastValue(targets[i], 'scale', 1);
                 var minFilter = GetFastValue(targets[i], 'minFilter', 0);
                 var autoClear = GetFastValue(targets[i], 'autoClear', 1);
+                var autoResize = GetFastValue(targets[i], 'autoResize', false);
                 var targetWidth = GetFastValue(targets[i], 'width', null);
                 var targetHeight = GetFastValue(targets[i], 'height', targetWidth);
 
                 if (targetWidth)
                 {
-                    renderTargets.push(new RenderTarget(renderer, targetWidth, targetHeight, 1, minFilter, autoClear));
+                    renderTargets.push(new RenderTarget(renderer, targetWidth, targetHeight, 1, minFilter, autoClear, autoResize));
                 }
                 else
                 {
-                    renderTargets.push(new RenderTarget(renderer, width, height, scale, minFilter, autoClear));
+                    renderTargets.push(new RenderTarget(renderer, width, height, scale, minFilter, autoClear, autoResize));
                 }
             }
         }
