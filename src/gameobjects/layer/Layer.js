@@ -642,12 +642,12 @@ var Layer = new Class({
      *
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} child - The Game Object, or array of Game Objects, to be removed from the Layer.
      * @param {boolean} [destroyChild=false] - Optionally call `destroy` on each child successfully removed from this Layer.
+     * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
      * @return {this} This Layer instance.
-     */
-    remove: function (child, destroyChild)
+    remove: function (child, destroyChild, skipCallback)
     {
-        var removed = List.prototype.remove.call(this, child);
+        var removed = List.prototype.remove.call(this, child, skipCallback);
 
         if (destroyChild && removed)
         {
@@ -664,6 +664,7 @@ var Layer = new Class({
 
         return this;
     },
+     */
 
     /**
      * Removes all Game Objects from this Layer.
@@ -829,11 +830,15 @@ var Layer = new Class({
      */
     addChildCallback: function (gameObject)
     {
-        gameObject.once(GameObjectEvents.DESTROY, this.remove, this);
+        var displayList = gameObject.displayList;
 
-        if (gameObject.displayList && gameObject.displayList !== this)
+        if (displayList && displayList !== this && displayList.exists(gameObject))
         {
-            gameObject.removeFromDisplayList();
+            displayList.remove(this, true);
+
+            displayList.queueDepthSort();
+
+            gameObject.displayList = null;
         }
 
         if (!gameObject.displayList)
@@ -861,8 +866,6 @@ var Layer = new Class({
      */
     removeChildCallback: function (gameObject)
     {
-        gameObject.off(GameObjectEvents.DESTROY, this.remove, this);
-
         this.queueDepthSort();
 
         gameObject.displayList = null;
@@ -1041,6 +1044,8 @@ var Layer = new Class({
      */
     destroy: function (fromScene)
     {
+        console.log('Layer.destroy', this.list.length);
+
         //  This Game Object has already been destroyed
         if (!this.scene || this.ignoreDestroy)
         {
@@ -1062,7 +1067,7 @@ var Layer = new Class({
 
         if (this.displayList)
         {
-            this.displayList.remove(this, true);
+            this.displayList.remove(this, true, false);
 
             this.displayList.queueDepthSort();
         }
