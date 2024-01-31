@@ -741,6 +741,8 @@ var Axes = require('../geometry/Axes');
 
         point = point || body.position;
 
+        var wasFixedRotation = (body.inertia === Infinity) ? true : false;
+
         for (var i = 0; i < body.parts.length; i++) {
             var part = body.parts[i];
 
@@ -791,6 +793,11 @@ var Axes = require('../geometry/Axes');
                 // body is no longer a circle
                 body.circleRadius = null;
             }
+        }
+
+        if (wasFixedRotation)
+        {
+            Body.setInertia(body, Infinity);
         }
     };
 
