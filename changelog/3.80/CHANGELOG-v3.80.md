@@ -13,7 +13,6 @@
 * `Tilemaps.Components.WeightedRandomize` now uses the Phaser `Math.RND.frac` method with a seed instead of the `Math.Random` static method. (thanks @jorbascrumps)
 * `Tilemaps.Components.IsometricCullTiles` does the `CheckIsoBounds` method check last when building the outputArray, as to help optimize in situations where the tile would not be visible anyways. (thanks @zegenie)
 * `Tilemaps.Components.WeightedRandomize` now uses the Phaser `Math.RND.frac` method with a seed instead the `Math.Random` static method. (thanks @jorbascrumps)
-* The method `Layer.removeAll` has been removed. This method is still available via the `List.removeAll` that Layer inherits, but the `destroyChild` parameter is no longer available.
 * The `Layer.removeAll`, `remove` and `add` methods have been removed. These methods are all still available via the `List` class that Layer inherits, but the `destroyChild` parameters are no longer available.
 
 # Bug Fixes
