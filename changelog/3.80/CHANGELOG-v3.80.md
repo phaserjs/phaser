@@ -17,6 +17,7 @@
 * The `Renderer.Canvas` and `Renderer.WebGL` will now only be included in the build file if the corresponding feature flags `CANVAS_RENDERER` and/or `WEBGL_RENDERER` are set to `true`. For Canvas only builds this saves a lot of space in the build (thanks @samme)
 * You can now specify an `autoResize` boolean in the `RenderTargetConfig` which is passed to the Render Targets when they are created by a pipeline.
 * The `UtilityPipeline` now sets `autoResize` to `true` in its Render Target Config, so that the global `fullFrame` and `halfFrame` Render Targets will automatically resize if the renderer changes.
+* `Actions.PlaceOnLine` now has an added an `ease` parameter which accepts a string from the EaseMap or a custom ease function to allow for different distrubutions along a line. (thanks @sB3p)
 
 # Bug Fixes
 
