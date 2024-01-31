@@ -236,17 +236,10 @@ var DisplayList = new Class({
     {
         var list = this.list;
 
-        console.log('DisplayList.shutdown', list.length);
-
-        for (var i = 0; i < list.length; i++)
+        while (list.length)
         {
-            list[i].destroy(true);
+            list[0].destroy(true);
         }
-
-        // while (list.length)
-        // {
-        //     list[0].destroy(true);
-        // }
 
         this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
