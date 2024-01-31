@@ -12,6 +12,9 @@
 * The `Text` and `TileSprite` Game Objects now place their textures into the global `TextureManager` and a `_textureKey` private string property has been added which contains a UUID to reference that texture.
 * `Tilemaps.Components.WeightedRandomize` now uses the Phaser `Math.RND.frac` method with a seed instead of the `Math.Random` static method. (thanks @jorbascrumps)
 * `Tilemaps.Components.IsometricCullTiles` does the `CheckIsoBounds` method check last when building the outputArray, as to help optimize in situations where the tile would not be visible anyways. (thanks @zegenie)
+* `Tilemaps.Components.WeightedRandomize` now uses the Phaser `Math.RND.frac` method with a seed instead the `Math.Random` static method. (thanks @jorbascrumps)
+* The method `Layer.removeAll` has been removed. This method is still available via the `List.removeAll` that Layer inherits, but the `destroyChild` parameter is no longer available.
+* The `Layer.removeAll`, `remove` and `add` methods have been removed. These methods are all still available via the `List` class that Layer inherits, but the `destroyChild` parameters are no longer available.
 
 # Bug Fixes
 
@@ -20,6 +23,7 @@
 * The `Time.Timeline` class didn't show as extending the Event Emitter, or have `config` as an optional argument in the docs / TS defs. Fix #6673 (thanks @ghclark2)
 * `Animations.AnimationFrame#duration` is now the complete duration of the frame. Before this included `Animations.AnimationState#msPerFrame` with the value of `Animations.AnimationFrame#duration`. The fix to remove `Animations.AnimationState#msPerFrame` from `Animations.AnimationFrame#duration` has been removed from `Animations.AnimationManager#createFromAseprite` because of this clarification. Fix #6712 (thanks @Nerodon @TomMalitz)
 * The `NineSlice` Game Object method `setSize` now recalculates its origin by calling the `updateDisplayOrigin` method. (thanks @dhashvir)
+* When a `Layer` Game Object is destroyed, i.e. from changing or restarting a Scene, it will no longer cause an error when trying to destroy the children on its display list. Fix #6675 (thanks @crockergd @gm0nk)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
