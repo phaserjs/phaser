@@ -391,6 +391,7 @@ var WebGLShader = new Class({
                     {
                         name: name,
                         location: location,
+                        setter: null,
                         value1: null,
                         value2: null,
                         value3: null,
@@ -418,6 +419,7 @@ var WebGLShader = new Class({
                             {
                                 name: name,
                                 location: location,
+                                setter: null,
                                 value1: null,
                                 value2: null,
                                 value3: null,
@@ -430,6 +432,25 @@ var WebGLShader = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Repopulate uniforms on the GPU.
+     * 
+     * This is called automatically by the pipeline when the context is
+     * lost and then recovered. By the time this method is called,
+     * the WebGL resources are already recreated, so we just need to
+     * re-populate them.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLShader#syncUniforms
+     * @since 3.80.0
+     */
+    syncUniforms: function ()
+    {
+        ArrayEach(this.uniforms, function (uniform)
+        {
+            uniform.setter.call(this.gl, uniform.location.webGLUniformLocation, uniform.value1, uniform.value2, uniform.value3, uniform.value4);
+        });
     },
 
     /**
@@ -504,6 +525,11 @@ var WebGLShader = new Class({
 
         if (skipCheck || uniform.value1 !== value1)
         {
+            if (!uniform.setter)
+            {
+                uniform.setter = setter;
+            }
+
             uniform.value1 = value1;
 
             this.renderer.setProgram(this.program);
@@ -549,6 +575,11 @@ var WebGLShader = new Class({
 
         if (skipCheck || uniform.value1 !== value1 || uniform.value2 !== value2)
         {
+            if (!uniform.setter)
+            {
+                uniform.setter = setter;
+            }
+
             uniform.value1 = value1;
             uniform.value2 = value2;
 
@@ -596,6 +627,11 @@ var WebGLShader = new Class({
 
         if (skipCheck || uniform.value1 !== value1 || uniform.value2 !== value2 || uniform.value3 !== value3)
         {
+            if (!uniform.setter)
+            {
+                uniform.setter = setter;
+            }
+
             uniform.value1 = value1;
             uniform.value2 = value2;
             uniform.value3 = value3;
@@ -645,6 +681,11 @@ var WebGLShader = new Class({
 
         if (skipCheck || uniform.value1 !== value1 || uniform.value2 !== value2 || uniform.value3 !== value3 || uniform.value4 !== value4)
         {
+            if (!uniform.setter)
+            {
+                uniform.setter = setter;
+            }
+
             uniform.value1 = value1;
             uniform.value2 = value2;
             uniform.value3 = value3;

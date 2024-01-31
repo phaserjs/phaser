@@ -1249,6 +1249,24 @@ var PipelineManager = new Class({
     },
 
     /**
+     * Restore WebGL resources after context was lost.
+     * 
+     * Calls `rebind` on this Pipeline Manager.
+     * Then calls `restoreContext` on each pipeline in turn.
+     * 
+     * @method Phaser.Renderer.WebGL.PipelineManager#restoreContext
+     * @since 3.80.0
+     */
+    restoreContext: function ()
+    {
+        this.rebind();
+        this.pipelines.each(function (_, pipeline)
+        {
+            pipeline.restoreContext();
+        });
+    },
+
+    /**
      * Use this to reset the gl context to the state that Phaser requires to continue rendering.
      *
      * Calling this will:

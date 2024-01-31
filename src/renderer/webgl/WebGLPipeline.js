@@ -1195,6 +1195,24 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * This method is called if the WebGL context is lost and restored.
+     * It ensures that uniforms are synced back to the GPU
+     * for all shaders in this pipeline.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#restoreContext
+     * @since 3.80.0
+     */
+    restoreContext: function ()
+    {
+        var shaders = this.shaders;
+
+        for (var i = 0; i < shaders.length; i++)
+        {
+            shaders[i].syncUniforms();
+        }
+    },
+
+    /**
      * Binds the vertex buffer to be the active ARRAY_BUFFER on the WebGL context.
      *
      * It first checks to see if it's already set as the active buffer and only
