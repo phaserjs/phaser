@@ -269,7 +269,10 @@ var DynamicTexture = new Class({
                 if (renderTarget.willResize(width, height))
                 {
                     renderTarget.resize(width, height);
+                }
 
+                if (renderTarget.texture !== source.glTexture)
+                {
                     //  The WebGLTexture has been resized, so is new, so we need to delete the old one
                     this.renderer.deleteTexture(source.glTexture);
                 }
