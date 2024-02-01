@@ -5,6 +5,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var ArrayEach = require('../../utils/array/Each');
 var ArrayRemove = require('../../utils/array/Remove');
 var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
@@ -758,6 +759,69 @@ var WebGLRenderer = new Class({
 
         canvas.addEventListener('webglcontextlost', this.contextLostHandler, false);
 
+        this.contextRestoredHandler = function (event)
+        {
+            if (gl.isContextLost())
+            {
+                if (console)
+                {
+                    console.log('WebGL Context restored, but context is still lost');
+                }
+                return;
+            }
+
+            // Clear "current" settings so they can be set again.
+            _this.currentProgram = null;
+            _this.currentFramebuffer = null;
+            _this.setBlendMode(CONST.BlendModes.NORMAL);
+
+            // Settings we DON'T need to reset:
+            // Scissor is set during preRender.
+            // Mask is set during preRender.
+            // Camera mask is set during preRenderCamera.
+
+            // Restore GL flags.
+            gl.disable(gl.BLEND);
+            gl.disable(gl.DEPTH_TEST);
+            gl.enable(gl.CULL_FACE);
+
+            // Restore wrapped GL objects.
+            // Order matters, as some wrappers depend on others.
+            var wrapperCreateResource = function (wrapper)
+            {
+                wrapper.createResource();
+            };
+            ArrayEach(_this.glTextureWrappers, wrapperCreateResource);
+            ArrayEach(_this.glBufferWrappers, wrapperCreateResource);
+            ArrayEach(_this.glFramebufferWrappers, wrapperCreateResource);
+            ArrayEach(_this.glProgramWrappers, wrapperCreateResource);
+            ArrayEach(_this.glAttribLocationWrappers, wrapperCreateResource);
+            ArrayEach(_this.glUniformLocationWrappers, wrapperCreateResource);
+
+            // Create temporary textures.
+            _this.createTemporaryTextures();
+
+            // Restore pipelines.
+            // _this.pipelines.rebind();
+            _this.pipelines.restoreContext();
+
+            // Apply resize.
+            _this.resize(_this.width, _this.height);
+
+            // Context has been restored.
+
+            _this.contextLost = false;
+
+            if (console)
+            {
+                console.warn('WebGL Context restored. Renderer running again.');
+            }
+
+            event.preventDefault();
+        };
+
+        canvas.addEventListener('webglcontextrestored', this.contextRestoredHandler, false);
+
         //  Set it back into the Game, so developers can access it from there too
         game.context = gl;
 
@@ -855,19 +919,7 @@ var WebGLRenderer = new Class({
 
         this.textureIndexes = [];
 
-        //  Create temporary WebGL textures to stop WebGL errors on mac os
-        for (var index = 0; index < this.maxTextures; index++)
-        {
-            var tempTexture = gl.createTexture();
-
-            gl.activeTexture(gl.TEXTURE0 + index);
-
-            gl.bindTexture(gl.TEXTURE_2D, tempTexture);
-
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 0, 0, 255, 255 ]));
-
-            this.textureIndexes.push(index);
-        }
+        this.createTemporaryTextures();
 
         this.pipelines = new PipelineManager(this);
 
@@ -926,6 +978,27 @@ var WebGLRenderer = new Class({
         game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
         this.resize(width, height);
+    },
+
+    /**
+     * Create temporary WebGL textures to stop WebGL errors on mac os
+     */
+    createTemporaryTextures: function ()
+    {
+        var gl = this.gl;
+
+        for (var index = 0; index < this.maxTextures; index++)
+        {
+            var tempTexture = gl.createTexture();
+
+            gl.activeTexture(gl.TEXTURE0 + index);
+
+            gl.bindTexture(gl.TEXTURE_2D, tempTexture);
+
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 0, 0, 255, 255 ]));
+
+            this.textureIndexes.push(index);
+        }
     },
 
     /**

@@ -637,6 +637,8 @@ var PostFXPipeline = new Class({
         this.halfFrame1 = null;
         this.halfFrame2 = null;
 
+        this.manager.removePostPipeline(this);
+
         WebGLPipeline.prototype.destroy.call(this);
 
         return this;

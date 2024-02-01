@@ -24,6 +24,8 @@ var PointLightPipeline = require('./pipelines/PointLightPipeline');
 var RopePipeline = require('./pipelines/RopePipeline');
 var SinglePipeline = require('./pipelines/SinglePipeline');
 var UtilityPipeline = require('./pipelines/UtilityPipeline');
+var ArrayEach = require('../../utils/array/Each');
+var ArrayRemove = require('../../utils/array/Remove');
 
 /**
  * @classdesc
@@ -142,6 +144,14 @@ var PipelineManager = new Class({
          * @since 3.50.0
          */
         this.pipelines = new CustomMap();
+
+        /**
+         * An array of all post-pipelines that are created by this manager.
+         * 
+         * @name Phaser.Renderer.WebGL.PipelineManager#postPipelineInstances
+         * @type {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline[]}
+         */
+        this.postPipelineInstances = [];
 
         /**
          * The default Game Object pipeline.
@@ -742,8 +752,26 @@ var PipelineManager = new Class({
                 newPipeline.gameObject = gameObject;
             }
 
+            this.postPipelineInstances.push(newPipeline);
+
             return newPipeline;
         }
+    },
+
+    /**
+     * Removes a PostFXPipeline instance from this Pipeline Manager.
+     *
+     * Note that the pipeline will not be flushed or destroyed, it's simply removed from
+     * this manager.
+     *
+     * @method Phaser.Renderer.WebGL.PipelineManager#removePostPipeline
+     * @since 3.80.0
+     *
+     * @param {Phaser.Renderer.WebGL.Pipelines.PostFXPipeline} pipeline - The pipeline instance to be removed.
+     */
+    removePostPipeline: function (pipeline)
+    {
+        ArrayRemove(this.postPipelineInstances, pipeline);
     },
 
     /**
@@ -1261,6 +1289,10 @@ var PipelineManager = new Class({
     {
         this.rebind();
         this.pipelines.each(function (_, pipeline)
+        {
+            pipeline.restoreContext();
+        });
+        ArrayEach(this.postPipelineInstances, function (pipeline)
         {
             pipeline.restoreContext();
         });

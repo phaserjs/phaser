@@ -297,6 +297,7 @@ var WebGLShader = new Class({
         if (reset === undefined) { reset = false; }
 
         var gl = this.gl;
+        var renderer = this.renderer;
         var vertexSize = this.vertexSize;
         var attributes = this.attributes;
         var program = this.program;
@@ -314,6 +315,10 @@ var WebGLShader = new Class({
 
             if (reset)
             {
+                if (location !== -1)
+                {
+                    renderer.deleteAttribLocation(location);
+                }
                 var attribLocation = this.renderer.createAttribLocation(program, element.name);
 
                 if (attribLocation.webGLAttribLocation >= 0)
@@ -447,10 +452,18 @@ var WebGLShader = new Class({
      */
     syncUniforms: function ()
     {
-        ArrayEach(this.uniforms, function (uniform)
+        var gl = this.gl;
+        this.renderer.setProgram(this.program);
+        for (var name in this.uniforms)
         {
-            uniform.setter.call(this.gl, uniform.location.webGLUniformLocation, uniform.value1, uniform.value2, uniform.value3, uniform.value4);
-        });
+            var uniform = this.uniforms[name];
+
+            // A uniform that hasn't been set doesn't need to be synced.
+            if (uniform.setter)
+            {
+                uniform.setter.call(gl, uniform.location.webGLUniformLocation, uniform.value1, uniform.value2, uniform.value3, uniform.value4);
+            }
+        }
     },
 
     /**
