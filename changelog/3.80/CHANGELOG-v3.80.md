@@ -4,11 +4,12 @@
 
 * The Scale Manager has a new scale mode called `EXPAND`. This is inspired by the Expand mode in Godot: "Keep aspect ratio when stretching the screen, but keep neither the base width nor height. Depending on the screen aspect ratio, the viewport will either be larger in the horizontal direction (if the screen is wider than the base size) or in the vertical direction (if the screen is taller than the original size)" (thanks @rexrainbow)
 
-# Spine 4.1 Updates
+# Spine Updates
 
-* The Spine 4.1 Plugin will now call `preUpdate` automatically when the `play` method is called. This forces the new animation state to update and apply itself to the skeleton. This fixes an issue where Spine object would show the default frame in the Spine atlas for a single update before the animation started. Fix #5443 (thanks @spayton)
+* The Spine 3 and 4.1 Plugins will now call `preUpdate` automatically when the `play` method is called. This forces the new animation state to update and apply itself to the skeleton. This fixes an issue where Spine object would show the default frame in the Spine atlas for a single update before the animation started. Fix #5443 (thanks @spayton)
 * `SpineGameObject.setSlotAlpha` is a new method that allows you to set the alpha on a specific slot in a Spine skeleton.
 * The `SpineGameObject.setAlpha` method has had its 2nd parameter removed. This fixes needless slot look-ups during rendering when a Spine Game Object is inside a regular Container. If you need to set slot alpha, use the new `setSlotAlpha` method instead. Fix #6571 (thanks @spayton)
+* The `SpineFile.onFileComplete` handler was running a regular expression against `file.src` instead of `file.url`, sometimes leading to double paths in the atlas paths on loading. Fix #6642 (thanks @rez23)
 
 # Updates
 
