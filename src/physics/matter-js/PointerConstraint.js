@@ -305,7 +305,7 @@ var PointerConstraint = new Class({
         }
         else if (pointer.isDown)
         {
-            if (!body && !this.getBody(pointer))
+            if (!this.camera || (!body && !this.getBody(pointer)))
             {
                 return;
             }
