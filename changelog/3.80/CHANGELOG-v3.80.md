@@ -4,6 +4,15 @@
 
 * The Scale Manager has a new scale mode called `EXPAND`. This is inspired by the Expand mode in Godot: "Keep aspect ratio when stretching the screen, but keep neither the base width nor height. Depending on the screen aspect ratio, the viewport will either be larger in the horizontal direction (if the screen is wider than the base size) or in the vertical direction (if the screen is taller than the original size)" (thanks @rexrainbow)
 
+# New Features - Base64 Loader
+
+The Phaser LoaderPlugin and related classes have been updated so that they now work natively with base64 encoded files and Data URIs. This means you can now load a base64 encoded image, audio file or text file directly into the Loader. The Loader will then decode the data and process it as if it was a normal file. This is particularly useful for environments such as Playable Ads where you have to provide a single html file with all assets embedded and no XHR requests.
+
+* `Loader.File.base64` is a new read-only boolean property that is set if the file contains a Data URI encoded string.
+* `Loader.File.onBase64Load` is a new method that is called when the file has finished decoding from a Data URI.
+* The `ImageFile` will now default to using the Image Load Element if a base64 file is detected, instead of throwing a console warning about unsupported types.
+* The `XHRLoader` will now return a fake XHR result object containing the decoded base64 data if a base64 file is detected, skipping the creation of a real XML Http Request object.
+
 # Spine Updates
 
 * The Spine 3 and 4.1 Plugins will now call `preUpdate` automatically when the `play` method is called. This forces the new animation state to update and apply itself to the skeleton. This fixes an issue where Spine object would show the default frame in the Spine atlas for a single update before the animation started. Fix #5443 (thanks @spayton)
