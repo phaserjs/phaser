@@ -63,6 +63,7 @@ var XHRLoader = function (file, globalXHRSettings)
     xhr.onload = file.onLoad.bind(file, xhr);
     xhr.onerror = file.onError.bind(file, xhr);
     xhr.onprogress = file.onProgress.bind(file);
+    xhr.ontimeout = file.onError.bind(file, xhr);
 
     //  This is the only standard method, the ones above are browser additions (maybe not universal?)
     // xhr.onreadystatechange

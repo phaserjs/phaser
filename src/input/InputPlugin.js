@@ -2491,6 +2491,8 @@ var InputPlugin = new Class({
 
             debug.preUpdate = function ()
             {
+                debug.setVisible(gameObject.visible);
+
                 debug.setStrokeStyle(1 / gameObject.scale, debug.strokeColor);
 
                 debug.setDisplayOrigin(gameObject.displayOriginX, gameObject.displayOriginY);
@@ -2547,8 +2549,7 @@ var InputPlugin = new Class({
         {
             var debug = input.hitAreaDebug;
 
-            this.systems.updateList.remove(debug);
-
+            //  This will remove it from both the display list and update list
             debug.destroy();
 
             input.hitAreaDebug = null;
