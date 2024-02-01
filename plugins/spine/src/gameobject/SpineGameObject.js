@@ -284,6 +284,8 @@ var SpineGameObject = new Class({
      *
      * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
      *
+     * To set the alpha of a specific attachment, use the `setSlotAlpha` method instead.
+     *
      * @method SpineGameObject#setAlpha
      * @since 3.19.0
      *
@@ -291,22 +293,41 @@ var SpineGameObject = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setAlpha: function (value, slotName)
+    setAlpha: function (value)
     {
         if (value === undefined) { value = 1; }
 
-        if (slotName)
-        {
-            var slot = this.findSlot(slotName);
+        this.alpha = value;
 
-            if (slot)
-            {
-                slot.color.a = Clamp(value, 0, 1);
-            }
-        }
-        else
+        return this;
+    },
+
+    /**
+     * Set the Alpha level for the given attachment slot.
+     *
+     * The alpha controls the opacity of the slot as it renders.
+     *
+     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
+     *
+     * To set the alpha for the whole skeleton, use the `setAlpha` method instead.
+     *
+     * @method SpineGameObject#setSlotAlpha
+     * @since 3.80.0
+     *
+     * @param {string} slotName - The name of the slot to find.
+     * @param {number} [value=1] - The alpha value used for the slot.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setSlotAlpha: function (value, slotName)
+    {
+        if (value === undefined) { value = 1; }
+
+        var slot = this.findSlot(slotName);
+
+        if (slot)
         {
-            this.alpha = value;
+            slot.color.a = Clamp(value, 0, 1);
         }
 
         return this;
@@ -994,6 +1015,8 @@ var SpineGameObject = new Class({
     play: function (animationName, loop, ignoreIfPlaying)
     {
         this.setAnimation(0, animationName, loop, ignoreIfPlaying);
+
+        this.preUpdate(0, 16.66667);
 
         return this;
     },
