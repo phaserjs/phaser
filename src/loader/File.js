@@ -232,6 +232,15 @@ var File = new Class({
          * @since 3.7.0
          */
         this.linkFile;
+
+        /**
+         * Does this File contain a data URI?
+         *
+         * @name Phaser.Loader.File#base64
+         * @type {boolean}
+         * @since 3.80.0
+         */
+        this.base64 = (url.indexOf('data:') === 0);
     },
 
     /**
@@ -288,19 +297,10 @@ var File = new Class({
 
             if (this.src.indexOf('data:') === 0)
             {
-                console.warn('Local data URIs are not supported: ' + this.key);
+                this.base64 = true;
             }
-            else
-            {
-                //  The creation of this XHRLoader starts the load process going.
-                //  It will automatically call the following, based on the load outcome:
-                //
-                // xhr.onload = this.onLoad
-                // xhr.onerror = this.onError
-                // xhr.onprogress = this.onProgress
 
-                this.xhrLoader = XHRLoader(this, this.loader.xhr);
-            }
+            this.xhrLoader = XHRLoader(this, this.loader.xhr);
         }
     },
 
@@ -335,6 +335,27 @@ var File = new Class({
         this.resetXHR();
 
         this.loader.nextFile(this, success);
+    },
+
+    /**
+     * Called by the XHRLoader if it was given a File with base64 data to load.
+     *
+     * @method Phaser.Loader.File#onBase64Load
+     * @since 3.80.0
+     *
+     * @param {XMLHttpRequest} xhr - The FakeXHR object containing the decoded base64 data.
+     */
+    onBase64Load: function (xhr)
+    {
+        this.xhrLoader = xhr;
+
+        this.state = CONST.FILE_LOADED;
+
+        this.percentComplete = 1;
+
+        this.loader.emit(Events.FILE_PROGRESS, this, this.percentComplete);
+
+        this.loader.nextFile(this, true);
     },
 
     /**
