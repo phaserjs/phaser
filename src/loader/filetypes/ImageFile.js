@@ -86,7 +86,7 @@ var ImageFile = new Class({
             loader.addFile(normalMap);
         }
 
-        this.useImageElementLoad = loader.imageLoadType === 'HTMLImageElement';
+        this.useImageElementLoad = (loader.imageLoadType === 'HTMLImageElement') || this.base64;
 
         if (this.useImageElementLoad)
         {
@@ -165,32 +165,25 @@ var ImageFile = new Class({
 
         this.src = GetURL(this, this.loader.baseURL);
 
-        if (this.src.indexOf('data:') === 0)
+        this.data = new Image();
+
+        this.data.crossOrigin = this.crossOrigin;
+
+        var _this = this;
+
+        this.data.onload = function ()
         {
-            console.warn('Local data URIs are not supported: ' + this.key);
-        }
-        else
+            _this.state = CONST.FILE_LOADED;
+
+            _this.loader.nextFile(_this, true);
+        };
+
+        this.data.onerror = function ()
         {
-            this.data = new Image();
+            _this.loader.nextFile(_this, false);
+        };
 
-            this.data.crossOrigin = this.crossOrigin;
-
-            var _this = this;
-
-            this.data.onload = function ()
-            {
-                _this.state = CONST.FILE_LOADED;
-
-                _this.loader.nextFile(_this, true);
-            };
-
-            this.data.onerror = function ()
-            {
-                _this.loader.nextFile(_this, false);
-            };
-
-            this.data.src = this.src;
-        }
+        this.data.src = this.src;
     },
 
     /**
