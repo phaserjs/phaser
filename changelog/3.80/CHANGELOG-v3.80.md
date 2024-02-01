@@ -25,6 +25,7 @@
 * You can now specify an `autoResize` boolean in the `RenderTargetConfig` which is passed to the Render Targets when they are created by a pipeline.
 * The `UtilityPipeline` now sets `autoResize` to `true` in its Render Target Config, so that the global `fullFrame` and `halfFrame` Render Targets will automatically resize if the renderer changes.
 * `Actions.PlaceOnLine` now has an added `ease` parameter which accepts a string from the EaseMap or a custom ease function to allow for different distrubutions along a line. (thanks @sB3p)
+* If you enable a Game Object for Input Debugging, the debug shape will no longer be rendered if the Game Object itself is not visible. Fix #6364 (thanks @orjandh)
 
 # Bug Fixes
 
