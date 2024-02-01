@@ -818,6 +818,8 @@ var WebGLRenderer = new Class({
             }
 
             event.preventDefault();
+
+            _this.emit(Events.RESTORE_WEBGL, _this);
         };
 
         canvas.addEventListener('webglcontextrestored', this.contextRestoredHandler, false);
