@@ -995,6 +995,8 @@ var SpineGameObject = new Class({
     {
         this.setAnimation(0, animationName, loop, ignoreIfPlaying);
 
+        this.preUpdate(0, 16.6);
+
         return this;
     },
 
