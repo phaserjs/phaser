@@ -19,7 +19,7 @@ var Class = require('../../../utils/Class');
  */
 var WebGLProgramWrapper = new Class({
     initialize:
-    function (gl, vertexSource, fragmentSource)
+    function WebGLProgramWrapper (gl, vertexSource, fragmentSource)
     {
         /**
          * The WebGLProgram being wrapped by this class.
@@ -128,6 +128,7 @@ var WebGLProgramWrapper = new Class({
         if (!this.webGLProgram) { return; }
         this.gl.deleteProgram(this.webGLProgram);
         this.webGLProgram = null;
+        this.gl = null;
     }
 });
 

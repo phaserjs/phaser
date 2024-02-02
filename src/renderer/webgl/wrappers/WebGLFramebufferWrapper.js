@@ -30,7 +30,7 @@ var errors = {
  * @param {boolean} [addDepthStencilBuffer=false] - Create a Renderbuffer for the depth stencil?
  */
 var WebGLFramebufferWrapper = new Class({
-    initialize: function WebGLFramebufferWrapper (renderer, width, height, renderTexture, addDepthStencilBuffer)
+    initialize: function WebGLFramebufferWrapper (gl, width, height, renderTexture, addDepthStencilBuffer)
     {
         /**
          * The WebGLFramebuffer being wrapped by this class.
@@ -47,13 +47,13 @@ var WebGLFramebufferWrapper = new Class({
         this.webGLFramebuffer = null;
 
         /**
-         * The WebGLRenderer instance that owns this WebGLFramebufferWrapper.
+         * The WebGL context this WebGLFramebuffer belongs to.
          * 
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#renderer
-         * @type {Phaser.Renderer.WebGL.WebGLRenderer}
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#gl
+         * @type {WebGLRenderingContext}
          * @since 3.80.0
          */
-        this.renderer = renderer;
+        this.gl = gl;
 
         /**
          * Width of the depth stencil.
@@ -106,16 +106,13 @@ var WebGLFramebufferWrapper = new Class({
      */
     createResource: function ()
     {
-        var renderer = this.renderer;
-        var gl = renderer.gl;
+        var gl = this.gl;
         var renderTexture = this.renderTexture;
         var complete = 0;
         var framebuffer = gl.createFramebuffer();
 
-        // This property must exist before calling `setFramebuffer`.
         this.webGLFramebuffer = framebuffer;
-
-        renderer.setFramebuffer(this);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 
         renderTexture.isRenderTexture = true;
         renderTexture.isAlphaPremultiplied = false;
@@ -138,7 +135,7 @@ var WebGLFramebufferWrapper = new Class({
             gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, depthStencilBuffer);
         }
 
-        renderer.setFramebuffer(null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     },
 
     /**
@@ -153,7 +150,7 @@ var WebGLFramebufferWrapper = new Class({
         {
             return;
         }
-        var gl = this.renderer.gl;
+        var gl = this.gl;
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.webGLFramebuffer);
 
@@ -182,6 +179,7 @@ var WebGLFramebufferWrapper = new Class({
         gl.deleteFramebuffer(this.webGLFramebuffer);
 
         this.webGLFramebuffer = null;
+        this.gl = null;
     }
 });
 

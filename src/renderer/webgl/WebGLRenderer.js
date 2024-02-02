@@ -2101,6 +2101,8 @@ var WebGLRenderer = new Class({
     /**
      * Creates a WebGL Framebuffer object and optionally binds a depth stencil render buffer.
      *
+     * This will unbind any currently bound framebuffer.
+     *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createFramebuffer
      * @since 3.0.0
      *
@@ -2113,9 +2115,8 @@ var WebGLRenderer = new Class({
      */
     createFramebuffer: function (width, height, renderTexture, addDepthStencilBuffer)
     {
-        // During initialization, the wrapper calls `this.setFramebuffer`
-        // to bind and unbind the new framebuffer.
-        var framebuffer = new WebGLFramebufferWrapper(this, width, height, renderTexture, addDepthStencilBuffer);
+        this.currentFramebuffer = null;
+        var framebuffer = new WebGLFramebufferWrapper(this.gl, width, height, renderTexture, addDepthStencilBuffer);
 
         this.glFramebufferWrappers.push(framebuffer);
 

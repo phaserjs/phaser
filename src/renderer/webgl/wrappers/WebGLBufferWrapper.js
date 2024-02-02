@@ -110,6 +110,7 @@ var WebGLBufferWrapper = new Class({
         this.gl.deleteBuffer(this.webGLBuffer);
         this.webGLBuffer = null;
         this.initialDataOrSize = null;
+        this.gl = null;
     }
 });
 
