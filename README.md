@@ -34,7 +34,7 @@ Since the incorporation of Phaser Studio Inc we have been expanding the core Pha
 
 As usual, please check our detailed [Change Log](https://github.com/phaserjs/phaser/blob/master/changelog/3.80/CHANGELOG-v3.80.md) for v3.80.
 
-v3.80 Beta 1 is available now from the [Releases page](https://github.com/phaserjs/phaser/releases) and npm.
+v3.80 Beta 1 is available now from the [Releases page](https://github.com/phaserjs/phaser/releases/tag/v3.80.0-beta.1) and npm under the `beta` tag.
 
 You'll find up to date TypeScript defs that align with this release in the `types` folder of this repository.
 
@@ -262,7 +262,7 @@ Ourcade have published [two great Phaser 3 books](https://blog.ourcade.co). They
 
 Learn the secrets of HTML5 game development with Phaser 3.50 while building a cross platform endless runner game. Designed both for beginners and skilled programmers, the course guides you from an empty folder introducing the bare bones of JavaScript to advanced Phaser 3 features. Find out more details about [HTML5 Cross Platform Game Development with Phaser](https://gumroad.com/a/244184179).
 
-![Building Phaser](https://phaser.io/images/github/div-building-phaser.png "Building Phaser")
+![Building Phaser](https://phaser.io/images/github/div2-building-phaser.png "Building Phaser")
 
 There are both plain and minified compiled versions of Phaser in the `dist` folder of the repository. The plain version is for use during development, and the minified version is for production use. You can and should also create your own builds.
 
