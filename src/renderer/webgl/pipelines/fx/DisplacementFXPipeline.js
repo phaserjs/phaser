@@ -66,10 +66,10 @@ var DisplacementFXPipeline = new Class({
         this.y = 0.005;
 
         /**
-         * The underlying WebGLTexture used for displacement.
+         * The underlying texture used for displacement.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FX.DisplacementFXPipeline#glTexture
-         * @type {WebGLTexture}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @since 3.60.0
          */
         this.glTexture;

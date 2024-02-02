@@ -464,34 +464,33 @@ var TextureManager = new Class({
     },
 
     /**
-     * Takes a WebGL Texture and creates a Phaser Texture from it, which is added to the Texture Manager using the given key.
+     * Takes a WebGLTextureWrapper and creates a Phaser Texture from it, which is added to the Texture Manager using the given key.
      *
      * This allows you to then use the Texture as a normal texture for texture based Game Objects like Sprites.
      *
-     * If the `width` and `height` arguments are omitted, but the WebGL Texture was created by Phaser's WebGL Renderer
-     * and has `glTexture.width` and `glTexture.height` properties, these values will be used instead.
-     *
      * This is a WebGL only feature.
+     * 
+     * Prior to Phaser 3.80.0, this method took a bare `WebGLTexture`
+     * as the `glTexture` parameter. You must now wrap the `WebGLTexture` in a
+     * `WebGLTextureWrapper` instance before passing it to this method.
      *
      * @method Phaser.Textures.TextureManager#addGLTexture
      * @fires Phaser.Textures.Events#ADD
      * @since 3.19.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {WebGLTexture} glTexture - The source Render Texture.
-     * @param {number} [width] - The new width of the Texture. Read from `glTexture.width` if omitted.
-     * @param {number} [height] - The new height of the Texture. Read from `glTexture.height` if omitted.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} glTexture - The source Render Texture.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
-    addGLTexture: function (key, glTexture, width, height)
+    addGLTexture: function (key, glTexture)
     {
         var texture = null;
 
         if (this.checkKey(key))
         {
-            if (width === undefined) { width = glTexture.width; }
-            if (height === undefined) { height = glTexture.height; }
+            var width = glTexture.width;
+            var height = glTexture.height;
 
             texture = this.create(key, glTexture, width, height);
 
@@ -1146,13 +1145,52 @@ var TextureManager = new Class({
     },
 
     /**
+     * Creates a texture from an array of colour data.
+     * 
+     * This is only available in WebGL mode.
+     * 
+     * If the dimensions provided are powers of two, the resulting texture
+     * will be automatically set to wrap by the WebGL Renderer.
+     * 
+     * @method Phaser.Textures.TextureManager#addUint8Array
+     * @fires Phaser.Textures.Events#ADD
+     * @since 3.80.0
+     *
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {Uint8Array} data - The color data for the texture.
+     * @param {number} width - The width of the texture.
+     * @param {number} height - The height of the texture.
+     *
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
+     */
+    addUint8Array: function (key, data, width, height)
+    {
+        if (
+            !this.checkKey(key) ||
+            data.length / 4 !== width * height
+        )
+        {
+            return null;
+        }
+
+        var texture = this.create(key, data, width, height);
+
+        texture.add('__BASE', 0, 0, 0, width, height);
+
+        this.emit(Events.ADD, key, texture);
+        this.emit(Events.ADD_KEY + key, texture);
+
+        return texture;
+    },
+
+    /**
      * Creates a new Texture using the given source and dimensions.
      *
      * @method Phaser.Textures.TextureManager#create
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[])} source - An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
+     * @param {(HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]|Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper)} source - An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
      * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
      * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
      *

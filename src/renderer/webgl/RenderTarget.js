@@ -52,23 +52,23 @@ var RenderTarget = new Class({
         this.renderer = renderer;
 
         /**
-         * The WebGLFramebuffer of this Render Target.
+         * The Framebuffer of this Render Target.
          *
          * This is created in the `RenderTarget.resize` method.
          *
          * @name Phaser.Renderer.WebGL.RenderTarget#framebuffer
-         * @type {WebGLFramebuffer}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper}
          * @since 3.50.0
          */
         this.framebuffer = null;
 
         /**
-         * The WebGLTexture of this Render Target.
+         * The WebGLTextureWrapper of this Render Target.
          *
          * This is created in the `RenderTarget.resize` method.
          *
          * @name Phaser.Renderer.WebGL.RenderTarget#texture
-         * @type {WebGLTexture}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @since 3.50.0
          */
         this.texture = null;
@@ -379,7 +379,7 @@ var RenderTarget = new Class({
      *
      * @param {boolean} [flush=false] - Flush the WebGL Renderer before unbinding?
      *
-     * @return {WebGLFramebuffer} The Framebuffer that was set, or `null` if there aren't any more in the stack.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper} The Framebuffer that was set, or `null` if there aren't any more in the stack.
      */
     unbind: function (flush)
     {

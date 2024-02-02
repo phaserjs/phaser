@@ -12,6 +12,7 @@ var Extend = require('../../utils/object/Extend');
 var SetValue = require('../../utils/object/SetValue');
 var ShaderRender = require('./ShaderRender');
 var TransformMatrix = require('../components/TransformMatrix');
+var ArrayEach = require('../../utils/array/Each');
 
 /**
  * @classdesc
@@ -160,7 +161,7 @@ var Shader = new Class({
          * The WebGL vertex buffer object this shader uses.
          *
          * @name Phaser.GameObjects.Shader#vertexBuffer
-         * @type {WebGLBuffer}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @since 3.17.0
          */
         this.vertexBuffer = renderer.createVertexBuffer(this.vertexData.byteLength, this.gl.STREAM_DRAW);
@@ -169,7 +170,7 @@ var Shader = new Class({
          * The WebGL shader program this shader uses.
          *
          * @name Phaser.GameObjects.Shader#program
-         * @type {WebGLProgram}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper}
          * @since 3.17.0
          */
         this.program = null;
@@ -306,17 +307,17 @@ var Shader = new Class({
          * This property is only set if you have called `Shader.setRenderToTexture`.
          *
          * @name Phaser.GameObjects.Shader#framebuffer
-         * @type {?WebGLFramebuffer}
+         * @type {?Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper}
          * @since 3.19.0
          */
         this.framebuffer = null;
 
         /**
-         * A reference to the WebGLTexture this Shader is rendering to.
+         * A reference to the WebGLTextureWrapper this Shader is rendering to.
          * This property is only set if you have called `Shader.setRenderToTexture`.
          *
          * @name Phaser.GameObjects.Shader#glTexture
-         * @type {?WebGLTexture}
+         * @type {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @since 3.19.0
          */
         this.glTexture = null;
@@ -439,7 +440,7 @@ var Shader = new Class({
 
             if (key)
             {
-                this.texture = this.scene.sys.textures.addGLTexture(key, this.glTexture, width, height);
+                this.texture = this.scene.sys.textures.addGLTexture(key, this.glTexture);
             }
         }
 
@@ -498,15 +499,15 @@ var Shader = new Class({
 
         if (this.program)
         {
-            gl.deleteProgram(this.program);
+            renderer.deleteProgram(this.program);
         }
 
         var program = renderer.createProgram(this.shader.vertexSrc, this.shader.fragmentSrc);
 
         //  The default uniforms available within the vertex shader
-        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewMatrix'), false, this.viewMatrix);
-        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uProjectionMatrix'), false, this.projectionMatrix);
-        gl.uniform2f(gl.getUniformLocation(program, 'uResolution'), this.width, this.height);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program.webGLProgram, 'uViewMatrix'), false, this.viewMatrix);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program.webGLProgram, 'uProjectionMatrix'), false, this.projectionMatrix);
+        gl.uniform2f(gl.getUniformLocation(program.webGLProgram, 'uResolution'), this.width, this.height);
 
         this.program = program;
 
@@ -607,7 +608,7 @@ var Shader = new Class({
 
         renderer.setProgram(program);
 
-        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uProjectionMatrix'), false, this.projectionMatrix);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program.webGLProgram, 'uProjectionMatrix'), false, this.projectionMatrix);
 
         this._rendererWidth = right;
         this._rendererHeight = bottom;
@@ -625,7 +626,6 @@ var Shader = new Class({
      */
     initUniforms: function ()
     {
-        var gl = this.gl;
         var map = this.renderer.glFuncMap;
         var program = this.program;
 
@@ -638,7 +638,7 @@ var Shader = new Class({
             var type = uniform.type;
             var data = map[type];
 
-            uniform.uniformLocation = gl.getUniformLocation(program, key);
+            uniform.uniformLocation = this.renderer.createUniformLocation(program, key);
 
             if (type !== 'sampler2D')
             {
@@ -650,7 +650,7 @@ var Shader = new Class({
     },
 
     /**
-     * Sets a sampler2D uniform on this shader where the source texture is a WebGLTexture.
+     * Sets a sampler2D uniform on this shader where the source texture is a WebGLTextureBuffer.
      *
      * This allows you to feed the output from one Shader into another:
      *
@@ -672,7 +672,7 @@ var Shader = new Class({
      * @since 3.19.0
      *
      * @param {string} uniformKey - The key of the sampler2D uniform to be updated, i.e. `iChannel0`.
-     * @param {WebGLTexture} texture - A WebGLTexture reference.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} texture - A texture reference.
      * @param {number} width - The width of the texture.
      * @param {number} height - The height of the texture.
      * @param {number} [textureIndex=0] - The texture index.
@@ -908,7 +908,7 @@ var Shader = new Class({
         var gl = this.gl;
 
         gl.activeTexture(gl.TEXTURE0 + this._textureCount);
-        gl.bindTexture(gl.TEXTURE_2D, uniform.value);
+        gl.bindTexture(gl.TEXTURE_2D, uniform.value.webGLTexture);
 
         //  Extended texture data
 
@@ -916,6 +916,8 @@ var Shader = new Class({
 
         if (data && !uniform.value.isRenderTexture)
         {
+            var wrapper = uniform.value;
+            
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
 
             //  mag / minFilter can be: gl.LINEAR, gl.LINEAR_MIPMAP_LINEAR or gl.NEAREST
@@ -944,6 +946,8 @@ var Shader = new Class({
 
                 //  texImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView? pixels)
                 gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, border, format, gl.UNSIGNED_BYTE, null);
+                wrapper.width = width;
+                wrapper.height = height;
             }
             else
             {
@@ -955,11 +959,18 @@ var Shader = new Class({
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+
+            // Update texture wrapper.
+            wrapper.magFilter = magFilter;
+            wrapper.minFilter = minFilter;
+            wrapper.wrapS = wrapS;
+            wrapper.wrapT = wrapT;
+            wrapper.format = format;
+            wrapper.flipY = !!data.flipY;
+            wrapper.pixels = uniform.source;
         }
 
         this.renderer.setProgram(this.program);
-
-        gl.uniform1i(uniform.uniformLocation, this._textureCount);
 
         this._textureCount++;
     },
@@ -1002,32 +1013,32 @@ var Shader = new Class({
             {
                 if (uniform.glMatrix)
                 {
-                    glFunc.call(gl, location, uniform.transpose, value);
+                    glFunc.call(gl, location.webGLUniformLocation, uniform.transpose, value);
                 }
                 else
                 {
-                    glFunc.call(gl, location, value);
+                    glFunc.call(gl, location.webGLUniformLocation, value);
                 }
             }
             else if (length === 2)
             {
-                glFunc.call(gl, location, value.x, value.y);
+                glFunc.call(gl, location.webGLUniformLocation, value.x, value.y);
             }
             else if (length === 3)
             {
-                glFunc.call(gl, location, value.x, value.y, value.z);
+                glFunc.call(gl, location.webGLUniformLocation, value.x, value.y, value.z);
             }
             else if (length === 4)
             {
-                glFunc.call(gl, location, value.x, value.y, value.z, value.w);
+                glFunc.call(gl, location.webGLUniformLocation, value.x, value.y, value.z, value.w);
             }
             else if (uniform.type === 'sampler2D')
             {
                 gl.activeTexture(gl.TEXTURE0 + textureCount);
 
-                gl.bindTexture(gl.TEXTURE_2D, value);
+                gl.bindTexture(gl.TEXTURE_2D, value.webGLTexture);
 
-                gl.uniform1i(location, textureCount);
+                gl.uniform1i(location.webGLUniformLocation, textureCount);
 
                 textureCount++;
             }
@@ -1074,10 +1085,11 @@ var Shader = new Class({
 
         //  Update vertex shader uniforms
 
-        gl.useProgram(program);
+        gl.useProgram(program.webGLProgram);
 
-        gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewMatrix'), false, vm);
-        gl.uniform2f(gl.getUniformLocation(program, 'uResolution'), this.width, this.height);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program.webGLProgram, 'uViewMatrix'), false, vm);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program.webGLProgram, 'uProjectionMatrix'), false, this.projectionMatrix);
+        gl.uniform2f(gl.getUniformLocation(program.webGLProgram, 'uResolution'), this.width, this.height);
 
         //  Update fragment shader uniforms
 
@@ -1135,9 +1147,9 @@ var Shader = new Class({
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer.webGLBuffer);
 
-        var location = gl.getAttribLocation(program, 'inPosition');
+        var location = gl.getAttribLocation(program.webGLProgram, 'inPosition');
 
         if (location !== -1)
         {
@@ -1204,14 +1216,14 @@ var Shader = new Class({
      */
     preDestroy: function ()
     {
-        var gl = this.gl;
+        var renderer = this.renderer;
 
-        gl.deleteProgram(this.program);
-        gl.deleteBuffer(this.vertexBuffer);
+        renderer.deleteProgram(this.program);
+        renderer.deleteBuffer(this.vertexBuffer);
 
         if (this.renderToTexture)
         {
-            this.renderer.deleteFramebuffer(this.framebuffer);
+            renderer.deleteFramebuffer(this.framebuffer);
 
             this.texture.destroy();
 
@@ -1219,6 +1231,12 @@ var Shader = new Class({
             this.glTexture = null;
             this.texture = null;
         }
+
+        ArrayEach(this.uniforms, function (uniform)
+        {
+            renderer.deleteUniformLocation(uniform.uniformLocation);
+            uniform.uniformLocation = null;
+        });
     }
 
 });

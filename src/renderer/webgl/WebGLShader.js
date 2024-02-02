@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var ArrayEach = require('../../utils/array/Each');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var WEBGL_CONST = require('./const');
 
@@ -99,7 +100,7 @@ var WebGLShader = new Class({
          * The WebGLProgram created from the vertex and fragment shaders.
          *
          * @name Phaser.Renderer.WebGL.WebGLShader#program
-         * @type {WebGLProgram}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper}
          * @since 3.50.0
          */
         this.program = this.renderer.createProgram(vertexShader, fragmentShader);
@@ -296,6 +297,7 @@ var WebGLShader = new Class({
         if (reset === undefined) { reset = false; }
 
         var gl = this.gl;
+        var renderer = this.renderer;
         var vertexSize = this.vertexSize;
         var attributes = this.attributes;
         var program = this.program;
@@ -313,29 +315,33 @@ var WebGLShader = new Class({
 
             if (reset)
             {
-                var attribLocation = gl.getAttribLocation(program, element.name);
-
-                if (attribLocation >= 0)
+                if (location !== -1)
                 {
-                    gl.enableVertexAttribArray(attribLocation);
+                    renderer.deleteAttribLocation(location);
+                }
+                var attribLocation = this.renderer.createAttribLocation(program, element.name);
 
-                    gl.vertexAttribPointer(attribLocation, size, type, normalized, vertexSize, offset);
+                if (attribLocation.webGLAttribLocation >= 0)
+                {
+                    gl.enableVertexAttribArray(attribLocation.webGLAttribLocation);
+
+                    gl.vertexAttribPointer(attribLocation.webGLAttribLocation, size, type, normalized, vertexSize, offset);
 
                     element.enabled = true;
                     element.location = attribLocation;
                 }
-                else if (attribLocation !== -1)
+                else if (attribLocation.webGLAttribLocation !== -1)
                 {
-                    gl.disableVertexAttribArray(attribLocation);
+                    gl.disableVertexAttribArray(attribLocation.webGLAttribLocation);
                 }
             }
             else if (enabled)
             {
-                gl.vertexAttribPointer(location, size, type, normalized, vertexSize, offset);
+                gl.vertexAttribPointer(location.webGLAttribLocation, size, type, normalized, vertexSize, offset);
             }
-            else if (!enabled && location > -1)
+            else if (!enabled && location !== -1 && location.webGLAttribLocation > -1)
             {
-                gl.disableVertexAttribArray(location);
+                gl.disableVertexAttribArray(location.webGLAttribLocation);
 
                 element.location = -1;
             }
@@ -348,7 +354,7 @@ var WebGLShader = new Class({
      * Sets up the `WebGLShader.uniforms` object, populating it with the names
      * and locations of the shader uniforms this shader requires.
      *
-     * It works by first calling `gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)` to
+     * It works by first calling `gl.getProgramParameter(program.webGLProgram, gl.ACTIVE_UNIFORMS)` to
      * find out how many active uniforms this shader has. It then iterates through them,
      * calling `gl.getActiveUniform` to get the WebGL Active Info from each one. Finally,
      * the name and location are stored in the local array.
@@ -372,17 +378,17 @@ var WebGLShader = new Class({
 
         //  Look-up all active uniforms
 
-        var totalUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+        var totalUniforms = gl.getProgramParameter(program.webGLProgram, gl.ACTIVE_UNIFORMS);
 
         for (i = 0; i < totalUniforms; i++)
         {
-            var info = gl.getActiveUniform(program, i);
+            var info = gl.getActiveUniform(program.webGLProgram, i);
 
             if (info)
             {
                 name = info.name;
 
-                location = gl.getUniformLocation(program, name);
+                location = this.renderer.createUniformLocation(program, name);
 
                 if (location !== null)
                 {
@@ -390,6 +396,7 @@ var WebGLShader = new Class({
                     {
                         name: name,
                         location: location,
+                        setter: null,
                         value1: null,
                         value2: null,
                         value3: null,
@@ -409,7 +416,7 @@ var WebGLShader = new Class({
 
                     if (!uniforms.hasOwnProperty(name))
                     {
-                        location = gl.getUniformLocation(program, name);
+                        location = this.renderer.createUniformLocation(program, name);
 
                         if (location !== null)
                         {
@@ -417,6 +424,7 @@ var WebGLShader = new Class({
                             {
                                 name: name,
                                 location: location,
+                                setter: null,
                                 value1: null,
                                 value2: null,
                                 value3: null,
@@ -429,6 +437,33 @@ var WebGLShader = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Repopulate uniforms on the GPU.
+     * 
+     * This is called automatically by the pipeline when the context is
+     * lost and then recovered. By the time this method is called,
+     * the WebGL resources are already recreated, so we just need to
+     * re-populate them.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLShader#syncUniforms
+     * @since 3.80.0
+     */
+    syncUniforms: function ()
+    {
+        var gl = this.gl;
+        this.renderer.setProgram(this.program);
+        for (var name in this.uniforms)
+        {
+            var uniform = this.uniforms[name];
+
+            // A uniform that hasn't been set doesn't need to be synced.
+            if (uniform.setter)
+            {
+                uniform.setter.call(gl, uniform.location.webGLUniformLocation, uniform.value1, uniform.value2, uniform.value3, uniform.value4);
+            }
+        }
     },
 
     /**
@@ -503,11 +538,16 @@ var WebGLShader = new Class({
 
         if (skipCheck || uniform.value1 !== value1)
         {
+            if (!uniform.setter)
+            {
+                uniform.setter = setter;
+            }
+
             uniform.value1 = value1;
 
             this.renderer.setProgram(this.program);
 
-            setter.call(this.gl, uniform.location, value1);
+            setter.call(this.gl, uniform.location.webGLUniformLocation, value1);
 
             this.pipeline.currentShader = this;
         }
@@ -548,12 +588,17 @@ var WebGLShader = new Class({
 
         if (skipCheck || uniform.value1 !== value1 || uniform.value2 !== value2)
         {
+            if (!uniform.setter)
+            {
+                uniform.setter = setter;
+            }
+
             uniform.value1 = value1;
             uniform.value2 = value2;
 
             this.renderer.setProgram(this.program);
 
-            setter.call(this.gl, uniform.location, value1, value2);
+            setter.call(this.gl, uniform.location.webGLUniformLocation, value1, value2);
 
             this.pipeline.currentShader = this;
         }
@@ -595,13 +640,18 @@ var WebGLShader = new Class({
 
         if (skipCheck || uniform.value1 !== value1 || uniform.value2 !== value2 || uniform.value3 !== value3)
         {
+            if (!uniform.setter)
+            {
+                uniform.setter = setter;
+            }
+
             uniform.value1 = value1;
             uniform.value2 = value2;
             uniform.value3 = value3;
 
             this.renderer.setProgram(this.program);
 
-            setter.call(this.gl, uniform.location, value1, value2, value3);
+            setter.call(this.gl, uniform.location.webGLUniformLocation, value1, value2, value3);
 
             this.pipeline.currentShader = this;
         }
@@ -644,6 +694,11 @@ var WebGLShader = new Class({
 
         if (skipCheck || uniform.value1 !== value1 || uniform.value2 !== value2 || uniform.value3 !== value3 || uniform.value4 !== value4)
         {
+            if (!uniform.setter)
+            {
+                uniform.setter = setter;
+            }
+
             uniform.value1 = value1;
             uniform.value2 = value2;
             uniform.value3 = value3;
@@ -651,7 +706,7 @@ var WebGLShader = new Class({
 
             this.renderer.setProgram(this.program);
 
-            setter.call(this.gl, uniform.location, value1, value2, value3, value4);
+            setter.call(this.gl, uniform.location.webGLUniformLocation, value1, value2, value3, value4);
 
             this.pipeline.currentShader = this;
         }
@@ -1142,11 +1197,9 @@ var WebGLShader = new Class({
         if (vertSrc === undefined) { vertSrc = this.vertSrc; }
         if (fragSrc === undefined) { fragSrc = this.fragSrc; }
 
-        var gl = this.gl;
-
         if (this.program)
         {
-            gl.deleteProgram(this.program);
+            this.renderer.deleteProgram(this.program);
         }
 
         this.vertSrc = vertSrc;
@@ -1169,14 +1222,25 @@ var WebGLShader = new Class({
      */
     destroy: function ()
     {
-        this.gl.deleteProgram(this.program);
+        var renderer = this.renderer;
+        ArrayEach(this.uniforms, function (uniform)
+        {
+            renderer.deleteUniformLocation(uniform.location);
+        });
+        this.uniforms = null;
+
+        ArrayEach(this.attributes, function (attrib)
+        {
+            renderer.deleteAttribLocation(attrib.location);
+        });
+        this.attributes = null;
+
+        renderer.deleteProgram(this.program);
 
         this.pipeline = null;
         this.renderer = null;
         this.gl = null;
         this.program = null;
-        this.attributes = null;
-        this.uniforms = null;
     }
 
 });

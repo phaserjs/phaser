@@ -10,6 +10,7 @@ var GetFastValue = require('../../../utils/object/GetFastValue');
 var LightShaderSourceFS = require('../shaders/Light-frag.js');
 var MultiPipeline = require('./MultiPipeline');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
+var UUID = require('../../../utils/string/UUID.js');
 var Vec2 = require('../../../math/Vector2');
 var WebGLPipeline = require('../WebGLPipeline');
 
@@ -158,15 +159,7 @@ var LightPipeline = new Class({
     {
         WebGLPipeline.prototype.boot.call(this);
 
-        var gl = this.gl;
-
-        var tempTexture = gl.createTexture();
-
-        gl.activeTexture(gl.TEXTURE0);
-
-        gl.bindTexture(gl.TEXTURE_2D, tempTexture);
-
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 127, 127, 255, 255 ]));
+        var tempTexture = this.renderer.game.textures.addUint8Array(UUID(), new Uint8Array([ 127, 127, 255, 255 ]), 1, 1);
 
         this.defaultNormalMap = { glTexture: tempTexture };
     },

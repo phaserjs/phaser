@@ -24,7 +24,7 @@
  * @param {number} tintBL - Bottom-left tint value.
  * @param {number} tintBR - Bottom-right tint value.
  * @param {number} tintEffect - The tint effect mode.
- * @param {WebGLTexture} texture - The WebGL texture.
+ * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} texture - The texture.
  * @param {number} textureUnit - The texture unit.
  */
 var BatchChar = function (pipeline, src, char, glyph, offsetX, offsetY, calcMatrix, roundPixels, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit)

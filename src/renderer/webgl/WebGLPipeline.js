@@ -178,7 +178,7 @@ var WebGLPipeline = new Class({
          * is created. If not, a `DYNAMIC_DRAW` buffer is created.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
-         * @type {WebGLBuffer}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @readonly
          * @since 3.0.0
          */
@@ -188,7 +188,7 @@ var WebGLPipeline = new Class({
          * The currently active WebGLBuffer.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#activeBuffer
-         * @type {WebGLBuffer}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @since 3.60.0
          */
         this.activeBuffer;
@@ -412,14 +412,14 @@ var WebGLPipeline = new Class({
         this.currentBatch = null;
 
         /**
-         * The most recently bound WebGLTexture, used as part of the batch process.
+         * The most recently bound texture, used as part of the batch process.
          *
          * Reset to null as part of the flush method.
          *
          * Treat this value as read-only.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#currentTexture
-         * @type {?WebGLTexture}
+         * @type {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @since 3.60.0
          */
         this.currentTexture = null;
@@ -443,7 +443,7 @@ var WebGLPipeline = new Class({
          * Treat this array as read-only.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#activeTextures
-         * @type {WebGLTexture[]}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]}
          * @since 3.60.0
          */
         this.activeTextures = [];
@@ -621,7 +621,7 @@ var WebGLPipeline = new Class({
      *
      * @param {Phaser.Renderer.WebGL.WebGLShader} shader - The shader to set as being current.
      * @param {boolean} [setAttributes=false] - Should the vertex attribute pointers be set?
-     * @param {WebGLBuffer} [vertexBuffer] - The vertex buffer to be set before the shader is bound. Defaults to the one owned by this pipeline.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [vertexBuffer] - The vertex buffer to be set before the shader is bound. Defaults to the one owned by this pipeline.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -782,7 +782,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#createBatch
      * @since 3.60.0
      *
-     * @param {WebGLTexture} texture - The WebGLTexture assigned to this batch entry.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} texture - The texture assigned to this batch entry.
      *
      * @return {number} The texture unit that was bound.
      */
@@ -811,7 +811,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#addTextureToBatch
      * @since 3.60.0
      *
-     * @param {WebGLTexture} texture - The WebGLTexture assigned to this batch entry.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} texture - The texture assigned to this batch entry.
      */
     addTextureToBatch: function (texture)
     {
@@ -826,7 +826,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * Takes the given WebGLTexture and determines what to do with it.
+     * Takes the given WebGLTextureWrapper and determines what to do with it.
      *
      * If there is no current batch (i.e. after a flush) it will create a new
      * batch from it.
@@ -843,7 +843,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#pushBatch
      * @since 3.60.0
      *
-     * @param {WebGLTexture} texture - The WebGLTexture assigned to this batch entry.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} texture - The texture assigned to this batch entry.
      *
      * @return {number} The texture unit that was bound.
      */
@@ -1130,7 +1130,7 @@ var WebGLPipeline = new Class({
 
         if (gl.getParameter(gl.ARRAY_BUFFER_BINDING) !== this.vertexBuffer)
         {
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer.webGLBuffer);
 
             this.activeBuffer = this.vertexBuffer;
 
@@ -1196,6 +1196,43 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * This method is called if the WebGL context is lost and restored.
+     * It ensures that uniforms are synced back to the GPU
+     * for all shaders in this pipeline.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#restoreContext
+     * @since 3.80.0
+     */
+    restoreContext: function ()
+    {
+        var shaders = this.shaders;
+        var hasVertexBuffer = !!this.vertexBuffer;
+
+        // Deactivate all invalidated state.
+        this.activeBuffer = null;
+        this.activeTextures.length = 0;
+        this.batch.length = 0;
+        this.currentBatch = null;
+        this.currentTexture = null;
+        this.currentUnit = 0;
+
+        if (hasVertexBuffer)
+        {
+            this.setVertexBuffer();
+        }
+
+        for (var i = 0; i < shaders.length; i++)
+        {
+            var shader = shaders[i];
+            shader.syncUniforms();
+            if (hasVertexBuffer)
+            {
+                shader.rebind();
+            }
+        }
+    },
+
+    /**
      * Binds the vertex buffer to be the active ARRAY_BUFFER on the WebGL context.
      *
      * It first checks to see if it's already set as the active buffer and only
@@ -1204,7 +1241,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setVertexBuffer
      * @since 3.50.0
      *
-     * @param {WebGLBuffer} [buffer] - The Vertex Buffer to be bound. Defaults to the one owned by this pipeline.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [buffer] - The Vertex Buffer to be bound. Defaults to the one owned by this pipeline.
      *
      * @return {boolean} `true` if the vertex buffer was bound, or `false` if it was already bound.
      */
@@ -1216,7 +1253,7 @@ var WebGLPipeline = new Class({
         {
             var gl = this.gl;
 
-            this.gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            this.gl.bindBuffer(gl.ARRAY_BUFFER, buffer.webGLBuffer);
 
             this.activeBuffer = buffer;
 
@@ -1375,7 +1412,7 @@ var WebGLPipeline = new Class({
 
                         if (activeTextures[0] !== texture)
                         {
-                            gl.bindTexture(gl.TEXTURE_2D, texture);
+                            gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
 
                             activeTextures[0] = texture;
                         }
@@ -1396,7 +1433,7 @@ var WebGLPipeline = new Class({
                             if (activeTextures[t] !== texture)
                             {
                                 gl.activeTexture(gl.TEXTURE0 + t);
-                                gl.bindTexture(gl.TEXTURE_2D, texture);
+                                gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
 
                                 activeTextures[t] = texture;
                             }
@@ -1686,7 +1723,7 @@ var WebGLPipeline = new Class({
      * @param {number} tintBL - The bottom-left tint color value.
      * @param {number} tintBR - The bottom-right tint color value.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
-     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture] - Texture that will be assigned to the current batch if a flush occurs.
      * @param {number} [unit=0] - Texture unit to which the texture needs to be bound.
      *
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
@@ -1804,7 +1841,7 @@ var WebGLPipeline = new Class({
      * @param {number} tintTR - The top-right tint color value.
      * @param {number} tintBL - The bottom-left tint color value.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
-     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture] - Texture that will be assigned to the current batch if a flush occurs.
      * @param {number} [unit=0] - Texture unit to which the texture needs to be bound.
      *
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
@@ -1883,7 +1920,7 @@ var WebGLPipeline = new Class({
      * @param {number} height - Height of the rectangle.
      * @param {number} color - Color of the rectangle to draw.
      * @param {number} alpha - Alpha value of the rectangle to draw.
-     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture] - texture that will be assigned to the current batch if a flush occurs.
      * @param {boolean} [flipUV=true] - Flip the vertical UV coordinates of the texture before rendering?
      */
     drawFillRect: function (x, y, width, height, color, alpha, texture, flipUV)
@@ -1922,7 +1959,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setTexture2D
      * @since 3.50.0
      *
-     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses `whiteTexture`.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture] - Texture that will be assigned to the current batch. If not given uses `whiteTexture`.
      *
      * @return {number} The assigned texture unit.
      */
@@ -1939,7 +1976,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bindTexture
      * @since 3.50.0
      *
-     * @param {WebGLTexture} [target] - The WebGLTexture to activate and bind.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [target] - Texture to activate and bind.
      * @param {number} [unit=0] - The WebGL texture ID to activate. Defaults to `gl.TEXTURE0`.
      *
      * @return {this} This WebGL Pipeline instance.
@@ -1952,7 +1989,7 @@ var WebGLPipeline = new Class({
 
         gl.activeTexture(gl.TEXTURE0 + unit);
 
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
 
         return this;
     },
@@ -2578,9 +2615,9 @@ var WebGLPipeline = new Class({
             targets[i].destroy();
         }
 
-        this.gl.deleteBuffer(this.vertexBuffer);
-
         var renderer = this.renderer;
+        
+        renderer.deleteBuffer(this.vertexBuffer);
 
         renderer.off(RendererEvents.RESIZE, this.resize, this);
         renderer.off(RendererEvents.PRE_RENDER, this.onPreRender, this);

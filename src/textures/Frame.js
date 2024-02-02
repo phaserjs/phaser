@@ -69,16 +69,6 @@ var Frame = new Class({
         this.sourceIndex = sourceIndex;
 
         /**
-         * A reference to the Texture Source WebGL Texture that this Frame is using.
-         *
-         * @name Phaser.Textures.Frame#glTexture
-         * @type {?WebGLTexture}
-         * @default null
-         * @since 3.11.0
-         */
-        this.glTexture = this.source.glTexture;
-
-        /**
          * X position within the source image to cut from.
          *
          * @name Phaser.Textures.Frame#cutX
@@ -794,9 +784,24 @@ var Frame = new Class({
     {
         this.texture = null;
         this.source = null;
-        this.glTexture = null;
         this.customData = null;
         this.data = null;
+    },
+
+    /**
+     * A reference to the Texture Source WebGL Texture that this Frame is using.
+     * 
+     * @name Phaser.Textures.Frame#glTexture
+     * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
+     * @readonly
+     * @since 3.11.0
+     */
+    glTexture: {
+
+        get: function ()
+        {
+            return this.source.glTexture;
+        }
     },
 
     /**

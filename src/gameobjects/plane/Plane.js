@@ -385,17 +385,6 @@ var Plane = new Class({
         if (alpha2 === undefined) { alpha2 = 255; }
         if (height === undefined) { height = 128; }
 
-        var gl = this.scene.sys.renderer.gl;
-
-        var glTexture = gl.createTexture();
-
-        gl.activeTexture(gl.TEXTURE0);
-
-        gl.bindTexture(gl.TEXTURE_2D, glTexture);
-
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-
         //  Let's assume 16x16 for our texture size and 8x8 cell size
 
         var c1 = IntegerToRGB(color1);
@@ -418,20 +407,9 @@ var Plane = new Class({
             }
         }
 
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 16, 16, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(colors));
-
-        glTexture.isAlphaPremultiplied = true;
-        glTexture.isRenderTexture = false;
-        glTexture.width = 16;
-        glTexture.height = 16;
-
-        var texture = this.scene.sys.textures.addGLTexture(UUID(), glTexture, 16, 16);
+        var texture = this.scene.sys.textures.addUint8Array(UUID(), new Uint8Array(colors), 16, 16);
 
         this.removeCheckerboard();
-
-        this._checkerboard = texture;
-
-        gl.bindTexture(gl.TEXTURE_2D, null);
 
         this.setTexture(texture);
 
