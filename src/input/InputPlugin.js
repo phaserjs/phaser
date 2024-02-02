@@ -832,20 +832,12 @@ var InputPlugin = new Class({
             input.dragState = 0;
         }
 
-        // Clear from _temp, _drag and _over
-        var temp = this._temp;
+        // Clear from _drag and _over
         var drag = this._drag;
         var over = this._over;
         var manager = this.manager;
 
-        var index = temp.indexOf(gameObject);
-
-        if (index > -1)
-        {
-            temp.splice(index, 1);
-        }
-
-        for (var i = 0; i < manager.pointersTotal; i++)
+        for (var i = 0, index; i < manager.pointersTotal; i++)
         {
             index = drag[i].indexOf(gameObject);
 
