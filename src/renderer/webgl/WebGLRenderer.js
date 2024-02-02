@@ -745,6 +745,25 @@ var WebGLRenderer = new Class({
 
         var _this = this;
 
+        //  Load supported extensions
+        var setupExtensions = function ()
+        {
+            var exts = gl.getSupportedExtensions();
+
+            _this.supportedExtensions = exts;
+
+            var angleString = 'ANGLE_instanced_arrays';
+
+            _this.instancedArraysExtension = (exts.indexOf(angleString) > -1) ? gl.getExtension(angleString) : null;
+
+            var vaoString = 'OES_vertex_array_object';
+
+            _this.vaoExtension = (exts.indexOf(vaoString) > -1) ? gl.getExtension(vaoString) : null;
+
+        };
+
+        setupExtensions();
+
         this.contextLostHandler = function (event)
         {
             _this.contextLost = true;
@@ -802,11 +821,13 @@ var WebGLRenderer = new Class({
             _this.createTemporaryTextures();
 
             // Restore pipelines.
-            // _this.pipelines.rebind();
             _this.pipelines.restoreContext();
 
             // Apply resize.
             _this.resize(_this.width, _this.height);
+
+            // Restore GL extensions.
+            setupExtensions();
 
             // Context has been restored.
 
@@ -875,9 +896,6 @@ var WebGLRenderer = new Class({
 
         };
 
-        //  Load supported extensions
-        var exts = gl.getSupportedExtensions();
-
         if (!config.maxTextures || config.maxTextures === -1)
         {
             config.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
@@ -889,16 +907,6 @@ var WebGLRenderer = new Class({
         }
 
         this.compression = this.getCompressedTextures();
-
-        this.supportedExtensions = exts;
-
-        var angleString = 'ANGLE_instanced_arrays';
-
-        this.instancedArraysExtension = (exts.indexOf(angleString) > -1) ? gl.getExtension(angleString) : null;
-
-        var vaoString = 'OES_vertex_array_object';
-
-        this.vaoExtension = (exts.indexOf(vaoString) > -1) ? gl.getExtension(vaoString) : null;
 
         //  Setup initial WebGL state
         gl.disable(gl.DEPTH_TEST);
