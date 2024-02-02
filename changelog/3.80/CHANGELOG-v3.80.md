@@ -55,6 +55,7 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * The touch event handler `onTouchEndWindow` now stops pointer events when clicking through DOM elements to input. Fix #6697 (thanks @laineus)
 * The `Physics.Matter.Factory` method `pointerConstraint` no longer returns an error when it can't find the camera. Fix #6684 (thanks @spritus)
 * The `Physics.Arcade.StaticBody` method `reset` now re-applies `offset` values. Fixes #6729 (thanks @samme)
+* The `Input.InputPlugin` method `disable` which is called by `GameObjects.GameObject#disableInteractive` keeps its temp hit box value which stops propagation to interactive Game Objects in another scene. Fixes #6601 (thanks @UnaiNeuronUp)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
