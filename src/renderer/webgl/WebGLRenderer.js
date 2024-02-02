@@ -773,6 +773,8 @@ var WebGLRenderer = new Class({
                 console.warn('WebGL Context lost. Renderer disabled');
             }
 
+            _this.emit(Events.LOSE_WEBGL, _this);
+
             event.preventDefault();
         };
 
@@ -838,9 +840,9 @@ var WebGLRenderer = new Class({
                 console.warn('WebGL Context restored. Renderer running again.');
             }
 
-            event.preventDefault();
-
             _this.emit(Events.RESTORE_WEBGL, _this);
+
+            event.preventDefault();
         };
 
         canvas.addEventListener('webglcontextrestored', this.contextRestoredHandler, false);
