@@ -6,6 +6,7 @@ Please select a version to read that specific change log:
 
 | Version | Name | Release Date |
 | ------- | ---- | ------------ |
+| [3.80](changelog/3.80/CHANGELOG-v3.80.md) | Nino | in beta |
 | [3.70](changelog/3.70/CHANGELOG-v3.70.md) | Yotsuba | 10th November 2023 |
 | [3.60](changelog/3.60/CHANGELOG-v3.60.md) | Miku | 12th April 2023 |
 | [3.55.2](changelog/3.55.2/CHANGELOG-v3.55.2.md) | Ichika | 27th May 2021 |
