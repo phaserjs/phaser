@@ -748,6 +748,9 @@ var StaticBody = new Class({
 
         gameObject.getTopLeft(this.position);
 
+        this.position.x += this.offset.x;
+        this.position.y += this.offset.y;
+
         this.updateCenter();
 
         this.world.staticTree.insert(this);
