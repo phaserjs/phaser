@@ -1088,6 +1088,7 @@ var Shader = new Class({
         gl.useProgram(program.webGLProgram);
 
         gl.uniformMatrix4fv(gl.getUniformLocation(program.webGLProgram, 'uViewMatrix'), false, vm);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program.webGLProgram, 'uProjectionMatrix'), false, this.projectionMatrix);
         gl.uniform2f(gl.getUniformLocation(program.webGLProgram, 'uResolution'), this.width, this.height);
 
         //  Update fragment shader uniforms
