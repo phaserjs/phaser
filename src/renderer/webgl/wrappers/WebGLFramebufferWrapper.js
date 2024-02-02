@@ -1,6 +1,7 @@
 var Class = require('../../../utils/Class');
 
 /**
+ * @ignore
  * Possible errors that can be thrown by `gl.checkFramebufferStatus()`.
  */
 var errors = {
