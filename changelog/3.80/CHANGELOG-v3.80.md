@@ -54,6 +54,7 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * Modified the `RandomDataGenerator.weightedPick` method to avoid sampling past the last element. Fix #6701 (thanks @jameskirkwood)
 * The touch event handler `onTouchEndWindow` now stops pointer events when clicking through DOM elements to input. Fix #6697 (thanks @laineus)
 * The `Physics.Matter.Factory` method `pointerConstraint` no longer returns an error when it can't find the camera. Fix #6684 (thanks @spritus)
+* The `Physics.Arcade.StaticBody` method `reset` now re-applies `offset` values. Fixes #6729 (thanks @samme)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
