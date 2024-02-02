@@ -1206,6 +1206,7 @@ var WebGLPipeline = new Class({
     restoreContext: function ()
     {
         var shaders = this.shaders;
+        var hasVertexBuffer = !!this.vertexBuffer;
 
         // Deactivate all invalidated state.
         this.activeBuffer = null;
@@ -1215,9 +1216,19 @@ var WebGLPipeline = new Class({
         this.currentTexture = null;
         this.currentUnit = 0;
 
+        if (hasVertexBuffer)
+        {
+            this.setVertexBuffer();
+        }
+
         for (var i = 0; i < shaders.length; i++)
         {
-            shaders[i].syncUniforms();
+            var shader = shaders[i];
+            shader.syncUniforms();
+            if (hasVertexBuffer)
+            {
+                shader.rebind();
+            }
         }
     },
 
