@@ -20,7 +20,9 @@ var errors = {
  * without other systems having to be aware of it.
  * Always use WebGLFramebufferWrapper instead.
  *
- * @method Phaser.Renderer.WebGL.WebGLRenderer#createFramebuffer
+ * @class WebGLFramebufferWrapper
+ * @memberof Phaser.Renderer.WebGL.Wrappers
+ * @constructor
  * @since 3.80.0
  *
  * @param {WebGLRenderingContext} gl - The WebGLRenderingContext to create the WebGLFramebuffer for.

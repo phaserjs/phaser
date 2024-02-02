@@ -17,7 +17,7 @@ var IsSizePowerOfTwo = require('../../../math/pow2/IsSizePowerOfTwo');
  * without other systems having to be aware of it.
  * Always use WebGLTextureWrapper instead.
  *
- * @class GLTextureWrapper
+ * @class WebGLTextureWrapper
  * @memberof Phaser.Renderer.WebGL.Wrappers
  * @constructor
  * @since 3.80.0
