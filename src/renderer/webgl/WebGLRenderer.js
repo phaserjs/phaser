@@ -3169,6 +3169,19 @@ var WebGLRenderer = new Class({
     {
         this.canvas.removeEventListener('webglcontextlost', this.contextLostHandler, false);
 
+        this.canvas.removeEventListener('webglcontextrestored', this.contextRestoredHandler, false);
+
+        var wrapperDestroy = function (wrapper)
+        {
+            wrapper.destroy();
+        };
+        ArrayEach(this.glAttribLocationWrappers, wrapperDestroy);
+        ArrayEach(this.glBufferWrappers, wrapperDestroy);
+        ArrayEach(this.glFramebufferWrappers, wrapperDestroy);
+        ArrayEach(this.glProgramWrappers, wrapperDestroy);
+        ArrayEach(this.glTextureWrappers, wrapperDestroy);
+        ArrayEach(this.glUniformLocationWrappers, wrapperDestroy);
+
         this.maskTarget.destroy();
         this.maskSource.destroy();
 
