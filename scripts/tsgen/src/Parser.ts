@@ -31,6 +31,10 @@ export class Parser {
 
         this.resolveParents(docs);
 
+        console.log('------------------------------------------------------------------');
+        console.log('Add Integer Alias and Declare Module');
+        console.log('------------------------------------------------------------------');
+
         // add integer alias
         this.topLevel.push(dom.create.alias('integer', dom.type.number));
 
@@ -43,6 +47,10 @@ export class Parser {
     }
 
     emit(): string {
+
+        console.log('------------------------------------------------------------------');
+        console.log('Parser Emit');
+        console.log('------------------------------------------------------------------');
 
         let ignored = [];
 
@@ -197,6 +205,8 @@ export class Parser {
         {
             let obj = (doclet.kind === 'namespace') ? this.namespaces[doclet.longname] : this.objects[doclet.longname];
 
+            // console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
+
             if (!obj)
             {
                 console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
@@ -219,6 +229,11 @@ export class Parser {
                 {
                     console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
                     console.log(`PARENT WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                }
+
+                if (!(parent as any).kind)
+                {
+                    console.log(`PARENT KIND WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
                 }
 
                 if ((<any>parent).members)
@@ -258,6 +273,10 @@ export class Parser {
 
     private resolveInheritance(docs: any[])
     {
+        console.log('------------------------------------------------------------------');
+        console.log('Resolve Inheritance');
+        console.log('------------------------------------------------------------------');
+
         for (let doclet of docs)
         {
             let obj = doclet.kind === 'namespace' ? this.namespaces[doclet.longname] : this.objects[doclet.longname];
@@ -289,28 +308,43 @@ export class Parser {
         }
     }
 
-    private resolveParents(docs: any[]) {
-        for (let doclet of docs) {
+    private resolveParents(docs: any[])
+    {
+        console.log('------------------------------------------------------------------');
+        console.log('Resolve Parents');
+        console.log('------------------------------------------------------------------');
+
+        for (let doclet of docs)
+        {
             let obj = this.objects[doclet.longname];
+
             if (!obj || doclet.kind !== 'class') continue;
 
             let o = obj as dom.ClassDeclaration;
 
             // resolve augments
-            if (doclet.augments && doclet.augments.length) {
-                for (let augment of doclet.augments) {
+            if (doclet.augments && doclet.augments.length)
+            {
+                for (let augment of doclet.augments)
+                {
                     let name: string = this.prepareTypeName(augment);
 
                     let wrappingName = name.match(/[^<]+/s)[0];//gets everything up to a first < (to handle augments with type parameters)
 
                     let baseType = this.objects[wrappingName] as dom.ClassDeclaration | dom.InterfaceDeclaration;
 
-                    if (!baseType) {
+                    if (!baseType)
+                    {
                         console.log(`ERROR: Did not find base type: ${augment} for ${doclet.longname}`);
-                    } else {
-                        if (baseType.kind == 'class') {
+                    }
+                    else
+                    {
+                        if (baseType.kind == 'class')
+                        {
                             o.baseType = dom.create.class(name);
-                        } else {
+                        }
+                        else
+                        {
                             o.implements.push(dom.create.interface(name));
                         }
                     }
