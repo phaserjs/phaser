@@ -916,6 +916,8 @@ var Shader = new Class({
 
         if (data && !uniform.value.isRenderTexture)
         {
+            var wrapper = uniform.value;
+            
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
 
             //  mag / minFilter can be: gl.LINEAR, gl.LINEAR_MIPMAP_LINEAR or gl.NEAREST
@@ -944,6 +946,8 @@ var Shader = new Class({
 
                 //  texImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView? pixels)
                 gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, border, format, gl.UNSIGNED_BYTE, null);
+                wrapper.width = width;
+                wrapper.height = height;
             }
             else
             {
@@ -955,6 +959,15 @@ var Shader = new Class({
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+
+            // Update texture wrapper.
+            wrapper.magFilter = magFilter;
+            wrapper.minFilter = minFilter;
+            wrapper.wrapS = wrapS;
+            wrapper.wrapT = wrapT;
+            wrapper.format = format;
+            wrapper.flipY = !!data.flipY;
+            wrapper.pixels = uniform.source;
         }
 
         this.renderer.setProgram(this.program);
