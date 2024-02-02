@@ -3,33 +3,33 @@ var Class = require('../../../utils/Class');
 /**
  * @classdesc
  * Wrapper for a WebGL uniform location, containing all the information that was used to create it.
- * 
+ *
  * A WebGLUniformLocation should never be exposed outside the WebGLRenderer,
  * so the WebGLRenderer can handle context loss and other events without other systems having to be aware of it.
  * Always use WebGLUniformLocationWrapper instead.
- * 
+ *
  * @class WebGLUniformLocationWrapper
  * @memberof Phaser.Renderer.WebGL.Wrappers
  * @constructor
  * @since 3.80.0
- * 
+ *
  * @param {WebGLRenderingContext} gl - The WebGLRenderingContext to create the WebGLUniformLocation for.
  * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The WebGLProgram that this location refers to. This must be created first.
  * @param {string} name - The name of this location, as defined in the shader source code.
  */
 var WebGLUniformLocationWrapper = new Class({
-  
+
     initialize:
 
     function WebGLUniformLocationWrapper (gl, program, name)
     {
         /**
          * The WebGLUniformLocation being wrapped by this class.
-         * 
+         *
          * This property could change at any time.
          * Therefore, you should never store a reference to this value.
          * It should only be passed directly to the WebGL API for drawing.
-         * 
+         *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper#webGLUniformLocation
          * @type {?WebGLUniformLocation}
          * @default null
@@ -39,8 +39,8 @@ var WebGLUniformLocationWrapper = new Class({
 
         /**
          * The WebGLRenderingContext that owns this location.
-         * 
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#gl
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper#gl
          * @type {WebGLRenderingContext}
          * @since 3.80.0
          */
@@ -48,7 +48,7 @@ var WebGLUniformLocationWrapper = new Class({
 
         /**
          * The WebGLProgram that this location refers to.
-         * 
+         *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper#program
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper}
          * @since 3.80.0
@@ -57,7 +57,7 @@ var WebGLUniformLocationWrapper = new Class({
 
         /**
          * The name of this location, as defined in the shader source code.
-         * 
+         *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper#name
          * @type {string}
          * @since 3.80.0
@@ -69,7 +69,7 @@ var WebGLUniformLocationWrapper = new Class({
 
     /**
      * Creates the WebGLUniformLocation.
-     * 
+     *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper#createResource
      * @since 3.80.0
      */
@@ -80,12 +80,13 @@ var WebGLUniformLocationWrapper = new Class({
             this.webGLUniformLocation = null;
             return;
         }
+
         this.webGLUniformLocation = this.gl.getUniformLocation(this.program.webGLProgram, this.name);
     },
 
     /**
      * Destroys this WebGLUniformLocationWrapper.
-     * 
+     *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper#destroy
      * @since 3.80.0
      */
