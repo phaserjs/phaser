@@ -1207,6 +1207,14 @@ var WebGLPipeline = new Class({
     {
         var shaders = this.shaders;
 
+        // Deactivate all invalidated state.
+        this.activeBuffer = null;
+        this.activeTextures.length = 0;
+        this.batch.length = 0;
+        this.currentBatch = null;
+        this.currentTexture = null;
+        this.currentUnit = 0;
+
         for (var i = 0; i < shaders.length; i++)
         {
             shaders[i].syncUniforms();
