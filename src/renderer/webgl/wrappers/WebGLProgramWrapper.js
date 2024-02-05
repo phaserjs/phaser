@@ -81,6 +81,13 @@ var WebGLProgramWrapper = new Class({
     {
         var gl = this.gl;
 
+        if (gl.isContextLost())
+        {
+            // GL state can't be updated right now.
+            // `createResource` will run when the context is restored.
+            return;
+        }
+
         var program = gl.createProgram();
 
         var vs = gl.createShader(gl.VERTEX_SHADER);
@@ -132,7 +139,11 @@ var WebGLProgramWrapper = new Class({
             return;
         }
 
-        this.gl.deleteProgram(this.webGLProgram);
+        if (!this.gl.isContextLost())
+        {
+            this.gl.deleteProgram(this.webGLProgram);
+        }
+
         this.webGLProgram = null;
         this.gl = null;
     }

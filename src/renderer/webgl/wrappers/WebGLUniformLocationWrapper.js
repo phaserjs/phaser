@@ -81,7 +81,16 @@ var WebGLUniformLocationWrapper = new Class({
             return;
         }
 
-        this.webGLUniformLocation = this.gl.getUniformLocation(this.program.webGLProgram, this.name);
+        var gl = this.gl;
+
+        if (gl.isContextLost())
+        {
+            // GL state can't be updated right now.
+            // `createResource` will run when the context is restored.
+            return;
+        }
+
+        this.webGLUniformLocation = gl.getUniformLocation(this.program.webGLProgram, this.name);
     },
 
     /**

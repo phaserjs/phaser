@@ -210,14 +210,21 @@ var WebGLTextureWrapper = new Class({
      */
     createResource: function ()
     {
+        var gl = this.gl;
+        
+        if (gl.isContextLost())
+        {
+            // GL state can't be updated right now.
+            // `createResource` will run when the context is restored.
+            return;
+        }
+
         if (this.pixels instanceof WebGLTextureWrapper)
         {
             // Use the source texture directly.
             this.webGLTexture = this.pixels.webGLTexture;
             return;
         }
-
-        var gl = this.gl;
 
         var texture = gl.createTexture();
 
@@ -320,7 +327,20 @@ var WebGLTextureWrapper = new Class({
             return;
         }
 
+        // Assume that the source might change.
+        this.pixels = source;
+        this.width = width;
+        this.height = height;
+        this.flipY = flipY;
+
         var gl = this.gl;
+
+        if (gl.isContextLost())
+        {
+            // GL state can't be updated right now.
+            // `createResource` will run when the context is restored.
+            return;
+        }
 
         gl.activeTexture(gl.TEXTURE0);
 
@@ -332,12 +352,6 @@ var WebGLTextureWrapper = new Class({
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, this.pma);
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
-
-        // Assume that the source might change.
-        this.pixels = source;
-        this.width = width;
-        this.height = height;
-        this.flipY = flipY;
 
         // Restore previous texture bind.
         if (currentTexture)
@@ -365,8 +379,12 @@ var WebGLTextureWrapper = new Class({
         {
             // eslint-disable-next-line camelcase
             this.__SPECTOR_Metadata = value;
-            // eslint-disable-next-line camelcase
-            this.webGLTexture.__SPECTOR_Metadata = value;
+
+            if (!this.gl.isContextLost())
+            {
+                // eslint-disable-next-line camelcase
+                this.webGLTexture.__SPECTOR_Metadata = value;
+            }
         }
     },
 
@@ -383,10 +401,13 @@ var WebGLTextureWrapper = new Class({
             return;
         }
 
-        if (!(this.pixels instanceof WebGLTextureWrapper))
+        if (!this.gl.isContextLost())
         {
-            // Do not delete a texture that belongs to another wrapper.
-            this.gl.deleteTexture(this.webGLTexture);
+            if (!(this.pixels instanceof WebGLTextureWrapper))
+            {
+                // Do not delete a texture that belongs to another wrapper.
+                this.gl.deleteTexture(this.webGLTexture);
+            }
         }
 
         this.pixels = null;

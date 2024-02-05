@@ -81,7 +81,16 @@ var WebGLAttribLocationWrapper = new Class({
             return;
         }
 
-        this.webGLAttribLocation = this.gl.getAttribLocation(this.program.webGLProgram, this.name);
+        var gl = this.gl;
+
+        if (gl.isContextLost())
+        {
+            // GL state can't be updated right now.
+            // `createResource` will run when the context is restored.
+            return;
+        }
+
+        this.webGLAttribLocation = gl.getAttribLocation(this.program.webGLProgram, this.name);
     },
 
     /**
