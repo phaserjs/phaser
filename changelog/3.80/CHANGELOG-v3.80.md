@@ -37,6 +37,7 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * `Actions.PlaceOnLine` now has an added `ease` parameter which accepts a string from the EaseMap or a custom ease function to allow for different distrubutions along a line. (thanks @sB3p)
 * If you enable a Game Object for Input Debugging, the debug shape will no longer be rendered if the Game Object itself is not visible. Fix #6364 (thanks @orjandh)
 * The `XHRLoader` will now listen for `ontimeout` and if triggered it will hand over to the `File.onError` handler. This prevents the Loader from stalling if a file times out. Fix #6472 (thanks @343dev)
+* `LightPipeline.currentNormalMap` was incorrectly documented as being a property of `WebGLRenderer`.
 
 # Bug Fixes
 

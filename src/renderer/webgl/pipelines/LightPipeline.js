@@ -99,7 +99,7 @@ var LightPipeline = new Class({
         /**
          * The currently bound normal map texture at texture unit one, if any.
          *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentNormalMap;
+         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#currentNormalMap;
          * @type {?WebGLTexture}
          * @since 3.60.0
          */
