@@ -784,6 +784,7 @@ var InputPlugin = new Class({
         if (input)
         {
             this.removeDebug(gameObject);
+            this.manager.resetCursor(input);
 
             input.gameObject = undefined;
             input.target = undefined;
@@ -851,8 +852,6 @@ var InputPlugin = new Class({
             if (index > -1)
             {
                 over[i].splice(index, 1);
-
-                manager.resetCursor(input);
             }
         }
 
