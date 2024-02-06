@@ -57,6 +57,7 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * The `Physics.Matter.Factory` method `pointerConstraint` no longer returns an error when it can't find the camera. Fix #6684 (thanks @spritus)
 * The `Physics.Arcade.StaticBody` method `reset` now re-applies `offset` values. Fixes #6729 (thanks @samme)
 * The `Input.InputPlugin` method `disable` which is called by `GameObjects.GameObject#disableInteractive` keeps its temp hit box value which stops propagation to interactive Game Objects in another scene. Fixes #6601 (thanks @UnaiNeuronUp)
+* Enabling and disabling interactivity of a Game Object outside of the game loop caused an error in which `Input.InputManager#resetCursor` would lose input context. Fixes #6387 (thanks @TomorrowToday)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
