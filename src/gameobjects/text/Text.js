@@ -1431,14 +1431,7 @@ var Text = new Class({
 
         if (this.renderer && this.renderer.gl)
         {
-            if (this.frame.source.glTexture)
-            {
-                this.frame.source.glTexture.update(canvas, canvas.width, canvas.height, false);
-            }
-            else
-            {
-                this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture, true);
-            }
+            this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture, true);
 
             if (typeof WEBGL_DEBUG)
             {
