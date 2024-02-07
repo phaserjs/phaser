@@ -38,6 +38,7 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * If you enable a Game Object for Input Debugging, the debug shape will no longer be rendered if the Game Object itself is not visible. Fix #6364 (thanks @orjandh)
 * The `XHRLoader` will now listen for `ontimeout` and if triggered it will hand over to the `File.onError` handler. This prevents the Loader from stalling if a file times out. Fix #6472 (thanks @343dev)
 * `LightPipeline.currentNormalMap` was incorrectly documented as being a property of `WebGLRenderer`.
+* * `Mesh` based Game Objects now can use an interactive config with the `setInteractive` method, which supports the options `draggable`, `dropzone`, `cursor` and `userHandCursor`. Fix #6510 #6652 (thanks @Baegus @Neppord)
 
 # Bug Fixes
 
@@ -55,9 +56,9 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * Modified the `RandomDataGenerator.weightedPick` method to avoid sampling past the last element. Fix #6701 (thanks @jameskirkwood)
 * The touch event handler `onTouchEndWindow` now stops pointer events when clicking through DOM elements to input. Fix #6697 (thanks @laineus)
 * The `Physics.Matter.Factory` method `pointerConstraint` no longer returns an error when it can't find the camera. Fix #6684 (thanks @spritus)
-* The `Physics.Arcade.StaticBody` method `reset` now re-applies `offset` values. Fixes #6729 (thanks @samme)
-* The `Input.InputPlugin` method `disable` which is called by `GameObjects.GameObject#disableInteractive` keeps its temp hit box value which stops propagation to interactive Game Objects in another scene. Fixes #6601 (thanks @UnaiNeuronUp)
-* Enabling and disabling interactivity of a Game Object outside of the game loop caused an error in which `Input.InputManager#resetCursor` would lose input context. Fixes #6387 (thanks @TomorrowToday)
+* The `Physics.Arcade.StaticBody` method `reset` now re-applies `offset` values. Fix #6729 (thanks @samme)
+* The `Input.InputPlugin` method `disable` which is called by `GameObjects.GameObject#disableInteractive` keeps its temp hit box value which stops propagation to interactive Game Objects in another scene. Fix #6601 (thanks @UnaiNeuronUp)
+* Enabling and disabling interactivity of a Game Object outside of the game loop caused an error in which `Input.InputManager#resetCursor` would lose input context. Fix #6387 (thanks @TomorrowToday)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
