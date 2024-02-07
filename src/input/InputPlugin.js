@@ -2159,7 +2159,7 @@ var InputPlugin = new Class({
         var customHitArea = true;
 
         //  Config object?
-        if (IsPlainObject(hitArea))
+        if (IsPlainObject(hitArea) && Object.keys(hitArea).length)
         {
             var config = hitArea;
 
@@ -2194,11 +2194,6 @@ var InputPlugin = new Class({
                 this.setHitAreaFromTexture(gameObjects);
                 customHitArea = false;
             }
-        }
-        else if (typeof hitArea === 'function' && !hitAreaCallback)
-        {
-            hitAreaCallback = hitArea;
-            hitArea = {};
         }
 
         for (var i = 0; i < gameObjects.length; i++)
