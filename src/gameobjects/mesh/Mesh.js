@@ -1157,14 +1157,21 @@ var Mesh = new Class({
      *
      * @example
      * mesh.setInteractive();
+     * 
+     * @example
+     * mesh.setInteractive({ useHandCursor: true });
      *
      * @method Phaser.GameObjects.Mesh#setInteractive
      * @since 3.60.0
+     * 
+     * @param {(Phaser.Types.Input.InputConfiguration)} [config] - An input configuration object but it will ignore hitArea, hitAreaCallback and pixelPerfect with associated alphaTolerance properties.
      *
      * @return {this} This GameObject.
      */
-    setInteractive: function ()
+    setInteractive: function (config)
     {
+        if (config === undefined) { config = {}; }
+
         var hitAreaCallback = function (area, x, y)
         {
             var faces = this.faces;
@@ -1183,7 +1190,7 @@ var Mesh = new Class({
             return false;
         }.bind(this);
 
-        this.scene.sys.input.enable(this, hitAreaCallback);
+        this.scene.sys.input.enable(this, config, hitAreaCallback);
 
         return this;
     },

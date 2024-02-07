@@ -2163,21 +2163,30 @@ var InputPlugin = new Class({
         {
             var config = hitArea;
 
-            hitArea = GetFastValue(config, 'hitArea', null);
-            hitAreaCallback = GetFastValue(config, 'hitAreaCallback', null);
+            var mesh = gameObjects.some(function (gameObject)
+            {
+                return gameObject.hasOwnProperty('faces');
+            });
+
+            if (!mesh)
+            {
+                hitArea = GetFastValue(config, 'hitArea', null);
+                hitAreaCallback = GetFastValue(config, 'hitAreaCallback', null);
+
+                pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
+                var alphaTolerance = GetFastValue(config, 'alphaTolerance', 1);
+
+                if (pixelPerfect)
+                {
+                    hitArea = {};
+                    hitAreaCallback = this.makePixelPerfect(alphaTolerance);
+                }
+            }
+
             draggable = GetFastValue(config, 'draggable', false);
             dropZone = GetFastValue(config, 'dropZone', false);
             cursor = GetFastValue(config, 'cursor', false);
             useHandCursor = GetFastValue(config, 'useHandCursor', false);
-
-            pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
-            var alphaTolerance = GetFastValue(config, 'alphaTolerance', 1);
-
-            if (pixelPerfect)
-            {
-                hitArea = {};
-                hitAreaCallback = this.makePixelPerfect(alphaTolerance);
-            }
 
             //  Still no hitArea or callback?
             if (!hitArea || !hitAreaCallback)
