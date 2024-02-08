@@ -826,7 +826,7 @@ var WebGLRenderer = new Class({
             _this.pipelines.restoreContext();
 
             // Apply resize.
-            _this.resize(_this.width, _this.height);
+            _this.resize(_this.game.scale.width, _this.game.scale.height);
 
             // Restore GL extensions.
             setupExtensions();
@@ -1295,6 +1295,11 @@ var WebGLRenderer = new Class({
      */
     resize: function (width, height)
     {
+        if (this.contextLost)
+        {
+            return this;
+        }
+
         var gl = this.gl;
 
         this.width = width;

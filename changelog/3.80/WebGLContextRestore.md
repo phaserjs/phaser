@@ -35,6 +35,8 @@ A render texture which is redrawn every frame will naturally redraw itself.
 
 Textures which are drawn once, however, will stay blank. You should listen for the `RESTORE_WEBGL` event to know when to redraw them.
 
+It is safe to draw while the context is lost, but nothing will be drawn. Snapshots will return blank.
+
 ### WebGL Object Wrappers
 
 WebGL objects are now wrapped. The wrapper holds the necessary information to automatically recreate the object when context is restored.

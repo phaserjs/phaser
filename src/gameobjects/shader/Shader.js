@@ -13,6 +13,7 @@ var SetValue = require('../../utils/object/SetValue');
 var ShaderRender = require('./ShaderRender');
 var TransformMatrix = require('../components/TransformMatrix');
 var ArrayEach = require('../../utils/array/Each');
+var RenderEvents = require('../../renderer/events');
 
 /**
  * @classdesc
@@ -165,6 +166,28 @@ var Shader = new Class({
          * @since 3.17.0
          */
         this.vertexBuffer = renderer.createVertexBuffer(this.vertexData.byteLength, this.gl.STREAM_DRAW);
+
+        /**
+         * Internal property: whether the shader needs to be created,
+         * and if so, the key and textures to use for the shader.
+         *
+         * @name Phaser.GameObjects.Shader#_deferSetShader
+         * @type {?{ key: string, textures: string[]|undefined, textureData: any|undefined }}
+         * @private
+         * @since 3.80.0
+         */
+        this._deferSetShader = false;
+
+        /**
+         * Internal property: whether the projection matrix needs to be set,
+         * and if so, the data to use for the orthographic projection.
+         *
+         * @name Phaser.GameObjects.Shader#_deferProjOrtho
+         * @type {?{ left: number, right: number, bottom: number, top: number }}
+         * @private
+         * @since 3.80.0
+         */
+        this._deferProjOrtho = null;
 
         /**
          * The WebGL shader program this shader uses.
@@ -351,6 +374,8 @@ var Shader = new Class({
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
         this.setShader(key, textures, textureData);
+
+        this.renderer.on(RenderEvents.RESTORE_WEBGL, this.onContextRestored, this);
     },
 
     /**
@@ -475,6 +500,12 @@ var Shader = new Class({
      */
     setShader: function (key, textures, textureData)
     {
+        if (this.renderer.contextLost)
+        {
+            this._deferSetShader = { key: key, textures: textures, textureData: textureData };
+            return this;
+        }
+
         if (textures === undefined) { textures = []; }
 
         if (typeof key === 'string')
@@ -585,6 +616,12 @@ var Shader = new Class({
      */
     projOrtho: function (left, right, bottom, top)
     {
+        if (this.renderer.contextLost)
+        {
+            this._deferProjOrtho = { left: left, right: right, bottom: bottom, top: top };
+            return;
+        }
+
         var near = -1000;
         var far = 1000;
 
@@ -1208,6 +1245,34 @@ var Shader = new Class({
     },
 
     /**
+     * Run any logic that was deferred during context loss.
+     * 
+     * @method Phaser.GameObjects.Shader#onContextRestored
+     * @since 3.80.0
+     */
+    onContextRestored: function ()
+    {
+        if (this._deferSetShader !== null)
+        {
+            var key = this._deferSetShader.key;
+            var textures = this._deferSetShader.textures;
+            var textureData = this._deferSetShader.textureData;
+            this._deferSetShader = null;
+            this.setShader(key, textures, textureData);
+        }
+
+        if (this._deferProjOrtho !== null)
+        {
+            var left = this._deferProjOrtho.left;
+            var right = this._deferProjOrtho.right;
+            var bottom = this._deferProjOrtho.bottom;
+            var top = this._deferProjOrtho.top;
+            this._deferProjOrtho = null;
+            this.projOrtho(left, right, bottom, top);
+        }
+    },
+
+    /**
      * Internal destroy handler, called as part of the destroy process.
      *
      * @method Phaser.GameObjects.Shader#preDestroy
@@ -1218,6 +1283,7 @@ var Shader = new Class({
     {
         var renderer = this.renderer;
 
+        renderer.off(RenderEvents.RESTORE_WEBGL, this.onContextRestored, this);
         renderer.deleteProgram(this.program);
         renderer.deleteBuffer(this.vertexBuffer);
 
