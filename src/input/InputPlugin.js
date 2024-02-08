@@ -19,6 +19,7 @@ var GetFastValue = require('../utils/object/GetFastValue');
 var GEOM_CONST = require('../geom/const');
 var InputPluginCache = require('./InputPluginCache');
 var IsPlainObject = require('../utils/object/IsPlainObject');
+var HasAny = require('../utils/object/HasAny');
 var PluginCache = require('../plugins/PluginCache');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var RectangleContains = require('../geom/rectangle/Contains');
@@ -2163,12 +2164,8 @@ var InputPlugin = new Class({
         {
             var config = hitArea;
 
-            var mesh = gameObjects.some(function (gameObject)
-            {
-                return gameObject.hasOwnProperty('faces');
-            });
-
-            if (!mesh)
+            // Check if any supplied Game Object is a Mesh based Game Object
+            if (!HasAny(gameObjects, 'faces'))
             {
                 hitArea = GetFastValue(config, 'hitArea', null);
                 hitAreaCallback = GetFastValue(config, 'hitAreaCallback', null);
