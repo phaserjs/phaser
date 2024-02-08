@@ -31,7 +31,7 @@ var WebGLAttribLocationWrapper = new Class({
          * It should only be passed directly to the WebGL API for drawing.
          *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper#webGLAttribLocation
-         * @type {WebGLAttribLocation}
+         * @type {GLint}
          * @default -1
          * @since 3.80.0
          */
