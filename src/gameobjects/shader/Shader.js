@@ -176,7 +176,7 @@ var Shader = new Class({
          * @private
          * @since 3.80.0
          */
-        this._deferSetShader = false;
+        this._deferSetShader = null;
 
         /**
          * Internal property: whether the projection matrix needs to be set,
