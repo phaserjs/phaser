@@ -472,6 +472,18 @@ var WebGLRenderer = new Class({
         this.blankTexture = null;
 
         /**
+         * A blank 1x1 #7f7fff texture, a flat normal map,
+         * as used by the Graphics system where needed.
+         * This is set in the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#normalTexture
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
+         * @readonly
+         * @since 3.80.0
+         */
+        this.normalTexture = null;
+
+        /**
          * A pure white 4x4 texture, as used by the Graphics system where needed.
          * This is set in the `boot` method.
          *
@@ -979,6 +991,7 @@ var WebGLRenderer = new Class({
         //  Set-up default textures, fbo and scissor
 
         this.blankTexture = game.textures.getFrame('__DEFAULT').glTexture;
+        this.normalTexture = game.textures.getFrame('__NORMAL').glTexture;
         this.whiteTexture = game.textures.getFrame('__WHITE').glTexture;
 
         var gl = this.gl;

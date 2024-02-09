@@ -10,7 +10,6 @@ var GetFastValue = require('../../../utils/object/GetFastValue');
 var LightShaderSourceFS = require('../shaders/Light-frag.js');
 var MultiPipeline = require('./MultiPipeline');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
-var UUID = require('../../../utils/string/UUID.js');
 var Vec2 = require('../../../math/Vector2');
 var WebGLPipeline = require('../WebGLPipeline');
 
@@ -87,20 +86,10 @@ var LightPipeline = new Class({
         ]);
 
         /**
-         * Stores a default normal map, which is an object with a `glTexture` property that
-         * maps to a 1x1 texture of the color #7f7fff created in the `boot` method.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#defaultNormalMap
-         * @type {object}
-         * @since 3.50.0
-         */
-        this.defaultNormalMap;
-
-        /**
          * The currently bound normal map texture at texture unit one, if any.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.LightPipeline#currentNormalMap;
-         * @type {?WebGLTexture}
+         * @type {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @since 3.60.0
          */
         this.currentNormalMap;
@@ -158,10 +147,6 @@ var LightPipeline = new Class({
     boot: function ()
     {
         WebGLPipeline.prototype.boot.call(this);
-
-        var tempTexture = this.renderer.game.textures.addUint8Array(UUID(), new Uint8Array([ 127, 127, 255, 255 ]), 1, 1);
-
-        this.defaultNormalMap = { glTexture: tempTexture };
     },
 
     /**
@@ -272,7 +257,7 @@ var LightPipeline = new Class({
      * @ignore
      * @since 3.50.0
      *
-     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture] - Texture that will be assigned to the current batch. If not given uses blankTexture.
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object being rendered or added to the batch.
      */
     setTexture2D: function (texture, gameObject)
@@ -363,8 +348,8 @@ var LightPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#isNewNormalMap
      * @since 3.50.0
      *
-     * @param {WebGLTexture} texture - The WebGL diffuse texture.
-     * @param {WebGLTexture} normalMap - The WebGL normal map texture.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} texture - The diffuse texture.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} normalMap - The normal map texture.
      *
      * @return {boolean} Returns `false` if this combination is already set, or `true` if it's a new combination.
      */
@@ -374,7 +359,7 @@ var LightPipeline = new Class({
     },
 
     /**
-     * Returns the normal map WebGLTexture from the given Game Object.
+     * Returns the normal map WebGLTextureWrapper from the given Game Object.
      * If the Game Object doesn't have one, it returns the default normal map from this pipeline instead.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#getNormalMap
@@ -382,7 +367,7 @@ var LightPipeline = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object to get the normal map from.
      *
-     * @return {WebGLTexture} The normal map texture.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The normal map texture.
      */
     getNormalMap: function (gameObject)
     {
@@ -390,7 +375,7 @@ var LightPipeline = new Class({
 
         if (!gameObject)
         {
-            normalMap = this.defaultNormalMap;
+            return this.renderer.normalMap;
         }
         else if (gameObject.displayTexture)
         {
@@ -414,7 +399,7 @@ var LightPipeline = new Class({
 
         if (!normalMap)
         {
-            normalMap = this.defaultNormalMap;
+            return this.renderer.normalMap;
         }
 
         return normalMap.glTexture;
@@ -445,7 +430,7 @@ var LightPipeline = new Class({
      * @since 3.50.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject.
-     * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} texture - Texture associated with the quad.
      * @param {number} textureWidth - Real texture width.
      * @param {number} textureHeight - Real texture height.
      * @param {number} srcX - X coordinate of the quad.

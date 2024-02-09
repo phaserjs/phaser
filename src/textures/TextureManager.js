@@ -187,6 +187,10 @@ var TextureManager = new Class({
         this.addBase64('__DEFAULT', config.defaultImage);
         this.addBase64('__MISSING', config.missingImage);
         this.addBase64('__WHITE', config.whiteImage);
+        if (this.game.renderer.gl)
+        {
+            this.addUint8Array('__NORMAL', new Uint8Array([ 127, 127, 255, 255 ]), 1, 1);
+        }
 
         this.game.events.once(GameEvents.DESTROY, this.destroy, this);
 
@@ -1351,7 +1355,7 @@ var TextureManager = new Class({
 
     /**
      * Returns an array with all of the keys of all Textures in this Texture Manager.
-     * The output array will exclude the `__DEFAULT`, `__MISSING`, and `__WHITE` keys.
+     * The output array will exclude the `__DEFAULT`, `__MISSING`, `__WHITE`, and `__NORMAL` keys.
      *
      * @method Phaser.Textures.TextureManager#getTextureKeys
      * @since 3.0.0
@@ -1364,7 +1368,7 @@ var TextureManager = new Class({
 
         for (var key in this.list)
         {
-            if (key !== '__DEFAULT' && key !== '__MISSING' && key !== '__WHITE')
+            if (key !== '__DEFAULT' && key !== '__MISSING' && key !== '__WHITE' && key !== '__NORMAL')
             {
                 output.push(key);
             }
