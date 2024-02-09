@@ -26,15 +26,15 @@ Grab the source and join the fun!
 
 ![What's New](https://phaser.io/images/github/div2-whats-new.png "What's New")
 
-> 2nd February 2024
+> 9th February 2024
 
-Phaser 3.80 Beta 1 is now available. This is a significant release, with a number of new features, updates and bug fixes. It's also the first release of 2024 and we're excited to see what you'll create with it. The biggest change is a reworking of the WebGL Renderer so it fully supports webgl context loss and restoration. This is a huge step forward for Phaser and will make it much more robust, especially on mobile devices where tabbing out to other apps, and losing context as a result, is very common.
+Phaser 3.80 Beta 2 is now available. This is a significant release, with a number of new features, updates and bug fixes. It's also the first release of 2024 and we're excited to see what you'll create with it. The biggest change is a reworking of the WebGL Renderer so it fully supports webgl context loss and restoration. This is a huge step forward for Phaser and will make it much more robust, especially on mobile devices where tabbing out to other apps, and losing context as a result, is very common.
 
 We've also added direct support for loading assets via Base64. This is particularly useful for Playable Ads and other environments where you need to embed all assets into a single HTML file. We've also made a number of updates to the Spine plugin, and fixed a lot of issues across the whole of the framework. Please test this release thoroughly and report any issues you find. We hope to have the final release out in a couple of weeks.
 
 Since the incorporation of Phaser Studio Inc we have been expanding the core Phaser team and firing on all cylinders! There have been lots of important new additions added to the framework, as well as loads of great new Project Templates, updates to Phaser Editor, the re-publication of the Phaser World newsletter and lots, lots more. We hope to have our brand new website live in the next couple of months, too. Please keep an eye on what's going on and subscribe to the newsletter for all the latest details.
 
-v3.80 Beta 1 is available now from the [Releases page](https://github.com/phaserjs/phaser/releases/tag/v3.80.0-beta.1) and npm under the `beta` tag. As usual, please check our detailed [Change Log](https://github.com/phaserjs/phaser/blob/master/changelog/3.80/CHANGELOG-v3.80.md) for v3.80.
+v3.80 Beta 2 is available now from the [Releases page](https://github.com/phaserjs/phaser/releases/tag/v3.80.0-beta.2) and npm under the `beta` tag. As usual, please check our detailed [Change Log](https://github.com/phaserjs/phaser/blob/master/changelog/3.80/CHANGELOG-v3.80.md) for v3.80.
 
 You'll find up to date TypeScript defs that align with this release in the `types` folder of this repository.
 
