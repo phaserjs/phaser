@@ -187,7 +187,7 @@ var TextureManager = new Class({
         this.addBase64('__DEFAULT', config.defaultImage);
         this.addBase64('__MISSING', config.missingImage);
         this.addBase64('__WHITE', config.whiteImage);
-        if (this.game.renderer.gl)
+        if (this.game.renderer && this.game.renderer.gl)
         {
             this.addUint8Array('__NORMAL', new Uint8Array([ 127, 127, 255, 255 ]), 1, 1);
         }
