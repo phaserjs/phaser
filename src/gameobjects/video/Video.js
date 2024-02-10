@@ -390,6 +390,16 @@ var Video = new Class({
         this._loadCallbackHandler = this.loadErrorHandler.bind(this);
 
         /**
+         * The locally bound callback handler specifically for the loadedmetadata event.
+         *
+         * @name Phaser.GameObjects.Video#_metadataCallbackHandler
+         * @type {function}
+         * @private
+         * @since 3.80.0
+         */
+        this._metadataCallbackHandler = this.metadataHandler.bind(this);
+
+        /**
          * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
          *
          * @name Phaser.GameObjects.Video#_crop
@@ -777,14 +787,18 @@ var Video = new Class({
             video.src = url;
         }
 
-        this.addLoadEventHandlers();
-
         this.retry = 0;
         this.video = video;
 
         this._playCalled = false;
 
         video.load();
+
+        this.addLoadEventHandlers();
+
+        var texture = this.scene.sys.textures.get(this._key);
+
+        this.setTexture(texture);
 
         return this;
     },
@@ -1004,6 +1018,7 @@ var Video = new Class({
         {
             video.addEventListener('error', this._loadCallbackHandler);
             video.addEventListener('abort', this._loadCallbackHandler);
+            video.addEventListener('loadedmetadata', this._metadataCallbackHandler);
         }
     },
 
@@ -1452,6 +1467,32 @@ var Video = new Class({
         this.stop(false);
 
         this.emit(Events.VIDEO_ERROR, this, event);
+    },
+
+    /**
+     * This internal method is called automatically when the video metadata is available.
+     *
+     * @method Phaser.GameObjects.Video#metadataHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_METADATA
+     * @since 3.80.0
+     *
+     * @param {Event} event - The loadedmetadata Event.
+     */
+    metadataHandler: function (event)
+    {
+        var video = this.video;
+
+        if (this.scaleX !== 1)
+        {
+            this.scaleX = this.displayWidth / video.videoWidth;
+        }
+
+        if (this.scaleY !== 1)
+        {
+            this.scaleY = this.displayHeight / video.videoHeight;
+        }
+
+        this.emit(Events.VIDEO_METADATA, this, event);
     },
 
     /**
