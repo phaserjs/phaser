@@ -39,6 +39,7 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * The `XHRLoader` will now listen for `ontimeout` and if triggered it will hand over to the `File.onError` handler. This prevents the Loader from stalling if a file times out. Fix #6472 (thanks @343dev)
 * `LightPipeline.currentNormalMap` was incorrectly documented as being a property of `WebGLRenderer`.
 * `Mesh` based Game Objects now can use an input config with the `setInteractive` method, which supports the options `draggable`, `dropzone`, `cursor` and `userHandCursor`. Fix #6510 #6652 (thanks @Baegus @Neppord)
+* `Video` Game Objects now emit a `metadata` event, which emits once the video metadata is available.
 
 # Bug Fixes
 
@@ -59,6 +60,7 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * The `Physics.Arcade.StaticBody` method `reset` now re-applies `offset` values. Fix #6729 (thanks @samme)
 * The `Input.InputPlugin` method `disable` which is called by `GameObjects.GameObject#disableInteractive` keeps its temp hit box value which stops propagation to interactive Game Objects in another scene. Fix #6601 (thanks @UnaiNeuronUp)
 * Using `setInteractive` and `removeInteractive` methods of a Game Object outside of the game loop would cause an error in which `Input.InputManager#resetCursor` would lose input context. Fix #6387 (thanks @TomorrowToday)
+* The `Video` Game Object now has a starting texture, which stops errors with accessing `frame` before the video loads the first frame. Fix #6475 (thanks @rexrainbow @JoeSiu)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
