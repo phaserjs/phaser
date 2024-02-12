@@ -77,6 +77,11 @@ var Events = require('./events');
  * timeline.play();
  * ```
  *
+ * The Timeline can also be looped with the repeat method:
+ * ```js
+ * timeline.repeat(2).play();
+ * ```
+ * 
  * There are lots of options available to you via the configuration object. See the
  * {@link Phaser.Types.Time.TimelineEventConfig} typedef for more details.
  *
@@ -176,6 +181,17 @@ var Timeline = new Class({
          * @since 3.60.0
          */
         this.totalComplete = 0;
+
+        /**
+         * The number of times this timeline should loop.
+         *
+         * This value is decremented each loop. 
+         *
+         * @name Phaser.Time.Timeline#loop
+         * @type {number}
+         * @since 3.80.0
+         */
+        this.loop = 0;
 
         /**
          * An array of all the Timeline Events.
@@ -336,7 +352,21 @@ var Timeline = new Class({
         //  It may be greater than the length if events have been removed
         if (this.totalComplete >= events.length)
         {
-            this.complete = true;
+            if (this.loop !== 0)
+            {
+                if (this.loop > 0)
+                {
+                    this.loop--;
+                }
+
+                // This combination resets the timeline
+                this.resume();
+                this.play();
+            }
+            else
+            {
+                this.complete = true;
+            }
         }
 
         if (this.complete)
@@ -395,6 +425,30 @@ var Timeline = new Class({
     pause: function ()
     {
         this.paused = true;
+
+        return this;
+    },
+
+    /**
+     * Repeats this Timeline.
+     *
+     * A positive number will be repeated that amount which is decremented each repeat.
+     * 
+     * Depending on the value given, `false` is 0 and `true`, undefined and negative numbers are infinite.
+     *
+     * @method Phaser.Time.Timeline#repeat
+     * @since 3.80.0
+     * 
+     * @param {Number|Boolean} [amount=-1] - Amount of times to repeat, if `true` or negative it will be infinite.
+     *
+     * @return {this} This Timeline instance.
+     */
+    repeat: function (amount)
+    {
+        if (amount === undefined || amount === true) { amount = -1; }
+        if (amount === false) { amount = 0; }
+
+        this.loop = amount;
 
         return this;
     },
