@@ -23,7 +23,7 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 
 # Input Updates
 
-The Phaser Input and related classes have been updated to be more consistant with each Game Object.
+The Phaser Input and related classes have been updated to be more consistent with each Game Object.
 
 * If you enable a Game Object for Input Debugging, the debug shape will no longer be rendered if the Game Object itself is not visible. Fix #6364 (thanks @orjandh)
 * `Mesh` based Game Objects now can use an input config with the `setInteractive` method, which supports the options `draggable`, `dropzone`, `cursor` and `userHandCursor`. Fix #6510 #6652 (thanks @Baegus @Neppord)
@@ -34,7 +34,7 @@ The Phaser Input and related classes have been updated to be more consistant wit
 # Updates
 
 * The `TweenChainBuilder` was incorrectly setting the `persist` flag on the Chain to `true`, which goes against what the documentation says. It now correctly sets it to `false`. This means if you previously had a Tween Chain that was persisting, it will no longer do so, so add the property to regain the feature.
-* The `dropped` argument has now been adeded to the documentation for the `DRAG_END` and `GAMEOBJECT_DRAG_END` events. (thanks @samme)
+* The `dropped` argument has now been added to the documentation for the `DRAG_END` and `GAMEOBJECT_DRAG_END` events. (thanks @samme)
 * `Container.onChildDestroyed` is a new internal method used to destroy Container children. Previously, if you destroyed a Game Object in an exclusive Container, the game object would (momentarily) move onto the Scene display list and emit an ADDED_TO_SCENE event. Also, if you added a Sprite to a non-exclusive Container and stopped the Scene, you would get a TypeError (evaluating 'this.anims.destroy'). This happened because the fromChild argument in the DESTROY event was misinterpreted as destroyChild in the Container's remove(), and the Container was calling the Sprite's destroy() again. (thanks @samme)
 * The `Text` and `TileSprite` Game Objects now place their textures into the global `TextureManager` and a `_textureKey` private string property has been added which contains a UUID to reference that texture.
 * The `Tilemaps.Components.WeightedRandomize` method now uses the Phaser `Math.RND.frac` method with a seed instead of the `Math.Random` static method. (thanks @jorbascrumps)
@@ -44,7 +44,7 @@ The Phaser Input and related classes have been updated to be more consistant wit
 * The `Renderer.Canvas` and `Renderer.WebGL` will now only be included in the build file if the corresponding feature flags `CANVAS_RENDERER` and/or `WEBGL_RENDERER` are set to `true`. For Canvas only builds this saves a lot of space in the build. (thanks @samme)
 * You can now specify an `autoResize` boolean in the `RenderTargetConfig` which is passed to the Render Targets when they are created by a pipeline.
 * The `UtilityPipeline` now sets `autoResize` to `true` in its Render Target Config, so that the global `fullFrame` and `halfFrame` Render Targets will automatically resize if the renderer changes.
-* `Actions.PlaceOnLine` now has an added `ease` parameter which accepts a string from the EaseMap or a custom ease function to allow for different distrubutions along a line. (thanks @sB3p)
+* `Actions.PlaceOnLine` now has an added `ease` parameter which accepts a string from the EaseMap or a custom ease function to allow for different distributions along a line. (thanks @sB3p)
 * The `XHRLoader` will now listen for `ontimeout` and if triggered it will hand over to the `File.onError` handler. This prevents the Loader from stalling if a file times out. Fix #6472 (thanks @343dev)
 * `LightPipeline.currentNormalMap` was incorrectly documented as being a property of `WebGLRenderer`.
 * `Video` Game Objects now emit a `metadata` event, which emits once the video metadata is available.
