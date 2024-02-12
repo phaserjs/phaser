@@ -21,6 +21,16 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * The `SpineGameObject.setAlpha` method has had its 2nd parameter removed. This fixes needless slot look-ups during rendering when a Spine Game Object is inside a regular Container. If you need to set slot alpha, use the new `setSlotAlpha` method instead. Fix #6571 (thanks @spayton)
 * The `SpineFile.onFileComplete` handler was running a regular expression against `file.src` instead of `file.url`, sometimes leading to double paths in the atlas paths on loading. Fix #6642 (thanks @rez23)
 
+# Input Updates
+
+The Phaser Input and related classes have been updated to be more consistant with each Game Object.
+
+* If you enable a Game Object for Input Debugging, the debug shape will no longer be rendered if the Game Object itself is not visible. Fix #6364 (thanks @orjandh)
+* `Mesh` based Game Objects now can use an input config with the `setInteractive` method, which supports the options `draggable`, `dropzone`, `cursor` and `userHandCursor`. Fix #6510 #6652 (thanks @Baegus @Neppord)
+* The touch event handler `onTouchEndWindow` now stops pointer events when clicking through DOM elements to input. Fix #6697 (thanks @laineus)
+* The `Input.InputPlugin` method `disable` which is called by `GameObjects.GameObject#disableInteractive` keeps its temp hit box value which stops propagation to interactive Game Objects in another scene. Fix #6601 (thanks @UnaiNeuronUp)
+* Using `setInteractive` and `removeInteractive` methods of a Game Object outside of the game loop would cause an error in which `Input.InputManager#resetCursor` would lose input context. Fix #6387 (thanks @TomorrowToday)
+
 # Updates
 
 * The `TweenChainBuilder` was incorrectly setting the `persist` flag on the Chain to `true`, which goes against what the documentation says. It now correctly sets it to `false`. This means if you previously had a Tween Chain that was persisting, it will no longer do so, so add the property to regain the feature.
@@ -35,15 +45,12 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * You can now specify an `autoResize` boolean in the `RenderTargetConfig` which is passed to the Render Targets when they are created by a pipeline.
 * The `UtilityPipeline` now sets `autoResize` to `true` in its Render Target Config, so that the global `fullFrame` and `halfFrame` Render Targets will automatically resize if the renderer changes.
 * `Actions.PlaceOnLine` now has an added `ease` parameter which accepts a string from the EaseMap or a custom ease function to allow for different distrubutions along a line. (thanks @sB3p)
-* If you enable a Game Object for Input Debugging, the debug shape will no longer be rendered if the Game Object itself is not visible. Fix #6364 (thanks @orjandh)
 * The `XHRLoader` will now listen for `ontimeout` and if triggered it will hand over to the `File.onError` handler. This prevents the Loader from stalling if a file times out. Fix #6472 (thanks @343dev)
 * `LightPipeline.currentNormalMap` was incorrectly documented as being a property of `WebGLRenderer`.
-* `Mesh` based Game Objects now can use an input config with the `setInteractive` method, which supports the options `draggable`, `dropzone`, `cursor` and `userHandCursor`. Fix #6510 #6652 (thanks @Baegus @Neppord)
 * `Video` Game Objects now emit a `metadata` event, which emits once the video metadata is available.
 
 # Bug Fixes
 
-* The `InputManager.onTouchMove` function has been fixed so it now correctly handles touch events on pages that have scrolled horizontally or vertically and shifted the viewport. Fix #6489 (thanks @somechris @hyewonjo)
 * `Factory.staticBody`  had the wrong return type in the docs/TS defs. Fix #6693 (thanks @ddhaiby)
 * The `Time.Timeline` class didn't show as extending the Event Emitter, or have `config` as an optional argument in the docs / TS defs. Fix #6673 (thanks @ghclark2)
 * The `Animations.AnimationFrame` member `duration` is now the complete duration of the frame, which is a breaking change. Before this `Animations.AnimationState#msPerFrame` was combined with `Animations.AnimationFrame#duration` which wasn't intuitive. The fix to remove `Animations.AnimationState#msPerFrame` from `Animations.AnimationFrame#duration` has been removed from the `Animations.AnimationManager` method `createFromAseprite` because of this clarification. Fix #6712 (thanks @Nerodon @TomMalitz)
@@ -55,11 +62,8 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * The `PostFXPipeline.postBatch` method will now skip `onDraw` if the pipeline hasn't booted, introducing an artificial frame skip. This should potentially fix glitch errors on mobile devices where Post FX would appear corrupted for a single frame. Fix #6681 (thanks @moufmouf @tongliang999)
 * The `Matter.Body` function `scale` has been updated so if the Body originally had an `inertia` of `Infinity` this will be restored at the end of the call. This happens if you set a Matter Body to have fixed rotation. Fix #6369 (thanks @sushovande)
 * Modified the `RandomDataGenerator.weightedPick` method to avoid sampling past the last element. Fix #6701 (thanks @jameskirkwood)
-* The touch event handler `onTouchEndWindow` now stops pointer events when clicking through DOM elements to input. Fix #6697 (thanks @laineus)
 * The `Physics.Matter.Factory` method `pointerConstraint` no longer returns an error when it can't find the camera. Fix #6684 (thanks @spritus)
 * The `Physics.Arcade.StaticBody` method `reset` now re-applies `offset` values. Fix #6729 (thanks @samme)
-* The `Input.InputPlugin` method `disable` which is called by `GameObjects.GameObject#disableInteractive` keeps its temp hit box value which stops propagation to interactive Game Objects in another scene. Fix #6601 (thanks @UnaiNeuronUp)
-* Using `setInteractive` and `removeInteractive` methods of a Game Object outside of the game loop would cause an error in which `Input.InputManager#resetCursor` would lose input context. Fix #6387 (thanks @TomorrowToday)
 * The `Video` Game Object now has a starting texture, which stops errors with accessing `frame` before the video loads the first frame. Fix #6475 (thanks @rexrainbow @JoeSiu)
 
 ## Examples, Documentation, Beta Testing and TypeScript
