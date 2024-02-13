@@ -1344,10 +1344,11 @@ var WebGLRenderer = new Class({
     {
         var extString = 'WEBGL_compressed_texture_';
         var wkExtString = 'WEBKIT_' + extString;
+        var extEXTString = 'EXT_texture_compression_';
 
         var hasExt = function (gl, format)
         {
-            var results = gl.getExtension(extString + format) || gl.getExtension(wkExtString + format);
+            var results = gl.getExtension(extString + format) || gl.getExtension(wkExtString + format) || gl.getExtension(extEXTString + format);
 
             if (results)
             {
