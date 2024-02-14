@@ -59,6 +59,7 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * The `Physics.Arcade.StaticBody` method `reset` now re-applies `offset` values. Fix #6729 (thanks @samme)
 * The `Input.InputPlugin` method `disable` which is called by `GameObjects.GameObject#disableInteractive` keeps its temp hit box value which stops propagation to interactive Game Objects in another scene. Fix #6601 (thanks @UnaiNeuronUp)
 * Using `setInteractive` and `removeInteractive` methods of a Game Object outside of the game loop would cause an error in which `Input.InputManager#resetCursor` would lose input context. Fix #6387 (thanks @TomorrowToday)
+* The `Device.Browser.safari` regular expression has been strenghtened so it now captures versions with double or triple periods in. Previously it would fail for `Version/17.2.1` due to the minor value (thanks watcher)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
