@@ -86,7 +86,7 @@ function init ()
         Browser.ie = true;
         Browser.ieVersion = parseInt(RegExp.$1, 10);
     }
-    else if ((/Version\/(\d+\.\d+) Safari/).test(ua) && !OS.windowsPhone)
+    else if ((/Version\/(\d+\.\d+(\.\d+)?) Safari/).test(ua) && !OS.windowsPhone)
     {
         Browser.safari = true;
         Browser.safariVersion = parseInt(RegExp.$1, 10);
