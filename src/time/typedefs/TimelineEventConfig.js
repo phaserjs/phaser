@@ -3,9 +3,10 @@
  * @since 3.60.0
  *
  * @property {number} [at=0] - The time (in ms) at which the Event will fire. The Timeline starts at 0.
- * @property {number} [in] - If the Timeline is already running, this is the time (in ms) at which the Event will fire based on its current elapsed value. If set, overrides the `at` property.
- * @property {number} [from] - Fire this event 'from' milliseconds after the previous event in the Timeline. If set it overrides the `at` and `in` properties.
+ * @property {number} [in] - If the Timeline is running, this is the time (in ms) at which the Event will fire based on its current elapsed value. If set it will override the `at` property.
+ * @property {number} [from] - Fire this event 'from' milliseconds after the previous event in the Timeline. If set it will override the `at` and `in` properties.
  * @property {function} [run] - A function which will be called when the Event fires.
+ * @property {function} [loop] - A function which will be called when the Event loops, this does not get called if the `repeat` method is not used or on first iteration.
  * @property {string} [event] - Optional string-based event name to emit when the Event fires. The event is emitted from the Timeline instance.
  * @property {*} [target] - The scope (`this` object) with which to invoke the run `callback`, if set.
  * @property {boolean} [once=false] - If set, the Event will be removed from the Timeline when it fires.

@@ -2130,6 +2130,8 @@ var InputPlugin = new Class({
      * The hit area callback is the function that takes an `x` and `y` coordinate and returns a boolean if
      * those values fall within the area of the shape or not. All of the Phaser geometry objects provide this,
      * such as `Phaser.Geom.Rectangle.Contains`.
+     * 
+     * A hit area callback can be supplied to the `hitArea` parameter without using the `hitAreaCallback` parameter.
      *
      * @method Phaser.Input.InputPlugin#setHitArea
      * @since 3.0.0
@@ -2191,6 +2193,11 @@ var InputPlugin = new Class({
                 this.setHitAreaFromTexture(gameObjects);
                 customHitArea = false;
             }
+        }
+        else if (typeof hitArea === 'function' && !hitAreaCallback)
+        {
+            hitAreaCallback = hitArea;
+            hitArea = {};
         }
 
         for (var i = 0; i < gameObjects.length; i++)
