@@ -79,7 +79,7 @@ var Events = require('./events');
  *
  * The Timeline can also be looped with the repeat method:
  * ```js
- * timeline.repeat(2).play();
+ * timeline.repeat().play();
  * ```
  * 
  * There are lots of options available to you via the configuration object. See the
@@ -156,8 +156,8 @@ var Timeline = new Class({
          *
          * A Timeline is considered complete when all of its events have been run.
          *
-         * If you wish to restart a Timeline after it has completed, you can do so
-         * by calling the `Timeline.restart` method.
+         * If you wish to reset a Timeline after it has completed, you can do so
+         * by calling the `Timeline.reset` method.
          *
          * You can also use the `Timeline.stop` method to stop a running Timeline,
          * at any point, without resetting it.
@@ -185,13 +185,24 @@ var Timeline = new Class({
         /**
          * The number of times this timeline should loop.
          *
-         * This value is decremented each loop. 
+         * If this value is -1 or any negative number this Timeline will not stop. 
          *
          * @name Phaser.Time.Timeline#loop
          * @type {number}
          * @since 3.80.0
          */
         this.loop = 0;
+
+        /**
+         * The number of times this Timeline has looped.
+         *
+         * This value is incremented each loop if looping is enabled.
+         *
+         * @name Phaser.Time.Timeline#iteration
+         * @type {number}
+         * @since 3.80.0
+         */
+        this.iteration = 0;
 
         /**
          * An array of all the Timeline Events.
@@ -245,6 +256,8 @@ var Timeline = new Class({
      * If the `TimelineEvent.event` property is set then the Timeline emits that event.
      *
      * If the `TimelineEvent.run` property is set then the Timeline invokes that method.
+     * 
+     * If the `TimelineEvent.loop` property is set then the Timeline invokes that method when repeated.
      *
      * If the `TimelineEvent.target` property is set then the Timeline invokes the `run` method on that target.
      *
@@ -329,9 +342,19 @@ var Timeline = new Class({
                     event.run.call(target);
                 }
 
+                if (event.loop && event.repeat)
+                {
+                    event.loop.call(target);
+                }
+
                 if (event.stop)
                 {
                     this.stop();
+                }
+
+                if (this.iteration)
+                {
+                    event.repeat++;
                 }
             }
         }
@@ -352,16 +375,11 @@ var Timeline = new Class({
         //  It may be greater than the length if events have been removed
         if (this.totalComplete >= events.length)
         {
-            if (this.loop !== 0)
+            if (this.loop !== 0 && (this.loop === -1 || this.loop > this.iteration))
             {
-                if (this.loop > 0)
-                {
-                    this.loop--;
-                }
+                this.iteration++;
 
-                // This combination resets the timeline
-                this.resume();
-                this.play();
+                this.reset(true);
             }
             else
             {
@@ -432,14 +450,18 @@ var Timeline = new Class({
     /**
      * Repeats this Timeline.
      *
-     * A positive number will be repeated that amount which is decremented each repeat.
+     * If the value for `amount` is positive, the Timeline will repeat that many additional times.
+     * For example a value of 1 will actually run this Timeline twice.
      * 
      * Depending on the value given, `false` is 0 and `true`, undefined and negative numbers are infinite.
+     * 
+     * If this Timeline had any events set to `once` that have already been removed,
+     * they will **not** be repeated each loop.
      *
      * @method Phaser.Time.Timeline#repeat
      * @since 3.80.0
      * 
-     * @param {Number|Boolean} [amount=-1] - Amount of times to repeat, if `true` or negative it will be infinite.
+     * @param {number|boolean} [amount=-1] - Amount of times to repeat, if `true` or negative it will be infinite.
      *
      * @return {this} This Timeline instance.
      */
@@ -505,16 +527,30 @@ var Timeline = new Class({
      *
      * @method Phaser.Time.Timeline#reset
      * @since 3.60.0
-     *
+     * 
+     * @param {boolean} [loop=false] - Set to true if you do not want to reset the loop counters.
+     * 
      * @return {this} This Timeline instance.
      */
-    reset: function ()
+    reset: function (loop)
     {
+        if (loop === undefined) { loop = false; }
+
         this.elapsed = 0;
+
+        if (!loop)
+        {
+            this.iteration = 0;
+        }
 
         for (var i = 0; i < this.events.length; i++)
         {
             this.events[i].complete = false;
+            
+            if (!loop)
+            {
+                this.events[i].repeat = 0;
+            }
         }
 
         return this.play(false);
@@ -582,8 +618,10 @@ var Timeline = new Class({
             events.push({
                 complete: false,
                 time: startTime,
+                repeat: 0,
                 if: GetFastValue(entry, 'if', null),
                 run: GetFastValue(entry, 'run', null),
+                loop: GetFastValue(entry, 'loop', null),
                 event: GetFastValue(entry, 'event', null),
                 target: GetFastValue(entry, 'target', null),
                 set: GetFastValue(entry, 'set', null),
@@ -750,6 +788,11 @@ var Timeline = new Class({
  * timeline.play();
  * ```
  *
+ * The Timeline can also be looped with the repeat method:
+ * ```js
+ * timeline.repeat().play();
+ * ```
+ * 
  * There are lots of options available to you via the configuration object. See the
  * {@link Phaser.Types.Time.TimelineEventConfig} typedef for more details.
  *
