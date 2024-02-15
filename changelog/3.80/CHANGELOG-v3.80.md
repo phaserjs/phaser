@@ -48,6 +48,7 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * The `XHRLoader` will now listen for `ontimeout` and if triggered it will hand over to the `File.onError` handler. This prevents the Loader from stalling if a file times out. Fix #6472 (thanks @343dev)
 * `LightPipeline.currentNormalMap` was incorrectly documented as being a property of `WebGLRenderer`.
 * `Video` Game Objects now emit a `metadata` event, which emits once the video metadata is available.
+* `Time.Timeline` now supports looping via the `repeat` method. `Types.Time.TimelineEvent` now has a `loop` callback which will be called before its next iteration. Fix #6560 (thanks @micsun-al)
 
 # Bug Fixes
 
