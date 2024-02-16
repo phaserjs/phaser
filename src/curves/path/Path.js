@@ -783,7 +783,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#lineTo
      * @since 3.0.0
      *
-     * @param {(number|Phaser.Math.Vector2)} x - The X coordinate of the line's end point, or a `Vector2` containing the entire end point.
+     * @param {(number|Phaser.Math.Vector2|Phaser.Types.Math.Vector2Like)} x - The X coordinate of the line's end point, or a `Vector2` / `Vector2Like` containing the entire end point.
      * @param {number} [y] - The Y coordinate of the line's end point, if a number was passed as the X parameter.
      *
      * @return {this} This Path object.
@@ -793,6 +793,10 @@ var Path = new Class({
         if (x instanceof Vector2)
         {
             this._tmpVec2B.copy(x);
+        }
+        else if (typeof x === 'object')
+        {
+            this._tmpVec2B.setFromObject(x);
         }
         else
         {
@@ -829,7 +833,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#moveTo
      * @since 3.0.0
      *
-     * @param {(number|Phaser.Math.Vector2)} x - The X coordinate of the position to move the path's end point to, or a `Vector2` containing the entire new end point.
+     * @param {(number|Phaser.Math.Vector2|Phaser.Types.Math.Vector2Like)} x - The X coordinate of the position to move the path's end point to, or a `Vector2` / `Vector2Like` containing the entire new end point.
      * @param {number} [y] - The Y coordinate of the position to move the path's end point to, if a number was passed as the X coordinate.
      *
      * @return {this} This Path object.
