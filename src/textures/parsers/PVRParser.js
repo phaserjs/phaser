@@ -39,6 +39,14 @@ function PVRTC4bppSize (width, height)
 /**
  * @ignore
  */
+function BPTCSize (width, height)
+{
+    return Math.ceil(width / 4) * Math.ceil(height / 4) * 16;
+}
+
+/**
+ * @ignore
+ */
 function DXTEtcSmallSize (width, height)
 {
     return GetSize(width, height, 3, 3, 4, 4, 8);
@@ -156,7 +164,7 @@ function ATC12x12Size (width, height)
     return GetSize(width, height, 11, 11, 12, 12);
 }
 
-/**
+/*
  * 0: COMPRESSED_RGB_PVRTC_2BPPV1_IMG
  * 1: COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
  * 2: COMPRESSED_RGB_PVRTC_4BPPV1_IMG
@@ -166,6 +174,8 @@ function ATC12x12Size (width, height)
  * 8: COMPRESSED_RGBA_S3TC_DXT1_EXT or COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT
  * 9: COMPRESSED_RGBA_S3TC_DXT3_EXT or COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT
  * 11: COMPRESSED_RGBA_S3TC_DXT5_EXT or COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT
+ * 14: COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT or COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT
+ * 15: COMPRESSED_RGBA_BPTC_UNORM_EXT or COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT
  * 22: COMPRESSED_RGB8_ETC2
  * 23: COMPRESSED_RGBA8_ETC2_EAC
  * 24: COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2
@@ -200,8 +210,8 @@ var FORMATS = {
     8: { sizeFunc: DXTEtcAstcBigSize, glFormat: [ 0x83F1, 0x8C4D ] },
     9: { sizeFunc: DXTEtcAstcBigSize, glFormat: [ 0x83F2, 0x8C4E ] },
     11: { sizeFunc: DXTEtcAstcBigSize, glFormat: [ 0x83F3, 0x8C4F ] },
-    22: { sizeFunc: DXTEtcSmallSize , glFormat: 0x9274 },
-    23: { sizeFunc: DXTEtcAstcBigSize, glFormat: 0x9278 },
+    14: { sizeFunc: BPTCSize, glFormat: [ 0x8E8E, 0x8E8F ] },
+    15: { sizeFunc: BPTCSize, glFormat: [ 0x8E8C, 0x8E8D ] },
     22: { sizeFunc: DXTEtcSmallSize , glFormat: [ 0x9274 ] },
     23: { sizeFunc: DXTEtcAstcBigSize, glFormat: [ 0x9278 ] },
     24: { sizeFunc: DXTEtcSmallSize, glFormat: [ 0x9276 ] },
