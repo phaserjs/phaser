@@ -315,6 +315,16 @@ var Timeline = new Class({
                     }
                 }
 
+                if (this.iteration)
+                {
+                    event.repeat++;
+                }
+
+                if (event.loop && event.repeat)
+                {
+                    event.loop.call(target);
+                }
+
                 if (event.tween)
                 {
                     sys.tweens.add(event.tween);
@@ -342,19 +352,9 @@ var Timeline = new Class({
                     event.run.call(target);
                 }
 
-                if (event.loop && event.repeat)
-                {
-                    event.loop.call(target);
-                }
-
                 if (event.stop)
                 {
                     this.stop();
-                }
-
-                if (this.iteration)
-                {
-                    event.repeat++;
                 }
             }
         }
