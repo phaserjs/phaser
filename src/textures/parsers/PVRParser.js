@@ -176,9 +176,9 @@ function ATC12x12Size (width, height)
  * 11: COMPRESSED_RGBA_S3TC_DXT5_EXT or COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT
  * 14: COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT or COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT
  * 15: COMPRESSED_RGBA_BPTC_UNORM_EXT or COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT
- * 22: COMPRESSED_RGB8_ETC2
- * 23: COMPRESSED_RGBA8_ETC2_EAC
- * 24: COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2
+ * 22: COMPRESSED_RGB8_ETC2 or COMPRESSED_SRGB8_ETC2
+ * 23: COMPRESSED_RGBA8_ETC2_EAC or COMPRESSED_SRGB8_ALPHA8_ETC2_EAC
+ * 24: COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 or COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2
  * 25: COMPRESSED_R11_EAC
  * 26: COMPRESSED_RG11_EAC
  * 27: COMPRESSED_RGBA_ASTC_4x4_KHR or COMPRESSED_SRGB8_ALPHA8_ASTC_4X4_KHR
@@ -212,9 +212,9 @@ var FORMATS = {
     11: { sizeFunc: DXTEtcAstcBigSize, glFormat: [ 0x83F3, 0x8C4F ] },
     14: { sizeFunc: BPTCSize, glFormat: [ 0x8E8E, 0x8E8F ] },
     15: { sizeFunc: BPTCSize, glFormat: [ 0x8E8C, 0x8E8D ] },
-    22: { sizeFunc: DXTEtcSmallSize , glFormat: [ 0x9274 ] },
-    23: { sizeFunc: DXTEtcAstcBigSize, glFormat: [ 0x9278 ] },
-    24: { sizeFunc: DXTEtcSmallSize, glFormat: [ 0x9276 ] },
+    22: { sizeFunc: DXTEtcSmallSize , glFormat: [ 0x9274, 0x9275 ] },
+    23: { sizeFunc: DXTEtcAstcBigSize, glFormat: [ 0x9278, 0x9279 ] },
+    24: { sizeFunc: DXTEtcSmallSize, glFormat: [ 0x9276, 0x9277 ] },
     25: { sizeFunc: DXTEtcSmallSize, glFormat: [ 0x9270 ] },
     26: { sizeFunc: DXTEtcAstcBigSize, glFormat: [ 0x9272 ] },
     27: { sizeFunc: DXTEtcAstcBigSize, glFormat: [ 0x93B0, 0x93D0 ] },
