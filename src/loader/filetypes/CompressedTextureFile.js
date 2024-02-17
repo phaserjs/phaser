@@ -17,6 +17,7 @@ var Merge = require('../../utils/object/Merge');
 var MultiAtlasFile = require('./MultiAtlasFile');
 var MultiFile = require('../MultiFile');
 var PVRParser = require('../../textures/parsers/PVRParser');
+var verifyCompressedTexture = require('../../textures/parsers/VerifyCompressedTexture');
 
 /**
  * @classdesc
@@ -190,6 +191,11 @@ var CompressedTextureFile = new Class({
      */
     addToCache: function ()
     {
+        function compressionWarning (message)
+        {
+            console.warn('Compressed Texture Invalid: "' + image.key + '". ' + message);
+        }
+
         if (this.isReadyToProcess())
         {
             var entry = this.config;
@@ -214,9 +220,27 @@ var CompressedTextureFile = new Class({
                 else if (entry.type === 'KTX')
                 {
                     textureData = KTXParser(image.data);
+                    if (!textureData)
+                    {
+                        compressionWarning('KTX file contains unsupported format.');
+                    }
                 }
 
-                if (textureData && renderer.supportsCompressedTexture(entry.format, textureData.internalFormat))
+                // Check block size.
+                if (textureData && !verifyCompressedTexture(textureData))
+                {
+                    compressionWarning('Texture dimensions failed verification. Check the texture format specifications for ' + entry.format + ' 0x' + textureData.internalFormat.toString(16) + '.');
+                    textureData = null;
+                }
+
+                // Check texture compression.
+                if (textureData && !renderer.supportsCompressedTexture(entry.format, textureData.internalFormat))
+                {
+                    compressionWarning('Texture format ' + entry.format + ' with internal format ' + textureData.internalFormat + ' not supported by the GPU. Texture invalid. This is often due to the texture using sRGB instead of linear RGB.');
+                    textureData = null;
+                }
+
+                if (textureData)
                 {
                     textureData.format = renderer.getCompressedTextureName(entry.format, textureData.internalFormat);
 
