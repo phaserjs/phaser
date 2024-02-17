@@ -35,7 +35,7 @@
  * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [RGTC] - The string, or file entry object, for an RGTC format texture.
  * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [PVRTC] - The string, or file entry object, for an PVRTC format texture.
  * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [S3TC] - The string, or file entry object, for an S3TC format texture.
- * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [S3TCRGB] - The string, or file entry object, for an S3TCRGB format texture.
+ * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [S3TCSRGB] - The string, or file entry object, for an S3TCSRGB format texture.
  * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [IMG] - The string, or file entry object, for the fallback image file.
  * @property {string} [shaderType='fragment'] - The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle.
  * @property {number} [width=512] - The width of the texture the HTML will be rendered to.
