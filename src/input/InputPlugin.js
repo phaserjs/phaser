@@ -19,7 +19,6 @@ var GetFastValue = require('../utils/object/GetFastValue');
 var GEOM_CONST = require('../geom/const');
 var InputPluginCache = require('./InputPluginCache');
 var IsPlainObject = require('../utils/object/IsPlainObject');
-var HasAny = require('../utils/object/HasAny');
 var PluginCache = require('../plugins/PluginCache');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var RectangleContains = require('../geom/rectangle/Contains');
@@ -2137,7 +2136,7 @@ var InputPlugin = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set the hit area on.
-     * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {(Phaser.Types.Input.InputConfiguration|Phaser.Types.Input.HitAreaCallback|any)} [hitArea] - Either an input configuration object, a geometric shape that defines the hit area or a hit area callback. If not specified a Rectangle hit area will be used.
      * @param {Phaser.Types.Input.HitAreaCallback} [hitAreaCallback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      *
      * @return {this} This InputPlugin object.
@@ -2167,7 +2166,12 @@ var InputPlugin = new Class({
             var config = hitArea;
 
             // Check if any supplied Game Object is a Mesh based Game Object
-            if (!HasAny(gameObjects, 'faces'))
+            var isMesh = gameObjects.some(function (gameObject)
+            {
+                return gameObject.hasOwnProperty('faces');
+            });
+
+            if (!isMesh)
             {
                 hitArea = GetFastValue(config, 'hitArea', null);
                 hitAreaCallback = GetFastValue(config, 'hitAreaCallback', null);
