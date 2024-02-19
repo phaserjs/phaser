@@ -75,6 +75,7 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * The `Physics.Arcade.StaticBody` method `reset` now re-applies `offset` values. Fix #6729 (thanks @samme)
 * The `Video` Game Object now has a starting texture, which stops errors with accessing `frame` before the video loads the first frame. Fix #6475 (thanks @rexrainbow @JoeSiu)
 * The `Device.Browser.safari` regular expression has been strenghtened so it now captures versions with double or triple periods in. Previously it would fail for `Version/17.2.1` due to the minor value. (thanks watcher)
+* The `Browser` Device class will no longer think that Chrome is Mobile Safari on iOS devices. Fix #6739 (thanks @michalfialadev)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
