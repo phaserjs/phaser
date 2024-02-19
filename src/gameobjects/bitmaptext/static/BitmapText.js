@@ -783,7 +783,7 @@ var BitmapText = new Class({
     /**
      * Changes the font this BitmapText is using to render.
      *
-     * The new texture is loaded and applied to the BitmapText. The existing test, size and alignment are preserved,
+     * The new texture is loaded and applied to the BitmapText. The existing text, size and alignment are preserved,
      * unless overridden via the arguments.
      *
      * @method Phaser.GameObjects.BitmapText#setFont
@@ -800,22 +800,19 @@ var BitmapText = new Class({
         if (size === undefined) { size = this._fontSize; }
         if (align === undefined) { align = this._align; }
 
-        if (key !== this.font)
+        var entry = this.scene.sys.cache.bitmapFont.get(key);
+
+        if (entry)
         {
-            var entry = this.scene.sys.cache.bitmapFont.get(key);
+            this.font = key;
+            this.fontData = entry.data;
+            this._fontSize = size;
+            this._align = align;
+            this.fromAtlas = entry.fromAtlas === true;
 
-            if (entry)
-            {
-                this.font = key;
-                this.fontData = entry.data;
-                this._fontSize = size;
-                this._align = align;
-                this.fromAtlas = entry.fromAtlas === true;
+            this.setTexture(entry.texture, entry.frame);
 
-                this.setTexture(entry.texture, entry.frame);
-
-                GetBitmapTextSize(this, false, true, this._bounds);
-            }
+            GetBitmapTextSize(this, false, true, this._bounds);
         }
 
         return this;
