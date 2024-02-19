@@ -237,7 +237,7 @@ var WebGLRenderer = new Class({
 
         /**
          * A list of all WebGLBufferWrappers that have been created by this renderer.
-         * 
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glBufferWrappers
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper[]}
          * @since 3.80.0
@@ -246,7 +246,7 @@ var WebGLRenderer = new Class({
 
         /**
          * A list of all WebGLProgramWrappers that have been created by this renderer.
-         * 
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glProgramWrappers
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper[]}
          * @since 3.80.0
@@ -255,7 +255,7 @@ var WebGLRenderer = new Class({
 
         /**
          * A list of all WebGLTextureWrappers that have been created by this renderer.
-         * 
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glTextureWrappers
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]}
          * @since 3.80.0
@@ -264,7 +264,7 @@ var WebGLRenderer = new Class({
 
         /**
          * A list of all WebGLFramebufferWrappers that have been created by this renderer.
-         * 
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glFramebufferWrappers
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper[]}
          * @since 3.80.0
@@ -273,7 +273,7 @@ var WebGLRenderer = new Class({
 
         /**
          * A list of all WebGLAttribLocationWrappers that have been created by this renderer.
-         * 
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glAttribLocationWrappers
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper[]}
          * @since 3.80.0
@@ -282,7 +282,7 @@ var WebGLRenderer = new Class({
 
         /**
          * A list of all WebGLUniformLocationWrappers that have been created by this renderer.
-         * 
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glUniformLocationWrappers
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper[]}
          * @since 3.80.0
@@ -2266,10 +2266,10 @@ var WebGLRenderer = new Class({
 
     /**
      * Creates a WebGLAttribLocationWrapper instance based on the given WebGLProgramWrapper and attribute name.
-     * 
+     *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createAttribLocation
      * @since 3.80.0
-     * 
+     *
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The WebGLProgramWrapper instance.
      * @param {string} name - The name of the attribute.
      */
@@ -2282,10 +2282,10 @@ var WebGLRenderer = new Class({
 
     /**
      * Creates a WebGLUniformLocationWrapper instance based on the given WebGLProgramWrapper and uniform name.
-     * 
+     *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createUniformLocation
      * @since 3.80.0
-     * 
+     *
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The WebGLProgramWrapper instance.
      * @param {string} name - The name of the uniform.
      */
@@ -2381,7 +2381,7 @@ var WebGLRenderer = new Class({
 
     /**
      * Deletes a WebGLAttribLocation from the GL instance.
-     * 
+     *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteAttribLocation
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper} attrib - The attrib location to be deleted.
      * @since 3.80.0
@@ -2399,7 +2399,7 @@ var WebGLRenderer = new Class({
 
     /**
      * Deletes a WebGLUniformLocation from the GL instance.
-     * 
+     *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteUniformLocation
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper} uniform - The uniform location to be deleted.
      * @since 3.80.0
@@ -3093,11 +3093,11 @@ var WebGLRenderer = new Class({
 
     /**
      * Create a WebGLTexture from a Uint8Array.
-     * 
+     *
      * The Uint8Array is assumed to be RGBA values, one byte per color component.
-     * 
+     *
      * The texture will be filtered with `gl.NEAREST` and will not be mipped.
-     * 
+     *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createUint8ArrayTexture
      * @since 3.80.0
      * @param {Uint8Array} data - The Uint8Array to create the texture from.
