@@ -14,4 +14,5 @@
  * @property {Phaser.Types.Renderer.WebGL.WebGLPipelineShaderConfig[]} [shaders] - An array of shaders, all of which are created for this one pipeline. Uses the `vertShader`, `fragShader`, `attributes` and `uniforms` properties of this object as defaults.
  * @property {boolean} [forceZero=false] - Force the shader to use just a single sampler2d? Set for anything that extends the Single Pipeline.
  * @property {(boolean|number|Phaser.Types.Renderer.WebGL.RenderTargetConfig[])} [renderTarget] - Create Render Targets for this pipeline. Can be a number, which determines the quantity, a boolean (sets quantity to 1), or an array of Render Target configuration objects.
+ * @property {string} [resizeUniform=''] - If the WebGL renderer resizes, this uniform will be set with the new width and height values as part of the pipeline resize call.
  */

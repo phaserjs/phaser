@@ -148,6 +148,7 @@ var MultiPipeline = new Class({
                 normalized: true
             }
         ]);
+        config.resizeUniform = 'uResolution';
 
         WebGLPipeline.call(this, config);
 

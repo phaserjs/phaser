@@ -89,6 +89,7 @@ var MobilePipeline = new Class({
             }
         ]);
         config.forceZero = true;
+        config.resizeUniform = 'uResolution';
 
         MultiPipeline.call(this, config);
     },

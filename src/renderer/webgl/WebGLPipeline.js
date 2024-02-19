@@ -447,6 +447,17 @@ var WebGLPipeline = new Class({
          * @since 3.60.0
          */
         this.activeTextures = [];
+
+        /**
+         * If the WebGL Renderer changes size, this uniform will be set with the new width and height values
+         * as part of the pipeline resize method. Various built-in pipelines, such as the MultiPipeline, set
+         * this property automatically to `uResolution`.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#resizeUniform
+         * @type {string}
+         * @since 3.80.0
+         */
+        this.resizeUniform = GetFastValue(config, 'resizeUniform', '');
     },
 
     /**
@@ -985,6 +996,11 @@ var WebGLPipeline = new Class({
 
         this.setProjectionMatrix(width, height);
 
+        if (this.resizeUniform)
+        {
+            this.set2f(this.resizeUniform, width, height);
+        }
+
         this.emit(Events.RESIZE, width, height, this);
 
         this.onResize(width, height);
@@ -1199,7 +1215,7 @@ var WebGLPipeline = new Class({
      * This method is called if the WebGL context is lost and restored.
      * It ensures that uniforms are synced back to the GPU
      * for all shaders in this pipeline.
-     * 
+     *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#restoreContext
      * @since 3.80.0
      */
@@ -2616,7 +2632,7 @@ var WebGLPipeline = new Class({
         }
 
         var renderer = this.renderer;
-        
+
         renderer.deleteBuffer(this.vertexBuffer);
 
         renderer.off(RendererEvents.RESIZE, this.resize, this);
