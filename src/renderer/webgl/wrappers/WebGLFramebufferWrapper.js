@@ -1,3 +1,9 @@
+/**
+ * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
 var Class = require('../../../utils/Class');
 
 /**
@@ -170,27 +176,27 @@ var WebGLFramebufferWrapper = new Class({
         if (!gl.isContextLost())
         {
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.webGLFramebuffer);
-    
+
             // Check for a color attachment and remove it
             var colorAttachment = gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
-    
+
             if (colorAttachment !== null)
             {
                 gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, null, 0);
-    
+
                 gl.deleteTexture(colorAttachment);
             }
-    
+
             // Check for a depth-stencil attachment and remove it
             var depthStencilAttachment = gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
-    
+
             if (depthStencilAttachment !== null)
             {
                 gl.deleteRenderbuffer(depthStencilAttachment);
             }
-    
+
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    
+
             gl.deleteFramebuffer(this.webGLFramebuffer);
         }
 
