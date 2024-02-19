@@ -76,7 +76,7 @@ function init ()
         Browser.firefoxVersion = parseInt(RegExp.$1, 10);
         Browser.es2019 = (Browser.firefoxVersion > 10);
     }
-    else if ((/AppleWebKit/).test(ua) && OS.iOS)
+    else if ((/AppleWebKit\/(?!.*CriOS)/).test(ua) && OS.iOS)
     {
         Browser.mobileSafari = true;
         Browser.es2019 = true;
