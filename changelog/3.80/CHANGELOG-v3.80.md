@@ -50,6 +50,7 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * The `Video` Game Object now emits a `metadata` event, which emits once the video metadata is available.
 * The `Time.Timeline` class now supports looping via the `repeat` method. `Types.Time.TimelineEvent` now has a `loop` callback which will be called before its next iteration. Fix #6560 (thanks @micsun-al)
 * The `Curves.Path` methods `lineTo` and `moveTo` now support `Types.Math.Vector2Like` as the first parameter. Fix #6557 (thanks @wayfu)
+* The `BitmapText.setFont` method will now set the texture, size and alignment even if the same font key has been given as is already in use. Fix #6740 (thanks @AlvaroNeuronup)
 
 # Bug Fixes
 
@@ -85,3 +86,6 @@ My thanks to the following for helping with the Phaser 3 Examples, Beta Testing,
 @actionmoon
 @rafael-lua
 @Byvire
+@yaustar
+@Stan-Stani
+
