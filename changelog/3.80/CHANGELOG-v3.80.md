@@ -2,10 +2,10 @@
 
 # New Features
 
-* The Scale Manager has a new scale mode called `EXPAND`. This is inspired by the Expand mode in Godot: "Keep aspect ratio when stretching the screen, but keep neither the base width nor height. Depending on the screen aspect ratio, the viewport will either be larger in the horizontal direction (if the screen is wider than the base size) or in the vertical direction (if the screen is taller than the original size)" (thanks @rexrainbow)
 * Phaser now performs a [WebGL Context Restore](WebGLContextRestore.md) to keep the game running after losing WebGL context. This affects many parts of the rendering system, but everything should work just the same unless you're doing something very technical. See the link for more details.
+* The Scale Manager has a new scale mode called `EXPAND`. This is inspired by the Expand mode in Godot: "Keep aspect ratio when stretching the screen, but keep neither the base width nor height. Depending on the screen aspect ratio, the viewport will either be larger in the horizontal direction (if the screen is wider than the base size) or in the vertical direction (if the screen is taller than the original size)" (thanks @rexrainbow)
 
-# New Features - Base64 Loader
+# New Feature - Base64 Loader
 
 The Phaser LoaderPlugin and related classes have been updated so that they now work natively with base64 encoded files and Data URIs. This means you can now load a base64 encoded image, audio file or text file directly into the Loader. The Loader will then decode the data and process it as if it was a normal file. This is particularly useful for environments such as Playable Ads where you have to provide a single html file with all assets embedded and no XHR requests.
 
@@ -13,6 +13,14 @@ The Phaser LoaderPlugin and related classes have been updated so that they now w
 * `Loader.File.onBase64Load` is a new method that is called when the file has finished decoding from a Data URI.
 * The `ImageFile` will now default to using the Image Load Element if a base64 file is detected, instead of throwing a console warning about unsupported types.
 * The `XHRLoader` will now return a fake XHR result object containing the decoded base64 data if a base64 file is detected, skipping the creation of a real XML Http Request object.
+
+# New Feature - Scale Manager Snap Mode
+
+The Game Config has a new Scale Manager property called `snap`. This allows you to set a 'snapping' value for the width and height of your game. This is especially useful for games where you want to keep a fixed dimension: for example, you want the game to always snap to a multiple of 16 pixels for the width. Or, if you want to scale a pixel-art game up by integer values, you can now set the game size as the `snap` value and the Scale Manager will ensure the game size is always a multiple of that value.
+
+* A new property is available in the Game Configuration specifically for setting the 'snap' values for the Scale Manager. You can now set `snap: { width, height }` in the game config. This is then passed to the display size by the Scale Manager and used to control the snap values. Fix #6629 (thanks @musjj @samme)
+* `ScaleManager.setSnap` is a new method that allows you to set the snap values for the game size, should you need to do it post-boot and not in the game config.
+* `Config#snapWidth` and `Config#snapHeight` are new properties in the Game Config that hold the parsed `snap` config values, as used by the Scale Manager.
 
 # Spine Updates
 
@@ -51,7 +59,7 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * The `Time.Timeline` class now supports looping via the `repeat` method. `Types.Time.TimelineEvent` now has a `loop` callback which will be called before its next iteration. Fix #6560 (thanks @micsun-al)
 * The `Curves.Path` methods `lineTo` and `moveTo` now support `Types.Math.Vector2Like` as the first parameter. Fix #6557 (thanks @wayfu)
 * The `BitmapText.setFont` method will now set the texture, size and alignment even if the same font key has been given as is already in use. Fix #6740 (thanks @AlvaroNeuronup)
-* `WebGLPipeline.resizeUniform` is a new property that is defined in the `WebGLPipelineConfig`. This is a string that defines a `uResolution` property, or similar, within the pipeline shader. If the WebGL Renderer resizes, this uniform will now be updated automatically as part of the pipeline resize method. It has been added to both the Multi and Mobile pipelines as default. This fixes issues where the pipelines were rendering with old resolution values, causing graphical glitches in mostly pixel-art games. Fix #6674 (thanks @Nerodon)
+* `WebGLPipeline.resizeUniform` is a new property that is defined in the `WebGLPipelineConfig`. This is a string that defines a `uResolution` property, or similar, within the pipeline shader. If the WebGL Renderer resizes, this uniform will now be updated automatically as part of the pipeline resize method. It has been added to both the Multi and Mobile pipelines as default. This fixes issues where the pipelines were rendering with old resolution values, causing graphical glitches in mostly pixel-art games. Fix #6674 #6678 (thanks @Nerodon @LazeKer)
 
 # Bug Fixes
 
