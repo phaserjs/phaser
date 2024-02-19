@@ -122,6 +122,16 @@ var Config = new Class({
         this.maxHeight = GetValue(scaleConfig, 'max.height', 0, config);
 
         /**
+         * @const {number} Phaser.Core.Config#snapWidth - The horizontal amount to snap the canvas by when the Scale Manager is resizing. A value of zero means no snapping.
+         */
+        this.snapWidth = GetValue(scaleConfig, 'snap.width', 0, config);
+
+        /**
+         * @const {number} Phaser.Core.Config#snapHeight - The vertical amount to snap the canvas by when the Scale Manager is resizing. A value of zero means no snapping.
+         */
+        this.snapHeight = GetValue(scaleConfig, 'snap.height', 0, config);
+
+        /**
          * @const {number} Phaser.Core.Config#renderType - Force Phaser to use a specific renderer. Can be `CONST.CANVAS`, `CONST.WEBGL`, `CONST.HEADLESS` or `CONST.AUTO` (default)
          */
         this.renderType = GetValue(config, 'type', CONST.AUTO);
