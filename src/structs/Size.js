@@ -185,8 +185,8 @@ var Size = new Class({
     },
 
     /**
-     * By setting a Snap To value when this Size component is modified its dimensions will automatically
-     * by snapped to the nearest grid slice, using floor. For example, if you have snap value of 16,
+     * By setting snap values, when this Size component is modified its dimensions will automatically
+     * be snapped to the nearest grid slice, using floor. For example, if you have snap value of 16,
      * and the width changes to 68, then it will snap down to 64 (the closest multiple of 16 when floored)
      *
      * Note that snapping takes place before adjustments by the parent, or the min / max settings. If these
