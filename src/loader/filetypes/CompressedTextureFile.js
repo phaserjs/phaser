@@ -437,7 +437,7 @@ var CompressedTextureFile = new Class({
  * Mali Texture Compression Tool (https://developer.arm.com/tools-and-software/graphics-and-gaming/mali-texture-compression-tool)
  * ASTC Encoder (https://github.com/ARM-software/astc-encoder)
  *
- * ASTCs must have a Channel Type of Unsigned Normalized Bytes (UNorm) and a Linear RGB Color Space.
+ * ASTCs must have a Channel Type of Unsigned Normalized Bytes (UNorm).
  *
  * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
  * or if it's already running, when the next free load slot becomes available. This happens automatically if you
