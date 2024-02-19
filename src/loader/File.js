@@ -240,7 +240,7 @@ var File = new Class({
          * @type {boolean}
          * @since 3.80.0
          */
-        this.base64 = (url.indexOf('data:') === 0);
+        this.base64 = (typeof url === 'string') && (url.indexOf('data:') === 0);
     },
 
     /**
