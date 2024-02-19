@@ -585,6 +585,11 @@ var ScaleManager = new Class({
         //  We just use the w/h here as this is what sets the aspect ratio (which doesn't then change)
         this.displaySize.setSize(width, height);
 
+        if (config.snapWidth > 0 || config.snapHeight > 0)
+        {
+            this.displaySize.setSnap(config.snapWidth, config.snapHeight);
+        }
+
         this.orientation = GetScreenOrientation(width, height);
     },
 
@@ -905,6 +910,36 @@ var ScaleManager = new Class({
     {
         this.zoom = this.getMaxZoom();
         this._resetZoom = true;
+
+        return this.refresh();
+    },
+
+    /**
+     * By setting a Snap value, when the browser size is modified, its dimensions will automatically
+     * be snapped to the nearest grid slice, using floor. For example, if you have snap value of 16,
+     * and the width changes to 68, then it will snap down to 64 (the closest multiple of 16 when floored)
+     *
+     * This mode is best used with the `FIT` scale mode.
+     *
+     * Call this method with no arguments to reset the snap values.
+     *
+     * Calling this method automatically invokes `ScaleManager.refresh` which emits a `RESIZE` event.
+     *
+     * @method Phaser.Scale.ScaleManager#setSnap
+     * @fires Phaser.Scale.Events#RESIZE
+     * @since 3.80.0
+     *
+     * @param {number} [snapWidth=0] - The amount to snap the width to. If you don't want to snap the width, pass a value of zero.
+     * @param {number} [snapHeight=snapWidth] - The amount to snap the height to. If not provided it will use the `snapWidth` value. If you don't want to snap the height, pass a value of zero.
+     *
+     * @return {this} The Scale Manager instance.
+     */
+    setSnap: function (snapWidth, snapHeight)
+    {
+        if (snapWidth === undefined) { snapWidth = 0; }
+        if (snapHeight === undefined) { snapHeight = snapWidth; }
+
+        this.displaySize.setSnap(snapWidth, snapHeight);
 
         return this.refresh();
     },
