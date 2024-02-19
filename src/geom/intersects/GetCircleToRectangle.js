@@ -1,7 +1,7 @@
 /**
  * @author       Florian Vazelle
  * @author       Geoffrey Glaive
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2024 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 

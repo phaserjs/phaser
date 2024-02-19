@@ -1,8 +1,8 @@
 /**
  * @author       Joachim Grill <joachim@codeandweb.com>
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @copyright    2018 CodeAndWeb GmbH
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2024 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 

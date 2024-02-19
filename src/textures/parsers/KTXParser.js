@@ -1,5 +1,5 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @copyright    2021 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
