@@ -9,6 +9,7 @@ var BuildGameObject = require('../BuildGameObject');
 var Container = require('./Container');
 var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
+var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * Creates a new Container Game Object and returns it.
@@ -29,7 +30,7 @@ GameObjectCreator.register('container', function (config, addToScene)
 
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
-    var children = GetAdvancedValue(config, 'children', null);
+    var children = GetFastValue(config, 'children', null);
 
     var container = new Container(this.scene, x, y, children);
 
