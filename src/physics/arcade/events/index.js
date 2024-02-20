@@ -10,6 +10,7 @@
 
 module.exports = {
 
+    BOUNCE: require('./BOUNCE_EVENT'),
     COLLIDE: require('./COLLIDE_EVENT'),
     OVERLAP: require('./OVERLAP_EVENT'),
     PAUSE: require('./PAUSE_EVENT'),
