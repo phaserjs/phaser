@@ -4,6 +4,7 @@
 
 * Phaser now performs a [WebGL Context Restore](WebGLContextRestore.md) to keep the game running after losing WebGL context. This affects many parts of the rendering system, but everything should work just the same unless you're doing something very technical. See the link for more details.
 * The Scale Manager has a new scale mode called `EXPAND`. This is inspired by the Expand mode in Godot: "Keep aspect ratio when stretching the screen, but keep neither the base width nor height. Depending on the screen aspect ratio, the viewport will either be larger in the horizontal direction (if the screen is wider than the base size) or in the vertical direction (if the screen is taller than the original size)" (thanks @rexrainbow)
+* The `Tilemap.createFromTiles` method has been updated. It will now copy the following properties, if set in the Tile, to the Sprites it creates: `rotation`, `flipX`, `flipY`, `alpha`, `visible` and `tint`. If these properties are declared in the `spriteConfig` passed to the method, those will be used instead, otherwise the Tile values are used. Fix #6711 (thanks @Nerodon)
 
 # New Feature - Base64 Loader
 
