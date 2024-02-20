@@ -538,16 +538,27 @@ var TextureManager = new Class({
 
             if (atlasData)
             {
+                var parse = function (texture, sourceIndex, atlasData)
+                {
+                    if (Array.isArray(atlasData.textures) || Array.isArray(atlasData.frames))
+                    {
+                        Parser.JSONArray(texture, sourceIndex, atlasData);
+                    }
+                    else
+                    {
+                        Parser.JSONHash(texture, sourceIndex, atlasData);
+                    }
+                };
                 if (Array.isArray(atlasData))
                 {
                     for (var i = 0; i < atlasData.length; i++)
                     {
-                        Parser.JSONHash(texture, i, atlasData[i]);
+                        parse(texture, i, atlasData[i]);
                     }
                 }
                 else
                 {
-                    Parser.JSONHash(texture, 0, atlasData);
+                    parse(texture, 0, atlasData);
                 }
             }
 
@@ -1129,7 +1140,12 @@ var TextureManager = new Class({
 
         if (sheet)
         {
-            var texture = this.create(key, sheet.source.image);
+            var source = sheet.source.image;
+            if (!source)
+            {
+                source = sheet.source.glTexture;
+            }
+            var texture = this.create(key, source);
 
             if (sheet.trimmed)
             {

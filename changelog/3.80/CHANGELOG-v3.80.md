@@ -76,6 +76,7 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * Compressed texture files which are incompatible with WebGL will now fail to load, and display a console warning explaining why. Previously they might seem to load, but not display properly.
 * Add experimental support for BPTC compressed textures in PVR files.
 * Change `S3TCRGB` to `S3TCSRGB` in `WebGLTextureCompression`, `CompressedTextureFileConfig`, and `FileConfig` typedefs.
+* Fix generating spritesheets from members of texture atlases based on compressed textures. (Thanks @vladyslavfolkuian)
 * The `BloomFX` and `BlurFX` and any custom pipeline that relies on using the `UtilityPipeline` full or half frame targets will now correctly draw even after the renderer size changes. Fix #6677 (thanks @Nerodon)
 * The `PostFXPipeline.postBatch` method will now bind the current Render Target after the pipeline has booted for the first time. This fixes glitch errors on mobile devices where Post FX would appear corrupted for a single frame. Fix #6681 (thanks @moufmouf @tongliang999)
 * The `Matter.Body` function `scale` has been updated so if the Body originally had an `inertia` of `Infinity` this will be restored at the end of the call. This happens if you set a Matter Body to have fixed rotation. Fix #6369 (thanks @sushovande)

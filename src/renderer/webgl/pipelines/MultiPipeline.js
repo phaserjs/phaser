@@ -361,9 +361,9 @@ var MultiPipeline = new Class({
             flipX = -1;
         }
 
-        //  Auto-invert the flipY if this is coming from a GLTexture
+        //  Auto-invert the flipY if this is coming from a GL RenderTexture
 
-        if (gameObject.flipY || (frame.source.isGLTexture && !texture.flipY))
+        if (gameObject.flipY || (frame.source.isGLTexture && frame.source.isRenderTexture && !texture.flipY))
         {
             if (!customPivot)
             {
