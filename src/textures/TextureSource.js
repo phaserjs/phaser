@@ -244,7 +244,7 @@ var TextureSource = new Class({
                 }
                 else if (this.compressionAlgorithm)
                 {
-                    this.glTexture = renderer.createTextureFromSource(source);
+                    this.glTexture = renderer.createTextureFromSource(source, undefined, undefined, scaleMode);
                 }
                 else if (source instanceof Uint8Array)
                 {

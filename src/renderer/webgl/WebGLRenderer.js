@@ -2066,14 +2066,14 @@ var WebGLRenderer = new Class({
 
         if (scaleMode === CONST.ScaleModes.LINEAR && this.config.antialias)
         {
-            minFilter = (pow && this.mipmapFilter) ? this.mipmapFilter : gl.LINEAR;
-            magFilter = gl.LINEAR;
-        }
+            var isCompressed = source && source.compressed;
+            var isMip = pow || (isCompressed && source.mipmaps.length > 1);
 
-        if (source && source.compressed)
-        {
-            //  If you don't set minFilter to LINEAR then the compressed textures don't work!
-            minFilter = gl.LINEAR;
+            // Filters above LINEAR only work with MIPmaps.
+            // These are only generated for power of two (POT) textures.
+            // Compressed textures with mipmaps are always POT,
+            // but POT compressed textures might not have mipmaps.
+            minFilter = (this.mipmapFilter && isMip) ? this.mipmapFilter : gl.LINEAR;
             magFilter = gl.LINEAR;
         }
 
