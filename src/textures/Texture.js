@@ -317,6 +317,59 @@ var Texture = new Class({
     },
 
     /**
+     * Based on the given Texture Source Index, this method will get all of the Frames using
+     * that source and then work out the bounds that they encompass, returning them in an object.
+     *
+     * This is useful if this Texture is, for example, a sprite sheet within an Atlas, and you
+     * need to know the total bounds of the sprite sheet.
+     *
+     * @method Phaser.Textures.Texture#getFrameBounds
+     * @since 3.80.0
+     *
+     * @param {number} sourceIndex - The index of the TextureSource to get the Frame bounds from.
+     *
+     * @return {Phaser.Types.Math.RectangleLike} An object containing the bounds of the Frames using the given Texture Source Index.
+     */
+    getFrameBounds: function (sourceIndex)
+    {
+        if (sourceIndex === undefined) { sourceIndex = 0; }
+
+        var frames = this.getFramesFromTextureSource(sourceIndex);
+
+        var minX = Infinity;
+        var minY = Infinity;
+        var maxX = 0;
+        var maxY = 0;
+
+        for (var i = 0; i < frames.length; i++)
+        {
+            var frame = frames[i];
+
+            if (frame.cutX < minX)
+            {
+                minX = frame.cutX;
+            }
+
+            if (frame.cutY < minY)
+            {
+                minY = frame.cutY;
+            }
+
+            if (frame.cutX + frame.cutWidth > maxX)
+            {
+                maxX = frame.cutX + frame.cutWidth;
+            }
+
+            if (frame.cutY + frame.cutHeight > maxY)
+            {
+                maxY = frame.cutY + frame.cutHeight;
+            }
+        }
+
+        return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+    },
+
+    /**
      * Returns an array with all of the names of the Frames in this Texture.
      *
      * Useful if you want to randomly assign a Frame to a Game Object, as you can
