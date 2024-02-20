@@ -92,14 +92,14 @@ The Phaser Input and related classes have been updated to be more consistent wit
 
 My thanks to the following for helping with the Phaser 3 Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@AlvaroEstradaDev
-@stevenwithaph
-@paxperscientiam
-@samme
 @actionmoon
-@rafael-lua
+@AlvaroEstradaDev
 @Byvire
-@yaustar
-@Stan-Stani
+@Creepypoke
 @Flashfyre
-@orcomarcio
+@paxperscientiam
+@rafael-lua
+@samme
+@Stan-Stani
+@stevenwithaph
+@yaustar
