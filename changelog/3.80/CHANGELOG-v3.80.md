@@ -6,6 +6,8 @@
 * The Scale Manager has a new scale mode called `EXPAND`. This is inspired by the Expand mode in Godot: "Keep aspect ratio when stretching the screen, but keep neither the base width nor height. Depending on the screen aspect ratio, the viewport will either be larger in the horizontal direction (if the screen is wider than the base size) or in the vertical direction (if the screen is taller than the original size)" (thanks @rexrainbow)
 * The `Tilemap.createFromTiles` method has been updated. It will now copy the following properties, if set in the Tile, to the Sprites it creates: `rotation`, `flipX`, `flipY`, `alpha`, `visible` and `tint`. If these properties are declared in the `spriteConfig` passed to the method, those will be used instead, otherwise the Tile values are used. Fix #6711 (thanks @Nerodon)
 * The `Tilemap.createFromTiles` method has a new property called `useSpriteSheet`. If this is set to `true` and you have loaded the tileset as a sprite sheet (not an image), then it will set the Sprite key and frame to match the sprite texture and tile index. Also, if you have not specified an `origin` in the spriteConfig, it will adjust the sprite positions by half the tile size, to position them accurately on the map.
+* `Texture#getFrameBounds` is a new method that will return the bounds that all of the frames of a given Texture Source encompass. This is useful for things like calculating the bounds of a Sprite Sheet embedded within a Texture Atlas.
+* `Math.RectangleLike` is a new typedef that defines a rectangle-like object with public `x`, `y`, `width` and `height` properties.
 
 # New Feature - Base64 Loader
 
@@ -64,6 +66,7 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * `WebGLPipeline.resizeUniform` is a new property that is defined in the `WebGLPipelineConfig`. This is a string that defines a `uResolution` property, or similar, within the pipeline shader. If the WebGL Renderer resizes, this uniform will now be updated automatically as part of the pipeline resize method. It has been added to both the Multi and Mobile pipelines as default. This fixes issues where the pipelines were rendering with old resolution values, causing graphical glitches in mostly pixel-art games. Fix #6674 #6678 (thanks @Nerodon @LazeKer)
 * `WebAudioSound` will now set `hasEnded = false` as part of `stopAndRemoveBufferSource`, after the source has been stopped and disconnected. This should prevent it from being left in a `true` state if the source `onended` callback fired late, after the sound had been re-played. Fix #6657 (thanks @Demeno)
 * The `ScaleManager.orientationChange` event listener will now directly refresh the Scale Manager internals. This fixes an issue where the orientation change event would fire after the window resize event, causing the Scale Manager to incorrectly report the new orientation on Chrome on iOS. Fix #6484 (thanks @spayton)
+* The `Tileset.updateTileData` method has two new optional parameters `offsetX` and `offsetY` which allow you to set the offset that the tile data starts from within the base source texture.
 
 # Bug Fixes
 
@@ -92,6 +95,7 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * The `Device.Browser.safari` regular expression has been strenghtened so it now captures versions with double or triple periods in. Previously it would fail for `Version/17.2.1` due to the minor value. (thanks watcher)
 * The `Browser` Device class will no longer think that Chrome is Mobile Safari on iOS devices. Fix #6739 (thanks @michalfialadev)
 * The `GameObjectCreator` method `container` now includes all children in the config, accessed via `Scene.make.container`. Fix #6743 (thanks @Fake)
+* Tilemaps that have been created using Tiles taken from a Sprite Sheet embedded in a Texture Atlas (via `addSpriteSheetFromAtlas` and `Tilemap.addTilesetImage`) will now render correctly. Fix #6691 (thanks @Antriel)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
