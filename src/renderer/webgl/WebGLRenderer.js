@@ -2067,7 +2067,7 @@ var WebGLRenderer = new Class({
         if (scaleMode === CONST.ScaleModes.LINEAR && this.config.antialias)
         {
             var isCompressed = source && source.compressed;
-            var isMip = pow || (isCompressed && source.mipmaps.length > 1);
+            var isMip = (!isCompressed && pow) || (isCompressed && source.mipmaps.length > 1);
 
             // Filters above LINEAR only work with MIPmaps.
             // These are only generated for power of two (POT) textures.
