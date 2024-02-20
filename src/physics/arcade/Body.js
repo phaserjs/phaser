@@ -487,6 +487,16 @@ var Body = new Class({
         this.onOverlap = false;
 
         /**
+         * Whether the simulation emits an `bounce` event when this Body bounces.
+         *
+         * @name Phaser.Physics.Arcade.StaticBody#onBounce
+         * @type {boolean}
+         * @default false
+         * @since 3.80.0
+         */
+        this.onBounce = false;
+
+        /**
          * The absolute maximum velocity of this body, in pixels per second.
          * The horizontal and vertical components are applied separately.
          *
@@ -1222,6 +1232,11 @@ var Body = new Class({
             var blocked = this.blocked;
 
             this.world.emit(Events.WORLD_BOUNDS, this, blocked.up, blocked.down, blocked.left, blocked.right);
+
+            if (this.onBounce && this.bounce.length())
+            {
+                this.emit(Events.BOUNCE, this);
+            }
         }
     },
 

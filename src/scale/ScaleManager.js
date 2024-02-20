@@ -1511,6 +1511,8 @@ var ScaleManager = new Class({
 
             _this._checkOrientation = true;
             _this.dirty = true;
+
+            _this.refresh();
         };
 
         listeners.windowResize = function ()

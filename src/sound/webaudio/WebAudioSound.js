@@ -444,13 +444,17 @@ var WebAudioSound = new Class({
     {
         if (this.source)
         {
-            this.source.stop();
-            this.source.disconnect();
+            var tempSource = this.source;
+
             this.source = null;
+
+            tempSource.stop();
+            tempSource.disconnect();
         }
 
         this.playTime = 0;
         this.startTime = 0;
+        this.hasEnded = false;
 
         this.stopAndRemoveLoopBufferSource();
     },
@@ -622,8 +626,6 @@ var WebAudioSound = new Class({
 
         if (this.hasEnded)
         {
-            this.hasEnded = false;
-
             BaseSound.prototype.stop.call(this);
 
             this.stopAndRemoveBufferSource();

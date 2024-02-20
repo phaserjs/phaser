@@ -4,6 +4,8 @@
 
 * Phaser now performs a [WebGL Context Restore](WebGLContextRestore.md) to keep the game running after losing WebGL context. This affects many parts of the rendering system, but everything should work just the same unless you're doing something very technical. See the link for more details.
 * The Scale Manager has a new scale mode called `EXPAND`. This is inspired by the Expand mode in Godot: "Keep aspect ratio when stretching the screen, but keep neither the base width nor height. Depending on the screen aspect ratio, the viewport will either be larger in the horizontal direction (if the screen is wider than the base size) or in the vertical direction (if the screen is taller than the original size)" (thanks @rexrainbow)
+* The `Tilemap.createFromTiles` method has been updated. It will now copy the following properties, if set in the Tile, to the Sprites it creates: `rotation`, `flipX`, `flipY`, `alpha`, `visible` and `tint`. If these properties are declared in the `spriteConfig` passed to the method, those will be used instead, otherwise the Tile values are used. Fix #6711 (thanks @Nerodon)
+* The `Tilemap.createFromTiles` method has a new property called `useSpriteSheet`. If this is set to `true` and you have loaded the tileset as a sprite sheet (not an image), then it will set the Sprite key and frame to match the sprite texture and tile index. Also, if you have not specified an `origin` in the spriteConfig, it will adjust the sprite positions by half the tile size, to position them accurately on the map.
 
 # New Feature - Base64 Loader
 
@@ -60,13 +62,16 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * The `Curves.Path` methods `lineTo` and `moveTo` now support `Types.Math.Vector2Like` as the first parameter. Fix #6557 (thanks @wayfu)
 * The `BitmapText.setFont` method will now set the texture, size and alignment even if the same font key has been given as is already in use. Fix #6740 (thanks @AlvaroNeuronup)
 * `WebGLPipeline.resizeUniform` is a new property that is defined in the `WebGLPipelineConfig`. This is a string that defines a `uResolution` property, or similar, within the pipeline shader. If the WebGL Renderer resizes, this uniform will now be updated automatically as part of the pipeline resize method. It has been added to both the Multi and Mobile pipelines as default. This fixes issues where the pipelines were rendering with old resolution values, causing graphical glitches in mostly pixel-art games. Fix #6674 #6678 (thanks @Nerodon @LazeKer)
+* `WebAudioSound` will now set `hasEnded = false` as part of `stopAndRemoveBufferSource`, after the source has been stopped and disconnected. This should prevent it from being left in a `true` state if the source `onended` callback fired late, after the sound had been re-played. Fix #6657 (thanks @Demeno)
+* The `ScaleManager.orientationChange` event listener will now directly refresh the Scale Manager internals. This fixes an issue where the orientation change event would fire after the window resize event, causing the Scale Manager to incorrectly report the new orientation on Chrome on iOS. Fix #6484 (thanks @spayton)
 
 # Bug Fixes
 
 * `Factory.staticBody`  had the wrong return type in the docs/TS defs. Fix #6693 (thanks @ddhaiby)
 * The `Time.Timeline` class didn't show as extending the Event Emitter, or have `config` as an optional argument in the docs / TS defs. Fix #6673 (thanks @ghclark2)
 * The `Animations.AnimationFrame` member `duration` is now the complete duration of the frame, which is a breaking change. Before this `Animations.AnimationState#msPerFrame` was combined with `Animations.AnimationFrame#duration` which wasn't intuitive. The fix to remove `Animations.AnimationState#msPerFrame` from `Animations.AnimationFrame#duration` has been removed from the `Animations.AnimationManager` method `createFromAseprite` because of this clarification. Fix #6712 (thanks @Nerodon @TomMalitz)
-* The `NineSlice` Game Object method `setSize` now recalculates its origin by calling the `updateDisplayOrigin` method. (thanks @dhashvir)
+* The `NineSlice` Game Object method `setSize` now recalculates its origin by calling the `updateDisplayOrigin` method. Fix #6713 (thanks @dhashvir)
+* The `NineSlice` Game Object method no longer defaults origin to `0.5`. Fix #6655 (thanks @michalfialadev)
 * When a `Layer` Game Object is destroyed, i.e. from changing or restarting a Scene, it will no longer cause an error when trying to destroy the children on its display list. Fix #6675 (thanks @crockergd @gm0nk)
 * `DynamicTexture` will now automatically call `setSize(width, height)` for both WebGL and Canvas. Previously it only did it for WebGL. This fixes an issue where DynamicTextures in Canvas mode would have a width and height of -1. Fix #6682 (thanks @samme)
 * `DynamicTexture.setSize` will now check to see if the `glTexture` bound to the current frame is stale, and if so, destroy it before binding the one from the Render Target. This fixes an issue where constantly destroying and creating Dynamic Textures would cause a memory leak in WebGL. Fix #6669 (thanks @DavidTalevski)
@@ -93,13 +98,16 @@ The Phaser Input and related classes have been updated to be more consistent wit
 
 My thanks to the following for helping with the Phaser 3 Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
-@AlvaroEstradaDev
-@stevenwithaph
-@paxperscientiam
-@samme
 @actionmoon
-@rafael-lua
+@AlvaroEstradaDev
 @Byvire
-@yaustar
+@Creepypoke
+@Flashfyre
+@orcomarcio
+@paxperscientiam
+@michalfialadev
+@rafael-lua
+@samme
 @Stan-Stani
-
+@stevenwithaph
+@yaustar

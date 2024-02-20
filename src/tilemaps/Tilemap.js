@@ -198,8 +198,11 @@ var Tilemap = new Class({
         /**
          * Map specific properties as specified in Tiled.
          *
+         * Depending on the version of Tiled and the JSON export used, this will be either
+         * an object or an array of objects. For Tiled 1.2.0+ maps, it will be an array.
+         *
          * @name Phaser.Tilemaps.Tilemap#properties
-         * @type {object}
+         * @type {object|object[]}
          * @since 3.0.0
          */
         this.properties = mapData.properties;
@@ -910,10 +913,26 @@ var Tilemap = new Class({
     },
 
     /**
-     * Creates a Sprite for every object matching the given tile indexes in the layer. You can
+     * Creates a Sprite for every tile matching the given tile indexes in the layer. You can
      * optionally specify if each tile will be replaced with a new tile after the Sprite has been
-     * created. This is useful if you want to lay down special tiles in a level that are converted to
+     * created. Set this value to -1 if you want to just remove the tile after conversion.
+     *
+     * This is useful if you want to lay down special tiles in a level that are converted to
      * Sprites, but want to replace the tile itself with a floor tile or similar once converted.
+     *
+     * The following features were added in Phaser v3.80:
+     *
+     * By default, Phaser Sprites have their origin set to 0.5 x 0.5. If you don't specify a new
+     * origin in the spriteConfig, then it will adjust the sprite positions by half the tile size,
+     * to position them accurately on the map.
+     *
+     * When the Sprite is created it will copy the following properties from the tile:
+     *
+     * 'rotation', 'flipX', 'flipY', 'alpha', 'visible' and 'tint'.
+     *
+     * The spriteConfig also has a special property called `useSpriteSheet`. If this is set to
+     * `true` and you have loaded the tileset as a sprite sheet (not an image), then it will
+     * set the Sprite key and frame to match the sprite texture and tile index.
      *
      * @method Phaser.Tilemaps.Tilemap#createFromTiles
      * @since 3.0.0
@@ -922,7 +941,7 @@ var Tilemap = new Class({
      * @param {?(number|array)} replacements - The tile index, or array of indexes, to change a converted
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
      * one-to-one mapping with the indexes array.
-     * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
+     * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} [spriteConfig] - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
      * @param {Phaser.Scene} [scene] - The Scene to create the Sprites within.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
