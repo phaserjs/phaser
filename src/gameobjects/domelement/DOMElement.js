@@ -65,6 +65,9 @@ var Vector4 = require('../../math/Vector4');
  * entirely and clipped accordingly. DOM Elements respect camera scrolling and scrollFactor settings, but if you
  * change the size of the camera so it no longer matches the size of the canvas, they won't be clipped accordingly.
  *
+ * DOM Game Objects can be added to a Phaser Container, however you should only nest them **one level deep**.
+ * Any further down the chain and they will ignore all root container properties.
+ *
  * Also, all DOM Elements are inserted into the same DOM Container, regardless of which Scene they are created in.
  *
  * Note that you should only have DOM Elements in a Scene with a _single_ Camera. If you require multiple cameras,
