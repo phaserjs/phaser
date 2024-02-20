@@ -319,8 +319,12 @@ var WebGLTextureWrapper = new Class({
      * @param {number} width - The new width of the WebGLTexture.
      * @param {number} height - The new height of the WebGLTexture.
      * @param {boolean} [flipY] - Should the WebGLTexture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * @param {number} [wrapS] - The new wrapping mode for the WebGLTexture.
+     * @param {number} [wrapT] - The new wrapping mode for the WebGLTexture.
+     * @param {number} [minFilter] - The new minification filter for the WebGLTexture.
+     * @param {number} [magFilter] - The new magnification filter for the WebGLTexture.
      */
-    update: function (source, width, height, flipY)
+    update: function (source, width, height, flipY, wrapS, wrapT, minFilter, magFilter)
     {
         if (width === 0 || height === 0)
         {
@@ -332,6 +336,10 @@ var WebGLTextureWrapper = new Class({
         this.width = width;
         this.height = height;
         this.flipY = flipY;
+        this.wrapS = wrapS;
+        this.wrapT = wrapT;
+        this.minFilter = minFilter;
+        this.magFilter = magFilter;
 
         var gl = this.gl;
 
@@ -348,10 +356,22 @@ var WebGLTextureWrapper = new Class({
 
         gl.bindTexture(gl.TEXTURE_2D, this.webGLTexture);
 
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.minFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.magFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrapS);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.wrapT);
+
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, this.pma);
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
+
+        // Should we generate mipmaps?
+        var pixels = this.pixels;
+        if (IsSizePowerOfTwo(width, height) && !pixels.compressed && !(pixels instanceof Uint8Array))
+        {
+            gl.generateMipmap(gl.TEXTURE_2D);
+        }
 
         // Restore previous texture bind.
         if (currentTexture)
