@@ -43,6 +43,19 @@ var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, came
     var sprites = [];
     var i;
 
+    var mergeExtras = function (config, tile, properties)
+    {
+        for (var i = 0; i < properties.length; i++)
+        {
+            var property = properties[i];
+
+            if (!config.hasOwnProperty(property))
+            {
+                config[property] = tile[property];
+            }
+        }
+    };
+
     for (i = 0; i < tiles.length; i++)
     {
         var tile = tiles[i];
@@ -53,6 +66,8 @@ var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, came
 
             spriteConfig.x = point.x;
             spriteConfig.y = point.y;
+
+            mergeExtras(spriteConfig, tile, [ 'rotation', 'flipX', 'flipY', 'alpha', 'visible', 'tint' ]);
 
             sprites.push(scene.make.sprite(spriteConfig));
         }
