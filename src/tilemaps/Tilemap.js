@@ -401,13 +401,15 @@ var Tilemap = new Class({
         if (tilesetName === undefined) { return null; }
         if (key === undefined || key === null) { key = tilesetName; }
 
-        if (!this.scene.sys.textures.exists(key))
+        var textureManager = this.scene.sys.textures;
+
+        if (!textureManager.exists(key))
         {
             console.warn('Texture key "%s" not found', key);
             return null;
         }
 
-        var texture = this.scene.sys.textures.get(key);
+        var texture = textureManager.get(key);
 
         var index = this.getTilesetIndex(tilesetName);
 
