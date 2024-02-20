@@ -198,8 +198,11 @@ var Tilemap = new Class({
         /**
          * Map specific properties as specified in Tiled.
          *
+         * Depending on the version of Tiled and the JSON export used, this will be either
+         * an object or an array of objects. For Tiled 1.2.0+ maps, it will be an array.
+         *
          * @name Phaser.Tilemaps.Tilemap#properties
-         * @type {object}
+         * @type {object|object[]}
          * @since 3.0.0
          */
         this.properties = mapData.properties;
