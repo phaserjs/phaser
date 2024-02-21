@@ -2314,27 +2314,15 @@ var World = new Class({
             return false;
         }
 
-        var x = body.x;
-        var y = body.y;
-        var w = body.width;
-        var h = body.height;
-
         var layerData = tilemapLayer.layer;
 
-        if (layerData.tileWidth > layerData.baseTileWidth)
-        {
-            // The x origin of a tile is the left side, so x and width need to be adjusted.
-            var xDiff = (layerData.tileWidth - layerData.baseTileWidth) * tilemapLayer.scaleX;
-            x -= xDiff;
-            w += xDiff;
-        }
+        //  Increase the hit area of the body by the size of the tiles * the scale
+        //  This will allow GetTilesWithinWorldXY to include the tiles around the body
 
-        if (layerData.tileHeight > layerData.baseTileHeight)
-        {
-            // The y origin of a tile is the bottom side, so just the height needs to be adjusted.
-            var yDiff = (layerData.tileHeight - layerData.baseTileHeight) * tilemapLayer.scaleY;
-            h += yDiff;
-        }
+        var x = body.x - (layerData.tileWidth * tilemapLayer.scaleX);
+        var y = body.y - (layerData.tileHeight * tilemapLayer.scaleY);
+        var w = body.width + (layerData.tileWidth * tilemapLayer.scaleX);
+        var h = body.height + layerData.tileHeight * tilemapLayer.scaleY;
 
         var options = (overlapOnly) ? null : this.tileFilterOptions;
 
@@ -2390,20 +2378,14 @@ var World = new Class({
             tileWorldRect.left = point.x;
             tileWorldRect.top = point.y;
 
-            //  If the maps base tile size differs from the layer tile size, only the top of the rect
-            //  needs to be adjusted since its origin is (0, 1).
-            if (tile.baseHeight !== tile.height)
-            {
-                tileWorldRect.top -= (tile.height - tile.baseHeight) * tilemapLayer.scaleY;
-            }
-
             tileWorldRect.right = tileWorldRect.left + tile.width * tilemapLayer.scaleX;
             tileWorldRect.bottom = tileWorldRect.top + tile.height * tilemapLayer.scaleY;
 
-            if (TileIntersectsBody(tileWorldRect, body)
-                && (!processCallback || processCallback.call(callbackContext, sprite, tile))
-                && ProcessTileCallbacks(tile, sprite)
-                && (overlapOnly || SeparateTile(i, body, tile, tileWorldRect, tilemapLayer, this.TILE_BIAS, isLayer)))
+            if (
+                TileIntersectsBody(tileWorldRect, body) &&
+                (!processCallback || processCallback.call(callbackContext, sprite, tile)) &&
+                ProcessTileCallbacks(tile, sprite) &&
+                (overlapOnly || SeparateTile(i, body, tile, tileWorldRect, tilemapLayer, this.TILE_BIAS, isLayer)))
             {
                 this._total++;
 
