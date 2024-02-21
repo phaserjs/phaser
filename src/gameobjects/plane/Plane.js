@@ -34,7 +34,8 @@ var UUID = require('../../utils/string/UUID');
  * atlas or sprite sheet.
  *
  * The Plane Game Object also has the Animation component, allowing you to play animations
- * across the Plane just as you would with a Sprite.
+ * across the Plane just as you would with a Sprite. The animation frame size must be fixed
+ * as the first frame will be the size of the entire animation, for example use a `SpriteSheet`.
  *
  * Note that the Plane object is WebGL only and does not have a Canvas counterpart.
  *
