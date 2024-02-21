@@ -308,7 +308,14 @@ var Tileset = new Class({
 
         this.glTexture = frame.source.glTexture;
 
-        this.updateTileData(bounds.width, bounds.height, bounds.x, bounds.y);
+        if (frame.width > bounds.width || frame.height > bounds.height)
+        {
+            this.updateTileData(frame.width, frame.height);
+        }
+        else
+        {
+            this.updateTileData(bounds.width, bounds.height, bounds.x, bounds.y);
+        }
 
         return this;
     },
