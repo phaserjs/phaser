@@ -1,13 +1,8 @@
-# Version 3.80.0 - Nino - in dev
+# Version 3.80.0 - Nino - 21st February 2024
 
-# New Features
+# New Features - WebGL Context Loss Handling
 
 * Phaser now performs a [WebGL Context Restore](WebGLContextRestore.md) to keep the game running after losing WebGL context. This affects many parts of the rendering system, but everything should work just the same unless you're doing something very technical. See the link for more details.
-* The Scale Manager has a new scale mode called `EXPAND`. This is inspired by the Expand mode in Godot: "Keep aspect ratio when stretching the screen, but keep neither the base width nor height. Depending on the screen aspect ratio, the viewport will either be larger in the horizontal direction (if the screen is wider than the base size) or in the vertical direction (if the screen is taller than the original size)" (thanks @rexrainbow)
-* The `Tilemap.createFromTiles` method has been updated. It will now copy the following properties, if set in the Tile, to the Sprites it creates: `rotation`, `flipX`, `flipY`, `alpha`, `visible` and `tint`. If these properties are declared in the `spriteConfig` passed to the method, those will be used instead, otherwise the Tile values are used. Fix #6711 (thanks @Nerodon)
-* The `Tilemap.createFromTiles` method has a new property called `useSpriteSheet`. If this is set to `true` and you have loaded the tileset as a sprite sheet (not an image), then it will set the Sprite key and frame to match the sprite texture and tile index. Also, if you have not specified an `origin` in the spriteConfig, it will adjust the sprite positions by half the tile size, to position them accurately on the map.
-* `Texture#getFrameBounds` is a new method that will return the bounds that all of the frames of a given Texture Source encompass. This is useful for things like calculating the bounds of a Sprite Sheet embedded within a Texture Atlas.
-* `Math.RectangleLike` is a new typedef that defines a rectangle-like object with public `x`, `y`, `width` and `height` properties.
 
 # New Feature - Base64 Loader
 
@@ -25,6 +20,14 @@ The Game Config has a new Scale Manager property called `snap`. This allows you 
 * A new property is available in the Game Configuration specifically for setting the 'snap' values for the Scale Manager. You can now set `snap: { width, height }` in the game config. This is then passed to the display size by the Scale Manager and used to control the snap values. Fix #6629 (thanks @musjj @samme)
 * `ScaleManager.setSnap` is a new method that allows you to set the snap values for the game size, should you need to do it post-boot and not in the game config.
 * `Config#snapWidth` and `Config#snapHeight` are new properties in the Game Config that hold the parsed `snap` config values, as used by the Scale Manager.
+
+# New Features
+
+* The Scale Manager has a new scale mode called `EXPAND`. This is inspired by the Expand mode in Godot: "Keep aspect ratio when stretching the screen, but keep neither the base width nor height. Depending on the screen aspect ratio, the viewport will either be larger in the horizontal direction (if the screen is wider than the base size) or in the vertical direction (if the screen is taller than the original size)" (thanks @rexrainbow)
+* The `Tilemap.createFromTiles` method has been updated. It will now copy the following properties, if set in the Tile, to the Sprites it creates: `rotation`, `flipX`, `flipY`, `alpha`, `visible` and `tint`. If these properties are declared in the `spriteConfig` passed to the method, those will be used instead, otherwise the Tile values are used. Fix #6711 (thanks @Nerodon)
+* The `Tilemap.createFromTiles` method has a new property called `useSpriteSheet`. If this is set to `true` and you have loaded the tileset as a sprite sheet (not an image), then it will set the Sprite key and frame to match the sprite texture and tile index. Also, if you have not specified an `origin` in the spriteConfig, it will adjust the sprite positions by half the tile size, to position them accurately on the map.
+* `Texture#getFrameBounds` is a new method that will return the bounds that all of the frames of a given Texture Source encompass. This is useful for things like calculating the bounds of a Sprite Sheet embedded within a Texture Atlas.
+* `Math.RectangleLike` is a new typedef that defines a rectangle-like object with public `x`, `y`, `width` and `height` properties.
 
 # Spine Updates
 

@@ -5,8 +5,8 @@ tasks:
     command: npm run watch
   - init: >
             cd ../ &&
-            git clone https://github.com/photonstorm/phaser3-examples.git &&
-            cd phaser3-examples &&
+            git clone https://github.com/phaserjs/examples.git &&
+            cd examples &&
             npm install && npm start
 ports:
   - port: 8080
