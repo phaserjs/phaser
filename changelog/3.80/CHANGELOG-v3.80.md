@@ -67,7 +67,6 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * `WebAudioSound` will now set `hasEnded = false` as part of `stopAndRemoveBufferSource`, after the source has been stopped and disconnected. This should prevent it from being left in a `true` state if the source `onended` callback fired late, after the sound had been re-played. Fix #6657 (thanks @Demeno)
 * The `ScaleManager.orientationChange` event listener will now directly refresh the Scale Manager internals. This fixes an issue where the orientation change event would fire after the window resize event, causing the Scale Manager to incorrectly report the new orientation on Chrome on iOS. Fix #6484 #5762 (thanks @spayton @meetpatel1989)
 * The `Tileset.updateTileData` method has two new optional parameters `offsetX` and `offsetY` which allow you to set the offset that the tile data starts from within the base source texture.
-* The way in which the Webpack DefinePlugin is used has changed, which should make life a little easier for those of you importing the Phaser source directly on Node, or from Next.js, etc. Fix #6644 (thanks @yandeu)
 
 # Bug Fixes
 
