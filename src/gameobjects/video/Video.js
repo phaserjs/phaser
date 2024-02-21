@@ -97,6 +97,7 @@ var VideoRender = require('./VideoRender');
  *
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
@@ -105,7 +106,6 @@ var VideoRender = require('./VideoRender');
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
- * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.TextureCrop
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
@@ -123,6 +123,7 @@ var Video = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.ComputedSize,
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
@@ -131,7 +132,6 @@ var Video = new Class({
         Components.Pipeline,
         Components.PostPipeline,
         Components.ScrollFactor,
-        Components.Size,
         Components.TextureCrop,
         Components.Tint,
         Components.Transform,
@@ -1480,19 +1480,53 @@ var Video = new Class({
      */
     metadataHandler: function (event)
     {
-        var video = this.video;
+        this.emit(Events.VIDEO_METADATA, this, event);
+    },
+
+    /**
+     * Sets the size of this Game Object to be that of the given Frame.
+     *
+     * This will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or call the
+     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
+     * to do so by giving pixel values.
+     *
+     * If you have enabled this Game Object for input, changing the size will _not_ change the
+     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
+     *
+     * @method Phaser.GameObjects.Components.Size#setSizeToFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.Textures.Frame|boolean} [frame] - The frame to base the size of this Game Object on.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setSizeToFrame: function (frame)
+    {
+        if (!frame) { frame = this.frame; }
+
+        this.width = frame.realWidth;
+        this.height = frame.realHeight;
 
         if (this.scaleX !== 1)
         {
-            this.scaleX = this.displayWidth / video.videoWidth;
+            this.scaleX = this.displayWidth / this.width;
         }
 
         if (this.scaleY !== 1)
         {
-            this.scaleY = this.displayHeight / video.videoHeight;
+            this.scaleY = this.displayHeight / this.height;
         }
 
-        this.emit(Events.VIDEO_METADATA, this, event);
+        var input = this.input;
+
+        if (input && !input.customHitArea)
+        {
+            input.hitArea.width = this.width;
+            input.hitArea.height = this.height;
+        }
+
+        return this;
     },
 
     /**
