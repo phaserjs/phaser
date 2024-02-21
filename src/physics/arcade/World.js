@@ -1469,16 +1469,6 @@ var World = new Class({
             else if (body1.onCollide || body2.onCollide)
             {
                 this.emit(Events.COLLIDE, body1.gameObject, body2.gameObject, body1, body2);
-
-                if (body1.onBounce && body1.bounce.length())
-                {
-                    this.emit(Events.BOUNCE, body1);
-                }
-
-                if (body2.onBounce && body2.bounce.length())
-                {
-                    this.emit(Events.BOUNCE, body2);
-                }
             }
         }
 

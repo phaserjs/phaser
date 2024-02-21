@@ -296,17 +296,6 @@ var StaticBody = new Class({
         this.onOverlap = false;
 
         /**
-         * Whether the simulation emits an `bounce` event when this StaticBody bounces.
-         * Always false for a Static Body. (Static Bodies never bounce and never trigger a `bounce` event.)
-         *
-         * @name Phaser.Physics.Arcade.StaticBody#onBounce
-         * @type {boolean}
-         * @default false
-         * @since 3.80.0
-         */
-        this.onBounce = false;
-
-        /**
          * The StaticBody's inertia, relative to a default unit (1). With `bounce`, this affects the exchange of momentum (velocities) during collisions.
          *
          * @name Phaser.Physics.Arcade.StaticBody#mass
