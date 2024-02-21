@@ -29,6 +29,21 @@ The Game Config has a new Scale Manager property called `snap`. This allows you 
 * `Texture#getFrameBounds` is a new method that will return the bounds that all of the frames of a given Texture Source encompass. This is useful for things like calculating the bounds of a Sprite Sheet embedded within a Texture Atlas.
 * `Math.RectangleLike` is a new typedef that defines a rectangle-like object with public `x`, `y`, `width` and `height` properties.
 
+# WebGL Renderer Updates
+
+* Fix MIPmap filters being effectively disabled for compressed textures.
+* `WebGLRenderer.getCompressedTextures` can now identify BPTC and RGTC support correctly. These were previously skipped.
+* PVR compressed texture files now support sRGB color space in S3TCSRGB, ETC, and ASTC formats. Fix #6247 (thanks @dominikhalvonik)
+* Compressed texture files which are incompatible with WebGL will now fail to load, and display a console warning explaining why. Previously they might seem to load, but not display properly.
+* Add experimental support for BPTC compressed textures in PVR files.
+* Change `S3TCRGB` to `S3TCSRGB` in `WebGLTextureCompression`, `CompressedTextureFileConfig`, and `FileConfig` typedefs.
+* Fix generating spritesheets from members of texture atlases based on compressed textures (thanks @vladyslavfolkuian)
+* The `BloomFX` and `BlurFX` and any custom pipeline that relies on using the `UtilityPipeline` full or half frame targets will now correctly draw even after the renderer size changes. Fix #6677 (thanks @Nerodon)
+* The `PostFXPipeline.postBatch` method will now bind the current Render Target after the pipeline has booted for the first time. This fixes glitch errors on mobile devices where Post FX would appear corrupted for a single frame. Fix #6681 (thanks @moufmouf @tongliang999)
+* Fix unpredictable text sizes failing to render in WebGL with `mipmapFilter` set. Fix #6721 (thanks @saintflow and @rexrainbow)
+* The `UtilityPipeline` now sets `autoResize` to `true` in its Render Target Config, so that the global `fullFrame` and `halfFrame` Render Targets will automatically resize if the renderer changes.
+* `WebGLPipeline.resizeUniform` is a new property that is defined in the `WebGLPipelineConfig`. This is a string that defines a `uResolution` property, or similar, within the pipeline shader. If the WebGL Renderer resizes, this uniform will now be updated automatically as part of the pipeline resize method. It has been added to both the Multi and Mobile pipelines as default. This fixes issues where the pipelines were rendering with old resolution values, causing graphical glitches in mostly pixel-art games. Fix #6674 #6678 (thanks @Nerodon @LazeKer)
+
 # Spine Updates
 
 * The Spine 3 and 4.1 Plugins will now call `preUpdate` automatically when the `play` method is called. This forces the new animation state to update and apply itself to the skeleton. This fixes an issue where Spine object would show the default frame in the Spine atlas for a single update before the animation started. Fix #5443 (thanks @spayton)
@@ -49,24 +64,22 @@ The Phaser Input and related classes have been updated to be more consistent wit
 # Updates
 
 * The `TweenChainBuilder` was incorrectly setting the `persist` flag on the Chain to `true`, which goes against what the documentation says. It now correctly sets it to `false`. This means if you previously had a Tween Chain that was persisting, it will no longer do so, so add the property to regain the feature.
-* The `dropped` argument has now been added to the documentation for the `DRAG_END` and `GAMEOBJECT_DRAG_END` events. (thanks @samme)
-* `Container.onChildDestroyed` is a new internal method used to destroy Container children. Previously, if you destroyed a Game Object in an exclusive Container, the game object would (momentarily) move onto the Scene display list and emit an ADDED_TO_SCENE event. Also, if you added a Sprite to a non-exclusive Container and stopped the Scene, you would get a TypeError (evaluating 'this.anims.destroy'). This happened because the fromChild argument in the DESTROY event was misinterpreted as destroyChild in the Container's remove(), and the Container was calling the Sprite's destroy() again. (thanks @samme)
+* The `dropped` argument has now been added to the documentation for the `DRAG_END` and `GAMEOBJECT_DRAG_END` events (thanks @samme)
+* `Container.onChildDestroyed` is a new internal method used to destroy Container children. Previously, if you destroyed a Game Object in an exclusive Container, the game object would (momentarily) move onto the Scene display list and emit an ADDED_TO_SCENE event. Also, if you added a Sprite to a non-exclusive Container and stopped the Scene, you would get a TypeError (evaluating 'this.anims.destroy'). This happened because the fromChild argument in the DESTROY event was misinterpreted as destroyChild in the Container's remove(), and the Container was calling the Sprite's destroy() again (thanks @samme)
 * The `Text` and `TileSprite` Game Objects now place their textures into the global `TextureManager` and a `_textureKey` private string property has been added which contains a UUID to reference that texture.
-* The `Tilemaps.Components.WeightedRandomize` method now uses the Phaser `Math.RND.frac` method with a seed instead of the `Math.Random` static method. (thanks @jorbascrumps)
-* `Tilemaps.Components.IsometricCullTiles` does the `CheckIsoBounds` method check last when building the outputArray, as to help optimize in situations where the tile would not be visible anyways. (thanks @zegenie)
-* `Tilemaps.Components.WeightedRandomize` now uses the Phaser `Math.RND.frac` method with a seed instead the `Math.Random` static method. (thanks @jorbascrumps)
+* The `Tilemaps.Components.WeightedRandomize` method now uses the Phaser `Math.RND.frac` method with a seed instead of the `Math.Random` static method (thanks @jorbascrumps)
+* `Tilemaps.Components.IsometricCullTiles` does the `CheckIsoBounds` method check last when building the outputArray, as to help optimize in situations where the tile would not be visible anyway (thanks @zegenie)
+* `Tilemaps.Components.WeightedRandomize` now uses the Phaser `Math.RND.frac` method with a seed instead the `Math.Random` static method (thanks @jorbascrumps)
 * The `Layer` Game Object has had its `removeAll`, `remove` and `add` methods removed. These methods are all still available via the `List` class that Layer inherits, but the `destroyChild` parameters are no longer available.
-* The `Renderer.Canvas` and `Renderer.WebGL` will now only be included in the build file if the corresponding feature flags `CANVAS_RENDERER` and/or `WEBGL_RENDERER` are set to `true`. For Canvas only builds this saves a lot of space in the build. (thanks @samme)
+* The `Renderer.Canvas` and `Renderer.WebGL` will now only be included in the build file if the corresponding feature flags `CANVAS_RENDERER` and/or `WEBGL_RENDERER` are set to `true`. For Canvas only builds this saves a lot of space in the build (thanks @samme)
 * You can now specify an `autoResize` boolean in the `RenderTargetConfig` which is passed to the Render Targets when they are created by a pipeline.
-* The `UtilityPipeline` now sets `autoResize` to `true` in its Render Target Config, so that the global `fullFrame` and `halfFrame` Render Targets will automatically resize if the renderer changes.
-* The `Actions` method `PlaceOnLine` now has an added `ease` parameter which accepts a string from the EaseMap or a custom ease function to allow for different distributions along a line. (thanks @sB3p)
+* The `Actions` method `PlaceOnLine` now has an added `ease` parameter which accepts a string from the EaseMap or a custom ease function to allow for different distributions along a line (thanks @sB3p)
 * The `XHRLoader` will now listen for `ontimeout` and if triggered it will hand over to the `File.onError` handler. This prevents the Loader from stalling if a file times out. Fix #6472 (thanks @343dev)
 * `LightPipeline.currentNormalMap` was incorrectly documented as being a property of `WebGLRenderer`.
 * The `Video` Game Object now emits a `metadata` event, which emits once the video metadata is available.
 * The `Time.Timeline` class now supports looping via the `repeat` method. `Types.Time.TimelineEvent` now has a `loop` callback which will be called before its next iteration. Fix #6560 (thanks @micsun-al)
 * The `Curves.Path` methods `lineTo` and `moveTo` now support `Types.Math.Vector2Like` as the first parameter. Fix #6557 (thanks @wayfu)
 * The `BitmapText.setFont` method will now set the texture, size and alignment even if the same font key has been given as is already in use. Fix #6740 (thanks @AlvaroNeuronup)
-* `WebGLPipeline.resizeUniform` is a new property that is defined in the `WebGLPipelineConfig`. This is a string that defines a `uResolution` property, or similar, within the pipeline shader. If the WebGL Renderer resizes, this uniform will now be updated automatically as part of the pipeline resize method. It has been added to both the Multi and Mobile pipelines as default. This fixes issues where the pipelines were rendering with old resolution values, causing graphical glitches in mostly pixel-art games. Fix #6674 #6678 (thanks @Nerodon @LazeKer)
 * `WebAudioSound` will now set `hasEnded = false` as part of `stopAndRemoveBufferSource`, after the source has been stopped and disconnected. This should prevent it from being left in a `true` state if the source `onended` callback fired late, after the sound had been re-played. Fix #6657 (thanks @Demeno)
 * The `ScaleManager.orientationChange` event listener will now directly refresh the Scale Manager internals. This fixes an issue where the orientation change event would fire after the window resize event, causing the Scale Manager to incorrectly report the new orientation on Chrome on iOS. Fix #6484 #5762 (thanks @spayton @meetpatel1989)
 * The `Tileset.updateTileData` method has two new optional parameters `offsetX` and `offsetY` which allow you to set the offset that the tile data starts from within the base source texture.
@@ -81,22 +94,12 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * When a `Layer` Game Object is destroyed, i.e. from changing or restarting a Scene, it will no longer cause an error when trying to destroy the children on its display list. Fix #6675 (thanks @crockergd @gm0nk)
 * `DynamicTexture` will now automatically call `setSize(width, height)` for both WebGL and Canvas. Previously it only did it for WebGL. This fixes an issue where DynamicTextures in Canvas mode would have a width and height of -1. Fix #6682 (thanks @samme)
 * `DynamicTexture.setSize` will now check to see if the `glTexture` bound to the current frame is stale, and if so, destroy it before binding the one from the Render Target. This fixes an issue where constantly destroying and creating Dynamic Textures would cause a memory leak in WebGL. Fix #6669 (thanks @DavidTalevski)
-* Fix unpredictable text sizes failing to render in WebGL with `mipmapFilter` set. Fix #6721 (thanks @saintflow and @rexrainbow).
-* Fix MIPmap filters being effectively disabled for compressed textures.
-* `WebGLRenderer.getCompressedTextures` can now identify BPTC and RGTC support correctly. These were previously skipped.
-* PVR compressed texture files now support sRGB color space in S3TCSRGB, ETC, and ASTC formats. Fix #6247 (thanks @dominikhalvonik)
-* Compressed texture files which are incompatible with WebGL will now fail to load, and display a console warning explaining why. Previously they might seem to load, but not display properly.
-* Add experimental support for BPTC compressed textures in PVR files.
-* Change `S3TCRGB` to `S3TCSRGB` in `WebGLTextureCompression`, `CompressedTextureFileConfig`, and `FileConfig` typedefs.
-* Fix generating spritesheets from members of texture atlases based on compressed textures. (Thanks @vladyslavfolkuian)
-* The `BloomFX` and `BlurFX` and any custom pipeline that relies on using the `UtilityPipeline` full or half frame targets will now correctly draw even after the renderer size changes. Fix #6677 (thanks @Nerodon)
-* The `PostFXPipeline.postBatch` method will now bind the current Render Target after the pipeline has booted for the first time. This fixes glitch errors on mobile devices where Post FX would appear corrupted for a single frame. Fix #6681 (thanks @moufmouf @tongliang999)
 * The `Matter.Body` function `scale` has been updated so if the Body originally had an `inertia` of `Infinity` this will be restored at the end of the call. This happens if you set a Matter Body to have fixed rotation. Fix #6369 (thanks @sushovande)
 * Modified the `RandomDataGenerator.weightedPick` method to avoid sampling past the last element. Fix #6701 (thanks @jameskirkwood)
 * The `Physics.Matter.Factory` method `pointerConstraint` no longer returns an error when it can't find the camera. Fix #6684 (thanks @spritus)
 * The `Physics.Arcade.StaticBody` method `reset` now re-applies `offset` values. Fix #6729 (thanks @samme)
 * The `Video` Game Object now has a starting texture, which stops errors with accessing `frame` before the video loads the first frame. Fix #6475 (thanks @rexrainbow @JoeSiu)
-* The `Device.Browser.safari` regular expression has been strenghtened so it now captures versions with double or triple periods in. Previously it would fail for `Version/17.2.1` due to the minor value. (thanks watcher)
+* The `Device.Browser.safari` regular expression has been strenghtened so it now captures versions with double or triple periods in. Previously it would fail for `Version/17.2.1` due to the minor value (thanks watcher)
 * The `Browser` Device class will no longer think that Chrome is Mobile Safari on iOS devices. Fix #6739 (thanks @michalfialadev)
 * The `GameObjectCreator` method `container` now includes all children in the config, accessed via `Scene.make.container`. Fix #6743 (thanks @Fake)
 * Tilemaps that have been created using Tiles taken from a Sprite Sheet embedded in a Texture Atlas (via `addSpriteSheetFromAtlas` and `Tilemap.addTilesetImage`) will now render correctly. Fix #6691 (thanks @Antriel)
