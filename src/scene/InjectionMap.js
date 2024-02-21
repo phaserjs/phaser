@@ -47,12 +47,12 @@ var InjectionMap = {
 
 };
 
-if (typeof PLUGIN_CAMERA3D !== 'undefined')
+if (typeof PLUGIN_CAMERA3D)
 {
     InjectionMap.cameras3d = 'cameras3d';
 }
 
-if (typeof PLUGIN_FBINSTANT !== 'undefined')
+if (typeof PLUGIN_FBINSTANT)
 {
     InjectionMap.facebook = 'facebook';
 }

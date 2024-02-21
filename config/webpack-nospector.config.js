@@ -34,14 +34,14 @@ module.exports = [
 
         plugins: [
             new webpack.DefinePlugin({
-                CANVAS_RENDERER: JSON.stringify(true),
-                WEBGL_RENDERER: JSON.stringify(true),
-                WEBGL_DEBUG: JSON.stringify(false),
-                EXPERIMENTAL: JSON.stringify(true),
-                PLUGIN_3D: JSON.stringify(false),
-                PLUGIN_CAMERA3D: JSON.stringify(false),
-                PLUGIN_FBINSTANT: JSON.stringify(false),
-                FEATURE_SOUND: JSON.stringify(true)
+                "typeof CANVAS_RENDERER": JSON.stringify(true),
+                "typeof WEBGL_RENDERER": JSON.stringify(true),
+                "typeof WEBGL_DEBUG": JSON.stringify(false),
+                "typeof EXPERIMENTAL": JSON.stringify(true),
+                "typeof PLUGIN_3D": JSON.stringify(false),
+                "typeof PLUGIN_CAMERA3D": JSON.stringify(false),
+                "typeof PLUGIN_FBINSTANT": JSON.stringify(false),
+                "typeof FEATURE_SOUND": JSON.stringify(true)
             }),
             {
                 apply: (compiler) => {

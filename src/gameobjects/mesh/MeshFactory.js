@@ -30,7 +30,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * @return {Phaser.GameObjects.Mesh} The Game Object that was created.
  */
-if (typeof WEBGL_RENDERER !== 'undefined')
+if (typeof WEBGL_RENDERER)
 {
     GameObjectFactory.register('mesh', function (x, y, texture, frame, vertices, uvs, indicies, containsZ, normals, colors, alphas)
     {

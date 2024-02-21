@@ -28,12 +28,12 @@ var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
 var VisibilityHandler = require('./VisibilityHandler');
 
-if (typeof FEATURE_SOUND !== 'undefined')
+if (typeof FEATURE_SOUND)
 {
     var SoundManagerCreator = require('../sound/SoundManagerCreator');
 }
 
-if (typeof PLUGIN_FBINSTANT !== 'undefined')
+if (typeof PLUGIN_FBINSTANT)
 {
     var FacebookInstantGamesPlugin = require('../../plugins/fbinstant/src/FacebookInstantGamesPlugin');
 }
@@ -255,7 +255,7 @@ var Game = new Class({
          */
         this.sound = null;
 
-        if (typeof FEATURE_SOUND !== 'undefined')
+        if (typeof FEATURE_SOUND)
         {
             this.sound = SoundManagerCreator.create(this);
         }
@@ -284,7 +284,7 @@ var Game = new Class({
          */
         this.plugins = new PluginManager(this, this.config);
 
-        if (typeof PLUGIN_FBINSTANT !== 'undefined')
+        if (typeof PLUGIN_FBINSTANT)
         {
             /**
              * An instance of the Facebook Instant Games Plugin.
@@ -395,7 +395,7 @@ var Game = new Class({
 
         this.events.emit(Events.BOOT);
 
-        if (typeof WEBGL_DEBUG !== 'undefined' && window)
+        if (typeof WEBGL_DEBUG && window)
         {
             window.PHASER_GAME = this;
         }

@@ -30,7 +30,7 @@ var WebGLUniformLocationWrapper = require('./wrappers/WebGLUniformLocationWrappe
 
 var DEBUG = false;
 
-if (typeof WEBGL_DEBUG !== 'undefined')
+if (typeof WEBGL_DEBUG)
 {
     var SPECTOR = require('phaser3spectorjs');
     DEBUG = true;

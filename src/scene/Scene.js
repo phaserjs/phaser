@@ -257,7 +257,7 @@ var Scene = new Class({
          */
         this.matter;
 
-        if (typeof PLUGIN_FBINSTANT !== 'undefined')
+        if (typeof PLUGIN_FBINSTANT)
         {
             /**
              * The Facebook Instant Games Plugin.

@@ -255,7 +255,7 @@ var TextureSource = new Class({
                     this.glTexture = renderer.createTextureFromSource(image, width, height, scaleMode);
                 }
 
-                if (typeof WEBGL_DEBUG !== 'undefined')
+                if (typeof WEBGL_DEBUG)
                 {
                     this.glTexture.spectorMetadata = { textureKey: this.texture.key };
                 }
