@@ -3097,17 +3097,38 @@ var WebGLRenderer = new Class({
      * @param {HTMLVideoElement} srcVideo - The Video to update the WebGL Texture with.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} dstTexture - The destination WebGLTextureWrapper to update.
      * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT`?
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The updated WebGLTextureWrapper. This is the same wrapper object as `dstTexture`.
      */
-    updateVideoTexture: function (srcVideo, dstTexture, flipY)
+    updateVideoTexture: function (srcVideo, dstTexture, flipY, noRepeat)
     {
         if (flipY === undefined) { flipY = false; }
+        if (noRepeat === undefined) { noRepeat = false; }
+
+        var gl = this.gl;
+        var minFilter = gl.NEAREST;
+        var magFilter = gl.NEAREST;
 
         var width = srcVideo.videoWidth;
         var height = srcVideo.videoHeight;
 
-        dstTexture.update(srcVideo, width, height, flipY);
+        var wrapping = gl.CLAMP_TO_EDGE;
+
+        var pow = IsSizePowerOfTwo(width, height);
+
+        if (!noRepeat && pow)
+        {
+            wrapping = gl.REPEAT;
+        }
+
+        if (this.config.antialias)
+        {
+            minFilter = (pow && this.mipmapFilter) ? this.mipmapFilter : gl.LINEAR;
+            magFilter = gl.LINEAR;
+        }
+
+        dstTexture.update(srcVideo, width, height, flipY, wrapping, wrapping, minFilter, magFilter);
 
         return dstTexture;
     },
