@@ -59,24 +59,26 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
         }
 
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+        var tileWidth = tileset.tileWidth;
+        var tileHeight = tileset.tileHeight;
 
-        if (tileTexCoords === null)
+        if (!tileTexCoords || tileWidth === 0 || tileHeight === 0)
         {
             continue;
         }
+
+        var halfWidth = tileWidth * 0.5;
+        var halfHeight = tileHeight * 0.5;
 
         var texture = tileset.glTexture;
 
         var textureUnit = pipeline.setTexture2D(texture, src);
 
-        var frameWidth = tileset.tileWidth;
-        var frameHeight = tileset.tileHeight;
+        var frameWidth = tileWidth;
+        var frameHeight = tileHeight;
 
         var frameX = tileTexCoords.x;
         var frameY = tileTexCoords.y;
-
-        var tw = tileset.tileWidth * 0.5;
-        var th = tileset.tileHeight * 0.5;
 
         var tOffsetX = tileset.tileOffset.x;
         var tOffsetY = tileset.tileOffset.y;
@@ -87,13 +89,14 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
             src,
             texture,
             texture.width, texture.height,
-            x + tile.pixelX * sx + (tw * sx - tOffsetX), y + tile.pixelY * sy + (th * sy - tOffsetY),
-            tile.width, tile.height,
+            x + tile.pixelX * sx + (halfWidth * sx - tOffsetX),
+            y + tile.pixelY * sy + (halfHeight * sy - tOffsetY),
+            tileWidth, tileHeight,
             sx, sy,
             tile.rotation,
             tile.flipX, tile.flipY,
             scrollFactorX, scrollFactorY,
-            tw, th,
+            halfWidth, halfHeight,
             frameX, frameY, frameWidth, frameHeight,
             tint, tint, tint, tint, tile.tintFill,
             0, 0,
