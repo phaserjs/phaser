@@ -97,6 +97,7 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * The `Browser` Device class will no longer think that Chrome is Mobile Safari on iOS devices. Fix #6739 (thanks @michalfialadev)
 * The `GameObjectCreator` method `container` now includes all children in the config, accessed via `Scene.make.container`. Fix #6743 (thanks @Fake)
 * Tilemaps that have been created using Tiles taken from a Sprite Sheet embedded in a Texture Atlas (via `addSpriteSheetFromAtlas` and `Tilemap.addTilesetImage`) will now render correctly. Fix #6691 (thanks @Antriel)
+* The `TilemapWebGLRenderer` function has been fixed so it now uses the TileSet width and height for the tile draw command. This fixes an issue where the Tilemap would render incorrectly if the base tile size was different to the tile size. Fix #5988 (thanks @samme)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
