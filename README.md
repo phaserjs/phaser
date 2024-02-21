@@ -11,7 +11,7 @@ Phaser is a fast, free, and fun open source HTML5 game framework that offers Web
 
 Along with the fantastic open source community, Phaser is actively developed and maintained by **Phaser Studio Inc**. As a result of rapid support, and a developer friendly API, Phaser is currently one of the [most starred](https://github.com/collections/javascript-game-engines) game frameworks on GitHub.
 
-Thousands of developers from indie and multi-national digital agencies, and universities worldwide use Phaser. Take a look at their incredible [games](https://phaser.io/games/) in our showcase video:
+Thousands of developers from indies to multi-national digital agencies, along with universities worldwide use Phaser. Take a look at their incredible [games](https://phaser.io/games/) in our showcase video:
 
 [![Phaser Games Showcase video](https://img.youtube.com/vi/gnfgwkVg7vc/maxresdefault.jpg)](https://www.youtube.com/watch?v=gnfgwkVg7vc)
 
@@ -26,17 +26,27 @@ Grab the source and join the fun!
 
 ![What's New](https://phaser.io/images/github/div2-whats-new.png "What's New")
 
-> 9th February 2024
+> 21st February 2024
 
-Phaser 3.80 Beta 2 is now available. This is a significant release, with a number of new features, updates and bug fixes. It's also the first release of 2024 and we're excited to see what you'll create with it. The biggest change is a reworking of the WebGL Renderer so it fully supports webgl context loss and restoration. This is a huge step forward for Phaser and will make it much more robust, especially on mobile devices where tabbing out to other apps, and losing context as a result, is very common.
+The release of Phaser 3.80, affectionately dubbed "Nino," represents a significant leap forward in our quest to provide an even more powerful and versatile web game development framework. This update showcases our commitment to innovation, bolstered by the insightful feedback and contributions from our dedicated community and the tireless efforts of our development team.
 
-We've also added direct support for loading assets via Base64. This is particularly useful for Playable Ads and other environments where you need to embed all assets into a single HTML file. We've also made a number of updates to the Spine plugin, and fixed a lot of issues across the whole of the framework. Please test this release thoroughly and report any issues you find. We hope to have the final release out in a couple of weeks.
+Phaser 3.80 brings an array of new capabilities and improvements that enrich the developer experience. Among the highlights:
 
-Since the incorporation of Phaser Studio Inc we have been expanding the core Phaser team and firing on all cylinders! There have been lots of important new additions added to the framework, as well as loads of great new Project Templates, updates to Phaser Editor, the re-publication of the Phaser World newsletter and lots, lots more. We hope to have our brand new website live in the next couple of months, too. Please keep an eye on what's going on and subscribe to the newsletter for all the latest details.
+- **WebGL Context Loss Handling**: A robust solution to keep your games running smoothly, even in the face of WebGL context losses, ensuring uninterrupted gameplay.
 
-v3.80 Beta 2 is available now from the [Releases page](https://github.com/phaserjs/phaser/releases/tag/v3.80.0-beta.2) and npm under the `beta` tag. As usual, please check our detailed [Change Log](https://github.com/phaserjs/phaser/blob/master/changelog/3.80/CHANGELOG-v3.80.md) for v3.80.
+- **Compressed Texture Improvements**: Added support for BPTC and RGTC file formats, sRGB color spaces and lots of updates around Mipmaps levels.
 
-You'll find up to date TypeScript defs that align with this release in the `types` folder of this repository.
+- **Base64 Loader Integration**: Allows for the loading of base64 encoded assets, facilitating smoother development processes for environments requiring embedded assets, like Playable Ads.
+
+- **Scale Manager Snap Mode**: A new feature allowing developers to set a 'snapping' value for game dimensions, ideal for pixel-art games and those requiring precise scaling control.
+
+- **Tilemap Enhancements**: Fixes and updates for tile collision and rendering, enhanced Tile to Sprite creation properties and more control over tile-based game elements.
+
+With this release, we've implemented over **100 updates and bug fixes**, addressing community-reported issues and optimizing Phaser's performance and stability. These changes reflect our ongoing dedication to enhancing the framework's capabilities, ensuring developers have the tools they need to bring their creative visions to life.
+
+At the same time as this release we also hit the **36,000 stars** milestone on GitHub, are used by over 32,000 developers and have over 550 contributors! These figures are a testament to the growing community of developers who have embraced Phaser as their go-to framework for web game development. We're grateful for the support and feedback we've received, and we're committed to continuing to evolve Phaser to meet the needs of our community.
+
+We're excited for you to dive into Phaser 3.80 "Nino" and explore the new features and improvements. As always, we look forward to your feedback and contributions as we continue to evolve Phaser together. To make sure you read our weekly Developer Logs, please [subscribe to our free newsletter](https://phaser.io/community/newsletter/).
 
 > If you find any problems please report them in GitHub issues.
 
@@ -50,7 +60,7 @@ Happy coding everyone!
 
 Cheers,
 
-Rich<br>
+Rich and the team at Phaser Studio<br>
 [@photonstorm](https://twitter.com/photonstorm)
 
 ![boogie](https://www.phaser.io/images/spacedancer.gif)
@@ -79,13 +89,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.80.0/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.80.0/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -112,6 +122,7 @@ The TypeScript defs are automatically generated from the JSDoc comments found in
 
 If you are familiar with web development and bundlers, then we have published a selection of project templates to help you get started with your game quicky. Choose from the following:
 
+* [Vue 3 + Vite Template](https://github.com/phaserjs/template-vue)
 * [Vite Template](https://github.com/phaserjs/template-vite)
 * [Webpack Template](https://github.com/phaserjs/template-webpack)
 * [ESBuild Template](https://github.com/phaserjs/template-esbuild)
@@ -164,7 +175,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.0/dist/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
@@ -287,7 +298,7 @@ You can then run `webpack` to create a development build in the `build` folder w
 Due to the increasing size of our Change Logs we have now split them up, one version per folder.
 
 * [v3.80.0 Change Log](changelog/3.80/CHANGELOG-v3.80.md)
-* [v3.0.0 to v3.70.0. Change Logs](CHANGELOG.md)
+* [v3.0.0 to v3.80.0. Change Logs](CHANGELOG.md)
 
 We've organized the Change Logs into commonly themed sections to make it more digestible, but we appreciate there is a lot in there. Please don't feel overwhelmed! If you need clarification about something, join us on the Phaser Discord and ask.
 
@@ -302,7 +313,7 @@ The [Contributors Guide][contribute] contains full details on how to help with P
 
 - Before contributing read the [code of conduct](https://github.com/phaserjs/phaser/blob/master/.github/CODE_OF_CONDUCT.md).
 
-Written something cool in Phaser? Please tell us about it in the [forum][forum], or email games@phaser.io
+Written something cool in Phaser? Please tell us about it in Discord, the [forum][forum], or simply email games@phaser.io
 
 ![Created by](https://phaser.io/images/github/div2-created-by.png "Created by")
 
@@ -318,8 +329,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/phaserjs/phaser/releases/download/v3.70.0/phaser.js
-[get-minjs]: https://github.com/phaserjs/phaser/releases/download/v3.70.0/phaser.min.js
+[get-js]: https://github.com/phaserjs/phaser/releases/download/v3.80.0/phaser.js
+[get-minjs]: https://github.com/phaserjs/phaser/releases/download/v3.80.0/phaser.min.js
 [clone-http]: https://github.com/phaserjs/phaser.git
 [clone-ssh]: git@github.com:phaserjs/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/phaserjs/phaser
