@@ -469,7 +469,7 @@ var TileSprite = new Class({
         {
             this.fillPattern = this.renderer.canvasToTexture(canvas, this.fillPattern);
 
-            if (typeof WEBGL_DEBUG)
+            if (typeof WEBGL_DEBUG !== 'undefined')
             {
                 this.fillPattern.spectorMetadata = { textureKey: 'TileSprite Game Object' };
             }

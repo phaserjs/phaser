@@ -103,7 +103,7 @@ var Phaser = {
 
 //  Merge in the optional plugins and WebGL only features
 
-if (typeof FEATURE_SOUND)
+if (typeof FEATURE_SOUND !== 'undefined')
 {
     Phaser.Sound = require('./sound');
 }

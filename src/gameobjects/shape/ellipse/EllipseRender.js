@@ -8,12 +8,12 @@ var NOOP = require('../../../utils/NOOP');
 var renderWebGL = NOOP;
 var renderCanvas = NOOP;
 
-if (typeof WEBGL_RENDERER)
+if (typeof WEBGL_RENDERER !== 'undefined')
 {
     renderWebGL = require('./EllipseWebGLRenderer');
 }
 
-if (typeof CANVAS_RENDERER)
+if (typeof CANVAS_RENDERER !== 'undefined')
 {
     renderCanvas = require('./EllipseCanvasRenderer');
 }

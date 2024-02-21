@@ -94,7 +94,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * @return {Phaser.GameObjects.NineSlice} The Game Object that was created.
  */
-if (typeof WEBGL_RENDERER)
+if (typeof WEBGL_RENDERER !== 'undefined')
 {
     GameObjectFactory.register('nineslice', function (x, y, texture, frame, width, height, leftWidth, rightWidth, topHeight, bottomHeight)
     {

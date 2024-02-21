@@ -1433,7 +1433,7 @@ var Text = new Class({
         {
             this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture, true);
 
-            if (typeof WEBGL_DEBUG)
+            if (typeof WEBGL_DEBUG !== 'undefined')
             {
                 this.frame.glTexture.spectorMetadata = { textureKey: 'Text Game Object' };
             }

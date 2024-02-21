@@ -62,7 +62,7 @@ var Systems = new Class({
          */
         this.renderer;
 
-        if (typeof PLUGIN_FBINSTANT)
+        if (typeof PLUGIN_FBINSTANT !== 'undefined')
         {
             /**
              * The Facebook Instant Games Plugin.

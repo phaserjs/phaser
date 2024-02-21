@@ -87,12 +87,12 @@ var DefaultPlugins = {
 
 };
 
-if (typeof PLUGIN_CAMERA3D)
+if (typeof PLUGIN_CAMERA3D !== 'undefined')
 {
     DefaultPlugins.DefaultScene.push('CameraManager3D');
 }
 
-if (typeof PLUGIN_FBINSTANT)
+if (typeof PLUGIN_FBINSTANT !== 'undefined')
 {
     DefaultPlugins.Global.push('facebook');
 }

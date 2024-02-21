@@ -101,7 +101,7 @@ var DebugHeader = function (game)
             }
         }
 
-        var fb = (typeof PLUGIN_FBINSTANT) ? '-FB' : '';
+        var fb = (typeof PLUGIN_FBINSTANT !== 'undefined') ? '-FB' : '';
 
         if (!config.hidePhaser)
         {

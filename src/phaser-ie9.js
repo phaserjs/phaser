@@ -52,12 +52,12 @@ var Phaser = {
 
 //  Merge in the optional plugins and WebGL only features
 
-if (typeof FEATURE_SOUND)
+if (typeof FEATURE_SOUND !== 'undefined')
 {
     Phaser.Sound = require('./sound');
 }
 
-if (typeof PLUGIN_CAMERA3D)
+if (typeof PLUGIN_CAMERA3D !== 'undefined')
 {
     Phaser.Cameras.Sprite3D = require('../plugins/camera3d/src');
     Phaser.GameObjects.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3D');
@@ -65,7 +65,7 @@ if (typeof PLUGIN_CAMERA3D)
     Phaser.GameObjects.Creators.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3DCreator');
 }
 
-if (typeof PLUGIN_FBINSTANT)
+if (typeof PLUGIN_FBINSTANT !== 'undefined')
 {
     Phaser.FacebookInstantGamesPlugin = require('../plugins/fbinstant/src/FacebookInstantGamesPlugin');
 }

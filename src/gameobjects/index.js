@@ -124,7 +124,7 @@ var GameObjects = {
 };
 
 //  WebGL only Game Objects
-if (typeof WEBGL_RENDERER)
+if (typeof WEBGL_RENDERER !== 'undefined')
 {
     GameObjects.Shader = require('./shader/Shader');
     GameObjects.Mesh = require('./mesh/Mesh');
