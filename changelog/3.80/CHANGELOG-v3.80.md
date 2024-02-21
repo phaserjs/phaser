@@ -98,6 +98,7 @@ The Phaser Input and related classes have been updated to be more consistent wit
 * The `GameObjectCreator` method `container` now includes all children in the config, accessed via `Scene.make.container`. Fix #6743 (thanks @Fake)
 * Tilemaps that have been created using Tiles taken from a Sprite Sheet embedded in a Texture Atlas (via `addSpriteSheetFromAtlas` and `Tilemap.addTilesetImage`) will now render correctly. Fix #6691 (thanks @Antriel)
 * The `TilemapWebGLRenderer` function has been fixed so it now uses the TileSet width and height for the tile draw command. This fixes an issue where the Tilemap would render incorrectly if the base tile size was different to the tile size. Fix #5988 (thanks @samme)
+* The `ArcadePhysics.World.collideSpriteVsTilemapLayer` method has been modified so that the body bounds are now expanded by the size of the scaled base tile in the Tilemap Layer. This fixes an issue where the check would skip over-sized tiles that were outside the bounds of the body. Mostly noticeable on layers that had a different base tile size to the map itself. Fix #4479 (thanks @KingCosmic)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
