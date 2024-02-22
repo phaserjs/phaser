@@ -302,6 +302,10 @@ var WebGLTextureWrapper = new Class({
         {
             gl.bindTexture(gl.TEXTURE_2D, currentTexture);
         }
+        else
+        {
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        }
 
         // Assign the texture to our wrapper.
         this.webGLTexture = texture;
@@ -377,6 +381,10 @@ var WebGLTextureWrapper = new Class({
         if (currentTexture)
         {
             gl.bindTexture(gl.TEXTURE_2D, currentTexture);
+        }
+        else
+        {
+            gl.bindTexture(gl.TEXTURE_2D, null);
         }
     },
 

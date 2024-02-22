@@ -362,7 +362,7 @@ var Shader = new Class({
         /**
          * A reference to the Phaser.Textures.Texture that has been stored in the Texture Manager for this Shader.
          *
-         * This property is only set if you have called `Shader.setRenderToTexture`, otherwise it is `null`.
+         * This property is only set if you have called `Shader.setRenderToTexture` with a key, otherwise it is `null`.
          *
          * @name Phaser.GameObjects.Shader#texture
          * @type {Phaser.Textures.Texture}
