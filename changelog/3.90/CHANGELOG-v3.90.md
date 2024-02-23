@@ -6,6 +6,7 @@
 
 # Bug Fixes
 
+* Fix failure to restore compressed textures after WebGL context loss.
 * Fix a single WebGL error, with no visual side-effects, from occurring while calling `Shader.setRenderToTexture()` after the game has started running. Actually, the root cause was leaving new WebGL textures bound after creation.
 
 ## Examples, Documentation, Beta Testing and TypeScript

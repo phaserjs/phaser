@@ -818,6 +818,9 @@ var WebGLRenderer = new Class({
             gl.disable(gl.DEPTH_TEST);
             gl.enable(gl.CULL_FACE);
 
+            // Re-enable compressed texture formats.
+            _this.compression = _this.getCompressedTextures();
+
             // Restore wrapped GL objects.
             // Order matters, as some wrappers depend on others.
             var wrapperCreateResource = function (wrapper)
