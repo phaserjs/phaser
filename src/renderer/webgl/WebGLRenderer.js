@@ -2952,13 +2952,37 @@ var WebGLRenderer = new Class({
         if (noRepeat === undefined) { noRepeat = false; }
         if (flipY === undefined) { flipY = false; }
 
+        var gl = this.gl;
+        var minFilter = gl.NEAREST;
+        var magFilter = gl.NEAREST;
+
+        var width = srcCanvas.width;
+        var height = srcCanvas.height;
+
+        var wrapping = gl.CLAMP_TO_EDGE;
+
+        var pow = IsSizePowerOfTwo(width, height);
+
+        if (!noRepeat && pow)
+        {
+            wrapping = gl.REPEAT;
+        }
+
+        if (this.config.antialias)
+        {
+            minFilter = (pow && this.mipmapFilter) ? this.mipmapFilter : gl.LINEAR;
+            magFilter = gl.LINEAR;
+        }
+
         if (!dstTexture)
         {
-            return this.createCanvasTexture(srcCanvas, noRepeat, flipY);
+            return this.createTexture2D(0, minFilter, magFilter, wrapping, wrapping, gl.RGBA, srcCanvas, width, height, true, false, flipY);
         }
         else
         {
-            return this.updateCanvasTexture(srcCanvas, dstTexture, flipY, noRepeat);
+            dstTexture.update(srcCanvas, width, height, flipY, wrapping, wrapping, minFilter, magFilter);
+
+            return dstTexture;
         }
     },
 
@@ -2979,29 +3003,7 @@ var WebGLRenderer = new Class({
         if (noRepeat === undefined) { noRepeat = false; }
         if (flipY === undefined) { flipY = false; }
 
-        var gl = this.gl;
-        var minFilter = gl.NEAREST;
-        var magFilter = gl.NEAREST;
-
-        var width = srcCanvas.width;
-        var height = srcCanvas.height;
-
-        var wrapping = gl.CLAMP_TO_EDGE;
-
-        var pow = IsSizePowerOfTwo(width, height);
-
-        if (!noRepeat && pow)
-        {
-            wrapping = gl.REPEAT;
-        }
-
-        if (this.config.antialias)
-        {
-            minFilter = (pow && this.mipmapFilter) ? this.mipmapFilter : gl.LINEAR;
-            magFilter = gl.LINEAR;
-        }
-
-        return this.createTexture2D(0, minFilter, magFilter, wrapping, wrapping, gl.RGBA, srcCanvas, width, height, true, false, flipY);
+        return this.canvasToTexture(srcCanvas, null, noRepeat, flipY);
     },
 
     /**
@@ -3022,31 +3024,7 @@ var WebGLRenderer = new Class({
         if (flipY === undefined) { flipY = false; }
         if (noRepeat === undefined) { noRepeat = false; }
 
-        var gl = this.gl;
-        var minFilter = gl.NEAREST;
-        var magFilter = gl.NEAREST;
-
-        var width = srcCanvas.width;
-        var height = srcCanvas.height;
-
-        var wrapping = gl.CLAMP_TO_EDGE;
-
-        var pow = IsSizePowerOfTwo(width, height);
-
-        if (!noRepeat && pow)
-        {
-            wrapping = gl.REPEAT;
-        }
-
-        if (this.config.antialias)
-        {
-            minFilter = (pow && this.mipmapFilter) ? this.mipmapFilter : gl.LINEAR;
-            magFilter = gl.LINEAR;
-        }
-
-        dstTexture.update(srcCanvas, width, height, flipY, wrapping, wrapping, minFilter, magFilter);
-
-        return dstTexture;
+        return this.canvasToTexture(srcCanvas, dstTexture, noRepeat, flipY);
     },
 
     /**

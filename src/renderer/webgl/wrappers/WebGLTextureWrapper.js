@@ -228,87 +228,14 @@ var WebGLTextureWrapper = new Class({
 
         var texture = gl.createTexture();
 
-        gl.activeTexture(gl.TEXTURE0);
-
-        var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
-
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.minFilter);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.magFilter);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrapS);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.wrapT);
-
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, this.pma);
-
-        if (this.flipY)
-        {
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-        }
-
-        var pixels = this.pixels;
-        var mipLevel = this.mipLevel;
-        var width = this.width;
-        var height = this.height;
-        var format = this.format;
-
-        var generateMipmap = false;
-
-        if (pixels === null || pixels === undefined)
-        {
-            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, width, height, 0, format, gl.UNSIGNED_BYTE, null);
-
-            generateMipmap = IsSizePowerOfTwo(width, height);
-        }
-        else if (pixels.compressed)
-        {
-            width = pixels.width;
-            height = pixels.height;
-            generateMipmap = pixels.generateMipmap;
-
-            for (var i = 0; i < pixels.mipmaps.length; i++)
-            {
-                gl.compressedTexImage2D(gl.TEXTURE_2D, i, pixels.internalFormat, pixels.mipmaps[i].width, pixels.mipmaps[i].height, 0, pixels.mipmaps[i].data);
-            }
-        }
-        else if (pixels instanceof Uint8Array)
-        {
-            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, width, height, 0, format, gl.UNSIGNED_BYTE, pixels);
-        }
-        else
-        {
-            if (!this.forceSize)
-            {
-                width = pixels.width;
-                height = pixels.height;
-            }
-
-            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, format, gl.UNSIGNED_BYTE, pixels);
-
-            generateMipmap = IsSizePowerOfTwo(width, height);
-        }
-
-        if (generateMipmap)
-        {
-            gl.generateMipmap(gl.TEXTURE_2D);
-        }
-
         // Set Spector metadata.
         // eslint-disable-next-line camelcase
         texture.__SPECTOR_Metadata = this.__SPECTOR_Metadata;
 
-        // Restore previous texture bind.
-        if (currentTexture)
-        {
-            gl.bindTexture(gl.TEXTURE_2D, currentTexture);
-        }
-        else
-        {
-            gl.bindTexture(gl.TEXTURE_2D, null);
-        }
-
         // Assign the texture to our wrapper.
         this.webGLTexture = texture;
+
+        this._processTexture();
     },
 
     /**
@@ -354,6 +281,21 @@ var WebGLTextureWrapper = new Class({
             return;
         }
 
+        this._processTexture();
+    },
+
+    /**
+     * Set all parameters of this WebGLTexture per the stored values.
+     *
+     * @function Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#_processTexture
+     * @protected
+     * @since 3.90.0
+     * @ignore
+     */
+    _processTexture: function ()
+    {
+        var gl = this.gl;
+
         gl.activeTexture(gl.TEXTURE0);
 
         var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
@@ -365,14 +307,54 @@ var WebGLTextureWrapper = new Class({
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrapS);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.wrapT);
 
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, this.pma);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, this.flipY);
 
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
-
-        // Should we generate mipmaps?
         var pixels = this.pixels;
-        if (IsSizePowerOfTwo(width, height) && !pixels.compressed && !(pixels instanceof Uint8Array))
+        var mipLevel = this.mipLevel;
+        var width = this.width;
+        var height = this.height;
+        var format = this.format;
+
+        var generateMipmap = false;
+
+        if (pixels === null || pixels === undefined)
+        {
+            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, width, height, 0, format, gl.UNSIGNED_BYTE, null);
+
+            generateMipmap = IsSizePowerOfTwo(width, height);
+        }
+        else if (pixels.compressed)
+        {
+            width = pixels.width;
+            height = pixels.height;
+            generateMipmap = pixels.generateMipmap;
+
+            for (var i = 0; i < pixels.mipmaps.length; i++)
+            {
+                gl.compressedTexImage2D(gl.TEXTURE_2D, i, pixels.internalFormat, pixels.mipmaps[i].width, pixels.mipmaps[i].height, 0, pixels.mipmaps[i].data);
+            }
+        }
+        else if (pixels instanceof Uint8Array)
+        {
+            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, width, height, 0, format, gl.UNSIGNED_BYTE, pixels);
+
+            generateMipmap = IsSizePowerOfTwo(width, height);
+        }
+        else
+        {
+            if (!this.forceSize)
+            {
+                width = pixels.width;
+                height = pixels.height;
+            }
+
+            gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, format, gl.UNSIGNED_BYTE, pixels);
+
+            generateMipmap = IsSizePowerOfTwo(width, height);
+        }
+
+        if (generateMipmap)
         {
             gl.generateMipmap(gl.TEXTURE_2D);
         }
