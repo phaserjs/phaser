@@ -2,6 +2,12 @@
 
 # New Features
 
+# WebGL Rendering Updates
+
+* `WebGLTextureWrapper.update` expanded:
+  * `source` parameter is now type `?object`, so it can be used for anything that is valid in the constructor.
+  * New `format` parameter can update the texture format.
+
 # Updates
 
 # Bug Fixes

@@ -942,17 +942,13 @@ var Shader = new Class({
             return;
         }
 
-        var gl = this.gl;
-
-        gl.activeTexture(gl.TEXTURE0 + this._textureCount);
-        gl.bindTexture(gl.TEXTURE_2D, uniform.value.webGLTexture);
-
         //  Extended texture data
 
         var data = uniform.textureData;
 
         if (data && !uniform.value.isRenderTexture)
         {
+            var gl = this.gl;
             var wrapper = uniform.value;
             
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
@@ -966,6 +962,10 @@ var Shader = new Class({
             var wrapS = gl[GetFastValue(data, 'wrapS', 'repeat').toUpperCase()];
             var wrapT = gl[GetFastValue(data, 'wrapT', 'repeat').toUpperCase()];
             var format = gl[GetFastValue(data, 'format', 'rgba').toUpperCase()];
+            var flipY = GetFastValue(data, 'flipY', false);
+            var width = GetFastValue(data, 'width', wrapper.width);
+            var height = GetFastValue(data, 'height', wrapper.height);
+            var source = GetFastValue(data, 'source', wrapper.pixels);
 
             if (data.repeat)
             {
@@ -973,38 +973,13 @@ var Shader = new Class({
                 wrapT = gl.REPEAT;
             }
 
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, !!data.flipY);
-
             if (data.width)
             {
-                var width = GetFastValue(data, 'width', 512);
-                var height = GetFastValue(data, 'height', 2);
-                var border = GetFastValue(data, 'border', 0);
-
-                //  texImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView? pixels)
-                gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, border, format, gl.UNSIGNED_BYTE, null);
-                wrapper.width = width;
-                wrapper.height = height;
-            }
-            else
-            {
-                //  texImage2D(GLenum target, GLint level, GLenum internalformat, GLenum format, GLenum type, ImageData? pixels)
-                gl.texImage2D(gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, uniform.source);
+                // If the uniform has resolution, use a blank texture.
+                source = null;
             }
 
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
-
-            // Update texture wrapper.
-            wrapper.magFilter = magFilter;
-            wrapper.minFilter = minFilter;
-            wrapper.wrapS = wrapS;
-            wrapper.wrapT = wrapT;
-            wrapper.format = format;
-            wrapper.flipY = !!data.flipY;
-            wrapper.pixels = uniform.source;
+            wrapper.update(source, width, height, flipY, wrapS, wrapT, minFilter, magFilter, format);
         }
 
         this.renderer.setProgram(this.program);

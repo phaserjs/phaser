@@ -2980,7 +2980,7 @@ var WebGLRenderer = new Class({
         }
         else
         {
-            dstTexture.update(srcCanvas, width, height, flipY, wrapping, wrapping, minFilter, magFilter);
+            dstTexture.update(srcCanvas, width, height, flipY, wrapping, wrapping, minFilter, magFilter, dstTexture.format);
 
             return dstTexture;
         }
@@ -3075,7 +3075,7 @@ var WebGLRenderer = new Class({
         }
         else
         {
-            dstTexture.update(srcVideo, width, height, flipY, wrapping, wrapping, minFilter, magFilter);
+            dstTexture.update(srcVideo, width, height, flipY, wrapping, wrapping, minFilter, magFilter, dstTexture.format);
 
             return dstTexture;
         }

@@ -246,7 +246,7 @@ var WebGLTextureWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#update
      * @since 3.80.0
      *
-     * @param {HTMLCanvasElement|HTMLVideoElement} source - The source to update the WebGLTexture with.
+     * @param {?object} source - The source to update the WebGLTexture with.
      * @param {number} width - The new width of the WebGLTexture.
      * @param {number} height - The new height of the WebGLTexture.
      * @param {boolean} flipY - Should the WebGLTexture set `UNPACK_MULTIPLY_FLIP_Y`?
@@ -254,8 +254,9 @@ var WebGLTextureWrapper = new Class({
      * @param {number} wrapT - The new wrapping mode for the WebGLTexture.
      * @param {number} minFilter - The new minification filter for the WebGLTexture.
      * @param {number} magFilter - The new magnification filter for the WebGLTexture.
+     * @param {number} format - The new format for the WebGLTexture.
      */
-    update: function (source, width, height, flipY, wrapS, wrapT, minFilter, magFilter)
+    update: function (source, width, height, flipY, wrapS, wrapT, minFilter, magFilter, format)
     {
         if (width === 0 || height === 0)
         {
@@ -271,6 +272,7 @@ var WebGLTextureWrapper = new Class({
         this.wrapT = wrapT;
         this.minFilter = minFilter;
         this.magFilter = magFilter;
+        this.format = format;
 
         var gl = this.gl;
 
