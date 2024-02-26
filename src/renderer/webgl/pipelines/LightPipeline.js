@@ -375,7 +375,7 @@ var LightPipeline = new Class({
 
         if (!gameObject)
         {
-            return this.renderer.normalMap;
+            return this.renderer.normalTexture;
         }
         else if (gameObject.displayTexture)
         {
@@ -399,7 +399,7 @@ var LightPipeline = new Class({
 
         if (!normalMap)
         {
-            return this.renderer.normalMap;
+            return this.renderer.normalTexture;
         }
 
         return normalMap.glTexture;
