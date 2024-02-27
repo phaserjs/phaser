@@ -301,11 +301,6 @@ var TouchManager = new Class({
             {
                 //  Only process the event if the target isn't the canvas
                 manager.onTouchEnd(event);
-
-                if (_this.capture && event.cancelable)
-                {
-                    event.preventDefault();
-                }
             }
         };
 
