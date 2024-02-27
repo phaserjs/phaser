@@ -12,17 +12,15 @@ var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * @classdesc
- * A 2D point light.
+ * A 2D Light.
  *
- * These are typically created by a {@link Phaser.GameObjects.LightsManager}, available from within a scene via `this.lights`.
+ * These are created by the {@link Phaser.GameObjects.LightsManager}, available from within a scene via `this.lights`.
  *
  * Any Game Objects using the Light2D pipeline will then be affected by these Lights as long as they have a normal map.
  *
  * They can also simply be used to represent a point light for your own purposes.
  *
- * As of Phaser 3.60 this Game Object now has the Transform and Origin components. However, changing the scale,
- * rotation or origin properties will not make any difference to the Light. They are simply present to allow you
- * to add this Light to a Container, or enable it for Physics.
+ * Lights cannot be added to Containers. They are designed to exist in the root of a Scene.
  *
  * @class Light
  * @extends Phaser.Geom.Circle
@@ -32,7 +30,6 @@ var Utils = require('../../renderer/webgl/Utils');
  *
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.ScrollFactor
- * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {number} x - The horizontal position of the light.
@@ -50,7 +47,6 @@ var Light = new Class({
     Mixins: [
         Components.Origin,
         Components.ScrollFactor,
-        Components.Transform,
         Components.Visible
     ],
 
