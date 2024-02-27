@@ -332,7 +332,6 @@ var DynamicTexture = new Class({
         source.isGLTexture = true;
 
         source.glTexture = renderTarget.texture;
-        source.glTexture.flipY = true;
 
         return this;
     },

@@ -452,8 +452,6 @@ var Shader = new Class({
 
             this.glTexture = renderer.createTextureFromSource(null, width, height, 0);
 
-            this.glTexture.flipY = flipY;
-
             this.framebuffer = renderer.createFramebuffer(width, height, this.glTexture, false);
 
             this._rendererWidth = width;
