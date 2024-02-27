@@ -26,7 +26,7 @@ Grab the source and join the fun!
 
 ![What's New](https://phaser.io/images/github/div2-whats-new.png "What's New")
 
-> 21st February 2024
+> 27th February 2024
 
 The release of Phaser 3.80, affectionately dubbed "Nino," represents a significant leap forward in our quest to provide an even more powerful and versatile web game development framework. This update showcases our commitment to innovation, bolstered by the insightful feedback and contributions from our dedicated community and the tireless efforts of our development team.
 
@@ -89,13 +89,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.80.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.80.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -175,7 +175,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.0/dist/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
@@ -297,7 +297,7 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 Due to the increasing size of our Change Logs we have now split them up, one version per folder.
 
-* [v3.80.0 Change Log](changelog/3.80/CHANGELOG-v3.80.md)
+* [v3.80.1 Change Log](changelog/3.80.1/CHANGELOG-v3.80.1.md)
 * [v3.0.0 to v3.80.0. Change Logs](CHANGELOG.md)
 
 We've organized the Change Logs into commonly themed sections to make it more digestible, but we appreciate there is a lot in there. Please don't feel overwhelmed! If you need clarification about something, join us on the Phaser Discord and ask.
@@ -329,8 +329,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/phaserjs/phaser/releases/download/v3.80.0/phaser.js
-[get-minjs]: https://github.com/phaserjs/phaser/releases/download/v3.80.0/phaser.min.js
+[get-js]: https://github.com/phaserjs/phaser/releases/download/v3.80.1/phaser.js
+[get-minjs]: https://github.com/phaserjs/phaser/releases/download/v3.80.1/phaser.min.js
 [clone-http]: https://github.com/phaserjs/phaser.git
 [clone-ssh]: git@github.com:phaserjs/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/phaserjs/phaser

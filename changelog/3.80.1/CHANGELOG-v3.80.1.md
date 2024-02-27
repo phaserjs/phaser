@@ -1,5 +1,7 @@
 # Version 3.80.1 - Nino - 27th February 2024
 
+Please also see the [3.80](changelog/3.80/CHANGELOG-v3.80.md) Change Log for details about the major 3.80 release.
+
 ## Bug Fixes
 
 * Fix `RenderTexture` crashing in the presence of a light.
