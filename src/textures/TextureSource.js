@@ -306,7 +306,10 @@ var TextureSource = new Class({
     {
         if (value === undefined) { value = true; }
 
+        if (value === this.flipY) { return this; }
+
         this.flipY = value;
+        this.update();
 
         return this;
     },
