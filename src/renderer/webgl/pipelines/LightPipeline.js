@@ -251,53 +251,6 @@ var LightPipeline = new Class({
     },
 
     /**
-     * Assigns a texture to the current batch. If a different texture is already set it creates a new batch object.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.LightPipeline#setTexture2D
-     * @ignore
-     * @since 3.50.0
-     *
-     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture] - Texture that will be assigned to the current batch. If not given uses blankTexture.
-     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object being rendered or added to the batch.
-     */
-    setTexture2D: function (texture, gameObject)
-    {
-        var renderer = this.renderer;
-
-        if (texture === undefined) { texture = renderer.whiteTexture; }
-
-        var normalMap = this.getNormalMap(gameObject);
-
-        if (this.isNewNormalMap(texture, normalMap))
-        {
-            this.flush();
-
-            this.createBatch(texture);
-
-            this.addTextureToBatch(normalMap);
-
-            this.currentNormalMap = normalMap;
-        }
-
-        var rotation = 0;
-
-        if (gameObject && gameObject.parentContainer)
-        {
-            var matrix = gameObject.getWorldTransformMatrix(this._tempMatrix, this._tempMatrix2);
-
-            rotation = matrix.rotationNormalized;
-        }
-        else if (gameObject)
-        {
-            rotation = gameObject.rotation;
-        }
-
-        this.setNormalMapRotation(rotation);
-
-        return 0;
-    },
-
-    /**
      * Custom pipelines can use this method in order to perform any required pre-batch tasks
      * for the given Game Object. It must return the texture unit the Game Object was assigned.
      *
