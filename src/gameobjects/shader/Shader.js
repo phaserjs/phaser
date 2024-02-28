@@ -436,14 +436,11 @@ var Shader = new Class({
      * @since 3.19.0
      *
      * @param {string} [key] - The unique key to store the texture as within the global Texture Manager.
-     * @param {boolean} [flipY=false] - Does this texture need vertically flipping before rendering? This should usually be set to `true` if being fed from a buffer.
      *
      * @return {this} This Shader instance.
      */
-    setRenderToTexture: function (key, flipY)
+    setRenderToTexture: function (key)
     {
-        if (flipY === undefined) { flipY = false; }
-
         if (!this.renderToTexture)
         {
             var width = this.width;
