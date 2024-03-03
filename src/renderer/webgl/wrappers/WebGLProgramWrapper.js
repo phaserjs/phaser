@@ -70,6 +70,28 @@ var WebGLProgramWrapper = new Class({
          */
         this.fragmentSource = fragmentSource;
 
+        /**
+         * The vertex shader object. This is only stored if `WEBGL_DEBUG` is enabled.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#_vertexShader
+         * @type {WebGLShader}
+         * @default null
+         * @private
+         * @since 3.90.0
+         */
+        this._vertexShader = null;
+
+        /**
+         * The fragment shader object. This is only stored if `WEBGL_DEBUG` is enabled.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#_fragmentShader
+         * @type {WebGLShader}
+         * @default null
+         * @private
+         * @since 3.90.0
+         */
+        this._fragmentShader = null;
+
         this.createResource();
     },
 
@@ -105,26 +127,36 @@ var WebGLProgramWrapper = new Class({
         gl.compileShader(vs);
         gl.compileShader(fs);
 
-        var failed = 'Shader failed:\n';
-
-        if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS))
-        {
-            throw new Error('Vertex ' + failed + gl.getShaderInfoLog(vs));
-        }
-
-        if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS))
-        {
-            throw new Error('Fragment ' + failed + gl.getShaderInfoLog(fs));
-        }
-
         gl.attachShader(program, vs);
         gl.attachShader(program, fs);
 
         gl.linkProgram(program);
 
+        if (typeof WEBGL_DEBUG)
+        {
+            this._vertexShader = vs;
+            this._fragmentShader = fs;
+        }
+        else
+        {
+            gl.deleteShader(vs);
+            gl.deleteShader(fs);
+        }
+
+        var failed = 'Shader failed:\n';
+
         if (!gl.getProgramParameter(program, gl.LINK_STATUS))
         {
-            throw new Error('Link ' + failed + gl.getProgramInfoLog(program));
+            if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS))
+            {
+                throw new Error('Vertex ' + failed + gl.getShaderInfoLog(vs));
+            }
+    
+            if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS))
+            {
+                throw new Error('Fragment ' + failed + gl.getShaderInfoLog(fs));
+            }
+            throw new Error('Link Shader failed:' + gl.getProgramInfoLog(program));
         }
 
         gl.useProgram(program);
@@ -145,11 +177,22 @@ var WebGLProgramWrapper = new Class({
             return;
         }
 
-        if (!this.gl.isContextLost())
+        var gl = this.gl;
+        if (!gl.isContextLost())
         {
-            this.gl.deleteProgram(this.webGLProgram);
+            if (this._vertexShader)
+            {
+                gl.deleteShader(this._vertexShader);
+            }
+            if (this._fragmentShader)
+            {
+                gl.deleteShader(this._fragmentShader);
+            }
+            gl.deleteProgram(this.webGLProgram);
         }
 
+        this._vertexShader = null;
+        this._fragmentShader = null;
         this.webGLProgram = null;
         this.gl = null;
     }
