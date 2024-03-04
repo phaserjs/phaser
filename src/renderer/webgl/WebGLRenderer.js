@@ -814,9 +814,9 @@ var WebGLRenderer = new Class({
             // Camera mask is set during preRenderCamera.
 
             // Restore GL flags.
-            gl.disable(gl.BLEND);
+            gl.enable(gl.BLEND);
             gl.disable(gl.DEPTH_TEST);
-            gl.enable(gl.CULL_FACE);
+            gl.disable(gl.CULL_FACE);
 
             // Re-enable compressed texture formats.
             _this.compression = _this.getCompressedTextures();
