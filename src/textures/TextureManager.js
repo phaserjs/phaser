@@ -1415,6 +1415,14 @@ var TextureManager = new Class({
 
         if (textureFrame)
         {
+            var source = textureFrame.source;
+            var image = source.image;
+            if (!(source.isCanvas || source.isVideo || image instanceof HTMLImageElement))
+            {
+                console.warn('TextureManager.getPixelAlpha: The texture source must be Image, Canvas, or Video');
+                return null;
+            }
+
             //  Adjust for trim (if not trimmed x and y are just zero)
             x -= textureFrame.x;
             y -= textureFrame.y;
@@ -1429,7 +1437,7 @@ var TextureManager = new Class({
                 var ctx = this._tempContext;
 
                 ctx.clearRect(0, 0, 1, 1);
-                ctx.drawImage(textureFrame.source.image, x, y, 1, 1, 0, 0, 1, 1);
+                ctx.drawImage(image, x, y, 1, 1, 0, 0, 1, 1);
 
                 var rgb = ctx.getImageData(0, 0, 1, 1);
 
@@ -1461,6 +1469,14 @@ var TextureManager = new Class({
 
         if (textureFrame)
         {
+            var source = textureFrame.source;
+            var image = source.image;
+            if (!(source.isCanvas || source.isVideo || image instanceof HTMLImageElement))
+            {
+                console.warn('TextureManager.getPixelAlpha: The texture source must be Image, Canvas, or Video');
+                return null;
+            }
+
             //  Adjust for trim (if not trimmed x and y are just zero)
             x -= textureFrame.x;
             y -= textureFrame.y;
@@ -1475,7 +1491,7 @@ var TextureManager = new Class({
                 var ctx = this._tempContext;
 
                 ctx.clearRect(0, 0, 1, 1);
-                ctx.drawImage(textureFrame.source.image, x, y, 1, 1, 0, 0, 1, 1);
+                ctx.drawImage(image, x, y, 1, 1, 0, 0, 1, 1);
 
                 var rgb = ctx.getImageData(0, 0, 1, 1);
 

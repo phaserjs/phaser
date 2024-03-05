@@ -14,6 +14,7 @@
 # Bug Fixes
 
 * Fix `LightPipeline` failing to render the same normal map twice in a row in a single batch, by removing `setTexture2D`. Fix #6708 (thanks @sroboubi)
+* Log a warning instead of throwing an exception when calling `TextureManager.getPixel()` or `getPixelAlpha()` on textures that cannot be drawn to a canvas for sampling. Fix #6761 (thanks @yaustar)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
