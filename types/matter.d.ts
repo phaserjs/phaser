@@ -5,6 +5,7 @@
 //                 Piotr Pietrzak <https://github.com/hasparus>,
 //                 Richard Davey <rich@photonstorm.com>
 
+/// <reference types="./phaser" />
 declare namespace MatterJS {
 
     //  --------------------------------------------------------------
@@ -405,7 +406,7 @@ declare namespace MatterJS {
          * @property gameObject
          * @type Phaser.GameObjects.GameObject
          */
-        gameObject?: any;
+        gameObject?: Phaser.GameObjects.GameObject;
 
         /**
          * Scale the influence of World gravity when applied to this body.
@@ -1860,7 +1861,7 @@ declare namespace MatterJS {
          * @property gameObject
          * @type Phaser.GameObjects.GameObject
          */
-        gameObject?: any;
+        gameObject?: Phaser.GameObjects.GameObject;
 
         /**
          * The scale of the Body.
