@@ -1618,7 +1618,7 @@ var ScaleManager = new Class({
         var y = (canvasBounds.y >= 0) ? 0 : -(canvasBounds.y * displayScale.y);
 
         var width;
-        if (parentSize.width >= canvasBounds.width)
+        if ((parentSize.width >= canvasBounds.width) || (this.scaleMode === CONST.SCALE_MODE.EXPAND))
         {
             width = baseSize.width;
         }
@@ -1628,7 +1628,7 @@ var ScaleManager = new Class({
         }
 
         var height;
-        if (parentSize.height >= canvasBounds.height)
+        if ((parentSize.height >= canvasBounds.height) || (this.scaleMode === CONST.SCALE_MODE.EXPAND))
         {
             height = baseSize.height;
         }
