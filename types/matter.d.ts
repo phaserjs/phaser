@@ -469,13 +469,13 @@ declare namespace MatterJS {
         onCollideActiveCallback?: Function;
 
         /**
-         * A collision callback dictionary used by the `Body.setOnCollideWith` function.
+         * A collision callback dictionary _(body id -> function)_ used by the `Body.setOnCollideWith` function.
          *
          * @property onCollideWith
-         * @type object
-         * @default null
+         * @type {Object.<number, Function>}
+         * @default {}
          */
-        onCollideWith?: any;
+        onCollideWith?: Record<number, Function>;
 
     }
 
@@ -1953,13 +1953,13 @@ declare namespace MatterJS {
         onCollideActiveCallback?: Function;
 
         /**
-         * A collision callback dictionary used by the `Body.setOnCollideWith` function.
+         * A collision callback dictionary _(body id -> function)_ used by the `Body.setOnCollideWith` function.
          *
          * @property onCollideWith
-         * @type object
-         * @default null
+         * @type {Object.<number, Function>}
+         * @default {}
          */
-        onCollideWith?: any;
+        onCollideWith?: Record<number, Function>;
 
         /**
          * Sets the onCollideWith callback.
