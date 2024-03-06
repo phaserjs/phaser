@@ -71,7 +71,7 @@ var TweenData = new Class({
          * A function that returns what to set the target property to,
          * the moment the TweenData is invoked.
          *
-         * This is called when this TweenData is inititalised or reset.
+         * This is called when this TweenData is initialised or reset.
          *
          * @name Phaser.Tweens.TweenData#getActiveValue
          * @type {?Phaser.Types.Tweens.GetActiveCallback}

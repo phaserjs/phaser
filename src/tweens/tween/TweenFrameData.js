@@ -15,7 +15,7 @@ var Events = require('../events');
  * at the conclusion of the Tween.
  *
  * TweenFrameData instances are typically created by the TweenBuilder automatically, when it
- * detects the prescence of a 'texture' property as the key being tweened.
+ * detects the presence of a 'texture' property as the key being tweened.
  *
  * A Tween can own multiple TweenFrameData instances, but a TweenFrameData only
  * ever belongs to a single Tween.
