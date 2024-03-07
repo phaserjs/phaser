@@ -379,10 +379,10 @@ var CompressedTextureFile = new Class({
  *     const path = 'assets/compressed';
  *
  *     this.load.texture('yourAtlas', {
- *         'ASTC': { type: 'PVR', atlasURL: `${path}/textures.json` },
- *         'PVRTC': { type: 'PVR', atlasURL: `${path}/textures-pvrtc-4bpp-rgba.json` },
- *         'S3TC': { type: 'PVR', atlasURL: `${path}/textures-dxt5.json` },
- *         'IMG': { atlasURL: `${path}/textures.json` }
+ *         'ASTC': { type: 'PVR', multiAtlasURL: `${path}/textures.json`, multiPath: `${path}` },
+ *         'PVRTC': { type: 'PVR', multiAtlasURL: `${path}/textures-pvrtc-4bpp-rgba.json`, multiPath: `${path}` },
+ *         'S3TC': { type: 'PVR', multiAtlasURL: `${path}/textures-dxt5.json`, multiPath: `${path}` },
+ *         'IMG': { multiAtlasURL: `${path}/textures.json`, multiPath: `${path}` }
  *     });
  * }
  * ```
@@ -434,10 +434,26 @@ var CompressedTextureFile = new Class({
  *
  * Texture Packer (https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16)
  * PVRTexTool (https://developer.imaginationtech.com/pvrtextool/) - available for Windows, macOS and Linux.
- * Mali Texture Compression Tool (https://developer.arm.com/tools-and-software/graphics-and-gaming/mali-texture-compression-tool)
  * ASTC Encoder (https://github.com/ARM-software/astc-encoder)
  *
- * ASTCs must have a Channel Type of Unsigned Normalized Bytes (UNorm).
+ * Compressed textures will appear darker than normal textures. This is because
+ * the Web uses sRGB colorspace, but compressed textures are sampled as linear
+ * colorspace. You must adjust your textures to be lighter before compression.
+ * See https://imagemagick.org/Usage/color_basics/#srgb for more details.
+ * You can do this with ImageMagick (https://imagemagick.org/index.php) using
+ * the following command:
+ *
+ * `magick input.png -set colorspace RGB -colorspace sRGB output.png`
+ *
+ * You must ensure that compressed textures meet the following standards for use
+ * in WebGL and Phaser:
+ *
+ * - PVRTC must have a power-of-two width and height.
+ * - MIPMaps, if present, must have a power-of-two width and height.
+ * - S3TC S3TCSRGB, RGTC, and BPTC must have width and height divisible by 4.
+ * - ASTC must have a Channel Type of Unsigned Normalized Bytes (UNorm). In fact, all compressed textures should be UNorm, but ASTC presents many other options.
+ *
+ * If in doubt, a power-of-two resolution is always a safe bet.
  *
  * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
  * or if it's already running, when the next free load slot becomes available. This happens automatically if you
