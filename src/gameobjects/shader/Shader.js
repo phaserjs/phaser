@@ -1020,7 +1020,7 @@ var Shader = new Class({
             {
                 if (uniform.glMatrix)
                 {
-                    glFunc.call(gl, location.webGLUniformLocation, uniform.transpose, value);
+                    glFunc.call(gl, location.webGLUniformLocation, false, value);
                 }
                 else
                 {
