@@ -22,11 +22,13 @@ var TextureEvents = require('../../textures/events');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 var WebGLBufferWrapper = require('./wrappers/WebGLBufferWrapper');
+var WebGLGlobalWrapper = require('./wrappers/WebGLGlobalWrapper');
 var WebGLProgramWrapper = require('./wrappers/WebGLProgramWrapper');
 var WebGLTextureWrapper = require('./wrappers/WebGLTextureWrapper');
 var WebGLFramebufferWrapper = require('./wrappers/WebGLFramebufferWrapper');
 var WebGLAttribLocationWrapper = require('./wrappers/WebGLAttribLocationWrapper');
 var WebGLUniformLocationWrapper = require('./wrappers/WebGLUniformLocationWrapper');
+var WebGLBlendParametersFactory = require('./parameters/WebGLBlendParametersFactory');
 
 var DEBUG = false;
 
@@ -175,7 +177,7 @@ var WebGLRenderer = new Class({
          * This array includes the default blend modes as well as any custom blend modes added through {@link #addBlendMode}.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#blendModes
-         * @type {array}
+         * @type {WebGLBlendParameters[]}
          * @default []
          * @since 3.0.0
          */
@@ -384,6 +386,16 @@ var WebGLRenderer = new Class({
          * @since 3.0.0
          */
         this.gl = null;
+
+        /**
+         * The current WebGLRenderingContext state.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#glWrapper
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper}
+         * @default null
+         * @since 3.90.0
+         */
+        this.glWrapper = null;
 
         /**
          * Array of strings that indicate which WebGL extensions are supported by the browser.
@@ -867,20 +879,21 @@ var WebGLRenderer = new Class({
 
         for (var i = 0; i <= 27; i++)
         {
-            this.blendModes.push({ func: [ gl.ONE, gl.ONE_MINUS_SRC_ALPHA ], equation: gl.FUNC_ADD });
+            this.blendModes.push(WebGLBlendParametersFactory.createCombined(this));
         }
 
         //  ADD
-        this.blendModes[1].func = [ gl.ONE, gl.DST_ALPHA ];
+        this.blendModes[1].func = [ gl.ONE, gl.DST_ALPHA, gl.ONE, gl.DST_ALPHA ];
 
         //  MULTIPLY
-        this.blendModes[2].func = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
+        this.blendModes[2].func = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA, gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
 
         //  SCREEN
-        this.blendModes[3].func = [ gl.ONE, gl.ONE_MINUS_SRC_COLOR ];
+        this.blendModes[3].func = [ gl.ONE, gl.ONE_MINUS_SRC_COLOR, gl.ONE, gl.ONE_MINUS_SRC_COLOR ];
 
         //  ERASE
-        this.blendModes[17] = { func: [ gl.ZERO, gl.ONE_MINUS_SRC_ALPHA ], equation: gl.FUNC_REVERSE_SUBTRACT };
+        this.blendModes[17].equation = [ gl.FUNC_REVERSE_SUBTRACT, gl.FUNC_REVERSE_SUBTRACT ];
+        this.blendModes[17].func = [ gl.ZERO, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE_MINUS_SRC_ALPHA ];
 
         this.glFormats = [ gl.BYTE, gl.SHORT, gl.UNSIGNED_BYTE, gl.UNSIGNED_SHORT, gl.FLOAT ];
 
@@ -926,10 +939,8 @@ var WebGLRenderer = new Class({
         this.compression = this.getCompressedTextures();
 
         //  Setup initial WebGL state
-        gl.disable(gl.DEPTH_TEST);
-        gl.disable(gl.CULL_FACE);
-
-        gl.enable(gl.BLEND);
+        this.glWrapper = new WebGLGlobalWrapper(this);
+        this.glWrapper.update(undefined, true);
 
         gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, clearColor.alphaGL);
 
@@ -1708,24 +1719,13 @@ var WebGLRenderer = new Class({
     {
         if (force === undefined) { force = false; }
 
-        var gl = this.gl;
         var blendMode = this.blendModes[blendModeId];
 
         if (force || (blendModeId !== CONST.BlendModes.SKIP_CHECK && this.currentBlendMode !== blendModeId))
         {
             this.flush();
 
-            gl.enable(gl.BLEND);
-            gl.blendEquation(blendMode.equation);
-
-            if (blendMode.func.length > 2)
-            {
-                gl.blendFuncSeparate(blendMode.func[0], blendMode.func[1], blendMode.func[2], blendMode.func[3]);
-            }
-            else
-            {
-                gl.blendFunc(blendMode.func[0], blendMode.func[1]);
-            }
+            this.glWrapper.updateBlend({ blend: blendMode });
 
             this.currentBlendMode = blendModeId;
 
@@ -1750,7 +1750,7 @@ var WebGLRenderer = new Class({
      */
     addBlendMode: function (func, equation)
     {
-        var index = this.blendModes.push({ func: func, equation: equation });
+        var index = this.blendModes.push(WebGLBlendParametersFactory.createCombined(this, true, undefined, equation, func[0], func[1])) - 1;
 
         return index - 1;
     },
@@ -1762,20 +1762,32 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {number} index - The index of the custom blend mode.
-     * @param {function} func - The function to use for the blend mode.
-     * @param {function} equation - The equation to use for the blend mode.
+     * @param {GLenum[]} func - The function to use for the blend mode. Specify either 2 elements for src and dest, or 4 elements for separate srcRGB, destRGB, srcAlpha, destAlpha.
+     * @param {GLenum|GLenum[]} equation - The equation to use for the blend mode. This can be either a single equation for both source and destination, or an array containing separate equations for source and destination.
      *
      * @return {this} This WebGLRenderer instance.
      */
     updateBlendMode: function (index, func, equation)
     {
-        if (this.blendModes[index])
+        if (index > 17 && this.blendModes[index])
         {
-            this.blendModes[index].func = func;
-
-            if (equation)
+            var blendMode = this.blendModes[index];
+            if (func.length === 2)
             {
-                this.blendModes[index].equation = equation;
+                blendMode.func = [ func[0], func[1], func[0], func[1] ];
+            }
+            else
+            {
+                blendMode.func = [ func[0], func[1], func[2], func[3] ];
+            }
+
+            if (typeof equation === 'number')
+            {
+                blendMode.equation = [ equation, equation ];
+            }
+            else
+            {
+                blendMode.equation = [ equation[0], equation[1] ];
             }
         }
 

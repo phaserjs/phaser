@@ -9,6 +9,7 @@
  */
 
 var Wrappers = {
+    WebGLGlobalWrapper: require('./WebGLGlobalWrapper'),
     WebGLAttribLocationWrapper: require('./WebGLAttribLocationWrapper'),
     WebGLBufferWrapper: require('./WebGLBufferWrapper'),
     WebGLProgramWrapper: require('./WebGLProgramWrapper'),
