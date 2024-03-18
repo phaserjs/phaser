@@ -18,7 +18,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#tilemapTiledJSON.
  *
  * @class TilemapJSONFile
- * @extends Phaser.Loader.File
+ * @extends Phaser.Loader.FileTypes.JSONFile
  * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
