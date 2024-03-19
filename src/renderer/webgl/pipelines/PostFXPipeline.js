@@ -363,8 +363,7 @@ var PostFXPipeline = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
 
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        this.renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -580,16 +579,7 @@ var PostFXPipeline = new Class({
 
             if (clear)
             {
-                if (clearAlpha)
-                {
-                    gl.clearColor(0, 0, 0, 0);
-                }
-                else
-                {
-                    gl.clearColor(0, 0, 0, 1);
-                }
-
-                gl.clear(gl.COLOR_BUFFER_BIT);
+                renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
             }
         }
         else

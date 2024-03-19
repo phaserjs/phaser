@@ -1876,8 +1876,7 @@ var WebGLRenderer = new Class({
 
         if (clear)
         {
-            gl.clearColor(0, 0, 0, 0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            this.clearFramebuffer([ 0, 0, 0, 0 ]);
         }
 
         if (updateScissor)
@@ -1961,6 +1960,36 @@ var WebGLRenderer = new Class({
         this.currentFramebuffer = null;
 
         this.setFramebuffer(framebuffer, updateScissor, setViewport);
+    },
+
+    /**
+     * Clear the current framebuffer to the given color.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#clearFramebuffer
+     * @since 3.90.0
+     * @param {[number, number, number, number]} [color] - The color to clear to.
+     * @param {number} [stencil] - The stencil value to clear to.
+     * @param {number} [depth] - The depth value to clear to. Currently, this is not set, and only determines whether the depth buffer is cleared.
+     */
+    clearFramebuffer: function (color, stencil, depth)
+    {
+        var gl = this.gl;
+        var bits = 0;
+        if (color)
+        {
+            this.glWrapper.updateColorClearValue({ colorClearValue: color });
+            bits = bits | gl.COLOR_BUFFER_BIT;
+        }
+        if (stencil !== undefined)
+        {
+            this.glWrapper.updateStencilClear({ stencil: { clear: stencil }});
+            bits = bits | gl.STENCIL_BUFFER_BIT;
+        }
+        if (depth !== undefined)
+        {
+            bits = bits | gl.DEPTH_BUFFER_BIT;
+        }
+        gl.clear(bits);
     },
 
     /**
@@ -2539,11 +2568,7 @@ var WebGLRenderer = new Class({
 
         if (this.config.clearBeforeRender)
         {
-            var clearColor = this.config.backgroundColor;
-
-            gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, clearColor.alphaGL);
-
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+            this.clearFramebuffer(this.config.backgroundColor, 0, 0);
         }
 
         gl.enable(gl.SCISSOR_TEST);

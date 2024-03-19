@@ -389,8 +389,7 @@ var PreFXPipeline = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, fsTarget.framebuffer.webGLFramebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, fsTarget.texture.webGLTexture, 0);
 
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
 
         this.setTexture2D(texture);
 
@@ -552,9 +551,7 @@ var PreFXPipeline = new Class({
 
         if (clear)
         {
-            gl.clearColor(0, 0, 0, Number(!clearAlpha));
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
         }
 
         if (eraseMode)
@@ -608,8 +605,7 @@ var PreFXPipeline = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
 
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        this.renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.quadVertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -778,9 +774,8 @@ var PreFXPipeline = new Class({
         this.flush();
 
         //  Clear the source framebuffer out, ready for the next pass
-        // gl.clearColor(0, 0, 0, 0);
         // gl.bindFramebuffer(gl.FRAMEBUFFER, source.framebuffer.webGLFramebuffer);
-        // gl.clear(gl.COLOR_BUFFER_BIT);
+        // renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
         // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         //  No hanging references

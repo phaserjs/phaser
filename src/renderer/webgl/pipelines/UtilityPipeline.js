@@ -306,16 +306,7 @@ var UtilityPipeline = new Class({
 
         if (clear)
         {
-            if (clearAlpha)
-            {
-                gl.clearColor(0, 0, 0, 0);
-            }
-            else
-            {
-                gl.clearColor(0, 0, 0, 1);
-            }
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            this.renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
         }
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
@@ -381,16 +372,7 @@ var UtilityPipeline = new Class({
 
         if (clear)
         {
-            if (clearAlpha)
-            {
-                gl.clearColor(0, 0, 0, 0);
-            }
-            else
-            {
-                gl.clearColor(0, 0, 0, 1);
-            }
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            this.renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
         }
 
         if (eraseMode)
@@ -452,16 +434,7 @@ var UtilityPipeline = new Class({
 
         if (clear)
         {
-            if (clearAlpha)
-            {
-                gl.clearColor(0, 0, 0, 0);
-            }
-            else
-            {
-                gl.clearColor(0, 0, 0, 1);
-            }
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            this.renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
         }
 
         gl.activeTexture(gl.TEXTURE0);
@@ -550,16 +523,7 @@ var UtilityPipeline = new Class({
             gl.viewport(0, 0, source.width, source.height);
         }
 
-        if (clearAlpha)
-        {
-            gl.clearColor(0, 0, 0, 0);
-        }
-        else
-        {
-            gl.clearColor(0, 0, 0, 1);
-        }
-
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        this.renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -613,16 +577,7 @@ var UtilityPipeline = new Class({
             gl.viewport(0, 0, source1.width, source1.height);
         }
 
-        if (clearAlpha)
-        {
-            gl.clearColor(0, 0, 0, 0);
-        }
-        else
-        {
-            gl.clearColor(0, 0, 0, 1);
-        }
-
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        this.renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -668,16 +623,7 @@ var UtilityPipeline = new Class({
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
 
-        if (clearAlpha)
-        {
-            gl.clearColor(0, 0, 0, 0);
-        }
-        else
-        {
-            gl.clearColor(0, 0, 0, 1);
-        }
-
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        this.renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
 
         var fbo = this.renderer.currentFramebuffer;
 

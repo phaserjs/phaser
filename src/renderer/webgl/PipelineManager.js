@@ -1339,13 +1339,13 @@ var PipelineManager = new Class({
 
         if (renderer.hasActiveStencilMask())
         {
-            gl.clear(gl.DEPTH_BUFFER_BIT);
+            renderer.clearFramebuffer(undefined, undefined, 0);
         }
         else
         {
             //  If there wasn't a stencil mask set before this call, we can disable it safely
             gl.disable(gl.STENCIL_TEST);
-            gl.clear(gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+            renderer.clearFramebuffer(undefined, 0, 0);
         }
 
         renderer.currentProgram = null;

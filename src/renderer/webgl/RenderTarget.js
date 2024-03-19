@@ -320,11 +320,7 @@ var RenderTarget = new Class({
 
         if (this.autoClear)
         {
-            var gl = this.renderer.gl;
-
-            gl.clearColor(0, 0, 0, 0);
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
         }
 
         renderer.clearStencilMask();
@@ -362,9 +358,7 @@ var RenderTarget = new Class({
 
         gl.disable(gl.SCISSOR_TEST);
 
-        gl.clearColor(0, 0, 0, 0);
-
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
 
         renderer.popFramebuffer();
 

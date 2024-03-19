@@ -140,7 +140,7 @@ var GeometryMask = new Class({
         if (renderer.maskStack.length === 0)
         {
             gl.enable(gl.STENCIL_TEST);
-            gl.clear(gl.STENCIL_BUFFER_BIT);
+            renderer.clearFramebuffer(undefined, 0);
 
             renderer.maskCount = 0;
         }

@@ -1148,10 +1148,7 @@ var Shader = new Class({
         if (this.renderToTexture)
         {
             renderer.setFramebuffer(this.framebuffer);
-
-            gl.clearColor(0, 0, 0, 0);
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
         }
 
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer.webGLBuffer);
