@@ -2568,7 +2568,8 @@ var WebGLRenderer = new Class({
 
         if (this.config.clearBeforeRender)
         {
-            this.clearFramebuffer(this.config.backgroundColor, 0, 0);
+            var backgroundColor = this.config.backgroundColor;
+            this.clearFramebuffer([ backgroundColor.redGL, backgroundColor.greenGL, backgroundColor.blueGL, backgroundColor.alphaGL ], 0, 0);
         }
 
         gl.enable(gl.SCISSOR_TEST);
