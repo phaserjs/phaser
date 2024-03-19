@@ -25,6 +25,7 @@ var WebGLBufferWrapper = require('./wrappers/WebGLBufferWrapper');
 var WebGLGlobalWrapper = require('./wrappers/WebGLGlobalWrapper');
 var WebGLProgramWrapper = require('./wrappers/WebGLProgramWrapper');
 var WebGLTextureWrapper = require('./wrappers/WebGLTextureWrapper');
+var WebGLTextureUnitsWrapper = require('./wrappers/WebGLTextureUnitsWrapper');
 var WebGLFramebufferWrapper = require('./wrappers/WebGLFramebufferWrapper');
 var WebGLAttribLocationWrapper = require('./wrappers/WebGLAttribLocationWrapper');
 var WebGLUniformLocationWrapper = require('./wrappers/WebGLUniformLocationWrapper');
@@ -227,17 +228,6 @@ var WebGLRenderer = new Class({
         this.maxTextures = 0;
 
         /**
-         * An array of the available WebGL texture units, used to populate the uSampler uniforms.
-         *
-         * This array is populated during the init phase and should never be changed after boot.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#textureIndexes
-         * @type {array}
-         * @since 3.50.0
-         */
-        this.textureIndexes;
-
-        /**
          * A list of all WebGLBufferWrappers that have been created by this renderer.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glBufferWrappers
@@ -396,6 +386,16 @@ var WebGLRenderer = new Class({
          * @since 3.90.0
          */
         this.glWrapper = null;
+
+        /**
+         * The current WebGL texture units in use.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#glTextureUnits
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureUnitsWrapper}
+         * @default null
+         * @since 3.90.0
+         */
+        this.glTextureUnits = null;
 
         /**
          * Array of strings that indicate which WebGL extensions are supported by the browser.
@@ -815,20 +815,16 @@ var WebGLRenderer = new Class({
                 return;
             }
 
+            // Restore GL extensions.
+            setupExtensions();
+
+            // Force update the GL state.
+            _this.glWrapper.update(undefined, true);
+            _this.glTextureUnits.init();
+
             // Clear "current" settings so they can be set again.
             _this.currentProgram = null;
             _this.currentFramebuffer = null;
-            _this.setBlendMode(CONST.BlendModes.NORMAL);
-
-            // Settings we DON'T need to reset:
-            // Scissor is set during preRender.
-            // Mask is set during preRender.
-            // Camera mask is set during preRenderCamera.
-
-            // Restore GL flags.
-            gl.enable(gl.BLEND);
-            gl.disable(gl.DEPTH_TEST);
-            gl.disable(gl.CULL_FACE);
 
             // Re-enable compressed texture formats.
             _this.compression = _this.getCompressedTextures();
@@ -846,17 +842,11 @@ var WebGLRenderer = new Class({
             ArrayEach(_this.glAttribLocationWrappers, wrapperCreateResource);
             ArrayEach(_this.glUniformLocationWrappers, wrapperCreateResource);
 
-            // Create temporary textures.
-            _this.createTemporaryTextures();
-
             // Restore pipelines.
             _this.pipelines.restoreContext();
 
             // Apply resize.
             _this.resize(_this.game.scale.baseSize.width, _this.game.scale.baseSize.height);
-
-            // Restore GL extensions.
-            setupExtensions();
 
             // Context has been restored.
 
@@ -955,13 +945,9 @@ var WebGLRenderer = new Class({
         //  Check maximum supported textures
         this.maxTextures = Utils.checkShaderMax(gl, config.maxTextures);
 
-        this.textureIndexes = [];
-
-        this.createTemporaryTextures();
+        this.glTextureUnits = new WebGLTextureUnitsWrapper(this);
 
         this.pipelines = new PipelineManager(this);
-
-        this.setBlendMode(CONST.BlendModes.NORMAL);
 
         this.projectionMatrix = new Matrix4().identity();
 
@@ -1017,27 +1003,6 @@ var WebGLRenderer = new Class({
         game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
         this.resize(width, height);
-    },
-
-    /**
-     * Create temporary WebGL textures to stop WebGL errors on mac os
-     */
-    createTemporaryTextures: function ()
-    {
-        var gl = this.gl;
-
-        for (var index = 0; index < this.maxTextures; index++)
-        {
-            var tempTexture = gl.createTexture();
-
-            gl.activeTexture(gl.TEXTURE0 + index);
-
-            gl.bindTexture(gl.TEXTURE_2D, tempTexture);
-
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 0, 0, 255, 255 ]));
-
-            this.textureIndexes.push(index);
-        }
     },
 
     /**
@@ -2130,7 +2095,7 @@ var WebGLRenderer = new Class({
         if (typeof width !== 'number') { width = pixels ? pixels.width : 1; }
         if (typeof height !== 'number') { height = pixels ? pixels.height : 1; }
 
-        var texture = new WebGLTextureWrapper(this.gl, mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY);
+        var texture = new WebGLTextureWrapper(this, mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY);
 
         this.glTextureWrappers.push(texture);
 
@@ -3251,7 +3216,6 @@ var WebGLRenderer = new Class({
         this.fboStack = [];
         this.maskStack = [];
         this.extensions = {};
-        this.textureIndexes = [];
 
         this.gl = null;
         this.game = null;
@@ -3263,6 +3227,22 @@ var WebGLRenderer = new Class({
         if (DEBUG)
         {
             this.spector = null;
+        }
+    },
+
+    /**
+     * An array of the available WebGL texture units, used to populate the uSampler uniforms.
+     *
+     * @name Phaser.Renderer.WebGL.WebGLRenderer#textureIndexes
+     * @type {number[]}
+     * @readonly
+     * @since 3.50.0
+     * @deprecated since version 3.90.0: Use `glTextureUnits.unitIndices` instead.
+     */
+    textureIndexes: {
+        get: function ()
+        {
+            return this.glTextureUnits.unitIndices;
         }
     }
 

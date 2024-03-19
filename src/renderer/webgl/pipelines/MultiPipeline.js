@@ -282,7 +282,7 @@ var MultiPipeline = new Class({
 
         var renderer = this.renderer;
 
-        this.set1iv('uMainSampler', renderer.textureIndexes);
+        this.set1iv('uMainSampler', renderer.glTextureUnits.unitIndices);
         this.set2f('uResolution', renderer.width, renderer.height);
         this.set1i('uRoundPixels', renderer.config.roundPixels);
     },

@@ -26,6 +26,7 @@ var SinglePipeline = require('./pipelines/SinglePipeline');
 var UtilityPipeline = require('./pipelines/UtilityPipeline');
 var ArrayEach = require('../../utils/array/Each');
 var ArrayRemove = require('../../utils/array/Remove');
+var DeepCopy = require('../../utils/object/DeepCopy');
 
 /**
  * @classdesc
@@ -1328,8 +1329,13 @@ var PipelineManager = new Class({
         var renderer = this.renderer;
         var gl = renderer.gl;
 
-        gl.disable(gl.DEPTH_TEST);
-        gl.disable(gl.CULL_FACE);
+        // Reapply the WebGL state, which may have been changed externally.
+        renderer.glWrapper.update({
+            blend: DeepCopy(renderer.glWrapper.blend),
+            cullFace: false,
+            depthTest: false,
+            viewport: [ 0, 0, renderer.width, renderer.height ]
+        }, true);
 
         if (renderer.hasActiveStencilMask())
         {
@@ -1342,11 +1348,7 @@ var PipelineManager = new Class({
             gl.clear(gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
         }
 
-        gl.viewport(0, 0, renderer.width, renderer.height);
-
         renderer.currentProgram = null;
-
-        renderer.setBlendMode(0, true);
 
         var vao = renderer.vaoExtension;
 

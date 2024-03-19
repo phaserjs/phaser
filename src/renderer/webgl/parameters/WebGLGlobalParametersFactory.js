@@ -24,15 +24,14 @@ var WebGLGlobalParametersFactory = {
     getDefault: function (renderer)
     {
         var parameters = {
-            blend: DeepCopy(renderer.blendModes[CONST.BlendModes.NORMAL]),
             bindings: {
                 activeTexture: 0,
                 arrayBuffer: null,
                 elementArrayBuffer: null,
                 framebuffer: null,
-                program: null,
-                texture: null
+                program: null
             },
+            blend: DeepCopy(renderer.blendModes[CONST.BlendModes.NORMAL]),
             colorClearValue: [ 0, 0, 0, 1 ],
             colorWritemask: [ true, true, true, true ],
             cullFace: false,
@@ -46,7 +45,6 @@ var WebGLGlobalParametersFactory = {
                 flipY: false,
                 premultiplyAlpha: false
             },
-            textureUnits: [],
             viewport: [ 0, 0, 0, 0 ]
         };
 

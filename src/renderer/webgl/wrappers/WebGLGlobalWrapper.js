@@ -71,6 +71,10 @@ var WebGLGlobalWrapper = new Class({
         }
         if (force === undefined) { force = false; }
 
+        if (state.bindings !== undefined)
+        {
+            this.updateBindings(state, force);
+        }
         if (state.blend !== undefined)
         {
             this.updateBlend(state, force);
@@ -103,19 +107,185 @@ var WebGLGlobalWrapper = new Class({
         {
             this.updateTexturing(state, force);
         }
-        if (state.textureUnits !== undefined)
-        {
-            this.updateTextureUnits(state, force);
-        }
         if (state.viewport !== undefined)
         {
             this.updateViewport(state, force);
         }
-        
-        // Update bindings last, because textureUnits may change them.
-        if (state.bindings !== undefined)
+    },
+
+    /**
+     * Updates the bindings state.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindings
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
+     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
+     */
+    updateBindings: function (state, force)
+    {
+        var bindings = state.bindings;
+
+        if (bindings.activeTexture !== undefined)
         {
-            this.updateBindings(state, force);
+            this.updateBindingsActiveTexture(state, force);
+        }
+        if (bindings.arrayBuffer !== undefined)
+        {
+            this.updateBindingsArrayBuffer(state, force);
+        }
+        if (bindings.elementArrayBuffer !== undefined)
+        {
+            this.updateBindingsElementArrayBuffer(state, force);
+        }
+        if (bindings.framebuffer !== undefined)
+        {
+            this.updateBindingsFramebuffer(state, force);
+        }
+        if (bindings.program !== undefined)
+        {
+            this.updateBindingsProgram(state, force);
+        }
+    },
+
+    /**
+     * Updates the active texture unit state.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsActiveTexture
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
+     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
+     */
+    updateBindingsActiveTexture: function (state, force)
+    {
+        var activeTexture = state.bindings.activeTexture;
+
+        var different = activeTexture !== this.state.bindings.activeTexture;
+
+        if (different)
+        {
+            this.state.bindings.activeTexture = activeTexture;
+        }
+        if (different || force)
+        {
+            var gl = this.renderer.gl;
+            gl.activeTexture(gl.TEXTURE0 + activeTexture);
+        }
+    },
+
+    /**
+     * Updates the vertex array buffer state.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsArrayBuffer
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
+     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
+     */
+    updateBindingsArrayBuffer: function (state, force)
+    {
+        var arrayBuffer = state.bindings.arrayBuffer;
+        var gl = this.renderer.gl;
+        if (
+            arrayBuffer !== null &&
+            arrayBuffer.bufferType !== gl.ARRAY_BUFFER
+        )
+        {
+            throw new Error('Invalid buffer type for ARRAY_BUFFER');
+        }
+
+        var different = arrayBuffer !== this.state.bindings.arrayBuffer;
+
+        if (different)
+        {
+            this.state.bindings.arrayBuffer = arrayBuffer;
+        }
+        if (different || force)
+        {
+            var webGLBuffer = arrayBuffer ? arrayBuffer.webGLBuffer : null;
+            gl.bindBuffer(gl.ARRAY_BUFFER, webGLBuffer);
+        }
+    },
+
+    /**
+     * Updates the index array buffer state.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsElementArrayBuffer
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
+     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
+     */
+    updateBindingsElementArrayBuffer: function (state, force)
+    {
+        var elementArrayBuffer = state.bindings.elementArrayBuffer;
+        var gl = this.renderer.gl;
+        if (
+            elementArrayBuffer !== null &&
+            elementArrayBuffer.bufferType !== gl.ELEMENT_ARRAY_BUFFER
+        )
+        {
+            throw new Error('Invalid buffer type for ELEMENT_ARRAY_BUFFER');
+        }
+
+        var different = elementArrayBuffer !== this.state.bindings.elementArrayBuffer;
+
+        if (different)
+        {
+            this.state.bindings.elementArrayBuffer = elementArrayBuffer;
+        }
+        if (different || force)
+        {
+            var webGLBuffer = elementArrayBuffer ? elementArrayBuffer.webGLBuffer : null;
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webGLBuffer);
+        }
+    },
+
+    /**
+     * Updates the framebuffer state.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsFramebuffer
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
+     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
+     */
+    updateBindingsFramebuffer: function (state, force)
+    {
+        var framebuffer = state.bindings.framebuffer;
+
+        var different = framebuffer !== this.state.bindings.framebuffer;
+
+        if (different)
+        {
+            this.state.bindings.framebuffer = framebuffer;
+        }
+        if (different || force)
+        {
+            var gl = this.renderer.gl;
+            var webGLFramebuffer = framebuffer ? framebuffer.webGLFramebuffer : null;
+            gl.bindFramebuffer(gl.FRAMEBUFFER, webGLFramebuffer);
+        }
+    },
+
+    /**
+     * Updates the program state.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsProgram
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
+     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
+     */
+    updateBindingsProgram: function (state, force)
+    {
+        var program = state.bindings.program;
+
+        var different = program !== this.state.bindings.program;
+
+        if (different)
+        {
+            this.state.bindings.program = program;
+        }
+        if (different || force)
+        {
+            var webGLProgram = program ? program.webGLProgram : null;
+            this.renderer.gl.useProgram(webGLProgram);
         }
     },
 
@@ -265,219 +435,6 @@ var WebGLGlobalWrapper = new Class({
         if (different || force)
         {
             this.renderer.gl.blendFuncSeparate(func[0], func[1], func[2], func[3]);
-        }
-    },
-
-    /**
-     * Updates the bindings state.
-     *
-     * This should be called after `updateTextureUnits` to ensure that
-     * `activeTexture` is not overridden.
-     *
-     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindings
-     * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
-     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
-     */
-    updateBindings: function (state, force)
-    {
-        var bindings = state.bindings;
-
-        if (bindings.activeTexture !== undefined)
-        {
-            this.updateBindingsActiveTexture(state, force);
-        }
-        if (bindings.arrayBuffer !== undefined)
-        {
-            this.updateBindingsArrayBuffer(state, force);
-        }
-        if (bindings.elementArrayBuffer !== undefined)
-        {
-            this.updateBindingsElementArrayBuffer(state, force);
-        }
-        if (bindings.framebuffer !== undefined)
-        {
-            this.updateBindingsFramebuffer(state, force);
-        }
-        if (bindings.program !== undefined)
-        {
-            this.updateBindingsProgram(state, force);
-        }
-        if (bindings.texture !== undefined)
-        {
-            this.updateBindingsTexture(state, force);
-        }
-    },
-
-    /**
-     * Updates the active texture state.
-     *
-     * This should be called after `updateTextureUnits` to ensure that
-     * `activeTexture` is not overridden, and before `updateBindingsTexture`
-     * to ensure that the texture is bound to the correct unit.
-     *
-     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsActiveTexture
-     * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
-     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
-     */
-    updateBindingsActiveTexture: function (state, force)
-    {
-        var activeTexture = state.bindings.activeTexture;
-
-        var different = activeTexture !== this.state.bindings.activeTexture;
-
-        if (different)
-        {
-            this.state.bindings.activeTexture = activeTexture;
-        }
-        if (different || force)
-        {
-            var gl = this.renderer.gl;
-            gl.activeTexture(gl.TEXTURE0 + activeTexture);
-        }
-    },
-
-    /**
-     * Updates the vertex array buffer state.
-     *
-     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsArrayBuffer
-     * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
-     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
-     */
-    updateBindingsArrayBuffer: function (state, force)
-    {
-        var arrayBuffer = state.bindings.arrayBuffer;
-        var gl = this.renderer.gl;
-        if (
-            arrayBuffer !== null &&
-            arrayBuffer.bufferType !== gl.ARRAY_BUFFER
-        )
-        {
-            throw new Error('Invalid buffer type for ARRAY_BUFFER');
-        }
-
-        var different = arrayBuffer !== this.state.bindings.arrayBuffer;
-
-        if (different)
-        {
-            this.state.bindings.arrayBuffer = arrayBuffer;
-        }
-        if (different || force)
-        {
-            var webGLBuffer = arrayBuffer ? arrayBuffer.webGLBuffer : null;
-            gl.bindBuffer(gl.ARRAY_BUFFER, webGLBuffer);
-        }
-    },
-
-    /**
-     * Updates the index array buffer state.
-     *
-     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsElementArrayBuffer
-     * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
-     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
-     */
-    updateBindingsElementArrayBuffer: function (state, force)
-    {
-        var elementArrayBuffer = state.bindings.elementArrayBuffer;
-        var gl = this.renderer.gl;
-        if (
-            elementArrayBuffer !== null &&
-            elementArrayBuffer.bufferType !== gl.ELEMENT_ARRAY_BUFFER
-        )
-        {
-            throw new Error('Invalid buffer type for ELEMENT_ARRAY_BUFFER');
-        }
-
-        var different = elementArrayBuffer !== this.state.bindings.elementArrayBuffer;
-
-        if (different)
-        {
-            this.state.bindings.elementArrayBuffer = elementArrayBuffer;
-        }
-        if (different || force)
-        {
-            var webGLBuffer = elementArrayBuffer ? elementArrayBuffer.webGLBuffer : null;
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webGLBuffer);
-        }
-    },
-
-    /**
-     * Updates the framebuffer state.
-     *
-     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsFramebuffer
-     * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
-     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
-     */
-    updateBindingsFramebuffer: function (state, force)
-    {
-        var framebuffer = state.bindings.framebuffer;
-
-        var different = framebuffer !== this.state.bindings.framebuffer;
-
-        if (different)
-        {
-            this.state.bindings.framebuffer = framebuffer;
-        }
-        if (different || force)
-        {
-            var gl = this.renderer.gl;
-            var webGLFramebuffer = framebuffer ? framebuffer.webGLFramebuffer : null;
-            gl.bindFramebuffer(gl.FRAMEBUFFER, webGLFramebuffer);
-        }
-    },
-
-    /**
-     * Updates the program state.
-     *
-     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsProgram
-     * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
-     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
-     */
-    updateBindingsProgram: function (state, force)
-    {
-        var program = state.bindings.program;
-
-        var different = program !== this.state.bindings.program;
-
-        if (different)
-        {
-            this.state.bindings.program = program;
-        }
-        if (different || force)
-        {
-            var webGLProgram = program ? program.webGLProgram : null;
-            this.renderer.gl.useProgram(webGLProgram);
-        }
-    },
-
-    /**
-     * Updates the texture state. This is a `TEXTURE_2D`.
-     *
-     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsTexture
-     * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
-     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
-     */
-    updateBindingsTexture: function (state, force)
-    {
-        var texture = state.bindings.texture;
-
-        var different = texture !== this.state.bindings.texture;
-
-        if (different)
-        {
-            this.state.bindings.texture = texture;
-        }
-        if (different || force)
-        {
-            var gl = this.renderer.gl;
-            var webGLTexture = texture ? texture.webGLTexture : null;
-            gl.bindTexture(gl.TEXTURE_2D, webGLTexture);
         }
     },
 
@@ -900,76 +857,6 @@ var WebGLGlobalWrapper = new Class({
         {
             var gl = this.renderer.gl;
             gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, premultiplyAlpha);
-        }
-    },
-
-    /**
-     * Updates the texture units state. This will set `activeTexture` several
-     * times, and bind textures to their units. It should be called before
-     * `updateBindings` to ensure that `activeTexture` is not overridden.
-     *
-     * In the input array, `undefined` elements are ignored, but `null` elements
-     * clear the texture unit.
-     *
-     * Texture units will only be assigned up to `WebGLRenderer.maxTextures`.
-     *
-     * The texture unit at `state.bindings.activeTexture` will not be set,
-     * as it will be overridden by `updateBindings`.
-     * If `state.bindings.activeTexture` is `undefined`, `this.state` will be
-     * updated with the last texture unit in `textureUnits`.
-     *
-     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateTextureUnits
-     * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
-     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
-     */
-    updateTextureUnits: function (state, force)
-    {
-        var textureUnits = state.textureUnits;
-
-        var gl = this.renderer.gl;
-        var maxTextures = this.renderer.maxTextures;
-        var length = Math.min(textureUnits.length, maxTextures);
-        var texture;
-
-        if (length < textureUnits.length)
-        {
-            console.warn('Texture units array length is greater than maxTextures. Excess elements will be ignored.');
-        }
-
-        var different;
-        for (var unit = 0; unit < length; unit++)
-        {
-            if (unit === state.bindings.activeTexture)
-            {
-                // This texture unit will be set by `updateBindings`.
-                continue;
-            }
-            texture = textureUnits[unit];
-            if (texture === undefined)
-            {
-                continue;
-            }
-            different = texture === this.state.textureUnits[unit];
-            if (different)
-            {
-                this.state.textureUnits[unit] = texture;
-            }
-            if (different || force)
-            {
-                gl.activeTexture(gl.TEXTURE0 + unit);
-                var webGLTexture = texture ? texture.webGLTexture : null;
-                gl.bindTexture(gl.TEXTURE_2D, webGLTexture);
-            }
-        }
-
-        // If `state.bindings.activeTexture` is undefined,
-        // update `this.state.bindings` with the last texture unit.
-        if (state.bindings.activeTexture === undefined)
-        {
-            var lastUnit = length - 1;
-            this.state.bindings.activeTexture = lastUnit;
-            this.state.bindings.texture = textureUnits[lastUnit];
         }
     },
 

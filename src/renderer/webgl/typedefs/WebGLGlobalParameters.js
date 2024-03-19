@@ -8,15 +8,14 @@
  * @typedef {object} Phaser.Types.Renderer.WebGL.WebGLGlobalParameters
  * @since 3.90.0
  *
- * @property {Phaser.Types.Renderer.WebGL.WebGLBlendParameters} [blend] The blend parameters to set.
- *
  * @property {object} [bindings] Resources to be bound.
  * @property {GLint} [bindings.activeTexture] The active texture unit.
  * @property {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [bindings.arrayBuffer] The vertex array buffer to bind.
  * @property {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [bindings.elementArrayBuffer] The index array buffer to bind.
  * @property {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper} [bindings.framebuffer] The framebuffer to bind.
  * @property {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} [bindings.program] The program to bind.
- * @property {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [bindings.texture] The texture to bind.
+ *
+ * @property {Phaser.Types.Renderer.WebGL.WebGLBlendParameters} [blend] The blend parameters to set.
  *
  * @property {Float32Array[4]} [colorClearValue] The color to clear the color buffer to.
  * @property {GLboolean[4]} [colorWritemask] The color writemask to set.
@@ -32,8 +31,6 @@
  * @property {object} [texturing] Texture settings to set. These take effect when creating a texture.
  * @property {GLboolean} [texturing.flipY] Should the texture be flipped on the Y axis?
  * @property {GLboolean} [texturing.premultiplyAlpha] Should the texture be pre-multiplied alpha?
- *
- * @property {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]} [textureUnits] Textures to be bound to each texture unit.
  *
  * @property {Int32Array[4]} [viewport] The viewport to set.
  */
