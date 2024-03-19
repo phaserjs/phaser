@@ -436,19 +436,6 @@ var WebGLPipeline = new Class({
         this.currentUnit = 0;
 
         /**
-         * The currently active WebGLTextures, used as part of the batch process.
-         *
-         * Reset to empty as part of the bind method.
-         *
-         * Treat this array as read-only.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#activeTextures
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]}
-         * @since 3.60.0
-         */
-        this.activeTextures = [];
-
-        /**
          * If the WebGL Renderer changes size, this uniform will be set with the new width and height values
          * as part of the pipeline resize method. Various built-in pipelines, such as the MultiPipeline, set
          * this property automatically to `uResolution`.
@@ -1157,8 +1144,6 @@ var WebGLPipeline = new Class({
 
         this.currentShader = currentShader;
 
-        this.activeTextures.length = 0;
-
         this.emit(Events.BIND, this, currentShader);
 
         this.onActive(currentShader);
@@ -1198,8 +1183,6 @@ var WebGLPipeline = new Class({
             }
         }
 
-        this.activeTextures.length = 0;
-
         this.emit(Events.REBIND, this.currentShader);
 
         this.onActive(this.currentShader);
@@ -1226,7 +1209,6 @@ var WebGLPipeline = new Class({
 
         // Deactivate all invalidated state.
         this.activeBuffer = null;
-        this.activeTextures.length = 0;
         this.batch.length = 0;
         this.currentBatch = null;
         this.currentTexture = null;
@@ -1411,27 +1393,16 @@ var WebGLPipeline = new Class({
                 var entry;
                 var texture;
                 var batch = this.batch;
-                var activeTextures = this.activeTextures;
+                var renderer = this.renderer;
 
                 if (this.forceZero)
                 {
                     //  Single Texture Pipeline
-                    if (!activeTextures[0])
-                    {
-                        gl.activeTexture(gl.TEXTURE0);
-                    }
-
                     for (i = 0; i < batch.length; i++)
                     {
                         entry = batch[i];
                         texture = entry.texture[0];
-
-                        if (activeTextures[0] !== texture)
-                        {
-                            gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
-
-                            activeTextures[0] = texture;
-                        }
+                        renderer.glTextureUnits.bind(texture, 0);
 
                         gl.drawArrays(topology, entry.start, entry.count);
                     }
@@ -1445,14 +1416,7 @@ var WebGLPipeline = new Class({
                         for (var t = 0; t <= entry.maxUnit; t++)
                         {
                             texture = entry.texture[t];
-
-                            if (activeTextures[t] !== texture)
-                            {
-                                gl.activeTexture(gl.TEXTURE0 + t);
-                                gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
-
-                                activeTextures[t] = texture;
-                            }
+                            renderer.glTextureUnits.bind(texture, t);
                         }
 
                         gl.drawArrays(topology, entry.start, entry.count);
@@ -2001,11 +1965,7 @@ var WebGLPipeline = new Class({
     {
         if (unit === undefined) { unit = 0; }
 
-        var gl = this.gl;
-
-        gl.activeTexture(gl.TEXTURE0 + unit);
-
-        gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
+        this.renderer.glTextureUnits.bind(texture, unit);
 
         return this;
     },
@@ -2656,7 +2616,6 @@ var WebGLPipeline = new Class({
         this.vertexBuffer = null;
         this.currentShader = null;
         this.currentRenderTarget = null;
-        this.activeTextures = null;
 
         return this;
     }

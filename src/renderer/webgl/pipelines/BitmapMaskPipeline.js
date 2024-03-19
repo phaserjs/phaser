@@ -135,7 +135,7 @@ var BitmapMaskPipeline = new Class({
             }
 
             //  Clear gl.TEXTURE1
-            gl.bindTexture(gl.TEXTURE_2D, null);
+            renderer.glTextureUnits.bind(null, 1);
         }
     }
 

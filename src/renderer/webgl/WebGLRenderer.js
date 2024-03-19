@@ -2227,11 +2227,7 @@ var WebGLRenderer = new Class({
         //  Bind this pipeline and draw
         this.pipelines.set(bitmapMaskPipeline);
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.maskTarget.texture.webGLTexture);
-
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.maskSource.texture.webGLTexture);
+        this.glTextureUnits.bindUnits([ this.maskTarget.texture, this.maskSource.texture ]);
     },
 
     /**
@@ -3170,25 +3166,25 @@ var WebGLRenderer = new Class({
     setTextureFilter: function (texture, filter)
     {
         var gl = this.gl;
-
         var glFilter = (filter === 0) ? gl.LINEAR : gl.NEAREST;
 
-        gl.activeTexture(gl.TEXTURE0);
-
-        var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
-
-        gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
-
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glFilter);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glFilter);
-
-        // Update wrapper.
-        texture.minFilter = glFilter;
-        texture.magFilter = glFilter;
-
+        var texUnits = this.glTextureUnits;
+        var currentTexture = texUnits.units[0];
+        texUnits.bind(texture, 0);
+        texture.update(
+            texture.pixels,
+            texture.width,
+            texture.height,
+            texture.flipY,
+            texture.wrapS,
+            texture.wrapT,
+            glFilter,
+            glFilter,
+            texture.format
+        );
         if (currentTexture)
         {
-            gl.bindTexture(gl.TEXTURE_2D, currentTexture);
+            texUnits.bind(currentTexture, 0);
         }
 
         return this;

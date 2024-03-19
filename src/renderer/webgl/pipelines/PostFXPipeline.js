@@ -353,24 +353,24 @@ var PostFXPipeline = new Class({
     {
         if (reset === undefined) { reset = false; }
 
+        var renderer = this.renderer;
         var gl = this.gl;
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
+        renderer.glTextureUnits.bind(source.texture, 0);
 
         var currentFBO = gl.getParameter(gl.FRAMEBUFFER_BINDING);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
 
-        this.renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
+        renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         if (reset)
         {
-            gl.bindTexture(gl.TEXTURE_2D, null);
+            renderer.glTextureUnits.bind(null, 0);
             gl.bindFramebuffer(gl.FRAMEBUFFER, currentFBO);
         }
     },
@@ -594,15 +594,14 @@ var PostFXPipeline = new Class({
 
         renderer.restoreStencilMask();
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
+        renderer.glTextureUnits.bind(source.texture, 0);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         if (target)
         {
-            gl.bindTexture(gl.TEXTURE_2D, null);
+            renderer.glTextureUnits.bind(null, 0);
             gl.bindFramebuffer(gl.FRAMEBUFFER, renderer.currentFramebuffer.webGLFramebuffer);
         }
     },

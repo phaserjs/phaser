@@ -166,6 +166,7 @@ var BlurFXPipeline = new Class({
     {
         var controller = this.getController();
 
+        var renderer = this.renderer;
         var gl = this.gl;
         var target2 = this.fullFrame1;
 
@@ -173,7 +174,7 @@ var BlurFXPipeline = new Class({
 
         this.bind(this.shaders[controller.quality]);
 
-        gl.activeTexture(gl.TEXTURE0);
+        renderer.glWrapper.updateBindingsActiveTexture({ bindings: { activeTexture: 0 } });
         gl.viewport(0, 0, target1.width, target1.height);
 
         this.set1i('uMainSampler', 0);
@@ -191,7 +192,7 @@ var BlurFXPipeline = new Class({
         }
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, currentFBO);
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        renderer.glTextureUnits.bind(null, 0);
 
         this.copyToGame(target1);
     }

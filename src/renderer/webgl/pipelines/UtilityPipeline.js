@@ -283,6 +283,7 @@ var UtilityPipeline = new Class({
         if (clear === undefined) { clear = true; }
         if (clearAlpha === undefined) { clearAlpha = true; }
 
+        var renderer = this.renderer;
         var gl = this.gl;
 
         this.setShader(this.copyShader);
@@ -290,8 +291,7 @@ var UtilityPipeline = new Class({
         this.set1i('uMainSampler', 0);
         this.set1f('uBrightness', brightness);
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
+        renderer.glTextureUnits.bind(source.texture, 0);
 
         if (target)
         {
@@ -306,14 +306,14 @@ var UtilityPipeline = new Class({
 
         if (clear)
         {
-            this.renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
+            renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
         }
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        renderer.glTextureUnits.bind(null, 0);
     },
 
     /**
@@ -344,6 +344,7 @@ var UtilityPipeline = new Class({
         if (eraseMode === undefined) { eraseMode = false; }
         if (flipY === undefined) { flipY = false; }
 
+        var renderer = this.renderer;
         var gl = this.gl;
 
         this.setShader(this.copyShader);
@@ -351,8 +352,7 @@ var UtilityPipeline = new Class({
         this.set1i('uMainSampler', 0);
         this.set1f('uBrightness', brightness);
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
+        renderer.glTextureUnits.bind(source.texture, 0);
 
         if (source.height > target.height)
         {
@@ -372,7 +372,7 @@ var UtilityPipeline = new Class({
 
         if (clear)
         {
-            this.renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
+            renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
         }
 
         if (eraseMode)
@@ -396,7 +396,7 @@ var UtilityPipeline = new Class({
         }
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        renderer.glTextureUnits.bind(null, 0);
 
         this.resetUVs();
     },
@@ -427,6 +427,7 @@ var UtilityPipeline = new Class({
         if (clear === undefined) { clear = true; }
         if (clearAlpha === undefined) { clearAlpha = true; }
 
+        var renderer = this.renderer;
         var gl = this.gl;
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, source.framebuffer.webGLFramebuffer);
@@ -434,16 +435,15 @@ var UtilityPipeline = new Class({
 
         if (clear)
         {
-            this.renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
+            renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
         }
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, target.texture.webGLTexture);
+        renderer.textureUnits.bind(target.texture, 0);
 
         gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, x, y, width, height);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        renderer.textureUnits.bind(null, 0);
     },
 
     /**
@@ -463,6 +463,7 @@ var UtilityPipeline = new Class({
      */
     copyToGame: function (source)
     {
+        var renderer = this.renderer;
         var gl = this.gl;
 
         this.setShader(this.copyShader);
@@ -470,10 +471,9 @@ var UtilityPipeline = new Class({
         this.set1i('uMainSampler', 0);
         this.set1f('uBrightness', 1);
 
-        this.renderer.popFramebuffer();
+        renderer.popFramebuffer();
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
+        renderer.glTextureUnits.bind(source.texture, 0);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -501,6 +501,7 @@ var UtilityPipeline = new Class({
         if (clearAlpha === undefined) { clearAlpha = true; }
         if (colorMatrix === undefined) { colorMatrix = this.colorMatrix; }
 
+        var renderer = this.renderer;
         var gl = this.gl;
 
         this.setShader(this.colorMatrixShader);
@@ -509,8 +510,7 @@ var UtilityPipeline = new Class({
         this.set1fv('uColorMatrix', colorMatrix.getData());
         this.set1f('uAlpha', colorMatrix.alpha);
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
+        renderer.glTextureUnits.bind(source.texture, 0);
 
         if (target)
         {
@@ -523,13 +523,13 @@ var UtilityPipeline = new Class({
             gl.viewport(0, 0, source.width, source.height);
         }
 
-        this.renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
+        renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        renderer.glTextureUnits.bind(null, 0);
     },
 
     /**
@@ -552,6 +552,7 @@ var UtilityPipeline = new Class({
         if (clearAlpha === undefined) { clearAlpha = true; }
         if (blendShader === undefined) { blendShader = this.linearShader; }
 
+        var renderer = this.renderer;
         var gl = this.gl;
 
         this.setShader(blendShader);
@@ -560,11 +561,7 @@ var UtilityPipeline = new Class({
         this.set1i('uMainSampler2', 1);
         this.set1f('uStrength', strength);
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source1.texture.webGLTexture);
-
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, source2.texture.webGLTexture);
+        renderer.glTextureUnits.bindUnits([ source1.texture, source2.texture ]);
 
         if (target)
         {
@@ -577,13 +574,13 @@ var UtilityPipeline = new Class({
             gl.viewport(0, 0, source1.width, source1.height);
         }
 
-        this.renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
+        renderer.clearFramebuffer([ 0, 0, 0, Number(!clearAlpha) ]);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        renderer.glTextureUnits.bindUnits([ null, null ]);
     },
 
     /**

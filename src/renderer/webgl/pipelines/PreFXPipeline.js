@@ -407,12 +407,11 @@ var PreFXPipeline = new Class({
 
         //  Now we've got the sprite drawn to our screen-sized fbo, copy the rect we need to our target
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, target.texture.webGLTexture);
+        renderer.glTextureUnits.bind(target.texture, 0);
         gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, targetBounds.x, targetBounds.y, targetBounds.width, targetBounds.height);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        renderer.glTextureUnits.bind(null, 0);
 
         //  We've drawn the sprite to the target (using our pipeline shader)
         //  we can pass it to the pipeline in case they want to do further
@@ -528,8 +527,7 @@ var PreFXPipeline = new Class({
             this.set1f('uAlpha', colorMatrix.alpha);
         }
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
+        renderer.glTextureUnits.bind(source.texture, 0);
 
         if (source.height > target.height)
         {
@@ -590,12 +588,12 @@ var PreFXPipeline = new Class({
      */
     copy: function (source, target)
     {
+        var renderer = this.renderer;
         var gl = this.gl;
 
         this.set1i('uMainSampler', 0);
 
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, source.texture.webGLTexture);
+        renderer.glTextureUnits.bind(source.texture, 0);
 
         //  source and target must always be the same size
         gl.viewport(0, 0, source.width, source.height);
@@ -605,7 +603,7 @@ var PreFXPipeline = new Class({
         gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer.webGLFramebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture.webGLTexture, 0);
 
-        this.renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
+        renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
 
         gl.bufferData(gl.ARRAY_BUFFER, this.quadVertexData, gl.STATIC_DRAW);
         gl.drawArrays(gl.TRIANGLES, 0, 6);

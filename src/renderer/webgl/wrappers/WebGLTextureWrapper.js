@@ -277,15 +277,6 @@ var WebGLTextureWrapper = new Class({
         this.magFilter = magFilter;
         this.format = format;
 
-        var gl = this.renderer.gl;
-
-        if (gl.isContextLost())
-        {
-            // GL state can't be updated right now.
-            // `createResource` will run when the context is restored.
-            return;
-        }
-
         this._processTexture();
     },
 

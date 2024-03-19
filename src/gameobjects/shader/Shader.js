@@ -1041,9 +1041,7 @@ var Shader = new Class({
             }
             else if (uniform.type === 'sampler2D')
             {
-                gl.activeTexture(gl.TEXTURE0 + textureCount);
-
-                gl.bindTexture(gl.TEXTURE_2D, value.webGLTexture);
+                this.renderer.glTextureUnits.bind(value, textureCount);
 
                 gl.uniform1i(location.webGLUniformLocation, textureCount);
 
