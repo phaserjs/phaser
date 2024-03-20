@@ -105,37 +105,22 @@ var WebGLTextureUnitsWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLTextureUnitsWrapper#bind
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper|null} texture - The texture to bind, or null to unbind the unit.
-     * @param {number} [unit] - The texture unit to bind the texture to. If not given, it looks for the texture in existing units. If not found, it defaults to 0.
+     * @param {number} unit - The texture unit to bind the texture to.
      * @param {boolean} [force=false] - If true, it will bind the texture even if it is already bound.
      */
     bind: function (texture, unit, force)
     {
-        if (unit === undefined)
-        {
-            unit = 0;
-            for (var i = 0; i < this.units.length; i++)
+        if (this.units[unit] === texture && !force) { return; }
+        this.renderer.glWrapper.updateBindingsActiveTexture({
+            bindings:
             {
-                if (this.units[i] === texture)
-                {
-                    unit = i;
-                    break;
-                }
+                activeTexture: unit
             }
-        }
-
-        if (this.units[unit] !== texture || force)
-        {
-            this.renderer.glWrapper.updateBindingsActiveTexture({
-                bindings:
-                {
-                    activeTexture: unit
-                }
-            });
-            this.units[unit] = texture;
-            var glTexture = texture ? texture.webGLTexture : null;
-            var gl = this.renderer.gl;
-            gl.bindTexture(gl.TEXTURE_2D, glTexture);
-        }
+        });
+        this.units[unit] = texture;
+        var glTexture = texture ? texture.webGLTexture : null;
+        var gl = this.renderer.gl;
+        gl.bindTexture(gl.TEXTURE_2D, glTexture);
     },
 
     /**

@@ -292,7 +292,7 @@ var WebGLTextureWrapper = new Class({
     {
         var gl = this.renderer.gl;
 
-        this.renderer.glTextureUnits.bind(this);
+        this.renderer.glTextureUnits.bind(this, 0);
         this.renderer.glWrapper.updateTexturing({
             texturing:
             {
