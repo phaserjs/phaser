@@ -1129,11 +1129,9 @@ var WebGLPipeline = new Class({
 
         var wasBound = false;
 
-        var gl = this.gl;
-
-        if (gl.getParameter(gl.ARRAY_BUFFER_BINDING) !== this.vertexBuffer)
+        if (this.renderer.glWrapper.state.bindings.arrayBuffer !== this.vertexBuffer)
         {
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer.webGLBuffer);
+            this.vertexBuffer.bind();
 
             this.activeBuffer = this.vertexBuffer;
 
@@ -1249,9 +1247,7 @@ var WebGLPipeline = new Class({
 
         if (buffer !== this.activeBuffer)
         {
-            var gl = this.gl;
-
-            this.gl.bindBuffer(gl.ARRAY_BUFFER, buffer.webGLBuffer);
+            buffer.bind();
 
             this.activeBuffer = buffer;
 

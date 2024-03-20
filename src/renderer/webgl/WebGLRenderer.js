@@ -2264,7 +2264,7 @@ var WebGLRenderer = new Class({
     createVertexBuffer: function (initialDataOrSize, bufferUsage)
     {
         var gl = this.gl;
-        var vertexBuffer = new WebGLBufferWrapper(gl, initialDataOrSize, gl.ARRAY_BUFFER, bufferUsage);
+        var vertexBuffer = new WebGLBufferWrapper(this, initialDataOrSize, gl.ARRAY_BUFFER, bufferUsage);
         this.glBufferWrappers.push(vertexBuffer);
         return vertexBuffer;
     },
@@ -2315,7 +2315,7 @@ var WebGLRenderer = new Class({
     createIndexBuffer: function (initialDataOrSize, bufferUsage)
     {
         var gl = this.gl;
-        var indexBuffer = new WebGLBufferWrapper(gl, initialDataOrSize, gl.ELEMENT_ARRAY_BUFFER, bufferUsage);
+        var indexBuffer = new WebGLBufferWrapper(this, initialDataOrSize, gl.ELEMENT_ARRAY_BUFFER, bufferUsage);
         this.glBufferWrappers.push(indexBuffer);
         return indexBuffer;
     },

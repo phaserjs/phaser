@@ -20,7 +20,7 @@ var Class = require('../../../utils/Class');
  * @constructor
  * @since 3.80.0
  *
- * @param {WebGLRenderingContext} gl - The WebGLRenderingContext to create the WebGLBuffer for.
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance that owns this wrapper.
  * @param {ArrayBuffer|number} initialDataOrSize - Either an ArrayBuffer of data, or the size of the buffer to create.
  * @param {GLenum} bufferType - The type of the buffer being created.
  * @param {GLenum} bufferUsage - The usage of the buffer being created. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW.
@@ -29,8 +29,17 @@ var WebGLBufferWrapper = new Class({
 
     initialize:
 
-    function WebGLBufferWrapper (gl, initialDataOrSize, bufferType, bufferUsage)
+    function WebGLBufferWrapper (renderer, initialDataOrSize, bufferType, bufferUsage)
     {
+        /**
+         * The WebGLRenderer instance that owns this wrapper.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#renderer
+         * @type {Phaser.Renderer.WebGL.WebGLRenderer}
+         * @since 3.90.0
+         */
+        this.renderer = renderer;
+
         /**
          * The WebGLBuffer being wrapped by this class.
          *
@@ -44,15 +53,6 @@ var WebGLBufferWrapper = new Class({
          * @since 3.80.0
          */
         this.webGLBuffer = null;
-
-        /**
-         * The WebGLRenderingContext that owns this WebGLBuffer.
-         *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#gl
-         * @type {WebGLRenderingContext}
-         * @since 3.80.0
-         */
-        this.gl = gl;
 
         /**
          * The initial data or size of the buffer.
@@ -102,23 +102,44 @@ var WebGLBufferWrapper = new Class({
             return;
         }
 
-        var gl = this.gl;
-
-        if (gl.isContextLost())
-        {
-            // GL state can't be updated right now.
-            // `createResource` will run when the context is restored.
-            return;
-        }
+        var gl = this.renderer.gl;
 
         var bufferType = this.bufferType;
         var webGLBuffer = gl.createBuffer();
 
         this.webGLBuffer = webGLBuffer;
 
-        gl.bindBuffer(bufferType, this.webGLBuffer);
+        this.bind();
         gl.bufferData(bufferType, this.initialDataOrSize, this.bufferUsage);
-        gl.bindBuffer(bufferType, null);
+        this.bind(true);
+    },
+
+    /**
+     * Binds this WebGLBufferWrapper to the current WebGLRenderingContext.
+     * It uses the bufferType of this wrapper to determine which binding point to use.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#bind
+     * @since 3.90.0
+     * @param {boolean} [unbind=false] - Whether to unbind the buffer instead.
+     */
+    bind: function (unbind)
+    {
+        var gl = this.renderer.gl;
+        var bufferType = this.bufferType;
+        var buffer = unbind ? null : this;
+
+        if (bufferType === gl.ARRAY_BUFFER)
+        {
+            this.renderer.glWrapper.updateBindingsArrayBuffer({
+                bindings: { arrayBuffer: buffer }
+            });
+        }
+        else if (bufferType === gl.ELEMENT_ARRAY_BUFFER)
+        {
+            this.renderer.glWrapper.updateBindingsElementArrayBuffer({
+                bindings: { elementArrayBuffer: buffer }
+            });
+        }
     },
 
     /**
@@ -129,11 +150,7 @@ var WebGLBufferWrapper = new Class({
      */
     destroy: function ()
     {
-        var gl = this.gl;
-        if (!gl.isContextLost())
-        {
-            gl.deleteBuffer(this.webGLBuffer);
-        }
+        this.gl.deleteBuffer(this.webGLBuffer);
         this.webGLBuffer = null;
         this.initialDataOrSize = null;
         this.gl = null;

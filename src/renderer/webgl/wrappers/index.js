@@ -14,6 +14,7 @@ var Wrappers = {
     WebGLBufferWrapper: require('./WebGLBufferWrapper'),
     WebGLProgramWrapper: require('./WebGLProgramWrapper'),
     WebGLTextureWrapper: require('./WebGLTextureWrapper'),
+    WebGLTextureUnitsWrapper: require('./WebGLTextureUnitsWrapper'),
     WebGLFramebufferWrapper: require('./WebGLFramebufferWrapper'),
     WebGLUniformLocationWrapper: require('./WebGLUniformLocationWrapper')
 };

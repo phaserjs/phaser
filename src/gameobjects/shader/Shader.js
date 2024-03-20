@@ -1149,7 +1149,7 @@ var Shader = new Class({
             renderer.clearFramebuffer([ 0, 0, 0, 0 ]);
         }
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer.webGLBuffer);
+        vertexBuffer.bind();
 
         var location = gl.getAttribLocation(program.webGLProgram, 'inPosition');
 
