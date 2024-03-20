@@ -539,7 +539,7 @@ var FXPipeline = new Class({
         this.set1i('uDisplacementSampler', 1);
         this.set2f('amount', config.x, config.y);
 
-        this.bindTexture(config.glTexture, 1);
+        this.renderer.glTextureUnits.bind(config.glTexture, 1);
 
         this.runDraw();
     },

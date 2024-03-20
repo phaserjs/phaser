@@ -102,7 +102,7 @@ var DisplacementFXPipeline = new Class({
         this.set1i('uDisplacementSampler', 1);
         this.set2f('amount', controller.x, controller.y);
 
-        this.bindTexture(controller.glTexture, 1);
+        this.renderer.glTextureUnits.bind(controller.glTexture, 1);
 
         this.copySprite(source, target);
 

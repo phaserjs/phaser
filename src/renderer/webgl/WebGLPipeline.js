@@ -1955,6 +1955,7 @@ var WebGLPipeline = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bindTexture
      * @since 3.50.0
+     * @deprecated since version 3.90.0. Use `this.renderer.glTextureUnits.bind` directly instead.
      *
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [target] - Texture to activate and bind.
      * @param {number} [unit=0] - The WebGL texture ID to activate. Defaults to `gl.TEXTURE0`.
