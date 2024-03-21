@@ -30,6 +30,7 @@ var WebGLFramebufferWrapper = require('./wrappers/WebGLFramebufferWrapper');
 var WebGLAttribLocationWrapper = require('./wrappers/WebGLAttribLocationWrapper');
 var WebGLUniformLocationWrapper = require('./wrappers/WebGLUniformLocationWrapper');
 var WebGLBlendParametersFactory = require('./parameters/WebGLBlendParametersFactory');
+var WebGLGlobalParametersFactory = require('./parameters/WebGLGlobalParametersFactory');
 
 var DEBUG = false;
 
@@ -819,7 +820,7 @@ var WebGLRenderer = new Class({
             setupExtensions();
 
             // Force update the GL state.
-            _this.glWrapper.update(undefined, true);
+            _this.glWrapper.update(WebGLGlobalParametersFactory.getDefault(_this), true);
             _this.glTextureUnits.init();
 
             // Clear "current" settings so they can be set again.
