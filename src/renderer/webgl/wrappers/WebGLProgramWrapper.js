@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Map = require('../../../structs/Map');
 var Class = require('../../../utils/Class');
 
 /**
@@ -19,7 +20,7 @@ var Class = require('../../../utils/Class');
  * @constructor
  * @since 3.80.0
  *
- * @param {WebGLRenderingContext} gl - The WebGLRenderingContext to create the WebGLProgram for.
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance that owns this wrapper.
  * @param {string} vertexSource - The vertex shader source code as a string.
  * @param {string} fragmentShader - The fragment shader source code as a string.
  */
@@ -27,8 +28,17 @@ var WebGLProgramWrapper = new Class({
 
     initialize:
 
-    function WebGLProgramWrapper (gl, vertexSource, fragmentSource)
+    function WebGLProgramWrapper (renderer, vertexSource, fragmentSource)
     {
+        /**
+         * The WebGLRenderer instance that owns this wrapper.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#renderer
+         * @type {Phaser.Renderer.WebGL.WebGLRenderer}
+         * @since 3.90.0
+         */
+        this.renderer = renderer;
+
         /**
          * The WebGLProgram being wrapped by this class.
          *
@@ -42,15 +52,6 @@ var WebGLProgramWrapper = new Class({
          * @since 3.80.0
          */
         this.webGLProgram = null;
-
-        /**
-         * The WebGLRenderingContext that owns this WebGLProgram.
-         *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#gl
-         * @type {WebGLRenderingContext}
-         * @since 3.80.0
-         */
-        this.gl = gl;
 
         /**
          * The vertex shader source code as a string.
@@ -92,6 +93,60 @@ var WebGLProgramWrapper = new Class({
          */
         this._fragmentShader = null;
 
+        /**
+         * The attribute state of this program.
+         *
+         * These represent the actual state in WebGL, and are only updated when
+         * the program is used to draw.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#glAttributes
+         * @type {{ location: WebGLAttribLocation, name: string, size: number, type: GLenum }[]}
+         * @since 3.90.0
+         */
+        this.glAttributes = [];
+
+        /**
+         * Map of attribute names to their indexes in `glAttributes`.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#glAttributeNames
+         * @type {Map<string, number>}
+         * @since 3.90.0
+         */
+        this.glAttributeNames = new Map();
+
+        /**
+         * The buffer which this program is using for its attributes.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#glAttributeBuffer
+         * @type {?WebGLBuffer}
+         * @default null
+         * @since 3.90.0
+         */
+        this.glAttributeBuffer = null;
+
+        /**
+         * The uniform state of this program.
+         *
+         * These represent the actual state in WebGL, and are only updated when
+         * the program is used to draw.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#glUniforms
+         * @type {Map<string, Phaser.Types.Renderer.WebGL.WebGLUniform>}
+         * @since 3.90.0
+         */
+        this.glUniforms = new Map();
+
+        /**
+         * Requests to update the uniform state.
+         * Set a request by name to a new value.
+         * These are only processed when the program is used to draw.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#uniformRequests
+         * @type {Map<string, any>}
+         * @since 3.90.0
+         */
+        this.uniformRequests = new Map();
+
         this.createResource();
     },
 
@@ -107,7 +162,12 @@ var WebGLProgramWrapper = new Class({
      */
     createResource: function ()
     {
-        var gl = this.gl;
+        var renderer = this.renderer;
+        var gl = renderer.gl;
+
+        // Ensure that there is no vertex buffer associated with this program,
+        // so that the attributes are reset.
+        this.glAttributeBuffer = null;
 
         if (gl.isContextLost())
         {
@@ -117,6 +177,8 @@ var WebGLProgramWrapper = new Class({
         }
 
         var program = gl.createProgram();
+
+        this.webGLProgram = program;
 
         var vs = gl.createShader(gl.VERTEX_SHADER);
         var fs = gl.createShader(gl.FRAGMENT_SHADER);
@@ -159,9 +221,164 @@ var WebGLProgramWrapper = new Class({
             throw new Error('Link Shader failed:' + gl.getProgramInfoLog(program));
         }
 
-        gl.useProgram(program);
+        // Extract attributes.
+        this.glAttributeNames.clear();
+        this.glAttributes.length = 0;
+        var attributeCount = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
 
-        this.webGLProgram = program;
+        for (var index = 0; index < attributeCount; index++)
+        {
+            var attribute = gl.getActiveAttrib(program, index);
+            var location = gl.getAttribLocation(program, attribute.name);
+
+            this.glAttributeNames.set(attribute.name, index);
+            this.glAttributes[index] = {
+                location: location,
+                name: attribute.name,
+                size: attribute.size,
+                type: attribute.type
+            };
+            gl.enableVertexAttribArray(location);
+        }
+        
+        // Extract uniforms.
+        if (this.glUniforms.size > 0)
+        {
+            // Send the old uniforms to the request map,
+            // so they are recreated with the new program.
+            this.glUniforms.each(function (name, uniform)
+            {
+                if (!this.uniformRequests.has(name))
+                {
+                    this.uniformRequests.set(name, uniform.value);
+                }
+            });
+        }
+
+        this.glUniforms.clear();
+        var uniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+
+        for (index = 0; index < uniformCount; index++)
+        {
+            var uniform = gl.getActiveUniform(program, index);
+            var setter = renderer.uniformSetterMap[uniform.type];
+
+            var initialValue = setter.int
+                ? new Int32Array(uniform.size * setter.size)
+                : new Float32Array(uniform.size * setter.size);
+
+            this.glUniforms.set(uniform.name, {
+                location: gl.getUniformLocation(program, uniform.name),
+                size: uniform.size,
+                type: uniform.type,
+                value: initialValue
+            });
+        }
+    },
+
+    /**
+     * Set a uniform value for this WebGLProgram.
+     *
+     * This method doesn't set the WebGL value directly.
+     * Instead, it adds a request to the `uniforms.requests` map.
+     * These requests are processed when the program is used to draw.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#setUniform
+     * @since 3.90.0
+     * @param {string} name - The name of the uniform.
+     * @param {number|number[]|Int32Array|Float32Array} value - The value to set.
+     */
+    setUniform: function (name, value)
+    {
+        this.uniformRequests.set(name, value);
+    },
+
+    /**
+     * Set this program as the active program in the WebGL context.
+     *
+     * This will also update the attribute and uniform state.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#bind
+     * @since 3.90.0
+     */
+    bind: function ()
+    {
+        var _this = this;
+        var renderer = this.renderer;
+        var gl = renderer.gl;
+
+        renderer.glWrapper.updateBindingsProgram({
+            bindings: { program: this }
+        });
+
+        // TODO: Bind the vertex buffer to the attributes.
+
+        // Process uniform requests.
+        this.uniformRequests.each(function (name, value)
+        {
+            var uniform = _this.glUniforms.get(name);
+
+            if (!uniform) { return; }
+
+            var uniformValue = uniform.value;
+
+            // Update stored values if they are different.
+            if (uniformValue.length)
+            {
+                var different = false;
+                for (var i = 0; i < uniformValue.length; i++)
+                {
+                    if (uniformValue[i] !== value[i])
+                    {
+                        different = true;
+                        uniformValue[i] = value[i];
+                    }
+                }
+                if (!different) { return; }
+            }
+            else
+            {
+                if (uniformValue === value) { return; }
+                uniformValue = value;
+                uniform.value = value;
+            }
+
+            // Get info about the uniform.
+            var location = uniform.location;
+            var type = uniform.type;
+            var size = uniform.size;
+            var setter = renderer.uniformSetterMap[type];
+
+            // Set the value.
+            if (setter.matrix)
+            {
+                setter.set.call(gl, location, false, uniformValue);
+            }
+            else if (size > 1)
+            {
+                setter.setV.call(gl, location, uniformValue);
+            }
+            else
+            {
+                switch (setter.size)
+                {
+                    case 1:
+                        setter.set.call(gl, location, value);
+                        break;
+                    case 2:
+                        setter.set.call(gl, location, value[0], value[1]);
+                        break;
+                    case 3:
+                        setter.set.call(gl, location, value[0], value[1], value[2]);
+                        break;
+                    case 4:
+                        setter.set.call(gl, location, value[0], value[1], value[2], value[3]);
+                        break;
+                }
+            }
+        });
+
+        this.uniformRequests.clear();
     },
 
     /**
@@ -177,7 +394,7 @@ var WebGLProgramWrapper = new Class({
             return;
         }
 
-        var gl = this.gl;
+        var gl = this.renderer.gl;
         if (!gl.isContextLost())
         {
             if (this._vertexShader)
@@ -189,12 +406,22 @@ var WebGLProgramWrapper = new Class({
                 gl.deleteShader(this._fragmentShader);
             }
             gl.deleteProgram(this.webGLProgram);
+
+            for (var i = 0; i < this.glAttributes.length; i++)
+            {
+                gl.disableVertexAttribArray(this.glAttributes[i].location);
+            }
+            this.glAttributes.length = 0;
+            this.glUniforms.clear();
         }
 
+        this.glAttributeBuffer = null;
+        this.glAttributeNames.clear();
+        this.uniformRequests.clear();
         this._vertexShader = null;
         this._fragmentShader = null;
         this.webGLProgram = null;
-        this.gl = null;
+        this.renderer = null;
     }
 });
 
