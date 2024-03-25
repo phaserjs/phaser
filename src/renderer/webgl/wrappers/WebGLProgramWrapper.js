@@ -240,20 +240,16 @@ var WebGLProgramWrapper = new Class({
             };
             gl.enableVertexAttribArray(location);
         }
-        
-        // Extract uniforms.
-        if (this.glUniforms.size > 0)
+
+        // Send the old uniforms to the request map,
+        // so they are recreated with the new program.
+        this.glUniforms.each(function (name, uniform)
         {
-            // Send the old uniforms to the request map,
-            // so they are recreated with the new program.
-            this.glUniforms.each(function (name, uniform)
+            if (!this.uniformRequests.has(name))
             {
-                if (!this.uniformRequests.has(name))
-                {
-                    this.uniformRequests.set(name, uniform.value);
-                }
-            });
-        }
+                this.uniformRequests.set(name, uniform.value);
+            }
+        });
 
         this.glUniforms.clear();
         var uniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
@@ -261,11 +257,16 @@ var WebGLProgramWrapper = new Class({
         for (index = 0; index < uniformCount; index++)
         {
             var uniform = gl.getActiveUniform(program, index);
-            var setter = renderer.uniformSetterMap[uniform.type];
+            var setter = renderer.shaderSetters.constants[uniform.type];
 
-            var initialValue = setter.int
-                ? new Int32Array(uniform.size * setter.size)
-                : new Float32Array(uniform.size * setter.size);
+            var initialValue = 0;
+            var terms = uniform.size * setter.size;
+            if (terms > 1)
+            {
+                initialValue = setter.baseType === gl.FLOAT
+                    ? new Float32Array(terms)
+                    : new Int32Array(terms);
+            }
 
             this.glUniforms.set(uniform.name, {
                 location: gl.getUniformLocation(program, uniform.name),
@@ -294,6 +295,71 @@ var WebGLProgramWrapper = new Class({
     },
 
     /**
+     * Set the vertex buffer for this program.
+     *
+     * This will connect the attributes to the buffer.
+     * Only one buffer can be connected at a time.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#setVertexBuffer
+     * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} buffer - The buffer to connect to the attributes.
+     * @param {{ name: string, normalized: boolean }[]} layout - The layout of the buffer. The order of the entries dictates how offsets are calculated within the buffer.
+     */
+    setVertexBuffer: function (buffer, layout)
+    {
+        var renderer = this.renderer;
+        var gl = renderer.gl;
+        var attributes = this.glAttributes;
+
+        if (this.glAttributeBuffer === buffer)
+        {
+            return;
+        }
+
+        this.glAttributeBuffer = buffer;
+
+        renderer.glWrapper.updateBindingsArrayBuffer({
+            bindings: { arrayBuffer: buffer }
+        });
+
+        var attributeProperties = [];
+
+        var offset = 0;
+        for (var i = 0; i < layout.length; i++)
+        {
+            var entry = layout[i];
+            var attributeIndex = this.glAttributeNames.get(entry.name);
+            if (attributeIndex === undefined)
+            {
+                continue;
+            }
+
+            var attributeInfo = attributes[attributeIndex];
+            var setter = renderer.shaderSetters.constants[attributeInfo.type];
+            var terms = attributeInfo.size * setter.size;
+            var attributeSize = terms * setter.bytes;
+
+            attributeProperties.push({
+                location: attributeInfo.location,
+                terms: terms,
+                baseType: setter.baseType,
+                normalized: entry.normalized,
+                offset: offset
+            });
+
+            offset += attributeSize;
+        }
+
+        var stride = offset;
+
+        for (i = 0; i < attributeProperties.length; i++)
+        {
+            var property = attributeProperties[i];
+            gl.vertexAttribPointer(property.location, property.terms, property.baseType, property.normalized, stride, property.offset);
+        }
+    },
+
+    /**
      * Set this program as the active program in the WebGL context.
      *
      * This will also update the attribute and uniform state.
@@ -310,8 +376,6 @@ var WebGLProgramWrapper = new Class({
         renderer.glWrapper.updateBindingsProgram({
             bindings: { program: this }
         });
-
-        // TODO: Bind the vertex buffer to the attributes.
 
         // Process uniform requests.
         this.uniformRequests.each(function (name, value)
@@ -347,10 +411,10 @@ var WebGLProgramWrapper = new Class({
             var location = uniform.location;
             var type = uniform.type;
             var size = uniform.size;
-            var setter = renderer.uniformSetterMap[type];
+            var setter = renderer.shaderSetters.constants[type];
 
             // Set the value.
-            if (setter.matrix)
+            if (setter.isMatrix)
             {
                 setter.set.call(gl, location, false, uniformValue);
             }
@@ -412,6 +476,11 @@ var WebGLProgramWrapper = new Class({
                 gl.disableVertexAttribArray(this.glAttributes[i].location);
             }
             this.glAttributes.length = 0;
+
+            this.glUniforms.each(function (name, uniform)
+            {
+                gl.deleteUniformLocation(uniform.location);
+            });
             this.glUniforms.clear();
         }
 

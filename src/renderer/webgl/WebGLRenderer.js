@@ -24,6 +24,7 @@ var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 var WebGLBufferWrapper = require('./wrappers/WebGLBufferWrapper');
 var WebGLGlobalWrapper = require('./wrappers/WebGLGlobalWrapper');
 var WebGLProgramWrapper = require('./wrappers/WebGLProgramWrapper');
+var WebGLShaderSetterWrapper = require('./wrappers/WebGLShaderSetterWrapper');
 var WebGLTextureWrapper = require('./wrappers/WebGLTextureWrapper');
 var WebGLTextureUnitsWrapper = require('./wrappers/WebGLTextureUnitsWrapper');
 var WebGLFramebufferWrapper = require('./wrappers/WebGLFramebufferWrapper');
@@ -550,27 +551,22 @@ var WebGLRenderer = new Class({
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glFuncMap
          * @type {any}
          * @since 3.17.0
+         * @deprecated since 3.90.0. Use `shaderSetters` instead.
          */
         this.glFuncMap = null;
 
         /**
-         * Internal GL function mapping for setting uniform data.
+         * Internal gl function mapping for uniform and attribute look-up.
+         *
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniform
          *
-         * Each key is a WebGL constant for a specific uniform type.
-         * Each value has these properties:
-         * - `size`: The number of terms in the uniform, i.e. the length of the vector.
-         * - `set`: The function to call to set the uniform value.
-         * - If it is a matrix:
-         *   - `matrix: true`
-         * - Otherwise:
-         *   - `setV`: The function to call to set the uniform value as an array.
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
          *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#uniformSetterMap
-         * @type {any}
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#shaderSetters
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLShaderSetterWrapper}
          * @since 3.90.0
          */
-        this.uniformSetterMap = null;
+        this.shaderSetters = null;
 
         /**
          * The `type` of the Game Object being currently rendered.
@@ -936,39 +932,7 @@ var WebGLRenderer = new Class({
 
         };
 
-        // Map uniform types to WebGL functions
-        this.uniformSetterMap = {
-            0x1404: { size: 1, set: gl.uniform1i, setV: gl.uniform1iv, int: true },
-            0x8B53: { size: 2, set: gl.uniform2i, setV: gl.uniform2iv, int: true },
-            0x8B54: { size: 3, set: gl.uniform3i, setV: gl.uniform3iv, int: true },
-            0x8B55: { size: 4, set: gl.uniform4i, setV: gl.uniform4iv, int: true },
-            0x1406: { size: 1, set: gl.uniform1f, setV: gl.uniform1fv },
-            0x8B50: { size: 2, set: gl.uniform2f, setV: gl.uniform2fv },
-            0x8B51: { size: 3, set: gl.uniform3f, setV: gl.uniform3fv },
-            0x8B52: { size: 4, set: gl.uniform4f, setV: gl.uniform4fv },
-            0x8B5A: { size: 4, matrix: true, set: gl.uniformMatrix2fv },
-            0x8B5B: { size: 9, matrix: true, set: gl.uniformMatrix3fv },
-            0x8B5C: { size: 16, matrix: true, set: gl.uniformMatrix4fv }
-        };
-
-        // Map extra uniform types to integers.
-        // BOOL
-        this.uniformSetterMap[0x8B56] = this.uniformSetterMap[0x1404];
-
-        // BOOL_VEC2
-        this.uniformSetterMap[0x8B57] = this.uniformSetterMap[0x8B53];
-
-        // BOOL_VEC3
-        this.uniformSetterMap[0x8B58] = this.uniformSetterMap[0x8B54];
-
-        // BOOL_VEC4
-        this.uniformSetterMap[0x8B59] = this.uniformSetterMap[0x8B55];
-
-        // SAMPLER_2D
-        this.uniformSetterMap[0x8B5E] = this.uniformSetterMap[0x1404];
-
-        // SAMPLER_CUBE
-        this.uniformSetterMap[0x8B60] = this.uniformSetterMap[0x1404];
+        this.shaderSetters = new WebGLShaderSetterWrapper(this);
 
         if (!config.maxTextures || config.maxTextures === -1)
         {
