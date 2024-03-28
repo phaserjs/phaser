@@ -303,7 +303,7 @@ var WebGLProgramWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#setVertexBuffer
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} buffer - The buffer to connect to the attributes.
-     * @param {{ name: string, normalized: boolean }[]} layout - The layout of the buffer. The order of the entries dictates how offsets are calculated within the buffer.
+     * @param {{ name: string, normalized: boolean, padding?: number }[]} layout - The layout of the buffer. The order of the entries dictates how offsets are calculated within the buffer. Define `padding` to add extra bytes between attributes.
      */
     setVertexBuffer: function (buffer, layout)
     {
@@ -331,7 +331,7 @@ var WebGLProgramWrapper = new Class({
             var attributeIndex = this.glAttributeNames.get(entry.name);
             if (attributeIndex === undefined)
             {
-                continue;
+                throw new Error('Attribute not found: ' + entry.name);
             }
 
             var attributeInfo = attributes[attributeIndex];
@@ -347,7 +347,7 @@ var WebGLProgramWrapper = new Class({
                 offset: offset
             });
 
-            offset += attributeSize;
+            offset += attributeSize + (entry.padding || 0);
         }
 
         var stride = offset;
