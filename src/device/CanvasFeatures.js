@@ -100,7 +100,7 @@ function checkInverseAlpha ()
 
 function init ()
 {
-    if (typeof importScripts !== 'function' && document !== undefined)
+    if (typeof importScripts !== 'function' && typeof Image !== 'undefined')
     {
         CanvasFeatures.supportNewBlendModes = checkBlendMode();
         CanvasFeatures.supportInverseAlpha = checkInverseAlpha();

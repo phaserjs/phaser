@@ -43,7 +43,7 @@ var Video = {
 
 function init ()
 {
-    if (typeof importScripts === 'function')
+    if (typeof importScripts === 'function' || typeof window === 'undefined')
     {
         return Video;
     }
