@@ -45,7 +45,7 @@ var WebAudioSound = new Class({
 
         if (!this.audioBuffer)
         {
-            throw new Error('Audio key "' + key + '" missing from cache');
+            throw new Error('Audio key "' + key + '" not found in cache');
         }
 
         /**
