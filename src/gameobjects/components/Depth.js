@@ -97,7 +97,7 @@ var Depth = {
      */
     bringMeToTop: function()
     {
-        var list = (this.parentContainer) ? gameObject.parentContainer : this.displayList.list;
+        var list = (this.parentContainer) ? this.parentContainer.list : this.displayList.list;
 
         if (!list)
         {
@@ -118,7 +118,7 @@ var Depth = {
      */
     sendMeToBack: function()
     {
-        var list = (this.parentContainer) ? gameObject.parentContainer : this.displayList.list;
+        var list = (this.parentContainer) ? this.parentContainer.list : this.displayList.list;
 
         if (!list)
         {
@@ -142,7 +142,7 @@ var Depth = {
      */
     moveMyDepthBelow: function(gameObject)
     {
-        var list = (this.parentContainer) ? gameObject.parentContainer : this.displayList.list;
+        var list = (this.parentContainer) ? this.parentContainer.list : this.displayList.list;
 
         if (!list)
         {
@@ -166,7 +166,7 @@ var Depth = {
      */
     moveMyDepthAbove: function(gameObject)
     {
-        var list = (this.parentContainer) ? gameObject.parentContainer : this.displayList.list;
+        var list = (this.parentContainer) ? this.parentContainer.list : this.displayList.list;
 
         if (!list)
         {
