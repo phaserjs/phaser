@@ -12,6 +12,7 @@ var Events = require('./events');
 var FileTypesManager = require('./FileTypesManager');
 var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
+var IsPlainObject = require('../utils/object/IsPlainObject');
 var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
 var XHRSettings = require('./XHRSettings');
@@ -676,6 +677,180 @@ var LoaderPlugin = new Class({
         this.setPrefix(currentPrefix);
 
         return (total > 0);
+    },
+
+    /**
+     * Remove the resources listed in an Asset Pack.
+     *
+     * This removes Animations from the Animation Manager, Textures from the Texture Manager, and all other assets from their respective caches.
+     * It doesn't remove the Pack itself from the JSON cache, if it exists there.
+     * If the Pack includes another Pack, its resources will be removed too.
+     *
+     * @method Phaser.Loader.LoaderPlugin#removePack
+     * @since 3.90.0
+     *
+     * @param {(string|object)} packKey - The key of an Asset Pack in the JSON cache, or a Pack File data.
+     * @param {string} [dataKey] - A key in the Pack data, if you want to process only a section of it.
+     */
+    removePack: function (packKey, dataKey)
+    {
+        var animationManager = this.systems.anims;
+        var cacheManager = this.cacheManager;
+        var textureManager = this.textureManager;
+
+        var cacheMap = {
+            animation: 'json',
+            aseprite: 'json',
+            audio: 'audio',
+            audioSprite: 'audio',
+            binary: 'binary',
+            bitmapFont: 'bitmapFont',
+            css: null,
+            glsl: 'shader',
+            html: 'html',
+            json: 'json',
+            obj: 'obj',
+            plugin: null,
+            scenePlugin: null,
+            script: null,
+            spine: 'json',
+            text: 'text',
+            tilemapCSV: 'tilemap',
+            tilemapImpact: 'tilemap',
+            tilemapTiledJSON: 'tilemap',
+            video: 'video',
+            xml: 'xml'
+        };
+
+        var pack;
+
+        if (IsPlainObject(packKey))
+        {
+            pack = packKey;
+        }
+        else
+        {
+            pack = cacheManager.json.get(packKey);
+
+            if (!pack)
+            {
+                console.warn('Asset Pack not found in JSON cache:', packKey);
+
+                return;
+            }
+        }
+
+        if (dataKey)
+        {
+            pack = { _: pack[dataKey] };
+        }
+
+        for (var configKey in pack)
+        {
+            var config = pack[configKey];
+            var prefix = GetFastValue(config, 'prefix', '');
+            var files = GetFastValue(config, 'files');
+            var defaultType = GetFastValue(config, 'defaultType');
+
+            if (Array.isArray(files))
+            {
+                for (var i = 0; i < files.length; i++)
+                {
+                    var file = files[i];
+                    var type = (file.hasOwnProperty('type')) ? file.type : defaultType;
+
+                    if (!type)
+                    {
+                        console.warn('No type:', file);
+
+                        continue;
+                    }
+
+                    var fileKey = prefix + file.key;
+
+                    if (type === 'animation')
+                    {
+                        animationManager.remove(fileKey);
+                    }
+
+                    if (type === 'aseprite' || type === 'atlas' || type === 'atlasXML' || type === 'htmlTexture' || type === 'image' || type === 'multiatlas' || type === 'spritesheet' || type === 'svg' || type === 'texture' || type === 'unityAtlas')
+                    {
+                        textureManager.remove(fileKey);
+
+                        if (!cacheMap[type])
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (type === 'pack')
+                    {
+                        this.removePack(fileKey, file.dataKey);
+
+                        continue;
+                    }
+
+                    if (type === 'spine')
+                    {
+                        var spineAtlas = cacheManager.custom.spine.get(fileKey);
+
+                        if (!spineAtlas)
+                        {
+                            continue;
+                        }
+
+                        var spinePrefix = (spineAtlas.prefix === undefined) ? '' : spineAtlas.prefix;
+
+                        cacheManager.custom.spine.remove(fileKey);
+
+                        var spineTexture = cacheManager.custom.spineTextures.get(fileKey);
+
+                        if (!spineTexture)
+                        {
+                            continue;
+                        }
+
+                        cacheManager.custom.spineTextures.remove(fileKey);
+
+                        for (var j = 0; j < spineTexture.pages.length; j++)
+                        {
+                            var page = spineTexture.pages[j];
+                            var textureKey = spinePrefix + page.name;
+                            var altTextureKey = fileKey + ':' + textureKey;
+
+                            if (textureManager.exists(altTextureKey))
+                            {
+                                textureManager.remove(altTextureKey);
+                            }
+                            else
+                            {
+                                textureManager.remove(textureKey);
+                            }
+                        }
+                    }
+
+                    var cacheName = cacheMap[type];
+
+                    if (cacheName === null)
+                    {
+                        //  Nothing to remove.
+
+                        continue;
+                    }
+
+                    if (!cacheName)
+                    {
+                        console.warn('Unknown type:', type);
+
+                        continue;
+                    }
+
+                    var cache = cacheManager[cacheName];
+
+                    cache.remove(fileKey);
+                }
+            }
+        }
     },
 
     /**
