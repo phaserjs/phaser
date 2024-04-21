@@ -295,6 +295,11 @@ var File = new Class({
 
             this.src = GetURL(this, this.loader.baseURL);
 
+            if (!this.src)
+            {
+                throw new Error('URL Error in File: ' + this.key + ' from: ' + this.url);
+            }
+
             if (this.src.indexOf('data:') === 0)
             {
                 this.base64 = true;
