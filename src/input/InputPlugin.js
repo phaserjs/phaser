@@ -573,9 +573,8 @@ var InputPlugin = new Class({
         var manager = this.manager;
 
         var pointers = manager.pointers;
-        var pointersTotal = manager.pointersTotal;
 
-        for (i = 0; i < pointersTotal; i++)
+        for (i = 0; i < pointers.length; i++)
         {
             pointers[i].updateMotion();
         }
@@ -611,7 +610,7 @@ var InputPlugin = new Class({
         //  We got this far? Then we should poll for movement
         var captured = false;
 
-        for (i = 0; i < pointersTotal; i++)
+        for (i = 0; i < pointers.length; i++)
         {
             var total = 0;
 
@@ -678,10 +677,9 @@ var InputPlugin = new Class({
             return false;
         }
 
-        var pointersTotal = pointers.length;
         var captured = false;
 
-        for (var i = 0; i < pointersTotal; i++)
+        for (var i = 0; i < pointers.length; i++)
         {
             var total = 0;
             var pointer = pointers[i];
@@ -838,7 +836,7 @@ var InputPlugin = new Class({
         var over = this._over;
         var manager = this.manager;
 
-        for (var i = 0, index; i < manager.pointersTotal; i++)
+        for (var i = 0, index; i < manager.pointers.length; i++)
         {
             index = drag[i].indexOf(gameObject);
 
