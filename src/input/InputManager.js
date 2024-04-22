@@ -177,11 +177,6 @@ var InputManager = new Class({
          */
         this.pointersTotal = config.inputActivePointers;
 
-        if (config.inputTouch && this.pointersTotal === 1)
-        {
-            this.pointersTotal = 2;
-        }
-
         for (var i = 0; i <= this.pointersTotal; i++)
         {
             var pointer = new Pointer(this, i);
