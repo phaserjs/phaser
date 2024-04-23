@@ -14,6 +14,7 @@
  * @property {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [bindings.elementArrayBuffer] The index array buffer to bind.
  * @property {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper} [bindings.framebuffer] The framebuffer to bind.
  * @property {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} [bindings.program] The program to bind.
+ * @property {WebGLRenderbuffer} [bindings.renderbuffer] The renderbuffer to bind.
  *
  * @property {Phaser.Types.Renderer.WebGL.WebGLBlendParameters} [blend] The blend parameters to set.
  *

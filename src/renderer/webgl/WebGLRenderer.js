@@ -2167,17 +2167,26 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createFramebuffer
      * @since 3.0.0
      *
-     * @param {number} width - If `addDepthStencilBuffer` is true, this controls the width of the depth stencil.
-     * @param {number} height - If `addDepthStencilBuffer` is true, this controls the height of the depth stencil.
-     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} renderTexture - The color texture where the color pixels are written.
-     * @param {boolean} [addDepthStencilBuffer=false] - Create a Renderbuffer for the depth stencil?
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper|Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]|null} renderTexture - The color texture where the color pixels are written. Specify an array for multiple color attachments, but WebGL1 only supports the first by default. Specify `null` to create a framebuffer for the base canvas.
+     * @param {boolean} [addStencilBuffer=false] - Create a Renderbuffer for the stencil?
+     * @param {boolean} [addDepthBuffer=false] - Create a Renderbuffer for the depth?
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper} Wrapped framebuffer which is safe to use with the renderer.
      */
-    createFramebuffer: function (width, height, renderTexture, addDepthStencilBuffer)
+    createFramebuffer: function (renderTexture, addStencilBuffer, addDepthBuffer)
     {
         this.currentFramebuffer = null;
-        var framebuffer = new WebGLFramebufferWrapper(this.gl, width, height, renderTexture, addDepthStencilBuffer);
+
+        if (!Array.isArray(renderTexture) && renderTexture !== null)
+        {
+            renderTexture = [ renderTexture ];
+        }
+        var framebuffer = new WebGLFramebufferWrapper(
+            this,
+            renderTexture,
+            addStencilBuffer,
+            addDepthBuffer
+        );
 
         this.glFramebufferWrappers.push(framebuffer);
 

@@ -29,7 +29,8 @@ var WebGLGlobalParametersFactory = {
                 arrayBuffer: null,
                 elementArrayBuffer: null,
                 framebuffer: null,
-                program: null
+                program: null,
+                renderbuffer: null
             },
             blend: DeepCopy(renderer.blendModes[CONST.BlendModes.NORMAL]),
             colorClearValue: [ 0, 0, 0, 1 ],

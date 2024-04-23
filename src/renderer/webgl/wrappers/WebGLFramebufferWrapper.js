@@ -18,6 +18,16 @@ var errors = {
 };
 
 /**
+ * @typedef {object} Attachment
+ * @since 3.90.0
+ *
+ * @property {GLenum} attachmentPoint - The attachment point for the attachment. This is a GLenum such as `gl.COLOR_ATTACHMENT0`, `gl.DEPTH_ATTACHMENT`, `gl.STENCIL_ATTACHMENT`, or `gl.DEPTH_STENCIL_ATTACHMENT`.
+ * @property {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [texture] - The texture for the attachment. Either a texture or a renderbuffer is required.
+ * @property {WebGLRenderbuffer} [renderbuffer] - The renderbuffer for the attachment. Either a texture or a renderbuffer is required.
+ * @property {GLenum} [internalFormat] - The internal format for the renderbuffer. This is a GLenum such as `gl.DEPTH_STENCIL`. 
+ */
+
+/**
  * @classdesc
  * Wrapper for a WebGL frame buffer,
  * containing all the information that was used to create it.
@@ -27,29 +37,36 @@ var errors = {
  * without other systems having to be aware of it.
  * Always use WebGLFramebufferWrapper instead.
  *
+ * This also manages the attachments to the framebuffer,
+ * including renderbuffer life cycle.
+ *
  * @class WebGLFramebufferWrapper
  * @memberof Phaser.Renderer.WebGL.Wrappers
  * @constructor
  * @since 3.80.0
  *
- * @param {WebGLRenderingContext} gl - The WebGLRenderingContext to create the WebGLFramebuffer for.
- * @param {number} width - If `addDepthStencilBuffer` is true, this controls the width of the depth stencil.
- * @param {number} height - If `addDepthStencilBuffer` is true, this controls the height of the depth stencil.
- * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} renderTexture - The color texture where the color pixels are written.
- * @param {boolean} [addDepthStencilBuffer=false] - Create a Renderbuffer for the depth stencil?
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer this WebGLFramebuffer belongs to.
+ * @param {?Phaser.Types.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]} colorAttachments - The color textures where the color pixels are written. If empty, the canvas will be used as the color attachment. Only the first color attachment is used in default WebGL1.
+ * @param {boolean} [addStencilBuffer=false] - Whether to add a stencil buffer to the framebuffer. If the canvas is used as the color attachment, this will be ignored.
+ * @param {boolean} [addDepthBuffer=false] - Whether to add a depth buffer to the framebuffer. If depth and stencil are both provided, they will be combined into a single depth-stencil buffer. If the canvas is used as the color attachment, this will be ignored.
  */
 var WebGLFramebufferWrapper = new Class({
 
     initialize:
 
-    function WebGLFramebufferWrapper (gl, width, height, renderTexture, addDepthStencilBuffer)
+    function WebGLFramebufferWrapper (renderer, colorAttachments, addStencilBuffer, addDepthBuffer)
     {
+        var gl = renderer.gl;
+
         /**
          * The WebGLFramebuffer being wrapped by this class.
          *
          * This property could change at any time.
          * Therefore, you should never store a reference to this value.
          * It should only be passed directly to the WebGL API for drawing.
+         *
+         * If the FrameBuffer is using the canvas as the color attachment,
+         * this property will be `null`.
          *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#webGLFramebuffer
          * @type {?WebGLFramebuffer}
@@ -59,13 +76,25 @@ var WebGLFramebufferWrapper = new Class({
         this.webGLFramebuffer = null;
 
         /**
-         * The WebGL context this WebGLFramebuffer belongs to.
+         * The WebGLRenderer this WebGLFramebuffer belongs to.
          *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#gl
-         * @type {WebGLRenderingContext}
-         * @since 3.80.0
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#renderer
+         * @type {Phaser.Renderer.WebGL.WebGLRenderer}
+         * @since 3.90.0
          */
-        this.gl = gl;
+        this.renderer = renderer;
+
+        /**
+         * Whether to use the canvas as the color attachment.
+         * If this is true, a framebuffer will not be created.
+         * This is useful for the main framebuffer, which is created by the browser.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#useCanvas
+         * @type {boolean}
+         * @default false
+         * @since 3.90.0
+         */
+        this.useCanvas = !colorAttachments || colorAttachments.length === 0;
 
         /**
          * Width of the depth stencil.
@@ -74,7 +103,7 @@ var WebGLFramebufferWrapper = new Class({
          * @type {number}
          * @since 3.80.0
          */
-        this.width = width;
+        this.width = 0;
 
         /**
          * Height of the depth stencil.
@@ -83,26 +112,118 @@ var WebGLFramebufferWrapper = new Class({
          * @type {number}
          * @since 3.80.0
          */
-        this.height = height;
+        this.height = 0;
+
+        /**
+         * Attachments to the framebuffer. These contain data such as
+         * the width, height, and renderbuffer or texture.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#attachments
+         * @type {Attachment[]}
+         * @since 3.90.0
+         */
+        this.attachments = [];
+
+        if (!this.useCanvas)
+        {
+            for (var i = 0; i < colorAttachments.length; i++)
+            {
+                this.attachments.push({
+                    texture: colorAttachments[i],
+                    attachmentPoint: gl.COLOR_ATTACHMENT0 + i
+                });
+
+                if (i === 0)
+                {
+                    this.width = colorAttachments[i].width;
+                    this.height = colorAttachments[i].height;
+                }
+                else if (colorAttachments[i].width !== this.width || colorAttachments[i].height !== this.height)
+                {
+                    throw new Error('Color attachments must have the same dimensions');
+                }
+            }
+
+            // Only generate depth and stencil buffers if color attachments are provided.
+            // Generate a depth-stencil buffer if both are requested.
+            // These must be attached after the color attachments,
+            // so that the framebuffer is complete when they're attached.
+            if (addDepthBuffer && addStencilBuffer)
+            {
+                this.attachments.push({
+                    attachmentPoint: gl.DEPTH_STENCIL_ATTACHMENT,
+                    internalFormat: gl.DEPTH_STENCIL
+                });
+            }
+            else if (addDepthBuffer)
+            {
+                this.attachments.push({
+                    attachmentPoint: gl.DEPTH_ATTACHMENT,
+                    internalFormat: gl.DEPTH_COMPONENT16
+                });
+            }
+            else if (addStencilBuffer)
+            {
+                this.attachments.push({
+                    attachmentPoint: gl.STENCIL_ATTACHMENT,
+                    internalFormat: gl.STENCIL_INDEX8
+                });
+            }
+        }
 
         /**
          * The color texture where the color pixels are written.
          *
+         * This will be `null` if the canvas is used as the color attachment.
+         * It is the first color attachment on the framebuffer.
+         *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#renderTexture
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
+         * @type {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
+         * @default null
          * @since 3.80.0
          */
-        this.renderTexture = renderTexture;
+        this.renderTexture = this.attachments[0] || null;
 
         /**
-         * Create a Renderbuffer for the depth stencil?
+         * How many DrawingContexts are drawing to this framebuffer.
+         * This is used to avoid unnecessary `gl.clear()` calls.
          *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#addDepthStencilBuffer
-         * @type {boolean}
-         * @default false
-         * @since 3.80.0
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#drawingContextUsers
+         * @type {number}
+         * @default 0
+         * @since 3.90.0
          */
-        this.addDepthStencilBuffer = !!addDepthStencilBuffer;
+        this.drawingContextUsers = 0;
+
+        /**
+         * Which framebuffer attachments have contents.
+         * It should be set when the framebuffer is drawn to, or cleared.
+         * This is used to avoid unnecessary `gl.clear()` calls.
+         * The value is a bitmask of the following values:
+         *
+         * - gl.COLOR_BUFFER_BIT
+         * - gl.DEPTH_BUFFER_BIT
+         * - gl.STENCIL_BUFFER_BIT
+         *
+         * If the value is 0, no attachments have contents.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#attachmentContents
+         * @type {number}
+         * @default 0
+         * @since 3.90.0
+         */
+        this.attachmentContents = 0;
+
+        /**
+         * Which framebuffer attachments are intended to be cleared.
+         * This is used to avoid unnecessary `gl.clear()` calls.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#attachmentClearIntended
+         * @type {number}
+         * @default 0
+         * @since 3.90.0
+         */
+        this.attachmentClearIntended = 0;
 
         this.createResource();
     },
@@ -118,44 +239,66 @@ var WebGLFramebufferWrapper = new Class({
      */
     createResource: function ()
     {
-        var gl = this.gl;
+        this.attachmentContents = 0;
+        this.attachmentClearIntended = 0;
 
-        if (gl.isContextLost())
-        {
-            // GL state can't be updated right now.
-            // `createResource` will run when the context is restored.
-            return;
-        }
+        if (this.useCanvas) { return; }
 
-        var renderTexture = this.renderTexture;
-        var complete = 0;
+        var renderer = this.renderer;
+        var glWrapper = renderer.glWrapper;
+        var gl = renderer.gl;
+
+        // Create framebuffer.
         var framebuffer = gl.createFramebuffer();
-
         this.webGLFramebuffer = framebuffer;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+        glWrapper.updateBindingsFramebuffer({
+            bindings:
+            {
+                framebuffer: this
+            }
+        });
 
-        renderTexture.isRenderTexture = true;
-        renderTexture.isAlphaPremultiplied = false;
-
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, renderTexture.webGLTexture, 0);
-
-        complete = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-
-        if (complete !== gl.FRAMEBUFFER_COMPLETE)
+        // Create attachments.
+        for (var i = 0; i < this.attachments.length; i++)
         {
-            throw new Error('Framebuffer status: ' + (errors[complete] || complete));
+            var attachment = this.attachments[i];
+            var attachmentPoint = attachment.attachmentPoint;
+            var texture = attachment.texture;
+
+            if (texture)
+            {
+                texture.isRenderTexture = true;
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture.webGLTexture, 0);
+            }
+            else
+            {
+                // Check for completeness.
+                // We must do this after the color attachments are created,
+                // or the framebuffer will be incomplete and cannot accept
+                // a renderbuffer.
+                var complete = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+                if (complete !== gl.FRAMEBUFFER_COMPLETE)
+                {
+                    throw new Error('Framebuffer status: ' + (errors[complete] || complete));
+                }
+
+                var renderbuffer = gl.createRenderbuffer();
+                glWrapper.updateBindingsRenderbuffer({
+                    bindings:
+                    {
+                        renderbuffer: renderbuffer
+                    }
+                });
+                gl.renderbufferStorage(gl.RENDERBUFFER, attachment.internalFormat, this.width, this.height);
+                gl.framebufferRenderbuffer(gl.FRAMEBUFFER, attachmentPoint, gl.RENDERBUFFER, renderbuffer);
+
+                // We could check for completeness again here,
+                // but the invocations were checked during development,
+                // and the renderbuffer is free of error.
+
+                attachment.renderbuffer = renderbuffer;
+            }
         }
-
-        if (this.addDepthStencilBuffer)
-        {
-            var depthStencilBuffer = gl.createRenderbuffer();
-
-            gl.bindRenderbuffer(gl.RENDERBUFFER, depthStencilBuffer);
-            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.width, this.height);
-            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, depthStencilBuffer);
-        }
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     },
 
     /**
@@ -166,43 +309,50 @@ var WebGLFramebufferWrapper = new Class({
      */
     destroy: function ()
     {
-        if (this.webGLFramebuffer === null)
+        if (this.renderer === null)
         {
             return;
         }
 
-        var gl = this.gl;
+        var renderer = this.renderer;
+        var gl = renderer.gl;
 
-        if (!gl.isContextLost())
+        for (var i = 0; i < this.attachments.length; i++)
         {
-            gl.bindFramebuffer(gl.FRAMEBUFFER, this.webGLFramebuffer);
-
-            // Check for a color attachment and remove it
-            var colorAttachment = gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
-
-            if (colorAttachment !== null)
+            var attachment = this.attachments[i];
+            if (attachment.texture)
             {
-                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, null, 0);
-
-                gl.deleteTexture(colorAttachment);
+                renderer.glWrapper.updateBindingsFramebuffer({
+                    bindings:
+                    {
+                        framebuffer: this
+                    }
+                });
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, attachment.attachmentPoint, gl.TEXTURE_2D, null, 0);
+                renderer.deleteTexture(attachment.texture);
             }
-
-            // Check for a depth-stencil attachment and remove it
-            var depthStencilAttachment = gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
-
-            if (depthStencilAttachment !== null)
+            else
             {
-                gl.deleteRenderbuffer(depthStencilAttachment);
+                gl.deleteRenderbuffer(attachment.renderbuffer);
             }
-
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-            gl.deleteFramebuffer(this.webGLFramebuffer);
         }
 
+        gl.deleteFramebuffer(this.webGLFramebuffer);
+
+        // Remove bindings from the global state.
+        renderer.glWrapper.updateBindingsFramebuffer({
+            bindings:
+            {
+                framebuffer: null,
+                renderbuffer: null
+            }
+        });
+
+        this.attachmentContents = 0;
+        this.attachments.length = 0;
         this.renderTexture = null;
         this.webGLFramebuffer = null;
-        this.gl = null;
+        this.renderer = null;
     }
 });
 

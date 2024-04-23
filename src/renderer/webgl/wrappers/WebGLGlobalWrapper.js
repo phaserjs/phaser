@@ -149,6 +149,10 @@ var WebGLGlobalWrapper = new Class({
         {
             this.updateBindingsProgram(state, force);
         }
+        if (bindings.renderbuffer !== undefined)
+        {
+            this.updateBindingsRenderbuffer(state, force);
+        }
     },
 
     /**
@@ -290,6 +294,32 @@ var WebGLGlobalWrapper = new Class({
         {
             var webGLProgram = program ? program.webGLProgram : null;
             this.renderer.gl.useProgram(webGLProgram);
+        }
+    },
+
+    /**
+     * Updates the renderbuffer state.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateBindingsRenderbuffer
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
+     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
+     */
+    updateBindingsRenderbuffer: function (state, force)
+    {
+        var renderbuffer = state.bindings.renderbuffer;
+
+        var different = renderbuffer !== this.state.bindings.renderbuffer;
+
+        if (different)
+        {
+            this.state.bindings.renderbuffer = renderbuffer;
+        }
+        if (different || force)
+        {
+            var gl = this.renderer.gl;
+            var webGLRenderbuffer = renderbuffer || null;
+            gl.bindRenderbuffer(gl.RENDERBUFFER, webGLRenderbuffer);
         }
     },
 
