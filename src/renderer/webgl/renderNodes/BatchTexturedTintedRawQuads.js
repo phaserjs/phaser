@@ -110,42 +110,49 @@ var BatchTexturedTintedRawQuads = new Class({
                     type: gl.UNSIGNED_BYTE,
                     normalized: true
                 },
+
                 {
-                    name: 'inMatrix',
+                    name: 'inObjectMatrixABCD',
                     location: -1,
                     size: 4,
-                    columns: 4,
+                    type: gl.FLOAT,
+                    normalized: false
+                },
+                {
+                    name: 'inObjectMatrixXY',
+                    location: -1,
+                    size: 2,
+                    type: gl.FLOAT,
+                    normalized: false
+                },
+                {
+                    name: 'inWorldMatrixABCD',
+                    location: -1,
+                    size: 4,
+                    type: gl.FLOAT,
+                    normalized: false
+                },
+                {
+                    name: 'inWorldMatrixXY',
+                    location: -1,
+                    size: 2,
+                    type: gl.FLOAT,
+                    normalized: false
+                },
+                {
+                    name: 'inViewMatrixABCD',
+                    location: -1,
+                    size: 4,
+                    type: gl.FLOAT,
+                    normalized: false
+                },
+                {
+                    name: 'inViewMatrixXY',
+                    location: -1,
+                    size: 2,
                     type: gl.FLOAT,
                     normalized: false
                 }
-
-                // {
-                //     name: 'inObjectMatrix',
-                //     location: -1,
-                //     size: 4,
-                //     columns: 4,
-                //     type: gl.FLOAT,
-                //     normalized: false,
-                //     offset: 10 * bytesPerElement
-                // },
-                // {
-                //     name: 'inWorldMatrix',
-                //     location: -1,
-                //     size: 4,
-                //     columns: 4,
-                //     type: gl.FLOAT,
-                //     normalized: false,
-                //     offset: 26 * bytesPerElement
-                // },
-                // {
-                //     name: 'inViewMatrix',
-                //     location: -1,
-                //     size: 4,
-                //     columns: 4,
-                //     type: gl.FLOAT,
-                //     normalized: false,
-                //     offset: 42 * bytesPerElement
-                // }
             ]
         };
 
@@ -358,7 +365,9 @@ var BatchTexturedTintedRawQuads = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to render to.
      * @param {Phaser.Textures.Frame} frame - The texture frame to render.
      * @param {boolean} tintFill - Whether to tint the fill color.
-     * @param {Float32Array} matrix - The matrix to transform the quad.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} objectMatrix - The matrix to transform the base quad into the object space.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} worldMatrix - The matrix to transform the object space quad into the world space.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} viewMatrix - The matrix to transform the world space quad into the view space.
      * @param {number} texX - The left u coordinate (0-1).
      * @param {number} texY - The top v coordinate (0-1).
      * @param {number} texWidth - The width of the texture (0-1).
@@ -368,7 +377,7 @@ var BatchTexturedTintedRawQuads = new Class({
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBR - The bottom-right tint color.
      */
-    batch: function (currentContext, camera, frame, tintFill, matrix, texX, texY, texWidth, texHeight, tintTL, tintBL, tintTR, tintBR)
+    batch: function (currentContext, camera, frame, tintFill, objectMatrix, worldMatrix, viewMatrix, texX, texY, texWidth, texHeight, tintTL, tintBL, tintTR, tintBR)
     {
         this.manager.setCurrentBatchNode(this, currentContext, camera);
 
@@ -377,12 +386,6 @@ var BatchTexturedTintedRawQuads = new Class({
         var quadViewU32 = this._quadViewU32;
 
         // TODO: Simplify matrix handling.
-        var mat4 = [
-            matrix[0], matrix[1], 0, 0,
-            matrix[2], matrix[3], 0, 0,
-            0, 0, 1, 0,
-            matrix[4], matrix[5], 0, 1
-        ];
 
         // Texture
         var glTexture = frame.glTexture;
@@ -404,7 +407,9 @@ var BatchTexturedTintedRawQuads = new Class({
         quadViewU32[quadOffset32 + 7] = tintBL;
         quadViewU32[quadOffset32 + 8] = tintTR;
         quadViewU32[quadOffset32 + 9] = tintBR;
-        quadViewF32.set(mat4, quadOffset32 + 10);
+        quadViewF32.set(objectMatrix.matrix.subarray(0, 6), quadOffset32 + 10);
+        quadViewF32.set(worldMatrix.matrix.subarray(0, 6), quadOffset32 + 16);
+        quadViewF32.set(viewMatrix.matrix.subarray(0, 6), quadOffset32 + 22);
 
         // Increment the instance count.
         this.instanceCount++;

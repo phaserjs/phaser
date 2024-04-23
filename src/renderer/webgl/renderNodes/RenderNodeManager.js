@@ -8,6 +8,7 @@ var Class = require('../../../utils/Class');
 var BatchTexturedTintedRawQuads = require('./BatchTexturedTintedRawQuads');
 var Camera = require('./Camera');
 var GetQuadTransform = require('./GetQuadTransform');
+var GetSBRQuadMatrices = require('./GetSBRQuadMatrices');
 var ImageQuadrangulateBatch = require('./ImageQuadrangulateBatch');
 var ListCompositor = require('./ListCompositor');
 
@@ -50,6 +51,7 @@ var RenderNodeManager = new Class({
             BatchTexturedTintedRawQuads: new BatchTexturedTintedRawQuads(this, renderer),
             Camera: new Camera(this, renderer),
             GetQuadTransform: new GetQuadTransform(this, renderer),
+            GetSBRQuadMatrices: new GetSBRQuadMatrices(this, renderer),
             ImageQuadrangulateBatch: new ImageQuadrangulateBatch(this, renderer),
             ListCompositor: new ListCompositor(this, renderer),
         };

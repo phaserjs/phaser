@@ -12,7 +12,12 @@ attribute vec4 inTintTL;
 attribute vec4 inTintBL;
 attribute vec4 inTintTR;
 attribute vec4 inTintBR;
-attribute mat4 inMatrix;
+attribute vec4 inObjectMatrixABCD;
+attribute vec2 inObjectMatrixXY;
+attribute vec4 inWorldMatrixABCD;
+attribute vec2 inWorldMatrixXY;
+attribute vec4 inViewMatrixABCD;
+attribute vec2 inViewMatrixXY;
 attribute vec3 inPositionAndIndex;
 
 varying vec2 outTexCoord;
@@ -20,12 +25,21 @@ varying float outTexId;
 varying float outTintEffect;
 varying vec4 outTint;
 
+mat4 assembleMatrix4 (vec4 abcd, vec2 xy)
+{
+    return mat4(abcd.xy, 0, 0, abcd.zw, 0, 0, 0, 0, 1, 0, xy.xy, 0, 1);
+}
+
 void main ()
 {
     vec2 position = inPositionAndIndex.xy;
     float index = inPositionAndIndex.z;
 
-    gl_Position = uProjectionMatrix * inMatrix * vec4(position, 1.0, 1.0);
+    mat4 objectMatrix = assembleMatrix4(inObjectMatrixABCD, inObjectMatrixXY);
+    mat4 worldMatrix = assembleMatrix4(inWorldMatrixABCD, inWorldMatrixXY);
+    mat4 viewMatrix = assembleMatrix4(inViewMatrixABCD, inViewMatrixXY);
+
+    gl_Position = uProjectionMatrix * viewMatrix * worldMatrix * objectMatrix * vec4(position, 1.0, 1.0);
 
     if (uRoundPixels == 1)
     {

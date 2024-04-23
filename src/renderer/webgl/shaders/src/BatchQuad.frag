@@ -1,4 +1,4 @@
-#define SHADER_NAME PHASER_MULTI_FS
+#define SHADER_NAME PHASER_BATCH_QUAD_FS
 
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;

@@ -44,16 +44,18 @@ var ImageQuadrangulateBatch = new Class({
         var tintBL = Utils.getTintAppendFloatAlpha(gameObject.tintBottomLeft, camera.alpha * gameObject._alphaBL);
         var tintBR = Utils.getTintAppendFloatAlpha(gameObject.tintBottomRight, camera.alpha * gameObject._alphaBR);
 
-        // Render with matrix
+        // Render with separate matrices.
 
-        var matrix = this.manager.nodes.GetQuadTransform.run(gameObject, camera, parentMatrix);
+        var matrices = this.manager.nodes.GetSBRQuadMatrices.run(gameObject, camera, parentMatrix);
 
         this.manager.nodes.BatchTexturedTintedRawQuads.batch(
             drawingContext,
             camera,
             frame,
             gameObject.tintFill,
-            matrix.matrix,
+            matrices.objectMatrix,
+            matrices.worldMatrix,
+            matrices.camMatrix,
 
             // Texture coordinates in X, Y, Width, Height:
             u0, v0, u1 - u0, v1 - v0,
@@ -61,26 +63,6 @@ var ImageQuadrangulateBatch = new Class({
             // Tint colors in TRIANGLE_STRIP order:
             tintTL, tintTR, tintBL, tintBR
         );
-
-        // // Render with separate matrices.
-
-        // var matrices = this.manager.nodes.GetSBRQuadMatrices.run(gameObject, camera, parentMatrix);
-
-        // this.manager.nodes.BatchTexturedTintedRawQuads.batch(
-        //     drawingContext,
-        //     camera,
-        //     frame,
-        //     gameObject.tintFill,
-        //     matrices.objectMatrix,
-        //     matrices.worldMatrix,
-        //     matrices.camMatrix,
-
-        //     // Texture coordinates in X, Y, Width, Height:
-        //     u0, v0, u1 - u0, v1 - v0,
-
-        //     // Tint colors in TRIANGLE_STRIP order:
-        //     tintTL, tintTR, tintBL, tintBR
-        // );
 
         return;
     }

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@phaser.io>
- * @copyright    2013-2024 Phaser Studio Inc.
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2013-2023 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,6 +11,8 @@
 module.exports = {
 
     AddBlendFrag: require('./AddBlend-frag.js'),
+    BatchQuadFrag: require('./BatchQuad-frag.js'),
+    BatchQuadVert: require('./BatchQuad-vert.js'),
     BitmapMaskFrag: require('./BitmapMask-frag.js'),
     BitmapMaskVert: require('./BitmapMask-vert.js'),
     ColorMatrixFrag: require('./ColorMatrix-frag.js'),
