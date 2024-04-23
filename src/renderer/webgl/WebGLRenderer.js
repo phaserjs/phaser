@@ -15,6 +15,7 @@ var Events = require('../events');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var Matrix4 = require('../../math/Matrix4');
 var NOOP = require('../../utils/NOOP');
+var DrawingContext = require('./DrawingContext');
 var PipelineManager = require('./PipelineManager');
 var RenderTarget = require('./RenderTarget');
 var ScaleEvents = require('../../scale/events');
@@ -311,6 +312,24 @@ var WebGLRenderer = new Class({
          * @since 3.50.0
          */
         this.fboStack = [];
+
+        /**
+         * The DrawingContext used for the base canvas.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#baseDrawingContext
+         * @type {Phaser.Renderer.WebGL.DrawingContext}
+         * @since 3.90.0
+         */
+        this.baseDrawingContext = null;
+
+        /**
+         * DrawingContexts which can be requested by GameObjects.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#spareDrawingContexts
+         * @type {Phaser.Renderer.WebGL.DrawingContext[]}
+         * @since 3.90.0
+         */
+        this.spareDrawingContexts = [];
 
         /**
          * Current WebGLProgram in use.
@@ -1016,11 +1035,29 @@ var WebGLRenderer = new Class({
 
         pipelineManager.boot(config.pipeline, config.defaultPipeline, config.autoMobilePipeline);
 
+        // Set up render steps.
+        this.renderNodes = new RenderNodeManager(this);
+
         //  Set-up default textures, fbo and scissor
 
         this.blankTexture = game.textures.getFrame('__DEFAULT').glTexture;
         this.normalTexture = game.textures.getFrame('__NORMAL').glTexture;
         this.whiteTexture = game.textures.getFrame('__WHITE').glTexture;
+
+        // Set up drawing contexts.
+        this.baseDrawingContext = new DrawingContext(this,
+            {
+                autoClear: true,
+                autoResize: true,
+                useCanvas: true,
+                clearColor: [
+                    this.config.backgroundColor.redGL,
+                    this.config.backgroundColor.greenGL,
+                    this.config.backgroundColor.blueGL,
+                    this.config.backgroundColor.alphaGL
+                ]
+            }
+        );
 
         var gl = this.gl;
 
@@ -2191,6 +2228,45 @@ var WebGLRenderer = new Class({
         this.glFramebufferWrappers.push(framebuffer);
 
         return framebuffer;
+    },
+
+    /**
+     * Get an unused DrawingContext to render to.
+     *
+     * If all DrawingContexts are in use, a new one is created.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#getSpareDrawingContext
+     * @since 3.90.0
+     * @return {Phaser.Renderer.WebGL.DrawingContext} The DrawingContext.
+     */
+    getSpareDrawingContext: function ()
+    {
+        var spareDrawingContext;
+
+        for (var i = 0; i < this.spareDrawingContexts.length; i++)
+        {
+            var drawingContext = this.spareDrawingContexts[i];
+            if (!DrawingContext.inUse)
+            {
+                spareDrawingContext = drawingContext;
+                break;
+            }
+        }
+
+        if (!spareDrawingContext)
+        {
+            // Create a new DrawingContext.
+            spareDrawingContext = new DrawingContext(
+                this,
+                {
+                    autoClear: true,
+                    autoResize: true
+                }
+            );
+            this.spareDrawingContexts.push(spareDrawingContext);
+        }
+
+        return spareDrawingContext;
     },
 
     /**
