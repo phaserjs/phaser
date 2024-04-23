@@ -28,6 +28,7 @@ var WebGLShaderSetterWrapper = require('./wrappers/WebGLShaderSetterWrapper');
 var WebGLTextureWrapper = require('./wrappers/WebGLTextureWrapper');
 var WebGLTextureUnitsWrapper = require('./wrappers/WebGLTextureUnitsWrapper');
 var WebGLFramebufferWrapper = require('./wrappers/WebGLFramebufferWrapper');
+var WebGLVAOWrapper = require('./wrappers/WebGLVAOWrapper');
 var WebGLAttribLocationWrapper = require('./wrappers/WebGLAttribLocationWrapper');
 var WebGLUniformLocationWrapper = require('./wrappers/WebGLUniformLocationWrapper');
 var WebGLBlendParametersFactory = require('./parameters/WebGLBlendParametersFactory');
@@ -282,6 +283,15 @@ var WebGLRenderer = new Class({
          * @since 3.80.0
          */
         this.glUniformLocationWrappers = [];
+
+        /**
+         * A list of all WebGLVAOWrappers that have been created by this renderer.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#glVAOWrappers
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper[]}
+         * @since 3.90.0
+         */
+        this.glVAOWrappers = [];
 
         /**
          * The currently bound framebuffer in use.
@@ -2336,6 +2346,22 @@ var WebGLRenderer = new Class({
         var indexBuffer = new WebGLBufferWrapper(this, initialDataOrSize, gl.ELEMENT_ARRAY_BUFFER, bufferUsage);
         this.glBufferWrappers.push(indexBuffer);
         return indexBuffer;
+    },
+
+    /**
+     * Wrapper for creating a vertex array object.
+     * This manages a vertex attribute binding state.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#createVAO
+     * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} indexBuffer - The index buffer.
+     * @param {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout[]} attributeBufferLayouts - The attribute buffer layouts.
+     */
+    createVAO: function (indexBuffer, attributeBufferLayouts)
+    {
+        var vao = new WebGLVAOWrapper(this, indexBuffer, attributeBufferLayouts);
+        this.glVAOWrappers.push(vao);
+        return vao;
     },
 
     /**

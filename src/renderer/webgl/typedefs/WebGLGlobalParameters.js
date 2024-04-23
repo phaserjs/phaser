@@ -32,5 +32,7 @@
  * @property {GLboolean} [texturing.flipY] Should the texture be flipped on the Y axis?
  * @property {GLboolean} [texturing.premultiplyAlpha] Should the texture be pre-multiplied alpha?
  *
+ * @property {Phaser.Types.Renderer.WebGL.Wrappers.WebGLVAOWrapper} [vao] Vertex Array Object to bind. This controls the vertex attribute state.
+ *
  * @property {Int32Array[4]} [viewport] The viewport to set.
  */

@@ -1,0 +1,29 @@
+/**
+ * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
+ * @copyright    2013-2024 Phaser Studio Inc.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @typedef {object} Phaser.Types.Renderer.WebGL.WebGLAttributeLayout
+ * @since 3.90.0
+ *
+ * @property {string} name - The name of the attribute, as defined in the shader.
+ * @property {Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper} location - The location of the attribute.
+ * @property {number} size - The number of components per vertex attribute.
+ * @property {GLenum} type - The data type of each component in the array. This can differ from the type in the shader, so long as WebGL can convert the types.
+ * @property {boolean} normalized - Whether integer data values should be normalized when being cast to a float.
+ * @property {number} offset - The byte offset from the beginning of the buffer.
+ * @property {number} [bytes=4] - The number of bytes per vertex attribute. This is the size of the type, usually 4 bytes for FLOAT or INT.
+ * @property {number} [columns=1] - The number of columns in the attribute data. Represent matrices as column vectors and increase columns to match the matrix size.
+ */
+
+/**
+ * @typedef {object} Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout
+ * @since 3.90.0
+ *
+ * @property {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} buffer - The buffer containing the attribute data.
+ * @property {number} stride - The stride of the attribute data.
+ * @property {number} instanceDivisor - The instance divisor of the attribute data. This is how many vertex instances to draw before moving to the next one.
+ * @property {Phaser.Types.Renderer.WebGL.WebGLAttributeLayout} layout - The layout of the attribute data.
+ */

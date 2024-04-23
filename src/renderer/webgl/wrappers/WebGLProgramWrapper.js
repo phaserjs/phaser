@@ -238,7 +238,6 @@ var WebGLProgramWrapper = new Class({
                 size: attribute.size,
                 type: attribute.type
             };
-            gl.enableVertexAttribArray(location);
         }
 
         // Send the old uniforms to the request map,
@@ -295,74 +294,68 @@ var WebGLProgramWrapper = new Class({
     },
 
     /**
-     * Set the vertex buffer for this program.
+     * Complete the layout of the provided attribute buffer layouts.
+     * This will fill in the strides, locations, byte counts, and offsets.
+     * This mutates the layouts.
      *
-     * This will connect the attributes to the buffer.
-     * Only one buffer can be connected at a time.
+     * The order of attributes within each layout forms the order of the buffer.
      *
-     * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#setVertexBuffer
+     * This is necessary to connect the attributes to the buffer.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#completeLayout
      * @since 3.90.0
-     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} buffer - The buffer to connect to the attributes.
-     * @param {{ name: string, normalized: boolean, padding?: number }[]} layout - The layout of the buffer. The order of the entries dictates how offsets are calculated within the buffer. Define `padding` to add extra bytes between attributes.
+     * @param {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout[]} attributeBufferLayouts - The layouts to complete.
      */
-    setVertexBuffer: function (buffer, layout)
+    completeLayouts: function (attributeBufferLayouts)
     {
-        var renderer = this.renderer;
-        var gl = renderer.gl;
-        var attributes = this.glAttributes;
+        var glAttributes = this.glAttributes;
+        var glAttributeNames = this.glAttributeNames;
+        var constants = this.renderer.shaderSetters.constants;
 
-        if (this.glAttributeBuffer === buffer)
+        for (var i = 0; i < attributeBufferLayouts.length; i++)
         {
-            return;
-        }
+            var attributeBufferLayout = attributeBufferLayouts[i];
+            var layout = attributeBufferLayout.layout;
 
-        this.glAttributeBuffer = buffer;
+            var offset = 0;
 
-        renderer.glWrapper.updateBindingsArrayBuffer({
-            bindings: { arrayBuffer: buffer }
-        });
-
-        var attributeProperties = [];
-
-        var offset = 0;
-        for (var i = 0; i < layout.length; i++)
-        {
-            var entry = layout[i];
-            var attributeIndex = this.glAttributeNames.get(entry.name);
-            if (attributeIndex === undefined)
+            for (var j = 0; j < layout.length; j++)
             {
-                throw new Error('Attribute not found: ' + entry.name);
+                var attribute = layout[j];
+                var size = attribute.size;
+                var columns = attribute.columns || 1;
+
+                // First, append the current offset.
+                attribute.offset = offset;
+    
+                var typeData = constants[attribute.type];
+                var baseSize = typeData.size;
+                var baseBytes = typeData.bytes;
+    
+                // Append the bytes per attribute element.
+                attribute.bytes = baseBytes;
+
+                offset += size * columns * baseBytes * baseSize;
+
+                // Assign attribute location.
+                var attributeIndex = glAttributeNames.get(attribute.name);
+                if (attributeIndex === undefined)
+                {
+                    throw new Error('Attribute not found: ' + attribute.name);
+                }
+                var attributeInfo = glAttributes[attributeIndex];
+                attribute.location = attributeInfo.location;
             }
 
-            var attributeInfo = attributes[attributeIndex];
-            var setter = renderer.shaderSetters.constants[attributeInfo.type];
-            var terms = attributeInfo.size * setter.size;
-            var attributeSize = terms * setter.bytes;
-
-            attributeProperties.push({
-                location: attributeInfo.location,
-                terms: terms,
-                baseType: setter.baseType,
-                normalized: entry.normalized,
-                offset: offset
-            });
-
-            offset += attributeSize + (entry.padding || 0);
-        }
-
-        var stride = offset;
-
-        for (i = 0; i < attributeProperties.length; i++)
-        {
-            var property = attributeProperties[i];
-            gl.vertexAttribPointer(property.location, property.terms, property.baseType, property.normalized, stride, property.offset);
+            // Now that we know the total stride, we can set it.
+            attributeBufferLayout.stride = offset;
         }
     },
 
     /**
      * Set this program as the active program in the WebGL context.
      *
-     * This will also update the attribute and uniform state.
+     * This will also update the uniform state.
      *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#bind
      * @since 3.90.0

@@ -45,6 +45,7 @@ var WebGLGlobalParametersFactory = {
                 flipY: false,
                 premultiplyAlpha: false
             },
+            vao: null,
             viewport: [ 0, 0, 0, 0 ]
         };
 

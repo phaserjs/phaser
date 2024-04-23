@@ -107,6 +107,10 @@ var WebGLGlobalWrapper = new Class({
         {
             this.updateTexturing(state, force);
         }
+        if (state.vao !== undefined)
+        {
+            this.updateVAO(state, force);
+        }
         if (state.viewport !== undefined)
         {
             this.updateViewport(state, force);
@@ -857,6 +861,39 @@ var WebGLGlobalWrapper = new Class({
         {
             var gl = this.renderer.gl;
             gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, premultiplyAlpha);
+        }
+    },
+
+    /**
+     * Updates the vertex array object state.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateVAO
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
+     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
+     */
+    updateVAO: function (state, force)
+    {
+        var vao = state.vao;
+
+        var different = vao !== this.state.vao;
+
+        if (different)
+        {
+            this.state.vao = vao;
+        }
+        if (different || force)
+        {
+            var extVAO = this.renderer.vaoExtension;
+
+            if (vao)
+            {
+                extVAO.bindVertexArrayOES(vao.vertexArrayObject);
+            }
+            else
+            {
+                extVAO.bindVertexArrayOES(null);
+            }
         }
     },
 

@@ -16,7 +16,8 @@ var Wrappers = {
     WebGLTextureWrapper: require('./WebGLTextureWrapper'),
     WebGLTextureUnitsWrapper: require('./WebGLTextureUnitsWrapper'),
     WebGLFramebufferWrapper: require('./WebGLFramebufferWrapper'),
-    WebGLUniformLocationWrapper: require('./WebGLUniformLocationWrapper')
+    WebGLUniformLocationWrapper: require('./WebGLUniformLocationWrapper'),
+    WebGLVAOWrapper: require('./WebGLVAOWrapper')
 };
 
 module.exports = Wrappers;
