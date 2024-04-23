@@ -62,7 +62,7 @@ var BatchTexturedTintedRawQuads = new Class({
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper}
          * @since 3.90.0
          */
-        this.program = new WebGLProgramWrapper(renderer, ShaderSourceVS, ParsedShaderSourceFS);
+        this.program = renderer.createProgram(ShaderSourceVS, ParsedShaderSourceFS);
 
         var quadLayout = {
             buffer: null,
@@ -249,7 +249,7 @@ var BatchTexturedTintedRawQuads = new Class({
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @since 3.90.0
          */
-        this.quadBuffer = renderer.createVertexBuffer(this.quadsPerBatch * this._quadViewF32.length * Float32Array.BYTES_PER_ELEMENT, gl.DYNAMIC_DRAW);
+        this.quadBuffer = renderer.createVertexBuffer(this._quadViewF32.length * Float32Array.BYTES_PER_ELEMENT, gl.DYNAMIC_DRAW);
 
         // Assign buffers to layout.
         this.attributeBufferLayouts[0].buffer = this.quadBuffer;
