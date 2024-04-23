@@ -2078,7 +2078,7 @@ var WebGLRenderer = new Class({
         {
             this.flush();
 
-            this.gl.useProgram(program.webGLProgram);
+            program.bind();
 
             this.currentProgram = program;
 
@@ -2099,7 +2099,7 @@ var WebGLRenderer = new Class({
      */
     resetProgram: function ()
     {
-        this.gl.useProgram(this.currentProgram.webGLProgramWrapper);
+        this.currentProgram.bind();
 
         return this;
     },
@@ -2358,7 +2358,7 @@ var WebGLRenderer = new Class({
      */
     createProgram: function (vertexShader, fragmentShader)
     {
-        var wrapper = new WebGLProgramWrapper(this.gl, vertexShader, fragmentShader);
+        var wrapper = new WebGLProgramWrapper(this, vertexShader, fragmentShader);
         this.glProgramWrappers.push(wrapper);
         return wrapper;
     },
@@ -2390,6 +2390,7 @@ var WebGLRenderer = new Class({
      *
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The WebGLProgramWrapper instance.
      * @param {string} name - The name of the attribute.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper} The wrapped attribute location.
      */
     createAttribLocation: function (program, name)
     {
@@ -2406,6 +2407,7 @@ var WebGLRenderer = new Class({
      *
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The WebGLProgramWrapper instance.
      * @param {string} name - The name of the uniform.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper} The wrapped uniform location.
      */
     createUniformLocation: function (program, name)
     {
