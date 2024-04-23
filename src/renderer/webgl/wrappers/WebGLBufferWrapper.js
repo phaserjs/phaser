@@ -143,6 +143,28 @@ var WebGLBufferWrapper = new Class({
     },
 
     /**
+     * Updates the data in this WebGLBufferWrapper.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#update
+     * @since 3.90.0
+     * @param {ArrayBuffer} data - The new data to update the buffer with.
+     * @param {number} [offset=0] - The offset into the buffer to start updating data at.
+     */
+    update: function (data, offset)
+    {
+        var gl = this.renderer.gl;
+
+        this.bind();
+
+        if (offset === undefined)
+        {
+            offset = 0;
+        }
+
+        gl.bufferSubData(this.bufferType, offset, data);
+    },
+
+    /**
      * Remove this WebGLBufferWrapper from the GL context.
      *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#destroy

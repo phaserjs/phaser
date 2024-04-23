@@ -34,6 +34,7 @@ var WebGLAttribLocationWrapper = require('./wrappers/WebGLAttribLocationWrapper'
 var WebGLUniformLocationWrapper = require('./wrappers/WebGLUniformLocationWrapper');
 var WebGLBlendParametersFactory = require('./parameters/WebGLBlendParametersFactory');
 var WebGLGlobalParametersFactory = require('./parameters/WebGLGlobalParametersFactory');
+var RenderNodeManager = require('./renderNodes/RenderNodeManager');
 
 var DEBUG = false;
 
@@ -146,6 +147,16 @@ var WebGLRenderer = new Class({
          * @since 3.50.0
          */
         this.pipelines = null;
+
+        /**
+         * An instance of the RenderNodeManager class which handles all
+         * RenderNodes used by the WebGLRenderer.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#renderNodes
+         * @type {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager}
+         * @since 3.90.0
+         */
+        this.renderNodes = null;
 
         /**
          * The width of the canvas being rendered to.
@@ -2690,6 +2701,22 @@ var WebGLRenderer = new Class({
 
         var gl = this.gl;
 
+        this.baseDrawingContext.use();
+
+        // Sync the background color to the DrawingContext.
+        var backgroundColor = this.config.backgroundColor;
+        this.baseDrawingContext.setClearColor(
+            backgroundColor.redGL,
+            backgroundColor.greenGL,
+            backgroundColor.blueGL,
+            backgroundColor.alphaGL
+        );
+
+        this.emit(Events.PRE_RENDER);
+
+        return;
+        // OLD CODE:
+
         //  Make sure we are bound to the main frame buffer
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
@@ -2739,6 +2766,15 @@ var WebGLRenderer = new Class({
     render: function (scene, children, camera)
     {
         if (this.contextLost) { return; }
+
+        this.emit(Events.RENDER, scene, camera);
+
+        this.renderNodes.nodes.Camera.run(this.baseDrawingContext, children, camera);
+
+        // TODO: Debug batches
+
+        return;
+        // OLD CODE:
 
         var childCount = children.length;
 
@@ -2836,6 +2872,15 @@ var WebGLRenderer = new Class({
     {
         if (this.contextLost) { return; }
 
+        this.baseDrawingContext.release();
+
+        this.emit(Events.POST_RENDER);
+
+        return;
+
+        // Old Code:
+        if (this.contextLost) { return; }
+
         this.flush();
 
         this.emit(Events.POST_RENDER);
@@ -2848,6 +2893,39 @@ var WebGLRenderer = new Class({
 
             state.callback = null;
         }
+    },
+
+    draw: function (drawingContext, program, vao, indexStart, instanceVertices, instanceCount)
+    {
+        var gl = this.gl;
+
+        drawingContext.beginDraw();
+
+        program.bind();
+
+        vao.bind();
+
+        if (vao.indexBuffer)
+        {
+            this.instancedArraysExtension.drawElementsInstancedANGLE(
+                gl.TRIANGLE_STRIP,
+                instanceVertices,
+                gl.UNSIGNED_SHORT,
+                indexStart,
+                instanceCount
+            );
+        }
+        else
+        {
+            this.instancedArraysExtension.drawArraysInstancedANGLE(
+                gl.TRIANGLE_STRIP,
+                indexStart,
+                instanceVertices,
+                instanceCount
+            );
+        }
+
+        drawingContext.markFramebufferAttachmentContents();
     },
 
     /**
