@@ -316,20 +316,25 @@ var BatchTexturedTintedRawQuads = new Class({
     {
         this.manager.setCurrentBatchNode(this, currentContext, camera);
 
-        var quadOffset32 = this.instanceCount * this.quadBufferLayout.layout.stride / 4;
-        var quadViewF32 = this.quadBufferLayout.viewFloat32;
-        var quadViewU32 = this.quadBufferLayout.viewUint32;
-
-        // TODO: Simplify matrix handling.
-
         // Texture
         var glTexture = frame.glTexture;
         var textureIndex = this.batchTextures.indexOf(glTexture);
         if (textureIndex === -1)
         {
+            if (this.batchTextures.length === this.renderer.maxTextures)
+            {
+                // Flush the batch if the texture limit is reached.
+                this.run(currentContext, camera);
+            }
             textureIndex = this.batchTextures.length;
             this.batchTextures.push(glTexture);
         }
+
+        var quadOffset32 = this.instanceCount * this.quadBufferLayout.layout.stride / 4;
+        var quadViewF32 = this.quadBufferLayout.viewFloat32;
+        var quadViewU32 = this.quadBufferLayout.viewUint32;
+
+        // TODO: Simplify matrix handling.
 
         // Quad
         quadViewF32[quadOffset32 + 0] = textureIndex;
@@ -352,7 +357,6 @@ var BatchTexturedTintedRawQuads = new Class({
         // Check whether the batch should be rendered immediately.
         // This guarantees that none of the arrays are full above.
         if (
-            (this.batchTextures.length === this.renderer.maxTextures) ||
             (this.instanceCount === this.quadsPerBatch)
         )
         {
