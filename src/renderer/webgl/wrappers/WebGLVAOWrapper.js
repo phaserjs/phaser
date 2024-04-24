@@ -20,7 +20,7 @@ var Class = require('../../../utils/Class');
  * @since 3.90.0
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance that owns this wrapper.
  * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [indexBuffer] - The index buffer used in this VAO, if any.
- * @param {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout[]} attributeBufferLayouts - The vertex buffers containing attribute data for this VAO, alongside the relevant attribute layout.
+ * @param {Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper[]} attributeBufferLayouts - The vertex buffers containing attribute data for this VAO, alongside the relevant attribute layout.
  */
 var WebGLVAOWrapper = new Class({
     initialize: function WebGLVAOWrapper (renderer, indexBuffer, attributeBufferLayouts)
@@ -63,7 +63,7 @@ var WebGLVAOWrapper = new Class({
          * alongside the relevant attribute layout.
          *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper#attributeBufferLayouts
-         * @type {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout[]}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper[]}
          * @since 3.90.0
          */
         this.attributeBufferLayouts = attributeBufferLayouts;
@@ -106,14 +106,13 @@ var WebGLVAOWrapper = new Class({
             var attributeBufferLayout = this.attributeBufferLayouts[i];
 
             attributeBufferLayout.buffer.bind();
-            var instanceDivisor = attributeBufferLayout.instanceDivisor || 0;
+            var instanceDivisor = attributeBufferLayout.layout.instanceDivisor || 0;
 
-            for (var j = 0; j < attributeBufferLayout.layout.length; j++)
+            for (var j = 0; j < attributeBufferLayout.layout.layout.length; j++)
             {
-                var layout = attributeBufferLayout.layout[j];
+                var layout = attributeBufferLayout.layout.layout[j];
 
                 var location = layout.location;
-
 
                 var bytes = layout.bytes || 4;
                 var columns = layout.columns || 1;
@@ -128,51 +127,13 @@ var WebGLVAOWrapper = new Class({
                         layout.size,
                         layout.type,
                         layout.normalized,
-                        attributeBufferLayout.stride,
+                        attributeBufferLayout.layout.stride,
                         layout.offset + bytes * column * size
                     );
 
                     if (instanceDivisor > 0)
                     {
                         extInstances.vertexAttribDivisorANGLE(location + column, instanceDivisor);
-                    }
-                }
-
-                // WebGL breaks matrix attributes into parts.
-                // Most attributes just have one part.
-                // A matrix attribute is secretly split into multiple vectors,
-                // which we need to enable individually.
-                var parts = 1;
-                switch (layout.type)
-                {
-                    case gl.FLOAT_MAT4:
-                        parts = 4;
-                        break;
-                    case gl.FLOAT_MAT3:
-                        parts = 3;
-                        break;
-                    case gl.FLOAT_MAT2:
-                        parts = 2;
-                        break;
-                }
-
-                for (var part = 0; part < parts; part++)
-                {
-                    var partSize = layout.size / parts;
-                    gl.enableVertexAttribArray(location + part);
-
-                    gl.vertexAttribPointer(
-                        location + part,
-                        partSize,
-                        layout.type,
-                        layout.normalized,
-                        attributeBufferLayout.stride,
-                        layout.offset + partSize * part
-                    );
-
-                    if (instanceDivisor > 0)
-                    {
-                        extInstances.vertexAttribDivisorANGLE(location + part, instanceDivisor);
                     }
                 }
             }

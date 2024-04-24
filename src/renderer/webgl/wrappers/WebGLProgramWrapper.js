@@ -294,62 +294,57 @@ var WebGLProgramWrapper = new Class({
     },
 
     /**
-     * Complete the layout of the provided attribute buffer layouts.
-     * This will fill in the strides, locations, byte counts, and offsets.
-     * This mutates the layouts.
+     * Complete the layout of the provided attribute buffer layout.
+     * This will fill in the stride, locations, byte counts, and offsets.
+     * This mutates the layout.
      *
-     * The order of attributes within each layout forms the order of the buffer.
+     * The order of attributes within the layout forms the order of the buffer.
      *
      * This is necessary to connect the attributes to the buffer.
      *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#completeLayout
      * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout[]} attributeBufferLayouts - The layouts to complete.
+     * @param {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout} attributeBufferLayout - The layout to complete.
      */
-    completeLayouts: function (attributeBufferLayouts)
+    completeLayout: function (attributeBufferLayout)
     {
+        var layout = attributeBufferLayout.layout;
         var glAttributes = this.glAttributes;
         var glAttributeNames = this.glAttributeNames;
         var constants = this.renderer.shaderSetters.constants;
 
-        for (var i = 0; i < attributeBufferLayouts.length; i++)
+        var offset = 0;
+
+        for (var i = 0; i < layout.length; i++)
         {
-            var attributeBufferLayout = attributeBufferLayouts[i];
-            var layout = attributeBufferLayout.layout;
+            var attribute = layout[i];
+            var size = attribute.size;
+            var columns = attribute.columns || 1;
 
-            var offset = 0;
+            // First, append the current offset.
+            attribute.offset = offset;
 
-            for (var j = 0; j < layout.length; j++)
+            var typeData = constants[attribute.type];
+            var baseSize = typeData.size;
+            var baseBytes = typeData.bytes;
+
+            // Append the bytes per attribute element.
+            attribute.bytes = baseBytes;
+
+            offset += size * columns * baseBytes * baseSize;
+
+            // Assign attribute location.
+            var attributeIndex = glAttributeNames.get(attribute.name);
+            if (attributeIndex === undefined)
             {
-                var attribute = layout[j];
-                var size = attribute.size;
-                var columns = attribute.columns || 1;
-
-                // First, append the current offset.
-                attribute.offset = offset;
-    
-                var typeData = constants[attribute.type];
-                var baseSize = typeData.size;
-                var baseBytes = typeData.bytes;
-    
-                // Append the bytes per attribute element.
-                attribute.bytes = baseBytes;
-
-                offset += size * columns * baseBytes * baseSize;
-
-                // Assign attribute location.
-                var attributeIndex = glAttributeNames.get(attribute.name);
-                if (attributeIndex === undefined)
-                {
-                    throw new Error('Attribute not found: ' + attribute.name);
-                }
-                var attributeInfo = glAttributes[attributeIndex];
-                attribute.location = attributeInfo.location;
+                throw new Error('Attribute not found: ' + attribute.name);
             }
-
-            // Now that we know the total stride, we can set it.
-            attributeBufferLayout.stride = offset;
+            var attributeInfo = glAttributes[attributeIndex];
+            attribute.location = attributeInfo.location;
         }
+
+        // Now that we know the total stride, we can set it.
+        attributeBufferLayout.stride = offset;
     },
 
     /**

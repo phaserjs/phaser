@@ -8,7 +8,7 @@ var Class = require('../../../utils/Class');
 var ShaderSourceFS = require('../shaders/BatchQuad-frag.js');
 var ShaderSourceVS = require('../shaders/BatchQuad-vert.js');
 var Utils = require('../Utils.js');
-var WebGLProgramWrapper = require('../wrappers/WebGLProgramWrapper');
+var WebGLVertexBufferLayoutWrapper = require('../wrappers/WebGLVertexBufferLayoutWrapper.js');
 var Batch = require('./Batch');
 
 /**
@@ -43,6 +43,16 @@ var BatchTexturedTintedRawQuads = new Class({
         this.quadsPerBatch = renderer.config.batchSize;
 
         /**
+         * The number of vertices per instance.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#verticesPerInstance
+         * @type {number}
+         * @since 3.90.0
+         * @default 4
+         */
+        this.verticesPerInstance = 4;
+
+        /**
          * The number of quads currently in the batch.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#instanceCount
@@ -64,9 +74,17 @@ var BatchTexturedTintedRawQuads = new Class({
          */
         this.program = renderer.createProgram(ShaderSourceVS, ParsedShaderSourceFS);
 
-        var quadLayout = {
-            buffer: null,
+        /**
+         * The layout, data, and vertex buffer used to store the quad data.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#quadBufferLayout
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper}
+         * @since 3.90.0
+         */
+        this.quadBufferLayout = new WebGLVertexBufferLayoutWrapper(renderer, this.program, {
             instanceDivisor: 1,
+            usage: gl.DYNAMIC_DRAW,
+            count: this.quadsPerBatch,
             layout: [
                 {
                     name: 'inTexIdAndTintEffect',
@@ -154,10 +172,18 @@ var BatchTexturedTintedRawQuads = new Class({
                     normalized: false
                 }
             ]
-        };
+        });
 
-        var instanceLayout = {
-            buffer: null,
+        /**
+         * The layout, data, and vertex buffer used to store the instance data.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#instanceBufferLayout
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper}
+         * @since 3.90.0
+         */
+        this.instanceBufferLayout = new WebGLVertexBufferLayoutWrapper(renderer, this.program, {
+            usage: gl.STATIC_DRAW,
+            count: this.verticesPerInstance,
             instanceDivisor: 0,
             layout: [
                 {
@@ -168,92 +194,7 @@ var BatchTexturedTintedRawQuads = new Class({
                     normalized: false
                 }
             ]
-        };
-
-        /**
-         * The attribute buffer layouts for the vertex and quad buffers.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#attributeBufferLayouts
-         * @type {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout[]}
-         * @since 3.90.0
-         */
-        this.attributeBufferLayouts = [
-            quadLayout,
-            instanceLayout
-        ];
-
-        // Auto-complete the attribute buffer layouts.
-        this.program.completeLayouts(this.attributeBufferLayouts);
-
-        /**
-         * The buffer used to construct the instance data.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.Single#_instanceConstructionBuffer
-         * @type {ArrayBuffer}
-         * @since 3.90.0
-         */
-        this._instanceConstructionBuffer = new ArrayBuffer(instanceLayout.stride * 4);
-
-        /**
-         * View of the instance construction buffer as a Float32Array.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.Single#_instanceViewF32
-         * @type {Float32Array}
-         * @since 3.90.0
-         */
-        this._instanceViewF32 = new Float32Array(this._instanceConstructionBuffer);
-
-        /**
-         * The instance buffer, a vertex buffer describing a single quad.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#instanceBuffer
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
-         * @since 3.90.0
-         */
-        this.instanceBuffer = renderer.createVertexBuffer(this._instanceConstructionBuffer.byteLength, gl.STATIC_DRAW);
-
-        /**
-         * The buffer used to construct the quad data.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.Single#_quadConstructionBuffer
-         * @type {ArrayBuffer}
-         * @since 3.90.0
-         * @private
-         */
-        this._quadConstructionBuffer = new ArrayBuffer(this.quadsPerBatch * quadLayout.stride);
-
-        /**
-         * View of the quad construction buffer as a Float32Array.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.Single#_quadViewF32
-         * @type {Float32Array}
-         * @since 3.90.0
-         * @private
-         */
-        this._quadViewF32 = new Float32Array(this._quadConstructionBuffer);
-
-        /**
-         * View of the quad construction buffer as a Uint32Array.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.Single#_quadViewU32
-         * @type {Uint32Array}
-         * @since 3.90.0
-         * @private
-         */
-        this._quadViewU32 = new Uint32Array(this._quadConstructionBuffer);
-
-        /**
-         * The quad buffer, a vertex buffer used for quad data via instanced rendering.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#quadBuffer
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
-         * @since 3.90.0
-         */
-        this.quadBuffer = renderer.createVertexBuffer(this._quadConstructionBuffer.byteLength, gl.DYNAMIC_DRAW);
-
-        // Assign buffers to layout.
-        this.attributeBufferLayouts[0].buffer = this.quadBuffer;
-        this.attributeBufferLayouts[1].buffer = this.instanceBuffer;
+        });
 
         /**
          * The Vertex Array Object used to render the batch.
@@ -262,7 +203,10 @@ var BatchTexturedTintedRawQuads = new Class({
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper}
          * @since 3.90.0
          */
-        this.vao = renderer.createVAO(null, this.attributeBufferLayouts);
+        this.vao = renderer.createVAO(null, [
+            this.quadBufferLayout,
+            this.instanceBufferLayout
+        ]);
 
         /**
          * The textures used by the batch.
@@ -274,23 +218,13 @@ var BatchTexturedTintedRawQuads = new Class({
         this.batchTextures = [];
 
         /**
-         * The number of vertices per instance.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#verticesPerInstance
-         * @type {number}
-         * @since 3.90.0
-         * @default 4
-         */
-        this.verticesPerInstance = 4;
-
-        /**
          * The number of floats per quad, used to determine how much of the quad buffer to update.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#floatsPerQuad
          * @type {number}
          * @since 3.90.0
          */
-        this.floatsPerQuad = quadLayout.stride / Float32Array.BYTES_PER_ELEMENT;
+        this.floatsPerQuad = this.quadBufferLayout.layout.stride / Float32Array.BYTES_PER_ELEMENT;
 
         // TODO: Allow uniforms to update, with resize or context loss or drawing context settings.
 
@@ -301,13 +235,13 @@ var BatchTexturedTintedRawQuads = new Class({
         this.program.setUniform('uResolution', [ renderer.width, renderer.height ]);
 
         // Populate the instance buffer with the base quad.
-        this._instanceViewF32.set([
+        this.instanceBufferLayout.viewFloat32.set([
             0, 0, 0,
             0, 1, 1,
             1, 0, 2,
             1, 1, 3
-        ], 0);
-        this.instanceBuffer.update(this._instanceConstructionBuffer);
+        ]);
+        this.instanceBufferLayout.buffer.update(this.instanceBufferLayout.data);
     },
 
     /**
@@ -323,17 +257,18 @@ var BatchTexturedTintedRawQuads = new Class({
         if (this.instanceCount === 0) { return; }
 
         var renderer = this.renderer;
+        var quadBuffer = this.quadBufferLayout.buffer;
 
         // Update vertex buffers.
         if (this.instanceCount < this.quadsPerBatch)
         {
             // We use a subarray to avoid copying the buffer, but still
             // control the length.
-            this.quadBuffer.update(this._quadViewF32.subarray(0, this.instanceCount * this.floatsPerQuad));
+            quadBuffer.update(this.quadBufferLayout.viewFloat32.subarray(0, this.instanceCount * this.floatsPerQuad));
         }
         else
         {
-            this.quadBuffer.update(this._quadConstructionBuffer);
+            quadBuffer.update(this.quadBufferLayout.data);
         }
 
         // Bind textures.
@@ -381,9 +316,9 @@ var BatchTexturedTintedRawQuads = new Class({
     {
         this.manager.setCurrentBatchNode(this, currentContext, camera);
 
-        var quadOffset32 = this.instanceCount * this.attributeBufferLayouts[0].stride / 4;
-        var quadViewF32 = this._quadViewF32;
-        var quadViewU32 = this._quadViewU32;
+        var quadOffset32 = this.instanceCount * this.quadBufferLayout.layout.stride / 4;
+        var quadViewF32 = this.quadBufferLayout.viewFloat32;
+        var quadViewU32 = this.quadBufferLayout.viewUint32;
 
         // TODO: Simplify matrix handling.
 
