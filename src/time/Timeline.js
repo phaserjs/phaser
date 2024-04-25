@@ -134,6 +134,19 @@ var Timeline = new Class({
         this.elapsed = 0;
 
         /**
+         * The Timeline's delta time scale.
+         *
+         * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
+         * A value of 0 freezes time and is effectively equivalent to pausing the Timeline.
+         *
+         * @name Phaser.Time.Timeline#timeScale
+         * @type {number}
+         * @default
+         * @since 3.90.0
+         */
+        this.timeScale = 1;
+
+        /**
          * Whether the Timeline is running (`true`) or active (`false`).
          *
          * When paused, the Timeline will not run any of its actions.
@@ -241,7 +254,7 @@ var Timeline = new Class({
             return;
         }
 
-        this.elapsed += delta;
+        this.elapsed += delta * this.timeScale;
     },
 
     /**
