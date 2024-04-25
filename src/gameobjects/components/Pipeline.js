@@ -205,11 +205,11 @@ var Pipeline = {
      * @webglOnly
      * @since 3.0.0
      *
-     * @return {string} The string-based name of the pipeline being used by this Game Object.
+     * @return {?string} The string-based name of the pipeline being used by this Game Object, or null.
      */
     getPipelineName: function ()
     {
-        return this.pipeline.name;
+        return (this.pipeline === null) ? null : this.pipeline.name;
     }
 
 };
