@@ -61,8 +61,6 @@ var BatchTexturedTintedRawQuads = new Class({
          */
         this.instanceCount = 0;
 
-        // TODO: Shift matrix transforms to the shader.
-
         var ParsedShaderSourceFS = Utils.parseFragmentShaderMaxTextures(ShaderSourceFS, renderer.maxTextures);
 
         /**
@@ -280,6 +278,10 @@ var BatchTexturedTintedRawQuads = new Class({
 
         // Reset batch accumulation.
         this.instanceCount = 0;
+        for (var i = 0; i < this.batchTextures.length; i++)
+        {
+            this.batchTextures[i].batchUnit = -1;
+        }
         this.batchTextures.length = 0;
     },
 
@@ -317,24 +319,38 @@ var BatchTexturedTintedRawQuads = new Class({
         this.manager.setCurrentBatchNode(this, currentContext, camera);
 
         // Texture
-        var glTexture = frame.glTexture;
-        var textureIndex = this.batchTextures.indexOf(glTexture);
+
+        // Check if the texture is already in the batch.
+        // This could be a very expensive operation if we're not careful.
+        // If we just use `batchTextures.indexOf`, a linear search,
+        // we can use up to 20% of a frame budget.
+        // Instead, we cache the texture unit index on the texture itself,
+        // so we can immediately tell whether it's in the batch.
+        // We reset this value when we flush the batch.
+        //
+        // Accessing `frame.source.glTexture` bypasses the `frame.glTexture`
+        // getter method, which is also moderately expensive.
+
+        var glTexture = frame.source.glTexture;
+        var textureIndex = glTexture.batchUnit;
         if (textureIndex === -1)
         {
-            if (this.batchTextures.length === this.renderer.maxTextures)
+            var batchTextures = this.batchTextures;
+            var nextTextureUnit = batchTextures.length;
+            if (nextTextureUnit === this.renderer.maxTextures)
             {
                 // Flush the batch if the texture limit is reached.
                 this.run(currentContext, camera);
+                nextTextureUnit = 0;
             }
-            textureIndex = this.batchTextures.length;
-            this.batchTextures.push(glTexture);
+            textureIndex = nextTextureUnit;
+            glTexture.batchUnit = textureIndex;
+            batchTextures.push(glTexture);
         }
 
-        var quadOffset32 = this.instanceCount * this.quadBufferLayout.layout.stride / 4;
+        var quadOffset32 = this.instanceCount * this.floatsPerQuad;
         var quadViewF32 = this.quadBufferLayout.viewFloat32;
         var quadViewU32 = this.quadBufferLayout.viewUint32;
-
-        // TODO: Simplify matrix handling.
 
         // Quad
         quadViewF32[quadOffset32 + 0] = textureIndex;

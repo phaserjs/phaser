@@ -196,6 +196,20 @@ var WebGLTextureWrapper = new Class({
         // eslint-disable-next-line camelcase
         this.__SPECTOR_Metadata = {};
 
+        /**
+         * The texture unit this texture will be bound to in the current
+         * rendering batch.
+         *
+         * This should be set by the batcher. It is a quick way to tell whether
+         * this texture has been included in the batch. If it is -1, it has not.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#batchUnit
+         * @type {number}
+         * @since 3.90.0
+         * @default -1
+         */
+        this.batchUnit = -1;
+
         this.createResource();
     },
 
