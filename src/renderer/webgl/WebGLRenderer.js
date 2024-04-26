@@ -2895,7 +2895,27 @@ var WebGLRenderer = new Class({
         }
     },
 
-    draw: function (drawingContext, program, vao, indexStart, instanceVertices, instanceCount)
+    /**
+     * Draw a number of instances to a drawing context.
+     *
+     * This is the primary render method. It requires all the WebGL resources
+     * necessary to render the instances, so they don't have to be set up
+     * ad-hoc elsewhere.
+     *
+     * It does not upload vertex data to buffers. Ensure that this is done
+     * before calling this method.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#drawInstances
+     * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The DrawingContext to draw to.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]} textures - An array of textures to bind. Textures are bound to units corresponding to their indices in the array.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The shader program to use.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper} vao - The Vertex Array Object to bind.
+     * @param {number} indexStart - The index to start drawing from.
+     * @param {number} instanceVertices - The number of vertices per instance.
+     * @param {number} instanceCount - The number of instances to draw.
+     */
+    drawInstances: function (drawingContext, textures, program, vao, indexStart, instanceVertices, instanceCount)
     {
         var gl = this.gl;
 
@@ -2904,6 +2924,8 @@ var WebGLRenderer = new Class({
         program.bind();
 
         vao.bind();
+
+        this.glTextureUnits.bindUnits(textures);
 
         if (vao.indexBuffer)
         {

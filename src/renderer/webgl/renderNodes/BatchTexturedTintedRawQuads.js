@@ -269,12 +269,9 @@ var BatchTexturedTintedRawQuads = new Class({
             quadBuffer.update(this.quadBufferLayout.data);
         }
 
-        // Bind textures.
-        renderer.glTextureUnits.bindUnits(this.batchTextures);
-
         this.program.setUniform('uRoundPixels', camera.roundPixels);
 
-        renderer.draw(drawingContext, this.program, this.vao, 0, this.verticesPerInstance, this.instanceCount);
+        renderer.drawInstances(drawingContext, this.batchTextures, this.program, this.vao, 0, this.verticesPerInstance, this.instanceCount);
 
         // Reset batch accumulation.
         this.instanceCount = 0;
