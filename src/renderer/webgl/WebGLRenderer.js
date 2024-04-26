@@ -2702,15 +2702,24 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
 
         // Sync the background color to the DrawingContext.
-        var backgroundColor = this.config.backgroundColor;
-        this.baseDrawingContext.setClearColor(
-            backgroundColor.redGL,
-            backgroundColor.greenGL,
-            backgroundColor.blueGL,
-            backgroundColor.alphaGL
-        );
+        var baseDrawingContext = this.baseDrawingContext;
+        if (this.config.clearBeforeRender)
+        {
+            var backgroundColor = this.config.backgroundColor;
+            baseDrawingContext.setClearColor(
+                backgroundColor.redGL,
+                backgroundColor.greenGL,
+                backgroundColor.blueGL,
+                backgroundColor.alphaGL
+            );
+            baseDrawingContext.setAutoClear(true, true, true);
+        }
+        else
+        {
+            baseDrawingContext.setAutoClear(false, false, false);
+        }
 
-        this.baseDrawingContext.use();
+        baseDrawingContext.use();
 
         this.emit(Events.PRE_RENDER);
 
