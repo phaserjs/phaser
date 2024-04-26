@@ -184,47 +184,6 @@ var WebGLFramebufferWrapper = new Class({
          */
         this.renderTexture = this.attachments[0] || null;
 
-        /**
-         * How many DrawingContexts are drawing to this framebuffer.
-         * This is used to avoid unnecessary `gl.clear()` calls.
-         *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#drawingContextUsers
-         * @type {number}
-         * @default 0
-         * @since 3.90.0
-         */
-        this.drawingContextUsers = 0;
-
-        /**
-         * Which framebuffer attachments have contents.
-         * It should be set when the framebuffer is drawn to, or cleared.
-         * This is used to avoid unnecessary `gl.clear()` calls.
-         * The value is a bitmask of the following values:
-         *
-         * - gl.COLOR_BUFFER_BIT
-         * - gl.DEPTH_BUFFER_BIT
-         * - gl.STENCIL_BUFFER_BIT
-         *
-         * If the value is 0, no attachments have contents.
-         *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#attachmentContents
-         * @type {number}
-         * @default 0
-         * @since 3.90.0
-         */
-        this.attachmentContents = 0;
-
-        /**
-         * Which framebuffer attachments are intended to be cleared.
-         * This is used to avoid unnecessary `gl.clear()` calls.
-         *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#attachmentClearIntended
-         * @type {number}
-         * @default 0
-         * @since 3.90.0
-         */
-        this.attachmentClearIntended = 0;
-
         this.createResource();
     },
 
@@ -239,9 +198,6 @@ var WebGLFramebufferWrapper = new Class({
      */
     createResource: function ()
     {
-        this.attachmentContents = 0;
-        this.attachmentClearIntended = 0;
-
         if (this.useCanvas) { return; }
 
         var renderer = this.renderer;
@@ -348,7 +304,6 @@ var WebGLFramebufferWrapper = new Class({
             }
         });
 
-        this.attachmentContents = 0;
         this.attachments.length = 0;
         this.renderTexture = null;
         this.webGLFramebuffer = null;

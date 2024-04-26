@@ -27,10 +27,11 @@ var Events = require('../events');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this context.
  * @param {object} [options] - The options for this context.
- * @param {boolean|number} [options.autoClear=true] - Whether to automatically clear the framebuffer before drawing. If a number, this is the mask of buffers to clear: gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT, gl.STENCIL_BUFFER_BIT.
+ * @param {boolean|[boolean,boolean,boolean]} [options.autoClear=true] - Whether to automatically clear the framebuffer when the context comes into use. If an array, the elements are whether to clear the color, depth, and stencil buffers respectively.
  * @param {boolean} [options.autoResize=false] - Whether to automatically resize the framebuffer if the WebGL Renderer resizes.
  * @param {[number, number, number, number]} [options.clearColor=[0, 0, 0, 0]] - The color to clear the framebuffer with.
  * @param {boolean} [options.useCanvas=false] - Whether to use the canvas as the framebuffer.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} [options.copyFrom] - The DrawingContext to copy from.
  */
 var DrawingContext = new Class({
     initialize:
@@ -38,8 +39,6 @@ var DrawingContext = new Class({
     function DrawingContext (renderer, options)
     {
         if (options === undefined) { options = {}; }
-
-        var gl = renderer.gl;
 
         /**
          * The renderer that owns this context.
@@ -71,24 +70,24 @@ var DrawingContext = new Class({
         };
 
         /**
-         * Whether to automatically clear the framebuffer before drawing.
+         * Which renderbuffers in the framebuffer to clear when the DrawingContext comes into use.
          * This is the mask of buffers to clear:
          * gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT, gl.STENCIL_BUFFER_BIT.
          *
          * @name Phaser.Renderer.WebGL.DrawingContext#autoClear
          * @type {number}
-         * @default gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT|gl.STENCIL_BUFFER_BIT
+         * @default 0
          * @since 3.90.0
          */
-        this.autoClear = options.autoClear;
+        this.autoClear = 0;
 
-        if (options.autoClear === false)
+        if (options.autoClear === undefined || options.autoClear === true)
         {
-            this.autoClear = 0;
+            this.setAutoClear(true, true, true);
         }
-        else if (options.autoClear === true)
+        else if (Array.isArray(options.autoClear))
         {
-            this.autoClear = gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT;
+            this.setAutoClear.apply(this, options.autoClear);
         }
 
         /**
@@ -138,13 +137,20 @@ var DrawingContext = new Class({
             this.renderer.on(Events.RESIZE, this.resize, this);
         }
 
-        this.resize(renderer.width, renderer.height);
+        if (options.copyFrom)
+        {
+            this.copy(options.copyFrom);
+        }
+        else
+        {
+            this.resize(renderer.width, renderer.height);
+        }
     },
 
     /**
      * Resize the DrawingContext.
      *
-     * Delete the framebuffer and texture, and create new ones with the new size.
+     * Delete the framebuffer and texture, and create new ones with the new size. The scissor box and viewport are reset to match the new size.
      *
      * This method is called automatically if `autoResize` is `true` and the WebGL Renderer resizes.
      *
@@ -196,6 +202,68 @@ var DrawingContext = new Class({
     },
 
     /**
+     * Copy the state of another DrawingContext.
+     * This doesn't copy `inUse` or `autoResize`.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#copy
+     * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} source - The DrawingContext to copy from.
+     */
+    copy: function (source)
+    {
+        this.autoClear = source.autoClear;
+        this.useCanvas = source.useCanvas;
+        this.framebuffer = source.framebuffer;
+
+        this.state = {
+            bindings:
+            {
+                framebuffer: source.state.bindings.framebuffer
+            },
+            colorClearValue: source.state.colorClearValue.slice(),
+            scissor: {
+                box: source.state.scissor.box.slice(),
+                enable: source.state.scissor.enable
+            },
+            viewport: source.state.viewport.slice()
+        };
+
+        this.resize(source.width, source.height);
+    },
+
+    /**
+     * Create a clone of the DrawingContext. This is intended to be mutated
+     * for temporary use, and then thrown away.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#getClone
+     * @since 3.90.0
+     * @return {Phaser.Renderer.WebGL.DrawingContext} The cloned DrawingContext.
+     */
+    getClone: function ()
+    {
+        return new DrawingContext(this.renderer, { copyFrom: this });
+    },
+
+    /**
+     * Set the buffers to clear when the DrawingContext comes into use.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#setAutoClear
+     * @since 3.90.0
+     * @param {boolean} color - Whether to clear the color buffer.
+     * @param {boolean} depth - Whether to clear the depth buffer.
+     * @param {boolean} stencil - Whether to clear the stencil buffer.
+     */
+    setAutoClear: function (color, depth, stencil)
+    {
+        var autoClear = 0;
+        var gl = this.renderer.gl;
+        if (color) { autoClear |= gl.COLOR_BUFFER_BIT; }
+        if (depth) { autoClear |= gl.DEPTH_BUFFER_BIT; }
+        if (stencil) { autoClear |= gl.STENCIL_BUFFER_BIT; }
+        this.autoClear = autoClear;
+    },
+
+    /**
      * Set the clear color for the DrawingContext.
      * No changes will be made if the color is the same as the current clear color.
      *
@@ -217,33 +285,59 @@ var DrawingContext = new Class({
         ) { return; }
 
         this.state.colorClearValue = [ r, g, b, a ];
+    },
 
-        // Mark the framebuffer as needing a clear.
-        this.framebuffer.attachmentClearIntended |= this.renderer.gl.COLOR_BUFFER_BIT;
+    /**
+     * Set the scissor box for the DrawingContext.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#setScissorBox
+     * @since 3.90.0
+     * @param {number} x - The x coordinate of the scissor box.
+     * @param {number} y - The y coordinate of the scissor box.
+     * @param {number} width - The width of the scissor box.
+     * @param {number} height - The height of the scissor box.
+     */
+    setScissorBox: function (x, y, width, height)
+    {
+        this.state.scissor.box = [ x, y, width, height ];
+    },
+
+    /**
+     * Enable or disable the scissor box for the DrawingContext.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#setScissorEnable
+     * @since 3.90.0
+     * @param {boolean} enable - Whether to enable the scissor box.
+     */
+    setScissorEnable: function (enable)
+    {
+        this.state.scissor.enable = enable;
     },
 
     /**
      * Begin using the DrawingContext. This marks the context as in use.
+     * This will finish any outstanding batches.
      *
      * @method Phaser.Renderer.WebGL.DrawingContext#use
      * @since 3.90.0
      */
     use: function ()
     {
+        // Finish any outstanding batches.
+        this.renderer.renderNodes.setCurrentBatchNode(null);
+
         this.inUse = true;
-        var framebuffer = this.framebuffer;
 
-        // Identify which attachments already have contents,
-        // and must be cleared before drawing or completing the DrawingContext.
-        framebuffer.attachmentClearIntended = framebuffer.attachmentContents & this.autoClear;
-
-        framebuffer.drawingContextUsers++;
+        if (this.autoClear)
+        {
+            this.clear();
+        }
     },
 
     /**
      * End using the DrawingContext. This marks the context as not in use,
      * so its framebuffer and texture are not needed any more
-     * and may be cleared at any time.
+     * and may be cleared at any time. This will finish any outstanding batches.
      *
      * @method Phaser.Renderer.WebGL.DrawingContext#release
      * @since 3.90.0
@@ -251,23 +345,9 @@ var DrawingContext = new Class({
     release: function ()
     {
         this.inUse = false;
-        this.framebuffer.drawingContextUsers--;
 
-        if (this.framebuffer.drawingContextUsers === 0)
-        {
-            // Drawing has completed.
-
-            // Finish any outstanding batches.
-            this.renderer.renderNodes.setCurrentBatchNode(null);
-            
-            // If nothing was drawn, the framebuffer needs to complete its
-            // clearing procedure.
-            if (this.framebuffer.attachmentClearIntended)
-            {
-                this.renderer.glWrapper.update(this.state);
-                this.clear();
-            }
-        }
+        // Finish any outstanding batches.
+        this.renderer.renderNodes.setCurrentBatchNode(null);
     },
 
     /**
@@ -282,49 +362,19 @@ var DrawingContext = new Class({
     beginDraw: function ()
     {
         this.renderer.glWrapper.update(this.state);
-
-        if (this.framebuffer.attachmentClearIntended)
-        {
-            this.clear();
-        }
     },
 
     /**
-     * Mark the framebuffer attachments which have contents.
-     * This is used to determine which attachments need to be cleared.
-     * We assume that this is called after drawing, so the framebuffer
-     * contains everything enabled by this DrawingContext.
-     *
-     * @method Phaser.Renderer.WebGL.DrawingContext#markFramebufferAttachmentContents
-     * @since 3.90.0
-     */
-    markFramebufferAttachmentContents: function ()
-    {
-        var gl = this.renderer.gl;
-        var framebuffer = this.framebuffer;
-
-        var contents = gl.COLOR_BUFFER_BIT;
-
-        // TODO: Handle depth and stencil buffers.
-
-        framebuffer.attachmentContents |= contents;
-    },
-
-    /**
-     * Clear the framebuffer. This does not bind the framebuffer.
-     * It uses the framebuffer's current `attachmentClearIntended` mask.
+     * Clear the framebuffer. This will bind the framebuffer.
      *
      * @method Phaser.Renderer.WebGL.DrawingContext#clear
      * @since 3.90.0
      */
     clear: function ()
     {
-        var renderer = this.renderer;
-        var framebuffer = this.framebuffer;
+        this.beginDraw();
 
-        renderer.gl.clear(framebuffer.attachmentClearIntended);
-        framebuffer.attachmentContents &= ~framebuffer.attachmentClearIntended;
-        framebuffer.attachmentClearIntended = false;
+        this.renderer.gl.clear(this.autoClear);
     }
 });
 

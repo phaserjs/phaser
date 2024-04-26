@@ -679,7 +679,14 @@ var WebGLGlobalWrapper = new Class({
         }
         if (different || force)
         {
-            this.renderer.gl.scissor(x, y, width, height);
+            // Convert Y coordinate, as WebGL uses bottom-left origin.
+            var renderer = this.renderer;
+            renderer.gl.scissor(
+                x,
+                renderer.drawingBufferHeight - y - height,
+                width,
+                height
+            );
         }
     },
 

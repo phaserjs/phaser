@@ -30,20 +30,27 @@ var Camera = new Class({
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.Camera#run
      * @since 3.90.0
-     * @param {Phaser.Renderer.WebGL.DrawingContext} currentContext - The context currently in use.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
      * @param {Phaser.GameObjects.GameObject[]} children - The list of children to render.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - Current Camera.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - This transform matrix is defined if the game object is nested
      */
-    run: function (currentContext, children, camera, parentTransformMatrix)
+    run: function (drawingContext, children, camera, parentTransformMatrix)
     {
+        // Generate a drawing context.
+        // TODO: Handle FX stacks and framebuffer changeover.
+        var currentContext = drawingContext.getClone();
+        currentContext.autoClear = 0;
+
         // Set camera scissor.
         var cx = camera.x;
         var cy = camera.y;
         var cw = camera.width;
         var ch = camera.height;
+        currentContext.setScissorBox(cx, cy, cw, ch);
 
-        // TODO: Scissor.
+        // Enter drawing context.
+        currentContext.use();
 
         // Draw camera fill.
         if (camera.backgroundColor.alphaGL > 0)
@@ -65,6 +72,8 @@ var Camera = new Class({
         }
 
         // Finish rendering.
+
+        currentContext.release();
 
         camera.dirty = false;
 

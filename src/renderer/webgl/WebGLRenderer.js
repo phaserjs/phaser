@@ -2701,8 +2701,6 @@ var WebGLRenderer = new Class({
 
         var gl = this.gl;
 
-        this.baseDrawingContext.use();
-
         // Sync the background color to the DrawingContext.
         var backgroundColor = this.config.backgroundColor;
         this.baseDrawingContext.setClearColor(
@@ -2711,6 +2709,8 @@ var WebGLRenderer = new Class({
             backgroundColor.blueGL,
             backgroundColor.alphaGL
         );
+
+        this.baseDrawingContext.use();
 
         this.emit(Events.PRE_RENDER);
 
@@ -2870,9 +2870,9 @@ var WebGLRenderer = new Class({
      */
     postRender: function ()
     {
-        if (this.contextLost) { return; }
-
         this.baseDrawingContext.release();
+
+        if (this.contextLost) { return; }
 
         this.emit(Events.POST_RENDER);
 
@@ -2946,8 +2946,6 @@ var WebGLRenderer = new Class({
                 instanceCount
             );
         }
-
-        drawingContext.markFramebufferAttachmentContents();
     },
 
     /**
