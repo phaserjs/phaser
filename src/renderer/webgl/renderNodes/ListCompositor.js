@@ -4,7 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var CONST = require('../../../const');
 var Class = require('../../../utils/Class');
 var RenderNode = require('./RenderNode');
 
@@ -30,58 +29,59 @@ var ListCompositor = new Class({
     /**
      * Render each child in the display list.
      *
-     * This steps through the list, treating each child as either
-     * a Stand Alone Render (SAR) or a Standard Batch Render (SBR).
-     * SARs are rendered immediately, while SBRs are accumulated
-     * for rendering in a single batch. Any change in the nature of the batch
-     * (e.g. a new blend mode) will cause the batch to be rendered as an SAR
-     * and a new batch to be started.
+     * This allocates a new DisplayContext if a child's blend mode is different
+     * from the previous child. This will start a new batch if one is in progress.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.ListCompositor#render
      * @since 3.90.0
-     * @param {Phaser.Renderer.WebGL.DrawingContext} currentContext - The context currently in use.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} displayContext - The context currently in use.
      * @param {Phaser.GameObjects.GameObject[]} children - The list of children to render.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - Current Camera.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - This transform matrix is defined if the game object is nested
      */
-    run: function (currentContext, children, camera, parentTransformMatrix)
+    run: function (displayContext, children, camera, parentTransformMatrix)
     {
-        // Accumulate any batch objects to be rendered.
-        var batchObjects = [];
-        var batchBlendMode = CONST.BlendModes.NORMAL;
-        var batchTextures = [];
+        var currentContext = displayContext;
+        var baseBlendMode = displayContext.blendMode;
+        var currentBlendMode = baseBlendMode;
 
         // Render each child in the display list
         for (var i = 0; i < children.length; i++)
         {
             var child = children[i];
 
-            var result = child.renderWebGL(this.renderer, currentContext, child, camera, parentTransformMatrix);
-
-            if (result)
+            if (child.blendMode !== currentBlendMode)
             {
-                // A SBR was rendered, so add it to the batch.
+                if (currentContext !== displayContext)
+                {
+                    // Only release non-base contexts.
+                    currentContext.release();
+                }
 
-                // The result can have various outcomes:
-                // - Add to the current batch (1 batch: in = out).
-                // - Flush the current batch and start a new one (2 batches: in and out).
-                // - Render this entry as a SAR (3 batches: in, SAR, and out).
+                currentBlendMode = child.blendMode;
 
-                // If the result has FX, render it as a SAR.
-
-                // Check whether the batch should be flushed.
-                // - Is the blend mode different?
-                // - Have the textures reached the hardware limit?
-                // - Is the batch full?
-
-                // TODO: Implement batching
-
-                // this.manager.nodes.Single.run(currentContext, result.gameObject, result.camera, result.parentMatrix);
-                this.manager.nodes.Single.run(currentContext, result, camera.roundPixels);
+                if (currentBlendMode === baseBlendMode)
+                {
+                    // Reset to the base context.
+                    currentContext = displayContext;
+                }
+                else
+                {
+                    // Change blend mode.
+                    currentContext = displayContext.getClone();
+                    currentContext.setBlendMode(currentBlendMode);
+                    currentContext.use();
+                }
             }
+
+            child.renderWebGL(this.renderer, currentContext, child, camera, parentTransformMatrix);
         }
 
-        // If there are any batch objects, flush them now.
+        // Release any remaining context.
+        if (currentContext !== displayContext)
+        {
+            currentContext.release();
+        }
     }
 });
 

@@ -29,6 +29,7 @@ var Events = require('../events');
  * @param {object} [options] - The options for this context.
  * @param {boolean|[boolean,boolean,boolean]} [options.autoClear=true] - Whether to automatically clear the framebuffer when the context comes into use. If an array, the elements are whether to clear the color, depth, and stencil buffers respectively.
  * @param {boolean} [options.autoResize=false] - Whether to automatically resize the framebuffer if the WebGL Renderer resizes.
+ * @param {number} [options.blendMode=0] - The blend mode to use when rendering.
  * @param {[number, number, number, number]} [options.clearColor=[0, 0, 0, 0]] - The color to clear the framebuffer with.
  * @param {boolean} [options.useCanvas=false] - Whether to use the canvas as the framebuffer.
  * @param {Phaser.Renderer.WebGL.DrawingContext} [options.copyFrom] - The DrawingContext to copy from.
@@ -61,6 +62,9 @@ var DrawingContext = new Class({
             {
                 framebuffer: null
             },
+            blend: {
+                // This will be automatically populated below.
+            },
             colorClearValue: options.clearColor || [ 0, 0, 0, 0 ],
             scissor: {
                 box: [ 0, 0, 0, 0 ],
@@ -68,6 +72,20 @@ var DrawingContext = new Class({
             },
             viewport: [ 0, 0, 0, 0 ]
         };
+
+        /**
+         * The blend mode to use when rendering.
+         * This is an index into the renderer's blendModes array.
+         * It is faster to check than the state object.
+         *
+         * @name Phaser.Renderer.WebGL.DrawingContext#blendMode
+         * @type {number}
+         * @default 0
+         * @since 3.90.0
+         */
+        this.blendMode = -1;
+
+        this.setBlendMode(options.blendMode || 0);
 
         /**
          * Which renderbuffers in the framebuffer to clear when the DrawingContext comes into use.
@@ -211,6 +229,10 @@ var DrawingContext = new Class({
      */
     copy: function (source)
     {
+        var state = source.state;
+        var blend = state.blend;
+        var scissor = state.scissor;
+
         this.autoClear = source.autoClear;
         this.useCanvas = source.useCanvas;
         this.framebuffer = source.framebuffer;
@@ -218,14 +240,20 @@ var DrawingContext = new Class({
         this.state = {
             bindings:
             {
-                framebuffer: source.state.bindings.framebuffer
+                framebuffer: state.bindings.framebuffer
             },
-            colorClearValue: source.state.colorClearValue.slice(),
+            blend: {
+                color: blend.color && blend.color.slice(),
+                enable: blend.enable,
+                equation: blend.equation,
+                func: blend.func
+            },
+            colorClearValue: state.colorClearValue.slice(),
             scissor: {
-                box: source.state.scissor.box.slice(),
-                enable: source.state.scissor.enable
+                box: scissor.box.slice(),
+                enable: scissor.enable
             },
-            viewport: source.state.viewport.slice()
+            viewport: state.viewport.slice()
         };
 
         this.resize(source.width, source.height);
@@ -235,13 +263,25 @@ var DrawingContext = new Class({
      * Create a clone of the DrawingContext. This is intended to be mutated
      * for temporary use, and then thrown away.
      *
+     * The autoClear setting is set to false unless specified.
+     * This is because most clones reference an existing framebuffer,
+     * which is intended to accumulate drawing operations.
+     *
      * @method Phaser.Renderer.WebGL.DrawingContext#getClone
      * @since 3.90.0
+     * @param {boolean} [preserveAutoClear=false] - Whether to preserve the autoClear setting.
      * @return {Phaser.Renderer.WebGL.DrawingContext} The cloned DrawingContext.
      */
-    getClone: function ()
+    getClone: function (preserveAutoClear)
     {
-        return new DrawingContext(this.renderer, { copyFrom: this });
+        var context = new DrawingContext(this.renderer, { copyFrom: this });
+
+        if (!preserveAutoClear)
+        {
+            context.setAutoClear(false, false, false);
+        }
+
+        return context;
     },
 
     /**
@@ -261,6 +301,37 @@ var DrawingContext = new Class({
         if (depth) { autoClear |= gl.DEPTH_BUFFER_BIT; }
         if (stencil) { autoClear |= gl.STENCIL_BUFFER_BIT; }
         this.autoClear = autoClear;
+    },
+
+    /**
+     * Set the blend mode for the DrawingContext.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#setBlendMode
+     * @since 3.90.0
+     * @param {number} blendMode - The blend mode to set.
+     * @param {[number, number, number, number]} [blendColor] - The blend color to set.
+     */
+    setBlendMode: function (blendMode, blendColor)
+    {
+        if (blendMode === this.blendMode) { return; }
+
+        var blend = this.state.blend;
+        var blendModeData = this.renderer.blendModes[blendMode];
+
+        blend.enable = blendModeData.enable;
+        blend.equation = blendModeData.equation;
+        blend.func = blendModeData.func;
+
+        if (blendColor)
+        {
+            blend.color = blendColor;
+        }
+        else
+        {
+            blend.color = undefined;
+        }
+
+        this.blendMode = blendMode;
     },
 
     /**

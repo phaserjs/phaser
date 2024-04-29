@@ -43,7 +43,6 @@ var Camera = new Class({
             // Generate a drawing context.
             // TODO: Handle FX stacks and framebuffer changeover.
             currentContext = drawingContext.getClone();
-            currentContext.autoClear = 0;
     
             // Set camera scissor.
             var cx = camera.x;
