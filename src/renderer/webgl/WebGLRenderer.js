@@ -898,8 +898,9 @@ var WebGLRenderer = new Class({
             ArrayEach(_this.glAttribLocationWrappers, wrapperCreateResource);
             ArrayEach(_this.glUniformLocationWrappers, wrapperCreateResource);
 
-            // Restore pipelines.
-            _this.pipelines.restoreContext();
+            // TODO: Remove PipelineManager once the RenderNodes are fully implemented.
+            // // Restore pipelines.
+            // _this.pipelines.restoreContext();
 
             // Apply resize.
             _this.resize(_this.game.scale.baseSize.width, _this.game.scale.baseSize.height);
@@ -1005,7 +1006,8 @@ var WebGLRenderer = new Class({
 
         this.glTextureUnits = new WebGLTextureUnitsWrapper(this);
 
-        this.pipelines = new PipelineManager(this);
+        // TODO: Remove PipelineManager once the RenderNodes are fully implemented.
+        // this.pipelines = new PipelineManager(this);
 
         this.projectionMatrix = new Matrix4().identity();
 
@@ -1024,7 +1026,6 @@ var WebGLRenderer = new Class({
     boot: function ()
     {
         var game = this.game;
-        var pipelineManager = this.pipelines;
 
         var baseSize = game.scale.baseSize;
 
@@ -1041,10 +1042,12 @@ var WebGLRenderer = new Class({
         this.maskTarget = new RenderTarget(this, width, height, 1, 0, true, true);
         this.maskSource = new RenderTarget(this, width, height, 1, 0, true, true);
 
-        //  Set-up pipelines
-        var config = game.config;
-
-        pipelineManager.boot(config.pipeline, config.defaultPipeline, config.autoMobilePipeline);
+        // TODO: Remove PipelineManager once the RenderNodes are fully implemented.
+        // //  Set-up pipelines
+        // var pipelineManager = this.pipelines;
+        // var config = game.config;
+        //
+        // pipelineManager.boot(config.pipeline, config.defaultPipeline, config.autoMobilePipeline);
 
         // Set up render steps.
         this.renderNodes = new RenderNodeManager(this);
