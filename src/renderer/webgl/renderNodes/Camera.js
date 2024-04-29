@@ -5,6 +5,7 @@
  */
 
 var CameraEvents = require('../../../cameras/2d/events');
+const GetColor32 = require('../../../display/color/GetColor32');
 var Class = require('../../../utils/Class');
 var RenderNode = require('./RenderNode');
 
@@ -38,6 +39,12 @@ var Camera = new Class({
     run: function (drawingContext, children, camera, parentTransformMatrix)
     {
         var currentContext = drawingContext;
+
+        var cx = camera.x;
+        var cy = camera.y;
+        var cw = camera.width;
+        var ch = camera.height;
+
         if (camera._customViewport)
         {
             // Generate a drawing context.
@@ -45,10 +52,6 @@ var Camera = new Class({
             currentContext = drawingContext.getClone();
     
             // Set camera scissor.
-            var cx = camera.x;
-            var cy = camera.y;
-            var cw = camera.width;
-            var ch = camera.height;
             currentContext.setScissorBox(cx, cy, cw, ch);
     
             // Enter drawing context.
@@ -58,7 +61,9 @@ var Camera = new Class({
         // Draw camera fill.
         if (camera.backgroundColor.alphaGL > 0)
         {
-            //
+            var bg = camera.backgroundColor;
+            var col = GetColor32(bg.red, bg.green, bg.blue, bg.alpha);
+            this.manager.nodes.FillRect.run(currentContext, camera, parentTransformMatrix, cx, cy, cw, ch, col, col, col, col, 2);
         }
 
         // Draw children.

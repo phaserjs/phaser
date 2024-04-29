@@ -29,6 +29,16 @@ var ImageQuadrangulateBatch = new Class({
         RenderNode.call(this, 'ImageQuadrangulateBatch', manager, renderer);
     },
 
+    /**
+     * Render the GameObject.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.ImageQuadrangulateBatch#run
+     * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
+     * @param {Phaser.GameObjects.Image} gameObject - The GameObject being rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current Camera.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested.
+     */
     run: function (drawingContext, gameObject, camera, parentMatrix)
     {
         var frame = gameObject.frame;
@@ -48,10 +58,13 @@ var ImageQuadrangulateBatch = new Class({
 
         var matrices = this.manager.nodes.GetSBRQuadMatrices.run(gameObject, camera, parentMatrix);
 
+        // Use `frame.source.glTexture` instead of `frame.glTexture` to avoid
+        // unnecessary getter function calls.
+
         this.manager.nodes.BatchTexturedTintedRawQuads.batch(
             drawingContext,
             camera,
-            frame,
+            frame.source.glTexture,
             gameObject.tintFill,
             matrices.objectMatrix,
             matrices.worldMatrix,

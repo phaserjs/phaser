@@ -297,7 +297,7 @@ var BatchTexturedTintedRawQuads = new Class({
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} currentContext - The current drawing context.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to render to.
-     * @param {Phaser.Textures.Frame} frame - The texture frame to render.
+     * @param {Phaser.Renderer.WebGL.WebGLTextureWrapper} glTexture - The texture to render.
      * @param {boolean} tintFill - Whether to tint the fill color.
      * @param {Phaser.GameObjects.Components.TransformMatrix} objectMatrix - The matrix to transform the base quad into the object space.
      * @param {Phaser.GameObjects.Components.TransformMatrix} worldMatrix - The matrix to transform the object space quad into the world space.
@@ -311,7 +311,7 @@ var BatchTexturedTintedRawQuads = new Class({
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBR - The bottom-right tint color.
      */
-    batch: function (currentContext, camera, frame, tintFill, objectMatrix, worldMatrix, viewMatrix, texX, texY, texWidth, texHeight, tintTL, tintBL, tintTR, tintBR)
+    batch: function (currentContext, camera, glTexture, tintFill, objectMatrix, worldMatrix, viewMatrix, texX, texY, texWidth, texHeight, tintTL, tintBL, tintTR, tintBR)
     {
         this.manager.setCurrentBatchNode(this, currentContext, camera);
 
@@ -324,11 +324,7 @@ var BatchTexturedTintedRawQuads = new Class({
         // Instead, we cache the texture unit index on the texture itself,
         // so we can immediately tell whether it's in the batch.
         // We reset this value when we flush the batch.
-        //
-        // Accessing `frame.source.glTexture` bypasses the `frame.glTexture`
-        // getter method, which is also moderately expensive.
 
-        var glTexture = frame.source.glTexture;
         var textureIndex = glTexture.batchUnit;
         if (textureIndex === -1)
         {
