@@ -301,30 +301,11 @@ var Fade = new Class({
      * @method Phaser.Cameras.Scene2D.Effects.Fade#postRenderWebGL
      * @since 3.5.0
      *
-     * @param {Phaser.Renderer.WebGL.Pipelines.MultiPipeline} pipeline - The WebGL Pipeline to render to. Must provide the `drawFillRect` method.
-     * @param {function} getTintFunction - A function that will return the gl safe tint colors.
-     *
-     * @return {boolean} `true` if the effect drew to the renderer, otherwise `false`.
+     * @return {boolean} `true` if the effect should draw to the renderer, otherwise `false`.
      */
-    postRenderWebGL: function (pipeline, getTintFunction)
+    postRenderWebGL: function ()
     {
-        if (!this.isRunning && !this.isComplete)
-        {
-            return false;
-        }
-
-        var camera = this.camera;
-        var red = this.red / 255;
-        var green = this.green / 255;
-        var blue = this.blue / 255;
-
-        pipeline.drawFillRect(
-            camera.x, camera.y, camera.width, camera.height,
-            getTintFunction(blue, green, red, 1),
-            this.alpha
-        );
-
-        return true;
+        return this.isRunning || this.isComplete;
     },
 
     /**

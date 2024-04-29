@@ -5,7 +5,7 @@
  */
 
 var CameraEvents = require('../../../cameras/2d/events');
-const GetColor32 = require('../../../display/color/GetColor32');
+var GetColor32 = require('../../../display/color/GetColor32');
 var Class = require('../../../utils/Class');
 var RenderNode = require('./RenderNode');
 
@@ -58,12 +58,14 @@ var Camera = new Class({
             currentContext.use();
         }
 
-        // Draw camera fill.
+        var FillCamera = this.manager.nodes.FillCamera;
+
+        // Draw camera background.
         if (camera.backgroundColor.alphaGL > 0)
         {
             var bg = camera.backgroundColor;
             var col = GetColor32(bg.red, bg.green, bg.blue, bg.alpha);
-            this.manager.nodes.FillRect.run(currentContext, camera, parentTransformMatrix, cx, cy, cw, ch, col, col, col, col, 2);
+            FillCamera.run(currentContext, camera, col);
         }
 
         // Draw children.
@@ -72,11 +74,17 @@ var Camera = new Class({
         // Draw camera post effects.
 
         var flashEffect = camera.flashEffect;
-        var fadeEffect = camera.fadeEffect;
-
-        if (flashEffect.isRunning)
+        if (flashEffect.postRenderWebGL())
         {
-            // TODO
+            col = GetColor32(flashEffect.red, flashEffect.green, flashEffect.blue, flashEffect.alpha * 255);
+            FillCamera.run(currentContext, camera, col);
+        }
+        
+        var fadeEffect = camera.fadeEffect;
+        if (fadeEffect.postRenderWebGL())
+        {
+            col = GetColor32(fadeEffect.red, fadeEffect.green, fadeEffect.blue, fadeEffect.alpha * 255);
+            FillCamera.run(currentContext, camera, col);
         }
 
         // Finish rendering.
