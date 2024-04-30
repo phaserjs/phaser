@@ -224,22 +224,17 @@ var BatchTexturedTintedRawQuads = new Class({
          */
         this.floatsPerQuad = this.quadBufferLayout.layout.stride / Float32Array.BYTES_PER_ELEMENT;
 
-        // TODO: Allow uniforms to update, with resize or context loss or drawing context settings.
+        // Set the dimension-related uniforms and listen for resize events.
+        this.resize(renderer.width, renderer.height);
+        this.renderer.on(Phaser.Renderer.Events.RESIZE, this.resize, this);
 
         // Main sampler will never change after initialization,
         // because it addresses texture units, not textures.
         this.program.setUniform('uMainSampler[0]', this.getTextureUnitIndices());
-        this.program.setUniform('uProjectionMatrix', renderer.projectionMatrix.val);
-        this.program.setUniform('uResolution', [ renderer.width, renderer.height ]);
 
-        // Populate the instance buffer with the base quad.
-        this.instanceBufferLayout.viewFloat32.set([
-            0, 0, 0,
-            0, 1, 1,
-            1, 0, 2,
-            1, 1, 3
-        ]);
-        this.instanceBufferLayout.buffer.update(this.instanceBufferLayout.data);
+        // Initialize the instance buffer, and listen for context loss and restore.
+        this.populateInstanceBuffer();
+        this.renderer.on(Phaser.Renderer.Events.RESTORE_WEBGL, this.populateInstanceBuffer, this);
     },
 
     /**
@@ -391,6 +386,40 @@ var BatchTexturedTintedRawQuads = new Class({
             indices.push(i);
         }
         return indices;
+    },
+
+    /**
+     * Populate the instance buffer with the base quad.
+     *
+     * This is called automatically when the renderer is initialized,
+     * or when the context is lost and restored.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#populateInstanceBuffer
+     * @since 3.90.0
+     */
+    populateInstanceBuffer: function ()
+    {
+        this.instanceBufferLayout.viewFloat32.set([
+            0, 0, 0,
+            0, 1, 1,
+            1, 0, 2,
+            1, 1, 3
+        ]);
+        this.instanceBufferLayout.buffer.update(this.instanceBufferLayout.data);
+    },
+
+    /**
+     * Set new dimensions for the renderer. This is called automatically when the renderer is resized.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#resize
+     * @since 3.90.0
+     * @param {number} width - The new width of the renderer.
+     * @param {number} height - The new height of the renderer.
+     */
+    resize: function (width, height)
+    {
+        this.program.setUniform('uResolution', [ width, height ]);
+        this.program.setUniform('uProjectionMatrix', this.renderer.projectionMatrix.val);
     }
 });
 

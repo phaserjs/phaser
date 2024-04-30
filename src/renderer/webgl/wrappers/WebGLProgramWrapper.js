@@ -162,6 +162,7 @@ var WebGLProgramWrapper = new Class({
      */
     createResource: function ()
     {
+        var _this = this;
         var renderer = this.renderer;
         var gl = renderer.gl;
 
@@ -244,9 +245,9 @@ var WebGLProgramWrapper = new Class({
         // so they are recreated with the new program.
         this.glUniforms.each(function (name, uniform)
         {
-            if (!this.uniformRequests.has(name))
+            if (!_this.uniformRequests.has(name))
             {
-                this.uniformRequests.set(name, uniform.value);
+                _this.uniformRequests.set(name, uniform.value);
             }
         });
 

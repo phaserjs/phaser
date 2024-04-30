@@ -897,6 +897,10 @@ var WebGLRenderer = new Class({
             ArrayEach(_this.glProgramWrappers, wrapperCreateResource);
             ArrayEach(_this.glAttribLocationWrappers, wrapperCreateResource);
             ArrayEach(_this.glUniformLocationWrappers, wrapperCreateResource);
+            ArrayEach(_this.glVAOWrappers, wrapperCreateResource);
+
+            // Restore texture unit assignment.
+            _this.glTextureUnits.bindUnits(_this.glTextureUnits.units, true);
 
             // TODO: Remove PipelineManager once the RenderNodes are fully implemented.
             // // Restore pipelines.
