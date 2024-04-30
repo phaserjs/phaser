@@ -45,18 +45,16 @@ var Camera = new Class({
         var cw = camera.width;
         var ch = camera.height;
 
-        if (camera._customViewport)
-        {
-            // Generate a drawing context.
-            // TODO: Handle FX stacks and framebuffer changeover.
-            currentContext = drawingContext.getClone();
-    
-            // Set camera scissor.
-            currentContext.setScissorBox(cx, cy, cw, ch);
-    
-            // Enter drawing context.
-            currentContext.use();
-        }
+        // Generate a drawing context.
+        // TODO: Handle FX stacks and framebuffer changeover.
+        currentContext = drawingContext.getClone();
+
+        // Set up camera clone.
+        currentContext.setScissorBox(cx, cy, cw, ch);
+        currentContext.setCamera(camera);
+
+        // Enter drawing context.
+        currentContext.use();
 
         var FillCamera = this.manager.nodes.FillCamera;
 
@@ -69,7 +67,7 @@ var Camera = new Class({
         }
 
         // Draw children.
-        this.manager.nodes.ListCompositor.run(currentContext, children, camera, parentTransformMatrix);
+        this.manager.nodes.ListCompositor.run(currentContext, children, parentTransformMatrix);
 
         // Draw camera post effects.
 
@@ -77,22 +75,19 @@ var Camera = new Class({
         if (flashEffect.postRenderWebGL())
         {
             col = GetColor32(flashEffect.red, flashEffect.green, flashEffect.blue, flashEffect.alpha * 255);
-            FillCamera.run(currentContext, camera, col);
+            FillCamera.run(currentContext, col);
         }
         
         var fadeEffect = camera.fadeEffect;
         if (fadeEffect.postRenderWebGL())
         {
             col = GetColor32(fadeEffect.red, fadeEffect.green, fadeEffect.blue, fadeEffect.alpha * 255);
-            FillCamera.run(currentContext, camera, col);
+            FillCamera.run(currentContext, col);
         }
 
         // Finish rendering.
 
-        if (camera._customViewport)
-        {
-            currentContext.release();
-        }
+        currentContext.release();
 
         camera.dirty = false;
 

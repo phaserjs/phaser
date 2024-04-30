@@ -82,17 +82,6 @@ var RenderNodeManager = new Class({
         this.currentBatchDrawingContext = null;
 
         /**
-         * The camera of the current batch.
-         * This is stored here because the batch node is stateless.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#currentBatchCamera
-         * @type {?Phaser.Cameras.Scene2D.Camera}
-         * @default null
-         * @since 3.90.0
-         */
-        this.currentBatchCamera = null;
-
-        /**
          * Whether nodes should record their run method for debugging.
          * This should be set via `setDebug`.
          *
@@ -156,24 +145,21 @@ var RenderNodeManager = new Class({
      * @since 3.90.0
      * @param {?Phaser.Renderer.WebGL.RenderNodes.Batch} node - The node to set, or null to clear the current node.
      * @param {Phaser.Renderer.WebGL.DrawingContext} [drawingContext] - The drawing context. Only used if `node` is defined.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera. Only used if `node` is defined.
      */
-    setCurrentBatchNode: function (node, drawingContext, camera)
+    setCurrentBatchNode: function (node, drawingContext)
     {
         if (this.currentBatchNode !== node)
         {
             if (this.currentBatchNode !== null)
             {
                 this.currentBatchNode.run(
-                    this.currentBatchDrawingContext,
-                    this.currentBatchCamera
+                    this.currentBatchDrawingContext
                 );
             }
 
             this.currentBatchNode = node;
 
             this.currentBatchDrawingContext = node ? drawingContext : null;
-            this.currentBatchCamera = node ? camera : null;
         }
     },
 

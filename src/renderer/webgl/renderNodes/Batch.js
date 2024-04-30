@@ -53,20 +53,16 @@ var Batch = new Class({
     /**
      * Receive data to add to the current batch.
      *
-     * This checks whether this Batch is the current batch handler
-     * in the RenderNodeManager, and will trigger a flush and switch
-     * if not.
-     *
-     * This method should be extended to handle the data specific to a subclass,
-     * but those should always call `Batch.batch` to handle switching.
+     * This method should be extended to handle the data specific to a subclass.
+     * In particular, it should notify the RenderNodeManager, e.g. via
+     * `this.manager.setCurrentBatchNode(this, currentContext, camera);`,
+     * which will trigger a flush and switch if necessary.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.Batch#batch
      * @since 3.90.0
      */
     batch: function ()
-    {
-        // TODO: Check if this is the current batch handler in the RenderNodeManager. Flush and switch if not.
-    }
+    {}
 });
 
 module.exports = Batch;

@@ -64,7 +64,6 @@ var FillRect = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.FillRect#run
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current Camera.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested.
      * @param {number} x - The x-coordinate of the rectangle.
      * @param {number} y - The y-coordinate of the rectangle.
@@ -77,7 +76,7 @@ var FillRect = new Class({
      * @param {number|boolean} tintFill - The tint effect for the shader to use.
      * @param {boolean} [inWorldSpace] - Is this in world space? By default, it's in screen space.
      */
-    run: function (drawingContext, camera, parentMatrix, x, y, width, height, tintTL, tintTR, tintBL, tintBR, tintFill, inWorldSpace)
+    run: function (drawingContext, parentMatrix, x, y, width, height, tintTL, tintTR, tintBL, tintBR, tintFill, inWorldSpace)
     {
         this._objectMatrix.applyITRS(x, y, 0, width, height);
 
@@ -85,7 +84,7 @@ var FillRect = new Class({
 
         if (inWorldSpace)
         {
-            currentMatrix = camera.matrix;
+            currentMatrix = drawingContext.camera.matrix;
         }
 
         if (parentMatrix)
@@ -96,7 +95,6 @@ var FillRect = new Class({
 
         this.manager.nodes.BatchTexturedTintedRawQuads.batch(
             drawingContext,
-            camera,
             this.renderer.whiteTexture,
             tintFill,
             this._objectMatrix,

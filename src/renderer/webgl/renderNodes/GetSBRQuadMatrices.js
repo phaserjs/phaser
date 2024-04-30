@@ -91,8 +91,8 @@ var GetSBRQuadMatrices = new Class({
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.GetSBRQuadMatrices#run
      * @since 3.90.0
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to use for the transformation.
      * @param {Phaser.GameObjects.GameObject} gameObject - The game object to transform.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to use for the transformation.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - The parent matrix to apply, if any.
      * @return {{
      *   objectMatrix: Phaser.GameObjects.Components.TransformMatrix,
@@ -177,10 +177,6 @@ var GetSBRQuadMatrices = new Class({
             //  Multiply the camera by the parent matrix
             camMatrix.copyFrom(camera.matrix);
             camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * gameObject.scrollFactorX, -camera.scrollY * gameObject.scrollFactorY);
-
-            //  Undo the camera scroll
-            worldMatrix.e = gx;
-            worldMatrix.f = gy;
 
             return this._matrices;
         }

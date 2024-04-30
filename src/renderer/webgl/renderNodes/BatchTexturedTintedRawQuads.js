@@ -243,9 +243,8 @@ var BatchTexturedTintedRawQuads = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#run
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to render to.
      */
-    run: function (drawingContext, camera)
+    run: function (drawingContext)
     {
         if (this.instanceCount === 0) { return; }
 
@@ -264,7 +263,7 @@ var BatchTexturedTintedRawQuads = new Class({
             quadBuffer.update(this.quadBufferLayout.data);
         }
 
-        this.program.setUniform('uRoundPixels', camera.roundPixels);
+        this.program.setUniform('uRoundPixels', drawingContext.camera.roundPixels);
 
         renderer.drawInstances(drawingContext, this.batchTextures, this.program, this.vao, 0, this.verticesPerInstance, this.instanceCount);
 
@@ -291,7 +290,6 @@ var BatchTexturedTintedRawQuads = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#batch
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} currentContext - The current drawing context.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to render to.
      * @param {Phaser.Renderer.WebGL.WebGLTextureWrapper} glTexture - The texture to render.
      * @param {boolean} tintFill - Whether to tint the fill color.
      * @param {Phaser.GameObjects.Components.TransformMatrix} objectMatrix - The matrix to transform the base quad into the object space.
@@ -306,9 +304,9 @@ var BatchTexturedTintedRawQuads = new Class({
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBR - The bottom-right tint color.
      */
-    batch: function (currentContext, camera, glTexture, tintFill, objectMatrix, worldMatrix, viewMatrix, texX, texY, texWidth, texHeight, tintTL, tintBL, tintTR, tintBR)
+    batch: function (currentContext, glTexture, tintFill, objectMatrix, worldMatrix, viewMatrix, texX, texY, texWidth, texHeight, tintTL, tintBL, tintTR, tintBR)
     {
-        this.manager.setCurrentBatchNode(this, currentContext, camera);
+        this.manager.setCurrentBatchNode(this, currentContext);
 
         // Texture
 
@@ -328,7 +326,7 @@ var BatchTexturedTintedRawQuads = new Class({
             if (nextTextureUnit === this.renderer.maxTextures)
             {
                 // Flush the batch if the texture limit is reached.
-                this.run(currentContext, camera);
+                this.run(currentContext);
                 nextTextureUnit = 0;
             }
             textureIndex = nextTextureUnit;
@@ -360,11 +358,9 @@ var BatchTexturedTintedRawQuads = new Class({
 
         // Check whether the batch should be rendered immediately.
         // This guarantees that none of the arrays are full above.
-        if (
-            (this.instanceCount === this.quadsPerBatch)
-        )
+        if (this.instanceCount === this.quadsPerBatch)
         {
-            this.run(currentContext, camera);
+            this.run(currentContext);
 
             // Now the batch is empty.
         }

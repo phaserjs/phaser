@@ -34,17 +34,17 @@ var FillCamera = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.FillCamera#run
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to fill.
      * @param {number} color - The color to fill the camera with.
      */
-    run: function (drawingContext, camera, color)
+    run: function (drawingContext, color)
     {
+        var camera = drawingContext.camera;
         var cx = camera.x;
         var cy = camera.y;
         var cw = camera.width;
         var ch = camera.height;
 
-        this.manager.nodes.FillRect.run(drawingContext, camera, null, cx, cy, cw, ch, color, color, color, color, 2);
+        this.manager.nodes.FillRect.run(drawingContext, null, cx, cy, cw, ch, color, color, color, color, 2);
     }
 });
 

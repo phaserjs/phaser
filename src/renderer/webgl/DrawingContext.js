@@ -30,6 +30,7 @@ var Events = require('../events');
  * @param {boolean|[boolean,boolean,boolean]} [options.autoClear=true] - Whether to automatically clear the framebuffer when the context comes into use. If an array, the elements are whether to clear the color, depth, and stencil buffers respectively.
  * @param {boolean} [options.autoResize=false] - Whether to automatically resize the framebuffer if the WebGL Renderer resizes.
  * @param {number} [options.blendMode=0] - The blend mode to use when rendering.
+ * @param {?Phaser.Cameras.Scene2D.Camera} [options.camera=null] - The camera to use for this context.
  * @param {[number, number, number, number]} [options.clearColor=[0, 0, 0, 0]] - The color to clear the framebuffer with.
  * @param {boolean} [options.useCanvas=false] - Whether to use the canvas as the framebuffer.
  * @param {Phaser.Renderer.WebGL.DrawingContext} [options.copyFrom] - The DrawingContext to copy from.
@@ -49,6 +50,20 @@ var DrawingContext = new Class({
          * @since 3.90.0
          */
         this.renderer = renderer;
+
+        /**
+         * The camera used by this context. Set this using `setCamera` to ensure
+         * the view matrix is updated. Ensure that this is not `null` before
+         * rendering.
+         *
+         * @name Phaser.Renderer.WebGL.DrawingContext#camera
+         * @type {?Phaser.Cameras.Scene2D.Camera}
+         * @since 3.90.0
+         * @readonly
+         */
+        this.camera = null;
+
+        this.setCamera(options.camera || null);
 
         /**
          * Relevant WebGL state for the DrawingContext.
@@ -332,6 +347,18 @@ var DrawingContext = new Class({
         }
 
         this.blendMode = blendMode;
+    },
+
+    /**
+     * Set the camera for the DrawingContext.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#setCamera
+     * @since 3.90.0
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to set.
+     */
+    setCamera: function (camera)
+    {
+        this.camera = camera;
     },
 
     /**

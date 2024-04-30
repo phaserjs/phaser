@@ -36,10 +36,9 @@ var ListCompositor = new Class({
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} displayContext - The context currently in use.
      * @param {Phaser.GameObjects.GameObject[]} children - The list of children to render.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current Camera.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - This transform matrix is defined if the game object is nested
      */
-    run: function (displayContext, children, camera, parentTransformMatrix)
+    run: function (displayContext, children, parentTransformMatrix)
     {
         var currentContext = displayContext;
         var baseBlendMode = displayContext.blendMode;
@@ -74,7 +73,7 @@ var ListCompositor = new Class({
                 }
             }
 
-            child.renderWebGL(this.renderer, currentContext, child, camera, parentTransformMatrix);
+            child.renderWebGL(this.renderer, currentContext, child, parentTransformMatrix);
         }
 
         // Release any remaining context.

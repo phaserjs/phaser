@@ -16,12 +16,11 @@
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Sprite} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var SpriteWebGLRenderer = function (renderer, drawingContext, src, camera, parentMatrix)
+var SpriteWebGLRenderer = function (renderer, drawingContext, src, parentMatrix)
 {
-    camera.addToRenderList(src);
+    drawingContext.camera.addToRenderList(src);
 
     // Update crop UVs, which will be used in the render.
     if (src.isCropped)
@@ -34,7 +33,7 @@ var SpriteWebGLRenderer = function (renderer, drawingContext, src, camera, paren
         }
     }
 
-    renderer.renderNodes.nodes.ImageQuadrangulateBatch.run(drawingContext, src, camera, parentMatrix);
+    renderer.renderNodes.nodes.ImageQuadrangulateBatch.run(drawingContext, src, parentMatrix);
 };
 
 module.exports = SpriteWebGLRenderer;

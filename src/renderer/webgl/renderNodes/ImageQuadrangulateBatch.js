@@ -36,10 +36,9 @@ var ImageQuadrangulateBatch = new Class({
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
      * @param {Phaser.GameObjects.Image} gameObject - The GameObject being rendered.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current Camera.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested.
      */
-    run: function (drawingContext, gameObject, camera, parentMatrix)
+    run: function (drawingContext, gameObject, parentMatrix)
     {
         var frame = gameObject.frame;
 
@@ -48,22 +47,22 @@ var ImageQuadrangulateBatch = new Class({
         var v0 = uvSource.v0;
         var u1 = uvSource.u1;
         var v1 = uvSource.v1;
+        var cameraAlpha = drawingContext.camera.alpha;
 
-        var tintTL = Utils.getTintAppendFloatAlpha(gameObject.tintTopLeft, camera.alpha * gameObject._alphaTL);
-        var tintTR = Utils.getTintAppendFloatAlpha(gameObject.tintTopRight, camera.alpha * gameObject._alphaTR);
-        var tintBL = Utils.getTintAppendFloatAlpha(gameObject.tintBottomLeft, camera.alpha * gameObject._alphaBL);
-        var tintBR = Utils.getTintAppendFloatAlpha(gameObject.tintBottomRight, camera.alpha * gameObject._alphaBR);
+        var tintTL = Utils.getTintAppendFloatAlpha(gameObject.tintTopLeft, cameraAlpha * gameObject._alphaTL);
+        var tintTR = Utils.getTintAppendFloatAlpha(gameObject.tintTopRight, cameraAlpha * gameObject._alphaTR);
+        var tintBL = Utils.getTintAppendFloatAlpha(gameObject.tintBottomLeft, cameraAlpha * gameObject._alphaBL);
+        var tintBR = Utils.getTintAppendFloatAlpha(gameObject.tintBottomRight, cameraAlpha * gameObject._alphaBR);
 
         // Render with separate matrices.
 
-        var matrices = this.manager.nodes.GetSBRQuadMatrices.run(gameObject, camera, parentMatrix);
+        var matrices = this.manager.nodes.GetSBRQuadMatrices.run(gameObject, drawingContext.camera, parentMatrix);
 
         // Use `frame.source.glTexture` instead of `frame.glTexture` to avoid
         // unnecessary getter function calls.
 
         this.manager.nodes.BatchTexturedTintedRawQuads.batch(
             drawingContext,
-            camera,
             frame.source.glTexture,
             gameObject.tintFill,
             matrices.objectMatrix,
