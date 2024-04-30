@@ -73,7 +73,7 @@ var ListCompositor = new Class({
                 }
             }
 
-            child.renderWebGL(this.renderer, currentContext, child, parentTransformMatrix);
+            child.renderWebGL(this.renderer, child, currentContext, parentTransformMatrix);
         }
 
         // Release any remaining context.
