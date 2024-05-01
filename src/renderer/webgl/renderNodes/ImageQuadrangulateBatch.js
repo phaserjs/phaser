@@ -8,6 +8,8 @@ var Class = require('../../../utils/Class');
 var Utils = require('../Utils.js');
 var RenderNode = require('./RenderNode');
 
+var getTint = Utils.getTintAppendFloatAlpha;
+
 /**
  * @classdesc
  * A RenderNode which computes a StandardBatchRenderQuad (SBR-Quad) from an
@@ -49,10 +51,10 @@ var ImageQuadrangulateBatch = new Class({
         var v1 = uvSource.v1;
         var cameraAlpha = drawingContext.camera.alpha;
 
-        var tintTL = Utils.getTintAppendFloatAlpha(gameObject.tintTopLeft, cameraAlpha * gameObject._alphaTL);
-        var tintTR = Utils.getTintAppendFloatAlpha(gameObject.tintTopRight, cameraAlpha * gameObject._alphaTR);
-        var tintBL = Utils.getTintAppendFloatAlpha(gameObject.tintBottomLeft, cameraAlpha * gameObject._alphaBL);
-        var tintBR = Utils.getTintAppendFloatAlpha(gameObject.tintBottomRight, cameraAlpha * gameObject._alphaBR);
+        var tintTL = getTint(gameObject.tintTopLeft, cameraAlpha * gameObject._alphaTL);
+        var tintTR = getTint(gameObject.tintTopRight, cameraAlpha * gameObject._alphaTR);
+        var tintBL = getTint(gameObject.tintBottomLeft, cameraAlpha * gameObject._alphaBL);
+        var tintBR = getTint(gameObject.tintBottomRight, cameraAlpha * gameObject._alphaBR);
 
         // Render with separate matrices.
 
