@@ -15,16 +15,26 @@
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Video} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var VideoWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var VideoWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
     if (src.videoTexture)
     {
-        camera.addToRenderList(src);
+        drawingContext.camera.addToRenderList(src);
 
-        src.pipeline.batchSprite(src, camera, parentMatrix);
+        if (src.isCropped)
+        {
+            var crop = src._crop;
+
+            if (crop.flipX !== src.flipX || crop.flipY !== src.flipY)
+            {
+                src.frame.updateCropUVs(crop, src.flipX, src.flipY);
+            }
+        }
+
+        renderer.renderNodes.nodes.ImageQuadrangulateBatch.run(drawingContext, src, parentMatrix);
     }
 };
 
