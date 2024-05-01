@@ -339,6 +339,27 @@ var TextureSource = new Class({
     },
 
     /**
+     * Updates the dimensions of this Texture Source.
+     * This is called automatically by game systems which manage textures,
+     * such as Text, which renders to a dedicated canvas that changes size.
+     *
+     * @method Phaser.Textures.TextureSource#updateSize
+     * @since 3.90.0
+     * @param {number} width - The new width of the source image.
+     * @param {number} height - The new height of the source image.
+     */
+    updateSize: function (width, height)
+    {
+        if (this.width === width && this.height === height)
+        {
+            return;
+        }
+        this.width = width;
+        this.height = height;
+        this.isPowerOf2 = IsSizePowerOfTwo(width, height);
+    },
+
+    /**
      * Destroys this Texture Source and nulls the references.
      *
      * @method Phaser.Textures.TextureSource#destroy

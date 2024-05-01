@@ -1303,6 +1303,12 @@ var Text = new Class({
 
             this.frame.setSize(w, h);
 
+            // Resizing the canvas changes the size of the texture source.
+            // Because this is a dedicated texture for this Text object,
+            // we know this is a simple resize.
+            this.frame.source.updateSize(w, h);
+            this.frame.updateUVs();
+
             //  Because resizing the canvas resets the context
             style.syncFont(canvas, context);
 
