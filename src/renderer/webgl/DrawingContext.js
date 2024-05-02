@@ -253,6 +253,7 @@ var DrawingContext = new Class({
         this.framebuffer = source.framebuffer;
         this.texture = source.texture;
         this.camera = source.camera;
+        this.blendMode = source.blendMode;
 
         this.state = {
             bindings:
