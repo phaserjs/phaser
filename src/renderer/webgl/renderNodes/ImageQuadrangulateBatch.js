@@ -44,7 +44,17 @@ var ImageQuadrangulateBatch = new Class({
     {
         var frame = gameObject.frame;
 
-        var uvSource = gameObject.isCropped ? gameObject._crop : frame;
+        var uvSource = frame;
+        if (gameObject.isCropped)
+        {
+            var crop = gameObject._crop;
+            uvSource = crop;
+
+            if (crop.flipX !== gameObject.flipX || crop.flipY !== gameObject.flipY)
+            {
+                gameObject.frame.updateCropUVs(crop, gameObject.flipX, gameObject.flipY);
+            }
+        }
         var u0 = uvSource.u0;
         var v0 = uvSource.v0;
         var u1 = uvSource.u1;

@@ -4,8 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Utils = require('../../renderer/webgl/Utils');
-
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -27,19 +25,7 @@ var TextWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
         return;
     }
 
-    var camera = drawingContext.camera;
-
-    camera.addToRenderList(src);
-
-    if (src.isCropped)
-    {
-        var crop = src._crop;
-
-        if (crop.flipX !== src.flipX || crop.flipY !== src.flipY)
-        {
-            src.frame.updateCropUVs(crop, src.flipX, src.flipY);
-        }
-    }
+    drawingContext.camera.addToRenderList(src);
 
     renderer.renderNodes.nodes.ImageQuadrangulateBatch.run(drawingContext, src, parentMatrix);
 };

@@ -20,22 +20,14 @@
  */
 var VideoWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
-    if (src.videoTexture)
+    if (!src.videoTexture)
     {
-        drawingContext.camera.addToRenderList(src);
-
-        if (src.isCropped)
-        {
-            var crop = src._crop;
-
-            if (crop.flipX !== src.flipX || crop.flipY !== src.flipY)
-            {
-                src.frame.updateCropUVs(crop, src.flipX, src.flipY);
-            }
-        }
-
-        renderer.renderNodes.nodes.ImageQuadrangulateBatch.run(drawingContext, src, parentMatrix);
+        return;
     }
+
+    drawingContext.camera.addToRenderList(src);
+
+    renderer.renderNodes.nodes.ImageQuadrangulateBatch.run(drawingContext, src, parentMatrix);
 };
 
 module.exports = VideoWebGLRenderer;

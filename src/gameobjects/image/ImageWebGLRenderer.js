@@ -22,17 +22,6 @@ var ImageWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
     drawingContext.camera.addToRenderList(src);
 
-    // Update crop UVs, which will be used in the render.
-    if (src.isCropped)
-    {
-        var crop = src._crop;
-
-        if (crop.flipX !== src.flipX || crop.flipY !== src.flipY)
-        {
-            src.frame.updateCropUVs(crop, src.flipX, src.flipY);
-        }
-    }
-
     renderer.renderNodes.nodes.ImageQuadrangulateBatch.run(drawingContext, src, parentMatrix);
 };
 
