@@ -251,6 +251,8 @@ var DrawingContext = new Class({
         this.autoClear = source.autoClear;
         this.useCanvas = source.useCanvas;
         this.framebuffer = source.framebuffer;
+        this.texture = source.texture;
+        this.camera = source.camera;
 
         this.state = {
             bindings:
