@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../../utils/Class');
+var Events = require('../../events');
 var BatchTexturedTintedRawQuads = require('./BatchTexturedTintedRawQuads');
 var Camera = require('./Camera');
 var FillCamera = require('./FillCamera');
@@ -197,6 +198,18 @@ var RenderNodeManager = new Class({
         {
             this.debugGraph = null;
             this.currentDebugNode = null;
+
+            // Insert a synthetic root node.
+            this.pushDebug('[Render Tree Root]');
+
+            this.renderer.once(
+                Events.POST_RENDER,
+                function ()
+                {
+                    this.setDebug(false);
+                },
+                this
+            );
         }
     },
 
@@ -252,9 +265,6 @@ var RenderNodeManager = new Class({
         else
         {
             this.currentDebugNode = null;
-
-            // Stop recording the graph.
-            this.setDebug(false);
         }
     },
 

@@ -63,7 +63,7 @@ var Camera = new Class({
         {
             var bg = camera.backgroundColor;
             var col = GetColor32(bg.red, bg.green, bg.blue, bg.alpha);
-            FillCamera.run(currentContext, camera, col);
+            FillCamera.run(currentContext, col);
         }
 
         // Draw children.

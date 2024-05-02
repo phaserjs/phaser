@@ -2787,8 +2787,6 @@ var WebGLRenderer = new Class({
 
         this.renderNodes.nodes.Camera.run(this.baseDrawingContext, children, camera);
 
-        // TODO: Debug batches
-
         return;
         // OLD CODE:
 
