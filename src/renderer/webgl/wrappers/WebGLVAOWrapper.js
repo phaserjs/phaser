@@ -136,6 +136,7 @@ var WebGLVAOWrapper = new Class({
             var attributeBufferLayout = this.attributeBufferLayouts[i];
 
             attributeBufferLayout.buffer.bind();
+            var stride = attributeBufferLayout.layout.stride;
             var instanceDivisor = attributeBufferLayout.layout.instanceDivisor || 0;
 
             for (var j = 0; j < attributeBufferLayout.layout.layout.length; j++)
@@ -146,7 +147,10 @@ var WebGLVAOWrapper = new Class({
 
                 var bytes = layout.bytes || 4;
                 var columns = layout.columns || 1;
+                var normalized = layout.normalized;
+                var offset = layout.offset;
                 var size = layout.size;
+                var type = layout.type;
 
                 for (var column = 0; column < columns; column++)
                 {
@@ -154,11 +158,11 @@ var WebGLVAOWrapper = new Class({
 
                     gl.vertexAttribPointer(
                         location + column,
-                        layout.size,
-                        layout.type,
-                        layout.normalized,
-                        attributeBufferLayout.layout.stride,
-                        layout.offset + bytes * column * size
+                        size,
+                        type,
+                        normalized,
+                        stride,
+                        offset + bytes * column * size
                     );
 
                     if (instanceDivisor > 0)
