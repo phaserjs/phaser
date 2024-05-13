@@ -53,6 +53,17 @@ var BatchTexturedTintedRawQuads = new Class({
         this.verticesPerInstance = 4;
 
         /**
+         * The maximum number of textures per batch entry.
+         * This is usually the maximum number of texture units available,
+         * but it might be smaller for some uses.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#maxTexturesPerBatch
+         * @type {number}
+         * @since 3.90.0
+         */
+        this.maxTexturesPerBatch = renderer.maxTextures;
+
+        /**
          * The number of quads currently in the batch.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#instanceCount
@@ -61,7 +72,7 @@ var BatchTexturedTintedRawQuads = new Class({
          */
         this.instanceCount = 0;
 
-        var ParsedShaderSourceFS = Utils.parseFragmentShaderMaxTextures(ShaderSourceFS, renderer.maxTextures);
+        var ParsedShaderSourceFS = Utils.parseFragmentShaderMaxTextures(ShaderSourceFS, this.maxTexturesPerBatch);
 
         /**
          * The WebGL program used to render the Game Object.
@@ -207,13 +218,33 @@ var BatchTexturedTintedRawQuads = new Class({
         ]);
 
         /**
-         * The textures used by the batch.
+         * The current batch entry being filled with textures.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#batchTextures
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]}
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#currentBatchEntry
+         * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineBatchEntry}
          * @since 3.90.0
          */
-        this.batchTextures = [];
+        this.currentBatchEntry = {
+            start: 0,
+            count: 0,
+            unit: 0,
+            texture: []
+        };
+
+        /**
+         * The entries in the batch.
+         * Each entry represents a "sub-batch" of quads which use the same
+         * pool of textures. This allows the renderer to continue to buffer
+         * quads into the same batch without needing to upload the vertex
+         * buffer. When the batch flushes, there will be one vertex buffer
+         * upload, and one draw call per batch entry.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#batchEntries
+         * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineBatchEntry[]}
+         * @since 3.90.0
+         * @default []
+         */
+        this.batchEntries = [];
 
         /**
          * The number of floats per quad, used to determine how much of the quad buffer to update.
@@ -251,6 +282,9 @@ var BatchTexturedTintedRawQuads = new Class({
         var renderer = this.renderer;
         var quadBuffer = this.quadBufferLayout.buffer;
 
+        // Finalize the current batch entry.
+        this.pushCurrentBatchEntry();
+
         // Update vertex buffers.
         if (this.instanceCount < this.quadsPerBatch)
         {
@@ -265,15 +299,25 @@ var BatchTexturedTintedRawQuads = new Class({
 
         this.program.setUniform('uRoundPixels', drawingContext.camera.roundPixels);
 
-        renderer.drawInstances(drawingContext, this.batchTextures, this.program, this.vao, 0, this.verticesPerInstance, this.instanceCount);
+        var subBatches = this.batchEntries.length;
+        for (var i = 0; i < subBatches; i++)
+        {
+            var entry = this.batchEntries[i];
+            renderer.drawInstances(
+                drawingContext,
+                entry.texture,
+                this.program,
+                this.vao,
+                entry.start,
+                this.verticesPerInstance,
+                entry.count
+            );
+        }
 
         // Reset batch accumulation.
         this.instanceCount = 0;
-        for (var i = 0; i < this.batchTextures.length; i++)
-        {
-            this.batchTextures[i].batchUnit = -1;
-        }
-        this.batchTextures.length = 0;
+        this.currentBatchEntry.start = 0;
+        this.batchEntries.length = 0;
     },
 
     /**
@@ -321,17 +365,17 @@ var BatchTexturedTintedRawQuads = new Class({
         var textureIndex = glTexture.batchUnit;
         if (textureIndex === -1)
         {
-            var batchTextures = this.batchTextures;
-            var nextTextureUnit = batchTextures.length;
-            if (nextTextureUnit === this.renderer.maxTextures)
+            var currentBatchEntry = this.currentBatchEntry;
+            if (currentBatchEntry.count === this.maxTexturesPerBatch)
             {
-                // Flush the batch if the texture limit is reached.
-                this.run(currentContext);
-                nextTextureUnit = 0;
+                // Commit the current batch entry and start a new one.
+                this.pushCurrentBatchEntry();
+                currentBatchEntry = this.currentBatchEntry;
             }
-            textureIndex = nextTextureUnit;
+            textureIndex = currentBatchEntry.unit;
             glTexture.batchUnit = textureIndex;
-            batchTextures.push(glTexture);
+            currentBatchEntry.texture[textureIndex] = glTexture;
+            currentBatchEntry.unit++;
         }
 
         var quadOffset32 = this.instanceCount * this.floatsPerQuad;
@@ -355,6 +399,7 @@ var BatchTexturedTintedRawQuads = new Class({
 
         // Increment the instance count.
         this.instanceCount++;
+        this.currentBatchEntry.count++;
 
         // Check whether the batch should be rendered immediately.
         // This guarantees that none of the arrays are full above.
@@ -364,6 +409,32 @@ var BatchTexturedTintedRawQuads = new Class({
 
             // Now the batch is empty.
         }
+    },
+
+    /**
+     * Push the current batch entry to the batch entry list,
+     * and create a new batch entry for future use.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#pushCurrentBatchEntry
+     * @since 3.90.0
+     */
+    pushCurrentBatchEntry: function ()
+    {
+        this.batchEntries.push(this.currentBatchEntry);
+
+        // Clear unit assignment on textures.
+        var texture = this.currentBatchEntry.texture;
+        for (var i = 0; i < texture.length; i++)
+        {
+            texture[i].batchUnit = -1;
+        }
+
+        this.currentBatchEntry = {
+            start: this.instanceCount,
+            count: 0,
+            unit: 0,
+            texture: []
+        };
     },
 
     /**

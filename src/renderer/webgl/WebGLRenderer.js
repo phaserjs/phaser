@@ -2925,11 +2925,11 @@ var WebGLRenderer = new Class({
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]} textures - An array of textures to bind. Textures are bound to units corresponding to their indices in the array.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The shader program to use.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper} vao - The Vertex Array Object to bind.
-     * @param {number} indexStart - The index to start drawing from.
+     * @param {number} instanceStart - The instance to start drawing from.
      * @param {number} instanceVertices - The number of vertices per instance.
      * @param {number} instanceCount - The number of instances to draw.
      */
-    drawInstances: function (drawingContext, textures, program, vao, indexStart, instanceVertices, instanceCount)
+    drawInstances: function (drawingContext, textures, program, vao, instanceStart, instanceVertices, instanceCount)
     {
         var gl = this.gl;
 
@@ -2937,7 +2937,7 @@ var WebGLRenderer = new Class({
 
         program.bind();
 
-        vao.bind();
+        vao.bind(instanceStart);
 
         this.glTextureUnits.bindUnits(textures);
 
@@ -2947,7 +2947,7 @@ var WebGLRenderer = new Class({
                 gl.TRIANGLE_STRIP,
                 instanceVertices,
                 gl.UNSIGNED_SHORT,
-                indexStart,
+                0,
                 instanceCount
             );
         }
@@ -2955,7 +2955,7 @@ var WebGLRenderer = new Class({
         {
             this.instancedArraysExtension.drawArraysInstancedANGLE(
                 gl.TRIANGLE_STRIP,
-                indexStart,
+                0,
                 instanceVertices,
                 instanceCount
             );

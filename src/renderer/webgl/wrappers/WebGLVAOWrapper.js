@@ -68,6 +68,36 @@ var WebGLVAOWrapper = new Class({
          */
         this.attributeBufferLayouts = attributeBufferLayouts;
 
+        /**
+         * The current instance offset for this VAO.
+         *
+         * When using instanced rendering, there is no way to offset
+         * the instance data in the draw call itself.
+         * It only specifies the number of instances to draw,
+         * starting from 0.
+         * Instead, we we must rebind the attributes with a different
+         * offset so they start at the desired instance.
+         * This property stores the current instance offset,
+         * so it can be updated when necessary.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper#instanceOffset
+         * @type {number}
+         * @default 0
+         * @since 3.90.0
+         */
+        this.instanceOffset = 0;
+
+        /**
+         * The state object used to bind this VAO.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper#glState
+         * @type {object}
+         * @since 3.90.0
+         */
+        this.glState = {
+            vao: this
+        };
+
         this.createResource();
     },
 
@@ -159,13 +189,88 @@ var WebGLVAOWrapper = new Class({
      *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper#bind
      * @since 3.90.0
+     * @param {number} [instanceOffset=0] - The instance from which drawing should start.
      */
-    bind: function ()
+    bind: function (instanceOffset)
     {
-        this.renderer.glWrapper.updateVAO({
-            // TODO: cache state object
-            vao: this
-        });
+        this.renderer.glWrapper.updateVAO(this.glState);
+
+        if (instanceOffset === undefined)
+        {
+            instanceOffset = 0;
+        }
+
+        if (instanceOffset !== this.instanceOffset)
+        {
+            this.instanceOffset = instanceOffset;
+            this.bindAttributes();
+        }
+    },
+
+    /**
+     * Sets up the attribute pointers for this VAO,
+     * based on the current instance offset. Used internally.
+     *
+     * The VAO must be bound before calling this method, or all hell will break loose.
+     *
+     * This is called whenever a new instance offset is required,
+     * generally when a batch has more textures than a single draw call
+     * can support. It does not change the enabled state of the attributes,
+     * or the instance divisor.
+     * While it does require binding the relevant buffers, they are
+     * generally already bound as part of the render process.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper#bindAttributes
+     * @since 3.90.0
+     */
+    bindAttributes: function ()
+    {
+        var gl = this.renderer.gl;
+
+        for (var i = 0; i < this.attributeBufferLayouts.length; i++)
+        {
+            var attributeBufferLayout = this.attributeBufferLayouts[i];
+            var layout = attributeBufferLayout.layout;
+            var divisor = layout.instanceDivisor;
+
+            if (divisor === 0)
+            {
+                // Skip attributes that are not instanced.
+                // They will always be repeated for each instance.
+                continue;
+            }
+
+            attributeBufferLayout.buffer.bind();
+
+            var stride = layout.stride;
+            var instanceOffset = Math.floor(this.instanceOffset / divisor) * stride;
+
+            for (var j = 0; j < layout.layout.length; j++)
+            {
+                var attribute = layout.layout[j];
+
+                var bytes = attribute.bytes || 4;
+                var columns = attribute.columns || 1;
+                var location = attribute.location;
+                var normalized = attribute.normalized;
+                var offset = attribute.offset;
+                var size = attribute.size;
+                var type = attribute.type;
+
+                for (var column = 0; column < columns; column++)
+                {
+                    gl.vertexAttribPointer(
+                        location + column,
+                        size,
+                        type,
+                        normalized,
+                        stride,
+                        offset + bytes * column * size + instanceOffset
+                    );
+                }
+
+            }
+        }
     },
 
     /**
@@ -186,6 +291,7 @@ var WebGLVAOWrapper = new Class({
 
         this.indexBuffer = null;
         this.attributeBufferLayouts = null;
+        this.glState = null;
         this.renderer = null;
     }
 });
