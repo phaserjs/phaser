@@ -61,7 +61,7 @@ var BatchTexturedTintedRawQuads = new Class({
          * @type {number}
          * @since 3.90.0
          */
-        this.maxTexturesPerBatch = renderer.maxTextures;
+        this.maxTexturesPerBatch = manager.maxParallelTextureUnits;
 
         /**
          * The number of quads currently in the batch.
@@ -266,6 +266,9 @@ var BatchTexturedTintedRawQuads = new Class({
         // Initialize the instance buffer, and listen for context loss and restore.
         this.populateInstanceBuffer();
         this.renderer.on(Phaser.Renderer.Events.RESTORE_WEBGL, this.populateInstanceBuffer, this);
+
+        // Listen for changes to the number of draw calls per batch.
+        this.manager.on(Phaser.Renderer.Events.SET_PARALLEL_TEXTURE_UNITS, this.updateTextureCount, this);
     },
 
     /**
@@ -487,6 +490,65 @@ var BatchTexturedTintedRawQuads = new Class({
     {
         this.program.setUniform('uResolution', [ width, height ]);
         this.program.setUniform('uProjectionMatrix', this.renderer.projectionMatrix.val);
+    },
+
+    /**
+     * Update the number of draw calls per batch.
+     * This rebuilds the shader program with the new draw call count.
+     * The minimum number of draw calls is 1, and the maximum is the number of
+     * texture units defined in the renderer.
+     * Rebuilding the shader may be expensive, so use this sparingly.
+     *
+     * If this runs during a batch, and the new count is less than the number of
+     * textures in the current batch entry, the batch will be flushed before the
+     * shader program is rebuilt, so none of the textures are skipped.
+     *
+     * This is usually called automatically by a listener
+     * for the `Phaser.Renderer.Events.SET_PARALLEL_TEXTURE_UNITS` event,
+     * triggered by the RenderNodeManager.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.Pressurizer#updateDrawCallCount
+     * @since 3.90.0
+     * @param {number} [count] - The new number of draw calls per batch. If undefined, the maximum number of texture units is used.
+     */
+    updateTextureCount: function (count)
+    {
+        if (count === undefined)
+        {
+            count = this.renderer.maxTextures;
+        }
+
+        var newCount = Math.max(1, Math.min(count, this.renderer.maxTextures));
+        if (newCount === this.texturesPerBatch)
+        {
+            return;
+        }
+
+        if (
+            newCount < this.currentBatchEntry.unit &&
+            this.manager.currentBatchNode === this
+        )
+        {
+            // The batch is currently running. Flush the current batch entry,
+            // before the shader program becomes unable to handle all textures.
+            this.manager.setCurrentBatchNode(null);
+        }
+
+        this.maxTexturesPerBatch = newCount;
+
+        // Recreate the shader program with the new texture count.
+        var ParsedShaderSourceFS = Utils.parseFragmentShaderMaxTextures(
+            ShaderSourceFS,
+            this.maxTexturesPerBatch
+        );
+        this.program.fragmentSource = ParsedShaderSourceFS;
+        this.program.createResource();
+
+        this.program.setUniform(
+            'uMainSampler[0]',
+            this.getTextureUnitIndices()
+        );
+        this.resize(this.renderer.width, this.renderer.height);
     }
 });
 

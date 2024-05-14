@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var EventEmitter = require('eventemitter3');
 var Class = require('../../../utils/Class');
 var Events = require('../../events');
 var BatchTexturedTintedRawQuads = require('./BatchTexturedTintedRawQuads');
@@ -31,8 +32,12 @@ var ListCompositor = require('./ListCompositor');
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this manager.
  */
 var RenderNodeManager = new Class({
+    Extends: EventEmitter,
+
     initialize: function RenderNodeManager (renderer)
     {
+        EventEmitter.call(this);
+
         /**
          * The renderer that owns this manager.
          *
@@ -41,6 +46,28 @@ var RenderNodeManager = new Class({
          * @since 3.90.0
          */
         this.renderer = renderer;
+
+        var game = renderer.game;
+
+        /**
+         * The maximum number of texture units to use as choices in a batch.
+         * Batches can bind several textures and select one of them per instance,
+         * allowing for larger batches.
+         * However, some mobile devices degrade performance when using multiple
+         * texture units. So if the game config option `autoMobilePipeline` is
+         * enabled and the device is not a desktop, this will be set to 1.
+         * Otherwise, it will be set to the renderer's `maxTextures`.
+         *
+         * Some shaders may require more than one texture unit,
+         * so the actual limit on texture units per batch is `maxTextures`.
+         *
+         * This value can be changed at runtime via `setMaxParallelTextureUnits`.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#maxParallelTextureUnits
+         * @type {number}
+         * @since 3.90.0
+         */
+        this.maxParallelTextureUnits = (game.config.autoMobilePipeline && !game.device.os.desktop) ? renderer.maxTextures : 1;
         
         /**
          * Nodes available for use.
@@ -162,6 +189,25 @@ var RenderNodeManager = new Class({
 
             this.currentBatchDrawingContext = node ? drawingContext : null;
         }
+    },
+
+    /**
+     * Set `maxParallelTextureUnits` to a new value.
+     * This will be clamped to the range [1, renderer.maxTextures].
+     *
+     * This can be useful for providing the user with a way to adjust the
+     * performance of the game at runtime.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#setMaxParallelTextureUnits
+     * @since 3.90.0
+     * @param {number} [value] - The new value for `maxParallelTextureUnits`. If not provided, it will be set to the renderer's `maxTextures`.
+     * @fires Phaser.Renderer.Events#SET_PARALLEL_TEXTURE_UNITS
+     */
+    setMaxParallelTextureUnits: function (value)
+    {
+        this.maxParallelTextureUnits = Math.max(1, Math.min(value, this.renderer.maxTextures));
+
+        this.emit(Events.SET_PARALLEL_TEXTURE_UNITS, this.maxParallelTextureUnits);
     },
 
     /**
