@@ -177,6 +177,16 @@ var WebGLProgramWrapper = new Class({
             return;
         }
 
+        // Unbind current program before creating a new one.
+        // Otherwise, the old program will stay in use,
+        // and cause errors.
+        if (renderer.glWrapper.state.bindings.program === this)
+        {
+            renderer.glWrapper.updateBindingsProgram({
+                bindings: { program: null }
+            });
+        }
+
         var program = gl.createProgram();
 
         this.webGLProgram = program;
@@ -466,10 +476,6 @@ var WebGLProgramWrapper = new Class({
             }
             this.glAttributes.length = 0;
 
-            this.glUniforms.each(function (name, uniform)
-            {
-                gl.deleteUniformLocation(uniform.location);
-            });
             this.glUniforms.clear();
         }
 
