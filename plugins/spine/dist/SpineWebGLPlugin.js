@@ -23501,7 +23501,7 @@ var FX = new Class({
                     pipeline = pipeline.pop();
                 }
 
-                if (pipeline) pipeline.controller = fx;
+                pipeline.controller = fx;
 
                 return fx;
             }
