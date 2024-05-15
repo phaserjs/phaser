@@ -3033,7 +3033,7 @@ var WebGLRenderer = new Class({
      * If the `dstTexture` parameter is given, the WebGL Texture is updated, rather than created fresh.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#videoToTexture
-     * @since 3.90.0
+     * @since 3.85.0
      *
      * @param {HTMLVideoElement} srcVideo - The Video to create the WebGL Texture from
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [dstTexture] - The destination WebGLTextureWrapper to set.
