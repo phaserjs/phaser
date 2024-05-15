@@ -235,7 +235,7 @@ var TextureManager = new Class({
      */
     checkKey: function (key)
     {
-        if (this.exists(key))
+        if (!key || typeof key !== 'string' || this.exists(key))
         {
             if (!this.silentWarnings)
             {
@@ -473,7 +473,7 @@ var TextureManager = new Class({
      * This allows you to then use the Texture as a normal texture for texture based Game Objects like Sprites.
      *
      * This is a WebGL only feature.
-     * 
+     *
      * Prior to Phaser 3.80.0, this method took a bare `WebGLTexture`
      * as the `glTexture` parameter. You must now wrap the `WebGLTexture` in a
      * `WebGLTextureWrapper` instance before passing it to this method.
@@ -1166,12 +1166,12 @@ var TextureManager = new Class({
 
     /**
      * Creates a texture from an array of colour data.
-     * 
+     *
      * This is only available in WebGL mode.
-     * 
+     *
      * If the dimensions provided are powers of two, the resulting texture
      * will be automatically set to wrap by the WebGL Renderer.
-     * 
+     *
      * @method Phaser.Textures.TextureManager#addUint8Array
      * @fires Phaser.Textures.Events#ADD
      * @since 3.80.0
