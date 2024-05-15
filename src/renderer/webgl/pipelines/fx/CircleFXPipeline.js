@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
-var CircleFrag = require('../../shaders/FXCircle-frag.js');
+var CircleFrag = require('../../shaders/FXCircle-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 
 /**

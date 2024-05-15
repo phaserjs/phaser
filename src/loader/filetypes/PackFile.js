@@ -7,7 +7,7 @@
 var Class = require('../../utils/Class');
 var CONST = require('../const');
 var FileTypesManager = require('../FileTypesManager');
-var JSONFile = require('./JSONFile.js');
+var JSONFile = require('./JSONFile');
 
 /**
  * @classdesc

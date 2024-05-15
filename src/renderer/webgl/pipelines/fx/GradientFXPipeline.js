@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
-var GradientFrag = require('../../shaders/FXGradient-frag.js');
+var GradientFrag = require('../../shaders/FXGradient-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 
 /**

@@ -7,10 +7,10 @@
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var ImageFile = require('./ImageFile.js');
+var ImageFile = require('./ImageFile');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var JSONFile = require('./JSONFile.js');
-var MultiFile = require('../MultiFile.js');
+var JSONFile = require('./JSONFile');
+var MultiFile = require('../MultiFile');
 
 /**
  * @classdesc

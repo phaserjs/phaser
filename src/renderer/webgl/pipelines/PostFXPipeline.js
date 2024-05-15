@@ -7,8 +7,8 @@
 var Class = require('../../../utils/Class');
 var ColorMatrix = require('../../../display/ColorMatrix');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var ShaderSourceFS = require('../shaders/PostFX-frag.js');
-var ShaderSourceVS = require('../shaders/Quad-vert.js');
+var ShaderSourceFS = require('../shaders/PostFX-frag');
+var ShaderSourceVS = require('../shaders/Quad-vert');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**

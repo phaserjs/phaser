@@ -4,13 +4,13 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var AudioFile = require('./AudioFile.js');
+var AudioFile = require('./AudioFile');
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var JSONFile = require('./JSONFile.js');
-var MultiFile = require('../MultiFile.js');
+var JSONFile = require('./JSONFile');
+var MultiFile = require('../MultiFile');
 
 /**
  * @classdesc

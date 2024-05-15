@@ -7,11 +7,11 @@
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var ImageFile = require('./ImageFile.js');
+var ImageFile = require('./ImageFile');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var MultiFile = require('../MultiFile.js');
-var ParseXMLBitmapFont = require('../../gameobjects/bitmaptext/ParseXMLBitmapFont.js');
-var XMLFile = require('./XMLFile.js');
+var MultiFile = require('../MultiFile');
+var ParseXMLBitmapFont = require('../../gameobjects/bitmaptext/ParseXMLBitmapFont');
+var XMLFile = require('./XMLFile');
 
 /**
  * @classdesc

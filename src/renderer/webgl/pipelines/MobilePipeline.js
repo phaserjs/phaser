@@ -7,8 +7,8 @@
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var MultiPipeline = require('./MultiPipeline');
-var ShaderSourceFS = require('../shaders/Single-frag.js');
-var ShaderSourceVS = require('../shaders/Single-vert.js');
+var ShaderSourceFS = require('../shaders/Single-frag');
+var ShaderSourceVS = require('../shaders/Single-vert');
 var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
 

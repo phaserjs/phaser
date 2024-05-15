@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
-var BokehFrag = require('../../shaders/FXBokeh-frag.js');
+var BokehFrag = require('../../shaders/FXBokeh-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 
 /**

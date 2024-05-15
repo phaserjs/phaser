@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseCamera = require('../../cameras/2d/BaseCamera.js');
+var BaseCamera = require('../../cameras/2d/BaseCamera');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');
 var Components = require('../components');
