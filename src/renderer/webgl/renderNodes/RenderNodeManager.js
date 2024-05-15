@@ -67,7 +67,7 @@ var RenderNodeManager = new Class({
          * @type {number}
          * @since 3.90.0
          */
-        this.maxParallelTextureUnits = (game.config.autoMobilePipeline && !game.device.os.desktop) ? renderer.maxTextures : 1;
+        this.maxParallelTextureUnits = (game.config.autoMobilePipeline && !game.device.os.desktop) ? 1 : renderer.maxTextures;
         
         /**
          * Nodes available for use.
