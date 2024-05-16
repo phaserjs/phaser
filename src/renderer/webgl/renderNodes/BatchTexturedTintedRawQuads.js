@@ -261,7 +261,7 @@ var BatchTexturedTintedRawQuads = new Class({
 
         // Main sampler will never change after initialization,
         // because it addresses texture units, not textures.
-        this.program.setUniform('uMainSampler[0]', this.getTextureUnitIndices());
+        this.program.setUniform('uMainSampler[0]', this.renderer.textureUnitIndices);
 
         // Initialize the instance buffer, and listen for context loss and restore.
         this.populateInstanceBuffer();
@@ -441,24 +441,6 @@ var BatchTexturedTintedRawQuads = new Class({
     },
 
     /**
-     * Return a list containing the indices of all available texture units.
-     * TODO: this should be universal.
-     *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#getTextureUnitIndices
-     * @since 3.90.0
-     * @return {number[]} The list of available texture unit indices.
-     */
-    getTextureUnitIndices: function ()
-    {
-        var indices = [];
-        for (var i = 0; i < this.renderer.maxTextures; i++)
-        {
-            indices.push(i);
-        }
-        return indices;
-    },
-
-    /**
      * Populate the instance buffer with the base quad.
      *
      * This is called automatically when the renderer is initialized,
@@ -546,7 +528,7 @@ var BatchTexturedTintedRawQuads = new Class({
 
         this.program.setUniform(
             'uMainSampler[0]',
-            this.getTextureUnitIndices()
+            this.renderer.textureUnitIndices
         );
         this.resize(this.renderer.width, this.renderer.height);
     }

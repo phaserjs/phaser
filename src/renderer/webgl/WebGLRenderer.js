@@ -243,6 +243,17 @@ var WebGLRenderer = new Class({
         this.maxTextures = 0;
 
         /**
+         * A list containing the indices of all available texture units.
+         * This is populated during the `init` method.
+         * It is used internally to connect texture units to shaders.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#textureUnitIndices
+         * @type {number[]}
+         * @since 3.90.0
+         */
+        this.textureUnitIndices = [];
+
+        /**
          * A list of all WebGLBufferWrappers that have been created by this renderer.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glBufferWrappers
@@ -1007,6 +1018,10 @@ var WebGLRenderer = new Class({
 
         //  Check maximum supported textures
         this.maxTextures = Utils.checkShaderMax(gl, config.maxTextures);
+        for (i = 0; i < this.maxTextures; i++)
+        {
+            this.textureUnitIndices.push(i);
+        }
 
         this.glTextureUnits = new WebGLTextureUnitsWrapper(this);
 
