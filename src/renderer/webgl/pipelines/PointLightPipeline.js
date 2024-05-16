@@ -6,8 +6,8 @@
 
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var PointLightShaderSourceFS = require('../shaders/PointLight-frag.js');
-var PointLightShaderSourceVS = require('../shaders/PointLight-vert.js');
+var PointLightShaderSourceFS = require('../shaders/PointLight-frag');
+var PointLightShaderSourceVS = require('../shaders/PointLight-vert');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**

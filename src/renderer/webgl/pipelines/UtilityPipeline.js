@@ -4,15 +4,15 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var AddBlendFS = require('../shaders/AddBlend-frag.js');
+var AddBlendFS = require('../shaders/AddBlend-frag');
 var BlendModes = require('../../BlendModes');
 var Class = require('../../../utils/Class');
 var ColorMatrix = require('../../../display/ColorMatrix');
-var ColorMatrixFS = require('../shaders/ColorMatrix-frag.js');
-var CopyFS = require('../shaders/Copy-frag.js');
+var ColorMatrixFS = require('../shaders/ColorMatrix-frag');
+var CopyFS = require('../shaders/Copy-frag');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var LinearBlendFS = require('../shaders/LinearBlend-frag.js');
-var QuadVS = require('../shaders/Quad-vert.js');
+var LinearBlendFS = require('../shaders/LinearBlend-frag');
+var QuadVS = require('../shaders/Quad-vert');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**

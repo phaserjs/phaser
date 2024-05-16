@@ -5,9 +5,9 @@
  */
 
 var Class = require('../../../../utils/Class');
-var BlurLowFrag = require('../../shaders/FXBlurLow-frag.js');
-var BlurMedFrag = require('../../shaders/FXBlurMed-frag.js');
-var BlurHighFrag = require('../../shaders/FXBlurHigh-frag.js');
+var BlurLowFrag = require('../../shaders/FXBlurLow-frag');
+var BlurMedFrag = require('../../shaders/FXBlurMed-frag');
+var BlurHighFrag = require('../../shaders/FXBlurHigh-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 
 /**

@@ -6,7 +6,7 @@
 
 var Class = require('../../../../utils/Class');
 var GetFastValue = require('../../../../utils/object/GetFastValue');
-var GlowFrag = require('../../shaders/FXGlow-frag.js');
+var GlowFrag = require('../../shaders/FXGlow-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 var Utils = require('../../Utils');
 

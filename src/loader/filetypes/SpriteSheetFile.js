@@ -7,7 +7,7 @@
 var Class = require('../../utils/Class');
 var CONST = require('../const');
 var FileTypesManager = require('../FileTypesManager');
-var ImageFile = require('./ImageFile.js');
+var ImageFile = require('./ImageFile');
 
 /**
  * @classdesc

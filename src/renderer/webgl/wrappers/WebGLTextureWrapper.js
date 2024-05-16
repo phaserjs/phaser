@@ -211,7 +211,7 @@ var WebGLTextureWrapper = new Class({
     createResource: function ()
     {
         var gl = this.gl;
-        
+
         if (gl.isContextLost())
         {
             // GL state can't be updated right now.
@@ -291,7 +291,7 @@ var WebGLTextureWrapper = new Class({
      *
      * @function Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#_processTexture
      * @protected
-     * @since 3.90.0
+     * @since 3.85.0
      * @ignore
      */
     _processTexture: function ()

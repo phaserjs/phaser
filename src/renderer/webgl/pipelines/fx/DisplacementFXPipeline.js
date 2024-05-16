@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
-var DisplacementFrag = require('../../shaders/FXDisplacement-frag.js');
+var DisplacementFrag = require('../../shaders/FXDisplacement-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 
 /**

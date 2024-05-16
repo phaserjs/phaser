@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
-var WipeFrag = require('../../shaders/FXWipe-frag.js');
+var WipeFrag = require('../../shaders/FXWipe-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 
 /**

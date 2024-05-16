@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
-var BloomFrag = require('../../shaders/FXBloom-frag.js');
+var BloomFrag = require('../../shaders/FXBloom-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 
 /**

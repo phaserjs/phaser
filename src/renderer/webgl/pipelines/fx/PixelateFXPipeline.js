@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
-var PixelateFrag = require('../../shaders/FXPixelate-frag.js');
+var PixelateFrag = require('../../shaders/FXPixelate-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 
 /**

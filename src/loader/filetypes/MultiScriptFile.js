@@ -8,8 +8,8 @@ var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var MultiFile = require('../MultiFile.js');
-var ScriptFile = require('./ScriptFile.js');
+var MultiFile = require('../MultiFile');
+var ScriptFile = require('./ScriptFile');
 
 /**
  * @classdesc

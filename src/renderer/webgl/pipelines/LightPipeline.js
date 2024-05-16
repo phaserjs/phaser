@@ -7,7 +7,7 @@
 
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var LightShaderSourceFS = require('../shaders/Light-frag.js');
+var LightShaderSourceFS = require('../shaders/Light-frag');
 var MultiPipeline = require('./MultiPipeline');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var Vec2 = require('../../../math/Vector2');

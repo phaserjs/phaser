@@ -7,8 +7,8 @@
 
 var Class = require('../../../utils/Class');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var ShaderSourceFS = require('../shaders/BitmapMask-frag.js');
-var ShaderSourceVS = require('../shaders/BitmapMask-vert.js');
+var ShaderSourceFS = require('../shaders/BitmapMask-frag');
+var ShaderSourceVS = require('../shaders/BitmapMask-vert');
 var WEBGL_CONST = require('../const');
 var WebGLPipeline = require('../WebGLPipeline');
 

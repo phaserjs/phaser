@@ -7,14 +7,14 @@
 var BlendModes = require('../../BlendModes');
 var CenterOn = require('../../../geom/rectangle/CenterOn');
 var Class = require('../../../utils/Class');
-var ColorMatrixFS = require('../shaders/ColorMatrix-frag.js');
+var ColorMatrixFS = require('../shaders/ColorMatrix-frag');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var MultiPipeline = require('./MultiPipeline');
-var PostFXFS = require('../shaders/PostFX-frag.js');
+var PostFXFS = require('../shaders/PostFX-frag');
 var Rectangle = require('../../../geom/rectangle/Rectangle');
 var RenderTarget = require('../RenderTarget');
-var SingleQuadFS = require('../shaders/Single-frag.js');
-var SingleQuadVS = require('../shaders/Single-vert.js');
+var SingleQuadFS = require('../shaders/Single-frag');
+var SingleQuadVS = require('../shaders/Single-vert');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**

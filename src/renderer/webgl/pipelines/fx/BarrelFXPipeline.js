@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
-var BarrelFrag = require('../../shaders/FXBarrel-frag.js');
+var BarrelFrag = require('../../shaders/FXBarrel-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 
 /**

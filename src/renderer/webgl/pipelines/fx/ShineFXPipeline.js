@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
-var ShineFrag = require('../../shaders/FXShine-frag.js');
+var ShineFrag = require('../../shaders/FXShine-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 
 /**

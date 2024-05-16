@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
-var VignetteFrag = require('../../shaders/FXVignette-frag.js');
+var VignetteFrag = require('../../shaders/FXVignette-frag');
 var PostFXPipeline = require('../PostFXPipeline');
 
 /**
