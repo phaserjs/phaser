@@ -12,6 +12,7 @@
 
 # Bug Fixes
 
+* The `activePointers` game config option is now the correct amount of touch input pointers set. Fix #6783 (thanks @samme)
 * The method `TextureManager.checkKey` will now return `false` if the key is not a string, which fixes issues where a texture could be created if a key was given that was already in use (thanks Will Macfarlane).
 
 ## Examples, Documentation, Beta Testing and TypeScript
