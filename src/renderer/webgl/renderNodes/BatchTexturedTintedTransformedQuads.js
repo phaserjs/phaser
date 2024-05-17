@@ -5,8 +5,8 @@
  */
 
 var Class = require('../../../utils/Class');
-var ShaderSourceFS = require('../shaders/BatchQuad-frag.js');
-var ShaderSourceVS = require('../shaders/BatchQuad-vert.js');
+var ShaderSourceFS = require('../shaders/Multi-frag.js');
+var ShaderSourceVS = require('../shaders/Multi-vert.js');
 var Utils = require('../Utils.js');
 var WebGLVertexBufferLayoutWrapper = require('../wrappers/WebGLVertexBufferLayoutWrapper.js');
 var Batch = require('./Batch');
@@ -15,7 +15,7 @@ var Batch = require('./Batch');
  * @classdesc
  * This RenderNode draws Standard Batch Render (SBR) quads in batches.
  *
- * @class BatchTexturedTintedRawQuads
+ * @class BatchTexturedTintedTransformedQuads
  * @extends Phaser.Renderer.WebGL.RenderNodes.Batch
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
@@ -23,12 +23,12 @@ var Batch = require('./Batch');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this RenderNode.
  */
-var BatchTexturedTintedRawQuads = new Class({
+var BatchTexturedTintedTransformedQuads = new Class({
     Extends: Batch,
 
-    initialize: function BatchTexturedTintedRawQuads (manager, renderer)
+    initialize: function BatchTexturedTintedTransformedQuads (manager, renderer)
     {
-        Batch.call(this, 'BatchTexturedTintedRawQuads', manager, renderer);
+        Batch.call(this, 'BatchTexturedTintedTransformedQuads', manager, renderer);
 
         var gl = renderer.gl;
 
@@ -36,7 +36,7 @@ var BatchTexturedTintedRawQuads = new Class({
          * The number of quads per batch, used to determine the size of the
          * vertex and quad buffers, and the number of instances to render.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#quadsPerBatch
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#quadsPerBatch
          * @type {number}
          * @since 3.90.0
          */
@@ -44,8 +44,9 @@ var BatchTexturedTintedRawQuads = new Class({
 
         /**
          * The number of vertices per instance.
+         * This is always 4 for a quad.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#verticesPerInstance
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#verticesPerInstance
          * @type {number}
          * @since 3.90.0
          * @default 4
@@ -53,11 +54,37 @@ var BatchTexturedTintedRawQuads = new Class({
         this.verticesPerInstance = 4;
 
         /**
+         * The number of indices per instance.
+         * This is always 6 for a quad.
+         * It is composed of four triangles,
+         * but the first and last are degenerate to allow for
+         * TRIANGLE_STRIP rendering, so there are only two true triangles.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#indicesPerInstance
+         * @type {number}
+         * @since 3.90.0
+         * @default 6
+         */
+        this.indicesPerInstance = 6;
+
+        /**
+         * The number of bytes per index per instance.
+         * This is used to advance the index buffer, and accounts for the
+         * size of a Uint16Array element.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#bytesPerIndexPerInstance
+         * @type {number}
+         * @since 3.90.0
+         * @default 12
+         */
+        this.bytesPerIndexPerInstance = this.indicesPerInstance * Uint16Array.BYTES_PER_ELEMENT;
+
+        /**
          * The maximum number of textures per batch entry.
          * This is usually the maximum number of texture units available,
          * but it might be smaller for some uses.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#maxTexturesPerBatch
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#maxTexturesPerBatch
          * @type {number}
          * @since 3.90.0
          */
@@ -66,7 +93,7 @@ var BatchTexturedTintedRawQuads = new Class({
         /**
          * The number of quads currently in the batch.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#instanceCount
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#instanceCount
          * @type {number}
          * @since 3.90.0
          */
@@ -84,126 +111,69 @@ var BatchTexturedTintedRawQuads = new Class({
         this.program = renderer.createProgram(ShaderSourceVS, ParsedShaderSourceFS);
 
         /**
-         * The layout, data, and vertex buffer used to store the quad data.
+         * The index buffer defining vertex order.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#quadBufferLayout
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper}
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#indexBuffer
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @since 3.90.0
          */
-        this.quadBufferLayout = new WebGLVertexBufferLayoutWrapper(renderer, this.program, {
-            instanceDivisor: 1,
-            usage: gl.DYNAMIC_DRAW,
-            count: this.quadsPerBatch,
-            layout: [
-                {
-                    name: 'inTexIdAndTintEffect',
-                    location: -1,
-                    size: 2,
-                    type: gl.FLOAT,
-                    normalized: false
-                },
-                {
-                    name: 'inTextureBox',
-                    location: -1,
-                    size: 4,
-                    type: gl.FLOAT,
-                    normalized: false
-                },
-                {
-                    name: 'inTintTL',
-                    location: -1,
-                    size: 4,
-                    type: gl.UNSIGNED_BYTE,
-                    normalized: true
-                },
-                {
-                    name: 'inTintBL',
-                    location: -1,
-                    size: 4,
-                    type: gl.UNSIGNED_BYTE,
-                    normalized: true
-                },
-                {
-                    name: 'inTintTR',
-                    location: -1,
-                    size: 4,
-                    type: gl.UNSIGNED_BYTE,
-                    normalized: true
-                },
-                {
-                    name: 'inTintBR',
-                    location: -1,
-                    size: 4,
-                    type: gl.UNSIGNED_BYTE,
-                    normalized: true
-                },
-
-                {
-                    name: 'inObjectMatrixABCD',
-                    location: -1,
-                    size: 4,
-                    type: gl.FLOAT,
-                    normalized: false
-                },
-                {
-                    name: 'inObjectMatrixXY',
-                    location: -1,
-                    size: 2,
-                    type: gl.FLOAT,
-                    normalized: false
-                },
-                {
-                    name: 'inWorldMatrixABCD',
-                    location: -1,
-                    size: 4,
-                    type: gl.FLOAT,
-                    normalized: false
-                },
-                {
-                    name: 'inWorldMatrixXY',
-                    location: -1,
-                    size: 2,
-                    type: gl.FLOAT,
-                    normalized: false
-                },
-                {
-                    name: 'inViewMatrixABCD',
-                    location: -1,
-                    size: 4,
-                    type: gl.FLOAT,
-                    normalized: false
-                },
-                {
-                    name: 'inViewMatrixXY',
-                    location: -1,
-                    size: 2,
-                    type: gl.FLOAT,
-                    normalized: false
-                }
-            ]
-        });
+        this.indexBuffer = renderer.createIndexBuffer(
+            this._generateElementIndices(this.quadsPerBatch),
+            gl.STATIC_DRAW
+        );
 
         /**
-         * The layout, data, and vertex buffer used to store the instance data.
+         * The layout, data, and vertex buffer used to store the vertex data.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#instanceBufferLayout
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#vertexBufferLayout
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper}
          * @since 3.90.0
          */
-        this.instanceBufferLayout = new WebGLVertexBufferLayoutWrapper(renderer, this.program, {
-            usage: gl.STATIC_DRAW,
-            count: this.verticesPerInstance,
-            instanceDivisor: 0,
-            layout: [
-                {
-                    name: 'inPositionAndIndex',
-                    location: -1,
-                    size: 3,
-                    type: gl.FLOAT,
-                    normalized: false
-                }
-            ]
-        });
+        this.vertexBufferLayout = new WebGLVertexBufferLayoutWrapper(
+            renderer,
+            this.program,
+            {
+                usage: gl.DYNAMIC_DRAW,
+                count: this.quadsPerBatch * 4,
+                layout: [
+                    {
+                        name: 'inPosition',
+                        location: -1,
+                        size: 2,
+                        type: gl.FLOAT,
+                        normalized: false
+                    },
+                    {
+                        name: 'inTexCoord',
+                        location: -1,
+                        size: 2,
+                        type: gl.FLOAT,
+                        normalized: false
+                    },
+                    {
+                        name: 'inTexId',
+                        location: -1,
+                        size: 1,
+                        type: gl.FLOAT,
+                        normalized: false
+                    },
+                    {
+                        name: 'inTintEffect',
+                        location: -1,
+                        size: 1,
+                        type: gl.FLOAT,
+                        normalized: false
+                    },
+                    {
+                        name: 'inTint',
+                        location: -1,
+                        size: 4,
+                        type: gl.UNSIGNED_BYTE,
+                        normalized: true
+                    }
+                ]
+            }
+        );
 
         /**
          * The Vertex Array Object used to render the batch.
@@ -212,15 +182,14 @@ var BatchTexturedTintedRawQuads = new Class({
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper}
          * @since 3.90.0
          */
-        this.vao = renderer.createVAO(null, [
-            this.quadBufferLayout,
-            this.instanceBufferLayout
+        this.vao = renderer.createVAO(this.indexBuffer, [
+            this.vertexBufferLayout
         ]);
 
         /**
          * The current batch entry being filled with textures.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#currentBatchEntry
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#currentBatchEntry
          * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineBatchEntry}
          * @since 3.90.0
          */
@@ -239,7 +208,7 @@ var BatchTexturedTintedRawQuads = new Class({
          * buffer. When the batch flushes, there will be one vertex buffer
          * upload, and one draw call per batch entry.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#batchEntries
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#batchEntries
          * @type {Phaser.Types.Renderer.WebGL.WebGLPipelineBatchEntry[]}
          * @since 3.90.0
          * @default []
@@ -247,13 +216,13 @@ var BatchTexturedTintedRawQuads = new Class({
         this.batchEntries = [];
 
         /**
-         * The number of floats per quad, used to determine how much of the quad buffer to update.
+         * The number of floats per instance, used to determine how much of the vertex buffer to update.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#floatsPerQuad
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#floatsPerInstance
          * @type {number}
          * @since 3.90.0
          */
-        this.floatsPerQuad = this.quadBufferLayout.layout.stride / Float32Array.BYTES_PER_ELEMENT;
+        this.floatsPerInstance = this.vertexBufferLayout.layout.stride * this.verticesPerInstance / Float32Array.BYTES_PER_ELEMENT;
 
         // Set the dimension-related uniforms and listen for resize events.
         this.resize(renderer.width, renderer.height);
@@ -263,10 +232,6 @@ var BatchTexturedTintedRawQuads = new Class({
         // because it addresses texture units, not textures.
         this.program.setUniform('uMainSampler[0]', this.renderer.textureUnitIndices);
 
-        // Initialize the instance buffer, and listen for context loss and restore.
-        this.populateInstanceBuffer();
-        this.renderer.on(Phaser.Renderer.Events.RESTORE_WEBGL, this.populateInstanceBuffer, this);
-
         // Listen for changes to the number of draw calls per batch.
         this.manager.on(Phaser.Renderer.Events.SET_PARALLEL_TEXTURE_UNITS, this.updateTextureCount, this);
     },
@@ -274,7 +239,7 @@ var BatchTexturedTintedRawQuads = new Class({
     /**
      * Draw then empty the current batch.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#run
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#run
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
@@ -282,8 +247,12 @@ var BatchTexturedTintedRawQuads = new Class({
     {
         if (this.instanceCount === 0) { return; }
 
+        var bytesPerIndexPerInstance = this.bytesPerIndexPerInstance;
+        var indicesPerInstance = this.indicesPerInstance;
+        var program = this.program;
+        var vao = this.vao;
         var renderer = this.renderer;
-        var quadBuffer = this.quadBufferLayout.buffer;
+        var vertexBuffer = this.vertexBufferLayout.buffer;
 
         // Finalize the current batch entry.
         this.pushCurrentBatchEntry();
@@ -293,11 +262,11 @@ var BatchTexturedTintedRawQuads = new Class({
         {
             // We use a subarray to avoid copying the buffer, but still
             // control the length.
-            quadBuffer.update(this.quadBufferLayout.viewFloat32.subarray(0, this.instanceCount * this.floatsPerQuad));
+            vertexBuffer.update(this.vertexBufferLayout.viewFloat32.subarray(0, this.instanceCount * this.floatsPerInstance));
         }
         else
         {
-            quadBuffer.update(this.quadBufferLayout.data);
+            vertexBuffer.update(this.vertexBufferLayout.data);
         }
 
         this.program.setUniform('uRoundPixels', drawingContext.camera.roundPixels);
@@ -306,14 +275,13 @@ var BatchTexturedTintedRawQuads = new Class({
         for (var i = 0; i < subBatches; i++)
         {
             var entry = this.batchEntries[i];
-            renderer.drawInstances(
+            renderer.drawElements(
                 drawingContext,
                 entry.texture,
-                this.program,
-                this.vao,
-                entry.start,
-                this.verticesPerInstance,
-                entry.count
+                program,
+                vao,
+                entry.count * indicesPerInstance,
+                entry.start * bytesPerIndexPerInstance
             );
         }
 
@@ -334,26 +302,34 @@ var BatchTexturedTintedRawQuads = new Class({
      * - Top-right
      * - Bottom-right
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#batch
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#batch
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} currentContext - The current drawing context.
      * @param {Phaser.Renderer.WebGL.WebGLTextureWrapper} glTexture - The texture to render.
-     * @param {boolean} tintFill - Whether to tint the fill color.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} objectMatrix - The matrix to transform the base quad into the object space.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} worldMatrix - The matrix to transform the object space quad into the world space.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} viewMatrix - The matrix to transform the world space quad into the view space.
+     * @param {number} x0 - The x coordinate of the top-left corner.
+     * @param {number} y0 - The y coordinate of the top-left corner.
+     * @param {number} x1 - The x coordinate of the bottom-left corner.
+     * @param {number} y1 - The y coordinate of the bottom-left corner.
+     * @param {number} x2 - The x coordinate of the top-right corner.
+     * @param {number} y2 - The y coordinate of the top-right corner.
+     * @param {number} x3 - The x coordinate of the bottom-right corner.
+     * @param {number} y3 - The y coordinate of the bottom-right corner.
      * @param {number} texX - The left u coordinate (0-1).
      * @param {number} texY - The top v coordinate (0-1).
      * @param {number} texWidth - The width of the texture (0-1).
      * @param {number} texHeight - The height of the texture (0-1).
+     * @param {number} tintFill - Whether to tint the fill color.
      * @param {number} tintTL - The top-left tint color.
      * @param {number} tintBL - The bottom-left tint color.
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBR - The bottom-right tint color.
      */
-    batch: function (currentContext, glTexture, tintFill, objectMatrix, worldMatrix, viewMatrix, texX, texY, texWidth, texHeight, tintTL, tintBL, tintTR, tintBR)
+    batch: function (currentContext, glTexture, x0, y0, x1, y1, x2, y2, x3, y3, texX, texY, texWidth, texHeight, tintFill, tintTL, tintBL, tintTR, tintBR)
     {
-        this.manager.setCurrentBatchNode(this, currentContext);
+        if (this.instanceCount === 0)
+        {
+            this.manager.setCurrentBatchNode(this, currentContext);
+        }
 
         // Texture
 
@@ -381,24 +357,46 @@ var BatchTexturedTintedRawQuads = new Class({
             currentBatchEntry.unit++;
         }
 
-        var quadOffset32 = this.instanceCount * this.floatsPerQuad;
-        var quadViewF32 = this.quadBufferLayout.viewFloat32;
-        var quadViewU32 = this.quadBufferLayout.viewUint32;
+        // Update the vertex buffer.
+        var vertexOffset32 = this.instanceCount * this.floatsPerInstance;
+        var vertexViewF32 = this.vertexBufferLayout.viewFloat32;
+        var vertexViewU32 = this.vertexBufferLayout.viewUint32;
 
-        // Quad
-        quadViewF32[quadOffset32 + 0] = textureIndex;
-        quadViewF32[quadOffset32 + 1] = tintFill;
-        quadViewF32[quadOffset32 + 2] = texX;
-        quadViewF32[quadOffset32 + 3] = texY;
-        quadViewF32[quadOffset32 + 4] = texWidth;
-        quadViewF32[quadOffset32 + 5] = texHeight;
-        quadViewU32[quadOffset32 + 6] = tintTL;
-        quadViewU32[quadOffset32 + 7] = tintBL;
-        quadViewU32[quadOffset32 + 8] = tintTR;
-        quadViewU32[quadOffset32 + 9] = tintBR;
-        quadViewF32.set(objectMatrix.matrix.subarray(0, 6), quadOffset32 + 10);
-        quadViewF32.set(worldMatrix.matrix.subarray(0, 6), quadOffset32 + 16);
-        quadViewF32.set(viewMatrix.matrix.subarray(0, 6), quadOffset32 + 22);
+        // Top-left
+        vertexViewF32[vertexOffset32++] = x0;
+        vertexViewF32[vertexOffset32++] = y0;
+        vertexViewF32[vertexOffset32++] = texX;
+        vertexViewF32[vertexOffset32++] = texY;
+        vertexViewF32[vertexOffset32++] = textureIndex;
+        vertexViewF32[vertexOffset32++] = tintFill;
+        vertexViewU32[vertexOffset32++] = tintTL;
+
+        // Bottom-left
+        vertexViewF32[vertexOffset32++] = x1;
+        vertexViewF32[vertexOffset32++] = y1;
+        vertexViewF32[vertexOffset32++] = texX;
+        vertexViewF32[vertexOffset32++] = texY + texHeight;
+        vertexViewF32[vertexOffset32++] = textureIndex;
+        vertexViewF32[vertexOffset32++] = tintFill;
+        vertexViewU32[vertexOffset32++] = tintBL;
+
+        // Top-right
+        vertexViewF32[vertexOffset32++] = x2;
+        vertexViewF32[vertexOffset32++] = y2;
+        vertexViewF32[vertexOffset32++] = texX + texWidth;
+        vertexViewF32[vertexOffset32++] = texY;
+        vertexViewF32[vertexOffset32++] = textureIndex;
+        vertexViewF32[vertexOffset32++] = tintFill;
+        vertexViewU32[vertexOffset32++] = tintTR;
+
+        // Bottom-right
+        vertexViewF32[vertexOffset32++] = x3;
+        vertexViewF32[vertexOffset32++] = y3;
+        vertexViewF32[vertexOffset32++] = texX + texWidth;
+        vertexViewF32[vertexOffset32++] = texY + texHeight;
+        vertexViewF32[vertexOffset32++] = textureIndex;
+        vertexViewF32[vertexOffset32++] = tintFill;
+        vertexViewU32[vertexOffset32++] = tintBR;
 
         // Increment the instance count.
         this.instanceCount++;
@@ -418,7 +416,7 @@ var BatchTexturedTintedRawQuads = new Class({
      * Push the current batch entry to the batch entry list,
      * and create a new batch entry for future use.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#pushCurrentBatchEntry
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#pushCurrentBatchEntry
      * @since 3.90.0
      */
     pushCurrentBatchEntry: function ()
@@ -441,29 +439,41 @@ var BatchTexturedTintedRawQuads = new Class({
     },
 
     /**
-     * Populate the instance buffer with the base quad.
+     * Generate element indices for the quad vertices.
+     * This is called automatically when the node is initialized.
      *
-     * This is called automatically when the renderer is initialized,
-     * or when the context is lost and restored.
+     * Each quad is drawn as two triangles, with the vertices in the order:
+     * 0, 0, 1, 2, 3, 3. The quads are drawn as a TRIANGLE_STRIP, so the
+     * repeated vertices form degenerate triangles to connect the quads
+     * without being drawn.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#populateInstanceBuffer
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#_generateElementIndices
      * @since 3.90.0
+     * @private
+     * @param {number} quads - The number of quads to define.
+     * @return {Uint16Array} The index buffer data.
      */
-    populateInstanceBuffer: function ()
+    _generateElementIndices: function (quads)
     {
-        this.instanceBufferLayout.viewFloat32.set([
-            0, 0, 0,
-            0, 1, 1,
-            1, 0, 2,
-            1, 1, 3
-        ]);
-        this.instanceBufferLayout.buffer.update(this.instanceBufferLayout.data);
+        var indices = new Uint16Array(quads * 6);
+        var offset = 0;
+        for (var i = 0; i < quads; i++)
+        {
+            var index = i * 4;
+            indices[offset++] = index;
+            indices[offset++] = index;
+            indices[offset++] = index + 1;
+            indices[offset++] = index + 2;
+            indices[offset++] = index + 3;
+            indices[offset++] = index + 3;
+        }
+        return indices;
     },
 
     /**
      * Set new dimensions for the renderer. This is called automatically when the renderer is resized.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedRawQuads#resize
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#resize
      * @since 3.90.0
      * @param {number} width - The new width of the renderer.
      * @param {number} height - The new height of the renderer.
@@ -489,7 +499,7 @@ var BatchTexturedTintedRawQuads = new Class({
      * for the `Phaser.Renderer.Events.SET_PARALLEL_TEXTURE_UNITS` event,
      * triggered by the RenderNodeManager.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.Pressurizer#updateDrawCallCount
+     * @method Phaser.Renderer.WebGL.RenderNodes.Pressurizer#updateTextureCount
      * @since 3.90.0
      * @param {number} [count] - The new number of draw calls per batch. If undefined, the maximum number of texture units is used.
      */
@@ -534,4 +544,4 @@ var BatchTexturedTintedRawQuads = new Class({
     }
 });
 
-module.exports = BatchTexturedTintedRawQuads;
+module.exports = BatchTexturedTintedTransformedQuads;

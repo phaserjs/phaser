@@ -2925,26 +2925,28 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Draw a number of instances to a drawing context.
+     * Draw a number of vertices to a drawing context.
+     *
+     * This draws the vertices using an index buffer. The buffer should be
+     * bound to the VAO. Vertices are drawn as a `TRIANGLE_STRIP`.
      *
      * This is the primary render method. It requires all the WebGL resources
-     * necessary to render the instances, so they don't have to be set up
+     * necessary to render the vertices, so they don't have to be set up
      * ad-hoc elsewhere.
      *
      * It does not upload vertex data to buffers. Ensure that this is done
      * before calling this method.
      *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#drawInstances
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#drawElements
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The DrawingContext to draw to.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]} textures - An array of textures to bind. Textures are bound to units corresponding to their indices in the array.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The shader program to use.
-     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper} vao - The Vertex Array Object to bind.
-     * @param {number} instanceStart - The instance to start drawing from.
-     * @param {number} instanceVertices - The number of vertices per instance.
-     * @param {number} instanceCount - The number of instances to draw.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper} vao - The Vertex Array Object to bind. It must have an index buffer attached.
+     * @param {number} count - The number of vertices to draw. Because of the TRIANGLE_STRIP topology, this should be `n + 2`, where `n` is the number of triangles to draw, including degenerate triangles.
+     * @param {number} offset - The offset to start drawing from in the index buffer. This is in bytes, and should be a multiple of 2 (for 16-bit `UNSIGNED_SHORT` indices).
      */
-    drawInstances: function (drawingContext, textures, program, vao, instanceStart, instanceVertices, instanceCount)
+    drawElements: function (drawingContext, textures, program, vao, count, offset)
     {
         var gl = this.gl;
 
@@ -2952,29 +2954,11 @@ var WebGLRenderer = new Class({
 
         program.bind();
 
-        vao.bind(instanceStart);
+        vao.bind();
 
         this.glTextureUnits.bindUnits(textures);
 
-        if (vao.indexBuffer)
-        {
-            this.instancedArraysExtension.drawElementsInstancedANGLE(
-                gl.TRIANGLE_STRIP,
-                instanceVertices,
-                gl.UNSIGNED_SHORT,
-                0,
-                instanceCount
-            );
-        }
-        else
-        {
-            this.instancedArraysExtension.drawArraysInstancedANGLE(
-                gl.TRIANGLE_STRIP,
-                0,
-                instanceVertices,
-                instanceCount
-            );
-        }
+        gl.drawElements(gl.TRIANGLE_STRIP, count, gl.UNSIGNED_SHORT, offset);
     },
 
     /**

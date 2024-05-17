@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var TransformMatrix = require('../../../gameobjects/components/TransformMatrix.js');
 var Class = require('../../../utils/Class');
 var Utils = require('../Utils.js');
 var RenderNode = require('./RenderNode');
@@ -29,6 +30,36 @@ var ImageQuadrangulateBatch = new Class({
     initialize: function ImageQuadrangulateBatch (manager, renderer)
     {
         RenderNode.call(this, 'ImageQuadrangulateBatch', manager, renderer);
+
+        /**
+         * The matrix used internally to compute camera transforms.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.Single#_camMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.90.0
+         * @private
+         */
+        this._camMatrix = new TransformMatrix();
+
+        /**
+         * The matrix used internally to compute sprite transforms.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.Single#_spriteMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.90.0
+         * @private
+         */
+        this._spriteMatrix = new TransformMatrix();
+
+        /**
+         * The matrix used internally to compute the final transform.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.Single#_calcMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.90.0
+         * @private
+         */
+        this._calcMatrix = new TransformMatrix();
     },
 
     /**
@@ -43,7 +74,16 @@ var ImageQuadrangulateBatch = new Class({
     run: function (drawingContext, gameObject, parentMatrix)
     {
         var frame = gameObject.frame;
+        var frameX = frame.x;
+        var frameY = frame.y;
+        var frameWidth = frame.cutWidth;
+        var frameHeight = frame.cutHeight;
+        var customPivot = frame.customPivot;
 
+        var displayOriginX = gameObject.displayOriginX;
+        var displayOriginY = gameObject.displayOriginY;
+
+        // Get UVs.
         var uvSource = frame;
         if (gameObject.isCropped)
         {
@@ -54,6 +94,13 @@ var ImageQuadrangulateBatch = new Class({
             {
                 gameObject.frame.updateCropUVs(crop, gameObject.flipX, gameObject.flipY);
             }
+
+            // Modify the frame dimensions based on the crop.
+            frameWidth = crop.width;
+            frameHeight = crop.height;
+
+            frameX = crop.x;
+            frameY = crop.y;
         }
         var u0 = uvSource.u0;
         var v0 = uvSource.v0;
@@ -61,28 +108,89 @@ var ImageQuadrangulateBatch = new Class({
         var v1 = uvSource.v1;
         var cameraAlpha = drawingContext.camera.alpha;
 
+        // Get tints.
         var tintTL = getTint(gameObject.tintTopLeft, cameraAlpha * gameObject._alphaTL);
         var tintTR = getTint(gameObject.tintTopRight, cameraAlpha * gameObject._alphaTR);
         var tintBL = getTint(gameObject.tintBottomLeft, cameraAlpha * gameObject._alphaBL);
         var tintBR = getTint(gameObject.tintBottomRight, cameraAlpha * gameObject._alphaBR);
 
-        // Render with separate matrices.
+        // Get the transformed quad.
+        var x = -displayOriginX + frameX;
+        var y = -displayOriginY + frameY;
 
-        var matrices = this.manager.nodes.GetSBRQuadMatrices.run(gameObject, drawingContext.camera, parentMatrix);
+        var flipX = 1;
+        var flipY = 1;
 
-        // Use `frame.source.glTexture` instead of `frame.glTexture` to avoid
-        // unnecessary getter function calls.
+        if (gameObject.flipX)
+        {
+            if (!customPivot)
+            {
+                x += (-frame.realWidth + (displayOriginX * 2));
+            }
 
-        this.manager.nodes.BatchTexturedTintedRawQuads.batch(
+            flipX = -1;
+        }
+
+        if (gameObject.flipY)
+        {
+            if (!customPivot)
+            {
+                y += (-frame.realHeight + (displayOriginY * 2));
+            }
+
+            flipY = -1;
+        }
+
+        var gx = gameObject.x;
+        var gy = gameObject.y;
+
+        var camera = drawingContext.camera;
+        var calcMatrix = this._calcMatrix;
+        var camMatrix = this._camMatrix;
+        var spriteMatrix = this._spriteMatrix;
+
+        spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
+
+        if (parentMatrix)
+        {
+            //  Multiply the camera by the parent matrix
+            camMatrix.copyFrom(camera.matrix);
+            camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * gameObject.scrollFactorX, -camera.scrollY * gameObject.scrollFactorY);
+
+            //  Undo the camera scroll
+            spriteMatrix.e = gx;
+            spriteMatrix.f = gy;
+        }
+        else
+        {
+            // camMatrix will not be mutated after this point, so we just take a reference.
+            camMatrix = camera.matrix;
+            spriteMatrix.e -= camera.scrollX * gameObject.scrollFactorX;
+            spriteMatrix.f -= camera.scrollY * gameObject.scrollFactorY;
+        }
+
+        // Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
+
+        var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight);
+
+        this.manager.nodes.BatchTexturedTintedTransformedQuads.batch(
             drawingContext,
-            frame.source.glTexture,
-            gameObject.tintFill,
-            matrices.objectMatrix,
-            matrices.worldMatrix,
-            matrices.camMatrix,
 
+            // Use `frame.source.glTexture` instead of `frame.glTexture`
+            // to avoid unnecessary getter function calls.
+            frame.source.glTexture,
+
+            // Transformed quad in TRIANGLE_STRIP order:
+            quad[0], quad[1],
+            quad[2], quad[3],
+            quad[6], quad[7],
+            quad[4], quad[5],
+            
             // Texture coordinates in X, Y, Width, Height:
             u0, v0, u1 - u0, v1 - v0,
+
+            gameObject.tintFill,
 
             // Tint colors in TRIANGLE_STRIP order:
             tintTL, tintTR, tintBL, tintBR

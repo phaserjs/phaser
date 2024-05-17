@@ -25,6 +25,5 @@
  * @property {number} stride - The stride of the attribute data.
  * @property {number} count - The maximum number of elements in the buffer.
  * @property {GLenum} usage - The usage pattern of the data store. gl.STATIC_DRAW, gl.DYNAMIC_DRAW or gl.STREAM_DRAW.
- * @property {number} instanceDivisor - The instance divisor of the attribute data. This is how many vertex instances to draw before moving to the next one.
  * @property {Phaser.Types.Renderer.WebGL.WebGLAttributeLayout} layout - The layout of the attribute data.
  */
