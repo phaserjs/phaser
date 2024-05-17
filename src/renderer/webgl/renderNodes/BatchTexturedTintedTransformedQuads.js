@@ -36,6 +36,9 @@ var BatchTexturedTintedTransformedQuads = new Class({
          * The number of quads per batch, used to determine the size of the
          * vertex and quad buffers, and the number of instances to render.
          *
+         * This is usually limited by the maximum number of vertices that can be
+         * distinguished with a 16-bit UNSIGNED_INT index buffer, which is 65536. It is set in the game render config.
+         *
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#quadsPerBatch
          * @type {number}
          * @since 3.90.0

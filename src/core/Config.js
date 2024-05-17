@@ -440,7 +440,7 @@ var Config = new Class({
         /**
          * @const {number} Phaser.Core.Config#batchSize - The default WebGL Batch size. Represents the number of _quads_ that can be added to a single batch.
          */
-        this.batchSize = GetValue(renderConfig, 'batchSize', 4096, config);
+        this.batchSize = GetValue(renderConfig, 'batchSize', 16384, config);
 
         /**
          * @const {number} Phaser.Core.Config#maxTextures - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
