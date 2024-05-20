@@ -32,15 +32,6 @@ var FillRect = new Class({
         RenderNode.call(this, 'FillRect', manager, renderer);
 
         /**
-         * Temporary matrix for computing the area covered by the rectangle.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#_objectMatrix
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @private
-         */
-        this._objectMatrix = new TransformMatrix();
-
-        /**
          * An unchanging identity matrix.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#_identityMatrix
@@ -78,8 +69,6 @@ var FillRect = new Class({
      */
     run: function (drawingContext, parentMatrix, x, y, width, height, tintTL, tintTR, tintBL, tintBR, tintFill, inWorldSpace)
     {
-        this._objectMatrix.applyITRS(x, y, 0, width, height);
-
         var currentMatrix = this._identityMatrix;
 
         if (inWorldSpace)
@@ -93,16 +82,22 @@ var FillRect = new Class({
             currentMatrix = this._calcMatrix;
         }
 
-        this.manager.nodes.BatchTexturedTintedRawQuads.batch(
+        var quad = currentMatrix.setQuad(x, y, x + width, y + height);
+
+        this.manager.nodes.BatchTexturedTintedTransformedQuads.batch(
             drawingContext,
             this.renderer.whiteTexture,
-            tintFill,
-            this._objectMatrix,
-            this._identityMatrix,
-            currentMatrix,
 
+            // Quad vertices in TRIANGLE_STRIP order:
+            quad[0], quad[1],
+            quad[2], quad[3],
+            quad[6], quad[7],
+            quad[4], quad[5],
+            
             // Texture coordinates in X, Y, Width, Height:
             0, 0, 1, 1,
+
+            tintFill,
 
             // Tint colors in TRIANGLE_STRIP order:
             tintTL, tintTR, tintBL, tintBR
