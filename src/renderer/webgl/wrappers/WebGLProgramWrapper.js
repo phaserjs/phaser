@@ -54,6 +54,17 @@ var WebGLProgramWrapper = new Class({
         this.webGLProgram = null;
 
         /**
+         * The WebGL state necessary to bind this program.
+         *
+         * This is used internally to accelerate state changes.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#glState
+         * @type {Phaser.Types.Renderer.WebGL.WebGLState}
+         * @since 3.90.0
+         */
+        this.glState = { bindings: { program: this } };
+
+        /**
          * The vertex shader source code as a string.
          *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#vertexSource
@@ -291,7 +302,7 @@ var WebGLProgramWrapper = new Class({
      * Set a uniform value for this WebGLProgram.
      *
      * This method doesn't set the WebGL value directly.
-     * Instead, it adds a request to the `uniforms.requests` map.
+     * Instead, it adds a request to the `uniformRequests` map.
      * These requests are processed when the program is used to draw.
      *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#setUniform
@@ -368,80 +379,95 @@ var WebGLProgramWrapper = new Class({
      */
     bind: function ()
     {
-        var _this = this;
-        var renderer = this.renderer;
-        var gl = renderer.gl;
+        this.renderer.glWrapper.updateBindingsProgram(this.glState);
 
-        renderer.glWrapper.updateBindingsProgram({
-            bindings: { program: this }
-        });
-
-        // Process uniform requests.
-        this.uniformRequests.each(function (name, value)
-        {
-            var uniform = _this.glUniforms.get(name);
-
-            if (!uniform) { return; }
-
-            var uniformValue = uniform.value;
-
-            // Update stored values if they are different.
-            if (uniformValue.length)
-            {
-                var different = false;
-                for (var i = 0; i < uniformValue.length; i++)
-                {
-                    if (uniformValue[i] !== value[i])
-                    {
-                        different = true;
-                        uniformValue[i] = value[i];
-                    }
-                }
-                if (!different) { return; }
-            }
-            else
-            {
-                if (uniformValue === value) { return; }
-                uniformValue = value;
-                uniform.value = value;
-            }
-
-            // Get info about the uniform.
-            var location = uniform.location;
-            var type = uniform.type;
-            var size = uniform.size;
-            var setter = renderer.shaderSetters.constants[type];
-
-            // Set the value.
-            if (setter.isMatrix)
-            {
-                setter.set.call(gl, location, false, uniformValue);
-            }
-            else if (size > 1)
-            {
-                setter.setV.call(gl, location, uniformValue);
-            }
-            else
-            {
-                switch (setter.size)
-                {
-                    case 1:
-                        setter.set.call(gl, location, value);
-                        break;
-                    case 2:
-                        setter.set.call(gl, location, value[0], value[1]);
-                        break;
-                    case 3:
-                        setter.set.call(gl, location, value[0], value[1], value[2]);
-                        break;
-                    case 4:
-                        setter.set.call(gl, location, value[0], value[1], value[2], value[3]);
-                        break;
-                }
-            }
-        });
+        this.uniformRequests.each(this._processUniformRequest.bind(this));
 
         this.uniformRequests.clear();
+    },
+
+    /**
+     * Process a request to update a uniform value.
+     *
+     * Requests are stored in the `uniformRequests` map,
+     * and only bound with this method when the program is used to draw.
+     * This ensures that the WebGL state is only updated when necessary.
+     *
+     * This method works from the description of uniforms provided by WebGL.
+     * It will only update uniforms that exist, in the fields that exist
+     * on those uniforms. If requests for invalid uniforms or fields are made,
+     * they are ignored.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#_processUniformRequest
+     * @since 3.90.0
+     * @private
+     * @param {string} name - The name of the uniform.
+     * @param {number|number[]|Int32Array|Float32Array} value - The value to set.
+     */
+    _processUniformRequest: function (name, value)
+    {
+        var renderer = this.renderer;
+        var gl = renderer.gl;
+        var uniform = this.glUniforms.get(name);
+
+        if (!uniform) { return; }
+
+        var uniformValue = uniform.value;
+
+        // Update stored values if they are different.
+        if (uniformValue.length)
+        {
+            var different = false;
+            for (var i = 0; i < uniformValue.length; i++)
+            {
+                if (uniformValue[i] !== value[i])
+                {
+                    different = true;
+                    uniformValue[i] = value[i];
+                }
+            }
+            if (!different) { return; }
+        }
+        else
+        {
+            if (uniformValue === value) { return; }
+            uniformValue = value;
+            uniform.value = value;
+        }
+
+        // Get info about the uniform.
+        var location = uniform.location;
+        var type = uniform.type;
+        var size = uniform.size;
+        var setter = renderer.shaderSetters.constants[type];
+
+        // Set the value.
+        if (setter.isMatrix)
+        {
+            setter.set.call(gl, location, false, uniformValue);
+        }
+        else if (size > 1)
+        {
+            setter.setV.call(gl, location, uniformValue);
+        }
+        else
+        {
+            switch (setter.size)
+            {
+                case 1:
+                    setter.set.call(gl, location, value);
+                    break;
+                case 2:
+                    setter.set.call(gl, location, value[0], value[1]);
+                    break;
+                case 3:
+                    setter.set.call(gl, location, value[0], value[1], value[2]);
+                    break;
+                case 4:
+                    setter.set.call(gl, location, value[0], value[1], value[2], value[3]);
+                    break;
+            }
+        }
     },
 
     /**
