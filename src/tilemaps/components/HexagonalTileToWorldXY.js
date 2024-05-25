@@ -20,7 +20,7 @@ var Vector2 = require('../../math/Vector2');
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
- * @return {Phaser.Math.Vector2} The XY location in world coordinates.
+ * @return {Phaser.Math.Vector2} The center XY location in world coordinates.
  */
 var HexagonalTileToWorldXY = function (tileX, tileY, point, camera, layer)
 {
@@ -44,7 +44,7 @@ var HexagonalTileToWorldXY = function (tileX, tileY, point, camera, layer)
         tileHeight *= tilemapLayer.scaleY;
     }
 
-    //  Hard-coded orientation values for Pointy-Top Hexagons only
+    //  Hard-coded orientation values for Pointy-Top (staggerAxis === 'y') Hexagons only
 
     //  origin
     var tileWidthHalf = tileWidth / 2;
@@ -57,16 +57,23 @@ var HexagonalTileToWorldXY = function (tileX, tileY, point, camera, layer)
     {
         x = worldX + (tileWidth * tileX) + tileWidth;
         y = worldY + ((1.5 * tileY) * tileHeightHalf) + tileHeightHalf;
-
+        
         if (tileY % 2 === 0)
         {
-            if (this.staggerIndex === 'odd')
+            if (layer.staggerIndex === 'odd')
             {
                 x -= tileWidthHalf;
             }
             else
             {
-                x += tileWidthHalf;
+                x -= tileWidthHalf;
+            }
+        }
+        else
+        {
+            if (layer.staggerIndex === 'even')
+            {
+                x -= tileWidth;
             }
         }
     }
