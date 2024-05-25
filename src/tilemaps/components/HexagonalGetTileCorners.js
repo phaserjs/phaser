@@ -36,7 +36,7 @@ var HexagonalGetTileCorners = function (tileX, tileY, camera, layer)
 
     //  Sets the center of the tile into tempVec
     var tempVec = new Phaser.Math.Vector2;
-    var center =  this.HexagonalTileToWorldXY(tileX, tileY, tempVec, camera, layer);
+    var center = HexagonalTileToWorldXY(tileX, tileY, tempVec, camera, layer);
 
     var corners = [];
 
