@@ -35,17 +35,18 @@ var HexagonalGetTileCorners = function (tileX, tileY, camera, layer)
     }
 
     //  Sets the center of the tile into tempVec
-    var tempVec = new Phaser.Math.Vector2;
+    var tempVec = new Vector2();
     var center = HexagonalTileToWorldXY(tileX, tileY, tempVec, camera, layer);
 
     var corners = [];
 
+    // We assume a pointy-top orientation (staggerAxis == 'y')
     var b0 = 0.5773502691896257; // Math.sqrt(3) / 3
     var rotation = 0;
     var hexWidth;
     var hexHeight;
 
-    if (layer.staggerAxis === 'y')
+    if (layer.staggerAxis == 'y')
     {
         hexWidth = b0 * tileWidth;
         hexHeight = tileHeight / 2;
@@ -62,7 +63,7 @@ var HexagonalGetTileCorners = function (tileX, tileY, camera, layer)
         var angle = 2 * Math.PI * (0.5 - i) / 6;
         angle += rotation;
 
-        corners.push(new Phaser.Math.Vector2(center.x + (hexWidth * Math.cos(angle)), center.y + (hexHeight * Math.sin(angle))));
+        corners.push(new Vector2(center.x + (hexWidth * Math.cos(angle)), center.y + (hexHeight * Math.sin(angle))));
     }
 
     return corners;
