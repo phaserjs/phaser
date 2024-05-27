@@ -18,7 +18,7 @@ var Class = require('../../../utils/Class');
  * @since 3.90.0
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance that owns this wrapper.
  * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The program that this layout is associated with.
- * @param {Partial<Phaser.Types.Renderer.WebGL.WebGLBufferLayout>} layout - The layout of the buffer. At construction, this should be incomplete. The stride and per-attribute location, bytes, and offset will be filled in during construction. This will mutate the object.
+ * @param {Partial<Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout>} layout - The layout of the buffer. At construction, this should be incomplete. The stride and per-attribute location, bytes, and offset will be filled in during construction. This will mutate the object.
  */
 var WebGLVertexBufferLayoutWrapper = new Class({
     initialize: function WebGLVertexBufferLayoutWrapper (renderer, program, layout)
@@ -45,7 +45,7 @@ var WebGLVertexBufferLayoutWrapper = new Class({
          * The layout of the buffer.
          *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper#layout
-         * @type {Phaser.Types.Renderer.WebGL.WebGLBufferLayout}
+         * @type {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout}
          * @since 3.90.0
          */
         this.layout = layout;

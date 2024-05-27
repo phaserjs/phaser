@@ -24,6 +24,26 @@ var Camera = new Class({
     initialize: function Camera (manager, renderer)
     {
         RenderNode.call(this, 'Camera', manager, renderer);
+
+        /**
+         * The RenderNode that handles filling the camera with a
+         * flat color. This is used to render the camera background,
+         * flash effects, and fade effects.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.Camera#fillCameraNode
+         * @type {Phaser.Renderer.WebGL.RenderNodes.FillCamera}
+         * @since 3.90.0
+         */
+        this.fillCameraNode = manager.getNode('FillCamera');
+
+        /**
+         * The RenderNode that handles rendering lists of children.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.Camera#listCompositorNode
+         * @type {Phaser.Renderer.WebGL.RenderNodes.ListCompositor}
+         * @since 3.90.0
+         */
+        this.listCompositorNode = manager.getNode('ListCompositor');
     },
 
     /**
@@ -56,18 +76,18 @@ var Camera = new Class({
         // Enter drawing context.
         currentContext.use();
 
-        var FillCamera = this.manager.nodes.FillCamera;
+        var fillCamera = this.fillCameraNode;
 
         // Draw camera background.
         if (camera.backgroundColor.alphaGL > 0)
         {
             var bg = camera.backgroundColor;
             var col = GetColor32(bg.red, bg.green, bg.blue, bg.alpha);
-            FillCamera.run(currentContext, col);
+            fillCamera.run(currentContext, col);
         }
 
         // Draw children.
-        this.manager.nodes.ListCompositor.run(currentContext, children, parentTransformMatrix);
+        this.listCompositorNode.run(currentContext, children, parentTransformMatrix);
 
         // Draw camera post effects.
 
@@ -75,14 +95,14 @@ var Camera = new Class({
         if (flashEffect.postRenderWebGL())
         {
             col = GetColor32(flashEffect.red, flashEffect.green, flashEffect.blue, flashEffect.alpha * 255);
-            FillCamera.run(currentContext, col);
+            fillCamera.run(currentContext, col);
         }
         
         var fadeEffect = camera.fadeEffect;
         if (fadeEffect.postRenderWebGL())
         {
             col = GetColor32(fadeEffect.red, fadeEffect.green, fadeEffect.blue, fadeEffect.alpha * 255);
-            FillCamera.run(currentContext, col);
+            fillCamera.run(currentContext, col);
         }
 
         // Finish rendering.

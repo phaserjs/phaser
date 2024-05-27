@@ -16,20 +16,67 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * A RenderNode which computes a StandardBatchRenderQuad (SBR-Quad) from an
  * Image-like GameObject.
  *
- * @class ImageQuadrangulateBatch
+ * This node computes the vertices and texture properties of a single quad.
+ * The quad is then batched with other quads to be rendered together at some
+ * later point in the render sequence.
+ * This is useful for rendering many similar objects at once.
+ *
+ * This RenderNode is configurable. Most of the time, this involves setting
+ * the `config.batchHandler` property to a custom batch handler configuration.
+ * The batch handler contains the vertex buffer layout and shaders used to
+ * render the batched items.
+ *
+ * The default batch handler is `QuadBatchHandler`. It is set up to handle
+ * Standard Batch Render Quads (SBR-Quads) as the parameters of its `batch`
+ * method. These define a quad with a texture reference, texture
+ * coordinates as a box, vertex coordinates for each corner,
+ * tint colors for each corner, and a tint fill value. SBR-Quads are
+ * the default, efficient way to render images and sprites.
+ *
+ * If you want to render something that doesn't fit the SBR-Quad format,
+ * you will need to customize more than just the batch handler.
+ * Configure a new `run` method to invoke your custom batch handler
+ * with the correct parameters.
+ *
+ * @class GameObjectBatcher
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
  * @since 3.90.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this RenderNode.
+ * @param {Phaser.Renderer.WebGL.RenderNodes.GameObjectBatcherConfig} [config] - The configuration object for this RenderNode.
  */
-var ImageQuadrangulateBatch = new Class({
+var GameObjectBatcher = new Class({
     Extends: RenderNode,
 
-    initialize: function ImageQuadrangulateBatch (manager, renderer)
+    initialize: function GameObjectBatcher (manager, renderer, config)
     {
-        RenderNode.call(this, 'ImageQuadrangulateBatch', manager, renderer);
+        if (config === undefined) { config = {}; }
+
+        var name = config.name || 'GameObjectBatcher';
+
+        RenderNode.call(this, name, manager, renderer);
+
+        var batchHandler = 'QuadBatchHandler';
+        if (config.batchHandler)
+        {
+            var batchHandlerIsConfig = typeof config.batchHandler === 'object';
+            batchHandler = batchHandlerIsConfig ? config.batchHandler.name : config.batchHandler;
+            if (batchHandlerIsConfig && !manager.hasNode(batchHandler))
+            {
+                manager.addNodeConstructor(batchHandler, config.batchHandler);
+            }
+        }
+
+        /**
+         * The batch handler used to render the quads.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.GameObjectBatcher#batchHandler
+         * @type {Phaser.Renderer.WebGL.RenderNodes.BatchHandler}
+         * @since 3.90.0
+         */
+        this.batchHandler = manager.getNode(batchHandler);
 
         /**
          * The matrix used internally to compute camera transforms.
@@ -65,7 +112,7 @@ var ImageQuadrangulateBatch = new Class({
     /**
      * Render the GameObject.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.ImageQuadrangulateBatch#run
+     * @method Phaser.Renderer.WebGL.RenderNodes.GameObjectBatcher#run
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
      * @param {Phaser.GameObjects.Image} gameObject - The GameObject being rendered.
@@ -174,7 +221,7 @@ var ImageQuadrangulateBatch = new Class({
 
         var quad = calcMatrix.setQuad(x, y, x + frameWidth, y + frameHeight);
 
-        this.manager.nodes.BatchTexturedTintedTransformedQuads.batch(
+        this.batchHandler.batch(
             drawingContext,
 
             // Use `frame.source.glTexture` instead of `frame.glTexture`
@@ -200,4 +247,4 @@ var ImageQuadrangulateBatch = new Class({
     }
 });
 
-module.exports = ImageQuadrangulateBatch;
+module.exports = GameObjectBatcher;

@@ -27,7 +27,7 @@ var VideoWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 
     drawingContext.camera.addToRenderList(src);
 
-    renderer.renderNodes.nodes.ImageQuadrangulateBatch.run(drawingContext, src, parentMatrix);
+    this.renderNode.run(drawingContext, src, parentMatrix);
 };
 
 module.exports = VideoWebGLRenderer;

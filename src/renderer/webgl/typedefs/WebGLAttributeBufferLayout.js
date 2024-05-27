@@ -11,7 +11,7 @@
  * @property {string} name - The name of the attribute, as defined in the shader.
  * @property {Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper} location - The location of the attribute.
  * @property {number} size - The number of components per vertex attribute.
- * @property {GLenum} type - The data type of each component in the array. This can differ from the type in the shader, so long as WebGL can convert the types.
+ * @property {GLenum|string} type - The data type of each component in the array. This can differ from the type in the shader, so long as WebGL can convert the types. If the type is a string, it will be converted to the appropriate GLenum, e.g. 'FLOAT' to gl.FLOAT.
  * @property {boolean} normalized - Whether integer data values should be normalized when being cast to a float.
  * @property {number} offset - The byte offset from the beginning of the buffer.
  * @property {number} [bytes=4] - The number of bytes per vertex attribute. This is the size of the type, usually 4 bytes for FLOAT or INT.
@@ -24,6 +24,6 @@
  *
  * @property {number} stride - The stride of the attribute data.
  * @property {number} count - The maximum number of elements in the buffer.
- * @property {GLenum} usage - The usage pattern of the data store. gl.STATIC_DRAW, gl.DYNAMIC_DRAW or gl.STREAM_DRAW.
+ * @property {GLenum|string} usage - The usage pattern of the data store. gl.STATIC_DRAW, gl.DYNAMIC_DRAW or gl.STREAM_DRAW. If the type is a string, it will be converted to the appropriate GLenum, e.g. 'STATIC_DRAW' to gl.STATIC_DRAW.
  * @property {Phaser.Types.Renderer.WebGL.WebGLAttributeLayout} layout - The layout of the attribute data.
  */

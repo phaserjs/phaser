@@ -32,6 +32,15 @@ var FillRect = new Class({
         RenderNode.call(this, 'FillRect', manager, renderer);
 
         /**
+         * The QuadBatchHandler that handles the rendering of quads.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#quadBatchHandlerNode
+         * @type {Phaser.Renderer.WebGL.RenderNodes.QuadBatchHandler}
+         * @since 3.90.0
+         */
+        this.quadBatchHandlerNode = this.manager.getNode('QuadBatchHandler');
+
+        /**
          * An unchanging identity matrix.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#_identityMatrix
@@ -84,7 +93,7 @@ var FillRect = new Class({
 
         var quad = currentMatrix.setQuad(x, y, x + width, y + height);
 
-        this.manager.nodes.BatchTexturedTintedTransformedQuads.batch(
+        this.quadBatchHandlerNode.batch(
             drawingContext,
             this.renderer.whiteTexture,
 

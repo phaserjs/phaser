@@ -159,6 +159,17 @@ var WebGLRenderer = new Class({
         this.renderNodes = null;
 
         /**
+         * The RenderNode to use for rendering individual cameras.
+         *
+         * This will be populated during the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#cameraRenderNode
+         * @type {Phaser.Renderer.WebGL.RenderNodes.RenderNode}
+         * @since 3.90.0
+         */
+        this.cameraRenderNode = null;
+
+        /**
          * The width of the canvas being rendered to.
          * This is populated in the onResize event handler.
          *
@@ -1068,8 +1079,10 @@ var WebGLRenderer = new Class({
         //
         // pipelineManager.boot(config.pipeline, config.defaultPipeline, config.autoMobilePipeline);
 
-        // Set up render steps.
+        // Set up render nodes.
         this.renderNodes = new RenderNodeManager(this);
+
+        this.cameraRenderNode = this.renderNodes.getNode('Camera');
 
         //  Set-up default textures, fbo and scissor
 
@@ -2800,7 +2813,7 @@ var WebGLRenderer = new Class({
 
         this.emit(Events.RENDER, scene, camera);
 
-        this.renderNodes.nodes.Camera.run(this.baseDrawingContext, children, camera);
+        this.cameraRenderNode.run(this.baseDrawingContext, children, camera);
 
         return;
         // OLD CODE:

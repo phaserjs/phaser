@@ -16,6 +16,7 @@ var WebGL = {
     DrawingContext: require('./DrawingContext'),
     PipelineManager: require('./PipelineManager'),
     Pipelines: require('./pipelines'),
+    RenderNodes: require('./renderNodes'),
     RenderTarget: require('./RenderTarget'),
     Utils: require('./Utils'),
     WebGLPipeline: require('./WebGLPipeline'),

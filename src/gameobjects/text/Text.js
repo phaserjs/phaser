@@ -68,8 +68,8 @@ var UUID = require('../../utils/string/UUID');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
@@ -97,8 +97,8 @@ var Text = new Class({
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
         Components.PostPipeline,
+        Components.RenderNode,
         Components.ScrollFactor,
         Components.Tint,
         Components.Transform,
@@ -126,7 +126,7 @@ var Text = new Class({
 
         this.setPosition(x, y);
         this.setOrigin(0, 0);
-        this.initPipeline();
+        this.initRenderNode();
         this.initPostPipeline(true);
 
         /**

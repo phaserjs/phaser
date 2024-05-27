@@ -7,12 +7,13 @@
 var EventEmitter = require('eventemitter3');
 var Class = require('../../../utils/Class');
 var Events = require('../../events');
-var BatchTexturedTintedTransformedQuads = require('./BatchTexturedTintedTransformedQuads');
+
 var Camera = require('./Camera');
 var FillCamera = require('./FillCamera');
 var FillRect = require('./FillRect');
-var ImageQuadrangulateBatch = require('./ImageQuadrangulateBatch');
+var GameObjectBatcher = require('./GameObjectBatcher');
 var ListCompositor = require('./ListCompositor');
+var QuadBatchHandler = require('./QuadBatchHandler');
 
 /**
  * @typedef {object} DebugGraphNode
@@ -69,20 +70,55 @@ var RenderNodeManager = new Class({
         this.maxParallelTextureUnits = (game.config.autoMobilePipeline && !game.device.os.desktop) ? 1 : renderer.maxTextures;
         
         /**
-         * Nodes available for use.
+         * Nodes available for use. This is an internal object,
+         * where the keys are the names of the nodes.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#steps
+         * Nodes are constructed when requested by `getNode`.
+         * Custom nodes can be added via `addNode` or `addNodeConstructor`.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#nodes
          * @type {object}
          * @since 3.90.0
+         * @private
          */
-        this.nodes = {
-            BatchTexturedTintedTransformedQuads: new BatchTexturedTintedTransformedQuads(this, renderer),
-            Camera: new Camera(this, renderer),
-            FillCamera: new FillCamera(this, renderer),
-            FillRect: new FillRect(this, renderer),
-            ImageQuadrangulateBatch: new ImageQuadrangulateBatch(this, renderer),
-            ListCompositor: new ListCompositor(this, renderer),
+        this._nodes = {};
+
+        /**
+         * Built-in nodes which can be constructed by name.
+         * Use `getNode` to either return a constructed built-in node
+         * from `_nodes`, or construct a new one if it does not exist.
+         *
+         * Use `addNodeConstructor` to add custom nodes
+         * without constructing them.
+         * Use `addNode` to add custom nodes that have already been constructed.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#_nodeConstructors
+         * @type {object}
+         * @since 3.90.0
+         * @private
+         */
+        this._nodeConstructors = {
+            Camera: Camera,
+            FillCamera: FillCamera,
+            FillRect: FillRect,
+            GameObjectBatcher: GameObjectBatcher,
+            ImageQuadrangulateBatch: ImageQuadrangulateBatch,
+            ListCompositor: ListCompositor,
+            QuadBatchHandler: QuadBatchHandler
         };
+
+        /**
+         * The default node to use for game objects.
+         *
+         * By default, this is the GameObjectBatcher node.
+         * It is specified as a string, so that the node is only constructed
+         * when it is needed.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#default
+         * @type {string}
+         * @since 3.90.0
+         */
+        this.default = GameObjectBatcher.name;
 
         /**
          * The RenderNode which is currently being filled.
@@ -149,11 +185,11 @@ var RenderNodeManager = new Class({
      */
     addNode: function (name, node)
     {
-        if (this.nodes[name])
+        if (this._nodes[name])
         {
             throw new Error('node ' + name + ' already exists.');
         }
-        this.nodes[name] = node;
+        this._nodes[name] = node;
 
         // If a node is somehow added during a debug render pass,
         // ensure that it is also set to debug.
@@ -161,6 +197,70 @@ var RenderNodeManager = new Class({
         {
             node.setDebug(true);
         }
+    },
+
+    /**
+     * Add a constructor for a node to the manager.
+     * This will allow the node to be constructed when `getNode` is called.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#addNodeConstructor
+     * @since 3.90.0
+     * @param {string} name - The name of the node.
+     * @param {function} constructor - The constructor for the node.
+     * @throws {Error} Will throw an error if the node constructor already exists.
+     */
+    addNodeConstructor: function (name, constructor)
+    {
+        if (this._nodeConstructors[name])
+        {
+            throw new Error('node constructor ' + name + ' already exists.');
+        }
+        this._nodeConstructors[name] = constructor;
+    },
+
+    /**
+     * Get a node from the manager.
+     *
+     * If the node does not exist, and a constructor is available,
+     * it will be constructed and added to the manager,
+     * then returned.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#getNode
+     * @since 3.90.0
+     * @param {string} name - The name of the node.
+     * @return {?Phaser.Renderer.WebGL.RenderNodes.RenderNode} The node, or null if it does not exist.
+     */
+    getNode: function (name)
+    {
+        if (this._nodes[name])
+        {
+            return this._nodes[name];
+        }
+        if (this._nodeConstructors[name])
+        {
+            var node = new this._nodeConstructors[name](this, this.renderer);
+            this.addNode(name, node);
+            return node;
+        }
+        return null;
+    },
+
+    /**
+     * Check if a node exists in the manager.
+     *
+     * If a node is not constructed, but a constructor is available,
+     * it will be considered to exist. Set `constructed` to true to
+     * require that the node has already been constructed.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#hasNode
+     * @since 3.90.0
+     * @param {string} name - The name of the node.
+     * @param {boolean} [constructed=false] - Whether the node must be constructed to be considered to exist.
+     * @return {boolean} Whether the node exists.
+     */
+    hasNode: function (name, constructed)
+    {
+        return !!this._nodes[name] || (!constructed && !!this._nodeConstructors[name]);
     },
 
     /**
@@ -233,9 +333,9 @@ var RenderNodeManager = new Class({
     {
         this.debug = value;
 
-        for (var key in this.nodes)
+        for (var key in this._nodes)
         {
-            this.nodes[key].setDebug(value);
+            this._nodes[key].setDebug(value);
         }
 
         if (value)

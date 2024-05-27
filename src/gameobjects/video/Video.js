@@ -103,8 +103,8 @@ var VideoRender = require('./VideoRender');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.TextureCrop
  * @extends Phaser.GameObjects.Components.Tint
@@ -129,8 +129,8 @@ var Video = new Class({
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
         Components.PostPipeline,
+        Components.RenderNode,
         Components.ScrollFactor,
         Components.TextureCrop,
         Components.Tint,
@@ -195,7 +195,7 @@ var Video = new Class({
          * If you have saved this video to a texture via the `saveTexture` method, this controls if the video
          * is rendered with `flipY` in WebGL or not. You often need to set this if you wish to use the video texture
          * as the input source for a shader. If you find your video is appearing upside down within a shader or
-         * custom pipeline, flip this property.
+         * custom renderer, flip this property.
          *
          * @name Phaser.GameObjects.Video#flipY
          * @type {boolean}
@@ -517,7 +517,7 @@ var Video = new Class({
 
         this.setPosition(x, y);
         this.setSize(256, 256);
-        this.initPipeline();
+        this.initRenderNode();
         this.initPostPipeline(true);
 
         game.events.on(GameEvents.PAUSE, this.globalPause, this);

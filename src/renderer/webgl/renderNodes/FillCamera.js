@@ -25,6 +25,15 @@ var FillCamera = new Class({
     initialize: function FillCamera (manager, renderer)
     {
         RenderNode.call(this, 'FillCamera', manager, renderer);
+
+        /**
+         * The RenderNode that draws a filled rectangle.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.FillCamera#fillRectNode
+         * @type {Phaser.Renderer.WebGL.RenderNodes.FillRect}
+         * @since 3.90.0
+         */
+        this.fillRectNode = this.manager.getNode('FillRect');
     },
 
     /**
@@ -44,7 +53,7 @@ var FillCamera = new Class({
         var cw = camera.width;
         var ch = camera.height;
 
-        this.manager.nodes.FillRect.run(drawingContext, null, cx, cy, cw, ch, color, color, color, color, 2);
+        this.fillRectNode.run(drawingContext, null, cx, cy, cw, ch, color, color, color, color, 2);
     }
 });
 

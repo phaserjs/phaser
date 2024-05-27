@@ -318,6 +318,8 @@ var WebGLProgramWrapper = new Class({
     /**
      * Complete the layout of the provided attribute buffer layout.
      * This will fill in the stride, locations, byte counts, and offsets.
+     * In addition, it will convert any GLenums specified as strings
+     * to their numeric values.
      * This mutates the layout.
      *
      * The order of attributes within the layout forms the order of the buffer.
@@ -330,10 +332,16 @@ var WebGLProgramWrapper = new Class({
      */
     completeLayout: function (attributeBufferLayout)
     {
+        var gl = this.renderer.gl;
         var layout = attributeBufferLayout.layout;
         var glAttributes = this.glAttributes;
         var glAttributeNames = this.glAttributeNames;
         var constants = this.renderer.shaderSetters.constants;
+
+        if (typeof attributeBufferLayout.usage === 'string')
+        {
+            attributeBufferLayout.usage = gl[attributeBufferLayout.usage];
+        }
 
         var offset = 0;
 
@@ -345,6 +353,12 @@ var WebGLProgramWrapper = new Class({
 
             // First, append the current offset.
             attribute.offset = offset;
+
+            // Convert the type to a GLenum if it is a string.
+            if (typeof attribute.type === 'string')
+            {
+                attribute.type = gl[attribute.type];
+            }
 
             var typeData = constants[attribute.type];
             var baseSize = typeData.size;
