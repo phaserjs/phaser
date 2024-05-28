@@ -22,14 +22,13 @@ var RenderNode = require('./RenderNode');
  * @since 3.90.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this RenderNode.
  */
 var FillRect = new Class({
     Extends: RenderNode,
 
-    initialize: function FillRect (manager, renderer)
+    initialize: function FillRect (manager)
     {
-        RenderNode.call(this, 'FillRect', manager, renderer);
+        RenderNode.call(this, 'FillRect', manager);
 
         /**
          * The QuadBatchHandler that handles the rendering of quads.
@@ -95,7 +94,7 @@ var FillRect = new Class({
 
         this.quadBatchHandlerNode.batch(
             drawingContext,
-            this.renderer.whiteTexture,
+            this.manager.renderer.whiteTexture,
 
             // Quad vertices in TRIANGLE_STRIP order:
             quad[0], quad[1],

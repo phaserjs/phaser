@@ -16,14 +16,13 @@ var RenderNode = require('./RenderNode');
  * @since 3.90.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this RenderNode.
  */
 var Camera = new Class({
     Extends: RenderNode,
 
-    initialize: function Camera (manager, renderer)
+    initialize: function Camera (manager)
     {
-        RenderNode.call(this, 'Camera', manager, renderer);
+        RenderNode.call(this, 'Camera', manager);
 
         /**
          * The RenderNode that handles filling the camera with a

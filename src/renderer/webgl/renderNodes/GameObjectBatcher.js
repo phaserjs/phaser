@@ -44,19 +44,18 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * @since 3.90.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this RenderNode.
  * @param {Phaser.Renderer.WebGL.RenderNodes.GameObjectBatcherConfig} [config] - The configuration object for this RenderNode.
  */
 var GameObjectBatcher = new Class({
     Extends: RenderNode,
 
-    initialize: function GameObjectBatcher (manager, renderer, config)
+    initialize: function GameObjectBatcher (manager, config)
     {
         if (config === undefined) { config = {}; }
 
         var name = config.name || 'GameObjectBatcher';
 
-        RenderNode.call(this, name, manager, renderer);
+        RenderNode.call(this, name, manager);
 
         var batchHandler = 'QuadBatchHandler';
         if (config.batchHandler)

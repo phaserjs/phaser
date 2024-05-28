@@ -16,13 +16,13 @@ var Class = require('../../../utils/Class');
  * @constructor
  * @since 3.90.0
  * @param {string} name - The name of the RenderNode.
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this RenderNode.
+ * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
 var RenderNode = new Class({
   
     initialize:
 
-    function RenderNode (name, manager, renderer)
+    function RenderNode (name, manager)
     {
         /**
          * The name of the RenderNode.
@@ -41,15 +41,6 @@ var RenderNode = new Class({
          * @since 3.90.0
          */
         this.manager = manager;
-
-        /**
-         * The renderer that owns this RenderNode.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.RenderNode#renderer
-         * @type {Phaser.Renderer.WebGL.WebGLRenderer}
-         * @since 3.90.0
-         */
-        this.renderer = renderer;
 
         /**
          * Reference to the original `run` method of this node.

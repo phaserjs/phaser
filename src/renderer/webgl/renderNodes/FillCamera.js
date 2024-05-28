@@ -17,14 +17,13 @@ var RenderNode = require('./RenderNode');
  * @since 3.90.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this RenderNode.
  */
 var FillCamera = new Class({
     Extends: RenderNode,
 
-    initialize: function FillCamera (manager, renderer)
+    initialize: function FillCamera (manager)
     {
-        RenderNode.call(this, 'FillCamera', manager, renderer);
+        RenderNode.call(this, 'FillCamera', manager);
 
         /**
          * The RenderNode that draws a filled rectangle.

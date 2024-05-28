@@ -238,7 +238,7 @@ var RenderNodeManager = new Class({
         }
         if (this._nodeConstructors[name])
         {
-            var node = new this._nodeConstructors[name](this, this.renderer);
+            var node = new this._nodeConstructors[name](this);
             this.addNode(name, node);
             return node;
         }

@@ -20,19 +20,18 @@ var BatchHandler = require('./BatchHandler');
  * @constructor
  * @since 3.90.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this handler.
  */
 var QuadBatchHandler = new Class({
     Extends: BatchHandler,
 
-    initialize: function QuadBatchHandler (manager, renderer, config)
+    initialize: function QuadBatchHandler (manager, config)
     {
-        BatchHandler.call(this, manager, renderer, config, this.defaultConfig);
+        BatchHandler.call(this, manager, config, this.defaultConfig);
 
         // Main sampler will never change after initialization,
         // because it addresses texture units, not textures.
-        this.program.setUniform('uMainSampler[0]', this.renderer.textureUnitIndices);
+        this.program.setUniform('uMainSampler[0]', this.manager.renderer.textureUnitIndices);
     },
 
     defaultConfig: {
@@ -112,7 +111,7 @@ var QuadBatchHandler = new Class({
     resize: function (width, height)
     {
         this.program.setUniform('uResolution', [ width, height ]);
-        this.program.setUniform('uProjectionMatrix', this.renderer.projectionMatrix.val);
+        this.program.setUniform('uProjectionMatrix', this.manager.renderer.projectionMatrix.val);
     },
 
     /**
@@ -136,12 +135,14 @@ var QuadBatchHandler = new Class({
      */
     updateTextureCount: function (count)
     {
+        var renderer = this.manager.renderer;
+
         if (count === undefined)
         {
-            count = this.renderer.maxTextures;
+            count = renderer.maxTextures;
         }
 
-        var newCount = Math.max(1, Math.min(count, this.renderer.maxTextures));
+        var newCount = Math.max(1, Math.min(count, renderer.maxTextures));
         if (newCount === this.texturesPerBatch)
         {
             return;
@@ -168,9 +169,9 @@ var QuadBatchHandler = new Class({
 
         this.program.setUniform(
             'uMainSampler[0]',
-            this.renderer.textureUnitIndices
+            renderer.textureUnitIndices
         );
-        this.resize(this.renderer.width, this.renderer.height);
+        this.resize(renderer.width, renderer.height);
     },
 
     /**
@@ -191,7 +192,7 @@ var QuadBatchHandler = new Class({
         var indicesPerInstance = this.indicesPerInstance;
         var program = this.program;
         var vao = this.vao;
-        var renderer = this.renderer;
+        var renderer = this.manager.renderer;
         var vertexBuffer = this.vertexBufferLayout.buffer;
 
         // Finalize the current batch entry.

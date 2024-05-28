@@ -16,14 +16,13 @@ var RenderNode = require('./RenderNode');
  * @since 3.90.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this RenderNode.
  */
 var ListCompositor = new Class({
     Extends: RenderNode,
 
-    initialize: function ListCompositor (manager, renderer)
+    initialize: function ListCompositor (manager)
     {
-        RenderNode.call(this, 'ListCompositor', manager, renderer);
+        RenderNode.call(this, 'ListCompositor', manager);
     },
 
     /**
@@ -43,6 +42,7 @@ var ListCompositor = new Class({
         var currentContext = displayContext;
         var baseBlendMode = displayContext.blendMode;
         var currentBlendMode = baseBlendMode;
+        var renderer = this.manager.renderer;
 
         // Render each child in the display list
         for (var i = 0; i < children.length; i++)
@@ -73,7 +73,7 @@ var ListCompositor = new Class({
                 }
             }
 
-            child.renderWebGL(this.renderer, child, currentContext, parentTransformMatrix);
+            child.renderWebGL(renderer, child, currentContext, parentTransformMatrix);
         }
 
         // Release any remaining context.

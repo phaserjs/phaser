@@ -27,15 +27,15 @@ var RenderNode = require('./RenderNode');
  * @since 3.90.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this RenderNode.
  * @param {Phaser.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this RenderNode.
  * @param {Phaser.Renderer.WebGL.RenderNodes.BatchHandlerConfig} defaultConfig - The default configuration object for this RenderNode. This is used to ensure all required properties are present, so it must be complete.
  */
 var BatchHandler = new Class({
     Extends: RenderNode,
 
-    initialize: function BatchHandler (manager, renderer, config, defaultConfig)
+    initialize: function BatchHandler (manager, config, defaultConfig)
     {
+        var renderer = manager.renderer;
         var gl = renderer.gl;
 
         config = this._copyAndCompleteConfig(config || {}, defaultConfig);
@@ -46,7 +46,7 @@ var BatchHandler = new Class({
             throw new Error('BatchHandler must have a name');
         }
 
-        RenderNode.call(this, name, manager, renderer);
+        RenderNode.call(this, name, manager);
 
         /**
          * The number of instances per batch, used to determine the size of the
@@ -79,7 +79,7 @@ var BatchHandler = new Class({
         // Calculate the final number of instances per batch.
         var indexLimit = 65536; // 2^16
         var maxInstances = Math.floor(indexLimit / this.verticesPerInstance);
-        var targetInstances = config.instancesPerBatch || this.renderer.config.batchSize || maxInstances;
+        var targetInstances = config.instancesPerBatch || renderer.config.batchSize || maxInstances;
         this.instancesPerBatch = Math.min(targetInstances, maxInstances);
 
         /**
@@ -247,7 +247,7 @@ var BatchHandler = new Class({
 
         // Set the dimension-related uniforms and listen for resize events.
         this.resize(renderer.width, renderer.height);
-        this.renderer.on(Phaser.Renderer.Events.RESIZE, this.resize, this);
+        renderer.on(Phaser.Renderer.Events.RESIZE, this.resize, this);
     },
 
     /**
