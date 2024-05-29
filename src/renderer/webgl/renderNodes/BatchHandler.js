@@ -155,6 +155,10 @@ var BatchHandler = new Class({
             )
         );
 
+        // Ensure that there is no VAO bound, because the following index buffer
+        // will modify any currently bound VAO.
+        renderer.glWrapper.updateVAO({ vao: null });
+
         /**
          * The index buffer defining vertex order.
          *
