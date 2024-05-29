@@ -18,7 +18,6 @@ module.exports = [
     'uniform mat3 uInverseRotationMatrix;',
     'uniform int uLightCount;',
     'varying vec2 outTexCoord;',
-    'varying float outTexId;',
     'varying float outTintEffect;',
     'varying vec4 outTint;',
     'void main ()',

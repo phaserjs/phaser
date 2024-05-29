@@ -12,6 +12,8 @@ var Camera = require('./Camera');
 var FillCamera = require('./FillCamera');
 var FillRect = require('./FillRect');
 var GameObjectBatcher = require('./GameObjectBatcher');
+var LightBatcher = require('./LightBatcher');
+var LightBatchHandler = require('./LightBatchHandler');
 var ListCompositor = require('./ListCompositor');
 var QuadBatchHandler = require('./QuadBatchHandler');
 
@@ -102,7 +104,8 @@ var RenderNodeManager = new Class({
             FillCamera: FillCamera,
             FillRect: FillRect,
             GameObjectBatcher: GameObjectBatcher,
-            ImageQuadrangulateBatch: ImageQuadrangulateBatch,
+            LightBatcher: LightBatcher,
+            LightBatchHandler: LightBatchHandler,
             ListCompositor: ListCompositor,
             QuadBatchHandler: QuadBatchHandler
         };
