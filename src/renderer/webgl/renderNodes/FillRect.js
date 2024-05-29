@@ -77,6 +77,8 @@ var FillRect = new Class({
      */
     run: function (drawingContext, parentMatrix, x, y, width, height, tintTL, tintTR, tintBL, tintBR, tintFill, inWorldSpace)
     {
+        this.onRunBegin(drawingContext);
+
         var currentMatrix = this._identityMatrix;
 
         if (inWorldSpace)
@@ -110,6 +112,8 @@ var FillRect = new Class({
             // Tint colors in TRIANGLE_STRIP order:
             tintTL, tintTR, tintBL, tintBR
         );
+
+        this.onRunEnd(drawingContext);
     }
 });
 

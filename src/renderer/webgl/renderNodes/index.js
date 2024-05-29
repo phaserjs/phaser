@@ -14,6 +14,7 @@ var RenderNodes = {
     FillCamera: require('./FillCamera'),
     FillRect: require('./FillRect'),
     GameObjectBatcher: require('./GameObjectBatcher'),
+    ListCompositor: require('./ListCompositor'),
     QuadBatchHandler: require('./QuadBatchHandler'),
     RenderNode: require('./RenderNode')
 };

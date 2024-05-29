@@ -175,6 +175,21 @@ var QuadBatchHandler = new Class({
     },
 
     /**
+     * Called at the beginning of the `run` method.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandler#onRunBegin
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     */
+    onRunBegin: function (drawingContext)
+    {
+        this.program.setUniform(
+            'uRoundPixels',
+            drawingContext.camera.roundPixels
+        );
+    },
+
+    /**
      * Draw then empty the current batch.
      *
      * This method is called automatically, by either this node or the manager,
@@ -187,6 +202,8 @@ var QuadBatchHandler = new Class({
     run: function (drawingContext)
     {
         if (this.instanceCount === 0) { return; }
+
+        this.onRunBegin(drawingContext);
 
         var bytesPerIndexPerInstance = this.bytesPerIndexPerInstance;
         var indicesPerInstance = this.indicesPerInstance;
@@ -210,8 +227,6 @@ var QuadBatchHandler = new Class({
             vertexBuffer.update(this.vertexBufferLayout.data);
         }
 
-        this.program.setUniform('uRoundPixels', drawingContext.camera.roundPixels);
-
         var subBatches = this.batchEntries.length;
         for (var i = 0; i < subBatches; i++)
         {
@@ -230,6 +245,8 @@ var QuadBatchHandler = new Class({
         this.instanceCount = 0;
         this.currentBatchEntry.start = 0;
         this.batchEntries.length = 0;
+
+        this.onRunEnd(drawingContext);
     },
 
     /**

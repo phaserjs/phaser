@@ -38,7 +38,7 @@ var BatchHandler = new Class({
         var renderer = manager.renderer;
         var gl = renderer.gl;
 
-        config = this._copyAndCompleteConfig(config || {}, defaultConfig);
+        config = this._copyAndCompleteConfig(manager, config || {}, defaultConfig);
 
         var name = config.name;
         if (!name)
@@ -264,10 +264,11 @@ var BatchHandler = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandler#_copyAndCompleteConfig
      * @since 3.90.0
      * @private
+     * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
      * @param {Phaser.Renderer.WebGL.RenderNodes.BatchHandlerConfig} config - The configuration object.
      * @param {Phaser.Renderer.WebGL.RenderNodes.BatchHandlerConfig} defaultConfig - The default configuration object.
      */
-    _copyAndCompleteConfig: function (config, defaultConfig)
+    _copyAndCompleteConfig: function (manager, config, defaultConfig)
     {
         var newConfig = {};
 

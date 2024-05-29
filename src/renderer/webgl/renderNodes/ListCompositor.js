@@ -39,6 +39,8 @@ var ListCompositor = new Class({
      */
     run: function (displayContext, children, parentTransformMatrix)
     {
+        this.onRunBegin(displayContext);
+
         var currentContext = displayContext;
         var baseBlendMode = displayContext.blendMode;
         var currentBlendMode = baseBlendMode;
@@ -81,6 +83,8 @@ var ListCompositor = new Class({
         {
             currentContext.release();
         }
+
+        this.onRunEnd(displayContext);
     }
 });
 

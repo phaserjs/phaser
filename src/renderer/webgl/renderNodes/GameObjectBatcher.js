@@ -119,6 +119,8 @@ var GameObjectBatcher = new Class({
      */
     run: function (drawingContext, gameObject, parentMatrix)
     {
+        this.onRunBegin(drawingContext);
+
         var frame = gameObject.frame;
         var frameX = frame.x;
         var frameY = frame.y;
@@ -242,7 +244,7 @@ var GameObjectBatcher = new Class({
             tintTL, tintTR, tintBL, tintBR
         );
 
-        return;
+        this.onRunEnd(drawingContext);
     }
 });
 

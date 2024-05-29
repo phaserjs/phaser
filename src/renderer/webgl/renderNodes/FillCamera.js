@@ -46,6 +46,8 @@ var FillCamera = new Class({
      */
     run: function (drawingContext, color)
     {
+        this.onRunBegin(drawingContext);
+
         var camera = drawingContext.camera;
         var cx = camera.x;
         var cy = camera.y;
@@ -53,6 +55,8 @@ var FillCamera = new Class({
         var ch = camera.height;
 
         this.fillRectNode.run(drawingContext, null, cx, cy, cw, ch, color, color, color, color, 2);
+
+        this.onRunEnd(drawingContext);
     }
 });
 

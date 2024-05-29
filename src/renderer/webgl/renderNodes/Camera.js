@@ -57,6 +57,8 @@ var Camera = new Class({
      */
     run: function (drawingContext, children, camera, parentTransformMatrix)
     {
+        this.onRunBegin(drawingContext);
+
         var currentContext = drawingContext;
 
         var cx = camera.x;
@@ -111,6 +113,8 @@ var Camera = new Class({
         camera.dirty = false;
 
         camera.emit(CameraEvents.POST_RENDER, camera);
+
+        this.onRunEnd(drawingContext);
     }
 });
 

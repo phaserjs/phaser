@@ -71,6 +71,32 @@ var RenderNode = new Class({
     },
 
     /**
+     * By default this is an empty method hook that you can override and use in your own custom render nodes.
+     *
+     * This method is called at the start of the `run` method.
+     * Don't forget to call it in your custom method.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.RenderNode#onRunBegin
+     * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
+     */
+    onRunBegin: function (drawingContext)
+    {},
+
+    /**
+     * By default this is an empty method hook that you can override and use in your own custom render nodes.
+     *
+     * This method is called at the end of the `run` method.
+     * Don't forget to call it in your custom method.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.RenderNode#onRunEnd
+     * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
+     */
+    onRunEnd: function (drawingContext)
+    {},
+
+    /**
      * Set whether the node should report debug information.
      * It wraps the `run` method with additional debug information.
      *
