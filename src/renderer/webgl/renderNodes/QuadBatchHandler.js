@@ -34,6 +34,14 @@ var QuadBatchHandler = new Class({
         this.program.setUniform('uMainSampler[0]', this.manager.renderer.textureUnitIndices);
     },
 
+    /**
+     * The default configuration object for this handler.
+     * This is merged with the `config` object passed in the constructor.
+     *
+     * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandler#defaultConfig
+     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
+     * @since 3.90.0
+     */
     defaultConfig: {
         name: 'QuadBatchHandler',
         verticesPerInstance: 4,

@@ -26,7 +26,7 @@ var QuadBatchHandler = require('./QuadBatchHandler');
  * @since 3.90.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.QuadBatchHandler
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
- * @param {Phaser.Types.Renderer.WebGL.QuadBatchHandlerConfig} config - The configuration object for this RenderNode.
+ * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} config - The configuration object for this RenderNode.
  */
 var LightBatchHandler = new Class({
     Extends: QuadBatchHandler,
@@ -73,6 +73,20 @@ var LightBatchHandler = new Class({
         this._normalMapRotation = 0;
     },
 
+    /**
+     * The default configuration settings for LightBatchHandler.
+     *
+     * These are very similar to standard settings,
+     * but because the textures are always set in units 0 and 1,
+     * there's no need to have an attribute for the texture unit.
+     * While the vertex shader still reads `inTexId`, it is not used,
+     * and the default value of 0 is fine.
+     *
+     * @name Phaser.Renderer.WebGL.RenderNodes.LightBatchHandler#defaultConfig
+     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
+     * @since 3.90.0
+     * @readonly
+     */
     defaultConfig: {
         name: 'LightBatchHandler',
         verticesPerInstance: 4,
@@ -349,7 +363,20 @@ var LightBatchHandler = new Class({
 
             // Now the batch is empty.
         }
-    }
+    },
+
+    /**
+     * Called by the render node manager when the advised texture unit count changes.
+     * In `LightBatchHandler`, this does nothing, because it only ever uses two texture units.
+     *
+     * As this extends `QuadBatchHandler`, it would otherwise rebuild the shader
+     * program.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.LightBatchHandler#updateTextureCount
+     * @since 3.90.0
+     * @param {number} count - The new advised texture unit count.
+     */
+    updateTextureCount: function (count) {}
 });
 
 module.exports = LightBatchHandler;

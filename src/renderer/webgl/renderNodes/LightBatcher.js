@@ -21,17 +21,23 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * @since 3.90.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.GameObjectBatcher
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
+ * @param {Phaser.Types.Renderer.WebGL.RenderNodes.GameObjectBatcherConfig} config - The configuration object for this RenderNode.
  */
 var LightBatcher = new Class({
     Extends: GameObjectBatcher,
-    initialize: function LightBatcher (manager)
+    initialize: function LightBatcher (manager, config)
     {
-        GameObjectBatcher.call(this, manager,
-            {
-                name: 'LightBatcher',
-                batchHandler: 'LightBatchHandler'
-            }
-        );
+        if (config === undefined) { config = {}; }
+        if (config.name === undefined)
+        {
+            config.name = 'LightBatcher';
+        }
+        if (config.batchHandler === undefined)
+        {
+            config.batchHandler = 'LightBatchHandler';
+        }
+
+        GameObjectBatcher.call(this, manager, config);
 
         /**
          * A temporary Transform Matrix used for parent Container calculations without them needing their own local copy.
