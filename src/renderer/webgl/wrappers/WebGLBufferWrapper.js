@@ -21,7 +21,7 @@ var Class = require('../../../utils/Class');
  * @since 3.80.0
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance that owns this wrapper.
- * @param {ArrayBuffer|number} initialDataOrSize - Either an ArrayBuffer of data, or the size of the buffer to create.
+ * @param {ArrayBuffer} dataBuffer - An ArrayBuffer of data to store. The buffer will be permanently associated with this data.
  * @param {GLenum} bufferType - The type of the buffer being created.
  * @param {GLenum} bufferUsage - The usage of the buffer being created. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW.
  */
@@ -29,7 +29,7 @@ var WebGLBufferWrapper = new Class({
 
     initialize:
 
-    function WebGLBufferWrapper (renderer, initialDataOrSize, bufferType, bufferUsage)
+    function WebGLBufferWrapper (renderer, dataBuffer, bufferType, bufferUsage)
     {
         /**
          * The WebGLRenderer instance that owns this wrapper.
@@ -55,15 +55,51 @@ var WebGLBufferWrapper = new Class({
         this.webGLBuffer = null;
 
         /**
-         * The initial data or size of the buffer.
+         * The data associated with the buffer.
          *
          * Note that this will be used to recreate the buffer if the WebGL context is lost.
          *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#initialDataOrSize
-         * @type {ArrayBuffer|number}
-         * @since 3.80.0
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#dataBuffer
+         * @type {ArrayBuffer}
+         * @since 3.90.0
          */
-        this.initialDataOrSize = initialDataOrSize;
+        this.dataBuffer = dataBuffer;
+
+        /**
+         * A Float32Array view of the dataBuffer.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#viewF32
+         * @type {Float32Array}
+         * @since 3.90.0
+         */
+        this.viewF32 = new Float32Array(dataBuffer);
+
+        /**
+         * A Uint8Array view of the dataBuffer.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#viewU8
+         * @type {Uint8Array}
+         * @since 3.90.0
+         */
+        this.viewU8 = new Uint8Array(dataBuffer);
+
+        /**
+         * A Uint16Array view of the dataBuffer.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#viewU16
+         * @type {Uint16Array}
+         * @since 3.90.0
+         */
+        this.viewU16 = new Uint16Array(dataBuffer);
+
+        /**
+         * A Uint32Array view of the dataBuffer.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#viewU32
+         * @type {Uint32Array}
+         * @since 3.90.0
+         */
+        this.viewU32 = new Uint32Array(dataBuffer);
 
         /**
          * The type of the buffer.
@@ -97,11 +133,6 @@ var WebGLBufferWrapper = new Class({
      */
     createResource: function ()
     {
-        if (this.initialDataOrSize === null)
-        {
-            return;
-        }
-
         var gl = this.renderer.gl;
 
         var bufferType = this.bufferType;
@@ -110,7 +141,7 @@ var WebGLBufferWrapper = new Class({
         this.webGLBuffer = webGLBuffer;
 
         this.bind();
-        gl.bufferData(bufferType, this.initialDataOrSize, this.bufferUsage);
+        gl.bufferData(bufferType, this.dataBuffer, this.bufferUsage);
         this.bind(true);
     },
 
@@ -144,13 +175,15 @@ var WebGLBufferWrapper = new Class({
 
     /**
      * Updates the data in this WebGLBufferWrapper.
+     * The dataBuffer must contain the new data to be uploaded to the GPU.
+     * Data will preserve its range from dataBuffer to the WebGLBuffer.
      *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#update
      * @since 3.90.0
-     * @param {ArrayBuffer} data - The new data to update the buffer with.
+     * @param {number} [bytes] - The number of bytes to update in the buffer. If not specified, the entire buffer will be updated.
      * @param {number} [offset=0] - The offset into the buffer to start updating data at.
      */
-    update: function (data, offset)
+    update: function (bytes, offset)
     {
         var gl = this.renderer.gl;
 
@@ -161,7 +194,23 @@ var WebGLBufferWrapper = new Class({
             offset = 0;
         }
 
-        gl.bufferSubData(this.bufferType, offset, data);
+        if (bytes === undefined)
+        {
+            gl.bufferSubData(
+                this.bufferType,
+                offset,
+                this.dataBuffer
+            );
+        }
+        else
+        {
+            gl.bufferSubData(
+                this.bufferType,
+                offset,
+                this.viewU8.subarray(offset, offset + bytes)
+            );
+        }
+
     },
 
     /**
@@ -174,7 +223,7 @@ var WebGLBufferWrapper = new Class({
     {
         this.renderer.gl.deleteBuffer(this.webGLBuffer);
         this.webGLBuffer = null;
-        this.initialDataOrSize = null;
+        this.dataBuffer = null;
         this.renderer = null;
     }
 });

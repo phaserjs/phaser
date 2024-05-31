@@ -203,13 +203,22 @@ var BatchHandler = new Class({
         ]);
 
         /**
+         * The number of bytes per instance, used to determine how much of the vertex buffer to upload.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandler#bytesPerInstance
+         * @type {number}
+         * @since 3.90.0
+         */
+        this.bytesPerInstance = this.vertexBufferLayout.layout.stride * this.verticesPerInstance;
+
+        /**
          * The number of floats per instance, used to determine how much of the vertex buffer to update.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandler#floatsPerInstance
          * @type {number}
          * @since 3.90.0
          */
-        this.floatsPerInstance = this.vertexBufferLayout.layout.stride * this.verticesPerInstance / Float32Array.BYTES_PER_ELEMENT;
+        this.floatsPerInstance = this.bytesPerInstance / Float32Array.BYTES_PER_ELEMENT;
 
         /**
          * The current batch entry being filled with textures.
@@ -331,12 +340,12 @@ var BatchHandler = new Class({
      * @since 3.90.0
      * @private
      * @param {number} instances - The number of instances to define.
-     * @return {Uint16Array} The index buffer data.
+     * @return {ArrayBuffer} The index buffer data.
      */
     _generateElementIndices: function (instances)
     {
-        // This is meaningless and should be overridden by subclasses.
-        return new Uint16Array(instances);
+        // This is empty and should be overridden by subclasses.
+        return new ArrayBuffer(instances * this.bytesPerInstance);
     },
 
     /**

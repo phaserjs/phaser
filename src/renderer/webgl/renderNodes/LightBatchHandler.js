@@ -316,8 +316,9 @@ var LightBatchHandler = new Class({
 
         // Update the vertex buffer.
         var vertexOffset32 = this.instanceCount * this.floatsPerInstance;
-        var vertexViewF32 = this.vertexBufferLayout.viewFloat32;
-        var vertexViewU32 = this.vertexBufferLayout.viewUint32;
+        var vertexBuffer = this.vertexBufferLayout.buffer;
+        var vertexViewF32 = vertexBuffer.viewF32;
+        var vertexViewU32 = vertexBuffer.viewU32;
 
         // Top-left
         vertexViewF32[vertexOffset32++] = x0;

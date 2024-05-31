@@ -89,11 +89,12 @@ var QuadBatchHandler = new Class({
      * @since 3.90.0
      * @private
      * @param {number} instances - The number of instances to define.
-     * @return {Uint16Array} The index buffer data.
+     * @return {ArrayBuffer} The index buffer data.
      */
     _generateElementIndices: function (instances)
     {
-        var indices = new Uint16Array(instances * 6);
+        var buffer = new ArrayBuffer(instances * 6 * 2);
+        var indices = new Uint16Array(buffer);
         var offset = 0;
         for (var i = 0; i < instances; i++)
         {
@@ -105,7 +106,7 @@ var QuadBatchHandler = new Class({
             indices[offset++] = index + 3;
             indices[offset++] = index + 3;
         }
-        return indices;
+        return buffer;
     },
 
     /**
@@ -226,13 +227,11 @@ var QuadBatchHandler = new Class({
         // Update vertex buffers.
         if (this.instanceCount < this.instancesPerBatch)
         {
-            // We use a subarray to avoid copying the buffer, but still
-            // control the length.
-            vertexBuffer.update(this.vertexBufferLayout.viewFloat32.subarray(0, this.instanceCount * this.floatsPerInstance));
+            vertexBuffer.update(this.instanceCount * this.bytesPerInstance);
         }
         else
         {
-            vertexBuffer.update(this.vertexBufferLayout.data);
+            vertexBuffer.update();
         }
 
         var subBatches = this.batchEntries.length;
@@ -325,8 +324,9 @@ var QuadBatchHandler = new Class({
 
         // Update the vertex buffer.
         var vertexOffset32 = this.instanceCount * this.floatsPerInstance;
-        var vertexViewF32 = this.vertexBufferLayout.viewFloat32;
-        var vertexViewU32 = this.vertexBufferLayout.viewUint32;
+        var vertexBuffer = this.vertexBufferLayout.buffer;
+        var vertexViewF32 = vertexBuffer.viewF32;
+        var vertexViewU32 = vertexBuffer.viewU32;
 
         // Top-left
         vertexViewF32[vertexOffset32++] = x0;

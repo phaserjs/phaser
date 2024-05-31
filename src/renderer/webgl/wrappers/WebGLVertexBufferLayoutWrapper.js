@@ -64,24 +64,6 @@ var WebGLVertexBufferLayoutWrapper = new Class({
         this.data = new ArrayBuffer(layout.stride * layout.count);
 
         /**
-         * A Float32Array view of the ArrayBuffer.
-         *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper#viewFloat32
-         * @type {Float32Array}
-         * @since 3.90.0
-         */
-        this.viewFloat32 = new Float32Array(this.data);
-
-        /**
-         * A Uint32Array view of the ArrayBuffer.
-         *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper#viewUint32
-         * @type {Uint32Array}
-         * @since 3.90.0
-         */
-        this.viewUint32 = new Uint32Array(this.data);
-
-        /**
          * The WebGLBuffer that this layout is based on.
          *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper#buffer
