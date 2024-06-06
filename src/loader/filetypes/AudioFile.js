@@ -116,7 +116,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if (!urlConfig)
     {
-        console.warn('No audio URLs for "%s" matched this device', key);
+        console.warn('No audio URLs for "%s" can play on this device', key);
 
         return null;
     }
