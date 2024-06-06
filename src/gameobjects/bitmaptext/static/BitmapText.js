@@ -110,7 +110,7 @@ var BitmapText = new Class({
 
         if (!entry)
         {
-            console.warn('Invalid BitmapText key: ' + font);
+            throw new Error('Invalid BitmapText key: ' + font);
         }
 
         /**
