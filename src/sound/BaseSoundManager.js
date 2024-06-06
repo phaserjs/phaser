@@ -539,7 +539,7 @@ var BaseSoundManager = new Class({
      * When no key is given, returns true if any sound is playing.
      *
      * @method Phaser.Sound.BaseSoundManager#isPlaying
-     * @since 3.90.0
+     * @since 3.85.0
      *
      * @param {?string} key - Sound asset key.
      *
