@@ -35,3 +35,12 @@ Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs
 @lgtome
 @samme
 @AlbertMontagutCasero
+
+# Deprecation Warning for the next release
+
+The _next release_ of Phaser will make the following API-breaking changes:
+
+* We are removing `Phaser.Struct.Map` and replacing it with a regular JS `Map` instance. This means methods like `contains` and `setAll` will be gone.
+* We are removing `Phaser.Struct.Set` and replacing it with a regular JS `Set` instance. This means methods like `iterateLocal` will be gone.
+* The `Create.GenerateTexture`, all of the Create Palettes and the `create` folder will be removed.
+* The `phaser-ie9.js` entry-point will be removed along with all associated polyfills.
