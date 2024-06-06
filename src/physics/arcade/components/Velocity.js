@@ -20,8 +20,8 @@ var Velocity = {
      * @method Phaser.Physics.Arcade.Components.Velocity#setVelocity
      * @since 3.0.0
      *
-     * @param {number} x - The horizontal velocity of the body. Positive values move the body to the right, while negative values move it to the left.
-     * @param {number} [y=x] - The vertical velocity of the body. Positive values move the body down, while negative values move it up.
+     * @param {number} x - The horizontal velocity of the body, in pixels per second. Positive values move the body to the right, while negative values move it to the left.
+     * @param {number} [y=x] - The vertical velocity of the body, in pixels per second. Positive values move the body down, while negative values move it up.
      *
      * @return {this} This Game Object.
      */
@@ -40,7 +40,7 @@ var Velocity = {
      * @method Phaser.Physics.Arcade.Components.Velocity#setVelocityX
      * @since 3.0.0
      *
-     * @param {number} x - The new horizontal velocity.
+     * @param {number} x - The new horizontal velocity, in pixels per second.
      *
      * @return {this} This Game Object.
      */
@@ -59,7 +59,7 @@ var Velocity = {
      * @method Phaser.Physics.Arcade.Components.Velocity#setVelocityY
      * @since 3.0.0
      *
-     * @param {number} y - The new vertical velocity of the body.
+     * @param {number} y - The new vertical velocity, in pixels per second.
      *
      * @return {this} This Game Object.
      */
@@ -76,8 +76,8 @@ var Velocity = {
      * @method Phaser.Physics.Arcade.Components.Velocity#setMaxVelocity
      * @since 3.0.0
      *
-     * @param {number} x - The new maximum horizontal velocity.
-     * @param {number} [y=x] - The new maximum vertical velocity.
+     * @param {number} x - The new maximum horizontal velocity, in pixels per second.
+     * @param {number} [y=x] - The new maximum vertical velocity, in pixels per second.
      *
      * @return {this} This Game Object.
      */
