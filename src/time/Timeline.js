@@ -327,7 +327,7 @@ var Timeline = new Class({
 
                 if (event.tween)
                 {
-                    sys.tweens.add(event.tween);
+                    event.tweenInstance = sys.tweens.add(event.tween);
                 }
 
                 if (event.sound)
@@ -444,6 +444,18 @@ var Timeline = new Class({
     {
         this.paused = true;
 
+        var events = this.events;
+
+        for (var i = 0; i < events.length; i++)
+        {
+            var event = events[i];
+
+            if (event.tweenInstance)
+            {
+                event.tweenInstance.paused = true;
+            }
+        }
+
         return this;
     },
 
@@ -491,6 +503,18 @@ var Timeline = new Class({
     {
         this.paused = false;
 
+        var events = this.events;
+
+        for (var i = 0; i < events.length; i++)
+        {
+            var event = events[i];
+
+            if (event.tweenInstance)
+            {
+                event.tweenInstance.paused = false;
+            }
+        }
+
         return this;
     },
 
@@ -524,6 +548,8 @@ var Timeline = new Class({
      *
      * If the Timeline isn't currently running (i.e. it's paused or complete) then
      * calling this method resets those states, the same as calling `Timeline.play(true)`.
+     * 
+     * Any Tweens that were currently running by this Timeline will be stopped.
      *
      * @method Phaser.Time.Timeline#reset
      * @since 3.60.0
@@ -543,13 +569,22 @@ var Timeline = new Class({
             this.iteration = 0;
         }
 
-        for (var i = 0; i < this.events.length; i++)
+        var events = this.events;
+
+        for (var i = 0; i < events.length; i++)
         {
-            this.events[i].complete = false;
+            var event = events[i];
+
+            event.complete = false;
             
             if (!loop)
             {
-                this.events[i].repeat = 0;
+                event.repeat = 0;
+            }
+
+            if (event.tweenInstance)
+            {  
+                event.tweenInstance.stop();
             }
         }
 
@@ -642,6 +677,8 @@ var Timeline = new Class({
     /**
      * Removes all events from this Timeline, resets the elapsed time to zero
      * and pauses the Timeline.
+     * 
+     * Any Tweens that were currently running as a result of this Timeline will be stopped.
      *
      * @method Phaser.Time.Timeline#clear
      * @since 3.60.0
@@ -650,7 +687,20 @@ var Timeline = new Class({
      */
     clear: function ()
     {
-        this.events = [];
+        var events = this.events;
+
+        for (i = 0; i < events.length; i++)
+        {
+            var event = events[i];
+
+            if (event.tweenInstance)
+            {
+                event.tweenInstance.stop();
+            }
+        }
+
+        events = [];
+
         this.elapsed = 0;
         this.paused = true;
 
@@ -701,6 +751,8 @@ var Timeline = new Class({
      * Destroys this Timeline.
      *
      * This will remove all events from the Timeline and stop it from processing.
+     * 
+     * Any Tweens that were currently running as a result of this Timeline will be stopped.
      *
      * This method is called automatically when the Scene shuts down, but you may
      * also call it directly should you need to destroy the Timeline earlier.
@@ -716,9 +768,10 @@ var Timeline = new Class({
         eventEmitter.off(SceneEvents.UPDATE, this.update, this);
         eventEmitter.off(SceneEvents.SHUTDOWN, this.destroy, this);
 
+        this.clear();
+
         this.scene = null;
         this.systems = null;
-        this.events = [];
     }
 
 });
