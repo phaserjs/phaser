@@ -18,7 +18,7 @@
 * `TimelineEvent` has a new property called `tweenInstance`. If the Timeline event has a tween that has been activated, this will hold a reference to it.
 * If you create a BitmapText with an invalid key it will now throw a runtime error. Previously it just issued a console warning and then crashed (thanks @samme)
 * The console warnings when Audio files are missing/incorrect have been improved (thanks @samme)
-* The `requestVideoFrame` polyfill has been updated to the latest release, which should resolve some SSR framework issues.
+* The `requestVideoFrame` polyfill has been updated to the latest release, which should resolve some SSR framework issues. Fix #6776 (thanks @lantictac)
 
 # Bug Fixes
 
