@@ -2,6 +2,8 @@
 
 # New Features
 
+* `BaseSoundManager.isPlaying` is a new method that will return a boolean if the given sound key is playing. If you don't provide a key, it will return a boolean if any sound is playing (thanks @samme)
+
 # WebGL Rendering Updates
 
 * `WebGLTextureWrapper.update` expanded:
@@ -15,6 +17,8 @@
 * Calling `Timeline.clear` and `Timeline.destroy` will now destroy any currently active Tweens that the Timeline had created. Previously, active tweens would continue to play to completion (thanks @monteiz)
 * `TimelineEvent` has a new property called `tweenInstance`. If the Timeline event has a tween that has been activated, this will hold a reference to it.
 * If you create a BitmapText with an invalid key it will now throw a runtime error. Previously it just issued a console warning and then crashed (thanks @samme)
+* The console warnings when Audio files are missing/incorrect have been improved (thanks @samme)
+* The `requestVideoFrame` polyfill has been updated to the latest release, which should resolve some SSR framework issues.
 
 # Bug Fixes
 
@@ -22,6 +26,7 @@
 * The method `TextureManager.checkKey` will now return `false` if the key is not a string, which fixes issues where a texture could be created if a key was given that was already in use (thanks Will Macfarlane).
 * Added all of the missing Loader Config values (such as `imageLoadType`) to LoaderConfig, so they now appear in the TypeScript defs.
 * The `EXPAND` scale mode had a bug that prevented it from using the world bounds cameras, cutting rendering short. Fix #6767 (thanks @Calcue-dev @rexrainbow)
+* Calling `getPipelineName()` on a Game Object would cause a runtime error if running under Canvas. It now simply returns `null`. Fix #6799 (thanks @samme)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
@@ -29,3 +34,4 @@ Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs
 
 @lgtome
 @samme
+@AlbertMontagutCasero
