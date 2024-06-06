@@ -14,4 +14,5 @@
  * @property {string|object} [sound=null] - Sound configuration object which will be used to create a Sound when the Event fires if set.
  * @property {*} [target] - The scope (`this` object) with which to invoke the run `callback`.
  * @property {string} [event] - Optional event name to emit when the Event fires.
+ * @property {Phaser.Tweens.Tween|Phaser.Tweens.TweenChain} [tweenInstance=null] - If this Event is using a Tween to manage its actions, this property will contain a reference to it.
  */
