@@ -534,6 +534,52 @@ var BaseSoundManager = new Class({
     },
 
     /**
+     * When a key is given, returns true if any sound with that key is playing.
+     *
+     * When no key is given, returns true if any sound is playing.
+     *
+     * @method Phaser.Sound.BaseSoundManager#isPlaying
+     * @since 3.90.0
+     *
+     * @param {?string} key - Sound asset key.
+     *
+     * @return {boolean} - Per the key argument, true if any matching sound is playing, otherwise false.
+     */
+    isPlaying: function (key)
+    {
+        var sounds = this.sounds;
+        var i = sounds.length - 1;
+        var sound;
+
+        if (key === undefined)
+        {
+            for (; i >= 0; i--)
+            {
+                sound = this.sounds[i];
+
+                if (sound.isPlaying)
+                {
+                    return true;
+                }
+            }
+        }
+        else
+        {
+            for (; i >= 0; i--)
+            {
+                sound = this.sounds[i];
+
+                if (sound.key === key && sound.isPlaying)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    },
+
+    /**
      * Method used internally for unlocking audio playback on devices that
      * require user interaction before any sound can be played on a web page.
      *
