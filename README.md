@@ -18,7 +18,7 @@ Thousands of developers from indies to multi-national digital agencies, along wi
 **Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)<br />
 **Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
 **Learn:** [API Docs](https://newdocs.phaser.io), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
-**Code:** 2000+ [Examples](https://phaser.io/examples) (source available in this [repo][examples])<br />
+**Code:** 2000+ [Examples](https://phaser.io/examples) (source available in this [repo][https://github.com/phaserjs/examples])<br />
 **Read:** The [Phaser World](#newsletter) Newsletter<br />
 **Discord:** Join us on [Discord](https://discord.gg/phaser)<br />
 
