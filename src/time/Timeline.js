@@ -139,6 +139,9 @@ var Timeline = new Class({
          * Values higher than 1 increase the speed of time, while values smaller than 1 decrease it.
          * A value of 0 freezes time and is effectively equivalent to pausing the Timeline.
          *
+         * This doesn't affect the delta time scale of any Tweens created by the Timeline.
+         * You will have to set the `timeScale` of each Tween or the Tween Manager if you want them to match.
+         *
          * @name Phaser.Time.Timeline#timeScale
          * @type {number}
          * @default
