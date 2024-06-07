@@ -35,6 +35,7 @@ Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs
 @lgtome
 @samme
 @AlbertMontagutCasero
+@rexrainbow
 
 # Deprecation Warning for the next release
 
