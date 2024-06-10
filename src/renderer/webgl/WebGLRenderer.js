@@ -775,6 +775,7 @@ var WebGLRenderer = new Class({
         };
 
         setupExtensions();
+
         this.setContextHandlers();
 
         //  Set it back into the Game, so developers can access it from there too
@@ -924,15 +925,20 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the WebGLRenderer's `context lost` and `context restored` methods.
+     * Sets the handlers that are called when WebGL context is lost or restored by the browser.
+     * 
+     * The default handlers are referenced via the properties `WebGLRenderer.contextLostHandler` and `WebGLRenderer.contextRestoredHandler`.
+     * By default, these map to the methods `WebGLRenderer.dispatchContextLost` and `WebGLRenderer.dispatchContextRestored`.
+     * 
+     * You can override these handlers with your own via this method.
+     * 
+     * If you do override them, make sure that your handlers invoke the methods `WebGLRenderer.dispatchContextLost` and `WebGLRenderer.dispatchContextRestored` in due course, otherwise the renderer will be able to restore itself fully.
      * 
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setContextHandlers
      * @since 3.85.0
      *
-     * @param {Function} [contextLost] - Custom handler for context lost event.
-     * @param {Function} [contextRestored] - Custom handler for context restored event.
-     *
-     * @returns {void}
+     * @param {function} [contextLost] - Custom handler for responding to the WebGL context lost event. Set as `undefined` to use the default handler.
+     * @param {function} [contextRestored] - Custom handler for responding to the WebGL context restored event. Set as `undefined` to use the default handler.
      */
     setContextHandlers: function (contextLost, contextRestored)
     {
@@ -959,13 +965,13 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * `WebGLRenderer.dispatchContextLost` is a new internal method that is called when the WebGL context is lost. By default this is bound to the property `WebGLRenderer.contextLostHandler`. If you override the context loss handler, be sure to invoke this method in due course.
+     * This method is called when the WebGL context is lost. By default this is bound to the property `WebGLRenderer.contextLostHandler`.
+     * If you override the context loss handler via the `setContextHandlers` method then be sure to invoke this method in due course.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#dispatchContextLost
      * @since 3.85.0
      * 
-     * @param {Event} event - The context lost Event.
-     * @returns {void}
+     * @param {WebGLContextEvent } event - The WebGL context lost Event.
      */
     dispatchContextLost: function (event)
     {
@@ -982,22 +988,25 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * `WebGLRenderer.dispatchContextRestore` is a new internal method that is called when the WebGL context is restored. By default this is bound to the property `WebGLRenderer.contextRestoreHandler`. If you override the context restore handler, be sure to invoke this method in due course.
+     * This method is called when the WebGL context is restored. By default this is bound to the property `WebGLRenderer.contextRestoredHandler`.
+     * If you override the context restored handler via the `setContextHandlers` method then be sure to invoke this method in due course.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#dispatchContextRestored
      * @since 3.85.0
      * 
-     * @param {Event} event - The context restored Event.
-     * @returns {void}
+     * @param {WebGLContextEvent } event - The WebGL context restored Event.
      */
     dispatchContextRestored: function (event)
     {
-        if (this.gl.isContextLost())
+        var gl = this.gl;
+
+        if (gl.isContextLost())
         {
             if (console)
             {
                 console.log('WebGL Context restored, but context is still lost');
             }
+
             return;
         }
 
@@ -1012,9 +1021,9 @@ var WebGLRenderer = new Class({
         // Camera mask is set during preRenderCamera.
 
         // Restore GL flags.
-        this.gl.disable(this.gl.BLEND);
-        this.gl.disable(this.gl.DEPTH_TEST);
-        this.gl.enable(this.gl.CULL_FACE);
+        gl.disable(gl.BLEND);
+        gl.disable(gl.DEPTH_TEST);
+        gl.enable(gl.CULL_FACE);
 
         // Re-enable compressed texture formats.
         this.compression = this.getCompressedTextures();
@@ -1025,6 +1034,7 @@ var WebGLRenderer = new Class({
         {
             wrapper.createResource();
         };
+
         ArrayEach(this.glTextureWrappers, wrapperCreateResource);
         ArrayEach(this.glBufferWrappers, wrapperCreateResource);
         ArrayEach(this.glFramebufferWrappers, wrapperCreateResource);
@@ -1059,7 +1069,10 @@ var WebGLRenderer = new Class({
     },
     
     /**
-     * Create temporary WebGL textures to stop WebGL errors on mac os
+     * Create temporary WebGL textures to stop WebGL errors on macOS.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#createTemporaryTextures
+     * @since 3.60.0
      */
     createTemporaryTextures: function ()
     {
