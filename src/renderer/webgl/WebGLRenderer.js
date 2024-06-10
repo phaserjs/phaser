@@ -775,7 +775,7 @@ var WebGLRenderer = new Class({
         };
 
         setupExtensions();
-        this.setContextHandlers(this.dispatchContextLost, this.dispatchContextRestored);
+        this.setContextHandlers();
 
         //  Set it back into the Game, so developers can access it from there too
         game.context = gl;
@@ -925,18 +925,18 @@ var WebGLRenderer = new Class({
 
     /**
      * Sets the WebGLRenderer's `context lost` and `context restored` methods.
-     *
+     * 
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setContextHandlers
      * @since 3.85.0
      *
-     * @param {callback} contextLost - Context Lost callback
-     * @param {callback} contextRestored - Context Lost callback
+     * @param {Function} [contextLost] - Custom handler for context lost event.
+     * @param {Function} [contextRestored] - Custom handler for context restored event.
      *
-     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     * @returns {void}
      */
     setContextHandlers: function (contextLost, contextRestored)
     {
-        if (contextLost !== undefined && typeof contextLost === 'function')
+        if (typeof contextLost === 'function')
         {
             this.contextLostHandler = contextLost.bind(this);
         }
@@ -945,7 +945,7 @@ var WebGLRenderer = new Class({
             this.contextLostHandler = this.dispatchContextLost.bind(this);
         }
 
-        if (contextRestored !== undefined && typeof contextRestored === 'function')
+        if (typeof contextRestored === 'function')
         {
             this.contextRestoredHandler = contextRestored.bind(this);
         }
@@ -959,7 +959,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Internal context lost handler.
+     * `WebGLRenderer.dispatchContextLost` is a new internal method that is called when the WebGL context is lost. By default this is bound to the property `WebGLRenderer.contextLostHandler`. If you override the context loss handler, be sure to invoke this method in due course.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#dispatchContextLost
      * @since 3.85.0
@@ -982,7 +982,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Internal context restored handler.
+     * `WebGLRenderer.dispatchContextRestore` is a new internal method that is called when the WebGL context is restored. By default this is bound to the property `WebGLRenderer.contextRestoreHandler`. If you override the context restore handler, be sure to invoke this method in due course.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#dispatchContextRestored
      * @since 3.85.0
