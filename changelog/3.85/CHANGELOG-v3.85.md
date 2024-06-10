@@ -3,7 +3,6 @@
 # New Features
 
 * `BaseSoundManager.isPlaying` is a new method that will return a boolean if the given sound key is playing. If you don't provide a key, it will return a boolean if any sound is playing (thanks @samme)
-* Added `dispatchContextLost` and `dispatchContextRestored` internal methods called by `contextLostHandler` and `contextRestoredHandler` for custom context overrides and error tracking. (@yaustar)
 
 # WebGL Rendering Updates
 
