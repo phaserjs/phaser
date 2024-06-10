@@ -775,14 +775,7 @@ var WebGLRenderer = new Class({
         };
 
         setupExtensions();
-
-        this.contextLostHandler = this.dispatchContextLost.bind(this);
-
-        canvas.addEventListener('webglcontextlost', this.contextLostHandler, false);
-
-        this.contextRestoredHandler = this.dispatchContextRestored.bind(this);
-
-        canvas.addEventListener('webglcontextrestored', this.contextRestoredHandler, false);
+        this.setContextHandlers(this.dispatchContextLost, this.dispatchContextRestored);
 
         //  Set it back into the Game, so developers can access it from there too
         game.context = gl;
@@ -931,10 +924,48 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * Sets the WebGLRenderer's `context lost` and `context restored` methods.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setContextHandlers
+     * @since 3.85.0
+     *
+     * @param {callback} contextLost - Context Lost callback
+     * @param {callback} contextRestored - Context Lost callback
+     *
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setContextHandlers: function (contextLost, contextRestored)
+    {
+        if (contextLost !== undefined && typeof contextLost === 'function')
+        {
+            this.contextLostHandler = contextLost.bind(this);
+        }
+        else
+        {
+            this.contextLostHandler = this.dispatchContextLost.bind(this);
+        }
+
+        if (contextRestored !== undefined && typeof contextRestored === 'function')
+        {
+            this.contextRestoredHandler = contextRestored.bind(this);
+        }
+        else
+        {
+            this.contextRestoredHandler = this.dispatchContextRestored.bind(this);
+        }
+
+        this.canvas.addEventListener('webglcontextlost', this.contextLostHandler, false);
+        this.canvas.addEventListener('webglcontextrestored', this.contextRestoredHandler, false);
+    },
+
+    /**
      * Internal context lost handler.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#dispatchContextLost
      * @since 3.85.0
+     * 
+     * @param {Event} event - The context lost Event.
+     * @returns {void}
      */
     dispatchContextLost: function (event)
     {
@@ -955,6 +986,9 @@ var WebGLRenderer = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#dispatchContextRestored
      * @since 3.85.0
+     * 
+     * @param {Event} event - The context restored Event.
+     * @returns {void}
      */
     dispatchContextRestored: function (event)
     {
