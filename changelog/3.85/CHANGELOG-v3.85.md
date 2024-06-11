@@ -30,6 +30,7 @@
 * Added all of the missing Loader Config values (such as `imageLoadType`) to LoaderConfig, so they now appear in the TypeScript defs.
 * The `EXPAND` scale mode had a bug that prevented it from using the world bounds cameras, cutting rendering short. Fix #6767 (thanks @Calcue-dev @rexrainbow)
 * Calling `getPipelineName()` on a Game Object would cause a runtime error if running under Canvas. It now simply returns `null`. Fix #6799 (thanks @samme)
+* The Arcade Body `setPushable` method for `circle` bodies cannot be pushed when both circle bodies have `setPushable` set to `false`. Fix #5617 (thanks @kainage)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
