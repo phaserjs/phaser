@@ -32,6 +32,14 @@
 * Calling `getPipelineName()` on a Game Object would cause a runtime error if running under Canvas. It now simply returns `null`. Fix #6799 (thanks @samme)
 * Calling the Arcade Body `setPushable(false)` method for `circle` bodies prevents the bodies from being pushed. Fix #5617 (thanks @kainage)
 
+## Input Bug Fixes
+
+* The method `pointer.leftButtonReleased` will now return `true` when multiple mouse buttons are being pressed.
+* The method `pointer.rightButtonReleased` will now return `true` when multiple mouse buttons are being pressed.
+* The method `pointer.middleButtonReleased` will now return `true` when multiple mouse buttons are being pressed.
+* The method `pointer.backButtonReleased` will now return `true` when multiple mouse buttons are being pressed.
+* The method `pointer.forwardButtonReleased` will now return `true` when multiple mouse buttons are being pressed. Fix #6027 (thanks @michalfialadev)
+
 ## Examples, Documentation, Beta Testing and TypeScript
 
 Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
