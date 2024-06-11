@@ -1609,19 +1609,19 @@ var World = new Class({
             var ny = ((body2Center.y - body1Center.y) / d) || 0;
             var p = 2 * (body1Velocity.x * nx + body1Velocity.y * ny - body2Velocity.x * nx - body2Velocity.y * ny) / (body1.mass + body2.mass);
 
-            if (body1Immovable || body2Immovable)
+            if (body1Immovable || body2Immovable || !body1.pushable || !body2.pushable)
             {
                 p *= 2;
             }
 
-            if (!body1Immovable)
+            if (!body1Immovable && body1.pushable)
             {
                 body1Velocity.x = (body1Velocity.x - p / body1.mass * nx);
                 body1Velocity.y = (body1Velocity.y - p / body1.mass * ny);
                 body1Velocity.multiply(body1.bounce);
             }
 
-            if (!body2Immovable)
+            if (!body2Immovable && body2.pushable)
             {
                 body2Velocity.x = (body2Velocity.x + p / body2.mass * nx);
                 body2Velocity.y = (body2Velocity.y + p / body2.mass * ny);
@@ -1634,15 +1634,14 @@ var World = new Class({
                 overlapY *= 0.5;
             }
 
-            if (!body1Immovable)
+            if (!body1Immovable || body1.pushable || deadlock)
             {
                 body1.x -= overlapX;
                 body1.y -= overlapY;
 
                 body1.updateCenter();
             }
-
-            if (!body2Immovable)
+            else if (!body2Immovable || body2.pushable || deadlock)
             {
                 body2.x += overlapX;
                 body2.y += overlapY;
