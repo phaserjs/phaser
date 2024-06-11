@@ -963,7 +963,7 @@ var Pointer = new Class({
      */
     leftButtonReleased: function ()
     {
-        return (this.button === 0 && !this.isDown);
+        return this.buttons === 0 ? (this.button === 0 && !this.isDown) : this.button === 0;
     },
 
     /**
@@ -976,7 +976,7 @@ var Pointer = new Class({
      */
     rightButtonReleased: function ()
     {
-        return (this.button === 2 && !this.isDown);
+        return this.buttons === 0 ? (this.button === 2 && !this.isDown) : this.button === 2;
     },
 
     /**
@@ -989,7 +989,7 @@ var Pointer = new Class({
      */
     middleButtonReleased: function ()
     {
-        return (this.button === 1 && !this.isDown);
+        return this.buttons === 0 ? (this.button === 1 && !this.isDown) : this.button === 1;
     },
 
     /**
@@ -1002,7 +1002,7 @@ var Pointer = new Class({
      */
     backButtonReleased: function ()
     {
-        return (this.button === 3 && !this.isDown);
+        return this.buttons === 0 ? (this.button === 3 && !this.isDown) : this.button === 3;
     },
 
     /**
@@ -1015,7 +1015,7 @@ var Pointer = new Class({
      */
     forwardButtonReleased: function ()
     {
-        return (this.button === 4 && !this.isDown);
+        return this.buttons === 0 ? (this.button === 4 && !this.isDown) : this.button === 4;
     },
 
     /**
