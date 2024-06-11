@@ -19,9 +19,11 @@ var Class = require('../../../utils/Class');
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance that owns this wrapper.
  * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The program that this layout is associated with.
  * @param {Partial<Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout>} layout - The layout of the buffer. At construction, this should be incomplete. The stride and per-attribute location, bytes, and offset will be filled in during construction. This will mutate the object.
+ * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [buffer] - The buffer that this layout should use. If not provided, a new buffer will be created. If the buffer is too small, an exception is thrown.
+ * @throws {Error} If the buffer is too small for the layout.
  */
 var WebGLVertexBufferLayoutWrapper = new Class({
-    initialize: function WebGLVertexBufferLayoutWrapper (renderer, program, layout)
+    initialize: function WebGLVertexBufferLayoutWrapper (renderer, program, layout, buffer)
     {
         /**
          * The WebGLRenderer instance that owns this wrapper.
@@ -54,14 +56,11 @@ var WebGLVertexBufferLayoutWrapper = new Class({
         // and per-attribute location, bytes, and offset.
         program.completeLayout(layout);
 
-        /**
-         * The ArrayBuffer which contains the data for the buffer.
-         *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper#data
-         * @type {ArrayBuffer}
-         * @since 3.90.0
-         */
-        this.data = new ArrayBuffer(layout.stride * layout.count);
+        var bufferSize = layout.stride * layout.count;
+        if (buffer && buffer.byteLength < bufferSize)
+        {
+            throw new Error('Buffer too small for layout');
+        }
 
         /**
          * The WebGLBuffer that this layout is based on.
@@ -70,7 +69,7 @@ var WebGLVertexBufferLayoutWrapper = new Class({
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @since 3.90.0
          */
-        this.buffer = renderer.createVertexBuffer(this.data, layout.usage);
+        this.buffer = buffer || renderer.createVertexBuffer(new ArrayBuffer(bufferSize), layout.usage);
     }
 });
 

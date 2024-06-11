@@ -328,6 +328,26 @@ var WebGLRenderer = new Class({
         this.glVAOWrappers = [];
 
         /**
+         * A generic vertex buffer. This should be used by any process
+         * which doesn't need persistent vertex data.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#genericVertexBuffer
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
+         * @since 3.90.0
+         */
+        this.genericVertexBuffer = null;
+
+        /**
+         * Data for a generic vertex buffer. This is used to update the
+         * `genericVertexBuffer`.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#genericVertexData
+         * @type {ArrayBuffer}
+         * @since 3.90.0
+         */
+        this.genericVertexData = null;
+
+        /**
          * The currently bound framebuffer in use.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentFramebuffer
@@ -1056,6 +1076,7 @@ var WebGLRenderer = new Class({
     boot: function ()
     {
         var game = this.game;
+        var gl = this.gl;
 
         var baseSize = game.scale.baseSize;
 
@@ -1071,6 +1092,22 @@ var WebGLRenderer = new Class({
 
         this.maskTarget = new RenderTarget(this, width, height, 1, 0, true, true);
         this.maskSource = new RenderTarget(this, width, height, 1, 0, true, true);
+
+        // Provision the generic vertex buffer.
+        // The size is determined by the maximum number of vertices we want
+        // to handle.
+        // This is usually determined by the maximum amount of data we can index
+        // with a 16-bit unsigned integer.
+        // There are 65536 indices possible with 16 bits.
+        // We actually use a number of indices equal to the batch size
+        // multiplied by 4 (each batch item is a quad with 4 vertices),
+        // although this number is 65536 (16384 * 4) by default.
+        // Each index represents a vertex with 16 possible attributes.
+        // Each attribute has a maximum size of 4 floats.
+        // Each float is 4 bytes.
+        var genericVertexBytes = game.config.batchSize * 4 * 16 * 4 * 4;
+        this.genericVertexData = new ArrayBuffer(genericVertexBytes);
+        this.genericVertexBuffer = this.createVertexBuffer(this.genericVertexData, gl.DYNAMIC_DRAW);
 
         // TODO: Remove PipelineManager once the RenderNodes are fully implemented.
         // //  Set-up pipelines
@@ -1104,8 +1141,6 @@ var WebGLRenderer = new Class({
                 ]
             }
         );
-
-        var gl = this.gl;
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 

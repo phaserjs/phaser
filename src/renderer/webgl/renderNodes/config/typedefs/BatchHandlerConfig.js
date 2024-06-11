@@ -18,4 +18,5 @@
  * @property {Partial<Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout>} [vertexBufferLayout] - The vertex buffer layout for the batch handler. If not provided, a default quad layout will be used. The `count` property will be determined by the `instancesPerBatch` and `verticesPerInstance` properties. The `location` and `bytes` properties of each attribute will be determined automatically during initialization.
  * @property {string[]} [vertexBufferLayoutRemove] - An array of attribute names to remove from the vertex buffer layout. This is useful for removing attributes that are not used by the shader program.
  * @property {Partial<Phaser.Types.Renderer.WebGL.WebGLAttributeLayout>[]} [vertexBufferLayoutAdd] - An array of additional attribute layouts to add to the vertex buffer layout. This is useful for adding attributes to the default shader program.
+ * @property {boolean} [createOwnVertexBuffer=false] - Whether the batch handler should create its own vertex buffer. If false, the handler will use the renderer's `genericVertexBuffer`.
  */

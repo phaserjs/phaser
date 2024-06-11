@@ -225,14 +225,10 @@ var QuadBatchHandler = new Class({
         this.pushCurrentBatchEntry();
 
         // Update vertex buffers.
-        if (this.instanceCount < this.instancesPerBatch)
-        {
-            vertexBuffer.update(this.instanceCount * this.bytesPerInstance);
-        }
-        else
-        {
-            vertexBuffer.update();
-        }
+        // Because we are probably using a generic vertex buffer
+        // which is larger than the current batch, we need to update
+        // the buffer with the correct size.
+        vertexBuffer.update(this.instanceCount * this.bytesPerInstance);
 
         var subBatches = this.batchEntries.length;
         for (var i = 0; i < subBatches; i++)
