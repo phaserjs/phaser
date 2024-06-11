@@ -932,7 +932,7 @@ var WebGLRenderer = new Class({
      * 
      * You can override these handlers with your own via this method.
      * 
-     * If you do override them, make sure that your handlers invoke the methods `WebGLRenderer.dispatchContextLost` and `WebGLRenderer.dispatchContextRestored` in due course, otherwise the renderer will be able to restore itself fully.
+     * If you do override them, make sure that your handlers invoke the methods `WebGLRenderer.dispatchContextLost` and `WebGLRenderer.dispatchContextRestored` in due course, otherwise the renderer will not be able to restore itself fully.
      * 
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setContextHandlers
      * @since 3.85.0
