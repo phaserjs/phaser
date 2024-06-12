@@ -324,15 +324,6 @@ var QuadBatchHandler = new Class({
         var vertexViewF32 = vertexBuffer.viewF32;
         var vertexViewU32 = vertexBuffer.viewU32;
 
-        // Top-left
-        vertexViewF32[vertexOffset32++] = x0;
-        vertexViewF32[vertexOffset32++] = y0;
-        vertexViewF32[vertexOffset32++] = texX;
-        vertexViewF32[vertexOffset32++] = texY;
-        vertexViewF32[vertexOffset32++] = textureIndex;
-        vertexViewF32[vertexOffset32++] = tintFill;
-        vertexViewU32[vertexOffset32++] = tintTL;
-
         // Bottom-left
         vertexViewF32[vertexOffset32++] = x1;
         vertexViewF32[vertexOffset32++] = y1;
@@ -342,14 +333,14 @@ var QuadBatchHandler = new Class({
         vertexViewF32[vertexOffset32++] = tintFill;
         vertexViewU32[vertexOffset32++] = tintBL;
 
-        // Top-right
-        vertexViewF32[vertexOffset32++] = x2;
-        vertexViewF32[vertexOffset32++] = y2;
-        vertexViewF32[vertexOffset32++] = texX + texWidth;
+        // Top-left
+        vertexViewF32[vertexOffset32++] = x0;
+        vertexViewF32[vertexOffset32++] = y0;
+        vertexViewF32[vertexOffset32++] = texX;
         vertexViewF32[vertexOffset32++] = texY;
         vertexViewF32[vertexOffset32++] = textureIndex;
         vertexViewF32[vertexOffset32++] = tintFill;
-        vertexViewU32[vertexOffset32++] = tintTR;
+        vertexViewU32[vertexOffset32++] = tintTL;
 
         // Bottom-right
         vertexViewF32[vertexOffset32++] = x3;
@@ -359,6 +350,15 @@ var QuadBatchHandler = new Class({
         vertexViewF32[vertexOffset32++] = textureIndex;
         vertexViewF32[vertexOffset32++] = tintFill;
         vertexViewU32[vertexOffset32++] = tintBR;
+
+        // Top-right
+        vertexViewF32[vertexOffset32++] = x2;
+        vertexViewF32[vertexOffset32++] = y2;
+        vertexViewF32[vertexOffset32++] = texX + texWidth;
+        vertexViewF32[vertexOffset32++] = texY;
+        vertexViewF32[vertexOffset32++] = textureIndex;
+        vertexViewF32[vertexOffset32++] = tintFill;
+        vertexViewU32[vertexOffset32++] = tintTR;
 
         // Increment the instance count.
         this.instanceCount++;
