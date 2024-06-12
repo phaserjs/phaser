@@ -62,9 +62,7 @@ var DeathZone = new Class({
      */
     willKill: function (particle)
     {
-        var pos = particle.worldPosition;
-
-        var withinZone = this.source.contains(pos.x, pos.y);
+        var withinZone = this.source.contains(particle.x, particle.y);
 
         return (withinZone && this.killOnEnter || !withinZone && !this.killOnEnter);
     }
