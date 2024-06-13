@@ -376,6 +376,26 @@ var WebGLRenderer = new Class({
         this.contextRestoredHandler = NOOP;
 
         /**
+         * The previous contextLostHandler that was in use.
+         * This is set when `setContextHandlers` is called.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#previousContextLostHandler
+         * @type {function}
+         * @since 3.19.0
+         */
+        this.previousContextLostHandler = NOOP;
+
+        /**
+         * The previous contextRestoredHandler that was in use.
+         * This is set when `setContextHandlers` is called.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#previousContextRestoredHandler
+         * @type {function}
+         * @since 3.19.0
+         */
+        this.previousContextRestoredHandler = NOOP;
+
+        /**
          * The underlying WebGL context of the renderer.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#gl
@@ -942,6 +962,15 @@ var WebGLRenderer = new Class({
      */
     setContextHandlers: function (contextLost, contextRestored)
     {
+        if (this.previousContextLostHandler)
+        {
+            this.canvas.removeEventListener('webglcontextlost', this.previousContextLostHandler, false);
+        }
+        if (this.previousContextRestoredHandler)
+        {
+            this.canvas.removeEventListener('webglcontextlost', this.previousContextRestoredHandler, false);
+        }
+        
         if (typeof contextLost === 'function')
         {
             this.contextLostHandler = contextLost.bind(this);
@@ -962,6 +991,9 @@ var WebGLRenderer = new Class({
 
         this.canvas.addEventListener('webglcontextlost', this.contextLostHandler, false);
         this.canvas.addEventListener('webglcontextrestored', this.contextRestoredHandler, false);
+
+        this.previousContextLostHandler = this.contextLostHandler;
+        this.previousContextRestoredHandler = this.contextRestoredHandler;
     },
 
     /**
