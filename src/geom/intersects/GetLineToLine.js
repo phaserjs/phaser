@@ -63,7 +63,19 @@ var GetLineToLine = function (line1, line2, isRay, out)
     if (isRay)
     {
         t = (dx1 * (y3 - y1) + dy1 * (x1 - x3)) / (dx2 * dy1 - dy2 * dx1);
-        u = (x3 + dx2 * t - x1) / dx1;
+        
+        if (dx1 !== 0)
+        {
+            u = (x3 + dx2 * t - x1) / dx1;
+        }
+        else if (dy1 !== 0)
+        {
+            u = (y3 + dy2 * t - y1) / dy1;
+        }
+        else
+        {
+            return null; // degenerate line segment
+        }
 
         //  Intersects?
         if (u < 0 || t < 0 || t > 1)
