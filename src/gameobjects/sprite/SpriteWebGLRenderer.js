@@ -22,7 +22,16 @@ var SpriteWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
     drawingContext.camera.addToRenderList(src);
 
-    this.renderNode.run(drawingContext, src, parentMatrix);
+    var customRenderNodes = src.customRenderNodes;
+    var defaultRenderNodes = src.defaultRenderNodes;
+
+    (customRenderNodes.Submitter || defaultRenderNodes.Submitter).run(
+        drawingContext,
+        src,
+        parentMatrix,
+        customRenderNodes.Texturer || defaultRenderNodes.Texturer,
+        customRenderNodes.Transformer || defaultRenderNodes.Transformer
+    );
 };
 
 module.exports = SpriteWebGLRenderer;

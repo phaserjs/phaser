@@ -1,0 +1,130 @@
+/**
+ * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
+ * @copyright    2013-2024 Phaser Studio Inc.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = require('../../../../utils/Class');
+var Merge = require('../../../../utils/object/Merge');
+var Utils = require('../../Utils.js');
+var RenderNode = require('../RenderNode');
+
+var getTint = Utils.getTintAppendFloatAlpha;
+
+/**
+ * @classdesc
+ * The SubmitterImage RenderNode submits data for rendering a single Image-like GameObject.
+ * It uses a BatchHandler to render the image as part of a batch.
+ *
+ * This node receives the drawing context, game object, and parent matrix.
+ * It also receives the texturer, tinter, and transformer nodes
+ * from the node that invoked it.
+ * This allows the behavior to be configured by setting the appropriate nodes
+ * on the GameObject for individual tweaks, or on the invoking Renderer node
+ * for global changes.
+ *
+ * @class SubmitterImage
+ * @memberof Phaser.Renderer.WebGL.RenderNodes
+ * @constructor
+ * @since 3.90.0
+ * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
+ * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
+ * @param {object} [config] - The configuration object for this RenderNode.
+ * @param {string} [config.name='SubmitterImage'] - The name of this RenderNode.
+ * @param {string} [config.role='Submitter'] - The expected role of this RenderNode.
+ * @param {string} [config.batchHandler='BatchHandlerQuad'] - The key of the default batch handler node to use for this RenderNode. This should correspond to a node which extends `BatchHandlerQuad`.
+ */
+var SubmitterImage = new Class({
+    Extends: RenderNode,
+
+    initialize: function SubmitterImage (manager, config)
+    {
+        config = Merge(config || {}, this.defaultConfig);
+
+        RenderNode.call(this, config.name, manager);
+
+        /**
+         * The RenderNode used to render data.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterImage#batchHandler
+         * @type {Phaser.Renderer.WebGL.RenderNodes.BatchHandler}
+         * @since 3.90.0
+         */
+        this.batchHandler = manager.getNode(config.batchHandler);
+    },
+
+    /**
+     * The default configuration for this RenderNode.
+     *
+     * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterImage#defaultConfig
+     * @type {object}
+     */
+    defaultConfig: {
+        name: 'SubmitterImage',
+        role: 'Submitter',
+        batchHandler: 'BatchHandlerQuad'
+    },
+
+    /**
+     * Submit data for rendering.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.SubmitterImage#run
+     * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent matrix of the GameObject.
+     * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode} texturerNode - The texturer node used to texture the GameObject.
+     * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode} transformerNode - The transformer node used to transform the GameObject.
+     */
+    run: function (
+        drawingContext,
+        gameObject,
+        parentMatrix,
+        texturerNode,
+        transformerNode
+    )
+    {
+        this.onRunBegin(drawingContext);
+
+        texturerNode.run(drawingContext, gameObject);
+        transformerNode.run(drawingContext, gameObject, parentMatrix, texturerNode);
+
+        var quad = transformerNode.quad;
+        var uvSource = texturerNode.uvSource;
+        var u0 = uvSource.u0;
+        var v0 = uvSource.v0;
+        var u1 = uvSource.u1;
+        var v1 = uvSource.v1;
+
+        var cameraAlpha = drawingContext.camera.alpha;
+
+        this.batchHandler.batch(
+            drawingContext,
+
+            // Use `frame.source.glTexture` instead of `frame.glTexture`
+            // to avoid unnecessary getter function calls.
+            texturerNode.frame.source.glTexture,
+
+            // Transformed quad in order TL, BL, TR, BR:
+            quad[0], quad[1],
+            quad[2], quad[3],
+            quad[6], quad[7],
+            quad[4], quad[5],
+
+            // Texture coordinates in X, Y, Width, Height:
+            u0, v0, u1 - u0, v1 - v0,
+
+            gameObject.tintFill,
+
+            // Tint colors in order TL, BL, TR, BR:
+            getTint(gameObject.tintTopLeft, cameraAlpha * gameObject._alphaTL),
+            getTint(gameObject.tintBottomLeft, cameraAlpha * gameObject._alphaBL),
+            getTint(gameObject.tintTopRight, cameraAlpha * gameObject._alphaTR),
+            getTint(gameObject.tintBottomRight, cameraAlpha * gameObject._alphaBR)
+        );
+
+        this.onRunEnd(drawingContext);
+    }
+});
+
+module.exports = SubmitterImage;

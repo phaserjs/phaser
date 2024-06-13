@@ -7,41 +7,50 @@
 var DeepCopy = require('../../utils/object/DeepCopy');
 
 /**
- * Provides methods for setting the WebGL render node of a Game Object.
+ * Provides methods for setting the WebGL render nodes of a Game Object.
  *
  * @namespace Phaser.GameObjects.Components.RenderNode
  * @webglOnly
  * @since 3.90.0
  */
 var RenderNode = {
-
     /**
-     * The initial WebGL render node of this Game Object.
+     * Customized WebGL render nodes of this Game Object.
+     * RenderNodes are responsible for managing the rendering process of this Game Object.
+     * A default set of RenderNodes are coded into the engine,
+     * but they will check here first to see if a custom one exists.
      *
-     * If you call `resetRenderNode` on this Game Object,
-     * the render node is reset to this default.
-     *
-     * @name Phaser.GameObjects.Components.RenderNode#defaultRenderNode
-     * @type {Phaser.Renderer.WebGL.RenderNodes.RenderNode}
-     * @default null
+     * @name Phaser.GameObjects.Components.RenderNode#customRenderNodes
+     * @type {object}
      * @webglOnly
      * @since 3.90.0
      */
-    defaultRenderNode: null,
+    customRenderNodes: null,
 
     /**
-     * The current WebGL render node of this Game Object.
+     * The default RenderNodes for this Game Object.
+     * RenderNodes are responsible for managing the rendering process of this Game Object.
+     * These are the nodes that are used if no custom ones are set.
      *
-     * @name Phaser.GameObjects.Components.RenderNode#renderNode
-     * @type {Phaser.Renderer.WebGL.RenderNodes.RenderNode}
-     * @default null
+     * RenderNodes are identified by a unique key for their role.
+     *
+     * Common role keys include:
+     *
+     * - 'Submitter': responsible for running other node roles for each element.
+     * - 'Transformer': responsible for providing vertex coordinates for an element.
+     * - 'Texturer': responsible for handling textures for an element.
+     *
+     * @name Phaser.GameObjects.Components.RenderNode#defaultRenderNodes
+     * @type {object}
      * @webglOnly
      * @since 3.90.0
      */
-    renderNode: null,
+    defaultRenderNodes: null,
 
     /**
      * An object to store render node specific data in, to be read by the render nodes this Game Object uses.
+     *
+     * Render nodes store their data under their own name, not their role.
      *
      * @name Phaser.GameObjects.Components.RenderNode#renderNodeData
      * @type {object}
@@ -51,96 +60,116 @@ var RenderNode = {
     renderNodeData: null,
 
     /**
-     * Sets the initial WebGL render node of this Game Object.
+     * Initializes the render nodes for this Game Object.
      *
-     * This should only be called during the instantiation of the Game Object. After that, use `setRenderNode`.
+     * This method is called when the Game Object is added to the Scene.
+     * It is responsible for setting up the default render nodes
+     * this Game Object will use.
      *
-     * @method Phaser.GameObjects.Components.RenderNode#initRenderNode
+     * @method Phaser.GameObjects.Components.RenderNode#initRenderNodes
      * @webglOnly
      * @since 3.90.0
-     * @param {string|Phaser.Renderer.WebGL.RenderNodes.RenderNode} renderNode - The render node to set on this Game Object. Either a string, or a RenderNode instance.
-     * @return {boolean} `true` if the render node was set successfully, otherwise `false`.
+     * @param {string|Map<string, string>} defaultNodes - The default render nodes to set for this Game Object. This can be a string referring to a map in the RenderNodeManager, or a map of render nodes to set directly.
      */
-    initRenderNode: function (renderNode)
+    initRenderNodes: function (defaultNodes)
     {
-        this.pipelineData = {};
+        this.customRenderNodes = {};
+        this.defaultRenderNodes = {};
+        this.renderNodeData = {};
 
         var renderer = this.scene.sys.renderer;
 
         if (!renderer)
         {
-            return false;
+            return;
         }
 
-        var manager = renderer.renderNodes;
+        var manager = this.scene.sys.renderer.renderNodes;
 
         if (!manager)
         {
-            return false;
+            return;
         }
 
-        if (typeof renderNode === 'string')
+        if (typeof defaultNodes === 'string')
         {
-            renderNode = manager.getNode(renderNode);
-        }
-        if (!renderNode)
-        {
-            renderNode = manager.getNode(manager.default);
-        }
-        if (!renderNode)
-        {
-            return false;
+            defaultNodes = manager.defaultRenderNodes[defaultNodes];
         }
 
-        this.renderNode = renderNode;
-        this.defaultRenderNode = renderNode;
-        return true;
+        if (!defaultNodes)
+        {
+            return;
+        }
+
+        var _this = this;
+        defaultNodes.each(function (role, node)
+        {
+            _this.defaultRenderNodes[role] = manager.getNode(node);
+        });
     },
 
     /**
-     * Sets the WebGL render node of this Game Object.
+     * Sets the RenderNode for a given role.
      *
-     * Also sets the render node data object, if specified.
+     * Also sets the relevant render node data object, if specified.
      *
-     * @method Phaser.GameObjects.Components.RenderNode#setRenderNode
+     * If the node cannot be set, no changes are made.
+     *
+     * @method Phaser.GameObjects.Components.RenderNode#setRenderNodeRole
      * @webglOnly
      * @since 3.90.0
-     * @param {string|Phaser.Renderer.WebGL.RenderNodes.RenderNode} renderNode - The render node to set on this Game Object. Either a string, or a RenderNode instance.
+     * @param {string} key - The key of the role to set the render node for.
+     * @param {string|Phaser.Renderer.WebGL.RenderNodes.RenderNode|null} renderNode - The render node to set on this Game Object. Either a string, or a RenderNode instance. If `null`, the render node is removed, along with its data.
      * @param {object} [renderNodeData] - An object to store render node specific data in, to be read by the render nodes this Game Object uses.
      * @param {boolean} [copyData=false] - Should the data be copied from the `renderNodeData` object?
-     *
      * @return {this} This Game Object instance.
      */
-    setRenderNode: function (renderNode, renderNodeData, copyData)
+    setRenderNodeRole: function (key, renderNode, renderNodeData, copyData)
     {
         var renderer = this.scene.sys.renderer;
 
         if (!renderer)
         {
-            return false;
+            return this;
         }
 
         var manager = renderer.renderNodes;
 
         if (!manager)
         {
-            return false;
+            return this;
         }
 
-        if (typeof renderNode === 'string')
+        if (renderNode !== null)
         {
-            renderNode = manager.getNode(renderNode);
-        }
-        if (!renderNode)
-        {
-            return false;
-        }
+            if (typeof renderNode === 'string')
+            {
+                renderNode = manager.getNode(renderNode);
+            }
+            if (!renderNode)
+            {
+                return this;
+            }
+            this.customRenderNodes[key] = renderNode;
 
-        this.renderNode = renderNode;
-
-        if (renderNodeData)
+            if (renderNodeData)
+            {
+                this.renderNodeData[renderNode.name] = copyData ? DeepCopy(renderNodeData) : renderNodeData;
+            }
+            else
+            {
+                this.renderNodeData[renderNode.name] = {};
+            
+            }
+        }
+        else
         {
-            this.renderNodeData = copyData ? DeepCopy(renderNodeData) : renderNodeData;
+            var node = this.customRenderNodes[key];
+            if (node)
+            {
+                delete this.renderNodeData[node.name];
+                delete this.customRenderNodes[key];
+            }
         }
 
         return this;
@@ -156,13 +185,19 @@ var RenderNode = {
      * @method Phaser.GameObjects.Components.RenderNode#setRenderNodeData
      * @webglOnly
      * @since 3.90.0
+     * @param {string|Phaser.Renderer.WebGL.RenderNodes.RenderNode} renderNode - The render node to set the data for. If a string, it should be the name of the render node.
      * @param {string} key - The key of the property to set.
      * @param {*} value - The value to set the property to.
      * @return {this} This Game Object instance.
      */
-    setRenderNodeData: function (key, value)
+    setRenderNodeData: function (renderNode, key, value)
     {
-        var data = this.renderNodeData;
+        var name = renderNode;
+        if (typeof renderNode !== 'string')
+        {
+            name = renderNode.name;
+        }
+        var data = this.renderNodeData[name];
 
         if (value === undefined)
         {
@@ -174,32 +209,6 @@ var RenderNode = {
         }
 
         return this;
-    },
-
-    /**
-     * Resets the WebGL render node of this Game Object to the default.
-     *
-     * @method Phaser.GameObjects.Components.RenderNode#resetRenderNode
-     * @webglOnly
-     * @since 3.90.0
-     * @param {boolean} [resetData=false] - Should the render node data be reset to an empty object?
-     * @return {boolean} Whether the render node was reset successfully.
-     */
-    resetRenderNode: function (resetData)
-    {
-        if (!resetData)
-        {
-            resetData = false;
-        }
-
-        this.renderNode = this.defaultRenderNode;
-
-        if (resetData)
-        {
-            this.renderNodeData = {};
-        }
-
-        return this.renderNode !== null;
     }
 };
 

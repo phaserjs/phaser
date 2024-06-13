@@ -8,14 +8,18 @@ var EventEmitter = require('eventemitter3');
 var Class = require('../../../utils/Class');
 var Events = require('../../events');
 
+var DefaultImageNodes = require('./defaults/DefaultImageNodes');
+
+var BatchHandlerQuad = require('./BatchHandlerQuad');
+var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
 var Camera = require('./Camera');
 var FillCamera = require('./FillCamera');
 var FillRect = require('./FillRect');
-var GameObjectBatcher = require('./GameObjectBatcher');
-var LightBatcher = require('./LightBatcher');
-var LightBatchHandler = require('./LightBatchHandler');
 var ListCompositor = require('./ListCompositor');
-var QuadBatchHandler = require('./QuadBatchHandler');
+var SubmitterImage = require('./submitter/SubmitterImage');
+var SubmitterImageLight = require('./submitter/SubmitterImageLight');
+var TexturerImage = require('./texturer/TexturerImage');
+var TransformerImage = require('./transformer/TransformerImage');
 
 /**
  * @typedef {object} DebugGraphNode
@@ -70,7 +74,20 @@ var RenderNodeManager = new Class({
          * @since 3.90.0
          */
         this.maxParallelTextureUnits = (game.config.autoMobilePipeline && !game.device.os.desktop) ? 1 : renderer.maxTextures;
-        
+
+        /**
+         * The default render nodes for game objects.
+         * These maps are requested when a game object is created,
+         * and are used to assign default render nodes to the game object.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#defaultRenderNodes
+         * @type {object}
+         * @since 3.90.0
+         */
+        this.defaultRenderNodes = {
+            Image: DefaultImageNodes
+        };
+
         /**
          * Nodes available for use. This is an internal object,
          * where the keys are the names of the nodes.
@@ -100,28 +117,17 @@ var RenderNodeManager = new Class({
          * @private
          */
         this._nodeConstructors = {
+            BatchHandlerQuad: BatchHandlerQuad,
+            BatchHandlerQuadLight: BatchHandlerQuadLight,
             Camera: Camera,
             FillCamera: FillCamera,
             FillRect: FillRect,
-            GameObjectBatcher: GameObjectBatcher,
-            LightBatcher: LightBatcher,
-            LightBatchHandler: LightBatchHandler,
             ListCompositor: ListCompositor,
-            QuadBatchHandler: QuadBatchHandler
+            SubmitterImage: SubmitterImage,
+            SubmitterImageLight: SubmitterImageLight,
+            TexturerImage: TexturerImage,
+            TransformerImage: TransformerImage
         };
-
-        /**
-         * The default node to use for game objects.
-         *
-         * By default, this is the GameObjectBatcher node.
-         * It is specified as a string, so that the node is only constructed
-         * when it is needed.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#default
-         * @type {string}
-         * @since 3.90.0
-         */
-        this.default = GameObjectBatcher.name;
 
         /**
          * The RenderNode which is currently being filled.

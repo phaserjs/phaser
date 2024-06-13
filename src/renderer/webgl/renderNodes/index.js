@@ -10,15 +10,17 @@
 
 var RenderNodes = {
     BatchHandler: require('./BatchHandler'),
+    BatchHandlerQuad: require('./BatchHandlerQuad'),
+    BatchHandlerQuadLight: require('./BatchHandlerQuadLight'),
     Camera: require('./Camera'),
     FillCamera: require('./FillCamera'),
     FillRect: require('./FillRect'),
-    GameObjectBatcher: require('./GameObjectBatcher'),
-    LightBatcher: require('./LightBatcher'),
-    LightBatchHandler: require('./LightBatchHandler'),
     ListCompositor: require('./ListCompositor'),
-    QuadBatchHandler: require('./QuadBatchHandler'),
-    RenderNode: require('./RenderNode')
+    RenderNode: require('./RenderNode'),
+    SubmitterImage: require('./submitter/SubmitterImage'),
+    SubmitterImageLight: require('./submitter/SubmitterImageLight'),
+    TexturerImage: require('./texturer/TexturerImage'),
+    TransformerImage: require('./transformer/TransformerImage')
 };
 
 module.exports = RenderNodes;

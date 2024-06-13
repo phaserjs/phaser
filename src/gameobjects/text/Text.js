@@ -95,6 +95,7 @@ var Text = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
         Components.PostPipeline,
@@ -126,7 +127,7 @@ var Text = new Class({
 
         this.setPosition(x, y);
         this.setOrigin(0, 0);
-        this.initRenderNode();
+        this.initRenderNodes('Image');
         this.initPostPipeline(true);
 
         /**

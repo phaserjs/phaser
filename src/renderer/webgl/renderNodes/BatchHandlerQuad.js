@@ -14,7 +14,7 @@ var BatchHandler = require('./BatchHandler');
  * @classdesc
  * This RenderNode draws Standard Batch Render (SBR) quads in batches.
  *
- * @class QuadBatchHandler
+ * @class BatchHandlerQuad
  * @extends Phaser.Renderer.WebGL.RenderNodes.Batch
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
@@ -22,10 +22,10 @@ var BatchHandler = require('./BatchHandler');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this handler.
  */
-var QuadBatchHandler = new Class({
+var BatchHandlerQuad = new Class({
     Extends: BatchHandler,
 
-    initialize: function QuadBatchHandler (manager, config)
+    initialize: function BatchHandlerQuad (manager, config)
     {
         BatchHandler.call(this, manager, config, this.defaultConfig);
 
@@ -43,7 +43,7 @@ var QuadBatchHandler = new Class({
      * @since 3.90.0
      */
     defaultConfig: {
-        name: 'QuadBatchHandler',
+        name: 'BatchHandlerQuad',
         verticesPerInstance: 4,
         indicesPerInstance: 6,
         vertexSource: ShaderSourceVS,
@@ -401,4 +401,4 @@ var QuadBatchHandler = new Class({
     }
 });
 
-module.exports = QuadBatchHandler;
+module.exports = BatchHandlerQuad;

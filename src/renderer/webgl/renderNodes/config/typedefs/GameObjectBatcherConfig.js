@@ -9,5 +9,5 @@
  * @since 3.90.0
  *
  * @property {string} name - The name of the RenderNode. This should be unique within the manager.
- * @property {string|Phaser.Renderer.WebGL.RenderNodes.BatchHandler} [batchHandler='QuadBatchHandler'] - The batch handler to which this node will send vertex information. The batch handler will be added to the manager if necessary. This is invoked during `run`. It is where shader configuration should be done.
+ * @property {string|Phaser.Renderer.WebGL.RenderNodes.BatchHandler} [batchHandler='BatchHandlerQuad'] - The batch handler to which this node will send vertex information. The batch handler will be added to the manager if necessary. This is invoked during `run`. It is where shader configuration should be done.
  */

@@ -127,6 +127,7 @@ var Video = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
         Components.PostPipeline,
@@ -517,7 +518,7 @@ var Video = new Class({
 
         this.setPosition(x, y);
         this.setSize(256, 256);
-        this.initRenderNode();
+        this.initRenderNodes('Image');
         this.initPostPipeline(true);
 
         game.events.on(GameEvents.PAUSE, this.globalPause, this);

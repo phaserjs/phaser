@@ -8,7 +8,7 @@ var Vector2 = require('../../../math/Vector2');
 var Class = require('../../../utils/Class');
 var LightShaderSourceFS = require('../shaders/Light-frag');
 var ShaderSourceVS = require('../shaders/Multi-vert');
-var QuadBatchHandler = require('./QuadBatchHandler');
+var BatchHandlerQuad = require('./BatchHandlerQuad');
 
 /**
  * @classdesc
@@ -20,20 +20,20 @@ var QuadBatchHandler = require('./QuadBatchHandler');
  * The string `%LIGHT_COUNT%` in the fragment shader source will be
  * replaced with this value.
  *
- * @class LightBatchHandler
+ * @class BatchHandlerQuadLight
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
  * @since 3.90.0
- * @extends Phaser.Renderer.WebGL.RenderNodes.QuadBatchHandler
+ * @extends Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} config - The configuration object for this RenderNode.
  */
-var LightBatchHandler = new Class({
-    Extends: QuadBatchHandler,
+var BatchHandlerQuadLight = new Class({
+    Extends: BatchHandlerQuad,
 
-    initialize: function LightBatchHandler (manager, config)
+    initialize: function BatchHandlerQuadLight (manager, config)
     {
-        QuadBatchHandler.call(this, manager, config);
+        BatchHandlerQuad.call(this, manager, config);
 
         this.program.setUniform('uMainSampler', 0);
         this.program.setUniform('uNormSampler', 1);
@@ -41,7 +41,7 @@ var LightBatchHandler = new Class({
         /**
         * Inverse rotation matrix for normal map rotations.
         *
-        * @name Phaser.Renderer.WebGL.RenderNodes.LightBatchHandler#inverseRotationMatrix
+        * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLight#inverseRotationMatrix
         * @type {Float32Array}
         * @private
         * @since 3.90.0
@@ -55,7 +55,7 @@ var LightBatchHandler = new Class({
         /**
          * A persistent calculation vector used when processing the lights.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.LightBatchHandler#_lightVector
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLight#_lightVector
          * @type {Phaser.Math.Vector2}
          * @private
          * @since 3.90.0
@@ -65,7 +65,7 @@ var LightBatchHandler = new Class({
         /**
          * The rotation of the normal map texture.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.LightBatchHandler#_normalMapRotation
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLight#_normalMapRotation
          * @type {number}
          * @private
          * @since 3.90.0
@@ -74,7 +74,7 @@ var LightBatchHandler = new Class({
     },
 
     /**
-     * The default configuration settings for LightBatchHandler.
+     * The default configuration settings for BatchHandlerQuadLight.
      *
      * These are very similar to standard settings,
      * but because the textures are always set in units 0 and 1,
@@ -82,13 +82,13 @@ var LightBatchHandler = new Class({
      * While the vertex shader still reads `inTexId`, it is not used,
      * and the default value of 0 is fine.
      *
-     * @name Phaser.Renderer.WebGL.RenderNodes.LightBatchHandler#defaultConfig
+     * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLight#defaultConfig
      * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
      * @since 3.90.0
      * @readonly
      */
     defaultConfig: {
-        name: 'LightBatchHandler',
+        name: 'BatchHandlerQuadLight',
         verticesPerInstance: 4,
         indicesPerInstance: 6,
         vertexSource: ShaderSourceVS,
@@ -119,7 +119,7 @@ var LightBatchHandler = new Class({
 
     _copyAndCompleteConfig: function (manager, config, defaultConfig)
     {
-        var newConfig = QuadBatchHandler.prototype._copyAndCompleteConfig.call(this, config, defaultConfig);
+        var newConfig = BatchHandlerQuad.prototype._copyAndCompleteConfig.call(this, config, defaultConfig);
 
         newConfig.fragmentSource = newConfig.fragmentSource.replace(
             '%LIGHT_COUNT%',
@@ -132,7 +132,7 @@ var LightBatchHandler = new Class({
     /**
      * Called at the start of the `run` method.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.LightBatchHandler#onRunBegin
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLight#onRunBegin
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
@@ -221,7 +221,7 @@ var LightBatchHandler = new Class({
      * - Top-right
      * - Bottom-right
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.LightBatchHandler#batch
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLight#batch
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} currentContext - The current drawing context.
      * @param {Phaser.Renderer.WebGL.WebGLTextureWrapper} glTexture - The texture to render.
@@ -368,16 +368,16 @@ var LightBatchHandler = new Class({
 
     /**
      * Called by the render node manager when the advised texture unit count changes.
-     * In `LightBatchHandler`, this does nothing, because it only ever uses two texture units.
+     * In `BatchHandlerQuadLight`, this does nothing, because it only ever uses two texture units.
      *
-     * As this extends `QuadBatchHandler`, it would otherwise rebuild the shader
+     * As this extends `BatchHandlerQuad`, it would otherwise rebuild the shader
      * program.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.LightBatchHandler#updateTextureCount
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLight#updateTextureCount
      * @since 3.90.0
      * @param {number} count - The new advised texture unit count.
      */
     updateTextureCount: function (count) {}
 });
 
-module.exports = LightBatchHandler;
+module.exports = BatchHandlerQuadLight;

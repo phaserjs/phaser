@@ -56,6 +56,7 @@ var Image = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
         Components.PostPipeline,
@@ -89,7 +90,7 @@ var Image = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOriginFromFrame();
-        this.initRenderNode();
+        this.initRenderNodes('Image');
         this.initPostPipeline(true);
     }
 

@@ -19,6 +19,7 @@ module.exports = {
     Flip: require('./Flip'),
     FX: require('./FX'),
     GetBounds: require('./GetBounds'),
+    Lighting: require('./Lighting'),
     Mask: require('./Mask'),
     Origin: require('./Origin'),
     PathFollower: require('./PathFollower'),
