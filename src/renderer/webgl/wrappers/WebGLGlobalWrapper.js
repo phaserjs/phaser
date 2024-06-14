@@ -58,8 +58,11 @@ var WebGLGlobalWrapper = new Class({
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} [state] - The state to set. If undefined, the current state is used when `force` is `true`.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
+     * @param {boolean} [vaoLast=false] - If `true`, the VAO will be set last.
+     * Otherwise, it will be set first. This is useful when performing state
+     * changes that will affect a VAO, such as `bindings.elementArrayBuffer`.
      */
-    update: function (state, force)
+    update: function (state, force, vaoLast)
     {
         if (state === undefined)
         {
@@ -70,7 +73,12 @@ var WebGLGlobalWrapper = new Class({
             state = this.state;
         }
         if (force === undefined) { force = false; }
+        if (vaoLast === undefined) { vaoLast = false; }
 
+        if (state.vao !== undefined && !vaoLast)
+        {
+            this.updateVAO(state, force);
+        }
         if (state.bindings !== undefined)
         {
             this.updateBindings(state, force);
@@ -107,13 +115,13 @@ var WebGLGlobalWrapper = new Class({
         {
             this.updateTexturing(state, force);
         }
-        if (state.vao !== undefined)
-        {
-            this.updateVAO(state, force);
-        }
         if (state.viewport !== undefined)
         {
             this.updateViewport(state, force);
+        }
+        if (state.vao !== undefined && vaoLast)
+        {
+            this.updateVAO(state, force);
         }
     },
 
@@ -903,6 +911,12 @@ var WebGLGlobalWrapper = new Class({
 
     /**
      * Updates the vertex array object state.
+     *
+     * Note that the VAO is automatically affected by
+     * bindings of `elementArrayBuffer` and any attribute settings,
+     * as written in WebGL. When binding the VAO, ensure that other
+     * bindings come before or after, as you intend.
+     * When using `update`, the VAO is set first by default.
      *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateVAO
      * @since 3.90.0
