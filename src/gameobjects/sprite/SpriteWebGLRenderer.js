@@ -29,6 +29,7 @@ var SpriteWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
         drawingContext,
         src,
         parentMatrix,
+        0,
         customRenderNodes.Texturer || defaultRenderNodes.Texturer,
         customRenderNodes.Transformer || defaultRenderNodes.Transformer
     );

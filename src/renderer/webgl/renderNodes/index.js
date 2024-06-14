@@ -18,8 +18,8 @@ var RenderNodes = {
     ListCompositor: require('./ListCompositor'),
     RebindContext: require('./RebindContext'),
     RenderNode: require('./RenderNode'),
-    SubmitterImage: require('./submitter/SubmitterImage'),
-    SubmitterImageLight: require('./submitter/SubmitterImageLight'),
+    SubmitterQuad: require('./submitter/SubmitterQuad'),
+    SubmitterQuadLight: require('./submitter/SubmitterQuadLight'),
     TexturerImage: require('./texturer/TexturerImage'),
     TransformerImage: require('./transformer/TransformerImage'),
     YieldContext: require('./YieldContext')

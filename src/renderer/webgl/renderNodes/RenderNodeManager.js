@@ -17,8 +17,8 @@ var FillCamera = require('./FillCamera');
 var FillRect = require('./FillRect');
 var ListCompositor = require('./ListCompositor');
 var RebindContext = require('./RebindContext');
-var SubmitterImage = require('./submitter/SubmitterImage');
-var SubmitterImageLight = require('./submitter/SubmitterImageLight');
+var SubmitterQuad = require('./submitter/SubmitterQuad');
+var SubmitterQuadLight = require('./submitter/SubmitterQuadLight');
 var TexturerImage = require('./texturer/TexturerImage');
 var TransformerImage = require('./transformer/TransformerImage');
 var YieldContext = require('./YieldContext');
@@ -126,8 +126,8 @@ var RenderNodeManager = new Class({
             FillRect: FillRect,
             ListCompositor: ListCompositor,
             RebindContext: RebindContext,
-            SubmitterImage: SubmitterImage,
-            SubmitterImageLight: SubmitterImageLight,
+            SubmitterQuad: SubmitterQuad,
+            SubmitterQuadLight: SubmitterQuadLight,
             TexturerImage: TexturerImage,
             TransformerImage: TransformerImage,
             YieldContext: YieldContext

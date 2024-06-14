@@ -7,52 +7,73 @@
 var Class = require('../../../../utils/Class');
 var Merge = require('../../../../utils/object/Merge');
 var Utils = require('../../Utils.js');
-var SubmitterImage = require('./SubmitterImage');
+var RenderNode = require('../RenderNode');
 
 var getTint = Utils.getTintAppendFloatAlpha;
 
 /**
  * @classdesc
- * The SubmitterImageLight RenderNode submits data for rendering
- * a single Image-like GameObject with lighting information.
+ * The SubmitterQuad RenderNode submits data for rendering a single Image-like GameObject.
+ * It uses a BatchHandler to render the image as part of a batch.
  *
- * It uses a BatchHandlerQuadLight to render the image as part of a batch.
+ * This node receives the drawing context, game object, and parent matrix.
+ * It also receives the texturer, tinter, and transformer nodes
+ * from the node that invoked it.
+ * This allows the behavior to be configured by setting the appropriate nodes
+ * on the GameObject for individual tweaks, or on the invoking Renderer node
+ * for global changes.
  *
- * @class SubmitterImageLight
+ * @class SubmitterQuad
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
  * @since 3.90.0
- * @extends Phaser.Renderer.WebGL.RenderNodes.SubmitterImage
+ * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {object} [config] - The configuration object for this RenderNode.
- * @param {string} [config.name='SubmitterImageLight'] - The name of this RenderNode.
+ * @param {string} [config.name='SubmitterQuad'] - The name of this RenderNode.
  * @param {string} [config.role='Submitter'] - The expected role of this RenderNode.
- * @param {string} [config.batchHandler='BatchHandlerQuadLight'] - The key of the default batch handler node to use for this RenderNode. This should correspond to a node which extends `BatchHandlerQuadLight`.
+ * @param {string} [config.batchHandler='BatchHandlerQuad'] - The key of the default batch handler node to use for this RenderNode. This should correspond to a node which extends `BatchHandlerQuad`.
  */
-var SubmitterImageLight = new Class({
-    Extends: SubmitterImage,
+var SubmitterQuad = new Class({
+    Extends: RenderNode,
 
-    initialize: function SubmitterImageLight (manager, config)
+    initialize: function SubmitterQuad (manager, config)
     {
         config = Merge(config || {}, this.defaultConfig);
 
-        SubmitterImage.call(this, manager, config);
+        RenderNode.call(this, config.name, manager);
+
+        /**
+         * The RenderNode used to render data.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad#batchHandler
+         * @type {Phaser.Renderer.WebGL.RenderNodes.BatchHandler}
+         * @since 3.90.0
+         */
+        this.batchHandler = manager.getNode(config.batchHandler);
     },
 
+    /**
+     * The default configuration for this RenderNode.
+     *
+     * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad#defaultConfig
+     * @type {object}
+     */
     defaultConfig: {
-        name: 'SubmitterImageLight',
+        name: 'SubmitterQuad',
         role: 'Submitter',
-        batchHandler: 'BatchHandlerQuadLight'
+        batchHandler: 'BatchHandlerQuad'
     },
 
     /**
      * Submit data for rendering.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.SubmitterImageLight#run
+     * @method Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad#run
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent matrix of the GameObject.
+     * @param {number} [elementIndex] - The index of the element within the game object. This is used for objects that consist of multiple quads.
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode} texturerNode - The texturer node used to texture the GameObject.
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode} transformerNode - The transformer node used to transform the GameObject.
      */
@@ -60,21 +81,15 @@ var SubmitterImageLight = new Class({
         drawingContext,
         gameObject,
         parentMatrix,
+        elementIndex,
         texturerNode,
         transformerNode
     )
     {
-        var lightManager = drawingContext.camera.scene.sys.lights;
-        if (!lightManager || !lightManager.active)
-        {
-            // Skip rendering if the light manager is not active.
-            return;
-        }
-
         this.onRunBegin(drawingContext);
 
-        texturerNode.run(drawingContext, gameObject);
-        transformerNode.run(drawingContext, gameObject, parentMatrix, texturerNode);
+        texturerNode.run(drawingContext, gameObject, elementIndex);
+        transformerNode.run(drawingContext, gameObject, parentMatrix, elementIndex, texturerNode);
 
         var quad = transformerNode.quad;
         var uvSource = texturerNode.uvSource;
@@ -85,55 +100,12 @@ var SubmitterImageLight = new Class({
 
         var cameraAlpha = drawingContext.camera.alpha;
 
-        // Get normal map.
-        var normalMap;
-        if (gameObject.displayTexture)
-        {
-            normalMap = gameObject.displayTexture.dataSource[gameObject.displayFrame.sourceIndex];
-        }
-        else if (gameObject.texture)
-        {
-            normalMap = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
-        }
-        else if (gameObject.tileset)
-        {
-            if (Array.isArray(gameObject.tileset))
-            {
-                normalMap = gameObject.tileset[0].image.dataSource[0];
-            }
-            else
-            {
-                normalMap = gameObject.tileset.image.dataSource[0];
-            }
-        }
-        if (!normalMap)
-        {
-            normalMap = this.manager.renderer.normalTexture;
-        }
-        else
-        {
-            normalMap = normalMap.glTexture;
-        }
-
-        // Get normal map rotation.
-        var normalMapRotation = gameObject.rotation;
-        if (gameObject.parentContainer)
-        {
-            var matrix = gameObject.getWorldTransformMatrix(this._tempMatrix, this._tempMatrix2);
-            normalMapRotation = matrix.rotationNormalized;
-        }
-
-        // Batch the quad.
         this.batchHandler.batch(
             drawingContext,
 
             // Use `frame.source.glTexture` instead of `frame.glTexture`
             // to avoid unnecessary getter function calls.
             texturerNode.frame.source.glTexture,
-            normalMap,
-
-            // Normal map rotation
-            normalMapRotation,
 
             // Transformed quad in order TL, BL, TR, BR:
             quad[0], quad[1],
@@ -157,4 +129,4 @@ var SubmitterImageLight = new Class({
     }
 });
 
-module.exports = SubmitterImageLight;
+module.exports = SubmitterQuad;

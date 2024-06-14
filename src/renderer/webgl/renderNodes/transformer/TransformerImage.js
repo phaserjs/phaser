@@ -71,9 +71,10 @@ var TransformerImage = new Class({
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent matrix of the GameObject.
+     * @param {number} [elementIndex] - The index of the element within the game object. This is used for objects that consist of multiple quads. It is unused here.
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode} texturerNode - The texturer node used to texture the GameObject. This contains relevant data on the dimensions of the object.
      */
-    run: function (drawingContext, gameObject, parentMatrix, texturerNode)
+    run: function (drawingContext, gameObject, parentMatrix, elementIndex, texturerNode)
     {
         this.onRunBegin(drawingContext);
 

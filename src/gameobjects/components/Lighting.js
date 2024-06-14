@@ -51,7 +51,7 @@ var Lighting = {
         if (enable)
         {
             this.lighting = true;
-            this.setRenderNodeRole('Submitter', 'SubmitterImageLight');
+            this.setRenderNodeRole('Submitter', 'SubmitterQuadLight');
         }
         else
         {

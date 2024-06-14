@@ -94,8 +94,9 @@ var TexturerImage = new Class({
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.Image} gameObject - The GameObject being rendered.
+     * @param {number} [elementIndex] - The index of the element within the game object. This is used for objects that consist of multiple quads. It is unused here.
      */
-    run: function (drawingContext, gameObject)
+    run: function (drawingContext, gameObject, elementIndex)
     {
         this.onRunBegin(drawingContext);
 
