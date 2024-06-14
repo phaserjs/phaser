@@ -5,7 +5,7 @@
 * `BaseSoundManager.isPlaying` is a new method that will return a boolean if the given sound key is playing. If you don't provide a key, it will return a boolean if any sound is playing (thanks @samme)
 * `WebGLRenderer.dispatchContextLost` is a new internal method that is called when the WebGL context is lost. By default this is bound to the property `WebGLRenderer.contextLostHandler`. If you override the context loss handler, be sure to invoke this method in due course.
 * `WebGLRenderer.dispatchContextRestore` is a new internal method that is called when the WebGL context is restored. By default this is bound to the property `WebGLRenderer.contextRestoreHandler`. If you override the context restore handler, be sure to invoke this method in due course.
-* `WebGLRenderer.setContextHandlers` is a new internal method with 2 optional parameters: `contextLost` and `contextRestored`. These allow you to overwrite the default `contextLostHandler` and `contextRestoreHandler` handlers.
+* `WebGLRenderer.setContextHandlers` is a new internal method with 2 optional parameters: `contextLost` and `contextRestored`. These allow you to overwrite the default `contextLostHandler` and `contextRestoreHandler` handlers. (thanks @yaustar)
 
 # WebGL Rendering Updates
 
@@ -32,7 +32,7 @@
 * Calling `getPipelineName()` on a Game Object would cause a runtime error if running under Canvas. It now simply returns `null`. Fix #6799 (thanks @samme)
 * Calling the Arcade Body `setPushable(false)` method for `circle` bodies prevents the bodies from being pushed. Fix #5617 (thanks @kainage)
 * Calling `addDeathZone()` on a particle emitter Game Object had a bug where the `DeathZone` used world position coordinates. `DeathZone` now uses local position coordinates following the particle emitter position. Fix #6371 (thanks @vforsh)
-* Updated the `GetLineToLine` method in `GetLineToLine.js` to handle the case where `dx1` or `dy1` values is zero. This ensures the function correctly returns `null` in this case to prevent errors in calculations involving line segments.
+* Updated the `GetLineToLine` method in `GetLineToLine.js` to handle the case where `dx1` or `dy1` values is zero. This ensures the function correctly returns `null` in this case to prevent errors in calculations involving line segments. Fix #6579 (thanks @finscn)
 
 ## Input Bug Fixes
 
