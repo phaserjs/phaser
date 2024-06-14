@@ -6,6 +6,8 @@
 * `WebGLRenderer.dispatchContextLost` is a new internal method that is called when the WebGL context is lost. By default this is bound to the property `WebGLRenderer.contextLostHandler`. If you override the context loss handler, be sure to invoke this method in due course.
 * `WebGLRenderer.dispatchContextRestore` is a new internal method that is called when the WebGL context is restored. By default this is bound to the property `WebGLRenderer.contextRestoreHandler`. If you override the context restore handler, be sure to invoke this method in due course.
 * `WebGLRenderer.setContextHandlers` is a new internal method with 2 optional parameters: `contextLost` and `contextRestored`. These allow you to overwrite the default `contextLostHandler` and `contextRestoreHandler` handlers. (thanks @yaustar)
+* `Phaser.Textures.Frame#setCutPosition` is a new internal method with 2 optional parameters: `x` and `y`. These sets the x and y position within the source image to cut from.
+* `Phaser.Textures.Frame#setCutSize` is a new internal method with 2 parameters: `width` and `height`. These sets the width, and height of the area in the source image to cut. (thanks @FelipeIzolan)
 
 # WebGL Rendering Updates
 
