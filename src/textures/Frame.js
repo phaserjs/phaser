@@ -337,6 +337,47 @@ var Frame = new Class({
     },
 
     /**
+     * Sets the x and y position within the source image to cut from.
+     *
+     * @method Phaser.Textures.Frame#setCutPosition
+     * @since 3.85.0
+     *
+     * @param {number} [x=0] - X position within the source image to cut from.
+     * @param {number} [y=0] - Y position within the source image to cut from.
+     *
+     * @return {this} This Frame object.
+     */
+    setCutPosition: function (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        this.cutX = x;
+        this.cutY = y;
+
+        return this.updateUVs();
+    },
+
+    /**
+     * Sets the width, and height of the area in the source image to cut.
+     *
+     * @method Phaser.Textures.Frame#setCutSize
+     * @since 3.85.0
+     *
+     * @param {number} width - The width of the area in the source image to cut.
+     * @param {number} height - The height of the area in the source image to cut.
+     *
+     * @return {this} This Frame object.
+     */
+    setCutSize: function (width, height)
+    {
+        this.cutWidth = width;
+        this.cutHeight = height;
+
+        return this.updateUVs();
+    },
+
+    /**
      * Sets the width, height, x and y of this Frame.
      *
      * This is called automatically by the constructor
@@ -357,10 +398,8 @@ var Frame = new Class({
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
 
-        this.cutX = x;
-        this.cutY = y;
-        this.cutWidth = width;
-        this.cutHeight = height;
+        this.setCutPosition(x, y);
+        this.setCutSize(width, height);
 
         this.width = width;
         this.height = height;
