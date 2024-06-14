@@ -16,10 +16,12 @@ var Camera = require('./Camera');
 var FillCamera = require('./FillCamera');
 var FillRect = require('./FillRect');
 var ListCompositor = require('./ListCompositor');
+var RebindContext = require('./RebindContext');
 var SubmitterImage = require('./submitter/SubmitterImage');
 var SubmitterImageLight = require('./submitter/SubmitterImageLight');
 var TexturerImage = require('./texturer/TexturerImage');
 var TransformerImage = require('./transformer/TransformerImage');
+var YieldContext = require('./YieldContext');
 
 /**
  * @typedef {object} DebugGraphNode
@@ -123,10 +125,12 @@ var RenderNodeManager = new Class({
             FillCamera: FillCamera,
             FillRect: FillRect,
             ListCompositor: ListCompositor,
+            RebindContext: RebindContext,
             SubmitterImage: SubmitterImage,
             SubmitterImageLight: SubmitterImageLight,
             TexturerImage: TexturerImage,
-            TransformerImage: TransformerImage
+            TransformerImage: TransformerImage,
+            YieldContext: YieldContext
         };
 
         /**

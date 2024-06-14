@@ -33,6 +33,12 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    if (camera.camera)
+    {
+        // `camera` is really a DrawingContext object, used in WebGL rendering.
+        camera = camera.camera;
+    }
+
     var style = src.node.style;
     var settings = src.scene.sys.settings;
 

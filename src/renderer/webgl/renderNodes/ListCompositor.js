@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../../utils/Class');
+var CONST = require('../../../const');
 var RenderNode = require('./RenderNode');
 
 /**
@@ -51,7 +52,10 @@ var ListCompositor = new Class({
         {
             var child = children[i];
 
-            if (child.blendMode !== currentBlendMode)
+            if (
+                child.blendMode !== currentBlendMode &&
+                child.blendMode !== CONST.BlendModes.SKIP_CHECK
+            )
             {
                 if (currentContext !== displayContext)
                 {

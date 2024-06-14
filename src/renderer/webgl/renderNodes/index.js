@@ -16,11 +16,13 @@ var RenderNodes = {
     FillCamera: require('./FillCamera'),
     FillRect: require('./FillRect'),
     ListCompositor: require('./ListCompositor'),
+    RebindContext: require('./RebindContext'),
     RenderNode: require('./RenderNode'),
     SubmitterImage: require('./submitter/SubmitterImage'),
     SubmitterImageLight: require('./submitter/SubmitterImageLight'),
     TexturerImage: require('./texturer/TexturerImage'),
-    TransformerImage: require('./transformer/TransformerImage')
+    TransformerImage: require('./transformer/TransformerImage'),
+    YieldContext: require('./YieldContext')
 };
 
 module.exports = RenderNodes;
