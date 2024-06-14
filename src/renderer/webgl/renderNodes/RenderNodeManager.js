@@ -9,6 +9,7 @@ var Class = require('../../../utils/Class');
 var Events = require('../../events');
 
 var DefaultImageNodes = require('./defaults/DefaultImageNodes');
+var DefaultNineSliceNodes = require('./defaults/DefaultNineSliceNodes');
 
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
@@ -87,7 +88,8 @@ var RenderNodeManager = new Class({
          * @since 3.90.0
          */
         this.defaultRenderNodes = {
-            Image: DefaultImageNodes
+            Image: DefaultImageNodes,
+            NineSlice: DefaultNineSliceNodes
         };
 
         /**

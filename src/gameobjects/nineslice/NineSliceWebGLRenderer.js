@@ -18,10 +18,10 @@ var Utils = require('../../renderer/webgl/Utils');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Mesh} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var NineSliceWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
     var verts = src.vertices;
     var totalVerts = verts.length;
@@ -31,63 +31,53 @@ var NineSliceWebGLRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    var camera = drawingContext.camera;
+
     camera.addToRenderList(src);
 
-    var pipeline = renderer.pipelines.set(src.pipeline, src);
-
-    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, false).calc;
-
-    //  This causes a flush if the NineSlice has a Post Pipeline
-    renderer.pipelines.preBatch(src);
-
-    var textureUnit = pipeline.setGameObject(src);
-
-    var F32 = pipeline.vertexViewF32;
-    var U32 = pipeline.vertexViewU32;
-
-    var vertexOffset = (pipeline.vertexCount * pipeline.currentShader.vertexComponentCount) - 1;
-
-    var roundPixels = camera.roundPixels;
-
-    var tintEffect = src.tintFill;
     var alpha = camera.alpha * src.alpha;
+    var batchHandler = src.customRenderNodes.BatchHandler || src.defaultRenderNodes.BatchHandler;
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, false).calc;
     var color = Utils.getTintAppendFloatAlpha(src.tint, alpha);
+    var glTexture = src.frame.source.glTexture;
+    var roundPixels = camera.roundPixels;
+    var tintEffect = src.tintFill;
 
-    var available = pipeline.vertexAvailable();
-    var flushCount = -1;
+    var quad, vtl, vbr;
 
-    if (available < totalVerts)
+    for (var i = 0; i < totalVerts; i += 6)
     {
-        flushCount = available;
+        // Of the 6 vertices, we only need these 2 to define a quad.
+        // They are the top-left and bottom-right.
+        vtl = verts[i + 1];
+        vbr = verts[i + 2];
+
+        quad = calcMatrix.setQuad(
+            vtl.vx, vtl.vy,
+            vbr.vx, vbr.vy,
+            roundPixels
+        );
+
+        batchHandler.batch(
+            drawingContext,
+
+            glTexture,
+
+            // Transformed quad in order TL, BL, TR, BR:
+            quad[0], quad[1],
+            quad[2], quad[3],
+            quad[6], quad[7],
+            quad[4], quad[5],
+
+            // Texture coordinates in X, Y, Width, Height:
+            vtl.u, vtl.v, vbr.u - vtl.u, vbr.v - vtl.v,
+
+            tintEffect,
+
+            // Tint colors in order TL, BL, TR, BR:
+            color, color, color, color
+        );
     }
-
-    for (var i = 0; i < totalVerts; i++)
-    {
-        var vert = verts[i];
-
-        if (i === flushCount)
-        {
-            pipeline.flush();
-
-            textureUnit = pipeline.setGameObject(src);
-
-            vertexOffset = 0;
-        }
-
-        F32[++vertexOffset] = calcMatrix.getXRound(vert.vx, vert.vy, roundPixels);
-        F32[++vertexOffset] = calcMatrix.getYRound(vert.vx, vert.vy, roundPixels);
-        F32[++vertexOffset] = vert.u;
-        F32[++vertexOffset] = vert.v;
-        F32[++vertexOffset] = textureUnit;
-        F32[++vertexOffset] = tintEffect;
-        U32[++vertexOffset] = color;
-
-        pipeline.vertexCount++;
-
-        pipeline.currentBatch.count = (pipeline.vertexCount - pipeline.currentBatch.start);
-    }
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = NineSliceWebGLRenderer;
