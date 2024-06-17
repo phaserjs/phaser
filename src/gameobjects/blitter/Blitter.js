@@ -67,9 +67,10 @@ var Blitter = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Depth,
+        Components.Lighting,
         Components.Mask,
-        Components.Pipeline,
         Components.PostPipeline,
+        Components.RenderNode,
         Components.ScrollFactor,
         Components.Size,
         Components.Texture,
@@ -86,7 +87,7 @@ var Blitter = new Class({
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);
-        this.initPipeline();
+        this.initRenderNodes('Blitter');
         this.initPostPipeline();
 
         /**

@@ -74,8 +74,9 @@ var SubmitterQuad = new Class({
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent matrix of the GameObject.
      * @param {number} [elementIndex] - The index of the element within the game object. This is used for objects that consist of multiple quads.
-     * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode} texturerNode - The texturer node used to texture the GameObject.
-     * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode} transformerNode - The transformer node used to transform the GameObject.
+     * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode|Omit<Phaser.Renderer.WebGL.RenderNodes.TexturerImage, 'run'>} texturerNode - The texturer node used to texture the GameObject. You may pass a texturer node or an object containing equivalent data without a `run` method.
+     * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode|{ quad: Float32Array }} transformerNode - The transformer node used to transform the GameObject. You may pass a transformer node or an object with a `quad` property.
+     * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode|Omit<Phaser.Renderer.WebGL.RenderNodes.RenderNode, 'run'>} [tinterNode] - The tinter node used to tint the GameObject. You may pass a tinter node or an object containing equivalent data without a `run` method. If omitted, Image-style tinting will be used.
      */
     run: function (
         drawingContext,
@@ -83,13 +84,41 @@ var SubmitterQuad = new Class({
         parentMatrix,
         elementIndex,
         texturerNode,
-        transformerNode
+        transformerNode,
+        tinterNode
     )
     {
         this.onRunBegin(drawingContext);
 
-        texturerNode.run(drawingContext, gameObject, elementIndex);
-        transformerNode.run(drawingContext, gameObject, parentMatrix, elementIndex, texturerNode);
+        var cameraAlpha = drawingContext.camera.alpha;
+        var tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight;
+
+        if (texturerNode.run)
+        {
+            texturerNode.run(drawingContext, gameObject, elementIndex);
+        }
+        if (transformerNode.run)
+        {
+            transformerNode.run(drawingContext, gameObject, parentMatrix, elementIndex, texturerNode);
+        }
+        if (tinterNode)
+        {
+            if (tinterNode.run)
+            {
+                tinterNode.run(drawingContext, gameObject, elementIndex);
+            }
+            tintTopLeft = tinterNode.tintTopLeft;
+            tintBottomLeft = tinterNode.tintBottomLeft;
+            tintTopRight = tinterNode.tintTopRight;
+            tintBottomRight = tinterNode.tintBottomRight;
+        }
+        else
+        {
+            tintTopLeft = getTint(gameObject.tintTopLeft, cameraAlpha * gameObject._alphaTL);
+            tintBottomLeft = getTint(gameObject.tintBottomLeft, cameraAlpha * gameObject._alphaBL);
+            tintTopRight = getTint(gameObject.tintTopRight, cameraAlpha * gameObject._alphaTR);
+            tintBottomRight = getTint(gameObject.tintBottomRight, cameraAlpha * gameObject._alphaBR);
+        }
 
         var quad = transformerNode.quad;
         var uvSource = texturerNode.uvSource;
@@ -97,8 +126,6 @@ var SubmitterQuad = new Class({
         var v0 = uvSource.v0;
         var u1 = uvSource.u1;
         var v1 = uvSource.v1;
-
-        var cameraAlpha = drawingContext.camera.alpha;
 
         this.batchHandler.batch(
             drawingContext,
@@ -119,10 +146,7 @@ var SubmitterQuad = new Class({
             gameObject.tintFill,
 
             // Tint colors in order TL, BL, TR, BR:
-            getTint(gameObject.tintTopLeft, cameraAlpha * gameObject._alphaTL),
-            getTint(gameObject.tintBottomLeft, cameraAlpha * gameObject._alphaBL),
-            getTint(gameObject.tintTopRight, cameraAlpha * gameObject._alphaTR),
-            getTint(gameObject.tintBottomRight, cameraAlpha * gameObject._alphaBR)
+            tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight
         );
 
         this.onRunEnd(drawingContext);

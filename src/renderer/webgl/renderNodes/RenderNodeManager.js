@@ -8,6 +8,7 @@ var EventEmitter = require('eventemitter3');
 var Class = require('../../../utils/Class');
 var Events = require('../../events');
 
+var DefaultBlitterNodes = require('./defaults/DefaultBlitterNodes');
 var DefaultImageNodes = require('./defaults/DefaultImageNodes');
 var DefaultNineSliceNodes = require('./defaults/DefaultNineSliceNodes');
 
@@ -88,6 +89,7 @@ var RenderNodeManager = new Class({
          * @since 3.90.0
          */
         this.defaultRenderNodes = {
+            Blitter: DefaultBlitterNodes,
             Image: DefaultImageNodes,
             NineSlice: DefaultNineSliceNodes
         };
