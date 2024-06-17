@@ -44,9 +44,10 @@ var List = require('../../structs/List');
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture

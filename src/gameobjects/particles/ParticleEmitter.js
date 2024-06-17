@@ -319,9 +319,10 @@ var configOpMap = [
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -341,9 +342,10 @@ var ParticleEmitter = new Class({
         Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
+        Components.Lighting,
         Components.Mask,
-        Components.Pipeline,
         Components.PostPipeline,
+        Components.RenderNode,
         Components.ScrollFactor,
         Components.Texture,
         Components.Transform,
@@ -894,7 +896,7 @@ var ParticleEmitter = new Class({
          */
         this.tintFill = false;
 
-        this.initPipeline();
+        this.initRenderNodes('ParticleEmitter');
         this.initPostPipeline();
 
         this.setPosition(x, y);

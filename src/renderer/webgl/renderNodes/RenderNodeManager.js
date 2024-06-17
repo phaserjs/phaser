@@ -11,6 +11,7 @@ var Events = require('../../events');
 var DefaultBlitterNodes = require('./defaults/DefaultBlitterNodes');
 var DefaultImageNodes = require('./defaults/DefaultImageNodes');
 var DefaultNineSliceNodes = require('./defaults/DefaultNineSliceNodes');
+var DefaultParticleEmitterNodes = require('./defaults/DefaultParticleEmitterNodes');
 
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
@@ -91,7 +92,8 @@ var RenderNodeManager = new Class({
         this.defaultRenderNodes = {
             Blitter: DefaultBlitterNodes,
             Image: DefaultImageNodes,
-            NineSlice: DefaultNineSliceNodes
+            NineSlice: DefaultNineSliceNodes,
+            ParticleEmitter: DefaultParticleEmitterNodes
         };
 
         /**

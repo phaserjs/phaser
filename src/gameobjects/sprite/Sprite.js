@@ -33,6 +33,7 @@ var SpriteRender = require('./SpriteRender');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.PostPipeline
