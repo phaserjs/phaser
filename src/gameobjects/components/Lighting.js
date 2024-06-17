@@ -35,6 +35,12 @@ var Lighting = {
      *
      * This will assign the relevant RenderNodes to the GameObject.
      *
+     * This method will override any custom RenderNode in the `Submitter` role,
+     * either replacing it with the RenderNode in the `SubmitterLight` role,
+     * or removing it if `enable` is `false`.
+     * The `SubmitterLight` role is read from `customRenderNodes` first,
+     * then from `defaultRenderNodes`.
+     *
      * @method Phaser.GameObjects.Components.Lighting#setLighting
      * @webglOnly
      * @since 3.90.0
@@ -44,14 +50,24 @@ var Lighting = {
     {
         if (!this.defaultRenderNodes)
         {
-            // Cannot enable lighting without custom render nodes.
+            // Cannot enable lighting without the render nodes component.
             return this;
         }
 
         if (enable)
         {
+            var submitterLight =
+                this.customRenderNodes.SubmitterLight ||
+                this.defaultRenderNodes.SubmitterLight;
+
+            if (!submitterLight)
+            {
+                // Cannot enable lighting without the SubmitterLight role.
+                return this;
+            }
+
             this.lighting = true;
-            this.setRenderNodeRole('Submitter', 'SubmitterQuadLight');
+            this.setRenderNodeRole('Submitter', submitterLight);
         }
         else
         {
