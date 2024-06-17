@@ -91,7 +91,7 @@ var SubmitterQuad = new Class({
         this.onRunBegin(drawingContext);
 
         var cameraAlpha = drawingContext.camera.alpha;
-        var tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight;
+        var tintFill, tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight;
 
         if (texturerNode.run)
         {
@@ -107,6 +107,7 @@ var SubmitterQuad = new Class({
             {
                 tinterNode.run(drawingContext, gameObject, elementIndex);
             }
+            tintFill = tinterNode.tintFill;
             tintTopLeft = tinterNode.tintTopLeft;
             tintBottomLeft = tinterNode.tintBottomLeft;
             tintTopRight = tinterNode.tintTopRight;
@@ -114,6 +115,7 @@ var SubmitterQuad = new Class({
         }
         else
         {
+            tintFill = gameObject.tintFill;
             tintTopLeft = getTint(gameObject.tintTopLeft, cameraAlpha * gameObject._alphaTL);
             tintBottomLeft = getTint(gameObject.tintBottomLeft, cameraAlpha * gameObject._alphaBL);
             tintTopRight = getTint(gameObject.tintTopRight, cameraAlpha * gameObject._alphaTR);
@@ -143,7 +145,7 @@ var SubmitterQuad = new Class({
             // Texture coordinates in X, Y, Width, Height:
             u0, v0, u1 - u0, v1 - v0,
 
-            gameObject.tintFill,
+            tintFill,
 
             // Tint colors in order TL, BL, TR, BR:
             tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight
