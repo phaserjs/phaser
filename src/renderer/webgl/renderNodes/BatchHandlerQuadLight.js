@@ -150,6 +150,10 @@ var BatchHandlerQuadLight = new Class({
         var height = this.manager.renderer.height;
 
         program.setUniform(
+            'uRoundPixels',
+            drawingContext.roundPixels
+        );
+        program.setUniform(
             'uCamera',
             [
                 camera.x,

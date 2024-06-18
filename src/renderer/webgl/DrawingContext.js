@@ -165,6 +165,30 @@ var DrawingContext = new Class({
          */
         this.inUse = false;
 
+        /**
+         * Whether to override the camera's roundPixels setting
+         * with the DrawingContext's own setting.
+         *
+         * @name Phaser.Renderer.WebGL.DrawingContext#overrideRoundPixels
+         * @type {boolean}
+         * @default false
+         * @since 3.90.0
+         */
+        this.overrideRoundPixels = false;
+
+        /**
+         * Whether to round the camera's position before rendering.
+         *
+         * This value is taken from the camera's `roundPixels` property
+         * when `setCamera` is called if `overrideRoundPixels` is `false`.
+         *
+         * @name Phaser.Renderer.WebGL.DrawingContext#roundPixels
+         * @type {boolean}
+         * @default false
+         * @since 3.90.0
+         */
+        this.roundPixels = false;
+
         if (options.autoResize)
         {
             this.renderer.on(Events.RESIZE, this.resize, this);
@@ -254,6 +278,8 @@ var DrawingContext = new Class({
         this.texture = source.texture;
         this.camera = source.camera;
         this.blendMode = source.blendMode;
+        this.overrideRoundPixels = source.overrideRoundPixels;
+        this.roundPixels = source.roundPixels;
 
         this.state = {
             bindings:
@@ -362,6 +388,11 @@ var DrawingContext = new Class({
     setCamera: function (camera)
     {
         this.camera = camera;
+
+        if (!this.overrideRoundPixels)
+        {
+            this.roundPixels = camera ? camera.roundPixels : false;
+        }
     },
 
     /**
