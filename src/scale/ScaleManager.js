@@ -1528,7 +1528,14 @@ var ScaleManager = new Class({
         };
 
         //  Only dispatched on mobile devices
-        window.addEventListener('orientationchange', listeners.orientationChange, false);
+        if (screen.orientation && screen.orientation.addEventListener)
+        {
+            screen.orientation.addEventListener('change', listeners.orientationChange, false);
+        }
+        else
+        {
+            window.addEventListener('orientationchange', listeners.orientationChange, false);
+        }
 
         window.addEventListener('resize', listeners.windowResize, false);
 
@@ -1697,7 +1704,15 @@ var ScaleManager = new Class({
     {
         var listeners = this.domlisteners;
 
-        window.removeEventListener('orientationchange', listeners.orientationChange, false);
+        if (screen.orientation && screen.orientation.addEventListener)
+        {
+            screen.orientation.removeEventListener('change', listeners.orientationChange, false);
+        }
+        else
+        {
+            window.removeEventListener('orientationchange', listeners.orientationChange, false);
+        }
+        
         window.removeEventListener('resize', listeners.windowResize, false);
 
         var vendors = [ 'webkit', 'moz', '' ];
