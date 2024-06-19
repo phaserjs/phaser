@@ -160,8 +160,9 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
 
         if (lastGlyph !== null)
         {
-            var kerningOffset = glyph.kerning[lastCharCode];
-            x += (kerningOffset !== undefined) ? kerningOffset : 0;
+            var kerningOffset = glyph.kerning[lastCharCode] || 0;
+            x += kerningOffset;
+            xAdvance += kerningOffset;
         }
 
         xAdvance += glyph.xAdvance + letterSpacing;
