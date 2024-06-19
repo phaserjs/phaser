@@ -8,6 +8,7 @@
 * `WebGLRenderer.setContextHandlers` is a new internal method with 2 optional parameters: `contextLost` and `contextRestored`. These allow you to overwrite the default `contextLostHandler` and `contextRestoreHandler` handlers. (thanks @yaustar)
 * `Phaser.Textures.Frame#setCutPosition` is a new internal method with 2 optional parameters: `x` and `y`. These sets the x and y position within the source image to cut from.
 * `Phaser.Textures.Frame#setCutSize` is a new internal method with 2 parameters: `width` and `height`. These sets the width, and height of the area in the source image to cut. (thanks @FelipeIzolan)
+* Introduced new constants in `ORIENTATION_CONST.js`. The constants `LANDSCAPE_SECONDARY` and `PORTRAIT_SECONDARY` have been added to the `Phaser.Scale.Orientation` object. These constants represent the secondary landscape and portrait orientations respectively. This addition provides more granular control over device orientation handling in Phaser. Fix #6837 (thanks @rexrainbow)
 
 # WebGL Rendering Updates
 
