@@ -2,9 +2,8 @@
 
 ![Phaser Header](https://phaser.io/images/github/300/phaser-header.png "Phaser 3 Header Banner")
 
-[![Discord chat](https://img.shields.io/discord/244245946873937922?style=for-the-badge)](https://discord.gg/phaser)
-[![Twitter Follow](https://img.shields.io/twitter/follow/phaser_?style=for-the-badge)](https://twitter.com/phaser_)
-![npm](https://img.shields.io/jsdelivr/npm/hm/phaser?style=for-the-badge)
+[![Discord](https://img.shields.io/discord/244245946873937922?style=for-the-badge)](https://discord.gg/phaser)
+![JSDelivr](https://img.shields.io/jsdelivr/npm/hm/phaser?style=for-the-badge)
 ![GitHub](https://img.shields.io/github/downloads/phaserjs/phaser/total?style=for-the-badge)
 
 Phaser is a fast, free, and fun open source HTML5 game framework that offers WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled to iOS, Android and native apps by using 3rd party tools. You can use JavaScript or TypeScript for development.
@@ -15,44 +14,24 @@ Thousands of developers from indies to multi-national digital agencies, along wi
 
 [![Phaser Games Showcase video](https://img.youtube.com/vi/gnfgwkVg7vc/maxresdefault.jpg)](https://www.youtube.com/watch?v=gnfgwkVg7vc)
 
-**Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)<br />
-**Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
-**Learn:** [API Docs](https://newdocs.phaser.io), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
-**Code:** 2000+ [Examples](https://phaser.io/examples) (source available in this [repo][https://github.com/phaserjs/examples])<br />
-**Read:** The [Phaser World](#newsletter) Newsletter<br />
-**Discord:** Join us on [Discord](https://discord.gg/phaser)<br />
+**Visit** the [Phaser website](https://phaser.io)<br />
+**Play** some [amazing games](https://phaser.io/games)<br />
+**Learn** By browsing our [API Docs](https://newdocs.phaser.io), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
+**Code Examples?** We've over 2000 [Examples](https://phaser.io/examples) to learn from<br />
+**Read** the weekly [Phaser World](https://phaser.io/newsletter/2024) Newsletter<br />
+**Be Social:** Join us on [Discord](https://discord.gg/phaser) and [Reddit](https://phaser.io/community/reddit) or follow us on [Twitter](https://twitter.com/phaser_)<br />
 
 Grab the source and join the fun!
 
 ![What's New](https://phaser.io/images/github/div2-whats-new.png "What's New")
 
-> 27th February 2024
+> 21st June 2024
 
-The release of Phaser 3.80, affectionately dubbed "Nino," represents a significant leap forward in our quest to provide an even more powerful and versatile web game development framework. This update showcases our commitment to innovation, bolstered by the insightful feedback and contributions from our dedicated community and the tireless efforts of our development team.
+The Phaser Studio team have been hard at work on the **v3.85** release, which went into beta today. This release builds upon the improvements made in v3.80 and brings lots more fixes and updates to the party. We send our thanks to the Phaser community for their help in both reporting issues and submitting pull requests. You lot always keep us on our toes 🙂
 
-Phaser 3.80 brings an array of new capabilities and improvements that enrich the developer experience. Among the highlights:
+In parallel we've also been busy working on a replacement physics engine and a brand new renderer, built from the ground-up to be as efficient and powerful as possible for 2D web games. Keep track of everything in our weekly newsletter [Phaser World](https://phaser.io/newsletter/2024).
 
-- **WebGL Context Loss Handling**: A robust solution to keep your games running smoothly, even in the face of WebGL context losses, ensuring uninterrupted gameplay.
-
-- **Compressed Texture Improvements**: Added support for BPTC and RGTC file formats, sRGB color spaces and lots of updates around Mipmaps levels.
-
-- **Base64 Loader Integration**: Allows for the loading of base64 encoded assets, facilitating smoother development processes for environments requiring embedded assets, like Playable Ads.
-
-- **Scale Manager Snap Mode**: A new feature allowing developers to set a 'snapping' value for game dimensions, ideal for pixel-art games and those requiring precise scaling control.
-
-- **Tilemap Enhancements**: Fixes and updates for tile collision and rendering, enhanced Tile to Sprite creation properties and more control over tile-based game elements.
-
-With this release, we've implemented over **100 updates and bug fixes**, addressing community-reported issues and optimizing Phaser's performance and stability. These changes reflect our ongoing dedication to enhancing the framework's capabilities, ensuring developers have the tools they need to bring their creative visions to life.
-
-At the same time as this release we also hit the **36,000 stars** milestone on GitHub, are used by over 32,000 developers and have over 550 contributors! These figures are a testament to the growing community of developers who have embraced Phaser as their go-to framework for web game development. We're grateful for the support and feedback we've received, and we're committed to continuing to evolve Phaser to meet the needs of our community.
-
-We're excited for you to dive into Phaser 3.80 "Nino" and explore the new features and improvements. As always, we look forward to your feedback and contributions as we continue to evolve Phaser together. To make sure you read our weekly Developer Logs, please [subscribe to our free newsletter](https://phaser.io/community/newsletter/).
-
-> If you find any problems please report them in GitHub issues.
-
-As usual, I'd like to send my thanks to the Phaser community for their help in both reporting issues and submitting pull requests to fix them 🙂
-
-You can also follow Phaser on [Twitter](https://twitter.com/phaser_) and chat with fellow Phaser devs in our [Discord](https://discord.gg/phaser).
+Phaser also hit **36,500 stars** on GitHub and is used by over 34,600 developers. These figures are a testament to the growing community who has embraced Phaser as their go-to framework for web game development. We're grateful for the support and feedback we've received, and we're committed to continuing to evolve Phaser to meet your needs.
 
 Phaser wouldn't have been possible without the fantastic support of the community. Thank you to everyone who supports our work, who shares our belief in the future of HTML5 gaming, and Phaser's role in that.
 
@@ -81,6 +60,26 @@ Install via [npm](https://www.npmjs.com):
 ```bash
 npm install phaser
 ```
+
+### Create Phaser Game App
+
+One of the easiest ways to get started quickly with Phaser is by using our new `create-phaser-game` app. This is a CLI tool that presents an interactive selection of official project templates and demo games. Just issue the command, answer some questions and the app will download and configure the right package for your needs.
+
+Currently, we support all of the following frameworks and bundlers:
+
+| Frameworks | Bundlers |
+| --------- | ------- |
+| Vue.js | Vite |
+| React | Rollup |
+| Angular | Parcel |
+| Next.js | Webpack |
+| SolidJS | ESBuild |
+| Svelte | Import Map |
+| Remix | Bun |
+
+Most of these come in both JavaScript and TypeScript versions.
+
+[Read all about the app here](https://phaser.io/tutorials/create-game-app).
 
 ### CDN
 
@@ -118,33 +117,12 @@ Depending on your project, you may need to add the following to your `tsconfig.j
 
 The TypeScript defs are automatically generated from the JSDoc comments found in the Phaser source code. If you wish to help refine them then you must edit the Phaser JSDoc blocks directly, not the defs file. You can find more details about the parser we built in the `scripts/tsgen` folder.
 
-### Project Templates
-
-If you are familiar with web development and bundlers, then we have published a selection of project templates to help you get started with your game quicky. Choose from the following:
-
-* [Vue 3 + Vite Template](https://github.com/phaserjs/template-vue)
-* [Vite Template](https://github.com/phaserjs/template-vite)
-* [Webpack Template](https://github.com/phaserjs/template-webpack)
-* [ESBuild Template](https://github.com/phaserjs/template-esbuild)
-* [Import Map Template](https://github.com/phaserjs/template-importmap)
-* [Rollup Template](https://github.com/phaserjs/template-rollup)
-* [Parcel Template](https://github.com/phaserjs/template-parcel)
-
 ### License
 
 Phaser is released under the [MIT License](https://opensource.org/licenses/MIT).
 
-![Phaser World](https://phaser.io/images/github/div2-newsletter.png "Phaser World")
-<a name="newsletter"></a>
-
-The Phaser World newsletter is a weekly email that contains the latest news, updates, and releases from the Phaser community. It includes new games, code examples, and the latest articles.
-
-[Subscribe here](https://phaser.io/community/newsletter)
-
 ![Getting Started](https://phaser.io/images/github/div2-getting-started.png "Getting Started")
 <a name="getting-started"></a>
-
-<img src="https://phaser.io/images/github/learn.jpg" align="right">
 
 Tutorials and guides on Phaser are being published every week.
 
@@ -152,6 +130,22 @@ Tutorials and guides on Phaser are being published every week.
 * [Making your first Phaser 3 Game](https://phaser.io/tutorials/making-your-first-phaser-3-game)
 * The [Complete Phaser 3 Game Development course](https://academy.zenva.com/product/html5-game-phaser-mini-degree/?a=13) contains over 15 hours of videos covering all kinds of important topics.
 * Plus, there are [over 700 Phaser tutorials](https://phaser.io/learn) listed on the official website.
+
+### Free Phaser by Example Book
+
+A brand-new free 500 page book on game development with Phaser. Learn by building shoot-em-ups, puzzle games, rogue-likes and more.
+
+![Phaser by Example](https://cdn.phaser.io/news/2024/04/phaser-by-example-book.jpg)
+
+Written by long-time prolific Phaser enthusiast Pello Xabier Altadill and Richard Davey, creator of Phaser, it contains over 500 pages of brand-new, up-to-date content on building games with Phaser v3.80.
+
+The book is divided into 17 chapters and takes you through the process of creating a variety of different games. As the title implies, this allows you to learn by working through real-life examples. The games start off simple with an infinite runner game - but then progress through how to build a shoot-em-up, a platformer, a puzzle game, a rogue-like, a story game, and even includes a 3D game and a Multiplayer shooter.
+
+As well as the games, Richard has written a large section on the core concepts of Phaser, covering the terminology and conventions used by the framework, as well as a comprehensive deep dive into Game Objects - the life blood of any Phaser game. You'll be guided through topics including the Game Object Factory, Masks, custom Blend Modes, and lots more.
+
+The book is then rounded out with chapters on working with assets, popular build tools, the rule of 4:44, and the benefits of taking part in game jams — as well as a handy Phaser cookbook.
+
+[Download the book](https://phaser.io/news/2024/04/phaser-by-example-book) by registering for a free Phaser account.
 
 ### Source Code Examples
 
@@ -168,6 +162,8 @@ They have also published a [brand-new tutorial](https://bullet-mania.vercel.app/
 Super community member RexRainbow has been publishing Phaser 3 content for years, building up an impressive catalogue in that time. You'll find [loads of plugins](https://rexrainbow.github.io/phaser3-rex-notes/docs/site/index.html#list-of-my-plugins), from UI controls such as text input boxes, to Firebase support, Finite State Machines and lots more. As well as the plugins there is also a comprehensive set of 'Notes' about Phaser 3, going into great detail about how the various systems work. It's an invaluable resource and well worth checking out at [https://rexrainbow.github.io](https://rexrainbow.github.io/phaser3-rex-notes/docs/site/index.html)
 
 ### Create Your First Phaser 3 Example
+
+**Phaser Sandbox**: If you'd rather not test Phaser locally, then you can [register for a free account](https://phaser.io/register) on our site and use the [Phaser Sandbox](https://phaser.io/sandbox/XyqPcjNr). Here you'll find a fully-configured online editor, ready to go. Otherwise, read on ...
 
 Create an `index.html` page locally and paste the following code into it:
 
@@ -262,27 +258,19 @@ Run it in your browser and you'll see the following:
 
 ![Phaser 3 Demo](https://phaser.io/images/github/300/sample1.png "Phaser 3 Demo")
 
-(Got an error? Here's the [full code](https://gist.github.com/photonstorm/46cb8fb4b19fc7717dcad514cdcec064))
+If you can't get it to run, then have a look at this example in the [Phaser Sandbox](https://phaser.io/sandbox/XyqPcjNr).
 
 This is a tiny example, and there are hundreds more for you to explore, but hopefully it shows how expressive and quick Phaser is to use. With just a few easily readable lines of code, we've got something pretty impressive up on screen!
-
-[![Ourcade](https://phaser.io/images/github/ourcade.jpg)](https://blog.ourcade.co)
-
-Ourcade have published [two great Phaser 3 books](https://blog.ourcade.co). They'll take you from getting set-up, through to finishing your first game using modern JavaScript or TypeScript and they're both completely free! They also publish a huge range of quality tutorials and videos, so be sure to check out their site every week.
-
-[![HTML5 Cross Platform Game Development with Phaser 3](https://phaser.io/images/github/feronato.png)](https://gumroad.com/a/244184179)
-
-Learn the secrets of HTML5 game development with Phaser 3.50 while building a cross platform endless runner game. Designed both for beginners and skilled programmers, the course guides you from an empty folder introducing the bare bones of JavaScript to advanced Phaser 3 features. Find out more details about [HTML5 Cross Platform Game Development with Phaser](https://gumroad.com/a/244184179).
 
 ![Building Phaser](https://phaser.io/images/github/div2-building-phaser.png "Building Phaser")
 
 There are both plain and minified compiled versions of Phaser in the `dist` folder of the repository. The plain version is for use during development, and the minified version is for production use. You can and should also create your own builds.
 
-### Custom Builds
+### Phaser Compressor
 
-Phaser 3 is built using Webpack and we take advantage of the Webpack definePlugin feature to allow for conditional building of the Canvas and WebGL renderers and extra plugins. You can custom the build process to only include the features you require. Doing so can cut the main build file size down to just 70KB.
+Use our powerful new web-based tool to crunch your Phaser bundles down by up to 60%, enabling only the features your game requires.
 
-Read our [comprehensive guide](https://github.com/phaserjs/phaser3-custom-build#creating-custom-phaser-3-builds) on creating Custom Builds of Phaser 3 for full details.
+Read more about [Phaser Compressor](https://phaser.io/news/2024/05/phaser-compressor-released)
 
 ### Building from Source
 
@@ -297,8 +285,8 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 Due to the increasing size of our Change Logs we have now split them up, one version per folder.
 
-* [v3.80.1 Change Log](changelog/3.80.1/CHANGELOG-v3.80.1.md)
-* [v3.0.0 to v3.80.0. Change Logs](CHANGELOG.md)
+* [v3.85 Change Log](changelog/3.85/CHANGELOG-v3.85.md)
+* [v3.0.0 to v3.80.1. Change Logs](CHANGELOG.md)
 
 We've organized the Change Logs into commonly themed sections to make it more digestible, but we appreciate there is a lot in there. Please don't feel overwhelmed! If you need clarification about something, join us on the Phaser Discord and ask.
 
