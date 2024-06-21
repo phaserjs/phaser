@@ -2976,7 +2976,7 @@ var WebGLRenderer = new Class({
      * Draw a number of vertices to a drawing context.
      *
      * This draws the vertices using an index buffer. The buffer should be
-     * bound to the VAO. Vertices are drawn as a `TRIANGLE_STRIP`.
+     * bound to the VAO. Vertices are drawn as a `TRIANGLE_STRIP` by default.
      *
      * This is the primary render method. It requires all the WebGL resources
      * necessary to render the vertices, so they don't have to be set up
@@ -2993,8 +2993,9 @@ var WebGLRenderer = new Class({
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper} vao - The Vertex Array Object to bind. It must have an index buffer attached.
      * @param {number} count - The number of vertices to draw. Because of the TRIANGLE_STRIP topology, this should be `n + 2`, where `n` is the number of triangles to draw, including degenerate triangles.
      * @param {number} offset - The offset to start drawing from in the index buffer. This is in bytes, and should be a multiple of 2 (for 16-bit `UNSIGNED_SHORT` indices).
+     * @param {number} topology - The type of primitives to render. Defaults to `TRIANGLE_STRIP`.
      */
-    drawElements: function (drawingContext, textures, program, vao, count, offset)
+    drawElements: function (drawingContext, textures, program, vao, count, offset, topology)
     {
         var gl = this.gl;
 
@@ -3006,7 +3007,7 @@ var WebGLRenderer = new Class({
 
         this.glTextureUnits.bindUnits(textures);
 
-        gl.drawElements(gl.TRIANGLE_STRIP, count, gl.UNSIGNED_SHORT, offset);
+        gl.drawElements(topology || gl.TRIANGLE_STRIP, count, gl.UNSIGNED_SHORT, offset);
     },
 
     /**

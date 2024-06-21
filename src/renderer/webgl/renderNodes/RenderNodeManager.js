@@ -9,17 +9,23 @@ var Class = require('../../../utils/Class');
 var Events = require('../../events');
 
 var DefaultBlitterNodes = require('./defaults/DefaultBlitterNodes');
+var DefaultGraphicsNodes = require('./defaults/DefaultGraphicsNodes');
 var DefaultImageNodes = require('./defaults/DefaultImageNodes');
 var DefaultNineSliceNodes = require('./defaults/DefaultNineSliceNodes');
 var DefaultParticleEmitterNodes = require('./defaults/DefaultParticleEmitterNodes');
 
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
+var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
 var Camera = require('./Camera');
+var DrawLine = require('./DrawLine');
 var FillCamera = require('./FillCamera');
+var FillPath = require('./FillPath');
 var FillRect = require('./FillRect');
+var FillTri = require('./FillTri');
 var ListCompositor = require('./ListCompositor');
 var RebindContext = require('./RebindContext');
+var StrokePath = require('./StrokePath');
 var SubmitterQuad = require('./submitter/SubmitterQuad');
 var SubmitterQuadLight = require('./submitter/SubmitterQuadLight');
 var TexturerImage = require('./texturer/TexturerImage');
@@ -91,6 +97,7 @@ var RenderNodeManager = new Class({
          */
         this.defaultRenderNodes = {
             Blitter: DefaultBlitterNodes,
+            Graphics: DefaultGraphicsNodes,
             Image: DefaultImageNodes,
             NineSlice: DefaultNineSliceNodes,
             ParticleEmitter: DefaultParticleEmitterNodes
@@ -127,11 +134,16 @@ var RenderNodeManager = new Class({
         this._nodeConstructors = {
             BatchHandlerQuad: BatchHandlerQuad,
             BatchHandlerQuadLight: BatchHandlerQuadLight,
+            BatchHandlerTriFlat: BatchHandlerTriFlat,
             Camera: Camera,
+            DrawLine: DrawLine,
             FillCamera: FillCamera,
+            FillPath: FillPath,
             FillRect: FillRect,
+            FillTri: FillTri,
             ListCompositor: ListCompositor,
             RebindContext: RebindContext,
+            StrokePath: StrokePath,
             SubmitterQuad: SubmitterQuad,
             SubmitterQuadLight: SubmitterQuadLight,
             TexturerImage: TexturerImage,

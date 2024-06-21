@@ -84,8 +84,8 @@ var Graphics = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.Mask,
-        Components.Pipeline,
         Components.PostPipeline,
+        Components.RenderNode,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -102,7 +102,7 @@ var Graphics = new Class({
         GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
-        this.initPipeline();
+        this.initRenderNodes('Graphics');
         this.initPostPipeline();
 
         /**

@@ -32,6 +32,8 @@ module.exports = {
     FXShineFrag: require('./FXShine-frag.js'),
     FXVignetteFrag: require('./FXVignette-frag.js'),
     FXWipeFrag: require('./FXWipe-frag.js'),
+    FlatFrag: require('./Flat-frag.js'),
+    FlatVert: require('./Flat-vert.js'),
     LightFrag: require('./Light-frag.js'),
     LinearBlendFrag: require('./LinearBlend-frag.js'),
     MeshFrag: require('./Mesh-frag.js'),

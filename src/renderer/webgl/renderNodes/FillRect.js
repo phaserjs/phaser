@@ -13,9 +13,6 @@ var RenderNode = require('./RenderNode');
  * A RenderNode which renders a filled rectangle.
  * This is useful for full-screen effects and rectangle geometry.
  *
- * It works by drawing a tinted white texture. This can take advantage of
- * the WebGL renderer's batching capabilities.
- *
  * @class FillRect
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
@@ -31,13 +28,13 @@ var FillRect = new Class({
         RenderNode.call(this, 'FillRect', manager);
 
         /**
-         * The BatchHandlerQuad that handles the rendering of quads.
+         * The RenderNode that handles the rendering of quads.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#BatchHandlerQuadNode
-         * @type {Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad}
+         * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#batchHandler
+         * @type {Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat}
          * @since 3.90.0
          */
-        this.BatchHandlerQuadNode = this.manager.getNode('BatchHandlerQuad');
+        this.batchHandler = this.manager.getNode('BatchHandlerTriFlat');
 
         /**
          * An unchanging identity matrix.
@@ -47,14 +44,6 @@ var FillRect = new Class({
          * @private
          */
         this._identityMatrix = new TransformMatrix();
-
-        /**
-         * Temporary matrix for calculating the screen space.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#_calcMatrix
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         */
-        this._calcMatrix = new TransformMatrix();
     },
 
     /**
@@ -63,7 +52,7 @@ var FillRect = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.FillRect#run
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [currentMatrix] - A transform matrix to apply to the vertices. If not defined, the identity matrix is used.
      * @param {number} x - The x-coordinate of the rectangle.
      * @param {number} y - The y-coordinate of the rectangle.
      * @param {number} width - The width of the rectangle.
@@ -72,45 +61,32 @@ var FillRect = new Class({
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBL - The bottom-left tint color.
      * @param {number} tintBR - The bottom-right tint color.
-     * @param {number|boolean} tintFill - The tint effect for the shader to use.
-     * @param {boolean} [inWorldSpace] - Is this in world space? By default, it's in screen space.
      */
-    run: function (drawingContext, parentMatrix, x, y, width, height, tintTL, tintTR, tintBL, tintBR, tintFill, inWorldSpace)
+    run: function (drawingContext, currentMatrix, x, y, width, height, tintTL, tintTR, tintBL, tintBR)
     {
         this.onRunBegin(drawingContext);
 
-        var currentMatrix = this._identityMatrix;
-
-        if (inWorldSpace)
+        if (!currentMatrix)
         {
-            currentMatrix = drawingContext.camera.matrix;
-        }
-
-        if (parentMatrix)
-        {
-            parentMatrix.multiply(currentMatrix, this._calcMatrix);
-            currentMatrix = this._calcMatrix;
+            currentMatrix = this._identityMatrix;
         }
 
         var quad = currentMatrix.setQuad(x, y, x + width, y + height);
 
-        this.BatchHandlerQuadNode.batch(
+        this.batchHandler.batch(
             drawingContext,
-            this.manager.renderer.whiteTexture,
-
-            // Quad vertices in TRIANGLE_STRIP order:
             quad[0], quad[1],
             quad[2], quad[3],
-            quad[6], quad[7],
             quad[4], quad[5],
-            
-            // Texture coordinates in X, Y, Width, Height:
-            0, 0, 1, 1,
+            tintTL, tintBL, tintBR
+        );
 
-            tintFill,
-
-            // Tint colors in TRIANGLE_STRIP order:
-            tintTL, tintTR, tintBL, tintBR
+        this.batchHandler.batch(
+            drawingContext,
+            quad[4], quad[5],
+            quad[6], quad[7],
+            quad[0], quad[1],
+            tintBR, tintTR, tintTL
         );
 
         this.onRunEnd(drawingContext);

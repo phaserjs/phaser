@@ -6,8 +6,8 @@
 
 var Commands = require('./Commands');
 var GetCalcMatrix = require('../GetCalcMatrix');
-var TransformMatrix = require('../components/TransformMatrix');
 var Utils = require('../../renderer/webgl/Utils');
+var TransformMatrix = require('../components/TransformMatrix');
 
 var Point = function (x, y, width)
 {
@@ -16,15 +16,36 @@ var Point = function (x, y, width)
     this.width = width;
 };
 
+
 var Path = function (x, y, width)
 {
     this.points = [];
-    this.pointsLength = 1;
     this.points[0] = new Point(x, y, width);
+
+    this.addPoint = function (x, y, width)
+    {
+        var point = this.points[this.points.length - 1];
+
+        if (point.x === x && point.y === y)
+        {
+            return;
+        }
+
+        this.points.push(new Point(x, y, width));
+    };
 };
 
 var matrixStack = [];
 var tempMatrix = new TransformMatrix();
+var renderMatrix = new TransformMatrix();
+var fillTint = { TL: 0, TR: 0, BL: 0, BR: 0 };
+var strokeTint = { TL: 0, TR: 0, BL: 0, BR: 0 };
+var trianglePath = [
+    { x: 0, y: 0, width: 0 },
+    { x: 0, y: 0, width: 0 },
+    { x: 0, y: 0, width: 0 },
+    { x: 0, y: 0, width: 0 }
+];
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -37,21 +58,23 @@ var tempMatrix = new TransformMatrix();
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Graphics} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
     if (src.commandBuffer.length === 0)
     {
         return;
     }
 
+    var customRenderNodes = src.customRenderNodes;
+    var defaultRenderNodes = src.defaultRenderNodes;
+
+    var currentContext = drawingContext;
+
+    var camera = currentContext.camera;
     camera.addToRenderList(src);
-
-    var pipeline = renderer.pipelines.set(src.pipeline, src);
-
-    renderer.pipelines.preBatch(src);
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
@@ -61,8 +84,6 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var alpha = camera.alpha * src.alpha;
 
     var lineWidth = 1;
-    var fillTint = pipeline.fillTint;
-    var strokeTint = pipeline.strokeTint;
 
     var tx = 0;
     var ty = 0;
@@ -108,10 +129,15 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
             {
                 for (pathIndex = 0; pathIndex < path.length; pathIndex++)
                 {
-                    pipeline.batchFillPath(
+                    calcMatrix.multiply(currentMatrix, renderMatrix);
+
+                    (customRenderNodes.FillPath || defaultRenderNodes.FillPath).run(
+                        currentContext,
                         path[pathIndex].points,
-                        currentMatrix,
-                        calcMatrix
+                        renderMatrix,
+                        fillTint.TL,
+                        fillTint.TR,
+                        fillTint.BL
                     );
                 }
                 break;
@@ -121,12 +147,18 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
             {
                 for (pathIndex = 0; pathIndex < path.length; pathIndex++)
                 {
-                    pipeline.batchStrokePath(
+                    calcMatrix.multiply(currentMatrix, renderMatrix);
+
+                    (customRenderNodes.StrokePath || defaultRenderNodes.StrokePath).run(
+                        currentContext,
                         path[pathIndex].points,
                         lineWidth,
                         pathOpen,
-                        currentMatrix,
-                        calcMatrix
+                        renderMatrix,
+                        strokeTint.TL,
+                        strokeTint.TR,
+                        strokeTint.BL,
+                        strokeTint.BR
                     );
                 }
                 break;
@@ -228,7 +260,7 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                     tx = x + Math.cos(ta) * radius;
                     ty = y + Math.sin(ta) * radius;
 
-                    lastPath.points.push(new Point(tx, ty, lineWidth));
+                    lastPath.addPoint(tx, ty, lineWidth);
 
                     iteration += iterStep;
                 }
@@ -237,64 +269,98 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 tx = x + Math.cos(ta) * radius;
                 ty = y + Math.sin(ta) * radius;
 
-                lastPath.points.push(new Point(tx, ty, lineWidth));
+                lastPath.addPoint(tx, ty, lineWidth);
 
                 break;
             }
 
             case Commands.FILL_RECT:
             {
-                pipeline.batchFillRect(
+                calcMatrix.multiply(currentMatrix, renderMatrix);
+
+                (customRenderNodes.FillRect || defaultRenderNodes.FillRect).run(
+                    currentContext,
+                    renderMatrix,
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     commands[++cmdIndex],
-                    currentMatrix,
-                    calcMatrix
+                    fillTint.TL,
+                    fillTint.TR,
+                    fillTint.BL,
+                    fillTint.BR
                 );
+
                 break;
             }
 
             case Commands.FILL_TRIANGLE:
             {
-                pipeline.batchFillTriangle(
+                calcMatrix.multiply(currentMatrix, renderMatrix);
+
+                (customRenderNodes.FillTri || defaultRenderNodes.FillTri).run(
+                    currentContext,
+                    renderMatrix,
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     commands[++cmdIndex],
-                    currentMatrix,
-                    calcMatrix
+                    fillTint.TL,
+                    fillTint.TR,
+                    fillTint.BL
                 );
+
                 break;
             }
 
             case Commands.STROKE_TRIANGLE:
             {
-                pipeline.batchStrokeTriangle(
-                    commands[++cmdIndex],
-                    commands[++cmdIndex],
-                    commands[++cmdIndex],
-                    commands[++cmdIndex],
-                    commands[++cmdIndex],
-                    commands[++cmdIndex],
+                calcMatrix.multiply(currentMatrix, renderMatrix);
+
+                trianglePath[0].x = commands[++cmdIndex];
+                trianglePath[0].y = commands[++cmdIndex];
+                trianglePath[0].width = lineWidth;
+
+                trianglePath[1].x = commands[++cmdIndex];
+                trianglePath[1].y = commands[++cmdIndex];
+                trianglePath[1].width = lineWidth;
+
+                trianglePath[2].x = commands[++cmdIndex];
+                trianglePath[2].y = commands[++cmdIndex];
+                trianglePath[2].width = lineWidth;
+
+                trianglePath[3].x = trianglePath[0].x;
+                trianglePath[3].y = trianglePath[0].y;
+                trianglePath[3].width = lineWidth;
+
+                (customRenderNodes.StrokePath || defaultRenderNodes.StrokePath).run(
+                    currentContext,
+                    trianglePath,
                     lineWidth,
-                    currentMatrix,
-                    calcMatrix
+                    false,
+                    renderMatrix,
+                    strokeTint.TL,
+                    strokeTint.TR,
+                    strokeTint.BL,
+                    strokeTint.BR
                 );
                 break;
             }
 
             case Commands.LINE_TO:
             {
+                x = commands[++cmdIndex];
+                y = commands[++cmdIndex];
+
                 if (lastPath !== null)
                 {
-                    lastPath.points.push(new Point(commands[++cmdIndex], commands[++cmdIndex], lineWidth));
+                    lastPath.addPoint(x, y, lineWidth);
                 }
                 else
                 {
-                    lastPath = new Path(commands[++cmdIndex], commands[++cmdIndex], lineWidth);
+                    lastPath = new Path(x, y, lineWidth);
                     path.push(lastPath);
                 }
                 break;
@@ -342,8 +408,6 @@ var GraphicsWebGLRenderer = function (renderer, src, camera, parentMatrix)
             }
         }
     }
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = GraphicsWebGLRenderer;
