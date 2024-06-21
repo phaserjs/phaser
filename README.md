@@ -325,6 +325,6 @@ All rights reserved.
 [clone-ghmac]: github-mac://openRepo/https://github.com/phaserjs/phaser
 [phaser]: https://github.com/phaserjs/phaser
 [issues]: https://github.com/phaserjs/phaser/issues
-[examples]: https://github.com/phaserjs/phaser3-examples
+[examples]: https://github.com/phaserjs/examples
 [contribute]: https://github.com/phaserjs/phaser/blob/master/.github/CONTRIBUTING.md
 [forum]: https://phaser.discourse.group/
