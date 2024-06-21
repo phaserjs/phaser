@@ -130,6 +130,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
                 xAdvance = 0;
                 yAdvance += lineHeight + lineSpacing;
+                
                 lastGlyph = null;
 
                 continue;
@@ -292,7 +293,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             }
 
             xAdvance = 0;
-            yAdvance += lineHeight + lineSpacing;
+            yAdvance = (lineHeight + lineSpacing) * currentLine;
             lastGlyph = null;
 
             lineWidths[currentLine] = currentLineWidth;
