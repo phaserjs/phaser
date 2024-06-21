@@ -273,8 +273,6 @@ var DrawingContext = new Class({
             },
             viewport: state.viewport.slice()
         };
-
-        this.resize(source.width, source.height);
     },
 
     /**
