@@ -194,7 +194,7 @@ var BatchHandlerQuad = new Class({
     {
         this.program.setUniform(
             'uRoundPixels',
-            drawingContext.roundPixels
+            drawingContext.camera.roundPixels
         );
     },
 

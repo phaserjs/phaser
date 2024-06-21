@@ -151,7 +151,7 @@ var BatchHandlerQuadLight = new Class({
 
         program.setUniform(
             'uRoundPixels',
-            drawingContext.roundPixels
+            drawingContext.camera.roundPixels
         );
         program.setUniform(
             'uCamera',
