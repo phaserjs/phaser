@@ -68,11 +68,19 @@ var WebGLBufferWrapper = new Class({
         /**
          * A Float32Array view of the dataBuffer.
          *
+         * This will be `null` if the byte length of the dataBuffer
+         * is not divisible by Float32Array.BYTES_PER_ELEMENT (4).
+         * Such a buffer is only suited for use with 16-bit indices.
+         *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#viewF32
-         * @type {Float32Array}
+         * @type {Float32Array | null}
          * @since 3.90.0
          */
-        this.viewF32 = new Float32Array(dataBuffer);
+        this.viewF32 = null;
+        if (dataBuffer.byteLength % Float32Array.BYTES_PER_ELEMENT === 0)
+        {
+            this.viewF32 = new Float32Array(dataBuffer);
+        }
 
         /**
          * A Uint8Array view of the dataBuffer.
@@ -86,20 +94,36 @@ var WebGLBufferWrapper = new Class({
         /**
          * A Uint16Array view of the dataBuffer.
          *
+         * This will be `null` if the byte length of the dataBuffer
+         * is not divisible by Uint16Array.BYTES_PER_ELEMENT (2).
+         * Such a buffer is only suited for use with byte data.
+         *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#viewU16
-         * @type {Uint16Array}
+         * @type {Uint16Array | null}
          * @since 3.90.0
          */
-        this.viewU16 = new Uint16Array(dataBuffer);
+        this.viewU16 = null;
+        if (dataBuffer.byteLength % Uint16Array.BYTES_PER_ELEMENT === 0)
+        {
+            this.viewU16 = new Uint16Array(dataBuffer);
+        }
 
         /**
          * A Uint32Array view of the dataBuffer.
          *
+         * This will be `null` if the byte length of the dataBuffer
+         * is not divisible by Uint32Array.BYTES_PER_ELEMENT (4).
+         * Such a buffer is only suited for use with 16-bit indices.
+         *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#viewU32
-         * @type {Uint32Array}
+         * @type {Uint32Array | null}
          * @since 3.90.0
          */
-        this.viewU32 = new Uint32Array(dataBuffer);
+        this.viewU32 = null;
+        if (dataBuffer.byteLength % Uint32Array.BYTES_PER_ELEMENT === 0)
+        {
+            this.viewU32 = new Uint32Array(dataBuffer);
+        }
 
         /**
          * The type of the buffer.

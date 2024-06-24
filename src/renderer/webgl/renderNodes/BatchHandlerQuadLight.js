@@ -119,7 +119,7 @@ var BatchHandlerQuadLight = new Class({
 
     _copyAndCompleteConfig: function (manager, config, defaultConfig)
     {
-        var newConfig = BatchHandlerQuad.prototype._copyAndCompleteConfig.call(this, config, defaultConfig);
+        var newConfig = BatchHandlerQuad.prototype._copyAndCompleteConfig.call(this, manager, config, defaultConfig);
 
         newConfig.fragmentSource = newConfig.fragmentSource.replace(
             '%LIGHT_COUNT%',

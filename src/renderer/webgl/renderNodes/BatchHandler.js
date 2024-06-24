@@ -168,7 +168,7 @@ var BatchHandler = new Class({
          */
         this.indexBuffer = renderer.createIndexBuffer(
             this._generateElementIndices(this.instancesPerBatch),
-            gl.STATIC_DRAW
+            config.indexBufferDynamic ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW
         );
 
         // Prepare the vertex buffer layout.
@@ -287,6 +287,7 @@ var BatchHandler = new Class({
         newConfig.indicesPerInstance = config.indicesPerInstance || defaultConfig.indicesPerInstance;
         newConfig.vertexSource = config.vertexSource || defaultConfig.vertexSource;
         newConfig.fragmentSource = config.fragmentSource || defaultConfig.fragmentSource;
+        newConfig.indexBufferDynamic = config.indexBufferDynamic || defaultConfig.indexBufferDynamic;
 
         // These may be left undefined to auto-calculate instance count.
         newConfig.instancesPerBatch = config.instancesPerBatch;
