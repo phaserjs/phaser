@@ -65,6 +65,7 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.PostPipeline
@@ -83,6 +84,7 @@ var Graphics = new Class({
         Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
+        Components.Lighting,
         Components.Mask,
         Components.PostPipeline,
         Components.RenderNode,

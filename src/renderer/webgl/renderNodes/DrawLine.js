@@ -9,7 +9,7 @@ var RenderNode = require('./RenderNode');
 
 /**
  * @classdesc
- * A RenderNode which renders a line segment.
+ * A RenderNode which computes the geometry of a line segment.
  *
  * @class DrawLine
  * @memberof Phaser.Renderer.WebGL.RenderNodes
@@ -26,79 +26,32 @@ var DrawLine = new Class({
         RenderNode.call(this, 'DrawLine', manager);
 
         /**
-         * The render node that handles the rendering of triangles.
+         * The vertices of the line segment as a quad.
+         * These values have been transformed.
+         * They should be used before the next call to `run`,
+         * whereupon they will be overridden.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.DrawLine#batchHandler
-         * @type {Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat}
+         * @name Phaser.Renderer.WebGL.RenderNodes.DrawLine#quad
+         * @type {{ xTL: number, yTL: number, xTR: number, yTR: number, xBL: number, yBL: number, xBR: number, yBR: number }}
          * @since 3.90.0
          */
-        this.batchHandler = this.manager.getNode('BatchHandlerTriFlat');
-
-        /**
-         * The top and bottom vertices of the start of the first line in a loop.
-         *
-         * These values have been pre-transformed to save on redundant calculations.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.DrawLine#start
-         * @type {number[]}
-         * @since 3.90.0
-         */
-        this.start = [ 0, 0, 0, 0 ];
-
-        /**
-         * The top and bottom vertices of the end of the last line in a loop.
-         *
-         * These values have been pre-transformed to save on redundant calculations.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.DrawLine#previous
-         * @type {number[]}
-         * @since 3.90.0
-         */
-        this.previous = [ 0, 0, 0, 0 ];
+        this.quad = {
+            xTL: 0,
+            yTL: 0,
+            xTR: 0,
+            yTR: 0,
+            xBL: 0,
+            yBL: 0,
+            xBR: 0,
+            yBR: 0
+        };
     },
 
     /**
-     * Constant that defines the first line in a loop.
-     * If the line is not open, this is cached,
-     * and will join to the last line in the loop.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.DrawLine#FIRST
-     * @type {number}
-     * @const
-     * @since 3.90.0
-     * @default 1
-     * @readonly
-     */
-    FIRST: 1,
-
-    /**
-     * Constant that defines the last line in a loop.
-     * This joins to the previous line in the loop.
-     * If the line is not open, this also joins to the first line in the loop.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.DrawLine#LAST
-     * @type {number}
-     * @const
-     * @since 3.90.0
-     * @default 2
-     * @readonly
-     */
-    LAST: 2,
-
-    /**
-     * Constant that defines a single line with no joins.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.DrawLine#SINGLE
-     * @type {number}
-     * @const
-     * @since 3.90.0
-     * @default 3
-     * @readonly
-     */
-    SINGLE: 3,
-
-    /**
-     * Render a line segment as a quad.
+     * Get the transformed vertices of a line segment as a quad.
+     * The values are stored in the `quad` property.
+     * Access the values directly or copy them to another object,
+     * before the next call to `run`, whereupon they will be overridden.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.DrawLine#run
      * @since 3.90.0
@@ -110,14 +63,8 @@ var DrawLine = new Class({
      * @param {number} by - The y coordinate of the end of the line.
      * @param {number} aLineWidth - The width of the line at the start.
      * @param {number} bLineWidth - The width of the line at the end.
-     * @param {number} lineWidth - The width of the line.
-     * @param {number} tintTL - The top-left tint color.
-     * @param {number} tintTR - The top-right tint color.
-     * @param {number} tintBL - The bottom-left tint color.
-     * @param {number} tintBR - The bottom-right tint color.
-     * @param {this.FIRST|this.LAST|this.SINGLE} [connection] - The connection type. If omitted, the line start joins to the previous line.
      */
-    run: function (drawingContext, currentMatrix, ax, ay, bx, by, aLineWidth, bLineWidth, lineWidth, tintTL, tintTR, tintBL, tintBR, connection)
+    run: function (drawingContext, currentMatrix, ax, ay, bx, by, aLineWidth, bLineWidth)
     {
         this.onRunBegin(drawingContext);
 
@@ -126,11 +73,7 @@ var DrawLine = new Class({
 
         var len = Math.sqrt(dx * dx + dy * dy);
 
-        if (len === 0)
-        {
-            // Because we cannot (and should not) divide by zero!
-            return;
-        }
+        // A well-formed path has no zero length segments, so we don't check.
 
         var al0 = aLineWidth * (by - ay) / len;
         var al1 = aLineWidth * (ax - bx) / len;
@@ -146,113 +89,29 @@ var DrawLine = new Class({
         var lx3 = ax + al0;
         var ly3 = ay + al1;
 
-        var brX, brY, blX, blY, trX, trY, tlX, tlY;
+        var quad = this.quad;
 
         if (currentMatrix)
         {
-            // Bottom right
-            brX = currentMatrix.getX(lx0, ly0);
-            brY = currentMatrix.getY(lx0, ly0);
-
-            // Bottom left
-            blX = currentMatrix.getX(lx1, ly1);
-            blY = currentMatrix.getY(lx1, ly1);
-
-            // Top right
-            trX = currentMatrix.getX(lx2, ly2);
-            trY = currentMatrix.getY(lx2, ly2);
-
-            // Top left
-            tlX = currentMatrix.getX(lx3, ly3);
-            tlY = currentMatrix.getY(lx3, ly3);
+            quad.xTL = currentMatrix.getX(lx3, ly3);
+            quad.yTL = currentMatrix.getY(lx3, ly3);
+            quad.xBL = currentMatrix.getX(lx1, ly1);
+            quad.yBL = currentMatrix.getY(lx1, ly1);
+            quad.xTR = currentMatrix.getX(lx2, ly2);
+            quad.yTR = currentMatrix.getY(lx2, ly2);
+            quad.xBR = currentMatrix.getX(lx0, ly0);
+            quad.yBR = currentMatrix.getY(lx0, ly0);
         }
         else
         {
-            brX = lx0;
-            brY = ly0;
-            blX = lx1;
-            blY = ly1;
-            trX = lx2;
-            trY = ly2;
-            tlX = lx3;
-            tlY = ly3;
-        }
-
-        // Draw the line
-        this.batchHandler.batch(
-            drawingContext,
-            tlX, tlY,
-            blX, blY,
-            brX, brY,
-            tintTL, tintBL, tintBR
-        );
-        this.batchHandler.batch(
-            drawingContext,
-            brX, brY,
-            trX, trY,
-            tlX, tlY,
-            tintBR, tintTR, tintTL
-        );
-
-        if (connection !== this.SINGLE)
-        {
-            var start = this.start;
-            var previous = this.previous;
-
-            if (connection === this.FIRST)
-            {
-                start[0] = tlX;
-                start[1] = tlY;
-                start[2] = blX;
-                start[3] = blY;
-            }
-            else if (lineWidth > 2)
-            {
-                // No point doing a linejoin if the line isn't thick enough
-
-                // Connect to previous line
-                this.batchHandler.batch(
-                    drawingContext,
-                    tlX, tlY,
-                    blX, blY,
-                    previous[2], previous[3],
-                    tintTL, tintBL, tintBR
-                );
-                this.batchHandler.batch(
-                    drawingContext,
-                    previous[2], previous[3],
-                    previous[0], previous[1],
-                    tlX, tlY,
-                    tintBR, tintTR, tintTL
-                );
-    
-                if (connection === this.LAST)
-                {
-                    // Connect to first line
-                    this.batchHandler.batch(
-                        drawingContext,
-                        brX, brY,
-                        trX, trY,
-                        start[0], start[1],
-                        tintTL, tintBL, tintBR
-                    );
-                    this.batchHandler.batch(
-                        drawingContext,
-                        start[0], start[1],
-                        start[2], start[3],
-                        brX, brY,
-                        tintBR, tintTR, tintTL
-                    );
-                }
-            }
-
-            if (connection !== this.LAST)
-            {
-                previous[0] = trX;
-                previous[1] = trY;
-                previous[2] = brX;
-                previous[3] = brY;
-            }
+            quad.xTL = lx3;
+            quad.yTL = ly3;
+            quad.xBL = lx1;
+            quad.yBL = ly1;
+            quad.xTR = lx2;
+            quad.yTR = ly2;
+            quad.xBR = lx0;
+            quad.yBR = ly0;
         }
 
         this.onRunEnd(drawingContext);

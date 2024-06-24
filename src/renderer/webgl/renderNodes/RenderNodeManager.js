@@ -17,6 +17,7 @@ var DefaultParticleEmitterNodes = require('./defaults/DefaultParticleEmitterNode
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
 var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
+var BatchHandlerTriFlatLight = require('./BatchHandlerTriFlatLight');
 var Camera = require('./Camera');
 var DrawLine = require('./DrawLine');
 var FillCamera = require('./FillCamera');
@@ -135,6 +136,7 @@ var RenderNodeManager = new Class({
             BatchHandlerQuad: BatchHandlerQuad,
             BatchHandlerQuadLight: BatchHandlerQuadLight,
             BatchHandlerTriFlat: BatchHandlerTriFlat,
+            BatchHandlerTriFlatLight: BatchHandlerTriFlatLight,
             Camera: Camera,
             DrawLine: DrawLine,
             FillCamera: FillCamera,

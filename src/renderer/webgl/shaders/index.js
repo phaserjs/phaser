@@ -34,6 +34,7 @@ module.exports = {
     FXWipeFrag: require('./FXWipe-frag.js'),
     FlatFrag: require('./Flat-frag.js'),
     FlatVert: require('./Flat-vert.js'),
+    FlatLightFrag: require('./FlatLight-frag.js'),
     LightFrag: require('./Light-frag.js'),
     LinearBlendFrag: require('./LinearBlend-frag.js'),
     MeshFrag: require('./Mesh-frag.js'),

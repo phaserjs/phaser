@@ -31,25 +31,6 @@ var FillPath = new Class({
     initialize: function FillPath (manager)
     {
         RenderNode.call(this, 'FillPath', manager);
-        
-        /**
-         * The RenderNode used to render polygons.
-         * By default, we use `FillTri`.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.FillPath#polygonNode
-         * @type {Phaser.Renderer.WebGL.RenderNodes.FillTri}
-         * @since 3.90.0
-         */
-        this.polygonNode = this.manager.getNode('FillTri');
-
-        /**
-         * Used internally for triangulating a polygon.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.FillPath#polygonCache
-         * @type {number[]}
-         * @since 3.90.0
-         */
-        this.polygonCache = [];
     },
 
     /**
@@ -58,54 +39,117 @@ var FillPath = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.FillPath#run
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
-     * @param {{ x: number, y: number, width: number }[]} path - The points that define the line segments.
      * @param {Phaser.GameObjects.Components.TransformMatrix} currentMatrix - The current transform matrix.
+     * @param {Phaser.Renderer.WebGL.RenderNodes.SubmitterGraphics} submitterNode - The Submitter node to use.
+     * @param {{ x: number, y: number, width: number }[]} path - The points that define the line segments.
      * @param {number} tintTL - The top-left tint color.
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBL - The bottom-left tint color.
      */
-    run: function (drawingContext, path, currentMatrix, tintTL, tintTR, tintBL)
+    run: function (drawingContext, currentMatrix, submitterNode, path, tintTL, tintTR, tintBL)
     {
         this.onRunBegin(drawingContext);
 
         var length = path.length;
-        var polygonCache = this.polygonCache;
-        var polygonIndexArray;
-        var point;
+        var index, pathIndex, point, polygonIndexArray, x, y;
 
-        for (var pathIndex = 0; pathIndex < length; pathIndex++)
+        var polygonCacheIndex = 0;
+        var verticesIndex = 0;
+        var indexedTrianglesIndex = 0;
+
+        var polygonCache = Array(length * 2);
+        var vertices = Array(length * 5);
+
+        if (tintTL === tintTR && tintTL === tintBL)
         {
-            point = path[pathIndex];
-            polygonCache.push(point.x, point.y);
+            // If the tint colors are all the same,
+            // then we can share vertices between the triangles.
+            for (pathIndex = 0; pathIndex < length; pathIndex++)
+            {
+                point = path[pathIndex];
+
+                // Transform the point.
+                x = currentMatrix.getX(point.x, point.y);
+                y = currentMatrix.getY(point.x, point.y);
+
+                polygonCache[polygonCacheIndex++] = x;
+                polygonCache[polygonCacheIndex++] = y;
+                vertices[verticesIndex++] = x;
+                vertices[verticesIndex++] = y;
+                vertices[verticesIndex++] = tintTL;
+                vertices[verticesIndex++] = -1;
+                vertices[verticesIndex++] = -1;
+            }
+
+            polygonIndexArray = Earcut(polygonCache);
+            length = polygonIndexArray.length;
+
+            submitterNode.batch(drawingContext, polygonIndexArray, vertices);
         }
-
-        polygonIndexArray = Earcut(polygonCache);
-        length = polygonIndexArray.length;
-
-        for (var index = 0; index < length; index += 3)
+        else
         {
-            var p0 = polygonIndexArray[index + 0] * 2;
-            var p1 = polygonIndexArray[index + 1] * 2;
-            var p2 = polygonIndexArray[index + 2] * 2;
+            // If the tint colors are different,
+            // then we need to create a new vertex for each triangle.
+            for (pathIndex = 0; pathIndex < length; pathIndex++)
+            {
+                point = path[pathIndex];
 
-            var x0 = polygonCache[p0 + 0];
-            var y0 = polygonCache[p0 + 1];
-            var x1 = polygonCache[p1 + 0];
-            var y1 = polygonCache[p1 + 1];
-            var x2 = polygonCache[p2 + 0];
-            var y2 = polygonCache[p2 + 1];
+                // Transform the point.
+                x = currentMatrix.getX(point.x, point.y);
+                y = currentMatrix.getY(point.x, point.y);
 
-            this.polygonNode.run(
-                drawingContext,
-                currentMatrix,
-                x0, y0,
-                x1, y1,
-                x2, y2,
-                tintTL, tintTR, tintBL
-            );
+                polygonCache[polygonCacheIndex++] = x;
+                polygonCache[polygonCacheIndex++] = y;
+            }
+
+            polygonIndexArray = Earcut(polygonCache);
+            length = polygonIndexArray.length;
+
+            var indexedTriangles = Array(length);
+
+            for (index = 0; index < length; index += 3)
+            {
+                // Vertex A
+                var p = polygonIndexArray[index] * 2;
+                x = polygonCache[p + 0];
+                y = polygonCache[p + 1];
+
+                vertices[verticesIndex++] = x;
+                vertices[verticesIndex++] = y;
+                vertices[verticesIndex++] = tintTL;
+                vertices[verticesIndex++] = -1;
+                vertices[verticesIndex++] = -1;
+
+                // Vertex B
+                p = polygonIndexArray[index + 1] * 2;
+                x = polygonCache[p + 0];
+                y = polygonCache[p + 1];
+
+                vertices[verticesIndex++] = x;
+                vertices[verticesIndex++] = y;
+                vertices[verticesIndex++] = tintTR;
+                vertices[verticesIndex++] = -1;
+                vertices[verticesIndex++] = -1;
+
+                // Vertex C
+                p = polygonIndexArray[index + 2] * 2;
+                x = polygonCache[p + 0];
+                y = polygonCache[p + 1];
+
+                vertices[verticesIndex++] = x;
+                vertices[verticesIndex++] = y;
+                vertices[verticesIndex++] = tintBL;
+                vertices[verticesIndex++] = -1;
+                vertices[verticesIndex++] = -1;
+
+                // Add new indices for the triangle.
+                indexedTriangles[indexedTrianglesIndex++] = index + 0;
+                indexedTriangles[indexedTrianglesIndex++] = index + 1;
+                indexedTriangles[indexedTrianglesIndex++] = index + 2;
+            }
+
+            submitterNode.batch(drawingContext, indexedTriangles, vertices);
         }
-
-        polygonCache.length = 0;
 
         this.onRunEnd(drawingContext);
     }

@@ -10,8 +10,6 @@ var RenderNode = require('./RenderNode');
 /**
  * @classdesc
  * A RenderNode which renders a filled triangle.
- * This is useful for arbitrary geometry.
- * This does not use textures, and is intended to form part of a larger batch.
  *
  * @class FillTri
  * @memberof Phaser.Renderer.WebGL.RenderNodes
@@ -28,13 +26,18 @@ var FillTri = new Class({
         RenderNode.call(this, 'FillTri', manager);
 
         /**
-         * The BatchHandlerQuad that handles the rendering of quads.
+         * Vertex indices for the triangle.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.FillTri#batchHandler
-         * @type {Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat}
-         * @since 3.90.0
+         * @name Phaser.Renderer.WebGL.RenderNodes.FillTri#_indexedTriangles
+         * @type {number[]}
+         * @private
+         * @since 3.90
+         * @default [0, 1, 2]
+         * @readonly
          */
-        this.batchHandler = this.manager.getNode('BatchHandlerTriFlat');
+        this._indexedTriangles = [
+            0, 1, 2
+        ];
     },
 
     /**
@@ -44,41 +47,69 @@ var FillTri = new Class({
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [currentMatrix] - A transform matrix to apply to the vertices. If not defined, the vertices are not transformed.
+     * @param {Phaser.Renderer.WebGL.RenderNodes.SubmitterGraphics} submitterNode - The Submitter node to use.
+     * @param {number} xA - The x-coordinate of the first vertex.
+     * @param {number} yA - The y-coordinate of the first vertex.
+     * @param {number} xB - The x-coordinate of the second vertex.
+     * @param {number} yB - The y-coordinate of the second vertex.
+     * @param {number} xC - The x-coordinate of the third vertex.
+     * @param {number} yC - The y-coordinate of the third vertex.
+     * @param {number} tintA - The tint color of the first vertex.
+     * @param {number} tintB - The tint color of the second vertex.
+     * @param {number} tintC - The tint color of the third vertex.
      */
-    run: function (drawingContext, currentMatrix, xA, yA, xB, yB, xC, yC, tintA, tintB, tintC)
+    run: function (drawingContext, currentMatrix, submitterNode, xA, yA, xB, yB, xC, yC, tintA, tintB, tintC)
     {
         this.onRunBegin(drawingContext);
 
-        var txA, tyA, txB, tyB, txC, tyC;
-
         if (currentMatrix)
         {
-            txA = currentMatrix.getX(xA, yA);
-            tyA = currentMatrix.getY(xA, yA);
-            txB = currentMatrix.getX(xB, yB);
-            tyB = currentMatrix.getY(xB, yB);
-            txC = currentMatrix.getX(xC, yC);
-            tyC = currentMatrix.getY(xC, yC);
+            submitterNode.batch(
+                drawingContext,
+                this._indexedTriangles,
+                [
+                    currentMatrix.getX(xA, yA),
+                    currentMatrix.getY(xA, yA),
+                    tintA,
+                    -1,
+                    -1,
+                    currentMatrix.getX(xB, yB),
+                    currentMatrix.getY(xB, yB),
+                    tintB,
+                    -1,
+                    -1,
+                    currentMatrix.getX(xC, yC),
+                    currentMatrix.getY(xC, yC),
+                    tintC,
+                    -1,
+                    -1
+                ]
+            );
         }
         else
         {
-            txA = xA;
-            tyA = yA;
-            txB = xB;
-            tyB = yB;
-            txC = xC;
-            tyC = yC;
+            submitterNode.batch(
+                drawingContext,
+                this._indexedTriangles,
+                [
+                    xA,
+                    yA,
+                    tintA,
+                    -1,
+                    -1,
+                    xB,
+                    yB,
+                    tintB,
+                    -1,
+                    -1,
+                    xC,
+                    yC,
+                    tintC,
+                    -1,
+                    -1
+                ]
+            );
         }
-
-        this.batchHandler.batch(
-            drawingContext,
-
-            txA, tyA,
-            txB, tyB,
-            txC, tyC,
-
-            tintA, tintB, tintC
-        );
 
         this.onRunEnd(drawingContext);
     }

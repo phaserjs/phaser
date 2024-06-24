@@ -28,13 +28,15 @@ var FillRect = new Class({
         RenderNode.call(this, 'FillRect', manager);
 
         /**
-         * The RenderNode that handles the rendering of quads.
+         * The fallback batch handler for this node.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#batchHandler
+         * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#_batchHandlerDefault
          * @type {Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat}
          * @since 3.90.0
+         * @private
+         * @readonly
          */
-        this.batchHandler = this.manager.getNode('BatchHandlerTriFlat');
+        this._batchHandlerDefault = manager.getNode('BatchHandlerTriFlat');
 
         /**
          * An unchanging identity matrix.
@@ -42,8 +44,24 @@ var FillRect = new Class({
          * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#_identityMatrix
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @private
+         * @since 3.90.0
          */
         this._identityMatrix = new TransformMatrix();
+
+        /**
+         * Vertex indices for the rectangle.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#_indexedTriangles
+         * @type {number[]}
+         * @private
+         * @since 3.90
+         * @default [0, 1, 2, 2, 3, 0]
+         * @readonly
+         */
+        this._indexedTriangles = [
+            0, 1, 2,
+            2, 3, 0
+        ];
     },
 
     /**
@@ -53,6 +71,7 @@ var FillRect = new Class({
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [currentMatrix] - A transform matrix to apply to the vertices. If not defined, the identity matrix is used.
+     * @param {Phaser.Renderer.WebGL.RenderNodes.SubmitterGraphics} [submitterNode] - The Submitter node to use.
      * @param {number} x - The x-coordinate of the rectangle.
      * @param {number} y - The y-coordinate of the rectangle.
      * @param {number} width - The width of the rectangle.
@@ -62,7 +81,7 @@ var FillRect = new Class({
      * @param {number} tintBL - The bottom-left tint color.
      * @param {number} tintBR - The bottom-right tint color.
      */
-    run: function (drawingContext, currentMatrix, x, y, width, height, tintTL, tintTR, tintBL, tintBR)
+    run: function (drawingContext, currentMatrix, submitterNode, x, y, width, height, tintTL, tintTR, tintBL, tintBR)
     {
         this.onRunBegin(drawingContext);
 
@@ -71,22 +90,22 @@ var FillRect = new Class({
             currentMatrix = this._identityMatrix;
         }
 
+        if (!submitterNode)
+        {
+            submitterNode = this._batchHandlerDefault;
+        }
+
         var quad = currentMatrix.setQuad(x, y, x + width, y + height);
 
-        this.batchHandler.batch(
+        submitterNode.batch(
             drawingContext,
-            quad[0], quad[1],
-            quad[2], quad[3],
-            quad[4], quad[5],
-            tintTL, tintBL, tintBR
-        );
-
-        this.batchHandler.batch(
-            drawingContext,
-            quad[4], quad[5],
-            quad[6], quad[7],
-            quad[0], quad[1],
-            tintBR, tintTR, tintTL
+            this._indexedTriangles,
+            [
+                quad[0], quad[1], tintTL, -1, -1,
+                quad[2], quad[3], tintBL, -1, -1,
+                quad[4], quad[5], tintBR, -1, -1,
+                quad[6], quad[7], tintTR, -1, -1
+            ]
         );
 
         this.onRunEnd(drawingContext);

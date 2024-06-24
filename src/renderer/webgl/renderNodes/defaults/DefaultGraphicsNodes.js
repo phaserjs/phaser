@@ -7,8 +7,8 @@
 var Map = require('../../../../structs/Map');
 
 var DefaultGraphicsNodes = new Map([
-    [ 'BatchHandlerTriFlat', 'BatchHandlerTriFlat' ],
-    // [ 'SubmitterLight', 'SubmitterQuadLight' ],
+    [ 'Submitter', 'BatchHandlerTriFlat' ],
+    [ 'SubmitterLight', 'BatchHandlerTriFlatLight' ],
     [ 'FillPath', 'FillPath' ],
     [ 'FillRect', 'FillRect' ],
     [ 'FillTri', 'FillTri' ],

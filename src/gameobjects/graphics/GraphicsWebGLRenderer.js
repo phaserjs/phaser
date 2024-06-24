@@ -70,6 +70,7 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
 
     var customRenderNodes = src.customRenderNodes;
     var defaultRenderNodes = src.defaultRenderNodes;
+    var submitterNode = customRenderNodes.Submitter || defaultRenderNodes.Submitter;
 
     var currentContext = drawingContext;
 
@@ -133,8 +134,9 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
 
                     (customRenderNodes.FillPath || defaultRenderNodes.FillPath).run(
                         currentContext,
-                        path[pathIndex].points,
                         renderMatrix,
+                        submitterNode,
+                        path[pathIndex].points,
                         fillTint.TL,
                         fillTint.TR,
                         fillTint.BL
@@ -151,6 +153,7 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
 
                     (customRenderNodes.StrokePath || defaultRenderNodes.StrokePath).run(
                         currentContext,
+                        submitterNode,
                         path[pathIndex].points,
                         lineWidth,
                         pathOpen,
@@ -281,6 +284,7 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
                 (customRenderNodes.FillRect || defaultRenderNodes.FillRect).run(
                     currentContext,
                     renderMatrix,
+                    submitterNode,
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     commands[++cmdIndex],
@@ -301,6 +305,7 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
                 (customRenderNodes.FillTri || defaultRenderNodes.FillTri).run(
                     currentContext,
                     renderMatrix,
+                    submitterNode,
                     commands[++cmdIndex],
                     commands[++cmdIndex],
                     commands[++cmdIndex],
@@ -337,6 +342,7 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
 
                 (customRenderNodes.StrokePath || defaultRenderNodes.StrokePath).run(
                     currentContext,
+                    submitterNode,
                     trianglePath,
                     lineWidth,
                     false,

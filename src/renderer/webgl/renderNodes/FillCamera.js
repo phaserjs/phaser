@@ -54,7 +54,7 @@ var FillCamera = new Class({
         var cw = camera.width;
         var ch = camera.height;
 
-        this.fillRectNode.run(drawingContext, null, cx, cy, cw, ch, color, color, color, color);
+        this.fillRectNode.run(drawingContext, null, null, cx, cy, cw, ch, color, color, color, color);
 
         this.onRunEnd(drawingContext);
     }

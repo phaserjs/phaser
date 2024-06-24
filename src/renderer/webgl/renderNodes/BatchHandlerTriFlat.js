@@ -39,6 +39,15 @@ var BatchHandlerTriFlat = new Class({
          * @readonly
          */
         this._emptyTextures = [];
+
+        /**
+         * The number of vertices currently in the batch.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#vertexCount
+         * @type {number}
+         * @since 3.90.0
+         */
+        this.vertexCount = 0;
     },
 
     defaultConfig: {
@@ -47,6 +56,7 @@ var BatchHandlerTriFlat = new Class({
         indicesPerInstance: 3,
         vertexSource: ShaderSourceVS,
         fragmentSource: ShaderSourceFS,
+        indexBufferDynamic: true,
         vertexBufferLayout: {
             usage: 'DYNAMIC_DRAW',
             layout: [
@@ -68,11 +78,6 @@ var BatchHandlerTriFlat = new Class({
      * Generate element indices for the instance vertices.
      * This is called automatically when the node is initialized.
      *
-     * By default, each instance is a triangle.
-     * The triangle is drawn with TRIANGLES topology,
-     * so the vertices are in the order 0, 1, 2,
-     * and each instance is fully separate.
-     *
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#_generateElementIndices
      * @since 3.90.0
      * @private
@@ -81,17 +86,7 @@ var BatchHandlerTriFlat = new Class({
      */
     _generateElementIndices: function (instances)
     {
-        var buffer = new ArrayBuffer(instances * 3 * 2);
-        var indices = new Uint16Array(buffer);
-        var offset = 0;
-        for (var i = 0; i < instances; i++)
-        {
-            var index = i * 3;
-            indices[offset++] = index;
-            indices[offset++] = index + 1;
-            indices[offset++] = index + 2;
-        }
-        return buffer;
+        return new ArrayBuffer(instances * 3 * 2);
     },
 
     /**
@@ -127,12 +122,19 @@ var BatchHandlerTriFlat = new Class({
         var vao = this.vao;
         var renderer = this.manager.renderer;
         var vertexBuffer = this.vertexBufferLayout.buffer;
+        var stride = this.vertexBufferLayout.layout.stride;
 
         // Update vertex buffers.
         // Because we are probably using a generic vertex buffer
         // which is larger than the current batch, we need to update
         // the buffer with the correct size.
-        vertexBuffer.update(instanceCount * this.bytesPerInstance);
+        vertexBuffer.update(this.vertexCount * stride);
+
+        // Update index buffer.
+        // We must bind the VAO before updating the index buffer.
+        // Each index is a 16-bit unsigned integer, so 2 bytes.
+        vao.bind();
+        vao.indexBuffer.update(instanceCount * indicesPerInstance * 2);
 
         renderer.drawElements(
             drawingContext,
@@ -146,66 +148,99 @@ var BatchHandlerTriFlat = new Class({
 
         // Reset batch accumulation.
         this.instanceCount = 0;
+        this.vertexCount = 0;
 
         this.onRunEnd(drawingContext);
     },
 
     /**
-     * Add a triangle to the batch.
+     * Add data to the batch.
      *
-     * The vertices are not textured, and are named A, B, and C.
+     * The data is composed of vertices and indexed triangles.
+     * Each triangle is defined by three indices into the vertices array.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#batch
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} currentContext - The current drawing context.
-     * @param {number} xA - The x-coordinate of vertex A.
-     * @param {number} yA - The y-coordinate of vertex A.
-     * @param {number} xB - The x-coordinate of vertex B.
-     * @param {number} yB - The y-coordinate of vertex B.
-     * @param {number} xC - The x-coordinate of vertex C.
-     * @param {number} yC - The y-coordinate of vertex C.
-     * @param {number} tintA - The vertex A tint color.
-     * @param {number} tintB - The vertex B tint color.
-     * @param {number} tintC - The vertex C tint color.
+     * @param {number[]} indexes - The index data. Each triangle is defined by three indices into the vertices array, so the length of this should be a multiple of 3.
+     * @param {number[]} vertices - The vertices data. Each vertex is defined by an x-coordinate, a y-coordinate, a tint color, a pass ID (initially -1), and an index ID (initially -1).
      */
-    batch: function (currentContext, xA, yA, xB, yB, xC, yC, tintA, tintB, tintC)
+    batch: function (currentContext, indexes, vertices)
     {
         if (this.instanceCount === 0)
         {
             this.manager.setCurrentBatchNode(this, currentContext);
         }
 
-        // Update the vertex buffer.
-        var vertexOffset32 = this.instanceCount * this.floatsPerInstance;
+        var passID = 0;
+        var instanceCompletion = 0;
+        var instancesPerBatch = this.instancesPerBatch;
+
+        // Buffer data
+        var stride = this.vertexBufferLayout.layout.stride;
+        var verticesPerInstance = this.verticesPerInstance;
+
+        var indexBuffer = this.vao.indexBuffer;
+        var indexView16 = indexBuffer.viewU16;
+        var indexOffset16 = this.instanceCount * this.indicesPerInstance;
+
         var vertexBuffer = this.vertexBufferLayout.buffer;
         var vertexViewF32 = vertexBuffer.viewF32;
         var vertexViewU32 = vertexBuffer.viewU32;
+        var vertexOffset32 = this.vertexCount * stride / vertexViewF32.BYTES_PER_ELEMENT;
 
-        // Vertex A
-        vertexViewF32[vertexOffset32++] = xA;
-        vertexViewF32[vertexOffset32++] = yA;
-        vertexViewU32[vertexOffset32++] = tintA;
-
-        // Vertex B
-        vertexViewF32[vertexOffset32++] = xB;
-        vertexViewF32[vertexOffset32++] = yB;
-        vertexViewU32[vertexOffset32++] = tintB;
-
-        // Vertex C
-        vertexViewF32[vertexOffset32++] = xC;
-        vertexViewF32[vertexOffset32++] = yC;
-        vertexViewU32[vertexOffset32++] = tintC;
-
-        // Increment the instance count.
-        this.instanceCount++;
-
-        // Check whether the batch should be rendered immediately.
-        // This guarantees that none of the arrays are full above.
-        if (this.instanceCount === this.instancesPerBatch)
+        for (var i = 0; i < indexes.length; i++)
         {
-            this.run(currentContext);
+            var index = indexes[i] * 5;
 
-            // Now the batch is empty.
+            if (vertices[index + 3] !== passID)
+            {
+                // Update the vertex buffer.
+                vertexViewF32[vertexOffset32++] = vertices[index];
+                vertexViewF32[vertexOffset32++] = vertices[index + 1];
+                vertexViewU32[vertexOffset32++] = vertices[index + 2];
+
+                // Assign the vertex to the current pass.
+                vertices[index + 3] = passID;
+
+                // Record the index where the vertex was stored.
+                vertices[index + 4] = this.vertexCount;
+
+                this.vertexCount++;
+            }
+            var id = vertices[index + 4];
+
+            // Update the index buffer.
+            // There is always at least one index per vertex,
+            // so we can assume that the vertex buffer is large enough.
+            indexView16[indexOffset16++] = id;
+
+            // Check whether the instance is complete.
+            instanceCompletion++;
+            if (instanceCompletion === verticesPerInstance)
+            {
+                this.instanceCount++;
+                instanceCompletion = 0;
+            }
+
+            // Check whether the batch should be rendered immediately.
+            // This guarantees that none of the arrays are full above.
+            if (
+                // The instance count has been reached.
+                this.instanceCount === instancesPerBatch ||
+
+                // This triangle is complete, and another would exceed the index buffer size.
+                (instanceCompletion === 0 && indexOffset16 + verticesPerInstance >= indexView16.length)
+            )
+            {
+                passID++;
+                this.run(currentContext);
+
+                indexOffset16 = this.instanceCount * this.indicesPerInstance;
+                vertexOffset32 = this.vertexCount * stride / vertexViewF32.BYTES_PER_ELEMENT;
+
+                // Now the batch is empty.
+            }
         }
     }
 });
