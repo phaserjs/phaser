@@ -12,6 +12,8 @@
  * @since 3.0.0
  */
 
+var ArrayUtils = require('../../utils/array');
+
 var Depth = {
 
     /**
@@ -82,6 +84,128 @@ var Depth = {
         if (value === undefined) { value = 0; }
 
         this.depth = value;
+
+        return this;
+    },
+
+    /**
+     * Bring this Game Object to top of display list.
+     *
+     * @method Phaser.GameObjects.Components.Depth#bringMeToTop
+     * @since 3.80.2
+     * @return {this} This Game Object instance.
+     */
+    bringMeToTop: function()
+    {
+        var list;
+        if (this.parentContainer)
+        {
+            list = this.parentContainer.list;
+        }
+        else if (this.displayList)
+        {
+            list = this.displayList.list;
+        }
+
+        if (!list)
+        {
+            return this;
+        }
+
+        ArrayUtils.BringToTop(list, this);
+
+        return this;
+    },
+
+    /**
+     * Send this Game Object to bottom of display list.
+     *
+     * @method Phaser.GameObjects.Components.Depth#sendMeToBack
+     * @since 3.80.2
+     * @return {this} This Game Object instance.
+     */
+    sendMeToBack: function()
+    {
+        var list;
+        if (this.parentContainer)
+        {
+            list = this.parentContainer.list;
+        }
+        else if (this.displayList)
+        {
+            list = this.displayList.list;
+        }
+
+        if (!list)
+        {
+            return this;
+        }
+
+        ArrayUtils.SendToBack(list, this);
+
+        return this;
+    },
+
+    /**
+     * Move this Game Object below another Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Depth#moveMyDepthBelow
+     * @since 3.80.2
+     * 
+     * @param {Phaser.GameObjects.GameObject} gameObject - Move this Game Object below this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    moveMyDepthBelow: function(gameObject)
+    {
+        var list;
+        if (this.parentContainer)
+        {
+            list = this.parentContainer.list;
+        }
+        else if (this.displayList)
+        {
+            list = this.displayList.list;
+        }
+
+        if (!list)
+        {
+            return this;
+        }
+
+        ArrayUtils.MoveBelow(list, this, gameObject);
+
+        return this;
+    },
+
+    /**
+     * Move this Game Object above another Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Depth#moveMyDepthAbove
+     * @since 3.80.2
+     * 
+     * @param {Phaser.GameObjects.GameObject} gameObject - Move this Game Object above this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    moveMyDepthAbove: function(gameObject)
+    {
+        var list;
+        if (this.parentContainer)
+        {
+            list = this.parentContainer.list;
+        }
+        else if (this.displayList)
+        {
+            list = this.displayList.list;
+        }
+
+        if (!list)
+        {
+            return this;
+        }
+
+        ArrayUtils.MoveAbove(list, this, gameObject);
 
         return this;
     }
