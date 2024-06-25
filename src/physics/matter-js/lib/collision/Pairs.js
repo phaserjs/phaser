@@ -37,26 +37,26 @@ var Common = require('../core/Common');
      * @param {number} timestamp
      */
     Pairs.update = function(pairs, collisions, timestamp) {
-        var pairsList = pairs.list,
-            pairsListLength = pairsList.length,
+        var pairUpdate = Pair.update,
+            pairCreate = Pair.create,
+            pairSetActive = Pair.setActive,
             pairsTable = pairs.table,
-            collisionsLength = collisions.length,
+            pairsList = pairs.list,
+            pairsListLength = pairsList.length,
+            pairsListIndex = pairsListLength,
             collisionStart = pairs.collisionStart,
             collisionEnd = pairs.collisionEnd,
             collisionActive = pairs.collisionActive,
+            collisionsLength = collisions.length,
+            collisionStartIndex = 0,
+            collisionEndIndex = 0,
+            collisionActiveIndex = 0,
             collision,
-            pairIndex,
             pair,
             i;
 
         // clear collision state arrays, but maintain old reference
-        collisionStart.length = 0;
-        collisionEnd.length = 0;
-        collisionActive.length = 0;
 
-        for (i = 0; i < pairsListLength; i++) {
-            pairsList[i].confirmedActive = false;
-        }
 
         for (i = 0; i < collisionsLength; i++) {
             collision = collisions[i];
@@ -66,49 +66,56 @@ var Common = require('../core/Common');
                 // pair already exists (but may or may not be active)
                 if (pair.isActive) {
                     // pair exists and is active
-                    collisionActive.push(pair);
-                } else {
+                    collisionActive[collisionActiveIndex++] = pair;
                     // pair exists but was inactive, so a collision has just started again
-                    collisionStart.push(pair);
                 }
 
                 // update the pair
-                Pair.update(pair, collision, timestamp);
-                pair.confirmedActive = true;
+                pairUpdate(pair, collision, timestamp);
             } else {
                 // pair did not exist, create a new pair
-                pair = Pair.create(collision, timestamp);
+                pair = pairCreate(collision, timestamp);
                 pairsTable[pair.id] = pair;
 
                 // push the new pair
-                collisionStart.push(pair);
-                pairsList.push(pair);
+                collisionStart[collisionStartIndex++] = pair;
+                pairsList[pairsListIndex++] = pair;
             }
         }
 
         // find pairs that are no longer active
-        var removePairIndex = [];
+        pairsListIndex = 0;
         pairsListLength = pairsList.length;
 
         for (i = 0; i < pairsListLength; i++) {
             pair = pairsList[i];
             
-            if (!pair.confirmedActive) {
-                Pair.setActive(pair, false, timestamp);
-                collisionEnd.push(pair);
+            if (pair.timeUpdated >= timestamp) {
+                pairsList[pairsListIndex++] = pair;
+            } else {
+                pairSetActive(pair, false, timestamp);
 
-                if (!pair.collision.bodyA.isSleeping && !pair.collision.bodyB.isSleeping) {
-                    removePairIndex.push(i);
+                if (pair.collision.bodyA.sleepCounter > 0 && pair.collision.bodyB.sleepCounter > 0) {
+                    pairsList[pairsListIndex++] = pair;
+                } else {
+                    collisionEnd[collisionEndIndex++] = pair;
+                    delete pairsTable[pair.id];
                 }
             }
         }
 
         // remove inactive pairs
-        for (i = 0; i < removePairIndex.length; i++) {
-            pairIndex = removePairIndex[i] - i;
-            pair = pairsList[pairIndex];
-            pairsList.splice(pairIndex, 1);
-            delete pairsTable[pair.id];
+        if (pairsList.length !== pairsListIndex) {
+            pairsList.length = pairsListIndex;
+        }
+        if (collisionStart.length !== collisionStartIndex) {
+            collisionStart.length = collisionStartIndex;
+        }
+        if (collisionEnd.length !== collisionEndIndex) {
+            collisionEnd.length = collisionEndIndex;
+        }
+        if (collisionActive.length !== collisionActiveIndex) {
+            collisionActive.length = collisionActiveIndex;
         }
     };
 

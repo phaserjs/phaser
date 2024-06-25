@@ -193,7 +193,11 @@ var Body = require('./Body');
     Composite.removeComposite = function(compositeA, compositeB, deep) {
         var position = Common.indexOf(compositeA.composites, compositeB);
         if (position !== -1) {
+            var bodies = Composite.allBodies(compositeB);
             Composite.removeCompositeAt(compositeA, position);
+            for (var i = 0; i < bodies.length; i++) {
+                bodies[i].sleepCounter = 0;
+            }
         }
 
         if (deep) {
@@ -246,6 +250,7 @@ var Body = require('./Body');
         var position = Common.indexOf(composite.bodies, body);
         if (position !== -1) {
             Composite.removeBodyAt(composite, position);
+            body.sleepCounter = 0;
         }
 
         if (deep) {

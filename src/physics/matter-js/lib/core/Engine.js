@@ -24,6 +24,7 @@ var Body = require('../body/Body');
 
 (function() {
 
+    Engine._deltaMax = 1000 / 60;
     /**
      * Creates a new engine. The options parameter is an object that specifies any properties you wish to override the defaults.
      * All properties have default values, and many are pre-calculated automatically based on other properties.
@@ -51,7 +52,8 @@ var Body = require('../body/Body');
                 timestamp: 0,
                 timeScale: 1,
                 lastDelta: 0,
-                lastElapsed: 0
+                lastElapsed: 0,
+                lastUpdatesPerFrame: 0
             }
         };
 
@@ -60,6 +62,7 @@ var Body = require('../body/Body');
         engine.world = options.world || Composite.create({ label: 'World' });
         engine.pairs = options.pairs || Pairs.create();
         engine.detector = options.detector || Detector.create();
+        engine.detector.pairs = engine.pairs;
 
         // for temporary back compatibility only
         engine.grid = { buckets: [] };
@@ -87,6 +90,11 @@ var Body = require('../body/Body');
             timing = engine.timing,
             timestamp = timing.timestamp,
             i;
+        if (delta > Engine._deltaMax) {
+            Common.warnOnce(
+                'Matter.Engine.update: delta argument is recommended to be less than or equal to', Engine._deltaMax.toFixed(3), 'ms.'
+            );
+        }
 
         delta = typeof delta !== 'undefined' ? delta : Common._baseDelta;
         delta *= timing.timeScale;
@@ -138,7 +146,6 @@ var Body = require('../body/Body');
         Constraint.postSolveAll(allBodies);
 
         // find all collisions
-        detector.pairs = engine.pairs;
         var collisions = Detector.collisions(detector);
 
         // update collision pairs
