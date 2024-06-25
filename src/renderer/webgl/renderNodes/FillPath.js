@@ -57,11 +57,11 @@ var FillPath = new Class({
         var index, pathIndex, point, polygonIndexArray, x, y;
 
         var polygonCacheIndex = 0;
-        var verticesIndex = 0;
         var indexedTrianglesIndex = 0;
 
         var polygonCache = [];
-        var vertices = [];
+        var colors = [];
+        var colorsIndex = 0;
 
         for (pathIndex = 0; pathIndex < length; pathIndex++)
         {
@@ -98,80 +98,21 @@ var FillPath = new Class({
 
             for (index = 0; index < polygonCacheLength; index += 2)
             {
-                vertices[verticesIndex++] = polygonCache[index];
-                vertices[verticesIndex++] = polygonCache[index + 1];
-                vertices[verticesIndex++] = tintTL;
-                vertices[verticesIndex++] = -1;
-                vertices[verticesIndex++] = -1;
+                colors[colorsIndex++] = tintTL;
             }
 
-            // for (pathIndex = 0; pathIndex < length; pathIndex++)
-            // {
-            //     point = path[pathIndex];
-
-            //     // Transform the point.
-            //     x = currentMatrix.getX(point.x, point.y);
-            //     y = currentMatrix.getY(point.x, point.y);
-
-            //     if (
-            //         pathIndex > 0 &&
-            //         pathIndex < length - 1 &&
-            //         Math.abs(x - polygonCache[polygonCacheIndex - 2]) <= detail &&
-            //         Math.abs(y - polygonCache[polygonCacheIndex - 1]) <= detail
-            //     )
-            //     {
-            //         // Skip this point if it's too close to the previous point
-            //         // and is not the first or last point in the path.
-            //         continue;
-            //     }
-
-            //     polygonCache[polygonCacheIndex++] = x;
-            //     polygonCache[polygonCacheIndex++] = y;
-            //     vertices[verticesIndex++] = x;
-            //     vertices[verticesIndex++] = y;
-            //     vertices[verticesIndex++] = tintTL;
-            //     vertices[verticesIndex++] = -1;
-            //     vertices[verticesIndex++] = -1;
-            // }
-
-            // polygonIndexArray = Earcut(polygonCache);
-
-            submitterNode.batch(drawingContext, polygonIndexArray, vertices);
+            submitterNode.batch(drawingContext, polygonIndexArray, polygonCache, colors);
         }
         else
         {
             // If the tint colors are different,
             // then we need to create a new vertex for each triangle.
 
-
-            // for (pathIndex = 0; pathIndex < length; pathIndex++)
-            // {
-            //     point = path[pathIndex];
-
-            //     // Transform the point.
-            //     x = currentMatrix.getX(point.x, point.y);
-            //     y = currentMatrix.getY(point.x, point.y);
-
-            //     if (
-            //         pathIndex > 0 &&
-            //         pathIndex < length - 1 &&
-            //         Math.abs(x - polygonCache[polygonCacheIndex - 2]) <= detail &&
-            //         Math.abs(y - polygonCache[polygonCacheIndex - 1]) <= detail
-            //     )
-            //     {
-            //         // Skip this point if it's too close to the previous point
-            //         // and is not the first or last point in the path.
-            //         continue;
-            //     }
-
-            //     polygonCache[polygonCacheIndex++] = x;
-            //     polygonCache[polygonCacheIndex++] = y;
-            // }
-
-            // polygonIndexArray = Earcut(polygonCache);
             var indexLength = polygonIndexArray.length;
 
             var indexedTriangles = Array(indexLength);
+            var vertices = Array(indexLength * 2);
+            var verticesIndex = 0;
 
             for (index = 0; index < indexLength; index += 3)
             {
@@ -182,9 +123,6 @@ var FillPath = new Class({
 
                 vertices[verticesIndex++] = x;
                 vertices[verticesIndex++] = y;
-                vertices[verticesIndex++] = tintTL;
-                vertices[verticesIndex++] = -1;
-                vertices[verticesIndex++] = -1;
 
                 // Vertex B
                 p = polygonIndexArray[index + 1] * 2;
@@ -193,9 +131,6 @@ var FillPath = new Class({
 
                 vertices[verticesIndex++] = x;
                 vertices[verticesIndex++] = y;
-                vertices[verticesIndex++] = tintTR;
-                vertices[verticesIndex++] = -1;
-                vertices[verticesIndex++] = -1;
 
                 // Vertex C
                 p = polygonIndexArray[index + 2] * 2;
@@ -204,9 +139,10 @@ var FillPath = new Class({
 
                 vertices[verticesIndex++] = x;
                 vertices[verticesIndex++] = y;
-                vertices[verticesIndex++] = tintBL;
-                vertices[verticesIndex++] = -1;
-                vertices[verticesIndex++] = -1;
+
+                colors[colorsIndex++] = tintTL;
+                colors[colorsIndex++] = tintTR;
+                colors[colorsIndex++] = tintBL;
 
                 // Add new indices for the triangle.
                 indexedTriangles[indexedTrianglesIndex++] = index + 0;
@@ -214,7 +150,7 @@ var FillPath = new Class({
                 indexedTriangles[indexedTrianglesIndex++] = index + 2;
             }
 
-            submitterNode.batch(drawingContext, indexedTriangles, vertices);
+            submitterNode.batch(drawingContext, indexedTriangles, vertices, colors);
         }
 
         this.onRunEnd(drawingContext);

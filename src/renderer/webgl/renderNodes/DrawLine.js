@@ -24,34 +24,11 @@ var DrawLine = new Class({
     initialize: function DrawLine (manager)
     {
         RenderNode.call(this, 'DrawLine', manager);
-
-        /**
-         * The vertices of the line segment as a quad.
-         * These values have been transformed.
-         * They should be used before the next call to `run`,
-         * whereupon they will be overridden.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.DrawLine#quad
-         * @type {{ xTL: number, yTL: number, xTR: number, yTR: number, xBL: number, yBL: number, xBR: number, yBR: number }}
-         * @since 3.90.0
-         */
-        this.quad = {
-            xTL: 0,
-            yTL: 0,
-            xTR: 0,
-            yTR: 0,
-            xBL: 0,
-            yBL: 0,
-            xBR: 0,
-            yBR: 0
-        };
     },
 
     /**
      * Get the transformed vertices of a line segment as a quad.
-     * The values are stored in the `quad` property.
-     * Access the values directly or copy them to another object,
-     * before the next call to `run`, whereupon they will be overridden.
+     * The values are pushed to a `vertices` list in the order TL, BL, BR, TR.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.DrawLine#run
      * @since 3.90.0
@@ -63,8 +40,9 @@ var DrawLine = new Class({
      * @param {number} by - The y coordinate of the end of the line.
      * @param {number} aLineWidth - The width of the line at the start.
      * @param {number} bLineWidth - The width of the line at the end.
+     * @param {number[]} vertices - The list to which the vertices are assigned.
      */
-    run: function (drawingContext, currentMatrix, ax, ay, bx, by, aLineWidth, bLineWidth)
+    run: function (drawingContext, currentMatrix, ax, ay, bx, by, aLineWidth, bLineWidth, vertices)
     {
         this.onRunBegin(drawingContext);
 
@@ -89,29 +67,29 @@ var DrawLine = new Class({
         var lx3 = ax + al0;
         var ly3 = ay + al1;
 
-        var quad = this.quad;
+        var offset = vertices.length;
 
         if (currentMatrix)
         {
-            quad.xTL = currentMatrix.getX(lx3, ly3);
-            quad.yTL = currentMatrix.getY(lx3, ly3);
-            quad.xBL = currentMatrix.getX(lx1, ly1);
-            quad.yBL = currentMatrix.getY(lx1, ly1);
-            quad.xTR = currentMatrix.getX(lx2, ly2);
-            quad.yTR = currentMatrix.getY(lx2, ly2);
-            quad.xBR = currentMatrix.getX(lx0, ly0);
-            quad.yBR = currentMatrix.getY(lx0, ly0);
+            vertices[offset + 0] = currentMatrix.getX(lx3, ly3);
+            vertices[offset + 1] = currentMatrix.getY(lx3, ly3);
+            vertices[offset + 2] = currentMatrix.getX(lx1, ly1);
+            vertices[offset + 3] = currentMatrix.getY(lx1, ly1);
+            vertices[offset + 4] = currentMatrix.getX(lx0, ly0);
+            vertices[offset + 5] = currentMatrix.getY(lx0, ly0);
+            vertices[offset + 6] = currentMatrix.getX(lx2, ly2);
+            vertices[offset + 7] = currentMatrix.getY(lx2, ly2);
         }
         else
         {
-            quad.xTL = lx3;
-            quad.yTL = ly3;
-            quad.xBL = lx1;
-            quad.yBL = ly1;
-            quad.xTR = lx2;
-            quad.yTR = ly2;
-            quad.xBR = lx0;
-            quad.yBR = ly0;
+            vertices[offset + 0] = lx3;
+            vertices[offset + 1] = ly3;
+            vertices[offset + 2] = lx1;
+            vertices[offset + 3] = ly1;
+            vertices[offset + 4] = lx0;
+            vertices[offset + 5] = ly0;
+            vertices[offset + 6] = lx2;
+            vertices[offset + 7] = ly2;
         }
 
         this.onRunEnd(drawingContext);

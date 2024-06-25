@@ -100,11 +100,9 @@ var FillRect = new Class({
         submitterNode.batch(
             drawingContext,
             this._indexedTriangles,
+            quad,
             [
-                quad[0], quad[1], tintTL, -1, -1,
-                quad[2], quad[3], tintBL, -1, -1,
-                quad[4], quad[5], tintBR, -1, -1,
-                quad[6], quad[7], tintTR, -1, -1
+                tintTL, tintBL, tintBR, tintTR
             ]
         );
 

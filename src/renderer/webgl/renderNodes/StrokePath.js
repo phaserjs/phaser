@@ -85,6 +85,9 @@ var StrokePath = new Class({
         var vertexOffset = 0;
         var vertexCount;
 
+        var colors = [];
+        var colorOffset = 0;
+
         var dx, dy, tdx, tdy;
         var detailSquared = detail * detail;
 
@@ -120,6 +123,7 @@ var StrokePath = new Class({
                 }
             }
 
+            // Compute and add the vertices for the line segment.
             drawLineNode.run(
                 drawingContext,
                 currentMatrix,
@@ -128,36 +132,19 @@ var StrokePath = new Class({
                 nextPoint.x,
                 nextPoint.y,
                 point.width / 2,
-                nextPoint.width / 2
+                nextPoint.width / 2,
+                vertices
             );
 
-            var quad = drawLineNode.quad;
+            // The previous operation added 4 vertices.
+            vertexOffset += 8;
 
-            vertices[vertexOffset++] = quad.xTL;
-            vertices[vertexOffset++] = quad.yTL;
-            vertices[vertexOffset++] = tintTL;
-            vertices[vertexOffset++] = -1;
-            vertices[vertexOffset++] = -1;
+            vertexCount = vertexOffset / 2;
 
-            vertices[vertexOffset++] = quad.xBL;
-            vertices[vertexOffset++] = quad.yBL;
-            vertices[vertexOffset++] = tintBL;
-            vertices[vertexOffset++] = -1;
-            vertices[vertexOffset++] = -1;
-
-            vertices[vertexOffset++] = quad.xBR;
-            vertices[vertexOffset++] = quad.yBR;
-            vertices[vertexOffset++] = tintBR;
-            vertices[vertexOffset++] = -1;
-            vertices[vertexOffset++] = -1;
-
-            vertices[vertexOffset++] = quad.xTR;
-            vertices[vertexOffset++] = quad.yTR;
-            vertices[vertexOffset++] = tintTR;
-            vertices[vertexOffset++] = -1;
-            vertices[vertexOffset++] = -1;
-
-            vertexCount = vertexOffset / 5;
+            colors[colorOffset++] = tintTL;
+            colors[colorOffset++] = tintBL;
+            colors[colorOffset++] = tintBR;
+            colors[colorOffset++] = tintTR;
 
             // Draw two triangles.
             // The vertices are in the order: TL, BL, BR, TR
@@ -201,7 +188,7 @@ var StrokePath = new Class({
             }
         }
 
-        submitterNode.batch(drawingContext, indices, vertices);
+        submitterNode.batch(drawingContext, indices, vertices, colors);
 
         this.onRunEnd(drawingContext);
     }

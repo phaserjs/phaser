@@ -70,19 +70,15 @@ var FillTri = new Class({
                 [
                     currentMatrix.getX(xA, yA),
                     currentMatrix.getY(xA, yA),
-                    tintA,
-                    -1,
-                    -1,
                     currentMatrix.getX(xB, yB),
                     currentMatrix.getY(xB, yB),
-                    tintB,
-                    -1,
-                    -1,
                     currentMatrix.getX(xC, yC),
-                    currentMatrix.getY(xC, yC),
-                    tintC,
-                    -1,
-                    -1
+                    currentMatrix.getY(xC, yC)
+                ],
+                [
+                    tintA,
+                    tintB,
+                    tintC
                 ]
             );
         }
@@ -94,19 +90,15 @@ var FillTri = new Class({
                 [
                     xA,
                     yA,
-                    tintA,
-                    -1,
-                    -1,
                     xB,
                     yB,
-                    tintB,
-                    -1,
-                    -1,
                     xC,
-                    yC,
-                    tintC,
-                    -1,
-                    -1
+                    yC
+                ],
+                [
+                    tintA,
+                    tintB,
+                    tintC
                 ]
             );
         }

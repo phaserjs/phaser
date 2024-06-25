@@ -163,9 +163,10 @@ var BatchHandlerTriFlat = new Class({
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} currentContext - The current drawing context.
      * @param {number[]} indexes - The index data. Each triangle is defined by three indices into the vertices array, so the length of this should be a multiple of 3.
-     * @param {number[]} vertices - The vertices data. Each vertex is defined by an x-coordinate, a y-coordinate, a tint color, a pass ID (initially -1), and an index ID (initially -1).
+     * @param {number[]} vertices - The vertices data. Each vertex is defined by an x-coordinate and a y-coordinate.
+     * @param {number[]} colors - The color data. Each vertex has a color as a Uint32 value.
      */
-    batch: function (currentContext, indexes, vertices)
+    batch: function (currentContext, indexes, vertices, colors)
     {
         if (this.instanceCount === 0)
         {
@@ -189,26 +190,33 @@ var BatchHandlerTriFlat = new Class({
         var vertexViewU32 = vertexBuffer.viewU32;
         var vertexOffset32 = this.vertexCount * stride / vertexViewF32.BYTES_PER_ELEMENT;
 
+        // Track vertex usage.
+        var passes = [];
+        var passOffset = 0;
+        var vertexIndices = [];
+        var vertexIndicesOffset = 0;
+
         for (var i = 0; i < indexes.length; i++)
         {
-            var index = indexes[i] * 5;
+            var index = indexes[i];
+            var vertexIndex = index * 2;
 
-            if (vertices[index + 3] !== passID)
+            if (passes[i] !== passID)
             {
                 // Update the vertex buffer.
-                vertexViewF32[vertexOffset32++] = vertices[index];
-                vertexViewF32[vertexOffset32++] = vertices[index + 1];
-                vertexViewU32[vertexOffset32++] = vertices[index + 2];
+                vertexViewF32[vertexOffset32++] = vertices[vertexIndex];
+                vertexViewF32[vertexOffset32++] = vertices[vertexIndex + 1];
+                vertexViewU32[vertexOffset32++] = colors[index];
 
                 // Assign the vertex to the current pass.
-                vertices[index + 3] = passID;
+                passes[passOffset++] = passID;
 
                 // Record the index where the vertex was stored.
-                vertices[index + 4] = this.vertexCount;
+                vertexIndices[vertexIndicesOffset++] = this.vertexCount;
 
                 this.vertexCount++;
             }
-            var id = vertices[index + 4];
+            var id = vertexIndices[vertexIndicesOffset - 1];
 
             // Update the index buffer.
             // There is always at least one index per vertex,
@@ -238,6 +246,8 @@ var BatchHandlerTriFlat = new Class({
 
                 indexOffset16 = this.instanceCount * this.indicesPerInstance;
                 vertexOffset32 = this.vertexCount * stride / vertexViewF32.BYTES_PER_ELEMENT;
+                passOffset = 0;
+                vertexIndicesOffset = 0;
 
                 // Now the batch is empty.
             }
