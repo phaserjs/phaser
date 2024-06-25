@@ -396,6 +396,11 @@ var Config = new Class({
         this.roundPixels = GetValue(renderConfig, 'roundPixels', true, config);
 
         /**
+         * @const {number} Phaser.Core.Config#pathDetailThreshold - Threshold for combining points into a single path in the WebGL renderer for Graphics objects. This can be overridden at the Graphics object level.
+         */
+        this.pathDetailThreshold = GetValue(renderConfig, 'pathDetailThreshold', 1, config);
+
+        /**
          * @const {boolean} Phaser.Core.Config#pixelArt - Prevent pixel art from becoming blurred when scaled. It will remain crisp (tells the WebGL renderer to automatically create textures using a linear filter mode).
          */
         this.pixelArt = GetValue(renderConfig, 'pixelArt', this.zoom !== 1, config);

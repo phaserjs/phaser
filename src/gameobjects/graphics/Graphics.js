@@ -207,6 +207,27 @@ var Graphics = new Class({
          */
         this._lineWidth = 1;
 
+        /**
+         * Path detail threshold for the WebGL renderer, in pixels.
+         * Path segments will be combined until the path is complete
+         * or the segment length is above the threshold.
+         *
+         * If the value is negative, the threshold will be taken from the
+         * game config `render.pathDetailThreshold` property.
+         *
+         * This threshold can greatly improve performance on complex shapes.
+         * It is calculated at render time and does not affect the original
+         * path data.
+         * The threshold is evaluated in screen pixels, so if the object is
+         * scaled up, fine detail will emerge.
+         *
+         * @name Phaser.GameObjects.Graphics#pathDetailThreshold
+         * @type {number}
+         * @default -1
+         * @since 3.90.0
+         */
+        this.pathDetailThreshold = -1;
+
         this.lineStyle(1, 0, 0);
         this.fillStyle(0, 0);
 

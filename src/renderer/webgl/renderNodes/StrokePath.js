@@ -51,8 +51,9 @@ var StrokePath = new Class({
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBL - The bottom-left tint color.
      * @param {number} tintBR - The bottom-right tint color.
+     * @param {number} detail - The level of detail to use when rendering the stroke. Points which are only this far apart in screen space are combined. It is ignored if the entire path is equal to or shorter than this distance.
      */
-    run: function (drawingContext, submitterNode, path, lineWidth, open, currentMatrix, tintTL, tintTR, tintBL, tintBR)
+    run: function (drawingContext, submitterNode, path, lineWidth, open, currentMatrix, tintTL, tintTR, tintBL, tintBR, detail)
     {
         this.onRunBegin(drawingContext);
 
@@ -62,37 +63,62 @@ var StrokePath = new Class({
 
         var point, nextPoint;
 
-        // Determine size of index array.
-        var indexCount = pathLength * 6;
+        // Determine connectivity of index array.
         var connect = false;
         var connectLoop = false;
 
         if (lineWidth > 2 && pathLength > 1)
         {
-            connect = true;
-
             // Lines will be connected by a secondary quad.
-            indexCount *= 2;
-            if (open)
+            connect = true;
+            if (!open)
             {
-                // The last line will not be connected to the first line.
-                indexCount -= 6;
-            }
-            else
-            {
+                // The last line will be connected to the first line.
                 connectLoop = true;
             }
         }
-        var indices = Array(indexCount);
+
+        var indices = [];
         var indexOffset = 0;
 
-        var vertices = Array(pathLength * 4 * 5);
+        var vertices = [];
         var vertexOffset = 0;
+        var vertexCount;
 
-        for (var i = 0; i < pathLength; i++)
+        var dx, dy, tdx, tdy;
+        var detailSquared = detail * detail;
+
+        var first, last, iterate;
+
+        for (var i = 0; i < pathLength; i += iterate)
         {
+            first = i === 0;
+            last = i === pathLength - 1;
+            iterate = 1;
+
             point = path[i];
-            nextPoint = path[i + 1];
+            nextPoint = path[i + iterate];
+
+            if (detailSquared && !last)
+            {
+                dx = nextPoint.x - point.x;
+                dy = nextPoint.y - point.y;
+                tdx = currentMatrix.getX(dx, dy) - currentMatrix.tx;
+                tdy = currentMatrix.getY(dx, dy) - currentMatrix.ty;
+                while (
+                    i + iterate < pathLength - 1 &&
+                    tdx * tdx + tdy * tdy <= detailSquared
+                )
+                {
+                    // Skip the next point if it's too close to the current point.
+                    iterate++;
+                    nextPoint = path[i + iterate];
+                    dx = nextPoint.x - point.x;
+                    dy = nextPoint.y - point.y;
+                    tdx = currentMatrix.getX(dx, dy) - currentMatrix.tx;
+                    tdy = currentMatrix.getY(dx, dy) - currentMatrix.ty;
+                }
+            }
 
             drawLineNode.run(
                 drawingContext,
@@ -131,16 +157,18 @@ var StrokePath = new Class({
             vertices[vertexOffset++] = -1;
             vertices[vertexOffset++] = -1;
 
+            vertexCount = vertexOffset / 5;
+
             // Draw two triangles.
             // The vertices are in the order: TL, BL, BR, TR
-            indices[indexOffset++] = i * 4;
-            indices[indexOffset++] = i * 4 + 1;
-            indices[indexOffset++] = i * 4 + 2;
-            indices[indexOffset++] = i * 4 + 2;
-            indices[indexOffset++] = i * 4 + 3;
-            indices[indexOffset++] = i * 4;
+            indices[indexOffset++] = vertexCount - 4;
+            indices[indexOffset++] = vertexCount - 3;
+            indices[indexOffset++] = vertexCount - 2;
+            indices[indexOffset++] = vertexCount - 2;
+            indices[indexOffset++] = vertexCount - 1;
+            indices[indexOffset++] = vertexCount - 4;
 
-            if (connect && i !== 0)
+            if (connect && !first)
             {
                 // Draw a quad connecting to the previous line segment.
                 // The vertices are in the order:
@@ -148,14 +176,14 @@ var StrokePath = new Class({
                 // - BL
                 // - Previous BR
                 // - Previous TR
-                indices[indexOffset++] = i * 4;
-                indices[indexOffset++] = i * 4 + 1;
-                indices[indexOffset++] = i * 4 - 2;
-                indices[indexOffset++] = i * 4 - 2;
-                indices[indexOffset++] = i * 4 - 1;
-                indices[indexOffset++] = i * 4;
+                indices[indexOffset++] = vertexCount - 4;
+                indices[indexOffset++] = vertexCount - 3;
+                indices[indexOffset++] = vertexCount - 6;
+                indices[indexOffset++] = vertexCount - 6;
+                indices[indexOffset++] = vertexCount - 5;
+                indices[indexOffset++] = vertexCount - 4;
 
-                if (connectLoop && i === pathLength - 1)
+                if (connectLoop && last)
                 {
                     // Connect the last line segment to the first.
                     // The vertices are in the order:
@@ -163,12 +191,12 @@ var StrokePath = new Class({
                     // - TR
                     // - First TL
                     // - First BL
-                    indices[indexOffset++] = i * 4 + 2;
-                    indices[indexOffset++] = i * 4 + 3;
+                    indices[indexOffset++] = vertexCount - 2;
+                    indices[indexOffset++] = vertexCount - 1;
                     indices[indexOffset++] = 0;
                     indices[indexOffset++] = 0;
                     indices[indexOffset++] = 1;
-                    indices[indexOffset++] = i * 4 + 2;
+                    indices[indexOffset++] = vertexCount - 2;
                 }
             }
         }

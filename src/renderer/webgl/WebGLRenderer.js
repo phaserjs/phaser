@@ -106,6 +106,7 @@ var WebGLRenderer = new Class({
             backgroundColor: gameConfig.backgroundColor,
             contextCreation: contextCreationConfig,
             roundPixels: gameConfig.roundPixels,
+            pathDetailThreshold: gameConfig.pathDetailThreshold,
             maxTextures: gameConfig.maxTextures,
             maxTextureSize: gameConfig.maxTextureSize,
             batchSize: gameConfig.batchSize,

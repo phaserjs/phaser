@@ -45,10 +45,13 @@ var FillPath = new Class({
      * @param {number} tintTL - The top-left tint color.
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBL - The bottom-left tint color.
+     * @param {number} detail - The level of detail to use when filling the path. Points which are only this far apart in screen space are combined. It is ignored if the entire path is equal to or shorter than this distance.
      */
-    run: function (drawingContext, currentMatrix, submitterNode, path, tintTL, tintTR, tintBL)
+    run: function (drawingContext, currentMatrix, submitterNode, path, tintTL, tintTR, tintBL, detail)
     {
         this.onRunBegin(drawingContext);
+
+        if (detail === undefined) { detail = 0; }
 
         var length = path.length;
         var index, pathIndex, point, polygonIndexArray, x, y;
@@ -57,32 +60,81 @@ var FillPath = new Class({
         var verticesIndex = 0;
         var indexedTrianglesIndex = 0;
 
-        var polygonCache = Array(length * 2);
-        var vertices = Array(length * 5);
+        var polygonCache = [];
+        var vertices = [];
+
+        for (pathIndex = 0; pathIndex < length; pathIndex++)
+        {
+            point = path[pathIndex];
+
+            // Transform the point.
+            x = currentMatrix.getX(point.x, point.y);
+            y = currentMatrix.getY(point.x, point.y);
+
+            if (
+                pathIndex > 0 &&
+                pathIndex < length - 1 &&
+                Math.abs(x - polygonCache[polygonCacheIndex - 2]) <= detail &&
+                Math.abs(y - polygonCache[polygonCacheIndex - 1]) <= detail
+            )
+            {
+                // Skip this point if it's too close to the previous point
+                // and is not the first or last point in the path.
+                continue;
+            }
+
+            polygonCache[polygonCacheIndex++] = x;
+            polygonCache[polygonCacheIndex++] = y;
+        }
+
+        polygonIndexArray = Earcut(polygonCache);
 
         if (tintTL === tintTR && tintTL === tintBL)
         {
             // If the tint colors are all the same,
             // then we can share vertices between the triangles.
-            for (pathIndex = 0; pathIndex < length; pathIndex++)
+
+            var polygonCacheLength = polygonCache.length;
+
+            for (index = 0; index < polygonCacheLength; index += 2)
             {
-                point = path[pathIndex];
-
-                // Transform the point.
-                x = currentMatrix.getX(point.x, point.y);
-                y = currentMatrix.getY(point.x, point.y);
-
-                polygonCache[polygonCacheIndex++] = x;
-                polygonCache[polygonCacheIndex++] = y;
-                vertices[verticesIndex++] = x;
-                vertices[verticesIndex++] = y;
+                vertices[verticesIndex++] = polygonCache[index];
+                vertices[verticesIndex++] = polygonCache[index + 1];
                 vertices[verticesIndex++] = tintTL;
                 vertices[verticesIndex++] = -1;
                 vertices[verticesIndex++] = -1;
             }
 
-            polygonIndexArray = Earcut(polygonCache);
-            length = polygonIndexArray.length;
+            // for (pathIndex = 0; pathIndex < length; pathIndex++)
+            // {
+            //     point = path[pathIndex];
+
+            //     // Transform the point.
+            //     x = currentMatrix.getX(point.x, point.y);
+            //     y = currentMatrix.getY(point.x, point.y);
+
+            //     if (
+            //         pathIndex > 0 &&
+            //         pathIndex < length - 1 &&
+            //         Math.abs(x - polygonCache[polygonCacheIndex - 2]) <= detail &&
+            //         Math.abs(y - polygonCache[polygonCacheIndex - 1]) <= detail
+            //     )
+            //     {
+            //         // Skip this point if it's too close to the previous point
+            //         // and is not the first or last point in the path.
+            //         continue;
+            //     }
+
+            //     polygonCache[polygonCacheIndex++] = x;
+            //     polygonCache[polygonCacheIndex++] = y;
+            //     vertices[verticesIndex++] = x;
+            //     vertices[verticesIndex++] = y;
+            //     vertices[verticesIndex++] = tintTL;
+            //     vertices[verticesIndex++] = -1;
+            //     vertices[verticesIndex++] = -1;
+            // }
+
+            // polygonIndexArray = Earcut(polygonCache);
 
             submitterNode.batch(drawingContext, polygonIndexArray, vertices);
         }
@@ -90,24 +142,38 @@ var FillPath = new Class({
         {
             // If the tint colors are different,
             // then we need to create a new vertex for each triangle.
-            for (pathIndex = 0; pathIndex < length; pathIndex++)
-            {
-                point = path[pathIndex];
 
-                // Transform the point.
-                x = currentMatrix.getX(point.x, point.y);
-                y = currentMatrix.getY(point.x, point.y);
 
-                polygonCache[polygonCacheIndex++] = x;
-                polygonCache[polygonCacheIndex++] = y;
-            }
+            // for (pathIndex = 0; pathIndex < length; pathIndex++)
+            // {
+            //     point = path[pathIndex];
 
-            polygonIndexArray = Earcut(polygonCache);
-            length = polygonIndexArray.length;
+            //     // Transform the point.
+            //     x = currentMatrix.getX(point.x, point.y);
+            //     y = currentMatrix.getY(point.x, point.y);
 
-            var indexedTriangles = Array(length);
+            //     if (
+            //         pathIndex > 0 &&
+            //         pathIndex < length - 1 &&
+            //         Math.abs(x - polygonCache[polygonCacheIndex - 2]) <= detail &&
+            //         Math.abs(y - polygonCache[polygonCacheIndex - 1]) <= detail
+            //     )
+            //     {
+            //         // Skip this point if it's too close to the previous point
+            //         // and is not the first or last point in the path.
+            //         continue;
+            //     }
 
-            for (index = 0; index < length; index += 3)
+            //     polygonCache[polygonCacheIndex++] = x;
+            //     polygonCache[polygonCacheIndex++] = y;
+            // }
+
+            // polygonIndexArray = Earcut(polygonCache);
+            var indexLength = polygonIndexArray.length;
+
+            var indexedTriangles = Array(indexLength);
+
+            for (index = 0; index < indexLength; index += 3)
             {
                 // Vertex A
                 var p = polygonIndexArray[index] * 2;

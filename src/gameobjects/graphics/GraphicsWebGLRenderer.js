@@ -84,6 +84,12 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
     var commands = src.commandBuffer;
     var alpha = camera.alpha * src.alpha;
 
+    var pathDetailThreshold = Math.max(
+        src.pathDetailThreshold,
+        renderer.config.pathDetailThreshold,
+        0
+    );
+
     var lineWidth = 1;
 
     var tx = 0;
@@ -128,10 +134,10 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
 
             case Commands.FILL_PATH:
             {
+                calcMatrix.multiply(currentMatrix, renderMatrix);
+
                 for (pathIndex = 0; pathIndex < path.length; pathIndex++)
                 {
-                    calcMatrix.multiply(currentMatrix, renderMatrix);
-
                     (customRenderNodes.FillPath || defaultRenderNodes.FillPath).run(
                         currentContext,
                         renderMatrix,
@@ -139,7 +145,8 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
                         path[pathIndex].points,
                         fillTint.TL,
                         fillTint.TR,
-                        fillTint.BL
+                        fillTint.BL,
+                        pathDetailThreshold
                     );
                 }
                 break;
@@ -147,10 +154,10 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
 
             case Commands.STROKE_PATH:
             {
+                calcMatrix.multiply(currentMatrix, renderMatrix);
+
                 for (pathIndex = 0; pathIndex < path.length; pathIndex++)
                 {
-                    calcMatrix.multiply(currentMatrix, renderMatrix);
-
                     (customRenderNodes.StrokePath || defaultRenderNodes.StrokePath).run(
                         currentContext,
                         submitterNode,
@@ -161,7 +168,8 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
                         strokeTint.TL,
                         strokeTint.TR,
                         strokeTint.BL,
-                        strokeTint.BR
+                        strokeTint.BR,
+                        pathDetailThreshold
                     );
                 }
                 break;
