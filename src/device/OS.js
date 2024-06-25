@@ -61,7 +61,7 @@ var OS = {
 
 function init ()
 {
-    if (typeof importScripts === 'function')
+    if (typeof importScripts === 'function' || typeof window === 'undefined')
     {
         return OS;
     }
@@ -148,17 +148,15 @@ function init ()
         OS.webApp = true;
     }
 
-    if (typeof importScripts !== 'function')
-    {
-        if (window.cordova !== undefined)
-        {
-            OS.cordova = true;
-        }
 
-        if (window.ejecta !== undefined)
-        {
-            OS.ejecta = true;
-        }
+    if (window.cordova !== undefined)
+    {
+        OS.cordova = true;
+    }
+
+    if (window.ejecta !== undefined)
+    {
+        OS.ejecta = true;
     }
 
     if (typeof process !== 'undefined' && process.versions && process.versions.node)

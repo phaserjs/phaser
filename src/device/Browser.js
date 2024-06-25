@@ -52,6 +52,11 @@ var Browser = {
 
 function init ()
 {
+    if (typeof navigator === 'undefined')
+    {
+        return Browser;
+    }
+
     var ua = navigator.userAgent;
 
     if ((/Edg\/\d+/).test(ua))
