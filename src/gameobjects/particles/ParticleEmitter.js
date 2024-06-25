@@ -369,6 +369,20 @@ var ParticleEmitter = new Class({
         this.particleClass = Particle;
 
         /**
+         * An internal object holding the configuration for the Emitter.
+         *
+         * These are populated as part of the Emitter configuration parsing.
+         *
+         * You typically do not access them directly, but instead use the
+         * `ParticleEmitter.setConfig` or `ParticleEmitter.updateConfig` methods.
+         *
+         * @name Phaser.GameObjects.Particles.ParticleEmitter#config
+         * @type {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig}
+         * @since 3.90.0
+         */
+        this.config = null;
+            
+        /**
          * An internal object holding all of the EmitterOp instances.
          *
          * These are populated as part of the Emitter configuration parsing.
@@ -936,6 +950,8 @@ var ParticleEmitter = new Class({
             return this;
         }
 
+        this.config = config;
+
         var i = 0;
         var key = '';
 
@@ -1049,6 +1065,38 @@ var ParticleEmitter = new Class({
             this.emit(Events.START, this);
         }
 
+        return this;
+    },
+
+    /**
+     * Takes an existing Emitter Configuration file and updates this Emitter.
+     * Existing properties are overriden while new properties are added. The
+     * updated configuration is then passed to the `setConfig` method to reset
+     * the Emitter with the updated configuration.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#updateConfig
+     * @since 3.60.0
+     *
+     * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} config - Settings for this emitter.
+     *
+     * @return {this} This Particle Emitter.
+     */
+    updateConfig: function (config)
+    {
+        if (!config)
+        {
+            return this;
+        }
+
+        if (!this.config)
+        {
+            this.setConfig(config);
+        }
+        else
+        {
+            this.setConfig({...this.config, ...config});
+        }
+        
         return this;
     },
 
