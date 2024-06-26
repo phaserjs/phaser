@@ -53,6 +53,11 @@ var Render = require('./GraphicsRender');
  * updates frequently then you should avoid doing this, as it will constantly generate new textures, which will consume
  * memory.
  *
+ * Under WebGL, Graphics uses its own shader which will batch drawing operations.
+ * Try to keep Graphics objects grouped together so they can be batched together.
+ * Avoid mixing object types where possible, as each batch will be flushed,
+ * costing performance.
+ *
  * As you can tell, Graphics objects are a bit of a trade-off. While they are extremely useful, you need to be careful
  * in their complexity and quantity of them in your game.
  *

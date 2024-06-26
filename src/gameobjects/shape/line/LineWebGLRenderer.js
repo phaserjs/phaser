@@ -7,6 +7,15 @@
 var GetCalcMatrix = require('../../GetCalcMatrix');
 var Utils = require('../../../renderer/webgl/Utils');
 
+var tempPath = [
+    {
+        x: 0, y: 0, width: 0
+    },
+    {
+        x: 0, y: 0, width: 0
+    }
+];
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -18,51 +27,42 @@ var Utils = require('../../../renderer/webgl/Utils');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Line} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var LineWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var LineWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
+    var camera = drawingContext.camera;
     camera.addToRenderList(src);
 
-    var pipeline = renderer.pipelines.set(src.pipeline);
-
-    var result = GetCalcMatrix(src, camera, parentMatrix);
-
-    pipeline.calcMatrix.copyFrom(result.calc);
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
     var alpha = camera.alpha * src.alpha;
 
-    renderer.pipelines.preBatch(src);
-
     if (src.isStroked)
     {
-        var strokeTint = pipeline.strokeTint;
         var color = Utils.getTintAppendFloatAlpha(src.strokeColor, src.strokeAlpha * alpha);
 
-        strokeTint.TL = color;
-        strokeTint.TR = color;
-        strokeTint.BL = color;
-        strokeTint.BR = color;
+        tempPath[0].x = src.geom.x1 - dx;
+        tempPath[0].y = src.geom.y1 - dy;
+        tempPath[0].width = src._startWidth;
 
-        pipeline.batchLine(
-            src.geom.x1 - dx,
-            src.geom.y1 - dy,
-            src.geom.x2 - dx,
-            src.geom.y2 - dy,
-            src._startWidth / 2,
-            src._endWidth / 2,
+        tempPath[1].x = src.geom.x2 - dx;
+        tempPath[1].y = src.geom.y2 - dy;
+        tempPath[1].width = src._endWidth;
+
+        (src.customRenderNodes.StrokePath || src.defaultRenderNodes.StrokePath).run(
+            drawingContext,
+            src.customRenderNodes.Submitter || src.defaultRenderNodes.Submitter,
+            tempPath,
             1,
-            0,
-            false,
-            result.sprite,
-            result.camera
+            true,
+            calcMatrix,
+            color, color, color, color
         );
     }
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = LineWebGLRenderer;

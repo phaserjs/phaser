@@ -19,49 +19,45 @@ var Utils = require('../../../renderer/webgl/Utils');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Rectangle} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var RectangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var RectangleWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
+    var camera = drawingContext.camera;
     camera.addToRenderList(src);
 
-    var pipeline = renderer.pipelines.set(src.pipeline);
-
-    var result = GetCalcMatrix(src, camera, parentMatrix);
-
-    pipeline.calcMatrix.copyFrom(result.calc);
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
     var alpha = camera.alpha * src.alpha;
 
-    renderer.pipelines.preBatch(src);
+    var customRenderNodes = this.customRenderNodes;
+    var defaultRenderNodes = this.defaultRenderNodes;
+    var submitter = customRenderNodes.Submitter || defaultRenderNodes.Submitter;
 
     if (src.isFilled)
     {
-        var fillTint = pipeline.fillTint;
         var fillTintColor = Utils.getTintAppendFloatAlpha(src.fillColor, src.fillAlpha * alpha);
 
-        fillTint.TL = fillTintColor;
-        fillTint.TR = fillTintColor;
-        fillTint.BL = fillTintColor;
-        fillTint.BR = fillTintColor;
-
-        pipeline.batchFillRect(
-            -dx,
-            -dy,
-            src.width,
-            src.height
+        (customRenderNodes.FillRect || defaultRenderNodes.FillRect).run(
+            drawingContext,
+            calcMatrix,
+            submitter,
+            -dx, -dy,
+            src.width, src.height,
+            fillTintColor,
+            fillTintColor,
+            fillTintColor,
+            fillTintColor
         );
     }
 
     if (src.isStroked)
     {
-        StrokePathWebGL(pipeline, src, alpha, dx, dy);
+        StrokePathWebGL(drawingContext, submitter, calcMatrix, src, alpha, dx, dy);
     }
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = RectangleWebGLRenderer;

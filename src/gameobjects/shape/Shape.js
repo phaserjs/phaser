@@ -14,6 +14,10 @@ var Line = require('../../geom/line/Line');
  * The Shape Game Object is a base class for the various different shapes, such as the Arc, Star or Polygon.
  * You cannot add a Shape directly to your Scene, it is meant as a base for your own custom Shape classes.
  *
+ * Shape objects use the same batch as the Graphics Game Object to render in WebGL.
+ * They do not support gradients, path detail threshold, or other advanced Graphics features.
+ * In return, they have precomputed internal data for quick rendering of the geometry.
+ *
  * @class Shape
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects
@@ -26,8 +30,8 @@ var Line = require('../../geom/line/Line');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -45,10 +49,11 @@ var Shape = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
         Components.PostPipeline,
+        Components.RenderNode,
         Components.ScrollFactor,
         Components.Transform,
         Components.Visible
@@ -205,7 +210,7 @@ var Shape = new Class({
          */
         this.height = 0;
 
-        this.initPipeline();
+        this.initRenderNodes('Graphics');
         this.initPostPipeline();
     },
 
