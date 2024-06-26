@@ -54,9 +54,14 @@ var GridWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 
     var fillTintColor;
 
-    var showCells = src.showCells;
+    var showCells = src.isFilled;
     var showAltCells = src.showAltCells;
-    var showOutline = src.showOutline;
+    var showOutline = src.isStroked;
+
+    var cellPadding = src.cellPadding;
+
+    var lineWidth = src.lineWidth;
+    var halfLineWidth = lineWidth / 2;
 
     var x = 0;
     var y = 0;
@@ -64,21 +69,13 @@ var GridWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
     var cw = 0;
     var ch = 0;
 
-    if (showOutline)
+    if (cellPadding)
     {
-        //  To make room for the grid lines (in case alpha < 1)
-        cellWidthA--;
-        cellHeightA--;
+        cellWidthA -= cellPadding * 2;
+        cellHeightA -= cellPadding * 2;
 
-        if (cellWidthB === cellWidth)
-        {
-            cellWidthB--;
-        }
-
-        if (cellHeightB === cellHeight)
-        {
-            cellHeightB--;
-        }
+        cellWidthB -= cellPadding * 2;
+        cellHeightB -= cellPadding * 2;
     }
 
     if (showCells && src.fillAlpha > 0)
@@ -105,14 +102,17 @@ var GridWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
                 cw = (x < gridWidth - 1) ? cellWidthA : cellWidthB;
                 ch = (y < gridHeight - 1) ? cellHeightA : cellHeightB;
 
-                fillRectNode.run(
-                    drawingContext,
-                    calcMatrix,
-                    submitterNode,
-                    x * cellWidth, y * cellHeight,
-                    cw, ch,
-                    fillTintColor, fillTintColor, fillTintColor, fillTintColor
-                );
+                if (cw > 0 && ch > 0)
+                {
+                    fillRectNode.run(
+                        drawingContext,
+                        calcMatrix,
+                        submitterNode,
+                        x * cellWidth + cellPadding, y * cellHeight + cellPadding,
+                        cw, ch,
+                        fillTintColor, fillTintColor, fillTintColor, fillTintColor
+                    );
+                }
             }
         }
     }
@@ -141,48 +141,81 @@ var GridWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
                 cw = (x < gridWidth - 1) ? cellWidthA : cellWidthB;
                 ch = (y < gridHeight - 1) ? cellHeightA : cellHeightB;
 
-                fillRectNode.run(
-                    drawingContext,
-                    calcMatrix,
-                    submitterNode,
-                    x * cellWidth, y * cellHeight,
-                    cw, ch,
-                    fillTintColor, fillTintColor, fillTintColor, fillTintColor
-                );
+                if (cw > 0 && ch > 0)
+                {
+                    fillRectNode.run(
+                        drawingContext,
+                        calcMatrix,
+                        submitterNode,
+                        x * cellWidth + cellPadding, y * cellHeight + cellPadding,
+                        cw, ch,
+                        fillTintColor, fillTintColor, fillTintColor, fillTintColor
+                    );
+                }
             }
         }
     }
 
-    if (showOutline && src.outlineFillAlpha > 0)
+    if (showOutline && src.strokeAlpha > 0)
     {
-        var color = Utils.getTintAppendFloatAlpha(src.outlineFillColor, src.outlineFillAlpha * alpha);
+        var color = Utils.getTintAppendFloatAlpha(src.strokeColor, src.strokeAlpha * alpha);
 
-        for (x = 1; x < gridWidth; x++)
+        var start = src.strokeOutside ? 0 : 1;
+
+        for (x = start; x < gridWidth; x++)
         {
-            var x1 = x * cellWidth - 1;
+            var x1 = x * cellWidth - halfLineWidth;
 
             fillRectNode.run(
                 drawingContext,
                 calcMatrix,
                 submitterNode,
                 x1, 0,
-                2, height,
+                lineWidth, height,
                 color, color, color, color
             );
         }
 
-        for (y = 1; y < gridHeight; y++)
+        for (y = start; y < gridHeight; y++)
         {
-            var y1 = y * cellHeight - 1;
+            var y1 = y * cellHeight - halfLineWidth;
 
             fillRectNode.run(
                 drawingContext,
                 calcMatrix,
                 submitterNode,
                 0, y1,
-                width, 2,
+                width, lineWidth,
                 color, color, color, color
             );
+        }
+
+        // Render remaining outer strokes.
+        if (src.strokeOutside && src.strokeOutsideIncomplete)
+        {
+            if (width > halfLineWidth)
+            {
+                fillRectNode.run(
+                    drawingContext,
+                    calcMatrix,
+                    submitterNode,
+                    width - halfLineWidth, 0,
+                    lineWidth, height,
+                    color, color, color, color
+                );
+            }
+
+            if (height > halfLineWidth)
+            {
+                fillRectNode.run(
+                    drawingContext,
+                    calcMatrix,
+                    submitterNode,
+                    0, height - halfLineWidth,
+                    width, lineWidth,
+                    color, color, color, color
+                );
+            }
         }
     }
 };
