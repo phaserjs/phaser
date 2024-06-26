@@ -1075,7 +1075,7 @@ var ParticleEmitter = new Class({
      * the Emitter with the updated configuration.
      *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#updateConfig
-     * @since 3.60.0
+     * @since 3.85.0
      *
      * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} config - Settings for this emitter.
      *
