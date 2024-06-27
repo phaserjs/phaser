@@ -27,6 +27,7 @@
 * The console warnings when Audio files are missing/incorrect have been improved (thanks @samme)
 * The `requestVideoFrame` polyfill has been updated to the latest release, which should resolve some SSR framework issues. Fix #6776 (thanks @lantictac)
 * `ScaleManager` listeners includes checks for the `screen.orientation` object and adds/removes a `change` eventListener  method to handle screen orientation changes on mobile devices. The `orientationchange` event is still maintained for backwards compatibility. Fix #6837 (thanks @rexrainbow)
+* Updated MatterJS to 0.20.0
 
 # Bug Fixes
 

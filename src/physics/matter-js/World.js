@@ -1479,12 +1479,15 @@ var World = new Class({
                 continue;
             }
 
-            for (var j = 0; j < pair.activeContacts.length; j++)
+            for (var j = 0; j < pair.contactCount; j++)
             {
-                var contact = pair.activeContacts[j];
+                var contact = pair.contacts[j];
                 var vertex = contact.vertex;
-
-                graphics.fillRect(vertex.x - 2, vertex.y - 2, 5, 5);
+                
+                if (vertex)
+                {
+                    graphics.fillRect(vertex.x - 2, vertex.y - 2, 5, 5);
+                }
             }
         }
 
@@ -1500,14 +1503,14 @@ var World = new Class({
             }
 
             var collision = pair.collision;
-            var contacts = pair.activeContacts;
+            var contacts = pair.contacts;
 
-            if (contacts.length > 0)
+            if (pair.contactCount > 0)
             {
                 var normalPosX = contacts[0].vertex.x;
                 var normalPosY = contacts[0].vertex.y;
 
-                if (contacts.length === 2)
+                if (pair.contactCount === 2)
                 {
                     normalPosX = (contacts[0].vertex.x + contacts[1].vertex.x) / 2;
                     normalPosY = (contacts[0].vertex.y + contacts[1].vertex.y) / 2;

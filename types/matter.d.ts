@@ -990,7 +990,7 @@ declare namespace MatterJS {
         bodyA: Body;
         bodyB: Body;
         contacts: any;
-        activeContacts: any;
+        contactCount: number;
         separation: number;
         isActive: boolean;
         timeCreated: number;
@@ -1030,7 +1030,7 @@ declare namespace MatterJS {
         id: string;
         bodyA: Body;
         bodyB: Body;
-        activeContacts: Vector[];
+        contacts: Vector[];
         separation: number;
         isActive: boolean;
         confirmedActive: boolean;
