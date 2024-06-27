@@ -5,6 +5,9 @@ let sourceMap = './build/phaser.js.map';
 let dest = '../phaser3-examples/public/build/dev.js';
 let destDir = '../phaser3-examples/public/build/';
 let destMap = '../phaser3-examples/public/build/phaser.js.map';
+let dest2 = '../examples/public/build/dev.js';
+let dest2Dir = '../examples/public/build/';
+let dest2Map = '../examples/public/build/phaser.js.map';
 
 if (fs.existsSync(destDir))
 {
@@ -28,7 +31,29 @@ if (fs.existsSync(destDir))
 
     });
 }
+else if (fs.existsSync(dest2Dir))
+{
+    fs.copy(sourceMap, dest2Map, function (err) {
+
+        if (err)
+        {
+            return console.error(err);
+        }
+
+    });
+
+    fs.copy(source, dest2, function (err) {
+
+        if (err)
+        {
+            return console.error(err);
+        }
+
+        console.log('Build copied to ' + dest2);
+
+    });
+}
 else
 {
-    console.log('Copy-to-Examples failed: Phaser 3 Examples not present at ../phaser3-examples');
+    console.log('Copy-to-Examples failed: Phaser 3 Examples not present at ../phaser3-examples or ../examples');
 }
