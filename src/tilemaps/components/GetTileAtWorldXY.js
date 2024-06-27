@@ -17,7 +17,7 @@ var point = new Vector2();
  *
  * @param {number} worldX - X position to get the tile from (given in pixels)
  * @param {number} worldY - Y position to get the tile from (given in pixels)
- * @param {boolean} nonNull - If true, function won't return null for empty tiles, but a Tile object with an index of -1.
+ * @param {boolean} [nonNull=false] - For empty tiles, return a Tile object with an index of -1 instead of null.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
