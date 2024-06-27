@@ -110,20 +110,6 @@ var BatchHandlerQuad = new Class({
     },
 
     /**
-     * Set new dimensions for the renderer. This is called automatically when the renderer is resized.
-     *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchTexturedTintedTransformedQuads#resize
-     * @since 3.90.0
-     * @param {number} width - The new width of the renderer.
-     * @param {number} height - The new height of the renderer.
-     */
-    resize: function (width, height)
-    {
-        this.program.setUniform('uResolution', [ width, height ]);
-        this.program.setUniform('uProjectionMatrix', this.manager.renderer.projectionMatrix.val);
-    },
-
-    /**
      * Update the number of draw calls per batch.
      * This rebuilds the shader program with the new draw call count.
      * The minimum number of draw calls is 1, and the maximum is the number of
@@ -195,6 +181,20 @@ var BatchHandlerQuad = new Class({
         this.program.setUniform(
             'uRoundPixels',
             drawingContext.camera.roundPixels
+        );
+
+        this.program.setUniform(
+            'uResolution',
+            [ drawingContext.width, drawingContext.height ]
+        );
+
+        drawingContext.renderer.setProjectionMatrix(
+            drawingContext.width,
+            drawingContext.height
+        );
+        this.program.setUniform(
+            'uProjectionMatrix',
+            drawingContext.renderer.projectionMatrix.val
         );
     },
 

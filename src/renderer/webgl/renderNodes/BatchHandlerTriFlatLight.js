@@ -148,6 +148,8 @@ var BatchHandlerTriFlatLight = new Class({
         var vec = this._lightVector;
         var height = this.manager.renderer.height;
 
+        BatchHandlerTriFlat.prototype.onRunBegin.call(this, drawingContext);
+
         program.setUniform(
             'uCamera',
             [

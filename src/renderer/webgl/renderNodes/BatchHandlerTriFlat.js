@@ -90,14 +90,22 @@ var BatchHandlerTriFlat = new Class({
     },
 
     /**
-     * Set new dimensions for the renderer. This is called automatically when the renderer is resized.
+     * Called at the beginning of the `run` method.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#resize
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#onRunBegin
      * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    resize: function ()
+    onRunBegin: function (drawingContext)
     {
-        this.program.setUniform('uProjectionMatrix', this.manager.renderer.projectionMatrix.val);
+        drawingContext.renderer.setProjectionMatrix(
+            drawingContext.width,
+            drawingContext.height
+        );
+        this.program.setUniform(
+            'uProjectionMatrix',
+            drawingContext.renderer.projectionMatrix.val
+        );
     },
 
     /**

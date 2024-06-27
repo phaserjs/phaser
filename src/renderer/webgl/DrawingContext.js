@@ -165,6 +165,24 @@ var DrawingContext = new Class({
          */
         this.inUse = false;
 
+        /**
+         * The width of the framebuffer.
+         *
+         * @name Phaser.Renderer.WebGL.DrawingContext#width
+         * @type {number}
+         * @since 3.90.0
+         */
+        this.width = 0;
+
+        /**
+         * The height of the framebuffer.
+         *
+         * @name Phaser.Renderer.WebGL.DrawingContext#height
+         * @type {number}
+         * @since 3.90.0
+         */
+        this.height = 0;
+
         if (options.autoResize)
         {
             this.renderer.on(Events.RESIZE, this.resize, this);
@@ -254,6 +272,8 @@ var DrawingContext = new Class({
         this.texture = source.texture;
         this.camera = source.camera;
         this.blendMode = source.blendMode;
+        this.width = source.width;
+        this.height = source.height;
 
         this.state = {
             bindings:

@@ -149,10 +149,8 @@ var BatchHandlerQuadLight = new Class({
         var vec = this._lightVector;
         var height = this.manager.renderer.height;
 
-        program.setUniform(
-            'uRoundPixels',
-            drawingContext.camera.roundPixels
-        );
+        BatchHandlerQuad.prototype.onRunBegin.call(this, drawingContext);
+
         program.setUniform(
             'uCamera',
             [
