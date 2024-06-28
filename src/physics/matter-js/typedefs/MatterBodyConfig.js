@@ -6,6 +6,7 @@
  * @property {(string|Phaser.Types.Physics.Matter.MatterSetBodyConfig)} [shape=null] - Set this Game Object to create and use a new Body based on the configuration object given.
  * @property {MatterJS.BodyType[]} [parts] - An array of bodies that make up this body. The first body in the array must always be a self reference to the current body instance. All bodies in the `parts` array together form a single rigid compound body.
  * @property {any} [plugin] - An object reserved for storing plugin-specific properties.
+ * @property {any} [wrapBounds] - An object for storing wrap boundaries.
  * @property {number} [angle=0] - A number specifying the angle of the body, in radians.
  * @property {Phaser.Types.Math.Vector2Like[]} [vertices=null] - An array of `Vector` objects that specify the convex hull of the rigid body. These should be provided about the origin `(0, 0)`.
  * @property {Phaser.Types.Math.Vector2Like} [position] - A `Vector` that specifies the current world-space position of the body.
