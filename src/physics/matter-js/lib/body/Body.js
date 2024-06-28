@@ -43,6 +43,7 @@ var Axes = require('../geometry/Axes');
             label: 'Body',
             parts: [],
             plugin: {},
+            wrapBounds: null,
             angle: 0,
             vertices: null, // Phaser change: no point calling fromPath if they pass in vertices anyway
             position: { x: 0, y: 0 },
@@ -925,6 +926,25 @@ var Axes = require('../geometry/Axes');
         return properties;
     };
 
+    /**
+     * Wraps the `body` position such that it always stays within the given bounds.
+     * Upon crossing a boundary the body will appear on the opposite side of the bounds,
+     * while maintaining its velocity.
+     * @function wrap
+     * @param {body} body The body to wrap.
+     * @param {Matter.Bounds} bounds The bounds to wrap the body inside.
+     * @returns {?Matter.Vector} The translation vector that was applied (only if wrapping was required).
+     */
+    Body.wrap = function(body, bounds) {
+        var translation = Bounds.wrap(body.bounds, bounds);
+
+        if (translation) {
+            Body.translate(body, translation);
+        }
+
+        return translation;
+    };
+
     /*
     *
     *  Events Documentation
@@ -1007,6 +1027,13 @@ var Axes = require('../geometry/Axes');
      *
      * @property parent
      * @type body
+     */
+
+    /**
+     * An object storing axis-aligned bounding boxes (AABB).
+     *
+     * @property wrapBounds
+     * @type {}
      */
 
     /**
