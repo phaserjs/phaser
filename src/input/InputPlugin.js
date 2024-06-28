@@ -1350,16 +1350,16 @@ var InputPlugin = new Class({
             var dragX;
             var dragY;
 
+            var dx = pointer.x - pointer.downX;
+            var dy = pointer.y - pointer.downY;
+
             if (!gameObject.parentContainer)
             {
-                dragX = pointer.worldX - input.dragX;
-                dragY = pointer.worldY - input.dragY;
+                dragX = dx + input.dragStartX;
+                dragY = dy + input.dragStartY;
             }
             else
-            {
-                var dx = pointer.worldX - input.dragStartXGlobal;
-                var dy = pointer.worldY - input.dragStartYGlobal;
-
+            {                
                 var rotation = gameObject.getParentRotation();
 
                 var dxRotated = dx * Math.cos(rotation) + dy * Math.sin(rotation);
