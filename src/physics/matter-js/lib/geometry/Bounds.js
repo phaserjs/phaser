@@ -116,5 +116,41 @@ module.exports = Bounds;
         bounds.min.y = position.y;
         bounds.max.y = position.y + deltaY;
     };
+
+    /**
+     * Returns a translation vector that wraps the `objectBounds` inside the `bounds`.
+     * @method wrap
+     * @param {bounds} objectBounds The bounds of the object to wrap inside the bounds.
+     * @param {bounds} bounds The bounds to wrap the body inside.
+     * @param {number} [padding=0] - An amount added to the boundary.
+     * @returns {?Matter.Vector} A translation vector (only if wrapping is required).
+     */
+    Bounds.wrap = function(objectBounds, bounds, padding) {
+        var x = null,
+          y = null;
+
+        if (typeof bounds.min.x !== 'undefined' && typeof bounds.max.x !== 'undefined') {
+          if (objectBounds.min.x > bounds.max.x) {
+            x = bounds.min.x - objectBounds.max.x;
+          } else if (objectBounds.max.x < bounds.min.x) {
+            x = bounds.max.x - objectBounds.min.x;
+          }
+        }
+  
+        if (typeof bounds.min.y !== 'undefined' && typeof bounds.max.y !== 'undefined') {
+          if (objectBounds.min.y > bounds.max.y) {
+            y = bounds.min.y - objectBounds.max.y;
+          } else if (objectBounds.max.y < bounds.min.y) {
+            y = bounds.max.y - objectBounds.min.y;
+          }
+        }
+  
+        if (x !== null || y !== null) {
+          return {
+            x: x || 0,
+            y: y || 0
+          };
+        }
+      };
     
 })();
