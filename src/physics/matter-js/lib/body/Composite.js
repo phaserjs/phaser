@@ -38,6 +38,7 @@ var Body = require('./Body');
             composites: [],
             label: 'Composite',
             plugin: {},
+            wrapBounds: null,
             cache: {
                 allBodies: null,
                 allConstraints: null,
@@ -584,6 +585,29 @@ var Body = require('./Body');
 
         return Bounds.create(vertices);
     };
+  
+    /**
+     * Wraps the `composite` position such that it always stays within the given bounds.
+     * Upon crossing a boundary the composite will appear on the opposite side of the bounds,
+     * while maintaining its velocity.
+     * This is called automatically by the plugin.
+     * @function wrap
+     * @param {composite} composite The composite to wrap.
+     * @param {bounds} bounds The bounds to wrap the composite inside.
+     * @returns {?Matter.Vector} The translation vector that was applied (only if wrapping was required).
+     */
+    Composite.wrap = function(composite, bounds) {
+        var translation = Bounds.wrap(
+          Composite.bounds(composite),
+          bounds
+        );
+  
+        if (translation) {
+          Composite.translate(composite, translation);
+        }
+  
+        return translation;
+    };
 
     /*
     *
@@ -713,6 +737,13 @@ var Body = require('./Body');
      * An object reserved for storing plugin-specific properties.
      *
      * @property plugin
+     * @type {}
+     */
+
+    /**
+     * An object storing axis-aligned bounding boxes (AABB).
+     *
+     * @property wrapBounds
      * @type {}
      */
 
