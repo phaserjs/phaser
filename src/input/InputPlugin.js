@@ -1151,6 +1151,8 @@ var InputPlugin = new Class({
             input.dragStartXGlobal = pointer.worldX;
             input.dragStartYGlobal = pointer.worldY;
 
+            input.dragStartCamera = pointer.camera;
+
             input.dragX = input.dragStartXGlobal - input.dragStartX;
             input.dragY = input.dragStartYGlobal - input.dragStartY;
 
@@ -1350,16 +1352,18 @@ var InputPlugin = new Class({
             var dragX;
             var dragY;
 
-            var dx = pointer.x - pointer.downX;
-            var dy = pointer.y - pointer.downY;
+            var dragWorldXY = pointer.positionToCamera(input.dragStartCamera);
 
             if (!gameObject.parentContainer)
             {
-                dragX = dx + input.dragStartX;
-                dragY = dy + input.dragStartY;
+                dragX = dragWorldXY.x - input.dragX;
+                dragY = dragWorldXY.y - input.dragY;
             }
             else
-            {                
+            {
+                var dx = dragWorldXY.x - input.dragStartXGlobal;
+                var dy = dragWorldXY.y - input.dragStartYGlobal;
+
                 var rotation = gameObject.getParentRotation();
 
                 var dxRotated = dx * Math.cos(rotation) + dy * Math.sin(rotation);
@@ -1413,6 +1417,8 @@ var InputPlugin = new Class({
 
                 input.dragX = input.localX - gameObject.displayOriginX;
                 input.dragY = input.localY - gameObject.displayOriginY;
+
+                input.dragStartCamera = null;
 
                 var dropped = false;
 
