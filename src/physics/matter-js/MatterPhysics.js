@@ -390,23 +390,6 @@ var MatterPhysics = new Class({
          */
         this._tempVec2 = Vector.create();
 
-        //  Matter plugins
-
-        if (GetValue(this.config, 'plugins.collisionevents', true))
-        {
-            this.enableCollisionEventsPlugin();
-        }
-
-        if (GetValue(this.config, 'plugins.attractors', false))
-        {
-            this.enableAttractorPlugin();
-        }
-
-        if (GetValue(this.config, 'plugins.wrap', false))
-        {
-            this.enableWrapPlugin();
-        }
-
         Resolver._restingThresh = GetValue(this.config, 'restingThresh', 4);
         Resolver._restingThreshTangent = GetValue(this.config, 'restingThreshTangent', 6);
         Resolver._positionDampen = GetValue(this.config, 'positionDampen', 0.9);
