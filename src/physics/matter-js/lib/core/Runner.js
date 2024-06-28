@@ -21,10 +21,6 @@ var Common = require('./Common');
 (function() {
 
     Runner._maxFrameDelta = 1000 / 15;
-
-   
-
-
     Runner._frameDeltaFallback = 1000 / 60;
     Runner._timeBufferMargin = 1.5;
     Runner._elapsedNextEstimate = 1;
