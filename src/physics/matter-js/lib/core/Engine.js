@@ -113,7 +113,8 @@ var Body = require('../body/Body');
 
         // get all bodies and all constraints in the world
         var allBodies = Composite.allBodies(world),
-            allConstraints = Composite.allConstraints(world);
+            allConstraints = Composite.allConstraints(world),
+            allComposites = Composite.allComposites(world);
 
         // if the world has changed
         if (world.isModified) {
@@ -134,6 +135,24 @@ var Body = require('../body/Body');
         // update all body position and rotation by integration
         if (delta > 0) {
             Engine._bodiesUpdate(allBodies, delta);
+        }
+
+        // wrap bodies within the wrapBounds parameters
+        for (var i = 0; i < allBodies.length; i += 1) {
+            var body = allBodies[i];
+    
+            if (body.wrapBounds !== null) {
+              Body.wrap(body, body.wrapBounds);
+            }
+        }
+
+        // wrap composites within the wrapBounds parameters
+        for (i = 0; i < allComposites.length; i += 1) {
+            var composite = allComposites[i];
+
+            if (composite.wrapBounds !== null) {
+                Composite.wrap(composite, composite.wrapBounds);
+            }
         }
 
         Events.trigger(engine, 'beforeSolve', event);
