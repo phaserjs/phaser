@@ -357,7 +357,9 @@ var RunImmovableBody1 = function (blockedState)
     //  This is special case code that handles things like horizontally moving platforms you can ride
     if (body1.moves)
     {
-        body2.x += (body1.x - body1.prev.x) * body1.friction.x;
+        var body1Distance = body1.directControl ? (body1.x - body1.autoFrame.x) : (body1.x - body1.prev.x);
+
+        body2.x += body1Distance * body1.friction.x;
         body2._dx = body2.x - body2.prev.x;
     }
 };
@@ -391,7 +393,9 @@ var RunImmovableBody2 = function (blockedState)
     //  This is special case code that handles things like horizontally moving platforms you can ride
     if (body2.moves)
     {
-        body1.x += (body2.x - body2.prev.x) * body2.friction.x;
+        var body2Distance = body2.directControl ? (body2.x - body2.autoFrame.x) : (body2.x - body2.prev.x);
+
+        body1.x += body2Distance * body2.friction.x;
         body1._dx = body1.x - body1.prev.x;
     }
 };
