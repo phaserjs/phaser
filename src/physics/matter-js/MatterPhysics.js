@@ -21,7 +21,6 @@ var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
-var MatterCollisionEvents = require('./lib/plugins/MatterCollisionEvents');
 var MatterLib = require('./lib/core/Matter');
 var Merge = require('../../utils/object/Merge');
 var Pair = require('./lib/collision/Pair');
@@ -458,45 +457,6 @@ var MatterPhysics = new Class({
         );
 
         return config;
-    },
-
-    /**
-     * Enables the Matter Collision Events Plugin.
-     *
-     * Note that this plugin is enabled by default. So you should only ever need to call this
-     * method if you have specifically disabled the plugin in your Matter World Config.
-     * You can disable it by setting `plugins.collisionevents: false` in your Matter World Config.
-     *
-     * This plugin triggers three new events on Matter.Body:
-     *
-     * 1. `onCollide`
-     * 2. `onCollideEnd`
-     * 3. `onCollideActive`
-     *
-     * These events correspond to the Matter.js events `collisionStart`, `collisionActive` and `collisionEnd`, respectively.
-     * You can listen to these events via Matter.Events or they will also be emitted from the Matter World.
-     *
-     * This plugin also extends Matter.Body with three convenience functions:
-     *
-     * `Matter.Body.setOnCollide(callback)`
-     * `Matter.Body.setOnCollideEnd(callback)`
-     * `Matter.Body.setOnCollideActive(callback)`
-     *
-     * You can register event callbacks by providing a function of type (pair: Matter.Pair) => void
-     *
-     * https://github.com/dxu/matter-collision-events
-     *
-     * @method Phaser.Physics.Matter.MatterPhysics#enableCollisionEventsPlugin
-     * @since 3.22.0
-     *
-     * @return {this} This Matter Physics instance.
-     */
-    enableCollisionEventsPlugin: function ()
-    {
-        Plugin.register(MatterCollisionEvents);
-        Plugin.use(MatterLib, MatterCollisionEvents);
-
-        return this;
     },
 
     /**
