@@ -132,27 +132,12 @@ var Body = require('../body/Body');
         // apply gravity to all bodies
         Engine._bodiesApplyGravity(allBodies, engine.gravity);
 
+        Engine.wrap(allBodies, allComposites);
+        Engine.attractors(allBodies);
+        
         // update all body position and rotation by integration
         if (delta > 0) {
             Engine._bodiesUpdate(allBodies, delta);
-        }
-
-        // wrap bodies within the wrapBounds parameters
-        for (var i = 0; i < allBodies.length; i += 1) {
-            var body = allBodies[i];
-    
-            if (body.wrapBounds !== null) {
-              Body.wrap(body, body.wrapBounds);
-            }
-        }
-
-        // wrap composites within the wrapBounds parameters
-        for (i = 0; i < allComposites.length; i += 1) {
-            var composite = allComposites[i];
-
-            if (composite.wrapBounds !== null) {
-                Composite.wrap(composite, composite.wrapBounds);
-            }
         }
 
         Events.trigger(engine, 'beforeSolve', event);
@@ -346,6 +331,74 @@ var Body = require('../body/Body');
 
         for (var i = 0; i < bodiesLength; i++) {
             Body.updateVelocities(bodies[i]);
+        }
+    };
+
+    /**
+     * Applies `Body.wrap` and `Composite.wrap` and to all given `bodies`.
+     * @method wrap
+     * @private
+     * @param {body[]} bodies
+     */
+    Engine.wrap = function(bodies, composites) {
+        // wrap bodies within the wrapBounds parameters
+        for (var i = 0; i < bodies.length; i += 1) {
+            var body = bodies[i];
+    
+            if (body.wrapBounds !== null) {
+              Body.wrap(body, body.wrapBounds);
+            }
+        }
+
+        // wrap composites within the wrapBounds parameters
+        for (i = 0; i < composites.length; i += 1) {
+            var composite = composites[i];
+
+            if (composite.wrapBounds !== null) {
+                Composite.wrap(composite, composite.wrapBounds);
+            }
+        }
+    };
+
+    /**
+     * Applies all attractors for all bodies in the `engine`.
+     * This is called automatically.
+     * @method attractors
+     * @private
+     * @param {body[]} bodies
+     */
+    Engine.attractors = function(bodies) {
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var bodyA = bodies[i];
+            var attractors = bodyA.attractors;
+
+            if (attractors && attractors.length > 0)
+            {
+                for (var j = 0; j < bodies.length; j++)
+                {
+                    var bodyB = bodies[j];
+
+                    if (i !== j)
+                    {
+                        for (var k = 0; k < attractors.length; k++)
+                        {
+                            var attractor = attractors[k];
+                            var forceVector = attractor;
+
+                            if (Common.isFunction(attractor))
+                            {
+                                forceVector = attractor(bodyA, bodyB);
+                            }
+
+                            if (forceVector)
+                            {
+                                Body.applyForce(bodyB, bodyB.position, forceVector);
+                            }
+                        }
+                    }
+                }
+            }
         }
     };
 
