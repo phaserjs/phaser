@@ -43,6 +43,7 @@ var Axes = require('../geometry/Axes');
             label: 'Body',
             parts: [],
             plugin: {},
+            attractors: options.attractors || [],
             wrapBounds: null,
             angle: 0,
             vertices: null, // Phaser change: no point calling fromPath if they pass in vertices anyway
@@ -1034,6 +1035,14 @@ var Axes = require('../geometry/Axes');
      *
      * @property wrapBounds
      * @type {}
+     */
+
+    /**
+     * An array of callback functions that will be called automatically
+     * for every pair of bodies, on every engine update.
+     *
+     * @property attractors
+     * @type Function[]
      */
 
     /**
