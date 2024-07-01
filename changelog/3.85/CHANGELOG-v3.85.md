@@ -21,6 +21,7 @@
 
 * MatterJS updated to 0.20.0 and integrated into Phaser. [Here are details about the update](MatterJS.md).
 * Matter Physics bodies has a new property `wrapBounds` which allow you to wrap physics bodies around a specified boundary
+* Matter Physics bodies has a new property `attractors` that make one body always attract other bodies.
 * Calling `Timeline.pause` will now pause any currently active Tweens that the Timeline had started (thanks @monteiz)
 * Calling `Timeline.resume` will now resume any currently paused Tweens that the Timeline had started (thanks @monteiz)
 * Calling `Timeline.clear` and `Timeline.destroy` will now destroy any currently active Tweens that the Timeline had created. Previously, active tweens would continue to play to completion (thanks @monteiz)
