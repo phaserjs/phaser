@@ -661,8 +661,44 @@ var World = new Class({
 
             if (pairs.length > 0)
             {
-                bodyA = pairs[0].bodyA;
-                bodyB = pairs[0].bodyB;
+                pairs.map(function (pair)
+                {
+                    bodyA = pair.bodyA;
+                    bodyB = pair.bodyB;
+
+                    if (bodyA.gameObject)
+                    {
+                        bodyA.gameObject.emit('collide', bodyA, bodyB, pair);
+                    }
+
+                    if (bodyB.gameObject)
+                    {
+                        bodyB.gameObject.emit('collide', bodyB, bodyA, pair);
+                    }
+
+                    MatterEvents.trigger(bodyA, 'onCollide', { pair: pair });
+                    MatterEvents.trigger(bodyB, 'onCollide', { pair: pair });
+
+                    if (bodyA.onCollideCallback)
+                    {
+                        bodyA.onCollideCallback(pair);
+                    }
+
+                    if (bodyB.onCollideCallback)
+                    {
+                        bodyB.onCollideCallback(pair);
+                    }
+
+                    if (bodyA.onCollideWith[bodyB.id])
+                    {
+                        bodyA.onCollideWith[bodyB.id](bodyB, pair);
+                    }
+
+                    if (bodyB.onCollideWith[bodyA.id])
+                    {
+                        bodyB.onCollideWith[bodyA.id](bodyA, pair);
+                    }
+                });
             }
 
             _this.emit(Events.COLLISION_START, event, bodyA, bodyB);
@@ -676,8 +712,34 @@ var World = new Class({
 
             if (pairs.length > 0)
             {
-                bodyA = pairs[0].bodyA;
-                bodyB = pairs[0].bodyB;
+                pairs.map(function (pair)
+                {
+                    bodyA = pair.bodyA;
+                    bodyB = pair.bodyB;
+
+                    if (bodyA.gameObject)
+                    {
+                        bodyA.gameObject.emit('collideActive', bodyA, bodyB, pair);
+                    }
+
+                    if (bodyB.gameObject)
+                    {
+                        bodyB.gameObject.emit('collideActive', bodyB, bodyA, pair);
+                    }
+
+                    MatterEvents.trigger(bodyA, 'onCollideActive', { pair: pair });
+                    MatterEvents.trigger(bodyB, 'onCollideActive', { pair: pair });
+
+                    if (bodyA.onCollideActiveCallback)
+                    {
+                        bodyA.onCollideActiveCallback(pair);
+                    }
+
+                    if (bodyB.onCollideActiveCallback)
+                    {
+                        bodyB.onCollideActiveCallback(pair);
+                    }
+                });
             }
 
             _this.emit(Events.COLLISION_ACTIVE, event, bodyA, bodyB);
@@ -691,8 +753,34 @@ var World = new Class({
 
             if (pairs.length > 0)
             {
-                bodyA = pairs[0].bodyA;
-                bodyB = pairs[0].bodyB;
+                pairs.map(function (pair)
+                {
+                    bodyA = pair.bodyA;
+                    bodyB = pair.bodyB;
+
+                    if (bodyA.gameObject)
+                    {
+                        bodyA.gameObject.emit('collideEnd', bodyA, bodyB, pair);
+                    }
+
+                    if (bodyB.gameObject)
+                    {
+                        bodyB.gameObject.emit('collideEnd', bodyB, bodyA, pair);
+                    }
+
+                    MatterEvents.trigger(bodyA, 'onCollideEnd', { pair: pair });
+                    MatterEvents.trigger(bodyB, 'onCollideEnd', { pair: pair });
+
+                    if (bodyA.onCollideEndCallback)
+                    {
+                        bodyA.onCollideEndCallback(pair);
+                    }
+
+                    if (bodyB.onCollideEndCallback)
+                    {
+                        bodyB.onCollideEndCallback(pair);
+                    }
+                });
             }
 
             _this.emit(Events.COLLISION_END, event, bodyA, bodyB);
