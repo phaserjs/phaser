@@ -10,6 +10,8 @@
 * `Phaser.Textures.Frame#setCutSize` is a new internal method with 2 parameters: `width` and `height`. These sets the width, and height of the area in the source image to cut. (thanks @FelipeIzolan)
 * Introduced new constants in `ORIENTATION_CONST.js`. The constants `LANDSCAPE_SECONDARY` and `PORTRAIT_SECONDARY` have been added to the `Phaser.Scale.Orientation` object. These constants represent the secondary landscape and portrait orientations respectively. This addition provides more granular control over device orientation handling in Phaser. Fix #6837 (thanks @rexrainbow)
 * Introduced `updateConfig` method in `ParticleEmitter.js` to allow dynamic updating of Particle Emitter configurations. This method enables existing properties to be overridden and new properties to be added to the emitter's configuration. It ensures that the emitter is reset with the updated configuration for more flexible particle effects management.
+* A new `wrap` method has been natively integrated into the `Body` class to replace the existing `MatterWrap` plugin. [Here's how it works](MatterWrapBounds.md).
+* The Matter `attractors` plugin has been natively integrated into the `Body` class and Matter engine. [More details here](MatterAttractor.md).
 
 # WebGL Rendering Updates
 
@@ -20,8 +22,6 @@
 # Updates
 
 * MatterJS updated to 0.20.0 and integrated into Phaser. [Here are details about the update](MatterJS.md).
-* Matter Physics bodies has a new property `wrapBounds` which allow you to wrap physics bodies around a specified boundary
-* Matter Physics bodies has a new property `attractors` that make one body always attract other bodies.
 * Calling `Timeline.pause` will now pause any currently active Tweens that the Timeline had started (thanks @monteiz)
 * Calling `Timeline.resume` will now resume any currently paused Tweens that the Timeline had started (thanks @monteiz)
 * Calling `Timeline.clear` and `Timeline.destroy` will now destroy any currently active Tweens that the Timeline had created. Previously, active tweens would continue to play to completion (thanks @monteiz)
