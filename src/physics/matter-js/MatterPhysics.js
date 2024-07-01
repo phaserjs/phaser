@@ -21,10 +21,8 @@ var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
-var MatterAttractors = require('./lib/plugins/MatterAttractors');
 var MatterCollisionEvents = require('./lib/plugins/MatterCollisionEvents');
 var MatterLib = require('./lib/core/Matter');
-var MatterWrap = require('./lib/plugins/MatterWrap');
 var Merge = require('../../utils/object/Merge');
 var Pair = require('./lib/collision/Pair');
 var Pairs = require('./lib/collision/Pairs');
@@ -460,55 +458,6 @@ var MatterPhysics = new Class({
         );
 
         return config;
-    },
-
-    /**
-     * Enables the Matter Attractors Plugin.
-     *
-     * The attractors plugin that makes it easy to apply continual forces on bodies.
-     * It's possible to simulate effects such as wind, gravity and magnetism.
-     *
-     * https://github.com/liabru/matter-attractors
-     *
-     * This method is called automatically if `plugins.attractors` is set in the Matter World Config.
-     * However, you can also call it directly from within your game.
-     *
-     * @method Phaser.Physics.Matter.MatterPhysics#enableAttractorPlugin
-     * @since 3.0.0
-     *
-     * @return {this} This Matter Physics instance.
-     */
-    enableAttractorPlugin: function ()
-    {
-        Plugin.register(MatterAttractors);
-        Plugin.use(MatterLib, MatterAttractors);
-
-        return this;
-    },
-
-    /**
-     * Enables the Matter Wrap Plugin.
-     *
-     * The coordinate wrapping plugin that automatically wraps the position of bodies such that they always stay
-     * within the given bounds. Upon crossing a boundary the body will appear on the opposite side of the bounds,
-     * while maintaining its velocity.
-     *
-     * https://github.com/liabru/matter-wrap
-     *
-     * This method is called automatically if `plugins.wrap` is set in the Matter World Config.
-     * However, you can also call it directly from within your game.
-     *
-     * @method Phaser.Physics.Matter.MatterPhysics#enableWrapPlugin
-     * @since 3.0.0
-     *
-     * @return {this} This Matter Physics instance.
-     */
-    enableWrapPlugin: function ()
-    {
-        Plugin.register(MatterWrap);
-        Plugin.use(MatterLib, MatterWrap);
-
-        return this;
     },
 
     /**
