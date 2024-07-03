@@ -18,6 +18,7 @@ var MatterBody = require('./lib/body/Body');
 var MatterEvents = require('./lib/core/Events');
 var MatterTileBody = require('./MatterTileBody');
 var MatterWorld = require('./lib/body/World');
+var MatterRunner = require('./lib/core/Runner');
 var Vector = require('./lib/geometry/Vector');
 
 /**
@@ -174,6 +175,7 @@ var World = new Class({
             timePrev: null,
             timeScalePrev: 1,
             frameRequestId: null,
+            timeBuffer: 0,
             isFixed: GetFastValue(runnerConfig, 'isFixed', false),
             delta: delta,
             deltaMin: deltaMin,
@@ -1196,46 +1198,89 @@ var World = new Class({
 
         var engine = this.engine;
         var runner = this.runner;
+        
+        var tickStartTime = Common.now(),
+            engineDelta = runner.delta,
+            updateCount = 0;
 
-        var timing = engine.timing;
+        // find frame delta time since last call
+        var frameDelta = time - runner.timeLastTick;
 
-        if (runner.isFixed)
+        // fallback for unusable frame delta values (e.g. 0, NaN, on first frame or long pauses)
+        if (!frameDelta || !runner.timeLastTick || frameDelta > Math.max(MatterRunner._maxFrameDelta, runner.maxFrameTime))
         {
-            //  fixed timestep
-            delta = this.getDelta(time, delta);
-        }
-        else
-        {
-            //  dynamic timestep based on wall clock between calls
-            delta = (time - runner.timePrev) || runner.delta;
-            runner.timePrev = time;
-
-            // optimistically filter delta over a few frames, to improve stability
-            runner.deltaHistory.push(delta);
-            runner.deltaHistory = runner.deltaHistory.slice(-runner.deltaSampleSize);
-            delta = Math.min.apply(null, runner.deltaHistory);
-
-            // limit delta
-            delta = delta < runner.deltaMin ? runner.deltaMin : delta;
-            delta = delta > runner.deltaMax ? runner.deltaMax : delta;
-
-            // update engine timing object
-            runner.delta = delta;
+            // reuse last accepted frame delta else fallback
+            frameDelta = runner.frameDelta || MatterRunner._frameDeltaFallback;
         }
 
-        runner.timeScalePrev = timing.timeScale;
-
-        // fps counter
-        runner.frameCounter += 1;
-
-        if (time - runner.counterTimestamp >= 1000)
+        if (runner.frameDeltaSmoothing)
         {
-            runner.fps = runner.frameCounter * ((time - runner.counterTimestamp) / 1000);
-            runner.counterTimestamp = time;
-            runner.frameCounter = 0;
+            // record frame delta over a number of frames
+            runner.frameDeltaHistory.push(frameDelta);
+            runner.frameDeltaHistory = runner.frameDeltaHistory.slice(-runner.frameDeltaHistorySize);
+
+            // sort frame delta history
+            var deltaHistorySorted = runner.frameDeltaHistory.slice(0).sort();
+
+            // sample a central window to limit outliers
+            var deltaHistoryWindow = runner.frameDeltaHistory.slice(
+                deltaHistorySorted.length * MatterRunner._smoothingLowerBound,
+                deltaHistorySorted.length * MatterRunner._smoothingUpperBound
+            );
+
+            // take the mean of the central window
+            var frameDeltaSmoothed = MatterRunner._mean(deltaHistoryWindow);
+            frameDelta = frameDeltaSmoothed || frameDelta;
         }
 
-        Engine.update(engine, delta);
+        if (runner.frameDeltaSnapping)
+        {
+            // snap frame delta to the nearest 1 Hz
+            frameDelta = 1000 / Math.round(1000 / frameDelta);
+        }
+
+        // update runner values for next call
+        runner.frameDelta = frameDelta;
+        runner.timeLastTick = time;
+
+        // accumulate elapsed time
+        runner.timeBuffer += runner.frameDelta;
+
+        // limit time buffer size to a single frame of updates
+        runner.timeBuffer = Common.clamp(
+            runner.timeBuffer, 0, runner.frameDelta + engineDelta * MatterRunner._timeBufferMargin
+        );
+
+        // reset count of over budget updates
+        runner.lastUpdatesDeferred = 0;
+
+        // get max updates per frame
+        var maxUpdates = runner.maxUpdates || Math.ceil(runner.maxFrameTime / engineDelta);
+
+        var updateStartTime = Common.now();
+
+        // simulate time elapsed between calls
+        while (engineDelta > 0 && runner.timeBuffer >= engineDelta * MatterRunner._timeBufferMargin)
+        {
+            // update the engine
+            Engine.update(engine, engineDelta);
+
+            // consume time simulated from buffer
+            runner.timeBuffer -= engineDelta;
+            updateCount += 1;
+
+            // find elapsed time during this tick
+            var elapsedTimeTotal = Common.now() - tickStartTime,
+                elapsedTimeUpdates = Common.now() - updateStartTime,
+                elapsedNextEstimate = elapsedTimeTotal + MatterRunner._elapsedNextEstimate * elapsedTimeUpdates / updateCount;
+
+            // defer updates if over performance budgets for this frame
+            if (updateCount >= maxUpdates || elapsedNextEstimate > runner.maxFrameTime)
+            {
+                runner.lastUpdatesDeferred = Math.round(Math.max(0, (runner.timeBuffer / engineDelta) - MatterRunner._timeBufferMargin));
+                break;
+            }
+        }
     },
 
     /**
