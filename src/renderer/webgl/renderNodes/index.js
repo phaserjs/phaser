@@ -10,6 +10,7 @@
 
 var RenderNodes = {
     BatchHandler: require('./BatchHandler'),
+    BatchHandlerPointLight: require('./BatchHandlerPointLight'),
     BatchHandlerQuad: require('./BatchHandlerQuad'),
     BatchHandlerQuadLight: require('./BatchHandlerQuadLight'),
     BatchHandlerTriFlat: require('./BatchHandlerTriFlat'),

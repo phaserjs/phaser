@@ -13,7 +13,9 @@ var DefaultGraphicsNodes = require('./defaults/DefaultGraphicsNodes');
 var DefaultImageNodes = require('./defaults/DefaultImageNodes');
 var DefaultNineSliceNodes = require('./defaults/DefaultNineSliceNodes');
 var DefaultParticleEmitterNodes = require('./defaults/DefaultParticleEmitterNodes');
+var DefaultPointLightNodes = require('./defaults/DefaultPointLightNodes');
 
+var BatchHandlerPointLight = require('./BatchHandlerPointLight');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
 var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
@@ -101,7 +103,8 @@ var RenderNodeManager = new Class({
             Graphics: DefaultGraphicsNodes,
             Image: DefaultImageNodes,
             NineSlice: DefaultNineSliceNodes,
-            ParticleEmitter: DefaultParticleEmitterNodes
+            ParticleEmitter: DefaultParticleEmitterNodes,
+            PointLight: DefaultPointLightNodes
         };
 
         /**
@@ -133,6 +136,7 @@ var RenderNodeManager = new Class({
          * @private
          */
         this._nodeConstructors = {
+            BatchHandlerPointLight: BatchHandlerPointLight,
             BatchHandlerQuad: BatchHandlerQuad,
             BatchHandlerQuadLight: BatchHandlerQuadLight,
             BatchHandlerTriFlat: BatchHandlerTriFlat,
