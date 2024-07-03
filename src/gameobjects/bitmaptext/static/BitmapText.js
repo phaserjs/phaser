@@ -47,10 +47,11 @@ var Render = require('./BitmapTextRender');
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Tint
@@ -74,10 +75,11 @@ var BitmapText = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
         Components.PostPipeline,
+        Components.RenderNode,
         Components.ScrollFactor,
         Components.Texture,
         Components.Tint,
@@ -294,7 +296,7 @@ var BitmapText = new Class({
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
-        this.initPipeline();
+        this.initRenderNodes('BitmapText');
         this.initPostPipeline();
 
         this.setText(text);

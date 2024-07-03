@@ -8,6 +8,7 @@ var EventEmitter = require('eventemitter3');
 var Class = require('../../../utils/Class');
 var Events = require('../../events');
 
+var DefaultBitmapTextNodes = require('./defaults/DefaultBitmapTextNodes');
 var DefaultBlitterNodes = require('./defaults/DefaultBlitterNodes');
 var DefaultGraphicsNodes = require('./defaults/DefaultGraphicsNodes');
 var DefaultImageNodes = require('./defaults/DefaultImageNodes');
@@ -99,6 +100,7 @@ var RenderNodeManager = new Class({
          * @since 3.90.0
          */
         this.defaultRenderNodes = {
+            BitmapText: DefaultBitmapTextNodes,
             Blitter: DefaultBlitterNodes,
             Graphics: DefaultGraphicsNodes,
             Image: DefaultImageNodes,
