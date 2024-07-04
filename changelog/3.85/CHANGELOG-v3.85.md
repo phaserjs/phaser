@@ -23,6 +23,7 @@
 
 * MatterJS updated to 0.20.0 and integrated into Phaser. [Here are details about the update](MatterJS.md).
 * Integrated `MatterCollisionEvents` plugin functionality directly into the `Matter.World` class to handle collisions more effectively. [More details here](MatterCollisionEvents.md).
+* Updated `Matter.World` to improve the performance, accuracy, and reliability of the `update` method in handling physics simulations or animations. [More details here](MatterWorldUpdate.md).
 * Calling `Timeline.pause` will now pause any currently active Tweens that the Timeline had started (thanks @monteiz)
 * Calling `Timeline.resume` will now resume any currently paused Tweens that the Timeline had started (thanks @monteiz)
 * Calling `Timeline.clear` and `Timeline.destroy` will now destroy any currently active Tweens that the Timeline had created. Previously, active tweens would continue to play to completion (thanks @monteiz)
