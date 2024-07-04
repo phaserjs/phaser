@@ -104,6 +104,7 @@ var LayerWebGLRenderer = function (renderer, layer, drawingContext)
         // TODO: Child Mask handling (end)
     }
 
+    // Release any remaining context.
     if (currentContext !== drawingContext)
     {
         currentContext.release();

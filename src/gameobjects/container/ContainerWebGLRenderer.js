@@ -122,7 +122,7 @@ var ContainerWebGLRenderer = function (renderer, container, drawingContext, pare
         child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
 
         //  Render
-        child.renderWebGL(renderer, child, drawingContext, transformMatrix, container);
+        child.renderWebGL(renderer, child, currentContext, transformMatrix, container);
 
         //  Restore original values
 
@@ -131,6 +131,12 @@ var ContainerWebGLRenderer = function (renderer, container, drawingContext, pare
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
 
         // TODO: Child Mask handling (end)
+    }
+
+    // Release any remaining context.
+    if (currentContext !== drawingContext)
+    {
+        currentContext.release();
     }
 
     // TODO: Container PostFX handling
