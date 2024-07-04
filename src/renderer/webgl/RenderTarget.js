@@ -348,19 +348,32 @@ var RenderTarget = new Class({
     },
 
     /**
-     * Clears this Render Target.
+     * Clears a portion or everything from this Render Target. To clear an area,
+     * specify the `x`, `y`, `width` and `height`.
+     * 
+     * @param {number} [x=0] - The left coordinate of the fill rectangle.
+     * @param {number} [y=0] - The top coordinate of the fill rectangle.
+     * @param {number} [width=this.width] - The width of the fill rectangle.
+     * @param {number} [height=this.height] - The height of the fill rectangle.
      *
      * @method Phaser.Renderer.WebGL.RenderTarget#clear
      * @since 3.50.0
      */
-    clear: function ()
+    clear: function (x, y, width, height)
     {
         var renderer = this.renderer;
         var gl = renderer.gl;
 
         renderer.pushFramebuffer(this.framebuffer);
 
-        gl.disable(gl.SCISSOR_TEST);
+        if (x !== undefined && y !== undefined && width !== undefined && height !== undefined)
+        {
+            gl.scissor(x, y, width, height);
+        }
+        else
+        {
+            gl.disable(gl.SCISSOR_TEST);
+        }
 
         gl.clearColor(0, 0, 0, 0);
 
