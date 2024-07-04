@@ -4,6 +4,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('../../const');
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -15,9 +17,9 @@
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Layer} layer - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  */
-var LayerWebGLRenderer = function (renderer, layer, camera)
+var LayerWebGLRenderer = function (renderer, layer, drawingContext)
 {
     var children = layer.list;
     var childCount = children.length;
@@ -27,16 +29,21 @@ var LayerWebGLRenderer = function (renderer, layer, camera)
         return;
     }
 
+    var currentContext = drawingContext;
+    var camera = currentContext.camera;
+
     layer.depthSort();
 
-    renderer.pipelines.preBatch(layer);
+    // TODO: Layer PostFX handling.
 
-    var layerHasBlendMode = (layer.blendMode !== -1);
+    var layerHasBlendMode = (layer.blendMode !== CONST.BlendModes.SKIP_CHECK);
 
     if (!layerHasBlendMode)
     {
         //  If Layer is SKIP_TEST then set blend mode to be Normal
-        renderer.setBlendMode(0);
+        currentContext = currentContext.getClone();
+        currentContext.setBlendMode(0);
+        currentContext.use();
     }
 
     var alpha = layer.alpha;
@@ -72,46 +79,37 @@ var LayerWebGLRenderer = function (renderer, layer, camera)
             childAlphaBottomRight = childAlpha;
         }
 
-        if (!layerHasBlendMode && child.blendMode !== renderer.currentBlendMode)
+        if (
+            !layerHasBlendMode &&
+            child.blendMode !== currentContext.blendMode &&
+            child.blendMode !== CONST.BlendModes.SKIP_CHECK
+        )
         {
             //  If Layer doesn't have its own blend mode, then a child can have one
-            renderer.setBlendMode(child.blendMode);
+            currentContext = currentContext.getClone();
+            currentContext.setBlendMode(child.blendMode);
+            currentContext.use();
         }
 
-        var mask = child.mask;
-
-        if (mask)
-        {
-            mask.preRenderWebGL(renderer, child, camera);
-        }
-
-        var type = child.type;
-
-        if (type !== renderer.currentType)
-        {
-            renderer.newType = true;
-            renderer.currentType = type;
-        }
-
-        renderer.nextTypeMatch = (i < childCount - 1) ? (children[i + 1].type === renderer.currentType) : false;
+        // TODO: Child Mask handling (start)
 
         child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
 
         //  Render
-        child.renderWebGL(renderer, child, camera);
+        child.renderWebGL(renderer, child, currentContext);
 
         //  Restore original values
         child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
 
-        if (mask)
-        {
-            mask.postRenderWebGL(renderer, camera);
-        }
-
-        renderer.newType = false;
+        // TODO: Child Mask handling (end)
     }
 
-    renderer.pipelines.postBatch(layer);
+    if (currentContext !== drawingContext)
+    {
+        currentContext.release();
+    }
+
+    // TODO: Layer PostFX handling
 };
 
 module.exports = LayerWebGLRenderer;

@@ -10,8 +10,13 @@ var Events = require('../events');
 /**
  * Descriptor of the context within which a drawing operation is performed.
  *
- * This specifies the framebuffer, the viewport, the scissor box, and the
- * stencil state.
+ * This consists of a subset of the global WebGL state. It includes the following:
+ *
+ * - Framebuffer
+ * - Viewport
+ * - Scissor box
+ * - Blend mode
+ * - Clear color
  *
  * This is analogous to a drafting table in a studio. The paper is the
  * framebuffer, while the rest of the data specifies masks, guides etc for
