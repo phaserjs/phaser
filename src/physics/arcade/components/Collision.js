@@ -141,7 +141,7 @@ var Collision = {
         var target = (this.body) ? this.body : this;
 
         target.collisionCategory = 0x0001;
-        target.collisionMask = 1;
+        target.collisionMask = 2147483647;
 
         return this;
     }
