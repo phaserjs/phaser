@@ -151,7 +151,7 @@ var PhysicsGroup = new Class({
          * @type {number}
          * @since 3.70.0
          */
-        this.collisionMask = 1;
+        this.collisionMask = 2147483647;
 
         /**
          * Default physics properties applied to Game Objects added to the Group or created by the Group. Derived from the `config` argument.
