@@ -2070,13 +2070,7 @@ var World = new Class({
     {
         var bodyA = (sprite.isBody) ? sprite : sprite.body;
 
-        if (
-            group.length === 0 ||
-            !bodyA ||
-            !bodyA.enable ||
-            bodyA.checkCollision.none ||
-            !this.canCollide(bodyA, group)
-        )
+        if (group.getLength() === 0 || !bodyA || !bodyA.enable || bodyA.checkCollision.none || !this.canCollide(bodyA, group))
         {
             return;
         }
@@ -2418,13 +2412,13 @@ var World = new Class({
      */
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
-        if (group1.length === 0 || group2.length === 0 || !this.canCollide(group1, group2))
+        if (group1.getLength() === 0 || group2.getLength() === 0 || !this.canCollide(group1, group2))
         {
             return;
         }
 
         var children = group1.getChildren();
-
+        
         for (var i = 0; i < children.length; i++)
         {
             this.collideSpriteVsGroup(children[i], group2, collideCallback, processCallback, callbackContext, overlapOnly);
