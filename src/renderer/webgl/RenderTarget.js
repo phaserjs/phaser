@@ -368,6 +368,7 @@ var RenderTarget = new Class({
 
         if (x !== undefined && y !== undefined && width !== undefined && height !== undefined)
         {
+            gl.enable(gl.SCISSOR_TEST);
             gl.scissor(x, y, width, height);
         }
         else
