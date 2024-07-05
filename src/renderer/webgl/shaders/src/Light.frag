@@ -4,7 +4,7 @@ precision mediump float;
 
 struct Light
 {
-    vec2 position;
+    vec3 position;
     vec3 color;
     float intensity;
     float radius;
@@ -54,7 +54,7 @@ void main ()
         if (index < uLightCount)
         {
             Light light = uLights[index];
-            vec3 lightDir = vec3((light.position.xy / res) - (gl_FragCoord.xy / res), 0.1);
+            vec3 lightDir = vec3((light.position.xy / res) - (gl_FragCoord.xy / res), light.position.z / res.x);
             vec3 lightNormal = normalize(lightDir);
             float distToSurf = length(lightDir) * uCamera.w;
             float diffuseFactor = max(dot(normal, lightNormal), 0.0);

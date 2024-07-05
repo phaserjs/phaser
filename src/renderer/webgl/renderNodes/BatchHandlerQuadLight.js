@@ -190,7 +190,8 @@ var BatchHandlerQuadLight = new Class({
                 lightName + 'position',
                 [
                     vec.x - (camera.scrollX * light.scrollFactorX * camera.zoom),
-                    height - (vec.y - (camera.scrollY * light.scrollFactorY * camera.zoom))
+                    height - (vec.y - (camera.scrollY * light.scrollFactorY * camera.zoom)),
+                    light.z
                 ]
             );
             program.setUniform(

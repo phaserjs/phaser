@@ -281,20 +281,22 @@ var LightsManager = new Class({
      * @param {number} [radius=128] - The radius of the Light.
      * @param {number} [rgb=0xffffff] - The integer RGB color of the light.
      * @param {number} [intensity=1] - The intensity of the Light.
+     * @param {number} [z] - The z position of the light. If omitted, it will be set to `radius * 0.1`.
      *
      * @return {Phaser.GameObjects.Light} The Light that was added.
      */
-    addLight: function (x, y, radius, rgb, intensity)
+    addLight: function (x, y, radius, rgb, intensity, z)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (radius === undefined) { radius = 128; }
         if (rgb === undefined) { rgb = 0xffffff; }
         if (intensity === undefined) { intensity = 1; }
+        if (z === undefined) { z = radius * 0.1; }
 
         var color = Utils.getFloatsFromUintRGB(rgb);
 
-        var light = new Light(x, y, radius, color[0], color[1], color[2], intensity);
+        var light = new Light(x, y, radius, color[0], color[1], color[2], intensity, z);
 
         this.lights.push(light);
 
