@@ -396,6 +396,11 @@ var Config = new Class({
         this.roundPixels = GetValue(renderConfig, 'roundPixels', true, config);
 
         /**
+         * @const {boolean} Phaser.Core.Config#selfShadow - On textured objects with lighting, this enables self-shadowing based on the diffuse map.
+         */
+        this.selfShadow = GetValue(renderConfig, 'selfShadow', false, config);
+
+        /**
          * @const {number} Phaser.Core.Config#pathDetailThreshold - Threshold for combining points into a single path in the WebGL renderer for Graphics objects. This can be overridden at the Graphics object level.
          */
         this.pathDetailThreshold = GetValue(renderConfig, 'pathDetailThreshold', 1, config);

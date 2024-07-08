@@ -36,6 +36,7 @@ module.exports = {
     FlatVert: require('./Flat-vert.js'),
     FlatLightFrag: require('./FlatLight-frag.js'),
     LightFrag: require('./Light-frag.js'),
+    LightShadowFrag: require('./LightShadow-frag.js'),
     LinearBlendFrag: require('./LinearBlend-frag.js'),
     MeshFrag: require('./Mesh-frag.js'),
     MeshVert: require('./Mesh-vert.js'),

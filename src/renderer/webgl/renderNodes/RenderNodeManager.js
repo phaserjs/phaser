@@ -19,6 +19,7 @@ var DefaultPointLightNodes = require('./defaults/DefaultPointLightNodes');
 var BatchHandlerPointLight = require('./BatchHandlerPointLight');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
+var BatchHandlerQuadLightShadow = require('./BatchHandlerQuadLightShadow');
 var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
 var BatchHandlerTriFlatLight = require('./BatchHandlerTriFlatLight');
 var Camera = require('./Camera');
@@ -158,6 +159,11 @@ var RenderNodeManager = new Class({
             TransformerImage: TransformerImage,
             YieldContext: YieldContext
         };
+
+        if (game.config.selfShadow)
+        {
+            this._nodeConstructors.BatchHandlerQuadLight = BatchHandlerQuadLightShadow;
+        }
 
         /**
          * The RenderNode which is currently being filled.
