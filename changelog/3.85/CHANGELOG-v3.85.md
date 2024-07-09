@@ -12,7 +12,7 @@
 * Introduced `updateConfig` method in `ParticleEmitter.js` to allow dynamic updating of Particle Emitter configurations. This method enables existing properties to be overridden and new properties to be added to the emitter's configuration. It ensures that the emitter is reset with the updated configuration for more flexible particle effects management.
 * A new `wrap` method has been natively integrated into the `Body` class to replace the existing `MatterWrap` plugin. [Here's how it works](MatterWrapBounds.md).
 * The Matter `attractors` plugin has been natively integrated into the `Body` class and Matter engine. [More details here](MatterAttractor.md).
-* Added functionality to the `Phaser.Textures.DynamicTexture#clear` method. Clear a specific area within a `Dynamic Texture` by specifying `x`, `y`, `width`, and `height` parameters to clear only a portion of the texture.
+* Added functionality to the `Phaser.Textures.DynamicTexture#clear` method. Clear a specific area within a `Dynamic Texture` by specifying `x`, `y`, `width`, and `height` parameters to clear only a portion of the texture. Fix #6853 (thanks @SelfDevTV)
 * Added functionality to the `Phaser.Renderer.WebGL.RenderTarget#clear` method. Clear a specific area within the `RenderTarget` by specifying `x`, `y`, `width`, and `height` parameters.
 * Added Default Image Handling in `TextureManager.js`. In the game `config`, set `defaultImage` to `null` to ignore loading the `defaultImage`.
 * Added Missing Image Handling in `TextureManager.js`. In the game `config`, set `missingImage` to `null` to ignore loading the `missingImage`.
