@@ -28,6 +28,8 @@ var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
  * It will affect all textured objects with lighting enabled
  * (technically, all objects that use the `BatchHandlerQuadLight` RenderNode).
  *
+ * Alternatively, you can create a custom RenderNode that uses this handler.
+ *
  * @class BatchHandlerQuadLightShadow
  * @extends Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLight
  * @memberof Phaser.Renderer.WebGL.RenderNodes

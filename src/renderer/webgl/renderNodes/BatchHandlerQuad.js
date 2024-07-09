@@ -38,7 +38,7 @@ var BatchHandlerQuad = new Class({
      * The default configuration object for this handler.
      * This is merged with the `config` object passed in the constructor.
      *
-     * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandler#defaultConfig
+     * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#defaultConfig
      * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
      * @since 3.90.0
      */
@@ -85,7 +85,7 @@ var BatchHandlerQuad = new Class({
      * repeated vertices form degenerate triangles to connect the quads
      * without being drawn.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandler#_generateElementIndices
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#_generateElementIndices
      * @since 3.90.0
      * @private
      * @param {number} instances - The number of instances to define.
@@ -172,7 +172,7 @@ var BatchHandlerQuad = new Class({
     /**
      * Called at the beginning of the `run` method.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandler#onRunBegin
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#onRunBegin
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
@@ -204,7 +204,7 @@ var BatchHandlerQuad = new Class({
      * This method is called automatically, by either this node or the manager,
      * when the batch is full, or when something else needs to be rendered.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandler#run
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#run
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
@@ -263,7 +263,7 @@ var BatchHandlerQuad = new Class({
      * - Top-right
      * - Bottom-right
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandler#batch
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#batch
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} currentContext - The current drawing context.
      * @param {Phaser.Renderer.WebGL.WebGLTextureWrapper} glTexture - The texture to render.
@@ -378,7 +378,7 @@ var BatchHandlerQuad = new Class({
      * Push the current batch entry to the batch entry list,
      * and create a new batch entry for future use.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandler#pushCurrentBatchEntry
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#pushCurrentBatchEntry
      * @since 3.90.0
      */
     pushCurrentBatchEntry: function ()
