@@ -8,7 +8,6 @@ var AnimationState = require('../../animations/AnimationState');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
-var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
 var RopeRender = require('./RopeRender');
 var Vector2 = require('../../math/Vector2');
 
@@ -38,8 +37,8 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNode
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -66,8 +65,8 @@ var Rope = new Class({
         Components.Depth,
         Components.Flip,
         Components.Mask,
-        Components.Pipeline,
         Components.PostPipeline,
+        Components.RenderNode,
         Components.Size,
         Components.Texture,
         Components.Transform,
@@ -277,7 +276,7 @@ var Rope = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
-        this.initPipeline(PIPELINE_CONST.ROPE_PIPELINE);
+        this.initRenderNodes('Rope');
         this.initPostPipeline();
 
         if (Array.isArray(points))

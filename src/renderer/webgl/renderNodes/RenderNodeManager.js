@@ -15,11 +15,13 @@ var DefaultImageNodes = require('./defaults/DefaultImageNodes');
 var DefaultNineSliceNodes = require('./defaults/DefaultNineSliceNodes');
 var DefaultParticleEmitterNodes = require('./defaults/DefaultParticleEmitterNodes');
 var DefaultPointLightNodes = require('./defaults/DefaultPointLightNodes');
+var DefaultRopeNodes = require('./defaults/DefaultRopeNodes');
 
 var BatchHandlerPointLight = require('./BatchHandlerPointLight');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
 var BatchHandlerQuadLightShadow = require('./BatchHandlerQuadLightShadow');
+var BatchHandlerStrip = require('./BatchHandlerStrip');
 var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
 var BatchHandlerTriFlatLight = require('./BatchHandlerTriFlatLight');
 var Camera = require('./Camera');
@@ -107,7 +109,8 @@ var RenderNodeManager = new Class({
             Image: DefaultImageNodes,
             NineSlice: DefaultNineSliceNodes,
             ParticleEmitter: DefaultParticleEmitterNodes,
-            PointLight: DefaultPointLightNodes
+            PointLight: DefaultPointLightNodes,
+            Rope: DefaultRopeNodes
         };
 
         /**
@@ -142,6 +145,7 @@ var RenderNodeManager = new Class({
             BatchHandlerPointLight: BatchHandlerPointLight,
             BatchHandlerQuad: BatchHandlerQuad,
             BatchHandlerQuadLight: BatchHandlerQuadLight,
+            BatchHandlerStrip: BatchHandlerStrip,
             BatchHandlerTriFlat: BatchHandlerTriFlat,
             BatchHandlerTriFlatLight: BatchHandlerTriFlatLight,
             Camera: Camera,
