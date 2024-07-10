@@ -202,6 +202,14 @@ var BatchHandlerStrip = new Class({
             debugVerts = [];
         }
 
+        var a = calcMatrix.a;
+        var b = calcMatrix.b;
+        var c = calcMatrix.c;
+        var d = calcMatrix.d;
+        var e = calcMatrix.e;
+        var f = calcMatrix.f;
+        var cameraAlpha = drawingContext.camera.alpha;
+
         var meshVerticesLength = vertices.length;
 
         for (var i = 0; i < meshVerticesLength; i += 2)
@@ -209,8 +217,8 @@ var BatchHandlerStrip = new Class({
             var x = vertices[i];
             var y = vertices[i + 1];
             
-            var tx = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
-            var ty = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+            var tx = x * a + y * c + e;
+            var ty = x * b + y * d + f;
 
             if (roundPixels)
             {
@@ -226,13 +234,17 @@ var BatchHandlerStrip = new Class({
             vertexViewF32[vertexOffset32++] = tintFill;
             vertexViewU32[vertexOffset32++] = getTint(
                 colors[i / 2],
-                drawingContext.camera.alpha * (alphas[i / 2] * alpha)
+                cameraAlpha * (alphas[i / 2] * alpha)
             );
 
-            if (repeatFirstVertex && i === 0)
+            if (repeatFirstVertex)
             {
                 // Repeat the first vertex of the strip.
                 i -= 2;
+
+                // Increment the instance count.
+                this.instanceCount++;
+                this.currentBatchEntry.count++;
 
                 repeatFirstVertex = false;
             }
@@ -241,7 +253,7 @@ var BatchHandlerStrip = new Class({
                 debugVerts.push(tx, ty);
             }
 
-            if (i % 4 === 2 || i === -2)
+            if (i % 4 === 2)
             {
                 // Every 2 vertices is an instance.
 
