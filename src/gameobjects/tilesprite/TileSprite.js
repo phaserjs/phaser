@@ -120,8 +120,8 @@ var TileSprite = new Class({
 
         if (!width || !height)
         {
-            width = displayFrame.width;
-            height = displayFrame.height;
+            width = width ? width : displayFrame.width;
+            height = height ? height : displayFrame.height;
         }
         else
         {
