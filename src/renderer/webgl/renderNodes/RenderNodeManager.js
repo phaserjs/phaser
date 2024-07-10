@@ -16,6 +16,7 @@ var DefaultNineSliceNodes = require('./defaults/DefaultNineSliceNodes');
 var DefaultParticleEmitterNodes = require('./defaults/DefaultParticleEmitterNodes');
 var DefaultPointLightNodes = require('./defaults/DefaultPointLightNodes');
 var DefaultRopeNodes = require('./defaults/DefaultRopeNodes');
+var DefaultTilemapLayerNodes = require('./defaults/DefaultTilemapLayerNodes');
 
 var BatchHandlerPointLight = require('./BatchHandlerPointLight');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
@@ -37,6 +38,7 @@ var SubmitterQuad = require('./submitter/SubmitterQuad');
 var SubmitterQuadLight = require('./submitter/SubmitterQuadLight');
 var TexturerImage = require('./texturer/TexturerImage');
 var TransformerImage = require('./transformer/TransformerImage');
+var TransformerTile = require('./transformer/TransformerTile');
 var YieldContext = require('./YieldContext');
 
 /**
@@ -110,7 +112,8 @@ var RenderNodeManager = new Class({
             NineSlice: DefaultNineSliceNodes,
             ParticleEmitter: DefaultParticleEmitterNodes,
             PointLight: DefaultPointLightNodes,
-            Rope: DefaultRopeNodes
+            Rope: DefaultRopeNodes,
+            TilemapLayer: DefaultTilemapLayerNodes
         };
 
         /**
@@ -161,6 +164,7 @@ var RenderNodeManager = new Class({
             SubmitterQuadLight: SubmitterQuadLight,
             TexturerImage: TexturerImage,
             TransformerImage: TransformerImage,
+            TransformerTile: TransformerTile,
             YieldContext: YieldContext
         };
 

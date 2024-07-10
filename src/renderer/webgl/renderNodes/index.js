@@ -31,6 +31,7 @@ var RenderNodes = {
     SubmitterQuadLight: require('./submitter/SubmitterQuadLight'),
     TexturerImage: require('./texturer/TexturerImage'),
     TransformerImage: require('./transformer/TransformerImage'),
+    TransformerTile: require('./transformer/TransformerTile'),
     YieldContext: require('./YieldContext')
 };
 

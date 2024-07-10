@@ -73,7 +73,7 @@ var SubmitterQuad = new Class({
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent matrix of the GameObject.
-     * @param {number} [elementIndex] - The index of the element within the game object. This is used for objects that consist of multiple quads.
+     * @param {object} [element] - The specific element within the game object. This is used for objects that consist of multiple quads.
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode|Omit<Phaser.Renderer.WebGL.RenderNodes.TexturerImage, 'run'>} texturerNode - The texturer node used to texture the GameObject. You may pass a texturer node or an object containing equivalent data without a `run` method.
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode|{ quad: Float32Array }} transformerNode - The transformer node used to transform the GameObject. You may pass a transformer node or an object with a `quad` property.
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode|Omit<Phaser.Renderer.WebGL.RenderNodes.RenderNode, 'run'>} [tinterNode] - The tinter node used to tint the GameObject. You may pass a tinter node or an object containing equivalent data without a `run` method. If omitted, Image-style tinting will be used.
@@ -82,7 +82,7 @@ var SubmitterQuad = new Class({
         drawingContext,
         gameObject,
         parentMatrix,
-        elementIndex,
+        element,
         texturerNode,
         transformerNode,
         tinterNode
@@ -95,17 +95,17 @@ var SubmitterQuad = new Class({
 
         if (texturerNode.run)
         {
-            texturerNode.run(drawingContext, gameObject, elementIndex);
+            texturerNode.run(drawingContext, gameObject, element);
         }
         if (transformerNode.run)
         {
-            transformerNode.run(drawingContext, gameObject, parentMatrix, elementIndex, texturerNode);
+            transformerNode.run(drawingContext, gameObject, parentMatrix, element, texturerNode);
         }
         if (tinterNode)
         {
             if (tinterNode.run)
             {
-                tinterNode.run(drawingContext, gameObject, elementIndex);
+                tinterNode.run(drawingContext, gameObject, element);
             }
             tintFill = tinterNode.tintFill;
             tintTopLeft = tinterNode.tintTopLeft;

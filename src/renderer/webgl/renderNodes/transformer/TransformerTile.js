@@ -11,9 +11,9 @@ var RenderNode = require('../RenderNode');
 
 /**
  * @classdesc
- * A RenderNode which handles transformation data for a single Image-like GameObject.
+ * A RenderNode which handles transformation data for a single Tile within a TilemapLayer.
  *
- * @class TransformerImage
+ * @class TransformerTile
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
  * @since 3.90.0
@@ -21,10 +21,10 @@ var RenderNode = require('../RenderNode');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {object} [config] - The configuration object for this RenderNode.
  */
-var TransformerImage = new Class({
+var TransformerTile = new Class({
     Extends: RenderNode,
 
-    initialize: function TransformerImage (manager, config)
+    initialize: function TransformerTile (manager, config)
     {
         config = Merge(config || {}, this.defaultConfig);
 
@@ -33,7 +33,7 @@ var TransformerImage = new Class({
         /**
          * The matrix used to store the final quad data for rendering.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerImage#quad
+         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerTile#quad
          * @type {Float32Array}
          * @since 3.90.0
          */
@@ -42,7 +42,7 @@ var TransformerImage = new Class({
         /**
          * The matrix used internally to compute camera transforms.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerImage#_camMatrix
+         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerTile#_camMatrix
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.90.0
          * @private
@@ -52,7 +52,7 @@ var TransformerImage = new Class({
         /**
          * The matrix used internally to compute sprite transforms.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerImage#_spriteMatrix
+         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerTile#_spriteMatrix
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.90.0
          * @private
@@ -62,7 +62,7 @@ var TransformerImage = new Class({
         /**
          * The matrix used internally to compute the final transform.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerImage#_calcMatrix
+         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerTile#_calcMatrix
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.90.0
          * @private
@@ -71,14 +71,14 @@ var TransformerImage = new Class({
     },
 
     defaultConfig: {
-        name: 'TransformerImage',
+        name: 'TransformerTile',
         role: 'Transformer'
     },
 
     /**
      * Stores the transform data for rendering.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.TransformerImage#run
+     * @method Phaser.Renderer.WebGL.RenderNodes.TransformerTile#run
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
@@ -90,6 +90,86 @@ var TransformerImage = new Class({
     {
         this.onRunBegin(drawingContext);
 
+
+
+
+
+
+
+
+        var camera = drawingContext.camera;
+        var calcMatrix = this._calcMatrix;
+        var spriteMatrix = this._spriteMatrix;
+
+        // camMatrix will not be mutated when working with tiles,
+        // so we just take a reference.
+        var camMatrix = camera.matrix;
+
+        var frameWidth = texturerNode.frameWidth;
+        var frameHeight = texturerNode.frameHeight;
+
+        var width = frameWidth;
+        var height = frameHeight;
+
+        var halfWidth = frameWidth / 2;
+        var halfHeight = frameHeight / 2;
+
+        var sx = gameObject.scaleX;
+        var sy = gameObject.scaleY;
+
+        var tileset = gameObject.gidMap[element.index];
+
+        // TODO: Is the tileset missing?
+
+        var tOffsetX = tileset.tileOffset.x;
+        var tOffsetY = tileset.tileOffset.y;
+
+        var srcX = gameObject.x + element.pixelX * sx + (halfWidth * sx - tOffsetX);
+        var srcY = gameObject.y + element.pixelY * sy + (halfHeight * sy - tOffsetY);
+
+        var x = - halfWidth;
+        var y = - halfHeight;
+
+        if (element.flipX)
+        {
+            width *= -1;
+            x += frameWidth;
+        }
+
+        if (element.flipY)
+        {
+            height *= -1;
+            x += frameHeight;
+        }
+
+        spriteMatrix.applyITRS(
+            srcX,
+            srcY,
+            element.rotation,
+            sx,
+            sy
+        );
+        spriteMatrix.e -= camera.scrollX * gameObject.scrollFactorX;
+        spriteMatrix.f -= camera.scrollY * gameObject.scrollFactorY;
+
+        // Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
+
+        calcMatrix.setQuad(
+            x,
+            y,
+            x + width,
+            y + height,
+            false,
+            this.quad
+        );
+
+
+
+
+
+
+/*
         var frame = texturerNode.frame;
         var uvSource = texturerNode.uvSource;
 
@@ -167,9 +247,9 @@ var TransformerImage = new Class({
             false,
             this.quad
         );
-
+*/
         this.onRunEnd(drawingContext);
     }
 });
 
-module.exports = TransformerImage;
+module.exports = TransformerTile;
