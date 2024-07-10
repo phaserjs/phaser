@@ -1137,6 +1137,11 @@ var InputPlugin = new Class({
 
         var list = this._drag[pointer.id];
 
+        if (list.length > 1)
+        {
+            list = list.slice(0);
+        }
+
         for (var i = 0; i < list.length; i++)
         {
             var gameObject = list[i];
@@ -1274,6 +1279,11 @@ var InputPlugin = new Class({
 
         var list = this._drag[pointer.id];
 
+        if (list.length > 1)
+        {
+            list = list.slice(0);
+        }
+
         for (var i = 0; i < list.length; i++)
         {
             var gameObject = list[i];
@@ -1400,6 +1410,11 @@ var InputPlugin = new Class({
     {
         //  5 = Pointer was actively dragging but has been released, notify draglist
         var list = this._drag[pointer.id];
+
+        if (list.length > 1)
+        {
+            list = list.slice(0);
+        }
 
         for (var i = 0; i < list.length; i++)
         {
