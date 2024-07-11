@@ -206,6 +206,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
         var prev;
         var offset = 0;
         var crs = [];
+        var currentY = words.length ? words[0].y : 0;
 
         for (i = 0; i < words.length; i++)
         {
@@ -247,6 +248,11 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
                 offset = 0;
                 prev = null;
+            }
+            else if (entry.y > currentY)
+            {
+                offset = 0;
+                currentY = entry.y;
             }
         }
 
