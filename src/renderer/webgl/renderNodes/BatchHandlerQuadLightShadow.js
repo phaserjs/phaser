@@ -35,8 +35,8 @@ var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
  * @since 3.90.0
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} manager - The WebGLRenderer instance that owns this handler.
- * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} config - The configuration object for this handler.
+ * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
+ * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this handler.
  */
 var BatchHandlerQuadLightShadow = new Class({
     Extends: BatchHandlerQuadLight,

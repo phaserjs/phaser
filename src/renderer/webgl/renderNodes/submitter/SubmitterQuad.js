@@ -32,7 +32,7 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * @param {object} [config] - The configuration object for this RenderNode.
  * @param {string} [config.name='SubmitterQuad'] - The name of this RenderNode.
  * @param {string} [config.role='Submitter'] - The expected role of this RenderNode.
- * @param {string} [config.batchHandler='BatchHandlerQuad'] - The key of the default batch handler node to use for this RenderNode. This should correspond to a node which extends `BatchHandlerQuad`.
+ * @param {string} [config.batchHandler='BatchHandler'] - The key of the default batch handler node to use for this RenderNode. This should correspond to a node which extends `BatchHandlerQuad`. It will be derived from the game object whenever the node runs.
  */
 var SubmitterQuad = new Class({
     Extends: RenderNode,
@@ -44,13 +44,13 @@ var SubmitterQuad = new Class({
         RenderNode.call(this, config.name, manager);
 
         /**
-         * The RenderNode used to render data.
+         * The key of the RenderNode used to render data.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad#batchHandler
-         * @type {Phaser.Renderer.WebGL.RenderNodes.BatchHandler}
+         * @type {string}
          * @since 3.90.0
          */
-        this.batchHandler = manager.getNode(config.batchHandler);
+        this.batchHandler = config.batchHandler;
     },
 
     /**
@@ -62,7 +62,7 @@ var SubmitterQuad = new Class({
     defaultConfig: {
         name: 'SubmitterQuad',
         role: 'Submitter',
-        batchHandler: 'BatchHandlerQuad'
+        batchHandler: 'BatchHandler'
     },
 
     /**
@@ -129,7 +129,10 @@ var SubmitterQuad = new Class({
         var u1 = uvSource.u1;
         var v1 = uvSource.v1;
 
-        this.batchHandler.batch(
+        (
+            gameObject.customRenderNodes[this.batchHandler] ||
+            gameObject.defaultRenderNodes[this.batchHandler]
+        ).batch(
             drawingContext,
 
             // Use `frame.source.glTexture` instead of `frame.glTexture`

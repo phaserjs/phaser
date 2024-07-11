@@ -8,7 +8,9 @@ var Map = require('../../../../structs/Map');
 
 var DefaultBitmapTextNodes = new Map([
     [ 'Submitter', 'SubmitterQuad' ],
-    [ 'SubmitterLight', 'SubmitterQuadLight' ]
+    [ 'SubmitterLight', 'SubmitterQuadLight' ],
+    [ 'BatchHandler', 'BatchHandlerQuad' ],
+    [ 'BatchHandlerLight', 'BatchHandlerQuadLight' ]
 ]);
 
 module.exports = DefaultBitmapTextNodes;

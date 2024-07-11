@@ -27,7 +27,7 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * @param {object} [config] - The configuration object for this RenderNode.
  * @param {string} [config.name='SubmitterQuadLight'] - The name of this RenderNode.
  * @param {string} [config.role='Submitter'] - The expected role of this RenderNode.
- * @param {string} [config.batchHandler='BatchHandlerQuadLight'] - The key of the default batch handler node to use for this RenderNode. This should correspond to a node which extends `BatchHandlerQuadLight`.
+ * @param {string} [config.batchHandler='BatchHandlerLight'] - The key of the default batch handler node to use for this RenderNode. This should correspond to a node which extends `BatchHandlerQuadLight`. It will be derived from the game object whenever the node runs.
  */
 var SubmitterQuadLight = new Class({
     Extends: SubmitterQuad,
@@ -42,7 +42,7 @@ var SubmitterQuadLight = new Class({
     defaultConfig: {
         name: 'SubmitterQuadLight',
         role: 'Submitter',
-        batchHandler: 'BatchHandlerQuadLight'
+        batchHandler: 'BatchHandlerLight'
     },
 
     /**
@@ -164,7 +164,10 @@ var SubmitterQuadLight = new Class({
         }
 
         // Batch the quad.
-        this.batchHandler.batch(
+        (
+            gameObject.customRenderNodes[this.batchHandler] ||
+            gameObject.defaultRenderNodes[this.batchHandler]
+        ).batch(
             drawingContext,
 
             // Use `frame.source.glTexture` instead of `frame.glTexture`
