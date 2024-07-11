@@ -566,9 +566,16 @@ var TileSprite = new Class({
 
         ctx.fillStyle = this.fillPattern;
 
-        var hypotenuse = Math.sqrt(width * width + height * height);
+        var scaledWidth = width / scaleX;
+        var scaledHeight = height / scaleY;
+        var hypotenuse = Math.sqrt(scaledWidth * scaledWidth + scaledHeight * scaledHeight);
 
-        ctx.fillRect(positionX - hypotenuse, positionY - hypotenuse, width / scaleX + 2 * hypotenuse, height / scaleY + 2 * hypotenuse);
+        ctx.fillRect(
+            positionX - hypotenuse,
+            positionY - hypotenuse,
+            2 * hypotenuse,
+            2 * hypotenuse
+        );
 
         ctx.restore();
 
