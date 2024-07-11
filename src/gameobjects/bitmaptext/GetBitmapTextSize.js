@@ -299,7 +299,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             }
 
             xAdvance = 0;
-            yAdvance = (lineHeight + lineSpacing) * currentLine;
+            yAdvance = (lineHeight + lineSpacing) * (currentLine + 1);
             lastGlyph = null;
 
             lineWidths[currentLine] = currentLineWidth;
