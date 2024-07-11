@@ -53,6 +53,7 @@
 * Resolved an issue in `GetBitmapTextSize.js` where an extra empty line was added when `setMaxWidth` was called, and the width of the line was less than a word. Previously, `yAdvance` was incorrectly incremented by `lineHeight + lineSpacing` for each word, leading to an unintended increase in vertical space. The correction now calculates `yAdvance` based on the `currentLine` index, ensuring that vertical spacing accurately reflects the number of lines. Fix #6807 (thanks @AlvaroNeuronup)
 * Fixed `Matter.World` bug where `group.length` returns `undefined`. Changed to `group.getLength()` to correctly return number of children in a group.
 * Fixed Group vs Group collisions failing when performing a bitwise `&` operation between `body1.collisionMask` and `body2.collisionCategory`. The default `collisionMask` value is changed to `2147483647` to correctly match any `collisionCategory`. Fix #6764 (thanks @codeimpossible)
+* Fixed `BitmapText` Line Wrapping Issue. Resolved an issue where adding a space character `' '` at the end of a line of text caused the following line of text to ignore line wrapping when using `setMaxWidth` on a `bitmapText`. Fix #6860 (thanks @bagyoni)
 
 ## Input Bug Fixes
 
