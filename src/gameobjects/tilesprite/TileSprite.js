@@ -150,6 +150,16 @@ var TileSprite = new Class({
         this._tileScale = new Vector2(1, 1);
 
         /**
+         * Internal tile rotation value.
+         *
+         * @name Phaser.GameObjects.TileSprite#_tileRotation
+         * @type {number}
+         * @private
+         * @since 3.90.0
+         */
+        this._tileRotation = 0;
+
+        /**
          * Whether the Tile Sprite has changed in some way, requiring an re-render of its tile texture.
          *
          * Such changes include the texture frame and scroll position of the Tile Sprite.
@@ -392,6 +402,23 @@ var TileSprite = new Class({
     },
 
     /**
+     * Sets {@link Phaser.GameObjects.TileSprite#tileRotation}.
+     *
+     * @method Phaser.GameObjects.TileSprite#setTileRotation
+     * @since 3.90.0
+     *
+     * @param {number} [radians=0] - The rotation of the tiling texture, in radians.
+     */
+    setTileRotation: function (radians)
+    {
+        if (radians === undefined) { radians = 0; }
+
+        this.tileRotation = radians;
+
+        return this;
+    },
+
+    /**
      * Sets {@link Phaser.GameObjects.TileSprite#tileScaleX} and {@link Phaser.GameObjects.TileSprite#tileScaleY}.
      *
      * @method Phaser.GameObjects.TileSprite#setTileScale
@@ -494,13 +521,15 @@ var TileSprite = new Class({
     updateCanvas: function ()
     {
         var canvas = this.canvas;
+        var width = this.width;
+        var height = this.height;
 
-        if (canvas.width !== this.width || canvas.height !== this.height)
+        if (canvas.width !== width || canvas.height !== height)
         {
-            canvas.width = this.width;
-            canvas.height = this.height;
+            canvas.width = width;
+            canvas.height = height;
 
-            this.frame.setSize(this.width, this.height);
+            this.frame.setSize(width, height);
             this.updateDisplayOrigin();
 
             this.dirty = true;
@@ -525,17 +554,21 @@ var TileSprite = new Class({
         var positionX = this._tilePosition.x;
         var positionY = this._tilePosition.y;
 
-        ctx.clearRect(0, 0, this.width, this.height);
+        ctx.clearRect(0, 0, width, height);
 
         ctx.save();
 
         ctx.scale(scaleX, scaleY);
 
+        ctx.rotate(this._tileRotation);
+
         ctx.translate(-positionX, -positionY);
 
         ctx.fillStyle = this.fillPattern;
 
-        ctx.fillRect(positionX, positionY, this.width / scaleX, this.height / scaleY);
+        var hypotenuse = Math.sqrt(width * width + height * height);
+
+        ctx.fillRect(positionX - hypotenuse, positionY - hypotenuse, width / scaleX + 2 * hypotenuse, height / scaleY + 2 * hypotenuse);
 
         ctx.restore();
 
@@ -620,6 +653,28 @@ var TileSprite = new Class({
             this.dirty = true;
         }
 
+    },
+
+    /**
+     * The rotation of the Tile Sprite texture, in radians.
+     *
+     * @name Phaser.GameObjects.TileSprite#tileRotation
+     * @type {number}
+     * @default 0
+     * @since 3.90.0
+     */
+    tileRotation: {
+            
+        get: function ()
+        {
+            return this._tileRotation;
+        },
+
+        set: function (radians)
+        {
+            this._tileRotation = radians;
+            this.dirty = true;
+        }
     },
 
     /**
