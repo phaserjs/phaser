@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var AnimationState = require('../../animations/AnimationState');
 var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
 var Components = require('../components');
@@ -260,12 +261,52 @@ var TileSprite = new Class({
          */
         this.fillPattern = null;
 
+        /**
+         * The Animation State component of this TileSprite.
+         *
+         * This component provides features to apply animations to this TileSprite.
+         * It is responsible for playing, loading, queuing animations for later playback,
+         * mixing between animations and setting the current animation frame to this Sprite.
+         *
+         * @name Phaser.GameObjects.TileSprite#anims
+         * @type {Phaser.Animations.AnimationState}
+         * @since 3.0.0
+         */
+        this.anims = new AnimationState(this);
+
         this.setTexture(textureKey, frameKey);
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
         this.initRenderNodes('TileSprite');
         this.initPostPipeline(true);
+    },
+
+    //  Overrides Game Object method
+    addedToScene: function ()
+    {
+        this.scene.sys.updateList.add(this);
+    },
+
+    //  Overrides Game Object method
+    removedFromScene: function ()
+    {
+        this.scene.sys.updateList.remove(this);
+    },
+
+    /**
+     * Update this TileSprite's animations.
+     *
+     * @method Phaser.GameObjects.TileSprite#preUpdate
+     * @protected
+     * @since 3.0.0
+     *
+     * @param {number} time - The current timestamp.
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
+     */
+    preUpdate: function (time, delta)
+    {
+        this.anims.update(time, delta);
     },
 
     /**
@@ -299,6 +340,18 @@ var TileSprite = new Class({
 
         this.dirty = true;
 
+        return this;
+    },
+
+    /**
+     * No-op method for compatibility with Animation.
+     *
+     * @method Phaser.GameObjects.TileSprite#setSizeToFrame
+     * @since 3.90.0
+     * @return {this} This Tile Sprite instance.
+     */
+    setSizeToFrame: function ()
+    {
         return this;
     },
 
@@ -379,7 +432,7 @@ var TileSprite = new Class({
      */
     updateTileTexture: function ()
     {
-        if (!this.dirty || !this.renderer || this.renderer.gl)
+        if (!this.renderer || this.renderer.gl)
         {
             return;
         }
@@ -519,6 +572,10 @@ var TileSprite = new Class({
         this.displayFrame = null;
 
         this.renderer = null;
+
+        this.anims.destroy();
+
+        this.anims = undefined;
     },
 
     /**
