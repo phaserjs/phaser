@@ -71,6 +71,33 @@ var BatchHandlerTileSprite = new Class({
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTileSprite#batch
      * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} currentContext - The current drawing context.
+     * @param {Phaser.Renderer.WebGL.WebGLTextureWrapper} glTexture - The texture to render.
+     * @param {number} x0 - The x-coordinate of the top-left corner.
+     * @param {number} y0 - The y-coordinate of the top-left corner.
+     * @param {number} x1 - The x-coordinate of the bottom-left corner.
+     * @param {number} y1 - The y-coordinate of the bottom-left corner.
+     * @param {number} x2 - The x-coordinate of the top-right corner.
+     * @param {number} y2 - The y-coordinate of the top-right corner.
+     * @param {number} x3 - The x-coordinate of the bottom-right corner.
+     * @param {number} y3 - The y-coordinate of the bottom-right corner.
+     * @param {number} texX - The left u coordinate (0-1).
+     * @param {number} texY - The top v coordinate (0-1).
+     * @param {number} texWidth - The width of the texture (0-1).
+     * @param {number} texHeight - The height of the texture (0-1).
+     * @param {number} u0 - The u coordinate of the distorted top-left corner.
+     * @param {number} v0 - The v coordinate of the distorted top-left corner.
+     * @param {number} u1 - The u coordinate of the distorted bottom-left corner.
+     * @param {number} v1 - The v coordinate of the distorted bottom-left corner.
+     * @param {number} u2 - The u coordinate of the distorted top-right corner.
+     * @param {number} v2 - The v coordinate of the distorted top-right corner.
+     * @param {number} u3 - The u coordinate of the distorted bottom-right corner.
+     * @param {number} v3 - The v coordinate of the distorted bottom-right corner.
+     * @param {number} tintFill - Whether to tint the fill color.
+     * @param {number} tintTL - The tint color for the top-left corner.
+     * @param {number} tintBL - The tint color for the bottom-left corner.
+     * @param {number} tintTR - The tint color for the top-right corner.
+     * @param {number} tintBR - The tint color for the bottom-right corner.
      */
     batch: function (
         currentContext,

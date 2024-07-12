@@ -8,7 +8,9 @@ var Map = require('../../../../structs/Map');
 
 var DefaultTileSpriteNodes = new Map([
     [ 'Submitter', 'SubmitterTileSprite' ],
+    [ 'SubmitterLight', 'SubmitterTileSpriteLight' ],
     [ 'BatchHandler', 'BatchHandlerTileSprite' ],
+    [ 'BatchHandlerLight', 'BatchHandlerTileSpriteLight' ],
     [ 'Transformer', 'TransformerTileSprite' ],
     [ 'Texturer', 'TexturerTileSprite' ]
 ]);

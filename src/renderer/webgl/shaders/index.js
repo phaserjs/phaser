@@ -51,6 +51,8 @@ module.exports = {
     PostFXFrag: require('./PostFX-frag.js'),
     QuadVert: require('./Quad-vert.js'),
     SingleFrag: require('./Single-frag.js'),
-    SingleVert: require('./Single-vert.js')
+    SingleVert: require('./Single-vert.js'),
+    TileSpriteLightFrag: require('./TileSpriteLight-frag.js'),
+    TileSpriteLightShadowFrag: require('./TileSpriteLightShadow-frag.js')
 
 };

@@ -10,6 +10,29 @@ var SubmitterQuad = require('./SubmitterQuad.js');
 
 var getTint = Utils.getTintAppendFloatAlpha;
 
+/**
+ * @classdesc
+ * The SubmitterTileSprite RenderNode submits data for rendering a single TileSprite GameObject.
+ * It uses a BatchHandler to render the TileSprite as part of a batch.
+ *
+ * This node receives the drawing context, game object, and parent matrix.
+ * It also receives the texturer, tinter, and transformer nodes
+ * from the node that invoked it.
+ * This allows the behavior to be configured by setting the appropriate nodes
+ * on the GameObject for individual tweaks, or on the invoking Renderer node
+ * for global changes.
+ *
+ * @class SubmitterTileSprite
+ * @memberof Phaser.Renderer.WebGL.RenderNodes
+ * @constructor
+ * @since 3.90.0
+ * @extends Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad
+ * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
+ * @param {object} [config] - The configuration object for this RenderNode.
+ * @param {string} [config.name='SubmitterTileSprite'] - The name of this RenderNode.
+ * @param {string} [config.role='Submitter'] - The expected role of this RenderNode.
+ * @param {string} [config.batchHandler='BatchHandler'] - The key of the default batch handler node to use for this RenderNode. This should correspond to a node which extends `BatchHandlerTileSprite`. It will be derived from the game object whenever the node runs.
+ */
 var SubmitterTileSprite = new Class({
     Extends: SubmitterQuad,
 

@@ -25,6 +25,8 @@ var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
 var BatchHandlerQuadLightShadow = require('./BatchHandlerQuadLightShadow');
 var BatchHandlerStrip = require('./BatchHandlerStrip');
 var BatchHandlerTileSprite = require('./BatchHandlerTileSprite');
+var BatchHandlerTileSpriteLight = require('./BatchHandlerTileSpriteLight');
+var BatchHandlerTileSpriteLightShadow = require('./BatchHandlerTileSpriteLightShadow');
 var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
 var BatchHandlerTriFlatLight = require('./BatchHandlerTriFlatLight');
 var Camera = require('./Camera');
@@ -39,6 +41,7 @@ var StrokePath = require('./StrokePath');
 var SubmitterQuad = require('./submitter/SubmitterQuad');
 var SubmitterQuadLight = require('./submitter/SubmitterQuadLight');
 var SubmitterTileSprite = require('./submitter/SubmitterTileSprite');
+var SubmitterTileSpriteLight = require('./submitter/SubmitterTileSpriteLight');
 var TexturerImage = require('./texturer/TexturerImage');
 var TexturerTileSprite = require('./texturer/TexturerTileSprite');
 var TransformerImage = require('./transformer/TransformerImage');
@@ -154,8 +157,11 @@ var RenderNodeManager = new Class({
             BatchHandlerPointLight: BatchHandlerPointLight,
             BatchHandlerQuad: BatchHandlerQuad,
             BatchHandlerQuadLight: BatchHandlerQuadLight,
+            BatchHandlerQuadLightShadow: BatchHandlerQuadLightShadow,
             BatchHandlerStrip: BatchHandlerStrip,
             BatchHandlerTileSprite: BatchHandlerTileSprite,
+            BatchHandlerTileSpriteLight: BatchHandlerTileSpriteLight,
+            BatchHandlerTileSpriteLightShadow: BatchHandlerTileSpriteLightShadow,
             BatchHandlerTriFlat: BatchHandlerTriFlat,
             BatchHandlerTriFlatLight: BatchHandlerTriFlatLight,
             Camera: Camera,
@@ -170,6 +176,7 @@ var RenderNodeManager = new Class({
             SubmitterQuad: SubmitterQuad,
             SubmitterQuadLight: SubmitterQuadLight,
             SubmitterTileSprite: SubmitterTileSprite,
+            SubmitterTileSpriteLight: SubmitterTileSpriteLight,
             TexturerImage: TexturerImage,
             TexturerTileSprite: TexturerTileSprite,
             TransformerImage: TransformerImage,
@@ -181,6 +188,7 @@ var RenderNodeManager = new Class({
         if (game.config.selfShadow)
         {
             this._nodeConstructors.BatchHandlerQuadLight = BatchHandlerQuadLightShadow;
+            this._nodeConstructors.BatchHandlerTileSpriteLight = BatchHandlerTileSpriteLightShadow;
         }
 
         /**

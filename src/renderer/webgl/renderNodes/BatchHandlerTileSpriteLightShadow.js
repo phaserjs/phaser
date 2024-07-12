@@ -5,32 +5,17 @@
  */
 
 var Class = require('../../../utils/Class');
-var LightShaderSourceFS = require('../shaders/LightShadow-frag');
-var ShaderSourceVS = require('../shaders/Multi-vert');
-var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
+var LightShaderSourceFS = require('../shaders/TileSpriteLightShadow-frag');
+var ShaderSourceVS = require('../shaders/MultiTileSprite-vert');
+var BatchHandlerTileSpriteLight = require('./BatchHandlerTileSpriteLight');
 
 /**
  * @classdesc
- * The BatchHandlerQuadLightShadow is a special type of BatchHandlerQuadLight
- * that supports self-shadowing based on the diffuse map.
+ * The BatchHandlerTileSpriteLightShadow works like
+ * @see Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTileSpriteLight
+ * to render TileSprite GameObjects with self-shadowing lighting.
  *
- * The shader uses the diffuse map to determine the concavity of the surface.
- * Darker areas are assumed to be more concave, thus they can only receive light
- * from a smaller range of angles. Light outside that range is cut off,
- * creating a shadow.
- *
- * Because most game art wasn't created with these characteristics in mind,
- * you may need to adjust the `diffuseFlatThreshold` and `penumbra` values
- * to get the desired effect.
- *
- * To use this RenderNode in your game, you must set the option
- * `render.selfShadow` to `true` in your game configuration.
- * It will affect all textured objects with lighting enabled
- * (technically, all objects that use the `BatchHandlerQuadLight` RenderNode).
- *
- * Alternatively, you can create a custom RenderNode that uses this handler.
- *
- * @class BatchHandlerQuadLightShadow
+ * @class BatchHandlerTileSpriteLightShadow
  * @extends Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLight
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
@@ -38,12 +23,12 @@ var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this handler.
  */
-var BatchHandlerQuadLightShadow = new Class({
-    Extends: BatchHandlerQuadLight,
+var BatchHandlerTileSpriteLightShadow = new Class({
+    Extends: BatchHandlerTileSpriteLight,
 
-    initialize: function BatchHandlerQuadLightShadow (manager, config)
+    initialize: function BatchHandlerTileSpriteLightShadow (manager, config)
     {
-        BatchHandlerQuadLight.call(this, manager, config);
+        BatchHandlerTileSpriteLight.call(this, manager, config);
 
         /**
          * The threshold at which the diffuse lighting will be considered flat.
@@ -54,7 +39,7 @@ var BatchHandlerQuadLightShadow = new Class({
          * a darker value, which is more likely to be considered flat.
          * You should adjust this value based on the art in your game.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLightShadow#diffuseFlatThreshold
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTileSpriteLightShadow#diffuseFlatThreshold
          * @type {number}
          * @default 1
          * @since 3.90.0
@@ -66,7 +51,7 @@ var BatchHandlerQuadLightShadow = new Class({
          * This smooths the edge of self-shadowing.
          * A lower value will create a sharper but more jagged shadow.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLightShadow#penumbra
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTileSpriteLightShadow#penumbra
          * @type {number}
          * @default 0.5
          * @since 3.90.0
@@ -75,15 +60,15 @@ var BatchHandlerQuadLightShadow = new Class({
     },
 
     /**
-     * The default configuration settings for BatchHandlerQuadLightShadow.
+     * The default configuration settings for BatchHandlerTileSpriteLightShadow.
      *
-     * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLightShadow#defaultConfig
+     * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTileSpriteLightShadow#defaultConfig
      * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
      * @since 3.90.0
      * @readonly
      */
     defaultConfig: {
-        name: 'BatchHandlerQuadLightShadow',
+        name: 'BatchHandlerTileSpriteLightShadow',
         verticesPerInstance: 4,
         indicesPerInstance: 6,
         vertexSource: ShaderSourceVS,
@@ -98,6 +83,10 @@ var BatchHandlerQuadLightShadow = new Class({
                 {
                     name: 'inTexCoord',
                     size: 2
+                },
+                {
+                    name: 'inFrame',
+                    size: 4
                 },
                 {
                     name: 'inTintEffect'
@@ -115,13 +104,13 @@ var BatchHandlerQuadLightShadow = new Class({
     /**
      * Called at the start of the run loop.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuadLightShadow#onRunBegin
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTileSpriteLightShadow#onRunBegin
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.WebGLPipeline} drawingContext - The drawing context.
      */
     onRunBegin: function (drawingContext)
     {
-        BatchHandlerQuadLight.prototype.onRunBegin.call(this, drawingContext);
+        BatchHandlerTileSpriteLight.prototype.onRunBegin.call(this, drawingContext);
 
         var program = this.program;
 
@@ -137,4 +126,4 @@ var BatchHandlerQuadLightShadow = new Class({
     }
 });
 
-module.exports = BatchHandlerQuadLightShadow;
+module.exports = BatchHandlerTileSpriteLightShadow;

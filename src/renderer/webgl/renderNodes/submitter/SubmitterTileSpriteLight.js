@@ -13,25 +13,24 @@ var getTint = Utils.getTintAppendFloatAlpha;
 
 /**
  * @classdesc
- * The SubmitterQuadLight RenderNode submits data for rendering
- * a single Image-like GameObject with lighting information.
- * It uses a BatchHandler to render the image as part of a batch.
+ * The SubmitterTileSpriteLight RenderNode submits data for rendering
+ * a single TileSprite GameObject with lighting information.
  *
- * @class SubmitterQuadLight
+ * @class SubmitterTileSpriteLight
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
  * @since 3.90.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {object} [config] - The configuration object for this RenderNode.
- * @param {string} [config.name='SubmitterQuadLight'] - The name of this RenderNode.
+ * @param {string} [config.name='SubmitterTileSpriteLight'] - The name of this RenderNode.
  * @param {string} [config.role='Submitter'] - The expected role of this RenderNode.
  * @param {string} [config.batchHandler='BatchHandlerLight'] - The key of the default batch handler node to use for this RenderNode. This should correspond to a node which extends `BatchHandlerQuadLight`. It will be derived from the game object whenever the node runs.
  */
-var SubmitterQuadLight = new Class({
+var SubmitterTileSpriteLight = new Class({
     Extends: SubmitterQuad,
 
-    initialize: function SubmitterQuadLight (manager, config)
+    initialize: function SubmitterTileSpriteLight (manager, config)
     {
         config = Merge(config || {}, this.defaultConfig);
 
@@ -39,7 +38,7 @@ var SubmitterQuadLight = new Class({
     },
 
     defaultConfig: {
-        name: 'SubmitterQuadLight',
+        name: 'SubmitterTileSpriteLight',
         role: 'Submitter',
         batchHandler: 'BatchHandlerLight'
     },
@@ -47,7 +46,7 @@ var SubmitterQuadLight = new Class({
     /**
      * Submit data for rendering.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.SubmitterQuadLight#run
+     * @method Phaser.Renderer.WebGL.RenderNodes.SubmitterTileSpriteLight#run
      * @since 3.90.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
@@ -112,12 +111,14 @@ var SubmitterQuadLight = new Class({
             tintBottomRight = getTint(gameObject.tintBottomRight, cameraAlpha * gameObject._alphaBR);
         }
 
+        var frame = texturerNode.frame;
         var quad = transformerNode.quad;
-        var uvSource = texturerNode.uvSource;
+        var uvSource = frame;
         var u0 = uvSource.u0;
         var v0 = uvSource.v0;
         var u1 = uvSource.u1;
         var v1 = uvSource.v1;
+        var uvQuad = texturerNode.uvMatrix.quad;
 
         // Get normal map.
         if (!normalMap)
@@ -171,7 +172,7 @@ var SubmitterQuadLight = new Class({
 
             // Use `frame.source.glTexture` instead of `frame.glTexture`
             // to avoid unnecessary getter function calls.
-            texturerNode.frame.source.glTexture,
+            frame.source.glTexture,
             normalMap,
 
             // Normal map rotation
@@ -186,6 +187,12 @@ var SubmitterQuadLight = new Class({
             // Texture coordinates in X, Y, Width, Height:
             u0, v0, u1 - u0, v1 - v0,
 
+            // Dynamic UV coordinates in order TL, BL, TR, BR:
+            uvQuad[0], uvQuad[1],
+            uvQuad[2], uvQuad[3],
+            uvQuad[6], uvQuad[7],
+            uvQuad[4], uvQuad[5],
+
             tintFill,
 
             // Tint colors in order TL, BL, TR, BR:
@@ -196,4 +203,4 @@ var SubmitterQuadLight = new Class({
     }
 });
 
-module.exports = SubmitterQuadLight;
+module.exports = SubmitterTileSpriteLight;

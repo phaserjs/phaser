@@ -49,6 +49,7 @@ var _FLAG = 8; // 1000
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.PostPipeline
@@ -79,6 +80,7 @@ var TileSprite = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
         Components.PostPipeline,
