@@ -165,6 +165,26 @@ var Vector3 = new Class({
     },
 
     /**
+     * Subtracts the two given Vector3s and sets the results into this Vector3.
+     *
+     * @method Phaser.Math.Vector3#subVectors
+     * @since 3.85.0
+     *
+     * @param {Phaser.Math.Vector3} a - The first Vector to sub.
+     * @param {Phaser.Math.Vector3} b - The second Vector to sub.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    subVectors: function (a, b)
+    {
+        this.x = a.x - b.x;
+        this.y = a.y - b.y;
+        this.z = a.z - b.z;
+
+        return this;
+    },
+
+    /**
      * Calculate the cross (vector) product of two given Vectors.
      *
      * @method Phaser.Math.Vector3#crossVectors
