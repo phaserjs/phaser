@@ -104,68 +104,169 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
     var characters = [];
     var current = null;
 
-    // check for maxWidth > 0 and insert line breaks as needed when text is wider than maxWidth
-    
-    var getCharWidth = function (char)
-    {
-        var charCode = char.charCodeAt(0);
-        var charGlyph = chars[charCode];
-        return charGlyph ? charGlyph.xOffset + charGlyph.xAdvance : 0;
-    };
-
     //  Scan for breach of maxWidth and insert carriage-returns
     if (maxWidth > 0)
     {
-        var formattedText = '';
-        var word = '';
-        var wordWidth = 0;
-        
-        for (i = 0; i < text.length; i++)
+        for (i = 0; i < textLength; i++)
         {
             charCode = text.charCodeAt(i);
-            
-            var isSpace = charCode === wordWrapCharCode;
-            var isLineFeed = charCode === 10;
 
-            // If the character is a space or the end of the text, check the word's width
-            if (isSpace || i === text.length - 1)
+            if (charCode === 10)
             {
-                // Add the last character if it's not a space
-                if (!isSpace)
+                if (current !== null)
                 {
-                    word += text[i];
+                    words.push({
+                        word: current.word,
+                        i: current.i,
+                        x: current.x * sx,
+                        y: current.y * sy,
+                        w: current.w * sx,
+                        h: current.h * sy,
+                        cr: true
+                    });
+
+                    current = null;
                 }
 
-                // Check if adding this word exceeds the maxWidth
-                if (xAdvance + wordWidth > maxWidth)
-                {
-                    formattedText += '\n';
-                    xAdvance = 0;
-                    yAdvance += lineHeight + lineSpacing;
-                }
-    
-                formattedText += word + (isSpace ? ' ' : '');
-                xAdvance += wordWidth + (isSpace ? letterSpacing * sx : 0);
-
-                word = '';
-                wordWidth = 0;
-            }
-            else if (isLineFeed)
-            {
-                formattedText += word + '\n';
                 xAdvance = 0;
                 yAdvance += lineHeight + lineSpacing;
-                word = '';
-                wordWidth = 0;
+                
+                lastGlyph = null;
+
+                continue;
             }
-            else // If the character is not a space or line feed, add it to the current word
+
+            glyph = chars[charCode];
+
+            if (!glyph)
             {
-                word += text[i];
-                wordWidth += getCharWidth(text[i]) * sx;
+                continue;
+            }
+
+            if (lastGlyph !== null)
+            {
+                var glyphKerningOffset = glyph.kerning[lastCharCode];
+            }
+
+            if (charCode === wordWrapCharCode)
+            {
+                if (current !== null)
+                {
+                    words.push({
+                        word: current.word,
+                        i: current.i,
+                        x: current.x * sx,
+                        y: current.y * sy,
+                        w: current.w * sx,
+                        h: current.h * sy,
+                        cr: false
+                    });
+
+                    current = null;
+                }
+            }
+            else
+            {
+                if (current === null)
+                {
+                    //  We're starting a new word, recording the starting index, etc
+                    current = { word: '', i: i, x: xAdvance, y: yAdvance, w: 0, h: lineHeight, cr: false };
+                }
+
+                current.word = current.word.concat(text[i]);
+                current.w += glyph.xOffset + glyph.xAdvance + ((glyphKerningOffset !== undefined) ? glyphKerningOffset : 0);
+            }
+
+            xAdvance += glyph.xAdvance + letterSpacing;
+            lastGlyph = glyph;
+            lastCharCode = charCode;
+        }
+
+        //  Last word
+        if (current !== null)
+        {
+            words.push({
+                word: current.word,
+                i: current.i,
+                x: current.x * sx,
+                y: current.y * sy,
+                w: current.w * sx,
+                h: current.h * sy,
+                cr: false
+            });
+        }
+
+        //  Reset for the next loop
+        xAdvance = 0;
+        yAdvance = 0;
+        lastGlyph = null;
+        lastCharCode = 0;
+
+        //  Loop through the words array and see if we've got any > maxWidth
+        var prev;
+        var offset = 0;
+        var crs = [];
+        var currentY = words.length ? words[0].y : 0;
+
+        for (i = 0; i < words.length; i++)
+        {
+            var entry = words[i];
+            var left = entry.x;
+            var right = entry.x + entry.w;
+
+            if (prev)
+            {
+                var diff = left - (prev.x + prev.w);
+
+                offset = left - (diff + prev.w);
+
+                prev = null;
+            }
+
+            var checkLeft = left - offset;
+            var checkRight = right - offset;
+
+            if (checkLeft > maxWidth || checkRight > maxWidth)
+            {
+                crs.push(entry.i - 1);
+
+                if (entry.cr)
+                {
+                    crs.push(entry.i + entry.word.length);
+
+                    offset = 0;
+                    prev = null;
+                }
+                else
+                {
+                    prev = entry;
+                }
+            }
+            else if (entry.cr)
+            {
+                crs.push(entry.i + entry.word.length);
+
+                offset = 0;
+                prev = null;
+            }
+            else if (entry.y > currentY)
+            {
+                offset = 0;
+                currentY = entry.y;
             }
         }
 
-        text = formattedText;
+        var stringInsert = function (str, index, value)
+        {
+            return str.substr(0, index) + value + str.substr(index + 1);
+        };
+
+        for (i = crs.length - 1; i >= 0; i--)
+        {
+            // eslint-disable-next-line quotes
+            text = stringInsert(text, crs[i], "\n");
+        }
+
         out.wrappedText = text;
 
         textLength = text.length;
@@ -173,10 +274,6 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
         //  Recalculated in the next loop
         words = [];
         current = null;
-        xAdvance = 0;
-        yAdvance = 0;
-        lastGlyph = null;
-        lastCharCode = 0;
     }
 
     var charIndex = 0;
