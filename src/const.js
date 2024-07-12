@@ -20,7 +20,7 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.90.0 Beam TP2',
+    VERSION: '3.90.0 Beam TP3',
 
     BlendModes: require('./renderer/BlendModes'),
 
