@@ -39,6 +39,7 @@
 * `ScaleManager` listeners includes checks for the `screen.orientation` object and adds/removes a `change` eventListener  method to handle screen orientation changes on mobile devices. The `orientationchange` event is still maintained for backwards compatibility. Fix #6837 (thanks @rexrainbow)
 * When creating a new `TileSprite`, setting either `width` or `height` to `0` results in both values being set to the `displayFrame.width` and `displayFrame.height`. The updated logic now checks for `width` and `height` separately. If `width` is `0`, it is set to `displayFrame.width`. If `height` is `0`, it is set to `displayFrame.height`. Fix #6857 (thanks @GaryStanton)
 * Updated `GetBitmapTextSize` with improved `maxWidth` calculations for wrapped text.
+* `Vector3.subVectors` is a new method that will take 2 Vector3s, subtract them from each other and store the result in the Vector3 it was called on.
 
 # Bug Fixes
 
@@ -56,6 +57,7 @@
 * Resolved an issue in `BitmapText` where adding a space character `' '` at the end of a line did not correctly align the vertical position of the new line. The updated calculation now correctly accounts for both line height and line spacing. Fix #6717 (thanks @wooseok123)
 * Resolved an issue in `BitmapText` where an extra empty line was added when `setMaxWidth` was called, and the width of the line was less than a word. Previously, `yAdvance` was incorrectly incremented by `lineHeight + lineSpacing` for each word, leading to an unintended increase in vertical space. The correction now calculates `yAdvance` based on the `currentLine` index, ensuring that vertical spacing accurately reflects the number of lines. Fix #6807 (thanks @AlvaroNeuronup)
 * Resolved an issue in `BitmapText` where adding a space character `' '` at the end of a line caused the following line of to ignore line wrapping when using `setMaxWidth`. Fix #6860 (thanks @bagyoni)
+* The `Matrix4.lookAtRH` method would fail because it called two missing Vector3 methods.
 
 ## Input Bug Fixes
 
