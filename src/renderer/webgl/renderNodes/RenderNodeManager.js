@@ -17,12 +17,14 @@ var DefaultParticleEmitterNodes = require('./defaults/DefaultParticleEmitterNode
 var DefaultPointLightNodes = require('./defaults/DefaultPointLightNodes');
 var DefaultRopeNodes = require('./defaults/DefaultRopeNodes');
 var DefaultTilemapLayerNodes = require('./defaults/DefaultTilemapLayerNodes');
+var DefaultTileSpriteNodes = require('./defaults/DefaultTileSpriteNodes');
 
 var BatchHandlerPointLight = require('./BatchHandlerPointLight');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
 var BatchHandlerQuadLightShadow = require('./BatchHandlerQuadLightShadow');
 var BatchHandlerStrip = require('./BatchHandlerStrip');
+var BatchHandlerTileSprite = require('./BatchHandlerTileSprite');
 var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
 var BatchHandlerTriFlatLight = require('./BatchHandlerTriFlatLight');
 var Camera = require('./Camera');
@@ -36,9 +38,12 @@ var RebindContext = require('./RebindContext');
 var StrokePath = require('./StrokePath');
 var SubmitterQuad = require('./submitter/SubmitterQuad');
 var SubmitterQuadLight = require('./submitter/SubmitterQuadLight');
+var SubmitterTileSprite = require('./submitter/SubmitterTileSprite');
 var TexturerImage = require('./texturer/TexturerImage');
+var TexturerTileSprite = require('./texturer/TexturerTileSprite');
 var TransformerImage = require('./transformer/TransformerImage');
 var TransformerTile = require('./transformer/TransformerTile');
+var TransformerTileSprite = require('./transformer/TransformerTileSprite');
 var YieldContext = require('./YieldContext');
 
 /**
@@ -113,7 +118,8 @@ var RenderNodeManager = new Class({
             ParticleEmitter: DefaultParticleEmitterNodes,
             PointLight: DefaultPointLightNodes,
             Rope: DefaultRopeNodes,
-            TilemapLayer: DefaultTilemapLayerNodes
+            TilemapLayer: DefaultTilemapLayerNodes,
+            TileSprite: DefaultTileSpriteNodes
         };
 
         /**
@@ -149,6 +155,7 @@ var RenderNodeManager = new Class({
             BatchHandlerQuad: BatchHandlerQuad,
             BatchHandlerQuadLight: BatchHandlerQuadLight,
             BatchHandlerStrip: BatchHandlerStrip,
+            BatchHandlerTileSprite: BatchHandlerTileSprite,
             BatchHandlerTriFlat: BatchHandlerTriFlat,
             BatchHandlerTriFlatLight: BatchHandlerTriFlatLight,
             Camera: Camera,
@@ -162,9 +169,12 @@ var RenderNodeManager = new Class({
             StrokePath: StrokePath,
             SubmitterQuad: SubmitterQuad,
             SubmitterQuadLight: SubmitterQuadLight,
+            SubmitterTileSprite: SubmitterTileSprite,
             TexturerImage: TexturerImage,
+            TexturerTileSprite: TexturerTileSprite,
             TransformerImage: TransformerImage,
             TransformerTile: TransformerTile,
+            TransformerTileSprite: TransformerTileSprite,
             YieldContext: YieldContext
         };
 

@@ -1,0 +1,16 @@
+/**
+ * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
+ * @copyright    2013-2024 Phaser Studio Inc.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Map = require('../../../../structs/Map');
+
+var DefaultTileSpriteNodes = new Map([
+    [ 'Submitter', 'SubmitterTileSprite' ],
+    [ 'BatchHandler', 'BatchHandlerTileSprite' ],
+    [ 'Transformer', 'TransformerTileSprite' ],
+    [ 'Texturer', 'TexturerTileSprite' ]
+]);
+
+module.exports = DefaultTileSpriteNodes;

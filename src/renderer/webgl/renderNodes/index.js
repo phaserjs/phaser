@@ -15,6 +15,7 @@ var RenderNodes = {
     BatchHandlerQuadLight: require('./BatchHandlerQuadLight'),
     BatchHandlerQuadLightShadow: require('./BatchHandlerQuadLightShadow'),
     BatchHandlerStrip: require('./BatchHandlerStrip'),
+    BatchHandlerTileSprite: require('./BatchHandlerTileSprite'),
     BatchHandlerTriFlat: require('./BatchHandlerTriFlat'),
     BatchHandlerTriFlatLight: require('./BatchHandlerTriFlatLight'),
     Camera: require('./Camera'),
@@ -29,9 +30,12 @@ var RenderNodes = {
     StrokePath: require('./StrokePath'),
     SubmitterQuad: require('./submitter/SubmitterQuad'),
     SubmitterQuadLight: require('./submitter/SubmitterQuadLight'),
+    SubmitterTileSprite: require('./submitter/SubmitterTileSprite'),
     TexturerImage: require('./texturer/TexturerImage'),
+    TexturerTileSprite: require('./texturer/TexturerTileSprite'),
     TransformerImage: require('./transformer/TransformerImage'),
     TransformerTile: require('./transformer/TransformerTile'),
+    TransformerTileSprite: require('./transformer/TransformerTileSprite'),
     YieldContext: require('./YieldContext')
 };
 

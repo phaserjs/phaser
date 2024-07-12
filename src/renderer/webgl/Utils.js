@@ -147,6 +147,18 @@ module.exports = {
             return '';
         }
 
+        // Allow renaming the texCoord variable.
+        var texCoordName = 'outTexCoord';
+        var texCoordRegex = /\s*%texCoordName=(.*)%\n/;
+        var texCoordMatch = fragmentShaderSource.match(texCoordRegex);
+
+        if (texCoordMatch)
+        {
+            texCoordName = texCoordMatch[1];
+            fragmentShaderSource = fragmentShaderSource.replace(texCoordRegex, '');
+        }
+
+        // Add the texture lookup code for each texture unit
         var src = '';
 
         for (var i = 0; i < maxTextures; i++)
@@ -162,10 +174,11 @@ module.exports = {
             }
 
             src += '\n\t{';
-            src += '\n\t\ttexture = texture2D(uMainSampler[' + i + '], outTexCoord);';
+            src += '\n\t\ttexture = texture2D(uMainSampler[' + i + '], ' + texCoordName + ');';
             src += '\n\t}';
         }
 
+        // Add texture count.
         fragmentShaderSource = fragmentShaderSource.replace(/%count%/gi, maxTextures.toString());
 
         return fragmentShaderSource.replace(/%forloop%/gi, src);

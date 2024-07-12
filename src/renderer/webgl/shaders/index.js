@@ -44,6 +44,8 @@ module.exports = {
     MobileVert: require('./Mobile-vert.js'),
     MultiFrag: require('./Multi-frag.js'),
     MultiVert: require('./Multi-vert.js'),
+    MultiTileSpriteFrag: require('./MultiTileSprite-frag.js'),
+    MultiTileSpriteVert: require('./MultiTileSprite-vert.js'),
     PointLightFrag: require('./PointLight-frag.js'),
     PointLightVert: require('./PointLight-vert.js'),
     PostFXFrag: require('./PostFX-frag.js'),
