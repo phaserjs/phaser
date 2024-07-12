@@ -1357,7 +1357,7 @@ var Matrix4 = new Class({
         _z.normalize();
         _x.crossVectors(up, _z);
 
-        if (_x.getLengthSquared() === 0)
+        if (_x.lengthSq() === 0)
         {
             // up and z are parallel
 
