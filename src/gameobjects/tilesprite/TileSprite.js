@@ -558,16 +558,16 @@ var TileSprite = new Class({
 
         ctx.save();
 
-        ctx.scale(scaleX, scaleY);
-
         ctx.rotate(this._tileRotation);
+
+        ctx.scale(scaleX, scaleY);
 
         ctx.translate(-positionX, -positionY);
 
         ctx.fillStyle = this.fillPattern;
 
-        var scaledWidth = width / scaleX;
-        var scaledHeight = height / scaleY;
+        var scaledWidth = Math.max(width, Math.abs(width / scaleX));
+        var scaledHeight = Math.max(height, Math.abs(height / scaleY));
         var hypotenuse = Math.sqrt(scaledWidth * scaledWidth + scaledHeight * scaledHeight);
 
         ctx.fillRect(
