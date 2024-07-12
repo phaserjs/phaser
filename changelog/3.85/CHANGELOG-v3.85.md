@@ -38,6 +38,7 @@
 * The `requestVideoFrame` polyfill has been updated to the latest release, which should resolve some SSR framework issues. Fix #6776 (thanks @lantictac)
 * `ScaleManager` listeners includes checks for the `screen.orientation` object and adds/removes a `change` eventListener  method to handle screen orientation changes on mobile devices. The `orientationchange` event is still maintained for backwards compatibility. Fix #6837 (thanks @rexrainbow)
 * When creating a new `TileSprite`, setting either `width` or `height` to `0` results in both values being set to the `displayFrame.width` and `displayFrame.height`. The updated logic now checks for `width` and `height` separately. If `width` is `0`, it is set to `displayFrame.width`. If `height` is `0`, it is set to `displayFrame.height`. Fix #6857 (thanks @GaryStanton)
+* Updated `GetBitmapTextSize` with improved `maxWidth` calculations for wrapped text.
 
 # Bug Fixes
 
