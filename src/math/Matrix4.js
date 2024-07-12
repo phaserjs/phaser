@@ -1348,7 +1348,7 @@ var Matrix4 = new Class({
 
         _z.subVectors(eye, target);
 
-        if (_z.getLengthSquared() === 0)
+        if (_z.lengthSq() === 0)
         {
             // eye and target are in the same position
             _z.z = 1;
