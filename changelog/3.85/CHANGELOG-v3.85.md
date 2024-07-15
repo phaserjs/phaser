@@ -40,6 +40,7 @@
 * When creating a new `TileSprite`, setting either `width` or `height` to `0` results in both values being set to the `displayFrame.width` and `displayFrame.height`. The updated logic now checks for `width` and `height` separately. If `width` is `0`, it is set to `displayFrame.width`. If `height` is `0`, it is set to `displayFrame.height`. Fix #6857 (thanks @GaryStanton)
 * Updated `GetBitmapTextSize` with improved `maxWidth` calculations for wrapped text.
 * `Vector3.subVectors` is a new method that will take 2 Vector3s, subtract them from each other and store the result in the Vector3 it was called on.
+* The `TextStyle.setStyle` method will no longer mutate the given `style` object if it includes a numeric `fontSize` value. Fix #6863 (thanks @stormpanda)
 
 # Bug Fixes
 
