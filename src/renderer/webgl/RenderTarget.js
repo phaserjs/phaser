@@ -164,7 +164,7 @@ var RenderTarget = new Class({
 
         if (autoResize)
         {
-            this.setAutoResize(true);
+            this.renderer.on(Events.RESIZE, this.resize, this);
         }
         else
         {
