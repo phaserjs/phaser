@@ -16,6 +16,8 @@ var Vector2 = require('../math/Vector2');
  * @classdesc
  * A Tilemap Layer is a Game Object that renders LayerData from a Tilemap when used in combination
  * with one, or more, Tilesets.
+ * 
+ * Do not add TilemapLayers to Containers, they are stand-alone display objects.
  *
  * @class TilemapLayer
  * @extends Phaser.GameObjects.GameObject
