@@ -377,7 +377,7 @@ var TextStyle = new Class({
      *
      * @param {Phaser.Types.GameObjects.Text.TextStyle} style - The style settings to set.
      * @param {boolean} [updateText=true] - Whether to update the text immediately.
-     * @param {boolean} [setDefaults=false] - Use the default values is not set, or the local values.
+     * @param {boolean} [setDefaults=false] - Use the default values if not set, or the local values.
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
