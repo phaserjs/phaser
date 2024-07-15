@@ -92,10 +92,16 @@ var WebGLVAOWrapper = new Class({
     {
         var gl = this.renderer.gl;
         var extVAO = this.renderer.vaoExtension;
+        var extInstance = this.renderer.instancedArraysExtension;
 
         if (!extVAO)
         {
             throw new Error('WebGLVertexArrayObject not supported by this browser');
+        }
+
+        if (!extInstance)
+        {
+            throw new Error('ANGLE_instanced_arrays extension not supported by this browser');
         }
 
         this.vertexArrayObject = extVAO.createVertexArrayOES();
@@ -113,6 +119,7 @@ var WebGLVAOWrapper = new Class({
 
             attributeBufferLayout.buffer.bind();
             var stride = attributeBufferLayout.layout.stride;
+            var instanceDivisor = attributeBufferLayout.layout.instanceDivisor;
 
             for (var j = 0; j < attributeBufferLayout.layout.layout.length; j++)
             {
@@ -139,6 +146,14 @@ var WebGLVAOWrapper = new Class({
                         stride,
                         offset + bytes * column * size
                     );
+
+                    if (!isNaN(instanceDivisor))
+                    {
+                        extInstance.vertexAttribDivisorANGLE(
+                            location + column,
+                            instanceDivisor
+                        );
+                    }
                 }
             }
         }

@@ -3012,6 +3012,41 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * Draw a number of instances to a drawing context.
+     *
+     * This draws vertices using the ANGLE_instanced_arrays extension.
+     * This typically uses an instance buffer and a vertex buffer.
+     * Both should be bound to the VAO. Vertices are drawn as a `TRIANGLE_STRIP` by default.
+     *
+     * It does not upload vertex data to buffers. Ensure that this is done
+     * before calling this method.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#drawInstancedArrays
+     * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The DrawingContext to draw to.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]} textures - An array of textures to bind. Textures are bound to units corresponding to their indices in the array.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The shader program to use.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper} vao - The Vertex Array Object to bind. It does not need an index buffer attached.
+     * @param {number} first - The starting index in the array of vector points.
+     * @param {number} count - The number of vertices to draw.
+     * @param {number} instanceCount - The number of instances to render.
+     */
+    drawInstancedArrays: function (drawingContext, textures, program, vao, first, count, instanceCount, topology)
+    {
+        var gl = this.gl;
+
+        drawingContext.beginDraw();
+
+        program.bind();
+
+        vao.bind();
+
+        this.glTextureUnits.bindUnits(textures);
+
+        this.instancedArraysExtension.drawArraysInstancedANGLE(topology || gl.TRIANGLE_STRIP, first, count, instanceCount);
+    },
+
+    /**
      * Disables the STENCIL_TEST but does not change the status
      * of the current stencil mask.
      *
