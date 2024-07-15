@@ -386,13 +386,6 @@ var TextStyle = new Class({
         if (updateText === undefined) { updateText = true; }
         if (setDefaults === undefined) { setDefaults = false; }
 
-        //  Avoid type mutation
-        // eslint-disable-next-line no-prototype-builtins
-        if (style && style.hasOwnProperty('fontSize') && typeof style.fontSize === 'number')
-        {
-            style.fontSize = style.fontSize.toString() + 'px';
-        }
-
         for (var key in propertyMap)
         {
             var value = (setDefaults) ? propertyMap[key][1] : this[key];
@@ -401,6 +394,10 @@ var TextStyle = new Class({
             {
                 // Callback & scope should be set without processing the values
                 this[key] = GetValue(style, propertyMap[key][0], value);
+            }
+            else if (key === 'fontSize' && typeof style.fontSize === 'number')
+            {
+                this[key] = style.fontSize.toString() + 'px';
             }
             else
             {
