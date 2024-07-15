@@ -77,10 +77,6 @@ var WebGLBufferWrapper = new Class({
          * @since 3.90.0
          */
         this.viewF32 = null;
-        if (dataBuffer.byteLength % Float32Array.BYTES_PER_ELEMENT === 0)
-        {
-            this.viewF32 = new Float32Array(dataBuffer);
-        }
 
         /**
          * A Uint8Array view of the dataBuffer.
@@ -103,10 +99,6 @@ var WebGLBufferWrapper = new Class({
          * @since 3.90.0
          */
         this.viewU16 = null;
-        if (dataBuffer.byteLength % Uint16Array.BYTES_PER_ELEMENT === 0)
-        {
-            this.viewU16 = new Uint16Array(dataBuffer);
-        }
 
         /**
          * A Uint32Array view of the dataBuffer.
@@ -120,10 +112,6 @@ var WebGLBufferWrapper = new Class({
          * @since 3.90.0
          */
         this.viewU32 = null;
-        if (dataBuffer.byteLength % Uint32Array.BYTES_PER_ELEMENT === 0)
-        {
-            this.viewU32 = new Uint32Array(dataBuffer);
-        }
 
         /**
          * The type of the buffer.
@@ -142,6 +130,8 @@ var WebGLBufferWrapper = new Class({
          * @since 3.80.0
          */
         this.bufferUsage = bufferUsage;
+
+        this.createViews();
 
         this.createResource();
     },
@@ -234,7 +224,62 @@ var WebGLBufferWrapper = new Class({
                 this.viewU8.subarray(offset, offset + bytes)
             );
         }
+    },
 
+    /**
+     * Resizes the dataBuffer of this WebGLBufferWrapper.
+     * This will recreate the dataBuffer and the views into it.
+     * All data will be lost.
+     * All views into the dataBuffer will be destroyed and recreated.
+     * Any VAO that uses this buffer will need to be re-bound.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#resize
+     * @since 3.90.0
+     * @param {number} bytes - The new size of the buffer in bytes.
+     */
+    resize: function (bytes)
+    {
+        var gl = this.renderer.gl;
+
+        this.dataBuffer = new ArrayBuffer(bytes);
+
+        this.createViews();
+
+        this.bind();
+        gl.bufferData(this.bufferType, this.dataBuffer, this.bufferUsage);
+    },
+
+    /**
+     * Creates the views into the dataBuffer.
+     * This is called internally.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#createViews
+     * @since 3.90.0
+     * @private
+     */
+    createViews: function ()
+    {
+        var dataBuffer = this.dataBuffer;
+
+        this.viewF32 = null;
+        if (dataBuffer.byteLength % Float32Array.BYTES_PER_ELEMENT === 0)
+        {
+            this.viewF32 = new Float32Array(dataBuffer);
+        }
+
+        this.viewU8 = new Uint8Array(dataBuffer);
+
+        this.viewU16 = null;
+        if (dataBuffer.byteLength % Uint16Array.BYTES_PER_ELEMENT === 0)
+        {
+            this.viewU16 = new Uint16Array(dataBuffer);
+        }
+
+        this.viewU32 = null;
+        if (dataBuffer.byteLength % Uint32Array.BYTES_PER_ELEMENT === 0)
+        {
+            this.viewU32 = new Uint32Array(dataBuffer);
+        }
     },
 
     /**
@@ -248,6 +293,10 @@ var WebGLBufferWrapper = new Class({
         this.renderer.gl.deleteBuffer(this.webGLBuffer);
         this.webGLBuffer = null;
         this.dataBuffer = null;
+        this.viewF32 = null;
+        this.viewU8 = null;
+        this.viewU16 = null;
+        this.viewU32 = null;
         this.renderer = null;
     }
 });
