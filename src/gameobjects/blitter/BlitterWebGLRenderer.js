@@ -40,21 +40,22 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     var cameraScrollX = camera.scrollX * src.scrollFactorX;
     var cameraScrollY = camera.scrollY * src.scrollFactorY;
-
+    
     var calcMatrix = tempMatrix.copyFrom(camera.matrix);
-
+    
     if (parentMatrix)
     {
         calcMatrix.multiplyWithOffset(parentMatrix, -cameraScrollX, -cameraScrollY);
-
+        
         cameraScrollX = 0;
         cameraScrollY = 0;
     }
-
+    
     var blitterX = src.x - cameraScrollX;
     var blitterY = src.y - cameraScrollY;
     var prevTextureSourceIndex = -1;
     var tintEffect = false;
+    var roundPixels = camera.roundPixels;
 
     renderer.pipelines.preBatch(src);
 
@@ -87,7 +88,7 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
             y += frame.height;
         }
 
-        var quad = calcMatrix.setQuad(x, y, x + width, y + height);
+        var quad = calcMatrix.setQuad(x, y, x + width, y + height, roundPixels);
 
         var tint = Utils.getTintAppendFloatAlpha(bob.tint, bobAlpha);
 
