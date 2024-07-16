@@ -705,7 +705,7 @@ var Timeline = new Class({
     {
         var events = this.events;
 
-        for (i = 0; i < events.length; i++)
+        for (var i = 0; i < events.length; i++)
         {
             var event = events[i];
 
