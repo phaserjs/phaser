@@ -1,0 +1,102 @@
+#define SHADER_NAME PHASER_IMAGE_BAKED_LAYER_VS
+
+precision mediump float;
+
+uniform mat4 uProjectionMatrix;
+uniform mat3 uViewMatrix;
+uniform vec3 uCameraScrollAndAlpha;
+uniform int uRoundPixels;
+uniform vec2 uResolution;
+
+// Vertex buffer attributes
+
+// 0 - BL, 1 - TL, 2 - BR, 3 - TR
+attribute float inVertex;
+
+// Instance buffer attributes
+attribute float inPositionX;
+attribute float inPositionY;
+attribute float inRotation;
+attribute float inScaleX;
+attribute float inScaleY;
+attribute vec2 inOrigin;
+attribute float inScrollFactorX;
+attribute float inScrollFactorY;
+attribute vec4 inFrameUVs;
+attribute vec2 inTintFillAndBlend;
+attribute vec4 inTintTL;
+attribute vec4 inTintTR;
+attribute vec4 inTintBL;
+attribute vec4 inTintBR;
+attribute float inAlpha;
+
+varying vec2 outTexCoord;
+varying float outTintEffect;
+varying vec4 outTint;
+
+void main ()
+{
+    float tintFill = inTintFillAndBlend.x;
+    float tintBlend = inTintFillAndBlend.y;
+
+    float x = -inOrigin.x;
+    float y = -inOrigin.y;
+    float u = inFrameUVs.x;
+    float v = inFrameUVs.y;
+    vec4 tint = inTintTL;
+
+    if (inVertex == 0.0)
+    {
+        // Bottom-left
+        y = 1.0 - inOrigin.y;
+        v = inFrameUVs.w;
+        tint = inTintBL;
+    }
+    // 1.0 is top-left and uses the initial values.
+    else if (inVertex == 2.0)
+    {
+        // Bottom-right
+        x = 1.0 - inOrigin.x;
+        y = 1.0 - inOrigin.y;
+        u = inFrameUVs.z;
+        v = inFrameUVs.w;
+        tint = inTintBR;
+    }
+    else if (inVertex == 3.0)
+    {
+        // Top-right
+        x = 1.0 - inOrigin.x;
+        u = inFrameUVs.z;
+        tint = inTintTR;
+    }
+
+    vec3 position = vec3(x * inScaleX, y * inScaleY, 1.0);
+
+    // Create and initialize the transform matrix.
+    float sine = sin(inRotation);
+    float cosine = cos(inRotation);
+    mat3 transformMatrix = mat3(
+        cosine, sine, 0,
+        -sine, cosine, 0,
+        inPositionX - uCameraScrollAndAlpha.x * inScrollFactorX, inPositionY - uCameraScrollAndAlpha.y * inScrollFactorY, 1
+    );
+
+    // Transform the position.
+    position = uViewMatrix * transformMatrix * position;
+
+    // Tint handling.
+    tint.rgb *= tint.a;
+    float alpha = inAlpha * uCameraScrollAndAlpha.z;
+    tint *= alpha;
+
+    gl_Position = uProjectionMatrix * vec4(position.xy, 1.0, 1.0);
+
+    if (uRoundPixels == 1)
+    {
+        gl_Position.xy = floor(((gl_Position.xy + 1.0) * 0.5 * uResolution) + 0.5) / uResolution * 2.0 - 1.0;
+    }
+
+    outTexCoord = vec2(u, v);
+    outTint = mix(vec4(1.0, 1.0, 1.0, alpha), tint, tintBlend).bgra;
+    outTintEffect = tintFill;
+}

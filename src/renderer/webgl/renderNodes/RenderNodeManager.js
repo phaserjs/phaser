@@ -12,6 +12,7 @@ var DefaultBitmapTextNodes = require('./defaults/DefaultBitmapTextNodes');
 var DefaultBlitterNodes = require('./defaults/DefaultBlitterNodes');
 var DefaultGraphicsNodes = require('./defaults/DefaultGraphicsNodes');
 var DefaultImageNodes = require('./defaults/DefaultImageNodes');
+var DefaultImageGPULayerNodes = require('./defaults/DefaultImageGPULayerNodes');
 var DefaultNineSliceNodes = require('./defaults/DefaultNineSliceNodes');
 var DefaultParticleEmitterNodes = require('./defaults/DefaultParticleEmitterNodes');
 var DefaultPointLightNodes = require('./defaults/DefaultPointLightNodes');
@@ -19,6 +20,7 @@ var DefaultRopeNodes = require('./defaults/DefaultRopeNodes');
 var DefaultTilemapLayerNodes = require('./defaults/DefaultTilemapLayerNodes');
 var DefaultTileSpriteNodes = require('./defaults/DefaultTileSpriteNodes');
 
+var BakeImageGPULayer = require('./BakeImageGPULayer');
 var BatchHandlerPointLight = require('./BatchHandlerPointLight');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
@@ -117,6 +119,7 @@ var RenderNodeManager = new Class({
             Blitter: DefaultBlitterNodes,
             Graphics: DefaultGraphicsNodes,
             Image: DefaultImageNodes,
+            ImageGPULayer: DefaultImageGPULayerNodes,
             NineSlice: DefaultNineSliceNodes,
             ParticleEmitter: DefaultParticleEmitterNodes,
             PointLight: DefaultPointLightNodes,
@@ -154,6 +157,7 @@ var RenderNodeManager = new Class({
          * @private
          */
         this._nodeConstructors = {
+            BakeImageGPULayer: BakeImageGPULayer,
             BatchHandlerPointLight: BatchHandlerPointLight,
             BatchHandlerQuad: BatchHandlerQuad,
             BatchHandlerQuadLight: BatchHandlerQuadLight,

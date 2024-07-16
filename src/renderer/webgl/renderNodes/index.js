@@ -9,6 +9,7 @@
  */
 
 var RenderNodes = {
+    BakeImageGPULayer: require('./BakeImageGPULayer'),
     BatchHandler: require('./BatchHandler'),
     BatchHandlerPointLight: require('./BatchHandlerPointLight'),
     BatchHandlerQuad: require('./BatchHandlerQuad'),
@@ -29,6 +30,7 @@ var RenderNodes = {
     RebindContext: require('./RebindContext'),
     RenderNode: require('./RenderNode'),
     StrokePath: require('./StrokePath'),
+    SubmitterImageGPULayer: require('./submitter/SubmitterImageGPULayer'),
     SubmitterQuad: require('./submitter/SubmitterQuad'),
     SubmitterQuadLight: require('./submitter/SubmitterQuadLight'),
     SubmitterTileSprite: require('./submitter/SubmitterTileSprite'),
