@@ -376,8 +376,7 @@ var TweenChain = new Class({
             data[i].reset(false);
         }
 
-        this.currentIndex = 0;
-        this.currentTween = data[0];
+        this.setCurrentTween(0);
     },
 
     /**
