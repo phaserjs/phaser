@@ -35,17 +35,39 @@ var BatchChar = function (pipeline, src, char, glyph, offsetX, offsetY, calcMatr
     var xw = x + char.w;
     var yh = y + char.h;
 
-    var tx0 = calcMatrix.getXRound(x, y, roundPixels);
-    var ty0 = calcMatrix.getYRound(x, y, roundPixels);
+    var a = calcMatrix.a;
+    var b = calcMatrix.b;
+    var c = calcMatrix.c;
+    var d = calcMatrix.d;
+    var e = calcMatrix.e;
+    var f = calcMatrix.f;
 
-    var tx1 = calcMatrix.getXRound(x, yh, roundPixels);
-    var ty1 = calcMatrix.getYRound(x, yh, roundPixels);
+    var tx0 = x * a + y * c + e;
+    var ty0 = x * b + y * d + f;
 
-    var tx2 = calcMatrix.getXRound(xw, yh, roundPixels);
-    var ty2 = calcMatrix.getYRound(xw, yh, roundPixels);
+    var tx1 = x * a + yh * c + e;
+    var ty1 = x * b + yh * d + f;
 
-    var tx3 = calcMatrix.getXRound(xw, y, roundPixels);
-    var ty3 = calcMatrix.getYRound(xw, y, roundPixels);
+    var tx2 = xw * a + yh * c + e;
+    var ty2 = xw * b + yh * d + f;
+
+    var tx3 = xw * a + y * c + e;
+    var ty3 = xw * b + y * d + f;
+
+    if (roundPixels)
+    {
+        tx0 = Math.round(tx0);
+        ty0 = Math.round(ty0);
+
+        tx1 = Math.round(tx1);
+        ty1 = Math.round(ty1);
+
+        tx2 = Math.round(tx2);
+        ty2 = Math.round(ty2);
+
+        tx3 = Math.round(tx3);
+        ty3 = Math.round(ty3);
+    }
 
     pipeline.batchQuad(src, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, glyph.u0, glyph.v0, glyph.u1, glyph.v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
 };
