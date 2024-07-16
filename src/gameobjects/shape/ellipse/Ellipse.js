@@ -130,6 +130,8 @@ var Ellipse = new Class({
         this.geom.setPosition(width / 2, height / 2);
         this.geom.setSize(width, height);
 
+        this.updateDisplayOrigin();
+
         return this.updateData();
     },
 
