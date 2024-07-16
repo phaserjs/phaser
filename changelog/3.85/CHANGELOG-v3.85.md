@@ -41,6 +41,7 @@
 * Updated `GetBitmapTextSize` with improved `maxWidth` calculations for wrapped text.
 * `Vector3.subVectors` is a new method that will take 2 Vector3s, subtract them from each other and store the result in the Vector3 it was called on.
 * The `TextStyle.setStyle` method will no longer mutate the given `style` object if it includes a numeric `fontSize` value. Fix #6863 (thanks @stormpanda)
+* Calling the `Shape.Ellipse.setSize` method will internally call `updateDisplayOrigin` to retain position after a size change.
 
 # Bug Fixes
 
