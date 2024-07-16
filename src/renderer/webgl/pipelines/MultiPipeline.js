@@ -372,6 +372,12 @@ var MultiPipeline = new Class({
         var gx = gameObject.x;
         var gy = gameObject.y;
 
+        if (camera.roundPixels)
+        {
+            gx = Math.floor(gx);
+            gy = Math.floor(gy);
+        }
+
         spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
 
         camMatrix.copyFrom(camera.matrix);
@@ -550,6 +556,12 @@ var MultiPipeline = new Class({
             y += srcHeight;
         }
 
+        if (camera.roundPixels)
+        {
+            srcX = Math.floor(srcX);
+            srcY = Math.floor(srcY);
+        }
+        
         spriteMatrix.applyITRS(srcX, srcY, rotation, scaleX, scaleY);
 
         camMatrix.copyFrom(camera.matrix);
