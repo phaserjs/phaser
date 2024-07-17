@@ -90,24 +90,63 @@ var BakeImageGPULayer = new Class({
             var image = images[i];
 
             var frame = image.frame;
-
+            
+            var xAnimation = image.xAnimation.encoding;
             viewF32[instanceBufferOffset++] = image.x;
+            viewF32[instanceBufferOffset++] = xAnimation[0];
+            viewF32[instanceBufferOffset++] = xAnimation[1];
+            viewF32[instanceBufferOffset++] = xAnimation[2];
+
+            var yAnimation = image.yAnimation.encoding;
             viewF32[instanceBufferOffset++] = image.y;
+            viewF32[instanceBufferOffset++] = yAnimation[0];
+            viewF32[instanceBufferOffset++] = yAnimation[1];
+            viewF32[instanceBufferOffset++] = yAnimation[2];
+            
+            var rotationAnimation = image.rotationAnimation.encoding;
             viewF32[instanceBufferOffset++] = image.rotation;
+            viewF32[instanceBufferOffset++] = rotationAnimation[0];
+            viewF32[instanceBufferOffset++] = rotationAnimation[1];
+            viewF32[instanceBufferOffset++] = rotationAnimation[2];
+
+            var scaleXAnimation = image.scaleXAnimation.encoding;
             viewF32[instanceBufferOffset++] = image.scaleX * frame.width;
+            viewF32[instanceBufferOffset++] = scaleXAnimation[0] * frame.width;
+            viewF32[instanceBufferOffset++] = scaleXAnimation[1];
+            viewF32[instanceBufferOffset++] = scaleXAnimation[2];
+
+            var scaleYAnimation = image.scaleYAnimation.encoding;
             viewF32[instanceBufferOffset++] = image.scaleY * frame.height;
+            viewF32[instanceBufferOffset++] = scaleYAnimation[0] * frame.height;
+            viewF32[instanceBufferOffset++] = scaleYAnimation[1];
+            viewF32[instanceBufferOffset++] = scaleYAnimation[2];
+
             viewF32[instanceBufferOffset++] = image.originX;
             viewF32[instanceBufferOffset++] = image.originY;
+            viewF32[instanceBufferOffset++] = image.tintFill;
+
+            var scrollFactorXAnimation = image.scrollFactorXAnimation.encoding;
             viewF32[instanceBufferOffset++] = image.scrollFactorX;
+            viewF32[instanceBufferOffset++] = scrollFactorXAnimation[0];
+            viewF32[instanceBufferOffset++] = scrollFactorXAnimation[1];
+            viewF32[instanceBufferOffset++] = scrollFactorXAnimation[2];
+
+            var scrollFactorYAnimation = image.scrollFactorYAnimation.encoding;
             viewF32[instanceBufferOffset++] = image.scrollFactorY;
+            viewF32[instanceBufferOffset++] = scrollFactorYAnimation[0];
+            viewF32[instanceBufferOffset++] = scrollFactorYAnimation[1];
+            viewF32[instanceBufferOffset++] = scrollFactorYAnimation[2];
 
             viewF32[instanceBufferOffset++] = frame.u0;
             viewF32[instanceBufferOffset++] = frame.v0;
             viewF32[instanceBufferOffset++] = frame.u1;
             viewF32[instanceBufferOffset++] = frame.v1;
 
-            viewF32[instanceBufferOffset++] = image.tintFill;
+            var tintBlendAnimation = image.tintBlendAnimation.encoding;
             viewF32[instanceBufferOffset++] = image.tintBlend;
+            viewF32[instanceBufferOffset++] = tintBlendAnimation[0];
+            viewF32[instanceBufferOffset++] = tintBlendAnimation[1];
+            viewF32[instanceBufferOffset++] = tintBlendAnimation[2];
 
             viewU32[instanceBufferOffset++] =
                 getTint(image.tintBottomLeft, image.alphaBottomLeft);
@@ -118,7 +157,11 @@ var BakeImageGPULayer = new Class({
             viewU32[instanceBufferOffset++] =
                 getTint(image.tintTopRight, image.alphaTopRight);
 
+            var alphaAnimation = image.alphaAnimation.encoding;
             viewF32[instanceBufferOffset++] = image.alpha;
+            viewF32[instanceBufferOffset++] = alphaAnimation[0];
+            viewF32[instanceBufferOffset++] = alphaAnimation[1];
+            viewF32[instanceBufferOffset++] = alphaAnimation[2];
         }
 
         instanceBuffer.update();

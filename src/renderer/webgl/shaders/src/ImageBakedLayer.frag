@@ -16,13 +16,15 @@ void main ()
 {
     vec4 texture = texture2D(uMainSampler, outTexCoord);
 
+    vec4 texel = vec4(outTint.bgr * outTint.a, outTint.a);
+
     //  Multiply texture tint
-    vec4 color = texture * outTint;
+    vec4 color = texture * texel;
 
     if (outTintEffect == 1.0)
     {
         //  Solid color + texture alpha
-        color.rgb = mix(texture.rgb, outTint.rgb, texture.a);
+        color.rgb = mix(texture.rgb, texel.rgb, texture.a);
     }
 
     gl_FragColor = color;

@@ -159,37 +159,44 @@ var SubmitterImageGPULayer = new Class({
             instanceDivisor: 1,
             layout: [
                 {
-                    name: 'inPositionX'
+                    name: 'inPositionX',
+                    size: 4
                 },
                 {
-                    name: 'inPositionY'
+                    name: 'inPositionY',
+                    size: 4
                 },
                 {
-                    name: 'inRotation'
+                    name: 'inRotation',
+                    size: 4
                 },
                 {
-                    name: 'inScaleX'
+                    name: 'inScaleX',
+                    size: 4
                 },
                 {
-                    name: 'inScaleY'
+                    name: 'inScaleY',
+                    size: 4
                 },
                 {
-                    name: 'inOrigin',
-                    size: 2
+                    name: 'inOriginAndTintFill',
+                    size: 3
                 },
                 {
-                    name: 'inScrollFactorX'
+                    name: 'inScrollFactorX',
+                    size: 4
                 },
                 {
-                    name: 'inScrollFactorY'
+                    name: 'inScrollFactorY',
+                    size: 4
                 },
                 {
                     name: 'inFrameUVs',
                     size: 4
                 },
                 {
-                    name: 'inTintFillAndBlend',
-                    size: 2
+                    name: 'inTintBlend',
+                    size: 4
                 },
                 {
                     name: 'inTintBL',
@@ -216,7 +223,8 @@ var SubmitterImageGPULayer = new Class({
                     normalized: true
                 },
                 {
-                    name: 'inAlpha'
+                    name: 'inAlpha',
+                    size: 4
                 }
             ]
         },
@@ -387,6 +395,11 @@ var SubmitterImageGPULayer = new Class({
                 camera.scrollY,
                 camera.alpha * this.gameObject.alpha
             ]
+        );
+
+        this.program.setUniform(
+            'uTime',
+            this.gameObject.timeElapsed
         );
 
         // Assemble textures.

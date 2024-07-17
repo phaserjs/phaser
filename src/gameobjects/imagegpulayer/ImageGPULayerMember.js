@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var ImageGPULayerMemberAnimation = require('./ImageGPULayerMemberAnimation');
 
 /**
  * @classdesc
@@ -53,6 +54,15 @@ var ImageGPULayerMember = new Class({
         this.x = x;
 
         /**
+         * The horizontal position animation of this ImageGPULayerMember.
+         *
+         * @name Phaser.GameObjects.ImageGPULayerMember#xAnimation
+         * @type {Phaser.GameObjects.ImageGPULayerMemberAnimation}
+         * @since 3.90.0
+         */
+        this.xAnimation = new ImageGPULayerMemberAnimation();
+
+        /**
          * The vertical position of this ImageGPULayerMember.
          *
          * @name Phaser.GameObjects.ImageGPULayerMember#y
@@ -60,6 +70,15 @@ var ImageGPULayerMember = new Class({
          * @since 3.90.0
          */
         this.y = y;
+
+        /**
+         * The vertical position animation of this ImageGPULayerMember.
+         *
+         * @name Phaser.GameObjects.ImageGPULayerMember#yAnimation
+         * @type {Phaser.GameObjects.ImageGPULayerMemberAnimation}
+         * @since 3.90.0
+         */
+        this.yAnimation = new ImageGPULayerMemberAnimation();
 
         /**
          * The rotation of this ImageGPULayerMember, in radians.
@@ -72,6 +91,15 @@ var ImageGPULayerMember = new Class({
         this.rotation = 0;
 
         /**
+         * The rotation animation of this ImageGPULayerMember.
+         *
+         * @name Phaser.GameObjects.ImageGPULayerMember#rotationAnimation
+         * @type {Phaser.GameObjects.ImageGPULayerMemberAnimation}
+         * @since 3.90.0
+         */
+        this.rotationAnimation = new ImageGPULayerMemberAnimation();
+
+        /**
          * The horizontal scale of this ImageGPULayerMember.
          *
          * @name Phaser.GameObjects.ImageGPULayerMember#scaleX
@@ -82,6 +110,15 @@ var ImageGPULayerMember = new Class({
         this.scaleX = 1;
 
         /**
+         * The horizontal scale animation of this ImageGPULayerMember.
+         *
+         * @name Phaser.GameObjects.ImageGPULayerMember#scaleXAnimation
+         * @type {Phaser.GameObjects.ImageGPULayerMemberAnimation}
+         * @since 3.90.0
+         */
+        this.scaleXAnimation = new ImageGPULayerMemberAnimation();
+
+        /**
          * The vertical scale of this ImageGPULayerMember.
          *
          * @name Phaser.GameObjects.ImageGPULayerMember#scaleY
@@ -90,6 +127,15 @@ var ImageGPULayerMember = new Class({
          * @default 1
          */
         this.scaleY = 1;
+
+        /**
+         * The vertical scale animation of this ImageGPULayerMember.
+         *
+         * @name Phaser.GameObjects.ImageGPULayerMember#scaleYAnimation
+         * @type {Phaser.GameObjects.ImageGPULayerMemberAnimation}
+         * @since 3.90.0
+         */
+        this.scaleYAnimation = new ImageGPULayerMemberAnimation();
 
         /**
          * The horizontal origin of this ImageGPULayerMember.
@@ -122,6 +168,15 @@ var ImageGPULayerMember = new Class({
         this.scrollFactorX = 1;
 
         /**
+         * The horizontal scroll factor animation of this ImageGPULayerMember.
+         *
+         * @name Phaser.GameObjects.ImageGPULayerMember#scrollFactorXAnimation
+         * @type {Phaser.GameObjects.ImageGPULayerMemberAnimation}
+         * @since 3.90.0
+         */
+        this.scrollFactorXAnimation = new ImageGPULayerMemberAnimation();
+
+        /**
          * The vertical scroll factor of this ImageGPULayerMember.
          *
          * @name Phaser.GameObjects.ImageGPULayerMember#scrollFactorY
@@ -130,6 +185,15 @@ var ImageGPULayerMember = new Class({
          * @default 1
          */
         this.scrollFactorY = 1;
+
+        /**
+         * The vertical scroll factor animation of this ImageGPULayerMember.
+         *
+         * @name Phaser.GameObjects.ImageGPULayerMember#scrollFactorYAnimation
+         * @type {Phaser.GameObjects.ImageGPULayerMemberAnimation}
+         * @since 3.90.0
+         */
+        this.scrollFactorYAnimation = new ImageGPULayerMemberAnimation();
 
         /**
          * Whether to tint the fill of this ImageGPULayerMember.
@@ -151,6 +215,15 @@ var ImageGPULayerMember = new Class({
          * @default 1
          */
         this.tintBlend = 1;
+
+        /**
+         * The tint blend animation of this ImageGPULayerMember.
+         *
+         * @name Phaser.GameObjects.ImageGPULayerMember#tintBlendAnimation
+         * @type {Phaser.GameObjects.ImageGPULayerMemberAnimation}
+         * @since 3.90.0
+         */
+        this.tintBlendAnimation = new ImageGPULayerMemberAnimation();
 
         /**
          * The bottom-left tint color of this ImageGPULayerMember.
@@ -243,6 +316,15 @@ var ImageGPULayerMember = new Class({
          * @default 1
          */
         this.alpha = 1;
+
+        /**
+         * The alpha animation of this ImageGPULayerMember.
+         *
+         * @name Phaser.GameObjects.ImageGPULayerMember#alphaAnimation
+         * @type {Phaser.GameObjects.ImageGPULayerMemberAnimation}
+         * @since 3.90.0
+         */
+        this.alphaAnimation = new ImageGPULayerMemberAnimation();
     }
 });
 

@@ -80,6 +80,26 @@ var ImageGPULayer = new Class({
          */
         this.needsUpdate = false;
 
+        /**
+         * The time elapsed since timer initialization.
+         * This drives the animation of the ImageGPULayer.
+         *
+         * @name Phaser.GameObjects.ImageGPULayer#timeElapsed
+         * @type {number}
+         * @since 3.90.0
+         */
+        this.timeElapsed = 0;
+
+        /**
+         * Whether the ImageGPULayer is paused.
+         *
+         * @name Phaser.GameObjects.ImageGPULayer#timePaused
+         * @type {boolean}
+         * @since 3.90.0
+         * @default false
+         */
+        this.timePaused = false;
+
         this.setTexture(texture);
         this.initRenderNodes('ImageGPULayer');
         this.initPostPipeline(true);
@@ -101,6 +121,26 @@ var ImageGPULayer = new Class({
 
         this.defaultRenderNodes['Submitter'] = this.submitterNode;
         this.renderNodeData[this.submitterNode.name] = {};
+    },
+
+    //  Overrides Game Object method
+    addedToScene: function ()
+    {
+        this.scene.sys.updateList.add(this);
+    },
+
+    //  Overrides Game Object method
+    removedFromScene: function ()
+    {
+        this.scene.sys.updateList.remove(this);
+    },
+
+    preUpdate: function (time, delta)
+    {
+        if (!this.timePaused)
+        {
+            this.timeElapsed += delta;
+        }
     },
 
     /**
@@ -151,6 +191,19 @@ var ImageGPULayer = new Class({
 
             this.images.splice(index, 1);
         }
+    },
+
+    /**
+     * Reset the animation timer for this ImageGPULayer.
+     *
+     * @method Phaser.GameObjects.ImageGPULayer#resetTimer
+     * @since 3.90.0
+     * @param {number} [ms=0] - The time to reset the timer to.
+     */
+    resetTimer: function (ms)
+    {
+        if (ms === undefined) { ms = 0; }
+        this.timeElapsed = ms;
     }
 });
 
