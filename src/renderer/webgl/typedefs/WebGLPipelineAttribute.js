@@ -8,5 +8,5 @@
  * @property {number} offset - The offset, in bytes, of this attribute data in the vertex array. Equivalent to `offsetof(vertex, attrib)` in C.
  * @property {boolean} normalized - Should the attribute data be normalized?
  * @property {boolean} enabled - You should set this to `false` by default. The pipeline will enable it on boot.
- * @property {(-1|Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper)} location - You should set this to `-1` by default. The pipeline will set it on boot.
+ * @property {(number|Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper)} location - You should set this to `-1` by default. The pipeline will set it on boot.
  */
