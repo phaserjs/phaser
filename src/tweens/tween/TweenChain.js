@@ -89,8 +89,6 @@ var TweenChain = new Class({
             this.setActiveState();
         }
 
-        this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
-
         return this;
     },
 
@@ -490,8 +488,6 @@ var TweenChain = new Class({
         this.currentTween = this.data[index];
 
         this.currentTween.setActiveState();
-
-        this.currentTween.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
     },
 
     /**
