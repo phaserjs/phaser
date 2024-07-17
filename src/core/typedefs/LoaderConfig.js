@@ -14,5 +14,4 @@
  * @property {string[]} [localScheme] - An optional array of schemes that the Loader considers as being 'local' files. Defaults to: `[ 'file://', 'capacitor://' ]` if not specified.
  * @property {boolean} [withCredentials=false] - Optional XHR withCredentials value.
  * @property {string} [imageLoadType='XHR'] - Optional load type for image, `XHR` is default, or `HTMLImageElement` for a lightweight way.
- * @property {string[]} [localScheme] - An array of schemes that the Loader considers as being 'local' files. Defaults to: `[ 'file://', 'capacitor://' ]`.
  */
