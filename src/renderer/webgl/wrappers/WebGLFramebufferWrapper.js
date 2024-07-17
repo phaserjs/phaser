@@ -6,9 +6,9 @@
 
 var Class = require('../../../utils/Class');
 
+// Possible errors that can be thrown by `gl.checkFramebufferStatus()`.
 /**
- * @ignore
- * Possible errors that can be thrown by `gl.checkFramebufferStatus()`.
+ * @ignore 
  */
 var errors = {
     36054: 'Incomplete Attachment',
