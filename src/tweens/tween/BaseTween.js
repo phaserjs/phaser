@@ -648,6 +648,8 @@ var BaseTween = new Class({
     setActiveState: function ()
     {
         this.state = TWEEN_CONST.ACTIVE;
+
+        this.hasStarted = false;
     },
 
     /**
