@@ -34,6 +34,8 @@ In this release we have removed the shader uniform and branching and also made `
 * Added Default Image Handling in `TextureManager`. In the game `config`, set `defaultImage` to `null` to ignore loading the `defaultImage`.
 * Added Missing Image Handling in `TextureManager`. In the game `config`, set `missingImage` to `null` to ignore loading the `missingImage`.
 * Added White Image Support in `TextureManager`. In the game `config`, set `whiteImage` to `null` to ignore loading the `whiteImage`.
+* `Phaser.Core.TimeStep#pauseDuration` is a new property that holds the duration of the most recent game pause, if any, in ms (thanks @samme)
+* The Game `Events#RESUME` event now contains a new parameter `pauseDuration` which is the duration, in ms, that the game was paused for (thanks @samme)
 
 # WebGL Rendering Updates
 
