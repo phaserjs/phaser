@@ -305,6 +305,17 @@ var TimeStep = new Class({
         this.inFocus = true;
 
         /**
+         * The duration of the most recent game pause, if any, in ms.
+         *
+         * @name Phaser.Core.TimeStep#pauseDuration
+         * @type {number}
+         * @readonly
+         * @default 0
+         * @since 3.85.0
+         */
+        this.pauseDuration = 0;
+
+        /**
          * The timestamp at which the game became paused, as determined by the Page Visibility API.
          *
          * @name Phaser.Core.TimeStep#_pauseTime
@@ -469,7 +480,8 @@ var TimeStep = new Class({
     {
         this.resetDelta();
 
-        this.startTime += this.time - this._pauseTime;
+        this.pauseDuration = this.time - this._pauseTime;
+        this.startTime += this.pauseDuration;
     },
 
     /**

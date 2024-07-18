@@ -630,7 +630,7 @@ var Game = new Class({
     {
         this.loop.resume();
 
-        this.events.emit(Events.RESUME);
+        this.events.emit(Events.RESUME, this.loop.pauseDuration);
     },
 
     /**
