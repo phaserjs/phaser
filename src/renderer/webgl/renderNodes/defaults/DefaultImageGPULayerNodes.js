@@ -6,8 +6,6 @@
 
 var Map = require('../../../../structs/Map');
 
-var DefaultImageGPULayerNodes = new Map([
-    [ 'Baker', 'BakeImageGPULayer' ]
-]);
+var DefaultImageGPULayerNodes = new Map([]);
 
 module.exports = DefaultImageGPULayerNodes;

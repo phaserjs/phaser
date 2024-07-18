@@ -68,7 +68,10 @@ var EasingEncoding = {
     Bounce: 100,
     'Bounce.easeOut': 100,
     'Bounce.easeIn': 101,
-    'Bounce.easeInOut': 102
+    'Bounce.easeInOut': 102,
+
+    // Stepped could require extra parameters, but we assume just 2.
+    Stepped: 110
 };
 
 module.exports = EasingEncoding;

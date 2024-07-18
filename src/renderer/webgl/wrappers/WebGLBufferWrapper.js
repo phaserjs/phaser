@@ -228,10 +228,9 @@ var WebGLBufferWrapper = new Class({
 
     /**
      * Resizes the dataBuffer of this WebGLBufferWrapper.
-     * This will recreate the dataBuffer and the views into it.
+     * This will recreate `dataBuffer` and the views into it.
      * All data will be lost.
-     * All views into the dataBuffer will be destroyed and recreated.
-     * Any VAO that uses this buffer will need to be re-bound.
+     * All views into `dataBuffer` will be destroyed and recreated.
      *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#resize
      * @since 3.90.0

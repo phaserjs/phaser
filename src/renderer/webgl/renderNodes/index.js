@@ -9,7 +9,6 @@
  */
 
 var RenderNodes = {
-    BakeImageGPULayer: require('./BakeImageGPULayer'),
     BatchHandler: require('./BatchHandler'),
     BatchHandlerPointLight: require('./BatchHandlerPointLight'),
     BatchHandlerQuad: require('./BatchHandlerQuad'),

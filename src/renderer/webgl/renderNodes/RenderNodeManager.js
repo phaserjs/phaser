@@ -20,7 +20,6 @@ var DefaultRopeNodes = require('./defaults/DefaultRopeNodes');
 var DefaultTilemapLayerNodes = require('./defaults/DefaultTilemapLayerNodes');
 var DefaultTileSpriteNodes = require('./defaults/DefaultTileSpriteNodes');
 
-var BakeImageGPULayer = require('./BakeImageGPULayer');
 var BatchHandlerPointLight = require('./BatchHandlerPointLight');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
@@ -157,7 +156,6 @@ var RenderNodeManager = new Class({
          * @private
          */
         this._nodeConstructors = {
-            BakeImageGPULayer: BakeImageGPULayer,
             BatchHandlerPointLight: BatchHandlerPointLight,
             BatchHandlerQuad: BatchHandlerQuad,
             BatchHandlerQuadLight: BatchHandlerQuadLight,

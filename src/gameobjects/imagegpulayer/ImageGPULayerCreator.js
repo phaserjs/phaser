@@ -18,7 +18,7 @@ var ImageGPULayer = require('./ImageGPULayer');
  * @method Phaser.GameObjects.GameObjectCreator#image
  * @since 3.0.0
  *
- * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig & { size: number }} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Image} The Game Object that was created.
@@ -28,8 +28,9 @@ GameObjectCreator.register('imageGPULayer', function (config, addToScene)
     if (config === undefined) { config = {}; }
 
     var key = GetAdvancedValue(config, 'key', null);
+    var size = GetAdvancedValue(config, 'size', 1);
 
-    var imageGPULayer = new ImageGPULayer(this.scene, key);
+    var imageGPULayer = new ImageGPULayer(this.scene, key, size);
 
     if (addToScene !== undefined)
     {

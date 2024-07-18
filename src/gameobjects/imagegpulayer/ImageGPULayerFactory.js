@@ -16,12 +16,13 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @since 3.0.0
  *
  * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {number} [size] - The number of members the ImageGPULayer will accommodate. Default 1.
  *
  * @return {Phaser.GameObjects.ImageGPULayer} The Game Object that was created.
  */
-GameObjectFactory.register('imageGPULayer', function (texture)
+GameObjectFactory.register('imageGPULayer', function (texture, size)
 {
-    return this.displayList.add(new ImageGPULayer(this.scene, texture));
+    return this.displayList.add(new ImageGPULayer(this.scene, texture, size));
 });
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.

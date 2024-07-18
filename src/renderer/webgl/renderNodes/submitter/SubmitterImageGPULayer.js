@@ -377,13 +377,21 @@ var SubmitterImageGPULayer = new Class({
      */
     run: function (drawingContext)
     {
+        var layer = this.gameObject;
+
+        if (layer.memberCount === 0)
+        {
+            return;
+        }
+
         this.manager.startStandAloneRender();
 
         this.onRunBegin(drawingContext);
 
-        if (this.gameObject.needsUpdate)
+        if (layer.needsUpdate)
         {
-            this.manager.getNode('BakeImageGPULayer').run(this.gameObject);
+            this.instanceBufferLayout.buffer.update();
+            layer.needsUpdate = false;
         }
 
         // Set game object derived uniforms.
@@ -393,18 +401,18 @@ var SubmitterImageGPULayer = new Class({
             [
                 camera.scrollX,
                 camera.scrollY,
-                camera.alpha * this.gameObject.alpha
+                camera.alpha * layer.alpha
             ]
         );
 
         this.program.setUniform(
             'uTime',
-            this.gameObject.timeElapsed
+            layer.timeElapsed
         );
 
         // Assemble textures.
         var textures = [
-            this.gameObject.frame.source.glTexture
+            layer.frame.source.glTexture
         ];
 
         // Render instances.
@@ -415,7 +423,7 @@ var SubmitterImageGPULayer = new Class({
             this.vao,
             0,
             4,
-            this.gameObject.images.length
+            layer.memberCount
         );
 
         this.onRunEnd(drawingContext);
