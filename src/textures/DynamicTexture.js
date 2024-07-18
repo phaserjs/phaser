@@ -5,7 +5,7 @@
  */
 
 var BlendModes = require('../renderer/BlendModes');
-var Camera = require('../cameras/2d/BaseCamera');
+var Camera = require('../cameras/2d/Camera');
 var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var CONST = require('../const');
@@ -197,7 +197,7 @@ var DynamicTexture = new Class({
          * You can scroll, zoom and rotate this Camera.
          *
          * @name Phaser.Textures.DynamicTexture#camera
-         * @type {Phaser.Cameras.Scene2D.BaseCamera}
+         * @type {Phaser.Cameras.Scene2D.Camera}
          * @since 3.12.0
          */
         this.camera = new Camera(0, 0, width, height).setScene(manager.game.scene.systemScene, false);
