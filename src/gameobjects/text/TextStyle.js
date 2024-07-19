@@ -395,7 +395,7 @@ var TextStyle = new Class({
                 // Callback & scope should be set without processing the values
                 this[key] = GetValue(style, propertyMap[key][0], value);
             }
-            else if (key === 'fontSize' && typeof style.fontSize === 'number')
+            else if (style && key === 'fontSize' && typeof style.fontSize === 'number')
             {
                 this[key] = style.fontSize.toString() + 'px';
             }
