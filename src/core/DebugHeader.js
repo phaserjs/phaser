@@ -70,7 +70,6 @@ var DebugHeader = function (game)
                 args.push('background: ' + color);
 
                 lastColor = color;
-
             });
 
             //  inject the text color
