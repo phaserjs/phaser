@@ -42,7 +42,7 @@ var Tileset = new Class({
         if (tileData === undefined) { tileData = {}; }
 
         /**
-         * The name of the Tileset.s
+         * The name of the Tileset.
          *
          * @name Phaser.Tilemaps.Tileset#name
          * @type {string}
@@ -308,12 +308,27 @@ var Tileset = new Class({
 
         this.glTexture = frame.source.glTexture;
 
+        if (
+            !isFinite(bounds.width) ||
+            !isFinite(bounds.height) ||
+            !isFinite(bounds.x) ||
+            !isFinite(bounds.y))
+        {
+            console.log('path 0', bounds, texture);
+            // this.updateTileData(frame.width, frame.height);
+            // this.updateTileData(bounds.width, bounds.height);
+            return this;
+        }
+
         if (frame.width > bounds.width || frame.height > bounds.height)
         {
+            console.log('path 1', bounds);
+            console.log('path 2', frame.width, frame.height, 'bnds', bounds.width, bounds.height, bounds.x, bounds.y);
             this.updateTileData(frame.width, frame.height);
         }
         else
         {
+            console.log('path 3', frame.width, frame.height, 'bnds', bounds.width, bounds.height, bounds.x, bounds.y);
             this.updateTileData(bounds.width, bounds.height, bounds.x, bounds.y);
         }
 
@@ -345,7 +360,7 @@ var Tileset = new Class({
     },
 
     /**
-     * Sets the tile margin & spacing and updates the tile data (rows, columns, etc.).
+     * Sets the tile margin and spacing and updates the tile data (rows, columns, etc.).
      *
      * @method Phaser.Tilemaps.Tileset#setSpacing
      * @since 3.0.0
