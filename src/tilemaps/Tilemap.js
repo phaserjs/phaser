@@ -423,8 +423,16 @@ var Tilemap = new Class({
 
         if (tileset)
         {
-            tileset.setTileSize(tileWidth, tileHeight);
-            tileset.setSpacing(tileMargin, tileSpacing);
+            if (tileWidth || tileHeight)
+            {
+                tileset.setTileSize(tileWidth, tileHeight);
+            }
+
+            if (tileMargin || tileSpacing)
+            {
+                tileset.setSpacing(tileMargin, tileSpacing);
+            }
+
             tileset.setImage(texture);
 
             return tileset;
