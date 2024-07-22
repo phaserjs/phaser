@@ -13,7 +13,7 @@ In this release we have removed the shader uniform and branching and also made `
 * Setting the `uRoundPixels` uniform has been removed from the Single, Rope, PreFX, PostFX, Multi and Mobile WebGL Pipelines.
 * The Multi Pipeline and Blitter WebGL Renderer will now pass the `camera.roundPixels` value to the Transform Matrix `setQuad` method.
 * The Multi Pipeline `batchSprite` and `batchTexture` methods will now apply `Math.floor` to the sprite matrix calculations if camera round pixels is enabled.
-* `BaseCamera.preRender` has been removed. This method was completely overridden by `Camera.preRender` which is the method that contained the correct rendering logic. As the Base Camera variant was not used internally we have removed it to save space.
+* `BaseCamera.preRender` has been removed. This method was completely overridden by `Camera.preRender` which is the method that contained the correct rendering logic. As the Base Camera variant was not used internally outside of Dynamic Textures, we have removed it to save space.
 * `Camera.preRender` has been updated to use both zoomX and zoomY for the matrix transform.
 * `Camera.preRender` has been updated to apply Math.floor to the scroll factor when rounding is enabled on the Camera. This fixes an issue where following sprites with Camera lerp, or heavy zoom factors, would cause 'stuttering' at sub-pixel values.
 
