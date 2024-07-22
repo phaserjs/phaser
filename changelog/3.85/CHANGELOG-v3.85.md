@@ -36,6 +36,7 @@ In this release we have removed the shader uniform and branching and also made `
 * Added White Image Support in `TextureManager`. In the game `config`, set `whiteImage` to `null` to ignore loading the `whiteImage`.
 * `Phaser.Core.TimeStep#pauseDuration` is a new property that holds the duration of the most recent game pause, if any, in ms (thanks @samme)
 * The Game `Events#RESUME` event now contains a new parameter `pauseDuration` which is the duration, in ms, that the game was paused for (thanks @samme)
+* Added `Phaser.Loader.LoaderPlugin#removePack` method to `LoaderPlugin` that removes resources listed in an Asset Pack.(thanks @samme)
 
 # WebGL Rendering Updates
 
