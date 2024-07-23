@@ -29,7 +29,6 @@ var RenderNodes = {
     RebindContext: require('./RebindContext'),
     RenderNode: require('./RenderNode'),
     StrokePath: require('./StrokePath'),
-    SubmitterImageGPULayer: require('./submitter/SubmitterImageGPULayer'),
     SubmitterQuad: require('./submitter/SubmitterQuad'),
     SubmitterQuadLight: require('./submitter/SubmitterQuadLight'),
     SubmitterTileSprite: require('./submitter/SubmitterTileSprite'),

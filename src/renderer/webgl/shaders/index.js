@@ -35,8 +35,6 @@ module.exports = {
     FlatFrag: require('./Flat-frag.js'),
     FlatVert: require('./Flat-vert.js'),
     FlatLightFrag: require('./FlatLight-frag.js'),
-    ImageBakedLayerFrag: require('./ImageBakedLayer-frag.js'),
-    ImageBakedLayerVert: require('./ImageBakedLayer-vert.js'),
     LightFrag: require('./Light-frag.js'),
     LightShadowFrag: require('./LightShadow-frag.js'),
     LinearBlendFrag: require('./LinearBlend-frag.js'),
