@@ -82,6 +82,7 @@ In this release we have removed the shader uniform and branching and also made `
 * Resolved an issue in `BitmapText` where adding a space character `' '` at the end of a line caused the following line of to ignore line wrapping when using `setMaxWidth`. Fix #6860 (thanks @bagyoni)
 * The `Matrix4.lookAtRH` method would fail because it called two missing Vector3 methods.
 * The `RenderTarget` will now automatically listen for the Renderer resize event if `autoResize` is true. This fixes an issue with Bitmap Masks where they wouldn't resize if the renderer resized. Fix #6769 (thanks @pavels)
+* The `Texture.getFrameBounds` method will now include the BASE texture in its calculations. This prevents it from returning a size of Infinity. This fixes an issue where a Tileset with margin/spacing loaded via `load.spritesheet` instead of `load.image` would have its margin and spacing ignored. Fix #6823 (thanks @damian-pastorini)
 
 ## Input Bug Fixes
 
