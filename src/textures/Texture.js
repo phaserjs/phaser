@@ -326,7 +326,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#getFrameBounds
      * @since 3.80.0
      *
-     * @param {number} sourceIndex - The index of the TextureSource to get the Frame bounds from.
+     * @param {number} [sourceIndex=0] - The index of the TextureSource to get the Frame bounds from.
      *
      * @return {Phaser.Types.Math.RectangleLike} An object containing the bounds of the Frames using the given Texture Source Index.
      */
