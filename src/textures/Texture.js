@@ -334,14 +334,16 @@ var Texture = new Class({
     {
         if (sourceIndex === undefined) { sourceIndex = 0; }
 
-        var frames = this.getFramesFromTextureSource(sourceIndex);
+        var frames = this.getFramesFromTextureSource(sourceIndex, true);
 
-        var minX = Infinity;
-        var minY = Infinity;
-        var maxX = 0;
-        var maxY = 0;
+        var baseFrame = frames[0];
 
-        for (var i = 0; i < frames.length; i++)
+        var minX = baseFrame.cutX;
+        var minY = baseFrame.cutY;
+        var maxX = baseFrame.cutX + baseFrame.cutWidth;
+        var maxY = baseFrame.cutY + baseFrame.cutHeight;
+
+        for (var i = 1; i < frames.length; i++)
         {
             var frame = frames[i];
 
