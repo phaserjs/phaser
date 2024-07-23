@@ -650,7 +650,7 @@ var Game = new Class({
 
         if (wasPaused)
         {
-            this.events.emit(Events.RESUME);
+            this.events.emit(Events.RESUME, 0);
         }
     },
 
