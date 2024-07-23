@@ -1,5 +1,14 @@
 # Version 3.85.0 - Itsuki - in development
 
+# MatterJS
+
+* MatterJS has been updated to version 0.20.0 - [Here are all the details about this update](MatterJS.md).
+* A new `wrap` method has been natively integrated into the `Body` class to replace the existing `MatterWrap` plugin. [Here's how it works](MatterWrapBounds.md).
+* The Matter `attractors` plugin has been natively integrated into the `Body` class and Matter engine. [More details here](MatterAttractor.md).
+* Integrated `MatterCollisionEvents` plugin functionality directly into the `Matter.World` class to handle collisions more effectively. [More details here](MatterCollisionEvents.md).
+* Updated `Matter.World` to improve the performance, accuracy, and reliability of the `update` method in handling physics simulations or animations. [More details here](MatterWorldUpdate.md).
+* Fixed `Matter.World` bug where `group.length` returns `undefined`. Changed to `group.getLength()` to correctly return number of children in a group.
+
 # Round Pixels
 
 Includes a **Potentially Breaking Change**
@@ -27,8 +36,6 @@ In this release we have removed the shader uniform and branching and also made `
 * `Phaser.Textures.Frame#setCutSize` is a new internal method with 2 parameters: `width` and `height`. These sets the width, and height of the area in the source image to cut. (thanks @FelipeIzolan)
 * Introduced new constants in `ORIENTATION_CONST`. The constants `LANDSCAPE_SECONDARY` and `PORTRAIT_SECONDARY` have been added to the `Phaser.Scale.Orientation` object. These constants represent the secondary landscape and portrait orientations respectively. This addition provides more granular control over device orientation handling in Phaser. Fix #6837 (thanks @rexrainbow)
 * Introduced `updateConfig` method in `ParticleEmitter` to allow dynamic updating of Particle Emitter configurations. This method enables existing properties to be overridden and new properties to be added to the emitter's configuration. It ensures that the emitter is reset with the updated configuration for more flexible particle effects management.
-* A new `wrap` method has been natively integrated into the `Body` class to replace the existing `MatterWrap` plugin. [Here's how it works](MatterWrapBounds.md).
-* The Matter `attractors` plugin has been natively integrated into the `Body` class and Matter engine. [More details here](MatterAttractor.md).
 * Added functionality to the `Phaser.Textures.DynamicTexture#clear` method. Clear a specific area within a `Dynamic Texture` by specifying `x`, `y`, `width`, and `height` parameters to clear only a portion of the texture. Fix #6853 (thanks @SelfDevTV)
 * Added functionality to the `Phaser.Renderer.WebGL.RenderTarget#clear` method. Clear a specific area within the `RenderTarget` by specifying `x`, `y`, `width`, and `height` parameters.
 * Added Default Image Handling in `TextureManager`. In the game `config`, set `defaultImage` to `null` to ignore loading the `defaultImage`.
@@ -46,9 +53,6 @@ In this release we have removed the shader uniform and branching and also made `
 
 # Updates
 
-* MatterJS updated to 0.20.0 and integrated into Phaser. [Here are details about the update](MatterJS.md).
-* Integrated `MatterCollisionEvents` plugin functionality directly into the `Matter.World` class to handle collisions more effectively. [More details here](MatterCollisionEvents.md).
-* Updated `Matter.World` to improve the performance, accuracy, and reliability of the `update` method in handling physics simulations or animations. [More details here](MatterWorldUpdate.md).
 * Calling `Timeline.pause` will now pause any currently active Tweens that the Timeline had started (thanks @monteiz)
 * Calling `Timeline.resume` will now resume any currently paused Tweens that the Timeline had started (thanks @monteiz)
 * Calling `Timeline.clear` and `Timeline.destroy` will now destroy any currently active Tweens that the Timeline had created. Previously, active tweens would continue to play to completion (thanks @monteiz)
@@ -75,7 +79,6 @@ In this release we have removed the shader uniform and branching and also made `
 * Calling `addDeathZone()` on a particle emitter Game Object had a bug where the `DeathZone` used world position coordinates. `DeathZone` now uses local position coordinates following the particle emitter position. Fix #6371 (thanks @vforsh)
 * Updated the `GetLineToLine` method in `GetLineToLine` to handle the case where `dx1` or `dy1` values is zero. This ensures the function correctly returns `null` in this case to prevent errors in calculations involving line segments. Fix #6579 (thanks @finscn)
 * Resolved all kerning issues in WebGL bitmap text rendering. This includes adjustments to glyph positioning and spacing, ensuring accurate and visually pleasing text display across all WebGL contexts. Fix #6631 (thanks @monteiz)
-* Fixed `Matter.World` bug where `group.length` returns `undefined`. Changed to `group.getLength()` to correctly return number of children in a group.
 * Fixed Group vs Group collisions failing when performing a bitwise `&` operation between `body1.collisionMask` and `body2.collisionCategory`. The default `collisionMask` value is changed to `2147483647` to correctly match any `collisionCategory`. Fix #6764 (thanks @codeimpossible)
 * Resolved an issue in `BitmapText` where adding a space character `' '` at the end of a line did not correctly align the vertical position of the new line. The updated calculation now correctly accounts for both line height and line spacing. Fix #6717 (thanks @wooseok123)
 * Resolved an issue in `BitmapText` where an extra empty line was added when `setMaxWidth` was called, and the width of the line was less than a word. Previously, `yAdvance` was incorrectly incremented by `lineHeight + lineSpacing` for each word, leading to an unintended increase in vertical space. The correction now calculates `yAdvance` based on the `currentLine` index, ensuring that vertical spacing accurately reflects the number of lines. Fix #6807 (thanks @AlvaroNeuronup)

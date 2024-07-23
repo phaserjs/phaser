@@ -12,6 +12,7 @@ Return to the [Change Log index](CHANGELOG-v3.85.md).
 *Enhanced Time Management*: Implemented a more robust handling of frame delta time calculation to accommodate edge cases such as 0, NaN, or unusually large frame deltas. This ensures smoother and more consistent updates.
 
 *Frame Delta Smoothing*: Added a smoothing mechanism for frame delta values over a series of frames to reduce the impact of outliers and ensure smoother animations and physics simulations. This includes:
+
 - Storing frame delta history.
 - Sorting and sampling a central window from the delta history to limit the influence of outliers.
 - Calculating a smoothed frame delta from the central window.

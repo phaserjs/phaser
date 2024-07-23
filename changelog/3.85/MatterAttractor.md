@@ -1,4 +1,4 @@
-# Phaser 3.80.0 Change Log
+# Phaser 3.85.0 Change Log
 
 Return to the [Change Log index](CHANGELOG-v3.85.md).
 
@@ -37,6 +37,7 @@ The `attractors` functionality is now natively integrated into the Matter.js lib
 # To remove the attractors from a game object
 
 - Set the `attractors` property on the game object body to `[]` or `null`. Example:
+
 ```js
-    gameObject.body.attractors = [];
+gameObject.body.attractors = [];
 ```

@@ -6,13 +6,13 @@ Return to the [Change Log index](CHANGELOG-v3.85.md).
 
 # Highlights
 
-* added support for high refresh rate displays with fixed timestep in `Matter.Runner`
-* added support for sub-stepping for higher quality simulations in `Matter.Runner`
-* changed to a fixed timestep by default in `Matter.Runner`
-* improved frame pacing and average performance up to ~6% (see [#1238](https://github.com/liabru/matter-js/pull/1238))
-* reduced average memory usage up to ~30% (see [#1238](https://github.com/liabru/matter-js/pull/1238))
-* reduced memory garbage collection
-* bug fixes and improvements see [changelog](https://github.com/liabru/matter-js/blob/0.20.0/CHANGELOG.md)
+* Added support for high refresh rate displays with fixed timestep in `Matter.Runner`
+* Added support for sub-stepping for higher quality simulations in `Matter.Runner`
+* Changed to a fixed timestep by default in `Matter.Runner`
+* Improved frame pacing and average performance up to ~6% (see [#1238](https://github.com/liabru/matter-js/pull/1238))
+* Reduced average memory usage up to ~30% (see [#1238](https://github.com/liabru/matter-js/pull/1238))
+* Reduced memory garbage collection
+* Bug fixes and improvements see [changelog](https://github.com/liabru/matter-js/blob/0.20.0/CHANGELOG.md)
 
 # Changes
 
@@ -23,10 +23,10 @@ See the release [compare page](https://github.com/liabru/matter-js/compare/0.19.
 `Matter.Runner` related changes [#1254](https://github.com/liabru/matter-js/pull/1254):
 
 * `Matter.Runner` now defaults to a fixed deterministic timestep and support for non-fixed timestep is removed
-* optionally set your performance budgets `runner.maxFrameTime` (see docs)
-* note that `Matter.Runner` can now call zero, one, or multiple engine updates and events per display frame (see docs)
-* if needed set up your polyfill for `window.requestAnimationFrame`
-* see `Matter.Runner` updated docs throughout
+* Optionally set your performance budgets `runner.maxFrameTime` (see docs)
+* Note that `Matter.Runner` can now call zero, one, or multiple engine updates and events per display frame (see docs)
+* If needed set up your polyfill for `window.requestAnimationFrame`
+* See `Matter.Runner` updated docs throughout
 
 Performance related changes [#1238](https://github.com/liabru/matter-js/pull/1238):
 
