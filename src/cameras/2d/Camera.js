@@ -555,8 +555,8 @@ var Camera = new Class({
 
         if (this.roundPixels)
         {
-            sx = Math.floor(sx);
-            sy = Math.floor(sy);
+            sx = Math.floor(sx + 0.5);
+            sy = Math.floor(sy + 0.5);
         }
 
         if (this.useBounds)
@@ -569,22 +569,22 @@ var Camera = new Class({
         this.scrollX = sx;
         this.scrollY = sy;
 
-        var midX = Math.floor(sx + halfWidth);
-        var midY = Math.floor(sy + halfHeight);
+        var midX = Math.floor((sx + halfWidth) + 0.5);
+        var midY = Math.floor((sy + halfHeight) + 0.5);
 
         //  The center of the camera, in world space, so taking zoom into account
         //  Basically the pixel value of what it's looking at in the middle of the cam
         this.midPoint.set(midX, midY);
 
-        var displayWidth = Math.floor(width / zoomX);
-        var displayHeight = Math.floor(height / zoomY);
+        var displayWidth = Math.floor((width / zoomX) + 0.5);
+        var displayHeight = Math.floor((height / zoomY) + 0.5);
 
-        var vwx = Math.floor(midX - (displayWidth / 2));
-        var vwy = Math.floor(midY - (displayHeight / 2));
+        var vwx = Math.floor((midX - (displayWidth / 2)) + 0.5);
+        var vwy = Math.floor((midY - (displayHeight / 2)) + 0.5);
 
         this.worldView.setTo(vwx, vwy, displayWidth, displayHeight);
 
-        matrix.applyITRS(Math.floor(this.x + originX), Math.floor(this.y + originY), this.rotation, zoomX, zoomY);
+        matrix.applyITRS(Math.floor(this.x + originX + 0.5), Math.floor(this.y + originY + 0.5), this.rotation, zoomX, zoomY);
 
         matrix.translate(-originX, -originY);
 

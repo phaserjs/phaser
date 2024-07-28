@@ -938,17 +938,17 @@ var TransformMatrix = new Class({
 
         if (roundPixels)
         {
-            quad[0] = Math.floor(x * a + y * c + e);
-            quad[1] = Math.floor(x * b + y * d + f);
+            quad[0] = Math.floor((x * a + y * c + e) + 0.5);
+            quad[1] = Math.floor((x * b + y * d + f) + 0.5);
 
-            quad[2] = Math.floor(x * a + yh * c + e);
-            quad[3] = Math.floor(x * b + yh * d + f);
+            quad[2] = Math.floor((x * a + yh * c + e) + 0.5);
+            quad[3] = Math.floor((x * b + yh * d + f) + 0.5);
 
-            quad[4] = Math.floor(xw * a + yh * c + e);
-            quad[5] = Math.floor(xw * b + yh * d + f);
+            quad[4] = Math.floor((xw * a + yh * c + e) + 0.5);
+            quad[5] = Math.floor((xw * b + yh * d + f) + 0.5);
 
-            quad[6] = Math.floor(xw * a + y * c + e);
-            quad[7] = Math.floor(xw * b + y * d + f);
+            quad[6] = Math.floor((xw * a + y * c + e) + 0.5);
+            quad[7] = Math.floor((xw * b + y * d + f) + 0.5);
         }
         else
         {
@@ -1022,7 +1022,7 @@ var TransformMatrix = new Class({
 
         if (round)
         {
-            v = Math.round(v);
+            v = Math.floor(v + 0.5);
         }
 
         return v;
@@ -1048,7 +1048,7 @@ var TransformMatrix = new Class({
 
         if (round)
         {
-            v = Math.round(v);
+            v = Math.floor(v + 0.5);
         }
 
         return v;
