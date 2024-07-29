@@ -5,6 +5,7 @@
 //                 Piotr Pietrzak <https://github.com/hasparus>,
 //                 Richard Davey <rich@photonstorm.com>
 
+/// <reference types="./phaser" />
 declare namespace MatterJS {
 
     //  --------------------------------------------------------------
@@ -405,7 +406,7 @@ declare namespace MatterJS {
          * @property gameObject
          * @type Phaser.GameObjects.GameObject
          */
-        gameObject?: any;
+        gameObject?: Phaser.GameObjects.GameObject;
 
         /**
          * Scale the influence of World gravity when applied to this body.
@@ -468,13 +469,13 @@ declare namespace MatterJS {
         onCollideActiveCallback?: Function;
 
         /**
-         * A collision callback dictionary used by the `Body.setOnCollideWith` function.
+         * A collision callback dictionary _(body id -> function)_ used by the `Body.setOnCollideWith` function.
          *
          * @property onCollideWith
-         * @type object
-         * @default null
+         * @type {Object.<number, Function>}
+         * @default {}
          */
-        onCollideWith?: any;
+        onCollideWith?: Record<number, Function>;
 
     }
 
@@ -1434,7 +1435,7 @@ declare namespace MatterJS {
         * A `Number` specifying the delta time, in ms, since the last game step
         */
         deltaTime: number;
-        
+
         /**
          * An array of `Vector` objects that specify the convex hull of the rigid body.
          * These should be provided about the origin `(0, 0)`. E.g.
@@ -1860,7 +1861,7 @@ declare namespace MatterJS {
          * @property gameObject
          * @type Phaser.GameObjects.GameObject
          */
-        gameObject?: any;
+        gameObject?: Phaser.GameObjects.GameObject;
 
         /**
          * The scale of the Body.
@@ -1952,13 +1953,13 @@ declare namespace MatterJS {
         onCollideActiveCallback?: Function;
 
         /**
-         * A collision callback dictionary used by the `Body.setOnCollideWith` function.
+         * A collision callback dictionary _(body id -> function)_ used by the `Body.setOnCollideWith` function.
          *
          * @property onCollideWith
-         * @type object
-         * @default null
+         * @type {Object.<number, Function>}
+         * @default {}
          */
-        onCollideWith?: any;
+        onCollideWith?: Record<number, Function>;
 
         /**
          * Sets the onCollideWith callback.
@@ -2266,7 +2267,7 @@ declare namespace MatterJS {
          * @method rotate
          * @param {body} body
          * @param {number} rotation
-         * @param {boolean} [updateVelocity]
+         * @param {boolean} [updateVelocity=false]
          */
         static rotate (body: BodyType, rotation: number, updateVelocity?: boolean): void;
 
@@ -2367,18 +2368,18 @@ declare namespace MatterJS {
          * @method setPosition
          * @param {body} body
          * @param {vector} position
-         * @param {boolean} updateVelocity
+         * @param {boolean} [updateVelocity=false]
          */
-        static setPosition (body: BodyType, position: Vector, updateVelocity: boolean): void;
+        static setPosition (body: BodyType, position: Vector, updateVelocity?: boolean): void;
 
         /**
          * Sets the angle of the body instantly. Angular velocity, position, force etc. are unchanged.
          * @method setAngle
          * @param {body} body
          * @param {number} angle
-         * @param {boolean} updateVelocity
+         * @param {boolean} [updateVelocity=false]
          */
-        static setAngle (body: BodyType, angle: number, updateVelocity: boolean): void;
+        static setAngle (body: BodyType, angle: number, updateVelocity?: boolean): void;
 
         /**
          * Sets the linear velocity of the body instantly. Position, angle, force etc. are unchanged. See also `Body.applyForce`.
@@ -2419,7 +2420,7 @@ declare namespace MatterJS {
          * @method translate
          * @param {body} body
          * @param {vector} translation
-         * @param {boolean} [updateVelocity]
+         * @param {boolean} [updateVelocity=false]
          */
         static translate (body: BodyType, translation: Vector, updateVelocity?: boolean): void;
 
@@ -2507,7 +2508,7 @@ declare namespace MatterJS {
          * @method rotate
          * @param {body} body
          * @param {number} rotation
-         * @param {boolean} [updateVelocity]
+         * @param {boolean} [updateVelocity=false]
          */
         rotate (body: BodyType, rotation: number, updateVelocity?: boolean): void;
 
@@ -2608,18 +2609,18 @@ declare namespace MatterJS {
          * @method setPosition
          * @param {body} body
          * @param {vector} position
-         * @param {boolean} updateVelocity
+         * @param {boolean} [updateVelocity=false]
          */
-        setPosition (body: BodyType, position: Vector, updateVelocity: boolean): void;
+        setPosition (body: BodyType, position: Vector, updateVelocity?: boolean): void;
 
         /**
          * Sets the angle of the body instantly. Angular velocity, position, force etc. are unchanged.
          * @method setAngle
          * @param {body} body
          * @param {number} angle
-         * @param {boolean} updateVelocity
+         * @param {boolean} [updateVelocity=false]
          */
-        setAngle (body: BodyType, angle: number, updateVelocity: boolean): void;
+        setAngle (body: BodyType, angle: number, updateVelocity?: boolean): void;
 
         /**
          * Sets the linear velocity of the body instantly. Position, angle, force etc. are unchanged. See also `Body.applyForce`.
@@ -2668,7 +2669,7 @@ declare namespace MatterJS {
          * @method translate
          * @param {body} body
          * @param {vector} translation
-         * @param {boolean} [updateVelocity]
+         * @param {boolean} [updateVelocity=false]
          */
         translate (body: BodyType, translation: Vector, updateVelocity?: boolean): void;
 
