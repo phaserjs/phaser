@@ -185,6 +185,69 @@ module.exports = {
     },
 
     /**
+     * Takes the given shader source and parses it, looking for blocks of code
+     * wrapped in `%% [feature|without] X %%` and `%% end X %%` directives,
+     * stripping the directives, and stripping or keeping the block
+     * based on whether X is in the feature set.
+     *
+     * @function Phaser.Renderer.WebGL.Utils.parseShaderFeatures
+     * @since 3.90.0
+     * @param {string} shaderSource - The shader source to parse.
+     * @param {string[]} features - An array of features to check for.
+     * @return {string} The modified shader source.
+     */
+    parseShaderFeatures: function (shaderSource, features)
+    {
+        var reCommand = new RegExp('%% (feature|without|end) (.+) %%');
+        var lines = shaderSource.split('\n');
+        var outShaderSource = '';
+
+        for (var i = 0; i < lines.length; i++)
+        {
+            var line = lines[i];
+
+            var commandExec = reCommand.exec(line);
+
+            if (!commandExec)
+            {
+                outShaderSource += line + '\n';
+                continue;
+            }
+
+            var command = commandExec[1];
+            var feature = commandExec[2];
+
+            if (
+                (command === 'feature' && features.indexOf(feature) === -1) ||
+                (command === 'without' && features.indexOf(feature) > -1)
+            )
+            {
+                // Skip lines until this command block ends.
+                while (i < lines.length)
+                {
+                    i++;
+                    line = lines[i];
+
+                    commandExec = reCommand.exec(line);
+                    if (!commandExec)
+                    {
+                        continue;
+                    }
+                    command = commandExec[1];
+                    var nextFeature = commandExec[2];
+
+                    if (command === 'end' && nextFeature === feature)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return outShaderSource;
+    },
+
+    /**
      * Takes the Glow FX Shader source and parses out the __SIZE__ and __DIST__
      * consts with the configuration values.
      *
