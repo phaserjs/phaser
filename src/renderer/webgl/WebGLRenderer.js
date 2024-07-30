@@ -3460,9 +3460,10 @@ var WebGLRenderer = new Class({
      * @param {Uint8Array} data - The Uint8Array to create the texture from.
      * @param {number} width - The width of the texture.
      * @param {number} height - The height of the texture.
+     * @param {boolean} [pma = true] - Should the texture be set as having premultiplied alpha?
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created WebGLTextureWrapper.
      */
-    createUint8ArrayTexture: function (data, width, height)
+    createUint8ArrayTexture: function (data, width, height, pma)
     {
         var gl = this.gl;
         var minFilter = gl.NEAREST;
@@ -3476,7 +3477,9 @@ var WebGLRenderer = new Class({
             wrap = gl.REPEAT;
         }
 
-        return this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, data, width, height);
+        if (pma === undefined) { pma = true; }
+
+        return this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, data, width, height, pma);
     },
 
     /**
