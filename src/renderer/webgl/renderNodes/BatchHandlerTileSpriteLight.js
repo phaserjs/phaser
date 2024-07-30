@@ -209,6 +209,7 @@ var BatchHandlerTileSpriteLight = new Class({
         currentBatchEntry.unit = 2;
 
         // Normal map rotation
+        normalMapRotation = -normalMapRotation - currentContext.camera.rotation;
         if (this._normalMapRotation !== normalMapRotation)
         {
             // Complete the entire batch if the normal map rotation changes.
@@ -219,9 +220,8 @@ var BatchHandlerTileSpriteLight = new Class({
 
             if (normalMapRotation)
             {
-                var rot = -normalMapRotation;
-                var c = Math.cos(rot);
-                var s = Math.sin(rot);
+                var c = Math.cos(normalMapRotation);
+                var s = Math.sin(normalMapRotation);
 
                 inverseRotationMatrix[1] = s;
                 inverseRotationMatrix[3] = -s;

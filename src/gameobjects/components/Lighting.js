@@ -45,6 +45,7 @@ var Lighting = {
      * @webglOnly
      * @since 3.90.0
      * @param {boolean} enable - `true` to use lighting, or `false` to disable it.
+     * @return {this} This Game Object instance.
      */
     setLighting: function (enable)
     {

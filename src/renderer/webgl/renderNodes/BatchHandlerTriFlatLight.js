@@ -179,13 +179,17 @@ var BatchHandlerTriFlatLight = new Class({
 
             var lightName = 'uLights[' + i + '].';
 
-            cameraMatrix.transformPoint(light.x, light.y, vec);
+            cameraMatrix.transformPoint(
+                light.x - camera.scrollX * light.scrollFactorX * camera.zoom,
+                light.y - camera.scrollY * light.scrollFactorY * camera.zoom,
+                vec
+            );
 
             program.setUniform(
                 lightName + 'position',
                 [
-                    vec.x - (camera.scrollX * light.scrollFactorX * camera.zoom),
-                    height - (vec.y - (camera.scrollY * light.scrollFactorY * camera.zoom))
+                    vec.x,
+                    height - vec.y
                 ]
             );
             program.setUniform(

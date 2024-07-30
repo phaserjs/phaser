@@ -184,13 +184,17 @@ var BatchHandlerQuadLight = new Class({
 
             var lightName = 'uLights[' + i + '].';
 
-            cameraMatrix.transformPoint(light.x, light.y, vec);
+            cameraMatrix.transformPoint(
+                light.x - (camera.scrollX * light.scrollFactorX * camera.zoom),
+                light.y - (camera.scrollY * light.scrollFactorY * camera.zoom),
+                vec
+            );
 
             program.setUniform(
                 lightName + 'position',
                 [
-                    vec.x - (camera.scrollX * light.scrollFactorX * camera.zoom),
-                    height - (vec.y - (camera.scrollY * light.scrollFactorY * camera.zoom)),
+                    vec.x,
+                    height - (vec.y),
                     light.z * camera.zoom
                 ]
             );
@@ -289,6 +293,7 @@ var BatchHandlerQuadLight = new Class({
         currentBatchEntry.unit = 2;
 
         // Normal map rotation
+        normalMapRotation = -normalMapRotation - currentContext.camera.rotation;
         if (this._normalMapRotation !== normalMapRotation)
         {
             // Complete the entire batch if the normal map rotation changes.
@@ -299,9 +304,8 @@ var BatchHandlerQuadLight = new Class({
 
             if (normalMapRotation)
             {
-                var rot = -normalMapRotation;
-                var c = Math.cos(rot);
-                var s = Math.sin(rot);
+                var c = Math.cos(normalMapRotation);
+                var s = Math.sin(normalMapRotation);
 
                 inverseRotationMatrix[1] = s;
                 inverseRotationMatrix[3] = -s;
