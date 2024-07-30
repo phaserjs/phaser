@@ -19,11 +19,12 @@ var Class = require('../../../utils/Class');
  * @constructor
  * @since 3.90.0
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance that owns this wrapper.
+ * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The shader program that this VAO is associated with.
  * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [indexBuffer] - The index buffer used in this VAO, if any.
  * @param {Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper[]} attributeBufferLayouts - The vertex buffers containing attribute data for this VAO, alongside the relevant attribute layout.
  */
 var WebGLVAOWrapper = new Class({
-    initialize: function WebGLVAOWrapper (renderer, indexBuffer, attributeBufferLayouts)
+    initialize: function WebGLVAOWrapper (renderer, program, indexBuffer, attributeBufferLayouts)
     {
         /**
          * The WebGLRenderer instance that owns this wrapper.
@@ -33,6 +34,15 @@ var WebGLVAOWrapper = new Class({
          * @since 3.90.0
          */
         this.renderer = renderer;
+
+        /**
+         * The shader program that this VAO is associated with.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper#program
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper}
+         * @since 3.90.0
+         */
+        this.program = program;
 
         /**
          * The WebGLVertexArrayObject being wrapped by this class.
@@ -113,6 +123,10 @@ var WebGLVAOWrapper = new Class({
             this.indexBuffer.bind();
         }
 
+        var program = this.program;
+        var glAttributes = program.glAttributes;
+        var glAttributeNames = program.glAttributeNames;
+
         for (var i = 0; i < this.attributeBufferLayouts.length; i++)
         {
             var attributeBufferLayout = this.attributeBufferLayouts[i];
@@ -124,6 +138,17 @@ var WebGLVAOWrapper = new Class({
             for (var j = 0; j < attributeBufferLayout.layout.layout.length; j++)
             {
                 var layout = attributeBufferLayout.layout.layout[j];
+
+                // Connect attribute locations from program.
+                var attributeIndex = glAttributeNames.get(layout.name);
+                if (attributeIndex === undefined)
+                {
+                    throw new Error('Attribute not found: ' + layout.name);
+                }
+                var attributeInfo = glAttributes[attributeIndex];
+                layout.location = attributeInfo.location;
+
+                // Create attribute pointers.
 
                 var location = layout.location;
 

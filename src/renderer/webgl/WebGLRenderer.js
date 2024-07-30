@@ -2523,12 +2523,13 @@ var WebGLRenderer = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createVAO
      * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The program to bind the VAO to.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} indexBuffer - The index buffer.
      * @param {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout[]} attributeBufferLayouts - The attribute buffer layouts.
      */
-    createVAO: function (indexBuffer, attributeBufferLayouts)
+    createVAO: function (program, indexBuffer, attributeBufferLayouts)
     {
-        var vao = new WebGLVAOWrapper(this, indexBuffer, attributeBufferLayouts);
+        var vao = new WebGLVAOWrapper(this, program, indexBuffer, attributeBufferLayouts);
         this.glVAOWrappers.push(vao);
         return vao;
     },

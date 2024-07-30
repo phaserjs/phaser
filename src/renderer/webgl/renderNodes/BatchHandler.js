@@ -187,7 +187,6 @@ var BatchHandler = new Class({
          */
         this.vertexBufferLayout = new WebGLVertexBufferLayoutWrapper(
             renderer,
-            this.program,
             partialLayout,
             config.createOwnVertexBuffer ? null : renderer.genericVertexBuffer
         );
@@ -199,7 +198,7 @@ var BatchHandler = new Class({
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper}
          * @since 3.90.0
          */
-        this.vao = renderer.createVAO(this.indexBuffer, [
+        this.vao = renderer.createVAO(this.program, this.indexBuffer, [
             this.vertexBufferLayout
         ]);
 

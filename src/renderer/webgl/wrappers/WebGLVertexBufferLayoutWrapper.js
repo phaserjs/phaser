@@ -23,7 +23,7 @@ var Class = require('../../../utils/Class');
  * @throws {Error} If the buffer is too small for the layout.
  */
 var WebGLVertexBufferLayoutWrapper = new Class({
-    initialize: function WebGLVertexBufferLayoutWrapper (renderer, program, layout, buffer)
+    initialize: function WebGLVertexBufferLayoutWrapper (renderer, layout, buffer)
     {
         /**
          * The WebGLRenderer instance that owns this wrapper.
@@ -35,15 +35,6 @@ var WebGLVertexBufferLayoutWrapper = new Class({
         this.renderer = renderer;
 
         /**
-         * The program that this layout is associated with.
-         *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper#program
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper}
-         * @since 3.90.0
-         */
-        this.program = program;
-
-        /**
          * The layout of the buffer.
          *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper#layout
@@ -53,8 +44,8 @@ var WebGLVertexBufferLayoutWrapper = new Class({
         this.layout = layout;
 
         // Fill in the layout with the stride
-        // and per-attribute location, bytes, and offset.
-        program.completeLayout(layout);
+        // and per-attribute bytes and offset.
+        this.completeLayout(layout);
 
         var bufferSize = layout.stride * layout.count;
         if (buffer && buffer.byteLength < bufferSize)
@@ -70,6 +61,61 @@ var WebGLVertexBufferLayoutWrapper = new Class({
          * @since 3.90.0
          */
         this.buffer = buffer || renderer.createVertexBuffer(new ArrayBuffer(bufferSize), layout.usage);
+    },
+
+    /**
+     * Complete the layout of the provided attribute buffer layout.
+     * This will fill in the stride, byte counts, and offsets.
+     * In addition, it will convert any GLenums specified as strings
+     * to their numeric values.
+     * This mutates the layout.
+     *
+     * The order of attributes within the layout forms the order of the buffer.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper#completeLayout
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout} attributeBufferLayout - The layout to complete.
+     */
+    completeLayout: function (attributeBufferLayout)
+    {
+        var gl = this.renderer.gl;
+        var layout = attributeBufferLayout.layout;
+        var constants = this.renderer.shaderSetters.constants;
+
+        if (typeof attributeBufferLayout.usage === 'string')
+        {
+            attributeBufferLayout.usage = gl[attributeBufferLayout.usage];
+        }
+
+        var offset = 0;
+
+        for (var i = 0; i < layout.length; i++)
+        {
+            var attribute = layout[i];
+            var size = attribute.size;
+            var columns = attribute.columns || 1;
+
+            // First, append the current offset.
+            attribute.offset = offset;
+
+            // Convert the type to a GLenum if it is a string.
+            if (typeof attribute.type === 'string')
+            {
+                attribute.type = gl[attribute.type];
+            }
+
+            var typeData = constants[attribute.type];
+            var baseSize = typeData.size;
+            var baseBytes = typeData.bytes;
+
+            // Append the bytes per attribute element.
+            attribute.bytes = baseBytes;
+
+            offset += size * columns * baseBytes * baseSize;
+        }
+
+        // Now that we know the total stride, we can set it.
+        attributeBufferLayout.stride = offset;
     }
 });
 
