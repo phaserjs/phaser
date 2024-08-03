@@ -19,8 +19,8 @@
  * @property {Phaser.GameObjects.Particles.EmitterOp} rotate - The rotate EmitterOp instance. This is an onEmit and onUpdate operator.
  * @property {Phaser.GameObjects.Particles.EmitterOp} scaleX - The scaleX EmitterOp instance. This is an onEmit and onUpdate operator.
  * @property {Phaser.GameObjects.Particles.EmitterOp} scaleY - The scaleY EmitterOp instance. This is an onEmit and onUpdate operator.
- * @property {Phaser.GameObjects.Particles.EmitterOp} speedX - The speedX EmitterOp instance. This is an onEmit operator only.
- * @property {Phaser.GameObjects.Particles.EmitterOp} speedY - The speedY EmitterOp instance. This is an onEmit operator only.
+@property {Phaser.GameObjects.Particles.EmitterOp} speedX - The speedX EmitterOp instance. This is an onEmit and onUpdate operator.
+@property {Phaser.GameObjects.Particles.EmitterOp} speedY - The speedY EmitterOp instance. This is an onEmit and onUpdate operator.
  * @property {Phaser.GameObjects.Particles.EmitterOp} tint - The tint EmitterOp instance. This is an onEmit and onUpdate operator.
  * @property {Phaser.GameObjects.Particles.EmitterOp} x - The x EmitterOp instance. This is an onEmit and onUpdate operator.
  * @property {Phaser.GameObjects.Particles.EmitterOp} y - The y EmitterOp instance. This is an onEmit and onUpdate operator.
