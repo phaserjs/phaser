@@ -292,6 +292,13 @@ var LightPipeline = new Class({
             rotation = gameObject.rotation;
         }
 
+        if (this.currentBatch === null)
+        {
+            this.createBatch(texture);
+
+            this.addTextureToBatch(normalMap);
+        }
+
         this.setNormalMapRotation(rotation);
 
         return 0;
@@ -337,6 +344,13 @@ var LightPipeline = new Class({
         else
         {
             this.setNormalMapRotation(gameObject.rotation);
+        }
+
+        if (this.currentBatch === null)
+        {
+            this.createBatch(texture);
+
+            this.addTextureToBatch(normalMap);
         }
 
         return 0;
