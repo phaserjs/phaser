@@ -312,7 +312,7 @@ var Config = new Class({
         //  If you do: { banner: false } it won't display any banner at all
 
         /**
-         * @const {boolean} Phaser.Core.Config#hideBanner - Don't write the banner line to the console.log.
+         * @const {boolean} Phaser.Core.Config#hideBanner - Don't write the banner line to the console.log. See `Phaser.TYpes.Core.BannerConfig` for details of this object.
          */
         this.hideBanner = (GetValue(config, 'banner', null) === false);
 
