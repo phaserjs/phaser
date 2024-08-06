@@ -1391,7 +1391,11 @@ var Text = new Class({
                 linePositionY = Math.round(linePositionY);
             }
 
-            if (style.strokeThickness)
+            var letterSpacing = this.letterSpacing;
+
+            // Apply stroke to the whole line only if there's no custom letter spacing
+
+            if (style.strokeThickness && letterSpacing === 0)
             {
                 style.syncShadow(context, style.shadowStroke);
 
@@ -1404,8 +1408,6 @@ var Text = new Class({
 
                 // Looping fillText could be an expensive operation, we should ignore it if it is not needed
 
-                var letterSpacing = this.letterSpacing;
-
                 if (letterSpacing !== 0)
                 {
                     var charPositionX = 0;
@@ -1415,6 +1417,15 @@ var Text = new Class({
                     //  Draw text letter by letter
                     for (var l = 0; l < line.length; l++)
                     {
+                        if (style.strokeThickness)
+                        {
+                            style.syncShadow(context, style.shadowStroke);
+
+                            context.strokeText(line[l], linePositionX + charPositionX, linePositionY);
+
+                            style.syncShadow(context, style.shadowFill);
+                        }
+
                         context.fillText(line[l], linePositionX + charPositionX, linePositionY);
 
                         charPositionX += context.measureText(line[l]).width + letterSpacing;
