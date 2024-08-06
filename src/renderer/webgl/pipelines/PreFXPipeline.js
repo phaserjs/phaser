@@ -355,7 +355,7 @@ var PreFXPipeline = new Class({
 
         //  targetBounds is the same size as the fbo and centered on the spriteBounds
         //  so we can use it when we re-render this back to the game
-        CenterOn(targetBounds, bounds.centerX, bounds.centerY);
+        CenterOn(targetBounds, Math.round(bounds.centerX), Math.round(bounds.centerY));
 
         this.tempSprite = gameObject;
 
