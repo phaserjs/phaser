@@ -44,6 +44,7 @@ In this release we have removed the shader uniform and branching and also made `
 * `Phaser.Core.TimeStep#pauseDuration` is a new property that holds the duration of the most recent game pause, if any, in ms (thanks @samme)
 * The Game `Events#RESUME` event now contains a new parameter `pauseDuration` which is the duration, in ms, that the game was paused for (thanks @samme)
 * Added `Phaser.Loader.LoaderPlugin#removePack` method to `LoaderPlugin` that removes resources listed in an Asset Pack.(thanks @samme)
+* When using `Scene.switch` you can now optionally specify a `data` argument, just like with Scene start, which will be passed along to the Scene that was switched to (thanks @wooseok123)
 
 # WebGL Rendering Updates
 
@@ -86,6 +87,7 @@ In this release we have removed the shader uniform and branching and also made `
 * The `Matrix4.lookAtRH` method would fail because it called two missing Vector3 methods.
 * The `RenderTarget` will now automatically listen for the Renderer resize event if `autoResize` is true. This fixes an issue with Bitmap Masks where they wouldn't resize if the renderer resized. Fix #6769 (thanks @pavels)
 * The `Texture.getFrameBounds` method will now include the BASE texture in its calculations. This prevents it from returning a size of Infinity. This fixes an issue where a Tileset with margin/spacing loaded via `load.spritesheet` instead of `load.image` would have its margin and spacing ignored. Fix #6823 (thanks @damian-pastorini)
+* If you used letter spacing on a `Text` Game Object, combined with stroke, the stroke would be mis-aligned. The stroke is now applied to the letter-spaced text as well (thanks @RomanFrom710)
 
 ## Input Bug Fixes
 
