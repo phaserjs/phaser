@@ -101,7 +101,10 @@ In this release we have removed the shader uniform and branching and also made `
 
 Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
+@Antriel
+@leha-games
 @lgtome
+@saintflow47
 @samme
 @AlbertMontagutCasero
 @rexrainbow
