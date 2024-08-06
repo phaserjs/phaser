@@ -88,6 +88,7 @@ In this release we have removed the shader uniform and branching and also made `
 * The `RenderTarget` will now automatically listen for the Renderer resize event if `autoResize` is true. This fixes an issue with Bitmap Masks where they wouldn't resize if the renderer resized. Fix #6769 (thanks @pavels)
 * The `Texture.getFrameBounds` method will now include the BASE texture in its calculations. This prevents it from returning a size of Infinity. This fixes an issue where a Tileset with margin/spacing loaded via `load.spritesheet` instead of `load.image` would have its margin and spacing ignored. Fix #6823 (thanks @damian-pastorini)
 * If you used letter spacing on a `Text` Game Object, combined with stroke, the stroke would be mis-aligned. The stroke is now applied to the letter-spaced text as well (thanks @RomanFrom710)
+* The `PreFXPipeline.batchQuad` method will now apply `Math.round` to the target bounds center point. This prevents sub-pixel values during the `copyTextSubImage2D` call, preventing sprites with pre-fx from appearing mis-aligned during camera pans. Fix #6879 (thanks @Antriel)
 
 ## Input Bug Fixes
 
