@@ -1322,10 +1322,11 @@ var SceneManager = new Class({
      *
      * @param {(string|Phaser.Scene)} from - The Scene to sleep.
      * @param {(string|Phaser.Scene)} to - The Scene to start.
+     * @param {object} [data] - Optional data object to pass to `Scene.Settings` and `Scene.init`, and `Scene.create`. It is only passed when the scene starts for the first time.
      *
      * @return {this} This Scene Manager instance.
      */
-    switch: function (from, to)
+    switch: function (from, to, data)
     {
         var sceneA = this.getScene(from);
         var sceneB = this.getScene(to);
@@ -1340,7 +1341,7 @@ var SceneManager = new Class({
             }
             else
             {
-                this.start(to);
+                this.start(to, data);
             }
         }
 
