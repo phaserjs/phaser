@@ -347,6 +347,24 @@ var LoaderPlugin = new Class({
          */
         this.multiKeyIndex = 0;
 
+        /**
+         * The number of times to retry loading a single file before it fails.
+         * 
+         * This property is read by the `File` object when it is created and set to
+         * the internal property of the same name. It's not used by the Loader itself.
+         * 
+         * You can set this value via the Game Config, or you can adjust this property
+         * at any point after the Loader has started. However, it will not apply to files
+         * that have already been added to the Loader, only those added after this value
+         * is changed.
+         *
+         * @name Phaser.Loader.LoaderPlugin#maxRetries
+         * @type {number}
+         * @default 2
+         * @since 3.85.0
+         */
+        this.maxRetries = GetFastValue(sceneConfig, 'maxRetries', gameConfig.loaderMaxRetries);
+
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.pluginStart, this);
     },
@@ -999,7 +1017,7 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * An internal method called automatically by the XHRLoader belong to a File.
+     * An internal method called automatically by the XHRLoader belonging to a File.
      *
      * This method will remove the given file from the inflight Set and update the load progress.
      * If the file was successful its `onProcess` method is called, otherwise it is added to the delete queue.
