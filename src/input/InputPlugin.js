@@ -539,6 +539,27 @@ var InputPlugin = new Class({
     },
 
     /**
+     * Sets a custom cursor on the parent canvas element of the game, based on the `cursor`
+     * setting of the given Interactive Object (i.e. a Sprite).
+     * 
+     * See the CSS property `cursor` for more information on MDN:
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
+     *
+     * @method Phaser.Input.InputPlugin#setCursor
+     * @since 3.85.0
+     *
+     * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that will set the cursor on the canvas.
+     */
+    setCursor: function (interactiveObject)
+    {
+        if (this.manager)
+        {
+            this.manager.setCursor(interactiveObject);
+        }
+    },
+
+    /**
      * Forces the Input Manager to clear the custom or hand cursor, regardless of the
      * interactive state of any Game Objects.
      *
