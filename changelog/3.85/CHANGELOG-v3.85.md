@@ -113,13 +113,14 @@ The Loader now has a new feature called `maxRetries`. This specifies the number 
 
 Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
+@AlbertMontagutCasero
 @Antriel
 @leha-games
 @lgtome
+@rexrainbow
 @saintflow47
 @samme
-@AlbertMontagutCasero
-@rexrainbow
+@ssotangkur
 
 # Deprecation Warning for the next release
 
