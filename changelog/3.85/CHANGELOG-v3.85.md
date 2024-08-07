@@ -62,6 +62,37 @@ The Loader now has a new feature called `maxRetries`. This specifies the number 
   * `source` parameter is now type `?object`, so it can be used for anything that is valid in the constructor.
   * New `format` parameter can update the texture format.
 
+# Updates - Input System
+
+* The `GameObject.disableInteractive` method has a new optional parameter `resetCursor`. If set, this will reset the current custom input cursor - regardless if the Game Object was the one that set it, or not.
+* The `GameObject.removeInteractive` method has a new optional parameter `resetCursor`. If set, this will reset the current custom input cursor - regardless if the Game Object was the one that set it, or not.
+* The `InputManager.resetCursor` method has a new optional boolean `forceReset` which will reset the state of the CSS canvas cursor, regardless if there is a given Interactive Object, or not.
+* The `InputPlugin.isActive` method will now check if the InputPlugin has the InputManager reference set, and if that is also enabled, as well as checking its own enabled state and that of the Scene.
+* `InputPlugin.resetCursor` is a new method that will reset a custom CSS cursor from the main canvas, regardless of the interactive state of any Game Objects.
+* The `InputPlugin.disable` method has a new optional boolean parameter `resetCursor` which will reset the CSS custom cursor if true.
+
+All of the core Input Plugin process methods have been rewritten. The methods that have changed are:
+
+* `InputPlugin.processMoveEvents`
+* `InputPlugin.processWheelEvent`
+* `InputPlugin.processOverEvents`
+* `InputPlugin.processOutEvents`
+* `InputPlugin.processOverOutEvents`
+* `InputPlugin.processUpEvents`
+* `InputPlugin.processDownEvents`
+
+And they all now do the following flow:
+
+1) They will now iterate over the array of objects to be inspected. If the object doesn't have an input handler, or their handler has been disabled, they are skipped for event consideration.
+2) If they have an input handler, the Game Object specific event is dispatched (i.e. `sprite.on('pointerdown')`)
+3) The result of this call is checked. If the Event has been cancelled, or if the Input Plugin now returns `isActive() false` then it will break from the handler loop. This will only happen if the user explicitly tells the event to stop propogation, or if they disable either the Input Plugin, or the entire Input Manager, during the event handler. Previously, only the state of cancelled event was checked. Also previously, if the Game Objects own input handler was removed or disabled as a result of their event handler, it would break from the process loop. This no longer happens. It will carry on inspecting the remaining interactive objects in the loop, as long as the Input system itself wasn't disabled.
+4) After this, the Game Object is checked to see if it is still input enabled. If it is, the Scene level events, like `this.input.on('gameobjectdown')` are emitted.
+5) The results of this call are also checked. Again, if the Event has been cancelled, or if the Input Plugin now returns `isActive() false` then it will break from the handler loop, otherwise it carries on.
+6) After the loop is complete it does one final check to see if the Event was cancelled, or if the Input Plugin is no longer active. If both of those pass, it emits the final event from the Input Plugin itself (i.e. `this.input.on('pointerdown')` from a Scene)
+
+The above flow is new in v3.85 and will catch a lot more strange edge-cases, where Game Objects, or the Event, or the whole Input system is disabled during an active event handler. In turn this fixes #6833 (thanks @ddanushkin )
+
+
 # Updates
 
 * Calling `Timeline.pause` will now pause any currently active Tweens that the Timeline had started (thanks @monteiz)
