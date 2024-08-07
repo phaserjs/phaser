@@ -452,11 +452,12 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      *
-     * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
+     * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method. Pass `null` if you just want to set the force value.
+     * @param {boolean} [forceReset=false] - Should the reset happen regardless of the object's cursor state? Default false.
      */
-    resetCursor: function (interactiveObject)
+    resetCursor: function (interactiveObject, forceReset)
     {
-        if (interactiveObject.cursor && this.canvas)
+        if ((forceReset || (interactiveObject && interactiveObject.cursor)) && this.canvas)
         {
             this.canvas.style.cursor = this.defaultCursor;
         }
