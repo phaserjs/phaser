@@ -531,6 +531,11 @@ var Config = new Class({
         this.loaderTimeout = GetValue(config, 'loader.timeout', 0);
 
         /**
+         * @const {number} Phaser.Core.Config#loaderMaxRetries - The number of times to retry a file load if it fails.
+         */
+        this.loaderMaxRetries = GetValue(config, 'loader.maxRetries', 2);
+
+        /**
          * @const {boolean} Phaser.Core.Config#loaderWithCredentials - Optional XHR withCredentials value.
          */
         this.loaderWithCredentials = GetValue(config, 'loader.withCredentials', false);
