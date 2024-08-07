@@ -93,6 +93,12 @@ And they all now do the following flow:
 
 The above flow is new in v3.85 and will catch a lot more strange edge-cases, where Game Objects, or the Event, or the whole Input system is disabled during an active event handler. The above fixes #6833 (thanks @ddanushkin), #6766 (thanks @pabloNeuronup) and #6754 (thanks @orcomarcio)
 
+* `InputPlugin.forceDownState` is a new method that will force the given Game Object into the 'down' input state, regardless of what state it is currently in. This will emit the relevant events accordingly.
+* `InputPlugin.forceUpState` is a new method that will force the given Game Object into the 'up' input state, regardless of what state it is currently in. This will emit the relevant events accordingly.
+* `InputPlugin.forceOverState` is a new method that will force the given Game Object into the 'over' input state, regardless of what state it is currently in. This will emit the relevant events accordingly.
+* `InputPlugin.forceOutState` is a new method that will force the given Game Object into the 'out' input state, regardless of what state it is currently in. This will emit the relevant events accordingly.
+* `InputPlugin.forceState` is a new internal method that forces a Game Object into the given state.
+
 # Updates
 
 * Calling `Timeline.pause` will now pause any currently active Tweens that the Timeline had started (thanks @monteiz)
