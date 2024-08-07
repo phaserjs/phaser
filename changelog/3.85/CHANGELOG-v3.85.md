@@ -26,6 +26,15 @@ In this release we have removed the shader uniform and branching and also made `
 * `Camera.preRender` has been updated to use both zoomX and zoomY for the matrix transform.
 * `Camera.preRender` has been updated to apply Math.floor to the scroll factor when rounding is enabled on the Camera. This fixes an issue where following sprites with Camera lerp, or heavy zoom factors, would cause 'stuttering' at sub-pixel values.
 
+# New Features - Loader
+
+The Loader now has a new feature called `maxRetries`. This specifies the number of times a single File will retry loading itself should it error for whatever reason, such as poor network connectivity. The default value is 2. You can change this in the Game Config, on the LoaderPlugin instance, on the FileConfig or on the File level itself. Thanks to @pavle-goloskokovic for the suggestion.
+
+* `loader.maxRetries` is a new Game Config option to set the number of retries a file will attempt to load. The default is 2.
+* `LoaderPlugin.maxRetries` is a new property that holds the number of times to retry loading a single file before it fails. This property is set via the Game Config, but can also be adjusted manually. Changing it doesn't not impact files already in the load queue, only those added later.
+* `FileConfig.maxRetries` is a new File Config option to set the number of retries a file will attempt to load. If not specified in the config, the value is read from the `LoaderPlugin.maxRetries` property.
+* `Loader.File.retryAttempts` is the internal property holding the counter for the number of times to retry loading this file before it fails. This value is decreased after each attempt. When it reaches zero, the file is considered as failed.
+
 # New Features
 
 * `BaseSoundManager.isPlaying` is a new method that will return a boolean if the given sound key is playing. If you don't provide a key, it will return a boolean if any sound is playing (thanks @samme)
@@ -45,6 +54,7 @@ In this release we have removed the shader uniform and branching and also made `
 * The Game `Events#RESUME` event now contains a new parameter `pauseDuration` which is the duration, in ms, that the game was paused for (thanks @samme)
 * Added `Phaser.Loader.LoaderPlugin#removePack` method to `LoaderPlugin` that removes resources listed in an Asset Pack.(thanks @samme)
 * When using `Scene.switch` you can now optionally specify a `data` argument, just like with Scene start, which will be passed along to the Scene that was switched to (thanks @wooseok123)
+
 
 # WebGL Rendering Updates
 
