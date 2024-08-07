@@ -954,12 +954,12 @@ var Pointer = new Class({
     },
 
     /**
-     * Checks to see if the left button was just released on this Pointer.
+     * Checks to see if the release of the left button was the most recent activity on this Pointer.
      *
      * @method Phaser.Input.Pointer#leftButtonReleased
      * @since 3.18.0
      *
-     * @return {boolean} `true` if the left button was just released.
+     * @return {boolean} `true` if the release of the left button was the most recent activity on this Pointer.
      */
     leftButtonReleased: function ()
     {
@@ -967,12 +967,12 @@ var Pointer = new Class({
     },
 
     /**
-     * Checks to see if the right button was just released on this Pointer.
+     * Checks to see if the release of the right button was the most recent activity on this Pointer.
      *
      * @method Phaser.Input.Pointer#rightButtonReleased
      * @since 3.18.0
      *
-     * @return {boolean} `true` if the right button was just released.
+     * @return {boolean} `true` if the release of the right button was the most recent activity on this Pointer.
      */
     rightButtonReleased: function ()
     {
@@ -980,12 +980,12 @@ var Pointer = new Class({
     },
 
     /**
-     * Checks to see if the middle button was just released on this Pointer.
+     * Checks to see if the release of the middle button was the most recent activity on this Pointer.
      *
      * @method Phaser.Input.Pointer#middleButtonReleased
      * @since 3.18.0
      *
-     * @return {boolean} `true` if the middle button was just released.
+     * @return {boolean} `true` if the release of the middle button was the most recent activity on this Pointer.
      */
     middleButtonReleased: function ()
     {
@@ -993,12 +993,12 @@ var Pointer = new Class({
     },
 
     /**
-     * Checks to see if the back button was just released on this Pointer.
+     * Checks to see if the release of the back button was the most recent activity on this Pointer.
      *
      * @method Phaser.Input.Pointer#backButtonReleased
      * @since 3.18.0
      *
-     * @return {boolean} `true` if the back button was just released.
+     * @return {boolean} `true` if the release of the back button was the most recent activity on this Pointer.
      */
     backButtonReleased: function ()
     {
@@ -1006,12 +1006,12 @@ var Pointer = new Class({
     },
 
     /**
-     * Checks to see if the forward button was just released on this Pointer.
+     * Checks to see if the release of the forward button was the most recent activity on this Pointer.
      *
      * @method Phaser.Input.Pointer#forwardButtonReleased
      * @since 3.18.0
      *
-     * @return {boolean} `true` if the forward button was just released.
+     * @return {boolean} `true` if the release of the forward button was the most recent activity on this Pointer.
      */
     forwardButtonReleased: function ()
     {
