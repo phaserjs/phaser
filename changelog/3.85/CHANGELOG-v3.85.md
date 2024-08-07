@@ -70,6 +70,7 @@ The Loader now has a new feature called `maxRetries`. This specifies the number 
 * The `InputPlugin.isActive` method will now check if the InputPlugin has the InputManager reference set, and if that is also enabled, as well as checking its own enabled state and that of the Scene.
 * `InputPlugin.resetCursor` is a new method that will reset a custom CSS cursor from the main canvas, regardless of the interactive state of any Game Objects.
 * The `InputPlugin.disable` method has a new optional boolean parameter `resetCursor` which will reset the CSS custom cursor if true.
+* `InputPlugin.setCursor` is a new method that will immediately set the CSS cursor to the given Interactive Objects cursor. Previously, this was hidden behind a private method in the Input Manager.
 
 All of the core Input Plugin process methods have been rewritten. The methods that have changed are:
 
@@ -90,8 +91,7 @@ And they all now do the following flow:
 5) The results of this call are also checked. Again, if the Event has been cancelled, or if the Input Plugin now returns `isActive() false` then it will break from the handler loop, otherwise it carries on.
 6) After the loop is complete it does one final check to see if the Event was cancelled, or if the Input Plugin is no longer active. If both of those pass, it emits the final event from the Input Plugin itself (i.e. `this.input.on('pointerdown')` from a Scene)
 
-The above flow is new in v3.85 and will catch a lot more strange edge-cases, where Game Objects, or the Event, or the whole Input system is disabled during an active event handler. In turn this fixes #6833 (thanks @ddanushkin )
-
+The above flow is new in v3.85 and will catch a lot more strange edge-cases, where Game Objects, or the Event, or the whole Input system is disabled during an active event handler. The above fixes #6833 (thanks @ddanushkin), #6766 (thanks @pabloNeuronup) and #6754 (thanks @orcomarcio)
 
 # Updates
 
