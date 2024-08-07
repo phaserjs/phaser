@@ -2078,6 +2078,133 @@ var InputPlugin = new Class({
     },
 
     /**
+     * This method will force the given Game Object into the 'down' input state.
+     * 
+     * This will check to see if the Game Object is enabled for input, and if so,
+     * it will emit the `GAMEOBJECT_POINTER_DOWN` event for it. If that doesn't change
+     * the input state, it will then emit the `GAMEOBJECT_DOWN` event.
+     * 
+     * The Game Object is not checked against the Pointer to see if it can enter this state,
+     * that is up to you to do before calling this method.
+     *
+     * @method Phaser.Input.InputPlugin#forceDownState
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_DOWN
+     * @fires Phaser.Input.Events#GAMEOBJECT_DOWN
+     * @since 3.85.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
+     */
+    forceDownState: function (pointer, gameObject)
+    {
+        this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_DOWN, Events.GAMEOBJECT_DOWN, false);
+    },
+
+    /**
+     * This method will force the given Game Object into the 'up' input state.
+     * 
+     * This will check to see if the Game Object is enabled for input, and if so,
+     * it will emit the `GAMEOBJECT_POINTER_UP` event for it. If that doesn't change
+     * the input state, it will then emit the `GAMEOBJECT_UP` event.
+     * 
+     * The Game Object is not checked against the Pointer to see if it can enter this state,
+     * that is up to you to do before calling this method.
+     *
+     * @method Phaser.Input.InputPlugin#forceUpState
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_UP
+     * @fires Phaser.Input.Events#GAMEOBJECT_UP
+     * @since 3.85.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
+     */
+    forceUpState: function (pointer, gameObject)
+    {
+        this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_UP, Events.GAMEOBJECT_UP, false);
+    },
+
+    /**
+     * This method will force the given Game Object into the 'over' input state.
+     * 
+     * This will check to see if the Game Object is enabled for input, and if so,
+     * it will emit the `GAMEOBJECT_POINTER_OVER` event for it. If that doesn't change
+     * the input state, it will then emit the `GAMEOBJECT_OVER` event.
+     * 
+     * The Game Object is not checked against the Pointer to see if it can enter this state,
+     * that is up to you to do before calling this method.
+     *
+     * @method Phaser.Input.InputPlugin#forceDownState
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_OVER
+     * @fires Phaser.Input.Events#GAMEOBJECT_OVER
+     * @since 3.85.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
+     */
+    forceOverState: function (pointer, gameObject)
+    {
+        this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_OVER, Events.GAMEOBJECT_OVER, true);
+    },
+
+    /**
+     * This method will force the given Game Object into the 'out' input state.
+     * 
+     * This will check to see if the Game Object is enabled for input, and if so,
+     * it will emit the `GAMEOBJECT_POINTER_OUT` event for it. If that doesn't change
+     * the input state, it will then emit the `GAMEOBJECT_OUT` event.
+     * 
+     * The Game Object is not checked against the Pointer to see if it can enter this state,
+     * that is up to you to do before calling this method.
+     *
+     * @method Phaser.Input.InputPlugin#forceDownState
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_OUT
+     * @fires Phaser.Input.Events#GAMEOBJECT_OUT
+     * @since 3.85.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
+     */
+    forceOutState: function (pointer, gameObject)
+    {
+        this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_OUT, Events.GAMEOBJECT_OUT, false);
+    },
+
+    /**
+     * This method will force the given Game Object into the given input state.
+     * 
+     * @method Phaser.Input.InputPlugin#forceState
+     * @since 3.85.0
+     * 
+     * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
+     * @param {string} gameObjectEvent - The event to emit on the Game Object.
+     * @param {string} inputPluginEvent - The event to emit on the Input Plugin.
+     * @param {boolean} [setCursor=false] - Should the cursor be set to the Game Object's cursor?
+     */
+    forceState: function (pointer, gameObject, gameObjectEvent, inputPluginEvent, setCursor)
+    {
+        var _eventData = this._eventData;
+        var _eventContainer = this._eventContainer;
+
+        _eventData.cancelled = false;
+
+        if (gameObject.input && gameObject.input.enabled)
+        {
+            gameObject.emit(gameObjectEvent, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
+
+            if (setCursor)
+            {
+                this.setCursor(gameObject.input);
+            }
+
+            if (!_eventData.cancelled && this.isActive() && gameObject.input && gameObject.input.enabled)
+            {
+                this.emit(inputPluginEvent, pointer, gameObject, _eventContainer);
+            }
+        }
+    },
+
+    /**
      * Queues a Game Object for insertion into this Input Plugin on the next update.
      *
      * @method Phaser.Input.InputPlugin#queueForInsertion
