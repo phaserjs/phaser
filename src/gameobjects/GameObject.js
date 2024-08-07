@@ -502,12 +502,16 @@ var GameObject = new Class({
      *
      * @method Phaser.GameObjects.GameObject#disableInteractive
      * @since 3.7.0
+     * 
+     * @param {boolean} [resetCursor=false] - Should the currently active Input cursor, if any, be reset to the default cursor?
      *
      * @return {this} This GameObject.
      */
-    disableInteractive: function ()
+    disableInteractive: function (resetCursor)
     {
-        this.scene.sys.input.disable(this);
+        if (resetCursor === undefined) { resetCursor = false; }
+
+        this.scene.sys.input.disable(this, resetCursor);
 
         return this;
     },
@@ -534,12 +538,21 @@ var GameObject = new Class({
      *
      * @method Phaser.GameObjects.GameObject#removeInteractive
      * @since 3.7.0
+     * 
+     * @param {boolean} [resetCursor=false] - Should the currently active Input cursor, if any, be reset to the default cursor?
      *
      * @return {this} This GameObject.
      */
-    removeInteractive: function ()
+    removeInteractive: function (resetCursor)
     {
+        if (resetCursor === undefined) { resetCursor = false; }
+
         this.scene.sys.input.clear(this);
+
+        if (resetCursor)
+        {
+            this.scene.sys.input.resetCursor();
+        }
 
         this.input = undefined;
 
