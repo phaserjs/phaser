@@ -30,7 +30,7 @@ var WebGLUniformLocationWrapper = require('./wrappers/WebGLUniformLocationWrappe
 
 var DEBUG = false;
 
-if (typeof WEBGL_DEBUG)
+if (typeof WEBGL_DEBUG && typeof window !== 'undefined')
 {
     var SPECTOR = require('phaser3spectorjs');
     DEBUG = true;
@@ -749,7 +749,7 @@ var WebGLRenderer = new Class({
         var canvas = this.canvas;
         var clearColor = config.backgroundColor;
 
-        if (DEBUG)
+        if (DEBUG && typeof SPECTOR !== 'undefined')
         {
             this.spector = new SPECTOR.Spector();
 
