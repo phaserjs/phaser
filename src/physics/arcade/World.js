@@ -1395,7 +1395,7 @@ var World = new Class({
         }
 
         //  They overlap. Is there a custom process callback? If it returns true then we can carry on, otherwise we should abort.
-        if (processCallback && processCallback.call(callbackContext, body1.gameObject, body2.gameObject) === false)
+        if (processCallback && processCallback.call(callbackContext, (body1.gameObject || body1), (body2.gameObject || body2)) === false)
         {
             return result;
         }
