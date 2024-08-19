@@ -35,6 +35,7 @@ var WebGLUniformLocationWrapper = require('./wrappers/WebGLUniformLocationWrappe
 var WebGLBlendParametersFactory = require('./parameters/WebGLBlendParametersFactory');
 var WebGLGlobalParametersFactory = require('./parameters/WebGLGlobalParametersFactory');
 var RenderNodeManager = require('./renderNodes/RenderNodeManager');
+var ShaderProgramFactory = require('./ShaderProgramFactory');
 
 var DEBUG = false;
 
@@ -169,6 +170,15 @@ var WebGLRenderer = new Class({
          * @since 3.90.0
          */
         this.cameraRenderNode = null;
+
+        /**
+         * The shader program factory for managing variant shaders.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#shaderProgramFactory
+         * @type {Phaser.Renderer.WebGL.ShaderProgramFactory}
+         * @since 3.90.0
+         */
+        this.shaderProgramFactory = new ShaderProgramFactory(this);
 
         /**
          * The width of the canvas being rendered to.

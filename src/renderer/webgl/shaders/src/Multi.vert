@@ -1,6 +1,14 @@
-#define SHADER_NAME PHASER_MULTI_VS
+#pragma phaserTemplate(shaderName)
 
+#pragma phaserTemplate(features)
+
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
 precision mediump float;
+#endif
+
+#pragma phaserTemplate(vertexDefine)
 
 uniform mat4 uProjectionMatrix;
 uniform int uRoundPixels;
@@ -8,14 +16,18 @@ uniform vec2 uResolution;
 
 attribute vec2 inPosition;
 attribute vec2 inTexCoord;
-attribute float inTexId;
+attribute float inTexDatum;
 attribute float inTintEffect;
 attribute vec4 inTint;
 
 varying vec2 outTexCoord;
-varying float outTexId;
+varying float outTexDatum;
 varying float outTintEffect;
 varying vec4 outTint;
+
+#pragma phaserTemplate(outVariables)
+
+#pragma phaserTemplate(vertexHeader)
 
 void main ()
 {
@@ -27,7 +39,9 @@ void main ()
     }
 
     outTexCoord = inTexCoord;
-    outTexId = inTexId;
+    outTexDatum = inTexDatum;
     outTint = inTint;
     outTintEffect = inTintEffect;
+
+    #pragma phaserTemplate(vertexProcess)
 }

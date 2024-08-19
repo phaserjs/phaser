@@ -51,6 +51,37 @@ var SubmitterQuad = new Class({
          * @since 3.90.0
          */
         this.batchHandler = config.batchHandler;
+
+        /**
+         * Persistent object reused to pass render options to the batch handler.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad#_renderOptions
+         * @type {object}
+         * @since 3.90.0
+         * @private
+         */
+        this._renderOptions = {
+            multiTexturing: true,
+            lighting: null
+        };
+
+        /**
+         * Persistent object reused to pass lighting options to the batch handler.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad#_lightingOptions
+         * @type {object}
+         * @since 3.90.0
+         * @private
+         */
+        this._lightingOptions = {
+            normalGLTexture: null,
+            normalMapRotation: 0,
+            selfShadow: {
+                enabled: false,
+                penumbra: 0,
+                diffuseFlatThreshold: 0
+            }
+        };
     },
 
     /**
@@ -77,6 +108,8 @@ var SubmitterQuad = new Class({
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode|Omit<Phaser.Renderer.WebGL.RenderNodes.TexturerImage, 'run'>} texturerNode - The texturer node used to texture the GameObject. You may pass a texturer node or an object containing equivalent data without a `run` method.
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode|{ quad: Float32Array }} transformerNode - The transformer node used to transform the GameObject. You may pass a transformer node or an object with a `quad` property.
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode|Omit<Phaser.Renderer.WebGL.RenderNodes.RenderNode, 'run'>} [tinterNode] - The tinter node used to tint the GameObject. You may pass a tinter node or an object containing equivalent data without a `run` method. If omitted, Image-style tinting will be used.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [normalMap] - The normal map texture to use for lighting. If omitted, the normal map texture of the GameObject will be used, or the default normal map texture of the renderer.
+     * @param {number} [normalMapRotation] - The rotation of the normal map texture. If omitted, the rotation of the GameObject will be used.
      */
     run: function (
         drawingContext,
@@ -85,7 +118,9 @@ var SubmitterQuad = new Class({
         element,
         texturerNode,
         transformerNode,
-        tinterNode
+        tinterNode,
+        normalMap,
+        normalMapRotation
     )
     {
         this.onRunBegin(drawingContext);
@@ -129,6 +164,8 @@ var SubmitterQuad = new Class({
         var u1 = uvSource.u1;
         var v1 = uvSource.v1;
 
+        this.setRenderOptions(gameObject, normalMap, normalMapRotation);
+
         (
             gameObject.customRenderNodes[this.batchHandler] ||
             gameObject.defaultRenderNodes[this.batchHandler]
@@ -151,10 +188,82 @@ var SubmitterQuad = new Class({
             tintFill,
 
             // Tint colors in order TL, BL, TR, BR:
-            tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight
+            tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight,
+
+            // Extra render options:
+            this._renderOptions
         );
 
         this.onRunEnd(drawingContext);
+    },
+
+    setRenderOptions: function (gameObject, normalMap, normalMapRotation)
+    {
+        if (gameObject.lighting)
+        {
+            // Get normal map.
+            if (!normalMap)
+            {
+                if (gameObject.displayTexture)
+                {
+                    normalMap = gameObject.displayTexture.dataSource[gameObject.displayFrame.sourceIndex];
+                }
+                else if (gameObject.texture)
+                {
+                    normalMap = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
+                }
+                else if (gameObject.tileset)
+                {
+                    if (Array.isArray(gameObject.tileset))
+                    {
+                        normalMap = gameObject.tileset[0].image.dataSource[0];
+                    }
+                    else
+                    {
+                        normalMap = gameObject.tileset.image.dataSource[0];
+                    }
+                }
+            }
+            if (!normalMap)
+            {
+                normalMap = this.manager.renderer.normalTexture;
+            }
+            else
+            {
+                normalMap = normalMap.glTexture;
+            }
+    
+            // Get normal map rotation.
+            if (isNaN(normalMapRotation))
+            {
+                normalMapRotation = gameObject.rotation;
+                if (gameObject.parentContainer)
+                {
+                    var matrix = gameObject.getWorldTransformMatrix(this._tempMatrix, this._tempMatrix2);
+                    normalMapRotation = matrix.rotationNormalized;
+                }
+            }
+
+            // Get self-shadow.
+            var selfShadow = gameObject.selfShadow;
+            var selfShadowEnabled = selfShadow.enabled;
+            if (selfShadowEnabled === null)
+            {
+                selfShadowEnabled = gameObject.scene.game.config.selfShadow;
+            }
+
+            this._lightingOptions.normalGLTexture = normalMap;
+            this._lightingOptions.normalMapRotation = normalMapRotation;
+            this._lightingOptions.selfShadow.enabled = selfShadowEnabled;
+            this._lightingOptions.selfShadow.penumbra = selfShadow.penumbra;
+            this._lightingOptions.selfShadow.diffuseFlatThreshold = selfShadow.diffuseFlatThreshold;
+
+            this._renderOptions.lighting = this._lightingOptions;
+        }
+        else
+        {
+            this._renderOptions.lighting = null;
+        }
     }
 });
 

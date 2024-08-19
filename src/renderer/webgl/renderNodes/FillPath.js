@@ -46,8 +46,9 @@ var FillPath = new Class({
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBL - The bottom-left tint color.
      * @param {number} detail - The level of detail to use when filling the path. Points which are only this far apart in screen space are combined. It is ignored if the entire path is equal to or shorter than this distance.
+     * @param {boolean} lighting - Whether to apply lighting effects to the path.
      */
-    run: function (drawingContext, currentMatrix, submitterNode, path, tintTL, tintTR, tintBL, detail)
+    run: function (drawingContext, currentMatrix, submitterNode, path, tintTL, tintTR, tintBL, detail, lighting)
     {
         this.onRunBegin(drawingContext);
 
@@ -101,7 +102,7 @@ var FillPath = new Class({
                 colors[colorsIndex++] = tintTL;
             }
 
-            submitterNode.batch(drawingContext, polygonIndexArray, polygonCache, colors);
+            submitterNode.batch(drawingContext, polygonIndexArray, polygonCache, colors, lighting);
         }
         else
         {
@@ -150,7 +151,7 @@ var FillPath = new Class({
                 indexedTriangles[indexedTrianglesIndex++] = index + 2;
             }
 
-            submitterNode.batch(drawingContext, indexedTriangles, vertices, colors);
+            submitterNode.batch(drawingContext, indexedTriangles, vertices, colors, lighting);
         }
 
         this.onRunEnd(drawingContext);

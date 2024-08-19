@@ -57,8 +57,9 @@ var FillTri = new Class({
      * @param {number} tintA - The tint color of the first vertex.
      * @param {number} tintB - The tint color of the second vertex.
      * @param {number} tintC - The tint color of the third vertex.
+     * @param {boolean} lighting - Whether to apply lighting effects to the triangle.
      */
-    run: function (drawingContext, currentMatrix, submitterNode, xA, yA, xB, yB, xC, yC, tintA, tintB, tintC)
+    run: function (drawingContext, currentMatrix, submitterNode, xA, yA, xB, yB, xC, yC, tintA, tintB, tintC, lighting)
     {
         this.onRunBegin(drawingContext);
 
@@ -79,7 +80,8 @@ var FillTri = new Class({
                     tintA,
                     tintB,
                     tintC
-                ]
+                ],
+                lighting
             );
         }
         else
@@ -99,7 +101,8 @@ var FillTri = new Class({
                     tintA,
                     tintB,
                     tintC
-                ]
+                ],
+                lighting
             );
         }
 

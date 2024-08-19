@@ -71,6 +71,7 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
     var customRenderNodes = src.customRenderNodes;
     var defaultRenderNodes = src.defaultRenderNodes;
     var submitterNode = customRenderNodes.Submitter || defaultRenderNodes.Submitter;
+    var lighting = src.lighting;
 
     var currentContext = drawingContext;
 
@@ -146,7 +147,8 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
                         fillTint.TL,
                         fillTint.TR,
                         fillTint.BL,
-                        pathDetailThreshold
+                        pathDetailThreshold,
+                        lighting
                     );
                 }
                 break;
@@ -169,7 +171,8 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
                         strokeTint.TR,
                         strokeTint.BL,
                         strokeTint.BR,
-                        pathDetailThreshold
+                        pathDetailThreshold,
+                        lighting
                     );
                 }
                 break;
@@ -300,7 +303,8 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
                     fillTint.TL,
                     fillTint.TR,
                     fillTint.BL,
-                    fillTint.BR
+                    fillTint.BR,
+                    lighting
                 );
 
                 break;
@@ -322,7 +326,8 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
                     commands[++cmdIndex],
                     fillTint.TL,
                     fillTint.TR,
-                    fillTint.BL
+                    fillTint.BL,
+                    lighting
                 );
 
                 break;
@@ -358,7 +363,8 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
                     strokeTint.TL,
                     strokeTint.TR,
                     strokeTint.BL,
-                    strokeTint.BR
+                    strokeTint.BR,
+                    lighting
                 );
                 break;
             }

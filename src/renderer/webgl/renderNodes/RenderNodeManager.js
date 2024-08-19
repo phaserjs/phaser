@@ -21,14 +21,9 @@ var DefaultTileSpriteNodes = require('./defaults/DefaultTileSpriteNodes');
 
 var BatchHandlerPointLight = require('./BatchHandlerPointLight');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
-var BatchHandlerQuadLight = require('./BatchHandlerQuadLight');
-var BatchHandlerQuadLightShadow = require('./BatchHandlerQuadLightShadow');
 var BatchHandlerStrip = require('./BatchHandlerStrip');
 var BatchHandlerTileSprite = require('./BatchHandlerTileSprite');
-var BatchHandlerTileSpriteLight = require('./BatchHandlerTileSpriteLight');
-var BatchHandlerTileSpriteLightShadow = require('./BatchHandlerTileSpriteLightShadow');
 var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
-var BatchHandlerTriFlatLight = require('./BatchHandlerTriFlatLight');
 var Camera = require('./Camera');
 var DrawLine = require('./DrawLine');
 var FillCamera = require('./FillCamera');
@@ -39,9 +34,7 @@ var ListCompositor = require('./ListCompositor');
 var RebindContext = require('./RebindContext');
 var StrokePath = require('./StrokePath');
 var SubmitterQuad = require('./submitter/SubmitterQuad');
-var SubmitterQuadLight = require('./submitter/SubmitterQuadLight');
 var SubmitterTileSprite = require('./submitter/SubmitterTileSprite');
-var SubmitterTileSpriteLight = require('./submitter/SubmitterTileSpriteLight');
 var TexturerImage = require('./texturer/TexturerImage');
 var TexturerTileSprite = require('./texturer/TexturerTileSprite');
 var TransformerImage = require('./transformer/TransformerImage');
@@ -156,14 +149,9 @@ var RenderNodeManager = new Class({
         this._nodeConstructors = {
             BatchHandlerPointLight: BatchHandlerPointLight,
             BatchHandlerQuad: BatchHandlerQuad,
-            BatchHandlerQuadLight: BatchHandlerQuadLight,
-            BatchHandlerQuadLightShadow: BatchHandlerQuadLightShadow,
             BatchHandlerStrip: BatchHandlerStrip,
             BatchHandlerTileSprite: BatchHandlerTileSprite,
-            BatchHandlerTileSpriteLight: BatchHandlerTileSpriteLight,
-            BatchHandlerTileSpriteLightShadow: BatchHandlerTileSpriteLightShadow,
             BatchHandlerTriFlat: BatchHandlerTriFlat,
-            BatchHandlerTriFlatLight: BatchHandlerTriFlatLight,
             Camera: Camera,
             DrawLine: DrawLine,
             FillCamera: FillCamera,
@@ -174,9 +162,7 @@ var RenderNodeManager = new Class({
             RebindContext: RebindContext,
             StrokePath: StrokePath,
             SubmitterQuad: SubmitterQuad,
-            SubmitterQuadLight: SubmitterQuadLight,
             SubmitterTileSprite: SubmitterTileSprite,
-            SubmitterTileSpriteLight: SubmitterTileSpriteLight,
             TexturerImage: TexturerImage,
             TexturerTileSprite: TexturerTileSprite,
             TransformerImage: TransformerImage,
@@ -184,12 +170,6 @@ var RenderNodeManager = new Class({
             TransformerTileSprite: TransformerTileSprite,
             YieldContext: YieldContext
         };
-
-        if (game.config.selfShadow)
-        {
-            this._nodeConstructors.BatchHandlerQuadLight = BatchHandlerQuadLightShadow;
-            this._nodeConstructors.BatchHandlerTileSpriteLight = BatchHandlerTileSpriteLightShadow;
-        }
 
         /**
          * The RenderNode which is currently being filled.

@@ -65,6 +65,8 @@ var SubmitterTileSprite = new Class({
      * @param {Phaser.Renderer.WebGL.RenderNodes.TexturerTileSprite|Omit<Phaser.Renderer.WebGL.RenderNodes.TexturerTileSprite, 'run'>} texturerNode - The texturer node used to texture the GameObject. You may pass a texturer node or an object containing equivalent data without a `run` method.
      * @param {Phaser.Renderer.WebGL.RenderNodes.TransformerTileSprite|{ quad: Float32Array }} transformerNode - The transformer node used to transform the GameObject. You may pass a transformer node or an object with a `quad` property.
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode|Omit<Phaser.Renderer.WebGL.RenderNodes.RenderNode, 'run'>} [tinterNode] - The tinter node used to tint the GameObject. You may pass a tinter node or an object containing equivalent data without a `run` method. If omitted, Image-style tinting will be used.
+     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [normalMap] - The normal map texture to use for lighting. If omitted, the normal map texture of the GameObject will be used, or the default normal map texture of the renderer.
+     * @param {number} [normalMapRotation] - The rotation of the normal map texture. If omitted, the rotation of the GameObject will be used.
      */
     run: function (
         drawingContext,
@@ -73,7 +75,9 @@ var SubmitterTileSprite = new Class({
         element,
         texturerNode,
         transformerNode,
-        tinterNode
+        tinterNode,
+        normalMap,
+        normalMapRotation
     )
     {
         this.onRunBegin(drawingContext);
@@ -119,6 +123,11 @@ var SubmitterTileSprite = new Class({
         var v1 = uvSource.v1;
         var uvQuad = texturerNode.uvMatrix.quad;
 
+        this.setRenderOptions(gameObject, normalMap, normalMapRotation);
+
+        // Normal map rotation must include the texture rotation.
+        this._lightingOptions.normalMapRotation += gameObject.tileRotation;
+
         (
             gameObject.customRenderNodes[this.batchHandler] ||
             gameObject.defaultRenderNodes[this.batchHandler]
@@ -147,7 +156,10 @@ var SubmitterTileSprite = new Class({
             tintFill,
 
             // Tint colors in order TL, BL, TR, BR:
-            tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight
+            tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight,
+
+            // Extra render options:
+            this._renderOptions
         );
 
         this.onRunEnd(drawingContext);

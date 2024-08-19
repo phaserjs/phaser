@@ -80,8 +80,9 @@ var FillRect = new Class({
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBL - The bottom-left tint color.
      * @param {number} tintBR - The bottom-right tint color.
+     * @param {boolean} lighting - Whether to apply lighting effects to the rectangle.
      */
-    run: function (drawingContext, currentMatrix, submitterNode, x, y, width, height, tintTL, tintTR, tintBL, tintBR)
+    run: function (drawingContext, currentMatrix, submitterNode, x, y, width, height, tintTL, tintTR, tintBL, tintBR, lighting)
     {
         this.onRunBegin(drawingContext);
 
@@ -103,7 +104,8 @@ var FillRect = new Class({
             quad,
             [
                 tintTL, tintBL, tintBR, tintTR
-            ]
+            ],
+            lighting
         );
 
         this.onRunEnd(drawingContext);

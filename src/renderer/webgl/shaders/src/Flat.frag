@@ -1,4 +1,6 @@
-#define SHADER_NAME PHASER_FLAT_FS
+#pragma phaserTemplate(shaderName)
+
+#pragma phaserTemplate(features)
 
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
@@ -6,9 +8,21 @@ precision highp float;
 precision mediump float;
 #endif
 
+#pragma phaserTemplate(fragmentDefine)
+
+uniform vec2 uResolution;
+
 varying vec4 outTint;
+
+#pragma phaserTemplate(outVariables)
+
+#pragma phaserTemplate(fragmentHeader)
 
 void main ()
 {
-    gl_FragColor = outTint;
+    vec4 fragColor = outTint;
+
+    #pragma phaserTemplate(fragmentProcess)
+
+    gl_FragColor = fragColor;
 }

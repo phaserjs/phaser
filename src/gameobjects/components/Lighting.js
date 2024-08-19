@@ -16,10 +16,9 @@
 var Lighting = {
 
     /**
-     * Is this GameObject using lighting?
+     * Should this GameObject use lighting?
      *
-     * This flag is read-only and cannot be changed directly.
-     * Use the `setLighting` method to toggle lighting effects on or off.
+     * This flag is used to set up WebGL shaders for rendering.
      *
      * @name Phaser.GameObjects.Components.Lighting#lighting
      * @type {boolean}
@@ -31,49 +30,74 @@ var Lighting = {
     lighting: false,
 
     /**
+     * Should this GameObject use self-shadowing?
+     * Self-shadowing is only enabled if `lighting` is enabled.
+     *
+     * The game config option `render.selfShadow` is used if this is not a boolean.
+     *
+     * This flag is used to set up WebGL shaders for rendering.
+     *
+     * @name Phaser.GameObjects.Components.Lighting#selfShadow
+     * @type {{ enabled: boolean, penumbra: number, diffuseFlatThreshold: number }}
+     * @webglOnly
+     * @since 3.90.0
+     */
+    selfShadow: {
+        enabled: null,
+        penumbra: 0.5,
+        diffuseFlatThreshold: 1 / 3
+    },
+
+    /**
      * Sets whether this GameObject should use lighting.
-     *
-     * This will assign the relevant RenderNodes to the GameObject.
-     *
-     * This method will override any custom RenderNode in the `Submitter` role,
-     * either replacing it with the RenderNode in the `SubmitterLight` role,
-     * or removing it if `enable` is `false`.
-     * The `SubmitterLight` role is read from `customRenderNodes` first,
-     * then from `defaultRenderNodes`.
      *
      * @method Phaser.GameObjects.Components.Lighting#setLighting
      * @webglOnly
      * @since 3.90.0
      * @param {boolean} enable - `true` to use lighting, or `false` to disable it.
-     * @return {this} This Game Object instance.
+     * @return {this} This GameObject instance.
      */
     setLighting: function (enable)
     {
-        if (!this.defaultRenderNodes)
-        {
-            // Cannot enable lighting without the render nodes component.
-            return this;
-        }
+        this.lighting = enable;
 
-        if (enable)
-        {
-            var submitterLight =
-                this.customRenderNodes.SubmitterLight ||
-                this.defaultRenderNodes.SubmitterLight;
+        return this;
+    },
 
-            if (!submitterLight)
+    /**
+     * Sets whether this GameObject should use self-shadowing.
+     * Self-shadowing is only enabled if `lighting` is also enabled.
+     *
+     * @method Phaser.GameObjects.Components.Lighting#setSelfShadow
+     * @webglOnly
+     * @since 3.90.0
+     * @param {?boolean} [enabled] - `true` to use self-shadowing, `false` to disable it, `null` to use the game default from `config.render.selfShadow`, or `undefined` to keep the setting.
+     * @param {number} [penumbra] - The penumbra value for the shadow. Lower is sharper but more jagged. Default is 0.5.
+     * @param {number} [diffuseFlatThreshold] - The texture brightness threshold at which the diffuse lighting will be considered flat. Range is 0-1. Default is 1/3.
+     * @return {this} This GameObject instance.
+     */
+    setSelfShadow: function (enabled, penumbra, diffuseFlatThreshold)
+    {
+        if (enabled !== undefined)
+        {
+            if (enabled === null)
             {
-                // Cannot enable lighting without the SubmitterLight role.
-                return this;
+                this.selfShadow.enabled = this.scene.game.config.selfShadow;
             }
-
-            this.lighting = true;
-            this.setRenderNodeRole('Submitter', submitterLight);
+            else
+            {
+                this.selfShadow.enabled = enabled;
+            }
         }
-        else
+
+        if (penumbra !== undefined)
         {
-            this.lighting = false;
-            this.setRenderNodeRole('Submitter', null);
+            this.selfShadow.penumbra = penumbra;
+        }
+
+        if (diffuseFlatThreshold !== undefined)
+        {
+            this.selfShadow.diffuseFlatThreshold = diffuseFlatThreshold;
         }
 
         return this;

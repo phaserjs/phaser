@@ -8,9 +8,7 @@ var Map = require('../../../../structs/Map');
 
 var DefaultParticleEmitterNodes = new Map([
     [ 'Submitter', 'SubmitterQuad' ],
-    [ 'SubmitterLight', 'SubmitterQuadLight' ],
-    [ 'BatchHandler', 'BatchHandlerQuad' ],
-    [ 'BatchHandlerLight', 'BatchHandlerQuadLight' ]
+    [ 'BatchHandler', 'BatchHandlerQuad' ]
 ]);
 
 module.exports = DefaultParticleEmitterNodes;

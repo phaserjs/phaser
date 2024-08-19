@@ -7,6 +7,8 @@
 var Class = require('../../../utils/Class');
 var ShaderSourceFS = require('../shaders/Multi-frag');
 var ShaderSourceVS = require('../shaders/Multi-vert');
+var MakeApplyTint = require('../shaders/configs/MakeApplyTint');
+var MakeGetTexture = require('../shaders/configs/MakeGetTexture');
 var Utils = require('../Utils');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 
@@ -34,6 +36,9 @@ var BatchHandlerStrip = new Class({
     initialize: function BatchHandlerStrip (manager, config)
     {
         BatchHandlerQuad.call(this, manager, config);
+
+        // We do not expect to use extra textures.
+        this.renderOptions.multiTexturing = true;
     },
 
     /**
@@ -48,8 +53,13 @@ var BatchHandlerStrip = new Class({
         name: 'BatchHandlerStrip',
         verticesPerInstance: 2,
         indicesPerInstance: 2,
+        shaderName: 'STRIP',
         vertexSource: ShaderSourceVS,
         fragmentSource: ShaderSourceFS,
+        shaderAdditions: [
+            MakeGetTexture(1),
+            MakeApplyTint()
+        ],
         vertexBufferLayout: {
             usage: 'DYNAMIC_DRAW',
             layout: [
@@ -62,7 +72,7 @@ var BatchHandlerStrip = new Class({
                     size: 2
                 },
                 {
-                    name: 'inTexId'
+                    name: 'inTexDatum'
                 },
                 {
                     name: 'inTintEffect'
@@ -144,31 +154,8 @@ var BatchHandlerStrip = new Class({
             // Now the batch is empty.
         }
 
-        // Texture
-
-        // Check if the texture is already in the batch.
-        // This could be a very expensive operation if we're not careful.
-        // If we just use `batchTextures.indexOf`, a linear search,
-        // we can use up to 20% of a frame budget.
-        // Instead, we cache the texture unit index on the texture itself,
-        // so we can immediately tell whether it's in the batch.
-        // We reset this value when we flush the batch.
-
-        var textureIndex = glTexture.batchUnit;
-        if (textureIndex === -1)
-        {
-            var currentBatchEntry = this.currentBatchEntry;
-            if (currentBatchEntry.count === this.maxTexturesPerBatch)
-            {
-                // Commit the current batch entry and start a new one.
-                this.pushCurrentBatchEntry();
-                currentBatchEntry = this.currentBatchEntry;
-            }
-            textureIndex = currentBatchEntry.unit;
-            glTexture.batchUnit = textureIndex;
-            currentBatchEntry.texture[textureIndex] = glTexture;
-            currentBatchEntry.unit++;
-        }
+        // Process textures and get relevant data.
+        var textureDatum = this.batchTextures(glTexture);
 
         // Update the vertex buffer.
         var vertexOffset32 = this.instanceCount * this.floatsPerInstance;
@@ -230,7 +217,7 @@ var BatchHandlerStrip = new Class({
             vertexViewF32[vertexOffset32++] = ty;
             vertexViewF32[vertexOffset32++] = uv[i];
             vertexViewF32[vertexOffset32++] = uv[i + 1];
-            vertexViewF32[vertexOffset32++] = textureIndex;
+            vertexViewF32[vertexOffset32++] = textureDatum;
             vertexViewF32[vertexOffset32++] = tintFill;
             vertexViewU32[vertexOffset32++] = getTint(
                 colors[i / 2],

@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../../utils/Class');
-var Utils = require('../Utils');
+var ProgramManager = require('../ProgramManager');
 var WebGLVertexBufferLayoutWrapper = require('../wrappers/WebGLVertexBufferLayoutWrapper');
 var RenderNode = require('./RenderNode');
 
@@ -108,51 +108,20 @@ var BatchHandler = new Class({
 
         /**
          * The maximum number of textures per batch entry.
-         * This is usually the maximum number of texture units available,
+         * This is usually set to the maximum number of texture units available,
          * but it might be smaller for some uses.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandler#maxTexturesPerBatch
          * @type {number}
          * @since 3.90.0
          */
-        this.maxTexturesPerBatch = manager.maxParallelTextureUnits;
+        this.maxTexturesPerBatch = 1;
 
         // Listen for changes to the number of draw calls per batch.
         this.manager.on(
             Phaser.Renderer.Events.SET_PARALLEL_TEXTURE_UNITS,
             this.updateTextureCount,
             this
-        );
-
-        /**
-         * The raw fragment shader source code.
-         *
-         * This is used to generate the final fragment shader source code,
-         * which is then compiled into a shader program.
-         * The final source code may apply some templates to the raw source
-         * via `Utils.parseFragmentShaderMaxTextures`,
-         * generally to set the number of textures per batch,
-         * which may change at runtime.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandler#rawShaderSourceFS
-         * @type {string}
-         * @since 3.90.0
-         */
-        this.rawShaderSourceFS = config.fragmentSource;
-
-        /**
-         * The WebGL program used to render the Game Object.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.Single#program
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper}
-         * @since 3.90.0
-         */
-        this.program = renderer.createProgram(
-            config.vertexSource,
-            Utils.parseFragmentShaderMaxTextures(
-                this.rawShaderSourceFS,
-                this.maxTexturesPerBatch
-            )
         );
 
         // Ensure that there is no VAO bound, because the following index buffer
@@ -192,15 +161,40 @@ var BatchHandler = new Class({
         );
 
         /**
-         * The Vertex Array Object used to render the batch.
+         * The program manager used to create and manage shader programs.
+         * This contains shader variants.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.Single#vao
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper}
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandler#programManager
+         * @type {Phaser.Renderer.WebGL.ProgramManager}
          * @since 3.90.0
          */
-        this.vao = renderer.createVAO(this.program, this.indexBuffer, [
-            this.vertexBufferLayout
-        ]);
+        this.programManager = new ProgramManager(
+            renderer,
+            this.indexBuffer,
+            [ this.vertexBufferLayout ]
+        );
+
+        // Fill in program configuration from config.
+        this.programManager.setBaseShader(
+            config.shaderName,
+            config.vertexSource,
+            config.fragmentSource
+        );
+        if (config.shaderAdditions)
+        {
+            for (var i = 0; i < config.shaderAdditions.length; i++)
+            {
+                var addition = config.shaderAdditions[i];
+                this.programManager.addAddition(addition);
+            }
+        }
+        if (config.shaderFeatures)
+        {
+            for (i = 0; i < config.shaderFeatures.length; i++)
+            {
+                this.programManager.addFeature(config.shaderFeatures[i]);
+            }
+        }
 
         /**
          * The number of bytes per instance, used to determine how much of the vertex buffer to upload.
@@ -258,6 +252,9 @@ var BatchHandler = new Class({
          */
         this.instanceCount = 0;
 
+        // Ensure that shader program has the correct number of textures.
+        this.updateTextureCount(manager.maxParallelTextureUnits);
+
         // Set the dimension-related uniforms and listen for resize events.
         this.resize(renderer.width, renderer.height);
         renderer.on(Phaser.Renderer.Events.RESIZE, this.resize, this);
@@ -284,8 +281,13 @@ var BatchHandler = new Class({
         newConfig.name = config.name || defaultConfig.name;
         newConfig.verticesPerInstance = config.verticesPerInstance || defaultConfig.verticesPerInstance;
         newConfig.indicesPerInstance = config.indicesPerInstance || defaultConfig.indicesPerInstance;
+
+        newConfig.shaderName = config.shaderName || defaultConfig.shaderName;
         newConfig.vertexSource = config.vertexSource || defaultConfig.vertexSource;
         newConfig.fragmentSource = config.fragmentSource || defaultConfig.fragmentSource;
+        newConfig.shaderAdditions = config.shaderAdditions || defaultConfig.shaderAdditions;
+        newConfig.shaderFeatures = config.shaderFeatures || defaultConfig.shaderFeatures;
+
         newConfig.indexBufferDynamic = config.indexBufferDynamic || defaultConfig.indexBufferDynamic;
 
         // These may be left undefined to auto-calculate instance count.

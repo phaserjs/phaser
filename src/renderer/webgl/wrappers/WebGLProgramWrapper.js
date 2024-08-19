@@ -233,13 +233,16 @@ var WebGLProgramWrapper = new Class({
         {
             if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS))
             {
+                console.log(this.vertexSource);
                 throw new Error('Vertex ' + failed + gl.getShaderInfoLog(vs));
             }
     
             if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS))
             {
+                console.log(this.fragmentSource);
                 throw new Error('Fragment ' + failed + gl.getShaderInfoLog(fs));
             }
+            console.log(this.vertexSource, this.fragmentSource);
             throw new Error('Link Shader failed:' + gl.getProgramInfoLog(program));
         }
 

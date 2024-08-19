@@ -129,125 +129,6 @@ module.exports = {
     },
 
     /**
-     * Checks the given Fragment Shader Source for `%count%` and `%forloop%` declarations and
-     * replaces those with GLSL code for setting `texture = texture2D(uMainSampler[i], outTexCoord)`.
-     *
-     * @function Phaser.Renderer.WebGL.Utils.parseFragmentShaderMaxTextures
-     * @since 3.50.0
-     *
-     * @param {string} fragmentShaderSource - The Fragment Shader source code to operate on.
-     * @param {number} maxTextures - The number of maxTextures value.
-     *
-     * @return {string} The modified Fragment Shader source.
-     */
-    parseFragmentShaderMaxTextures: function (fragmentShaderSource, maxTextures)
-    {
-        if (!fragmentShaderSource)
-        {
-            return '';
-        }
-
-        // Allow renaming the texCoord variable.
-        var texCoordName = 'outTexCoord';
-        var texCoordRegex = /\s*%texCoordName=(.*)%\n/;
-        var texCoordMatch = fragmentShaderSource.match(texCoordRegex);
-
-        if (texCoordMatch)
-        {
-            texCoordName = texCoordMatch[1];
-            fragmentShaderSource = fragmentShaderSource.replace(texCoordRegex, '');
-        }
-
-        // Add the texture lookup code for each texture unit
-        var src = '';
-
-        for (var i = 0; i < maxTextures; i++)
-        {
-            if (i > 0)
-            {
-                src += '\n\telse ';
-            }
-
-            if (i < maxTextures - 1)
-            {
-                src += 'if (outTexId < ' + i + '.5)';
-            }
-
-            src += '\n\t{';
-            src += '\n\t\ttexture = texture2D(uMainSampler[' + i + '], ' + texCoordName + ');';
-            src += '\n\t}';
-        }
-
-        // Add texture count.
-        fragmentShaderSource = fragmentShaderSource.replace(/%count%/gi, maxTextures.toString());
-
-        return fragmentShaderSource.replace(/%forloop%/gi, src);
-    },
-
-    /**
-     * Takes the given shader source and parses it, looking for blocks of code
-     * wrapped in `%% [feature|without] X %%` and `%% end X %%` directives,
-     * stripping the directives, and stripping or keeping the block
-     * based on whether X is in the feature set.
-     *
-     * @function Phaser.Renderer.WebGL.Utils.parseShaderFeatures
-     * @since 3.90.0
-     * @param {string} shaderSource - The shader source to parse.
-     * @param {string[]} features - An array of features to check for.
-     * @return {string} The modified shader source.
-     */
-    parseShaderFeatures: function (shaderSource, features)
-    {
-        var reCommand = new RegExp('%% (feature|without|end) (.+) %%');
-        var lines = shaderSource.split('\n');
-        var outShaderSource = '';
-
-        for (var i = 0; i < lines.length; i++)
-        {
-            var line = lines[i];
-
-            var commandExec = reCommand.exec(line);
-
-            if (!commandExec)
-            {
-                outShaderSource += line + '\n';
-                continue;
-            }
-
-            var command = commandExec[1];
-            var feature = commandExec[2];
-
-            if (
-                (command === 'feature' && features.indexOf(feature) === -1) ||
-                (command === 'without' && features.indexOf(feature) > -1)
-            )
-            {
-                // Skip lines until this command block ends.
-                while (i < lines.length)
-                {
-                    i++;
-                    line = lines[i];
-
-                    commandExec = reCommand.exec(line);
-                    if (!commandExec)
-                    {
-                        continue;
-                    }
-                    command = commandExec[1];
-                    var nextFeature = commandExec[2];
-
-                    if (command === 'end' && nextFeature === feature)
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return outShaderSource;
-    },
-
-    /**
      * Takes the Glow FX Shader source and parses out the __SIZE__ and __DIST__
      * consts with the configuration values.
      *
@@ -277,6 +158,146 @@ module.exports = {
         shader = shader.replace(/__DIST__/gi, distance.toFixed(0) + '.0');
 
         return shader;
-    }
+    },
 
+    /**
+     * Update lighting uniforms for a given shader program manager.
+     * This is a standard procedure for most lighting shaders.
+     *
+     * @function Phaser.Renderer.WebGL.Utils.updateLightingUniforms
+     * @since 3.90.0
+     * @webglOnly
+     *
+     * @param {boolean} enable - Whether to enable lighting.
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The DrawingContext instance.
+     * @param {Phaser.Renderer.WebGL.ShaderProgramManager} programManager - The ShaderProgramManager instance.
+     * @param {Phaser.Math.Vector2} vec - A Vector2 instance.
+     * @param {boolean} [selfShadow] - Whether to enable self-shadowing.
+     * @param {number} [selfShadowPenumbra] - The penumbra value for self-shadowing.
+     * @param {number} [selfShadowThreshold] - The threshold value for self-shadowing.
+     */
+    updateLightingUniforms: function (
+        enable,
+        renderer,
+        drawingContext,
+        programManager,
+        vec,
+        selfShadow,
+        selfShadowPenumbra,
+        selfShadowThreshold
+    )
+    {
+        var camera = drawingContext.camera;
+        var scene = camera.scene;
+        var lightManager = scene.sys.lights;
+        var lights = lightManager.getLights(camera);
+        var lightsCount = lights.length;
+        var ambientColor = lightManager.ambientColor;
+        var height = renderer.height;
+
+        if (enable)
+        {
+            programManager.setUniform(
+                'uNormSampler',
+                1
+            );
+
+            programManager.setUniform(
+                'uCamera',
+                [
+                    camera.x,
+                    camera.y,
+                    camera.rotation,
+                    camera.zoom
+                ]
+            );
+            programManager.setUniform(
+                'uAmbientLightColor',
+                [
+                    ambientColor.r,
+                    ambientColor.g,
+                    ambientColor.b
+                ]
+            );
+            programManager.setUniform(
+                'uLightCount',
+                lightsCount
+            );
+
+            for (var i = 0; i < lightsCount; i++)
+            {
+                var light = lights[i].light;
+                var color = light.color;
+
+                var lightName = 'uLights[' + i + '].';
+
+                camera.matrix.transformPoint(
+                    light.x - (camera.scrollX * light.scrollFactorX * camera.zoom),
+                    light.y - (camera.scrollY * light.scrollFactorY * camera.zoom),
+                    vec
+                );
+
+                programManager.setUniform(
+                    lightName + 'position',
+                    [
+                        vec.x,
+                        height - (vec.y),
+                        light.z * camera.zoom
+                    ]
+                );
+                programManager.setUniform(
+                    lightName + 'color',
+                    [
+                        color.r,
+                        color.g,
+                        color.b
+                    ]
+                );
+                programManager.setUniform(
+                    lightName + 'intensity',
+                    light.intensity
+                );
+                programManager.setUniform(
+                    lightName + 'radius',
+                    light.radius
+                );
+            }
+
+            if (selfShadow)
+            {
+                // Self-shadowing uniforms.
+                programManager.setUniform(
+                    'uDiffuseFlatThreshold',
+                    selfShadowThreshold * 3
+                );
+        
+                programManager.setUniform(
+                    'uPenumbra',
+                    selfShadowPenumbra
+                );
+            }
+        }
+        else
+        {
+            // Clear lighting uniforms.
+            programManager.removeUniform('uNormSampler');
+            programManager.removeUniform('uCamera');
+            programManager.removeUniform('uAmbientLightColor');
+            programManager.removeUniform('uLightCount');
+
+            programManager.removeUniform('uPenumbra');
+            programManager.removeUniform('uDiffuseFlatThreshold');
+
+            for (i = 0; i < lightsCount; i++)
+            {
+                lightName = 'uLights[' + i + '].';
+
+                programManager.removeUniform(lightName + 'position');
+                programManager.removeUniform(lightName + 'color');
+                programManager.removeUniform(lightName + 'intensity');
+                programManager.removeUniform(lightName + 'radius');
+            }
+        }
+    }
 };

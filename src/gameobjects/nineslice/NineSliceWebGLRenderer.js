@@ -7,6 +7,8 @@
 var GetCalcMatrix = require('../GetCalcMatrix');
 var Utils = require('../../renderer/webgl/Utils');
 
+var fixedRenderOptions = { multiTexturing: true };
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -75,7 +77,10 @@ var NineSliceWebGLRenderer = function (renderer, src, drawingContext, parentMatr
             tintEffect,
 
             // Tint colors in order TL, BL, TR, BR:
-            color, color, color, color
+            color, color, color, color,
+
+            // Render options:
+            fixedRenderOptions
         );
     }
 };

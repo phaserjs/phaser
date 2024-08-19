@@ -5,8 +5,13 @@
  */
 
 var Class = require('../../../utils/Class');
-var ShaderSourceFS = require('../shaders/MultiTileSprite-frag');
-var ShaderSourceVS = require('../shaders/MultiTileSprite-vert');
+var ShaderSourceFS = require('../shaders/Multi-frag');
+var ShaderSourceVS = require('../shaders/Multi-vert');
+var MakeApplyLighting = require('../shaders/configs/MakeApplyLighting');
+var MakeApplyTint = require('../shaders/configs/MakeApplyTint');
+var MakeGetTexture = require('../shaders/configs/MakeGetTexture');
+var MakeRotationDatum = require('../shaders/configs/MakeRotationDatum');
+var MakeTileSpriteWrap = require('../shaders/configs/MakeTileSpriteWrap');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 
 /**
@@ -33,8 +38,16 @@ var BatchHandlerTileSprite = new Class({
         name: 'BatchHandlerTileSprite',
         verticesPerInstance: 4,
         indicesPerInstance: 6,
+        shaderName: 'TILESPRITE',
         vertexSource: ShaderSourceVS,
         fragmentSource: ShaderSourceFS,
+        shaderAdditions: [
+            MakeGetTexture(1),
+            MakeTileSpriteWrap(),
+            MakeApplyTint(),
+            MakeRotationDatum(true),
+            MakeApplyLighting(true)
+        ],
         vertexBufferLayout: {
             usage: 'DYNAMIC_DRAW',
             layout: [
@@ -51,7 +64,7 @@ var BatchHandlerTileSprite = new Class({
                     size: 4
                 },
                 {
-                    name: 'inTexId'
+                    name: 'inTexDatum'
                 },
                 {
                     name: 'inTintEffect'
@@ -98,6 +111,15 @@ var BatchHandlerTileSprite = new Class({
      * @param {number} tintBL - The tint color for the bottom-left corner.
      * @param {number} tintTR - The tint color for the top-right corner.
      * @param {number} tintBR - The tint color for the bottom-right corner.
+     * @param {object} [renderOptions] - Optional render features.
+     * @param {boolean} [renderOptions.multiTexturing] - Whether to use multi-texturing.
+     * @param {object} [renderOptions.lighting] - How to treat lighting. If this object is defined, lighting will be activated, and multi-texturing disabled.
+     * @param {Phaser.Renderer.WebGL.WebGLTextureWrapper} renderOptions.lighting.normalGLTexture - The normal map texture to render.
+     * @param {number} renderOptions.lighting.normalMapRotation - The rotation of the normal map texture.
+     * @param {object} [renderOptions.lighting.selfShadow] - Self-shadowing options.
+     * @param {boolean} renderOptions.lighting.selfShadow.enabled - Whether to use self-shadowing.
+     * @param {number} renderOptions.lighting.selfShadow.penumbra - Self-shadowing penumbra strength.
+     * @param {number} renderOptions.lighting.selfShadow.diffuseFlatThreshold - Self-shadowing texture brightness equivalent to a flat surface.
      */
     batch: function (
         currentContext,
@@ -106,7 +128,8 @@ var BatchHandlerTileSprite = new Class({
         texX, texY, texWidth, texHeight,
         u0, v0, u1, v1, u2, v2, u3, v3,
         tintFill,
-        tintTL, tintBL, tintTR, tintBR
+        tintTL, tintBL, tintTR, tintBR,
+        renderOptions
     )
     {
         if (this.instanceCount === 0)
@@ -114,31 +137,11 @@ var BatchHandlerTileSprite = new Class({
             this.manager.setCurrentBatchNode(this, currentContext);
         }
 
-        // Texture
+        // Check render options and run the batch if they differ.
+        this.updateRenderOptions(currentContext, renderOptions);
 
-        // Check if the texture is already in the batch.
-        // This could be a very expensive operation if we're not careful.
-        // If we just use `batchTextures.indexOf`, a linear search,
-        // we can use up to 20% of a frame budget.
-        // Instead, we cache the texture unit index on the texture itself,
-        // so we can immediately tell whether it's in the batch.
-        // We reset this value when we flush the batch.
-
-        var textureIndex = glTexture.batchUnit;
-        if (textureIndex === -1)
-        {
-            var currentBatchEntry = this.currentBatchEntry;
-            if (currentBatchEntry.count === this.maxTexturesPerBatch)
-            {
-                // Commit the current batch entry and start a new one.
-                this.pushCurrentBatchEntry();
-                currentBatchEntry = this.currentBatchEntry;
-            }
-            textureIndex = currentBatchEntry.unit;
-            glTexture.batchUnit = textureIndex;
-            currentBatchEntry.texture[textureIndex] = glTexture;
-            currentBatchEntry.unit++;
-        }
+        // Process textures and get relevant data.
+        var textureDatum = this.batchTextures(glTexture, renderOptions);
 
         // Update the vertex buffer.
         var vertexOffset32 = this.instanceCount * this.floatsPerInstance;
@@ -155,7 +158,7 @@ var BatchHandlerTileSprite = new Class({
         vertexViewF32[vertexOffset32++] = texY;
         vertexViewF32[vertexOffset32++] = texWidth;
         vertexViewF32[vertexOffset32++] = texHeight;
-        vertexViewF32[vertexOffset32++] = textureIndex;
+        vertexViewF32[vertexOffset32++] = textureDatum;
         vertexViewF32[vertexOffset32++] = tintFill;
         vertexViewU32[vertexOffset32++] = tintBL;
 
@@ -168,7 +171,7 @@ var BatchHandlerTileSprite = new Class({
         vertexViewF32[vertexOffset32++] = texY;
         vertexViewF32[vertexOffset32++] = texWidth;
         vertexViewF32[vertexOffset32++] = texHeight;
-        vertexViewF32[vertexOffset32++] = textureIndex;
+        vertexViewF32[vertexOffset32++] = textureDatum;
         vertexViewF32[vertexOffset32++] = tintFill;
         vertexViewU32[vertexOffset32++] = tintTL;
 
@@ -181,7 +184,7 @@ var BatchHandlerTileSprite = new Class({
         vertexViewF32[vertexOffset32++] = texY;
         vertexViewF32[vertexOffset32++] = texWidth;
         vertexViewF32[vertexOffset32++] = texHeight;
-        vertexViewF32[vertexOffset32++] = textureIndex;
+        vertexViewF32[vertexOffset32++] = textureDatum;
         vertexViewF32[vertexOffset32++] = tintFill;
         vertexViewU32[vertexOffset32++] = tintBR;
 
@@ -194,7 +197,7 @@ var BatchHandlerTileSprite = new Class({
         vertexViewF32[vertexOffset32++] = texY;
         vertexViewF32[vertexOffset32++] = texWidth;
         vertexViewF32[vertexOffset32++] = texHeight;
-        vertexViewF32[vertexOffset32++] = textureIndex;
+        vertexViewF32[vertexOffset32++] = textureDatum;
         vertexViewF32[vertexOffset32++] = tintFill;
         vertexViewU32[vertexOffset32++] = tintTR;
 

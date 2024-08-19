@@ -8,9 +8,7 @@ var Map = require('../../../../structs/Map');
 
 var DefaultImageNodes = new Map([
     [ 'Submitter', 'SubmitterQuad' ],
-    [ 'SubmitterLight', 'SubmitterQuadLight' ],
     [ 'BatchHandler', 'BatchHandlerQuad' ],
-    [ 'BatchHandlerLight', 'BatchHandlerQuadLight' ],
     [ 'Transformer', 'TransformerImage' ],
     [ 'Texturer', 'TexturerImage' ]
 ]);

@@ -52,8 +52,9 @@ var StrokePath = new Class({
      * @param {number} tintBL - The bottom-left tint color.
      * @param {number} tintBR - The bottom-right tint color.
      * @param {number} detail - The level of detail to use when rendering the stroke. Points which are only this far apart in screen space are combined. It is ignored if the entire path is equal to or shorter than this distance.
+     * @param {boolean} lighting - Whether to apply lighting effects to the stroke.
      */
-    run: function (drawingContext, submitterNode, path, lineWidth, open, currentMatrix, tintTL, tintTR, tintBL, tintBR, detail)
+    run: function (drawingContext, submitterNode, path, lineWidth, open, currentMatrix, tintTL, tintTR, tintBL, tintBR, detail, lighting)
     {
         this.onRunBegin(drawingContext);
 
@@ -188,7 +189,7 @@ var StrokePath = new Class({
             }
         }
 
-        submitterNode.batch(drawingContext, indices, vertices, colors);
+        submitterNode.batch(drawingContext, indices, vertices, colors, lighting);
 
         this.onRunEnd(drawingContext);
     }

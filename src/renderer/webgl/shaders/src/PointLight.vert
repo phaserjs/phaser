@@ -1,6 +1,10 @@
-#define SHADER_NAME PHASER_POINTLIGHT_VS
+#pragma phaserTemplate(shaderName)
+
+#pragma phaserTemplate(features)
 
 precision mediump float;
+
+#pragma phaserTemplate(vertexDefine)
 
 uniform mat4 uProjectionMatrix;
 
@@ -15,6 +19,10 @@ varying vec4 lightColor;
 varying float lightRadius;
 varying float lightAttenuation;
 
+#pragma phaserTemplate(outVariables)
+
+#pragma phaserTemplate(vertexHeader)
+
 void main ()
 {
     lightColor = inLightColor;
@@ -23,4 +31,6 @@ void main ()
     lightPosition = uProjectionMatrix * vec4(inLightPosition, 1.0, 1.0);
 
     gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);
+
+    #pragma phaserTemplate(vertexProcess)
 }

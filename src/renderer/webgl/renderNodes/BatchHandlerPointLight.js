@@ -54,6 +54,7 @@ var BatchHandlerPointLight = new Class({
         name: 'BatchHandlerPointLight',
         verticesPerInstance: 4,
         indicesPerInstance: 6,
+        shaderName: 'POINTLIGHT',
         vertexSource: ShaderSourceVS,
         fragmentSource: ShaderSourceFS,
         vertexBufferLayout: {
@@ -118,29 +119,35 @@ var BatchHandlerPointLight = new Class({
     },
 
     /**
-     * Called at the beginning of the `run` method.
+     * Update the uniforms for the current shader program.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerPointLight#onRunBegin
+     * This method is called automatically when the batch is run.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerPointLight#setupUniforms
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    onRunBegin: function (drawingContext)
+    setupUniforms: function (drawingContext)
     {
-        this.program.setUniform(
+        var programManager = this.programManager;
+        var width = drawingContext.width;
+        var height = drawingContext.height;
+
+        programManager.setUniform(
             'uCameraZoom',
             drawingContext.camera.zoom
         );
 
-        this.program.setUniform(
+        programManager.setUniform(
             'uResolution',
-            [ drawingContext.width, drawingContext.height ]
+            [ width, height ]
         );
 
         drawingContext.renderer.setProjectionMatrix(
-            drawingContext.width,
-            drawingContext.height
+            width,
+            height
         );
-        this.program.setUniform(
+        programManager.setUniform(
             'uProjectionMatrix',
             drawingContext.renderer.projectionMatrix.val
         );
@@ -164,6 +171,14 @@ var BatchHandlerPointLight = new Class({
 
         this.onRunBegin(drawingContext);
 
+        var programManager = this.programManager;
+        var programSuite = programManager.getCurrentProgramSuite();
+        var program = programSuite.program;
+        var vao = programSuite.vao;
+
+        this.setupUniforms(drawingContext);
+        programManager.applyUniforms(program);
+
         // Update vertex buffers.
         // Because we are probably using a generic vertex buffer
         // which is larger than the current batch, we need to update
@@ -173,8 +188,8 @@ var BatchHandlerPointLight = new Class({
         this.manager.renderer.drawElements(
             drawingContext,
             this._emptyTextures,
-            this.program,
-            this.vao,
+            program,
+            vao,
             instanceCount * this.indicesPerInstance,
             0
         );

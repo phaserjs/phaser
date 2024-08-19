@@ -11,8 +11,8 @@
 module.exports = {
 
     AddBlendFrag: require('./AddBlend-frag.js'),
-    BatchQuadFrag: require('./BatchQuad-frag.js'),
-    BatchQuadVert: require('./BatchQuad-vert.js'),
+    ApplyLighting: require('./ApplyLighting-glsl.js'),
+    ApplyTint: require('./ApplyTint-glsl.js'),
     BitmapMaskFrag: require('./BitmapMask-frag.js'),
     BitmapMaskVert: require('./BitmapMask-vert.js'),
     ColorMatrixFrag: require('./ColorMatrix-frag.js'),
@@ -34,9 +34,9 @@ module.exports = {
     FXWipeFrag: require('./FXWipe-frag.js'),
     FlatFrag: require('./Flat-frag.js'),
     FlatVert: require('./Flat-vert.js'),
-    FlatLightFrag: require('./FlatLight-frag.js'),
+    GetTextureMulti: require('./GetTextureMulti-glsl.js'),
+    GetTextureSingle: require('./GetTextureSingle-glsl.js'),
     LightFrag: require('./Light-frag.js'),
-    LightShadowFrag: require('./LightShadow-frag.js'),
     LinearBlendFrag: require('./LinearBlend-frag.js'),
     MeshFrag: require('./Mesh-frag.js'),
     MeshVert: require('./Mesh-vert.js'),
@@ -44,15 +44,13 @@ module.exports = {
     MobileVert: require('./Mobile-vert.js'),
     MultiFrag: require('./Multi-frag.js'),
     MultiVert: require('./Multi-vert.js'),
-    MultiTileSpriteFrag: require('./MultiTileSprite-frag.js'),
-    MultiTileSpriteVert: require('./MultiTileSprite-vert.js'),
     PointLightFrag: require('./PointLight-frag.js'),
     PointLightVert: require('./PointLight-vert.js'),
     PostFXFrag: require('./PostFX-frag.js'),
     QuadVert: require('./Quad-vert.js'),
     SingleFrag: require('./Single-frag.js'),
     SingleVert: require('./Single-vert.js'),
-    TileSpriteLightFrag: require('./TileSpriteLight-frag.js'),
-    TileSpriteLightShadowFrag: require('./TileSpriteLightShadow-frag.js')
+    SpriteLayerFrag: require('./SpriteLayer-frag.js'),
+    SpriteLayerVert: require('./SpriteLayer-vert.js')
 
 };

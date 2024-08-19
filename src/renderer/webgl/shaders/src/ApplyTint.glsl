@@ -1,24 +1,5 @@
-#define SHADER_NAME PHASER_BATCH_QUAD_FS
-
-#ifdef GL_FRAGMENT_PRECISION_HIGH
-precision highp float;
-#else
-precision mediump float;
-#endif
-
-uniform sampler2D uMainSampler[%count%];
-
-varying vec2 outTexCoord;
-varying float outTexId;
-varying float outTintEffect;
-varying vec4 outTint;
-
-void main ()
+vec4 applyTint(vec4 texture)
 {
-    vec4 texture;
-
-    %forloop%
-
     vec4 texel = vec4(outTint.bgr * outTint.a, outTint.a);
 
     //  Multiply texture tint
@@ -35,5 +16,5 @@ void main ()
         color = texel;
     }
 
-    gl_FragColor = color;
+    return color;
 }

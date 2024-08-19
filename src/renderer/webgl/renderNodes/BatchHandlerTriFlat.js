@@ -4,9 +4,12 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Vector2 = require('../../../math/Vector2');
 var Class = require('../../../utils/Class');
+var MakeApplyLighting = require('../shaders/configs/MakeApplyLighting');
 var ShaderSourceFS = require('../shaders/Flat-frag');
 var ShaderSourceVS = require('../shaders/Flat-vert');
+var Utils = require('../Utils');
 var BatchHandler = require('./BatchHandler');
 
 /**
@@ -48,14 +51,41 @@ var BatchHandlerTriFlat = new Class({
          * @since 3.90.0
          */
         this.vertexCount = 0;
+
+        /**
+         * A persistent calculation vector used when processing the lights.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlatLight#_lightVector
+         * @type {Phaser.Math.Vector2}
+         * @private
+         * @since 3.90.0
+         */
+        this._lightVector = new Vector2();
+
+        /**
+         * The current render options to which the batch is built.
+         * These help define the shader.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#renderOptions
+         * @type {object}
+         * @since 3.90.0
+         */
+        this.renderOptions = {
+            lighting: false
+        };
     },
 
     defaultConfig: {
         name: 'BatchHandlerTriFlat',
         verticesPerInstance: 3,
         indicesPerInstance: 3,
+        shaderName: 'FLAT',
         vertexSource: ShaderSourceVS,
         fragmentSource: ShaderSourceFS,
+        shaderAdditions: [
+            MakeApplyLighting(true)
+        ],
+        shaderFeatures: [ 'FLAT_LIGHTING' ],
         indexBufferDynamic: true,
         vertexBufferLayout: {
             usage: 'DYNAMIC_DRAW',
@@ -90,22 +120,79 @@ var BatchHandlerTriFlat = new Class({
     },
 
     /**
-     * Called at the beginning of the `run` method.
+     * Update the uniforms for the current shader program.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#onRunBegin
+     * This method is called automatically when the batch is run.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#setupUniforms
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    onRunBegin: function (drawingContext)
+    setupUniforms: function (drawingContext)
     {
+        var programManager = this.programManager;
+
         drawingContext.renderer.setProjectionMatrix(
             drawingContext.width,
             drawingContext.height
         );
-        this.program.setUniform(
+        programManager.setUniform(
             'uProjectionMatrix',
             drawingContext.renderer.projectionMatrix.val
         );
+
+        // Lighting uniforms.
+        Utils.updateLightingUniforms(
+            this.renderOptions.lighting,
+            this.manager.renderer,
+            drawingContext,
+            programManager,
+            this._lightVector
+        );
+
+        if (this.renderOptions.lighting)
+        {
+            programManager.setUniform(
+                'uResolution',
+                [ drawingContext.width, drawingContext.height ]
+            );
+        }
+    },
+
+    /**
+     * Update the render options for the current shader program.
+     * If the options have changed, the batch is run to apply the changes.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#updateRenderOptions
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     * @param {boolean} lighting - Should this batch use lighting?
+     */
+    updateRenderOptions: function (drawingContext, lighting)
+    {
+        var programManager = this.programManager;
+        var renderOptions = this.renderOptions;
+        var updateLighting = this.renderOptions.lighting !== lighting;
+
+        if (updateLighting)
+        {
+            this.run(drawingContext);
+        }
+
+        renderOptions.lighting = lighting;
+
+        if (updateLighting)
+        {
+            var lightingAddition = programManager.getAddition('LIGHTING');
+            if (lightingAddition)
+            {
+                lightingAddition.disable = !lighting;
+                if (lighting)
+                {
+                    lightingAddition.additions.fragmentDefine = '#define LIGHT_COUNT ' + this.manager.renderer.config.maxLights;
+                }
+            }
+        }
     },
 
     /**
@@ -124,10 +211,16 @@ var BatchHandlerTriFlat = new Class({
 
         this.onRunBegin(drawingContext);
 
+        var programManager = this.programManager;
+        var programSuite = programManager.getCurrentProgramSuite();
+        var program = programSuite.program;
+        var vao = programSuite.vao;
+
+        this.setupUniforms(drawingContext);
+        programManager.applyUniforms(program);
+
         var indicesPerInstance = this.indicesPerInstance;
         var instanceCount = this.instanceCount;
-        var program = this.program;
-        var vao = this.vao;
         var renderer = this.manager.renderer;
         var vertexBuffer = this.vertexBufferLayout.buffer;
         var stride = this.vertexBufferLayout.layout.stride;
@@ -173,13 +266,17 @@ var BatchHandlerTriFlat = new Class({
      * @param {number[]} indexes - The index data. Each triangle is defined by three indices into the vertices array, so the length of this should be a multiple of 3.
      * @param {number[]} vertices - The vertices data. Each vertex is defined by an x-coordinate and a y-coordinate.
      * @param {number[]} colors - The color data. Each vertex has a color as a Uint32 value.
+     * @param {boolean} [lighting=false] - Should this batch use lighting?
      */
-    batch: function (currentContext, indexes, vertices, colors)
+    batch: function (currentContext, indexes, vertices, colors, lighting)
     {
         if (this.instanceCount === 0)
         {
             this.manager.setCurrentBatchNode(this, currentContext);
         }
+
+        // Check render options and run the batch if they differ.
+        this.updateRenderOptions(currentContext, lighting);
 
         var passID = 0;
         var instanceCompletion = 0;
@@ -189,7 +286,7 @@ var BatchHandlerTriFlat = new Class({
         var stride = this.vertexBufferLayout.layout.stride;
         var verticesPerInstance = this.verticesPerInstance;
 
-        var indexBuffer = this.vao.indexBuffer;
+        var indexBuffer = this.indexBuffer;
         var indexView16 = indexBuffer.viewU16;
         var indexOffset16 = this.instanceCount * this.indicesPerInstance;
 
