@@ -194,6 +194,20 @@ var Tileset = new Class({
          * @since 3.0.0
         */
         this.texCoordinates = [];
+
+        /**
+         * The number of frames above which a tile is considered to have
+         * many animation frames. This is used to optimize rendering.
+         * If a tile has fewer frames than this, frames are searched using
+         * a linear search. If a tile has more, frames are searched using
+         * a binary search.
+         *
+         * @name Phaser.Tilemaps.Tileset#animationSearchThreshold
+         * @type {number}
+         * @since 3.90.0
+         * @default 64
+         */
+        this.animationSearchThreshold = 64;
     },
 
     /**
@@ -267,6 +281,61 @@ var Tileset = new Class({
             tileIndex >= this.firstgid &&
             tileIndex < (this.firstgid + this.total)
         );
+    },
+
+    /**
+     * Returns the ID of the tile to use, given a base tile and time,
+     * according to the tile's animation properties.
+     *
+     * If the tile is not animated, this method returns the base tile ID.
+     *
+     * @method Phaser.Tilemaps.Tileset#getAnimatedTileId
+     * @since 3.90.0
+     * @param {number} tileIndex - The unique id of the tile across all tilesets in the map.
+     * @param {number} milliseconds - The current time in milliseconds.
+     * @return {?number} The tile ID to use, or null if the tile is not contained in this tileset.
+     */
+    getAnimatedTileId: function (tileIndex, milliseconds)
+    {
+        if (!this.containsTileIndex(tileIndex)) { return null; }
+
+        var animData = this.getTileData(tileIndex);
+
+        if (!(animData && animData.animation)) { return tileIndex; }
+
+        milliseconds = milliseconds % animData.animationDuration;
+        var anim = animData.animation;
+        var frame = null;
+
+        // Binary search.
+
+        var low = 0;
+        var high = anim.length - 1;
+        var mid = 0;
+        var startTime = 0;
+
+        while (low <= high)
+        {
+            mid = (low + high) >>> 1;
+            frame = anim[mid];
+            startTime = frame.startTime;
+
+            if (startTime <= milliseconds && startTime + frame.duration > milliseconds)
+            {
+                return frame.tileid + this.firstgid;
+            }
+
+            if (startTime < milliseconds)
+            {
+                low = mid + 1;
+            }
+            else
+            {
+                high = mid - 1;
+            }
+        }
+
+        return null;
     },
 
     /**

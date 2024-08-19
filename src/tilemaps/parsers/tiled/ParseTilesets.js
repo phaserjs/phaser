@@ -96,6 +96,22 @@ var ParseTilesets = function (json)
                             (datas[tile.id] || (datas[tile.id] = {})).type = tile.type;
                         }
                     }
+
+                    // Sum up animation length.
+                    for (var tileId in datas)
+                    {
+                        var animData = datas[tileId].animation;
+                        if (animData)
+                        {
+                            var animTime = 0;
+                            for (var j = 0; j < animData.length; j++)
+                            {
+                                animData[j].startTime = animTime;
+                                animTime += animData[j].duration;
+                            }
+                            datas[tileId].animationDuration = animTime;
+                        }
+                    }
                 }
 
                 if (Array.isArray(set.wangsets))

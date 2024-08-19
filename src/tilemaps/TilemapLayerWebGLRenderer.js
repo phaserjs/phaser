@@ -63,6 +63,8 @@ var TilemapLayerWebGLRenderer = function (renderer, src, drawingContext)
     var submitterNode = src.customRenderNodes.Submitter || src.defaultRenderNodes.Submitter;
     var transformerNode = src.customRenderNodes.Transformer || src.defaultRenderNodes.Transformer;
 
+    var timeElapsed = src.timeElapsed;
+
     for (var i = 0; i < tileCount; i++)
     {
         var tile = renderTiles[i];
@@ -74,7 +76,14 @@ var TilemapLayerWebGLRenderer = function (renderer, src, drawingContext)
             continue;
         }
 
-        var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+        var tileIndex = tileset.getAnimatedTileId(tile.index, timeElapsed);
+
+        if (tileIndex === null)
+        {
+            continue;
+        }
+
+        var tileTexCoords = tileset.getTileTextureCoordinates(tileIndex);
         var tileWidth = tileset.tileWidth;
         var tileHeight = tileset.tileHeight;
 

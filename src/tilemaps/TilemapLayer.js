@@ -329,6 +329,26 @@ var TilemapLayer = new Class({
          * @since 3.0.0
          */
 
+        /**
+         * The time elapsed since timer initialization.
+         * This drives the animation of the texture.
+         *
+         * @name Phaser.Tilemaps.TilemapLayer#timeElapsed
+         * @type {number}
+         * @since 3.90.0
+         */
+        this.timeElapsed = 0;
+
+        /**
+         * Whether the animation timer is paused.
+         *
+         * @name Phaser.Tilemaps.TilemapLayer#timePaused
+         * @type {boolean}
+         * @since 3.90.0
+         * @default false
+         */
+        this.timePaused = false;
+
         this.setTilesets(tileset);
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
@@ -337,6 +357,23 @@ var TilemapLayer = new Class({
 
         this.initRenderNodes('TilemapLayer');
         this.initPostPipeline(false);
+    },
+
+    //  Overrides Game Object method
+    addedToScene: function ()
+    {
+        this.scene.sys.updateList.add(this);
+    },
+
+    //  Overrides Game Object method
+    removedFromScene: function ()
+    {
+        this.scene.sys.updateList.remove(this);
+    },
+
+    preUpdate: function (time, delta)
+    {
+        this.updateTimer(time, delta);
     },
 
     /**
@@ -1486,6 +1523,63 @@ var TilemapLayer = new Class({
     worldToTileXY: function (worldX, worldY, snapToFloor, point, camera)
     {
         return this.tilemap.worldToTileXY(worldX, worldY, snapToFloor, point, camera, this);
+    },
+
+    /**
+     * Pauses or resumes the animation timer for this game object.
+     *
+     * @method Phaser.Tilemaps.TilemapLayer#setTimerPaused
+     * @since 3.90.0
+     * @param {boolean} [paused] - Pause state (`true` to pause, `false` to unpause). If not specified, the timer will unpause.
+     * @return {this} This game object.
+     */
+    setTimerPaused: function (paused)
+    {
+        this.timePaused = !!paused;
+
+        return this;
+    },
+
+    /**
+     * Reset the animation timer for this game object.
+     *
+     * @method Phaser.Tilemaps.TilemapLayer#resetTimer
+     * @since 3.90.0
+     * @param {number} [ms=0] - The time to reset the timer to.
+     * @return {this} This game object.
+     */
+    resetTimer: function (ms)
+    {
+        if (ms === undefined) { ms = 0; }
+        this.timeElapsed = ms;
+
+        return this;
+    },
+
+    /**
+     * Update the timer for this game object.
+     * This is called automatically by the preUpdate method.
+     * The timer drives the animation of the texture.
+     *
+     * Override this method to create more advanced time management,
+     * or set it to a NOOP function to disable the timer update.
+     * If you want to control animations with a tween or input system,
+     * disabling the timer update could be useful.
+     *
+     * @method Phaser.Tilemaps.TilemapLayer#updateTimer
+     * @since 3.90.0
+     * @param {number} time - The current time in milliseconds.
+     * @param {number} delta - The time since the last update, in milliseconds.
+     * @return {this} This game object.
+     */
+    updateTimer: function (time, delta)
+    {
+        if (!this.timePaused)
+        {
+            this.timeElapsed += delta;
+        }
+
+        return this;
     },
 
     /**
