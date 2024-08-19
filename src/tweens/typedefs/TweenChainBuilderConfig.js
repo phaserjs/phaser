@@ -19,6 +19,8 @@
  * @property {array} [onStartParams] - Additional parameters to pass to `onStart`.
  * @property {Phaser.Types.Tweens.TweenOnStopCallback} [onStop] - A function to call when the chain is stopped.
  * @property {array} [onStopParams] - Additional parameters to pass to `onStop`.
+ * @property {Phaser.Types.Tweens.TweenOnUpdateCallback} [onUpdate] - A function to call each time the tween steps. Called once per property per target.
+ * @property {array} [onUpdateParams] - Additional parameters to pass to `onUpdate`.
  * @property {Phaser.Types.Tweens.TweenOnActiveCallback} [onActive] - A function to call when the chain becomes active within the Tween Manager.
  * @property {array} [onActiveParams] - Additional parameters to pass to `onActive`.
  * @property {Phaser.Types.Tweens.TweenOnPauseCallback} [onPause] - A function to call when the chain is paused.
