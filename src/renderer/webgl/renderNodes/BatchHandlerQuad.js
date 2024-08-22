@@ -255,6 +255,7 @@ var BatchHandlerQuad = new Class({
             this.manager.renderer,
             drawingContext,
             programManager,
+            1,
             this._lightVector,
             renderOptions.selfShadow,
             renderOptions.selfShadowThreshold,

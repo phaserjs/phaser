@@ -147,6 +147,7 @@ var BatchHandlerTriFlat = new Class({
             this.manager.renderer,
             drawingContext,
             programManager,
+            1,
             this._lightVector
         );
 

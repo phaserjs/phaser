@@ -172,6 +172,7 @@ module.exports = {
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The DrawingContext instance.
      * @param {Phaser.Renderer.WebGL.ShaderProgramManager} programManager - The ShaderProgramManager instance.
+     * @param {number} textureUnit - The texture unit to use for the normal map.
      * @param {Phaser.Math.Vector2} vec - A Vector2 instance.
      * @param {boolean} [selfShadow] - Whether to enable self-shadowing.
      * @param {number} [selfShadowPenumbra] - The penumbra value for self-shadowing.
@@ -182,6 +183,7 @@ module.exports = {
         renderer,
         drawingContext,
         programManager,
+        textureUnit,
         vec,
         selfShadow,
         selfShadowPenumbra,
@@ -200,7 +202,7 @@ module.exports = {
         {
             programManager.setUniform(
                 'uNormSampler',
-                1
+                textureUnit
             );
 
             programManager.setUniform(
