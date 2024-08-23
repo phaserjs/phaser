@@ -818,6 +818,7 @@ var Container = new Class({
 
     /**
      * Moves a Game Object above another one within this Container.
+     * If the Game Object is already above the other, it isn't moved.
      *
      * These 2 Game Objects must already be children of this Container.
      *
@@ -841,6 +842,7 @@ var Container = new Class({
 
     /**
      * Moves a Game Object below another one within this Container.
+     * If the Game Object is already below the other, it isn't moved.
      *
      * These 2 Game Objects must already be children of this Container.
      *
