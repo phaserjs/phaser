@@ -1164,6 +1164,8 @@ var World = new Class({
     {
         this.enabled = true;
 
+        this.runner.timeLastTick = Common.now();
+
         this.emit(Events.RESUME);
 
         return this;
