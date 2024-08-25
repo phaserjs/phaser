@@ -8,6 +8,7 @@
 * Integrated `MatterCollisionEvents` plugin functionality directly into the `Matter.World` class to handle collisions more effectively. [More details here](MatterCollisionEvents.md).
 * Updated `Matter.World` to improve the performance, accuracy, and reliability of the `update` method in handling physics simulations or animations. [More details here](MatterWorldUpdate.md).
 * Fixed `Matter.World` bug where `group.length` returns `undefined`. Changed to `group.getLength()` to correctly return number of children in a group.
+* Calling `Matter.World.pause` would stop the world updating, but the Runner `timeLastTick` wasn't reset when `resume` was called, causing all the bodies to advance. The time is now reset correctly. Fix #6892 (thanks @philipgriffin)
 
 # Round Pixels
 
@@ -54,7 +55,6 @@ The Loader now has a new feature called `maxRetries`. This specifies the number 
 * The Game `Events#RESUME` event now contains a new parameter `pauseDuration` which is the duration, in ms, that the game was paused for (thanks @samme)
 * Added `Phaser.Loader.LoaderPlugin#removePack` method to `LoaderPlugin` that removes resources listed in an Asset Pack.(thanks @samme)
 * When using `Scene.switch` you can now optionally specify a `data` argument, just like with Scene start, which will be passed along to the Scene that was switched to (thanks @wooseok123)
-
 
 # WebGL Rendering Updates
 
@@ -137,6 +137,7 @@ The above flow is new in v3.85 and will catch a lot more strange edge-cases, whe
 * If you used letter spacing on a `Text` Game Object, combined with stroke, the stroke would be mis-aligned. The stroke is now applied to the letter-spaced text as well (thanks @RomanFrom710)
 * The `PreFXPipeline.batchQuad` method will now apply `Math.round` to the target bounds center point. This prevents sub-pixel values during the `copyTextSubImage2D` call, preventing sprites with pre-fx from appearing mis-aligned during camera pans. Fix #6879 (thanks @Antriel)
 * If you had a sprite on the display list using the LightPipeline, followed by a Mesh using the LightPipeline, and you invalidated the mesh (i.e. by rotating it), it would cause a runtime error in the current batch. Fix #6822 (thanks @urueda)
+* The Arcade Physics `processCallback` will now correctly handle non-Game Object physics bodies and pass them to the callback (thanks @ospira)
 
 ## Input Bug Fixes
 
@@ -150,6 +151,7 @@ The above flow is new in v3.85 and will catch a lot more strange edge-cases, whe
 
 Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
+@Andrek25
 @AlbertMontagutCasero
 @Antriel
 @leha-games
