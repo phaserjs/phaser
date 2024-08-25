@@ -632,14 +632,15 @@ var ScenePlugin = new Class({
      * @genericUse {(T|string)} - [key]
      *
      * @param {(string|Phaser.Scene)} key - The Scene to start.
+     * @param {any} [data] - Optional data object to pass to either the Scene `wake` or `start` method.
      *
      * @return {this} This Scene Plugin instance.
      */
-    switch: function (key)
+    switch: function (key, data)
     {
         if (key !== this.key)
         {
-            this.manager.queueOp('switch', this.key, key);
+            this.manager.queueOp('switch', this.key, key, data);
         }
 
         return this;
