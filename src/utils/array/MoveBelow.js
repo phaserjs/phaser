@@ -6,6 +6,8 @@
 
 /**
  * Moves the given array element below another one in the array.
+ * If the given element is already below the other, it isn't moved.
+ * Below means toward the start of the array.
  * The array is modified in-place.
  *
  * @function Phaser.Utils.Array.MoveBelow

@@ -1536,6 +1536,7 @@ var SceneManager = new Class({
 
     /**
      * Moves a Scene so it is immediately above another Scene in the Scenes list.
+     * If the Scene is already above the other, it isn't moved.
      *
      * This means it will render over the top of the other Scene.
      *
@@ -1583,6 +1584,7 @@ var SceneManager = new Class({
 
     /**
      * Moves a Scene so it is immediately below another Scene in the Scenes list.
+     * If the Scene is already below the other, it isn't moved.
      *
      * This means it will render behind the other Scene.
      *

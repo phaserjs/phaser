@@ -836,9 +836,10 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Swaps the position of two scenes in the Scenes list, so that Scene B is directly above Scene A.
+     * Moves a Scene so it is immediately above another Scene in the Scenes list.
+     * If the Scene is already above the other, it isn't moved.
      *
-     * This controls the order in which they are rendered and updated.
+     * This means it will render over the top of the other Scene.
      *
      * @method Phaser.Scenes.ScenePlugin#moveAbove
      * @since 3.2.0
@@ -864,9 +865,10 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Swaps the position of two scenes in the Scenes list, so that Scene B is directly below Scene A.
+     * Moves a Scene so it is immediately below another Scene in the Scenes list.
+     * If the Scene is already below the other, it isn't moved.
      *
-     * This controls the order in which they are rendered and updated.
+     * This means it will render behind the other Scene.
      *
      * @method Phaser.Scenes.ScenePlugin#moveBelow
      * @since 3.2.0
