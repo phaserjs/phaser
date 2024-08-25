@@ -310,7 +310,7 @@ var SceneManager = new Class({
         {
             entry = this._queue[i];
 
-            this[entry.op](entry.keyA, entry.keyB);
+            this[entry.op](entry.keyA, entry.keyB, entry.data);
         }
 
         this._queue.length = 0;
@@ -427,33 +427,31 @@ var SceneManager = new Class({
     {
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'remove', keyA: key, keyB: null });
+            return this.queueOp('remove', key);
         }
-        else
+
+        var sceneToRemove = this.getScene(key);
+
+        if (!sceneToRemove || sceneToRemove.sys.isTransitioning())
         {
-            var sceneToRemove = this.getScene(key);
+            return this;
+        }
 
-            if (!sceneToRemove || sceneToRemove.sys.isTransitioning())
+        var index = this.scenes.indexOf(sceneToRemove);
+        var sceneKey = sceneToRemove.sys.settings.key;
+
+        if (index > -1)
+        {
+            delete this.keys[sceneKey];
+            this.scenes.splice(index, 1);
+
+            if (this._start.indexOf(sceneKey) > -1)
             {
-                return this;
+                index = this._start.indexOf(sceneKey);
+                this._start.splice(index, 1);
             }
 
-            var index = this.scenes.indexOf(sceneToRemove);
-            var sceneKey = sceneToRemove.sys.settings.key;
-
-            if (index > -1)
-            {
-                delete this.keys[sceneKey];
-                this.scenes.splice(index, 1);
-
-                if (this._start.indexOf(sceneKey) > -1)
-                {
-                    index = this._start.indexOf(sceneKey);
-                    this._start.splice(index, 1);
-                }
-
-                sceneToRemove.sys.destroy();
-            }
+            sceneToRemove.sys.destroy();
         }
 
         return this;
@@ -528,13 +526,6 @@ var SceneManager = new Class({
      */
     loadComplete: function (loader)
     {
-        //  TODO - Remove. This should *not* be handled here
-        //  Try to unlock HTML5 sounds every time any loader completes
-        if (this.game.sound && this.game.sound.onBlurPausedSounds)
-        {
-            this.game.sound.unlock();
-        }
-
         this.create(loader.scene);
     },
 
@@ -679,7 +670,7 @@ var SceneManager = new Class({
 
             if (this.keys.hasOwnProperty(key))
             {
-                throw new Error('Cannot add a Scene with duplicate key: ' + key);
+                throw new Error('Cannot add Scene with duplicate key: ' + key);
             }
 
             return this.createSceneFromInstance(key, newScene);
@@ -838,7 +829,7 @@ var SceneManager = new Class({
 
         if (this.keys.hasOwnProperty(key))
         {
-            throw new Error('Cannot add a Scene with duplicate key: ' + key);
+            throw new Error('Cannot add Scene with duplicate key: ' + key);
         }
         else
         {
@@ -1214,7 +1205,7 @@ var SceneManager = new Class({
 
         if (!scene)
         {
-            console.warn('Scene not found for key: ' + key);
+            console.warn('Scene key not found: ' + key);
             return this;
         }
 
@@ -1337,7 +1328,7 @@ var SceneManager = new Class({
 
             if (this.isSleeping(to))
             {
-                this.wake(to);
+                this.wake(to, data);
             }
             else
             {
@@ -1405,19 +1396,18 @@ var SceneManager = new Class({
     {
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'bringToTop', keyA: key, keyB: null });
+            return this.queueOp('bringToTop', key);
         }
-        else
+
+        var index = this.getIndex(key);
+        var scenes = this.scenes;
+
+        if (index !== -1 && index < scenes.length)
         {
-            var index = this.getIndex(key);
+            var scene = this.getScene(key);
 
-            if (index !== -1 && index < this.scenes.length)
-            {
-                var scene = this.getScene(key);
-
-                this.scenes.splice(index, 1);
-                this.scenes.push(scene);
-            }
+            scenes.splice(index, 1);
+            scenes.push(scene);
         }
 
         return this;
@@ -1442,19 +1432,17 @@ var SceneManager = new Class({
     {
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'sendToBack', keyA: key, keyB: null });
+            return this.queueOp('sendToBack', key);
         }
-        else
+
+        var index = this.getIndex(key);
+
+        if (index !== -1 && index > 0)
         {
-            var index = this.getIndex(key);
+            var scene = this.getScene(key);
 
-            if (index !== -1 && index > 0)
-            {
-                var scene = this.getScene(key);
-
-                this.scenes.splice(index, 1);
-                this.scenes.unshift(scene);
-            }
+            this.scenes.splice(index, 1);
+            this.scenes.unshift(scene);
         }
 
         return this;
@@ -1477,21 +1465,19 @@ var SceneManager = new Class({
     {
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'moveDown', keyA: key, keyB: null });
+            return this.queueOp('moveDown', key);
         }
-        else
+
+        var indexA = this.getIndex(key);
+
+        if (indexA > 0)
         {
-            var indexA = this.getIndex(key);
+            var indexB = indexA - 1;
+            var sceneA = this.getScene(key);
+            var sceneB = this.getAt(indexB);
 
-            if (indexA > 0)
-            {
-                var indexB = indexA - 1;
-                var sceneA = this.getScene(key);
-                var sceneB = this.getAt(indexB);
-
-                this.scenes[indexA] = sceneB;
-                this.scenes[indexB] = sceneA;
-            }
+            this.scenes[indexA] = sceneB;
+            this.scenes[indexB] = sceneA;
         }
 
         return this;
@@ -1514,21 +1500,19 @@ var SceneManager = new Class({
     {
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'moveUp', keyA: key, keyB: null });
+            return this.queueOp('moveUp', key);
         }
-        else
+
+        var indexA = this.getIndex(key);
+
+        if (indexA < this.scenes.length - 1)
         {
-            var indexA = this.getIndex(key);
+            var indexB = indexA + 1;
+            var sceneA = this.getScene(key);
+            var sceneB = this.getAt(indexB);
 
-            if (indexA < this.scenes.length - 1)
-            {
-                var indexB = indexA + 1;
-                var sceneA = this.getScene(key);
-                var sceneB = this.getAt(indexB);
-
-                this.scenes[indexA] = sceneB;
-                this.scenes[indexB] = sceneA;
-            }
+            this.scenes[indexA] = sceneB;
+            this.scenes[indexB] = sceneA;
         }
 
         return this;
@@ -1560,23 +1544,21 @@ var SceneManager = new Class({
 
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'moveAbove', keyA: keyA, keyB: keyB });
+            return this.queueOp('moveAbove', keyA, keyB);
         }
-        else
+
+        var indexA = this.getIndex(keyA);
+        var indexB = this.getIndex(keyB);
+
+        if (indexA !== -1 && indexB !== -1 && indexB < indexA)
         {
-            var indexA = this.getIndex(keyA);
-            var indexB = this.getIndex(keyB);
+            var tempScene = this.getAt(indexB);
 
-            if (indexA !== -1 && indexB !== -1 && indexB < indexA)
-            {
-                var tempScene = this.getAt(indexB);
+            //  Remove
+            this.scenes.splice(indexB, 1);
 
-                //  Remove
-                this.scenes.splice(indexB, 1);
-
-                //  Add in new location
-                this.scenes.splice(indexA + (indexB > indexA), 0, tempScene);
-            }
+            //  Add in new location
+            this.scenes.splice(indexA + (indexB > indexA), 0, tempScene);
         }
 
         return this;
@@ -1608,29 +1590,27 @@ var SceneManager = new Class({
 
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'moveBelow', keyA: keyA, keyB: keyB });
+            return this.queueOp('moveBelow', keyA, keyB);
         }
-        else
+
+        var indexA = this.getIndex(keyA);
+        var indexB = this.getIndex(keyB);
+
+        if (indexA !== -1 && indexB !== -1 && indexB > indexA)
         {
-            var indexA = this.getIndex(keyA);
-            var indexB = this.getIndex(keyB);
+            var tempScene = this.getAt(indexB);
 
-            if (indexA !== -1 && indexB !== -1 && indexB > indexA)
+            //  Remove
+            this.scenes.splice(indexB, 1);
+
+            if (indexA === 0)
             {
-                var tempScene = this.getAt(indexB);
-
-                //  Remove
-                this.scenes.splice(indexB, 1);
-
-                if (indexA === 0)
-                {
-                    this.scenes.unshift(tempScene);
-                }
-                else
-                {
-                    //  Add in new location
-                    this.scenes.splice(indexA - (indexB < indexA), 0, tempScene);
-                }
+                this.scenes.unshift(tempScene);
+            }
+            else
+            {
+                //  Add in new location
+                this.scenes.splice(indexA - (indexB < indexA), 0, tempScene);
             }
         }
 
@@ -1647,12 +1627,13 @@ var SceneManager = new Class({
      * @param {string} op - The operation to perform.
      * @param {(string|Phaser.Scene)} keyA - Scene A.
      * @param {(any|string|Phaser.Scene)} [keyB] - Scene B, or a data object.
+     * @param {any} [data] - Optional data object to pass.
      *
      * @return {this} This Scene Manager instance.
      */
-    queueOp: function (op, keyA, keyB)
+    queueOp: function (op, keyA, keyB, data)
     {
-        this._queue.push({ op: op, keyA: keyA, keyB: keyB });
+        this._queue.push({ op: op, keyA: keyA, keyB: keyB, data: data });
 
         return this;
     },
@@ -1680,20 +1661,18 @@ var SceneManager = new Class({
 
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'swapPosition', keyA: keyA, keyB: keyB });
+            return this.queueOp('swapPosition', keyA, keyB);
         }
-        else
+
+        var indexA = this.getIndex(keyA);
+        var indexB = this.getIndex(keyB);
+
+        if (indexA !== indexB && indexA !== -1 && indexB !== -1)
         {
-            var indexA = this.getIndex(keyA);
-            var indexB = this.getIndex(keyB);
+            var tempScene = this.getAt(indexA);
 
-            if (indexA !== indexB && indexA !== -1 && indexB !== -1)
-            {
-                var tempScene = this.getAt(indexA);
-
-                this.scenes[indexA] = this.scenes[indexB];
-                this.scenes[indexB] = tempScene;
-            }
+            this.scenes[indexA] = this.scenes[indexB];
+            this.scenes[indexB] = tempScene;
         }
 
         return this;
