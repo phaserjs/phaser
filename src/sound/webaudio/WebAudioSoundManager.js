@@ -38,13 +38,22 @@ var WebAudioSoundManager = new Class({
     function WebAudioSoundManager (game)
     {
         /**
+         * The OfflineAudioContext used for audio decoding and state management.
+         *
+         * @name Phaser.Sound.WebAudioSoundManager#offlineContext
+         * @type {OfflineAudioContext}
+         * @since 3.85.0
+         */
+        this.offlineContext = new OfflineAudioContext(2, 1, 8000);
+
+        /**
          * The AudioContext being used for playback.
          *
          * @name Phaser.Sound.WebAudioSoundManager#context
          * @type {AudioContext}
          * @since 3.0.0
          */
-        this.context = this.createAudioContext(game);
+        this.context = null;
 
         /**
          * Gain node responsible for controlling global muting.
@@ -53,7 +62,7 @@ var WebAudioSoundManager = new Class({
          * @type {GainNode}
          * @since 3.0.0
          */
-        this.masterMuteNode = this.context.createGain();
+        this.masterMuteNode = null;
 
         /**
          * Gain node responsible for controlling global volume.
@@ -62,11 +71,7 @@ var WebAudioSoundManager = new Class({
          * @type {GainNode}
          * @since 3.0.0
          */
-        this.masterVolumeNode = this.context.createGain();
-
-        this.masterMuteNode.connect(this.masterVolumeNode);
-
-        this.masterVolumeNode.connect(this.context.destination);
+        this.masterVolumeNode = null;
 
         /**
          * Destination node for connecting individual sounds to.
@@ -75,19 +80,31 @@ var WebAudioSoundManager = new Class({
          * @type {AudioNode}
          * @since 3.0.0
          */
-        this.destination = this.masterMuteNode;
+        this.destination = null;
 
-        this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
+        this._volume = 1;
+        this._mute = false;
 
         BaseSoundManager.call(this, game);
 
-        if (this.locked && game.isBooted)
+        this.locked = this.offlineContext.state === 'suspended';
+
+        console.log('SM locked', this.locked);
+
+        if (this.locked)
         {
-            this.unlock();
+            if (game.isBooted)
+            {
+                this.unlock();
+            }
+            else
+            {
+                game.events.once(GameEvents.BOOT, this.unlock, this);
+            }
         }
         else
         {
-            game.events.once(GameEvents.BOOT, this.unlock, this);
+            this.createAudioContext();
         }
     },
 
@@ -101,29 +118,35 @@ var WebAudioSoundManager = new Class({
      * @method Phaser.Sound.WebAudioSoundManager#createAudioContext
      * @since 3.0.0
      *
-     * @param {Phaser.Game} game - Reference to the current game instance.
-     *
      * @return {AudioContext} The AudioContext instance to be used for playback.
      */
-    createAudioContext: function (game)
+    createAudioContext: function ()
     {
-        var audioConfig = game.config.audio;
+        console.log('createAudioContext');
+
+        var audioConfig = this.game.config.audio;
+        var context;
 
         if (audioConfig.context)
         {
             audioConfig.context.resume();
 
-            return audioConfig.context;
+            context = audioConfig.context;
         }
-
-        if (window.hasOwnProperty('AudioContext'))
+        else if (window.hasOwnProperty('AudioContext'))
         {
-            return new AudioContext();
+            context = new AudioContext();
         }
         else if (window.hasOwnProperty('webkitAudioContext'))
         {
-            return new window.webkitAudioContext();
+            context = new window.webkitAudioContext();
         }
+
+        this.setAudioContext(context);
+
+        this.locked = this.context.state === 'suspended';
+
+        return context;
     },
 
     /**
@@ -166,6 +189,9 @@ var WebAudioSoundManager = new Class({
         this.masterVolumeNode.connect(context.destination);
 
         this.destination = this.masterMuteNode;
+
+        this.setVolume(this._volume);
+        this.setMute(this._mute);
 
         return this;
     },
@@ -214,6 +240,8 @@ var WebAudioSoundManager = new Class({
      */
     decodeAudio: function (audioKey, audioData)
     {
+        console.log('decodeAudio', audioKey);
+
         var audioFiles;
 
         if (!Array.isArray(audioKey))
@@ -306,12 +334,21 @@ var WebAudioSoundManager = new Class({
      */
     unlock: function ()
     {
+        console.log('SM unlock');
+
         var _this = this;
 
         var body = document.body;
 
         var unlockHandler = function unlockHandler ()
         {
+            console.log('SM unlockHandler invoked');
+
+            // if (!_this.context)
+            // {
+            //     _this.createAudioContext();
+            // }
+
             if (_this.context && body)
             {
                 var bodyRemove = body.removeEventListener.bind(body);
@@ -353,7 +390,7 @@ var WebAudioSoundManager = new Class({
      */
     onBlur: function ()
     {
-        if (!this.locked)
+        if (!this.locked && this.context)
         {
             this.context.suspend();
         }
@@ -392,20 +429,23 @@ var WebAudioSoundManager = new Class({
      */
     update: function (time, delta)
     {
-        var listener = this.context.listener;
-
-        if (listener && listener.positionX !== undefined)
+        if (this.context)
         {
-            var x = GetFastValue(this.listenerPosition, 'x', null);
-            var y = GetFastValue(this.listenerPosition, 'y', null);
+            var listener = this.context.listener;
 
-            if (x && x !== this._spatialx)
+            if (listener && listener.positionX !== undefined)
             {
-                this._spatialx = listener.positionX.value = x;
-            }
-            if (y && y !== this._spatialy)
-            {
-                this._spatialy = listener.positionY.value = y;
+                var x = GetFastValue(this.listenerPosition, 'x', null);
+                var y = GetFastValue(this.listenerPosition, 'y', null);
+    
+                if (x && x !== this._spatialx)
+                {
+                    this._spatialx = listener.positionX.value = x;
+                }
+                if (y && y !== this._spatialy)
+                {
+                    this._spatialy = listener.positionY.value = y;
+                }
             }
         }
 
@@ -428,16 +468,24 @@ var WebAudioSoundManager = new Class({
     destroy: function ()
     {
         this.destination = null;
-        this.masterVolumeNode.disconnect();
-        this.masterVolumeNode = null;
-        this.masterMuteNode.disconnect();
-        this.masterMuteNode = null;
+
+        if (this.masterVolumeNode)
+        {
+            this.masterVolumeNode.disconnect();
+            this.masterVolumeNode = null;
+        }
+
+        if (this.masterMuteNode)
+        {
+            this.masterMuteNode.disconnect();
+            this.masterMuteNode = null;
+        }
 
         if (this.game.config.audio.context)
         {
             this.context.suspend();
         }
-        else
+        else if (this.context)
         {
             var _this = this;
 
@@ -478,12 +526,17 @@ var WebAudioSoundManager = new Class({
 
         get: function ()
         {
-            return (this.masterMuteNode.gain.value === 0);
+            return this._mute;
         },
 
         set: function (value)
         {
-            this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+            this._mute = value;
+
+            if (this.masterMuteNode)
+            {
+                this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+            }
 
             this.emit(Events.GLOBAL_MUTE, this, value);
         }
@@ -518,12 +571,17 @@ var WebAudioSoundManager = new Class({
 
         get: function ()
         {
-            return this.masterVolumeNode.gain.value;
+            return this._volume;
         },
 
         set: function (value)
         {
-            this.masterVolumeNode.gain.setValueAtTime(value, 0);
+            this._volume = value;
+
+            if (this.masterVolumeNode)
+            {
+                this.masterVolumeNode.gain.setValueAtTime(value, 0);
+            }
 
             this.emit(Events.GLOBAL_VOLUME, this, value);
         }

@@ -78,7 +78,7 @@ var AudioFile = new Class({
         var _this = this;
 
         // interesting read https://github.com/WebAudio/web-audio-api/issues/1305
-        this.config.context.decodeAudioData(this.xhrLoader.response,
+        this.config.offlineContext.decodeAudioData(this.xhrLoader.response,
             function (audioBuffer)
             {
                 _this.data = audioBuffer;
