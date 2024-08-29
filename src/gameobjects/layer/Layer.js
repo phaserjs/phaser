@@ -72,6 +72,7 @@ var StableSort = require('../../utils/array/StableSort');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.Visible
+ * @extends Phaser.Events.EventEmitter
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Layer.
