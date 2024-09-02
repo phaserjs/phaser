@@ -354,6 +354,7 @@ var CanvasRenderer = new Class({
      * Called at the start of the render loop.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#preRender
+     * @fires Phaser.Renderer.Events#PRE_RENDER_CLEAR
      * @fires Phaser.Renderer.Events#PRE_RENDER
      * @since 3.0.0
      */
@@ -368,6 +369,8 @@ var CanvasRenderer = new Class({
         ctx.globalAlpha = 1;
         ctx.globalCompositeOperation = 'source-over';
         ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        this.emit(Events.PRE_RENDER_CLEAR);
 
         if (config.clearBeforeRender)
         {

@@ -2643,6 +2643,7 @@ var WebGLRenderer = new Class({
      * Clears the current vertex buffer and updates pipelines.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#preRender
+     * @fires Phaser.Renderer.Events#PRE_RENDER_CLEAR
      * @fires Phaser.Renderer.Events#PRE_RENDER
      * @since 3.0.0
      */
@@ -2654,6 +2655,8 @@ var WebGLRenderer = new Class({
 
         //  Make sure we are bound to the main frame buffer
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        this.emit(Events.PRE_RENDER_CLEAR);
 
         if (this.config.clearBeforeRender)
         {
