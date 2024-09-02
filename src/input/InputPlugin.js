@@ -2133,7 +2133,7 @@ var InputPlugin = new Class({
      * The Game Object is not checked against the Pointer to see if it can enter this state,
      * that is up to you to do before calling this method.
      *
-     * @method Phaser.Input.InputPlugin#forceDownState
+     * @method Phaser.Input.InputPlugin#forceOverState
      * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_OVER
      * @fires Phaser.Input.Events#GAMEOBJECT_OVER
      * @since 3.85.0
@@ -2156,7 +2156,7 @@ var InputPlugin = new Class({
      * The Game Object is not checked against the Pointer to see if it can enter this state,
      * that is up to you to do before calling this method.
      *
-     * @method Phaser.Input.InputPlugin#forceDownState
+     * @method Phaser.Input.InputPlugin#forceOutState
      * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_OUT
      * @fires Phaser.Input.Events#GAMEOBJECT_OUT
      * @since 3.85.0
