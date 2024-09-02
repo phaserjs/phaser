@@ -55,6 +55,7 @@ The Loader now has a new feature called `maxRetries`. This specifies the number 
 * The Game `Events#RESUME` event now contains a new parameter `pauseDuration` which is the duration, in ms, that the game was paused for (thanks @samme)
 * Added `Phaser.Loader.LoaderPlugin#removePack` method to `LoaderPlugin` that removes resources listed in an Asset Pack.(thanks @samme)
 * When using `Scene.switch` you can now optionally specify a `data` argument, just like with Scene start, which will be passed along to the Scene that was switched to (thanks @wooseok123)
+* `PRE_RENDER_CLEAR` is a new event dispatched by the WebGL and Canvas Renderer. It's dispatched at the start of the render step, immediately before the canvas is cleared. This allows you to toggle the `clearBeforeRender` property as required, to have fine-grained control over when the canvas is cleared during render.
 
 # WebGL Rendering Updates
 
