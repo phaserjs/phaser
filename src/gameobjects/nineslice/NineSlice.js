@@ -312,7 +312,7 @@ var NineSlice = new Class({
          */
         this.is3Slice = (!topHeight && !bottomHeight);
 
-        if (textureFrame.scale9)
+        if (textureFrame && textureFrame.scale9)
         {
             //  If we're using the scale9 data from the frame, override the values from above
             this.is3Slice = textureFrame.is3Slice;
@@ -382,7 +382,7 @@ var NineSlice = new Class({
         }
         else
         {
-            if (frame.scale9 && !skipScale9)
+            if (frame && frame.scale9 && !skipScale9)
             {
                 var data = frame.data.scale9Borders;
 
