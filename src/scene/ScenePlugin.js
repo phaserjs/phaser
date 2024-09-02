@@ -1015,11 +1015,13 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Retrieve a Scene.
+     * Retrieves a Scene based on the given key.
+     *
+     * If an actual Scene is passed to this method, it can be used to check if
+     * its currently within the Scene Manager, or not.
      *
      * @generic {Phaser.Scene} T
      * @genericUse {(T|string)} - [key]
-     * @genericUse {T} - [$return]
      *
      * @method Phaser.Scenes.ScenePlugin#get
      * @since 3.0.0

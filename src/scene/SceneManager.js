@@ -885,7 +885,6 @@ var SceneManager = new Class({
      *
      * @generic {Phaser.Scene} T
      * @genericUse {(T|string)} - [key]
-     * @genericUse {T} - [$return]
      *
      * @param {(string|Phaser.Scene)} key - The key of the Scene to retrieve.
      *
