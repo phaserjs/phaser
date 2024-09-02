@@ -56,6 +56,7 @@ The Loader now has a new feature called `maxRetries`. This specifies the number 
 * Added `Phaser.Loader.LoaderPlugin#removePack` method to `LoaderPlugin` that removes resources listed in an Asset Pack.(thanks @samme)
 * When using `Scene.switch` you can now optionally specify a `data` argument, just like with Scene start, which will be passed along to the Scene that was switched to (thanks @wooseok123)
 * `PRE_RENDER_CLEAR` is a new event dispatched by the WebGL and Canvas Renderer. It's dispatched at the start of the render step, immediately before the canvas is cleared. This allows you to toggle the `clearBeforeRender` property as required, to have fine-grained control over when the canvas is cleared during render.
+* `Video.getFirstFrame` is a new method that can be used to load the first frame of the Video into its texture without starting playback. This is useful if you want to display the first frame of a video behind a 'Play' button, without calling the 'play' method.
 
 # WebGL Rendering Updates
 
