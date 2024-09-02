@@ -140,6 +140,7 @@ The above flow is new in v3.85 and will catch a lot more strange edge-cases, whe
 * The `PreFXPipeline.batchQuad` method will now apply `Math.round` to the target bounds center point. This prevents sub-pixel values during the `copyTextSubImage2D` call, preventing sprites with pre-fx from appearing mis-aligned during camera pans. Fix #6879 (thanks @Antriel)
 * If you had a sprite on the display list using the LightPipeline, followed by a Mesh using the LightPipeline, and you invalidated the mesh (i.e. by rotating it), it would cause a runtime error in the current batch. Fix #6822 (thanks @urueda)
 * The Arcade Physics `processCallback` will now correctly handle non-Game Object physics bodies and pass them to the callback (thanks @ospira)
+* If you set a `WebAudioSound` to loop and set `SoundManager.pauseOnBlur = false`, then if you start the sound and tab away from Phaser, the sound wouldn't then loop on return to the game, if the loop _expired_ while the tab was out of focus. This was due to checking the audio source node target against the wrong internal property. Fix #6702 (thanks @michalfialadev)
 
 ## Input Bug Fixes
 
