@@ -251,9 +251,7 @@ var BaseTween = new Class({
          * or they will retain references you may no longer require and waste memory.
          *
          * By default, `Tweens` are set to _not_ persist, so they are automatically cleaned-up by
-         * the Tween Manager. But `TweenChains` _do_ persist by default, unless overridden in their
-         * config. This is because the type of situations you use a chain for is far more likely to
-         * need to be replayed again in the future, rather than disposed of.
+         * the Tween Manager.
          *
          * @name Phaser.Tweens.BaseTween#persist
          * @type {boolean}
