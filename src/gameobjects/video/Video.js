@@ -494,6 +494,16 @@ var Video = new Class({
         this._playCalled = false;
 
         /**
+         * Has Video.getFirstFrame been called? This is reset if a new Video is loaded or played.
+         *
+         * @name Phaser.GameObjects.Video#_getFrame
+         * @type {boolean}
+         * @private
+         * @since 3.85.0
+         */
+        this._getFrame = false;
+
+        /**
          * The Callback ID returned by Request Video Frame.
          *
          * @name Phaser.GameObjects.Video#_rfvCallbackId
@@ -926,7 +936,18 @@ var Video = new Class({
 
         this._lastUpdate = currentTime;
 
-        this._rfvCallbackId = this.video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
+        if (this._getFrame)
+        {
+            this.removeEventHandlers();
+
+            video.pause();
+
+            this._getFrame = false;
+        }
+        else
+        {
+            this._rfvCallbackId = this.video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
+        }
     },
 
     /**
@@ -994,9 +1015,49 @@ var Video = new Class({
 
         if (!this._playCalled)
         {
+            this._getFrame = false;
+
             this._rfvCallbackId = video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
 
             this._playCalled = true;
+
+            this.createPlayPromise();
+        }
+
+        return this;
+    },
+
+    /**
+     * Attempts to get the first frame of the video by running the `requestVideoFrame` callback once,
+     * then stopping. This is useful if you need to grab the first frame of the video to display behind
+     * a 'play' button, without actually calling the 'play' method.
+     *
+     * If the video is already playing, or has been queued to play with `changeSource` then this method just returns.
+     *
+     * @method Phaser.GameObjects.Video#getFirstFrame
+     * @since 3.85.0
+     *
+     * @return {this} This Video Game Object for method chaining.
+     */
+    getFirstFrame: function ()
+    {
+        var video = this.video;
+
+        if (!video || this.isPlaying())
+        {
+            if (!video)
+            {
+                console.warn('Video not loaded');
+            }
+
+            return this;
+        }
+
+        if (!this._playCalled)
+        {
+            this._getFrame = true;
+
+            this._rfvCallbackId = video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
 
             this.createPlayPromise();
         }
