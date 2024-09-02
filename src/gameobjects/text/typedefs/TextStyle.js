@@ -6,7 +6,7 @@
  *
  * @property {string} [fontFamily='Courier'] - The font the Text object will render with. This is a Canvas style font string.
  * @property {(number|string)} [fontSize='16px'] - The font size, as a CSS size string.
- * @property {string} [fontStyle] - Any addition font styles, such as 'strong'.
+ * @property {string} [fontStyle] - Any addition font styles, such as 'bold'.
  * @property {string} [font] - The font family or font settings to set. Overrides the other font settings.
  * @property {string} [backgroundColor] - A solid fill color that is rendered behind the Text object. Given as a CSS string color such as `#ff0`.
  * @property {(string|CanvasGradient|CanvasPattern)} [color='#fff'] - The color the Text is drawn in. Given as a CSS string color such as `#fff` or `rgb()`.
