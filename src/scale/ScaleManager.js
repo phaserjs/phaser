@@ -1465,7 +1465,6 @@ var ScaleManager = new Class({
      *
      * @method Phaser.Scale.ScaleManager#leaveFullScreenSuccessHandler
      * @fires Phaser.Scale.Events#LEAVE_FULLSCREEN
-     * @fires Phaser.Scale.Events#FULLSCREEN_UNSUPPORTED
      * @since 3.85.0
      */
     leaveFullScreenSuccessHandler: function ()
