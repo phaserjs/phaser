@@ -162,6 +162,7 @@ Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs
 @saintflow47
 @samme
 @ssotangkur
+@vankop
 
 # Deprecation Warning for the next release
 
