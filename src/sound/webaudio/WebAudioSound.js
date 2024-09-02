@@ -415,7 +415,9 @@ var WebAudioSound = new Class({
 
         source.onended = function (ev)
         {
-            if (ev.target === _this.source)
+            var target = ev.target;
+
+            if (target === _this.source || target === _this.loopSource)
             {
                 // sound ended
                 if (_this.currentConfig.loop)
