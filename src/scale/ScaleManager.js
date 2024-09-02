@@ -1438,7 +1438,6 @@ var ScaleManager = new Class({
      * Calling this method will cancel fullscreen mode, if the browser has entered it.
      *
      * @method Phaser.Scale.ScaleManager#stopFullscreen
-     * @fires Phaser.Scale.Events#LEAVE_FULLSCREEN
      * @fires Phaser.Scale.Events#FULLSCREEN_UNSUPPORTED
      * @since 3.16.0
      */
@@ -1459,7 +1458,18 @@ var ScaleManager = new Class({
         }
 
         this.removeFullscreenTarget();
+    },
 
+    /**
+     * The browser has successfully left fullscreen mode.
+     *
+     * @method Phaser.Scale.ScaleManager#leaveFullScreenSuccessHandler
+     * @fires Phaser.Scale.Events#LEAVE_FULLSCREEN
+     * @fires Phaser.Scale.Events#FULLSCREEN_UNSUPPORTED
+     * @since 3.85.0
+     */
+    leaveFullScreenSuccessHandler: function ()
+    {
         //  Get the parent size again as it will have changed
         this.getParentBounds();
 
@@ -1582,6 +1592,7 @@ var ScaleManager = new Class({
         {
             //  They pressed ESC while in fullscreen mode
             this.stopFullscreen();
+            this.leaveFullScreenSuccessHandler();
         }
     },
 
