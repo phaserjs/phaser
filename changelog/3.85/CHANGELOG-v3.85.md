@@ -173,3 +173,5 @@ The _next release_ of Phaser will make the following API-breaking changes:
 * The `Create.GenerateTexture`, all of the Create Palettes and the `create` folder will be removed.
 * The `phaser-ie9.js` entry-point will be removed along with all associated polyfills.
 * The Spine 3 and Spine 4 plugins will no longer be updated. You should now use the official Phaser Spine plugin created by Esoteric Software.
+* The `Geom.Point` class and all related functions will be removed. All functionality for this can be found in the existing Vector2 math classes. All Geometry classes that currently create and return Point objects will be updated to return Vector2 objects instead.
+* We will be moving away from Webpack and using ESBuild to build the next version of Phaser.
