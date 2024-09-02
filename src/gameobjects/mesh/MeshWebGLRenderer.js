@@ -82,7 +82,7 @@ var MeshWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
             textureUnit = pipeline.setGameObject(src);
 
-            vertexOffset = 0;
+            vertexOffset = (pipeline.vertexCount * pipeline.currentShader.vertexComponentCount) - 1;
         }
 
         vertexOffset = face.load(F32, U32, vertexOffset, textureUnit, tintEffect);
