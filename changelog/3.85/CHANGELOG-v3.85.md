@@ -102,8 +102,7 @@ The above flow is new in v3.85 and will catch a lot more strange edge-cases, whe
 
 # Updates
 
-* Added `Phaser.Scale.ScaleManager.leaveFullScreenSuccessHandler` method 
-to separate `Events.LEAVE_FULLSCREEN` from `Phaser.Scale.ScaleManager.stopFullscreen` to ensure `Events.LEAVE_FULLSCREEN` is only emitted once when exiting fullscreen mode. (Fix #6885, thanks @Antriel)
+* Added `Phaser.Scale.ScaleManager.leaveFullScreenSuccessHandler` method to separate `Events.LEAVE_FULLSCREEN` from `Phaser.Scale.ScaleManager.stopFullscreen` to ensure `Events.LEAVE_FULLSCREEN` is only emitted once when exiting fullscreen mode. (Fix #6885, thanks @Antriel)
 * Calling `Timeline.pause` will now pause any currently active Tweens that the Timeline had started (thanks @monteiz)
 * Calling `Timeline.resume` will now resume any currently paused Tweens that the Timeline had started (thanks @monteiz)
 * Calling `Timeline.clear` and `Timeline.destroy` will now destroy any currently active Tweens that the Timeline had created. Previously, active tweens would continue to play to completion (thanks @monteiz)
