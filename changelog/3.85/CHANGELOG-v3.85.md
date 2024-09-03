@@ -144,6 +144,7 @@ The above flow is new in v3.85 and will catch a lot more strange edge-cases, whe
 * If you set a `WebAudioSound` to loop and set `SoundManager.pauseOnBlur = false`, then if you start the sound and tab away from Phaser, the sound wouldn't then loop on return to the game, if the loop _expired_ while the tab was out of focus. This was due to checking the audio source node target against the wrong internal property. Fix #6702 (thanks @michalfialadev)
 * The `Mesh` WebGLRenderer will now recalculate the `vertexOffset` correctly if the batch flushes, fixing an issue where it would display missing triangles in a mesh after a batch flush. Fix #6814 (thanks @pavels)
 * The `NineSlice` Game Object will now guard against an invalid texture by checking for the `frame` and `textureFrame` vars before trying to read values from them. Fix #6804 (thanks @IvanDem)
+* DOM Game Elements are now kept in the correct position when a Scene camera zooms out. Previously, they only worked if you kept their origin at 0x0, or didn't zoom the camera out. Fix #6817 #6607 (thanks @moufmouf)
 
 ## Input Bug Fixes
 
