@@ -615,6 +615,17 @@ export class Parser {
                     return `{[key: string]: ${this.processTypeName(matches[1])}}`;
                 }
             }
+        } else if (name.startsWith('object<')) {
+            let matches = name.match(/^object<(.*)>$/);
+
+            if (matches && matches[1]) {
+                if (matches[1].indexOf(',') != -1) {
+                    let parts = matches[1].split(',');
+                    return `{[key: ${this.processTypeName(parts[0])}]: typeof ${this.processTypeName(parts[1])}}`;
+                } else {
+                    return `{[key: string]: typeof ${this.processTypeName(matches[1])}}`;
+                }
+            }
         }
 
         return name;

@@ -31,7 +31,7 @@
  * @property {Phaser.Types.Core.PluginObject|Phaser.Types.Core.PluginObjectItem[]} [plugins] - Plugins to install.
  * @property {Phaser.Types.Core.ScaleConfig} [scale] - The Scale Manager configuration.
  * @property {Phaser.Types.Core.AudioConfig} [audio] - The Audio Configuration object.
- * @property {Phaser.Types.Core.PipelineConfig} [pipeline] - A WebGL Pipeline configuration object. Can also be part of the `RenderConfig`.
+ * @property {Phaser.Types.Core.PipelineConfig} [pipeline] - The WebGL Pipeline configuration object. Can also be part of the `RenderConfig`.
  * @property {(string|number)} [backgroundColor=0x000000] - The background color of the game canvas. The default is black.
  * @property {boolean} [antialias=true] - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
  * @property {boolean} [antialiasGL=true] - Sets the `antialias` property when the WebGL context is created. Setting this value does not impact any subsequent textures that are created, or the canvas style attributes.
