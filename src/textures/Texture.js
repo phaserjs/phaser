@@ -126,6 +126,19 @@ var Texture = new Class({
          */
         this.frameTotal = 0;
 
+        /**
+         * Whether shaders using this texture should use special filtering code.
+         * This relies on shader support.
+         *
+         * If `null`, the game default will be used.
+         *
+         * @name Phaser.Textures.Texture#smoothPixelArt
+         * @type {?boolean}
+         * @default null
+         * @since 3.90.0
+         */
+        this.smoothPixelArt = null;
+
         //  Load the Sources
         for (var i = 0; i < source.length; i++)
         {
@@ -523,6 +536,27 @@ var Texture = new Class({
         for (i = 0; i < this.dataSource.length; i++)
         {
             this.dataSource[i].setFilter(filterMode);
+        }
+    },
+
+    /**
+     * Set the `smoothPixelArt` property for this Texture.
+     * If `true`, it will also run `setFilter(Phaser.Textures.FilterMode.LINEAR)`
+     * to enable the necessary linear filtering.
+     * If `false`, it will not change the filter mode, as it doesn't know
+     * the previous state, nor is it necessary to change it.
+     *
+     * @method Phaser.Textures.Texture#setSmoothPixelArt
+     * @since 3.90.0
+     * @param {boolean|null} value - The value of the smoothPixelArt property.
+     */
+    setSmoothPixelArt: function (value)
+    {
+        this.smoothPixelArt = value;
+
+        if (value)
+        {
+            this.setFilter(Phaser.Textures.FilterMode.LINEAR);
         }
     },
 

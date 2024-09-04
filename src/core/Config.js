@@ -418,6 +418,18 @@ var Config = new Class({
         }
 
         /**
+         * @const {boolean} Phaser.Core.Config#smoothPixelArt - WebGL only. Sets `antialias` to true and `pixelArt` to false. Texture-based Game Objects use special shader setting that preserve blocky pixels, but smooth the edges between the pixels. This is only visible when objects are scaled up; otherwise, `antialias` is simpler.
+         */
+        this.smoothPixelArt = GetValue(renderConfig, 'smoothPixelArt', false, config);
+
+        if (this.smoothPixelArt)
+        {
+            this.antialias = true;
+            this.antialiasGL = true;
+            this.pixelArt = false;
+        }
+
+        /**
          * @const {boolean} Phaser.Core.Config#transparent - Whether the game canvas will have a transparent background.
          */
         this.transparent = GetValue(renderConfig, 'transparent', false, config);
