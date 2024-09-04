@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DefaultParticleEmitterNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultParticleEmitterNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var ComponentsToJSON = require('../components/ToJSON');
@@ -322,7 +323,7 @@ var configOpMap = [
  * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.PostPipeline
- * @extends Phaser.GameObjects.Components.RenderNode
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -345,7 +346,7 @@ var ParticleEmitter = new Class({
         Components.Lighting,
         Components.Mask,
         Components.PostPipeline,
-        Components.RenderNode,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Texture,
         Components.Transform,
@@ -896,7 +897,7 @@ var ParticleEmitter = new Class({
          */
         this.tintFill = false;
 
-        this.initRenderNodes('ParticleEmitter');
+        this.initRenderNodes(this._defaultRenderNodesMap);
         this.initPostPipeline();
 
         this.setPosition(x, y);
@@ -905,6 +906,23 @@ var ParticleEmitter = new Class({
         if (config)
         {
             this.setConfig(config);
+        }
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 3.90.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultParticleEmitterNodes;
         }
     },
 

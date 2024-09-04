@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DefaultPointLightNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultPointLightNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
@@ -48,7 +49,7 @@ var Render = require('./PointLightRender');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.PostPipeline
- * @extends Phaser.GameObjects.Components.RenderNode
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -71,7 +72,7 @@ var PointLight = new Class({
         Components.Depth,
         Components.Mask,
         Components.PostPipeline,
-        Components.RenderNode,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Transform,
         Components.Visible,
@@ -89,7 +90,7 @@ var PointLight = new Class({
 
         GameObject.call(this, scene, 'PointLight');
 
-        this.initRenderNodes('PointLight');
+        this.initRenderNodes(this._defaultRenderNodesMap);
         this.initPostPipeline();
 
         this.setPosition(x, y);
@@ -134,6 +135,23 @@ var PointLight = new Class({
         this.height = radius * 2;
 
         this._radius = radius;
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.PointLight#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 3.90.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultPointLightNodes;
+        }
     },
 
     /**

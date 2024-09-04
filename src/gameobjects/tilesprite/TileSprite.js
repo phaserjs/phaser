@@ -6,6 +6,7 @@
 
 var AnimationState = require('../../animations/AnimationState');
 var CanvasPool = require('../../display/canvas/CanvasPool');
+var DefaultTileSpriteNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultTileSpriteNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
@@ -54,7 +55,7 @@ var _FLAG = 8; // 1000
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.PostPipeline
- * @extends Phaser.GameObjects.Components.RenderNode
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.TextureCrop
  * @extends Phaser.GameObjects.Components.Tint
@@ -85,7 +86,7 @@ var TileSprite = new Class({
         Components.Mask,
         Components.Origin,
         Components.PostPipeline,
-        Components.RenderNode,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.TextureCrop,
         Components.Tint,
@@ -278,8 +279,25 @@ var TileSprite = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
-        this.initRenderNodes('TileSprite');
+        this.initRenderNodes(this._defaultRenderNodesMap);
         this.initPostPipeline(true);
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.TileSprite#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 3.90.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultTileSpriteNodes;
+        }
     },
 
     //  Overrides Game Object method

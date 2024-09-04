@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DefaultNineSliceNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultNineSliceNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
@@ -100,7 +101,7 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.PostPipeline
- * @extends Phaser.GameObjects.Components.RenderNode
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -130,7 +131,7 @@ var NineSlice = new Class({
         Components.Mask,
         Components.Origin,
         Components.PostPipeline,
-        Components.RenderNode,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Texture,
         Components.Transform,
@@ -333,8 +334,25 @@ var NineSlice = new Class({
 
         this.updateDisplayOrigin();
 
-        this.initRenderNodes('NineSlice');
+        this.initRenderNodes(this._defaultRenderNodesMap);
         this.initPostPipeline();
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.NineSlice#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 3.90.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultNineSliceNodes;
+        }
     },
 
     /**

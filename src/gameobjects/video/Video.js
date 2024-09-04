@@ -5,6 +5,7 @@
  */
 
 var Clamp = require('../../math/Clamp');
+var DefaultImageNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultImageNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var Events = require('../events');
@@ -105,7 +106,7 @@ var VideoRender = require('./VideoRender');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.PostPipeline
- * @extends Phaser.GameObjects.Components.RenderNode
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.TextureCrop
  * @extends Phaser.GameObjects.Components.Tint
@@ -132,7 +133,7 @@ var Video = new Class({
         Components.Mask,
         Components.Origin,
         Components.PostPipeline,
-        Components.RenderNode,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.TextureCrop,
         Components.Tint,
@@ -519,7 +520,7 @@ var Video = new Class({
 
         this.setPosition(x, y);
         this.setSize(256, 256);
-        this.initRenderNodes('Image');
+        this.initRenderNodes(this._defaultRenderNodesMap);
         this.initPostPipeline(true);
 
         game.events.on(GameEvents.PAUSE, this.globalPause, this);
@@ -535,6 +536,23 @@ var Video = new Class({
         if (key)
         {
             this.load(key);
+        }
+    },
+
+    /**
+     * The default render node map for this Game Object.
+     *
+     * @name Phaser.GameObjects.Video#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 3.90.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultImageNodes;
         }
     },
 

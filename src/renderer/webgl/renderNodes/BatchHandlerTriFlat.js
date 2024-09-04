@@ -7,6 +7,8 @@
 var Vector2 = require('../../../math/Vector2');
 var Class = require('../../../utils/Class');
 var MakeApplyLighting = require('../shaders/configs/MakeApplyLighting');
+var MakeDefineLights = require('../shaders/configs/MakeDefineLights');
+var MakeFlatNormal = require('../shaders/configs/MakeFlatNormal');
 var ShaderSourceFS = require('../shaders/Flat-frag');
 var ShaderSourceVS = require('../shaders/Flat-vert');
 var Utils = require('../Utils');
@@ -73,6 +75,18 @@ var BatchHandlerTriFlat = new Class({
         this.renderOptions = {
             lighting: false
         };
+
+        /**
+         * The render options currently being built.
+         * These are assigned to `renderOptions` by `applyRenderOptions`.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#nextRenderOptions
+         * @type {object}
+         * @since 3.90.0
+         */
+        this.nextRenderOptions = {
+            lighting: false
+        };
     },
 
     defaultConfig: {
@@ -83,9 +97,10 @@ var BatchHandlerTriFlat = new Class({
         vertexSource: ShaderSourceVS,
         fragmentSource: ShaderSourceFS,
         shaderAdditions: [
+            MakeDefineLights(true),
+            MakeFlatNormal(true),
             MakeApplyLighting(true)
         ],
-        shaderFeatures: [ 'FLAT_LIGHTING' ],
         indexBufferDynamic: true,
         vertexBufferLayout: {
             usage: 'DYNAMIC_DRAW',
@@ -160,37 +175,58 @@ var BatchHandlerTriFlat = new Class({
         }
     },
 
-    /**
-     * Update the render options for the current shader program.
-     * If the options have changed, the batch is run to apply the changes.
-     *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#updateRenderOptions
-     * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
-     * @param {boolean} lighting - Should this batch use lighting?
-     */
-    updateRenderOptions: function (drawingContext, lighting)
+    updateRenderOptions: function (lighting)
+    {
+        var newRenderOptions = this.nextRenderOptions;
+
+        newRenderOptions.lighting = lighting;
+    },
+
+    applyRenderOptions: function (drawingContext)
+    {
+        var renderOptions = this.renderOptions;
+        var nextRenderOptions = this.nextRenderOptions;
+
+        var changed = false;
+        for (var key in nextRenderOptions)
+        {
+            if (nextRenderOptions[key] !== renderOptions[key])
+            {
+                changed = true;
+            }
+        }
+
+        if (changed)
+        {
+            this.run(drawingContext);
+            this.updateShaderConfig();
+        }
+    },
+
+    updateShaderConfig: function ()
     {
         var programManager = this.programManager;
         var renderOptions = this.renderOptions;
-        var updateLighting = this.renderOptions.lighting !== lighting;
+        var nextRenderOptions = this.nextRenderOptions;
 
-        if (updateLighting)
+        if (renderOptions.lighting !== nextRenderOptions.lighting)
         {
-            this.run(drawingContext);
-        }
-
-        renderOptions.lighting = lighting;
-
-        if (updateLighting)
-        {
-            var lightingAddition = programManager.getAddition('LIGHTING');
-            if (lightingAddition)
+            var lighting = nextRenderOptions.lighting;
+            renderOptions.lighting = lighting;
+    
+            var lightingAdditions = programManager.getAdditionsByTag('LIGHTING');
+            for (var i = 0; i < lightingAdditions.length; i++)
             {
-                lightingAddition.disable = !lighting;
-                if (lighting)
+                var addition = lightingAdditions[i];
+                addition.disable = !lighting;
+            }
+    
+            if (lighting)
+            {
+                var defineLightsAddition = programManager.getAddition('DefineLights');
+                if (defineLightsAddition)
                 {
-                    lightingAddition.additions.fragmentDefine = '#define LIGHT_COUNT ' + this.manager.renderer.config.maxLights;
+                    defineLightsAddition.additions.fragmentDefine = '#define LIGHT_COUNT ' + this.manager.renderer.config.maxLights;
                 }
             }
         }
@@ -277,7 +313,8 @@ var BatchHandlerTriFlat = new Class({
         }
 
         // Check render options and run the batch if they differ.
-        this.updateRenderOptions(currentContext, lighting);
+        this.updateRenderOptions(lighting);
+        this.applyRenderOptions(currentContext);
 
         var passID = 0;
         var instanceCompletion = 0;

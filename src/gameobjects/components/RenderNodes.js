@@ -9,11 +9,11 @@ var DeepCopy = require('../../utils/object/DeepCopy');
 /**
  * Provides methods for setting the WebGL render nodes of a Game Object.
  *
- * @namespace Phaser.GameObjects.Components.RenderNode
+ * @namespace Phaser.GameObjects.Components.RenderNodes
  * @webglOnly
  * @since 3.90.0
  */
-var RenderNode = {
+var RenderNodes = {
     /**
      * Customized WebGL render nodes of this Game Object.
      * RenderNodes are responsible for managing the rendering process of this Game Object.
@@ -69,7 +69,7 @@ var RenderNode = {
      * @method Phaser.GameObjects.Components.RenderNode#initRenderNodes
      * @webglOnly
      * @since 3.90.0
-     * @param {string|Map<string, string>} defaultNodes - The default render nodes to set for this Game Object. This can be a string referring to a map in the RenderNodeManager, or a map of render nodes to set directly.
+     * @param {Map<string, string>} defaultNodes - The default render nodes to set for this Game Object.
      */
     initRenderNodes: function (defaultNodes)
     {
@@ -84,27 +84,17 @@ var RenderNode = {
             return;
         }
 
-        var manager = this.scene.sys.renderer.renderNodes;
+        var manager = renderer.renderNodes;
 
-        if (!manager)
+        if (!(manager && defaultNodes))
         {
             return;
         }
 
-        if (typeof defaultNodes === 'string')
-        {
-            defaultNodes = manager.defaultRenderNodes[defaultNodes];
-        }
-
-        if (!defaultNodes)
-        {
-            return;
-        }
-
-        var _this = this;
+        var defaultRenderNodes = this.defaultRenderNodes;
         defaultNodes.each(function (role, node)
         {
-            _this.defaultRenderNodes[role] = manager.getNode(node);
+            defaultRenderNodes[role] = manager.getNode(node);
         });
     },
 
@@ -212,4 +202,4 @@ var RenderNode = {
     }
 };
 
-module.exports = RenderNode;
+module.exports = RenderNodes;

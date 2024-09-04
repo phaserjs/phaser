@@ -515,6 +515,18 @@ var WebGLRenderer = new Class({
         this.instancedArraysExtension = null;
 
         /**
+         * If the browser supports the `OES_standard_derivatives` extension,
+         * and the `smoothPixelArt` config option is true,
+         * this property will hold a reference to the glExtension for it.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#standardDerivativesExtension
+         * @type {OES_standard_derivatives}
+         * @default null
+         * @since 3.90.0
+         */
+        this.standardDerivativesExtension = null;
+
+        /**
          * If the browser supports the `OES_vertex_array_object` extension, this property will hold
          * a reference to the glExtension for it.
          *
@@ -893,6 +905,12 @@ var WebGLRenderer = new Class({
 
             _this.vaoExtension = (exts.indexOf(vaoString) > -1) ? gl.getExtension(vaoString) : null;
 
+            if (game.config.smoothPixelArt)
+            {
+                var stdDerivativesString = 'OES_standard_derivatives';
+
+                _this.standardDerivativesExtension = (exts.indexOf(stdDerivativesString) > -1) ? gl.getExtension(stdDerivativesString) : null;
+            }
         };
 
         setupExtensions();

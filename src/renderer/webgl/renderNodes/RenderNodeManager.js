@@ -8,17 +8,6 @@ var EventEmitter = require('eventemitter3');
 var Class = require('../../../utils/Class');
 var Events = require('../../events');
 
-var DefaultBitmapTextNodes = require('./defaults/DefaultBitmapTextNodes');
-var DefaultBlitterNodes = require('./defaults/DefaultBlitterNodes');
-var DefaultGraphicsNodes = require('./defaults/DefaultGraphicsNodes');
-var DefaultImageNodes = require('./defaults/DefaultImageNodes');
-var DefaultNineSliceNodes = require('./defaults/DefaultNineSliceNodes');
-var DefaultParticleEmitterNodes = require('./defaults/DefaultParticleEmitterNodes');
-var DefaultPointLightNodes = require('./defaults/DefaultPointLightNodes');
-var DefaultRopeNodes = require('./defaults/DefaultRopeNodes');
-var DefaultTilemapLayerNodes = require('./defaults/DefaultTilemapLayerNodes');
-var DefaultTileSpriteNodes = require('./defaults/DefaultTileSpriteNodes');
-
 var BatchHandlerPointLight = require('./BatchHandlerPointLight');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerStrip = require('./BatchHandlerStrip');
@@ -34,6 +23,8 @@ var ListCompositor = require('./ListCompositor');
 var RebindContext = require('./RebindContext');
 var StrokePath = require('./StrokePath');
 var SubmitterQuad = require('./submitter/SubmitterQuad');
+var SubmitterTile = require('./submitter/SubmitterTile');
+var SubmitterTilemapGPULayer = require('./submitter/SubmitterTilemapGPULayer');
 var SubmitterTileSprite = require('./submitter/SubmitterTileSprite');
 var TexturerImage = require('./texturer/TexturerImage');
 var TexturerTileSprite = require('./texturer/TexturerTileSprite');
@@ -97,28 +88,6 @@ var RenderNodeManager = new Class({
         this.maxParallelTextureUnits = (game.config.autoMobilePipeline && !game.device.os.desktop) ? 1 : renderer.maxTextures;
 
         /**
-         * The default render nodes for game objects.
-         * These maps are requested when a game object is created,
-         * and are used to assign default render nodes to the game object.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#defaultRenderNodes
-         * @type {object}
-         * @since 3.90.0
-         */
-        this.defaultRenderNodes = {
-            BitmapText: DefaultBitmapTextNodes,
-            Blitter: DefaultBlitterNodes,
-            Graphics: DefaultGraphicsNodes,
-            Image: DefaultImageNodes,
-            NineSlice: DefaultNineSliceNodes,
-            ParticleEmitter: DefaultParticleEmitterNodes,
-            PointLight: DefaultPointLightNodes,
-            Rope: DefaultRopeNodes,
-            TilemapLayer: DefaultTilemapLayerNodes,
-            TileSprite: DefaultTileSpriteNodes
-        };
-
-        /**
          * Nodes available for use. This is an internal object,
          * where the keys are the names of the nodes.
          *
@@ -162,6 +131,8 @@ var RenderNodeManager = new Class({
             RebindContext: RebindContext,
             StrokePath: StrokePath,
             SubmitterQuad: SubmitterQuad,
+            SubmitterTile: SubmitterTile,
+            SubmitterTilemapGPULayer: SubmitterTilemapGPULayer,
             SubmitterTileSprite: SubmitterTileSprite,
             TexturerImage: TexturerImage,
             TexturerTileSprite: TexturerTileSprite,

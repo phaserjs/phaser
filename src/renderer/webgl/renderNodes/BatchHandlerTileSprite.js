@@ -9,14 +9,25 @@ var ShaderSourceFS = require('../shaders/Multi-frag');
 var ShaderSourceVS = require('../shaders/Multi-vert');
 var MakeApplyLighting = require('../shaders/configs/MakeApplyLighting');
 var MakeApplyTint = require('../shaders/configs/MakeApplyTint');
+var MakeDefineLights = require('../shaders/configs/MakeDefineLights');
+var MakeDefineTexCount = require('../shaders/configs/MakeDefineTexCount');
+var MakeGetNormalFromMap = require('../shaders/configs/MakeGetNormalFromMap');
+var MakeGetTexCoordOut = require('../shaders/configs/MakeGetTexCoordOut');
+var MakeGetTexRes = require('../shaders/configs/MakeGetTexRes');
 var MakeGetTexture = require('../shaders/configs/MakeGetTexture');
+var MakeOutFrame = require('../shaders/configs/MakeOutFrame');
+var MakeOutInverseRotation = require('../shaders/configs/MakeOutInverseRotation');
 var MakeRotationDatum = require('../shaders/configs/MakeRotationDatum');
-var MakeTileSpriteWrap = require('../shaders/configs/MakeTileSpriteWrap');
+var MakeSmoothPixelArt = require('../shaders/configs/MakeSmoothPixelArt');
+var MakeTexCoordFrameClamp = require('../shaders/configs/MakeTexCoordFrameClamp');
+var MakeTexCoordFrameWrap = require('../shaders/configs/MakeTexCoordFrameWrap');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 
 /**
  * @classdesc
- * This RenderNode handles batch rendering of TileSprites.
+ * This RenderNode handles batch rendering of TileSprites and Tiles.
+ * It supplies shaders with knowledge of the frame and texture data,
+ * which can be used to handle texture borders more intelligently.
  *
  * @class BatchHandlerTileSprite
  * @memberof Phaser.Renderer.WebGL.RenderNodes
@@ -42,10 +53,19 @@ var BatchHandlerTileSprite = new Class({
         vertexSource: ShaderSourceVS,
         fragmentSource: ShaderSourceFS,
         shaderAdditions: [
-            MakeGetTexture(1),
-            MakeTileSpriteWrap(),
+            MakeOutFrame(),
+            MakeGetTexCoordOut(),
+            MakeGetTexRes(true),
+            MakeTexCoordFrameWrap(true),
+            MakeTexCoordFrameClamp(true),
+            MakeSmoothPixelArt(true),
+            MakeDefineTexCount(1),
+            MakeGetTexture(),
             MakeApplyTint(),
+            MakeDefineLights(true),
             MakeRotationDatum(true),
+            MakeOutInverseRotation(true),
+            MakeGetNormalFromMap(true),
             MakeApplyLighting(true)
         ],
         vertexBufferLayout: {
@@ -79,12 +99,52 @@ var BatchHandlerTileSprite = new Class({
         }
     },
 
+    updateRenderOptions: function (renderOptions)
+    {
+        BatchHandlerQuad.prototype.updateRenderOptions.call(this, renderOptions);
+
+        var newRenderOptions = this.nextRenderOptions;
+
+        newRenderOptions.clampFrame = !!renderOptions.clampFrame;
+        newRenderOptions.wrapFrame = !!renderOptions.wrapFrame;
+
+        // Enable texture resolution data if not already available.
+        newRenderOptions.texRes = newRenderOptions.clampFrame || newRenderOptions.texRes;
+    },
+
+    updateShaderConfig: function ()
+    {
+        BatchHandlerQuad.prototype.updateShaderConfig.call(this);
+
+        var programManager = this.programManager;
+        var oldRenderOptions = this.renderOptions;
+        var newRenderOptions = this.nextRenderOptions;
+
+        if (newRenderOptions.clampFrame !== oldRenderOptions.clampFrame)
+        {
+            var clampFrame = newRenderOptions.clampFrame;
+            oldRenderOptions.clampFrame = clampFrame;
+
+            var clampAddition = programManager.getAddition('TexCoordFrameClamp');
+            clampAddition.disable = !newRenderOptions.clampFrame;
+        }
+
+        if (newRenderOptions.wrapFrame !== oldRenderOptions.wrapFrame)
+        {
+            var wrapFrame = newRenderOptions.wrapFrame;
+            oldRenderOptions.wrapFrame = wrapFrame;
+
+            var wrapAddition = programManager.getAddition('TexCoordFrameWrap');
+            wrapAddition.disable = !wrapFrame;
+        }
+    },
+
     /**
-     * Add a TileSprite to the batch.
+     * Add a quad to the batch.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTileSprite#batch
      * @since 3.90.0
-     * @param {Phaser.Renderer.WebGL.DrawingContext} currentContext - The current drawing context.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.Renderer.WebGL.WebGLTextureWrapper} glTexture - The texture to render.
      * @param {number} x0 - The x-coordinate of the top-left corner.
      * @param {number} y0 - The y-coordinate of the top-left corner.
@@ -111,7 +171,7 @@ var BatchHandlerTileSprite = new Class({
      * @param {number} tintBL - The tint color for the bottom-left corner.
      * @param {number} tintTR - The tint color for the top-right corner.
      * @param {number} tintBR - The tint color for the bottom-right corner.
-     * @param {object} [renderOptions] - Optional render features.
+     * @param {object} renderOptions - Optional render features.
      * @param {boolean} [renderOptions.multiTexturing] - Whether to use multi-texturing.
      * @param {object} [renderOptions.lighting] - How to treat lighting. If this object is defined, lighting will be activated, and multi-texturing disabled.
      * @param {Phaser.Renderer.WebGL.WebGLTextureWrapper} renderOptions.lighting.normalGLTexture - The normal map texture to render.
@@ -120,9 +180,12 @@ var BatchHandlerTileSprite = new Class({
      * @param {boolean} renderOptions.lighting.selfShadow.enabled - Whether to use self-shadowing.
      * @param {number} renderOptions.lighting.selfShadow.penumbra - Self-shadowing penumbra strength.
      * @param {number} renderOptions.lighting.selfShadow.diffuseFlatThreshold - Self-shadowing texture brightness equivalent to a flat surface.
+     * @param {boolean} [renderOptions.smoothPixelArt] - Whether to use the smooth pixel art algorithm.
+     * @param {boolean} [renderOptions.clampFrame] - Whether to clamp the texture frame. This prevents bleeding due to linear filtering. It is mostly useful for tiles.
+     * @param {boolean} [renderOptions.wrapFrame] - Whether to wrap the texture frame. This is necessary for TileSprites.
      */
     batch: function (
-        currentContext,
+        drawingContext,
         glTexture,
         x0, y0, x1, y1, x2, y2, x3, y3,
         texX, texY, texWidth, texHeight,
@@ -134,11 +197,12 @@ var BatchHandlerTileSprite = new Class({
     {
         if (this.instanceCount === 0)
         {
-            this.manager.setCurrentBatchNode(this, currentContext);
+            this.manager.setCurrentBatchNode(this, drawingContext);
         }
 
         // Check render options and run the batch if they differ.
-        this.updateRenderOptions(currentContext, renderOptions);
+        this.updateRenderOptions(renderOptions);
+        this.applyRenderOptions(drawingContext);
 
         // Process textures and get relevant data.
         var textureDatum = this.batchTextures(glTexture, renderOptions);
@@ -209,7 +273,7 @@ var BatchHandlerTileSprite = new Class({
         // This guarantees that none of the arrays are full above.
         if (this.instanceCount === this.instancesPerBatch)
         {
-            this.run(currentContext);
+            this.run(drawingContext);
 
             // Now the batch is empty.
         }

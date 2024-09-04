@@ -17,6 +17,9 @@ module.exports = {
     BitmapMaskVert: require('./BitmapMask-vert.js'),
     ColorMatrixFrag: require('./ColorMatrix-frag.js'),
     CopyFrag: require('./Copy-frag.js'),
+    DefineBlockyTexCoord: require('./DefineBlockyTexCoord-glsl.js'),
+    DefineLights: require('./DefineLights-glsl.js'),
+    DefineTexCoordFrameClamp: require('./DefineTexCoordFrameClamp-glsl.js'),
     FXBarrelFrag: require('./FXBarrel-frag.js'),
     FXBloomFrag: require('./FXBloom-frag.js'),
     FXBlurHighFrag: require('./FXBlurHigh-frag.js'),
@@ -34,8 +37,9 @@ module.exports = {
     FXWipeFrag: require('./FXWipe-frag.js'),
     FlatFrag: require('./Flat-frag.js'),
     FlatVert: require('./Flat-vert.js'),
-    GetTextureMulti: require('./GetTextureMulti-glsl.js'),
-    GetTextureSingle: require('./GetTextureSingle-glsl.js'),
+    GetNormalFromMap: require('./GetNormalFromMap-glsl.js'),
+    GetTexRes: require('./GetTexRes-glsl.js'),
+    GetTexture: require('./GetTexture-glsl.js'),
     LightFrag: require('./Light-frag.js'),
     LinearBlendFrag: require('./LinearBlend-frag.js'),
     MeshFrag: require('./Mesh-frag.js'),
@@ -44,13 +48,14 @@ module.exports = {
     MobileVert: require('./Mobile-vert.js'),
     MultiFrag: require('./Multi-frag.js'),
     MultiVert: require('./Multi-vert.js'),
+    OutInverseRotation: require('./OutInverseRotation-glsl.js'),
     PointLightFrag: require('./PointLight-frag.js'),
     PointLightVert: require('./PointLight-vert.js'),
     PostFXFrag: require('./PostFX-frag.js'),
     QuadVert: require('./Quad-vert.js'),
     SingleFrag: require('./Single-frag.js'),
     SingleVert: require('./Single-vert.js'),
-    SpriteLayerFrag: require('./SpriteLayer-frag.js'),
-    SpriteLayerVert: require('./SpriteLayer-vert.js')
+    TilemapGPULayerFrag: require('./TilemapGPULayer-frag.js'),
+    TilemapGPULayerVert: require('./TilemapGPULayer-vert.js')
 
 };

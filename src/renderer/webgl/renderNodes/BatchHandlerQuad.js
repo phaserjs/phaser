@@ -6,13 +6,21 @@
 
 var Vector2 = require('../../../math/Vector2');
 var Class = require('../../../utils/Class');
+var DeepCopy = require('../../../utils/object/DeepCopy');
 var Utils = require('../Utils');
 var ShaderSourceFS = require('../shaders/Multi-frag');
 var ShaderSourceVS = require('../shaders/Multi-vert');
 var MakeApplyLighting = require('../shaders/configs/MakeApplyLighting');
 var MakeApplyTint = require('../shaders/configs/MakeApplyTint');
+var MakeDefineLights = require('../shaders/configs/MakeDefineLights');
+var MakeDefineTexCount = require('../shaders/configs/MakeDefineTexCount');
+var MakeGetNormalFromMap = require('../shaders/configs/MakeGetNormalFromMap');
+var MakeGetTexCoordOut = require('../shaders/configs/MakeGetTexCoordOut');
+var MakeGetTexRes = require('../shaders/configs/MakeGetTexRes');
 var MakeGetTexture = require('../shaders/configs/MakeGetTexture');
+var MakeOutInverseRotation = require('../shaders/configs/MakeOutInverseRotation');
 var MakeRotationDatum = require('../shaders/configs/MakeRotationDatum');
+var MakeSmoothPixelArt = require('../shaders/configs/MakeSmoothPixelArt');
 var BatchHandler = require('./BatchHandler');
 
 /**
@@ -32,6 +40,7 @@ var BatchHandlerQuad = new Class({
 
     initialize: function BatchHandlerQuad (manager, config)
     {
+        // Placed before super call because the constructor needs it.
         /**
          * The current render options to which the batch is built.
          * These help define the shader.
@@ -42,10 +51,12 @@ var BatchHandlerQuad = new Class({
          */
         this.renderOptions = {
             multiTexturing: false,
+            texRes: false,
             lighting: false,
             selfShadow: false,
             selfShadowPenumbra: 0,
-            selfShadowThreshold: 0
+            selfShadowThreshold: 0,
+            smoothPixelArt: false
         };
 
         BatchHandler.call(this, manager, config, this.defaultConfig);
@@ -56,6 +67,16 @@ var BatchHandlerQuad = new Class({
             'uMainSampler[0]',
             this.manager.renderer.textureUnitIndices
         );
+
+        /**
+         * The render options currently being built.
+         * These are assigned to `renderOptions` by `applyRenderOptions`.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#nextRenderOptions
+         * @type {object}
+         * @since 3.90.0
+         */
+        this.nextRenderOptions = DeepCopy(this.renderOptions);
 
         /**
          * A persistent calculation vector used when processing the lights.
@@ -84,9 +105,16 @@ var BatchHandlerQuad = new Class({
         vertexSource: ShaderSourceVS,
         fragmentSource: ShaderSourceFS,
         shaderAdditions: [
-            MakeGetTexture(1),
+            MakeGetTexCoordOut(),
+            MakeGetTexRes(true),
+            MakeSmoothPixelArt(true),
+            MakeDefineTexCount(1),
+            MakeGetTexture(),
             MakeApplyTint(),
+            MakeDefineLights(true),
             MakeRotationDatum(true),
+            MakeOutInverseRotation(true),
+            MakeGetNormalFromMap(true),
             MakeApplyLighting(true)
         ],
         vertexBufferLayout: {
@@ -200,16 +228,14 @@ var BatchHandlerQuad = new Class({
         if (this.renderOptions.multiTexturing)
         {
             var programManager = this.programManager;
-            var textureAdditions = programManager.getAdditionsByTag('TEXTURE');
-            while (textureAdditions.length > 0)
+            var textureAddition = programManager.getAdditionsByTag('TEXTURE')[0];
+            if (textureAddition)
             {
-                var textureAddition = textureAdditions.pop();
-                programManager.removeAddition(textureAddition.name);
+                programManager.replaceAddition(
+                    textureAddition.name,
+                    MakeGetTexture(this.maxTexturesPerBatch)
+                );
             }
-            programManager.addAddition(
-                MakeGetTexture(this.maxTexturesPerBatch),
-                0
-            );
         }
 
         this.resize(renderer.width, renderer.height);
@@ -249,117 +275,200 @@ var BatchHandlerQuad = new Class({
             drawingContext.renderer.projectionMatrix.val
         );
 
-        // Lighting uniforms.
-        Utils.updateLightingUniforms(
-            renderOptions.lighting,
-            this.manager.renderer,
-            drawingContext,
-            programManager,
-            1,
-            this._lightVector,
-            renderOptions.selfShadow,
-            renderOptions.selfShadowThreshold,
-            renderOptions.selfShadowPenumbra
-        );
+        if (this.renderOptions.lighting)
+        {
+            // Lighting uniforms.
+            Utils.updateLightingUniforms(
+                renderOptions.lighting,
+                this.manager.renderer,
+                drawingContext,
+                programManager,
+                1,
+                this._lightVector,
+                renderOptions.selfShadow,
+                renderOptions.selfShadowThreshold,
+                renderOptions.selfShadowPenumbra
+            );
+        }
+    },
+
+    /**
+     * Update the texture uniforms for the current shader program.
+     *
+     * This method is called automatically when the batch is run.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#setupTextureUniforms
+     * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.WebGLTextureWrapper[]} textures - The textures to render.
+     */
+    setupTextureUniforms: function (textures)
+    {
+        var programManager = this.programManager;
+
+        if (this.renderOptions.multiTexturing)
+        {
+            // In the shader, this is an array of vec2s.
+            // But we must compose it as a flat array,
+            // not an array of arrays.
+            var dims = [];
+            for (var i = 0; i < textures.length; i++)
+            {
+                dims.push(textures[i].width, textures[i].height);
+            }
+            programManager.setUniform(
+                'uMainResolution[0]',
+                dims
+            );
+        }
+        else
+        {
+            programManager.setUniform(
+                'uMainResolution[0]',
+                [ textures[0].width, textures[0].height ]
+            );
+        }
+
     },
 
     /**
      * Update the render options for the current shader program.
-     * If the options have changed, the batch is run to apply the changes.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#updateRenderOptions
      * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {object} renderOptions - The new render options.
      */
-    updateRenderOptions: function (drawingContext, renderOptions)
+    updateRenderOptions: function (renderOptions)
+    {
+        var newRenderOptions = this.nextRenderOptions;
+
+        newRenderOptions.multiTexturing = !!renderOptions.multiTexturing && !renderOptions.lighting;
+        newRenderOptions.lighting = !!renderOptions.lighting;
+        newRenderOptions.selfShadow = newRenderOptions.lighting && renderOptions.lighting.selfShadow && renderOptions.lighting.selfShadow.enabled;
+        newRenderOptions.selfShadowPenumbra = newRenderOptions.selfShadow ? renderOptions.lighting.selfShadow.penumbra : 0;
+        newRenderOptions.selfShadowThreshold = newRenderOptions.selfShadow ? renderOptions.lighting.selfShadow.diffuseFlatThreshold : 0;
+        newRenderOptions.smoothPixelArt = !!renderOptions.smoothPixelArt;
+        newRenderOptions.texRes = newRenderOptions.smoothPixelArt;
+    },
+
+    /**
+     * Check `renderOptions` against `nextRenderOptions`.
+     * If they differ, run the batch, and apply the new options.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#applyRenderOptions
+     * @since 3.90.0
+     * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     */
+    applyRenderOptions: function (drawingContext)
+    {
+        var renderOptions = this.renderOptions;
+        var nextRenderOptions = this.nextRenderOptions;
+
+        var changed = false;
+        for (var key in nextRenderOptions)
+        {
+            if (nextRenderOptions[key] !== renderOptions[key])
+            {
+                changed = true;
+            }
+        }
+
+        if (changed)
+        {
+            this.run(drawingContext);
+            this.updateShaderConfig();
+        }
+    },
+
+    /**
+     * Update the shader configuration based on render options.
+     * This is called automatically when the render options change.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#updateShaderConfig
+     * @since 3.90.0
+     */
+    updateShaderConfig: function ()
     {
         var programManager = this.programManager;
         var oldRenderOptions = this.renderOptions;
-        var newRenderOptions = {
-            multiTexturing: false,
-            lighting: false,
-            selfShadow: false,
-            selfShadowPenumbra: 0,
-            selfShadowThreshold: 0
-        };
+        var newRenderOptions = this.nextRenderOptions;
+        var i;
 
-        // Parse shader-relevant render options.
-        if (renderOptions)
+        if (oldRenderOptions.multiTexturing !== newRenderOptions.multiTexturing)
         {
-            // Multitexturing is disabled if other textures are in use.
-            newRenderOptions.multiTexturing = !!renderOptions.multiTexturing && !renderOptions.lighting;
+            var multiTexturing = newRenderOptions.multiTexturing;
+            oldRenderOptions.multiTexturing = multiTexturing;
 
-            newRenderOptions.lighting = !!renderOptions.lighting;
-
-            if (renderOptions.lighting && renderOptions.lighting.selfShadow && renderOptions.lighting.selfShadow.enabled)
+            var texCountAddition = programManager.getAdditionsByTag('TexCount')[0];
+            if (texCountAddition)
             {
-                newRenderOptions.selfShadow = true;
-                newRenderOptions.selfShadowPenumbra = renderOptions.lighting.selfShadow.penumbra;
-                newRenderOptions.selfShadowThreshold = renderOptions.lighting.selfShadow.diffuseFlatThreshold;
+                programManager.replaceAddition(
+                    texCountAddition.name,
+                    MakeDefineTexCount(multiTexturing ? this.maxTexturesPerBatch : 1)
+                );
             }
         }
 
-        // Check for changes.
-        var updateTexturing = newRenderOptions.multiTexturing !== oldRenderOptions.multiTexturing;
-        var updateLighting = newRenderOptions.lighting !== oldRenderOptions.lighting;
-        var updateSelfShadow = newRenderOptions.selfShadow !== oldRenderOptions.selfShadow;
-        var updateSelfShadowPenumbra = newRenderOptions.selfShadowPenumbra !== oldRenderOptions.selfShadowPenumbra;
-        var updateSelfShadowThreshold = newRenderOptions.selfShadowThreshold !== oldRenderOptions.selfShadowThreshold;
-
-        // Run the batch if the shader has changed.
-        if (updateTexturing || updateLighting || updateSelfShadow || updateSelfShadowPenumbra || updateSelfShadowThreshold)
+        if (oldRenderOptions.lighting !== newRenderOptions.lighting)
         {
-            this.run(drawingContext);
-        }
+            var lighting = newRenderOptions.lighting;
+            oldRenderOptions.lighting = lighting;
 
-        // Cache new render options.
-        this.renderOptions = newRenderOptions;
-
-        // Update shader program configuration.
-        if (updateTexturing)
-        {
-            var texturingAddition = programManager.getAdditionsByTag('TEXTURE')[0];
-            if (texturingAddition)
+            var lightingAdditions = programManager.getAdditionsByTag('LIGHTING');
+            for (i = 0; i < lightingAdditions.length; i++)
             {
-                programManager.removeAddition(texturingAddition.name);
-
+                var lightingAddition = lightingAdditions[i];
+                lightingAddition.disable = !lighting;
             }
-            var texCount = newRenderOptions.multiTexturing ? this.maxTexturesPerBatch : 1;
-            programManager.addAddition(
-                MakeGetTexture(texCount),
-                0
-            );
-        }
 
-        if (updateLighting)
-        {
-            var lightingAddition = programManager.getAddition('LIGHTING');
-            if (lightingAddition)
+            if (lighting)
             {
-                lightingAddition.disable = !newRenderOptions.lighting;
-                if (newRenderOptions.lighting)
+                var defineLightsAddition = programManager.getAddition('DefineLights');
+                if (defineLightsAddition)
                 {
-                    lightingAddition.additions.fragmentDefine = '#define LIGHT_COUNT ' + this.manager.renderer.config.maxLights;
+                    defineLightsAddition.additions.fragmentDefine = '#define LIGHT_COUNT ' + this.manager.renderer.config.maxLights;
                 }
             }
-
-            var rotationAddition = programManager.getAddition('RotDatum');
-            if (rotationAddition)
-            {
-                rotationAddition.disable = !newRenderOptions.lighting;
-            }
         }
 
-        if (updateSelfShadow)
+        if (oldRenderOptions.selfShadow !== newRenderOptions.selfShadow)
         {
-            if (newRenderOptions.selfShadow)
+            var selfShadow = newRenderOptions.selfShadow;
+            oldRenderOptions.selfShadow = selfShadow;
+
+            if (selfShadow)
             {
                 programManager.addFeature('SELFSHADOW');
             }
             else
             {
                 programManager.removeFeature('SELFSHADOW');
+            }
+        }
+
+        oldRenderOptions.selfShadowPenumbra = newRenderOptions.selfShadowPenumbra;
+        oldRenderOptions.selfShadowThreshold = newRenderOptions.selfShadowThreshold;
+
+        if (oldRenderOptions.smoothPixelArt !== newRenderOptions.smoothPixelArt)
+        {
+            var smoothPixelArt = newRenderOptions.smoothPixelArt;
+            oldRenderOptions.smoothPixelArt = smoothPixelArt;
+
+            var smoothPixelArtAddition = programManager.getAddition('SmoothPixelArt');
+            if (smoothPixelArtAddition)
+            {
+                smoothPixelArtAddition.disable = !smoothPixelArt;
+            }
+        }
+
+        if (oldRenderOptions.texRes !== newRenderOptions.texRes)
+        {
+            var texRes = newRenderOptions.texRes;
+            oldRenderOptions.texRes = texRes;
+
+            var texResAddition = programManager.getAddition('GetTexRes');
+            if (texResAddition)
+            {
+                texResAddition.disable = !texRes;
             }
         }
     },
@@ -405,6 +514,13 @@ var BatchHandlerQuad = new Class({
         for (var i = 0; i < subBatches; i++)
         {
             var entry = this.batchEntries[i];
+
+            if (this.renderOptions.texRes)
+            {
+                this.setupTextureUniforms(entry.texture);
+                programManager.applyUniforms(program);
+            }
+
             renderer.drawElements(
                 drawingContext,
                 entry.texture,
@@ -455,7 +571,7 @@ var BatchHandlerQuad = new Class({
      * @param {number} tintBL - The bottom-left tint color.
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBR - The bottom-right tint color.
-     * @param {object} [renderOptions] - Optional render features.
+     * @param {object} renderOptions - Optional render features.
      * @param {boolean} [renderOptions.multiTexturing] - Whether to use multi-texturing.
      * @param {object} [renderOptions.lighting] - How to treat lighting. If this object is defined, lighting will be activated, and multi-texturing disabled.
      * @param {Phaser.Renderer.WebGL.WebGLTextureWrapper} renderOptions.lighting.normalGLTexture - The normal map texture to render.
@@ -464,6 +580,7 @@ var BatchHandlerQuad = new Class({
      * @param {boolean} renderOptions.lighting.selfShadow.enabled - Whether to use self-shadowing.
      * @param {number} renderOptions.lighting.selfShadow.penumbra - Self-shadowing penumbra strength.
      * @param {number} renderOptions.lighting.selfShadow.diffuseFlatThreshold - Self-shadowing texture brightness equivalent to a flat surface.
+     * @param {boolean} [renderOptions.smoothPixelArt] - Whether to use the smooth pixel art algorithm.
      */
     batch: function (
         currentContext,
@@ -485,7 +602,8 @@ var BatchHandlerQuad = new Class({
         }
 
         // Check render options and run the batch if they differ.
-        this.updateRenderOptions(currentContext, renderOptions);
+        this.updateRenderOptions(renderOptions);
+        this.applyRenderOptions(currentContext);
 
         // Process textures and get relevant data.
         var textureDatum = this.batchTextures(glTexture, renderOptions);

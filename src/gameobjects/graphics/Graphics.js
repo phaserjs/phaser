@@ -10,6 +10,7 @@ var Commands = require('./Commands');
 var Components = require('../components');
 var Ellipse = require('../../geom/ellipse/Ellipse');
 var GameObject = require('../GameObject');
+var DefaultGraphicsNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultGraphicsNodes.js');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
@@ -74,6 +75,7 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  * @extends Phaser.GameObjects.Components.ScrollFactor
@@ -92,7 +94,7 @@ var Graphics = new Class({
         Components.Lighting,
         Components.Mask,
         Components.PostPipeline,
-        Components.RenderNode,
+        Components.RenderNodes,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -109,7 +111,7 @@ var Graphics = new Class({
         GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
-        this.initRenderNodes('Graphics');
+        this.initRenderNodes(this._defaultRenderNodesMap);
         this.initPostPipeline();
 
         /**
@@ -237,6 +239,23 @@ var Graphics = new Class({
         this.fillStyle(0, 0);
 
         this.setDefaultStyles(options);
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.Graphics#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 3.90.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultGraphicsNodes;
+        }
     },
 
     /**

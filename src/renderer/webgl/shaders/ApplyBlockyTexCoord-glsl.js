@@ -1,0 +1,16 @@
+module.exports = [
+    '#if TEXTURE_COUNT == 1',
+    'texCoord = getBlockyTexCoord(texCoord, uMainResolution);',
+    '#else',
+    'vec2 texRes;',
+    'for (int i = 0; i < TEXTURE_COUNT; i++)',
+    '{',
+    '    if (outTexDatum == float(i))',
+    '    {',
+    '        texRes = uMainResolution[i];',
+    '        break;',
+    '    }',
+    '}',
+    'texCoord = getBlockyTexCoord(texCoord, texRes);',
+    '#endif',
+].join('\n');

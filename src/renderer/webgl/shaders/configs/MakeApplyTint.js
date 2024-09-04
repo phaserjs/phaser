@@ -17,7 +17,7 @@ var ApplyTint = require('../ApplyTint-glsl');
 var MakeApplyTint = function (disable)
 {
     return {
-        name: 'TINT',
+        name: 'Tint',
         additions: {
             fragmentHeader: ApplyTint,
             fragmentProcess: 'fragColor = applyTint(fragColor);'

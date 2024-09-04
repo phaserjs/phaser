@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DefaultBitmapTextNodes = require('../../../renderer/webgl/renderNodes/defaults/DefaultBitmapTextNodes');
 var Class = require('../../../utils/Class');
 var Clamp = require('../../../math/Clamp');
 var Components = require('../../components');
@@ -51,7 +52,7 @@ var Render = require('./BitmapTextRender');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.PostPipeline
- * @extends Phaser.GameObjects.Components.RenderNode
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Tint
@@ -79,7 +80,7 @@ var BitmapText = new Class({
         Components.Mask,
         Components.Origin,
         Components.PostPipeline,
-        Components.RenderNode,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Texture,
         Components.Tint,
@@ -296,10 +297,27 @@ var BitmapText = new Class({
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
-        this.initRenderNodes('BitmapText');
+        this.initRenderNodes(this._defaultRenderNodesMap);
         this.initPostPipeline();
 
         this.setText(text);
+    },
+
+    /**
+     * The default render nodes to initialize.
+     *
+     * @name Phaser.GameObjects.BitmapText#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 3.90.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultBitmapTextNodes;
+        }
     },
 
     /**

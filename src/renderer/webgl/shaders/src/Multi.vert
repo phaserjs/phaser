@@ -1,5 +1,7 @@
 #pragma phaserTemplate(shaderName)
 
+#pragma phaserTemplate(extensions)
+
 #pragma phaserTemplate(features)
 
 #ifdef GL_FRAGMENT_PRECISION_HIGH

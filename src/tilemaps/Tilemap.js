@@ -17,6 +17,8 @@ var SpliceOne = require('../utils/array/SpliceOne');
 var Sprite = require('../gameobjects/sprite/Sprite');
 var Tile = require('./Tile');
 var TilemapComponents = require('./components');
+var TilemapLayerBase = require('./TilemapLayerBase');
+var TilemapGPULayer = require('./TilemapGPULayer');
 var TilemapLayer = require('./TilemapLayer');
 var Tileset = require('./Tileset');
 
@@ -579,10 +581,11 @@ var Tilemap = new Class({
      * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
      * @param {number} [x=0] - The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
      * @param {number} [y=0] - The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
+     * @param {boolean} [gpu=false] - Create a TilemapGPULayer instead of a TilemapLayer. This option is WebGL-only. A TilemapGPULayer is less flexible, but can be much faster.
      *
-     * @return {?Phaser.Tilemaps.TilemapLayer} Returns the new layer was created, or null if it failed.
+     * @return {?Phaser.Tilemaps.TilemapLayer|?Phaser.Tilemaps.TilemapGPULayer} Returns the new layer was created, or null if it failed.
      */
-    createLayer: function (layerID, tileset, x, y)
+    createLayer: function (layerID, tileset, x, y, gpu)
     {
         var index = this.getLayerIndex(layerID);
 
@@ -621,9 +624,19 @@ var Tilemap = new Class({
             y = layerData.y;
         }
 
-        var layer = new TilemapLayer(this.scene, this, index, tileset, x, y);
+        var layer;
 
-        layer.setRenderOrder(this.renderOrder);
+        if (gpu)
+        {
+            layer = new TilemapGPULayer(this.scene, this, index, tileset, x, y);
+        }
+        else
+        {
+            layer = new TilemapLayer(this.scene, this, index, tileset, x, y);
+    
+            layer.setRenderOrder(this.renderOrder);
+        }
+
 
         this.scene.sys.displayList.add(layer);
 
@@ -1316,7 +1329,7 @@ var Tilemap = new Class({
         {
             return layer;
         }
-        else if (layer instanceof TilemapLayer && layer.tilemap === this)
+        else if (layer instanceof TilemapLayerBase && layer.tilemap === this)
         {
             return layer.layerIndex;
         }

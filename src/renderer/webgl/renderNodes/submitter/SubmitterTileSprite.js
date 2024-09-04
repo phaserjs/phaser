@@ -39,6 +39,8 @@ var SubmitterTileSprite = new Class({
     initialize: function SubmitterTileSprite (manager, config)
     {
         SubmitterQuad.call(this, manager, config);
+
+        this._renderOptions.wrapFrame = true;
     },
 
     /**

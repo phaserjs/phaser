@@ -6,6 +6,11 @@
 
 var GetCalcMatrix = require('../GetCalcMatrix');
 
+var renderOptions = {
+    multiTexturing: false,
+    smoothPixelArt: false
+};
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -32,6 +37,19 @@ var RopeWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
         src.updateVertices();
     }
 
+    // Get smooth pixel art option.
+    var smoothPixelArt;
+    var srcTexture = src.texture;
+    if (srcTexture && srcTexture.smoothPixelArt !== null)
+    {
+        smoothPixelArt = srcTexture.smoothPixelArt;
+    }
+    else
+    {
+        smoothPixelArt = src.scene.game.config.smoothPixelArt;
+    }
+    renderOptions.smoothPixelArt = smoothPixelArt;
+
     (src.customRenderNodes.BatchHandler || src.defaultRenderNodes.BatchHandler).batch(
         drawingContext,
         src,
@@ -43,7 +61,8 @@ var RopeWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
         src.alphas,
         src.alpha,
         src.tintFill,
-        src.debugCallback
+        src.debugCallback,
+        renderOptions
     );
 };
 

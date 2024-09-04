@@ -1,0 +1,24 @@
+// Set elsewhere: `#define TEXTURE_COUNT 1`
+uniform sampler2D uMainSampler[TEXTURE_COUNT];
+vec4 getTexture (vec2 texCoord)
+{
+    #if TEXTURE_COUNT == 1
+    float texId = 0.0;
+    #else
+    float texId = outTexDatum;
+    #endif
+    #pragma phaserTemplate(texIdProcess)
+
+    vec4 texture = vec4(0.0);
+
+    for (int i = 0; i < TEXTURE_COUNT; i++)
+    {
+        if (texId == float(i))
+        {
+            texture = texture2D(uMainSampler[i], texCoord);
+            break;
+        }
+    }
+
+    return texture;
+}

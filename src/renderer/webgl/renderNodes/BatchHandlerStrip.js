@@ -8,6 +8,10 @@ var Class = require('../../../utils/Class');
 var ShaderSourceFS = require('../shaders/Multi-frag');
 var ShaderSourceVS = require('../shaders/Multi-vert');
 var MakeApplyTint = require('../shaders/configs/MakeApplyTint');
+var MakeDefineTexCount = require('../shaders/configs/MakeDefineTexCount');
+var MakeGetTexCoordOut = require('../shaders/configs/MakeGetTexCoordOut');
+var MakeGetTexRes = require('../shaders/configs/MakeGetTexRes');
+var MakeSmoothPixelArt = require('../shaders/configs/MakeSmoothPixelArt');
 var MakeGetTexture = require('../shaders/configs/MakeGetTexture');
 var Utils = require('../Utils');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
@@ -57,7 +61,11 @@ var BatchHandlerStrip = new Class({
         vertexSource: ShaderSourceVS,
         fragmentSource: ShaderSourceFS,
         shaderAdditions: [
-            MakeGetTexture(1),
+            MakeGetTexCoordOut(),
+            MakeGetTexRes(true),
+            MakeSmoothPixelArt(true),
+            MakeDefineTexCount(1),
+            MakeGetTexture(),
             MakeApplyTint()
         ],
         vertexBufferLayout: {
@@ -131,8 +139,11 @@ var BatchHandlerStrip = new Class({
      * @param {number} alpha - The overall alpha value of the strip.
      * @param {number} tintFill - Whether to tint the fill color.
      * @param {function} [debugCallback] - The debug callback, called with an array consisting of alternating x,y values of the transformed vertices.
+     * @param {object} renderOptions - Optional render features.
+     * @param {boolean} [renderOptions.multiTexturing] - Whether to use multi-texturing. This should always be false for ropes.
+     * @param {boolean} [renderOptions.smoothPixelArt] - Whether to use the smooth pixel art algorithm.
      */
-    batch: function (drawingContext, src, calcMatrix, glTexture, vertices, uv, colors, alphas, alpha, tintFill, debugCallback)
+    batch: function (drawingContext, src, calcMatrix, glTexture, vertices, uv, colors, alphas, alpha, tintFill, debugCallback, renderOptions)
     {
         if (this.instanceCount === 0)
         {
@@ -153,6 +164,10 @@ var BatchHandlerStrip = new Class({
 
             // Now the batch is empty.
         }
+
+        // Check render options and run the batch if they differ.
+        this.updateRenderOptions(renderOptions);
+        this.applyRenderOptions(drawingContext);
 
         // Process textures and get relevant data.
         var textureDatum = this.batchTextures(glTexture);

@@ -7,8 +7,8 @@
 var Map = require('../../../../structs/Map');
 
 var DefaultTilemapLayerNodes = new Map([
-    [ 'Submitter', 'SubmitterQuad' ],
-    [ 'BatchHandler', 'BatchHandlerQuad' ],
+    [ 'Submitter', 'SubmitterTile' ],
+    [ 'BatchHandler', 'BatchHandlerTileSprite' ],
     [ 'Transformer', 'TransformerTile' ]
 ]);
 

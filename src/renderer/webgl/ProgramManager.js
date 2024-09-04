@@ -279,6 +279,7 @@ var ProgramManager = new Class({
      * @method Phaser.Renderer.WebGL.ProgramManager#getAdditionsByTag
      * @since 3.90.0
      * @param {string} tag - The tag to filter by.
+     * @returns {Phaser.Types.Renderer.WebGL.ShaderAdditionConfig[]} The shader additions with the tag.
      */
     getAdditionsByTag: function (tag)
     {
@@ -289,6 +290,22 @@ var ProgramManager = new Class({
                 return false;
             }
             return addition.tags.includes(tag);
+        });
+    },
+
+    /**
+     * Returns the index of a shader addition with the given name.
+     *
+     * @method Phaser.Renderer.WebGL.ProgramManager#getAdditionIndex
+     * @since 3.90.0
+     * @param {string} name - The name to find.
+     * @returns {number} The index of the addition, or `-1` if it was not found.
+     */
+    getAdditionIndex: function (name)
+    {
+        return this.currentConfig.additions.findIndex(function (addition)
+        {
+            return addition.name === name;
         });
     },
 
@@ -305,6 +322,27 @@ var ProgramManager = new Class({
         {
             return addition.name !== name;
         });
+    },
+
+    /**
+     * Replace a shader addition in the current configuration.
+     *
+     * @method Phaser.Renderer.WebGL.ProgramManager#replaceAddition
+     * @since 3.90.0
+     * @param {string} name - The name of the shader addition to replace.
+     * @param {Phaser.Types.Renderer.WebGL.ShaderAdditionConfig} addition - The new shader addition.
+     */
+    replaceAddition: function (name, addition)
+    {
+        var index = this.currentConfig.additions.findIndex(function (a)
+        {
+            return a.name === name;
+        });
+
+        if (index !== -1)
+        {
+            this.currentConfig.additions[index] = addition;
+        }
     },
 
     /**

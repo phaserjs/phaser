@@ -62,7 +62,8 @@ var SubmitterQuad = new Class({
          */
         this._renderOptions = {
             multiTexturing: true,
-            lighting: null
+            lighting: null,
+            smoothPixelArt: null
         };
 
         /**
@@ -199,29 +200,39 @@ var SubmitterQuad = new Class({
 
     setRenderOptions: function (gameObject, normalMap, normalMapRotation)
     {
+        var baseTexture, sourceIndex;
+        if (gameObject.displayTexture)
+        {
+            baseTexture = gameObject.displayTexture;
+            sourceIndex = gameObject.displayFrame.sourceIndex;
+        }
+        else if (gameObject.texture)
+        {
+            baseTexture = gameObject.texture;
+            sourceIndex = gameObject.frame.sourceIndex;
+        }
+        else if (gameObject.tileset)
+        {
+            if (Array.isArray(gameObject.tileset))
+            {
+                baseTexture = gameObject.tileset[0].image;
+            }
+            else
+            {
+                baseTexture = gameObject.tileset.image;
+            }
+            sourceIndex = 0;
+        }
+
+
         if (gameObject.lighting)
         {
             // Get normal map.
             if (!normalMap)
             {
-                if (gameObject.displayTexture)
+                if (baseTexture)
                 {
-                    normalMap = gameObject.displayTexture.dataSource[gameObject.displayFrame.sourceIndex];
-                }
-                else if (gameObject.texture)
-                {
-                    normalMap = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
-                }
-                else if (gameObject.tileset)
-                {
-                    if (Array.isArray(gameObject.tileset))
-                    {
-                        normalMap = gameObject.tileset[0].image.dataSource[0];
-                    }
-                    else
-                    {
-                        normalMap = gameObject.tileset.image.dataSource[0];
-                    }
+                    normalMap = baseTexture.dataSource[sourceIndex];
                 }
             }
             if (!normalMap)
@@ -264,6 +275,18 @@ var SubmitterQuad = new Class({
         {
             this._renderOptions.lighting = null;
         }
+
+        // Get smooth pixel art option.
+        var smoothPixelArt;
+        if (baseTexture && baseTexture.smoothPixelArt !== null)
+        {
+            smoothPixelArt = baseTexture.smoothPixelArt;
+        }
+        else
+        {
+            smoothPixelArt = gameObject.scene.game.config.smoothPixelArt;
+        }
+        this._renderOptions.smoothPixelArt = smoothPixelArt;
     }
 });
 

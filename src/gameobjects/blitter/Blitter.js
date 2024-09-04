@@ -6,6 +6,7 @@
 
 var BlitterRender = require('./BlitterRender');
 var Bob = require('./Bob');
+var DefaultBlitterNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultBlitterNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var Frame = require('../../textures/Frame');
@@ -47,7 +48,7 @@ var List = require('../../structs/List');
  * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.PostPipeline
- * @extends Phaser.GameObjects.Components.RenderNode
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
@@ -71,7 +72,7 @@ var Blitter = new Class({
         Components.Lighting,
         Components.Mask,
         Components.PostPipeline,
-        Components.RenderNode,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Size,
         Components.Texture,
@@ -88,7 +89,7 @@ var Blitter = new Class({
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);
-        this.initRenderNodes('Blitter');
+        this.initRenderNodes(this._defaultRenderNodesMap);
         this.initPostPipeline();
 
         /**
@@ -122,6 +123,23 @@ var Blitter = new Class({
          * @since 3.0.0
          */
         this.dirty = false;
+    },
+
+    /**
+     * The default render nodes to use for this Game Object.
+     *
+     * @name Phaser.GameObjects.Blitter#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 3.90.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultBlitterNodes;
+        }
     },
 
     /**
