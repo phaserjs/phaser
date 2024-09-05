@@ -72,7 +72,6 @@ var StableSort = require('../../utils/array/StableSort');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.Visible
- * @extends Phaser.Events.EventEmitter
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Layer.
@@ -816,14 +815,14 @@ var Layer = new Class({
     },
 
     /**
-     * Returns an array which contains all Game Objects within this Layer.
+     * Returns a reference to the array which contains all Game Objects in this Layer.
      *
-     * This is a reference to the main list array, not a copy of it, so be careful not to modify it.
+     * This is a reference, not a copy of it, so be very careful not to mutate it.
      *
      * @method Phaser.GameObjects.Layer#getChildren
      * @since 3.50.0
      *
-     * @return {Phaser.GameObjects.GameObject[]} The group members.
+     * @return {Phaser.GameObjects.GameObject[]} An array of Game Objects within this Layer.
      */
     getChildren: function ()
     {
@@ -853,7 +852,7 @@ var Layer = new Class({
      *
      * @param {(Phaser.GameObjects.DisplayList|Phaser.GameObjects.Layer)} [displayList] - The Display List to add to. Defaults to the Scene Display List.
      *
-     * @return {this} This Layer.
+     * @return {this} This Layer instance.
      */
     addToDisplayList: function (displayList)
     {
@@ -897,7 +896,7 @@ var Layer = new Class({
      * @fires Phaser.GameObjects.Events#REMOVED_FROM_SCENE
      * @since 3.60.0
      *
-     * @return {this} This Layer.
+     * @return {this} This Layer instance.
      */
     removeFromDisplayList: function ()
     {
@@ -983,6 +982,127 @@ var Layer = new Class({
         this.systems = undefined;
         this.events = undefined;
     }
+
+    /**
+     * Return an array listing the events for which the emitter has registered listeners.
+     *
+     * @method Phaser.GameObjects.Layer#eventNames
+     * @since 3.50.0
+     *
+     * @return {Array.<string|symbol>}
+     */
+
+    /**
+     * Return the listeners registered for a given event.
+     *
+     * @method Phaser.GameObjects.Layer#listeners
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     *
+     * @return {Function[]} The registered listeners.
+     */
+
+    /**
+     * Return the number of listeners listening to a given event.
+     *
+     * @method Phaser.GameObjects.Layer#listenerCount
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     *
+     * @return {number} The number of listeners.
+     */
+
+    /**
+     * Calls each of the listeners registered for a given event.
+     *
+     * @method Phaser.GameObjects.Layer#emit
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {...*} [args] - Additional arguments that will be passed to the event handler.
+     *
+     * @return {boolean} `true` if the event had listeners, else `false`.
+     */
+
+    /**
+     * Add a listener for a given event.
+     *
+     * @method Phaser.GameObjects.Layer#on
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {function} fn - The listener function.
+     * @param {*} [context=this] - The context to invoke the listener with.
+     *
+     * @return {this} This Layer instance.
+     */
+
+    /**
+     * Add a listener for a given event.
+     *
+     * @method Phaser.GameObjects.Layer#addListener
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {function} fn - The listener function.
+     * @param {*} [context=this] - The context to invoke the listener with.
+     *
+     * @return {this} This Layer instance.
+     */
+
+    /**
+     * Add a one-time listener for a given event.
+     *
+     * @method Phaser.GameObjects.Layer#once
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {function} fn - The listener function.
+     * @param {*} [context=this] - The context to invoke the listener with.
+     *
+     * @return {this} This Layer instance.
+     */
+
+    /**
+     * Remove the listeners of a given event.
+     *
+     * @method Phaser.GameObjects.Layer#removeListener
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {function} [fn] - Only remove the listeners that match this function.
+     * @param {*} [context] - Only remove the listeners that have this context.
+     * @param {boolean} [once] - Only remove one-time listeners.
+     *
+     * @return {this} This Layer instance.
+     */
+
+    /**
+     * Remove the listeners of a given event.
+     *
+     * @method Phaser.GameObjects.Layer#off
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {function} [fn] - Only remove the listeners that match this function.
+     * @param {*} [context] - Only remove the listeners that have this context.
+     * @param {boolean} [once] - Only remove one-time listeners.
+     *
+     * @return {this} This Layer instance.
+     */
+
+    /**
+     * Remove all listeners, or those of the specified event.
+     *
+     * @method Phaser.GameObjects.Layer#removeAllListeners
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} [event] - The event name.
+     *
+     * @return {this} This Layer instance.
+     */
 
 });
 
