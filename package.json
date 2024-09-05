@@ -19,12 +19,14 @@
   "scripts": {
     "beta": "npm publish --tag beta",
     "help": "node scripts/help.js",
-    "build": "webpack --config config/webpack.config.js",
+    "wpbuild": "webpack build --config config/webpack.config.js",
+    "build": "rspack build --config config/rspack.config.js",
     "watch": "webpack --watch --config config/webpack.config.js",
     "watchns": "webpack --watch --config config/webpack-nospector.config.js",
     "buildfb": "webpack --config config/webpack.fb.config.js",
     "watchfb": "webpack --config config/webpack.fb.config.js --watch",
-    "dist": "webpack --config config/webpack.dist.config.js",
+    "wpdist": "webpack --config config/webpack.dist.config.js",
+    "dist": "rspack --config config/rspack.dist.config.js",
     "distfb": "webpack --config config/webpack.fb.dist.config.js",
     "distfull": "npm run dist && npm run distfb",
     "plugin.cam3d": "webpack --config plugins/camera3d/webpack.config.js",
@@ -76,6 +78,8 @@
     "web audio"
   ],
   "devDependencies": {
+    "@rspack/cli": "^1.0.3",
+    "@rspack/core": "^1.0.3",
     "@types/offscreencanvas": "^2019.7.3",
     "@types/source-map": "^0.5.7",
     "clean-webpack-plugin": "^4.0.0",
