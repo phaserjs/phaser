@@ -156,7 +156,7 @@ Cheers,
 
 **Visit** the [Phaser website](https://phaser.io)<br />
 **Play** some [amazing games](https://phaser.io/games)<br />
-**Learn** By browsing our [API Docs](https://newdocs.phaser.io), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
+**Learn** By browsing our [API Docs](https://newdocs.phaser.io), [Support Forum](https://phaser.discourse.group/) and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
 **Code Examples?** We've over 2000 [Examples](https://phaser.io/examples) to learn from<br />
 **Read** the weekly [Phaser World](https://phaser.io/newsletter/2024) Newsletter<br />
 **Be Social:** Join us on [Discord](https://discord.gg/phaser) and [Reddit](https://phaser.io/community/reddit) or follow us on [Twitter](https://twitter.com/phaser_)<br />
