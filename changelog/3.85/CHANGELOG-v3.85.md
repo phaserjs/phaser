@@ -57,6 +57,10 @@ The Loader now has a new feature called `maxRetries`. This specifies the number 
 * When using `Scene.switch` you can now optionally specify a `data` argument, just like with Scene start, which will be passed along to the Scene that was switched to (thanks @wooseok123)
 * `PRE_RENDER_CLEAR` is a new event dispatched by the WebGL and Canvas Renderer. It's dispatched at the start of the render step, immediately before the canvas is cleared. This allows you to toggle the `clearBeforeRender` property as required, to have fine-grained control over when the canvas is cleared during render.
 * `Video.getFirstFrame` is a new method that can be used to load the first frame of the Video into its texture without starting playback. This is useful if you want to display the first frame of a video behind a 'Play' button, without calling the 'play' method.
+* `GameObject.bringToTop` is a new method that will move the Game Object to the top of the display list, or its parent container (thanks @rexrainbow)
+* `GameObject.sendToBack` is a new method that will move the Game Object to the bottom of the display list, or its parent container (thanks @rexrainbow)
+* `GameObject.moveBelow` is a new method that will move the Game Object to appear below a given Game Object (thanks @rexrainbow)
+* `GameObject.moveAbove` is a new method that will move the Game Object to appear above a given Game Object (thanks @rexrainbow)
 
 # WebGL Rendering Updates
 
