@@ -99,7 +99,9 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
     var currentLine = 0;
     var currentLineWidth = 0;
 
-    var i, j;
+    var i;
+    var j;
+    var lines;
     var words = [];
     var characters = [];
     var current = null;
@@ -108,14 +110,18 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
     var measureTextWidth = function (text, fontData)
     {
         var width = 0;
+
         for (var i = 0; i < text.length; i++)
         {
             var charCode = text.charCodeAt(i);
             var glyph = fontData.chars[charCode];
-            if (glyph) {
+
+            if (glyph)
+            {
                 width += glyph.xAdvance;
             }
         }
+
         return width * sx;
     };
     
@@ -123,7 +129,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
     if (maxWidth > 0)
     {
         // Split the text into lines
-        var lines = text.split('\n');
+        lines = text.split('\n');
         var wrappedLines = [];
 
         // Loop through each line
@@ -233,7 +239,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
         {
             if (crs[i] > -1)
             {
-                text = stringInsert(text, crs[i], "\n");
+                text = stringInsert(text, crs[i], '\n');
             }
         }
         
@@ -435,7 +441,8 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
     var local = out.local;
     var global = out.global;
-    var lines = out.lines;
+    
+    lines = out.lines;
 
     local.x = bx * scale;
     local.y = by * scale;
