@@ -409,7 +409,8 @@ var FX = new Class({
                     pipeline = pipeline.pop();
                 }
 
-                if (pipeline) {
+                if (pipeline)
+                {
                     pipeline.controller = fx;
                 }
 

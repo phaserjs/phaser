@@ -599,7 +599,7 @@ var Timeline = new Class({
             }
 
             if (event.tweenInstance)
-            {  
+            {
                 event.tweenInstance.stop();
             }
         }
