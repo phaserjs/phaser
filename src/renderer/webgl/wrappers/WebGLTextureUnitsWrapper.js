@@ -97,8 +97,7 @@ var WebGLTextureUnitsWrapper = new Class({
     /**
      * Binds a texture to a texture unit.
      *
-     * If it was not already bound, or if `force` is true,
-     * this will change the active texture unit to the given unit.
+     * This will change the active texture unit to the given unit.
      *
      * This should be the only way to bind a texture to a unit.
      *
@@ -110,13 +109,13 @@ var WebGLTextureUnitsWrapper = new Class({
      */
     bind: function (texture, unit, force)
     {
-        if (this.units[unit] === texture && !force) { return; }
         this.renderer.glWrapper.updateBindingsActiveTexture({
             bindings:
             {
                 activeTexture: unit
             }
         });
+        if (this.units[unit] === texture && !force) { return; }
         this.units[unit] = texture;
         var glTexture = texture ? texture.webGLTexture : null;
         var gl = this.renderer.gl;
