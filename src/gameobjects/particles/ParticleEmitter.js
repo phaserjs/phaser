@@ -22,7 +22,9 @@ var HasValue = require('../../utils/object/HasValue');
 var Inflate = require('../../geom/rectangle/Inflate');
 var List = require('../../structs/List');
 var MergeRect = require('../../geom/rectangle/MergeRect');
+var MergeRight = require('../../utils/object/MergeRight');
 var Particle = require('./Particle');
+var ParticleBounds = require('./ParticleBounds');
 var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleToRectangle = require('../../geom/intersects/RectangleToRectangle');
@@ -32,7 +34,6 @@ var StableSort = require('../../utils/array/StableSort');
 var TransformMatrix = require('../components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
-var ParticleBounds = require('./ParticleBounds');
 
 /**
  * Names of simple configuration properties.
@@ -1083,18 +1084,16 @@ var ParticleEmitter = new Class({
      */
     updateConfig: function (config)
     {
-        if (!config)
+        if (config)
         {
-            return this;
-        }
-
-        if (!this.config)
-        {
-            this.setConfig(config);
-        }
-        else
-        {
-            this.setConfig({...this.config, ...config});
+            if (!this.config)
+            {
+                this.setConfig(config);
+            }
+            else
+            {
+                this.setConfig(MergeRight(this.config, config));
+            }
         }
         
         return this;
