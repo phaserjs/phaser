@@ -379,7 +379,7 @@ var ParticleEmitter = new Class({
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#config
          * @type {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig}
-         * @since 3.90.0
+         * @since 3.85.0
          */
         this.config = null;
             

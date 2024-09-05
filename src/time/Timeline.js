@@ -145,7 +145,7 @@ var Timeline = new Class({
          * @name Phaser.Time.Timeline#timeScale
          * @type {number}
          * @default
-         * @since 3.90.0
+         * @since 3.85.0
          */
         this.timeScale = 1;
 
