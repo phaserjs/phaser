@@ -1,10 +1,9 @@
 # Version 3.85.2 - Itsuki - 17th September 2024
 
-
-
 ## Updates
 
 * `WebGLRenderer.setExtensions` is a new method that queries the GL context to get the list of supported extensions. Which it then sets into the class properties. This method is called internally as part of the `init` and restore process.
+* `TransformMatrix.setQuad` has been fixed so it no longer rounds the quad dimensions, only the x/y coordinates. This fixes a bug where it could give slightly different (+- 1px) sized textures based on how the dimensions were rounded when using `roundPixels` on the camera. Fix #6874 (thanks @saintflow47)
 
 ## Bug Fixes
 
