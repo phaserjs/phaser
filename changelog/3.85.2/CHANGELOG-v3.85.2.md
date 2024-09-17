@@ -8,4 +8,4 @@
 
 ## Bug Fixes
 
-* When the WebGL context was restored it would incorrectly try to call `init.setupExtensions()` which didn't exist.
+* When the WebGL context was restored it would incorrectly try to call `init.setupExtensions()` which didn't exist. It now calls the correct method, `WebGLRenderer.setExtensions`. Fix #6905 (thanks @RedRoosterMobile)

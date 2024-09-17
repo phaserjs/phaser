@@ -407,7 +407,7 @@ var WebGLRenderer = new Class({
 
         /**
          * Array of strings that indicate which WebGL extensions are supported by the browser.
-         * This is populated in the `boot` method.
+         * This is populated in the `setExtensions` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#supportedExtensions
          * @type {string[]}
@@ -419,6 +419,8 @@ var WebGLRenderer = new Class({
         /**
          * If the browser supports the `ANGLE_instanced_arrays` extension, this property will hold
          * a reference to the glExtension for it.
+         * 
+         * This is populated in the `setExtensions` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#instancedArraysExtension
          * @type {ANGLE_instanced_arrays}
@@ -430,6 +432,8 @@ var WebGLRenderer = new Class({
         /**
          * If the browser supports the `OES_vertex_array_object` extension, this property will hold
          * a reference to the glExtension for it.
+         * 
+         * This is populated in the `setExtensions` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#vaoExtension
          * @type {OES_vertex_array_object}
@@ -775,26 +779,7 @@ var WebGLRenderer = new Class({
 
         this.gl = gl;
 
-        var _this = this;
-
-        //  Load supported extensions
-        var setupExtensions = function ()
-        {
-            var exts = gl.getSupportedExtensions();
-
-            _this.supportedExtensions = exts;
-
-            var angleString = 'ANGLE_instanced_arrays';
-
-            _this.instancedArraysExtension = (exts.indexOf(angleString) > -1) ? gl.getExtension(angleString) : null;
-
-            var vaoString = 'OES_vertex_array_object';
-
-            _this.vaoExtension = (exts.indexOf(vaoString) > -1) ? gl.getExtension(vaoString) : null;
-
-        };
-
-        setupExtensions();
+        this.setExtensions();
 
         this.setContextHandlers();
 
@@ -945,6 +930,33 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * Queries the GL context to get the supported extensions.
+     * 
+     * Then sets them into the `supportedExtensions`, `instancedArraysExtension` and `vaoExtension` properties.
+     * 
+     * Called automatically during the `init` method.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setExtensions
+     * @since 3.85.2
+     */
+    setExtensions: function ()
+    {
+        var gl = this.gl;
+
+        var exts = gl.getSupportedExtensions();
+
+        this.supportedExtensions = exts;
+
+        var angleString = 'ANGLE_instanced_arrays';
+
+        this.instancedArraysExtension = (exts.indexOf(angleString) > -1) ? gl.getExtension(angleString) : null;
+
+        var vaoString = 'OES_vertex_array_object';
+
+        this.vaoExtension = (exts.indexOf(vaoString) > -1) ? gl.getExtension(vaoString) : null;
+    },
+
+    /**
      * Sets the handlers that are called when WebGL context is lost or restored by the browser.
      * 
      * The default handlers are referenced via the properties `WebGLRenderer.contextLostHandler` and `WebGLRenderer.contextRestoredHandler`.
@@ -1084,7 +1096,7 @@ var WebGLRenderer = new Class({
         this.resize(this.game.scale.baseSize.width, this.game.scale.baseSize.height);
 
         // Restore GL extensions.
-        this.init.setupExtensions();
+        this.setExtensions();
 
         // Context has been restored.
 
