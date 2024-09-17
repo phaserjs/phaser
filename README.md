@@ -57,15 +57,15 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include _either_ of the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.85.0/dist/phaser.js"></script>
-<script src="//cdn.jsdelivr.net/npm/phaser@3.85.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.85.2/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.85.2/dist/phaser.min.js"></script>
 ```
 
 It is also available from Cloudflare's [cdnjs](https://cdnjs.com/libraries/phaser):
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.85.0/phaser.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.85.0/phaser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.85.2/phaser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.85.2/phaser.min.js"></script>
 ```
 
 ## Phaser TypeScript Definitions
@@ -137,8 +137,8 @@ Read more about [Phaser Compressor](https://phaser.io/news/2024/05/phaser-compre
 
 We meticulously keep track of new features, updates and bug fixes in our change logs. Each version of Phaser has its own change log:
 
-* [v3.85 Change Log](changelog/3.85/CHANGELOG-v3.85.md)
-* [v3.0.0 to v3.80.1. Change Logs](CHANGELOG.md)
+* [v3.85.2 Change Log](changelog/3.85.2/CHANGELOG-v3.85.2.md)
+* [v3.0.0 to v3.85.0 Change Logs](CHANGELOG.md)
 
 ## Have fun!
 
