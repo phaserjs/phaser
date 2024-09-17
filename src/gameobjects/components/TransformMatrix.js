@@ -936,33 +936,55 @@ var TransformMatrix = new Class({
         var e = matrix[4];
         var f = matrix[5];
 
+        // Compute the unrounded positions for the quad
+        var x0 = x * a + y * c + e;
+        var y0 = x * b + y * d + f;
+
+        var x1 = x * a + yh * c + e;
+        var y1 = x * b + yh * d + f;
+
+        var x2 = xw * a + yh * c + e;
+        var y2 = xw * b + yh * d + f;
+
+        var x3 = xw * a + y * c + e;
+        var y3 = xw * b + y * d + f;
+
         if (roundPixels)
         {
-            quad[0] = Math.floor((x * a + y * c + e) + 0.5);
-            quad[1] = Math.floor((x * b + y * d + f) + 0.5);
+            // Round the top-left corner
+            var rx0 = Math.floor(x0 + 0.5);
+            var ry0 = Math.floor(y0 + 0.5);
 
-            quad[2] = Math.floor((x * a + yh * c + e) + 0.5);
-            quad[3] = Math.floor((x * b + yh * d + f) + 0.5);
+            // Calculate the offset caused by rounding
+            var dx = rx0 - x0;
+            var dy = ry0 - y0;
 
-            quad[4] = Math.floor((xw * a + yh * c + e) + 0.5);
-            quad[5] = Math.floor((xw * b + yh * d + f) + 0.5);
+            // Adjust the other corners by the same offset
+            quad[0] = rx0;
+            quad[1] = ry0;
 
-            quad[6] = Math.floor((xw * a + y * c + e) + 0.5);
-            quad[7] = Math.floor((xw * b + y * d + f) + 0.5);
+            quad[2] = x1 + dx;
+            quad[3] = y1 + dy;
+
+            quad[4] = x2 + dx;
+            quad[5] = y2 + dy;
+
+            quad[6] = x3 + dx;
+            quad[7] = y3 + dy;
         }
         else
         {
-            quad[0] = x * a + y * c + e;
-            quad[1] = x * b + y * d + f;
+            quad[0] = x0;
+            quad[1] = y0;
 
-            quad[2] = x * a + yh * c + e;
-            quad[3] = x * b + yh * d + f;
+            quad[2] = x1;
+            quad[3] = y1;
 
-            quad[4] = xw * a + yh * c + e;
-            quad[5] = xw * b + yh * d + f;
+            quad[4] = x2;
+            quad[5] = y2;
 
-            quad[6] = xw * a + y * c + e;
-            quad[7] = xw * b + y * d + f;
+            quad[6] = x3;
+            quad[7] = y3;
         }
 
         return quad;
