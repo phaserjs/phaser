@@ -6,7 +6,7 @@ Please select a version to read that specific change log:
 
 | Version | Name | Release Date |
 | ------- | ---- | ------------ |
-| [3.85.2](changelog/3.85/CHANGELOG-v3.85.2.md) | Itsuki | 17th September 2024 |
+| [3.85.2](changelog/3.85.2/CHANGELOG-v3.85.2.md) | Itsuki | 17th September 2024 |
 | [3.85.0](changelog/3.85/CHANGELOG-v3.85.md) | Itsuki | 5th September 2024 |
 | [3.80.1](changelog/3.80.1/CHANGELOG-v3.80.1.md) | Nino | 27th February 2024 |
 | [3.80](changelog/3.80/CHANGELOG-v3.80.md) | Nino | 21st February 2024 |
