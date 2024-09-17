@@ -9,3 +9,9 @@
 ## Bug Fixes
 
 * When the WebGL context was restored it would incorrectly try to call `init.setupExtensions()` which didn't exist. It now calls the correct method, `WebGLRenderer.setExtensions`. Fix #6905 (thanks @RedRoosterMobile)
+
+## Examples, Documentation, Beta Testing and TypeScript
+
+Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
+
+@AlvaroNeuronup
