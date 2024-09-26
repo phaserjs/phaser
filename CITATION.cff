@@ -1,0 +1,39 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Phaser
+message: >-
+  Phaser is a fast, free, and fun open source HTML5 game
+  framework that offers WebGL and Canvas rendering across
+  desktop and mobile web browsers
+type: software
+authors:
+  - name: Phaser Developers
+repository-code: 'https://github.com/phaserjs/phaser'
+url: 'https://phaser.io/'
+abstract: >-
+  Phaser is a fast, free, and fun open source HTML5 game
+  framework that offers WebGL and Canvas rendering across
+  desktop and mobile web browsers and has been actively
+  developed for over 10 years.
+
+
+  Games can be built for the web, or as YouTube Playables,
+  Discord Activies, Twitch Overlays or compiled to iOS,
+  Android, Steam and native apps using 3rd party tools. You
+  can use JavaScript or TypeScript for development. Phaser
+  supports over 40 different front-end frameworks including
+  React and Vue.
+
+
+  Phaser is commercially developed and maintained by Phaser
+  Studio Inc along with our fantastic open source community.
+  As a result of rapid support, and a developer friendly
+  API, Phaser is currently one of the most starred game
+  frameworks on GitHub.
+
+
+  Interested in learning more? Click the image below to
+  watch our intro video.
+license: MIT
