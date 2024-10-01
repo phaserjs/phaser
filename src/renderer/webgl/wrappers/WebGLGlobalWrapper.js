@@ -105,6 +105,7 @@ var WebGLGlobalWrapper = new Class({
         }
         if (state.scissor !== undefined)
         {
+            // Must happen after setting the framebuffer.
             this.updateScissor(state, force);
         }
         if (state.stencil !== undefined)
@@ -663,6 +664,10 @@ var WebGLGlobalWrapper = new Class({
     /**
      * Updates the scissor box state.
      *
+     * This method uses the current framebuffer's height to convert the
+     * Y coordinate, so ensure that it is called after setting the
+     * framebuffer. In a regular update, this happens naturally.
+     *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateScissorBox
      * @since 3.90.0
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
@@ -689,9 +694,15 @@ var WebGLGlobalWrapper = new Class({
         {
             // Convert Y coordinate, as WebGL uses bottom-left origin.
             var renderer = this.renderer;
+            var bufferHeight = renderer.drawingBufferHeight;
+            var currentFramebuffer = this.state.bindings.framebuffer;
+            if (currentFramebuffer && !currentFramebuffer.useCanvas)
+            {
+                bufferHeight = currentFramebuffer.height;
+            }
             renderer.gl.scissor(
                 x,
-                renderer.drawingBufferHeight - y - height,
+                bufferHeight - y - height,
                 width,
                 height
             );

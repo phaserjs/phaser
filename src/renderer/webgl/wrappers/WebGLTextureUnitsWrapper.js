@@ -97,7 +97,8 @@ var WebGLTextureUnitsWrapper = new Class({
     /**
      * Binds a texture to a texture unit.
      *
-     * This will change the active texture unit to the given unit.
+     * This will change the active texture unit to the given unit,
+     * unless `forceActive` is false.
      *
      * This should be the only way to bind a texture to a unit.
      *
@@ -106,16 +107,21 @@ var WebGLTextureUnitsWrapper = new Class({
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper|null} texture - The texture to bind, or null to unbind the unit.
      * @param {number} unit - The texture unit to bind the texture to.
      * @param {boolean} [force=false] - If true, it will bind the texture even if it is already bound.
+     * @param {boolean} [forceActive=true] - If true, it will change the active texture unit to the given unit even if it is already active. Otherwise, it will only change the active texture unit if it is not already active.
      */
-    bind: function (texture, unit, force)
+    bind: function (texture, unit, force, forceActive)
     {
-        this.renderer.glWrapper.updateBindingsActiveTexture({
-            bindings:
-            {
-                activeTexture: unit
-            }
-        });
-        if (this.units[unit] === texture && !force) { return; }
+        var needsBind = this.units[unit] !== texture;
+        if (force || (forceActive !== false) || needsBind)
+        {
+            this.renderer.glWrapper.updateBindingsActiveTexture({
+                bindings:
+                {
+                    activeTexture: unit
+                }
+            }, force);
+        }
+        if (!needsBind && !force) { return; }
         this.units[unit] = texture;
         var glTexture = texture ? texture.webGLTexture : null;
         var gl = this.renderer.gl;
@@ -123,9 +129,9 @@ var WebGLTextureUnitsWrapper = new Class({
     },
 
     /**
-     * Set specific texture units to specific textures. After this runs,
-     * the active texture unit will be the first index in the input array
-     * with a defined value.
+     * Set specific texture units to specific textures.
+     *
+     * The active texture unit may change to accommodate the bindings.
      *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLTextureUnitsWrapper#bindUnits
      * @since 3.90.0
@@ -139,7 +145,7 @@ var WebGLTextureUnitsWrapper = new Class({
         {
             if (textures[i] !== undefined)
             {
-                this.bind(textures[i], i, force);
+                this.bind(textures[i], i, force, false);
             }
         }
     }

@@ -40,6 +40,7 @@ var GameObjects = {
     RetroFont: require('./bitmaptext/RetroFont'),
     Rope: require('./rope/Rope'),
     Sprite: require('./sprite/Sprite'),
+    Stamp: require('./stamp/Stamp'),
 
     Text: require('./text/Text'),
     GetTextSize: require('./text/GetTextSize'),
@@ -82,6 +83,7 @@ var GameObjects = {
         RenderTexture: require('./rendertexture/RenderTextureFactory'),
         Rope: require('./rope/RopeFactory'),
         Sprite: require('./sprite/SpriteFactory'),
+        Stamp: require('./stamp/StampFactory'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
         Text: require('./text/TextFactory'),
         TileSprite: require('./tilesprite/TileSpriteFactory'),
@@ -114,6 +116,7 @@ var GameObjects = {
         RenderTexture: require('./rendertexture/RenderTextureCreator'),
         Rope: require('./rope/RopeCreator'),
         Sprite: require('./sprite/SpriteCreator'),
+        Stamp: require('./stamp/StampCreator'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
         Text: require('./text/TextCreator'),
         TileSprite: require('./tilesprite/TileSpriteCreator'),

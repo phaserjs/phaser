@@ -54,6 +54,40 @@ var WebGLProgramWrapper = new Class({
         this.webGLProgram = null;
 
         /**
+         * Whether this program is currently being compiled.
+         * This will always be false, unless parallel shader compilation
+         * is enabled via `config.render.skipUnreadyShaders`.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#compiling
+         * @type {boolean}
+         * @default false
+         * @readonly
+         * @since 3.90.0
+         */
+        this.compiling = false;
+
+        /**
+         * The time at which the compilation of this program started.
+         * This is used to track the time taken to compile the program.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#_compileStartTime
+         * @type {number}
+         * @private
+         * @since 3.90.0
+         */
+        this._compileStartTime = 0;
+
+        /**
+         * The time taken to compile this program, in milliseconds.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#compileTimeMs
+         * @type {number}
+         * @readonly
+         * @since 3.90.0
+         */
+        this.compileTimeMs = 0;
+
+        /**
          * The WebGL state necessary to bind this program.
          *
          * This is used internally to accelerate state changes.
@@ -83,7 +117,7 @@ var WebGLProgramWrapper = new Class({
         this.fragmentSource = fragmentSource;
 
         /**
-         * The vertex shader object. This is only stored if `WEBGL_DEBUG` is enabled.
+         * The vertex shader object.
          *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#_vertexShader
          * @type {WebGLShader}
@@ -94,7 +128,7 @@ var WebGLProgramWrapper = new Class({
         this._vertexShader = null;
 
         /**
-         * The fragment shader object. This is only stored if `WEBGL_DEBUG` is enabled.
+         * The fragment shader object.
          *
          * @name Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#_fragmentShader
          * @type {WebGLShader}
@@ -173,7 +207,6 @@ var WebGLProgramWrapper = new Class({
      */
     createResource: function ()
     {
-        var _this = this;
         var renderer = this.renderer;
         var gl = renderer.gl;
 
@@ -187,6 +220,9 @@ var WebGLProgramWrapper = new Class({
             // `createResource` will run when the context is restored.
             return;
         }
+
+        this.compiling = true;
+        this._compileStartTime = performance.now();
 
         // Unbind current program before creating a new one.
         // Otherwise, the old program will stay in use,
@@ -205,6 +241,9 @@ var WebGLProgramWrapper = new Class({
         var vs = gl.createShader(gl.VERTEX_SHADER);
         var fs = gl.createShader(gl.FRAGMENT_SHADER);
 
+        this._vertexShader = vs;
+        this._fragmentShader = fs;
+
         gl.shaderSource(vs, this.vertexSource);
         gl.shaderSource(fs, this.fragmentSource);
 
@@ -216,16 +255,50 @@ var WebGLProgramWrapper = new Class({
 
         gl.linkProgram(program);
 
-        if (typeof WEBGL_DEBUG)
+        if (!renderer.game.config.skipUnreadyShaders)
         {
-            this._vertexShader = vs;
-            this._fragmentShader = fs;
+            this._completeProgram();
         }
-        else
+    },
+
+    /**
+     * Poll shader compilation status, and complete the program if it is ready.
+     * This is only called if `skipUnreadyShaders` is enabled
+     * and the KHR_parallel_shader_compile extension is available.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#checkParallelCompile
+     * @since 3.90.0
+     */
+    checkParallelCompile: function ()
+    {
+        var renderer = this.renderer;
+        var gl = renderer.gl;
+        var ext = renderer.parallelShaderCompileExtension;
+
+        if (!ext || !gl.getProgramParameter(this.webGLProgram, ext.COMPLETION_STATUS_KHR))
         {
-            gl.deleteShader(vs);
-            gl.deleteShader(fs);
+            return;
         }
+
+        this._completeProgram();
+    },
+
+    /**
+     * Complete the program after the shaders have compiled.
+     * This checks the status of the shaders and the program,
+     * and throws an error if they failed to compile.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#_completeProgram
+     * @private
+     * @since 3.90.0
+     */
+    _completeProgram: function ()
+    {
+        var program = this.webGLProgram;
+        var renderer = this.renderer;
+        var gl = renderer.gl;
+        var vs = this._vertexShader;
+        var fs = this._fragmentShader;
 
         var failed = 'Shader failed:\n';
 
@@ -245,6 +318,27 @@ var WebGLProgramWrapper = new Class({
             console.log(this.vertexSource, this.fragmentSource);
             throw new Error('Link Shader failed:' + gl.getProgramInfoLog(program));
         }
+
+        this._setupAttributesAndUniforms();
+
+        this.compileTimeMs = performance.now() - this._compileStartTime;
+        this.compiling = false;
+    },
+
+    /**
+     * Set up the attributes and uniforms for this program.
+     * This is called after the program is created or re-created.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#_setupAttributesAndUniforms
+     * @private
+     * @since 3.90.0
+     */
+    _setupAttributesAndUniforms: function ()
+    {
+        var program = this.webGLProgram;
+        var renderer = this.renderer;
+        var gl = renderer.gl;
+        var _this = this;
 
         // Extract attributes.
         this.glAttributeNames.clear();

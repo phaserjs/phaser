@@ -79,7 +79,7 @@ var ShaderProgramFactory = new Class({
     {
         var key = this.getKey(base, additions, features);
 
-        var program = this.programs.key;
+        var program = this.programs[key];
 
         if (!program)
         {

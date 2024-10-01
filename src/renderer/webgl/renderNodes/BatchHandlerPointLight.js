@@ -143,10 +143,7 @@ var BatchHandlerPointLight = new Class({
             [ width, height ]
         );
 
-        drawingContext.renderer.setProjectionMatrix(
-            width,
-            height
-        );
+        drawingContext.renderer.setProjectionMatrixFromDrawingContext(drawingContext);
         programManager.setUniform(
             'uProjectionMatrix',
             drawingContext.renderer.projectionMatrix.val
@@ -173,26 +170,30 @@ var BatchHandlerPointLight = new Class({
 
         var programManager = this.programManager;
         var programSuite = programManager.getCurrentProgramSuite();
-        var program = programSuite.program;
-        var vao = programSuite.vao;
 
-        this.setupUniforms(drawingContext);
-        programManager.applyUniforms(program);
-
-        // Update vertex buffers.
-        // Because we are probably using a generic vertex buffer
-        // which is larger than the current batch, we need to update
-        // the buffer with the correct size.
-        this.vertexBufferLayout.buffer.update(this.instanceCount * this.bytesPerInstance);
-
-        this.manager.renderer.drawElements(
-            drawingContext,
-            this._emptyTextures,
-            program,
-            vao,
-            instanceCount * this.indicesPerInstance,
-            0
-        );
+        if (programSuite)
+        {
+            var program = programSuite.program;
+            var vao = programSuite.vao;
+    
+            this.setupUniforms(drawingContext);
+            programManager.applyUniforms(program);
+    
+            // Update vertex buffers.
+            // Because we are probably using a generic vertex buffer
+            // which is larger than the current batch, we need to update
+            // the buffer with the correct size.
+            this.vertexBufferLayout.buffer.update(this.instanceCount * this.bytesPerInstance);
+    
+            this.manager.renderer.drawElements(
+                drawingContext,
+                this._emptyTextures,
+                program,
+                vao,
+                instanceCount * this.indicesPerInstance,
+                0
+            );
+        }
 
         // Reset batch accumulation.
         this.instanceCount = 0;

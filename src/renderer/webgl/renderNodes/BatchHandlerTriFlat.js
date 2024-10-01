@@ -78,7 +78,6 @@ var BatchHandlerTriFlat = new Class({
 
         /**
          * The render options currently being built.
-         * These are assigned to `renderOptions` by `applyRenderOptions`.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#nextRenderOptions
          * @type {object}
@@ -87,6 +86,16 @@ var BatchHandlerTriFlat = new Class({
         this.nextRenderOptions = {
             lighting: false
         };
+
+        /**
+         * A flag indicating that the render options have changed.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#_renderOptionsChanged
+         * @type {boolean}
+         * @private
+         * @since 3.90.0
+         */
+        this._renderOptionsChanged = false;
     },
 
     defaultConfig: {
@@ -147,10 +156,7 @@ var BatchHandlerTriFlat = new Class({
     {
         var programManager = this.programManager;
 
-        drawingContext.renderer.setProjectionMatrix(
-            drawingContext.width,
-            drawingContext.height
-        );
+        drawingContext.renderer.setProjectionMatrixFromDrawingContext(drawingContext);
         programManager.setUniform(
             'uProjectionMatrix',
             drawingContext.renderer.projectionMatrix.val
@@ -178,29 +184,16 @@ var BatchHandlerTriFlat = new Class({
     updateRenderOptions: function (lighting)
     {
         var newRenderOptions = this.nextRenderOptions;
-
-        newRenderOptions.lighting = lighting;
-    },
-
-    applyRenderOptions: function (drawingContext)
-    {
-        var renderOptions = this.renderOptions;
-        var nextRenderOptions = this.nextRenderOptions;
-
+        var oldRenderOptions = this.renderOptions;
         var changed = false;
-        for (var key in nextRenderOptions)
+
+        if (lighting !== oldRenderOptions.lighting)
         {
-            if (nextRenderOptions[key] !== renderOptions[key])
-            {
-                changed = true;
-            }
+            newRenderOptions.lighting = lighting;
+            changed = true;
         }
 
-        if (changed)
-        {
-            this.run(drawingContext);
-            this.updateShaderConfig();
-        }
+        this._renderOptionsChanged = changed;
     },
 
     updateShaderConfig: function ()
@@ -250,39 +243,43 @@ var BatchHandlerTriFlat = new Class({
 
         var programManager = this.programManager;
         var programSuite = programManager.getCurrentProgramSuite();
-        var program = programSuite.program;
-        var vao = programSuite.vao;
 
-        this.setupUniforms(drawingContext);
-        programManager.applyUniforms(program);
-
-        var indicesPerInstance = this.indicesPerInstance;
-        var instanceCount = this.instanceCount;
-        var renderer = this.manager.renderer;
-        var vertexBuffer = this.vertexBufferLayout.buffer;
-        var stride = this.vertexBufferLayout.layout.stride;
-
-        // Update vertex buffers.
-        // Because we are probably using a generic vertex buffer
-        // which is larger than the current batch, we need to update
-        // the buffer with the correct size.
-        vertexBuffer.update(this.vertexCount * stride);
-
-        // Update index buffer.
-        // We must bind the VAO before updating the index buffer.
-        // Each index is a 16-bit unsigned integer, so 2 bytes.
-        vao.bind();
-        vao.indexBuffer.update(instanceCount * indicesPerInstance * 2);
-
-        renderer.drawElements(
-            drawingContext,
-            this._emptyTextures,
-            program,
-            vao,
-            instanceCount * indicesPerInstance,
-            0,
-            renderer.gl.TRIANGLES
-        );
+        if (programSuite)
+        {
+            var program = programSuite.program;
+            var vao = programSuite.vao;
+    
+            this.setupUniforms(drawingContext);
+            programManager.applyUniforms(program);
+    
+            var indicesPerInstance = this.indicesPerInstance;
+            var instanceCount = this.instanceCount;
+            var renderer = this.manager.renderer;
+            var vertexBuffer = this.vertexBufferLayout.buffer;
+            var stride = this.vertexBufferLayout.layout.stride;
+    
+            // Update vertex buffers.
+            // Because we are probably using a generic vertex buffer
+            // which is larger than the current batch, we need to update
+            // the buffer with the correct size.
+            vertexBuffer.update(this.vertexCount * stride);
+    
+            // Update index buffer.
+            // We must bind the VAO before updating the index buffer.
+            // Each index is a 16-bit unsigned integer, so 2 bytes.
+            vao.bind();
+            vao.indexBuffer.update(instanceCount * indicesPerInstance * 2);
+    
+            renderer.drawElements(
+                drawingContext,
+                this._emptyTextures,
+                program,
+                vao,
+                instanceCount * indicesPerInstance,
+                0,
+                renderer.gl.TRIANGLES
+            );
+        }
 
         // Reset batch accumulation.
         this.instanceCount = 0;
@@ -314,7 +311,11 @@ var BatchHandlerTriFlat = new Class({
 
         // Check render options and run the batch if they differ.
         this.updateRenderOptions(lighting);
-        this.applyRenderOptions(currentContext);
+        if (this._renderOptionsChanged)
+        {
+            this.run(currentContext);
+            this.updateShaderConfig();
+        }
 
         var passID = 0;
         var instanceCompletion = 0;

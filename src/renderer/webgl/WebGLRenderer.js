@@ -515,6 +515,17 @@ var WebGLRenderer = new Class({
         this.instancedArraysExtension = null;
 
         /**
+         * If the browser supports the `KHR_parallel_shader_compile` extension,
+         * this property will hold a reference to the glExtension for it.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#parallelShaderCompileExtension
+         * @type {KHR_parallel_shader_compile}
+         * @default null
+         * @since 3.90.0
+         */
+        this.parallelShaderCompileExtension = null;
+
+        /**
          * If the browser supports the `OES_standard_derivatives` extension,
          * and the `smoothPixelArt` config option is true,
          * this property will hold a reference to the glExtension for it.
@@ -800,6 +811,18 @@ var WebGLRenderer = new Class({
         this.projectionHeight = 0;
 
         /**
+         * The cached flipY state of the Projection matrix.
+         *
+         * This is set to `true` when rendering to a Framebuffer,
+         * and `false` when rendering to the canvas.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#projectionFlipY
+         * @type {boolean}
+         * @since 3.90.0
+         */
+        this.projectionFlipY = false;
+
+        /**
          * A RenderTarget used by the BitmapMask Pipeline.
          *
          * This is the source, i.e. the masked Game Object itself.
@@ -900,6 +923,13 @@ var WebGLRenderer = new Class({
             var angleString = 'ANGLE_instanced_arrays';
 
             _this.instancedArraysExtension = (exts.indexOf(angleString) > -1) ? gl.getExtension(angleString) : null;
+
+            if (game.config.skipUnreadyShaders)
+            {
+                var parallelShaderCompileString = 'KHR_parallel_shader_compile';
+    
+                _this.parallelShaderCompileExtension = (exts.indexOf(parallelShaderCompileString) > -1) ? gl.getExtension(parallelShaderCompileString) : null;
+            }
 
             var vaoString = 'OES_vertex_array_object';
 
@@ -1605,20 +1635,48 @@ var WebGLRenderer = new Class({
      *
      * @param {number} width - The new width of the Projection Matrix.
      * @param {number} height - The new height of the Projection Matrix.
+     * @param {boolean} [flipY=false] - Should the Y axis be flipped?
      *
      * @return {this} This WebGLRenderer instance.
      */
-    setProjectionMatrix: function (width, height)
+    setProjectionMatrix: function (width, height, flipY)
     {
-        if (width !== this.projectionWidth || height !== this.projectionHeight)
+        if (width !== this.projectionWidth || height !== this.projectionHeight || flipY !== this.projectionFlipY)
         {
             this.projectionWidth = width;
             this.projectionHeight = height;
+            this.projectionFlipY = !!flipY;
 
-            this.projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
+            if (!flipY)
+            {
+                this.projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
+            }
+            else
+            {
+                this.projectionMatrix.ortho(0, width, 0, height, -1000, 1000);
+            }
         }
 
         return this;
+    },
+
+    /**
+     * Sets the Projection Matrix of this renderer to match the given drawing context.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setProjectionMatrixFromDrawingContext
+     * @since 3.90.0
+     *
+     * @param {Phaser.Types.Renderer.WebGL.WebGLContext} drawingContext - The drawing context to set the projection matrix from.
+     *
+     * @return {this} This WebGLRenderer instance.
+     */
+    setProjectionMatrixFromDrawingContext: function (drawingContext)
+    {
+        return this.setProjectionMatrix(
+            drawingContext.width,
+            drawingContext.height,
+            !drawingContext.framebuffer.useCanvas
+        );
     },
 
     /**
@@ -2983,6 +3041,15 @@ var WebGLRenderer = new Class({
 
         this.emit(Events.POST_RENDER);
 
+        // Handle snapshot requests.
+        var state = this.snapshotState;
+        if (state.callback)
+        {
+            WebGLSnapshot(this.gl, state);
+
+            state.callback = null;
+        }
+
         return;
 
         // Old Code:
@@ -3259,8 +3326,6 @@ var WebGLRenderer = new Class({
             type = 'image/png';
         }
 
-        var currentFramebuffer = this.currentFramebuffer;
-
         this.snapshotArea(x, y, width, height, callback, type, encoderOptions);
 
         var state = this.snapshotState;
@@ -3275,11 +3340,12 @@ var WebGLRenderer = new Class({
         state.width = Math.min(state.width, bufferWidth);
         state.height = Math.min(state.height, bufferHeight);
 
-        this.setFramebuffer(framebuffer);
+        this.glWrapper.updateBindingsFramebuffer({ bindings: { framebuffer: framebuffer } });
 
         WebGLSnapshot(this.gl, state);
 
-        this.setFramebuffer(currentFramebuffer);
+        // We don't need to unbind the framebuffer,
+        // because the next time we draw it will be bound again.
 
         state.callback = null;
         state.isFramebuffer = false;
@@ -3589,8 +3655,6 @@ var WebGLRenderer = new Class({
 
         this.maskTarget.destroy();
         this.maskSource.destroy();
-
-        this.pipelines.destroy();
 
         this.removeAllListeners();
 

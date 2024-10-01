@@ -26,6 +26,9 @@ var Vector2 = require('../../math/Vector2');
  *
  * A Ropes origin is always 0.5 x 0.5 and cannot be changed.
  *
+ * This object does not support trimmed textures from Texture Packer.
+ * Trimming may interfere with the vertex arrangement.
+ *
  * @class Rope
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects

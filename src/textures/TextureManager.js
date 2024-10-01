@@ -21,6 +21,7 @@ var IsPlainObject = require('../utils/object/IsPlainObject');
 var Parser = require('./parsers');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var Texture = require('./Texture');
+var TileSpriteGameObject = require('../gameobjects/tilesprite/TileSprite');
 
 /**
  * @callback EachTextureCallback
@@ -138,8 +139,10 @@ var TextureManager = new Class({
          *
          * This is not part of the display list and doesn't render.
          *
+         * Prior to v3.90, this was of the type `Phaser.GameObjects.Image`.
+         *
          * @name Phaser.Textures.TextureManager#stamp
-         * @type {Phaser.GameObjects.Image}
+         * @type {Phaser.GameObjects.Stamp}
          * @readonly
          * @since 3.60.0
          */
@@ -153,6 +156,20 @@ var TextureManager = new Class({
          * @since 3.60.0
          */
         this.stampCrop = new Rectangle();
+
+        /**
+         * A TileSprite Game Object that belongs to this Texture Manager.
+         *
+         * Used for repeated drawing within Dynamic Textures.
+         *
+         * This is not part of the display list and doesn't render.
+         *
+         * @name Phaser.Textures.TextureManager#tileSprite
+         * @type {Phaser.GameObjects.TileSprite}
+         * @readonly
+         * @since 3.90.0
+         */
+        this.tileSprite;
 
         /**
          * If this flag is `true` then the Texture Manager will never emit any
@@ -197,6 +214,7 @@ var TextureManager = new Class({
         this.game.events.once(GameEvents.SYSTEM_READY, function (scene)
         {
             this.stamp = new ImageGameObject(scene).setOrigin(0);
+            this.tileSprite = new TileSpriteGameObject(scene, 0, 0, 256, 256, '__WHITE').setOrigin(0);
 
         }, this);
     },
@@ -1614,6 +1632,35 @@ var TextureManager = new Class({
         stamp.setTexture('__WHITE');
 
         return stamp;
+    },
+
+    /**
+     * Resets the internal Tile Sprite object, ready for drawing, and returns it.
+     *
+     * @method Phaser.Textures.TextureManager#resetTileSprite
+     * @since 3.90.0
+     *
+     * @param {number} [alpha=1] - The alpha to use.
+     * @param {number} [tint=0xffffff] - WebGL only. The tint color to use.
+     *
+     * @return {Phaser.GameObjects.TileSprite} A reference to the Tile Sprite Game Object.
+     */
+    resetTileSprite: function (alpha, tint)
+    {
+        if (alpha === undefined) { alpha = 1; }
+        if (tint === undefined) { tint = 0xffffff; }
+
+        var tileSprite = this.tileSprite;
+
+        tileSprite.setCrop();
+        tileSprite.setPosition(0);
+        tileSprite.setAngle(0);
+        tileSprite.setScale(1);
+        tileSprite.setAlpha(alpha);
+        tileSprite.setTint(tint);
+        tileSprite.setTexture('__WHITE');
+
+        return tileSprite;
     },
 
     /**

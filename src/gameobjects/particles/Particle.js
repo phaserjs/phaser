@@ -744,8 +744,8 @@ var Particle = new Class({
         var x = this.x;
         var y = this.y;
         var rotation = this.rotation;
-        var width = (this.frame.width * sx) / 2;
-        var height = (this.frame.height * sy) / 2;
+        var width = (this.frame.realWidth * sx) / 2;
+        var height = (this.frame.realHeight * sy) / 2;
 
         var bounds = this.bounds;
 

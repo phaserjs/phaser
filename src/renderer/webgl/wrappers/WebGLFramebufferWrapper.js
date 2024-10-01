@@ -182,7 +182,12 @@ var WebGLFramebufferWrapper = new Class({
          * @default null
          * @since 3.80.0
          */
-        this.renderTexture = this.attachments[0] || null;
+        this.renderTexture = null;
+
+        if (this.attachments[0])
+        {
+            this.renderTexture = this.attachments[0].texture;
+        }
 
         this.createResource();
     },
@@ -255,6 +260,29 @@ var WebGLFramebufferWrapper = new Class({
                 attachment.renderbuffer = renderbuffer;
             }
         }
+    },
+
+    /**
+     * Resizes the attachments of this WebGLFramebufferWrapper.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#resize
+     * @since 3.90.0
+     * @param {number} width - The new width of the framebuffer.
+     * @param {number} height - The new height of the framebuffer.
+     */
+    resize: function (width, height)
+    {
+        if (this.useCanvas)
+        {
+            return;
+        }
+
+        this.width = width;
+        this.height = height;
+
+        this.renderTexture.resize(width, height);
+
+        this.createResource();
     },
 
     /**

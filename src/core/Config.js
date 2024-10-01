@@ -450,6 +450,11 @@ var Config = new Class({
         this.premultipliedAlpha = GetValue(renderConfig, 'premultipliedAlpha', true, config);
 
         /**
+         * @const {boolean} Phaser.Core.Config#skipUnreadyShaders - Avert stuttering during shader compilation, by enabling parallel shader compilation, where supported. Objects which request a shader that is not yet ready will not be drawn. This prevents stutter, but may cause "pop-in" of objects unless you use a pre-touch strategy.
+         */
+        this.skipUnreadyShaders = GetValue(renderConfig, 'skipUnreadyShaders', false, config);
+
+        /**
          * @const {boolean} Phaser.Core.Config#failIfMajorPerformanceCaveat - Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
          */
         this.failIfMajorPerformanceCaveat = GetValue(renderConfig, 'failIfMajorPerformanceCaveat', false, config);

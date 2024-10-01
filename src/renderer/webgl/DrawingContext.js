@@ -39,6 +39,8 @@ var Events = require('../events');
  * @param {[number, number, number, number]} [options.clearColor=[0, 0, 0, 0]] - The color to clear the framebuffer with.
  * @param {boolean} [options.useCanvas=false] - Whether to use the canvas as the framebuffer.
  * @param {Phaser.Renderer.WebGL.DrawingContext} [options.copyFrom] - The DrawingContext to copy from.
+ * @param {number} [options.width] - The width of the framebuffer, used if `copyFrom` and `useCanvas` are not set. Default is the renderer width.
+ * @param {number} [options.height] - The height of the framebuffer, used if `copyFrom` and `useCanvas` are not set. Default is the renderer height.
  */
 var DrawingContext = new Class({
     initialize:
@@ -199,7 +201,10 @@ var DrawingContext = new Class({
         }
         else
         {
-            this.resize(renderer.width, renderer.height);
+            this.resize(
+                options.width || renderer.width,
+                options.height || renderer.height
+            );
         }
     },
 
@@ -233,13 +238,16 @@ var DrawingContext = new Class({
 
         if (!this.useCanvas)
         {
-            var renderer = this.renderer;
-    
-            renderer.deleteTexture(this.texture);
-            renderer.deleteFramebuffer(this.state.bindings.framebuffer);
-    
-            this.texture = renderer.createTextureFromSource(null, width, height, 0, true);
-            this.framebuffer = renderer.createFramebuffer(this.texture, true, false);
+            if (!this.framebuffer)
+            {
+                var renderer = this.renderer;
+                this.texture = renderer.createTextureFromSource(null, width, height, 0, true);
+                this.framebuffer = renderer.createFramebuffer(this.texture, true, false);
+            }
+            else
+            {
+                this.framebuffer.resize(width, height);
+            }
         }
         else if (!this.framebuffer)
         {
@@ -494,11 +502,39 @@ var DrawingContext = new Class({
      * @method Phaser.Renderer.WebGL.DrawingContext#clear
      * @since 3.90.0
      */
-    clear: function ()
+    clear: function (bits)
     {
         this.beginDraw();
 
-        this.renderer.gl.clear(this.autoClear);
+        if (bits === undefined)
+        {
+            bits = this.autoClear;
+        }
+        
+        // Finish any outstanding batches.
+        this.renderer.renderNodes.setCurrentBatchNode(null);
+
+        this.renderer.gl.clear(bits);
+    },
+
+    /**
+     * Destroys the DrawingContext and its resources.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#destroy
+     * @since 3.90.0
+     */
+    destroy: function ()
+    {
+        this.renderer.off(Events.RESIZE, this.resize, this);
+
+        this.renderer.deleteTexture(this.texture);
+        this.renderer.deleteFramebuffer(this.state.bindings.framebuffer);
+
+        this.renderer = null;
+        this.camera = null;
+        this.state = null;
+        this.framebuffer = null;
+        this.texture = null;
     }
 });
 

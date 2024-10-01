@@ -14,6 +14,7 @@
  * @property {boolean} [clearBeforeRender=true] - Whether the game canvas will be cleared between each rendering frame.
  * @property {boolean} [preserveDrawingBuffer=false] - If the value is true the WebGL buffers will not be cleared and will preserve their values until cleared or overwritten by the author.
  * @property {boolean} [premultipliedAlpha=true] - In WebGL mode, the drawing buffer contains colors with pre-multiplied alpha.
+ * @property {boolean} [skipUnreadyShaders=false] - Avert stuttering during shader compilation, by enabling parallel shader compilation, where supported. Objects which request a shader that is not yet ready will not be drawn. This prevents stutter, but may cause "pop-in" of objects unless you use a pre-touch strategy.
  * @property {boolean} [failIfMajorPerformanceCaveat=false] - Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
  * @property {string} [powerPreference='default'] - "high-performance", "low-power" or "default". A hint to the browser on how much device power the game might use.
  * @property {number} [batchSize=16384] - The default WebGL batch size. Represents the number of _quads_ that can be added to a single batch.

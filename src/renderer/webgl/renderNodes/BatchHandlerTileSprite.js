@@ -202,7 +202,11 @@ var BatchHandlerTileSprite = new Class({
 
         // Check render options and run the batch if they differ.
         this.updateRenderOptions(renderOptions);
-        this.applyRenderOptions(drawingContext);
+        if (this._renderOptionsChanged)
+        {
+            this.run(drawingContext);
+            this.updateShaderConfig();
+        }
 
         // Process textures and get relevant data.
         var textureDatum = this.batchTextures(glTexture, renderOptions);

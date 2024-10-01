@@ -117,8 +117,13 @@ var ProgramManager = new Class({
      * - `vao` (WebGLVAOWrapper) - The VAO associated with the program.
      * - `config` (object) - The configuration object used to create the program.
      *
+     * If parallel shader compilation is enabled,
+     * the program may not be available immediately.
+     * In this case, `null` is returned.
+     *
      * @method Phaser.Renderer.WebGL.ProgramManager#getCurrentProgramSuite
      * @since 3.90.0
+     * @return {?{ program: Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper, vao: Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper, config: object }} The program suite, or `null` if the program is not available.
      */
     getCurrentProgramSuite: function ()
     {
@@ -130,19 +135,28 @@ var ProgramManager = new Class({
 
         if (!this.programs[key])
         {
-            var program = factory.createShaderProgram(key, config.base, config.additions, config.features);
-            this.programs[key] = {
-                program: program,
-                vao: renderer.createVAO(
-                    program,
-                    this.indexBuffer,
-                    this.attributeBufferLayouts
-                ),
-                config: DeepCopy(config)
-            };
+            var program = factory.getShaderProgram(config.base, config.additions, config.features);
+
+            if (program.compiling)
+            {
+                program.checkParallelCompile();
+            }
+
+            if (!program.compiling)
+            {
+                this.programs[key] = {
+                    program: program,
+                    vao: renderer.createVAO(
+                        program,
+                        this.indexBuffer,
+                        this.attributeBufferLayouts
+                    ),
+                    config: DeepCopy(config)
+                };
+            }
         }
 
-        return this.programs[key];
+        return this.programs[key] || null;
     },
 
     /**

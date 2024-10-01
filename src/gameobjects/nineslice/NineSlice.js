@@ -88,6 +88,9 @@ var Vertex = require('../../geom/mesh/Vertex');
  * specifying anything more than the texture key and frame and it will pull the
  * area data from the atlas.
  *
+ * This object does not support trimmed textures from Texture Packer.
+ * Trimming interferes with the ability to stretch the texture correctly.
+ *
  * @class NineSlice
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects

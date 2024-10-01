@@ -281,10 +281,7 @@ var SubmitterTilemapGPULayer = new Class({
             [ drawingContext.width, drawingContext.height ]
         );
 
-        drawingContext.renderer.setProjectionMatrix(
-            drawingContext.width,
-            drawingContext.height
-        );
+        drawingContext.renderer.setProjectionMatrixFromDrawingContext(drawingContext);
         programManager.setUniform(
             'uProjectionMatrix',
             drawingContext.renderer.projectionMatrix.val
@@ -560,21 +557,25 @@ var SubmitterTilemapGPULayer = new Class({
 
         var programManager = this.programManager;
         var programSuite = programManager.getCurrentProgramSuite();
-        var program = programSuite.program;
-        var vao = programSuite.vao;
 
-        this.setupUniforms(drawingContext, tilemapLayer);
-        programManager.applyUniforms(program);
-
-        // Render layer.
-        renderer.drawElements(
-            drawingContext,
-            textures,
-            program,
-            vao,
-            4,
-            0
-        );
+        if (programSuite)
+        {
+            var program = programSuite.program;
+            var vao = programSuite.vao;
+    
+            this.setupUniforms(drawingContext, tilemapLayer);
+            programManager.applyUniforms(program);
+    
+            // Render layer.
+            renderer.drawElements(
+                drawingContext,
+                textures,
+                program,
+                vao,
+                4,
+                0
+            );
+        }
 
         this.onRunEnd(drawingContext);
     }

@@ -253,6 +253,28 @@ var WebGLTextureWrapper = new Class({
     },
 
     /**
+     * Resizes the WebGLTexture to the new dimensions.
+     * This will destroy the contents of the texture.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#resize
+     * @since 3.90.0
+     * @param {number} width - The new width of the WebGLTexture.
+     * @param {number} height - The new height of the WebGLTexture.
+     */
+    resize: function (width, height)
+    {
+        if (this.width === width && this.height === height)
+        {
+            return;
+        }
+
+        this.width = width;
+        this.height = height;
+
+        this._processTexture();
+    },
+
+    /**
      * Updates the WebGLTexture from an updated source.
      *
      * This should only be used when the source is a Canvas or Video element.

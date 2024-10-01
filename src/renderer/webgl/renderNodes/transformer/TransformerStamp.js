@@ -1,0 +1,133 @@
+/**
+ * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
+ * @copyright    2013-2024 Phaser Studio Inc.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var TransformMatrix = require('../../../../gameobjects/components/TransformMatrix.js');
+var Class = require('../../../../utils/Class');
+var Merge = require('../../../../utils/object/Merge');
+var RenderNode = require('../RenderNode');
+
+/**
+ * @classdesc
+ * A RenderNode which handles transformation data for a single Stamp-like GameObject.
+ *
+ * This is a modified version of the TransformerImage class.
+ * It skips the camera matrix.
+ *
+ * @class TransformerStamp
+ * @memberof Phaser.Renderer.WebGL.RenderNodes
+ * @constructor
+ * @since 3.90.0
+ * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
+ * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
+ * @param {object} [config] - The configuration object for this RenderNode.
+ */
+var TransformerStamp = new Class({
+
+    Extends: RenderNode,
+
+    initialize: function TransformerStamp (manager, config)
+    {
+        config = Merge(config || {}, this.defaultConfig);
+
+        RenderNode.call(this, config.name, manager);
+
+        /**
+         * The matrix used internally to compute sprite transforms.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerImage#_spriteMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.90.0
+         * @private
+         */
+        this._spriteMatrix = new TransformMatrix();
+
+        /**
+         * The matrix used to store the final quad data for rendering.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerImage#quad
+         * @type {Float32Array}
+         * @since 3.90.0
+         */
+        this.quad = this._spriteMatrix.quad;
+    },
+
+    defaultConfig: {
+        name: 'TransformerStamp',
+        role: 'Transformer'
+    },
+
+    /**
+     * Stores the transform data for rendering.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.TransformerImage#run
+     * @since 3.90.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested. It is unused here.
+     * @param {object} [element] - The specific element within the game object. This is used for objects that consist of multiple quads. It is unused here.
+     * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode} texturerNode - The texturer node used to texture the GameObject. This contains relevant data on the dimensions of the object.
+     */
+    run: function (drawingContext, gameObject, parentMatrix, element, texturerNode)
+    {
+        this.onRunBegin(drawingContext);
+
+        var frame = texturerNode.frame;
+        var uvSource = texturerNode.uvSource;
+
+        var frameX = uvSource.x;
+        var frameY = uvSource.y;
+
+        var displayOriginX = gameObject.displayOriginX;
+        var displayOriginY = gameObject.displayOriginY;
+
+        var x = -displayOriginX + frameX;
+        var y = -displayOriginY + frameY;
+
+        var customPivot = frame.customPivot;
+
+        var flipX = 1;
+        var flipY = 1;
+
+        if (gameObject.flipX)
+        {
+            if (!customPivot)
+            {
+                x += (-frame.realWidth + (displayOriginX * 2));
+            }
+
+            flipX = -1;
+        }
+
+        if (gameObject.flipY)
+        {
+            if (!customPivot)
+            {
+                y += (-frame.realHeight + (displayOriginY * 2));
+            }
+
+            flipY = -1;
+        }
+
+        var gx = gameObject.x;
+        var gy = gameObject.y;
+
+        var spriteMatrix = this._spriteMatrix;
+
+        spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
+
+        // Store the output quad.
+        spriteMatrix.setQuad(
+            x,
+            y,
+            x + texturerNode.frameWidth,
+            y + texturerNode.frameHeight
+        );
+
+        this.onRunEnd(drawingContext);
+    }
+});
+
+module.exports = TransformerStamp;

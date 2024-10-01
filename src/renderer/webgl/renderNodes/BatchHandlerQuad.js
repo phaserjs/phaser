@@ -70,13 +70,22 @@ var BatchHandlerQuad = new Class({
 
         /**
          * The render options currently being built.
-         * These are assigned to `renderOptions` by `applyRenderOptions`.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#nextRenderOptions
          * @type {object}
          * @since 3.90.0
          */
         this.nextRenderOptions = DeepCopy(this.renderOptions);
+
+        /**
+         * Whether the render options have changed.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#_renderOptionsChanged
+         * @type {boolean}
+         * @private
+         * @since 3.90.0
+         */
+        this._renderOptionsChanged = false;
 
         /**
          * A persistent calculation vector used when processing the lights.
@@ -266,10 +275,7 @@ var BatchHandlerQuad = new Class({
             [ drawingContext.width, drawingContext.height ]
         );
 
-        drawingContext.renderer.setProjectionMatrix(
-            drawingContext.width,
-            drawingContext.height
-        );
+        drawingContext.renderer.setProjectionMatrixFromDrawingContext(drawingContext);
         programManager.setUniform(
             'uProjectionMatrix',
             drawingContext.renderer.projectionMatrix.val
@@ -340,43 +346,53 @@ var BatchHandlerQuad = new Class({
     updateRenderOptions: function (renderOptions)
     {
         var newRenderOptions = this.nextRenderOptions;
-
-        newRenderOptions.multiTexturing = !!renderOptions.multiTexturing && !renderOptions.lighting;
-        newRenderOptions.lighting = !!renderOptions.lighting;
-        newRenderOptions.selfShadow = newRenderOptions.lighting && renderOptions.lighting.selfShadow && renderOptions.lighting.selfShadow.enabled;
-        newRenderOptions.selfShadowPenumbra = newRenderOptions.selfShadow ? renderOptions.lighting.selfShadow.penumbra : 0;
-        newRenderOptions.selfShadowThreshold = newRenderOptions.selfShadow ? renderOptions.lighting.selfShadow.diffuseFlatThreshold : 0;
-        newRenderOptions.smoothPixelArt = !!renderOptions.smoothPixelArt;
-        newRenderOptions.texRes = newRenderOptions.smoothPixelArt;
-    },
-
-    /**
-     * Check `renderOptions` against `nextRenderOptions`.
-     * If they differ, run the batch, and apply the new options.
-     *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#applyRenderOptions
-     * @since 3.90.0
-     * @param {Phaser.Types.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
-     */
-    applyRenderOptions: function (drawingContext)
-    {
-        var renderOptions = this.renderOptions;
-        var nextRenderOptions = this.nextRenderOptions;
-
+        var oldRenderOptions = this.renderOptions;
         var changed = false;
-        for (var key in nextRenderOptions)
+
+        var multiTexturing = !!renderOptions.multiTexturing && !renderOptions.lighting;
+        if (multiTexturing !== oldRenderOptions.multiTexturing)
         {
-            if (nextRenderOptions[key] !== renderOptions[key])
-            {
-                changed = true;
-            }
+            newRenderOptions.multiTexturing = multiTexturing;
+            changed = true;
         }
 
-        if (changed)
+        var lighting = !!renderOptions.lighting;
+        if (lighting !== oldRenderOptions.lighting)
         {
-            this.run(drawingContext);
-            this.updateShaderConfig();
+            newRenderOptions.lighting = lighting;
+            changed = true;
         }
+
+        var selfShadow = lighting && renderOptions.lighting.selfShadow && renderOptions.lighting.selfShadow.enabled;
+        if (selfShadow !== oldRenderOptions.selfShadow)
+        {
+            newRenderOptions.selfShadow = selfShadow;
+            changed = true;
+        }
+
+        var selfShadowPenumbra = selfShadow ? renderOptions.lighting.selfShadow.penumbra : 0;
+        if (selfShadowPenumbra !== oldRenderOptions.selfShadowPenumbra)
+        {
+            newRenderOptions.selfShadowPenumbra = selfShadowPenumbra;
+            changed = true;
+        }
+
+        var selfShadowThreshold = selfShadow ? renderOptions.lighting.selfShadow.diffuseFlatThreshold : 0;
+        if (selfShadowThreshold !== oldRenderOptions.selfShadowThreshold)
+        {
+            newRenderOptions.selfShadowThreshold = selfShadowThreshold;
+            changed = true;
+        }
+
+        var smoothPixelArt = !!renderOptions.smoothPixelArt;
+        if (smoothPixelArt !== oldRenderOptions.smoothPixelArt)
+        {
+            newRenderOptions.smoothPixelArt = smoothPixelArt;
+            newRenderOptions.texRes = smoothPixelArt;
+            changed = true;
+        }
+
+        this._renderOptionsChanged = changed;
     },
 
     /**
@@ -488,47 +504,52 @@ var BatchHandlerQuad = new Class({
         if (this.instanceCount === 0) { return; }
 
         this.onRunBegin(drawingContext);
-        var programManager = this.programManager;
-        var programSuite = programManager.getCurrentProgramSuite();
-        var program = programSuite.program;
-        var vao = programSuite.vao;
-
-        this.setupUniforms(drawingContext);
-        programManager.applyUniforms(program);
-
-        var bytesPerIndexPerInstance = this.bytesPerIndexPerInstance;
-        var indicesPerInstance = this.indicesPerInstance;
-        var renderer = this.manager.renderer;
-        var vertexBuffer = this.vertexBufferLayout.buffer;
-
+    
         // Finalize the current batch entry.
         this.pushCurrentBatchEntry();
 
-        // Update vertex buffers.
-        // Because we are probably using a generic vertex buffer
-        // which is larger than the current batch, we need to update
-        // the buffer with the correct size.
-        vertexBuffer.update(this.instanceCount * this.bytesPerInstance);
+        var programManager = this.programManager;
+        var programSuite = programManager.getCurrentProgramSuite();
 
-        var subBatches = this.batchEntries.length;
-        for (var i = 0; i < subBatches; i++)
+        if (programSuite)
         {
-            var entry = this.batchEntries[i];
-
-            if (this.renderOptions.texRes)
+            var program = programSuite.program;
+            var vao = programSuite.vao;
+    
+            this.setupUniforms(drawingContext);
+            programManager.applyUniforms(program);
+    
+            var bytesPerIndexPerInstance = this.bytesPerIndexPerInstance;
+            var indicesPerInstance = this.indicesPerInstance;
+            var renderer = this.manager.renderer;
+            var vertexBuffer = this.vertexBufferLayout.buffer;
+    
+            // Update vertex buffers.
+            // Because we are probably using a generic vertex buffer
+            // which is larger than the current batch, we need to update
+            // the buffer with the correct size.
+            vertexBuffer.update(this.instanceCount * this.bytesPerInstance);
+    
+            var subBatches = this.batchEntries.length;
+            for (var i = 0; i < subBatches; i++)
             {
-                this.setupTextureUniforms(entry.texture);
-                programManager.applyUniforms(program);
+                var entry = this.batchEntries[i];
+    
+                if (this.renderOptions.texRes)
+                {
+                    this.setupTextureUniforms(entry.texture);
+                    programManager.applyUniforms(program);
+                }
+    
+                renderer.drawElements(
+                    drawingContext,
+                    entry.texture,
+                    program,
+                    vao,
+                    entry.count * indicesPerInstance,
+                    entry.start * bytesPerIndexPerInstance
+                );
             }
-
-            renderer.drawElements(
-                drawingContext,
-                entry.texture,
-                program,
-                vao,
-                entry.count * indicesPerInstance,
-                entry.start * bytesPerIndexPerInstance
-            );
         }
 
         // Reset batch accumulation.
@@ -603,7 +624,11 @@ var BatchHandlerQuad = new Class({
 
         // Check render options and run the batch if they differ.
         this.updateRenderOptions(renderOptions);
-        this.applyRenderOptions(currentContext);
+        if (this._renderOptionsChanged)
+        {
+            this.run(currentContext);
+            this.updateShaderConfig();
+        }
 
         // Process textures and get relevant data.
         var textureDatum = this.batchTextures(glTexture, renderOptions);

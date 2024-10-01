@@ -15,6 +15,7 @@ var BatchHandlerTileSprite = require('./BatchHandlerTileSprite');
 var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
 var Camera = require('./Camera');
 var DrawLine = require('./DrawLine');
+var DynamicTextureHandler = require('./DynamicTextureHandler');
 var FillCamera = require('./FillCamera');
 var FillPath = require('./FillPath');
 var FillRect = require('./FillRect');
@@ -29,6 +30,7 @@ var SubmitterTileSprite = require('./submitter/SubmitterTileSprite');
 var TexturerImage = require('./texturer/TexturerImage');
 var TexturerTileSprite = require('./texturer/TexturerTileSprite');
 var TransformerImage = require('./transformer/TransformerImage');
+var TransformerStamp = require('./transformer/TransformerStamp');
 var TransformerTile = require('./transformer/TransformerTile');
 var TransformerTileSprite = require('./transformer/TransformerTileSprite');
 var YieldContext = require('./YieldContext');
@@ -123,6 +125,7 @@ var RenderNodeManager = new Class({
             BatchHandlerTriFlat: BatchHandlerTriFlat,
             Camera: Camera,
             DrawLine: DrawLine,
+            DynamicTextureHandler: DynamicTextureHandler,
             FillCamera: FillCamera,
             FillPath: FillPath,
             FillRect: FillRect,
@@ -137,6 +140,7 @@ var RenderNodeManager = new Class({
             TexturerImage: TexturerImage,
             TexturerTileSprite: TexturerTileSprite,
             TransformerImage: TransformerImage,
+            TransformerStamp: TransformerStamp,
             TransformerTile: TransformerTile,
             TransformerTileSprite: TransformerTileSprite,
             YieldContext: YieldContext

@@ -17,6 +17,7 @@ var RenderNodes = {
     BatchHandlerTriFlat: require('./BatchHandlerTriFlat'),
     Camera: require('./Camera'),
     DrawLine: require('./DrawLine'),
+    DynamicTextureHandler: require('./DynamicTextureHandler'),
     FillCamera: require('./FillCamera'),
     FillPath: require('./FillPath'),
     FillRect: require('./FillRect'),
@@ -32,6 +33,7 @@ var RenderNodes = {
     TexturerImage: require('./texturer/TexturerImage'),
     TexturerTileSprite: require('./texturer/TexturerTileSprite'),
     TransformerImage: require('./transformer/TransformerImage'),
+    TransformerStamp: require('./transformer/TransformerStamp'),
     TransformerTile: require('./transformer/TransformerTile'),
     TransformerTileSprite: require('./transformer/TransformerTileSprite'),
     YieldContext: require('./YieldContext')
