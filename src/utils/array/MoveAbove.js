@@ -41,19 +41,15 @@ var MoveAbove = function (array, item1, item2)
         return array;
     }
 
-    //  Remove
+    // Remove item1 from its current position
     array.splice(currentIndex, 1);
 
-    //  Add in new location
-    if (baseIndex === array.length - 1)
-    {
-        array.push(item1);
-    }
-    else
-    {
-        array.splice(baseIndex, 0, item1);
-    }
+    // Recalculate baseIndex after removal
+    baseIndex = array.indexOf(item2);
 
+    // Insert item1 immediately after item2
+    array.splice(baseIndex + 1, 0, item1);
+    
     return array;
 };
 
