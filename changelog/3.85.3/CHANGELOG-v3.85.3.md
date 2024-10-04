@@ -3,6 +3,7 @@
 ## Bug Fixes
 
 * The `Array.MoveAbove` function didn't recalculate the baseIndex after the splice, meaning the item would end up in the wrong location.
+* The `HexagonalTileToWorldXY` function incorrectly used `this` instead of `layer` causing it to error in hex tilemaps with x axis staggering. Fix #6913 (thanks @jummy123)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
