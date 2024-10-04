@@ -52,15 +52,17 @@ var HexagonalTileToWorldXY = function (tileX, tileY, point, camera, layer)
 
     var x;
     var y;
+    var staggerAxis = layer.staggerAxis;
+    var staggerIndex = layer.staggerIndex;
 
-    if (layer.staggerAxis === 'y')
+    if (staggerAxis === 'y')
     {
         x = worldX + (tileWidth * tileX) + tileWidth;
         y = worldY + ((1.5 * tileY) * tileHeightHalf) + tileHeightHalf;
 
         if (tileY % 2 === 0)
         {
-            if (this.staggerIndex === 'odd')
+            if (staggerIndex === 'odd')
             {
                 x -= tileWidthHalf;
             }
@@ -70,14 +72,14 @@ var HexagonalTileToWorldXY = function (tileX, tileY, point, camera, layer)
             }
         }
     }
-    else if ((this.staggerAxis === 'x') && (this.staggerIndex === 'odd'))
+    else if ((staggerAxis === 'x') && (staggerIndex === 'odd'))
     {
         x = worldX + ((1.5 * tileX) * tileWidthHalf) + tileWidthHalf;
         y = worldY + (tileHeight * tileX) + tileHeight;
 
         if (tileX % 2 === 0)
         {
-            if (this.staggerIndex === 'odd')
+            if (staggerIndex === 'odd')
             {
                 y -= tileHeightHalf;
             }
