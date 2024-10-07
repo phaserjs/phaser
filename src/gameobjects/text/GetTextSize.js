@@ -39,11 +39,21 @@ var GetTextSize = function (text, size, lines)
     {
         var lineWidth = style.strokeThickness;
 
-        lineWidth += context.measureText(lines[i]).width;
-
-        if (lines[i].length > 1)
+        if (text.letterSpacing === 0)
         {
-            lineWidth += text.letterSpacing * (lines[i].length - 1);
+            lineWidth += context.measureText(lines[i]).width;
+        }
+        else
+        {
+            var line = lines[i];
+            for(var j=0; j< line.length; j++)
+            {
+                lineWidth += context.measureText(line[j]).width + text.letterSpacing;
+            }
+            if (line.length > 0)
+            {
+                lineWidth -= text.letterSpacing;
+            }            
         }
 
         // Adjust for wrapped text
