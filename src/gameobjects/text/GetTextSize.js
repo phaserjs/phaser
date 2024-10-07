@@ -34,26 +34,26 @@ var GetTextSize = function (text, size, lines)
     style.syncFont(canvas, context);
 
     //  Text Width
+    var letterSpacing = text.letterSpacing;
 
     for (var i = 0; i < drawnLines; i++)
     {
         var lineWidth = style.strokeThickness;
 
-        if (text.letterSpacing === 0)
+        if (letterSpacing === 0)
         {
             lineWidth += context.measureText(lines[i]).width;
         }
         else
         {
             var line = lines[i];
+            
             for(var j=0; j< line.length; j++)
             {
-                lineWidth += context.measureText(line[j]).width + text.letterSpacing;
+                lineWidth += context.measureText(line[j]).width;
             }
-            if (line.length > 0)
-            {
-                lineWidth -= text.letterSpacing;
-            }            
+
+            lineWidth += letterSpacing * (line.length - 1);
         }
 
         // Adjust for wrapped text
