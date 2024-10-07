@@ -53,7 +53,10 @@ var GetTextSize = function (text, size, lines)
                 lineWidth += context.measureText(line[j]).width;
             }
 
-            lineWidth += letterSpacing * (line.length - 1);
+            if (line.length > 1)
+            {
+                lineWidth += letterSpacing * (line.length - 1);
+            }
         }
 
         // Adjust for wrapped text
