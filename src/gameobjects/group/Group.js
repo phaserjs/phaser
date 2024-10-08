@@ -1082,7 +1082,7 @@ var Group = new Class({
     },
 
     /**
-     * {@link Phaser.GameObjects.Components.Animation#play Plays} an animation for all members of this group.
+     * {@link Phaser.Animations.AnimationState#play Plays} an animation for all members of this group.
      *
      * @method Phaser.GameObjects.Group#playAnimation
      * @since 3.0.0
