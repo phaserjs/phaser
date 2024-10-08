@@ -597,7 +597,7 @@ File.createObjectURL = function (image, blob, defaultType)
 
 /**
  * Static method for releasing an existing object URL which was previously created
- * by calling {@link File#createObjectURL} method.
+ * by calling {@link Phaser.Loader.File.createObjectURL} method.
  *
  * @method Phaser.Loader.File.revokeObjectURL
  * @static
