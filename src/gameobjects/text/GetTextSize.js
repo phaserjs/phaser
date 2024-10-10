@@ -48,7 +48,7 @@ var GetTextSize = function (text, size, lines)
         {
             var line = lines[i];
             
-            for(var j=0; j< line.length; j++)
+            for (var j = 0; j < line.length; j++)
             {
                 lineWidth += context.measureText(line[j]).width;
             }
