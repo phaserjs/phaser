@@ -3,6 +3,7 @@
 ## Updates
 
 * `RenderTarget.init` is a new method that will create the underlying framebuffer and texture for a Render Target. This is called in the constructor only, avoiding the need to call the `resize` method.
+* `Phaser.GameObjects.Container#tempTransformMatrix` has been removed. This was an internal private Transform Matrix. It has been replaced by a global single matrix that is used instead. This removes the need for every Container to have its own instance of this temporary matrix, reducing object allocation and memory overhead.
 
 ## Bug Fixes
 
