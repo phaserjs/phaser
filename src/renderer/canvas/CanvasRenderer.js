@@ -782,6 +782,12 @@ var CanvasRenderer = new Class({
         var gx = sprite.x;
         var gy = sprite.y;
 
+        if (camera.roundPixels)
+        {
+            gx = Math.floor(gx);
+            gy = Math.floor(gy);
+        }
+    
         spriteMatrix.applyITRS(gx, gy, sprite.rotation, sprite.scaleX * flipX, sprite.scaleY * flipY);
 
         camMatrix.copyFrom(camera.matrix);
@@ -804,10 +810,10 @@ var CanvasRenderer = new Class({
         //  Multiply by the Sprite matrix
         camMatrix.multiply(spriteMatrix);
 
-        if (camera.roundPixels)
+        if (camera.renderRoundPixels)
         {
-            camMatrix.e = Math.round(camMatrix.e);
-            camMatrix.f = Math.round(camMatrix.f);
+            camMatrix.e = Math.floor(camMatrix.e + 0.5);
+            camMatrix.f = Math.floor(camMatrix.f + 0.5);
         }
 
         ctx.save();
@@ -827,26 +833,24 @@ var CanvasRenderer = new Class({
 
         if (frameWidth > 0 && frameHeight > 0)
         {
+            var fw = frameWidth / res;
+            var fh = frameHeight / res;
+
             if (camera.roundPixels)
             {
-                ctx.drawImage(
-                    frame.source.image,
-                    frameX, frameY,
-                    frameWidth, frameHeight,
-                    Math.round(x), Math.round(y),
-                    Math.round(frameWidth / res), Math.round(frameHeight / res)
-                );
+                x = Math.floor(x + 0.5);
+                y = Math.floor(y + 0.5);
+                fw += 0.5;
+                fh += 0.5;
             }
-            else
-            {
-                ctx.drawImage(
-                    frame.source.image,
-                    frameX, frameY,
-                    frameWidth, frameHeight,
-                    x, y,
-                    frameWidth / res, frameHeight / res
-                );
-            }
+
+            ctx.drawImage(
+                frame.source.image,
+                frameX, frameY,
+                frameWidth, frameHeight,
+                x, y,
+                fw, fh
+            );
         }
 
         if (sprite.mask)
