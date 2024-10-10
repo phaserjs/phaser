@@ -256,6 +256,11 @@ var RenderTarget = new Class({
      */
     willResize: function (width, height)
     {
+        if (typeof width !== 'number' || typeof height !== 'number')
+        {
+            return false;
+        }
+
         width = Math.round(width * this.scale);
         height = Math.round(height * this.scale);
 
