@@ -501,6 +501,8 @@ var Camera = new Class({
         var zoomY = this.zoomY;
         var matrix = this.matrix;
 
+        this.renderRoundPixels = (this.roundPixels && Number.isInteger(zoomX) && Number.isInteger(zoomY));
+
         var originX = width * this.originX;
         var originY = height * this.originY;
 
@@ -589,7 +591,8 @@ var Camera = new Class({
             Math.floor(this.x + originX + 0.5),
             Math.floor(this.y + originY + 0.5),
             this.rotation,
-            zoomX, zoomY);
+            zoomX, zoomY
+        );
 
         matrix.translate(-originX, -originY);
 
