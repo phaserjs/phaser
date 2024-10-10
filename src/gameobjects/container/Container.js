@@ -16,6 +16,8 @@ var Render = require('./ContainerRender');
 var Union = require('../../geom/rectangle/Union');
 var Vector2 = require('../../math/Vector2');
 
+var tempTransformMatrix = new Components.TransformMatrix();
+
 /**
  * @classdesc
  * A Container Game Object.
@@ -159,16 +161,6 @@ var Container = new Class({
          * @since 3.4.0
          */
         this.localTransform = new Components.TransformMatrix();
-
-        /**
-         * Internal temporary Transform Matrix used to avoid object creation.
-         *
-         * @name Phaser.GameObjects.Container#tempTransformMatrix
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @private
-         * @since 3.4.0
-         */
-        this.tempTransformMatrix = new Components.TransformMatrix();
 
         /**
          * The property key to sort by.
@@ -504,7 +496,7 @@ var Container = new Class({
             output.y = source.y;
         }
 
-        var tempMatrix = this.tempTransformMatrix;
+        var tempMatrix = tempTransformMatrix;
 
         //  No need to loadIdentity because applyITRS overwrites every value anyway
         tempMatrix.applyITRS(this.x, this.y, this.rotation, this.scaleX, this.scaleY);
@@ -528,7 +520,7 @@ var Container = new Class({
      */
     getBoundsTransformMatrix: function ()
     {
-        return this.getWorldTransformMatrix(this.tempTransformMatrix, this.localTransform);
+        return this.getWorldTransformMatrix(tempTransformMatrix, this.localTransform);
     },
 
     /**
@@ -1451,7 +1443,6 @@ var Container = new Class({
         this.removeAll(!!this.exclusive);
 
         this.localTransform.destroy();
-        this.tempTransformMatrix.destroy();
 
         this.list = [];
     },
