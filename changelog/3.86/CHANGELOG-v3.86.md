@@ -1,7 +1,12 @@
-# Version 3.85.3 - Itsuki - in development
+# Version 3.86 - Aoi - in development
+
+## Updates
+
+* `RenderTarget.init` is a new method that will create the underlying framebuffer and texture for a Render Target. This is called in the constructor only, avoiding the need to call the `resize` method.
 
 ## Bug Fixes
 
+* `RenderTarget.resize` will now check the `autoResize` property before applying the change. Textures that have been locked to a fixed size, such as FX POT buffers, will no longer be resized to the full canvas dimensions, causing Out of Memory errors on some mobile devices. Fix #6914 (thanks @mikaleerhart @DavidTalevski)
 * The `Array.MoveAbove` function didn't recalculate the baseIndex after the splice, meaning the item would end up in the wrong location.
 * The `HexagonalTileToWorldXY` function incorrectly used `this` instead of `layer` causing it to error in hex tilemaps with x axis staggering. Fix #6913 (thanks @jummy123)
 * The `Text` Game Object could truncate the length of the Text when `setLetterSpacing` was used. Fix #6915 (thanks @monteiz @rexrainbow)
