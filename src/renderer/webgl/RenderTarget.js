@@ -160,7 +160,7 @@ var RenderTarget = new Class({
          */
         this.forceClamp = forceClamp;
 
-        this.resize(width, height);
+        this.init(width, height);
 
         if (autoResize)
         {
@@ -171,6 +171,28 @@ var RenderTarget = new Class({
             //  Block resizing unless this RT allows it
             this.autoResize = false;
         }
+    },
+
+    /**
+     * Sets up this Render Target to the given width and height, creating a new
+     * frame buffer and texture. This method is called automatically by the constructor
+     * and at no other time.
+     *
+     * @method Phaser.Renderer.WebGL.RenderTarget#init
+     * @since 3.86.0
+     *
+     * @param {number} width - The new width of this Render Target.
+     * @param {number} height - The new height of this Render Target.
+     */
+    init: function (width, height)
+    {
+        var renderer = this.renderer;
+
+        this.texture = renderer.createTextureFromSource(null, width, height, this.minFilter, this.forceClamp);
+        this.framebuffer = renderer.createFramebuffer(width, height, this.texture, this.hasDepthBuffer);
+
+        this.width = width;
+        this.height = height;
     },
 
     /**
@@ -210,9 +232,6 @@ var RenderTarget = new Class({
      * them using the new sizes.
      *
      * This method is called automatically by the pipeline during its resize handler.
-     * 
-     * Previous to Phaser v3.85 this method would only run if `autoResize` was `true`,
-     * it will now run regardless.
      *
      * @method Phaser.Renderer.WebGL.RenderTarget#resize
      * @since 3.50.0
@@ -224,7 +243,7 @@ var RenderTarget = new Class({
      */
     resize: function (width, height)
     {
-        if (this.willResize(width, height))
+        if (this.autoResize && this.willResize(width, height))
         {
             var renderer = this.renderer;
 
@@ -264,16 +283,9 @@ var RenderTarget = new Class({
         width = Math.round(width * this.scale);
         height = Math.round(height * this.scale);
 
-        if (width <= 0)
-        {
-            width = 1;
-        }
-
-        if (height <= 0)
-        {
-            height = 1;
-        }
-
+        width = Math.max(width, 1);
+        height = Math.max(height, 1);
+        
         return (width !== this.width || height !== this.height);
     },
 
