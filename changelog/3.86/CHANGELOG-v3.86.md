@@ -1,4 +1,4 @@
-# Version 3.86 - Aoi - in development
+# Version 3.86 - Aoi - 11th October 2024
 
 ## Updates
 
