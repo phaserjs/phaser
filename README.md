@@ -57,15 +57,15 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include _either_ of the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.85.2/dist/phaser.js"></script>
-<script src="//cdn.jsdelivr.net/npm/phaser@3.85.2/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.86.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.86.0/dist/phaser.min.js"></script>
 ```
 
 It is also available from Cloudflare's [cdnjs](https://cdnjs.com/libraries/phaser):
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.85.2/phaser.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.85.2/phaser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.86.0/phaser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.86.0/phaser.min.js"></script>
 ```
 
 ## Phaser TypeScript Definitions
@@ -115,7 +115,7 @@ Register for a free Phaser account to [download the book](https://phaser.io/news
 
 We have created hundreds of examples and they are all available with full source code and assets. 
 
-Browse the examples on the [Phaser 3 Labs](https://labs.phaser.io)
+Browse our brand new [Phaser Examples site](https://phaser.io/examples).
 
 ## Phaser 3 Plugins
 
@@ -137,8 +137,8 @@ Read more about [Phaser Compressor](https://phaser.io/news/2024/05/phaser-compre
 
 We meticulously keep track of new features, updates and bug fixes in our change logs. Each version of Phaser has its own change log:
 
-* [v3.85.2 Change Log](changelog/3.85.2/CHANGELOG-v3.85.2.md)
-* [v3.0.0 to v3.85.0 Change Logs](CHANGELOG.md)
+* [v3.86 Change Log](changelog/3.86/CHANGELOG-v3.86.md)
+* [v3.0.0 to v3.85.2 Change Logs](CHANGELOG.md)
 
 ## Have fun!
 
@@ -158,7 +158,7 @@ Cheers,
 **Play** some [amazing games](https://phaser.io/games)<br />
 **Learn** By browsing our [API Docs](https://newdocs.phaser.io), [Support Forum](https://phaser.discourse.group/) and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
 **Code Examples?** We've over 2000 [Examples](https://phaser.io/examples) to learn from<br />
-**Read** the weekly [Phaser World](https://phaser.io/newsletter/2024) Newsletter<br />
+**Read** the weekly [Phaser World](https://phaser.world) Newsletter<br />
 **Be Social:** Join us on [Discord](https://discord.gg/phaser) and [Reddit](https://phaser.io/community/reddit) or follow us on [Twitter](https://twitter.com/phaser_)<br />
 
 Powered by coffee, anime, pixels and love.
