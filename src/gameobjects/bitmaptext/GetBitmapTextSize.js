@@ -162,6 +162,8 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
                     else
                     {
                         // If the current word is too long to fit on a line, wrap it
+                        // Remove trailing word wrap char to keep text length the same
+                        wrappedLine = wrappedLine.slice(0, -1);
                         wrappedLine += (wrappedLine ? '\n' : '') + lineToCheck;
                         lineToCheck = word;
                     }
@@ -170,6 +172,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
                 }
             }
 
+            wrappedLine = wrappedLine.slice(0, -1);
             wrappedLine += (wrappedLine ? '\n' : '') + lineToCheck;
             wrappedLines.push(wrappedLine);
         }
