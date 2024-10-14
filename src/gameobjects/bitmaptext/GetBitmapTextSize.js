@@ -162,6 +162,8 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
                     else
                     {
                         // If the current word is too long to fit on a line, wrap it
+                        // Remove trailing word wrap char to keep text length the same
+                        wrappedLine = wrappedLine.slice(0, -1);
                         wrappedLine += (wrappedLine ? '\n' : '') + lineToCheck;
                         lineToCheck = word;
                     }
@@ -170,86 +172,16 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
                 }
             }
 
+            wrappedLine = wrappedLine.slice(0, -1);
             wrappedLine += (wrappedLine ? '\n' : '') + lineToCheck;
             wrappedLines.push(wrappedLine);
         }
 
         text = wrappedLines.join('\n');
 
-        //  Loop through the words array and see if we've got any > maxWidth
-        var prev;
-        var offset = 0;
-        var crs = [];
-
-        for (i = 0; i < words.length; i++)
-        {
-            var entry = words[i];
-            var left = entry.x;
-            var right = entry.x + entry.w;
-
-            if (left === 0)
-            {
-                offset = 0;
-                prev = null;
-            }
-
-            if (prev)
-            {
-                var diff = left - (prev.x + prev.w);
-
-                offset = left - (diff + prev.w);
-
-                prev = null;
-            }
-
-            var checkLeft = left - offset;
-            var checkRight = right - offset;
-
-            if (checkLeft > maxWidth || checkRight > maxWidth)
-            {
-                crs.push(entry.i - 1);
-
-                if (entry.cr)
-                {
-                    crs.push(entry.i + entry.word.length);
-
-                    offset = 0;
-                    prev = null;
-                }
-                else
-                {
-                    prev = entry;
-                }
-            }
-            else if (entry.cr)
-            {
-                crs.push(entry.i + entry.word.length);
-
-                offset = 0;
-                prev = null;
-            }
-        }
-
-        var stringInsert = function (str, index, value)
-        {
-            return str.substr(0, index) + value + str.substr(index + 1);
-        };
-
-        for (i = crs.length - 1; i >= 0; i--)
-        {
-            if (crs[i] > -1)
-            {
-                text = stringInsert(text, crs[i], '\n');
-            }
-        }
-        
         out.wrappedText = text;
 
         textLength = text.length;
-
-        //  Recalculated in the next loop
-        words = [];
-        current = null;
     }
 
     var charIndex = 0;
