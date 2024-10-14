@@ -176,7 +176,7 @@ var Config = new Class({
         /**
          * @const {string} Phaser.Core.Config#gameURL - The URL of the game.
          */
-        this.gameURL = GetValue(config, 'url', 'https://phaser.io/v385/');
+        this.gameURL = GetValue(config, 'url', 'https://phaser.io/' + CONST.LOG_VERSION);
 
         /**
          * @const {string} Phaser.Core.Config#gameVersion - The version of the game.

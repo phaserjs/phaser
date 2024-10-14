@@ -20,7 +20,17 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.86.0',
+    VERSION: '3.86.1',
+
+    /**
+     * Phaser Release Version as displayed in the console.log header URL.
+     *
+     * @name Phaser.LOG_VERSION
+     * @const
+     * @type {string}
+     * @since 3.86.1
+     */
+    LOG_VERSION: 'v386',
 
     BlendModes: require('./renderer/BlendModes'),
 
