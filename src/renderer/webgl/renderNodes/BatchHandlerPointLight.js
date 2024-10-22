@@ -232,7 +232,7 @@ var BatchHandlerPointLight = new Class({
         var r = color.r * intensity;
         var g = color.g * intensity;
         var b = color.b * intensity;
-        var a = drawingContext.camera.alpha * light.alpha;
+        var a = light.alpha;
 
         // Update the vertex buffer.
         var vertexOffset32 = this.instanceCount * this.floatsPerInstance;

@@ -51,11 +51,9 @@ var ContainerWebGLRenderer = function (renderer, container, drawingContext, pare
         transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
     }
 
-    // TODO: Container PostFX handling
-
     var containerHasBlendMode = (container.blendMode !== -1);
 
-    if (!containerHasBlendMode)
+    if (!containerHasBlendMode && currentContext.blendMode !== 0)
     {
         //  If Container is SKIP_TEST then set blend mode to be Normal
         currentContext = currentContext.getClone();
@@ -114,8 +112,6 @@ var ContainerWebGLRenderer = function (renderer, container, drawingContext, pare
             currentContext.use();
         }
 
-        // TODO: Child Mask handling (start)
-
         //  Set parent values
         child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
 
@@ -129,8 +125,6 @@ var ContainerWebGLRenderer = function (renderer, container, drawingContext, pare
         child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
 
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
-
-        // TODO: Child Mask handling (end)
     }
 
     // Release any remaining context.
@@ -138,8 +132,6 @@ var ContainerWebGLRenderer = function (renderer, container, drawingContext, pare
     {
         currentContext.release();
     }
-
-    // TODO: Container PostFX handling
 };
 
 module.exports = ContainerWebGLRenderer;

@@ -31,7 +31,7 @@ var RectangleWebGLRenderer = function (renderer, src, drawingContext, parentMatr
 
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
 
     var customRenderNodes = this.customRenderNodes;
     var defaultRenderNodes = this.defaultRenderNodes;

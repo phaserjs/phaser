@@ -1,4 +1,5 @@
-#define SHADER_NAME BOKEH_FS
+// BOKEH_FS
+#pragma phaserTemplate(shaderName)
 
 precision mediump float;
 

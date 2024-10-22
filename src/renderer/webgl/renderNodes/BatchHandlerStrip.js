@@ -214,7 +214,6 @@ var BatchHandlerStrip = new Class({
         var d = calcMatrix.d;
         var e = calcMatrix.e;
         var f = calcMatrix.f;
-        var cameraAlpha = drawingContext.camera.alpha;
 
         var meshVerticesLength = vertices.length;
 
@@ -240,7 +239,7 @@ var BatchHandlerStrip = new Class({
             vertexViewF32[vertexOffset32++] = tintFill;
             vertexViewU32[vertexOffset32++] = getTint(
                 colors[i / 2],
-                cameraAlpha * (alphas[i / 2] * alpha)
+                alphas[i / 2] * alpha
             );
 
             if (repeatFirstVertex)

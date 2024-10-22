@@ -73,8 +73,6 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -93,7 +91,6 @@ var Graphics = new Class({
         Components.Depth,
         Components.Lighting,
         Components.Mask,
-        Components.PostPipeline,
         Components.RenderNodes,
         Components.Transform,
         Components.Visible,
@@ -112,7 +109,6 @@ var Graphics = new Class({
 
         this.setPosition(x, y);
         this.initRenderNodes(this._defaultRenderNodesMap);
-        this.initPostPipeline();
 
         /**
          * The horizontal display origin of the Graphics.

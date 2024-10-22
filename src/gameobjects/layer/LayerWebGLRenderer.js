@@ -34,11 +34,9 @@ var LayerWebGLRenderer = function (renderer, layer, drawingContext)
 
     layer.depthSort();
 
-    // TODO: Layer PostFX handling.
-
     var layerHasBlendMode = (layer.blendMode !== CONST.BlendModes.SKIP_CHECK);
 
-    if (!layerHasBlendMode)
+    if (!layerHasBlendMode && currentContext.blendMode !== 0)
     {
         //  If Layer is SKIP_TEST then set blend mode to be Normal
         currentContext = currentContext.getClone();
@@ -91,8 +89,6 @@ var LayerWebGLRenderer = function (renderer, layer, drawingContext)
             currentContext.use();
         }
 
-        // TODO: Child Mask handling (start)
-
         child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
 
         //  Render
@@ -100,8 +96,6 @@ var LayerWebGLRenderer = function (renderer, layer, drawingContext)
 
         //  Restore original values
         child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
-
-        // TODO: Child Mask handling (end)
     }
 
     // Release any remaining context.
@@ -109,8 +103,6 @@ var LayerWebGLRenderer = function (renderer, layer, drawingContext)
     {
         currentContext.release();
     }
-
-    // TODO: Layer PostFX handling
 };
 
 module.exports = LayerWebGLRenderer;

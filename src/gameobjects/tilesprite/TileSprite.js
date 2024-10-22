@@ -54,7 +54,6 @@ var _FLAG = 8; // 1000
  * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.TextureCrop
@@ -85,7 +84,6 @@ var TileSprite = new Class({
         Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.PostPipeline,
         Components.RenderNodes,
         Components.ScrollFactor,
         Components.TextureCrop,
@@ -280,7 +278,6 @@ var TileSprite = new Class({
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
         this.initRenderNodes(this._defaultRenderNodesMap);
-        this.initPostPipeline(true);
     },
 
     /**

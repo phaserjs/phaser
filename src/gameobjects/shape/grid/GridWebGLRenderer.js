@@ -33,7 +33,7 @@ var GridWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 
     calcMatrix.translate(-src._displayOriginX, -src._displayOriginY);
 
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
 
     //  Work out the grid size
 

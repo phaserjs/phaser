@@ -77,8 +77,6 @@ var DynamicTextureHandler = new Class({
             camera.height
         );
 
-        // TODO: Handle FX drawing context setup.
-
         // Enter drawing context.
         drawingContext.use();
 
@@ -261,8 +259,6 @@ var DynamicTextureHandler = new Class({
 
         // Clear the command buffer.
         commandBuffer.length = 0;
-
-        // TODO: Handle FX rendering.
 
         // Finish rendering.
         currentContext.release();

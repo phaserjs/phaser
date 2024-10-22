@@ -79,10 +79,10 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, drawingContext, pa
     tempTextureData.frame = src.frame;
 
     var tintEffect = src.tintFill;
-    var tintTL = Utils.getTintAppendFloatAlpha(src.tintTopLeft, camera.alpha * src._alphaTL);
-    var tintTR = Utils.getTintAppendFloatAlpha(src.tintTopRight, camera.alpha * src._alphaTR);
-    var tintBL = Utils.getTintAppendFloatAlpha(src.tintBottomLeft, camera.alpha * src._alphaBL);
-    var tintBR = Utils.getTintAppendFloatAlpha(src.tintBottomRight, camera.alpha * src._alphaBR);
+    var tintTL = Utils.getTintAppendFloatAlpha(src.tintTopLeft, src._alphaTL);
+    var tintTR = Utils.getTintAppendFloatAlpha(src.tintTopRight, src._alphaTR);
+    var tintBL = Utils.getTintAppendFloatAlpha(src.tintBottomLeft, src._alphaBL);
+    var tintBR = Utils.getTintAppendFloatAlpha(src.tintBottomRight, src._alphaBR);
 
     var xAdvance = 0;
     var yAdvance = 0;
@@ -227,10 +227,10 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, drawingContext, pa
                 tintBR = output.tint.bottomRight;
             }
 
-            tintTL = Utils.getTintAppendFloatAlpha(tintTL, camera.alpha * src._alphaTL);
-            tintTR = Utils.getTintAppendFloatAlpha(tintTR, camera.alpha * src._alphaTR);
-            tintBL = Utils.getTintAppendFloatAlpha(tintBL, camera.alpha * src._alphaBL);
-            tintBR = Utils.getTintAppendFloatAlpha(tintBR, camera.alpha * src._alphaBR);
+            tintTL = Utils.getTintAppendFloatAlpha(tintTL, src._alphaTL);
+            tintTR = Utils.getTintAppendFloatAlpha(tintTR, src._alphaTR);
+            tintBL = Utils.getTintAppendFloatAlpha(tintBL, src._alphaBL);
+            tintBR = Utils.getTintAppendFloatAlpha(tintBR, src._alphaBR);
         }
 
         tempTintData1.tintFill = tintEffect;

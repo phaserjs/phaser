@@ -33,7 +33,7 @@ var CurveWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
     var dx = src._displayOriginX + src._curveBounds.x;
     var dy = src._displayOriginY + src._curveBounds.y;
 
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
 
     var submitter = src.customRenderNodes.Submitter || src.defaultRenderNodes.Submitter;
 

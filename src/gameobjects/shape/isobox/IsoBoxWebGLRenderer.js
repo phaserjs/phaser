@@ -42,7 +42,7 @@ var IsoBoxWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
     var sizeA = size / 2;
     var sizeB = size / src.projection;
 
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
 
     var tint;
 

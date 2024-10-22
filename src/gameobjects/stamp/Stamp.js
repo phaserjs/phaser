@@ -33,7 +33,6 @@ var StampRender = require('./StampRender');
  * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size

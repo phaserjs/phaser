@@ -105,7 +105,6 @@ var VideoRender = require('./VideoRender');
  * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.TextureCrop
@@ -132,7 +131,6 @@ var Video = new Class({
         Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.PostPipeline,
         Components.RenderNodes,
         Components.ScrollFactor,
         Components.TextureCrop,
@@ -521,7 +519,6 @@ var Video = new Class({
         this.setPosition(x, y);
         this.setSize(256, 256);
         this.initRenderNodes(this._defaultRenderNodesMap);
-        this.initPostPipeline(true);
 
         game.events.on(GameEvents.PAUSE, this.globalPause, this);
         game.events.on(GameEvents.RESUME, this.globalResume, this);
@@ -880,6 +877,9 @@ var Video = new Class({
 
                 this.videoTextureSource.setFlipY(this.flipY);
 
+                this.setSizeToFrame();
+                this.updateDisplayOrigin();
+
                 this.emit(Events.VIDEO_TEXTURE, this, texture);
             }
             else
@@ -891,10 +891,10 @@ var Video = new Class({
 
                 //  Resize base frame
                 texture.get().setSize(width, height);
-            }
 
-            this.setSizeToFrame();
-            this.updateDisplayOrigin();
+                this.setSizeToFrame();
+                this.updateDisplayOrigin();
+            }
         }
         else
         {

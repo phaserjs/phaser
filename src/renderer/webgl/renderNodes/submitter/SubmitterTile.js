@@ -5,10 +5,7 @@
  */
 
 var Class = require('../../../../utils/Class');
-var Utils = require('../../Utils.js');
 var SubmitterQuad = require('./SubmitterQuad');
-
-var getTint = Utils.getTintAppendFloatAlpha;
 
 /**
  * @classdesc
@@ -76,7 +73,6 @@ var SubmitterTile = new Class({
     {
         this.onRunBegin(drawingContext);
 
-        var cameraAlpha = drawingContext.camera.alpha;
         var tintFill, tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight;
 
         if (texturerNode.run)
@@ -102,7 +98,7 @@ var SubmitterTile = new Class({
         else
         {
             tintFill = gameObject.tintFill;
-            var tint = getTint(0xffffffff, cameraAlpha);
+            var tint = 0xffffffff;
             tintTopLeft = tint;
             tintBottomLeft = tint;
             tintTopRight = tint;

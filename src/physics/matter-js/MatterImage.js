@@ -9,7 +9,6 @@ var Components = require('./components');
 var GameObject = require('../../gameobjects/GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Image = require('../../gameobjects/image/Image');
-var Pipeline = require('../../gameobjects/components/Pipeline');
 var Vector2 = require('../../math/Vector2');
 
 /**
@@ -46,8 +45,6 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
@@ -78,8 +75,7 @@ var MatterImage = new Class({
         Components.Sleep,
         Components.Static,
         Components.Transform,
-        Components.Velocity,
-        Pipeline
+        Components.Velocity
     ],
 
     initialize:
@@ -133,9 +129,6 @@ var MatterImage = new Class({
         }
 
         this.setPosition(x, y);
-
-        this.initPipeline();
-        this.initPostPipeline(true);
     }
 
 });

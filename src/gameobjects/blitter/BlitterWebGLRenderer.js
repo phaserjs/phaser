@@ -32,7 +32,7 @@ var BlitterWebGLRenderer = function (renderer, src, drawingContext, parentMatrix
 {
     var list = src.getRenderList();
     var camera = drawingContext.camera;
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
 
     if (list.length === 0 || alpha === 0)
     {

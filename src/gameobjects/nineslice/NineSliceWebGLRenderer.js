@@ -37,7 +37,7 @@ var NineSliceWebGLRenderer = function (renderer, src, drawingContext, parentMatr
 
     camera.addToRenderList(src);
 
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
     var batchHandler = src.customRenderNodes.BatchHandler || src.defaultRenderNodes.BatchHandler;
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, false).calc;
     var color = Utils.getTintAppendFloatAlpha(src.tint, alpha);

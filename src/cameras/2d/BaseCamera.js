@@ -185,7 +185,7 @@ var BaseCamera = new Class({
          *
          * A dirty Camera has had either its viewport size, bounds, scroll, rotation or zoom levels changed since the last frame.
          *
-         * This flag is cleared during the `postRenderCamera` method of the renderer.
+         * This flag is cleared during rendering with the new values.
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#dirty
          * @type {boolean}
@@ -472,7 +472,7 @@ var BaseCamera = new Class({
          * Set the mask using the `setMask` method. Remove the mask using the `clearMask` method.
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#mask
-         * @type {?(Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask)}
+         * @type {?Phaser.Display.Masks.GeometryMask}
          * @since 3.17.0
          */
         this.mask = null;
@@ -1424,9 +1424,9 @@ var BaseCamera = new Class({
     /**
      * Sets the mask to be applied to this Camera during rendering.
      *
-     * The mask must have been previously created and can be either a GeometryMask or a BitmapMask.
-     *
-     * Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+     * The mask must have been previously created and must be a GeometryMask.
+     * This only works in the Canvas Renderer.
+     * In WebGL, use a Mask filter instead (see {@link Phaser.GameObjects.Components.FilterList#addMask}).
      *
      * If a mask is already set on this Camera it will be immediately replaced.
      *
@@ -1436,7 +1436,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#setMask
      * @since 3.17.0
      *
-     * @param {(Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask)} mask - The mask this Camera will use when rendering.
+     * @param {Phaser.Display.Masks.GeometryMask} mask - The mask this Camera will use when rendering.
      * @param {boolean} [fixedPosition=true] - Should the mask translate along with the Camera, or be fixed in place and not impacted by the Cameras transform?
      *
      * @return {this} This Camera instance.

@@ -48,7 +48,6 @@ var Render = require('./PointLightRender');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
@@ -71,7 +70,6 @@ var PointLight = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.Mask,
-        Components.PostPipeline,
         Components.RenderNodes,
         Components.ScrollFactor,
         Components.Transform,
@@ -91,7 +89,6 @@ var PointLight = new Class({
         GameObject.call(this, scene, 'PointLight');
 
         this.initRenderNodes(this._defaultRenderNodesMap);
-        this.initPostPipeline();
 
         this.setPosition(x, y);
 

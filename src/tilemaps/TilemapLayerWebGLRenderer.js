@@ -51,7 +51,7 @@ var TilemapLayerWebGLRenderer = function (renderer, src, drawingContext)
     var renderTiles = src.cull(camera);
 
     var tileCount = renderTiles.length;
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
 
     if (tileCount === 0 || alpha <= 0)
     {

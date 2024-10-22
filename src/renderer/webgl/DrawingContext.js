@@ -33,7 +33,6 @@ var Events = require('../events');
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this context.
  * @param {object} [options] - The options for this context.
  * @param {boolean|[boolean,boolean,boolean]} [options.autoClear=true] - Whether to automatically clear the framebuffer when the context comes into use. If an array, the elements are whether to clear the color, depth, and stencil buffers respectively.
- * @param {boolean} [options.autoResize=false] - Whether to automatically resize the framebuffer if the WebGL Renderer resizes.
  * @param {number} [options.blendMode=0] - The blend mode to use when rendering.
  * @param {?Phaser.Cameras.Scene2D.Camera} [options.camera=null] - The camera to use for this context.
  * @param {[number, number, number, number]} [options.clearColor=[0, 0, 0, 0]] - The color to clear the framebuffer with.
@@ -41,6 +40,7 @@ var Events = require('../events');
  * @param {Phaser.Renderer.WebGL.DrawingContext} [options.copyFrom] - The DrawingContext to copy from.
  * @param {number} [options.width] - The width of the framebuffer, used if `copyFrom` and `useCanvas` are not set. Default is the renderer width.
  * @param {number} [options.height] - The height of the framebuffer, used if `copyFrom` and `useCanvas` are not set. Default is the renderer height.
+ * @param {Phaser.Renderer.WebGL.DrawingContextPool} [options.pool] - The pool to return to when this context is no longer needed. Used only for temporary contexts.
  */
 var DrawingContext = new Class({
     initialize:
@@ -162,15 +162,26 @@ var DrawingContext = new Class({
         this.texture = null;
 
         /**
-         * Whether the DrawingContext is in use.
-         * This is used to track 'spare' contexts which can be reused.
+         * The pool to return to when this context is no longer needed.
+         * Used only for temporary contexts.
          *
-         * @name Phaser.Renderer.WebGL.DrawingContext#inUse
-         * @type {boolean}
-         * @default false
+         * @name Phaser.Renderer.WebGL.DrawingContext#pool
+         * @type {Phaser.Renderer.WebGL.DrawingContextPool}
+         * @since 3.90.0
+         * @default null
+         */
+        this.pool = options.pool || null;
+
+        /**
+         * The last time the DrawingContext was used.
+         * This is used to determine whether the context is a candidate
+         * for reuse in a pool.
+         *
+         * @name Phaser.Renderer.WebGL.DrawingContext#lastUsed
+         * @type {number}
          * @since 3.90.0
          */
-        this.inUse = false;
+        this.lastUsed = 0;
 
         /**
          * The width of the framebuffer.
@@ -190,11 +201,6 @@ var DrawingContext = new Class({
          */
         this.height = 0;
 
-        if (options.autoResize)
-        {
-            this.renderer.on(Events.RESIZE, this.resize, this);
-        }
-
         if (options.copyFrom)
         {
             this.copy(options.copyFrom);
@@ -212,8 +218,6 @@ var DrawingContext = new Class({
      * Resize the DrawingContext.
      *
      * Delete the framebuffer and texture, and create new ones with the new size. The scissor box and viewport are reset to match the new size.
-     *
-     * This method is called automatically if `autoResize` is `true` and the WebGL Renderer resizes.
      *
      * @method Phaser.Renderer.WebGL.DrawingContext#resize
      * @since 3.90.0
@@ -267,7 +271,6 @@ var DrawingContext = new Class({
 
     /**
      * Copy the state of another DrawingContext.
-     * This doesn't copy `inUse` or `autoResize`.
      *
      * @method Phaser.Renderer.WebGL.DrawingContext#copy
      * @since 3.90.0
@@ -447,18 +450,15 @@ var DrawingContext = new Class({
     },
 
     /**
-     * Begin using the DrawingContext. This marks the context as in use.
-     * This will finish any outstanding batches.
+     * Begin using the DrawingContext.
+     * This will finish any outstanding batches and run any autoClear.
      *
      * @method Phaser.Renderer.WebGL.DrawingContext#use
      * @since 3.90.0
      */
     use: function ()
     {
-        // Finish any outstanding batches.
-        this.renderer.renderNodes.setCurrentBatchNode(null);
-
-        this.inUse = true;
+        this.renderer.renderNodes.finishBatch();
 
         if (this.autoClear)
         {
@@ -476,10 +476,13 @@ var DrawingContext = new Class({
      */
     release: function ()
     {
-        this.inUse = false;
+        if (this.pool)
+        {
+            this.lastUsed = Date.now();
+            this.pool.add(this);
+        }
 
-        // Finish any outstanding batches.
-        this.renderer.renderNodes.setCurrentBatchNode(null);
+        this.renderer.renderNodes.finishBatch();
     },
 
     /**
@@ -510,9 +513,8 @@ var DrawingContext = new Class({
         {
             bits = this.autoClear;
         }
-        
-        // Finish any outstanding batches.
-        this.renderer.renderNodes.setCurrentBatchNode(null);
+
+        this.renderer.renderNodes.finishBatch();
 
         this.renderer.gl.clear(bits);
     },

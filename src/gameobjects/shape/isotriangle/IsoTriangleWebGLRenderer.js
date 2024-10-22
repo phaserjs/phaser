@@ -44,7 +44,7 @@ var IsoTriangleWebGLRenderer = function (renderer, src, drawingContext, parentMa
 
     var reversed = src.isReversed;
 
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
 
     var tint;
 

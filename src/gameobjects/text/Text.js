@@ -69,7 +69,6 @@ var UUID = require('../../utils/string/UUID');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Tint
@@ -99,7 +98,6 @@ var Text = new Class({
         Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.PostPipeline,
         Components.RenderNodes,
         Components.ScrollFactor,
         Components.Tint,
@@ -129,7 +127,6 @@ var Text = new Class({
         this.setPosition(x, y);
         this.setOrigin(0, 0);
         this.initRenderNodes(this._defaultRenderNodesMap);
-        this.initPostPipeline(true);
 
         /**
          * The canvas element that the text is rendered to.

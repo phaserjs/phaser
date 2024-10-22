@@ -31,7 +31,6 @@ var Line = require('../../geom/line/Line');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
@@ -53,7 +52,6 @@ var Shape = new Class({
         Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.PostPipeline,
         Components.RenderNodes,
         Components.ScrollFactor,
         Components.Transform,
@@ -212,7 +210,6 @@ var Shape = new Class({
         this.height = 0;
 
         this.initRenderNodes(this._defaultRenderNodesMap);
-        this.initPostPipeline();
     },
 
     /**

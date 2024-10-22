@@ -9,6 +9,9 @@
  */
 
 var RenderNodes = {
+    BaseFilter: require('./filters/BaseFilter'),
+    BaseFilterShader: require('./filters/BaseFilterShader'),
+
     BatchHandler: require('./BatchHandler'),
     BatchHandlerPointLight: require('./BatchHandlerPointLight'),
     BatchHandlerQuad: require('./BatchHandlerQuad'),
@@ -22,6 +25,17 @@ var RenderNodes = {
     FillPath: require('./FillPath'),
     FillRect: require('./FillRect'),
     FillTri: require('./FillTri'),
+
+    FilterBlur: require('./filters/FilterBlur'),
+    FilterBlurHigh: require('./filters/FilterBlurHigh'),
+    FilterBlurLow: require('./filters/FilterBlurLow'),
+    FilterBlurMed: require('./filters/FilterBlurMed'),
+    FilterBokeh: require('./filters/FilterBokeh'),
+    FilterDisplacement: require('./filters/FilterDisplacement'),
+    FilterMask: require('./filters/FilterMask'),
+    FilterPixelate: require('./filters/FilterPixelate'),
+    FilterSampler: require('./filters/FilterSampler'),
+
     ListCompositor: require('./ListCompositor'),
     RebindContext: require('./RebindContext'),
     RenderNode: require('./RenderNode'),

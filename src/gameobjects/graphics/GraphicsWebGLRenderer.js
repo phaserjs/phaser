@@ -83,7 +83,7 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
     var currentMatrix = tempMatrix.loadIdentity();
 
     var commands = src.commandBuffer;
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
 
     var pathDetailThreshold = Math.max(
         src.pathDetailThreshold,

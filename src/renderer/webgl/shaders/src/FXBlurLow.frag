@@ -1,4 +1,5 @@
-#define SHADER_NAME BLUR_LOW_FS
+// BLUR_LOW_FS
+#pragma phaserTemplate(shaderName)
 
 precision mediump float;
 

@@ -24,6 +24,10 @@ var Class = require('../../utils/Class');
  * in front of all masked objects which has its own visual properties and, naturally, respects the camera's
  * visual properties, but isn't affected by and doesn't follow the masked objects by itself.
  *
+ * GeometryMask is only supported in the Canvas Renderer.
+ * If you want to use geometry to mask objects in WebGL,
+ * see {@link Phaser.GameObjects.Components.FilterList#addMask}.
+ *
  * @class GeometryMask
  * @memberof Phaser.Display.Masks
  * @constructor
@@ -46,38 +50,6 @@ var GeometryMask = new Class({
          * @since 3.0.0
          */
         this.geometryMask = graphicsGeometry;
-
-        /**
-         * Similar to the BitmapMasks invertAlpha setting this to true will then hide all pixels
-         * drawn to the Geometry Mask.
-         *
-         * This is a WebGL only feature.
-         *
-         * @name Phaser.Display.Masks.GeometryMask#invertAlpha
-         * @type {boolean}
-         * @since 3.16.0
-         */
-        this.invertAlpha = false;
-
-        /**
-         * Is this mask a stencil mask?
-         *
-         * @name Phaser.Display.Masks.GeometryMask#isStencil
-         * @type {boolean}
-         * @readonly
-         * @since 3.17.0
-         */
-        this.isStencil = true;
-
-        /**
-         * The current stencil level. This can change dynamically at runtime
-         * and is set in the applyStencil method.
-         *
-         * @name Phaser.Display.Masks.GeometryMask#level
-         * @type {boolean}
-         * @since 3.17.0
-         */
-        this.level = 0;
     },
 
     /**
@@ -95,165 +67,6 @@ var GeometryMask = new Class({
         this.geometryMask = graphicsGeometry;
 
         return this;
-    },
-
-    /**
-     * Sets the `invertAlpha` property of this Geometry Mask.
-     *
-     * Inverting the alpha essentially flips the way the mask works.
-     *
-     * This is a WebGL only feature.
-     *
-     * @method Phaser.Display.Masks.GeometryMask#setInvertAlpha
-     * @since 3.17.0
-     *
-     * @param {boolean} [value=true] - Invert the alpha of this mask?
-     *
-     * @return {this} This Geometry Mask
-     */
-    setInvertAlpha: function (value)
-    {
-        if (value === undefined) { value = true; }
-
-        this.invertAlpha = value;
-
-        return this;
-    },
-
-    /**
-     * Renders the Geometry Mask's underlying Graphics object to the OpenGL stencil buffer and enables the stencil test, which clips rendered pixels according to the mask.
-     *
-     * @method Phaser.Display.Masks.GeometryMask#preRenderWebGL
-     * @since 3.0.0
-     *
-     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw to.
-     * @param {Phaser.GameObjects.GameObject} child - The Game Object being rendered.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the Game Object is being rendered through.
-     */
-    preRenderWebGL: function (renderer, child, camera)
-    {
-        var gl = renderer.gl;
-
-        //  Force flushing before drawing to stencil buffer
-        renderer.flush();
-
-        if (renderer.maskStack.length === 0)
-        {
-            gl.enable(gl.STENCIL_TEST);
-            renderer.clearFramebuffer(undefined, 0);
-
-            renderer.maskCount = 0;
-        }
-
-        if (renderer.currentCameraMask.mask !== this)
-        {
-            renderer.currentMask.mask = this;
-        }
-
-        renderer.maskStack.push({ mask: this, camera: camera });
-
-        this.applyStencil(renderer, camera, true);
-
-        renderer.maskCount++;
-    },
-
-    /**
-     * Applies the current stencil mask to the renderer.
-     *
-     * @method Phaser.Display.Masks.GeometryMask#applyStencil
-     * @since 3.17.0
-     *
-     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw to.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the Game Object is being rendered through.
-     * @param {boolean} inc - Is this an INCR stencil or a DECR stencil?
-     */
-    applyStencil: function (renderer, camera, inc)
-    {
-        var gl = renderer.gl;
-        var geometryMask = this.geometryMask;
-        var level = renderer.maskCount;
-        var mask = 0xff;
-
-        gl.colorMask(false, false, false, false);
-
-        if (inc)
-        {
-            gl.stencilFunc(gl.EQUAL, level, mask);
-            gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
-
-            //  Do this _after_ we set the stencilFunc
-            level++;
-        }
-        else
-        {
-            gl.stencilFunc(gl.EQUAL, level + 1, mask);
-            gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
-        }
-
-        this.level = level;
-
-        //  Write stencil buffer
-        geometryMask.renderWebGL(renderer, geometryMask, camera);
-
-        renderer.flush();
-
-        gl.colorMask(true, true, true, true);
-        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-
-        if (this.invertAlpha)
-        {
-            gl.stencilFunc(gl.NOTEQUAL, level, mask);
-        }
-        else
-        {
-            gl.stencilFunc(gl.EQUAL, level, mask);
-        }
-    },
-
-    /**
-     * Flushes all rendered pixels and disables the stencil test of a WebGL context, thus disabling the mask for it.
-     *
-     * @method Phaser.Display.Masks.GeometryMask#postRenderWebGL
-     * @since 3.0.0
-     *
-     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw flush.
-     */
-    postRenderWebGL: function (renderer)
-    {
-        var gl = renderer.gl;
-
-        renderer.maskStack.pop();
-
-        renderer.maskCount--;
-
-        //  Force flush before disabling stencil test
-        renderer.flush();
-
-        var current = renderer.currentMask;
-
-        if (renderer.maskStack.length === 0)
-        {
-            //  If this is the only mask in the stack, flush and disable
-            current.mask = null;
-
-            gl.disable(gl.STENCIL_TEST);
-        }
-        else
-        {
-            var prev = renderer.maskStack[renderer.maskStack.length - 1];
-
-            prev.mask.applyStencil(renderer, prev.camera, false);
-
-            if (renderer.currentCameraMask.mask !== prev.mask)
-            {
-                current.mask = prev.mask;
-                current.camera = prev.camera;
-            }
-            else
-            {
-                current.mask = null;
-            }
-        }
     },
 
     /**

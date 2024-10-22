@@ -47,7 +47,6 @@ var List = require('../../structs/List');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
@@ -71,7 +70,6 @@ var Blitter = new Class({
         Components.Depth,
         Components.Lighting,
         Components.Mask,
-        Components.PostPipeline,
         Components.RenderNodes,
         Components.ScrollFactor,
         Components.Size,
@@ -90,7 +88,6 @@ var Blitter = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.initRenderNodes(this._defaultRenderNodesMap);
-        this.initPostPipeline();
 
         /**
          * The children of this Blitter.

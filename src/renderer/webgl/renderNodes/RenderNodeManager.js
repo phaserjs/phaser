@@ -8,6 +8,9 @@ var EventEmitter = require('eventemitter3');
 var Class = require('../../../utils/Class');
 var Events = require('../../events');
 
+var BaseFilter = require('./filters/BaseFilter');
+var BaseFilterShader = require('./filters/BaseFilterShader');
+
 var BatchHandlerPointLight = require('./BatchHandlerPointLight');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerStrip = require('./BatchHandlerStrip');
@@ -20,6 +23,17 @@ var FillCamera = require('./FillCamera');
 var FillPath = require('./FillPath');
 var FillRect = require('./FillRect');
 var FillTri = require('./FillTri');
+
+var FilterBlur = require('./filters/FilterBlur');
+var FilterBlurHigh = require('./filters/FilterBlurHigh');
+var FilterBlurLow = require('./filters/FilterBlurLow');
+var FilterBlurMed = require('./filters/FilterBlurMed');
+var FilterBokeh = require('./filters/FilterBokeh');
+var FilterDisplacement = require('./filters/FilterDisplacement');
+var FilterMask = require('./filters/FilterMask');
+var FilterPixelate = require('./filters/FilterPixelate');
+var FilterSampler = require('./filters/FilterSampler');
+
 var ListCompositor = require('./ListCompositor');
 var RebindContext = require('./RebindContext');
 var StrokePath = require('./StrokePath');
@@ -118,6 +132,9 @@ var RenderNodeManager = new Class({
          * @private
          */
         this._nodeConstructors = {
+            BaseFilter: BaseFilter,
+            BaseFilterShader: BaseFilterShader,
+
             BatchHandlerPointLight: BatchHandlerPointLight,
             BatchHandlerQuad: BatchHandlerQuad,
             BatchHandlerStrip: BatchHandlerStrip,
@@ -130,6 +147,17 @@ var RenderNodeManager = new Class({
             FillPath: FillPath,
             FillRect: FillRect,
             FillTri: FillTri,
+
+            FilterBlur: FilterBlur,
+            FilterBlurHigh: FilterBlurHigh,
+            FilterBlurLow: FilterBlurLow,
+            FilterBlurMed: FilterBlurMed,
+            FilterBokeh: FilterBokeh,
+            FilterDisplacement: FilterDisplacement,
+            FilterMask: FilterMask,
+            FilterPixelate: FilterPixelate,
+            FilterSampler: FilterSampler,
+
             ListCompositor: ListCompositor,
             RebindContext: RebindContext,
             StrokePath: StrokePath,
@@ -335,6 +363,21 @@ var RenderNodeManager = new Class({
     },
 
     /**
+     * Finish rendering the current batch.
+     * This should be called when starting a new rendering task.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#finishBatch
+     * @since 3.90.0
+     */
+    finishBatch: function ()
+    {
+        if (this.currentBatchNode !== null)
+        {
+            this.setCurrentBatchNode(null);
+        }
+    },
+
+    /**
      * Start a standalone render (SAR), which is not part of a batch.
      * This will trigger batch completion if a batch is in progress.
      *
@@ -343,7 +386,7 @@ var RenderNodeManager = new Class({
      */
     startStandAloneRender: function ()
     {
-        this.setCurrentBatchNode(null);
+        this.finishBatch();
     },
 
     /**

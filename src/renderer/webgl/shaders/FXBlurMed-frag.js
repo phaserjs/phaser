@@ -1,5 +1,5 @@
 module.exports = [
-    '#define SHADER_NAME BLUR_MED_FS',
+    '#pragma phaserTemplate(shaderName)',
     'precision mediump float;',
     'uniform sampler2D uMainSampler;',
     'uniform vec2 resolution;',

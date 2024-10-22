@@ -44,7 +44,6 @@ var Vector2 = require('../../math/Vector2');
  * @since 3.0.0
  *
  * @extends Phaser.Cameras.Scene2D.BaseCamera
- * @extends Phaser.GameObjects.Components.PostPipeline
  *
  * @param {number} x - The x position of the Camera, relative to the top-left of the game canvas.
  * @param {number} y - The y position of the Camera, relative to the top-left of the game canvas.
@@ -55,17 +54,27 @@ var Camera = new Class({
 
     Extends: BaseCamera,
 
-    Mixins: [
-        Components.PostPipeline
-    ],
-
     initialize:
 
     function Camera (x, y, width, height)
     {
         BaseCamera.call(this, x, y, width, height);
 
-        this.initPostPipeline();
+        /**
+         * The filters for this camera.
+         * Filters control special effects and masks.
+         *
+         * This object contains two lists of filters: `internal` and `external`.
+         * See {@link Phaser.GameObjects.Components.FilterList} for more information.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#filters
+         * @type {{ internal: Phaser.GameObjects.Components.FilterList, external: Phaser.GameObjects.Components.FilterList }}
+         * @since 3.90.0
+         */
+        this.filters = {
+            internal: new Components.FilterList(this, false),
+            external: new Components.FilterList(this, true)
+        };
 
         /**
          * Does this Camera allow the Game Objects it renders to receive input events?
@@ -775,6 +784,9 @@ var Camera = new Class({
     destroy: function ()
     {
         this.resetFX();
+
+        this.filters.internal.destroy();
+        this.filters.external.destroy();
 
         BaseCamera.prototype.destroy.call(this);
 

@@ -84,7 +84,6 @@ var SubmitterTileSprite = new Class({
     {
         this.onRunBegin(drawingContext);
 
-        var cameraAlpha = drawingContext.camera.alpha;
         var tintFill, tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight;
 
         if (texturerNode.run)
@@ -110,10 +109,10 @@ var SubmitterTileSprite = new Class({
         else
         {
             tintFill = gameObject.tintFill;
-            tintTopLeft = getTint(gameObject.tintTopLeft, cameraAlpha * gameObject._alphaTL);
-            tintBottomLeft = getTint(gameObject.tintBottomLeft, cameraAlpha * gameObject._alphaBL);
-            tintTopRight = getTint(gameObject.tintTopRight, cameraAlpha * gameObject._alphaTR);
-            tintBottomRight = getTint(gameObject.tintBottomRight, cameraAlpha * gameObject._alphaBR);
+            tintTopLeft = getTint(gameObject.tintTopLeft, gameObject._alphaTL);
+            tintBottomLeft = getTint(gameObject.tintBottomLeft, gameObject._alphaBL);
+            tintTopRight = getTint(gameObject.tintTopRight, gameObject._alphaTR);
+            tintBottomRight = getTint(gameObject.tintBottomRight, gameObject._alphaBR);
         }
 
         var frame = texturerNode.frame;

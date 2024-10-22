@@ -41,7 +41,6 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
@@ -69,7 +68,6 @@ var Rope = new Class({
         Components.Depth,
         Components.Flip,
         Components.Mask,
-        Components.PostPipeline,
         Components.RenderNodes,
         Components.Size,
         Components.Texture,
@@ -281,7 +279,6 @@ var Rope = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.initRenderNodes(this._defaultRenderNodesMap);
-        this.initPostPipeline();
 
         if (Array.isArray(points))
         {

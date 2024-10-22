@@ -32,7 +32,7 @@ var PolygonWebGLRenderer = function (renderer, src, drawingContext, parentMatrix
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
 
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
 
     var submitter = src.customRenderNodes.Submitter || src.defaultRenderNodes.Submitter;
 

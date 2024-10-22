@@ -1,4 +1,5 @@
-#define SHADER_NAME PIXELATE_FS
+// PIXELATE_FS
+#pragma phaserTemplate(shaderName)
 
 precision mediump float;
 

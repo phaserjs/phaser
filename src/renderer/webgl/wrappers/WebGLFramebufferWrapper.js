@@ -209,6 +209,20 @@ var WebGLFramebufferWrapper = new Class({
         var glWrapper = renderer.glWrapper;
         var gl = renderer.gl;
 
+        // Remove any existing framebuffer.
+        if (this.webGLFramebuffer)
+        {
+            gl.deleteFramebuffer(this.webGLFramebuffer);
+            for (var i = 0; i < this.attachments.length; i++)
+            {
+                var attachment = this.attachments[i];
+                if (!attachment.texture)
+                {
+                    gl.deleteRenderbuffer(attachment.renderbuffer);
+                }
+            }
+        }
+
         // Create framebuffer.
         var framebuffer = gl.createFramebuffer();
         this.webGLFramebuffer = framebuffer;
@@ -220,9 +234,9 @@ var WebGLFramebufferWrapper = new Class({
         });
 
         // Create attachments.
-        for (var i = 0; i < this.attachments.length; i++)
+        for (i = 0; i < this.attachments.length; i++)
         {
-            var attachment = this.attachments[i];
+            attachment = this.attachments[i];
             var attachmentPoint = attachment.attachmentPoint;
             var texture = attachment.texture;
 

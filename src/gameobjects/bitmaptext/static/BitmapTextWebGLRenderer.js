@@ -57,17 +57,15 @@ var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMat
 
     var roundPixels = camera.roundPixels;
 
-    var cameraAlpha = camera.alpha;
-
     var charColors = src.charColors;
 
     var getTint = Utils.getTintAppendFloatAlpha;
 
     tempTintData1.tintFill = src.tintFill;
-    tempTintData1.tintTopLeft = getTint(src.tintTopLeft, cameraAlpha * src._alphaTL);
-    tempTintData1.tintTopRight = getTint(src.tintTopRight, cameraAlpha * src._alphaTR);
-    tempTintData1.tintBottomLeft = getTint(src.tintBottomLeft, cameraAlpha * src._alphaBL);
-    tempTintData1.tintBottomRight = getTint(src.tintBottomRight, cameraAlpha * src._alphaBR);
+    tempTintData1.tintTopLeft = getTint(src.tintTopLeft, src._alphaTL);
+    tempTintData1.tintTopRight = getTint(src.tintTopRight, src._alphaTR);
+    tempTintData1.tintBottomLeft = getTint(src.tintBottomLeft, src._alphaBL);
+    tempTintData1.tintBottomRight = getTint(src.tintBottomRight, src._alphaBR);
 
     //  Update the bounds - skipped internally if not dirty
     var bounds = src.getTextBounds(false);
@@ -89,10 +87,10 @@ var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMat
         var srcShadowAlpha = src.dropShadowAlpha;
 
         tempTintData2.tintFill = 1;
-        tempTintData2.tintTopLeft = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaTL);
-        tempTintData2.tintTopRight = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaTR);
-        tempTintData2.tintBottomLeft = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaBL);
-        tempTintData2.tintBottomRight = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaBR);
+        tempTintData2.tintTopLeft = getTint(srcShadowColor, srcShadowAlpha * src._alphaTL);
+        tempTintData2.tintTopRight = getTint(srcShadowColor, srcShadowAlpha * src._alphaTR);
+        tempTintData2.tintBottomLeft = getTint(srcShadowColor, srcShadowAlpha * src._alphaBL);
+        tempTintData2.tintBottomRight = getTint(srcShadowColor, srcShadowAlpha * src._alphaBR);
 
         for (i = 0; i < characters.length; i++)
         {
@@ -123,10 +121,10 @@ var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMat
             var color = charColors[char.i];
 
             tempTintData2.tintFill = color.tintEffect;
-            tempTintData2.tintTopLeft = getTint(color.tintTL, cameraAlpha * src._alphaTL);
-            tempTintData2.tintTopRight = getTint(color.tintTR, cameraAlpha * src._alphaTR);
-            tempTintData2.tintBottomLeft = getTint(color.tintBL, cameraAlpha * src._alphaBL);
-            tempTintData2.tintBottomRight = getTint(color.tintBR, cameraAlpha * src._alphaBR);
+            tempTintData2.tintTopLeft = getTint(color.tintTL, src._alphaTL);
+            tempTintData2.tintTopRight = getTint(color.tintTR, src._alphaTR);
+            tempTintData2.tintBottomLeft = getTint(color.tintBL, src._alphaBL);
+            tempTintData2.tintBottomRight = getTint(color.tintBR, src._alphaBR);
 
             BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, roundPixels, tempTintData2);
         }

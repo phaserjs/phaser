@@ -229,9 +229,6 @@ var DynamicTexture = new Class({
                 drawingContext.resize(width, height);
             }
 
-
-
-
             this.camera.setSize(width, height);
 
             source.width = width;

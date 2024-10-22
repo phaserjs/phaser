@@ -14,14 +14,9 @@ var Extend = require('../../utils/object/Extend');
 var WebGL = {
 
     DrawingContext: require('./DrawingContext'),
-    PipelineManager: require('./PipelineManager'),
-    Pipelines: require('./pipelines'),
     RenderNodes: require('./renderNodes'),
-    RenderTarget: require('./RenderTarget'),
     Utils: require('./Utils'),
-    WebGLPipeline: require('./WebGLPipeline'),
     WebGLRenderer: require('./WebGLRenderer'),
-    WebGLShader: require('./WebGLShader'),
     Wrappers: require('./wrappers')
 
 };

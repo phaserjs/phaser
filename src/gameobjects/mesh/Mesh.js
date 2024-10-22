@@ -46,7 +46,7 @@ var Vertex = require('../../geom/mesh/Vertex');
  * vertex warping, this is the right object for you. Mesh data becomes part of the WebGL batch,
  * just like standard Sprites, so doesn't introduce any additional shader overhead. Because
  * the Mesh just generates vertices into the WebGL batch, like any other Sprite, you can use all of
- * the common Game Object components on a Mesh too, such as a custom pipeline, mask, blend mode
+ * the common Game Object components on a Mesh too, such as a custom mask, blend mode
  * or texture.
  *
  * Note that the Mesh object is WebGL only and does not have a Canvas counterpart.
@@ -64,8 +64,6 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
@@ -94,8 +92,6 @@ var Mesh = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.Mask,
-        Components.Pipeline,
-        Components.PostPipeline,
         Components.ScrollFactor,
         Components.Size,
         Components.Texture,
@@ -373,8 +369,6 @@ var Mesh = new Class({
         this.setPosition(x, y);
         this.setTexture(texture, frame);
         this.setSize(renderer.width, renderer.height);
-        this.initPipeline();
-        this.initPostPipeline();
 
         this.setPerspective(renderer.width, renderer.height);
 

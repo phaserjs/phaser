@@ -228,7 +228,7 @@ var BatchHandlerQuad = new Class({
         {
             // The batch is currently running. Flush the current batch entry,
             // before the shader program becomes unable to handle all textures.
-            this.manager.setCurrentBatchNode(null);
+            this.manager.finishBatch();
         }
 
         this.maxTexturesPerBatch = newCount;

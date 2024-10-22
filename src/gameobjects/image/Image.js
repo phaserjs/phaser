@@ -33,7 +33,6 @@ var ImageRender = require('./ImageRender');
  * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
@@ -61,7 +60,6 @@ var Image = new Class({
         Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.PostPipeline,
         Components.RenderNodes,
         Components.ScrollFactor,
         Components.Size,
@@ -93,7 +91,6 @@ var Image = new Class({
         this.setSizeToFrame();
         this.setOriginFromFrame();
         this.initRenderNodes(this._defaultRenderNodesMap);
-        this.initPostPipeline(true);
     },
 
     /**

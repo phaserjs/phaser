@@ -1,5 +1,5 @@
 module.exports = [
-    '#define SHADER_NAME BOKEH_FS',
+    '#pragma phaserTemplate(shaderName)',
     'precision mediump float;',
     '#define ITERATIONS 100.0',
     '#define ONEOVER_ITR 1.0 / ITERATIONS',

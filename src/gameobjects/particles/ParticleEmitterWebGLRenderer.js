@@ -54,7 +54,6 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, drawingContext, 
     }
 
     var getTint = Utils.getTintAppendFloatAlpha;
-    var camerAlpha = camera.alpha;
     var emitterAlpha = emitter.alpha;
 
     var particles = emitter.alive;
@@ -83,7 +82,7 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, drawingContext, 
     {
         var particle = particles[i];
 
-        var alpha = particle.alpha * emitterAlpha * camerAlpha;
+        var alpha = particle.alpha * emitterAlpha;
 
         if (alpha <= 0 || particle.scaleX === 0 || particle.scaleY === 0)
         {

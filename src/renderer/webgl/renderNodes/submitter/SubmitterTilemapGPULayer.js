@@ -98,7 +98,7 @@ var SubmitterTilemapGPULayer = new Class({
          * The program manager used to create and manage shader programs.
          * This contains shader variants.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandler#programManager
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterTilemapGPULayer#programManager
          * @type {Phaser.Renderer.WebGL.ProgramManager}
          * @since 3.90.0
          */
@@ -330,7 +330,7 @@ var SubmitterTilemapGPULayer = new Class({
 
         programManager.setUniform(
             'uAlpha',
-            tilemapLayer.alpha * camera.alpha
+            tilemapLayer.alpha
         );
 
         programManager.setUniform(
