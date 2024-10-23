@@ -1377,6 +1377,8 @@ var ParticleEmitter = new Class({
      * anim: [ 'red', 'green', 'blue', 'pink', 'white' ]
      * anim: { anims: [ 'red', 'green', 'blue', 'pink', 'white' ], [cycle: bool], [quantity: int] }
      *
+     * Call this method at least once before any particles are created, or set `anim` in the Particle Emitter's configuration when creating the Emitter.
+     *
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setAnim
      * @since 3.60.0
      *
