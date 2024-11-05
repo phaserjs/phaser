@@ -85,7 +85,7 @@
     "exports-loader": "^5.0.0",
     "fs-extra": "^11.2.0",
     "imports-loader": "^5.0.0",
-    "jsdoc": "3.x.x",
+    "jsdoc": "^4.0.4",
     "node-sloc": "^0.2.1",
     "path": "^0.12.7",
     "phaser3spectorjs": "^0.0.8",
@@ -99,6 +99,7 @@
     "webpack-shell-plugin": "^0.5.0"
   },
   "dependencies": {
-    "eventemitter3": "^5.0.1"
+    "eventemitter3": "^5.0.1",
+    "phaser": "^3.86.0"
   }
 }
