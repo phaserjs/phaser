@@ -72,8 +72,8 @@ var Camera = new Class({
          * @since 3.90.0
          */
         this.filters = {
-            internal: new Components.FilterList(this, false),
-            external: new Components.FilterList(this, true)
+            internal: new Components.FilterList(this),
+            external: new Components.FilterList(this)
         };
 
         /**

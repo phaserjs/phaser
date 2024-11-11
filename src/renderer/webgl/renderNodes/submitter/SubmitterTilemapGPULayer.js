@@ -62,10 +62,6 @@ var SubmitterTilemapGPULayer = new Class({
          */
         this.config = finalConfig;
 
-        // Ensure that there is no VAO bound, because the following index buffer
-        // will modify any currently bound VAO.
-        renderer.glWrapper.updateVAO({ vao: null });
-
         /**
          * The index buffer defining vertex order.
          *
@@ -73,10 +69,7 @@ var SubmitterTilemapGPULayer = new Class({
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @since 3.90.0
          */
-        this.indexBuffer = renderer.createIndexBuffer(
-            new Uint16Array([ 0, 1, 2, 3 ]),
-            gl.STATIC_DRAW
-        );
+        this.indexBuffer = renderer.genericQuadIndexBuffer;
 
         /**
          * The vertex buffer layout for this RenderNode.

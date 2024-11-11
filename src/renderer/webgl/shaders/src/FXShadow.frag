@@ -1,4 +1,5 @@
-#define SHADER_NAME SHADOW_FS
+// SHADOW_FS
+#pragma phaserTemplate(shaderName)
 
 precision mediump float;
 
@@ -15,9 +16,11 @@ uniform int samples;
 
 const int MAX = 12;
 
+#pragma phaserTemplate(fragmentHeader)
+
 void main ()
 {
-    vec4 texture = texture2D(uMainSampler, outTexCoord);
+    vec4 texture = boundedSampler(uMainSampler, outTexCoord);
 
     vec2 pc = (lightPosition - outTexCoord) * intensity;
 
@@ -31,10 +34,10 @@ void main ()
             break;
         }
 
-        shadow += texture2D(uMainSampler, outTexCoord + float(i) * decay / limit * pc).a * power;
+        shadow += boundedSampler(uMainSampler, outTexCoord + float(i) * decay / limit * pc).a * power;
     }
 
     float mask = 1.0 - texture.a;
 
-    gl_FragColor = mix(texture, color, shadow * mask);
+    gl_FragColor = mix(texture, color, clamp(shadow * mask, 0.0, 1.0));
 }

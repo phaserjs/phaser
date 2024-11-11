@@ -129,38 +129,6 @@ module.exports = {
     },
 
     /**
-     * Takes the Glow FX Shader source and parses out the __SIZE__ and __DIST__
-     * consts with the configuration values.
-     *
-     * @function Phaser.Renderer.WebGL.Utils.setGlowQuality
-     * @since 3.60.0
-     *
-     * @param {string} shader - The Fragment Shader source code to operate on.
-     * @param {Phaser.Game} game - The Phaser Game instance.
-     * @param {number} [quality] - The quality of the glow (defaults to 0.1)
-     * @param {number} [distance] - The distance of the glow (defaults to 10)
-     *
-     * @return {string} The modified Fragment Shader source.
-     */
-    setGlowQuality: function (shader, game, quality, distance)
-    {
-        if (quality === undefined)
-        {
-            quality = game.config.glowFXQuality;
-        }
-
-        if (distance === undefined)
-        {
-            distance = game.config.glowFXDistance;
-        }
-
-        shader = shader.replace(/__SIZE__/gi, (1 / quality / distance).toFixed(7));
-        shader = shader.replace(/__DIST__/gi, distance.toFixed(0) + '.0');
-
-        return shader;
-    },
-
-    /**
      * Update lighting uniforms for a given shader program manager.
      * This is a standard procedure for most lighting shaders.
      *

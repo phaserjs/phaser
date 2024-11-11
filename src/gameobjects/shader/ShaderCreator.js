@@ -26,13 +26,13 @@ GameObjectCreator.register('shader', function (config, addToScene)
 {
     if (config === undefined) { config = {}; }
 
-    var key = GetAdvancedValue(config, 'key', null);
+    var quadConfig = GetAdvancedValue(config, 'config', null);
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
     var width = GetAdvancedValue(config, 'width', 128);
     var height = GetAdvancedValue(config, 'height', 128);
 
-    var shader = new Shader(this.scene, key, x, y, width, height);
+    var shader = new Shader(this.scene, quadConfig, x, y, width, height);
 
     if (addToScene !== undefined)
     {

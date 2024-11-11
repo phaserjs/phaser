@@ -11,12 +11,19 @@
 var Filters = {
     Controller: require('./Controller'),
 
+    Barrel: require('./Barrel'),
+    Blend: require('./Blend'),
     Blur: require('./Blur'),
     Bokeh: require('./Bokeh'),
+    ColorMatrix: require('./ColorMatrix'),
     Displacement: require('./Displacement'),
+    Glow: require('./Glow'),
     Mask: require('./Mask'),
+    ParallelFilters: require('./ParallelFilters'),
     Pixelate: require('./Pixelate'),
-    Sampler: require('./Sampler')
+    Sampler: require('./Sampler'),
+    Shadow: require('./Shadow'),
+    Threshold: require('./Threshold')
 };
 
 module.exports = Filters;

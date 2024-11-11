@@ -26,7 +26,7 @@ var FilterBokeh = new Class({
 
     initialize: function FilterBokeh (manager)
     {
-        BaseFilterShader.call(this, 'FilterBokeh', manager, ShaderSourceFS);
+        BaseFilterShader.call(this, 'FilterBokeh', manager, null, ShaderSourceFS);
     },
 
     setupUniforms: function (controller, drawingContext)

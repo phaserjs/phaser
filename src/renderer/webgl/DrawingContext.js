@@ -5,7 +5,6 @@
  */
 
 var Class = require('../../utils/Class');
-var Events = require('../events');
 
 /**
  * Descriptor of the context within which a drawing operation is performed.
@@ -201,6 +200,19 @@ var DrawingContext = new Class({
          */
         this.height = 0;
 
+        /**
+         * Locks on the DrawingContext.
+         * These are used to prevent the context from being released
+         * to its pool.
+         * They can be any value, so long as they are distinct.
+         *
+         * @name Phaser.Renderer.WebGL.DrawingContext#_locks
+         * @type {any[]}
+         * @private
+         * @since 3.90.0
+         */
+        this._locks = [];
+
         if (options.copyFrom)
         {
             this.copy(options.copyFrom);
@@ -226,7 +238,6 @@ var DrawingContext = new Class({
      */
     resize: function (width, height)
     {
-        // TODO: dimensions were originally multiplied by `this.scale`.
         width = Math.round(width);
         height = Math.round(height);
 
@@ -471,18 +482,76 @@ var DrawingContext = new Class({
      * so its framebuffer and texture are not needed any more
      * and may be cleared at any time. This will finish any outstanding batches.
      *
+     * If there are no locks on the DrawingContext, and it comes from a pool,
+     * it will be returned to its pool.
+     *
      * @method Phaser.Renderer.WebGL.DrawingContext#release
      * @since 3.90.0
      */
     release: function ()
     {
-        if (this.pool)
+        if (this.pool && this._locks.length === 0)
         {
             this.lastUsed = Date.now();
             this.pool.add(this);
         }
 
         this.renderer.renderNodes.finishBatch();
+    },
+
+    /**
+     * Lock the DrawingContext to be in use.
+     * This prevents `release` from returning it to its pool
+     * until `unlock` is called with the appropriate key.
+     * This is used for temporary DrawingContexts,
+     * which may be returned to a pool.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#lock
+     * @since 3.90.0
+     * @param {any} key - The key to lock the DrawingContext with.
+     */
+    lock: function (key)
+    {
+        if (this._locks.indexOf(key) !== -1)
+        {
+            return;
+        }
+        this._locks.push(key);
+    },
+
+    /**
+     * Unlock the DrawingContext.
+     * This allows `release` to return it to its pool.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#unlock
+     * @since 3.90.0
+     * @param {any} key - The key to unlock the DrawingContext with. This must be the same key used to lock it.
+     * @param {boolean} [release] - Whether to release the DrawingContext immediately. This will only happen if there are no other locks on it.
+     */
+    unlock: function (key, release)
+    {
+        var index = this._locks.indexOf(key);
+        if (index !== -1)
+        {
+            this._locks.splice(index, 1);
+        }
+
+        if (release)
+        {
+            this.release();
+        }
+    },
+
+    /**
+     * Check whether the DrawingContext is locked.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#isLocked
+     * @since 3.90.0
+     * @return {boolean} Whether the DrawingContext is locked.
+     */
+    isLocked: function ()
+    {
+        return this._locks.length > 0;
     },
 
     /**
@@ -527,8 +596,6 @@ var DrawingContext = new Class({
      */
     destroy: function ()
     {
-        this.renderer.off(Events.RESIZE, this.resize, this);
-
         this.renderer.deleteTexture(this.texture);
         this.renderer.deleteFramebuffer(this.state.bindings.framebuffer);
 

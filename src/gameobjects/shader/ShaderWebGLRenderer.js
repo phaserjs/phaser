@@ -4,8 +4,6 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var GetCalcMatrix = require('../GetCalcMatrix');
-
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -17,40 +15,36 @@ var GetCalcMatrix = require('../GetCalcMatrix');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Shader} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var ShaderWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var ShaderWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
-    if (!src.shader)
-    {
-        return;
-    }
+    var camera = drawingContext.camera;
 
     camera.addToRenderList(src);
 
-    renderer.pipelines.clear();
+    if (src.renderToTexture)
+    {
+        drawingContext = src.drawingContext;
+
+        if (drawingContext.width !== src.width || drawingContext.height !== src.height)
+        {
+            var width = src.width;
+            var height = src.height;
+            drawingContext.resize(width, height);
+            drawingContext.camera.setSize(width, height);
+        }
+
+        drawingContext.use();
+    }
+
+    src.renderNode.run(drawingContext, src, parentMatrix);
 
     if (src.renderToTexture)
     {
-        src.load();
-        src.flush();
+        drawingContext.release();
     }
-    else
-    {
-        var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
-
-        //  Renderer size changed?
-        if (renderer.width !== src._rendererWidth || renderer.height !== src._rendererHeight)
-        {
-            src.projOrtho(0, renderer.width, renderer.height, 0);
-        }
-
-        src.load(calcMatrix.matrix);
-        src.flush();
-    }
-
-    renderer.pipelines.rebind();
 };
 
 module.exports = ShaderWebGLRenderer;

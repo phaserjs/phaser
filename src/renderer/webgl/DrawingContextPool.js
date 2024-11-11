@@ -96,6 +96,11 @@ var DrawingContextPool = new Class({
      */
     add: function (drawingContext)
     {
+        if (this.agePool.indexOf(drawingContext) !== -1)
+        {
+            return;
+        }
+
         var key = drawingContext.width + 'x' + drawingContext.height;
 
         if (this.sizePool[key])
@@ -141,11 +146,6 @@ var DrawingContextPool = new Class({
         {
             drawingContext = sizePool.pop();
 
-            if (sizePool.length === 0)
-            {
-                delete this.sizePool[key];
-            }
-
             // Extract the DrawingContext from the agePool
             index = this.agePool.indexOf(drawingContext);
             this.agePool.splice(index, 1);
@@ -171,11 +171,6 @@ var DrawingContextPool = new Class({
                 index = sizePool.indexOf(drawingContext);
                 sizePool.splice(index, 1);
 
-                if (sizePool.length === 0)
-                {
-                    delete this.sizePool[oldKey];
-                }
-
                 // Resize the DrawingContext
                 drawingContext.resize(width, height);
 
@@ -193,6 +188,7 @@ var DrawingContextPool = new Class({
                 width: width,
                 height: height
             });
+
             return drawingContext;
         }
 
@@ -205,11 +201,6 @@ var DrawingContextPool = new Class({
             sizePool = this.sizePool[key];
             index = sizePool.indexOf(drawingContext);
             sizePool.splice(index, 1);
-            
-            if (sizePool.length === 0)
-            {
-                delete this.sizePool[key];
-            }
 
             // Resize the DrawingContext
             drawingContext.resize(width, height);
@@ -225,6 +216,7 @@ var DrawingContextPool = new Class({
             width: width,
             height: height
         });
+
         return drawingContext;
     },
 

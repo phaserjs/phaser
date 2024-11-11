@@ -29,7 +29,7 @@ var FilterBlurMed = new Class({
 
     initialize: function FilterBlurMed (manager)
     {
-        BaseFilterShader.call(this, 'FilterBlurMed', manager, ShaderSourceFS);
+        BaseFilterShader.call(this, 'FilterBlurMed', manager, null, ShaderSourceFS);
     },
 
     setupUniforms: function (controller, drawingContext)

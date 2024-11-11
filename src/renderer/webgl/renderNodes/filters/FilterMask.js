@@ -12,6 +12,7 @@ var ShaderSourceFS = require('../../shaders/FXMask-frag.js');
 /**
  * @classdesc
  * This RenderNode renders the Mask filter effect.
+ * See {@link Phaser.Filters.Mask}.
  *
  * @class FilterMask
  * @extends Phaser.Renderer.WebGL.RenderNodes.BaseFilterShader
@@ -25,7 +26,7 @@ var FilterMask = new Class({
 
     initialize: function FilterMask (manager)
     {
-        BaseFilterShader.call(this, 'FilterMask', manager, ShaderSourceFS);
+        BaseFilterShader.call(this, 'FilterMask', manager, null, ShaderSourceFS);
     },
 
     setupTextures: function (controller, textures, drawingContext)

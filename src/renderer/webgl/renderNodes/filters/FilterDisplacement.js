@@ -12,6 +12,7 @@ var ShaderSourceFS = require('../../shaders/FXDisplacement-frag.js');
 /**
  * @classdesc
  * This RenderNode renders the Displacement filter effect.
+ * See {@link Phaser.Filters.Displacement}.
  *
  * @class FilterDisplacement
  * @extends Phaser.Renderer.WebGL.RenderNodes.BaseFilterShader
@@ -25,7 +26,7 @@ var FilterDisplacement = new Class({
 
     initialize: function FilterDisplacement (manager)
     {
-        BaseFilterShader.call(this, 'FilterDisplacement', manager, ShaderSourceFS);
+        BaseFilterShader.call(this, 'FilterDisplacement', manager, null, ShaderSourceFS);
     },
 
     setupTextures: function (controller, textures)

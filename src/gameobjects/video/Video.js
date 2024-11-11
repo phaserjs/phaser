@@ -50,6 +50,11 @@ var VideoRender = require('./VideoRender');
  * an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render
  * in-game with full transparency.
  *
+ * Transparent videos are supported by the HEVC (H.265) codec,
+ * but only on some devices and browsers, and sometimes the alpha channel is ignored,
+ * which can be a problem if you're aiming for a consistent experience.
+ * We advise against relying on HEVC.
+ *
  * Playback is handled entirely via the Request Video Frame API, which is supported by most modern browsers.
  * A polyfill is provided for older browsers.
  *

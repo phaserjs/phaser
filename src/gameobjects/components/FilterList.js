@@ -5,12 +5,19 @@
  */
 
 var Class = require('../../utils/Class');
+var Barrel = require('../../filters/Barrel');
+var Blend = require('../../filters/Blend');
 var Blur = require('../../filters/Blur');
 var Bokeh = require('../../filters/Bokeh');
+var ColorMatrix = require('../../filters/ColorMatrix');
 var Displacement = require('../../filters/Displacement');
+var Glow = require('../../filters/Glow');
 var Mask = require('../../filters/Mask');
+var ParallelFilters = null;
 var Pixelate = require('../../filters/Pixelate');
 var Sampler = require('../../filters/Sampler');
+var Shadow = require('../../filters/Shadow');
+var Threshold = require('../../filters/Threshold');
 
 /**
  * @classdesc
@@ -22,22 +29,19 @@ var Sampler = require('../../filters/Sampler');
  *
  * Filters include the following:
  *
- * * Barrel Distortion (not yet implemented in Technical Preview 5)
- * * Bloom (not yet implemented in Technical Preview 5)
+ * * Barrel Distortion
  * * Blur
+ * * Blend
  * * Bokeh / Tilt Shift
- * * Circle Outline (not yet implemented in Technical Preview 5)
- * * Color Matrix (not yet implemented in Technical Preview 5)
- * * Glow (not yet implemented in Technical Preview 5)
+ * * Color Matrix
  * * Displacement
- * * Gradient (not yet implemented in Technical Preview 5)
+ * * Glow
  * * Mask
+ * * Parallel Filters
  * * Pixelate
  * * Sampler
- * * Shine (not yet implemented in Technical Preview 5)
- * * Shadow (not yet implemented in Technical Preview 5)
- * * Vignette (not yet implemented in Technical Preview 5)
- * * Wipe / Reveal (not yet implemented in Technical Preview 5)
+ * * Shadow
+ * * Threshold
  *
  * This list is either 'internal' or 'external'.
  * Internal filters apply to things within the camera.
@@ -80,10 +84,9 @@ var Sampler = require('../../filters/Sampler');
  * @since 3.90.0
  *
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that owns this list.
- * @param {boolean} [isExternal=false] - Whether this list is for external use.
  */
 var FilterList = new Class({
-    initialize: function FilterList (camera, isExternal)
+    initialize: function FilterList (camera)
     {
         /**
          * The Camera that owns this list.
@@ -108,18 +111,6 @@ var FilterList = new Class({
          * @since 3.90.0
          */
         this.list = [];
-
-        /**
-         * Whether this list is for external use.
-         * External filters apply to the camera in context,
-         * rather than things within the camera.
-         *
-         * @name Phaser.GameObjects.Components.FilterList#isExternal
-         * @type {boolean}
-         * @default false
-         * @since 3.90.0
-         */
-        this.isExternal = !!isExternal;
     },
 
     /**
@@ -190,6 +181,59 @@ var FilterList = new Class({
     },
 
     /**
+     * Returns all active filters in this list.
+     *
+     * @method Phaser.GameObjects.Components.FilterList#getActive
+     * @since 3.90.0
+     * @return {Phaser.Filters.Controller[]} The active filters in this list.
+     */
+    getActive: function ()
+    {
+        return this.list.filter(isActive);
+    },
+
+    /**
+     * Adds a Barrel effect.
+     *
+     * A barrel effect allows you to apply either a 'pinch' or 'expand' distortion to
+     * a Game Object. The amount of the effect can be modified in real-time.
+     *
+     * @method Phaser.GameObjects.Components.FilterList#addBarrel
+     * @since 3.90.0
+     * @param {number} [amount=1] - The amount of distortion applied to the barrel effect. A value of 1 is no distortion. Typically keep this within +- 1.
+     * @return {Phaser.Filters.Barrel} The new Barrel filter controller.
+     */
+    addBarrel: function (amount)
+    {
+        return this.add(new Barrel(this.camera, amount));
+    },
+
+    /**
+     * Adds a Blend effect.
+     *
+     * A blend effect allows you to apply another texture to the view
+     * using a specific blend mode.
+     * This supports blend modes not otherwise available in WebGL.
+     *
+     * @method Phaser.GameObjects.Components.FilterList#addBlend
+     * @since 3.90.0
+     * @param {Phaser.Textures.Texture} [texture='__WHITE'] - The texture to apply to the view.
+     * @param {Phaser.BlendModes} [blendMode=Phaser.BlendModes.NORMAL] - The blend mode to apply to the view.
+     * @param {number} [amount=1] - The amount of the blend effect to apply to the view. At 0, the original image is preserved. At 1, the blend texture is fully applied. The expected range is 0 to 1, but you can go outside that range for different effects.
+     * @param {[number, number, number, number]} [color=[1, 1, 1, 1]] - The color to apply to the blend texture. Each value corresponds to a color channel in RGBA. The expected range is 0 to 1, but you can go outside that range for different effects.
+     */
+    addBlend: function (texture, blendMode, amount, color)
+    {
+        return this.add(new Blend(
+            this.camera,
+            texture,
+            blendMode,
+            amount,
+            color
+        ));
+    },
+
+    /**
      * Adds a Blur effect.
      *
      * A Gaussian blur is the result of blurring an image by a Gaussian function. It is a widely used effect,
@@ -252,6 +296,24 @@ var FilterList = new Class({
     },
 
     /**
+     * Adds a Color Matrix effect.
+     *
+     * The color matrix effect is a visual technique that involves manipulating the colors of an image
+     * or scene using a mathematical matrix. This process can adjust hue, saturation, brightness, and contrast,
+     * allowing developers to create various stylistic appearances or mood settings within the game.
+     * Common applications include simulating different lighting conditions, applying color filters,
+     * or achieving a specific visual style.
+     *
+     * @method Phaser.GameObjects.Components.FilterList#addColorMatrix
+     * @since 3.90.0
+     * @return {Phaser.Filters.ColorMatrix} The new ColorMatrix filter controller.
+     */
+    addColorMatrix: function ()
+    {
+        return this.add(new ColorMatrix(this.camera));
+    },
+
+    /**
      * Adds a Displacement effect.
      *
      * The displacement effect is a visual technique that alters the position of pixels in an image
@@ -276,6 +338,41 @@ var FilterList = new Class({
             texture,
             x,
             y
+        ));
+    },
+
+    /**
+     * Adds a Glow effect.
+     *
+     * The glow effect is a visual technique that creates a soft, luminous halo around game objects,
+     * characters, or UI elements. This effect is used to emphasize importance, enhance visual appeal,
+     * or convey a sense of energy, magic, or otherworldly presence. The effect can also be set on
+     * the inside of the edge. The color and strength of the glow can be modified.
+     *
+     * @method Phaser.GameObjects.Components.FilterList#addGlow
+     * @since 3.90.0
+     *
+     * @param {number} [color=0xffffff] - The color of the glow effect as a number value.
+     * @param {number} [outerStrength=4] - The strength of the glow outward from the edge of textures.
+     * @param {number} [innerStrength=0] - The strength of the glow inward from the edge of textures.
+     * @param {number} [scale=1] - The scale of the glow effect. This multiplies the fixed distance.
+     * @param {boolean} [knockout=false] - If `true` only the glow is drawn, not the texture itself.
+     * @param {number} [quality=0.1] - The quality of the glow effect. This cannot be changed after the filter has been created.
+     * @param {number} [distance=10] - The distance of the glow effect. This cannot be changed after the filter has been created.
+     *
+     * @return {Phaser.Filters.Glow} The new Glow filter controller.
+     */
+    addGlow: function (color, outerStrength, innerStrength, scale, knockout, quality, distance)
+    {
+        return this.add(new Glow(
+            this.camera,
+            color,
+            outerStrength,
+            innerStrength,
+            scale,
+            knockout,
+            quality,
+            distance
         ));
     },
 
@@ -318,6 +415,52 @@ var FilterList = new Class({
             texture,
             invert
         ));
+    },
+
+    /**
+     * Adds a Parallel Filters effect.
+     *
+     * This filter controller splits the input into two lists of filters,
+     * runs each list separately, and then blends the results together.
+     *
+     * The Parallel Filters effect is useful for reusing an input.
+     * Ordinarily, a filter modifies the input and passes it to the next filter.
+     * This effect allows you to split the input and re-use it elsewhere.
+     * It does not gain performance benefits from parallel processing;
+     * it is a convenience for reusing the input.
+     *
+     * The Parallel Filters effect is not a filter itself.
+     * It is a controller that manages two FilterLists,
+     * and the final Blend filter that combines the results.
+     * The FilterLists are named 'top' and 'bottom'.
+     * The 'top' output is applied as a blend texture to the 'bottom' output.
+     *
+     * You do not have to populate both lists. If only one is populated,
+     * it will be blended with the original input at the end.
+     * This is useful when you want to retain image data that would be lost
+     * in the filter process.
+     *
+     * @example
+     * // Create a customizable Bloom effect.
+     * const camera = this.cameras.main;
+     * const parallelFilters = camera.filters.internal.addParallelFilters();
+     * parallelFilters.top.addThreshold(0.5, 1);
+     * parallelFilters.top.addBlur();
+     * parallelFilters.blend.blendMode = Phaser.BlendModes.ADD;
+     * parallelFilters.blend.amount = 0.5;
+     *
+     * @method Phaser.GameObjects.Components.FilterList#addParallelFilters
+     * @since 3.90.0
+     * @return {Phaser.Filters.ParallelFilters} The new Parallel Filters filter controller.
+     */
+    addParallelFilters: function ()
+    {
+        // This import avoids a circular dependency.
+        if (!ParallelFilters)
+        {
+            ParallelFilters = require('../../filters/ParallelFilters');
+        }
+        return this.add(new ParallelFilters(this.camera));
     },
 
     /**
@@ -371,6 +514,75 @@ var FilterList = new Class({
     },
 
     /**
+     * Adds a Shadow effect.
+     *
+     * The shadow effect is a visual technique used to create the illusion of depth and realism by adding darker,
+     * offset silhouettes or shapes beneath game objects, characters, or environments. These simulated shadows
+     * help to enhance the visual appeal and immersion, making the 2D game world appear more dynamic and three-dimensional.
+     *
+     * @method Phaser.GameObjects.Components.FilterList#addShadow
+     * @since 3.90.0
+     *
+     * @param {number} [x=0] - The horizontal offset of the shadow effect.
+     * @param {number} [y=0] - The vertical offset of the shadow effect.
+     * @param {number} [decay=0.1] - The amount of decay for the shadow effect.
+     * @param {number} [power=1] - The power of the shadow effect.
+     * @param {number} [color=0x000000] - The color of the shadow, as a hex value.
+     * @param {number} [samples=6] - The number of samples that the shadow effect will run for.
+     * @param {number} [intensity=1] - The intensity of the shadow effect.
+     *
+     * @return {Phaser.Filters.Shadow} The new Shadow filter controller.
+     */
+    addShadow: function (x, y, decay, power, color, samples, intensity)
+    {
+        return this.add(new Shadow(
+            this.camera,
+            x,
+            y,
+            decay,
+            power,
+            color,
+            samples,
+            intensity
+        ));
+    },
+
+    /**
+     * Adds a Threshold effect.
+     *
+     * Input values are compared to a threshold value or range.
+     * Values below the threshold are set to 0, and values above the threshold are set to 1.
+     * Values within the range are linearly interpolated between 0 and 1.
+     *
+     * This is useful for creating effects such as sharp edges from gradients,
+     * or for creating binary effects.
+     *
+     * The threshold is stored as a range, with two edges.
+     * Each edge has a value for each channel, between 0 and 1.
+     * If the two edges are the same, the threshold has no interpolation,
+     * and will output either 0 or 1.
+     * Each channel can also be inverted.
+     *
+     * @method Phaser.GameObjects.Components.FilterList#addThreshold
+     * @since 3.90.0
+     *
+     * @param {number|[number, number, number, number]} [edge1=0.5] - The first edge of the threshold.
+     * @param {number|[number, number, number, number]} [edge2=0.5] - The second edge of the threshold.
+     * @param {boolean|[boolean, boolean, boolean, boolean]} [invert=false] - Whether each channel is inverted.
+     *
+     * @return {Phaser.Filters.Threshold} The new Threshold filter controller.
+     */
+    addThreshold: function (edge1, edge2, invert)
+    {
+        return this.add(new Threshold(
+            this.camera,
+            edge1,
+            edge2,
+            invert
+        ));
+    },
+
+    /**
      * Adds a Tilt Shift effect.
      *
      * This Bokeh effect can also be used to generate a Tilt Shift effect, which is a technique used to create a miniature
@@ -418,5 +630,10 @@ var FilterList = new Class({
         this.camera = null;
     }
 });
+
+function isActive (filter)
+{
+    return filter.active;
+}
 
 module.exports = FilterList;

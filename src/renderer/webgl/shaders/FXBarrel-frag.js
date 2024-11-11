@@ -1,9 +1,10 @@
 module.exports = [
-    '#define SHADER_NAME BARREL_FS',
+    '#pragma phaserTemplate(shaderName)',
     'precision mediump float;',
     'uniform sampler2D uMainSampler;',
     'uniform float amount;',
     'varying vec2 outTexCoord;',
+    '#pragma phaserTemplate(fragmentHeader)',
     'vec2 Distort(vec2 p)',
     '{',
     '    float theta  = atan(p.y, p.x);',
@@ -21,6 +22,6 @@ module.exports = [
     '    {',
     '        texCoord = Distort(xy);',
     '    }',
-    '    gl_FragColor = texture2D(uMainSampler, texCoord);',
+    '    gl_FragColor = boundedSampler(uMainSampler, texCoord);',
     '}',
 ].join('\n');

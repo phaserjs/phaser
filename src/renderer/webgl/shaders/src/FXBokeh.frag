@@ -28,6 +28,8 @@ vec2 Sample (in float theta, inout float r)
     return (r - 1.0) * vec2(cos(theta), sin(theta)) * 0.06;
 }
 
+#pragma phaserTemplate(fragmentHeader)
+
 vec3 Bokeh (sampler2D tex, vec2 uv, float radius)
 {
     vec3 acc = vec3(0.0);
@@ -39,7 +41,7 @@ vec3 Bokeh (sampler2D tex, vec2 uv, float radius)
 
     for (float j = 0.0; j < GOLDEN_ANGLE * ITERATIONS; j += GOLDEN_ANGLE)
     {
-        vec3 col = texture2D(tex, uv + pixel * Sample(j, r)).xyz;
+        vec3 col = boundedSampler(tex, uv + pixel * Sample(j, r)).xyz;
 
         col = contrast > 0.0 ? col * col * (1.0 + contrast) : col;
 

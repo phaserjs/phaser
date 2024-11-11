@@ -26,7 +26,7 @@ var FilterPixelate = new Class({
 
     initialize: function FilterPixelate (manager)
     {
-        BaseFilterShader.call(this, 'FilterPixelate', manager, ShaderSourceFS);
+        BaseFilterShader.call(this, 'FilterPixelate', manager, null, ShaderSourceFS);
     },
 
     setupUniforms: function (controller, drawingContext)

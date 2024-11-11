@@ -6,6 +6,7 @@
 
 var Class = require('../../../../utils/Class');
 var SimpleTextureVert = require('../../shaders/SimpleTexture-vert.js');
+var MakeBoundedSampler = require('../../shaders/configs/MakeBoundedSampler.js');
 var ProgramManager = require('../../ProgramManager');
 var WebGLVertexBufferLayoutWrapper = require('../../wrappers/WebGLVertexBufferLayoutWrapper');
 var BaseFilter = require('./BaseFilter');
@@ -19,21 +20,45 @@ var BaseFilter = require('./BaseFilter');
  * It also provides the `run` method which handles the rendering of the filter.
  * When rendering, it generates a new DrawingContext to render to,
  * and releases the input DrawingContext.
+ * 
+ * Note: be careful when using `gl_FragCoord` in shader code.
+ * This built-in variable gives you the "window relative" coordinate
+ * of the pixel being processed.
+ * But this is actually relative to the framebuffer size,
+ * and Phaser treats all framebuffers except the main canvas
+ * as being vertically flipped.
+ * This means that `gl_FragCoord.y = 0` in a shader will be the bottom of a framebuffer,
+ * but the top of the canvas.
+ * This means `gl_FragCoord` gives different results when it's inside a
+ * framebuffer (like a Render Texture or Filter) compared to the main canvas.
+ * Be aware of this restriction when writing shaders.
  *
  * @class BaseFilterShader
  * @extends Phaser.Renderer.WebGL.RenderNodes.Filters.BaseFilter
  * @memberof Phaser.Renderer.WebGL.RenderNodes.Filters
  * @constructor
  * @since 3.90.0
- * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this filter.
  * @param {string} name - The name of the filter.
- * @param {string} fragmentShaderSource - The fragment shader source.
+ * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this filter.
+ * @param {string} [fragmentShaderKey] - The key of the fragment shader source in the shader cache. This will only be used if `fragmentShaderSource` is not set.
+ * @param {string} [fragmentShaderSource] - The fragment shader source.
+ * @param {?Phaser.Types.Renderer.WebGL.ShaderAdditionConfig[]} [shaderAdditions] - An array of shader additions to apply to the shader program.
  */
 var BaseFilterShader = new Class({
     Extends: BaseFilter,
 
-    initialize: function BaseFilterShader (name, manager, fragmentShaderSource)
+    initialize: function BaseFilterShader (name, manager, fragmentShaderKey, fragmentShaderSource, shaderAdditions)
     {
+        if (!fragmentShaderSource)
+        {
+            var baseShader = manager.renderer.shaders.get(fragmentShaderKey);
+            if (!(baseShader && baseShader.glsl))
+            {
+                throw new Error('BaseFilterShader: No fragment shader source provided and no shader found with key ' + fragmentShaderKey);
+            }
+            fragmentShaderSource = baseShader.glsl;
+        }
+
         BaseFilter.call(this, name, manager);
 
         var renderer = manager.renderer;
@@ -44,6 +69,7 @@ var BaseFilterShader = new Class({
             shaderName: name,
             vertexSource: SimpleTextureVert,
             fragmentSource: fragmentShaderSource,
+            shaderAdditions: shaderAdditions || [],
             vertexBufferLayout: {
                 usage: 'DYNAMIC_DRAW',
                 count: 4,
@@ -64,9 +90,8 @@ var BaseFilterShader = new Class({
             }
         };
 
-        // Ensure that there is no VAO bound, because the following index buffer
-        // will modify any currently bound VAO.
-        renderer.glWrapper.updateVAO({ vao: null });
+        // Include the BoundedSampler addition.
+        config.shaderAdditions.push(MakeBoundedSampler());
 
         /**
          * The index buffer defining vertex order.
@@ -75,10 +100,7 @@ var BaseFilterShader = new Class({
          * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
          * @since 3.90.0
          */
-        this.indexBuffer = renderer.createIndexBuffer(
-            new Uint16Array([ 0, 1, 2, 3 ]),
-            gl.STATIC_DRAW
-        );
+        this.indexBuffer = renderer.genericQuadIndexBuffer;
 
         /**
          * The vertex buffer layout for this RenderNode.
@@ -116,6 +138,11 @@ var BaseFilterShader = new Class({
             config.vertexSource,
             config.fragmentSource
         );
+        for (var i = 0; i < config.shaderAdditions.length; i++)
+        {
+            var addition = config.shaderAdditions[i];
+            this.programManager.addAddition(addition);
+        }
 
         // Set the shader program to use texture unit 0.
         this.programManager.setUniform('uMainSampler', 0);
@@ -142,7 +169,6 @@ var BaseFilterShader = new Class({
             );
         }
 
-        inputDrawingContext.release();
         outputDrawingContext.use();
 
         this.onRunBegin(outputDrawingContext);
@@ -205,28 +231,28 @@ var BaseFilterShader = new Class({
         var offset32 = 0;
 
         // Bottom Left.
-        vertexF32[offset32++] = xBL;
-        vertexF32[offset32++] = yBL;
-        vertexF32[offset32++] = 0;
-        vertexF32[offset32++] = 0;
+        vertexF32[offset32++] = -1;
+        vertexF32[offset32++] = -1;
+        vertexF32[offset32++] = remapCoord(0, xBL, xBR);
+        vertexF32[offset32++] = remapCoord(0, yBL, yBR);
 
         // Top Left.
-        vertexF32[offset32++] = xTL;
-        vertexF32[offset32++] = yTL;
-        vertexF32[offset32++] = 0;
+        vertexF32[offset32++] = -1;
         vertexF32[offset32++] = 1;
+        vertexF32[offset32++] = remapCoord(0, xTL, xTR);
+        vertexF32[offset32++] = remapCoord(1, yTL, yTR);
 
         // Bottom Right.
-        vertexF32[offset32++] = xBR;
-        vertexF32[offset32++] = yBR;
         vertexF32[offset32++] = 1;
-        vertexF32[offset32++] = 0;
+        vertexF32[offset32++] = -1;
+        vertexF32[offset32++] = remapCoord(1, xBL, xBR);
+        vertexF32[offset32++] = remapCoord(0, yBL, yBR);
 
         // Top Right.
-        vertexF32[offset32++] = xTR;
-        vertexF32[offset32++] = yTR;
         vertexF32[offset32++] = 1;
         vertexF32[offset32++] = 1;
+        vertexF32[offset32++] = remapCoord(1, xTL, xTR);
+        vertexF32[offset32++] = remapCoord(1, yTL, yTR);
 
         // Update vertex buffer.
         // Because we are probably using a generic vertex buffer
@@ -238,6 +264,7 @@ var BaseFilterShader = new Class({
         // Render.
 
         var programManager = this.programManager;
+        this.updateShaderConfig(controller, outputDrawingContext);
         var programSuite = programManager.getCurrentProgramSuite();
 
         if (programSuite)
@@ -261,9 +288,24 @@ var BaseFilterShader = new Class({
 
 
         // Complete render.
+        inputDrawingContext.release();
         this.onRunEnd(outputDrawingContext);
 
         return outputDrawingContext;
+    },
+
+    /**
+     * Set up the shader configuration for this shader.
+     * Override this method to handle shader configuration.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.Filters.BaseFilterShader#updateShaderConfig
+     * @since 3.90.0
+     * @param {Phaser.Filters.Controller} controller - The filter controller.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The drawing context in use.
+     */
+    updateShaderConfig: function (controller, drawingContext)
+    {
+        // NOOP
     },
 
     /**
@@ -294,5 +336,15 @@ var BaseFilterShader = new Class({
         // This is the base setupUniforms method that all filters should override
     }
 });
+
+function remapCoord (coord, low, high)
+{
+    // Low,high are in the range -1,1.
+    // Convert low,high to 0,1.
+    low = ((1 / low) + 1) * 0.5;
+    high = ((1 / high) + 1) * 0.5;
+
+    return low + coord * (high - low);
+}
 
 module.exports = BaseFilterShader;

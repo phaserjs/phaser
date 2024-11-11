@@ -29,7 +29,7 @@ var FilterBlurHigh = new Class({
 
     initialize: function FilterBlurHigh (manager)
     {
-        BaseFilterShader.call(this, 'FilterBlurHigh', manager, ShaderSourceFS);
+        BaseFilterShader.call(this, 'FilterBlurHigh', manager, null, ShaderSourceFS);
     },
 
     setupUniforms: function (controller, drawingContext)

@@ -5,6 +5,7 @@
  */
 
 var Camera = require('../../cameras/2d/Camera');
+var Rectangle = require('../../geom/rectangle/Rectangle');
 var BlendModes = require('../../renderer/BlendModes');
 var DefaultRenderFiltersNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultRenderFiltersNodes');
 var Class = require('../../utils/Class');
@@ -95,6 +96,14 @@ var RenderFiltersRender = require('./RenderFiltersRender');
  * The RenderFilters will neatly fill the game screen, and no more.
  *
  * In general, dynamic objects require extra attention.
+ * Objects without well-defined bounds such as Graphics and Rope
+ * will require manual focus changes; `autoFocus` is not recommended.
+ * Try the following generic example:
+ *
+ * ```javascript
+ * renderFilters.focus(child.x, child.y, game.width, game.height);
+ * ```
+ *
  * Ordinary objects such as Sprites will rarely require a focus change.
  * Only when they are getting cut off is it necessary to adjust the view.
  *
@@ -238,6 +247,33 @@ var RenderFilters = new Class({
          */
         this.autoFocus = false;
 
+        /**
+         * Whether the RenderFilters should focus on its own context,
+         * rather than the child.
+         * This is useful for objects which do not have a `getBounds` method.
+         *
+         * @name Phaser.GameObjects.RenderFilters#autoFocusContext
+         * @type {boolean}
+         * @default false
+         * @since 3.90.0
+         */
+        this.autoFocusContext = false;
+
+        /**
+         * Whether the RenderFilters needs to focus on its own context.
+         * It is useful when an object doesn't have `getBounds`,
+         * but is expected to stay within a fixed camera view.
+         *
+         * This flag is deactivated after rendering, so it is a one-time use.
+         * Use it to change focus just once.
+         *
+         * @name Phaser.GameObjects.RenderFilters#needsFocusContext
+         * @type {boolean}
+         * @default false
+         * @since 3.90.0
+         */
+        this.needsFocusContext = false;
+
         this.setChild(child, true, true);
         this.initRenderNodes(this._defaultRenderNodesMap);
     },
@@ -295,7 +331,14 @@ var RenderFilters = new Class({
 
         if (this.autoFocus)
         {
-            this.focusOnChild();
+            if (this.autoFocusContext)
+            {
+                this.needsFocusContext = true;
+            }
+            else
+            {
+                this.focusOnChild();
+            }
         }
     },
 
@@ -633,7 +676,11 @@ var RenderFilters = new Class({
 
         this.setSize(width, height);
         this.camera.setScroll(childX - x, childY - y);
-        this.setOrigin(childX / width, childY / height);
+        this.setOrigin(x / width, y / height);
+
+        // Stop automatic focus.
+        this.autoFocus = false;
+        this.needsFocusContext = false;
 
         return this;
     },
@@ -642,18 +689,99 @@ var RenderFilters = new Class({
      * Orient the internal camera to fit the child.
      * This will set this object's origin, and adjust the internal camera.
      *
-     * Caution: this method will change the RenderFilters size,
+     * If the child has no bounds, it cannot be focused, and the RenderFilters
+     * will automatically activate `autoFocusContext` to use the bounds
+     * of the camera which is rendering the RenderFilters.
+     *
+     * Caution: this method can change the RenderFilters size,
      * which can be expensive as new framebuffers are requested. Use sparingly.
      *
      * @method Phaser.GameObjects.RenderFilters#focusOnChild
      * @since 3.90.0
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - A camera to use instead of the child's bounds. This is used by the renderer when `autoFocusContext` is on.
      * @returns {this} This RenderFilters Game Object.
      */
-    focusOnChild: function ()
+    focusOnChild: function (camera)
     {
         var child = this.child;
 
-        if (!child || !child.getBounds) { return this; }
+        if (!child)
+        {
+            return this;
+        }
+
+        var rotation = child.rotation;
+        var scaleX = child.scaleX;
+        var scaleY = child.scaleY;
+
+        if (!camera)
+        {
+            var bounds = this._getChildBounds();
+        }
+
+        // If the child has no bounds, focus on the RenderFilters context.
+        if (!bounds)
+        {
+            if (camera)
+            {
+                bounds = new Rectangle(camera.scrollX, camera.scrollY, camera.width, camera.height);
+                rotation = -camera.rotation;
+                scaleX = 1 / camera.zoomX;
+                scaleY = 1 / camera.zoomY;
+            }
+            else
+            {
+                this.needsFocusContext = true;
+                this.autoFocusContext = true;
+                return this;
+            }
+        }
+        this.needsFocusContext = false;
+        this.autoFocusContext = false;
+
+        // Set the size to match the child.
+        var width = bounds.width;
+        var height = bounds.height;
+        this.setSize(width, height);
+
+        // Set the camera to match the child.
+        var internalCamera = this.camera;
+        var centerX = width === 0 ? child.x : bounds.centerX;
+        var centerY = height === 0 ? child.y : bounds.centerY;
+        var x = centerX - this.width / 2;
+        var y = centerY - this.height / 2;
+
+        internalCamera.setScroll(x, y);
+        internalCamera.setRotation(-rotation);
+        internalCamera.setZoom(1 / scaleX, 1 / scaleY);
+
+        this.setOrigin(
+            0.5 + (child.x - centerX) / this.width,
+            0.5 + (child.y - centerY) / this.height
+        );
+
+        return this;
+    },
+
+    /**
+     * Returns the bounds of the child.
+     *
+     * If the child exists, and has a `getBounds` method,
+     * it will temporarily reorient the child to get axis-aligned bounds,
+     * and if the bounds have non-zero widht and height,
+     * it will return those bounds.
+     * Otherwise, it will return null.
+     *
+     * @method Phaser.GameObjects.RenderFilters#_getChildBounds
+     * @private
+     * @since 3.90.0
+     * @returns {?Phaser.Geom.Rectangle} The bounds of the child, or null if the child does not exist or does not have a `getBounds` method.
+     */
+    _getChildBounds: function ()
+    {
+        var child = this.child;
+
+        if (!child || !child.getBounds) { return null; }
 
         // Temporarily reorient the child to get axis-aligned bounds.
         var rotation = child.rotation;
@@ -668,28 +796,12 @@ var RenderFilters = new Class({
         child.setScale(scaleX, scaleY);
         child.setRotation(rotation);
 
-        // Set the size to match the child.
-        var width = bounds.width;
-        var height = bounds.height;
-        this.setSize(width, height);
+        if (bounds.width === 0 || bounds.height === 0)
+        {
+            return null;
+        }
 
-        // Set the camera to match the child.
-        var camera = this.camera;
-        var centerX = width === 0 ? child.x : bounds.centerX;
-        var centerY = height === 0 ? child.y : bounds.centerY;
-        var x = centerX - this.width / 2;
-        var y = centerY - this.height / 2;
-
-        camera.setScroll(x, y);
-        camera.setRotation(-rotation);
-        camera.setZoom(1 / scaleX, 1 / scaleY);
-
-        this.setOrigin(
-            0.5 + (child.x - centerX) / this.width,
-            0.5 + (child.y - centerY) / this.height
-        );
-
-        return this;
+        return bounds;
     }
 });
 

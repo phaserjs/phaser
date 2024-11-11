@@ -87,12 +87,8 @@ var Camera = new Class({
         var alpha = camera.alpha;
 
         // Check if the camera has any active filters.
-        function isActive (filter)
-        {
-            return filter.active;
-        }
-        var internalFilters = camera.filters.internal.list.filter(isActive);
-        var externalFilters = camera.filters.external.list.filter(isActive);
+        var internalFilters = camera.filters.internal.getActive();
+        var externalFilters = camera.filters.external.getActive();
 
         var useFramebuffers = forceFramebuffer || internalFilters.length || externalFilters.length || alpha < 1;
 
@@ -223,6 +219,7 @@ var Camera = new Class({
             if (copyInternal)
             {
                 // Draw the framebuffer to the external context.
+                // If there are no external filters, this will be the final draw.
                 var quad;
                 if (parentTransformMatrix)
                 {
@@ -247,11 +244,9 @@ var Camera = new Class({
                         w, offsetY
                     ];
                 }
-    
+
                 tint = drawExternalFilters ? 0xffffffff : getAlphaTint(alpha);
-    
-                // Draw the framebuffer to the external context.
-                // If there are no external filters, this will be the final draw.
+
                 this.batchHandlerQuadNode.batch(
                     currentContext,
     
@@ -262,28 +257,31 @@ var Camera = new Class({
                     // any operation that accesses the framebuffer pool
                     // will cause the batch to flush before the texture is reassigned.
                     outputContext.texture,
-    
+
                     // Transformed quad in order TL, BL, TR, BR:
                     quad[0], quad[1],
                     quad[2], quad[3],
                     quad[6], quad[7],
                     quad[4], quad[5],
-    
+
                     // Texture coordinates in X, Y, Width, Height:
                     0, 0, 1, 1,
-    
+
                     // Tint color:
                     tint,
-    
+
                     // Tint colors in order TL, BL, TR, BR:
                     tint, tint, tint, tint,
-    
+
                     // Render options:
                     blankRenderOptions
                 );
             }
 
-            outputContext.release();
+            if (outputContext !== currentContext)
+            {
+                outputContext.release();
+            }
 
 
             // Draw external filters.

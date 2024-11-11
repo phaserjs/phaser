@@ -16,6 +16,7 @@ var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerStrip = require('./BatchHandlerStrip');
 var BatchHandlerTileSprite = require('./BatchHandlerTileSprite');
 var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
+
 var Camera = require('./Camera');
 var DrawLine = require('./DrawLine');
 var DynamicTextureHandler = require('./DynamicTextureHandler');
@@ -24,15 +25,22 @@ var FillPath = require('./FillPath');
 var FillRect = require('./FillRect');
 var FillTri = require('./FillTri');
 
+var FilterBarrel = require('./filters/FilterBarrel');
+var FilterBlend = require('./filters/FilterBlend');
 var FilterBlur = require('./filters/FilterBlur');
 var FilterBlurHigh = require('./filters/FilterBlurHigh');
 var FilterBlurLow = require('./filters/FilterBlurLow');
 var FilterBlurMed = require('./filters/FilterBlurMed');
 var FilterBokeh = require('./filters/FilterBokeh');
+var FilterColorMatrix = require('./filters/FilterColorMatrix');
 var FilterDisplacement = require('./filters/FilterDisplacement');
+var FilterGlow = require('./filters/FilterGlow');
 var FilterMask = require('./filters/FilterMask');
+var FilterParallelFilters = require('./filters/FilterParallelFilters');
 var FilterPixelate = require('./filters/FilterPixelate');
 var FilterSampler = require('./filters/FilterSampler');
+var FilterShadow = require('./filters/FilterShadow');
+var FilterThreshold = require('./filters/FilterThreshold');
 
 var ListCompositor = require('./ListCompositor');
 var RebindContext = require('./RebindContext');
@@ -140,6 +148,7 @@ var RenderNodeManager = new Class({
             BatchHandlerStrip: BatchHandlerStrip,
             BatchHandlerTileSprite: BatchHandlerTileSprite,
             BatchHandlerTriFlat: BatchHandlerTriFlat,
+
             Camera: Camera,
             DrawLine: DrawLine,
             DynamicTextureHandler: DynamicTextureHandler,
@@ -148,15 +157,22 @@ var RenderNodeManager = new Class({
             FillRect: FillRect,
             FillTri: FillTri,
 
+            FilterBarrel: FilterBarrel,
+            FilterBlend: FilterBlend,
             FilterBlur: FilterBlur,
             FilterBlurHigh: FilterBlurHigh,
             FilterBlurLow: FilterBlurLow,
             FilterBlurMed: FilterBlurMed,
             FilterBokeh: FilterBokeh,
+            FilterColorMatrix: FilterColorMatrix,
             FilterDisplacement: FilterDisplacement,
+            FilterGlow: FilterGlow,
             FilterMask: FilterMask,
+            FilterParallelFilters: FilterParallelFilters,
             FilterPixelate: FilterPixelate,
             FilterSampler: FilterSampler,
+            FilterShadow: FilterShadow,
+            FilterThreshold: FilterThreshold,
 
             ListCompositor: ListCompositor,
             RebindContext: RebindContext,

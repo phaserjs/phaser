@@ -24,7 +24,13 @@ var RenderFiltersWebGLRenderer = function (renderer, src, drawingContext, parent
 {
     var camera = drawingContext.camera;
     camera.addToRenderList(src);
+
     var innerCamera = src.camera;
+    if (src.needsFocusContext || src.autoFocusContext)
+    {
+        src.focusOnChild(camera);
+        src.needsFocusContext = false;
+    }
     innerCamera.preRender();
 
     var customRenderNodes = src.customRenderNodes;

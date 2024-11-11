@@ -28,7 +28,6 @@ var WebGLTextureUnitsWrapper = require('./wrappers/WebGLTextureUnitsWrapper');
 var WebGLFramebufferWrapper = require('./wrappers/WebGLFramebufferWrapper');
 var WebGLVAOWrapper = require('./wrappers/WebGLVAOWrapper');
 var WebGLAttribLocationWrapper = require('./wrappers/WebGLAttribLocationWrapper');
-var WebGLUniformLocationWrapper = require('./wrappers/WebGLUniformLocationWrapper');
 var WebGLBlendParametersFactory = require('./parameters/WebGLBlendParametersFactory');
 var WebGLGlobalParametersFactory = require('./parameters/WebGLGlobalParametersFactory');
 var RenderNodeManager = require('./renderNodes/RenderNodeManager');
@@ -319,15 +318,6 @@ var WebGLRenderer = new Class({
         this.glAttribLocationWrappers = [];
 
         /**
-         * A list of all WebGLUniformLocationWrappers that have been created by this renderer.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#glUniformLocationWrappers
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper[]}
-         * @since 3.80.0
-         */
-        this.glUniformLocationWrappers = [];
-
-        /**
          * A list of all WebGLVAOWrappers that have been created by this renderer.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glVAOWrappers
@@ -355,6 +345,18 @@ var WebGLRenderer = new Class({
          * @since 3.90.0
          */
         this.genericVertexData = null;
+
+        /**
+         * A generic quad index buffer. This is a READ-ONLY buffer.
+         * It describes the four corners of a quad,
+         * a structure which is used in several places in the renderer.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#genericQuadIndexBuffer
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
+         * @since 3.90.0
+         * @readonly
+         */
+        this.genericQuadIndexBuffer = null;
 
         /**
          * The DrawingContext used for the base canvas.
@@ -839,6 +841,12 @@ var WebGLRenderer = new Class({
                 var parallelShaderCompileString = 'KHR_parallel_shader_compile';
     
                 _this.parallelShaderCompileExtension = (exts.indexOf(parallelShaderCompileString) > -1) ? gl.getExtension(parallelShaderCompileString) : null;
+
+                if (!_this.parallelShaderCompileExtension)
+                {
+                    // Disable the option if the extension is not supported.
+                    game.config.skipUnreadyShaders = false;
+                }
             }
 
             var vaoString = 'OES_vertex_array_object';
@@ -906,7 +914,6 @@ var WebGLRenderer = new Class({
             ArrayEach(_this.glFramebufferWrappers, wrapperCreateResource);
             ArrayEach(_this.glProgramWrappers, wrapperCreateResource);
             ArrayEach(_this.glAttribLocationWrappers, wrapperCreateResource);
-            ArrayEach(_this.glUniformLocationWrappers, wrapperCreateResource);
             ArrayEach(_this.glVAOWrappers, wrapperCreateResource);
 
             // Restore texture unit assignment.
@@ -1072,12 +1079,11 @@ var WebGLRenderer = new Class({
         this.genericVertexData = new ArrayBuffer(genericVertexBytes);
         this.genericVertexBuffer = this.createVertexBuffer(this.genericVertexData, gl.DYNAMIC_DRAW);
 
-        // TODO: Remove PipelineManager once the RenderNodes are fully implemented.
-        // //  Set-up pipelines
-        // var pipelineManager = this.pipelines;
-        // var config = game.config;
-        //
-        // pipelineManager.boot(config.pipeline, config.defaultPipeline, config.autoMobilePipeline);
+        // Provision the generic quad index buffer.
+        // Ensure that there is no VAO bound, because the following index buffer
+        // will modify any currently bound VAO.
+        this.glWrapper.updateVAO({ vao: null });
+        this.genericQuadIndexBuffer = this.createIndexBuffer(new Uint16Array([ 0, 1, 2, 3 ]), gl.STATIC_DRAW);
 
         // Set up render nodes.
         this.renderNodes = new RenderNodeManager(this);
@@ -1094,7 +1100,6 @@ var WebGLRenderer = new Class({
         this.baseDrawingContext = new DrawingContext(this,
             {
                 autoClear: true,
-                autoResize: true,
                 useCanvas: true,
                 clearColor: [
                     this.config.backgroundColor.redGL,
@@ -1104,6 +1109,7 @@ var WebGLRenderer = new Class({
                 ]
             }
         );
+        this.on(Events.RESIZE, this.baseDrawingContext.resize, this.baseDrawingContext);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
@@ -1886,23 +1892,6 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Creates a WebGLUniformLocationWrapper instance based on the given WebGLProgramWrapper and uniform name.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#createUniformLocation
-     * @since 3.80.0
-     *
-     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The WebGLProgramWrapper instance.
-     * @param {string} name - The name of the uniform.
-     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper} The wrapped uniform location.
-     */
-    createUniformLocation: function (program, name)
-    {
-        var uniform = new WebGLUniformLocationWrapper(this.gl, program, name);
-        this.glUniformLocationWrappers.push(uniform);
-        return uniform;
-    },
-
-    /**
      * Wrapper for creating a vertex buffer.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createIndexBuffer
@@ -2014,24 +2003,6 @@ var WebGLRenderer = new Class({
         {
             ArrayRemove(this.glAttribLocationWrappers, attrib);
             attrib.destroy();
-        }
-
-        return this;
-    },
-
-    /**
-     * Deletes a WebGLUniformLocation from the GL instance.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteUniformLocation
-     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLUniformLocationWrapper} uniform - The uniform location to be deleted.
-     * @since 3.80.0
-     */
-    deleteUniformLocation: function (uniform)
-    {
-        if (uniform)
-        {
-            ArrayRemove(this.glUniformLocationWrappers, uniform);
-            uniform.destroy();
         }
 
         return this;
@@ -2666,6 +2637,8 @@ var WebGLRenderer = new Class({
      */
     destroy: function ()
     {
+        this.off(Events.RESIZE, this.baseDrawingContext.resize, this.baseDrawingContext);
+
         this.canvas.removeEventListener('webglcontextlost', this.contextLostHandler, false);
 
         this.canvas.removeEventListener('webglcontextrestored', this.contextRestoredHandler, false);
@@ -2679,7 +2652,6 @@ var WebGLRenderer = new Class({
         ArrayEach(this.glFramebufferWrappers, wrapperDestroy);
         ArrayEach(this.glProgramWrappers, wrapperDestroy);
         ArrayEach(this.glTextureWrappers, wrapperDestroy);
-        ArrayEach(this.glUniformLocationWrappers, wrapperDestroy);
 
         this.removeAllListeners();
 
