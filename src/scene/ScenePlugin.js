@@ -1022,6 +1022,7 @@ var ScenePlugin = new Class({
      *
      * @generic {Phaser.Scene} T
      * @genericUse {(T|string)} - [key]
+     * @genericUse {T} - [$return]
      *
      * @method Phaser.Scenes.ScenePlugin#get
      * @since 3.0.0
