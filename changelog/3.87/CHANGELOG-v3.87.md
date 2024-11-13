@@ -5,8 +5,8 @@
 
 ## Bug Fixes
 
+* Fixed the calculation of the index in `GetBitmapTextSize` that would lead to incorrect indexes vs. the docs and previous releases (thanks @bagyoni)
 * `Utils.String.RemoveAt` would incorrectly calculate the slice index if it was > 0. It will now remove the correctly specified character.
-
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
