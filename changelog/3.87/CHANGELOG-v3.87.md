@@ -1,5 +1,23 @@
 # Version 3.87 - Aoi - in dev
 
+## New Features
+
+* `FontFile` is a new File Type loader that allows you to load TTF/OTF fonts directly into Phaser, without the need for a 3rd party web font loader or CSS hacks. The loaded fonts can be used in the Text Game Objects, such as the example below:
+
+```js
+preload ()
+{
+    this.load.font('Caroni', 'assets/fonts/ttf/caroni.otf', 'opentype');
+    this.load.font('troika', 'assets/fonts/ttf/troika.otf', 'opentype');
+}
+
+create ()
+{
+    this.add.text(32, 32, 'The face of the moon was in shadow.', { fontFamily: 'troika', fontSize: 80, color: '#ff0000' });
+    this.add.text(150, 350, 'Waves flung themselves at the blue evening.', { fontFamily: 'Caroni', fontSize: 64, color: '#5656ee' });
+}
+```
+
 ## Updates
 
 * The Particle Animation State is now optional. A Particle will not create an Animation State controller unless the `anim` property exists within the emitter configuration. By not creating the controller it leads to less memory overhead and a much faster clean-up time when destroying particles. Fix #6482 (thanks @samme)
