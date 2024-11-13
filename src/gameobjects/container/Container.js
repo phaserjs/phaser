@@ -57,7 +57,7 @@ var tempTransformMatrix = new Components.TransformMatrix();
  *
  * It's important to understand the impact of using Containers. They add additional processing overhead into
  * every one of their children. The deeper you nest them, the more the cost escalates. This is especially true
- * for input events. You also loose the ability to set the display depth of Container children in the same
+ * for input events. You also lose the ability to set the display depth of Container children in the same
  * flexible manner as those not within them. In short, don't use them for the sake of it. You pay a small cost
  * every time you create one, try to structure your game around avoiding that where possible.
  *
