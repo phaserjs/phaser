@@ -20,6 +20,7 @@ module.exports = {
     BitmapFontFile: require('./BitmapFontFile'),
     CompressedTextureFile: require('./CompressedTextureFile'),
     CSSFile: require('./CSSFile'),
+    FontFile: require('./FontFile'),
     GLSLFile: require('./GLSLFile'),
     HTML5AudioFile: require('./HTML5AudioFile'),
     HTMLFile: require('./HTMLFile'),
