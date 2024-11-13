@@ -847,6 +847,7 @@ var SceneManager = new Class({
      * @since 3.16.0
      *
      * @generic {Phaser.Scene[]} T - [$return]
+     * @genericUse {T} - [$return]
      *
      * @param {boolean} [isActive=true] - Only include Scene's that are currently active?
      * @param {boolean} [inReverse=false] - Return the array of Scenes in reverse?
@@ -885,6 +886,7 @@ var SceneManager = new Class({
      *
      * @generic {Phaser.Scene} T
      * @genericUse {(T|string)} - [key]
+     * @genericUse {T} - [$return]
      *
      * @param {(string|Phaser.Scene)} key - The key of the Scene to retrieve.
      *
