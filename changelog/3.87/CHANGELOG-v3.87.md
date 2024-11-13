@@ -1,4 +1,4 @@
-# Version 3.86.§ - Aoi - in dev
+# Version 3.87 - Aoi - in dev
 
 ## Updates
 
@@ -12,3 +12,4 @@
 
 Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
+@Jessime
