@@ -330,11 +330,19 @@ var Particle = new Class({
          * It is responsible for playing, loading, queuing animations for later playback,
          * mixing between animations and setting the current animation frame to this Particle.
          *
+         * It is created only if the Particle's Emitter has at least one Animation.
+         *
          * @name Phaser.GameObjects.Particles.Particle#anims
-         * @type {Phaser.Animations.AnimationState}
+         * @type {?Phaser.Animations.AnimationState}
          * @since 3.60.0
+         * @see Phaser.GameObjects.Particles.ParticleEmitter#setAnim
          */
-        this.anims = new AnimationState(this);
+        this.anims = null;
+
+        if (this.emitter.anims.length > 0)
+        {
+            this.anims = new AnimationState(this);
+        }
 
         /**
          * A rectangle that holds the bounds of this Particle after a call to
@@ -590,7 +598,10 @@ var Particle = new Class({
             return false;
         }
 
-        this.anims.update(0, delta);
+        if (this.anims)
+        {
+            this.anims.update(0, delta);
+        }
 
         var emitter = this.emitter;
         var ops = emitter.ops;
@@ -783,7 +794,10 @@ var Particle = new Class({
      */
     destroy: function ()
     {
-        this.anims.destroy();
+        if (this.anims)
+        {
+            this.anims.destroy();
+        }
 
         this.anims = null;
         this.emitter = null;
