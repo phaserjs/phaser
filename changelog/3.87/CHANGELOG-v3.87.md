@@ -2,6 +2,7 @@
 
 ## Updates
 
+* The Particle Animation State is now optional. A Particle will not create an Animation State controller unless the `anim` property exists within the emitter configuration. By not creating the controller it leads to less memory overhead and a much faster clean-up time when destroying particles. Fix #6482 (thanks @samme)
 
 ## Bug Fixes
 
