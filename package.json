@@ -55,6 +55,7 @@
     "build-tsgen": "cd scripts/tsgen && tsc",
     "tsgen": "cd scripts/tsgen && jsdoc -c jsdoc-tsd.conf.json",
     "test-ts": "cd scripts/tsgen/test && tsc --build tsconfig.json > output.txt 2>&1",
+    "test-ts2": "cd scripts/tsgen/test && tsc --build tsconfig.json",
     "ts": "npm run tsgen && npm run test-ts",
     "tsdev": "npm run build-tsgen && npm run tsgen && npm run test-ts"
   },
