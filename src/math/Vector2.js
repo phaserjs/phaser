@@ -183,6 +183,19 @@ var Vector2 = new Class({
     },
 
     /**
+     * Swaps the x and y components of this Vector2.
+     *
+     * @method Phaser.Math.Vector2#invert
+     * @since 4.0.0
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    invert: function ()
+    {
+        return this.set(this.y, this.x);
+    },
+
+    /**
      * Sets the `x` and `y` values of this object from a given polar coordinate.
      *
      * @method Phaser.Math.Vector2#setToPolar
@@ -449,7 +462,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#setLength
      * @since 3.23.0
      *
-     * @param {number} length
+     * @param {number} length - The new magnitude of this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -740,6 +753,33 @@ var Vector2 = new Class({
         var scalar = this.dot(src) / src.dot(src);
 
         return this.copy(src).scale(scalar);
+    },
+
+    /**
+     * Calculates the vector projection of this Vector2 onto the non-zero `vecB`. This is the
+     * orthogonal projection of this vector onto a straight line parallel to `vecB`.
+     *
+     * @method Phaser.Math.Vector2#projectUnit
+     * @since 4.0.0
+     *
+     * @param {Phaser.Math.Vector2} vecB - The vector to project onto.
+     * @param {Phaser.Math.Vector2} [out] - The Vector2 object to store the position in. If not given, a new Vector2 instance is created.
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    projectUnit: function (vecB, out)
+    {
+        if (out === undefined) { out = new Vector2(); }
+
+        var amt = ((this.x * vecB.x) + (this.y * vecB.y));
+    
+        if (amt !== 0)
+        {
+            out.x = amt * vecB.x;
+            out.y = amt * vecB.y;
+        }
+    
+        return out;
     }
 
 });
