@@ -27,13 +27,13 @@ function getLength (x1, y1, x2, y2)
  * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to find the incenter of.
- * @param {Phaser.Math.Vector2} [out] - An optional Point in which to store the coordinates.
+ * @param {Phaser.Math.Vector2} [out] - An optional Vector2 point in which to store the coordinates.
  *
- * @return {Phaser.Math.Vector2} Point (x, y) of the center pixel of the triangle.
+ * @return {Phaser.Math.Vector2} The center of the triangle in a Vector2.
  */
 var InCenter = function (triangle, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     var x1 = triangle.x1;
     var y1 = triangle.y1;

@@ -4,21 +4,16 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-//  http://www.blackpawn.com/texts/pointinpoly/
-
-//  points is an array of Point-like objects with public x/y properties
-//  returns an array containing all points that are within the triangle, or an empty array if none
-//  if 'returnFirst' is true it will return after the first point within the triangle is found
-
 /**
  * Filters an array of point-like objects to only those contained within a triangle.
+ * 
  * If `returnFirst` is true, will return an array containing only the first point in the provided array that is within the triangle (or an empty array if there are no such points).
  *
  * @function Phaser.Geom.Triangle.ContainsArray
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Triangle} triangle - The triangle that the points are being checked in.
- * @param {Phaser.Math.Vector2[]} points - An array of point-like objects (objects that have an `x` and `y` property)
+ * @param {Phaser.Math.Vector2[]} points - An array of Vector2 objects to check if they are within the triangle.
  * @param {boolean} [returnFirst=false] - If `true`, return an array containing only the first point found that is within the triangle.
  * @param {array} [out] - If provided, the points that are within the triangle will be appended to this array instead of being added to a new array. If `returnFirst` is true, only the first point found within the triangle will be appended. This array will also be returned by this function.
  *

@@ -18,9 +18,9 @@ var Vector2 = require('../../math/Vector2');
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to get the points from.
  * @param {number} quantity - The number of evenly spaced points to return. Set to 0 to return an arbitrary number of points based on the `stepRate`.
  * @param {number} stepRate - If `quantity` is 0, the distance between each returned point.
- * @param {(array|Phaser.Math.Vector2[])} [out] - An array to which the points should be appended.
+ * @param {Phaser.Math.Vector2[]} [out] - An array to which the points should be appended.
  *
- * @return {(array|Phaser.Math.Vector2[])} The modified `out` array, or a new array if none was provided.
+ * @return {Phaser.Math.Vector2[]} The modified `out` array, or a new array if none was provided.
  */
 var GetPoints = function (triangle, quantity, stepRate, out)
 {
@@ -47,7 +47,7 @@ var GetPoints = function (triangle, quantity, stepRate, out)
         var p = perimeter * (i / quantity);
         var localPosition = 0;
 
-        var point = new Point();
+        var point = new Vector2();
 
         //  Which line is it on?
 

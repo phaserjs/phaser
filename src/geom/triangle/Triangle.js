@@ -140,9 +140,9 @@ var Triangle = new Class({
      * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {number} position - Position as float within `0` and `1`. `0` equals the first point.
-     * @param {(Phaser.Math.Vector2|object)} [output] - Optional Point, or point-like object, that the calculated point will be written to.
+     * @param {Phaser.Math.Vector2} [output] - Optional Vector2 point that the calculated point will be written to.
      *
-     * @return {(Phaser.Math.Vector2|object)} Calculated `Point` that represents the requested position. It is the same as `output` when this parameter has been given.
+     * @return {Phaser.Math.Vector2} Calculated Vetor2 that represents the requested position. It is the same as `output` when this parameter has been given.
      */
     getPoint: function (position, output)
     {
@@ -159,9 +159,9 @@ var Triangle = new Class({
      *
      * @param {number} quantity - Number of points to be generated. Can be falsey when `stepRate` should be used. All points have the same distance along the triangle.
      * @param {number} [stepRate] - Distance between two points. Will only be used when `quantity` is falsey.
-     * @param {(array|Phaser.Math.Vector2[])} [output] - Optional Array for writing the calculated points into. Otherwise a new array will be created.
+     * @param {Phaser.Math.Vector2[]} [output] - Optional array of Vector2 points for writing the calculated points into. Otherwise a new array will be created.
      *
-     * @return {(array|Phaser.Math.Vector2[])} Returns a list of calculated `Point` instances or the filled array passed as parameter `output`.
+     * @return {Phaser.Math.Vector2[]} Returns a list of calculated `Vector2` instances or the filled array passed as parameter `output`.
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -176,13 +176,13 @@ var Triangle = new Class({
      *
      * @generic {Phaser.Math.Vector2} O - [point,$return]
      *
-     * @param {Phaser.Math.Vector2} [point] - Optional `Point` that should be modified. Otherwise a new one will be created.
+     * @param {Phaser.Math.Vector2} [vec] - Optional Vector2 point that will be modified. Otherwise a new one will be created.
      *
-     * @return {Phaser.Math.Vector2} Random `Point`. When parameter `point` has been provided it will be returned.
+     * @return {Phaser.Math.Vector2} Random Vector2. When parameter `vec` has been provided it will be returned.
      */
-    getRandomPoint: function (point)
+    getRandomPoint: function (vec)
     {
-        return Random(this, point);
+        return Random(this, vec);
     },
 
     /**

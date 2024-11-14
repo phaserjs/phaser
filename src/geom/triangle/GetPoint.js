@@ -8,7 +8,7 @@ var Vector2 = require('../../math/Vector2');
 var Length = require('../line/Length');
 
 /**
- * Returns a Point from around the perimeter of a Triangle.
+ * Returns a Vector2 point from around the perimeter of a Triangle.
  *
  * @function Phaser.Geom.Triangle.GetPoint
  * @since 3.0.0
@@ -17,13 +17,13 @@ var Length = require('../line/Length');
  *
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to get the point on its perimeter from.
  * @param {number} position - The position along the perimeter of the triangle. A value between 0 and 1.
- * @param {(Phaser.Math.Vector2|object)} [out] - An option Point, or Point-like object to store the value in. If not given a new Point will be created.
+ * @param {Phaser.Math.Vector2} [out] - An optional Vector2 point to store the value in. If not given a new Vector2 will be created.
  *
- * @return {(Phaser.Math.Vector2|object)} A Point object containing the given position from the perimeter of the triangle.
+ * @return {Phaser.Math.Vector2)} A Vector2 point object containing the given position from the perimeter of the triangle.
  */
 var GetPoint = function (triangle, position, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     var line1 = triangle.getLineA();
     var line2 = triangle.getLineB();
