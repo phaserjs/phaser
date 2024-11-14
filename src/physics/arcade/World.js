@@ -29,7 +29,6 @@ var RTree = require('../../structs/RTree');
 var SeparateTile = require('./tilemap/SeparateTile');
 var SeparateX = require('./SeparateX');
 var SeparateY = require('./SeparateY');
-var Set = require('../../structs/Set');
 var StaticBody = require('./StaticBody');
 var TileIntersectsBody = require('./tilemap/TileIntersectsBody');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
@@ -553,11 +552,11 @@ var World = new Class({
     {
         if (body.physicsType === CONST.DYNAMIC_BODY)
         {
-            this.bodies.set(body);
+            this.bodies.add(body);
         }
         else if (body.physicsType === CONST.STATIC_BODY)
         {
-            this.staticBodies.set(body);
+            this.staticBodies.add(body);
 
             this.staticTree.insert(body);
         }
@@ -948,7 +947,7 @@ var World = new Class({
 
         //  Update all active bodies
         var body;
-        var bodies = this.bodies.entries;
+        var bodies = this.bodies;
 
         //  Will a step happen this frame?
         var willStep = (this._elapsed >= msPerFrame);
@@ -960,15 +959,13 @@ var World = new Class({
             this._elapsed = 0;
         }
 
-        for (i = 0; i < bodies.length; i++)
+        bodies.forEach(function (body)
         {
-            body = bodies[i];
-
             if (body.enable)
             {
                 body.preUpdate(willStep, fixedDelta);
             }
-        }
+        });
 
         //  We know that a step will happen this frame, so let's bundle it all together to save branching and iteration costs
         if (willStep)
@@ -980,7 +977,7 @@ var World = new Class({
             if (this.useTree)
             {
                 this.tree.clear();
-                this.tree.load(bodies);
+                this.tree.load(Array.from(bodies));
             }
 
             //  Process any colliders
@@ -1020,32 +1017,27 @@ var World = new Class({
     step: function (delta)
     {
         //  Update all active bodies
-        var i;
-        var body;
-        var bodies = this.bodies.entries;
-        var len = bodies.length;
+        var bodies = this.bodies;
 
-        for (i = 0; i < len; i++)
+        bodies.forEach(function (body)
         {
-            body = bodies[i];
-
             if (body.enable)
             {
                 body.update(delta);
             }
-        }
+        });
 
         //  Optionally populate our dynamic collision tree
         if (this.useTree)
         {
             this.tree.clear();
-            this.tree.load(bodies);
+            this.tree.load(Array.from(bodies));
         }
 
         //  Process any colliders
         var colliders = this.colliders.update();
 
-        for (i = 0; i < colliders.length; i++)
+        for (var i = 0; i < colliders.length; i++)
         {
             var collider = colliders[i];
 
@@ -1082,11 +1074,6 @@ var World = new Class({
      */
     postUpdate: function ()
     {
-        var i;
-        var body;
-        var bodies = this.bodies.entries;
-        var len = bodies.length;
-
         var dynamic = this.bodies;
         var staticBodies = this.staticBodies;
 
@@ -1095,15 +1082,13 @@ var World = new Class({
         {
             this.stepsLastFrame = 0;
 
-            for (i = 0; i < len; i++)
+            dynamic.forEach(function (body)
             {
-                body = bodies[i];
-
                 if (body.enable)
                 {
                     body.postUpdate();
                 }
-            }
+            });
         }
 
         if (this.drawDebug)
@@ -1112,28 +1097,21 @@ var World = new Class({
 
             graphics.clear();
 
-            for (i = 0; i < len; i++)
+            dynamic.forEach(function (body)
             {
-                body = bodies[i];
-
                 if (body.willDrawDebug())
                 {
                     body.drawDebug(graphics);
                 }
-            }
+            });
 
-            bodies = staticBodies.entries;
-            len = bodies.length;
-
-            for (i = 0; i < len; i++)
+            staticBodies.forEach(function (body)
             {
-                body = bodies[i];
-
                 if (body.willDrawDebug())
                 {
                     body.drawDebug(graphics);
                 }
-            }
+            });
         }
 
         var pending = this.pendingDestroy;
@@ -1143,13 +1121,8 @@ var World = new Class({
             var dynamicTree = this.tree;
             var staticTree = this.staticTree;
 
-            bodies = pending.entries;
-            len = bodies.length;
-
-            for (i = 0; i < len; i++)
+            pending.forEach(function (body)
             {
-                body = bodies[i];
-
                 if (body.physicsType === CONST.DYNAMIC_BODY)
                 {
                     dynamicTree.remove(body);
@@ -1163,7 +1136,7 @@ var World = new Class({
 
                 body.world = undefined;
                 body.gameObject = undefined;
-            }
+            });
 
             pending.clear();
         }
@@ -2118,7 +2091,7 @@ var World = new Class({
         else
         {
             var children = group.getChildren();
-            var skipIndex = group.children.entries.indexOf(sprite);
+            var skipIndex = children.indexOf(sprite);
 
             len = children.length;
 

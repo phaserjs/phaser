@@ -15,7 +15,6 @@ module.exports = {
     Map: require('./Map'),
     ProcessQueue: require('./ProcessQueue'),
     RTree: require('./RTree'),
-    Set: require('./Set'),
     Size: require('./Size')
 
 };
