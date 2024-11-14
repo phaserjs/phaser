@@ -66,13 +66,13 @@ var GetEasedPoints = function (line, ease, quantity, collinearThreshold, easePar
     {
         v = easeFunc(i / q);
 
-        results.push(new Point(x1 + (spaceX * v), y1 + (spaceY * v)));
+        results.push(new Vector2(x1 + (spaceX * v), y1 + (spaceY * v)));
     }
 
     //  Always include the end of the line
     v = easeFunc(1);
 
-    results.push(new Point(x1 + (spaceX * v), y1 + (spaceY * v)));
+    results.push(new Vector2(x1 + (spaceX * v), y1 + (spaceY * v)));
 
     //  Remove collinear parts
     if (collinearThreshold > 0)

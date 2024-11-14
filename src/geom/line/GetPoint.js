@@ -16,13 +16,13 @@ var Vector2 = require('../../math/Vector2');
  *
  * @param {Phaser.Geom.Line} line - The line.
  * @param {number} position - A value between 0 and 1, where 0 is the start, 0.5 is the middle and 1 is the end of the line.
- * @param {(Phaser.Math.Vector2|object)} [out] - An optional point, or point-like object, to store the coordinates of the point on the line.
+ * @param {Phaser.Math.Vector2} [out] - An optional Vector2 object to store the coordinates of the point on the line.
  *
- * @return {(Phaser.Math.Vector2|object)} The point on the line.
+ * @return {Phaser.Math.Vector2} The point on the line.
  */
 var GetPoint = function (line, position, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     out.x = line.x1 + (line.x2 - line.x1) * position;
     out.y = line.y1 + (line.y2 - line.y1) * position;

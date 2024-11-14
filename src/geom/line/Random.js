@@ -14,14 +14,14 @@ var Vector2 = require('../../math/Vector2');
  *
  * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
- * @param {Phaser.Geom.Line} line - The Line to calculate the random Point on.
- * @param {(Phaser.Math.Vector2|object)} [out] - An instance of a Point to be modified.
+ * @param {Phaser.Geom.Line} line - The Line to calculate the random point on.
+ * @param {Phaser.Math.Vector2} [out] - An instance of a Vector2 to be modified.
  *
- * @return {(Phaser.Math.Vector2|object)} A random Point on the Line.
+ * @return {Phaser.Math.Vector2} A random point on the Line stored in a Vector2.
  */
 var Random = function (line, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     var t = Math.random();
 

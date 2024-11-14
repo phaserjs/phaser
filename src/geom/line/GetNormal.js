@@ -19,13 +19,13 @@ var Vector2 = require('../../math/Vector2');
  * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Line} line - The line to calculate the normal of.
- * @param {(Phaser.Math.Vector2|object)} [out] - An optional point object to store the normal in.
+ * @param {Phaser.Math.Vector2} [out] - An optional Vector2 object to store the normal in.
  *
- * @return {(Phaser.Math.Vector2|object)} The normal of the Line.
+ * @return {Phaser.Math.Vector2} The normal of the Line.
  */
 var GetNormal = function (line, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     var a = Angle(line) - MATH_CONST.PI_OVER_2;
 

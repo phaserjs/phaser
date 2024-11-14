@@ -16,14 +16,14 @@ var Vector2 = require('../../math/Vector2');
  * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Line} line - The line to get the nearest point on.
- * @param {(Phaser.Math.Vector2|object)} point - The point to get the nearest point to.
- * @param {(Phaser.Math.Vector2|object)} [out] - An optional point, or point-like object, to store the coordinates of the nearest point on the line.
+ * @param {Phaser.Math.Vector2} vec - The Vector2 to get the nearest point to.
+ * @param {Phaser.Math.Vector2} [out] - An optional Vector2 object, to store the coordinates of the nearest point on the line.
  *
- * @return {(Phaser.Math.Vector2|object)} The nearest point on the line.
+ * @return {Phaser.Math.Vector2} The nearest point on the line.
  */
-var GetNearestPoint = function (line, point, out)
+var GetNearestPoint = function (line, vec, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     var x1 = line.x1;
     var y1 = line.y1;
@@ -38,7 +38,7 @@ var GetNearestPoint = function (line, point, out)
         return out;
     }
 
-    var r = (((point.x - x1) * (x2 - x1)) + ((point.y - y1) * (y2 - y1))) / L2;
+    var r = (((vec.x - x1) * (x2 - x1)) + ((vec.y - y1) * (y2 - y1))) / L2;
 
     out.x = x1 + (r * (x2 - x1));
     out.y = y1 + (r * (y2 - y1));
