@@ -467,7 +467,7 @@ var Container = new Class({
     },
 
     /**
-     * Takes a Point-like object, such as a Vector2, Geom.Point or object with public x and y properties,
+     * Takes a Point-like object, such as a Vector2, or object with public x and y properties,
      * and transforms it into the space of this Container, then returns it in the output object.
      *
      * @method Phaser.GameObjects.Container#pointToContainer

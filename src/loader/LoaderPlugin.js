@@ -261,7 +261,7 @@ var LoaderPlugin = new Class({
          * By the end of the load process this Set will be empty.
          *
          * @name Phaser.Loader.LoaderPlugin#list
-         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
+         * @type {Set.<Phaser.Loader.File>}
          * @since 3.0.0
          */
         this.list = new Set();
@@ -274,7 +274,7 @@ var LoaderPlugin = new Class({
          * By the end of the load process this Set will be empty.
          *
          * @name Phaser.Loader.LoaderPlugin#inflight
-         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
+         * @type {Set.<Phaser.Loader.File>}
          * @since 3.0.0
          */
         this.inflight = new Set();
@@ -288,7 +288,7 @@ var LoaderPlugin = new Class({
          * At the end of the load process this Set will be empty.
          *
          * @name Phaser.Loader.LoaderPlugin#queue
-         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
+         * @type {Set.<Phaser.Loader.File>}
          * @since 3.0.0
          */
         this.queue = new Set();
@@ -298,7 +298,7 @@ var LoaderPlugin = new Class({
          * awaiting destruction at the end of the load process.
          *
          * @name Phaser.Loader.LoaderPlugin#_deleteQueue
-         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
+         * @type {Set.<Phaser.Loader.File>}
          * @private
          * @since 3.7.0
          */

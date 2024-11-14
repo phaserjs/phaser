@@ -45,7 +45,7 @@ var EdgeZone = new Class({
          * The points placed on the source edge.
          *
          * @name Phaser.GameObjects.Particles.Zones.EdgeZone#points
-         * @type {Phaser.Geom.Point[]}
+         * @type {Phaser.Math.Vector2[]}
          * @default []
          * @since 3.0.0
          */

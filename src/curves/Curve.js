@@ -175,7 +175,7 @@ var Curve = new Class({
      *
      * @param {number} distance - The distance, in pixels, between each point along the curve.
      *
-     * @return {Phaser.Geom.Point[]} An Array of Point objects.
+     * @return {Phaser.Math.Vector2[]} An Array of Vector2 objects.
      */
     getDistancePoints: function (distance)
     {
@@ -317,9 +317,9 @@ var Curve = new Class({
      *
      * @param {number} [divisions] - The number of divisions to make.
      * @param {number} [stepRate] - The curve distance between points, implying `divisions`.
-     * @param {(array|Phaser.Math.Vector2[])} [out] - An optional array to store the points in.
+     * @param {Phaser.Math.Vector2[]} [out] - An optional array to store the points in.
      *
-     * @return {(array|Phaser.Math.Vector2[])} An array of Points from the curve.
+     * @return {Phaser.Math.Vector2[]} An array of Vector2 points from the curve.
      */
     getPoints: function (divisions, stepRate, out)
     {
@@ -377,9 +377,9 @@ var Curve = new Class({
      *
      * @param {number} [divisions=this.defaultDivisions] - The number of divisions to make.
      * @param {number} [stepRate] - Step between points. Used to calculate the number of points to return when divisions is falsy. Ignored if divisions is positive.
-     * @param {(array|Phaser.Math.Vector2[])} [out] - An optional array to store the points in.
+     * @param {Phaser.Math.Vector2[]} [out] - An optional array to store the points in.
      *
-     * @return {Phaser.Math.Vector2[]} An array of points.
+     * @return {Phaser.Math.Vector2[]} An array of Vector2 points.
      */
     getSpacedPoints: function (divisions, stepRate, out)
     {

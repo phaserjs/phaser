@@ -95,7 +95,7 @@ var Group = new Class({
          * Members of this group.
          *
          * @name Phaser.GameObjects.Group#children
-         * @type {Phaser.Structs.Set.<Phaser.GameObjects.GameObject>}
+         * @type {Set.<Phaser.GameObjects.GameObject>}
          * @since 3.0.0
          */
         this.children = new Set();

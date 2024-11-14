@@ -892,7 +892,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#fillPointShape
      * @since 3.0.0
      *
-     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - The point to fill.
+     * @param {Phaser.Math.Vector2} point - The point to fill.
      * @param {number} [size=1] - The size of the square to draw.
      *
      * @return {this} This Game Object.
@@ -1108,7 +1108,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#strokePoints
      * @since 3.0.0
      *
-     * @param {(array|Phaser.Geom.Point[])} points - The points to stroke.
+     * @param {Phaser.Math.Vector2[]} points - The points to stroke.
      * @param {boolean} [closeShape=false] - When `true`, the shape is closed by joining the last point to the first point.
      * @param {boolean} [closePath=false] - When `true`, the path is closed before being stroked.
      * @param {number} [endIndex] - The index of `points` to stop drawing at. Defaults to `points.length`.
@@ -1155,7 +1155,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#fillPoints
      * @since 3.0.0
      *
-     * @param {(array|Phaser.Geom.Point[])} points - The points to fill.
+     * @param {Phaser.Math.Vector2[]} points - The points to fill.
      * @param {boolean} [closeShape=false] - When `true`, the shape is closed by joining the last point to the first point.
      * @param {boolean} [closePath=false] - When `true`, the path is closed before being stroked.
      * @param {number} [endIndex] - The index of `points` to stop at. Defaults to `points.length`.

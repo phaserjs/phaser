@@ -99,7 +99,7 @@ var Rope = new Class({
         /**
          * An array containing the points data for this Rope.
          *
-         * Each point should be given as a Vector2Like object (i.e. a Vector2, Geom.Point or object with public x/y properties).
+         * Each point should be given as a Vector2Like object (i.e. a Vector2 or object with public x/y properties).
          *
          * The point coordinates are given in local space, where 0 x 0 is the start of the Rope strip.
          *

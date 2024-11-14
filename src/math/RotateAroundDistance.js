@@ -14,7 +14,7 @@
  *
  * @generic {Phaser.Types.Math.Vector2Like} T - [point,$return]
  *
- * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
+ * @param {Phaser.Types.Math.Vector2Like} point - The point to be rotated.
  * @param {number} x - The horizontal coordinate to rotate around.
  * @param {number} y - The vertical coordinate to rotate around.
  * @param {number} angle - The angle of rotation in radians.

@@ -9,11 +9,13 @@
  *
  * @function Phaser.Math.Rotate
  * @since 3.0.0
+ * 
+ * @generic {Phaser.Types.Math.Vector2Like} T - [point,$return]
  *
- * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
+ * @param {Phaser.Types.Math.Vector2Like} point - The point to be rotated.
  * @param {number} angle - The angle to be rotated by in an anticlockwise direction.
  *
- * @return {Phaser.Geom.Point} The given point, rotated by the given angle in an anticlockwise direction.
+ * @return {Phaser.Types.Math.Vector2Like} The given point, rotated by the given angle in an anticlockwise direction.
  */
 var Rotate = function (point, angle)
 {
