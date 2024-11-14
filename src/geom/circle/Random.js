@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Returns a uniformly distributed random point from anywhere within the given Circle.
@@ -15,13 +15,13 @@ var Point = require('../point/Point');
  * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Circle} circle - The Circle to get a random point from.
- * @param {(Phaser.Math.Vector2|object)} [out] - A Point or point-like object to set the random `x` and `y` values in.
+ * @param {Phaser.Math.Vector2} [out] - A Vector2 object to set the random `x` and `y` values in.
  *
- * @return {(Phaser.Math.Vector2|object)} A Point object with the random values set in the `x` and `y` properties.
+ * @return {Phaser.Math.Vector2} A Vector2 object with the random values set in the `x` and `y` properties.
  */
 var Random = function (circle, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     var t = 2 * Math.PI * Math.random();
     var u = Math.random() + Math.random();

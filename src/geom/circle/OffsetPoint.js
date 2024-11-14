@@ -5,7 +5,7 @@
  */
 
 /**
- * Offsets the Circle by the values given in the `x` and `y` properties of the Point object.
+ * Offsets the Circle by the values given in the `x` and `y` properties of the Vector2 object.
  *
  * @function Phaser.Geom.Circle.OffsetPoint
  * @since 3.0.0
@@ -13,14 +13,14 @@
  * @generic {Phaser.Geom.Circle} O - [circle,$return]
  *
  * @param {Phaser.Geom.Circle} circle - The Circle to be offset (translated.)
- * @param {(Phaser.Math.Vector2|object)} point - The Point object containing the values to offset the Circle by.
+ * @param {Phaser.Math.Vector2} vec - The Vector2 object containing the values to offset the Circle by.
  *
  * @return {Phaser.Geom.Circle} The Circle that was offset.
  */
-var OffsetPoint = function (circle, point)
+var OffsetPoint = function (circle, vec)
 {
-    circle.x += point.x;
-    circle.y += point.y;
+    circle.x += vec.x;
+    circle.y += vec.y;
 
     return circle;
 };
