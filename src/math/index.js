@@ -39,6 +39,7 @@ var PhaserMath = {
     FloatBetween: require('./FloatBetween'),
     FloorTo: require('./FloorTo'),
     FromPercent: require('./FromPercent'),
+    GetCentroid: require('./GetCentroid'),
     GetSpeed: require('./GetSpeed'),
     IsEven: require('./IsEven'),
     IsEvenStrict: require('./IsEvenStrict'),
