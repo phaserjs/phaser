@@ -13,13 +13,13 @@ var Contains = require('./Contains');
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Polygon} polygon - The Polygon to check.
- * @param {Phaser.Math.Vector2} point - The Point to check if it's within the Polygon.
+ * @param {Phaser.Math.Vector2} vec - The Vector2 point to check if it's within the Polygon.
  *
- * @return {boolean} `true` if the Point is within the Polygon, otherwise `false`.
+ * @return {boolean} `true` if the point is within the Polygon, otherwise `false`.
  */
-var ContainsPoint = function (polygon, point)
+var ContainsPoint = function (polygon, vec)
 {
-    return Contains(polygon, point.x, point.y);
+    return Contains(polygon, vec.x, vec.y);
 };
 
 module.exports = ContainsPoint;

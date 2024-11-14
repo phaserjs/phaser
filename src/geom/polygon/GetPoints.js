@@ -9,7 +9,7 @@ var Line = require('../line/Line');
 var Perimeter = require('./Perimeter');
 
 /**
- * Returns an array of Point objects containing the coordinates of the points around the perimeter of the Polygon,
+ * Returns an array of Vector2 objects containing the coordinates of the points around the perimeter of the Polygon,
  * based on the given quantity or stepRate values.
  *
  * @function Phaser.Geom.Polygon.GetPoints
@@ -20,7 +20,7 @@ var Perimeter = require('./Perimeter');
  * @param {number} [stepRate] - Sets the quantity by getting the perimeter of the Polygon and dividing it by the stepRate.
  * @param {array} [output] - An array to insert the points in to. If not provided a new array will be created.
  *
- * @return {Phaser.Math.Vector2[]} An array of Point objects pertaining to the points around the perimeter of the Polygon.
+ * @return {Phaser.Math.Vector2[]} An array of Vector2 objects pertaining to the points around the perimeter of the Polygon.
  */
 var GetPoints = function (polygon, quantity, stepRate, out)
 {
