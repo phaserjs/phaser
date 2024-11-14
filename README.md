@@ -61,6 +61,9 @@ Other changes also include the following:
 * `Vector2.projectUnit` is a new method that will calculate the vector projection onto a non-zero target vector. Use as a replacement for `Geom.Point.ProjectUnit`.
 * `Math.GetCentroid` is a new function that will get the centroid, or geometric center, of a plane figure from an array of Vector2 like objects. Use as a replacement for `Geom.Point.GetCentroid`.
 * `Math.GetVec2Bounds` is a new function that will get the AABB bounds as a Geom.Rectangle from an array of Vector2 objects. Use as a replacement for `Geom.Point.GetRectangleFromPoints`.
+* `Math.TAU` is now actually the value of tau! (i.e. PI * 2) instead of being PI / 2.
+* `Math.PI2` has been removed. You can use `Math.TAU` instead. All internal use of PI2 has been replaced with TAU.
+* `Math.PI_OVER_2` is a new constant for PI / 2 and all internal use of TAU has been updated to this new constant.
 
 ## Installing Phaser from NPM
 
