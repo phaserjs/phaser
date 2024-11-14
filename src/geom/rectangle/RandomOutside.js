@@ -15,13 +15,13 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Rectangle.RandomOutside
  * @since 3.10.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Rectangle} outer - The outer Rectangle to get the random point within.
  * @param {Phaser.Geom.Rectangle} inner - The inner Rectangle to exclude from the returned point.
- * @param {Phaser.Geom.Point} [out] - A Point, or Point-like object to store the result in. If not specified, a new Point will be created.
+ * @param {Phaser.Math.Vector2} [out] - A Point, or Point-like object to store the result in. If not specified, a new Point will be created.
  *
- * @return {Phaser.Geom.Point} A Point object containing the random values in its `x` and `y` properties.
+ * @return {Phaser.Math.Vector2} A Point object containing the random values in its `x` and `y` properties.
  */
 var RandomOutside = function (outer, inner, out)
 {

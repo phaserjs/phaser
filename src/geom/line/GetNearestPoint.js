@@ -13,13 +13,13 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Line.GetNearestPoint
  * @since 3.16.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Line} line - The line to get the nearest point on.
- * @param {(Phaser.Geom.Point|object)} point - The point to get the nearest point to.
- * @param {(Phaser.Geom.Point|object)} [out] - An optional point, or point-like object, to store the coordinates of the nearest point on the line.
+ * @param {(Phaser.Math.Vector2|object)} point - The point to get the nearest point to.
+ * @param {(Phaser.Math.Vector2|object)} [out] - An optional point, or point-like object, to store the coordinates of the nearest point on the line.
  *
- * @return {(Phaser.Geom.Point|object)} The nearest point on the line.
+ * @return {(Phaser.Math.Vector2|object)} The nearest point on the line.
  */
 var GetNearestPoint = function (line, point, out)
 {

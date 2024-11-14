@@ -7,7 +7,7 @@
 var CircumferencePoint = require('./CircumferencePoint');
 var FromPercent = require('../../math/FromPercent');
 var MATH_CONST = require('../../math/const');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Returns a Point object containing the coordinates of a point on the circumference of the Circle
@@ -17,19 +17,19 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Circle.GetPoint
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Circle} circle - The Circle to get the circumference point on.
  * @param {number} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the circle.
- * @param {(Phaser.Geom.Point|object)} [out] - An object to store the return values in. If not given a Point object will be created.
+ * @param {Phaser.Math.Vector2} [out] - A Vector2 instance to store the return values in. If not given a new Vector2 object will be created.
  *
- * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point around the circle.
+ * @return {Phaser.Math.Vector2} A Vector2 containing the coordinates of the point around the circle.
  */
 var GetPoint = function (circle, position, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
-    var angle = FromPercent(position, 0, MATH_CONST.PI2);
+    var angle = FromPercent(position, 0, MATH_CONST.TAU);
 
     return CircumferencePoint(circle, angle, out);
 };

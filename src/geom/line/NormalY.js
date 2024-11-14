@@ -20,7 +20,7 @@ var Angle = require('./Angle');
  */
 var NormalY = function (line)
 {
-    return Math.sin(Angle(line) - MATH_CONST.TAU);
+    return Math.sin(Angle(line) - MATH_CONST.PI_OVER_2);
 };
 
 module.exports = NormalY;

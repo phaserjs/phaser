@@ -13,7 +13,7 @@
  * @generic {Phaser.Geom.Ellipse} O - [ellipse,$return]
  *
  * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to be offset (translated.)
- * @param {(Phaser.Geom.Point|object)} point - The Point object containing the values to offset the Ellipse by.
+ * @param {(Phaser.Math.Vector2|object)} point - The Point object containing the values to offset the Ellipse by.
  *
  * @return {Phaser.Geom.Ellipse} The Ellipse that was offset.
  */

@@ -20,7 +20,7 @@ var Perimeter = require('./Perimeter');
  * @param {number} [stepRate] - Sets the quantity by getting the perimeter of the Polygon and dividing it by the stepRate.
  * @param {array} [output] - An array to insert the points in to. If not provided a new array will be created.
  *
- * @return {Phaser.Geom.Point[]} An array of Point objects pertaining to the points around the perimeter of the Polygon.
+ * @return {Phaser.Math.Vector2[]} An array of Point objects pertaining to the points around the perimeter of the Polygon.
  */
 var GetPoints = function (polygon, quantity, stepRate, out)
 {

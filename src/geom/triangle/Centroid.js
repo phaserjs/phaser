@@ -18,12 +18,12 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Triangle.Centroid
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to use.
- * @param {(Phaser.Geom.Point|object)} [out] - An object to store the coordinates in.
+ * @param {(Phaser.Math.Vector2|object)} [out] - An object to store the coordinates in.
  *
- * @return {(Phaser.Geom.Point|object)} The `out` object with modified `x` and `y` properties, or a new Point if none was provided.
+ * @return {(Phaser.Math.Vector2|object)} The `out` object with modified `x` and `y` properties, or a new Point if none was provided.
  */
 var Centroid = function (triangle, out)
 {

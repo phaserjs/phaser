@@ -13,14 +13,14 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Triangle.GetPoints
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to get the points from.
  * @param {number} quantity - The number of evenly spaced points to return. Set to 0 to return an arbitrary number of points based on the `stepRate`.
  * @param {number} stepRate - If `quantity` is 0, the distance between each returned point.
- * @param {(array|Phaser.Geom.Point[])} [out] - An array to which the points should be appended.
+ * @param {(array|Phaser.Math.Vector2[])} [out] - An array to which the points should be appended.
  *
- * @return {(array|Phaser.Geom.Point[])} The modified `out` array, or a new array if none was provided.
+ * @return {(array|Phaser.Math.Vector2[])} The modified `out` array, or a new array if none was provided.
  */
 var GetPoints = function (triangle, quantity, stepRate, out)
 {

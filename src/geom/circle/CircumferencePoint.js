@@ -12,13 +12,13 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Circle.CircumferencePoint
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Circle} circle - The Circle to get the circumference point on.
  * @param {number} angle - The angle from the center of the Circle to the circumference to return the point from. Given in radians.
- * @param {(Phaser.Geom.Point|object)} [out] - A Point, or point-like object, to store the results in. If not given a Point will be created.
+ * @param {(Phaser.Math.Vector2|object)} [out] - A Point, or point-like object, to store the results in. If not given a Point will be created.
  *
- * @return {(Phaser.Geom.Point|object)} A Point object where the `x` and `y` properties are the point on the circumference.
+ * @return {(Phaser.Math.Vector2|object)} A Point object where the `x` and `y` properties are the point on the circumference.
  */
 var CircumferencePoint = function (circle, angle, out)
 {

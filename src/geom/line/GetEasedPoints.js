@@ -33,7 +33,7 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Line.GetEasedPoints
  * @since 3.23.0
  *
- * @generic {Phaser.Geom.Point[]} O - [out,$return]
+ * @generic {Phaser.Math.Vector2[]} O - [out,$return]
  *
  * @param {Phaser.Geom.Line} line - The Line object.
  * @param {(string|function)} ease - The ease to use. This can be either a string from the EaseMap, or a custom function.
@@ -41,7 +41,7 @@ var Point = require('../point/Point');
  * @param {number} [collinearThreshold=0] - An optional threshold. The final array is reduced so that each point is spaced out at least this distance apart. This helps reduce clustering in noisey eases.
  * @param {number[]} [easeParams] - An optional array of ease parameters to go with the ease.
  *
- * @return {Phaser.Geom.Point[]} An array of Geom.Points containing the coordinates of the points on the line.
+ * @return {Phaser.Math.Vector2[]} An array of Math.Vector2s containing the coordinates of the points on the line.
  */
 var GetEasedPoints = function (line, ease, quantity, collinearThreshold, easeParams)
 {

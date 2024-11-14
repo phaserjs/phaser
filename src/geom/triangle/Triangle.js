@@ -137,12 +137,12 @@ var Triangle = new Class({
      * @method Phaser.Geom.Triangle#getPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [output,$return]
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {number} position - Position as float within `0` and `1`. `0` equals the first point.
-     * @param {(Phaser.Geom.Point|object)} [output] - Optional Point, or point-like object, that the calculated point will be written to.
+     * @param {(Phaser.Math.Vector2|object)} [output] - Optional Point, or point-like object, that the calculated point will be written to.
      *
-     * @return {(Phaser.Geom.Point|object)} Calculated `Point` that represents the requested position. It is the same as `output` when this parameter has been given.
+     * @return {(Phaser.Math.Vector2|object)} Calculated `Point` that represents the requested position. It is the same as `output` when this parameter has been given.
      */
     getPoint: function (position, output)
     {
@@ -155,13 +155,13 @@ var Triangle = new Class({
      * @method Phaser.Geom.Triangle#getPoints
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     * @generic {Phaser.Math.Vector2[]} O - [output,$return]
      *
      * @param {number} quantity - Number of points to be generated. Can be falsey when `stepRate` should be used. All points have the same distance along the triangle.
      * @param {number} [stepRate] - Distance between two points. Will only be used when `quantity` is falsey.
-     * @param {(array|Phaser.Geom.Point[])} [output] - Optional Array for writing the calculated points into. Otherwise a new array will be created.
+     * @param {(array|Phaser.Math.Vector2[])} [output] - Optional Array for writing the calculated points into. Otherwise a new array will be created.
      *
-     * @return {(array|Phaser.Geom.Point[])} Returns a list of calculated `Point` instances or the filled array passed as parameter `output`.
+     * @return {(array|Phaser.Math.Vector2[])} Returns a list of calculated `Point` instances or the filled array passed as parameter `output`.
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -174,11 +174,11 @@ var Triangle = new Class({
      * @method Phaser.Geom.Triangle#getRandomPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [point,$return]
+     * @generic {Phaser.Math.Vector2} O - [point,$return]
      *
-     * @param {Phaser.Geom.Point} [point] - Optional `Point` that should be modified. Otherwise a new one will be created.
+     * @param {Phaser.Math.Vector2} [point] - Optional `Point` that should be modified. Otherwise a new one will be created.
      *
-     * @return {Phaser.Geom.Point} Random `Point`. When parameter `point` has been provided it will be returned.
+     * @return {Phaser.Math.Vector2} Random `Point`. When parameter `point` has been provided it will be returned.
      */
     getRandomPoint: function (point)
     {

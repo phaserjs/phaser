@@ -15,7 +15,7 @@ var RotateAroundXY = require('./RotateAroundXY');
  * @generic {Phaser.Geom.Triangle} O - [triangle,$return]
  *
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to rotate.
- * @param {Phaser.Geom.Point} point - The Point to rotate the Triangle about.
+ * @param {Phaser.Math.Vector2} point - The Point to rotate the Triangle about.
  * @param {number} angle - The angle by which to rotate the Triangle, in radians.
  *
  * @return {Phaser.Geom.Triangle} The rotated Triangle.

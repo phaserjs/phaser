@@ -12,12 +12,12 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Line.GetMidPoint
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Line} line - The line to get the midpoint of.
- * @param {(Phaser.Geom.Point|object)} [out] - An optional point object to store the midpoint in.
+ * @param {(Phaser.Math.Vector2|object)} [out] - An optional point object to store the midpoint in.
  *
- * @return {(Phaser.Geom.Point|object)} The midpoint of the Line.
+ * @return {(Phaser.Math.Vector2|object)} The midpoint of the Line.
  */
 var GetMidPoint = function (line, out)
 {

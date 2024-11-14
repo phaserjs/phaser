@@ -90,12 +90,12 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [output,$return]
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {number} position - A value between 0 and 1, where 0 is the start, 0.5 is the middle and 1 is the end of the line.
-     * @param {(Phaser.Geom.Point|object)} [output] - An optional point, or point-like object, to store the coordinates of the point on the line.
+     * @param {(Phaser.Math.Vector2|object)} [output] - An optional point, or point-like object, to store the coordinates of the point on the line.
      *
-     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point on the line.
+     * @return {(Phaser.Math.Vector2|object)} A Point, or point-like object, containing the coordinates of the point on the line.
      */
     getPoint: function (position, output)
     {
@@ -113,13 +113,13 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getPoints
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     * @generic {Phaser.Math.Vector2[]} O - [output,$return]
      *
      * @param {number} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
      * @param {number} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
-     * @param {(array|Phaser.Geom.Point[])} [output] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
+     * @param {(array|Phaser.Math.Vector2[])} [output] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
      *
-     * @return {(array|Phaser.Geom.Point[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
+     * @return {(array|Phaser.Math.Vector2[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -132,11 +132,11 @@ var Line = new Class({
      * @method Phaser.Geom.Line#getRandomPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [point,$return]
+     * @generic {Phaser.Math.Vector2} O - [point,$return]
      *
-     * @param {(Phaser.Geom.Point|object)} [point] - An instance of a Point to be modified.
+     * @param {(Phaser.Math.Vector2|object)} [point] - An instance of a Point to be modified.
      *
-     * @return {Phaser.Geom.Point} A random Point on the Line.
+     * @return {Phaser.Math.Vector2} A random Point on the Line.
      */
     getRandomPoint: function (point)
     {

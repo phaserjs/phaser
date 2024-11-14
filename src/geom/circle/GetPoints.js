@@ -21,7 +21,7 @@ var MATH_CONST = require('../../math/const');
  * @param {number} [stepRate] - Sets the quantity by getting the circumference of the circle and dividing it by the stepRate.
  * @param {array} [output] - An array to insert the points in to. If not provided a new array will be created.
  *
- * @return {Phaser.Geom.Point[]} An array of Point objects pertaining to the points around the circumference of the circle.
+ * @return {Phaser.Math.Vector2[]} An array of Vector2 objects pertaining to the points around the circumference of the circle.
  */
 var GetPoints = function (circle, quantity, stepRate, out)
 {
@@ -35,7 +35,7 @@ var GetPoints = function (circle, quantity, stepRate, out)
 
     for (var i = 0; i < quantity; i++)
     {
-        var angle = FromPercent(i / quantity, 0, MATH_CONST.PI2);
+        var angle = FromPercent(i / quantity, 0, MATH_CONST.TAU);
 
         out.push(CircumferencePoint(circle, angle));
     }

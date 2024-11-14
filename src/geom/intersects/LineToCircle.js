@@ -19,7 +19,7 @@ var tmp = new Point();
  *
  * @param {Phaser.Geom.Line} line - The line segment to check.
  * @param {Phaser.Geom.Circle} circle - The circle to check against the line.
- * @param {(Phaser.Geom.Point|any)} [nearest] - An optional Point-like object. If given the closest point on the Line where the circle intersects will be stored in this object.
+ * @param {(Phaser.Math.Vector2|any)} [nearest] - An optional Point-like object. If given the closest point on the Line where the circle intersects will be stored in this object.
  *
  * @return {boolean} `true` if the two objects intersect, otherwise `false`.
  */

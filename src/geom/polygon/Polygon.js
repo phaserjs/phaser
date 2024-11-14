@@ -62,7 +62,7 @@ var Polygon = new Class({
          * An array of number pair objects that make up this polygon. I.e. [ {x,y}, {x,y}, {x,y} ]
          *
          * @name Phaser.Geom.Polygon#points
-         * @type {Phaser.Geom.Point[]}
+         * @type {Phaser.Math.Vector2[]}
          * @since 3.0.0
          */
         this.points = [];
@@ -203,13 +203,13 @@ var Polygon = new Class({
      * @method Phaser.Geom.Polygon#getPoints
      * @since 3.12.0
      *
-     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     * @generic {Phaser.Math.Vector2[]} O - [output,$return]
      *
      * @param {number} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
      * @param {number} [stepRate] - Sets the quantity by getting the perimeter of the Polygon and dividing it by the stepRate.
-     * @param {(array|Phaser.Geom.Point[])} [output] - An array to insert the points in to. If not provided a new array will be created.
+     * @param {(array|Phaser.Math.Vector2[])} [output] - An array to insert the points in to. If not provided a new array will be created.
      *
-     * @return {(array|Phaser.Geom.Point[])} An array of Point objects pertaining to the points around the perimeter of the Polygon.
+     * @return {(array|Phaser.Math.Vector2[])} An array of Point objects pertaining to the points around the perimeter of the Polygon.
      */
     getPoints: function (quantity, step, output)
     {

@@ -20,14 +20,14 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Line.GetPoints
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point[]} O - [out,$return]
+ * @generic {Phaser.Math.Vector2[]} O - [out,$return]
  *
  * @param {Phaser.Geom.Line} line - The line.
  * @param {number} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
  * @param {number} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
- * @param {(array|Phaser.Geom.Point[])} [out] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
+ * @param {(array|Phaser.Math.Vector2[])} [out] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
  *
- * @return {(array|Phaser.Geom.Point[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
+ * @return {(array|Phaser.Math.Vector2[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
  */
 var GetPoints = function (line, quantity, stepRate, out)
 {

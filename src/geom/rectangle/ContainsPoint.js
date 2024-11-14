@@ -13,7 +13,7 @@ var Contains = require('./Contains');
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Rectangle} rect - The Rectangle object.
- * @param {Phaser.Geom.Point} point - The point object to be checked. Can be a Phaser Point object or any object with x and y values.
+ * @param {Phaser.Math.Vector2} point - The point object to be checked. Can be a Phaser Point object or any object with x and y values.
  *
  * @return {boolean} A value of true if the Rectangle object contains the specified point, otherwise false.
  */

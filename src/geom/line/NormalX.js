@@ -19,7 +19,7 @@ var Angle = require('./Angle');
  */
 var NormalX = function (line)
 {
-    return Math.cos(Angle(line) - MATH_CONST.TAU);
+    return Math.cos(Angle(line) - MATH_CONST.PI_OVER_2);
 };
 
 module.exports = NormalX;

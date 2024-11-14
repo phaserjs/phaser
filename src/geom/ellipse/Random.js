@@ -12,12 +12,12 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Ellipse.Random
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get a random point from.
- * @param {(Phaser.Geom.Point|object)} [out] - A Point or point-like object to set the random `x` and `y` values in.
+ * @param {(Phaser.Math.Vector2|object)} [out] - A Point or point-like object to set the random `x` and `y` values in.
  *
- * @return {(Phaser.Geom.Point|object)} A Point object with the random values set in the `x` and `y` properties.
+ * @return {(Phaser.Math.Vector2|object)} A Point object with the random values set in the `x` and `y` properties.
  */
 var Random = function (ellipse, out)
 {

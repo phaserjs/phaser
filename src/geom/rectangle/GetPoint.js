@@ -17,13 +17,13 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Rectangle.GetPoint
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Rectangle} rectangle - The Rectangle to get the perimeter point from.
  * @param {number} position - The normalized distance into the Rectangle's perimeter to return.
- * @param {(Phaser.Geom.Point|object)} [out] - An object to update with the `x` and `y` coordinates of the point.
+ * @param {(Phaser.Math.Vector2|object)} [out] - An object to update with the `x` and `y` coordinates of the point.
  *
- * @return {Phaser.Geom.Point} The updated `output` object, or a new Point if no `output` object was given.
+ * @return {Phaser.Math.Vector2} The updated `output` object, or a new Point if no `output` object was given.
  */
 var GetPoint = function (rectangle, position, out)
 {

@@ -114,16 +114,16 @@ var Circle = new Class({
      * @method Phaser.Geom.Circle#getPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [out,$return]
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {number} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the circle.
-     * @param {(Phaser.Geom.Point|object)} [out] - An object to store the return values in. If not given a Point object will be created.
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 to store the return values in. If not given a Vector2 object will be created.
      *
-     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point around the circle.
+     * @return {Phaser.Math.Vector2} A Vector2 containing the coordinates of the point around the circle.
      */
-    getPoint: function (position, point)
+    getPoint: function (position, out)
     {
-        return GetPoint(this, position, point);
+        return GetPoint(this, position, out);
     },
 
     /**
@@ -133,13 +133,13 @@ var Circle = new Class({
      * @method Phaser.Geom.Circle#getPoints
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     * @generic {Phaser.Math.Vector2[]} O - [output,$return]
      *
      * @param {number} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
      * @param {number} [stepRate] - Sets the quantity by getting the circumference of the circle and dividing it by the stepRate.
-     * @param {(array|Phaser.Geom.Point[])} [output] - An array to insert the points in to. If not provided a new array will be created.
+     * @param {Phaser.Math.Vector2[]} [output] - An array to insert the Vector2s in to. If not provided a new array will be created.
      *
-     * @return {(array|Phaser.Geom.Point[])} An array of Point objects pertaining to the points around the circumference of the circle.
+     * @return {Phaser.Math.Vector2[]} An array of Vector2 objects pertaining to the points around the circumference of the circle.
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -152,15 +152,15 @@ var Circle = new Class({
      * @method Phaser.Geom.Circle#getRandomPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [point,$return]
+     * @generic {Phaser.Math.Vector2} O - [point,$return]
      *
-     * @param {(Phaser.Geom.Point|object)} [point] - A Point or point-like object to set the random `x` and `y` values in.
+     * @param {Phaser.Math.Vector2} [vec] - A Vector2 object to set the random `x` and `y` values in.
      *
-     * @return {(Phaser.Geom.Point|object)} A Point object with the random values set in the `x` and `y` properties.
+     * @return {Phaser.Math.Vector2} A Vector2 object with the random values set in the `x` and `y` properties.
      */
-    getRandomPoint: function (point)
+    getRandomPoint: function (vec)
     {
-        return Random(this, point);
+        return Random(this, vec);
     },
 
     /**

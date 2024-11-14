@@ -18,11 +18,11 @@
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Triangle} triangle - The triangle that the points are being checked in.
- * @param {Phaser.Geom.Point[]} points - An array of point-like objects (objects that have an `x` and `y` property)
+ * @param {Phaser.Math.Vector2[]} points - An array of point-like objects (objects that have an `x` and `y` property)
  * @param {boolean} [returnFirst=false] - If `true`, return an array containing only the first point found that is within the triangle.
  * @param {array} [out] - If provided, the points that are within the triangle will be appended to this array instead of being added to a new array. If `returnFirst` is true, only the first point found within the triangle will be appended. This array will also be returned by this function.
  *
- * @return {Phaser.Geom.Point[]} An array containing all the points from `points` that are within the triangle, if an array was provided as `out`, points will be appended to that array and it will also be returned here.
+ * @return {Phaser.Math.Vector2[]} An array containing all the points from `points` that are within the triangle, if an array was provided as `out`, points will be appended to that array and it will also be returned here.
  */
 var ContainsArray = function (triangle, points, returnFirst, out)
 {

@@ -13,7 +13,7 @@
  * @generic {Phaser.Geom.Rectangle} O - [rect,$return]
  *
  * @param {Phaser.Geom.Rectangle} rect - The Rectangle to adjust.
- * @param {(Phaser.Geom.Point|Phaser.Math.Vector2)} point - The point whose coordinates should be used as an offset.
+ * @param {(Phaser.Math.Vector2|Phaser.Math.Vector2)} point - The point whose coordinates should be used as an offset.
  *
  * @return {Phaser.Geom.Rectangle} The adjusted Rectangle.
  */

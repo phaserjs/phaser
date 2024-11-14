@@ -13,7 +13,7 @@
  * @function Phaser.Geom.Intersects.PointToLine
  * @since 3.0.0
  *
- * @param {(Phaser.Geom.Point|any)} point - The point, or point-like object to check.
+ * @param {(Phaser.Math.Vector2|any)} point - The point, or point-like object to check.
  * @param {Phaser.Geom.Line} line - The line segment to test for intersection on.
  * @param {number} [lineThickness=1] - The line thickness. Assumes that the line end points are circular.
  *

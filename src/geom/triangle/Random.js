@@ -12,12 +12,12 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Triangle.Random
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to get a random point from.
- * @param {Phaser.Geom.Point} [out] - The Point object to store the position in. If not given, a new Point instance is created.
+ * @param {Phaser.Math.Vector2} [out] - The Point object to store the position in. If not given, a new Point instance is created.
  *
- * @return {Phaser.Geom.Point} A Point object holding the coordinates of a random position within the Triangle.
+ * @return {Phaser.Math.Vector2} A Point object holding the coordinates of a random position within the Triangle.
  */
 var Random = function (triangle, out)
 {

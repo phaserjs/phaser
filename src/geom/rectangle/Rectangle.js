@@ -115,12 +115,12 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#getPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [output,$return]
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {number} position - The normalized distance into the Rectangle's perimeter to return.
-     * @param {(Phaser.Geom.Point|object)} [output] - An object to update with the `x` and `y` coordinates of the point.
+     * @param {(Phaser.Math.Vector2|object)} [output] - An object to update with the `x` and `y` coordinates of the point.
      *
-     * @return {(Phaser.Geom.Point|object)} The updated `output` object, or a new Point if no `output` object was given.
+     * @return {(Phaser.Math.Vector2|object)} The updated `output` object, or a new Point if no `output` object was given.
      */
     getPoint: function (position, output)
     {
@@ -133,13 +133,13 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#getPoints
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     * @generic {Phaser.Math.Vector2[]} O - [output,$return]
      *
      * @param {number} quantity - The number of points to return. Set to `false` or 0 to return an arbitrary number of points (`perimeter / stepRate`) evenly spaced around the Rectangle based on the `stepRate`.
      * @param {number} [stepRate] - If `quantity` is 0, determines the normalized distance between each returned point.
-     * @param {(array|Phaser.Geom.Point[])} [output] - An array to which to append the points.
+     * @param {(array|Phaser.Math.Vector2[])} [output] - An array to which to append the points.
      *
-     * @return {(array|Phaser.Geom.Point[])} The modified `output` array, or a new array if none was provided.
+     * @return {(array|Phaser.Math.Vector2[])} The modified `output` array, or a new array if none was provided.
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -152,11 +152,11 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#getRandomPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [point,$return]
+     * @generic {Phaser.Math.Vector2} O - [point,$return]
      *
-     * @param {Phaser.Geom.Point} [point] - The object in which to store the `x` and `y` coordinates of the point.
+     * @param {Phaser.Math.Vector2} [point] - The object in which to store the `x` and `y` coordinates of the point.
      *
-     * @return {Phaser.Geom.Point} The updated `point`, or a new Point if none was provided.
+     * @return {Phaser.Math.Vector2} The updated `point`, or a new Point if none was provided.
      */
     getRandomPoint: function (point)
     {

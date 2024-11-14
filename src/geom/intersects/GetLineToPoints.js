@@ -29,7 +29,7 @@ var tempIntersect = new Vector3();
  * @since 3.50.0
  *
  * @param {Phaser.Geom.Line} line - The line segment, or ray, to check. If a ray, set the `isRay` parameter to `true`.
- * @param {Phaser.Math.Vector2[] | Phaser.Geom.Point[]} points - An array of points to check.
+ * @param {Phaser.Math.Vector2[] | Phaser.Math.Vector2[]} points - An array of points to check.
  * @param {boolean} [isRay=false] - Is `line` a ray or a line segment?
  * @param {Phaser.Math.Vector3} [out] - A Vector3 to store the intersection results in.
  *

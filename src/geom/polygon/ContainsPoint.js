@@ -13,7 +13,7 @@ var Contains = require('./Contains');
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Polygon} polygon - The Polygon to check.
- * @param {Phaser.Geom.Point} point - The Point to check if it's within the Polygon.
+ * @param {Phaser.Math.Vector2} point - The Point to check if it's within the Polygon.
  *
  * @return {boolean} `true` if the Point is within the Polygon, otherwise `false`.
  */

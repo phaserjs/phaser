@@ -12,12 +12,12 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Rectangle.Random
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Rectangle} rect - The Rectangle to return a point from.
- * @param {Phaser.Geom.Point} out - The object to update with the point's coordinates.
+ * @param {Phaser.Math.Vector2} out - The object to update with the point's coordinates.
  *
- * @return {Phaser.Geom.Point} The modified `out` object, or a new Point if none was provided.
+ * @return {Phaser.Math.Vector2} The modified `out` object, or a new Point if none was provided.
  */
 var Random = function (rect, out)
 {
