@@ -30,6 +30,7 @@ Other changes also include the following:
 ✔️ We have removed the `Create.GenerateTexture` function and all of the Create Palettes and the `create` folder.  
 ✔️ `TextureManager.generate` has been removed as a result of the GenerateTexture removal.  
 ✔️ We have removed the `phaser-ie9.js` entry-point.  
+✔️ We have removed `Math.SinCosTableGenerator`.  
 ✔️ We have removed the following polyfills: Array.forEach, Array.isArray, AudioContextMonkeyPatch, console, Math.trunc, performance.now, requestAnimationFrame and Uint32Array.  
 ✔️ We have removed the Facebook Plugin detection constants from the core library.  
 ✔️ We have removed the Camera3D Plugin.  
@@ -51,12 +52,15 @@ Other changes also include the following:
 `Point.SetMagnitude` = `Vector2.setLength`
 `Point.Project` = `Vector2.project`
 `Point.ProjectUnit` = `Vector2.projectUnit`
+`Point.Interpolate` = `Math.LinearXY`
+`Point.GetRectangleFromPoints` = `Math.GetVec2Bounds`
 
 * `Vector2.ceil` is a new method that will apply Math.ceil to the x and y components of the vector. Use as a replacement for `Geom.Point.Ceil`.
 * `Vector2.floor` is a new method that will apply Math.floor to the x and y components of the vector. Use as a replacement for `Geom.Point.Floor`.
-* `Math.GetCentroid` is a new function that will get the centroid, or geometric center, of a plane figure from an array of Vector2 like objects. Use as a replacement for `Geom.Point.GetCentroid`.
 * `Vector2.invert` is a new method that will swap the x and y components of the vector. Use as a replacement for `Geom.Point.Invert`.
 * `Vector2.projectUnit` is a new method that will calculate the vector projection onto a non-zero target vector. Use as a replacement for `Geom.Point.ProjectUnit`.
+* `Math.GetCentroid` is a new function that will get the centroid, or geometric center, of a plane figure from an array of Vector2 like objects. Use as a replacement for `Geom.Point.GetCentroid`.
+* `Math.GetVec2Bounds` is a new function that will get the AABB bounds as a Geom.Rectangle from an array of Vector2 objects. Use as a replacement for `Geom.Point.GetRectangleFromPoints`.
 
 ## Installing Phaser from NPM
 
