@@ -20,6 +20,7 @@ var RenderNodes = {
     BatchHandlerTriFlat: require('./BatchHandlerTriFlat'),
 
     Camera: require('./Camera'),
+    Defaults: require('./defaults'),
     DrawLine: require('./DrawLine'),
     DynamicTextureHandler: require('./DynamicTextureHandler'),
     FillCamera: require('./FillCamera'),
