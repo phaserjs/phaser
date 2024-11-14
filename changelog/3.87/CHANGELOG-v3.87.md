@@ -21,6 +21,7 @@ create ()
 ## Updates
 
 * The Particle Animation State is now optional. A Particle will not create an Animation State controller unless the `anim` property exists within the emitter configuration. By not creating the controller it leads to less memory overhead and a much faster clean-up time when destroying particles. Fix #6482 (thanks @samme)
+* Optimized `TweenData.update` to achieve the same result with my less repetition. Also fixes an issue where a Tween that used a custom `ease` callback would glitch when the final value was set, as it would be set outside of the ease callback. It's now passed through it, no matter what. Fix #6939 (thanks @SBCGames)
 
 ## Bug Fixes
 
