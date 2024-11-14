@@ -24,17 +24,17 @@ Please only use this release if you wish to help beta test Phaser v4.
 
 v4 contains the following API-breaking changes:
 
-✔️ We have removed `Phaser.Struct.Set` and replaced it with a regular JS `Set` instance. This means methods like `iterateLocal` are gone.
-✔️ We have removed the `Create.GenerateTexture` function and all of the Create Palettes and the `create` folder.
-✔️ `TextureManager.generate` has been removed as a result of the GenerateTexture removal.
-✔️ We have removed the `phaser-ie9.js` entry-point.
-✔️ We have removed the following polyfills: Array.forEach, Array.isArray, AudioContextMonkeyPatch, console, Math.trunc, performance.now, requestAnimationFrame and Uint32Array.
-✔️ We have removed the Facebook Plugin detection constants from the core library.
-✔️ We have removed the Camera3D Plugin
-✔️ We have removed the Layer3D Plugin
-* We are removing `Phaser.Struct.Map` and replacing it with a regular JS `Map` instance. This means methods like `contains` and `setAll` will be gone.
-* The `Geom.Point` class and all related functions will be removed. All functionality for this can be found in the existing Vector2 math classes. All Geometry classes that currently create and return Point objects will be updated to return Vector2 objects instead.
-* The Spine 3 and Spine 4 plugins will no longer be updated. You should now use the official Phaser Spine plugin created by Esoteric Software.
+✔️ We have removed `Phaser.Struct.Set` and replaced it with a regular JS `Set` instance. This means methods like `iterateLocal` are gone.  
+✔️ We have removed the `Create.GenerateTexture` function and all of the Create Palettes and the `create` folder.  
+✔️ `TextureManager.generate` has been removed as a result of the GenerateTexture removal.  
+✔️ We have removed the `phaser-ie9.js` entry-point.  
+✔️ We have removed the following polyfills: Array.forEach, Array.isArray, AudioContextMonkeyPatch, console, Math.trunc, performance.now, requestAnimationFrame and Uint32Array.  
+✔️ We have removed the Facebook Plugin detection constants from the core library.  
+✔️ We have removed the Camera3D Plugin.  
+✔️ We have removed the Layer3D Plugin.  
+* We are removing `Phaser.Struct.Map` and replacing it with a regular JS `Map` instance. This means methods like `contains` and `setAll` will be gone.  
+* The `Geom.Point` class and all related functions will be removed. All functionality for this can be found in the existing Vector2 math classes. All Geometry classes that currently create and return Point objects will be updated to return Vector2 objects instead.  
+* The Spine 3 and Spine 4 plugins will no longer be updated. You should now use the official Phaser Spine plugin created by Esoteric Software.  
 
 ## Installing Phaser from NPM
 
