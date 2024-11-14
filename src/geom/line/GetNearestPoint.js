@@ -5,7 +5,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Get the nearest point on a line perpendicular to the given point.

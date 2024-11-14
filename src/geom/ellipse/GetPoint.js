@@ -7,7 +7,7 @@
 var CircumferencePoint = require('./CircumferencePoint');
 var FromPercent = require('../../math/FromPercent');
 var MATH_CONST = require('../../math/const');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse

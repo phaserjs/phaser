@@ -6,7 +6,7 @@
 
 var MATH_CONST = require('../../math/const');
 var Angle = require('./Angle');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Calculate the normal of the given line.

@@ -5,7 +5,7 @@
  */
 
 var Contains = require('../circle/Contains');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 var tmp = new Point();
 

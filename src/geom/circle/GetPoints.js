@@ -10,7 +10,7 @@ var FromPercent = require('../../math/FromPercent');
 var MATH_CONST = require('../../math/const');
 
 /**
- * Returns an array of Point objects containing the coordinates of the points around the circumference of the Circle,
+ * Returns an array of Vector2 objects containing the coordinates of the points around the circumference of the Circle,
  * based on the given quantity or stepRate values.
  *
  * @function Phaser.Geom.Circle.GetPoints

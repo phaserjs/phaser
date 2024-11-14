@@ -5,7 +5,7 @@
  */
 
 var Length = require('./Length');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Get a number of points along a line's length.

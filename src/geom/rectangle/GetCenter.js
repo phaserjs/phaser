@@ -4,7 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Returns the center of a Rectangle as a Point.

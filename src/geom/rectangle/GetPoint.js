@@ -5,7 +5,7 @@
  */
 
 var Perimeter = require('./Perimeter');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Calculates the coordinates of a point at a certain `position` on the Rectangle's perimeter.

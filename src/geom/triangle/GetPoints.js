@@ -5,7 +5,7 @@
  */
 
 var Length = require('../line/Length');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Returns an array of evenly spaced points on the perimeter of a Triangle.

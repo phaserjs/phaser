@@ -6,7 +6,7 @@
 
 var Between = require('../../math/Between');
 var ContainsRect = require('./ContainsRect');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Calculates a random point that lies within the `outer` Rectangle, but outside of the `inner` Rectangle.

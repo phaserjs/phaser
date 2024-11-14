@@ -4,10 +4,10 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
- * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse based on the given angle.
+ * Returns a Vector2 containing the coordinates of a point on the circumference of the Ellipse based on the given angle.
  *
  * @function Phaser.Geom.Ellipse.CircumferencePoint
  * @since 3.0.0
@@ -16,13 +16,13 @@ var Point = require('../point/Point');
  *
  * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the circumference point on.
  * @param {number} angle - The angle from the center of the Ellipse to the circumference to return the point from. Given in radians.
- * @param {(Phaser.Math.Vector2|object)} [out] - A Point, or point-like object, to store the results in. If not given a Point will be created.
+ * @param {Phaser.Math.Vector2} [out] - A Vector2 to store the results in. If not given a Point will be created.
  *
- * @return {(Phaser.Math.Vector2|object)} A Point object where the `x` and `y` properties are the point on the circumference.
+ * @return {Phaser.Math.Vector2} A Vector2 object where the `x` and `y` properties are the point on the circumference.
  */
 var CircumferencePoint = function (ellipse, angle, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     var halfWidth = ellipse.width / 2;
     var halfHeight = ellipse.height / 2;

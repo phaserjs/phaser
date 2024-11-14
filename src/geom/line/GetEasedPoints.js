@@ -6,7 +6,7 @@
 
 var DistanceBetweenPoints = require('../../math/distance/DistanceBetweenPoints');
 var GetEaseFunction = require('../../tweens/builders/GetEaseFunction');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Returns an array of `quantity` Points where each point is taken from the given Line,
