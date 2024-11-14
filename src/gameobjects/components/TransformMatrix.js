@@ -294,7 +294,7 @@ var TransformMatrix = new Class({
             {
                 // var s = Math.sqrt(c * c + d * d);
 
-                return MATH_CONST.TAU - ((d > 0) ? Math.acos(-c / this.scaleY) : -Math.acos(c / this.scaleY));
+                return MATH_CONST.PI_OVER_2 - ((d > 0) ? Math.acos(-c / this.scaleY) : -Math.acos(c / this.scaleY));
             }
             else
             {

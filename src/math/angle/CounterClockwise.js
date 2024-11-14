@@ -30,10 +30,10 @@ var CounterClockwise = function (angle)
 {
     if (angle > Math.PI)
     {
-        angle -= CONST.PI2;
+        angle -= CONST.TAU;
     }
 
-    return Math.abs((((angle + CONST.TAU) % CONST.PI2) - CONST.PI2) % CONST.PI2);
+    return Math.abs((((angle + CONST.PI_OVER_2) % CONST.TAU) - CONST.TAU) % CONST.TAU);
 };
 
 module.exports = CounterClockwise;

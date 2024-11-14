@@ -355,22 +355,22 @@ var Arc = new Class({
 
         if (anticlockwise)
         {
-            if (endAngle < -MATH_CONST.PI2)
+            if (endAngle < -MATH_CONST.TAU)
             {
-                endAngle = -MATH_CONST.PI2;
+                endAngle = -MATH_CONST.TAU;
             }
             else if (endAngle > 0)
             {
-                endAngle = -MATH_CONST.PI2 + endAngle % MATH_CONST.PI2;
+                endAngle = -MATH_CONST.TAU + endAngle % MATH_CONST.TAU;
             }
         }
-        else if (endAngle > MATH_CONST.PI2)
+        else if (endAngle > MATH_CONST.TAU)
         {
-            endAngle = MATH_CONST.PI2;
+            endAngle = MATH_CONST.TAU;
         }
         else if (endAngle < 0)
         {
-            endAngle = MATH_CONST.PI2 + endAngle % MATH_CONST.PI2;
+            endAngle = MATH_CONST.TAU + endAngle % MATH_CONST.TAU;
         }
 
         var path = [ x + Math.cos(startAngle) * radius, y + Math.sin(startAngle) * radius ];

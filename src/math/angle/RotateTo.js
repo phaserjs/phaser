@@ -27,7 +27,7 @@ var RotateTo = function (currentAngle, targetAngle, lerp)
         return currentAngle;
     }
 
-    if (Math.abs(targetAngle - currentAngle) <= lerp || Math.abs(targetAngle - currentAngle) >= (MATH_CONST.PI2 - lerp))
+    if (Math.abs(targetAngle - currentAngle) <= lerp || Math.abs(targetAngle - currentAngle) >= (MATH_CONST.TAU - lerp))
     {
         currentAngle = targetAngle;
     }
@@ -37,11 +37,11 @@ var RotateTo = function (currentAngle, targetAngle, lerp)
         {
             if (targetAngle < currentAngle)
             {
-                targetAngle += MATH_CONST.PI2;
+                targetAngle += MATH_CONST.TAU;
             }
             else
             {
-                targetAngle -= MATH_CONST.PI2;
+                targetAngle -= MATH_CONST.TAU;
             }
         }
 

@@ -9,24 +9,20 @@ var MATH_CONST = {
     /**
      * The value of PI * 2.
      *
-     * @name Phaser.Math.PI2
-     * @type {number}
-     * @since 3.0.0
-     */
-    PI2: Math.PI * 2,
-
-    /**
-     * The value of PI * 0.5.
-     *
-     * Yes, we understand that this should actually be PI * 2, but
-     * it has been like this for so long we can't change it now.
-     * If you need PI * 2, use the PI2 constant instead.
-     *
      * @name Phaser.Math.TAU
      * @type {number}
+     * @since 4.0.0
+     */
+    TAU: Math.PI * 2,
+
+    /**
+     * The value of PI / 2, or 90 degrees, in radians.
+     *
+     * @name Phaser.Math.PI_OVER_2
+     * @type {number}
      * @since 3.0.0
      */
-    TAU: Math.PI * 0.5,
+    PI_OVER_2: Math.PI / 2,
 
     /**
      * An epsilon value (1.0e-6)

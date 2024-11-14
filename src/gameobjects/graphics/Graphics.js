@@ -572,7 +572,7 @@ var Graphics = new Class({
     fillCircle: function (x, y, radius)
     {
         this.beginPath();
-        this.arc(x, y, radius, 0, MATH_CONST.PI2);
+        this.arc(x, y, radius, 0, MATH_CONST.TAU);
         this.fillPath();
 
         return this;
@@ -593,7 +593,7 @@ var Graphics = new Class({
     strokeCircle: function (x, y, radius)
     {
         this.beginPath();
-        this.arc(x, y, radius, 0, MATH_CONST.PI2);
+        this.arc(x, y, radius, 0, MATH_CONST.TAU);
         this.strokePath();
 
         return this;
@@ -741,44 +741,44 @@ var Graphics = new Class({
 
         if (convexTR)
         {
-            this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+            this.arc(x + width - tr, y + tr, tr, -MATH_CONST.PI_OVER_2, 0);
         }
         else
         {
-            this.arc(x + width, y, tr, Math.PI, MATH_CONST.TAU, true);
+            this.arc(x + width, y, tr, Math.PI, MATH_CONST.PI_OVER_2, true);
         }
 
         this.lineTo(x + width, y + height - br);
 
         if (convexBR)
         {
-            this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+            this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.PI_OVER_2);
         }
         else
         {
-            this.arc(x + width, y + height, br, -MATH_CONST.TAU, Math.PI, true);
+            this.arc(x + width, y + height, br, -MATH_CONST.PI_OVER_2, Math.PI, true);
         }
 
         this.lineTo(x + bl, y + height);
 
         if (convexBL)
         {
-            this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+            this.arc(x + bl, y + height - bl, bl, MATH_CONST.PI_OVER_2, Math.PI);
         }
         else
         {
-            this.arc(x, y + height, bl, 0, -MATH_CONST.TAU, true);
+            this.arc(x, y + height, bl, 0, -MATH_CONST.PI_OVER_2, true);
         }
 
         this.lineTo(x, y + tl);
 
         if (convexTL)
         {
-            this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
+            this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.PI_OVER_2);
         }
         else
         {
-            this.arc(x, y, tl, MATH_CONST.TAU, 0, true);
+            this.arc(x, y, tl, MATH_CONST.PI_OVER_2, 0, true);
         }
 
         this.fillPath();
@@ -836,11 +836,11 @@ var Graphics = new Class({
 
         if (convexTR)
         {
-            this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+            this.arc(x + width - tr, y + tr, tr, -MATH_CONST.PI_OVER_2, 0);
         }
         else
         {
-            this.arc(x + width, y, tr, Math.PI, MATH_CONST.TAU, true);
+            this.arc(x + width, y, tr, Math.PI, MATH_CONST.PI_OVER_2, true);
         }
 
         this.lineTo(x + width, y + height - br);
@@ -848,11 +848,11 @@ var Graphics = new Class({
 
         if (convexBR)
         {
-            this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+            this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.PI_OVER_2);
         }
         else
         {
-            this.arc(x + width, y + height, br, -MATH_CONST.TAU, Math.PI, true);
+            this.arc(x + width, y + height, br, -MATH_CONST.PI_OVER_2, Math.PI, true);
         }
 
         this.lineTo(x + bl, y + height);
@@ -860,11 +860,11 @@ var Graphics = new Class({
 
         if (convexBL)
         {
-            this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+            this.arc(x + bl, y + height - bl, bl, MATH_CONST.PI_OVER_2, Math.PI);
         }
         else
         {
-            this.arc(x, y + height, bl, 0, -MATH_CONST.TAU, true);
+            this.arc(x, y + height, bl, 0, -MATH_CONST.PI_OVER_2, true);
         }
 
         this.lineTo(x, y + tl);
@@ -872,11 +872,11 @@ var Graphics = new Class({
 
         if (convexTL)
         {
-            this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
+            this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.PI_OVER_2);
         }
         else
         {
-            this.arc(x, y, tl, MATH_CONST.TAU, 0, true);
+            this.arc(x, y, tl, MATH_CONST.PI_OVER_2, 0, true);
         }
 
         this.strokePath();
