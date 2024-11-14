@@ -8,7 +8,7 @@ var Perimeter = require('./Perimeter');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * Returns an array of points from the perimeter of the Rectangle, where each point is spaced out based
+ * Returns an array of Vector2 points from the perimeter of the Rectangle, where each point is spaced out based
  * on either the `step` value, or the `quantity`.
  *
  * @function Phaser.Geom.Rectangle.MarchingAnts
@@ -19,9 +19,9 @@ var Vector2 = require('../../math/Vector2');
  * @param {Phaser.Geom.Rectangle} rect - The Rectangle to get the perimeter points from.
  * @param {number} [step] - The distance between each point of the perimeter. Set to `null` if you wish to use the `quantity` parameter instead.
  * @param {number} [quantity] - The total number of points to return. The step is then calculated based on the length of the Rectangle, divided by this value.
- * @param {(array|Phaser.Math.Vector2[])} [out] - An array in which the perimeter points will be stored. If not given, a new array instance is created.
+ * @param {Phaser.Math.Vector2[]} [out] - An array in which the perimeter points will be stored. If not given, a new array instance is created.
  *
- * @return {(array|Phaser.Math.Vector2[])} An array containing the perimeter points from the Rectangle.
+ * @return {Phaser.Math.Vector2[]} An array containing the perimeter points from the Rectangle.
  */
 var MarchingAnts = function (rect, step, quantity, out)
 {
@@ -52,7 +52,7 @@ var MarchingAnts = function (rect, step, quantity, out)
 
     for (var i = 0; i < quantity; i++)
     {
-        out.push(new Point(x, y));
+        out.push(new Vector2(x, y));
 
         switch (face)
         {

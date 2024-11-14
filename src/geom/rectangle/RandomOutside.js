@@ -19,13 +19,13 @@ var Vector2 = require('../../math/Vector2');
  *
  * @param {Phaser.Geom.Rectangle} outer - The outer Rectangle to get the random point within.
  * @param {Phaser.Geom.Rectangle} inner - The inner Rectangle to exclude from the returned point.
- * @param {Phaser.Math.Vector2} [out] - A Point, or Point-like object to store the result in. If not specified, a new Point will be created.
+ * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not specified, a new Vector2 will be created.
  *
- * @return {Phaser.Math.Vector2} A Point object containing the random values in its `x` and `y` properties.
+ * @return {Phaser.Math.Vector2} A Vector2 object containing the random values in its `x` and `y` properties.
  */
 var RandomOutside = function (outer, inner, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     if (ContainsRect(outer, inner))
     {

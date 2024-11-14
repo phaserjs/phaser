@@ -15,13 +15,13 @@ var Vector2 = require('../../math/Vector2');
  * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Rectangle} rect - The Rectangle to get the center of.
- * @param {(Phaser.Math.Vector2|object)} [out] - Optional point-like object to update with the center coordinates.
+ * @param {Phaser.Math.Vector2} [out] - Optional Vector2 object to update with the center coordinates.
  *
- * @return {(Phaser.Math.Vector2|object)} The modified `out` object, or a new Point if none was provided.
+ * @return {Phaser.Math.Vector2} The modified `out` object, or a new Vector2 if none was provided.
  */
 var GetCenter = function (rect, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     out.x = rect.centerX;
     out.y = rect.centerY;

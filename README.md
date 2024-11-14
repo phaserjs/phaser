@@ -72,6 +72,11 @@ Other changes also include the following:
 * The functions `Geom.Line.GetEasedPoint`, `Line.GetMidPoint`, `Line.GetNearestPoint`, `Line.GetNormal`, `Line.GetPoint`, `Line.GetPoints`, `Line.Random` and `Line.RotateAroundPoint` all now take and in some cases return Vector2 instances instead of Point objects.
 * The `Geom.Polygon.getPoints` method now returns Vector2 objects instead of Point.
 * The functions `Geom.Polygon.ContainsPoint` and `Polygon.GetPoints` all now take and in some cases return Vector2 instances instead of Point objects.
+* `Geom.Rectangle.getPoint`, `getPoints` and `getRandomPoint` now all return Vector2 objects instead of Point.
+* The functions `Geom.Rectangle.ContainsPoint`, `Rectangle.GetCenter`, `Rectangle.GetPoint`, `Rectangle.GetPoints`, `Rectangle.GetSize`, `Rectangle.MarchingAnts`, `Rectangle.MergePoints`, `Rectangle.OffsetPoint`, `Rectangle.PerimeterPoint`, `Rectangle.Random` and `Rectangle.RandomOutside` all now take and in some cases return Vector2 instances instead of Point objects.
+
+
+
 
 ## Installing Phaser from NPM
 

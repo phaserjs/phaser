@@ -21,7 +21,7 @@ var Vector2 = require('../../math/Vector2');
  */
 var Random = function (rect, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     out.x = rect.x + (Math.random() * rect.width);
     out.y = rect.y + (Math.random() * rect.height);

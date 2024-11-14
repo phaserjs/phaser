@@ -17,13 +17,13 @@ var DegToRad = require('../../math/DegToRad');
  *
  * @param {Phaser.Geom.Rectangle} rectangle - The Rectangle to get the perimeter point from.
  * @param {number} angle - The angle of the point, in degrees.
- * @param {Phaser.Math.Vector2} [out] - The Point object to store the position in. If not given, a new Point instance is created.
+ * @param {Phaser.Math.Vector2} [out] - The Vector2 object to store the position in. If not given, a new Vector2 instance is created.
  *
- * @return {Phaser.Math.Vector2} A Point object holding the coordinates of the Rectangle perimeter.
+ * @return {Phaser.Math.Vector2} A Vector2 object holding the coordinates of the Rectangle perimeter.
  */
 var PerimeterPoint = function (rectangle, angle, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     angle = DegToRad(angle);
 
