@@ -149,6 +149,38 @@ var Vector2 = new Class({
     {
         return this.set(x, y);
     },
+    
+    /**
+     * Runs the x and y components of this Vector2 through Math.ceil and then sets them.
+     *
+     * @method Phaser.Math.Vector2#ceil
+     * @since 4.0.0
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    ceil: function ()
+    {
+        this.x = Math.ceil(this.x);
+        this.y = Math.ceil(this.y);
+
+        return this;
+    },
+
+    /**
+     * Runs the x and y components of this Vector2 through Math.floor and then sets them.
+     *
+     * @method Phaser.Math.Vector2#floor
+     * @since 4.0.0
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    floor: function ()
+    {
+        this.x = Math.floor(this.x);
+        this.y = Math.floor(this.y);
+
+        return this;
+    },
 
     /**
      * Sets the `x` and `y` values of this object from a given polar coordinate.
