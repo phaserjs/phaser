@@ -10,7 +10,7 @@ var MATH_CONST = require('../../math/const');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse
+ * Returns a Vector2 object containing the coordinates of a point on the circumference of the Ellipse
  * based on the given angle normalized to the range 0 to 1. I.e. a value of 0.5 will give the point
  * at 180 degrees around the circle.
  *
@@ -21,13 +21,13 @@ var Vector2 = require('../../math/Vector2');
  *
  * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the circumference point on.
  * @param {number} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the ellipse.
- * @param {(Phaser.Math.Vector2|object)} [out] - An object to store the return values in. If not given a Point object will be created.
+ * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the return values in. If not given a new Vector2 object will be created.
  *
- * @return {(Phaser.Math.Vector2|object)} A Point, or point-like object, containing the coordinates of the point around the ellipse.
+ * @return {Phaser.Math.Vector2} A Vector2 object, containing the coordinates of the point around the ellipse.
  */
 var GetPoint = function (ellipse, position, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     var angle = FromPercent(position, 0, MATH_CONST.TAU);
 

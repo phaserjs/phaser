@@ -66,6 +66,8 @@ Other changes also include the following:
 * `Math.PI_OVER_2` is a new constant for PI / 2 and all internal use of TAU has been updated to this new constant.
 * `Geom.Circle.getPoint`, `getPoints` and `getRandomPoint` now all return Vector2 objects instead of Point.
 * The functions `Geom.Circle.CircumferencePoint`, `Circle.CircumferencePoint`, `Circle.GetPoint`, `Circle.GetPoints`, `Circle.OffsetPoint` and `Circle.Random` all now take and in some cases return Vector2 instances instead of Point objects.
+* `Geom.Ellipse.getPoint`, `getPoints` and `getRandomPoint` now all return Vector2 objects instead of Point.
+* The functions `Geom.Ellipse.CircumferencePoint`, `Ellipse.CircumferencePoint`, `Ellipse.GetPoint`, `Ellipse.GetPoints`, `Ellipse.OffsetPoint` and `Ellipse.Random` all now take and in some cases return Vector2 instances instead of Point objects.
 
 ## Installing Phaser from NPM
 

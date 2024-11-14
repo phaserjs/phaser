@@ -10,7 +10,7 @@ var FromPercent = require('../../math/FromPercent');
 var MATH_CONST = require('../../math/const');
 
 /**
- * Returns an array of Point objects containing the coordinates of the points around the circumference of the Ellipse,
+ * Returns an array of Vector2 objects containing the coordinates of the points around the circumference of the Ellipse,
  * based on the given quantity or stepRate values.
  *
  * @function Phaser.Geom.Ellipse.GetPoints
@@ -21,9 +21,9 @@ var MATH_CONST = require('../../math/const');
  * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the points from.
  * @param {number} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
  * @param {number} [stepRate] - Sets the quantity by getting the circumference of the ellipse and dividing it by the stepRate.
- * @param {(array|Phaser.Math.Vector2[])} [out] - An array to insert the points in to. If not provided a new array will be created.
+ * @param {Phaser.Math.Vector2[]} [out] - An array to insert the Vector2 objects in to. If not provided a new array will be created.
  *
- * @return {(array|Phaser.Math.Vector2[])} An array of Point objects pertaining to the points around the circumference of the ellipse.
+ * @return {Phaser.Math.Vector2[]} An array of Vector2 objects pertaining to the points around the circumference of the ellipse.
  */
 var GetPoints = function (ellipse, quantity, stepRate, out)
 {
