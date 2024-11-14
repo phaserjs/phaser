@@ -35,6 +35,7 @@ var GEOM_CONST = {
 
     /**
      * A Point Geometry object type.
+     * This object type was removed in 4.0.0. Use Vector2 instead.
      *
      * @name Phaser.Geom.POINT
      * @type {number}
