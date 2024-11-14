@@ -14,7 +14,6 @@ var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var Frame = require('./Frame');
 var GameEvents = require('../core/events');
-var GenerateTexture = require('../create/GenerateTexture');
 var GetValue = require('../utils/object/GetValue');
 var ImageGameObject = require('../gameobjects/image/Image');
 var IsPlainObject = require('../utils/object/IsPlainObject');
@@ -627,67 +626,6 @@ var TextureManager = new Class({
         }
 
         return texture;
-    },
-
-    /**
-     * Creates a new Texture using the given config values.
-     *
-     * Generated textures consist of a Canvas element to which the texture data is drawn.
-     *
-     * Generates a texture based on the given Create configuration object.
-     *
-     * The texture is drawn using a fixed-size indexed palette of 16 colors, where the hex value in the
-     * data cells map to a single color. For example, if the texture config looked like this:
-     *
-     * ```javascript
-     * var star = [
-     *   '.....828.....',
-     *   '....72227....',
-     *   '....82228....',
-     *   '...7222227...',
-     *   '2222222222222',
-     *   '8222222222228',
-     *   '.72222222227.',
-     *   '..787777787..',
-     *   '..877777778..',
-     *   '.78778887787.',
-     *   '.27887.78872.',
-     *   '.787.....787.'
-     * ];
-     *
-     * this.textures.generate('star', { data: star, pixelWidth: 4 });
-     * ```
-     *
-     * Then it would generate a texture that is 52 x 48 pixels in size, because each cell of the data array
-     * represents 1 pixel multiplied by the `pixelWidth` value. The cell values, such as `8`, maps to color
-     * number 8 in the palette. If a cell contains a period character `.` then it is transparent.
-     *
-     * The default palette is Arne16, but you can specify your own using the `palette` property.
-     *
-     * @method Phaser.Textures.TextureManager#generate
-     * @since 3.0.0
-     *
-     * @param {string} key - The unique string-based key of the Texture.
-     * @param {Phaser.Types.Create.GenerateTextureConfig} config - The configuration object needed to generate the texture.
-     *
-     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
-     */
-    generate: function (key, config)
-    {
-        if (this.checkKey(key))
-        {
-            var canvas = CanvasPool.create(this, 1, 1);
-
-            config.canvas = canvas;
-
-            GenerateTexture(config);
-
-            return this.addCanvas(key, canvas);
-        }
-        else
-        {
-            return null;
-        }
     },
 
     /**
